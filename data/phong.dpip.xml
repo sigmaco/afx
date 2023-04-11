@@ -1,0 +1,37 @@
+<Qwadro>
+    <Draw>
+        <Pipeline>
+            <Module stage='VERTEX' uri='data/phong.vsh' />
+            <Module stage='PIXEL' uri='data/phong.psh' />
+            <VertexInput topology='TRI_LIST' restart='false'>
+                <Source binding='0' stride='16' instance='false' />
+                <Source binding='0' stride='12' instance='false' />
+                <Source binding='0' stride='8' instance='false' />
+                <Stream location='0' binding='0' format='V4D' offset='0' />
+                <Stream location='1' binding='0' format='V3D' offset='0' />
+                <Stream location='2' binding='0' format='V2D' offset='0' />
+            </VertexInput>
+            <Rasterization>
+                <DepthClampEnable>false</DepthClampEnable>
+                <RasterizerDiscardEnable>false</RasterizerDiscardEnable>
+                <FillMode>SOLID</FillMode>
+                <CullMode>BACK</CullMode>
+                <FrontFace>CCW</FrontFace>
+                <DepthBias enable='false' constant='0.0' clamp='0.0' slope='0.0'/>
+                <LineWidth>1.0</LineWidth>
+            </Rasterization>
+            <DepthHandling>
+                <DepthTestEnable>true</DepthTestEnable>
+                <DepthWriteEnable>true</DepthWriteEnable>
+                <DepthCompareOp>LEQUAL</DepthCompareOp>
+                <DepthBoundsTest enable='false' min='0.0' max='1.0'/>
+                <StencilTest enable='false'>
+                    <Front fail='' pass='' depthFail='' compare=''/>
+                    <Back fail='' pass='' depthFail='' compare=''/>
+                </StencilTest>
+            </DepthHandling>
+            <Descriptor binding='0' type='CONSTANT_BUFFER' cnt='1' name='sgl0'/>
+            <Descriptor binding='1' type='COMBINED_IMAGE_SAMPLER' cnt='1' name='texDiff'/>
+        </Pipeline>
+    </Draw>
+</Qwadro>
