@@ -1,0 +1,554 @@
+
+ afxDebug.c:368?AfxAttachDebugTerminal()
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                       (c) 2017 SIGMA Technology Group                       
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxApplication.c:536?AfxBootUpApplication(uri=null,argc=1,argv=0000000000367120)
+ afxObject.c:425?AfxReacquireObject(obj=000007fece757400)
+ Reacquired. (obj/app)000007fece757400^2
+ afxApplication.c:390?AfxLoadApplicationComposition(uri=mmplayer.rom,argc=1,argv=0000000000367120)
+ afxStream.c:359?AfxAcquireStream(attrs=0000000000000001,addr=mmplayer.rom)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=strm,parent=0000000000000000,siz=4416,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=4416,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c500c0, 4416 bytes long, aligned to 4416 
+ Acquired. (obj/strm)0000000001c500c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c500c0,parent=000007fece757400)
+ Reparented. (obj/strm)0000000001c500c0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6fa600 -> (obj/strm)0000000001c500c0
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=512,hint="afxStream.c:406!AfxAcquireStream")
+ Allocated. (void)0000000001c600c0, 512 bytes long, aligned to 512 
+ Acquired. (strm)0000000001c500c0^1 <-> "mmplayer.rom"
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c500c0,off=0,origin=2)
+ afxStream.c:137?AfxAskStreamCursor(strm=0000000001c500c0)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=40448,hint="afxApplication.c:405!AfxLoadApplicationComposition")
+ Allocated. (void)0000000001c700c0, 40448 bytes long, aligned to 40448 
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c500c0,off=0,origin=0)
+ afxStream.c:307?AfxReadStream(strm=0000000001c500c0,cnt=40448,siz=29819072,to=0000000000000000)
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c500c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001c500c0)
+ Destroying  strm @ 0000000001c500c0...
+ afxStream.c:326?_AfxReleaseStream(strm=0000000001c500c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c600c0)
+ Deallocated. (void)0000000001c600c0, 512 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001c500c0,parent=0000000000000000)
+ Reparented. (obj/strm)0000000001c500c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c500c0)
+ Deallocated. (void)0000000001c500c0, 4416 bytes long.
+ Object 0000000001c500c0 destroyed.
+ Released. (obj)0000000001c500c0^0
+ afxStream.c:359?AfxAcquireStream(attrs=0000000000000002,addr=18779191.mmplayer.rom)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=strm,parent=0000000000000000,siz=4416,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=4416,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c512c0, 4416 bytes long, aligned to 4416 
+ Acquired. (obj/strm)0000000001c512c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c512c0,parent=000007fece757400)
+ Reparented. (obj/strm)0000000001c512c0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6fa600 -> (obj/strm)0000000001c512c0
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=512,hint="afxStream.c:406!AfxAcquireStream")
+ Allocated. (void)0000000001c60300, 512 bytes long, aligned to 512 
+ Acquired. (strm)0000000001c512c0^1 <-> "18779191.mmplayer.rom"
+ afxStream.c:212?AfxWriteStream(strm=0000000001c512c0,cnt=1,siz=40448,from=0000000001c700c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c700c0)
+ Deallocated. (void)0000000001c700c0, 40448 bytes long.
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c512c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001c512c0)
+ Destroying  strm @ 0000000001c512c0...
+ afxStream.c:326?_AfxReleaseStream(strm=0000000001c512c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c60300)
+ Deallocated. (void)0000000001c60300, 512 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001c512c0,parent=0000000000000000)
+ Reparented. (obj/strm)0000000001c512c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c512c0)
+ Deallocated. (void)0000000001c512c0, 4416 bytes long.
+ Object 0000000001c512c0 destroyed.
+ Released. (obj)0000000001c512c0^0
+ afxModule.c:66?AfxLoadModule(uri=18779191.mmplayer.rom,argc=1,argv=0000000000367120)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=mdle,parent=0000000000000000,siz=240,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=240,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c101f0, 240 bytes long, aligned to 240 
+ Acquired. (obj/mdle)0000000001c101f0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c101f0,parent=000007fece757400)
+ Reparented. (obj/mdle)0000000001c101f0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6c7b60 -> (obj/mdle)0000000001c101f0
+ mmplayer.c:138?AfxEntryPoint(opcode=1,argc=1,argv=0000000000367120)
+ Acquired. (mdle)0000000001c101f0^1
+ afxApplication.c:340?AfxExecuteApplicationComposition(app=000007fece757400)
+ mmplayer.c:55?AfxEnterApplication(app=000007fece757400)
+ afxDrawSystem.c:153?AfxAcquireDrawSystem(app=000007fece757400,uri=sgl2010.icd)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=dsys,parent=000007fece757400,siz=272,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=272,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c700c0, 272 bytes long, aligned to 272 
+ Acquired. (obj/dsys)0000000001c700c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c700c0,parent=000007fece757400)
+ Reparented. (obj/dsys)0000000001c700c0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6f0fd0 -> (obj/dsys)0000000001c700c0
+ afxAllocator.c:184?AfxAcquireAllocator(parent=0000000001c700c0,align=0,hint="afxDrawSystem.c:161!AfxAcquireDrawSystem")
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=mall,parent=0000000001c700c0,siz=416,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=416,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c402a0, 416 bytes long, aligned to 416 
+ Acquired. (obj/mall)0000000001c402a0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c402a0,parent=0000000001c700c0)
+ Reparented. (obj/mall)0000000001c402a0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece715230 -> (obj/mall)0000000001c402a0
+ Acquired. (mall)0000000001c402a0^1
+ afxModule.c:66?AfxLoadModule(uri=sgl2010.icd,argc=0,argv=0000000000000000)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=mdle,parent=0000000000000000,siz=240,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=240,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c10320, 240 bytes long, aligned to 240 
+ Acquired. (obj/mdle)0000000001c10320^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c10320,parent=000007fece757400)
+ Reparented. (obj/mdle)0000000001c10320 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6c7b60 -> (obj/mdle)0000000001c10320
+ sglModule.c:929?AfxEntryPoint(opcode=1,argc=0,argv=0000000000000000)
+ ADV sglModule.c:946?AfxEntryPoint
+    SIGMA-engineered OpenGL Drawing System module loaded!
+ Acquired. (mdle)0000000001c10320^1
+ sglSystem.c:416?_AfxInstallDrawSystemExtension(dsys=0000000001c700c0,uri=sgl2010.icd)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=3256,hint="sglSystem.c:421!_AfxInstallDrawSystemExtension")
+ Allocated. (void)0000000001c800c0, 3256 bytes long, aligned to 3264 
+ sglSystem.c:194?_SglGlCtxW32Create(dsys=0000000001c700c0,bufSiz="32,24,8",samples=000000000013d874,phwnd=0000000001c80110,phdc=0000000001c80118,phrc=0000000001c80120,verMaj=3,verMin=3,legacy=0)
+ ADV sglSystem.c:302?_SglGlCtxW32Create
+    Pixel format count: 1
+ ADV sglSystem.c:307?_SglGlCtxW32Create
+    16x multi-sampled anti-aliasing
+ sglModule.c:727?_SglLoadVmt(vmt=0000000001c80138)
+ sglModule.c:727?_SglLoadVmt(vmt=0000000001c80138)
+ SIGMA-engineered OpenGL Drawing System 0000000001c700c0 is running throught Intel(R) HD Graphics v3.3.0 - Build 10.18.10.5161
+ Acquired. (dsys)0000000001c700c0^1
+ afxDrawOutput.c:181?AfxAcquireDrawOutput(dsys=0000000001c700c0,uri=?dout=window)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=dout,parent=0000000001c700c0,siz=400,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=400,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c900c0, 400 bytes long, aligned to 400 
+ Acquired. (obj/dout)0000000001c900c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c900c0,parent=0000000001c700c0)
+ Reparented. (obj/dout)0000000001c900c0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece6ed9e0 -> (obj/dout)0000000001c900c0
+ sglOutput.c:348?_AfxInstallDrawOutputExtension(dout=0000000001c900c0,uri=?dout=window)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=3224,hint="sglOutput.c:383!_AfxInstallDrawOutputExtension")
+ Allocated. (void)0000000001c80ec0, 3224 bytes long, aligned to 3232 
+ sglOutput.c:264?_SglInstallOutputToWindowExtension(dout=0000000001c900c0)
+ sglSystem.c:194?_SglGlCtxW32Create(dsys=0000000001c700c0,bufSiz="32,24,8",samples=0000000001c90204,phwnd=0000000001c80ec8,phdc=0000000001c80ed0,phrc=0000000001c80ee0,verMaj=3,verMin=3,legacy=0)
+ ADV sglSystem.c:302?_SglGlCtxW32Create
+    Pixel format count: 1
+ ADV sglSystem.c:307?_SglGlCtxW32Create
+    16x multi-sampled anti-aliasing
+ sglModule.c:727?_SglLoadVmt(vmt=0000000001c80ee8)
+ ADV afxString.c:183?AfxCopyString
+    Truncation to 32 bytes
+ Acquired. (dout+wnd)0000000001c900c0^1
+ ADV mmplayer.c:71?AfxEnterApplication
+    window
+ ADV mmplayer.c:75?AfxEnterApplication
+    
+ ADV mmplayer.c:79?AfxEnterApplication
+    
+ afxDrawContext.c:159?AfxAcquireDrawContext(dout+wnd=0000000001c900c0,uri=)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=dctx,parent=0000000001c700c0,siz=1504,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=1504,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001ca00c0, 1504 bytes long, aligned to 1504 
+ Acquired. (obj/dctx)0000000001ca00c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001ca00c0,parent=0000000001c700c0)
+ Reparented. (obj/dctx)0000000001ca00c0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece6e97b0 -> (obj/dctx)0000000001ca00c0
+ afxArray.c:196?AfxDeployArray(arr=0000000001ca04b8,mall=0000000000000000,cap=0,siz=24,align=0)
+ Deployed. (arr)0000000001ca04b8.
+ afxDrawOutput.c:154?AfxReconnectDrawOutput(dout+wnd=0000000001c900c0,dctx=0000000001ca00c0)
+ afxDrawOutput.c:35?_AfxReconnectDrawOutput(dout+wnd=0000000001c900c0,dctx=0000000001ca00c0)
+ afxObject.c:425?AfxReacquireObject(obj=0000000001ca00c0)
+ Reacquired. (obj/dctx)0000000001ca00c0^2
+ Reconnected. (dout+wnd)0000000001c900c0 -> (dctx)0000000001ca00c0
+ sglContext.c:868?_SglInstallDrawContextExtension(dctx=0000000001ca00c0,uri=)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=96,hint="sglContext.c:877!_SglInstallDrawContextExtension")
+ Allocated. (void)0000000001cb00c0, 96 bytes long, aligned to 96 
+ afxArray.c:196?AfxDeployArray(arr=0000000001cb00c8,mall=0000000001c402a0,cap=20,siz=40,align=0)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=800,hint="afxArray.c:212!AfxDeployArray")
+ Allocated. (void)0000000001cc00c0, 800 bytes long, aligned to 800 
+ Deployed. (arr)0000000001cb00c8.
+ afxArray.c:196?AfxDeployArray(arr=0000000001cb00f0,mall=0000000001c402a0,cap=20,siz=40,align=0)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=800,hint="afxArray.c:212!AfxDeployArray")
+ Allocated. (void)0000000001cc0420, 800 bytes long, aligned to 800 
+ Deployed. (arr)0000000001cb00f0.
+ afxDrawCommandBuffer.c:69?AfxAcquireDrawCommandBuffer(dctx=0000000001ca00c0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=dcod,parent=0000000001ca00c0,siz=624,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=624,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001cd00c0, 624 bytes long, aligned to 624 
+ Acquired. (obj/dcod)0000000001cd00c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001cd00c0,parent=0000000001ca00c0)
+ Reparented. (obj/dcod)0000000001cd00c0 -> (obj/dctx)0000000001ca00c0
+ Reinstalled. (dtor)000007fece6e8d80 -> (obj/dcod)0000000001cd00c0
+ afxArray.c:196?AfxDeployArray(arr=0000000001cd01a8,mall=0000000000000000,cap=1000,siz=160,align=0)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=160000,hint="afxArray.c:212!AfxDeployArray")
+ Allocated. (void)0000000001ce00c0, 160000 bytes long, aligned to 160000 
+ Deployed. (arr)0000000001cd01a8.
+ afxDrawCommandBuffer.c:42?_AfxInstallNullDrawCodeDriver(dcod=0000000001cd00c0)
+ Acquired. (dcod)0000000001cd00c0^1
+ Acquired. (dctx)0000000001ca00c0^2
+ afxObject.c:412?AfxReleaseObject(obj=0000000001ca00c0)
+ Released. (obj)0000000001ca00c0^1
+ ERR sglContext.c:772?_SglActivateDrawOutput
+    rc == dctx->activeOutput->ext->oglDrwCtx
+ SUC sglContext.c:801?_SglActivateDrawOutput
+    
+ Activated. (dctx)0000000001ca00c0 -> (dout+wnd)0000000001c900c0
+ afxOverlay.c:254?AfxAcquireOverlay(dout+wnd=0000000001c900c0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=ovly,parent=0000000001c700c0,siz=288,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=288,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001d100c0, 288 bytes long, aligned to 288 
+ Acquired. (obj/ovly)0000000001d100c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001d100c0,parent=0000000001c700c0)
+ Reparented. (obj/ovly)0000000001d100c0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece71b4f0 -> (obj/ovly)0000000001d100c0
+ afxDrawInput.c:190?AfxAcquireDrawInput(dout+wnd=0000000001c900c0,uri=?t=overlay&x=0.0&y=0.0&w=1.0&h=1.0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=din,parent=0000000001c700c0,siz=928,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=928,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001d200c0, 928 bytes long, aligned to 928 
+ Acquired. (obj/din)0000000001d200c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001d200c0,parent=0000000001c700c0)
+ Reparented. (obj/din)0000000001d200c0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece6eb520 -> (obj/din)0000000001d200c0
+ afxDrawInput.c:172?AfxReconnectDrawInput(din+=0000000001d200c0,dout+wnd=0000000001c900c0)
+ afxDrawInput.c:41?_AfxReconnectDrawInput(din+=0000000001d200c0,dout+wnd=0000000001c900c0)
+ afxObject.c:425?AfxReacquireObject(obj=0000000001c900c0)
+ Reacquired. (obj/dout)0000000001c900c0^2
+ Reconnected. (din+)0000000001d200c0 -> (dout)0000000001c900c0
+ sglInput.c:50?_AfxInstallDrawInputExtension(din=0000000001d200c0,uri=?t=overlay&x=0.0&y=0.0&w=1.0&h=1.0)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=384,hint="sglInput.c:86!_AfxInstallDrawInputExtension")
+ Allocated. (void)0000000001d300c0, 384 bytes long, aligned to 384 
+ Acquired. (din+ovly)0000000001d200c0^1
+ afxDrawPipeline.c:160?AfxAcquireDrawPipeline(din+ovly=0000000001d200c0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=dpip,parent=0000000001d200c0,siz=448,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=448,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001d400c0, 448 bytes long, aligned to 448 
+ Acquired. (obj/dpip)0000000001d400c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001d400c0,parent=0000000001d200c0)
+ Reparented. (obj/dpip)0000000001d400c0 -> (obj/din)0000000001d200c0
+ Reinstalled. (dtor)000007fece6ef2a0 -> (obj/dpip)0000000001d400c0
+ afxArray.c:196?AfxDeployArray(arr=0000000001d40190,mall=0000000000000000,cap=0,siz=64,align=0)
+ Deployed. (arr)0000000001d40190.
+ afxArray.c:196?AfxDeployArray(arr=0000000001d401b8,mall=0000000000000000,cap=0,siz=12,align=0)
+ Deployed. (arr)0000000001d401b8.
+ afxArray.c:196?AfxDeployArray(arr=0000000001d401e0,mall=0000000000000000,cap=0,siz=16,align=0)
+ Deployed. (arr)0000000001d401e0.
+ afxArray.c:196?AfxDeployArray(arr=0000000001d40210,mall=0000000000000000,cap=0,siz=64,align=0)
+ Deployed. (arr)0000000001d40210.
+ sglPipeline.c:29?_SglInstallDrawPipelineExtension(dpip=0000000001d400c0)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=16,hint="sglPipeline.c:40!_SglInstallDrawPipelineExtension")
+ Allocated. (void)0000000001d500c0, 16 bytes long, aligned to 16 
+ afxDrawPipeline.c:36?_AfxInstallNullDrawPipelineExtension(dpip=0000000001d400c0)
+ Acquired. (dpip)0000000001d400c0
+ afxShader.c:133?AfxAcquireShader(dsys=0000000001c700c0,code=0000000000000000,len=0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=shdr,parent=0000000001c700c0,siz=224,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=224,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001d600c0, 224 bytes long, aligned to 224 
+ Acquired. (obj/shdr)0000000001d600c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001d600c0,parent=0000000001c700c0)
+ Reparented. (obj/shdr)0000000001d600c0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece6f4930 -> (obj/shdr)0000000001d600c0
+ afxShader.c:8?_AfxInstallNullShaderDriver(shdr=0000000001d600c0)
+ Acquired. (shdr)0000000001d600c0^1
+ afxShader.c:33?AfxInputShaderFromFile(shdr=0000000001d600c0,uri=E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.vsh)
+ afxStream.c:359?AfxAcquireStream(attrs=0000000000000001,addr=E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.vsh)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=strm,parent=0000000000000000,siz=4416,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=4416,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c524c0, 4416 bytes long, aligned to 4416 
+ Acquired. (obj/strm)0000000001c524c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c524c0,parent=000007fece757400)
+ Reparented. (obj/strm)0000000001c524c0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6fa600 -> (obj/strm)0000000001c524c0
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=512,hint="afxStream.c:406!AfxAcquireStream")
+ Allocated. (void)0000000001c60540, 512 bytes long, aligned to 512 
+ Acquired. (strm)0000000001c524c0^1 <-> "E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.vsh"
+ afxShader.c:61?AfxInputShaderFromStream(shdr=0000000001d600c0,input=0000000001c524c0)
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c524c0,off=0,origin=2)
+ afxStream.c:137?AfxAskStreamCursor(strm=0000000001c524c0)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=327,hint="afxShader.c:75!AfxInputShaderFromStream")
+ Allocated. (void)0000000001d700c0, 327 bytes long, aligned to 336 
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c524c0,off=0,origin=0)
+ afxStream.c:307?AfxReadStream(strm=0000000001c524c0,cnt=326,siz=30867648,to=0000000000000000)
+ afxShader.c:96?AfxInputShader(shdr=0000000001d600c0,code=0000000001d700c0,len=326)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=327,hint="afxShader.c:108!AfxInputShader")
+ Allocated. (void)0000000001d70250, 327 bytes long, aligned to 336 
+ Inputted. Input stream shader ***                                                                                                                                                                                           #version 330 core
+
+uniform vec2 viewSize;
+
+layout(location = 0) in vec2 a_xy;
+layout(location = 1) in vec2 a_uv;
+
+out block
+{
+    vec2 xy;
+    vec2 uv;
+}
+sgl_out;
+
+void main(void)
+{
+    sgl_out.xy = a_xy;
+    sgl_out.uv = a_uv;
+    gl_Position = vec4(2.0 * a_xy.x / viewSize.x - 1.0, 1.0 - 2.0 * a_xy.y / viewSize.y, 0, 1);
+}
+
+ ERR afxShader.c:86?AfxInputShaderFromStream
+    
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d700c0)
+ Deallocated. (void)0000000001d700c0, 336 bytes long.
+ ERR afxShader.c:51?AfxInputShaderFromFile
+    
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c524c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001c524c0)
+ Destroying  strm @ 0000000001c524c0...
+ afxStream.c:326?_AfxReleaseStream(strm=0000000001c524c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c60540)
+ Deallocated. (void)0000000001c60540, 512 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001c524c0,parent=0000000000000000)
+ Reparented. (obj/strm)0000000001c524c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c524c0)
+ Deallocated. (void)0000000001c524c0, 4416 bytes long.
+ Object 0000000001c524c0 destroyed.
+ Released. (obj)0000000001c524c0^0
+ ERR afxOverlay.c:301?AfxAcquireOverlay
+    
+ afxObject.c:412?AfxReleaseObject(obj=0000000001d600c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001d600c0)
+ Destroying  shdr @ 0000000001d600c0...
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d70250)
+ Deallocated. (void)0000000001d70250, 336 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001d600c0,parent=0000000000000000)
+ Reparented. (obj/shdr)0000000001d600c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d600c0)
+ Deallocated. (void)0000000001d600c0, 224 bytes long.
+ Object 0000000001d600c0 destroyed.
+ Released. (obj)0000000001d600c0^0
+ afxShader.c:133?AfxAcquireShader(dsys=0000000001c700c0,code=0000000000000000,len=0)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=shdr,parent=0000000001c700c0,siz=224,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=224,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001d601e0, 224 bytes long, aligned to 224 
+ Acquired. (obj/shdr)0000000001d601e0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001d601e0,parent=0000000001c700c0)
+ Reparented. (obj/shdr)0000000001d601e0 -> (obj/dsys)0000000001c700c0
+ Reinstalled. (dtor)000007fece6f4930 -> (obj/shdr)0000000001d601e0
+ afxShader.c:8?_AfxInstallNullShaderDriver(shdr=0000000001d601e0)
+ Acquired. (shdr)0000000001d601e0^1
+ afxShader.c:33?AfxInputShaderFromFile(shdr=0000000001d601e0,uri=E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.psh)
+ afxStream.c:359?AfxAcquireStream(attrs=0000000000000001,addr=E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.psh)
+ afxObject.c:474?AfxAcquireObjectNEW(fcc=strm,parent=0000000000000000,siz=4416,mall=0000000000000000)
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=4416,hint="afxObject.c:482!AfxAcquireObjectNEW")
+ Allocated. (void)0000000001c536c0, 4416 bytes long, aligned to 4416 
+ Acquired. (obj/strm)0000000001c536c0^1
+ afxObject.c:230?AfxReparentObject(obj=0000000001c536c0,parent=000007fece757400)
+ Reparented. (obj/strm)0000000001c536c0 -> (obj/app)000007fece757400
+ Reinstalled. (dtor)000007fece6fa600 -> (obj/strm)0000000001c536c0
+ afxMemory.c:396?AfxAllocate(mall=0000000000000000,siz=512,hint="afxStream.c:406!AfxAcquireStream")
+ Allocated. (void)0000000001c60780, 512 bytes long, aligned to 512 
+ Acquired. (strm)0000000001c536c0^1 <-> "E:\qwadro\afx\cooked\_system64\..\_data/technique/overlay/overlay_aa.psh"
+ afxShader.c:61?AfxInputShaderFromStream(shdr=0000000001d601e0,input=0000000001c536c0)
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c536c0,off=0,origin=2)
+ afxStream.c:137?AfxAskStreamCursor(strm=0000000001c536c0)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=2169,hint="afxShader.c:75!AfxInputShaderFromStream")
+ Allocated. (void)0000000001c20ac0, 2169 bytes long, aligned to 2176 
+ afxStream.c:129?AfxMoveStreamCursor(strm=0000000001c536c0,off=0,origin=0)
+ afxStream.c:307?AfxReadStream(strm=0000000001c536c0,cnt=2168,siz=29493952,to=0000000000000000)
+ afxShader.c:96?AfxInputShader(shdr=0000000001d601e0,code=0000000001c20ac0,len=2168)
+ afxMemory.c:396?AfxAllocate(mall=0000000001c402a0,siz=2169,hint="afxShader.c:108!AfxInputShader")
+ Allocated. (void)0000000001c214c0, 2169 bytes long, aligned to 2176 
+ Inputted. Input stream shader *** #version 330 core
+
+layout(location = 0, std140) uniform frag
+{
+    mat3 scissorMat;
+    mat3 paintMat;
+    vec4 innerCol;
+    vec4 outerCol;
+    vec2 scissorExt;
+    vec2 scissorScale;
+    vec2 extent;
+    float radius;
+    float feather;
+    float strokeMult;
+    float strokeThr;
+    int texType;
+    int type;
+};
+
+uniform sampler2D tex;
+
+in block
+{
+    vec2 xy;
+    vec2 uv;
+}
+sgl_in;
+
+out vec4 outColor;
+
+float sdroundrect(vec2 pt, vec2 ext, float rad)
+{
+	vec2 ext2 = ext - vec2(rad,rad);
+	vec2 d = abs(pt) - ext2;
+	return min(max(d.x,d.y),0.0) + length(max(d,0.0)) - rad;
+}
+
+// Scissoring
+float scissorMask(vec2 p)
+{
+	vec2 sc = (abs((scissorMat * vec3(p,1.0)).xy) - scissorExt);
+	sc = vec2(0.5,0.5) - sc * scissorScale;
+	return clamp(sc.x,0.0,1.0) * clamp(sc.y,0.0,1.0);
+}
+
+// Stroke - from [0..1] to clipped pyramid, where the slope is 1px.
+float strokeMask()
+{
+	return min(1.0, (1.0-abs(sgl_in.uv.x*2.0-1.0))*strokeMult) * min(1.0, sgl_in.uv.y);
+}
+
+void main(void)
+{
+   vec4 result;
+	float scissor = scissorMask(sgl_in.xy);
+
+	float strokeAlpha = strokeMask();
+	if (strokeAlpha < strokeThr) discard;
+
+	if (type == 0) {			// Gradient
+		// Calculate gradient color using box gradient
+		vec2 pt = (paintMat * vec3(sgl_in.xy,1.0)).xy;
+		float d = clamp((sdroundrect(pt, extent, radius) + feather*0.5) / feather, 0.0, 1.0);
+		vec4 color = mix(innerCol,outerCol,d);
+		// Combine alpha
+		color *= strokeAlpha * scissor;
+		result = color;
+	} else if (type == 1) {		// Image
+		// Calculate color fron texture
+		vec2 pt = (paintMat * vec3(sgl_in.xy,1.0)).xy / extent;
+
+		vec4 color = texture(tex, pt);
+
+		if (texType == 1) color = vec4(color.xyz*color.w,color.w);		if (texType == 2) color = vec4(color.x);		// Apply color tint and alpha.
+		color *= innerCol;
+		// Combine alpha
+		color *= strokeAlpha * scissor;
+		result = color;
+	} else if (type == 2) {		// Stencil fill
+		result = vec4(1,1,1,1);
+	} else if (type == 3) {		// Textured tris
+
+		vec4 color = texture(tex, sgl_in.uv);
+        
+		if (texType == 1) color = vec4(color.xyz*color.w,color.w);		if (texType == 2) color = vec4(color.x);		color *= scissor;
+		result = color * innerCol;
+	}
+    
+	outColor = result;
+}
+
+ ERR afxShader.c:86?AfxInputShaderFromStream
+    
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c20ac0)
+ Deallocated. (void)0000000001c20ac0, 2176 bytes long.
+ ERR afxShader.c:51?AfxInputShaderFromFile
+    
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c536c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001c536c0)
+ Destroying  strm @ 0000000001c536c0...
+ afxStream.c:326?_AfxReleaseStream(strm=0000000001c536c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c60780)
+ Deallocated. (void)0000000001c60780, 512 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001c536c0,parent=0000000000000000)
+ Reparented. (obj/strm)0000000001c536c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c536c0)
+ Deallocated. (void)0000000001c536c0, 4416 bytes long.
+ Object 0000000001c536c0 destroyed.
+ Released. (obj)0000000001c536c0^0
+ ERR afxOverlay.c:312?AfxAcquireOverlay
+    
+ afxObject.c:412?AfxReleaseObject(obj=0000000001d601e0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001d601e0)
+ Destroying  shdr @ 0000000001d601e0...
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c214c0)
+ Deallocated. (void)0000000001c214c0, 2176 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001d601e0,parent=0000000000000000)
+ Reparented. (obj/shdr)0000000001d601e0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d601e0)
+ Deallocated. (void)0000000001d601e0, 224 bytes long.
+ Object 0000000001d601e0 destroyed.
+ Released. (obj)0000000001d601e0^0
+ afxObject.c:412?AfxReleaseObject(obj=0000000001d400c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001d400c0)
+ Destroying  dpip @ 0000000001d400c0...
+ afxDrawPipeline.c:8?_AfxReleaseDrawPipeline(dpip=0000000001d400c0)
+ afxArray.c:184?AfxDismantleArray(arr=0000000001d40210)
+ afxArray.c:184?AfxDismantleArray(arr=0000000001d401e0)
+ afxArray.c:184?AfxDismantleArray(arr=0000000001d401b8)
+ afxArray.c:184?AfxDismantleArray(arr=0000000001d40190)
+ sglPipeline.c:8?_SglUninstallDrawPipelineExtension(dpip=0000000001d400c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d500c0)
+ Deallocated. (void)0000000001d500c0, 16 bytes long.
+ afxObject.c:230?AfxReparentObject(obj=0000000001d400c0,parent=0000000000000000)
+ Reparented. (obj/dpip)0000000001d400c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d400c0)
+ Deallocated. (void)0000000001d400c0, 448 bytes long.
+ Object 0000000001d400c0 destroyed.
+ Released. (obj)0000000001d400c0^0
+ afxObject.c:412?AfxReleaseObject(obj=0000000001d200c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001d200c0)
+ Destroying  din @ 0000000001d200c0...
+ afxDrawInput.c:67?_AfxDestroyDrawInput(din+ovly=0000000001d200c0)
+ afxDrawInput.c:172?AfxReconnectDrawInput(din+ovly=0000000001d200c0,dout+=0000000000000000)
+ afxDrawInput.c:41?_AfxReconnectDrawInput(din+ovly=0000000001d200c0,dout+=0000000000000000)
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c900c0)
+ Released. (obj)0000000001c900c0^1
+ Reconnected. (din+ovly)0000000001d200c0 -> (dout)0000000000000000
+ sglInput.c:20?_SglUninstallDrawInputExtension(din+ovly=0000000001d200c0)
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d300c0)
+ Deallocated. (void)0000000001d300c0, 384 bytes long.
+ afxObject.c:412?AfxReleaseObject(obj=0000000001c10320)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001c10320)
+ Destroying  mdle @ 0000000001c10320...
+ afxModule.c:40?_AfxDestroyModule(mdle=0000000001c10320)
+ sglModule.c:929?AfxEntryPoint(opcode=0,argc=0,argv=0000000000000000)
+ ADV sglModule.c:953?AfxEntryPoint
+    SIGMA-engineered OpenGL Drawing System module unloaded!
+ afxObject.c:230?AfxReparentObject(obj=0000000001c10320,parent=0000000000000000)
+ Reparented. (obj/mdle)0000000001c10320 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001c10320)
+ Deallocated. (void)0000000001c10320, 240 bytes long.
+ Object 0000000001c10320 destroyed.
+ Released. (obj)0000000001c10320^0
+ afxObject.c:230?AfxReparentObject(obj=0000000001d200c0,parent=0000000000000000)
+ Reparented. (obj/din)0000000001d200c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d200c0)
+ Deallocated. (void)0000000001d200c0, 928 bytes long.
+ Object 0000000001d200c0 destroyed.
+ Released. (obj)0000000001d200c0^0
+ ERR afxObject.c:467?AfxReinstallObjectDestructor
+    (dtor)
+ Reinstalled. (dtor)0000000000000000 -> (obj/ovly)0000000001d100c0
+ afxObject.c:412?AfxReleaseObject(obj=0000000001d100c0)
+ afxObject.c:358?_AfxDestroyObject(obj=0000000001d100c0)
+ Destroying  ovly @ 0000000001d100c0...
+ afxObject.c:230?AfxReparentObject(obj=0000000001d100c0,parent=0000000000000000)
+ Reparented. (obj/ovly)0000000001d100c0 -> (obj/null)0000000000000000
+ afxMemory.c:246?AfxDeallocate(mem=0000000001d100c0)
+ Deallocated. (void)0000000001d100c0, 288 bytes long.
+ Object 0000000001d100c0 destroyed.
+ Released. (obj)0000000001d100c0^0
+ ERR mmplayer.c:88?AfxEnterApplication
+    ovly
+ afxWidget.c:308?AfxAcquireWidget(ovly=0000000000000000,uri=?t=group&x=240.0&y=40.0&ha=0.0)
+ ERR afxWidget.c:309?AfxAcquireWidget
+    ((ovly))

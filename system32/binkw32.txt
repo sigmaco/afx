@@ -1,0 +1,1511 @@
+Dump of file E:\qwadro\afx\cooked\_system32\binkw32.dll
+Created by EXE Explorer 1.4.9.0 - Copyright (c) 2006-2016, Michal Mutl
+
+VERSION INFORMATION
+  CompanyName: RAD Game Tools, Inc. & SIGMA Technology Group
+  FileDescription: RAD Video Tools for The Standard QWADRO Implementation
+  FileVersion: 1.9c
+  LegalCopyright: (c) 1994-2020, RAD Game Tools, Inc. & SIGMA Technology Group
+  LegalTrademarks: Bink and Smacker are trademarks of RAD Game Tools, Inc.
+  ProductName: Bink and Smacker
+  ProductVersion: 1.9c
+  Comments:  The Standard QWADRO Implementation
+
+  Product Version Number: 1.9.3.0
+  File Version Number: 1.9.3.0
+  Debug:     No
+  Patched:   No
+  Private:   No
+  Private:   No
+  Special:   No
+  File Type: Application
+  File OS:   Unknown
+  Language:  1033
+  Code Page: 1252
+
+DOS HEADER
+  Magic number: 0x5A4D
+  Bytes on last page of file: 0x0090
+  Pages in file: 0x0003
+  Relocations: 0x0000
+  Size of header in paragraphs: 0x0004
+  Minimum extra paragraphs needed: 0x0000
+  Maximum extra paragraphs needed: 0xFFFF
+  Initial (relative) SS value: 0x0000
+  Initial SP value: 0x00B8
+  Checksum:  0x0000
+  Initial IP value: 0x0000
+  Initial (relative) CS value: 0x0000
+  File address of relocation table: 0x0040
+  Overlay number: 0x0000
+  Reserved[0]: 0x0000
+  Reserved[1]: 0x0000
+  Reserved[2]: 0x0000
+  Reserved[3]: 0x0000
+  OEM identifier: 0x0000
+  OEM information: 0x0000
+  Reserved[0]: 0x0000
+  Reserved[1]: 0x0000
+  Reserved[2]: 0x0000
+  Reserved[3]: 0x0000
+  Reserved[4]: 0x0000
+  Reserved[5]: 0x0000
+  Reserved[6]: 0x0000
+  Reserved[7]: 0x0000
+  Reserved[8]: 0x0000
+  Reserved[9]: 0x0000
+  File address of new exe header: 0x000000F0
+
+FILE HEADER
+  Signature:                     0x00004550 (Portable Executable)
+  Machine:                       32-bit Intel
+  Number of sections:            13
+  Timestamp:                     16/01/2008 04:57:01
+  Pointer to symbol table:       0x00000000
+  Number of symbols:             0
+  Size of optional header:       224
+  Characteristics:               0x2102
+
+OPTIONAL HEADER
+  Magic:                         0x010B (PE32)
+  Linker version:                8.0
+  Size of code:                  112128
+  Size of initialized data:      79360
+  Size of uninitialized:         0
+  Address of entry point:        0x000024F0
+  Base of code:                  0x00001000
+  Base of data:                  0x00020000
+  Image base:                    0x18000000
+  Section alignment:             4096
+  File alignment:                512
+  Operating system version:      4.0
+  Image version:                 0.0
+  Subsystem version:             4.0
+  Win32 version value:           0
+  Size of image:                 225280 B
+  Size of headers:               1024
+  Checksum:                      226217
+  Subsystem:                     Windows GUI
+  DLL characteristics:           0x0500
+  Size of stack reserve:         1048576
+  Size of stack commit:          4096
+  Size of heap reserve:          1048576
+  Size of heap commit:           4096
+  Loader flags:                  0x00000000
+  Number of RVA:                 16
+
+CHECKSUMS
+  CRC32:     0FD5FCAD
+  MD4:       A773355F955C9ECEE510489A735F6509
+  MD5:       FBC58BD68D68B4E826BA632676244F39
+  SHA1:      2E5C91B16938ACD74241C31D1B70DBDCACC912D2
+
+SECTIONS
+  .text
+    Virtual address:     0x00001000
+    Virtual size:        6332
+    Raw data offset:     0x00000400
+    Raw data size:       6656
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINKY12
+    Virtual address:     0x00003000
+    Virtual size:        432
+    Raw data offset:     0x00001E00
+    Raw data size:       512
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINKY16
+    Virtual address:     0x00004000
+    Virtual size:        2264
+    Raw data offset:     0x00002000
+    Raw data size:       2560
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINKP8
+    Virtual address:     0x00005000
+    Virtual size:        2297
+    Raw data offset:     0x00002A00
+    Raw data size:       2560
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINK16
+    Virtual address:     0x00006000
+    Virtual size:        4107
+    Raw data offset:     0x00003400
+    Raw data size:       4608
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINK32
+    Virtual address:     0x00008000
+    Virtual size:        4938
+    Raw data offset:     0x00004600
+    Raw data size:       5120
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  BINK
+    Virtual address:     0x0000A000
+    Virtual size:        89954
+    Raw data offset:     0x00005A00
+    Raw data size:       90112
+    Characteristics:     0x60000020
+    Relocations:         0
+    Line numbers:        0
+  .rdata
+    Virtual address:     0x00020000
+    Virtual size:        5849
+    Raw data offset:     0x0001BA00
+    Raw data size:       6144
+    Characteristics:     0x40000040
+    Relocations:         0
+    Line numbers:        0
+  .data
+    Virtual address:     0x00022000
+    Virtual size:        21476
+    Raw data offset:     0x0001D200
+    Raw data size:       512
+    Characteristics:     0xC0000040
+    Relocations:         0
+    Line numbers:        0
+  BINKBSS
+    Virtual address:     0x00028000
+    Virtual size:        20464
+    Raw data offset:     0x0001D400
+    Raw data size:       20480
+    Characteristics:     0x40000040
+    Relocations:         0
+    Line numbers:        0
+  BINKDATAŒ@
+    Virtual address:     0x0002D000
+    Virtual size:        16524
+    Raw data offset:     0x00022400
+    Raw data size:       16896
+    Characteristics:     0xC0000040
+    Relocations:         0
+    Line numbers:        0
+  .rsrc
+    Virtual address:     0x00032000
+    Virtual size:        8716
+    Raw data offset:     0x00026600
+    Raw data size:       9216
+    Characteristics:     0x40000040
+    Relocations:         0
+    Line numbers:        0
+  .reloc
+    Virtual address:     0x00035000
+    Virtual size:        4748
+    Raw data offset:     0x00028A00
+    Raw data size:       5120
+    Characteristics:     0x42000040
+    Relocations:         0
+    Line numbers:        0
+
+DIRECTORIES
+  Exports
+    Section:   .rdata
+    RVA:       0x00020E00
+    Size:      2200
+  Imports
+    Section:   .rdata
+    RVA:       0x000205C0
+    Size:      100
+  Resources
+    Section:   .rsrc
+    RVA:       0x00032000
+    Size:      8716
+  Base Relocations
+    Section:   .reloc
+    RVA:       0x00035000
+    Size:      4160
+  Debug
+    Section:   .rdata
+    RVA:       0x00020180
+    Size:      28
+  Load Configuration
+    Section:   .rdata
+    RVA:       0x000201A0
+    Size:      64
+  Import Address Table
+    Section:   BINK
+    RVA:       0x00020000
+    Size:      380
+  Delay Load Import
+    Section:   .rdata
+    RVA:       0x000202AC
+    Size:      64
+
+EXPORTS
+  _BinkBufferBlit@12
+    Ordinal:   0x0001
+    Address:   0x0000C300
+  _BinkBufferCheckWinPos@12
+    Ordinal:   0x0002
+    Address:   0x0000AF90
+  _BinkBufferClear@8
+    Ordinal:   0x0003
+    Address:   0x0000CA20
+  _BinkBufferClose@4
+    Ordinal:   0x0004
+    Address:   0x0000C050
+  _BinkBufferGetDescription@4
+    Ordinal:   0x0005
+    Address:   0x0000C7F0
+  _BinkBufferGetError@0
+    Ordinal:   0x0006
+    Address:   0x0000CA10
+  _BinkBufferLock@4
+    Ordinal:   0x0007
+    Address:   0x0000C160
+  _BinkBufferOpen@16
+    Ordinal:   0x0008
+    Address:   0x0000B5E0
+  _BinkBufferSetDirectDraw@8
+    Ordinal:   0x0009
+    Address:   0x0000A8E0
+  _BinkBufferSetHWND@8
+    Ordinal:   0x000A
+    Address:   0x0000C7E0
+  _BinkBufferSetOffset@12
+    Ordinal:   0x000B
+    Address:   0x0000B040
+  _BinkBufferSetResolution@12
+    Ordinal:   0x000C
+    Address:   0x0000ADF0
+  _BinkBufferSetScale@12
+    Ordinal:   0x000D
+    Address:   0x0000C6E0
+  _BinkBufferUnlock@4
+    Ordinal:   0x000E
+    Address:   0x0000C280
+  _BinkCheckCursor@20
+    Ordinal:   0x000F
+    Address:   0x0000AD10
+  _BinkClose@4
+    Ordinal:   0x0010
+    Address:   0x0000F7C0
+  _BinkCloseTrack@4
+    Ordinal:   0x0011
+    Address:   0x00010430
+  _BinkControlBackgroundIO@8
+    Ordinal:   0x0012
+    Address:   0x00010760
+  _BinkControlPlatformFeatures@8
+    Ordinal:   0x0013
+    Address:   0x00017DA0
+  _BinkCopyToBuffer@28
+    Ordinal:   0x0014
+    Address:   0x0000E750
+  _BinkCopyToBufferRect@44
+    Ordinal:   0x0015
+    Address:   0x0000E790
+  _BinkDDSurfaceType@4
+    Ordinal:   0x0016
+    Address:   0x0000CA60
+  _BinkDX8SurfaceType@4
+    Ordinal:   0x0017
+    Address:   0x0000CC40
+  _BinkDX9SurfaceType@4
+    Ordinal:   0x0018
+    Address:   0x0000CD30
+  _BinkDoFrame@4
+    Ordinal:   0x0019
+    Address:   0x0000EF50
+  _BinkDoFrameAsync@12
+    Ordinal:   0x001A
+    Address:   0x00001170
+  _BinkDoFrameAsyncWait@8
+    Ordinal:   0x001B
+    Address:   0x000012C0
+  _BinkGetError@0
+    Ordinal:   0x001C
+    Address:   0x0000CE90
+  _BinkGetFrameBuffersInfo@8
+    Ordinal:   0x001D
+    Address:   0x0000D5B0
+  _BinkGetKeyFrame@12
+    Ordinal:   0x001E
+    Address:   0x0000F4F0
+  _BinkGetPalette@4
+    Ordinal:   0x001F
+    Address:   0x000198E0
+  _BinkGetRealtime@12
+    Ordinal:   0x0020
+    Address:   0x0000FEA0
+  _BinkGetRects@8
+    Ordinal:   0x0021
+    Address:   0x00010030
+  _BinkGetSummary@8
+    Ordinal:   0x0022
+    Address:   0x0000FCE0
+  _BinkGetTrackData@8
+    Ordinal:   0x0023
+    Address:   0x000104A0
+  _BinkGetTrackID@8
+    Ordinal:   0x0024
+    Address:   0x00010300
+  _BinkGetTrackMaxSize@8
+    Ordinal:   0x0025
+    Address:   0x000102E0
+  _BinkGetTrackType@8
+    Ordinal:   0x0026
+    Address:   0x000102C0
+  _BinkGoto@12
+    Ordinal:   0x0027
+    Address:   0x0000F5D0
+  _BinkIsSoftwareCursor@8
+    Ordinal:   0x0028
+    Address:   0x0000A9D0
+  _BinkLogoAddress@0
+    Ordinal:   0x0029
+    Address:   0x000102B0
+  _BinkNextFrame@4
+    Ordinal:   0x002A
+    Address:   0x0000F330
+  _BinkOpen@8
+    Ordinal:   0x002B
+    Address:   0x0000D690
+  _BinkOpenDirectSound@4
+    Ordinal:   0x002C
+    Address:   0x00011BF0
+  _BinkOpenMiles@4
+    Ordinal:   0x002D
+    Address:   0x000122F0
+  _BinkOpenTrack@8
+    Ordinal:   0x002E
+    Address:   0x00010320
+  _BinkOpenWaveOut@4
+    Ordinal:   0x002F
+    Address:   0x00010EE0
+  _BinkPause@8
+    Ordinal:   0x0030
+    Address:   0x0000FBB0
+  _BinkRegisterFrameBuffers@8
+    Ordinal:   0x0031
+    Address:   0x0000D670
+  _BinkRequestStopAsyncThread@4
+    Ordinal:   0x0032
+    Address:   0x00001010
+  _BinkRestoreCursor@4
+    Ordinal:   0x0033
+    Address:   0x0000ADD0
+  _BinkService@4
+    Ordinal:   0x0034
+    Address:   0x000100F0
+  _BinkSetError@4
+    Ordinal:   0x0035
+    Address:   0x0000CE40
+  _BinkSetFrameRate@8
+    Ordinal:   0x0036
+    Address:   0x0000D2D0
+  _BinkSetIO@4
+    Ordinal:   0x0037
+    Address:   0x0000D300
+  _BinkSetIOSize@4
+    Ordinal:   0x0038
+    Address:   0x0000D2F0
+  _BinkSetMemory@8
+    Ordinal:   0x0039
+    Address:   0x00010740
+  _BinkSetMixBinVolumes@20
+    Ordinal:   0x003A
+    Address:   0x00010200
+  _BinkSetMixBins@16
+    Ordinal:   0x003B
+    Address:   0x000101A0
+  _BinkSetPan@12
+    Ordinal:   0x003C
+    Address:   0x00010260
+  _BinkSetSimulate@4
+    Ordinal:   0x003D
+    Address:   0x0000D310
+  _BinkSetSoundOnOff@8
+    Ordinal:   0x003E
+    Address:   0x00010600
+  _BinkSetSoundSystem@8
+    Ordinal:   0x003F
+    Address:   0x0000CEA0
+  _BinkSetSoundTrack@8
+    Ordinal:   0x0040
+    Address:   0x0000D320
+  _BinkSetVideoOnOff@8
+    Ordinal:   0x0041
+    Address:   0x000105E0
+  _BinkSetVolume@12
+    Ordinal:   0x0042
+    Address:   0x00010150
+  _BinkShouldSkip@4
+    Ordinal:   0x0043
+    Address:   0x0000F2D0
+  _BinkStartAsyncThread@8
+    Ordinal:   0x0044
+    Address:   0x00001000
+  _BinkWait@4
+    Ordinal:   0x0045
+    Address:   0x0000FA30
+  _BinkWaitStopAsyncThread@4
+    Ordinal:   0x0046
+    Address:   0x00001020
+  _RADTimerRead@0
+    Ordinal:   0x0047
+    Address:   0x00012360
+
+IMPORTS
+  USER32.dll
+    GetWindow
+      Ordinal:   0x016A
+      Address:   0x03F4C360
+    GetTopWindow
+      Ordinal:   0x0163
+      Address:   0x03F4C350
+    GetWindowLongA
+      Ordinal:   0x016E
+      Address:   0x03F4C33E
+    GetActiveWindow
+      Ordinal:   0x00EB
+      Address:   0x03F4C32C
+    GetWindowThreadProcessId
+      Ordinal:   0x017B
+      Address:   0x03F4C310
+    UnregisterClassA
+      Ordinal:   0x02B3
+      Address:   0x03F4C2FC
+    CreateWindowExA
+      Ordinal:   0x0060
+      Address:   0x03F4C2EA
+    EndPaint
+      Ordinal:   0x00C8
+      Address:   0x03F4C2DE
+    PeekMessageA
+      Ordinal:   0x0200
+      Address:   0x03F4C2CE
+    ClientToScreen
+      Ordinal:   0x0040
+      Address:   0x03F4C2BC
+    ReleaseDC
+      Ordinal:   0x022A
+      Address:   0x03F4C2B0
+    DestroyWindow
+      Ordinal:   0x0099
+      Address:   0x03F4C2A0
+    SetCursor
+      Ordinal:   0x024D
+      Address:   0x03F4C294
+    DefWindowProcA
+      Ordinal:   0x008E
+      Address:   0x03F4C282
+    GetCursorPos
+      Ordinal:   0x010B
+      Address:   0x03F4C272
+    ScreenToClient
+      Ordinal:   0x0231
+      Address:   0x03F4C260
+    GetWindowRect
+      Ordinal:   0x0174
+      Address:   0x03F4C250
+    IsIconic
+      Ordinal:   0x01A6
+      Address:   0x03F4C244
+    GetSystemMetrics
+      Ordinal:   0x015D
+      Address:   0x03F4C230
+    IsWindowVisible
+      Ordinal:   0x01B1
+      Address:   0x03F4C21E
+    GetClientRect
+      Ordinal:   0x00FF
+      Address:   0x03F4C20E
+    ChangeDisplaySettingsA
+      Ordinal:   0x0020
+      Address:   0x03F4C1F4
+    RegisterClassA
+      Ordinal:   0x0216
+      Address:   0x03F4C1E2
+    ShowCursor
+      Ordinal:   0x028E
+      Address:   0x03F4C1AE
+    GetDC
+      Ordinal:   0x010C
+      Address:   0x03F4C1BC
+    GetClassLongA
+      Ordinal:   0x00FA
+      Address:   0x03F4C1C4
+    BeginPaint
+      Ordinal:   0x000D
+      Address:   0x03F4C1D4
+    MessageBoxA
+      Ordinal:   0x01DF
+      Address:   0x03F4C1A0
+  GDI32.dll
+    SetStretchBltMode
+      Ordinal:   0x0238
+      Address:   0x03F4C410
+    DeleteDC
+      Ordinal:   0x008C
+      Address:   0x03F4C404
+    CreateDIBSection
+      Ordinal:   0x0032
+      Address:   0x03F4C3F0
+    GetDeviceCaps
+      Ordinal:   0x016B
+      Address:   0x03F4C3E0
+    StretchBlt
+      Ordinal:   0x0249
+      Address:   0x03F4C3D2
+    GetDIBits
+      Ordinal:   0x016A
+      Address:   0x03F4C3C6
+    GetPixel
+      Ordinal:   0x019C
+      Address:   0x03F4C3BA
+    SetPixel
+      Ordinal:   0x0231
+      Address:   0x03F4C3AE
+    DeleteObject
+      Ordinal:   0x008F
+      Address:   0x03F4C39E
+    SelectObject
+      Ordinal:   0x020E
+      Address:   0x03F4C38E
+    CreateCompatibleDC
+      Ordinal:   0x002D
+      Address:   0x03F4C378
+    CreateCompatibleBitmap
+      Ordinal:   0x002C
+      Address:   0x03F4C424
+  KERNEL32.dll
+    HeapCreate
+      Ordinal:   0x0212
+      Address:   0x03F4C63E
+    HeapFree
+      Ordinal:   0x0216
+      Address:   0x03F4C632
+    HeapAlloc
+      Ordinal:   0x0210
+      Address:   0x03F4C626
+    DisableThreadLibraryCalls
+      Ordinal:   0x008B
+      Address:   0x03F4C60A
+    SetEvent
+      Ordinal:   0x0316
+      Address:   0x03F4C64C
+    GetCurrentProcess
+      Ordinal:   0x0142
+      Address:   0x03F4C5F6
+    TerminateProcess
+      Ordinal:   0x035E
+      Address:   0x03F4C5E2
+    CreateThread
+      Ordinal:   0x006F
+      Address:   0x03F4C5D2
+    ReleaseSemaphore
+      Ordinal:   0x02C3
+      Address:   0x03F4C5BE
+    CreateSemaphoreA
+      Ordinal:   0x006B
+      Address:   0x03F4C5AA
+    WaitForSingleObject
+      Ordinal:   0x0390
+      Address:   0x03F4C594
+    CloseHandle
+      Ordinal:   0x0034
+      Address:   0x03F4C586
+    CreateEventA
+      Ordinal:   0x004F
+      Address:   0x03F4C658
+    SetThreadPriority
+      Ordinal:   0x0344
+      Address:   0x03F4C668
+    WaitForMultipleObjects
+      Ordinal:   0x038E
+      Address:   0x03F4C67C
+    CreateMutexA
+      Ordinal:   0x0060
+      Address:   0x03F4C696
+    ReleaseMutex
+      Ordinal:   0x02C2
+      Address:   0x03F4C6A6
+    ResumeThread
+      Ordinal:   0x02D2
+      Address:   0x03F4C6B6
+    LocalAlloc
+      Ordinal:   0x0258
+      Address:   0x03F4C7B4
+    InterlockedExchange
+      Ordinal:   0x0229
+      Address:   0x03F4C7C2
+    GetLastError
+      Ordinal:   0x0171
+      Address:   0x03F4C7D8
+    Sleep
+      Ordinal:   0x0356
+      Address:   0x03F4C4E0
+    GetWindowsDirectoryA
+      Ordinal:   0x01F3
+      Address:   0x03F4C448
+    GetSystemDirectoryA
+      Ordinal:   0x01C1
+      Address:   0x03F4C460
+    GetModuleFileNameA
+      Ordinal:   0x017D
+      Address:   0x03F4C476
+    GetProcAddress
+      Ordinal:   0x01A0
+      Address:   0x03F4C48C
+    LoadLibraryA
+      Ordinal:   0x0252
+      Address:   0x03F4C49E
+    SetErrorMode
+      Ordinal:   0x0315
+      Address:   0x03F4C4AE
+    FreeLibrary
+      Ordinal:   0x00F8
+      Address:   0x03F4C4BE
+    GetModuleHandleA
+      Ordinal:   0x017F
+      Address:   0x03F4C4CC
+    RaiseException
+      Ordinal:   0x02A7
+      Address:   0x03F4C7E8
+    GetCurrentProcessId
+      Ordinal:   0x0143
+      Address:   0x03F4C4E8
+    OutputDebugStringA
+      Ordinal:   0x028D
+      Address:   0x03F4C4FE
+    QueryPerformanceCounter
+      Ordinal:   0x02A3
+      Address:   0x03F4C514
+    GetTickCount
+      Ordinal:   0x01DF
+      Address:   0x03F4C52E
+    QueryPerformanceFrequency
+      Ordinal:   0x02A4
+      Address:   0x03F4C53E
+    CreateFileA
+      Ordinal:   0x0053
+      Address:   0x03F4C55A
+    SetFilePointer
+      Ordinal:   0x031B
+      Address:   0x03F4C568
+    ReadFile
+      Ordinal:   0x02B5
+      Address:   0x03F4C57A
+  WINMM.dll
+    waveOutRestart
+      Ordinal:   0x00C7
+      Address:   0x03F4C738
+    waveOutPause
+      Ordinal:   0x00C4
+      Address:   0x03F4C74A
+    waveOutWrite
+      Ordinal:   0x00CC
+      Address:   0x03F4C75A
+    waveOutClose
+      Ordinal:   0x00B7
+      Address:   0x03F4C76A
+    timeGetTime
+      Ordinal:   0x00A3
+      Address:   0x03F4C77A
+    timeBeginPeriod
+      Ordinal:   0x009F
+      Address:   0x03F4C788
+    timeEndPeriod
+      Ordinal:   0x00A0
+      Address:   0x03F4C79A
+    waveOutSetVolume
+      Ordinal:   0x00CA
+      Address:   0x03F4C714
+    waveOutUnprepareHeader
+      Ordinal:   0x00CB
+      Address:   0x03F4C6FA
+    waveOutOpen
+      Ordinal:   0x00C3
+      Address:   0x03F4C6EC
+    waveOutPrepareHeader
+      Ordinal:   0x00C5
+      Address:   0x03F4C6D4
+    waveOutReset
+      Ordinal:   0x00C6
+      Address:   0x03F4C728
+  mss32.dll
+    _AIL_release_sample_handle@4
+      Ordinal:   0x0000
+      Address:   0x03F4BD3C
+    _AIL_minimum_sample_buffer_size@12
+      Ordinal:   0x0000
+      Address:   0x03F4BD5C
+    _AIL_load_sample_buffer@16
+      Ordinal:   0x0000
+      Address:   0x03F4BD82
+    _AIL_sample_user_data@8
+      Ordinal:   0x0000
+      Address:   0x03F4BDA0
+    _AIL_register_EOB_callback@8
+      Ordinal:   0x0000
+      Address:   0x03F4BDBA
+    _AIL_digital_latency@4
+      Ordinal:   0x0000
+      Address:   0x03F4BDDA
+    _AIL_mem_free_lock@4
+      Ordinal:   0x0000
+      Address:   0x03F4BDF4
+    _AIL_set_sample_user_data@12
+      Ordinal:   0x0000
+      Address:   0x03F4BE0C
+    _AIL_set_sample_playback_rate@8
+      Ordinal:   0x0000
+      Address:   0x03F4BE2C
+    _AIL_sample_buffer_available@4
+      Ordinal:   0x0000
+      Address:   0x03F4BE4E
+    _AIL_stop_sample@4
+      Ordinal:   0x0000
+      Address:   0x03F4BE70
+    _AIL_init_sample@12
+      Ordinal:   0x0000
+      Address:   0x03F4BE86
+    _AIL_allocate_sample_handle@4
+      Ordinal:   0x0000
+      Address:   0x03F4BE9C
+    _AIL_resume_sample@4
+      Ordinal:   0x0000
+      Address:   0x03F4BEBC
+    _AIL_set_sample_buffer_count@8
+      Ordinal:   0x0000
+      Address:   0x03F4BED4
+    _AIL_set_sample_volume_pan@12
+      Ordinal:   0x0000
+      Address:   0x03F4BEF6
+    _AIL_set_sample_channel_levels@20
+      Ordinal:   0x0000
+      Address:   0x03F4BF16
+    _AIL_sample_buffer_info@24
+      Ordinal:   0x0000
+      Address:   0x03F4BF3A
+    _AIL_mem_alloc_lock@4
+      Ordinal:   0x0000
+      Address:   0x03F4BF58
+
+RESOURCES
+  ICON
+    1
+    2
+    3
+    4
+  STRING
+    3
+  GROUP_ICON
+    101
+  VERSION
+    1
+
+STRINGS
+  !This program cannot be run in DOS mode.
+  QRich_
+  .text
+  `BINKY12
+  `BINKY16
+  `BINKP8
+  `BINK16
+  `BINK32
+  `BINK
+  `.rdata
+  @.data
+  BINKBSS
+  @BINKDATA
+  .rsrc
+  @.reloc
+  x.+L$
+  PSQRVWh
+  _^ZY[X
+  ]_^[]
+  t{),$
+  t{),$
+   _^r!h
+  SVWh<
+  l$|VW
+  L$L^3
+  D$TVP
+  T$XRV
+  L$XQVW
+  ;L$tu
+  VSVVj j 
+  L$XQj
+  L$$Qh
+  L$,9|$
+  ;D$ |};L$$|w
+  [_^]Y
+  [_^]Y
+  [_^]Y
+  [_^]Y
+  [_^]Y
+  L$$VWP
+  \$tjl
+  L$(WSP
+  D$HPQ
+  L$dQj
+  hYV12
+  hYUY2
+  hUYVY
+  9t$0t/
+  T$PRj
+  9t$0t.)=D
+  L$(RV
+  D$h+D$`
+  L$l+L$d
+  T$`+S
+  D$d+C Q
+  S0+D$l
+  L$DQV
+  NPRPQj
+  T$@Rh
+  T$@RP
+  D$PRPSQ
+  =UYVYu
+  =YV12u
+  =YUY2u
+  9D$$u
+  =YUY2t
+  =UYVY
+  =YUY2t
+  =UYVY
+  T$(Rj
+  D$$=BIKft
+  =BIKgt
+  =BIKht
+  =BIKiu
+  D$(9D$0
+  BIKft
+  BIKgt
+  BIKhu
+  D$XPS
+  L$\QV
+  0;D$X
+  L$(RQP
+  T$ ~@
+  D$$+D$
+  ^ w,;|$
+  w.;l$
+  _]^[Y
+  Wp[_^Y
+  tb9l$
+  tkSWP
+  9zhu~9z8ty9zdSV
+  uv;Nx
+  L$ SWQ
+  L$(QP
+  NPQWP
+  N8;L$
+  9_8tP
+  \$ t 
+  Fltg3
+  F@)F`
+  \$,wN
+  SVWQS
+  s.;\$D
+  s.;\$D
+  L$0w?
+  9l$0s
+  9D$0u
+  sD;\$D
+  D$ t?
+  ;M$so
+  |$,SR
+  L$(QVW
+  T$0PQ
+  T$$R%
+  Z;\$4
+  m;l$@
+  q;l$@
+  l;\$,
+  l$0sB
+  f;l$8
+  l$0;D$$r
+  b;l$,
+  s+;l$4
+  \$$s)
+  T$ t/
+  |$$uG
+  |$ WSUV
+   _^][
+  |$ WSUV
+   _^][
+  T$(QV
+  t$Pua
+  0;L$L
+  D$$VP
+  T$(SR
+  L$@;T$L
+  _^][3
+  WUVSP
+  T$P;T$T
+  D$,SP
+  _^][3
+  _^][Y
+  _^][Y
+  D$ PSU
+  D$(WP
+  T$8WR
+  T$ WRSV
+  D$0WP
+  T$@WR
+  L$ WQSU
+  T$ RU
+  \$ SUWV
+  T$ RUWS
+  \$ SUWV
+  D$ PUW
+  l$0VW
+  D$8RV
+  D$,QV
+  ;\$,|
+  D$ PV
+  D$$QV
+  D$ QV
+  D$$RV
+  l$,9l$$
+  A stack error has been encountered. Hit OK to close the application, or cancel to trigger a breakpoint to debug...
+  Stack overwrite...
+  mss32.dll
+  @UUPE
+  _AIL_release_sample_handle@4
+  _AIL_minimum_sample_buffer_size@12
+  _AIL_load_sample_buffer@16
+  _AIL_sample_user_data@8
+  _AIL_register_EOB_callback@8
+  _AIL_digital_latency@4
+  _AIL_mem_free_lock@4
+  _AIL_set_sample_user_data@12
+  _AIL_set_sample_playback_rate@8
+  _AIL_sample_buffer_available@4
+  _AIL_stop_sample@4
+  _AIL_init_sample@12
+  _AIL_allocate_sample_handle@4
+  _AIL_resume_sample@4
+  _AIL_set_sample_buffer_count@8
+  _AIL_set_sample_volume_pan@12
+  _AIL_set_sample_channel_levels@20
+  _AIL_sample_buffer_info@24
+  _AIL_mem_alloc_lock@4
+  MessageBoxA
+  ShowCursor
+  GetDC
+  GetClassLongA
+  BeginPaint
+  RegisterClassA
+  ChangeDisplaySettingsA
+  GetClientRect
+  IsWindowVisible
+  GetSystemMetrics
+  IsIconic
+  GetWindowRect
+  ScreenToClient
+  GetCursorPos
+  DefWindowProcA
+  SetCursor
+  DestroyWindow
+  ReleaseDC
+  ClientToScreen
+  PeekMessageA
+  EndPaint
+  CreateWindowExA
+  UnregisterClassA
+  GetWindowThreadProcessId
+  GetActiveWindow
+  GetWindowLongA
+  GetTopWindow
+  GetWindow
+  USER32.dll
+  CreateCompatibleDC
+  SelectObject
+  DeleteObject
+  SetPixel
+  GetPixel
+  GetDIBits
+  StretchBlt
+  GetDeviceCaps
+  CreateDIBSection
+  DeleteDC
+  SetStretchBltMode
+  CreateCompatibleBitmap
+  GDI32.dll
+  GetWindowsDirectoryA
+  GetSystemDirectoryA
+  GetModuleFileNameA
+  GetProcAddress
+  LoadLibraryA
+  SetErrorMode
+  FreeLibrary
+  GetModuleHandleA
+  Sleep
+  GetCurrentProcessId
+  OutputDebugStringA
+  QueryPerformanceCounter
+  GetTickCount
+  QueryPerformanceFrequency
+  CreateFileA
+  SetFilePointer
+  ReadFile
+  CloseHandle
+  WaitForSingleObject
+  CreateSemaphoreA
+  ReleaseSemaphore
+  CreateThread
+  TerminateProcess
+  GetCurrentProcess
+  DisableThreadLibraryCalls
+  HeapAlloc
+  HeapFree
+  HeapCreate
+  SetEvent
+  CreateEventA
+  SetThreadPriority
+  WaitForMultipleObjects
+  CreateMutexA
+  ReleaseMutex
+  ResumeThread
+  KERNEL32.dll
+  waveOutPrepareHeader
+  waveOutOpen
+  waveOutUnprepareHeader
+  waveOutSetVolume
+  waveOutReset
+  waveOutRestart
+  waveOutPause
+  waveOutWrite
+  waveOutClose
+  timeGetTime
+  timeBeginPeriod
+  timeEndPeriod
+  WINMM.dll
+  LocalAlloc
+  InterlockedExchange
+  GetLastError
+  RaiseException
+  binkw32.dll
+  _BinkBufferBlit@12
+  _BinkBufferCheckWinPos@12
+  _BinkBufferClear@8
+  _BinkBufferClose@4
+  _BinkBufferGetDescription@4
+  _BinkBufferGetError@0
+  _BinkBufferLock@4
+  _BinkBufferOpen@16
+  _BinkBufferSetDirectDraw@8
+  _BinkBufferSetHWND@8
+  _BinkBufferSetOffset@12
+  _BinkBufferSetResolution@12
+  _BinkBufferSetScale@12
+  _BinkBufferUnlock@4
+  _BinkCheckCursor@20
+  _BinkClose@4
+  _BinkCloseTrack@4
+  _BinkControlBackgroundIO@8
+  _BinkControlPlatformFeatures@8
+  _BinkCopyToBuffer@28
+  _BinkCopyToBufferRect@44
+  _BinkDDSurfaceType@4
+  _BinkDX8SurfaceType@4
+  _BinkDX9SurfaceType@4
+  _BinkDoFrame@4
+  _BinkDoFrameAsync@12
+  _BinkDoFrameAsyncWait@8
+  _BinkGetError@0
+  _BinkGetFrameBuffersInfo@8
+  _BinkGetKeyFrame@12
+  _BinkGetPalette@4
+  _BinkGetRealtime@12
+  _BinkGetRects@8
+  _BinkGetSummary@8
+  _BinkGetTrackData@8
+  _BinkGetTrackID@8
+  _BinkGetTrackMaxSize@8
+  _BinkGetTrackType@8
+  _BinkGoto@12
+  _BinkIsSoftwareCursor@8
+  _BinkLogoAddress@0
+  _BinkNextFrame@4
+  _BinkOpen@8
+  _BinkOpenDirectSound@4
+  _BinkOpenMiles@4
+  _BinkOpenTrack@8
+  _BinkOpenWaveOut@4
+  _BinkPause@8
+  _BinkRegisterFrameBuffers@8
+  _BinkRequestStopAsyncThread@4
+  _BinkRestoreCursor@4
+  _BinkService@4
+  _BinkSetError@4
+  _BinkSetFrameRate@8
+  _BinkSetIO@4
+  _BinkSetIOSize@4
+  _BinkSetMemory@8
+  _BinkSetMixBinVolumes@20
+  _BinkSetMixBins@16
+  _BinkSetPan@12
+  _BinkSetSimulate@4
+  _BinkSetSoundOnOff@8
+  _BinkSetSoundSystem@8
+  _BinkSetSoundTrack@8
+  _BinkSetVideoOnOff@8
+  _BinkSetVolume@12
+  _BinkShouldSkip@4
+  _BinkStartAsyncThread@8
+  _BinkWait@4
+  _BinkWaitStopAsyncThread@4
+  _RADTimerRead@0
+  C:\devel\projects\bink\build\binkw32.pdb
+  Bink Error
+  The BinkW32.DLL file is installed in the Windows or Windows system directory - it must be installed in the application directory.
+  DDRAW.DLL
+  DirectDrawCreate
+  MouseTypeWind
+  256 color mode not supported.
+  Unable to create DIBSection.
+  Video mode not supported.
+  No capable blitting style available.
+  DirectDraw is not available
+  Out of memory.
+  DirectDraw YV12 overlay
+  DirectDraw YUY2 overlay
+  DirectDraw UYVY overlay
+  DirectDraw YV12 off-screen surface
+  DirectDraw YUY2 off-screen surface
+  DirectDraw UYVY off-screen surface
+  DirectDraw RGB off-screen video surface
+  DirectDraw RGB off-screen system surface
+  DirectDraw primary surface
+  DIB Section
+  Error opening file.
+  Not a Bink file.
+  The file doesn't contain any compressed frames yet.
+  The file has a corrupt header.
+  Error reading Bink header.
+  This file has bad frame size data.
+  DSOUND.DLL
+  DirectSoundCreate
+  MSS32.DLL
+  Bink now requires Miles version 7.
+   !()"#*+018923:;
+  $%,-&'./45<=67>?
+   (0891)!
+  "*2:;3+#
+  $,4<=5-%
+  &.6>?7/'
+  ;:980123+*)( !"#
+  $%&'/.-,4567?>=<
+   (0891)*2:;3+#"!
+  $,4<=5-.6>?7/'&%
+  #+"*!) (08192:3;<4=5>6?7/'.&-%,$
+  '&/.76?>=<54-,%$#"+*32;:9810)(! 
+   !"#()*+012389:;
+  $%&',-./4567<=>?
+  '/&.%-$,#+"*!) (1089:2;3<4=567?>
+   !"#$%&'/.-,+*)(01234567?>=<;:98
+   ()!"#+*21089:;34<=>?765-,$%&./'
+  &'./67>?<=45,-$%"#*+23:;8901() !
+   (!)"*#+3;2:1908<4=5>6?7/'.&-%,$
+  $,4<=>?7/'&%-56. (089:;3+#"!)12*
+  ! ()*"#+3;:219804<=56>?7/'&.-,$%
+  <4,$%&'/7?>=5.-680( !"#+3;:91*)2
+  ?>67/.-5=<4,$%&'8019:2*)( !"#+3;
+   !()0189:;23*+"#
+  $%,-45<=>?67./&'
+  @ABCDEFGHIJKLMNO
+  _ B!X T!\ C!Z V!^ B!Y U!] C![ W!_ C1X E2\ D1Z V2^ C1Y E2] D1[ W2_0D2X1F3\0E2Z1G3^0D2Y1F3]0E2[1G3_0FBJ1HD\0GCK1IE^0FBJ1HD]0GCK1IE_ EAI GC\ FBZ HD^ EAI GC] FB[ HD_
+  o 2!U C!Y 2!W D!l 2!V C!j 2!X D!n 2!U C!Y 2!W D!m 2!V C!k 2!X D!o
+  o "!S "!h "!U "!l "!T "!j "!f "!n "!S "!i "!U "!m "!T "!k "!g "!o
+   2!4 3!e 2!4 3!i 2!4 3!g 2!4 3!| 2!4 3!f 2!4 3!z 2!4 3!h 2!4 3!~ 2!4 3!e 2!4 3!i 2!4 3!g 2!4 3!} 2!4 3!f 2!4 3!{ 2!4 3!h 2!4 3!
+  @h+ @
+  uY@lb}@#
+  z/F+wLF1>nF
+  -Ga`JG
+  OHHJfiH{
+  I6'*I#CFI
+  yT(=J
+  =amD|Vu
+  nfAHB
+  H cw'
+  8Rsn}
+  G_'eMG
+  wA::(9j
+  \0Q\si
+  |BK[)
+  e[p,X
+  VH?gQ
+  HwrP9<
+  DB!$N
+  JEJ;71
+  B 2?P
+  U(r$$
+  2%2%2%VJ
+  }-z|E
+  F6=55
+  ;[oO|
+  o}U=!
+  q(mt.
+  (hFqc
+  Q?jE3lu
+  EM#"$F
+  cU?YY
+  hAYTF U
+  r]Y\?X\
+  ;gDf>
+  %ygys
+  -}pL$
+  `wji=
+  8yON$'
+  >?FG&
+  Kv@}c/=
+  a;b#{
+  FfFl|~
+  vUUPUUPU
+  [Y~S8
+  g)H%9r%
+  'Z?~mww
+  |gXxxi
+  Tt ukk
+  F>j7*>
+  zN NV
+  8U"f9:)3
+  zo4'9
+  ch=g]Mz
+  0S\K0
+  68sd]"
+  DKQRR
+  QQKKKh
+  07XXK
+  @@?bbhnQRQJ
+  ssL%FFb
+  0077RRn
+  $$E*077
+  @@?bhEKR770
+  0011+LFEb
+  077777Rn
+     $$*
+    FEEEK
+  tooonnnnn
+  sQX00
+  JQRRK
+  0RRQn
+  >DDKKR77
+  tF??b
+  0011RLng
+  @@bbbhhnQX770
+  @@@bbb
+  ssQQ++FFF?b
+  0077771RKh
+  0777777XR
+  $E$$*
+   @@@bbhhhKR77
+   @@@bbb
+  gnRX70
+  sssQL%%&&
+   @@@bbb
+  ))"""
+  000011+LFF?b
+  """))
+  0077777771Lhh
+  """))
+  0077777
+       
+  00777
+      %
+  007777
+  770QJ
+  G&%%%%%
+  EEEEDDDJ
+  ttoonnnnnnnnnmmsQX^
+  y77770Q
+  "JRQ"
+  K0`0}0
+  0#1H1
+  282i2
+  4%4/4
+  6$6I6
+  7 707=7G7T7}7
+  7!8-8
+  9%9^9h9l9r9v9|9
+  :):t:y:~:
+  ='=1=5=R=q=u={=
+  >3>8>?>E>U>c>k>o>
+  0B0U0b0q0z0
+  5"5(5.545:5?5L5[5`5k5p5{5
+  6 6+606;6@6K6P6[6`6k6p6{6
+  6+787\7w7
+  7N8Z8b8
+  3)474k4y4x8|8
+  Q0X0_0
+  2=2x2
+  3"3)3(5/565M5S5Y5a5i5r5
+  6#6)6/696?6G6
+  8 8;8A8X8^8m8
+  Q0X0_0
+  2=2x2
+  3"3)3u5|5
+  6&6-646;6B6I6
+  8!8(828<8F8Y8`8g8n8u8|8
+  8h9o9v9
+  :(:1:7:=:Z:`:g:n:w:}:
+  ;Z<d<h<n<r<x<~<
+  <h=o=v=
+  =3><>H>Q>W>]>z>
+  Q0X0_0
+  0c1j1q1
+  2H2R2\2c2
+  3!32393C3M3e3E7L7S7
+  7c8j8q8
+  9-9h9r9|9
+  :#:.:D:U:\:f:p:
+  ;#<,<8<A<^<d<k<x<
+  <??Z?d?h?n?r?x?
+  0.080<0\0`0d0h0l0p0
+  3$3.323
+  0>0D0
+  0C1H1P1
+  2,2=2S2e2w2
+  3G3f3q3z3
+  454L4Z4h4p4
+  525:5B5H5Z5q5
+  626:6G6V6[6g6v6
+  7,7N7V7\7
+  8&8+80868A8I8O8h8n8s8
+  9"9:9h9
+  ;#;(;0;D;`;k;v;
+  ;'<2<E<_<y<
+  =!=,=3=W=b=h=
+  ?7?h?
+  0-1D2H2L2P2T2X2
+  3G4U4
+  9&9?9m9
+  <!<0<6<F<b<h<o<t<
+  =>=O=V=j=
+  >+?1?6?<?C?I?O?T?[?a?i?
+  0 0$0(0,0004080<0@0n0
+  1C1O102/3D3
+  3(5V5
+  8$8)8.848:8@8F8L8R8X8]8f8l8r8w8|8
+  9%9*959C9H9S9a9f9n9|9
+  = =$=(=,=
+  >">H>S>
+  343@3S3Z3
+  585J5
+  7%7;7K7V7
+  <M=]=n>
+  1%1j1S2
+  5"5/5>5C5Y5c5m5w5
+  888>8E8
+  3A4_4
+  6I7O7
+  999D9T9
+  :?:E:
+  =a>k>u>
+  ?&?-?9?^?d?m?
+  1{416<6
+  8)8=8L8Z8
+  9::F:L:
+  <*<<<C<N<Y<f<n<t<{<
+  >Z>j>
+  ?)?B?I?Y?
+  3%3-333=3E3K3U3i3q3w3}3
+  4#4+4G4d4l4
+  4g5e6
+  2 3u3
+  7$737
+  9Y:_:k:
+  3m4y4
+  ^3]5u5
+  5*6<6
+  7 7O7a7
+  838E8t8
+  9 9X9j9
+  6>6D6j6r6
+  6 7&7L7T7
+  8.868d8l8
+  : :$:(:,:0:4:8:G:r;
+  ?/?=?
+  0"0.0K0_0p0{0
+  1)1;1R1]1y1
+  3!4,4L4^4t4
+  5;5N5
+  6)636=6C6H6\6t6
+  888d8j8v8
+  919;9H9T9Z9b9o9}9
+  :(:B:M:S:_:
+  ;1;D;j;};
+  =#='=
+  0#0)0/050;0@0E0K0Q0W0]0c0i0n0s0y0
+  071F1
+  2Y2h2
+  3 3&3,32383>3D3J3P3V3\3b3h3r3x3~3
+  6#7q7
+  8!8'8-83898J8P8[8
+  8q9w9
+  :7:=:J:W:a:~:
+  :'>|?
+  34787<7@7D7H7L7P7g7
+  88<<<@<D<
+   0$0(0,0004080<0@0D0H0L0P0T0X0\0`0d0h0
+
+UNICODE STRINGS
+  jjjjj
+   !"#$%&'()*+,-./0123456789:;<=>?@ABCDEF
+  333f3
+  f3fff
+  333f3
+  f3fff
+  1.9c-Copyright (C) 1994-2008, RAD Game Tools, Inc.
+  VS_VERSION_INFO
+  StringFileInfo
+  040904E4
+  CompanyName
+  RAD Game Tools, Inc. & SIGMA Technology Group
+  FileDescription
+  RAD Video Tools for The Standard QWADRO Implementation
+  FileVersion
+  LegalCopyright
+  (c) 1994-2020, RAD Game Tools, Inc. & SIGMA Technology Group
+  LegalTrademarks
+  Bink and Smacker are trademarks of RAD Game Tools, Inc.
+  ProductName
+  Bink and Smacker
+  ProductVersion
+  Comments
+  The Standard QWADRO Implementation
+  VarFileInfo
+  Translation
+
+LOAD CONFIG
+  Timestamp:                               01/01/1970
+  Version:                                 0.0
+  Global flags clear:                      0x00000000
+  Global flags set:                        0x00000000
+  Critical section default timeout:        0x00000000
+  DeCommit free block threshold:           0x00000000
+  DeCommit total free threshold:           0x00000000
+  Lock prefix table:                       0x00000000
+  Maximum allocation size:                 0x00000000
+  Virtual memory threshold:                0x00000000
+  Process heap flags:                      0x00000000
+  Process affinity mask:                   0x00000000
+  CSD version:                             0x0000
+  Reserved1:                               0x0000
+  Edit list:                               0x00000000
+  Security cookie:                         0x00000000
+  SE handler table:                        0x00000000
+  SE handler count:                        0x00000000
+
+DEBUG
+  CodeView
+    Timestamp:           16/01/2008 04:57:01
+    Version:             0.0
+    Characteristics:     0x00000000
+    Size:                0x00000041
+    Raw data address:    0x00021698
+    Pointer to raw data: 0x0001D098
