@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="e2draw">
+      <UniqueIdentifier>{334cc892-f619-4b48-96b8-2d8997caec44}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\e2draw\sgl.h">
+      <Filter>e2draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\e2draw\sglDriver.h">
+      <Filter>e2draw</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\e2draw\sglBuffer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglCanvas.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawContext.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawEngine.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawInput.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawOutput.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawScript.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDriver.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglIndexBuffer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglLego.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglPipeline.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglPipelineModule.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglPipelineRig.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglSampler.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglSurface.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglTexture.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglVertexBuffer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
