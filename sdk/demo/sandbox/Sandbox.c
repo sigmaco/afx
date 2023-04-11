@@ -5,13 +5,8 @@
 #include "afx/afxApplication.h"
 #include "afx/core/diag/afxDebug.h"
 #include "afx/math/afxQuat.h"
-
-#define ENABLE_DRAW 1
-
-#ifdef ENABLE_DRAW
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/simul/render/afxRenderer.h"
-#endif
 
 afxSystem sys = NIL;
 afxDrawSystem dsys = NIL;
@@ -640,7 +635,6 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     
     _AfxSetUpRenderer(&TheRenderer, sim);
     AfxDrawInputAffinePrefetchThreads(din, 0, 1, (afxNat[]) { 1 });
-    afxResult rslt;
     return AFX_SUCCESS; 
 }
 
