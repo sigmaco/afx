@@ -68,6 +68,7 @@
     <ClInclude Include="..\inc\afx\draw\base\afxColor.h" />
     <ClInclude Include="..\inc\afx\draw\base\afxDrawDefs.h" />
     <ClInclude Include="..\inc\afx\draw\base\afxVertex.h" />
+    <ClInclude Include="..\inc\afx\draw\io\afxDirectDrawSurface.h" />
     <ClInclude Include="..\inc\afx\draw\io\afxDirectDrawTexture.h" />
     <ClInclude Include="..\inc\afx\draw\io\afxTarga.h" />
     <ClInclude Include="..\inc\afx\draw\io\afxUniformPipelineDescriptor.h" />
@@ -210,12 +211,8 @@
     <ClCompile Include="..\src\e2coree\draw\base\afxColor.c" />
     <ClCompile Include="..\src\e2coree\draw\base\afxDrawDefs.c" />
     <ClCompile Include="..\src\e2coree\draw\base\afxVertex.c" />
-    <ClCompile Include="..\src\e2coree\draw\io\afxDirectDrawTexture.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\src\e2coree\draw\io\afxDirectDrawSurface.c" />
+    <ClCompile Include="..\src\e2coree\draw\io\afxDirectDrawTexture.c" />
     <ClCompile Include="..\src\e2coree\draw\io\afxTarga.c" />
     <ClCompile Include="..\src\e2coree\draw\io\afxUniformPipelineDescriptor.c" />
     <ClCompile Include="..\src\e2coree\draw\io\afxUniformTextureDescriptor.c">
