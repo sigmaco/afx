@@ -23,7 +23,7 @@
 #include "afx/core/io/afxResource.h"
 #include "afx/core/io/afxStream.h"
 #include "afx/core/io/afxUri.h"
-#include "afx/core/mem/afxMemContext.h"
+#include "afx/core/mem/afxAllocator.h"
 #include "afx/core/time/afxTime.h"
 #include "afxModule.h"
 #include "afx/draw/afxDrawSystem.h"
@@ -104,7 +104,7 @@ AFX_DEFINE_STRUCT(afxSystemSpecification)
     afxSize                             maxMemUsage;
 };
 
-AFX afxMemContext       AfxSystemAcquireMemContext(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
+AFX afxAllocator       AfxSystemAcquireAllocator(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
 AFX afxArchive          AfxSystemAcquireArchive(afxSystem sys, afxUri const *uri, afxChar const *access);
 AFX afxApplication      AfxSystemAcquireApplication(afxSystem sys, afxApplicationSpecification const *spec);
 AFX afxDrawSystem       AfxSystemAcquireDrawSystem(afxSystem sys);
@@ -123,7 +123,7 @@ AFX afxKeyboard         AfxSystemFindKeyboard(afxSystem sys, afxNat port);
 AFX afxModule           AfxSystemFindModule(afxSystem sys, afxUri const *uri);
 AFX afxMouse            AfxSystemFindMouse(afxSystem sys, afxNat port);
 
-AFX afxClass*           AfxSystemGetMemContextClass(afxSystem sys);
+AFX afxClass*           AfxSystemGetAllocatorClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetArchiveClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetApplicationClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetDrawSystemClass(afxSystem sys);
@@ -136,10 +136,11 @@ AFX afxClass*           AfxSystemGetStreamClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetThreadClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetUrdClass(afxSystem sys);
 
+AFX afxAllocator        AfxSystemGetAllocator(afxSystem sys);
 AFX afxUri const*       AfxSystemGetRootUri(afxSystem sys, afxUri *copy);
 AFX afxString const*    AfxSystemGetRootUriString(afxSystem sys, afxString *copy);
 
-AFX afxResult           AfxSystemForEachMemContext(afxSystem sys, void(*f)(afxIterator *iter), void *data);
+AFX afxResult           AfxSystemForEachAllocator(afxSystem sys, void(*f)(afxIterator *iter), void *data);
 AFX afxResult           AfxSystemForEachArchive(afxSystem sys, void(*f)(afxIterator *iter), void *data);
 AFX afxResult           AfxSystemForEachApplication(afxSystem sys, void(*f)(afxIterator *iter), void *data);
 AFX afxResult           AfxSystemForEachDrawSystem(afxSystem sys, void(*f)(afxIterator *iter), void *data);
@@ -170,9 +171,6 @@ AFX afxSystem           AfxSystemGet(void);
 AFX afxSystem           AfxSystemBootUp(afxSystemSpecification const *spec);
 AFX afxError            AfxSystemProcess(afxSystem sys);
 
-AFX afxSize mainThreadId;
-AFX void* e2coreeW32Dll;
-
 #define _AFX_SYS_IMPL
 #ifdef _AFX_SYS_IMPL
 
@@ -180,8 +178,6 @@ AFX_OBJECT(afxSystem)
 {
     afxObject               obj;
     afxChain                provisions;
-
-    afxSize                 mainThreadId;
 
     afxUri4096              rootDir;
     afxList                 mountPoints;
@@ -200,6 +196,9 @@ AFX_OBJECT(afxSystem)
     afxClass                dsysClass;
     afxClass                appClass; // can use everything
 
+    afxNat                  nofProcessors;
+    afxNat                  memPageSize; // The page size and the granularity of page protection and commitment.
+    afxAllocator            genrlAll;
     afxModule               e2coree;
     afxThread               deusExMachina;
     afxKeyboard             stdKbd;
@@ -218,5 +217,7 @@ AFX_DEFINE_STRUCT(afxMountPoint)
 };
 
 #endif
+
+AFX afxNat mainThreadId;
 
 #endif//AFX_SYSTEM_H

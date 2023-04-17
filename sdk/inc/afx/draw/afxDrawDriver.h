@@ -81,6 +81,8 @@ AFX_DEFINE_STRUCT(afxDrawDriverFeatures)
     afxBool inheritedQueries;
 };
 
+AFX_DEFINE_HANDLE(afxDrawDriver);
+
 AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
 {
     afxString const*            name;
@@ -96,9 +98,10 @@ AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
     afxError                    (*dctxCtor)(afxDrawContext dctx, void *args);
     afxError                    (*dctxDtor)(afxDrawContext dctx);
     void const*                 dctxVmt;
+    afxError                    (*process)(afxDrawDriver ddrv); // things to be processed on main thread
+    void*                       idd;
+    afxError                    (*iddDtor)(afxDrawDriver ddrv);
 };
-
-AFX_DEFINE_HANDLE(afxDrawDriver);
 
 #ifndef AFX_DRAW_SRC
 
@@ -108,10 +111,12 @@ AFX_OBJECT(afxDrawDriver) { afxObject obj; };
 
 AFX afxError    AfxDrawDriverGetFeatures(afxDrawDriver ddrv, afxDrawDriverFeatures *features);
 
-AFX afxResult   AfxDrawDriverForEachContext(afxDrawDriver ddrv, void(*f)(afxIterator *iter), void *data);
-
+AFX afxNat      AfxDrawDriverGetContextCount(afxDrawDriver ddrv);
+AFX afxResult   AfxDrawDriverEnumerateContexts(afxDrawDriver ddrv, afxNat base, afxNat cnt, afxDrawContext dctx[]);
 AFX afxClass*   AfxDrawDriverGetContextClass(afxDrawDriver ddrv);
 
 AFX void*       AfxDrawDriverGetDrawSystem(afxDrawDriver ddrv);
+
+AFX afxError    _AfxDrawDriverProcess(afxDrawDriver ddrv); // Called by draw system. Reserved for enginners at SIGMA.
 
 #endif//AFX_DRAW_DRIVER_H

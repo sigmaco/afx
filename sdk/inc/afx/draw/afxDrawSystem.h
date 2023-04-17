@@ -75,14 +75,18 @@ AFX afxDrawDriver   AfxDrawSystemRegisterDriver(afxDrawSystem dsys, afxModule md
 AFX afxDrawContext  AfxDrawSystemAcquireContext(afxDrawSystem dsys, afxDrawContextSpecification const *spec);
 
 AFX afxClass*       AfxDrawSystemGetDriverClass(afxDrawSystem dsys);
-
+AFX afxClass*       AfxDrawSystemGetContextClass(afxDrawSystem dsys, afxNat driverId);
+AFX afxAllocator    AfxDrawSystemGetAllocator(afxDrawSystem dsys);
 AFX afxDrawDriver   AfxDrawSystemGetDriver(afxDrawSystem dsys, afxNat idx);
+AFX afxNat          AfxDrawSystemGetDriverCount(afxDrawSystem dsys);
+AFX afxNat          AfxDrawSystemGetContextCount(afxDrawSystem dsys, afxNat driverId);
 
-AFX afxResult       AfxDrawSystemForEachDriver(afxDrawSystem dsys, void(*f)(afxIterator *iter), void *data);
+AFX afxResult       AfxDrawSystemEnumerateDrivers(afxDrawSystem dsys, afxNat base, afxNat cnt, afxDrawDriver ddrv[]);
+AFX afxResult       AfxDrawSystemEnumerateContexts(afxDrawSystem dsys, afxNat driverId, afxNat base, afxNat cnt, afxDrawContext dctx[]);
 
 AFX afxResult       AfxDrawSystemForEachTextureCodec(afxDrawSystem dsys, afxResult(*f)(afxTextureCodecRegistry*, void*), void *data);
 AFX afxResult       AfxDrawSystemRegisterTextureCodec(afxDrawSystem dsys, afxNat cnt, afxTextureCodecSpecification const queries[]);
 
-AFX afxResult       AfxDrawSystemProcess(afxDrawSystem dsys);
+AFX afxError        _AfxDrawSystemProcess(afxDrawSystem dsys); // Called by core execution system. Reserved for enginners at SIGMA.
 
 #endif//AFX_DRAW_SYSTEM_H

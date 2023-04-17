@@ -1,0 +1,200 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 00000000002ae950, 00000000002ae958)
+ Constructing instance 00000000003f2520 of Core Execution System.
+ afxSystem.c:1197?_AfxSysCtor(sys=00000000003f2520)
+ ADV afxSystem.c:1213?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1214?_AfxSysCtor
+    Logical processor count: 2
+ Allocator class registered.
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=00000000003f2520,strategy=00000000002ac3d8,hint="afxSystem.c:1229!_AfxSysCtor")
+ Class[Allocator].ConstructInstances(1, 00000000002ac090, 00000000002ac098)
+ Constructing instance 00000000003ee8c0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=00000000003ee8c0)
+ Instance 00000000003ee8c0[all]^1 built.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class registered.
+ Module class registered.
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000003f2520,uri=system/e2coree.dll)
+ Class[Module].ConstructInstances(1, 00000000002abfe0, 00000000002abfe8)
+ Constructing instance 00000000003f9ea0 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:system/e2coree.dll)
+ Instance 00000000003f9ea0[mdle]^1 built.
+ I/O Stream class registered.
+ Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ HID class registered.
+ Keyboard class registered.
+ Mouse class registered.
+ Draw System class registered.
+ Application class registered.
+ afxKeyboard.c:163?AfxSystemAcquireKeyboard(sys=00000000003f2520,port=0)
+ Class[Keyboard].ConstructInstances(1, 00000000002ac130, 00000000002ac138)
+ Constructing instance 00000000003f9fe0 of Keyboard : HID.
+ Constructing instance 00000000003f9fe0 of HID.
+ afxHid.c:55?_AfxHidCtor(hid=00000000003f9fe0)
+ Constructing instance 00000000003f9fe0 of Keyboard.
+ afxKeyboard.c:191?_AfxKbdCtor(kbd=00000000003f9fe0)
+ Instance 00000000003f9fe0[kbd]^1 built.
+ Instance 00000000003f2520[sys]^1 built.
+ afxDrawSystem.c:180?AfxSystemAcquireDrawSystem(sys=00000000003f2520)
+ Class[Draw System].ConstructInstances(1, 00000000002ae970, 00000000002ae978)
+ Constructing instance 00000000003f6a30 of Draw System.
+ afxDrawSystem.c:261?_AfxDsysCtor(dsys=00000000003f6a30)
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=00000000003f2520,strategy=00000000002ae498,hint="afxDrawSystem.c:280!_AfxDsysCtor")
+ Class[Allocator].ConstructInstances(1, 00000000002ae0a0, 00000000002ae0a8)
+ Constructing instance 00000000003fa8e0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=00000000003fa8e0)
+ Instance 00000000003fa8e0[all]^1 built.
+ Draw Driver class registered.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000003f2520,uri=e2draw.icd)
+ Class[Module].ConstructInstances(1, 00000000002adff0, 00000000002adff8)
+ Constructing instance 00000000003fbf30 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:e2draw.icd)
+ Instance 00000000003fbf30[mdle]^1 built.
+ afxDrawDriver.c:46?AfxDrawSystemRegisterDriver(dsys=00000000003f6a30,mdle=00000000003fbf30,spec=00000000002ae0f0)
+ Class[Draw Driver].ConstructInstances(1, 00000000002adf10, 00000000002adf18)
+ Constructing instance 00000000003fc9c0 of Draw Driver.
+ afxDrawDriver.c:79?_AfxDdrvCtor(ddrv=00000000003fc9c0)
+ Draw Context class registered.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Instance 00000000003fc9c0[ddrv]^1 built.
+ Loading draw ICDs...
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000003f2520,uri=e2draw.icd)
+ Reacquired. (mdle)00000000003fbf30^3
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000003f2520,uri=e2newton.icd)
+ Class[Module].ConstructInstances(1, 00000000002add20, 00000000002add28)
+ Constructing instance 00000000003feed0 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:e2newton.icd)
+ Instance 00000000003feed0[mdle]^1 built.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Instance 00000000003f6a30[dsys]^1 built.
+ afxDrawContext.c:266?AfxDrawSystemAcquireContext(dsys=00000000003f6a30,spec=00000000002aeb60)
+ Class[Draw Context].ConstructInstances(1, 00000000002ae8e0, 00000000002ae8e8)
+ Constructing instance 00000000003ffa30 of Draw Context.
+ sglDrawContext.c:625?_AfxDctxCtor(dctx=00000000003ffa30)
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class registered.
+ Draw Input class registered.
+ Draw Engine class registered.
+ Buffer class registered.
+ Vertex Buffer class registered.
+ Index Buffer class registered.
+ Sampler class registered.
+ Texture class registered.
+ Surface class registered.
+ Canvas class registered.
+ Pipeline Module class registered.
+ Pipeline Rig class registered.
+ Pipeline class registered.
+ Lego class registered.
+ Draw Output class registered.
+ sglDrawEngine.c:1953?_AfxDrawContextAcquireEngine(dctx=00000000003ffa30)
+ Class[Draw Engine].ConstructInstances(1, 00000000002adf10, 00000000002adf18)
+ Constructing instance 0000000000406730 of Draw Engine.
+ sglDrawEngine.c:1998?_AfxDengCtor(deng=0000000000406730)
+ afxThread.c:689?AfxSystemAcquireThread(sys=00000000003f2520,start=000007fee56f9a40,udd=0000000000406730,exec=000007fee56f92d0,hint="sglDrawEngine.c:2010!_AfxDengCtor")
+ Class[Thread].ConstructInstances(1, 00000000002ad6e0, 00000000002ad6e8)
+ Constructing instance 0000000000408870 of Thread.
+ afxThread.c:754?_AfxThrCtor(0000000000408870)
+ Instance 0000000000408870[thr]^1 built.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=00000000003ffa30,uri=data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=00000000003ffa30)
+ afxUrd.c:1086?AfxSystemUploadUrd(uri=data/pipeline/rgbaToRgbaYFlipped.pip.urdp)
+ Class[Uniform Resource Dictionary].ConstructInstances(1, 00000000002a4250, 00000000002a4258)
+ Constructing instance 0000000000408e80 of Uniform Resource Dictionary.
+ afxUrd.c:1059?_AfxUrdCtor(uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxStream.c:668?AfxSystemAcquireStream(sys:00000000003f2520,uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd,access=r)
+ Class[I/O Stream].ConstructInstances(1, 00000000002a3bc0, 00000000002a3bc8)
+ Constructing instance 0000000000408f90 of I/O Stream.
+ Acquired. (ios)0000000000408f90^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Instance 0000000000408f90[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 00000000002a3d48, 0000100000000008)
+ Destructing instance 0000000000408f90 of I/O Stream class.
+ Instance 0000000000408f90[ios]^0 destroyed.
+ Instance 0000000000408e80[urd]^1 built.
+ Class[Uniform Resource Dictionary].DestructInstances(1, 00000000002a43b8, 0000000100737973)
+ Destructing instance 0000000000408e80 of Uniform Resource Dictionary class.
+ afxUrd.c:1040?_AfxUrdDtor(urd=0000000000408e80)
+ Instance 0000000000408e80[urd]^0 destroyed.
+ Class[Pipeline].ConstructInstances(1, 00000000002a44b0, 00000000002a44b8)
+ Constructing instance 0000000000408e80 of Pipeline : Resource.
+ Constructing instance 0000000000408e80 of Resource.
+ afxResource.c:127?_AfxResCtor(res=0000000000408e80)
+ Constructing instance 0000000000408e80 of Pipeline.
+ sglPipeline.c:556?_AfxPipCtor(pip=0000000000408e80)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000003ffa30,code=00000000002a4dd0,len=627)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000003ffa30,code=00000000002a4dd0,len=627)
+ Class[Pipeline Module].ConstructInstances(1, 00000000002a3aa0, 00000000002a3aa8)
+ Constructing instance 00000000004149c0 of Pipeline Module.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=00000000004149c0)
+ Instance 00000000004149c0[pipm]^1 built.
+ Taking connection 0000000000409018 connecting 00000000004149c0?pipm#1 to holder 0000000000408e80?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000003ffa30,code=00000000002a5df0,len=398)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000003ffa30,code=00000000002a5df0,len=398)
+ Class[Pipeline Module].ConstructInstances(1, 00000000002a3aa0, 00000000002a3aa8)
+ Constructing instance 0000000000414df0 of Pipeline Module.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0000000000414df0)
+ Instance 0000000000414df0[pipm]^1 built.
+ Taking connection 0000000000409078 connecting 0000000000414df0?pipm#1 to holder 0000000000408e80?pip#1.
+ Class[Pipeline Rig].ConstructInstances(1, 00000000002a3b70, 00000000002a3b78)
+ Constructing instance 000000000040ef30 of Pipeline Rig.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=000000000040ef30)

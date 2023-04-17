@@ -26,6 +26,8 @@ typedef enum afxHidFlag
 
 AFX_DEFINE_HANDLE(afxHid);
 
+AFX void*       AfxHidGetSystem(afxHid hid);
+
 AFX afxNat      AfxHidGetPort(afxHid hid);
 AFX afxResult   AfxHidTestFlags(afxHid hid, afxHidFlag flags);
 

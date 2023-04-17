@@ -49,20 +49,20 @@ typedef enum afxFcc
 
     // *** e2coree ***
 
-    AFX_FCC_OBJ     = AfxPackFcc('o', 'b', 'j', NIL), // afxObject
+    AFX_FCC_OBJ     = AfxPackFcc('o', 'b', 'j', '\0'), // afxObject
     AFX_FCC_OBJC    = AfxPackFcc('o', 'b', 'j', 'c'), // afxObjectConnection
     AFX_FCC_SLOT    = AfxPackFcc('s', 'l', 'o', 't'), // afxSlot
     AFX_FCC_HNDL    = AfxPackFcc('h', 'n', 'd', 'l'), // afxObject*
     AFX_FCC_CLS    = AfxPackFcc('o', 'b', 'j', 't'), // afxClass
 
-    AFX_FCC_DBG     = AfxPackFcc('d', 'b', 'g', NIL), // afxDebugger
-    AFX_FCC_APP     = AfxPackFcc('a', 'p', 'p', NIL), // afxApplication
-    AFX_FCC_SYS     = AfxPackFcc('s', 'y', 's', NIL), // afxSystem
+    AFX_FCC_DBG     = AfxPackFcc('d', 'b', 'g', '\0'), // afxDebugger
+    AFX_FCC_APP     = AfxPackFcc('a', 'p', 'p', '\0'), // afxApplication
+    AFX_FCC_SYS     = AfxPackFcc('s', 'y', 's', '\0'), // afxSystem
 
     //AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f'), // afxBuffer
-    AFX_FCC_ARR     = AfxPackFcc('a', 'r', 'r', NIL), // afxArray
-    AFX_FCC_QUE     = AfxPackFcc('q', 'u', 'e', NIL), // afxQueue
-    AFX_FCC_STR     = AfxPackFcc('s', 't', 'r', NIL), // afxString
+    AFX_FCC_ARR     = AfxPackFcc('a', 'r', 'r', '\0'), // afxArray
+    AFX_FCC_QUE     = AfxPackFcc('q', 'u', 'e', '\0'), // afxQueue
+    AFX_FCC_STR     = AfxPackFcc('s', 't', 'r', '\0'), // afxString
     AFX_FCC_STR0    = AfxPackFcc('s', 't', 'r', '0'), // afxString8
     AFX_FCC_STR1    = AfxPackFcc('s', 't', 'r', '1'), // afxString16
     AFX_FCC_STR2    = AfxPackFcc('s', 't', 'r', '2'), // afxString32
@@ -76,26 +76,26 @@ typedef enum afxFcc
     AFX_FCC_STRC    = AfxPackFcc('s', 't', 'r', 'c'), // afxString
     AFX_FCC_STRE    = AfxPackFcc('s', 't', 'r', 'e'), // afxString excerpt; It is just a view of another string; canv't modify data.
     AFX_FCC_STRF    = AfxPackFcc('s', 't', 'r', 'f'), // afxString
-    AFX_FCC_URI     = AfxPackFcc('u', 'r', 'i', NIL), // afxUri
-    AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', NIL), // afxSignal
+    AFX_FCC_URI     = AfxPackFcc('u', 'r', 'i', '\0'), // afxUri
+    AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', '\0'), // afxSignal
     AFX_FCC_SIGH    = AfxPackFcc('s', 'i', 'g', 'h'), // afxSignalHandler
     AFX_FCC_SIGC    = AfxPackFcc('s', 'i', 'g', 'c'), // afxSignalConnection
-    AFX_FCC_MCTX    = AfxPackFcc('m', 'c', 't', 'x'), // afxMemContext
+    AFX_FCC_ALL     = AfxPackFcc('a', 'l', 'l', '\0'), // afxAllocator
     AFX_FCC_MPAG    = AfxPackFcc('m', 'p', 'a', 'g'), // afxMemPage
-    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', NIL), // afxMemory
-    AFX_FCC_MCTXS   = AfxPackFcc('a', 'l', 'l', 's'), // afxSlabMemContext
+    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', '\0'), // afxMemory
+    AFX_FCC_ALLS    = AfxPackFcc('a', 'l', 'l', 's'), // afxSlabAllocator
     AFX_FCC_SLAB    = AfxPackFcc('s', 'l', 'a', 'b'), // afxSlabHeader
-    AFX_FCC_MCTXR   = AfxPackFcc('a', 'l', 'l', 'r'), // afxRegionMemContext
+    AFX_FCC_ALLR    = AfxPackFcc('a', 'l', 'l', 'r'), // afxRegionAllocator
     AFX_FCC_CHNK    = AfxPackFcc('c', 'h', 'n', 'k'),
     AFX_FCC_BLCK    = AfxPackFcc('b', 'l', 'c', 'k'),
     AFX_FCC_BLOB    = AfxPackFcc('b', 'l', 'o', 'b'), // afxBlob
-    AFX_FCC_IOS     = AfxPackFcc('i', 'o', 's', NIL), // afxStream
+    AFX_FCC_IOS     = AfxPackFcc('i', 'o', 's', '\0'), // afxStream
     AFX_FCC_MNPT    = AfxPackFcc('m', 'n', 'p', 't'), // afxMountPoint
     AFX_FCC_ARCH    = AfxPackFcc('a', 'r', 'c', 'h'), // afxArchive
-    AFX_FCC_RES     = AfxPackFcc('r', 'e', 's', NIL), // afxResource
-    AFX_FCC_URD     = AfxPackFcc('u', 'r', 'd', NIL), // afxUrd
-    AFX_FCC_STD     = AfxPackFcc('s', 't', 'd', NIL), // for standard implementations
-    AFX_FCC_LCK     = AfxPackFcc('l', 'c', 'k', NIL), // afxTransistor
+    AFX_FCC_RES     = AfxPackFcc('r', 'e', 's', '\0'), // afxResource
+    AFX_FCC_URD     = AfxPackFcc('u', 'r', 'd', '\0'), // afxUrd
+    AFX_FCC_STD     = AfxPackFcc('s', 't', 'd', '\0'), // for standard implementations
+    AFX_FCC_LCK     = AfxPackFcc('l', 'c', 'k', '\0'), // afxTransistor
 
     AFX_FCC_EMEC    = AfxPackFcc('e', 's', 'y', 's'), // afxEventMechanism
     AFX_FCC_ETRG    = AfxPackFcc('e', 't', 'r', 'g'), // afxEventTrigger
@@ -105,34 +105,34 @@ typedef enum afxFcc
     AFX_FCC_FVOL    = AfxPackFcc('f', 'v', 'o', 'l'), // afxStorageVolume
     AFX_FCC_FILE    = AfxPackFcc('f', 'i', 'l', 'e'), // afxFile
     
-    AFX_FCC_THR     = AfxPackFcc('t', 'h', 'r', NIL), // afxThread
-    AFX_FCC_MTX     = AfxPackFcc('m', 't', 'x', NIL), // afxMutex
+    AFX_FCC_THR     = AfxPackFcc('t', 'h', 'r', '\0'), // afxThread
+    AFX_FCC_MTX     = AfxPackFcc('m', 't', 'x', '\0'), // afxMutex
 
     AFX_FCC_EVNT    = AfxPackFcc('e', 'v', 'n', 't'), // afxEvent
     AFX_FCC_EVLP    = AfxPackFcc('e', 'v', 'l', 'p'), // afxEventLoop
 
-    AFX_FCC_HID     = AfxPackFcc('h', 'i', 'd', NIL), // afxHid
-    AFX_FCC_KBD     = AfxPackFcc('k', 'b', 'd', NIL), // afxKeyboard
-    AFX_FCC_MSE     = AfxPackFcc('m', 's', 'e', NIL), // afxMouse
-    AFX_FCC_DSO     = AfxPackFcc('d', 's', 'o', NIL), // afxDso
+    AFX_FCC_HID     = AfxPackFcc('h', 'i', 'd', '\0'), // afxHid
+    AFX_FCC_KBD     = AfxPackFcc('k', 'b', 'd', '\0'), // afxKeyboard
+    AFX_FCC_MSE     = AfxPackFcc('m', 's', 'e', '\0'), // afxMouse
+    AFX_FCC_DSO     = AfxPackFcc('d', 's', 'o', '\0'), // afxDso
     AFX_FCC_AGTR    = AfxPackFcc('a', 'g', 't', 'r'), // afxAggregator
     AFX_FCC_AGGR    = AfxPackFcc('a', 'g', 'g', 'r'), // afxAggregation
 
-    AFX_FCC_ASI     = AfxPackFcc('a', 's', 'i', NIL), // afxService
+    AFX_FCC_ASI     = AfxPackFcc('a', 's', 'i', '\0'), // afxService
     AFX_FCC_MDLE    = AfxPackFcc('m', 'd', 'l', 'e'), // afxModule
     AFX_FCC_AUTR    = AfxPackFcc('a', 'u', 't', 'r'), // afxAutomator
 
     // *** e2math ***
 
-    AFX_FCC_V2D     = AfxPackFcc('v', '2', 'd', NIL), // afxV2d
-    AFX_FCC_V3D     = AfxPackFcc('v', '3', 'd', NIL), // afxV3d
-    AFX_FCC_V4D     = AfxPackFcc('v', '4', 'd', NIL), // afxV4d
-    AFX_FCC_QUAT    = AfxPackFcc('q', NIL, NIL, NIL), // afxQuat
-    AFX_FCC_V       = AfxPackFcc('v', NIL, NIL, NIL), // afxVersor
-    AFX_FCC_M2D     = AfxPackFcc('m', '2', 'd', NIL), // afxM2d
-    AFX_FCC_M3D     = AfxPackFcc('m', '3', 'd', NIL), // afxM3d
-    AFX_FCC_M4D     = AfxPackFcc('m', '4', 'd', NIL), // afxV4d
-    AFX_FCC_SPC     = AfxPackFcc('s', 'p', 'c', NIL), // afxSpace
+    AFX_FCC_V2D     = AfxPackFcc('v', '2', 'd', '\0'), // afxV2d
+    AFX_FCC_V3D     = AfxPackFcc('v', '3', 'd', '\0'), // afxV3d
+    AFX_FCC_V4D     = AfxPackFcc('v', '4', 'd', '\0'), // afxV4d
+    AFX_FCC_QUAT    = AfxPackFcc('q', '\0', '\0', '\0'), // afxQuat
+    AFX_FCC_V       = AfxPackFcc('v', '\0', '\0', '\0'), // afxVersor
+    AFX_FCC_M2D     = AfxPackFcc('m', '2', 'd', '\0'), // afxM2d
+    AFX_FCC_M3D     = AfxPackFcc('m', '3', 'd', '\0'), // afxM3d
+    AFX_FCC_M4D     = AfxPackFcc('m', '4', 'd', '\0'), // afxV4d
+    AFX_FCC_SPC     = AfxPackFcc('s', 'p', 'c', '\0'), // afxSpace
 
     // *** e2draw ***
 
@@ -140,26 +140,26 @@ typedef enum afxFcc
 
     AFX_FCC_DDEV    = AfxPackFcc('d', 'd', 'e', 'v'), // afxDrawDevice
     AFX_FCC_DDRV    = AfxPackFcc('d', 'd', 'r', 'v'), // afxDrawDriver
-    AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', NIL), // afxDrawInput
+    AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
     AFX_FCC_DOUT    = AfxPackFcc('d', 'o', 'u', 't'), // afxDrawOutput
     AFX_FCC_DENG    = AfxPackFcc('d', 'e', 'n', 'g'), // afxDrawEngine
     AFX_FCC_CANV    = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
-    AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', NIL), // afxPipeline
+    AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     AFX_FCC_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
     AFX_FCC_PIPS    = AfxPackFcc('p', 'i', 'p', 's'), // afxLegoSchema
     AFX_FCC_LEGO    = AfxPackFcc('b', 's', 'e', 't'), // afxLego
     AFX_FCC_PIPM    = AfxPackFcc('p', 'i', 'p', 'm'), // afxPipelineModule
     AFX_FCC_PIPB    = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint
     AFX_FCC_DRES    = AfxPackFcc('d', 'r', 'e', 's'), // afxDrawResourceSet
-    AFX_FCC_DSCR    = AfxPackFcc('d', 'i', 'b', NIL), // afxDrawScript
+    AFX_FCC_DSCR    = AfxPackFcc('d', 'i', 'b', '\0'), // afxDrawScript
     AFX_FCC_DDBG    = AfxPackFcc('d', 'd', 'b', 'g'), // afxDrawDebugger
     //AFX_FCC_DTEC    = AfxPackFcc('d', 't', 'e', 'c'), // afxDrawTechnique
     AFX_FCC_VPNT    = AfxPackFcc('v', 'p', 'n', 't'), // afxViewpoint
     AFX_FCC_WIMP    = AfxPackFcc('o', 'v', 'l', 'y'), // afxWimp
-    AFX_FCC_WID     = AfxPackFcc('w', 'i', 'd', NIL), // afxWidget
-    AFX_FCC_WND     = AfxPackFcc('w', 'n', 'd', NIL), // afxWindow
-    AFX_FCC_WPP     = AfxPackFcc('w', 'p', 'p', NIL), // afxWallpaper
+    AFX_FCC_WID     = AfxPackFcc('w', 'i', 'd', '\0'), // afxWidget
+    AFX_FCC_WND     = AfxPackFcc('w', 'n', 'd', '\0'), // afxWindow
+    AFX_FCC_WPP     = AfxPackFcc('w', 'p', 'p', '\0'), // afxWallpaper
 
     AFX_FCC_DUNI    = AfxPackFcc('d', 'u', 'n', 'i'), // afxDrawableUniverse
     AFX_FCC_DMDL    = AfxPackFcc('d', 'm', 'd', 'l'), // sglDrawableModel
@@ -175,7 +175,7 @@ typedef enum afxFcc
     AFX_FCC_SSYS    = AfxPackFcc('s', 's', 'y', 's'), // afxSoundSystem
     AFX_FCC_SDEV    = AfxPackFcc('s', 'o', 'u', 't'), // afxSoundIoDevice
     AFX_FCC_SOUT    = AfxPackFcc('s', 'o', 'u', 't'), // afxSoundOutput
-    AFX_FCC_SIN     = AfxPackFcc('s', 'i', 'n', NIL), // afxSoundInput
+    AFX_FCC_SIN     = AfxPackFcc('s', 'i', 'n', '\0'), // afxSoundInput
     AFX_FCC_SCTX    = AfxPackFcc('s', 'c', 't', 'x'), // afxSoundContext
 
     // *** e2social ***
@@ -185,33 +185,33 @@ typedef enum afxFcc
 
     // *** e2simul ***
 
-    AFX_FCC_SIM     = AfxPackFcc('s', 'i', 'm', NIL), // afxSimulation
-    AFX_FCC_HUB     = AfxPackFcc('h', 'u', 'b', NIL), // afxHub
-    AFX_FCC_DAG     = AfxPackFcc('d', 'a', 'g', NIL), // afxDag
-    AFX_FCC_NOD     = AfxPackFcc('n', 'o', 'd', NIL), // afxNode
+    AFX_FCC_SIM     = AfxPackFcc('s', 'i', 'm', '\0'), // afxSimulation
+    AFX_FCC_HUB     = AfxPackFcc('h', 'u', 'b', '\0'), // afxHub
+    AFX_FCC_DAG     = AfxPackFcc('d', 'a', 'g', '\0'), // afxDag
+    AFX_FCC_NOD     = AfxPackFcc('n', 'o', 'd', '\0'), // afxNode
     AFX_FCC_NODA    = AfxPackFcc('n', 'o', 'd', 'a'), // afxNodeAnnex (node annex)
     AFX_FCC_ASIO    = AfxPackFcc('a', 's', 'i', 'o'), // afxAssetIoAssistent
-    AFX_FCC_PVT     = AfxPackFcc('p', 'v', 't', NIL), // afxNode
+    AFX_FCC_PVT     = AfxPackFcc('p', 'v', 't', '\0'), // afxNode
 
-    AFX_FCC_IMG     = AfxPackFcc('i', 'm', 'g', NIL), // afxImage
-    AFX_FCC_SMP     = AfxPackFcc('s', 'm', 'p', NIL), // afxSampler
-    AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f', NIL), // afxBuffer
+    AFX_FCC_IMG     = AfxPackFcc('i', 'm', 'g', '\0'), // afxImage
+    AFX_FCC_SMP     = AfxPackFcc('s', 'm', 'p', '\0'), // afxSampler
+    AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f', '\0'), // afxBuffer
     AFX_FCC_VBUF    = AfxPackFcc('v', 'b', 'u', 'f'), // afxVertexBuffer
     AFX_FCC_IBUF    = AfxPackFcc('i', 'b', 'u', 'f'), // afxIndexBuffer
     AFX_FCC_IMGH    = AfxPackFcc('i', 'm', 'g', 'h'), // AfxImageHub
     AFX_FCC_IMIO    = AfxPackFcc('i', 'm', 'i', 'o'), // AfxImageIoAssistent
-    AFX_FCC_TEX     = AfxPackFcc('t', 'e', 'x', NIL), // afxTexture
+    AFX_FCC_TEX     = AfxPackFcc('t', 'e', 'x', '\0'), // afxTexture
     AFX_FCC_SURF    = AfxPackFcc('s', 'u', 'r', 'f'), // afxSurface
     AFX_FCC_TEXB    = AfxPackFcc('t', 'e', 'x', 'b'), // afxTextureBlueprint
 
-    AFX_FCC_MDL     = AfxPackFcc('m', 'd', 'l', NIL), // afxModel
+    AFX_FCC_MDL     = AfxPackFcc('m', 'd', 'l', '\0'), // afxModel
     AFX_FCC_MDLB    = AfxPackFcc('m', 'd', 'l', 'b'), // afxModelBlueprint
-    AFX_FCC_SKL     = AfxPackFcc('s', 'k', 'l', NIL), // afxSkeleton
+    AFX_FCC_SKL     = AfxPackFcc('s', 'k', 'l', '\0'), // afxSkeleton
     AFX_FCC_SKLB    = AfxPackFcc('s', 'k', 'l', 'b'), // afxSkeletonBlueprint
     AFX_FCC_BONB    = AfxPackFcc('b', 'o', 'n', 'b'), // afxBoneBlueprint
     AFX_FCC_MSHA    = AfxPackFcc('m', 's', 'h', 'a'), // afxMeshArticulation
     AFX_FCC_MSHC    = AfxPackFcc('m', 's', 'h', 'c'), // afxMeshConnection
-    AFX_FCC_MSH     = AfxPackFcc('m', 's', 'h', NIL), // afxMesh
+    AFX_FCC_MSH     = AfxPackFcc('m', 's', 'h', '\0'), // afxMesh
     AFX_FCC_MSHB    = AfxPackFcc('m', 's', 'h', 'b'), // afxMeshBlueprint
     AFX_FCC_MSHT    = AfxPackFcc('m', 's', 'h', 't'), // afxMeshTopology
     AFX_FCC_MSHS    = AfxPackFcc('m', 's', 'h', 's'), // afxMeshSection
@@ -219,19 +219,19 @@ typedef enum afxFcc
     AFX_FCC_MVER    = AfxPackFcc('m', 'v', 'e', 'r'), // afxMeshVertebra
     AFX_FCC_MDLM    = AfxPackFcc('m', 'd', 'l', 'm'), // AfxModelingMechanism
     AFX_FCC_MDIO    = AfxPackFcc('m', 'd', 'i', 'o'), // afxModelIoAssistent
-    AFX_FCC_MTL     = AfxPackFcc('m', 't', 'l', NIL), // afxMaterial
+    AFX_FCC_MTL     = AfxPackFcc('m', 't', 'l', '\0'), // afxMaterial
     AFX_FCC_MTLB    = AfxPackFcc('m', 't', 'l', 'b'), // afxMaterialBlueprint
 
-    AFX_FCC_UNI     = AfxPackFcc('u', 'n', 'i', NIL), // afxUniverse
+    AFX_FCC_UNI     = AfxPackFcc('u', 'n', 'i', '\0'), // afxUniverse
     AFX_FCC_CLST    = AfxPackFcc('c', 'l', 's', 't'), // afxCluster
-    AFX_FCC_ENT     = AfxPackFcc('e', 'n', 't', NIL), // afxEntity
-    AFX_FCC_ASP     = AfxPackFcc('a', 's', 'p', NIL), // afxAspect
-    AFX_FCC_LIT     = AfxPackFcc('l', 'i', 't', NIL), // afxLight
-    AFX_FCC_CAM     = AfxPackFcc('c', 'a', 'm', NIL), // afxCamera
-    AFX_FCC_SKY     = AfxPackFcc('s', 'k', 'y', NIL), // afxSky
+    AFX_FCC_ENT     = AfxPackFcc('e', 'n', 't', '\0'), // afxEntity
+    AFX_FCC_ASP     = AfxPackFcc('a', 's', 'p', '\0'), // afxAspect
+    AFX_FCC_LIT     = AfxPackFcc('l', 'i', 't', '\0'), // afxLight
+    AFX_FCC_CAM     = AfxPackFcc('c', 'a', 'm', '\0'), // afxCamera
+    AFX_FCC_SKY     = AfxPackFcc('s', 'k', 'y', '\0'), // afxSky
     AFX_FCC_TERR    = AfxPackFcc('t', 'e', 'r', 'r'), // afxTerrain
-    AFX_FCC_BRN     = AfxPackFcc('b', 'r', 'n', NIL), // afxBrain
-    AFX_FCC_BOD     = AfxPackFcc('b', 'o', 'd', NIL), // afxBody
+    AFX_FCC_BRN     = AfxPackFcc('b', 'r', 'n', '\0'), // afxBrain
+    AFX_FCC_BOD     = AfxPackFcc('b', 'o', 'd', '\0'), // afxBody
     AFX_FCC_BODP    = AfxPackFcc('b', 'o', 'd', 'p'), // afxBodyPart
 
     AFX_FCC_MAX_    = 0x7FFFFFFF

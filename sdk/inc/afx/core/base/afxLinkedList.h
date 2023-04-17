@@ -26,7 +26,7 @@
 // Adding, removing and moving the elements within the list or across several lists does not invalidate the iterators or references.
 // An iterator is invalidated only when the corresponding element is deleted.
 
-// std::list meets the requirements of Container, MemContextAwareContainer, SequenceContainer and ReversibleContainer.
+// std::list meets the requirements of Container, AllocatorAwareContainer, SequenceContainer and ReversibleContainer.
 
 typedef struct afxChain afxChain;
 typedef struct afxLinkage afxLinkage;

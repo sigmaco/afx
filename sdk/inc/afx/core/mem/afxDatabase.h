@@ -17,7 +17,7 @@
 #ifndef AFX_DATABASE_H
 #define AFX_DATABASE_H
 
-#include "afxMemContext.h"
+#include "afxAllocator.h"
 
 AFX_DEFINE_HANDLE(afxDatabase);
 
@@ -45,7 +45,7 @@ AFX_DEFINE_STRUCT(afxDatabaseTable)
 AFX_OBJECT(afxDatabase)
 {
     afxObject       obj;
-    afxMemContext    all;
+    afxAllocator    all;
     afxList         entries;
     afxList         tables;
 };

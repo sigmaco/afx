@@ -1,0 +1,1271 @@
+
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Acquiring Core Execution System...
+ Constructing instance 00000000001e8200 of Core Execution System class.
+ MemContext class initialized.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class initialized.
+ Module class initialized.
+ Acquiring Module...
+ Constructing instance 00000000001e40d0 of Module class.
+ Object 00000000001e40d0[mdle]^1 acquired.
+ I/O Stream class initialized.
+ Archive class initialized.
+ Resource class initialized.
+ Uniform Resource Dictionary class initialized.
+ HID class initialized.
+ Keyboard class initialized.
+ Mouse class initialized.
+ Draw System class initialized.
+ Application class initialized.
+ Acquiring Keyboard...
+ Constructing instance 00000000001ec040 of Keyboard : HID class.
+ Constructing instance 00000000001ec040 of HID class.
+ Constructing instance 00000000001ec040 of Keyboard class.
+ Object 00000000001ec040[kbd]^1 acquired.
+ Object 00000000001e8200[sys]^1 acquired.
+ Acquiring Draw System...
+ Constructing instance 00000000001b2dd0 of Draw System class.
+ Draw Driver class initialized.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ Acquiring Module...
+ Constructing instance 00000000001edcc0 of Module class.
+ Object 00000000001edcc0[mdle]^1 acquired.
+ Acquiring Draw Driver...
+ Constructing instance 00000000001ee960 of Draw Driver class.
+ Draw Context class initialized.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Object 00000000001ee960[ddrv]^1 acquired.
+ Loading draw ICDs...
+ Reacquired. (mdle)00000000001edcc0^3
+ Acquiring Module...
+ Constructing instance 00000000001f0e90 of Module class.
+ Object 00000000001f0e90[mdle]^1 acquired.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Object 00000000001b2dd0[dsys]^1 acquired.
+ Acquiring Draw Context...
+ Constructing instance 00000000001f19b0 of Draw Context class.
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class initialized.
+ Draw Input class initialized.
+ Draw Engine class initialized.
+ Buffer class initialized.
+ Vertex Buffer class initialized.
+ Index Buffer class initialized.
+ Sampler class initialized.
+ Texture class initialized.
+ Surface class initialized.
+ Canvas class initialized.
+ Pipeline Module class initialized.
+ Pipeline Rig class initialized.
+ Pipeline class initialized.
+ Lego class initialized.
+ Draw Output class initialized.
+ Acquiring Draw Engine...
+ Constructing instance 00000000001f8ba0 of Draw Engine class.
+ Acquiring Thread...
+ Constructing instance 00000000001fa2b0 of Thread class.
+ Object 00000000001fa2b0[thr]^1 acquired.
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 00000000001fa840 of Uniform Resource Dictionary class.
+ Acquiring I/O Stream...
+ Constructing instance 00000000001fa910 of I/O Stream class.
+ Acquired. (ios)00000000001fa910^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Object 00000000001fa910[ios]^1 acquired.
+ Destroying I/O Stream... 00000000001fa910[ios]^0
+ Destructing instance 00000000001fa910 of I/O Stream class.
+ I/O Stream destroyed. 00000000001fa910[ios]
+ Object 00000000001fa840[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 00000000001fa840[urd]^0
+ Destructing instance 00000000001fa840 of Uniform Resource Dictionary class.
+ Uniform Resource Dictionary destroyed. 00000000001fa840[urd]
+ Acquiring Pipeline...
+ Constructing instance 00000000001fa840 of Pipeline : Resource class.
+ Constructing instance 00000000001fa840 of Resource class.
+ Constructing instance 00000000001fa840 of Pipeline class.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000000203da0 of Pipeline Module class.
+ Object 0000000000203da0[pipm]^1 acquired.
+ Taking connection 00000000001fa9d8 connecting 0000000000203da0?pipm#1 to holder 00000000001fa840?pip#1.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000000203e80 of Pipeline Module class.
+ Object 0000000000203e80[pipm]^1 acquired.
+ Taking connection 00000000001faa38 connecting 0000000000203e80?pipm#1 to holder 00000000001fa840?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 00000000001fbad0 of Pipeline Rig class.
+ Object 00000000001fbad0[pipa]^1 acquired.
+ Object 00000000001fa840[pip]^1 acquired.
+ Acquiring Sampler...
+ Constructing instance 00000000001ffbd0 of Sampler class.
+ Object 00000000001ffbd0[smp]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 00000000001fb3c0 of Lego class.
+ Object 00000000001fb3c0[bset]^1 acquired.
+ Object 00000000001f8ba0[deng]^1 acquired.
+ Object 00000000001f19b0[dctx]^1 acquired.
+ Acquiring Application...
+ Constructing instance 00000000001fd5c0 of Application class.
+ Acquiring Mouse...
+ Constructing instance 0000000000206a50 of Mouse : HID class.
+ Constructing instance 0000000000206a50 of HID class.
+ Constructing instance 0000000000206a50 of Mouse class.
+ Object 0000000000206a50[mse]^1 acquired.
+ Taking connection 00000000001fd698 connecting 0000000000206a50?mse#1 to holder 00000000001fd5c0?app#1.
+ Acquiring MemContext...
+ Constructing instance 000000000020aa20 of MemContext class.
+ Object 000000000020aa20[mctx]^1 acquired.
+ Taking connection 00000000001fd640 connecting 000000000020aa20?mctx#1 to holder 00000000001fd5c0?app#1.
+ Acquiring Draw Input...
+ Constructing instance 000000000020ba10 of Draw Input class.
+ Acquiring MemContext...
+ Constructing instance 000000000021ecf0 of MemContext class.
+ Object 000000000021ecf0[mctx]^1 acquired.
+ Object 000000000020ba10[din]^1 acquired.
+ Taking connection 00000000001fdbd0 connecting 000000000020ba10?din#1 to holder 00000000001fd5c0?app#1.
+ Widget class initialized.
+ Simulation class initialized.
+ Object 00000000001fd5c0[app]^1 acquired.
+ Acquiring Simulation...
+ Constructing instance 0000000000292870 of Simulation class.
+ Material class initialized.
+ Mesh class initialized.
+ Node class initialized.
+ Skeleton class initialized.
+ Model class initialized.
+ Body class initialized.
+ Entity class initialized.
+ Camera class initialized.
+ Light class initialized.
+ Object 0000000000292870[sim]^1 acquired.
+ Acquiring Draw Output...
+ Constructing instance 000000000219f730 of Draw Output class.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 000000000219fd20 of Surface : Texture class.
+ Constructing instance 000000000219fd20 of Texture : Resource class.
+ Constructing instance 000000000219fd20 of Resource class.
+ Constructing instance 000000000219fd20 of Texture class.
+ Constructing instance 000000000219fd20 of Surface class.
+ Object 000000000219fd20[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002a46e30 of Surface : Texture class.
+ Constructing instance 0000000002a46e30 of Texture : Resource class.
+ Constructing instance 0000000002a46e30 of Resource class.
+ Constructing instance 0000000002a46e30 of Texture class.
+ Constructing instance 0000000002a46e30 of Surface class.
+ Object 0000000002a46e30[surf]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002a470e0 of Surface : Texture class.
+ Constructing instance 0000000002a470e0 of Texture : Resource class.
+ Constructing instance 0000000002a470e0 of Resource class.
+ Constructing instance 0000000002a470e0 of Texture class.
+ Constructing instance 0000000002a470e0 of Surface class.
+ Object 0000000002a470e0[surf]^1 acquired.
+ Extent readjusted. (dout)000000000219f730 -> 720, 0.375000 of 1920; 480 0.444444 of 1080
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ Extent readjusted. (dout)000000000219f730 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ Object 000000000219f730[dout]^1 acquired.
+ Acquiring Draw Input...
+ Constructing instance 00000000002ab2b0 of Draw Input class.
+ Acquiring MemContext...
+ Constructing instance 0000000002a49e50 of MemContext class.
+ Object 0000000002a49e50[mctx]^1 acquired.
+ Object 00000000002ab2b0[din]^1 acquired.
+ ADV glus_wavefront.c:865?__ldrWavefrontParse
+    MTL NAME art/scenario/bibliotheca/bibliotheca.mtl
+ ADV glus_wavefront.c:290?_ldrWavefrontLoadMaterial
+    MTL FNAME art/scenario/bibliotheca/bibliotheca.mtl
+ Mesh name 
+ Acquiring Material...
+ Constructing instance 0000000002a9c5e0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002ab3fe0 of I/O Stream class.
+ Acquired. (ios)0000000002ab3fe0^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/362dd2aa.tga"
+ Object 0000000002ab3fe0[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a668c0 of Texture : Resource class.
+ Constructing instance 0000000002a668c0 of Resource class.
+ Constructing instance 0000000002a668c0 of Texture class.
+ Object 0000000002a668c0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002ab3fe0[ios]^0
+ Destructing instance 0000000002ab3fe0 of I/O Stream class.
+ I/O Stream destroyed. 0000000002ab3fe0[ios]
+ Object 0000000002a9c5e0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a70140 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/9981a3e9.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000004301da0 of Texture : Resource class.
+ Constructing instance 0000000004301da0 of Resource class.
+ Constructing instance 0000000004301da0 of Texture class.
+ Object 0000000004301da0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 0000000002a70140[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a4a070 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/2e98f642.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a6d7e0 of Texture : Resource class.
+ Constructing instance 0000000002a6d7e0 of Resource class.
+ Constructing instance 0000000002a6d7e0 of Texture class.
+ Object 0000000002a6d7e0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 0000000002a4a070[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a93b60 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/7cdfd5bf.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002ab0530 of Texture : Resource class.
+ Constructing instance 0000000002ab0530 of Resource class.
+ Constructing instance 0000000002ab0530 of Texture class.
+ Object 0000000002ab0530[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 0000000002a93b60[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002aa0f10 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/5d90b6f0.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000004355850 of Texture : Resource class.
+ Constructing instance 0000000004355850 of Resource class.
+ Constructing instance 0000000004355850 of Texture class.
+ Object 0000000004355850[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 0000000002aa0f10[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000043555f0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/1b713eb1.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000004355d30 of Texture : Resource class.
+ Constructing instance 0000000004355d30 of Resource class.
+ Constructing instance 0000000004355d30 of Texture class.
+ Object 0000000004355d30[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 00000000043555f0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000004355ad0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000002b4e530 of I/O Stream class.
+ Acquired. (ios)0000000002b4e530^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/70e3c0c8.tga"
+ Object 0000000002b4e530[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000254e2280 of Texture : Resource class.
+ Constructing instance 00000000254e2280 of Resource class.
+ Constructing instance 00000000254e2280 of Texture class.
+ Object 00000000254e2280[tex]^1 acquired.
+ Destroying I/O Stream... 0000000002b4e530[ios]^0
+ Destructing instance 0000000002b4e530 of I/O Stream class.
+ I/O Stream destroyed. 0000000002b4e530[ios]
+ Object 0000000004355ad0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254e2020 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/c5ce3db4.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000025523920 of Texture : Resource class.
+ Constructing instance 0000000025523920 of Resource class.
+ Constructing instance 0000000025523920 of Texture class.
+ Object 0000000025523920[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254e2020[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254a0fb0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/ea5dad63.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000025564c10 of Texture : Resource class.
+ Constructing instance 0000000025564c10 of Resource class.
+ Constructing instance 0000000025564c10 of Texture class.
+ Object 0000000025564c10[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254a0fb0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000025564e90 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/055034b9.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000254a1140 of Texture : Resource class.
+ Constructing instance 00000000254a1140 of Resource class.
+ Constructing instance 00000000254a1140 of Texture class.
+ Object 00000000254a1140[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000025564e90[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254a13c0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/0bdda311.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000254a1550 of Texture : Resource class.
+ Constructing instance 00000000254a1550 of Resource class.
+ Constructing instance 00000000254a1550 of Texture class.
+ Object 00000000254a1550[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254a13c0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254a17d0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/6a2686cb.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000254a1960 of Texture : Resource class.
+ Constructing instance 00000000254a1960 of Resource class.
+ Constructing instance 00000000254a1960 of Texture class.
+ Object 00000000254a1960[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254a17d0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254a1be0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/383445d3.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000255e50e0 of Texture : Resource class.
+ Constructing instance 00000000255e50e0 of Resource class.
+ Constructing instance 00000000255e50e0 of Texture class.
+ Object 00000000255e50e0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254a1be0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000254a1d70 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/6b459c7a.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000256253c0 of Texture : Resource class.
+ Constructing instance 00000000256253c0 of Resource class.
+ Constructing instance 00000000256253c0 of Texture class.
+ Object 00000000256253c0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000254a1d70[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000025563c00 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/d9d96ca1.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000025563d90 of Texture : Resource class.
+ Constructing instance 0000000025563d90 of Resource class.
+ Constructing instance 0000000025563d90 of Texture class.
+ Object 0000000025563d90[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000025563c00[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000025564010 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/1ff936b5.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 00000000255641a0 of Texture : Resource class.
+ Constructing instance 00000000255641a0 of Resource class.
+ Constructing instance 00000000255641a0 of Texture class.
+ Object 00000000255641a0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000025564010[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a78b70 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/3d8a25c5.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000025564420 of Texture : Resource class.
+ Constructing instance 0000000025564420 of Resource class.
+ Constructing instance 0000000025564420 of Texture class.
+ Object 0000000025564420[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a78b70[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a78d00 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/a0d6db37.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7b370 of Texture : Resource class.
+ Constructing instance 0000000002a7b370 of Resource class.
+ Constructing instance 0000000002a7b370 of Texture class.
+ Object 0000000002a7b370[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a78d00[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a78e90 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/47d2115a.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7b600 of Texture : Resource class.
+ Constructing instance 0000000002a7b600 of Resource class.
+ Constructing instance 0000000002a7b600 of Texture class.
+ Object 0000000002a7b600[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a78e90[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79020 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/d6dcf516.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7b890 of Texture : Resource class.
+ Constructing instance 0000000002a7b890 of Resource class.
+ Constructing instance 0000000002a7b890 of Texture class.
+ Object 0000000002a7b890[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79020[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a791b0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/25041920.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7bb20 of Texture : Resource class.
+ Constructing instance 0000000002a7bb20 of Resource class.
+ Constructing instance 0000000002a7bb20 of Texture class.
+ Object 0000000002a7bb20[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a791b0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79340 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/7f172538.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7bdb0 of Texture : Resource class.
+ Constructing instance 0000000002a7bdb0 of Resource class.
+ Constructing instance 0000000002a7bdb0 of Texture class.
+ Object 0000000002a7bdb0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79340[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a794d0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/2ea2c05d.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7c040 of Texture : Resource class.
+ Constructing instance 0000000002a7c040 of Resource class.
+ Constructing instance 0000000002a7c040 of Texture class.
+ Object 0000000002a7c040[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a794d0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79660 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/722b0afa.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7c2d0 of Texture : Resource class.
+ Constructing instance 0000000002a7c2d0 of Resource class.
+ Constructing instance 0000000002a7c2d0 of Texture class.
+ Object 0000000002a7c2d0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79660[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a797f0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/fe22aa6f.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7c560 of Texture : Resource class.
+ Constructing instance 0000000002a7c560 of Resource class.
+ Constructing instance 0000000002a7c560 of Texture class.
+ Object 0000000002a7c560[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a797f0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79980 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/9a486f12.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7c7f0 of Texture : Resource class.
+ Constructing instance 0000000002a7c7f0 of Resource class.
+ Constructing instance 0000000002a7c7f0 of Texture class.
+ Object 0000000002a7c7f0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79980[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79b10 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/eee86999.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7ca80 of Texture : Resource class.
+ Constructing instance 0000000002a7ca80 of Resource class.
+ Constructing instance 0000000002a7ca80 of Texture class.
+ Object 0000000002a7ca80[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79b10[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79ca0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/f68cc09e.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7cd10 of Texture : Resource class.
+ Constructing instance 0000000002a7cd10 of Resource class.
+ Constructing instance 0000000002a7cd10 of Texture class.
+ Object 0000000002a7cd10[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79ca0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79e30 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/f4ed1ea7.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7cfa0 of Texture : Resource class.
+ Constructing instance 0000000002a7cfa0 of Resource class.
+ Constructing instance 0000000002a7cfa0 of Texture class.
+ Object 0000000002a7cfa0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79e30[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a79fc0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/ad268fe8.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7e370 of Texture : Resource class.
+ Constructing instance 0000000002a7e370 of Resource class.
+ Constructing instance 0000000002a7e370 of Texture class.
+ Object 0000000002a7e370[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a79fc0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a150 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/d1388839.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7e600 of Texture : Resource class.
+ Constructing instance 0000000002a7e600 of Resource class.
+ Constructing instance 0000000002a7e600 of Texture class.
+ Object 0000000002a7e600[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a150[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a2e0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/998d085a.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7e890 of Texture : Resource class.
+ Constructing instance 0000000002a7e890 of Resource class.
+ Constructing instance 0000000002a7e890 of Texture class.
+ Object 0000000002a7e890[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a2e0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a470 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/5362f255.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7eb20 of Texture : Resource class.
+ Constructing instance 0000000002a7eb20 of Resource class.
+ Constructing instance 0000000002a7eb20 of Texture class.
+ Object 0000000002a7eb20[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a470[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a600 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/fb208bcf.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7edb0 of Texture : Resource class.
+ Constructing instance 0000000002a7edb0 of Resource class.
+ Constructing instance 0000000002a7edb0 of Texture class.
+ Object 0000000002a7edb0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a600[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a790 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/00a3d971.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7f040 of Texture : Resource class.
+ Constructing instance 0000000002a7f040 of Resource class.
+ Constructing instance 0000000002a7f040 of Texture class.
+ Object 0000000002a7f040[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a790[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000002a7a920 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/a8a3b3b0.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7f2d0 of Texture : Resource class.
+ Constructing instance 0000000002a7f2d0 of Resource class.
+ Constructing instance 0000000002a7f2d0 of Texture class.
+ Object 0000000002a7f2d0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000002a7a920[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000296fe0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/4ca913c7.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7f560 of Texture : Resource class.
+ Constructing instance 0000000002a7f560 of Resource class.
+ Constructing instance 0000000002a7f560 of Texture class.
+ Object 0000000002a7f560[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000296fe0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297170 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/0d32c181.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7f7f0 of Texture : Resource class.
+ Constructing instance 0000000002a7f7f0 of Resource class.
+ Constructing instance 0000000002a7f7f0 of Texture class.
+ Object 0000000002a7f7f0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297170[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297300 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/b4b9b78a.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7fa80 of Texture : Resource class.
+ Constructing instance 0000000002a7fa80 of Resource class.
+ Constructing instance 0000000002a7fa80 of Texture class.
+ Object 0000000002a7fa80[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297300[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297490 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/0c95b675.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7fd10 of Texture : Resource class.
+ Constructing instance 0000000002a7fd10 of Resource class.
+ Constructing instance 0000000002a7fd10 of Texture class.
+ Object 0000000002a7fd10[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297490[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297620 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/24f94045.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000002a7ffa0 of Texture : Resource class.
+ Constructing instance 0000000002a7ffa0 of Resource class.
+ Constructing instance 0000000002a7ffa0 of Texture class.
+ Object 0000000002a7ffa0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297620[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000002977b0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/9f96bbda.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000298fe0 of Texture : Resource class.
+ Constructing instance 0000000000298fe0 of Resource class.
+ Constructing instance 0000000000298fe0 of Texture class.
+ Object 0000000000298fe0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000002977b0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297940 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/296e289b.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299270 of Texture : Resource class.
+ Constructing instance 0000000000299270 of Resource class.
+ Constructing instance 0000000000299270 of Texture class.
+ Object 0000000000299270[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297940[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297ad0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/781082bb.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299500 of Texture : Resource class.
+ Constructing instance 0000000000299500 of Resource class.
+ Constructing instance 0000000000299500 of Texture class.
+ Object 0000000000299500[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297ad0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297c60 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/f3da6c63.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299790 of Texture : Resource class.
+ Constructing instance 0000000000299790 of Resource class.
+ Constructing instance 0000000000299790 of Texture class.
+ Object 0000000000299790[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297c60[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297df0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/3d9bc97a.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299a20 of Texture : Resource class.
+ Constructing instance 0000000000299a20 of Resource class.
+ Constructing instance 0000000000299a20 of Texture class.
+ Object 0000000000299a20[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297df0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000297f80 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/b6b730f5.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299cb0 of Texture : Resource class.
+ Constructing instance 0000000000299cb0 of Resource class.
+ Constructing instance 0000000000299cb0 of Texture class.
+ Object 0000000000299cb0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000297f80[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000298110 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/f8bd67b2.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 0000000000299f40 of Texture : Resource class.
+ Constructing instance 0000000000299f40 of Resource class.
+ Constructing instance 0000000000299f40 of Texture class.
+ Object 0000000000299f40[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000298110[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 00000000002982a0 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/f1fa0874.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 000000000029a1d0 of Texture : Resource class.
+ Constructing instance 000000000029a1d0 of Resource class.
+ Constructing instance 000000000029a1d0 of Texture class.
+ Object 000000000029a1d0[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 00000000002982a0[mtl]^1 acquired.
+ Acquiring Material...
+ Constructing instance 0000000000298430 of Material class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/scenario/bibliotheca/upd.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 000000000029a460 of Texture : Resource class.
+ Constructing instance 000000000029a460 of Resource class.
+ Constructing instance 000000000029a460 of Texture class.
+ Object 000000000029a460[tex]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 0000000000298430[mtl]^1 acquired.
+ ADV afxString.c:423?AfxStringCopy
+    String length truncation: 40 -> 32 bytes
+ Acquiring Model...
+ Constructing instance 00000000255646a0 of Model class.
+ Acquiring Skeleton...
+ Constructing instance 0000000025564870 of Skeleton : Node class.
+ Constructing instance 0000000025564870 of Node class.
+ Constructing instance 0000000025564870 of Skeleton class.
+ ADV afxSkeleton.c:162?_AfxSklCtor
+    TODO: Reparent base to skeleton node
+ Acquiring Node...
+ Constructing instance 0000000004003950 of Node class.
+ Object 0000000004003950[nod]^1 acquired.
+ Object 0000000025564870[skl]^1 acquired.
+ Taking connection 0000000025564730 connecting 0000000025564870?skl#1 to holder 00000000255646a0?mdl#1.
+ Acquiring Index Buffer...
+ Constructing instance 0000000004052560 of Index Buffer : Buffer class.
+ Constructing instance 0000000004052560 of Buffer class.
+ Constructing instance 0000000004052560 of Index Buffer class.
+ Object 0000000004052560[ibuf]^1 acquired.
+ Acquiring Vertex Buffer...
+ Constructing instance 0000000004061910 of Vertex Buffer : Buffer class.
+ Constructing instance 0000000004061910 of Buffer class.
+ Constructing instance 0000000004061910 of Vertex Buffer class.
+ Object 0000000004061910[vbuf]^1 acquired.
+ Acquiring Mesh...
+ Constructing instance 0000000025665700 of Mesh class.
+ Taking connection 0000000025665790 connecting 0000000004061910?vbuf#1 to holder 0000000025665700?msh#1.
+ Taking connection 0000000004061a40 connecting 0000000004052560?ibuf#1 to holder 0000000025665700?msh#1.
+ ADV afxString.c:423?AfxStringCopy
+    String length truncation: 32 -> 32 bytes
+ Object 0000000025665700[msh]^1 acquired.
+ Taking connection 0000000004058230 connecting 0000000025665700?msh#1 to holder 00000000255646a0?mdl#1.
+ Object 00000000255646a0[mdl]^1 acquired.
+ Acquiring Body...
+ Constructing instance 00000000002af900 of Body : Node class.
+ Constructing instance 00000000002af900 of Node class.
+ Constructing instance 00000000002af900 of Body class.
+ Taking connection 00000000002afb10 connecting 00000000255646a0?mdl#1 to holder 00000000002af900?bod#1.
+ Object 00000000002af900[bod]^1 acquired.
+ Acquiring Camera...
+ Constructing instance 0000000000224990 of Camera : Node class.
+ Constructing instance 0000000000224990 of Node class.
+ Constructing instance 0000000000224990 of Camera class.
+ Object 0000000000224990[cam]^1 acquired.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Texture...
+ Constructing instance 000000000029a6f0 of Texture : Resource class.
+ Constructing instance 000000000029a6f0 of Resource class.
+ Constructing instance 000000000029a6f0 of Texture class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/right.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/left.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/top.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/bottom.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/back.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/art/skybox/blue/front.tga"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 000000000029a6f0[tex]^1 acquired.
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 000000000401a6c0 of Uniform Resource Dictionary class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/data/pipeline/skybox.pip.urd"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 000000000401a6c0[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 000000000401a6c0[urd]^0
+ Destructing instance 000000000401a6c0 of Uniform Resource Dictionary class.
+ Uniform Resource Dictionary destroyed. 000000000401a6c0[urd]
+ Acquiring Pipeline...
+ Constructing instance 0000000002aa9180 of Pipeline : Resource class.
+ Constructing instance 0000000002aa9180 of Resource class.
+ Constructing instance 0000000002aa9180 of Pipeline class.
+ Acquiring Pipeline Module...
+ Constructing instance 00000000002a91e0 of Pipeline Module class.
+ Object 00000000002a91e0[pipm]^1 acquired.
+ Taking connection 0000000002aa9318 connecting 00000000002a91e0?pipm#1 to holder 0000000002aa9180?pip#1.
+ Acquiring Pipeline Module...
+ Constructing instance 0000000002aa10a0 of Pipeline Module class.
+ Object 0000000002aa10a0[pipm]^1 acquired.
+ Taking connection 0000000002aa9378 connecting 0000000002aa10a0?pipm#1 to holder 0000000002aa9180?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 00000000252400d0 of Pipeline Rig class.
+ Object 00000000252400d0[pipa]^1 acquired.
+ Object 0000000002aa9180[pip]^1 acquired.
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 000000000401a6c0 of Uniform Resource Dictionary class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ Acquired. (ios)0000000025522560^1 <-> "E:/qwadro/afx/data/skinned.pip.urd"
+ Object 0000000025522560[ios]^1 acquired.
+ Destroying I/O Stream... 0000000025522560[ios]^0
+ Destructing instance 0000000025522560 of I/O Stream class.
+ I/O Stream destroyed. 0000000025522560[ios]
+ Object 000000000401a6c0[urd]^1 acquired.
+ ERR afxUniformPipelineDescriptor.c:132?_AfxParseApproach
+    Attribute 'set' not implemented yet.
+ ERR afxUniformPipelineDescriptor.c:132?_AfxParseApproach
+    Attribute 'set' not implemented yet.
+ ERR afxUniformPipelineDescriptor.c:132?_AfxParseApproach
+    Attribute 'set' not implemented yet.
+ ERR afxUniformPipelineDescriptor.c:132?_AfxParseApproach
+    Attribute 'set' not implemented yet.
+ ERR afxUniformPipelineDescriptor.c:132?_AfxParseApproach
+    Attribute 'set' not implemented yet.
+ Destroying Uniform Resource Dictionary... 000000000401a6c0[urd]^0
+ Destructing instance 000000000401a6c0 of Uniform Resource Dictionary class.
+ Uniform Resource Dictionary destroyed. 000000000401a6c0[urd]
+ Acquiring Pipeline...
+ Constructing instance 0000000004009e20 of Pipeline : Resource class.
+ Constructing instance 0000000004009e20 of Resource class.
+ Constructing instance 0000000004009e20 of Pipeline class.
+ Acquiring I/O Stream...
+ Constructing instance 0000000025522560 of I/O Stream class.
+ ERR afxSystem.c:751?AfxSystemResolveUri
+    
+ ERR afxStream.c:763?_AfxStrmCtor
+    
+ ERR afxClass.c:126?_AfxClsRunSubsetCtor
+    
+ ERR afxClass.c:138?AfxClassRunInstanceConstructors
+    
+ ERR afxObject.c:609?AfxObjectAcquire
+    
+ ERR afxStream.c:672?AfxSystemAcquireStream
+    
+ ERR sglPipelineModule.c:206?_AfxDrawContextUploadPipelineModuleGlsl
+    
+ ERR sglPipelineModule.c:256?_AfxDrawContextUploadPipelineModule
+    
+ ERR sglPipelineModule.c:314?_AfxDrawContextFetchPipelineModule
+    
+ ERR sglPipeline.c:585?_AfxPipCtor
+    
+ ERR afxClass.c:126?_AfxClsRunSubsetCtor
+    
+ ERR afxClass.c:138?AfxClassRunInstanceConstructors
+    
+ ERR afxObject.c:609?AfxObjectAcquire
+    
+ ERR afxUniformPipelineDescriptor.c:631?_AfxDrawContextUploadPipelineUrd
+    
+ ERR sglPipeline.c:800?_AfxDrawContextUploadPipeline
+    
+ ERR sglPipeline.c:858?_AfxDrawContextFetchPipeline
+    

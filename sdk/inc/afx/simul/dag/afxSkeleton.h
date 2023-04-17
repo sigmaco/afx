@@ -48,6 +48,8 @@ AFX_OBJECT(afxSkeleton)
     afxInt              lodType;
 };
 
+AFX void*       AfxSkeletonGetSimulation(afxSkeleton skl);
+
 AFX afxNode     AfxSkeletonGetNode(afxSkeleton skl);
 AFX afxSkeleton AfxSkeletonClone(afxSkeleton skl);
 

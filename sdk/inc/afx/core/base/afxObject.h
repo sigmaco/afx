@@ -78,7 +78,6 @@ AFX_DEFINE_STRUCT(afxConnection)
 };
 
 AFX void*               AfxObjectAcquire(afxClass *cls, void const *paradigm, afxHint const hint);
-AFX afxResult           AfxObjectCoacquire(afxClass *cls, afxNat cnt, void const **paradigms, void **objs, afxHint const hint);
 AFX afxResult           AfxObjectReacquire(afxObject *obj, afxObject *holder, void(*handler)(afxObject*, afxEvent*), afxNat32 filter, afxConnection *objc);
 AFX afxResult           AfxObjectRelease(afxObject *obj);
 

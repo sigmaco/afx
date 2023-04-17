@@ -96,6 +96,8 @@ afxStreamOrigin;
 
 AFX_DEFINE_HANDLE(afxStream);
 
+AFX void*               AfxStreamGetSystem(afxStream ios);
+
 AFX afxResult           AfxStreamAdvance(afxStream ios, afxInt range);
 AFX afxNat              AfxStreamAskCursor(afxStream ios);
 AFX afxResult           AfxStreamCopyUri(afxStream ios, afxString *str);

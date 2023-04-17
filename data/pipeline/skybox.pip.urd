@@ -9,65 +9,24 @@
 
                 layout(std140, row_major) uniform sgl_view
                 {
+                    vec3 camPos;
+                    mat4 c;
                     mat4 v;
                     mat4 p;
                     mat4 vp;
                 };
+
+                layout(location = 0) in vec3 a_xyz;
 
                 out block
                 {
                     vec3 uvw0;
                 } sgl_v;
 
-                const vec3 vertex[36] = vec3[]
-                (
-				vec3(-1.0,  1.0, -1.0),
-				vec3(-1.0, -1.0, -1.0),
-				vec3(1.0, -1.0, -1.0),
-				vec3(1.0, -1.0, -1.0),
-				vec3(1.0,  1.0, -1.0),
-				vec3(-1.0,  1.0, -1.0),
-
-				vec3(-1.0, -1.0,  1.0),
-				vec3(-1.0, -1.0, -1.0),
-				vec3(-1.0,  1.0, -1.0),
-				vec3(-1.0,  1.0, -1.0),
-				vec3(-1.0,  1.0,  1.0),
-				vec3(-1.0, -1.0,  1.0),
-
-				vec3(1.0, -1.0, -1.0),
-				vec3(1.0, -1.0,  1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(1.0,  1.0, -1.0),
-				vec3(1.0, -1.0, -1.0),
-
-				vec3(-1.0, -1.0,  1.0),
-				vec3(-1.0,  1.0,  1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(1.0, -1.0,  1.0),
-				vec3(-1.0, -1.0,  1.0),
-
-				vec3(-1.0,  1.0, -1.0),
-				vec3(1.0,  1.0, -1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(1.0,  1.0,  1.0),
-				vec3(-1.0,  1.0,  1.0),
-				vec3(-1.0,  1.0, -1.0),
-
-				vec3(-1.0, -1.0, -1.0),
-				vec3(-1.0, -1.0,  1.0),
-				vec3(1.0, -1.0, -1.0),
-				vec3(1.0, -1.0, -1.0),
-				vec3(-1.0, -1.0,  1.0),
-				vec3(1.0, -1.0,  1.0)
-                );
-
                 void main()
                 {
-                    sgl_v.uvw0 = vertex[gl_VertexID];
-                    vec4 pos = vec4(vertex[gl_VertexID] * 1000000.0, 1.0) * v * p;
+                    sgl_v.uvw0 = a_xyz;
+                    vec4 pos = vec4(a_xyz, 1.0) * v * p;
                     gl_Position = pos.xyww;
                 }
                 ]]>
@@ -93,7 +52,9 @@
                 }
                 ]]>
             </Module>
-            <Input topology='TRI_LIST' restart='false'/>
+            <Input topology='TRI_LIST' restart='false'>
+                <Stream location='0' binding='0' format='XYZ32' />
+            </Input>
             <Rasterization>
                 <DepthClampEnable>false</DepthClampEnable>
                 <RasterizerDiscardEnable>false</RasterizerDiscardEnable>

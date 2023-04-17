@@ -153,9 +153,6 @@
     <ClInclude Include="..\inc\afx\core\io\afxMouse.h">
       <Filter>e2coree\core\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\inc\afx\core\mem\afxMemContext.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
     <ClInclude Include="..\inc\afx\core\mem\afxMemory.h">
       <Filter>e2coree\core\mem</Filter>
     </ClInclude>
@@ -417,6 +414,12 @@
     <ClInclude Include="..\src\e2coree\core\base\afxCoreParadigms.h">
       <Filter>e2coree\core\base</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\afx\draw\io\afxDirectDrawSurface.h">
+      <Filter>e2coree\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\afx\core\mem\afxAllocator.h">
+      <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\inc\afx\README.md">
@@ -627,9 +630,6 @@
     <ClCompile Include="..\src\e2coree\core\mem\afxDatabase.c">
       <Filter>e2coree\core\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\e2coree\core\mem\afxMemContext.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\e2coree\core\mem\afxMemory.c">
       <Filter>e2coree\core\mem</Filter>
     </ClCompile>
@@ -737,6 +737,12 @@
     </ClCompile>
     <ClCompile Include="..\src\e2coree\deps\glus\glus_matrix.c">
       <Filter>e2coree\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2coree\draw\io\afxDirectDrawSurface.c">
+      <Filter>e2coree\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2coree\core\mem\afxAllocator.c">
+      <Filter>e2coree\core\mem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
