@@ -28,7 +28,7 @@
 // This object is available as QObject::typeObject().
 
 AFX_DEFINE_HANDLE(afxStream);
-AFX_DEFINE_HANDLE(afxMemContext);
+AFX_DEFINE_HANDLE(afxAllocator);
 AFX_DECLARE_STRUCT(afxClassExtension);
 AFX_DECLARE_STRUCT(afxObject);
 AFX_DECLARE_STRUCT(afxClass);
@@ -36,7 +36,7 @@ AFX_DECLARE_STRUCT(afxEvent);
 
 // A afxClass is a model for something which explains it or shows how it canv be produced.
 
-typedef struct afxClass
+AFX_DEFINE_STRUCT(afxClass)
 {
     afxFcc          fcc; // AFX_FCC_CLS
     afxFcc          objFcc;
@@ -44,7 +44,7 @@ typedef struct afxClass
     afxChain        deriveds;
 
     afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
-    afxMemContext   all;
+    afxAllocator    all;
     afxSize         siz;
     afxError        (*ctor)(afxObject* obj, void const *paradigm); // void to avoid warnings
     afxError        (*dtor)(afxObject* obj);
@@ -61,7 +61,7 @@ typedef struct afxClass
     afxNat          maxInstCnt;
     afxNat          instBaseSiz;
     void const      *vmt;
-} afxClass;
+};
 
 AFX_DEFINE_STRUCT(afxIterator)
 {
@@ -79,7 +79,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 AFX_DEFINE_STRUCT(afxClassSpecification)
 {
     afxFcc          fcc;
-    afxMemContext   all;
+    afxAllocator   all;
     afxNat          maxCnt;
     afxNat          size;
     afxClass*       base;
@@ -89,28 +89,28 @@ AFX_DEFINE_STRUCT(afxClassSpecification)
     void const*     vmt;
 };
 
-AFX afxError AfxClassDeploy(afxClass *cls, afxChain* provider, afxClass *base, afxClassSpecification const *spec);
-AFX afxError AfxClassDrop(afxClass *cls);
+AFX afxError AfxClassRegister(afxClass *cls, afxChain* provider, afxClass *base, afxClassSpecification const *spec);
+AFX afxError AfxClassDeregister(afxClass *cls);
 
 AFXINL afxClass* AfxClassGetBase(afxClass const *cls);
 AFXINL void const* AfxClassGetVmt(afxClass const *cls);
-AFX afxObject* AfxClassGetInstance(afxClass const *cls, afxBool b2f, afxNat idx);
-AFX afxNat AfxClassGetInstanceIndex(afxClass const *cls, afxBool b2f, afxObject const *obj);
+AFXINL afxObject* AfxClassGetInstance(afxClass const *cls, afxBool b2f, afxNat idx);
+AFXINL afxNat AfxClassGetInstanceIndex(afxClass const *cls, afxBool b2f, afxObject const *obj);
 
 AFXINL afxNat AfxClassGetInstanceCount(afxClass *cls);
-AFXINL afxNat AfxClassGetInstanceSize(afxClass *cls, afxBool partial);
-AFXINL void* AfxClassAllocateInstance(afxClass *cls, afxHint const hint);
+AFXINL afxNat AfxClassGetInstanceSize(afxClass *cls);
+AFXINL afxNat AfxClassGetSubsetSize(afxClass *cls);
 
-AFX afxError AfxClassRunInstanceDestructors(afxClass *cls, afxObject *obj);
-AFX afxError AfxClassRunInstanceConstructors(afxClass *cls, afxObject *obj, void const *args);
+AFXINL afxResult AfxClassAllocateInstances(afxClass *cls, afxNat cnt, afxObject *obj[], afxHint const hint);
+AFXINL afxResult AfxClassDeallocateInstances(afxClass *cls, afxNat cnt, afxObject *obj[]);
+
+AFX afxResult AfxClassDestructInstances(afxClass *cls, afxNat cnt, afxObject *obj[]);
+AFX afxResult AfxClassConstructInstances(afxClass *cls, afxNat cnt, afxObject *obj[], void const *args[]);
 
 AFXINL afxResult AfxClassEnumerateInstances(afxClass *cls, afxBool reverse, afxNat base, afxNat cnt, afxObject *obj[]);
 
 AFX afxResult AfxClassForEveryInstance(afxClass *cls, afxBool exclusive, void(*f)(afxIterator *obji), void *data);
 AFX afxResult AfxClassForEveryDerivedInstance(afxClass *cls, afxFcc superset, afxBool exclusive, void(*f)(afxIterator *obji), void *data);
-
-AFX afxResult _AfxShutdownOrphanClasses(void);
-AFX afxResult _AfxDropClassChain(afxChain *ch);
 
 AFX void    AfxClassLockInclusive(afxClass *cls);
 AFX void    AfxClassLockExclusive(afxClass *cls);
@@ -126,5 +126,8 @@ AFX afxBool AfxClassTryLockExclusive(afxClass *cls);
 #else
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif
+
+AFX afxResult _AfxShutdownOrphanClasses(void);
+AFX afxResult _AfxDropClassChain(afxChain *ch);
 
 #endif//AFX_CLASS_H

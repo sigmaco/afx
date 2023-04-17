@@ -26,13 +26,13 @@ In typical implementations, all objects in a region are allocated in a single co
 #ifndef AFX_ARENA_ALLOCATOR_H
 #define AFX_ARENA_ALLOCATOR_H
 
-#include "afxMemContext.h"
+#include "afxAllocator.h"
 
-AFX_DEFINE_HANDLE(afxArenaMemContext);
+AFX_DEFINE_HANDLE(afxArenaAllocator);
 
-AFX_OBJECT(afxArenaMemContext)
+AFX_OBJECT(afxArenaAllocator)
 {
-    AFX_OBJECT(afxMemContext)    all;
+    AFX_OBJECT(afxAllocator)    all;
 };
 
 #endif//AFX_ARENA_ALLOCATOR_H

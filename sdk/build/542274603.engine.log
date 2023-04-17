@@ -1,0 +1,33 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ ERR afxObject.c:275?AfxObjectAssert
+    
+ ERR afxObject.c:275?AfxObjectAssert
+    (obj)
+    Invalid
+ ERR afxObject.c:156?AfxObjectTestFcc
+    
+ ERR afxObject.c:156?AfxObjectTestFcc
+    (obj)
+    Invalid
+ ERR afxObject.c:203?AfxObjectGetClass
+    
+ ERR afxObject.c:203?AfxObjectGetClass
+    (obj)
+    Invalid

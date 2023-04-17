@@ -1,0 +1,154 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 00000000002ae790, 00000000002ae798)
+ Constructing instance 0000000000462520 of Core Execution System.
+ afxSystem.c:1197?_AfxSysCtor(sys=0000000000462520)
+ ADV afxSystem.c:1213?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1214?_AfxSysCtor
+    Logical processor count: 2
+ Allocator class registered.
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=0000000000462520,strategy=00000000002ac218,hint="afxSystem.c:1229!_AfxSysCtor")
+ Class[Allocator].ConstructInstances(1, 00000000002abed0, 00000000002abed8)
+ Constructing instance 000000000045e8c0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=000000000045e8c0)
+ Instance 000000000045e8c0[all]^1 built.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class registered.
+ Module class registered.
+ afxModule.c:63?AfxSystemAcquireModule(sys=0000000000462520,uri=system/e2coree.dll)
+ Class[Module].ConstructInstances(1, 00000000002abe20, 00000000002abe28)
+ Constructing instance 0000000000469ea0 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:system/e2coree.dll)
+ Instance 0000000000469ea0[mdle]^1 built.
+ I/O Stream class registered.
+ Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ HID class registered.
+ Keyboard class registered.
+ Mouse class registered.
+ Draw System class registered.
+ Application class registered.
+ afxKeyboard.c:163?AfxSystemAcquireKeyboard(sys=0000000000462520,port=0)
+ Class[Keyboard].ConstructInstances(1, 00000000002abf70, 00000000002abf78)
+ Constructing instance 0000000000469fe0 of Keyboard : HID.
+ Constructing instance 0000000000469fe0 of HID.
+ afxHid.c:55?_AfxHidCtor(hid=0000000000469fe0)
+ Constructing instance 0000000000469fe0 of Keyboard.
+ afxKeyboard.c:191?_AfxKbdCtor(kbd=0000000000469fe0)
+ Instance 0000000000469fe0[kbd]^1 built.
+ Instance 0000000000462520[sys]^1 built.
+ afxDrawSystem.c:180?AfxSystemAcquireDrawSystem(sys=0000000000462520)
+ Class[Draw System].ConstructInstances(1, 00000000002ae7b0, 00000000002ae7b8)
+ Constructing instance 0000000000466a30 of Draw System.
+ afxDrawSystem.c:261?_AfxDsysCtor(dsys=0000000000466a30)
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=0000000000462520,strategy=00000000002ae2d8,hint="afxDrawSystem.c:280!_AfxDsysCtor")
+ Class[Allocator].ConstructInstances(1, 00000000002adee0, 00000000002adee8)
+ Constructing instance 000000000046a8e0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=000000000046a8e0)
+ Instance 000000000046a8e0[all]^1 built.
+ Draw Driver class registered.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:63?AfxSystemAcquireModule(sys=0000000000462520,uri=e2draw.icd)
+ Class[Module].ConstructInstances(1, 00000000002ade30, 00000000002ade38)
+ Constructing instance 000000000046bf30 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:e2draw.icd)
+ Instance 000000000046bf30[mdle]^1 built.
+ afxDrawDriver.c:46?AfxDrawSystemRegisterDriver(dsys=0000000000466a30,mdle=000000000046bf30,spec=00000000002adf30)
+ Class[Draw Driver].ConstructInstances(1, 00000000002add50, 00000000002add58)
+ Constructing instance 000000000046c9c0 of Draw Driver.
+ afxDrawDriver.c:79?_AfxDdrvCtor(ddrv=000000000046c9c0)
+ Draw Context class registered.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Instance 000000000046c9c0[ddrv]^1 built.
+ Loading draw ICDs...
+ afxModule.c:63?AfxSystemAcquireModule(sys=0000000000462520,uri=e2draw.icd)
+ Reacquired. (mdle)000000000046bf30^3
+ afxModule.c:63?AfxSystemAcquireModule(sys=0000000000462520,uri=e2newton.icd)
+ Class[Module].ConstructInstances(1, 00000000002adb60, 00000000002adb68)
+ Constructing instance 000000000046eed0 of Module.
+ afxModule.c:129?_AfxMdleCtor(uri:e2newton.icd)
+ Instance 000000000046eed0[mdle]^1 built.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Instance 0000000000466a30[dsys]^1 built.
+ afxDrawContext.c:266?AfxDrawSystemAcquireContext(dsys=0000000000466a30,spec=00000000002ae9a0)
+ Class[Draw Context].ConstructInstances(1, 00000000002ae720, 00000000002ae728)
+ Constructing instance 000000000046fa30 of Draw Context.
+ sglDrawContext.c:627?_AfxDctxCtor(dctx=000000000046fa30)
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=0000000000462520,strategy=00000000002adfc8,hint="sglDrawContext.c:650!_AfxDctxCtor")
+ Class[Allocator].ConstructInstances(1, 00000000002adc70, 00000000002adc78)
+ Constructing instance 000000000046dec0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=000000000046dec0)
+ Instance 000000000046dec0[all]^1 built.
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class registered.
+ Draw Input class registered.
+ Draw Engine class registered.
+ Buffer class registered.
+ Vertex Buffer class registered.
+ Index Buffer class registered.
+ Sampler class registered.
+ Texture class registered.
+ Surface class registered.
+ Canvas class registered.
+ Pipeline Module class registered.
+ Pipeline Rig class registered.
+ Pipeline class registered.
+ Lego class registered.
+ Draw Output class registered.

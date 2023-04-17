@@ -60,30 +60,31 @@ AFX_DEFINE_HANDLE(afxSimulation);
 
 AFX_OBJECT(afxSimulation)
 {
-    afxObject           obj;
-    afxChain            provisions;
+    afxObject       obj;
+    afxChain        provisions;
 
-    afxClass           bodObjt;
-    afxClass           entObjt;
-    afxClass           camObjt;
-    afxClass           litObjt;
+    afxClass        bodObjt;
+    afxClass        entObjt;
+    afxClass        camObjt;
+    afxClass        litObjt;
 
-    afxClass           mtlObjt;
-    afxClass           mshObjt;
-    afxClass           mdlObjt;
-    afxClass           sklObjt;
-    afxClass           nodObjt;
+    afxClass        mtlObjt;
+    afxClass        mshObjt;
+    afxClass        mdlObjt;
+    afxClass        sklObjt;
+    afxClass        nodObjt;
 
-    afxArray                roots;
+    afxAllocator    genrlAll;
+    afxArray        roots;
 
-    afxAabb                 area;
-    afxV4d                  origin;
+    afxAabb         area;
+    afxV4d          origin;
 
-    afxSize                 stepNum, stepsPerSecond;
-    afxSize                 stepTime, swapTime;
-    afxReal                 stepDeltaTime;
+    afxSize         stepNum, stepsPerSecond;
+    afxSize         stepTime, swapTime;
+    afxReal         stepDeltaTime;
 
-    afxDrawContext          dctx;
+    afxDrawContext  dctx;
 };
 
 #endif
@@ -111,6 +112,8 @@ AFX afxNode         AfxSimulationAcquireNode(afxSimulation sim, afxNodeSpecifica
 AFX void*           AfxSimulationGetSystem(afxSimulation sim);
 AFX void*           AfxSimulationGetDrawSystem(afxSimulation sim);
 AFX void*           AfxSimulationGetApplication(afxSimulation sim);
+
+AFX afxAllocator    AfxSimulationGetAllocator(afxSimulation sim);
 
 AFX afxClass*  AfxSimulationGetBodyClass(afxSimulation sim);
 AFX afxClass*  AfxSimulationGetCameraClass(afxSimulation sim);

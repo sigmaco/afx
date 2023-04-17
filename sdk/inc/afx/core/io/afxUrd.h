@@ -46,6 +46,7 @@ AFX_OBJECT(afxUrd)
     afxUrdNode      *root;
 };
 
+AFX void*       AfxUrdGetSystem(afxUrd urd);
 
 AFX afxUrdNode* AfxUrdGetRootNode(afxUrd urd);
 AFX afxString*  AfxUrdNodeGetName(afxUrdNode *node);

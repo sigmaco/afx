@@ -37,9 +37,9 @@
 // alignment is an additional size used to pad elements in memory.
 // stride is the sum of size with alignment.
 
-AFX_DEFINE_HANDLE(afxMemContext);
+AFX_DEFINE_HANDLE(afxAllocator);
 AFX_DECLARE_STRUCT(afxSegment);
-AFX_DECLARE_STRUCT(afxMemory);
+AFX_DECLARE_STRUCT(afxAllocation);
 
 struct afxSegment
 {
@@ -56,34 +56,51 @@ AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize st
     seg->stride = stride ? stride : siz;
 };
 
-struct afxMemory
+typedef enum afxAllocationFlags
 {
+    AFX_MEM_FLAG_USED,
+    AFX_MEM_FLAG_UNPAGED,
+    AFX_MEM_FLAG_RESIZABLE,
+} afxAllocationFlags;
+
+typedef enum afxAllocationDuration
+{
+    AFX_ALL_DUR_TEMPORARY = (1 << 0), // to be used just inside "this" function.
+    AFX_ALL_DUR_TRANSIENT = (1 << 1), // to be used across functions, as example signaling objects about an event occurance.
+    AFX_ALL_DUR_PERMANENT = (1 << 2), // to be used across the entire system and or subsystem, 
+} afxAllocationDuration;
+
+struct afxAllocation
+{
+#ifndef _AFX_DONT_DEBUG_MEM_LEAK
     afxChar const       *func;
     afxSize             line;
     afxChar const       *file;
-    
-    afxSize             siz;
-    afxLinkage          mctx;
+#endif
+    afxNat              siz;
+    afxLinkage          all;
+    afxAllocationFlags  flags;
     afxFcc              fcc;
+    uintptr_t           data[];
 };
 
-AFX void*       AfxAllocate(afxMemContext mctx, afxSize siz, afxHint const hint);
+AFX void*           AfxAllocate(afxAllocator all, afxSize siz, afxHint const hint);
 
-AFX void*       AfxCoallocate(afxMemContext mctx, afxSize cnt, afxSize siz, afxHint const hint);
+AFX void*           AfxCoallocate(afxAllocator all, afxSize cnt, afxSize siz, afxHint const hint);
 
-AFX void*       AfxReallocate(void *p, afxSize siz, afxHint const hint);
+AFX void*           AfxReallocate(afxAllocator all, void *p, afxSize siz, afxHint const hint);
 
-AFX afxResult   AfxDeallocate(void *p);
+AFX afxResult       AfxDeallocate(afxAllocator all, void *p);
 
-AFX afxResult   AfxCopy(void *dst, void const *src, afxSize range);
+AFX afxResult       AfxCopy(void *dst, void const *src, afxSize range);
 
-AFX afxResult   AfxFill(void *p, afxSize range, afxInt value);
+AFX afxResult       AfxFill(void *p, afxSize range, afxInt value);
 
-AFX afxResult   AfxZero(void *p, afxSize range);
+AFX afxResult       AfxZero(void *p, afxSize range);
 
-AFX afxResult   AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
+AFX afxResult       AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
 
-AFX afxMemContext    AfxGetMemContext(void *p);
+AFX afxAllocator    AfxGetAllocator(void *p);
 
 AFX afxBool         AfxIsAnValidAllocation(void const *p);
 

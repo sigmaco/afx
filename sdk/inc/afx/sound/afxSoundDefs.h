@@ -5,7 +5,7 @@
 #include "afx/core/base/afxLinkedList.h"
 #include "afx/core/async/AfxCondition.h"
 #include "afx/core/base/afxEvent.h"
-#include "afx/core/mem/afxMemContext.h"
+#include "afx/core/mem/afxAllocator.h"
 
 typedef enum
 {

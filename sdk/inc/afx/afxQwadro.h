@@ -43,7 +43,7 @@
 #include "core/io/afxStream.h"
 #include "core/io/afxUri.h"
 
-#include "core/mem/afxMemContext.h"
+#include "core/mem/afxAllocator.h"
 #include "core/mem/afxArray.h"
 #include "core/mem/afxMemory.h"
 

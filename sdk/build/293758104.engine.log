@@ -1,0 +1,2670 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                         QWADRO Application Framework                        
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Acquiring Core Execution System...
+ Constructing instance 00000000000c2520 of Core Execution System class.
+ afxSystem.c:1186?_AfxSysCtor(sys=00000000000c2520)
+ MemContext class initialized.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class initialized.
+ Module class initialized.
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000000c2520,uri=system/e2coree.dll)
+ Acquiring Module...
+ Constructing instance 00000000000c6490 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:system/e2coree.dll)
+ Object 00000000000c6490[mdle]^1 acquired.
+ I/O Stream class initialized.
+ Archive class initialized.
+ Resource class initialized.
+ Uniform Resource Dictionary class initialized.
+ HID class initialized.
+ Keyboard class initialized.
+ Mouse class initialized.
+ Draw System class initialized.
+ Application class initialized.
+ afxKeyboard.c:154?AfxSystemAcquireKeyboard(sys=00000000000c2520,port=0)
+ Acquiring Keyboard...
+ Constructing instance 00000000000c9f50 of Keyboard : HID class.
+ Constructing instance 00000000000c9f50 of HID class.
+ afxHid.c:46?_AfxHidCtor(hid=00000000000c9f50)
+ Constructing instance 00000000000c9f50 of Keyboard class.
+ afxKeyboard.c:182?_AfxKbdCtor(kbd=00000000000c9f50)
+ Object 00000000000c9f50[kbd]^1 acquired.
+ Object 00000000000c2520[sys]^1 acquired.
+ afxDrawSystem.c:171?AfxSystemAcquireDrawSystem(sys=00000000000c2520)
+ Acquiring Draw System...
+ Constructing instance 00000000000c65d0 of Draw System class.
+ afxDrawSystem.c:250?_AfxDsysCtor(dsys=00000000000c65d0)
+ Draw Driver class initialized.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000000c2520,uri=e2draw.icd)
+ Acquiring Module...
+ Constructing instance 00000000000c6830 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:e2draw.icd)
+ Object 00000000000c6830[mdle]^1 acquired.
+ afxDrawDriver.c:46?AfxDrawSystemRegisterDriver(dsys=00000000000c65d0,mdle=00000000000c6830,spec=000000000027e0f0)
+ Acquiring Draw Driver...
+ Constructing instance 00000000000cc4a0 of Draw Driver class.
+ afxDrawDriver.c:79?_AfxDdrvCtor(ddrv=00000000000cc4a0)
+ Draw Context class initialized.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Object 00000000000cc4a0[ddrv]^1 acquired.
+ Loading draw ICDs...
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000000c2520,uri=e2draw.icd)
+ Reacquired. (mdle)00000000000c6830^3
+ afxModule.c:63?AfxSystemAcquireModule(sys=00000000000c2520,uri=e2newton.icd)
+ Acquiring Module...
+ Constructing instance 00000000000ce9b0 of Module class.
+ afxModule.c:129?_AfxMdleCtor(uri:e2newton.icd)
+ Object 00000000000ce9b0[mdle]^1 acquired.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterDrawDrivers not found.
+ ERR afxModule.c:47?AfxModuleFindSymbol
+    Symbol AfxRegisterTextureCodecs not found.
+ Object 00000000000c65d0[dsys]^1 acquired.
+ afxDrawContext.c:227?AfxDrawSystemAcquireContext(dsys=00000000000c65d0,spec=000000000027ea50)
+ Acquiring Draw Context...
+ Constructing instance 00000000000cf510 of Draw Context class.
+ sglDrawContext.c:617?_AfxDctxCtor(dctx=00000000000cf510)
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Draw Script class initialized.
+ Draw Input class initialized.
+ Draw Engine class initialized.
+ Buffer class initialized.
+ Vertex Buffer class initialized.
+ Index Buffer class initialized.
+ Sampler class initialized.
+ Texture class initialized.
+ Surface class initialized.
+ Canvas class initialized.
+ Pipeline Module class initialized.
+ Pipeline Rig class initialized.
+ Pipeline class initialized.
+ Lego class initialized.
+ Draw Output class initialized.
+ sglDrawEngine.c:1953?_AfxDrawContextAcquireEngine(dctx=00000000000cf510)
+ Acquiring Draw Engine...
+ Constructing instance 00000000000d42b0 of Draw Engine class.
+ sglDrawEngine.c:1998?_AfxDengCtor(deng=00000000000d42b0)
+ afxThread.c:680?AfxSystemAcquireThread(sys=00000000000c2520,start=000007fee66099a0,udd=00000000000d42b0,exec=000007fee6609230,hint="sglDrawEngine.c:2010!_AfxDengCtor")
+ Acquiring Thread...
+ Constructing instance 00000000000d63f0 of Thread class.
+ afxThread.c:745?_AfxThrCtor(00000000000d63f0)
+ Object 00000000000d63f0[thr]^1 acquired.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=00000000000cf510,uri=data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=00000000000cf510)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/rgbaToRgbaYFlipped.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 00000000000d6a00 of Uniform Resource Dictionary class.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 00000000000d6b10 of I/O Stream class.
+ Acquired. (ios)00000000000d6b10^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Object 00000000000d6b10[ios]^1 acquired.
+ Destroying I/O Stream... 00000000000d6b10[ios]^0
+ Destructing instance 00000000000d6b10 of I/O Stream class.
+ I/O Stream destroyed. 00000000000d6b10[ios]
+ Object 00000000000d6a00[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 00000000000d6a00[urd]^0
+ Destructing instance 00000000000d6a00 of Uniform Resource Dictionary class.
+ afxUrd.c:1019?_AfxUrdDtor(urd=00000000000d6a00)
+ Uniform Resource Dictionary destroyed. 00000000000d6a00[urd]
+ Acquiring Pipeline...
+ Constructing instance 00000000000e21d0 of Pipeline : Resource class.
+ Constructing instance 00000000000e21d0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=00000000000e21d0)
+ Constructing instance 00000000000e21d0 of Pipeline class.
+ sglPipeline.c:556?_AfxPipCtor(pip=00000000000e21d0)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000274e70,len=627)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000274e70,len=627)
+ Acquiring Pipeline Module...
+ Constructing instance 00000000000e2ba0 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=00000000000e2ba0)
+ Object 00000000000e2ba0[pipm]^1 acquired.
+ Taking connection 00000000000e2368 connecting 00000000000e2ba0?pipm#1 to holder 00000000000e21d0?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000275e90,len=398)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000275e90,len=398)
+ Acquiring Pipeline Module...
+ Constructing instance 00000000000d6a00 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=00000000000d6a00)
+ Object 00000000000d6a00[pipm]^1 acquired.
+ Taking connection 00000000000e23c8 connecting 00000000000d6a00?pipm#1 to holder 00000000000e21d0?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 00000000000dcb40 of Pipeline Rig class.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=00000000000dcb40)
+ Object 00000000000dcb40[pipa]^1 acquired.
+ Object 00000000000e21d0[pip]^1 acquired.
+ sglSampler.c:84?_AfxDrawContextAcquireSampler(dctx=00000000000cf510,spec=000000000027dae0)
+ Acquiring Sampler...
+ Constructing instance 00000000000ddab0 of Sampler class.
+ sglSampler.c:131?_AfxSmpCtor(smp=00000000000ddab0)
+ Object 00000000000ddab0[smp]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 00000000000ddc00 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=00000000000ddc00)
+ Object 00000000000ddc00[bset]^1 acquired.
+ Object 00000000000d42b0[deng]^1 acquired.
+ afxThread.c:662?AfxThreadStart(thr=00000000000d63f0)
+ sglDrawEngine.c:20?_SglGlCtxW32Create(dctx=00000000000cf510,shareCtx=0000000000000000,phwnd=00000000000d4c08,phdc=00000000000d4c10,phrc=00000000000d4c20)
+ Object 00000000000cf510[dctx]^1 acquired.
+ afxApplication.c:385?AfxSystemAcquireApplication(sys=000044aee243e691,spec=0000000000000000)
+ Acquiring Application...
+ Constructing instance 00000000000d8520 of Application class.
+ afxApplication.c:472?_AfxAppCtor(app=00000000000d8520)
+ afxMouse.c:223?AfxSystemAcquireMouse(sys=00000000000c2520,port=0)
+ Acquiring Mouse...
+ Constructing instance 00000000000eb4e0 of Mouse : HID class.
+ Constructing instance 00000000000eb4e0 of HID class.
+ afxHid.c:46?_AfxHidCtor(hid=00000000000eb4e0)
+ Constructing instance 00000000000eb4e0 of Mouse class.
+ afxMouse.c:250?_AfxMseCtor(mse=00000000000eb4e0)
+ Object 00000000000eb4e0[mse]^1 acquired.
+ Taking connection 00000000000d85f8 connecting 00000000000eb4e0?mse#1 to holder 00000000000d8520?app#1.
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000000c2520,strategy=000000000027e400,hint="afxApplication.c:507!_AfxAppCtor")
+ Acquiring MemContext...
+ Constructing instance 00000000000f7c40 of MemContext class.
+ afxMemContext.c:285?_AfxAllCtor(mctx=00000000000f7c40)
+ Object 00000000000f7c40[mctx]^1 acquired.
+ Taking connection 00000000000d85a0 connecting 00000000000f7c40?mctx#1 to holder 00000000000d8520?app#1.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=00000000000cf510,spec=000000000027e3d0)
+ Acquiring Draw Input...
+ Constructing instance 00000000001156a0 of Draw Input class.
+ sglDrawInput.c:252?_AfxDinCtor(din=00000000001156a0)
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000000c2520,strategy=000000000027dbd0,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Acquiring MemContext...
+ Constructing instance 00000000001198b0 of MemContext class.
+ afxMemContext.c:285?_AfxAllCtor(mctx=00000000001198b0)
+ Object 00000000001198b0[mctx]^1 acquired.
+ Object 00000000001156a0[din]^1 acquired.
+ Taking connection 00000000000d8b30 connecting 00000000001156a0?din#1 to holder 00000000000d8520?app#1.
+ Widget class initialized.
+ Simulation class initialized.
+ Object 00000000000d8520[app]^1 acquired.
+ afxApplication.c:337?AfxApplicationExecute(app=00000000000d8520)
+ Skybox.c:546?AfxEnterApplication(app=00000000000d8520)
+ afxSimulation.c:431?AfxApplicationAcquireSimulation(app=00000000000d8520,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ Acquiring Simulation...
+ Constructing instance 0000000000138cc0 of Simulation class.
+ afxSimulation.c:373?_AfxSimCtor(sim=0000000000138cc0)
+ Material class initialized.
+ Mesh class initialized.
+ Node class initialized.
+ Skeleton class initialized.
+ Model class initialized.
+ Body class initialized.
+ Entity class initialized.
+ Camera class initialized.
+ Light class initialized.
+ Object 0000000000138cc0[sim]^1 acquired.
+ afxDrawOutput.c:92?AfxDrawContextAcquireOutput(dctx=00000000000cf510,extent=000000000027e8b0,spec=000000000027e708)
+ sglDrawOutput.c:281?_AfxDrawContextAcquireOutput(dctx=00000000000cf510,extent=000000000027e8b0,spec=000000000027e708)
+ Acquiring Draw Output...
+ Constructing instance 0000000002cfbfa0 of Draw Output class.
+ sglDrawOutput.c:462?_AfxDoutCtor(dout=0000000002cfbfa0)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000000cf510,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002d6a500 of Surface : Texture class.
+ Constructing instance 0000000002d6a500 of Texture : Resource class.
+ Constructing instance 0000000002d6a500 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002d6a500)
+ Constructing instance 0000000002d6a500 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002d6a500)
+ Constructing instance 0000000002d6a500 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002d6a500)
+ Object 0000000002d6a500[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000000cf510,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002e2f1a0 of Surface : Texture class.
+ Constructing instance 0000000002e2f1a0 of Texture : Resource class.
+ Constructing instance 0000000002e2f1a0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002e2f1a0)
+ Constructing instance 0000000002e2f1a0 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002e2f1a0)
+ Constructing instance 0000000002e2f1a0 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002e2f1a0)
+ Object 0000000002e2f1a0[surf]^1 acquired.
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000000cf510,fmt=4,whd=[720,480,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002ed4a90 of Surface : Texture class.
+ Constructing instance 0000000002ed4a90 of Texture : Resource class.
+ Constructing instance 0000000002ed4a90 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002ed4a90)
+ Constructing instance 0000000002ed4a90 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002ed4a90)
+ Constructing instance 0000000002ed4a90 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002ed4a90)
+ Object 0000000002ed4a90[surf]^1 acquired.
+ sglDrawOutput.c:415?_AfxStdDoutImplCtor(dout=0000000002cfbfa0,uri=window)
+ sglDrawOutput.c:339?_AfxStdDoutImplCtorWnd(dout=0000000002cfbfa0)
+ Extent readjusted. (dout)0000000002cfbfa0 -> 720, 0.375000 of 1920; 480 0.444444 of 1080
+ sglDriver.c:763?_SglLoadVmt(vmt=00000000000d4c28,verMajor=1,verMinor=0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ Extent readjusted. (dout)0000000002cfbfa0 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ Object 0000000002cfbfa0[dout]^1 acquired.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=00000000000cf510,spec=000000000027e6d8)
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ Acquiring Draw Input...
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ Constructing instance 0000000002e44f00 of Draw Input class.
+ glGetTexLevelParameterfv @ 43 found.
+ sglDrawInput.c:252?_AfxDinCtor(din=0000000002e44f00)
+ glGetTexLevelParameteriv @ 44 found.
+ afxMemContext.c:532?AfxSystemAcquireMemContext(sys=00000000000c2520,strategy=000000000027df00,hint="sglDrawInput.c:287!_AfxDinCtor")
+ glIsEnabled @ 45 found.
+ Acquiring MemContext...
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ Constructing instance 0000000002ce55d0 of MemContext class.
+ sglDriver.c:763?_SglLoadVmt(vmt=00000000000d4c28,verMajor=4,verMinor=6)
+ afxMemContext.c:285?_AfxAllCtor(mctx=0000000002ce55d0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ Object 0000000002ce55d0[mctx]^1 acquired.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ Object 0000000002e44f00[din]^1 acquired.
+ glCopyTexSubImage3D @ 65 found.
+ afxCamera.c:276?AfxSimulationAcquireCamera(sim=0000000000138cc0,name=viewer,perspective=1)
+ glActiveTexture @ 66 found.
+ Acquiring Camera...
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ Constructing instance 0000000000156660 of Camera : Node class.
+ glCompressedTexImage2D @ 69 found.
+ Constructing instance 0000000000156660 of Node class.
+ glCompressedTexImage1D @ 70 found.
+ Constructing instance 0000000000156660 of Camera class.
+ glCompressedTexSubImage3D @ 71 found.
+ afxCamera.c:305?_AfxCamCtor(cam=0000000000156660)
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ Object 0000000000156660[cam]^1 acquired.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ sglTexture.c:983?_AfxDrawContextBuildTextures(dctx=00000000000cf510,fmt=3,whd=[2048,2048,1],lodCnt=1,usage=40000000)
+ glPointParameteriv @ 81 found.
+ Acquiring Texture...
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ Constructing instance 0000000002e26340 of Texture : Resource class.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ Constructing instance 0000000002e26340 of Resource class.
+ glGetShaderiv @ 124 found.
+ afxResource.c:127?_AfxResCtor(res=0000000002e26340)
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ Constructing instance 0000000002e26340 of Texture class.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002e26340)
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/right.tga,access=r)
+ glUniform4fv @ 150 found.
+ Acquiring I/O Stream...
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ Constructing instance 000000000313a680 of I/O Stream class.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/right.tga"
+ glVertexAttrib1f @ 161 found.
+ Object 000000000313a680[ios]^1 acquired.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearBufferData @ 491 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearBufferSubData @ 492 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyImageSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyImageSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyImageSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCopyImageSubData @ 495 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexSubImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexSubImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexSubImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateTexSubImage @ 499 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateTexImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateTexImage @ 500 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateBufferSubData @ 501 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateBufferDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateBufferData @ 502 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureView not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureViewARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureViewEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureView @ 517 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearTexImage @ 535 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexSubImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexSubImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearTexSubImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearTexSubImage @ 536 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersBase not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersBaseARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersBaseEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindBuffersBase @ 537 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersRange not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersRangeARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindBuffersRangeEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindBuffersRange @ 538 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTextures not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTexturesARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTexturesEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindTextures @ 539 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindSamplers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindSamplersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindSamplersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindSamplers @ 540 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindImageTextures not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindImageTexturesARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindImageTexturesEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindImageTextures @ 541 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindVertexBuffers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindVertexBuffersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindVertexBuffersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindVertexBuffers @ 542 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClipControl not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClipControlARB not found.
+ glClipControl @ 543 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTransformFeedbacks not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTransformFeedbacksARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTransformFeedbacksEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateTransformFeedbacks @ 544 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferBase not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferBaseARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferBaseEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTransformFeedbackBufferBase @ 545 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferRange not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferRangeARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTransformFeedbackBufferRangeEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTransformFeedbackBufferRange @ 546 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbackiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbackivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbackivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTransformFeedbackiv @ 547 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki_v not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki_vARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki_vEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTransformFeedbacki_v @ 548 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki64_v not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki64_vARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTransformFeedbacki64_vEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTransformFeedbacki64_v @ 549 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateBuffers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateBuffersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateBuffersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateBuffers @ 550 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferStorage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferStorageARB not found.
+ glNamedBufferStorage @ 551 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedBufferData @ 552 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedBufferSubData @ 553 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyNamedBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyNamedBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyNamedBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCopyNamedBufferSubData @ 554 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedBufferData @ 555 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedBufferSubData @ 556 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glMapNamedBuffer @ 557 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBufferRange not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBufferRangeARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMapNamedBufferRangeEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glMapNamedBufferRange @ 558 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glUnmapNamedBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glUnmapNamedBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glUnmapNamedBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glUnmapNamedBuffer @ 559 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glFlushMappedNamedBufferRange not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glFlushMappedNamedBufferRangeARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glFlushMappedNamedBufferRangeEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glFlushMappedNamedBufferRange @ 560 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedBufferParameteriv @ 561 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameteri64v not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameteri64vARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferParameteri64vEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedBufferParameteri64v @ 562 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferPointerv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferPointervARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferPointervEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedBufferPointerv @ 563 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedBufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedBufferSubData @ 564 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateFramebuffers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateFramebuffersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateFramebuffersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateFramebuffers @ 565 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferRenderbuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferRenderbufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferRenderbufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferRenderbuffer @ 566 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferParameteri not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferParameteriARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferParameteriEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferParameteri @ 567 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTexture not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTextureARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTextureEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferTexture @ 568 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTextureLayer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTextureLayerARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferTextureLayerEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferTextureLayer @ 569 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvas not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvasARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvasEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferCanvas @ 570 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvass not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvassARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferCanvassEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferCanvass @ 571 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferReadBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferReadBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedFramebufferReadBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedFramebufferReadBuffer @ 572 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateNamedFramebufferData @ 573 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferSubData not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferSubDataARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glInvalidateNamedFramebufferSubDataEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glInvalidateNamedFramebufferSubData @ 574 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedFramebufferiv @ 575 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferuiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferuivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferuivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedFramebufferuiv @ 576 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfvARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfvEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedFramebufferfv @ 577 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfi not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfiARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glClearNamedFramebufferfiEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glClearNamedFramebufferfi @ 578 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBlitNamedFramebuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBlitNamedFramebufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBlitNamedFramebufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBlitNamedFramebuffer @ 579 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCheckNamedFramebufferStatus not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCheckNamedFramebufferStatusARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCheckNamedFramebufferStatusEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCheckNamedFramebufferStatus @ 580 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedFramebufferParameteriv @ 581 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferAttachmentParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferAttachmentParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedFramebufferAttachmentParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedFramebufferAttachmentParameteriv @ 582 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateRenderbuffers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateRenderbuffersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateRenderbuffersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateRenderbuffers @ 583 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedRenderbufferStorage @ 584 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorageMultisample not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorageMultisampleARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glNamedRenderbufferStorageMultisampleEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glNamedRenderbufferStorageMultisample @ 585 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedRenderbufferParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedRenderbufferParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetNamedRenderbufferParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetNamedRenderbufferParameteriv @ 586 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTextures not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTexturesARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateTexturesEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateTextures @ 587 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureBuffer @ 588 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBufferRange not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBufferRangeARB not found.
+ glTextureBufferRange @ 589 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage1D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage1DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage1DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureStorage1D @ 590 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureStorage2D @ 591 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureStorage3D @ 592 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2DMultisample not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2DMultisampleARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage2DMultisampleEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureStorage2DMultisample @ 593 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3DMultisample not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3DMultisampleARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureStorage3DMultisampleEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureStorage3DMultisample @ 594 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage1D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage1DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage1DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureSubImage1D @ 595 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage2D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage2DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage2DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureSubImage2D @ 596 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage3D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage3DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureSubImage3DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureSubImage3D @ 597 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage1D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage1DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage1DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCompressedTextureSubImage1D @ 598 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage2D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage2DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage2DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCompressedTextureSubImage2D @ 599 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage3D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage3DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCompressedTextureSubImage3DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCompressedTextureSubImage3D @ 600 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage1D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage1DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage1DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCopyTextureSubImage1D @ 601 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage2D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage2DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage2DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCopyTextureSubImage2D @ 602 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage3D not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage3DARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCopyTextureSubImage3DEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCopyTextureSubImage3D @ 603 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterf not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterfARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterfEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureParameterf @ 604 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterfv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterfvARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterfvEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureParameterfv @ 605 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameteri not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameteriARB not found.
+ glTextureParameteri @ 606 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureParameterIiv @ 607 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIuiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIuivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterIuivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureParameterIuiv @ 608 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureParameteriv @ 609 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGenerateTextureMipmap not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGenerateTextureMipmapARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGenerateTextureMipmapEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGenerateTextureMipmap @ 610 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTextureUnit not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTextureUnitARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glBindTextureUnitEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glBindTextureUnit @ 611 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureImage @ 612 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetCompressedTextureImage @ 613 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameterfv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameterfvARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameterfvEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureLevelParameterfv @ 614 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureLevelParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureLevelParameteriv @ 615 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterfv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterfvARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterfvEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureParameterfv @ 616 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureParameterIiv @ 617 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIuiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIuivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterIuivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureParameterIuiv @ 618 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameteriv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureParameterivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureParameteriv @ 619 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateVertexArrays not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateVertexArraysARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateVertexArraysEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateVertexArrays @ 620 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glDisableVertexArrayAttrib not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glDisableVertexArrayAttribARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glDisableVertexArrayAttribEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glDisableVertexArrayAttrib @ 621 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glEnableVertexArrayAttrib not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glEnableVertexArrayAttribARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glEnableVertexArrayAttribEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glEnableVertexArrayAttrib @ 622 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayElementBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayElementBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayElementBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayElementBuffer @ 623 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBuffer not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBufferARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBufferEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayVertexBuffer @ 624 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBuffers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBuffersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayVertexBuffersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayVertexBuffers @ 625 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribBinding not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribBindingARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribBindingEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayAttribBinding @ 626 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribFormat not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribFormatARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribFormatEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayAttribFormat @ 627 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribIFormat not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribIFormatARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribIFormatEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayAttribIFormat @ 628 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribLFormat not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribLFormatARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayAttribLFormatEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayAttribLFormat @ 629 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayBindingDivisor not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayBindingDivisorARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glVertexArrayBindingDivisorEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glVertexArrayBindingDivisor @ 630 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetVertexArrayiv @ 631 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexediv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexedivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexedivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetVertexArrayIndexediv @ 632 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexed64iv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexed64ivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetVertexArrayIndexed64ivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetVertexArrayIndexed64iv @ 633 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateSamplers not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateSamplersARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateSamplersEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateSamplers @ 634 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateProgramPipelines not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateProgramPipelinesARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateProgramPipelinesEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateProgramPipelines @ 635 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateQueries not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateQueriesARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glCreateQueriesEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glCreateQueries @ 636 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjecti64v not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjecti64vARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjecti64vEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetQueryBufferObjecti64v @ 637 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetQueryBufferObjectiv @ 638 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectui64v not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectui64vARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectui64vEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetQueryBufferObjectui64v @ 639 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectuiv not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectuivARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetQueryBufferObjectuivEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetQueryBufferObjectuiv @ 640 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ glMemoryBarrierByRegion @ 641 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureSubImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureSubImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetTextureSubImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetTextureSubImage @ 642 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureSubImage not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureSubImageARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetCompressedTextureSubImageEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glGetCompressedTextureSubImage @ 643 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetGraphicsResetStatus not found.
+ glGetGraphicsResetStatus @ 644 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnCompressedTexImage not found.
+ glGetnCompressedTexImage @ 645 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnTexImage not found.
+ glGetnTexImage @ 646 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnUniformdv not found.
+ glGetnUniformdv @ 647 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnUniformfv not found.
+ glGetnUniformfv @ 648 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnUniformiv not found.
+ glGetnUniformiv @ 649 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glGetnUniformuiv not found.
+ glGetnUniformuiv @ 650 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glReadnPixels not found.
+ glReadnPixels @ 651 found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBarrier not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBarrierARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glTextureBarrierEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glTextureBarrier @ 652 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glSpecializeShader not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glSpecializeShaderARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glSpecializeShaderEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glSpecializeShader @ 653 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawArraysIndirectCount not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawArraysIndirectCountARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawArraysIndirectCountEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glMultiDrawArraysIndirectCount @ 654 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawElementsIndirectCount not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawElementsIndirectCountARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glMultiDrawElementsIndirectCountEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glMultiDrawElementsIndirectCount @ 655 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ ERR sglDriver.c:836?glcGetProcAddress
+    glPolygonOffsetClamp not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glPolygonOffsetClampARB not found.
+ ERR sglDriver.c:836?glcGetProcAddress
+    glPolygonOffsetClampEXT not found.
+ ERR sglDriver.c:740?_SglLoadVmtSubset
+    glPolygonOffsetClamp @ 656 not found.
+ ERR sglDriver.c:741?_SglLoadVmtSubset
+    
+ QWADRO Draw System (OpenGL/Vulkan Continuous Integration (Intel(R) HD Graphics v3.3.0))
+ afxThread.c:637?AfxThreadRun(thr=00000000000d63f0)
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/left.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/left.tga"
+ Object 000000000313a680[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/top.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/top.tga"
+ Object 000000000313a680[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/bottom.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/bottom.tga"
+ Object 000000000313a680[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/back.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/back.tga"
+ Object 000000000313a680[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:art/skybox/blue/front.tga,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/art/skybox/blue/front.tga"
+ Object 000000000313a680[ios]^1 acquired.
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    
+ ERR sglTexture.c:828?_AfxTextureUpdateRegions
+    (fmt[i] == tex->fmt)
+    Invalid
+ ERR afxTarga.c:802?AfxTextureUploadRegionsTarga
+    
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ ERR afxTexture.c:53?AfxTextureUploadRegions
+    
+ Object 0000000002e26340[tex]^1 acquired.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=00000000000cf510,uri=data/pipeline/skybox.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=00000000000cf510)
+ afxUrd.c:1054?AfxSystemUploadUrd(uri=data/pipeline/skybox.pip.urdp)
+ Acquiring Uniform Resource Dictionary...
+ Constructing instance 0000000002e49130 of Uniform Resource Dictionary class.
+ afxUrd.c:1036?_AfxUrdCtor(uri:data/pipeline/skybox.pip.urd)
+ afxStream.c:656?AfxSystemAcquireStream(sys:00000000000c2520,uri:data/pipeline/skybox.pip.urd,access=r)
+ Acquiring I/O Stream...
+ Constructing instance 000000000313a680 of I/O Stream class.
+ Acquired. (ios)000000000313a680^1 <-> "E:/qwadro/afx/data/pipeline/skybox.pip.urd"
+ Object 000000000313a680[ios]^1 acquired.
+ Destroying I/O Stream... 000000000313a680[ios]^0
+ Destructing instance 000000000313a680 of I/O Stream class.
+ I/O Stream destroyed. 000000000313a680[ios]
+ Object 0000000002e49130[urd]^1 acquired.
+ Destroying Uniform Resource Dictionary... 0000000002e49130[urd]^0
+ Destructing instance 0000000002e49130 of Uniform Resource Dictionary class.
+ afxUrd.c:1019?_AfxUrdDtor(urd=0000000002e49130)
+ Uniform Resource Dictionary destroyed. 0000000002e49130[urd]
+ Acquiring Pipeline...
+ Constructing instance 0000000002cfc5d0 of Pipeline : Resource class.
+ Constructing instance 0000000002cfc5d0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002cfc5d0)
+ Constructing instance 0000000002cfc5d0 of Pipeline class.
+ sglPipeline.c:556?_AfxPipCtor(pip=0000000002cfc5d0)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000273e60,len=1708)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000273e60,len=1708)
+ Acquiring Pipeline Module...
+ Constructing instance 0000000002e292e0 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0000000002e292e0)
+ Object 0000000002e292e0[pipm]^1 acquired.
+ Taking connection 0000000002cfc768 connecting 0000000002e292e0?pipm#1 to holder 0000000002cfc5d0?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000274e80,len=402)
+ sglPipelineModule.c:178?_AfxDrawContextBuildPipelineModule(dctx=00000000000cf510,code=0000000000274e80,len=402)
+ Acquiring Pipeline Module...
+ Constructing instance 0000000002e29400 of Pipeline Module class.
+ sglPipelineModule.c:139?_AfxPipmCtor(pipm=0000000002e29400)
+ Object 0000000002e29400[pipm]^1 acquired.
+ Taking connection 0000000002cfc7c8 connecting 0000000002e29400?pipm#1 to holder 0000000002cfc5d0?pip#1.
+ Acquiring Pipeline Rig...
+ Constructing instance 000000000313a680 of Pipeline Rig class.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=000000000313a680)
+ Object 000000000313a680[pipa]^1 acquired.
+ Object 0000000002cfc5d0[pip]^1 acquired.
+ sglSampler.c:84?_AfxDrawContextAcquireSampler(dctx=00000000000cf510,spec=000000000027cb90)
+ Acquiring Sampler...
+ Constructing instance 000000000313a2c0 of Sampler class.
+ sglSampler.c:131?_AfxSmpCtor(smp=000000000313a2c0)
+ Object 000000000313a2c0[smp]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=00000000000cf510,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Constructing instance 0000000002e27f00 of Canvas class.
+ sglCanvas.c:339?_AfxCanvCtor(canv=0000000002e27f00)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000000cf510,fmt=24,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002d24e70 of Surface : Texture class.
+ Constructing instance 0000000002d24e70 of Texture : Resource class.
+ Constructing instance 0000000002d24e70 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002d24e70)
+ Constructing instance 0000000002d24e70 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002d24e70)
+ Constructing instance 0000000002d24e70 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002d24e70)
+ Object 0000000002d24e70[surf]^1 acquired.
+ Object 0000000002e27f00[canv]^1 acquired.
+ Acquiring Buffer...
+ Constructing instance 0000000002e26600 of Buffer class.
+ sglBuffer.c:323?_AfxBufCtor(buf=0000000002e26600)
+ Object 0000000002e26600[buf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 0000000002e25fc0 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=0000000002e25fc0)
+ Object 0000000002e25fc0[bset]^1 acquired.
+ sglCanvas.c:256?_AfxDrawContextAcquireCanvas(dctx=00000000000cf510,extent=[1912,1053,1],surfaceCnt=2)
+ Acquiring Canvas...
+ Constructing instance 0000000002e281c0 of Canvas class.
+ sglCanvas.c:339?_AfxCanvCtor(canv=0000000002e281c0)
+ sglSurface.c:46?_AfxDrawContextAcquireSurface(dctx=00000000000cf510,fmt=24,whd=[1912,1053,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Acquiring Surface...
+ Constructing instance 0000000002cfcfa0 of Surface : Texture class.
+ Constructing instance 0000000002cfcfa0 of Texture : Resource class.
+ Constructing instance 0000000002cfcfa0 of Resource class.
+ afxResource.c:127?_AfxResCtor(res=0000000002cfcfa0)
+ Constructing instance 0000000002cfcfa0 of Texture class.
+ sglTexture.c:880?_AfxTexCtor(tex=0000000002cfcfa0)
+ Constructing instance 0000000002cfcfa0 of Surface class.
+ sglSurface.c:102?_AfxSurfCtor(surf=0000000002cfcfa0)
+ Object 0000000002cfcfa0[surf]^1 acquired.
+ Object 0000000002e281c0[canv]^1 acquired.
+ Acquiring Buffer...
+ Constructing instance 0000000000156aa0 of Buffer class.
+ sglBuffer.c:323?_AfxBufCtor(buf=0000000000156aa0)
+ Object 0000000000156aa0[buf]^1 acquired.
+ Acquiring Lego...
+ Constructing instance 0000000002cfd290 of Lego class.
+ sglLego.c:68?_AfxLegoCtor(lego=0000000002cfd290)
+ Object 0000000002cfd290[bset]^1 acquired.
+ sglDrawScript.c:394?_AfxDrawInputAcquireScript(din=0000000002e44f00)
+ Acquiring Draw Script...
+ Constructing instance 0000000002e2aff0 of Draw Script class.
+ sglDrawScript.c:412?_AfxDscrCtor(dscr=0000000002e2aff0)
+ Object 0000000002e2aff0[dib]^1 acquired.
+ sglCanvas.c:160?_AfxStdCanvImplDtor(canv=0000000002e27f00)
+ sglTexture.c:481?_SglTexImplDtor(img=0000000002d6a500)
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000000de1, gl/target 32856, gl/intFmt 6408, gl/fmt 5121, gl/type 6408
+ tex 0000000002d6a500, instanced.
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000000de1, gl/target 35056, gl/intFmt 34041, gl/fmt 34042, gl/type 34041
+ tex 0000000002d24e70, instanced.
+ canv 0000000002e27f00, reinstanced.
+ Shader 0000000002e292e0 reinstanced.
+ Shader 0000000002e29400 reinstanced.
+ Draw pipeline 0000000002cfc5d0 reinstanced.
+ buf 0000000002e26600, instanced.
+ Sampler 000000000313a2c0 reinstanced.
+ ADV sglTexture.c:360?SglTexImageInit
+    tex 0000000000008513, gl/target 32849, gl/intFmt 6407, gl/fmt 5121, gl/type 6407
+ tex 0000000002e26340, instanced.
+ Shader 00000000000e2ba0 reinstanced.
+ Shader 00000000000d6a00 reinstanced.
+ Draw pipeline 00000000000e21d0 reinstanced.
+ Sampler 00000000000ddab0 reinstanced.
+ ADV afxSystem.c:993?AfxSystemProcess
+    User input requested application break.
+ afxThread.c:591?AfxThreadRequestInterruption(thr=00000000000d63f0)
+ afxApplication.c:310?AfxApplicationExit(app=00000000000d8520)
+ Skybox.c:601?AfxLeaveApplication(app=00000000000d8520)
+ Destroying Draw Input... 0000000002e44f00[din]^0
+ Destructing instance 0000000002e44f00 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=0000000002e44f00)
+ Draw Input destroyed. 0000000002e44f00[din]
+ aaaaaaaaaaaa
+ Destroying Application... 00000000000d8520[app]^0
+ Dropping connection 00000000000d8b30 from 00000000001156a0?din#1 to holder 00000000000d8520?app#0.
+ Dropping connection 00000000000d85a0 from 00000000000f7c40?mctx#1 to holder 00000000000d8520?app#0.
+ Dropping connection 00000000000d85f8 from 00000000000eb4e0?mse#1 to holder 00000000000d8520?app#0.
+ Destructing instance 00000000000d8520 of Application class.
+ afxApplication.c:399?_AfxAppDtor(app=00000000000d8520)
+ Deinitializing Simulation class...
+ Destroying Simulation... 0000000000138cc0[sim]^0
+ Destructing instance 0000000000138cc0 of Simulation class.
+ afxSimulation.c:360?_AfxSimDtor(sim=0000000000138cc0)
+ Deinitializing Light class...
+ Light class deinitialized.
+ Deinitializing Camera class...
+ Destroying Camera... 0000000000156660[cam]^0
+ Destructing instance 0000000000156660 of Camera class.
+ afxCamera.c:297?_AfxCamDtor(cam=0000000000156660)
+ Destructing instance 0000000000156660 of Camera : Node class.
+ Destructing instance 0000000000156660 of Node class.
+ Camera destroyed. 0000000000156660[cam]
+ Camera class deinitialized.
+ Deinitializing Entity class...
+ Entity class deinitialized.
+ Deinitializing Body class...
+ Body class deinitialized.
+ Deinitializing Model class...
+ Model class deinitialized.
+ Deinitializing Skeleton class...
+ Skeleton class deinitialized.
+ Deinitializing Node class...
+ Node class deinitialized.
+ Deinitializing Mesh class...
+ Mesh class deinitialized.
+ Deinitializing Material class...
+ Material class deinitialized.
+ Simulation destroyed. 0000000000138cc0[sim]
+ Simulation class deinitialized.
+ Deinitializing Widget class...
+ Widget class deinitialized.
+ Application destroyed. 00000000000d8520[app]
+ Destroying Draw System... 00000000000c65d0[dsys]^0
+ Destructing instance 00000000000c65d0 of Draw System class.
+ afxDrawSystem.c:183?_AfxDsysDtor(dsys=00000000000c65d0)
+ Deinitializing Draw Driver class...
+ Destroying Draw Driver... 00000000000cc4a0[ddrv]^0
+ Destructing instance 00000000000cc4a0 of Draw Driver class.
+ afxDrawDriver.c:66?_AfxDdrvDtor(ddrv=00000000000cc4a0)
+ Deinitializing Draw Context class...
+ Destroying Draw Context... 00000000000cf510[dctx]^0
+ Destructing instance 00000000000cf510 of Draw Context class.
+ sglDrawContext.c:536?_AfxDctxDtor(dctx=00000000000cf510)
+ Deinitializing Draw Output class...
+ Destroying Draw Output... 0000000002cfbfa0[dout]^0
+ Destructing instance 0000000002cfbfa0 of Draw Output class.
+ sglDrawOutput.c:301?_AfxDoutDtor(dout=0000000002cfbfa0)
+ Extent readjusted. (dout)0000000002cfbfa0 -> 1912, 0.995833 of 1920; 1053 0.975000 of 1080
+ sglDrawOutput.c:255?_AfxDoutDropAllSurfaces(dout=0000000002cfbfa0)
+ Destroying Surface... 0000000002ed4a90[surf]^0
+ Destructing instance 0000000002ed4a90 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002ed4a90)
+ Destructing instance 0000000002ed4a90 of Surface : Texture class.
+ Destructing instance 0000000002ed4a90 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002ed4a90)
+ Destructing instance 0000000002ed4a90 of Texture : Resource class.
+ Destructing instance 0000000002ed4a90 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002ed4a90)
+ Surface destroyed. 0000000002ed4a90[surf]
+ Draw Output destroyed. 0000000002cfbfa0[dout]
+ Draw Output class deinitialized.
+ Deinitializing Lego class...
+ Destroying Lego... 0000000002cfd290[bset]^0
+ Destructing instance 0000000002cfd290 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=0000000002cfd290)
+ Lego destroyed. 0000000002cfd290[bset]
+ Destroying Lego... 0000000002e25fc0[bset]^0
+ Destructing instance 0000000002e25fc0 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=0000000002e25fc0)
+ Lego destroyed. 0000000002e25fc0[bset]
+ Destroying Lego... 00000000000ddc00[bset]^0
+ Destructing instance 00000000000ddc00 of Lego class.
+ sglLego.c:51?_AfxLegoDtor(pipa=00000000000ddc00)
+ Lego destroyed. 00000000000ddc00[bset]
+ Lego class deinitialized.
+ Deinitializing Pipeline class...
+ Destroying Pipeline... 0000000002cfc5d0[pip]^0
+ Dropping connection 0000000002cfc7c8 from 0000000002e29400?pipm#1 to holder 0000000002cfc5d0?pip#0.
+ Dropping connection 0000000002cfc768 from 0000000002e292e0?pipm#1 to holder 0000000002cfc5d0?pip#0.
+ Destructing instance 0000000002cfc5d0 of Pipeline class.
+ sglPipeline.c:485?_AfxPipDtor(pip=0000000002cfc5d0)
+ Destroying Pipeline Rig... 000000000313a680[pipa]^0
+ Destructing instance 000000000313a680 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=000000000313a680)
+ Pipeline Rig destroyed. 000000000313a680[pipa]
+ Destructing instance 0000000002cfc5d0 of Pipeline : Resource class.
+ Destructing instance 0000000002cfc5d0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002cfc5d0)
+ Pipeline destroyed. 0000000002cfc5d0[pip]
+ Destroying Pipeline... 00000000000e21d0[pip]^0
+ Dropping connection 00000000000e23c8 from 00000000000d6a00?pipm#1 to holder 00000000000e21d0?pip#0.
+ Dropping connection 00000000000e2368 from 00000000000e2ba0?pipm#1 to holder 00000000000e21d0?pip#0.
+ Destructing instance 00000000000e21d0 of Pipeline class.
+ sglPipeline.c:485?_AfxPipDtor(pip=00000000000e21d0)
+ Destroying Pipeline Rig... 00000000000dcb40[pipa]^0
+ Destructing instance 00000000000dcb40 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=00000000000dcb40)
+ Pipeline Rig destroyed. 00000000000dcb40[pipa]
+ Destructing instance 00000000000e21d0 of Pipeline : Resource class.
+ Destructing instance 00000000000e21d0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=00000000000e21d0)
+ Pipeline destroyed. 00000000000e21d0[pip]
+ Pipeline class deinitialized.
+ Deinitializing Pipeline Rig class...
+ Pipeline Rig class deinitialized.
+ Deinitializing Pipeline Module class...
+ Destroying Pipeline Module... 0000000002e29400[pipm]^0
+ Destructing instance 0000000002e29400 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000002e29400[pipm]
+ Destroying Pipeline Module... 0000000002e292e0[pipm]^0
+ Destructing instance 0000000002e292e0 of Pipeline Module class.
+ Pipeline Module destroyed. 0000000002e292e0[pipm]
+ Destroying Pipeline Module... 00000000000d6a00[pipm]^0
+ Destructing instance 00000000000d6a00 of Pipeline Module class.
+ Pipeline Module destroyed. 00000000000d6a00[pipm]
+ Destroying Pipeline Module... 00000000000e2ba0[pipm]^0
+ Destructing instance 00000000000e2ba0 of Pipeline Module class.
+ Pipeline Module destroyed. 00000000000e2ba0[pipm]
+ Pipeline Module class deinitialized.
+ Deinitializing Canvas class...
+ Destroying Canvas... 0000000002e281c0[canv]^0
+ Destructing instance 0000000002e281c0 of Canvas class.
+ sglCanvas.c:317?_AfxCanvDtor(canv=0000000002e281c0)
+ sglCanvas.c:291?_AfxCanvDropAllSurfaces(canv=0000000002e281c0)
+ Destroying Surface... 0000000002e2f1a0[surf]^0
+ Destructing instance 0000000002e2f1a0 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002e2f1a0)
+ Destructing instance 0000000002e2f1a0 of Surface : Texture class.
+ Destructing instance 0000000002e2f1a0 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002e2f1a0)
+ Destructing instance 0000000002e2f1a0 of Texture : Resource class.
+ Destructing instance 0000000002e2f1a0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002e2f1a0)
+ Surface destroyed. 0000000002e2f1a0[surf]
+ Destroying Surface... 0000000002cfcfa0[surf]^0
+ Destructing instance 0000000002cfcfa0 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002cfcfa0)
+ Destructing instance 0000000002cfcfa0 of Surface : Texture class.
+ Destructing instance 0000000002cfcfa0 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002cfcfa0)
+ Destructing instance 0000000002cfcfa0 of Texture : Resource class.
+ Destructing instance 0000000002cfcfa0 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002cfcfa0)
+ Surface destroyed. 0000000002cfcfa0[surf]
+ Canvas destroyed. 0000000002e281c0[canv]
+ Destroying Canvas... 0000000002e27f00[canv]^0
+ Destructing instance 0000000002e27f00 of Canvas class.
+ sglCanvas.c:317?_AfxCanvDtor(canv=0000000002e27f00)
+ sglCanvas.c:291?_AfxCanvDropAllSurfaces(canv=0000000002e27f00)
+ Destroying Surface... 0000000002d6a500[surf]^0
+ Destructing instance 0000000002d6a500 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002d6a500)
+ Destructing instance 0000000002d6a500 of Surface : Texture class.
+ Destructing instance 0000000002d6a500 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002d6a500)
+ Destructing instance 0000000002d6a500 of Texture : Resource class.
+ Destructing instance 0000000002d6a500 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002d6a500)
+ Surface destroyed. 0000000002d6a500[surf]
+ Destroying Surface... 0000000002d24e70[surf]^0
+ Destructing instance 0000000002d24e70 of Surface class.
+ sglSurface.c:69?_AfxSurfDtor(surf=0000000002d24e70)
+ Destructing instance 0000000002d24e70 of Surface : Texture class.
+ Destructing instance 0000000002d24e70 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002d24e70)
+ Destructing instance 0000000002d24e70 of Texture : Resource class.
+ Destructing instance 0000000002d24e70 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002d24e70)
+ Surface destroyed. 0000000002d24e70[surf]
+ Canvas destroyed. 0000000002e27f00[canv]
+ Canvas class deinitialized.
+ Deinitializing Surface class...
+ Surface class deinitialized.
+ Deinitializing Texture class...
+ Destroying Texture... 0000000002e26340[tex]^0
+ Destructing instance 0000000002e26340 of Texture class.
+ sglTexture.c:839?_AfxTexDtor(tex=0000000002e26340)
+ Destructing instance 0000000002e26340 of Texture : Resource class.
+ Destructing instance 0000000002e26340 of Resource class.
+ afxResource.c:93?_AfxResDtor(res=0000000002e26340)
+ Texture destroyed. 0000000002e26340[tex]
+ Texture class deinitialized.
+ Deinitializing Sampler class...
+ Destroying Sampler... 000000000313a2c0[smp]^0
+ Destructing instance 000000000313a2c0 of Sampler class.
+ sglSampler.c:104?_AfxSmpDtor(smp=000000000313a2c0)
+ Sampler destroyed. 000000000313a2c0[smp]
+ Destroying Sampler... 00000000000ddab0[smp]^0
+ Destructing instance 00000000000ddab0 of Sampler class.
+ sglSampler.c:104?_AfxSmpDtor(smp=00000000000ddab0)
+ Sampler destroyed. 00000000000ddab0[smp]
+ Sampler class deinitialized.
+ Deinitializing Index Buffer class...
+ Index Buffer class deinitialized.
+ Deinitializing Vertex Buffer class...
+ Vertex Buffer class deinitialized.
+ Deinitializing Buffer class...
+ Destroying Buffer... 0000000000156aa0[buf]^0
+ Destructing instance 0000000000156aa0 of Buffer class.
+ sglBuffer.c:292?_AfxBufDtor(buf=0000000000156aa0)
+ Buffer destroyed. 0000000000156aa0[buf]
+ Destroying Buffer... 0000000002e26600[buf]^0
+ Destructing instance 0000000002e26600 of Buffer class.
+ sglBuffer.c:292?_AfxBufDtor(buf=0000000002e26600)
+ Buffer destroyed. 0000000002e26600[buf]
+ Buffer class deinitialized.
+ Deinitializing Draw Engine class...
+ Destroying Draw Engine... 00000000000d42b0[deng]^0
+ Destructing instance 00000000000d42b0 of Draw Engine class.
+ sglDrawEngine.c:1970?_AfxDengDtor(deng=00000000000d42b0)
+ Destroying Thread... 00000000000d63f0[thr]^0
+ Destructing instance 00000000000d63f0 of Thread class.
+ afxThread.c:706?_AfxThrDtor(thr=00000000000d63f0)
+ Thread destroyed. 00000000000d63f0[thr]
+ Draw Engine destroyed. 00000000000d42b0[deng]
+ Draw Engine class deinitialized.
+ Deinitializing Draw Input class...
+ Destroying Draw Input... 00000000001156a0[din]^0
+ Destructing instance 00000000001156a0 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=00000000001156a0)
+ Draw Input destroyed. 00000000001156a0[din]
+ Draw Input class deinitialized.
+ Deinitializing Draw Script class...
+ Destroying Draw Script... 0000000002e2aff0[dib]^0
+ Destructing instance 0000000002e2aff0 of Draw Script class.
+ sglDrawScript.c:427?_AfxDscrDtor(dscr=0000000002e2aff0)
+ Draw Script destroyed. 0000000002e2aff0[dib]
+ Draw Script class deinitialized.
+ Draw Context destroyed. 00000000000cf510[dctx]
+ Draw Context class deinitialized.
+ Draw Driver destroyed. 00000000000cc4a0[ddrv]
+ Draw Driver class deinitialized.
+ Draw System destroyed. 00000000000c65d0[dsys]
+ Destroying Core Execution System... 00000000000c2520[sys]^0
+ Destructing instance 00000000000c2520 of Core Execution System class.
+ afxSystem.c:1132?_AfxSysDtor(sys=00000000000c2520)
+ Point "sound" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../sound".
+ Point "data" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../data".
+ Point "art" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../art".
+ Point "system" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64".
+ Point "." rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/..".
+ Destroying Keyboard... 00000000000c9f50[kbd]^0
+ Destructing instance 00000000000c9f50 of Keyboard class.
+ afxKeyboard.c:172?_AfxKbdDtor(kbd=00000000000c9f50)
+ Destructing instance 00000000000c9f50 of Keyboard : HID class.
+ Destructing instance 00000000000c9f50 of HID class.
+ afxHid.c:37?_AfxHidDtor(hid=00000000000c9f50)
+ Keyboard destroyed. 00000000000c9f50[kbd]
+ Destroying Module... 00000000000c6490[mdle]^0
+ Destructing instance 00000000000c6490 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000000c6490)
+ Module destroyed. 00000000000c6490[mdle]
+ Deinitializing Application class...
+ Application class deinitialized.
+ Deinitializing Draw System class...
+ Draw System class deinitialized.
+ Deinitializing Mouse class...
+ Destroying Mouse... 00000000000eb4e0[mse]^0
+ Destructing instance 00000000000eb4e0 of Mouse class.
+ afxMouse.c:241?_AfxMseDtor(mse=00000000000eb4e0)
+ Destructing instance 00000000000eb4e0 of Mouse : HID class.
+ Destructing instance 00000000000eb4e0 of HID class.
+ afxHid.c:37?_AfxHidDtor(hid=00000000000eb4e0)
+ Mouse destroyed. 00000000000eb4e0[mse]
+ Mouse class deinitialized.
+ Deinitializing Keyboard class...
+ Keyboard class deinitialized.
+ Deinitializing HID class...
+ HID class deinitialized.
+ Deinitializing Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deinitialized.
+ Deinitializing Resource class...
+ Resource class deinitialized.
+ Deinitializing Archive class...
+ Archive class deinitialized.
+ Deinitializing I/O Stream class...
+ I/O Stream class deinitialized.
+ Deinitializing Module class...
+ Destroying Module... 00000000000ce9b0[mdle]^0
+ Destructing instance 00000000000ce9b0 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000000ce9b0)
+ Module destroyed. 00000000000ce9b0[mdle]
+ Destroying Module... 00000000000c6830[mdle]^0
+ Destructing instance 00000000000c6830 of Module class.
+ afxModule.c:115?_AfxMdleDtor(mdle=00000000000c6830)
+ Module destroyed. 00000000000c6830[mdle]
+ Module class deinitialized.
+ Deinitializing Thread class...
+ Thread class deinitialized.
+ Deinitializing MemContext class...
+ Destroying MemContext... 0000000002ce55d0[mctx]^0
+ Destructing instance 0000000002ce55d0 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=0000000002ce55d0)
+ MemContext destroyed. 0000000002ce55d0[mctx]
+ Destroying MemContext... 00000000001198b0[mctx]^0
+ Destructing instance 00000000001198b0 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=00000000001198b0)
+ MemContext destroyed. 00000000001198b0[mctx]
+ Destroying MemContext... 00000000000f7c40[mctx]^0
+ Destructing instance 00000000000f7c40 of MemContext class.
+ afxMemContext.c:265?_AfxAllDtor(mctx=00000000000f7c40)
+ MemContext destroyed. 00000000000f7c40[mctx]
+ MemContext class deinitialized.
+ Core Execution System destroyed. 00000000000c2520[sys]

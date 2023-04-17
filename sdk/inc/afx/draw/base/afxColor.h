@@ -71,6 +71,11 @@ typedef enum afxPixelFormat
     AFX_PIXEL_FMT_D24S8,
     AFX_PIXEL_FMT_D32FS8,
 
+    AFX_PIXEL_FMT_RGB_DXT1,
+    AFX_PIXEL_FMT_RGBA_DXT1,
+    AFX_PIXEL_FMT_RGBA_DXT3,
+    AFX_PIXEL_FMT_RGBA_DXT5,
+
 	AFX_PIXEL_FMT_TOTAL
 } afxPixelFormat;
 
@@ -78,8 +83,9 @@ AFX_DEFINE_STRUCT(afxPixelFormatSpecification)
 {
     afxNat  stride;
     afxNat  chCnt;
-    afxNat  size[4][4];
-    afxNat  shift[4][4];
+    afxNat  bpp[4];
+    afxNat  shift[4];
+    afxNat  swizzle[4];
 };
 
 AFX_DEFINE_STRUCT(afxColorSwizzling)

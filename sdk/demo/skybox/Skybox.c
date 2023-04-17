@@ -288,20 +288,23 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
             afxWhd doutExtent;
             AfxDrawOutputGetExtent(dout, doutExtent);
             AfxM4dMakePerspective(p, fov, AfxScalar(doutExtent[0]) / AfxScalar(doutExtent[1]), clipPlanes[0], clipPlanes[1]);
-            //AfxM4dMakeRwProjection(p, din->surfaceArea.offset, din->surfaceArea.extent, clipPlanes[0], clipPlanes[1], renderer->cam->perspective);
+            //AfxM4dMakeRwProjection(p, vp.offset, vp.extent, clipPlanes[0], clipPlanes[1], renderer->cam->perspective);
             //AfxM4dCopy(renderer->p, p);
 
             afxViewConstants view;
+            AfxM4dCopy(view.c, camMtx);
             AfxM4dCopy(view.v, v);
             AfxM4dCopy(view.p, p);
             AfxM4dCopy(renderer->p, p);
+            AfxV3dSet(view.camPos, camMtx[3][0], camMtx[3][1], camMtx[3][2]);
             AfxBufferUpdate(renderer->sets[0].viewConstants, 0, sizeof(view), &view);
 
             AfxDrawScriptCmdBindPipeline(dscr, renderer->skyPip);
 
             AfxDrawScriptCmdBindLegos(dscr, 0, 1, &renderer->sets[0].viewLego);
 
-            AfxDrawScriptCmdBindWildVertexBuffers(dscr, 0, 0, NIL, NIL, NIL, NIL);
+            afxNat vtxArr[] = { 0 };
+            AfxDrawScriptCmdBindVertexBuffers(dscr, 0, 1, &renderer->skyGeom, vtxArr, vtxArr);
             AfxDrawScriptCmdDraw(dscr, 36, 1, 0, 0);
 
             //_AfxRendererDoDrawForObjects(dscr, qid, renderer);
@@ -352,12 +355,12 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     afxWhd skyWhd = { 2048, 2048, 1 };
     AfxTextureBlueprintDeploy(&texb, &name, AFX_PIXEL_FMT_RGB8, skyWhd, 1, 6, AFX_TEX_CUBEMAP);
     afxUri cubeUri[6];
-    AfxUriMapConstData(&cubeUri[0], "art/skybox/blue/right.tga", 0);
-    AfxUriMapConstData(&cubeUri[1], "art/skybox/blue/left.tga", 0);
-    AfxUriMapConstData(&cubeUri[2], "art/skybox/blue/top.tga", 0);
-    AfxUriMapConstData(&cubeUri[3], "art/skybox/blue/bottom.tga", 0);
-    AfxUriMapConstData(&cubeUri[4], "art/skybox/blue/back.tga", 0);
-    AfxUriMapConstData(&cubeUri[5], "art/skybox/blue/front.tga", 0);
+    AfxUriMapConstData(&cubeUri[0], "art/skybox/day/right.tga", 0);
+    AfxUriMapConstData(&cubeUri[1], "art/skybox/day/left.tga", 0);
+    AfxUriMapConstData(&cubeUri[2], "art/skybox/day/bottom.tga", 0);
+    AfxUriMapConstData(&cubeUri[3], "art/skybox/day/top.tga", 0);
+    AfxUriMapConstData(&cubeUri[4], "art/skybox/day/front.tga", 0);
+    AfxUriMapConstData(&cubeUri[5], "art/skybox/day/back.tga", 0);
     AfxTextureBlueprintSetSourceUrl(&texb, 0, 6, cubeUri);
 
     AfxDrawContextBuildTextures(renderer->dctx, 1, &texb, &renderer->skyTex);
@@ -367,10 +370,68 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
 
     AfxColorSet(renderer->skyAmbientColor, 0.1, 0.1, 0.1, 1);
     AfxColorSet(renderer->skyEmissiveColor, 0.1, 0.1, 0.1, 1);
-    renderer->skyGeom = NIL;
+    
+    afxReal skyboxVertices[] = {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+    };
+
+    //for (afxNat i = 0; i < 36 * 3; i++)
+    //    skyboxVertices[i] *= 100;
+
+    afxString skyPosSem;
+    afxVertexDataSpecification skyGeomSpec;
+    skyGeomSpec.fmt = (skyGeomSpec.srcFmt = AFX_VTX_FMT_XYZ32);
+    skyGeomSpec.src = skyboxVertices;
+    skyGeomSpec.usage = AFX_VTX_USAGE_POS;
+    skyGeomSpec.semantic = AfxStringMapConst(&skyPosSem, "a_xyz", 0);
+    renderer->skyGeom = AfxDrawContextAcquireVertexBuffer(renderer->dctx, 36, 1, &skyGeomSpec);
+    AfxAssertObject(renderer->skyGeom, AFX_FCC_VBUF);
     AfxUriMapConstData(&uri, "data/pipeline/skybox.pip.urd", 0);
     renderer->skyPip = AfxDrawContextFetchPipeline(renderer->dctx, &uri);
     renderer->skyType = 0;
+
+
 
     afxLegoSchema bindSchema[4];
     afxPipelineRig pipr = AfxPipelineGetRig(renderer->skyPip);
@@ -566,7 +627,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
-    afxWhd extent = { 720, 480, 1 };
+    afxWhd extent = { 1280, 720, 1 };
 
     dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
     AfxAssert(dout);
@@ -627,9 +688,10 @@ int main(int argc, char const* argv[])
         dsys = AfxSystemAcquireDrawSystem(sys);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec;
+        afxDrawContextSpecification dctxSpec = { 0 };
         dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 1;
+        dctxSpec.autonomousQueue = FALSE;
 
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
         AfxAssert(dctx);

@@ -6,6 +6,8 @@
 
 AFX_DEFINE_STRUCT(afxViewConstants)
 {
+    afxV3d camPos;
+    afxM4d c;
     afxM4d v;
     afxM4d p;
     afxM4d vp;

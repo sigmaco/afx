@@ -1,0 +1,35 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class initialized.
+ Class(Core Execution System).ConstructInstances(1, 000000000014e468, 000000000014e478)
+ ERR afxMemory.c:203?AfxZero
+    
+ ERR afxMemory.c:203?AfxZero
+    (p)
+    Invalid
+ ERR afxMemory.c:186?AfxFill
+    
+ ERR afxMemory.c:186?AfxFill
+    (p)
+    Invalid
+ ERR afxMemory.c:84?AfxValidateMemoryArea
+    
+ ERR afxMemory.c:84?AfxValidateMemoryArea
+    (p)
+    Invalid

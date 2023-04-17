@@ -32,6 +32,8 @@ typedef enum
 
 AFX_DEFINE_HANDLE(afxMouse);
 
+AFX void*       AfxMouseGetSystem(afxMouse mse);
+
 AFX afxResult   AfxMouseEmulateButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
 AFX afxResult   AfxMouseEmulateMotion(afxMouse mse, afxReal const motion[2]);
 AFX afxResult   AfxMouseEmulateWheelAction(afxMouse mse, afxReal delta);
