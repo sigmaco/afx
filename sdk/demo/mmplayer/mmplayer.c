@@ -96,7 +96,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     AfxUriFormat(&uri.uri, "art/world.tga");
     
-    if (AfxDrawContextFetchTextures(dctx, 1, &uri.uri, &dumpImg))
+    if (1 != AfxDrawContextFetchTextures(dctx, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
@@ -115,7 +115,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.presentMode = AFX_PRESENT_MODE_MAILBOX;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
-    afxWhd extent = { 640, 360, 1 };
+    afxWhd extent = { 1280, 720, 1 };
 
 #ifdef ENABLE_DOUT1
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
@@ -253,9 +253,10 @@ int main(int argc, char const* argv[])
         dsys = AfxSystemAcquireDrawSystem(sys);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec;
+        afxDrawContextSpecification dctxSpec = { 0 };
         dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 2;
+        dctxSpec.autonomousQueue = FALSE;
 
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
         AfxAssert(dctx);

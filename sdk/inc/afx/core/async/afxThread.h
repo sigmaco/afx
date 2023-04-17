@@ -29,19 +29,23 @@ AFX_DEFINE_HANDLE(afxThread);
 
 AFX_OBJECT(afxThread)
 {
-    afxObject   obj;
-    afxNat32    tid;
-    afxSize     osHandle;
-    afxHint     hint;
-    void        (*start)(afxThread thr, void *udd);
-    void        *udd;
-    afxInt      exitCode;
-    afxBool     running;
-    afxBool     finnished;
-    afxBool     interruptionRequested;
-    afxQueue    events;
-    void        (*exec)(afxThread thr);
+    afxObject       obj;
+    afxNat32        tid;
+    afxSize         osHandle;
+    afxHint         hint;
+    void            (*start)(afxThread thr, void *udd);
+    void            *udd;
+    afxInt          exitCode;
+    afxBool         started;
+    afxBool         running;
+    afxBool         finnished;
+    afxBool         interruptionRequested;
+    afxQueue        events;
+    void            (*exec)(afxThread thr);
+    afxAllocator    all;
 };
+
+AFX void*       AfxThreadGetSystem(afxThread thr);
 
 AFX afxNat32    AfxThreadGetId(afxThread thr);
 AFX void        AfxThreadStart(afxThread thr);

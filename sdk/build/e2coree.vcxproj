@@ -52,7 +52,7 @@
     <ClInclude Include="..\inc\afx\core\mem\afxArenaAllocator.h" />
     <ClInclude Include="..\inc\afx\core\mem\afxArray.h" />
     <ClInclude Include="..\inc\afx\core\mem\afxDatabase.h" />
-    <ClInclude Include="..\inc\afx\core\mem\afxMemContext.h" />
+    <ClInclude Include="..\inc\afx\core\mem\afxAllocator.h" />
     <ClInclude Include="..\inc\afx\core\mem\afxMemory.h" />
     <ClInclude Include="..\inc\afx\core\mem\afxQueue.h" />
     <ClInclude Include="..\inc\afx\core\mem\afxSlabAllocator.h" />
@@ -182,7 +182,7 @@
     </ClCompile>
     <ClCompile Include="..\src\e2coree\core\mem\afxArray.c" />
     <ClCompile Include="..\src\e2coree\core\mem\afxDatabase.c" />
-    <ClCompile Include="..\src\e2coree\core\mem\afxMemContext.c" />
+    <ClCompile Include="..\src\e2coree\core\mem\afxAllocator.c" />
     <ClCompile Include="..\src\e2coree\core\mem\afxMemory.c" />
     <ClCompile Include="..\src\e2coree\core\mem\afxQueue.c" />
     <ClCompile Include="..\src\e2coree\core\mem\afxSlabAllocator.c">

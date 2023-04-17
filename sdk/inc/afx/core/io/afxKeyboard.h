@@ -133,6 +133,8 @@ typedef enum // layout de HID
 
 AFX_DEFINE_HANDLE(afxKeyboard);
 
+AFX void*       AfxKeyboardGetSystem(afxKeyboard kbd);
+
 AFX afxBool     AfxKeyboardArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
 AFX afxResult   AfxKeyboardEmulateActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
 AFX afxBool     AfxKeyboardIsPressed(afxKeyboard kbd, afxKey code);

@@ -31,6 +31,7 @@ AFX_DEFINE_STRUCT(afxDrawContextSpecification)
     void                *enabledFeatures; // afxDrawDriverFeatures
 
     afxNat              queueCnt;
+    afxBool             autonomousQueue;
 
     afxNat              maxBufCnt;
     afxNat              maxSmpCnt;
@@ -55,12 +56,14 @@ AFX_OBJECT(afxDrawContext)
 
 #endif
 
-AFX afxDrawEngine       AfxDrawContextAcquireEngine(afxDrawContext dctx, afxNat idx);
+AFX afxDrawEngine       AfxDrawContextAcquireEngine(afxDrawContext dctx, afxNat idx, afxBool autonomous);
 AFX afxDrawInput        AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 AFX afxDrawOutput       AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const extent, afxDrawOutputSpecification const *spec);
 
 AFX void*               AfxDrawContextGetDriver(afxDrawContext dctx);
 AFX void*               AfxDrawContextGetDrawSystem(afxDrawContext dctx);
+
+AFX afxAllocator        AfxDrawContextGetAllocator(afxDrawContext dctx);
 
 AFX afxClass*           AfxDrawContextGetBufferClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetCanvasClass(afxDrawContext dctx);
@@ -78,19 +81,19 @@ AFX afxClass*           AfxDrawContextGetSurfaceClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetTextureClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetVertexBufferClass(afxDrawContext dctx);
 
-AFX afxResult           AfxDrawContextEnumerateEngines(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxDrawEngine deng[]);
-AFX afxResult           AfxDrawContextEnumerateInputs(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxDrawInput din[]);
-AFX afxResult           AfxDrawContextEnumerateScripts(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxDrawScript dscr[]);
-AFX afxResult           AfxDrawContextEnumerateTextures(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxTexture tex[]);
-AFX afxResult           AfxDrawContextEnumerateIndexBuffers(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxIndexBuffer ibuf[]);
-AFX afxResult           AfxDrawContextEnumerateVertexBuffers(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxVertexBuffer vbuf[]);
-AFX afxResult           AfxDrawContextEnumerateBuffers(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxBuffer buf[]);
-AFX afxResult           AfxDrawContextEnumerateSamplers(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxSampler smp[]);
-AFX afxResult           AfxDrawContextEnumeratePipelineModules(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxPipelineModule pipm[]);
-AFX afxResult           AfxDrawContextEnumeratePipelines(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxPipeline pip[]);
-AFX afxResult           AfxDrawContextEnumerateSurfaces(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxSurface surf[]);
-AFX afxResult           AfxDrawContextEnumerateCanvases(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxCanvas canv[]);
-AFX afxResult           AfxDrawContextEnumerateOutputs(afxDrawContext dctx, afxBool reverse, afxNat base, afxNat cnt, afxDrawOutput dout[]);
+AFX afxResult           AfxDrawContextEnumerateEngines(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawEngine deng[]);
+AFX afxResult           AfxDrawContextEnumerateInputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawInput din[]);
+AFX afxResult           AfxDrawContextEnumerateScripts(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawScript dscr[]);
+AFX afxResult           AfxDrawContextEnumerateTextures(afxDrawContext dctx, afxNat base, afxNat cnt, afxTexture tex[]);
+AFX afxResult           AfxDrawContextEnumerateIndexBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxIndexBuffer ibuf[]);
+AFX afxResult           AfxDrawContextEnumerateVertexBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxVertexBuffer vbuf[]);
+AFX afxResult           AfxDrawContextEnumerateBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxBuffer buf[]);
+AFX afxResult           AfxDrawContextEnumerateSamplers(afxDrawContext dctx, afxNat base, afxNat cnt, afxSampler smp[]);
+AFX afxResult           AfxDrawContextEnumeratePipelineModules(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipelineModule pipm[]);
+AFX afxResult           AfxDrawContextEnumeratePipelines(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipeline pip[]);
+AFX afxResult           AfxDrawContextEnumerateSurfaces(afxDrawContext dctx, afxNat base, afxNat cnt, afxSurface surf[]);
+AFX afxResult           AfxDrawContextEnumerateCanvases(afxDrawContext dctx, afxNat base, afxNat cnt, afxCanvas canv[]);
+AFX afxResult           AfxDrawContextEnumerateOutputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawOutput dout[]);
 
 AFX afxBuffer           AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec);
 AFX afxCanvas           AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *surfSpecs);

@@ -83,8 +83,9 @@ AFX_DEFINE_STRUCT(afxPixelFormatSpecification)
 {
     afxNat  stride;
     afxNat  chCnt;
-    afxNat  size[4][4];
-    afxNat  shift[4][4];
+    afxNat  bpp[4];
+    afxNat  shift[4];
+    afxNat  swizzle[4];
 };
 
 AFX_DEFINE_STRUCT(afxColorSwizzling)
