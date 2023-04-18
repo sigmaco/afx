@@ -391,8 +391,8 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     {
         afxSurfaceSpecification surfSpec[] =
         {
-            { AfxDrawOutputGetBuffer(dout, i), AfxTextureGetFormat(&(surfSpec[0].surf->tex)), AFX_TEX_USAGE_RASTER_BUFFER },
-            { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_DEPTH_BUFFER },
+            { AfxDrawOutputGetBuffer(dout, i), AfxTextureGetFormat(&(surfSpec[0].surf->tex)), AFX_TEX_USAGE_SURFACE_RASTER },
+            { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH },
         };
 
         afxWhd extent;
@@ -564,7 +564,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
+    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 720, 480, 1 };
 
     dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);

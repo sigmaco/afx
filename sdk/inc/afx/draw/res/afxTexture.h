@@ -38,8 +38,8 @@ typedef enum afxTextureUsage
     AFX_TEX_USAGE_TRANSFER_DST          = AFX_FLAG(1),
     AFX_TEX_USAGE_SAMPLED               = AFX_FLAG(2),
     AFX_TEX_USAGE_STORAGE               = AFX_FLAG(3),
-    AFX_TEX_USAGE_RASTER_BUFFER         = AFX_FLAG(4), // used as color buffer; a surface of canvases.
-    AFX_TEX_USAGE_DEPTH_BUFFER          = AFX_FLAG(5), // used as depth/stencil buffer; a surface of canvases.
+    AFX_TEX_USAGE_SURFACE_RASTER         = AFX_FLAG(4), // used as color buffer; a surface of canvases.
+    AFX_TEX_USAGE_SURFACE_DEPTH          = AFX_FLAG(5), // used as depth/stencil buffer; a surface of canvases.
     AFX_TEX_USAGE_TRANSIENT_BUFFER      = AFX_FLAG(6),
     AFX_TEX_USAGE_INPUT_BUFFER          = AFX_FLAG(7),
 

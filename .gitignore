@@ -15,7 +15,9 @@
 /art/skybox/blue
 /sdk/exp/projs
 /sdk/exp
-/sdk/src
+/sdk/src/e2coree/**/*.h
+/sdk/src/e2coree/**/*.c
+/sdk/src/e2coree/deps/
 /art/building/sponza
 /art/exp
 /art/fmv/ubi.bik
