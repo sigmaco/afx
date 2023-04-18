@@ -152,7 +152,7 @@ typedef enum afxFcc
     AFX_FCC_PIPM    = AfxPackFcc('p', 'i', 'p', 'm'), // afxPipelineModule
     AFX_FCC_PIPB    = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint
     AFX_FCC_DRES    = AfxPackFcc('d', 'r', 'e', 's'), // afxDrawResourceSet
-    AFX_FCC_DSCR    = AfxPackFcc('d', 'i', 'b', '\0'), // afxDrawScript
+    AFX_FCC_DSCR    = AfxPackFcc('d', 's', 'c', 'r'), // afxDrawScript
     AFX_FCC_DDBG    = AfxPackFcc('d', 'd', 'b', 'g'), // afxDrawDebugger
     //AFX_FCC_DTEC    = AfxPackFcc('d', 't', 'e', 'c'), // afxDrawTechnique
     AFX_FCC_VPNT    = AfxPackFcc('v', 'p', 'n', 't'), // afxViewpoint
