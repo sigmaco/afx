@@ -557,10 +557,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxUriMapConstData(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = {0};
     doutSpec.endpoint = &uriMap;
-    doutSpec.bufCnt = 3;
+    doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
-    doutSpec.compositeAlpha = FALSE;
+    doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     doutSpec.presentTransform = NIL;

@@ -171,24 +171,22 @@ _SGL afxError _AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, a
     return err;
 }
 
-_SGL afxResult _AfxDrawOutputForEachBuffer(afxDrawOutput dout, afxResult(*f)(afxSurface, void*), void *data)
+_SGL afxResult _AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[])
 {
     afxError err = NIL;
     AfxAssertObject(dout, AFX_FCC_DOUT);
+    AfxAssert(cnt);
+    AfxAssert(dout->bufCnt >= first + cnt);
+    AfxAssert(surf);
     afxResult cnt = 0;
 
-    AfxTransistorEnterShared(&dout->buffersLock);
     for (afxNat i = 0; i < dout->bufCnt; i++)
     {
-        afxSurface surf = dout->buffers[i];
-        AfxAssertObject(surf, AFX_FCC_SURF);
-
+        afxSurface surf2 = dout->buffers[first + i];
+        AfxAssertObject(surf2, AFX_FCC_SURF);
+        surf[i] = surf2;
         ++cnt;
-
-        if (!(f(surf, data)))
-            break;
     }
-    AfxTransistorExitShared(&dout->buffersLock);
     return cnt;
 }
 
@@ -252,7 +250,7 @@ _SGL afxError _AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent)
         if (fcc == AFX_FCC_WND || fcc == AFX_FCC_WPP)
         {
             RECT rect;
-            GetClientRect(GetDesktopWindow(), &(rect));
+            GetClientRect(NULL, &(rect));
             dout->whdMax[0] = rect.right - rect.left;
             dout->whdMax[1] = rect.bottom - rect.top;
             dout->whdMax[2] = 1;
@@ -357,7 +355,7 @@ afxDoutImpl const _AfxStdDoutWndImpl =
     _AfxDrawOutputGetExtent,
     _AfxDrawOutputGetExtentNdc,
     _AfxDrawOutputGetBuffer,
-    _AfxDrawOutputForEachBuffer,
+    _AfxDrawOutputEnumerateBuffers,
     _AfxDrawOutputRequestBuffer,
 };
 
@@ -434,7 +432,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 pxlAttrPairs[8][1] = 8;
 
                 pxlAttrPairs[9][0] = WGL_TRANSPARENT_ARB;
-                pxlAttrPairs[9][1] = (dout->compositeAlpha != AFX_PRESENT_IGNORE_ALPHA);
+                pxlAttrPairs[9][1] = (dout->presentAlpha != AFX_PRESENT_ALPHA_OPAQUE);
 
                 pxlAttrPairs[10][0] = WGL_SWAP_METHOD_ARB;
                 pxlAttrPairs[10][1] = dout->presentMode == AFX_PRESENT_MODE_IMMEDIATE ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB;
@@ -446,10 +444,10 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 //pxlAttrPairs[11][1] = 8;
 
                 //pxlAttrPairs[13][0] = WGL_COLORSPACE_EXT; // works on Mesa, didn't work on Intel
-                //pxlAttrPairs[13][1] = dout->colorSpc == AFX_COLOR_SPC_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == AFX_COLOR_SPC_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL);
+                //pxlAttrPairs[13][1] = dout->colorSpc == AFX_COLOR_SPACE_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == AFX_COLOR_SPACE_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL);
 
                 //pxlAttrPairs[14][0] = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB; // works on Mesa, didn't work on Intel
-                //pxlAttrPairs[14][1] = (dout->colorSpc == AFX_COLOR_SPC_SRGB);
+                //pxlAttrPairs[14][1] = (dout->colorSpc == AFX_COLOR_SPACE_SRGB);
 
 
                 pxlAttrPairs[11][0] = NIL;
@@ -481,7 +479,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                     if (!_SglSetPixelFormat(dout->wglDc, dout->wglDcPxlFmt, &(pfd))) AfxThrowError();
                     else
                     {
-                        if (dout->compositeAlpha)
+                        if (dout->presentAlpha)
                         {
                             DWM_BLURBEHIND bb = { 0 };
                             bb.dwFlags = DWM_BB_ENABLE;
@@ -578,14 +576,14 @@ _SGL afxError _AfxDoutCtor(afxDrawOutput dout, _afxDoutCtorArgs *args)
     dout->flags = NIL;
     dout->surface = NIL; // usually a OS window handle
     dout->pixelFmt = AFX_PIXEL_FMT_RGBA8; // or AFX_PIXEL_FMT_RGBA8R ?
-    dout->colorSpc = AFX_COLOR_SPC_SRGB; // sRGB is the default
+    dout->colorSpc = AFX_COLOR_SPACE_SRGB; // sRGB is the default
     dout->bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     dout->bufCnt = 0;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
     dout->lastAcqBufIdx = 0;
     AfxChainDeploy(&dout->swapchain, dout);
     AfxTransistorDeploy(&dout->buffersLock);
 
-    dout->compositeAlpha = TRUE; // consider transparency for window composing.
+    dout->presentAlpha = TRUE; // consider transparency for window composing.
     dout->presentTransform = AFX_PRESENT_TRANSFORM_FLIP_V; // NIL leaves it as it is.
     dout->presentMode = AFX_PRESENT_MODE_FIFO;
     dout->clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
@@ -616,7 +614,7 @@ _SGL afxError _AfxDoutCtor(afxDrawOutput dout, _afxDoutCtorArgs *args)
         dout->colorSpc = args->spec->colorSpc;
         dout->bufUsage = args->spec->bufUsage;
         dout->bufCnt = 0;// args->spec->bufCnt;
-        dout->compositeAlpha = args->spec->compositeAlpha;
+        dout->presentAlpha = args->spec->presentAlpha;
         dout->presentTransform = args->spec->presentTransform;
         dout->presentMode = args->spec->presentMode;
         dout->clipped = args->spec->clipped;

@@ -107,12 +107,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxUriFormat(&uri.uri, "window");
     afxDrawOutputSpecification doutSpec;
     doutSpec.endpoint = &uri.uri;
-    doutSpec.bufCnt = 3;
+    doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
-    doutSpec.compositeAlpha = FALSE;
+    doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_MAILBOX;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 1280, 720, 1 };
@@ -150,7 +150,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     }
 #endif
 #ifdef ENABLE_DOUT3
-    doutSpec.presentMode = AFX_PRESENT_MODE_MAILBOX;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     dout[2] = AfxDrawContextAcquireOutput(dctx, &doutSpec, &uri);
     AfxAssert(dout[2]);
 

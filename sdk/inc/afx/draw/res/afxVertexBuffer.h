@@ -23,15 +23,17 @@
 
 typedef enum afxVertexUsage
 {
-    AFX_VTX_USAGE_DYNAMIC   = AFX_FLAG(0), // The data store contents will be modified repeatedly and used many times.
-    AFX_VTX_USAGE_STREAM    = AFX_FLAG(1), // The data store contents will be modified once and used at most a few times.
+    AFX_VTX_USAGE_DYNAMIC       = AFX_FLAG(0), // The data store contents will be modified repeatedly and used many times.
+    AFX_VTX_USAGE_STREAM        = AFX_FLAG(1), // The data store contents will be modified once and used at most a few times.
     //AFX_VTX_USAGE_STATIC = AFX_FLAG(2), // The data store contents will be modified once and used many times.
 
-    AFX_VTX_USAGE_POS   = AFX_FLAG( 9),
-    AFX_VTX_USAGE_NRM   = AFX_FLAG(10),
-    AFX_VTX_USAGE_TAN   = AFX_FLAG(11),
-    AFX_VTX_USAGE_BTN   = AFX_FLAG(12),
-    AFX_VTX_USAGE_UV    = AFX_FLAG(13),
+    AFX_VTX_USAGE_POS           = AFX_FLAG( 9),
+    AFX_VTX_USAGE_NRM           = AFX_FLAG(10),
+    AFX_VTX_USAGE_TAN           = AFX_FLAG(11),
+    AFX_VTX_USAGE_BTN           = AFX_FLAG(12),
+    AFX_VTX_USAGE_UV            = AFX_FLAG(13),
+
+    AFX_VTX_USAGE_RASTERIZATION = AFX_FLAG(16),
 } afxVertexUsage;
 
 AFX_DEFINE_STRUCT(afxVertexDataSpecification)

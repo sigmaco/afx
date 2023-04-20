@@ -236,7 +236,7 @@ AFX_OBJECT(afxDrawOutput)
     afxNat                  lastAcqBufIdx;
     afxBool                 swapping;
     afxChain                swapchain; // display order
-    afxPresentCompositing   compositeAlpha; // consider transparency for external composing (usually on windowing system).
+    afxPresentAlpha         presentAlpha; // consider transparency for external composing (usually on windowing system).
     afxPresentTransform     presentTransform; // NIL leaves it as it is.
     afxPresentMode          presentMode; // FIFO
     afxBool                 clipped; // usually true to don't do off-screen draw.
@@ -541,7 +541,6 @@ typedef enum afxDrawScriptCmdId
 {
     AFX_DSC_END,
     AFX_DSC_BEGIN,
-    AAGEWAWG = 99,
     AFX_DSC_BEGIN_RENDER_PASS,
     AFX_DSC_BIND_BUFFER,
     AFX_DSC_BIND_TEXTURES,
