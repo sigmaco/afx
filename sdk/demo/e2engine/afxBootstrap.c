@@ -44,7 +44,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
+    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 720, 480, 1 };
 
     dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);

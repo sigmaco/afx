@@ -248,6 +248,8 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
             AfxCanvasGetExtent(renderer->sets[0].canv, drawArea.extent);
             AfxDrawScriptCmdBeginRenderPass(dscr, renderer->sets[0].canv, &drawArea, 2, fbufAnnexes);
 
+            AfxDrawScriptCmdBindPipeline(dscr, renderer->skyPip);
+
             afxWhd extent;
             AfxCanvasGetExtent(renderer->sets[0].canv, extent);
             afxViewport vp = { 0 };
@@ -292,14 +294,10 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
             //AfxM4dCopy(renderer->p, p);
 
             afxViewConstants view;
-            AfxM4dCopy(view.c, camMtx);
             AfxM4dCopy(view.v, v);
             AfxM4dCopy(view.p, p);
             AfxM4dCopy(renderer->p, p);
-            AfxV3dSet(view.camPos, camMtx[3][0], camMtx[3][1], camMtx[3][2]);
             AfxBufferUpdate(renderer->sets[0].viewConstants, 0, sizeof(view), &view);
-
-            AfxDrawScriptCmdBindPipeline(dscr, renderer->skyPip);
 
             AfxDrawScriptCmdBindLegos(dscr, 0, 1, &renderer->sets[0].viewLego);
 
@@ -474,8 +472,8 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     {
         afxSurfaceSpecification const surfSpec[] =
         {
-            { AfxDrawOutputGetBuffer(dout, i), AfxTextureGetFormat(&(surfSpec[0].surf->tex)), AFX_TEX_USAGE_RASTER_BUFFER },
-            { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_DEPTH_BUFFER },
+            { AfxDrawOutputGetBuffer(dout, i), AfxTextureGetFormat(&(surfSpec[0].surf->tex)), AFX_TEX_USAGE_SURFACE_RASTER },
+            { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH },
         };
 
         afxWhd extent;
@@ -619,14 +617,14 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxUriMapConstData(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = {0};
     doutSpec.endpoint = &uriMap;
-    doutSpec.bufCnt = 3;
+    doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
-    doutSpec.compositeAlpha = FALSE;
+    doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
+    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 1280, 720, 1 };
 
     dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);

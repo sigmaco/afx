@@ -1,0 +1,1251 @@
+
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 000000000019e4e0, 000000000019e4e8)
+ Constructing instance 00000000002e9020 of Core Execution System.
+ ADV afxSystem.c:1215?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1216?_AfxSysCtor
+    Logical processor count: 2
+ Allocator class registered.
+ Class[Allocator].ConstructInstances(1, 000000000019c140, 000000000019c148)
+ Constructing instance 00000000002e4a30 of Allocator.
+ Instance 00000000002e4a30[all]^1 built.
+ Point "." rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/..".
+ Point "system" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64".
+ Point "art" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../art".
+ Point "data" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../data".
+ Point "sound" rwx[1,0,0] mounted -> "E:/qwadro/afx/system64/../sound".
+ Thread class registered.
+ Module class registered.
+ Class[Module].ConstructInstances(1, 000000000019c070, 000000000019c078)
+ Constructing instance 00000000002b3530 of Module.
+ Instance 00000000002b3530[mdle]^1 built.
+ I/O Stream class registered.
+ Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ HID class registered.
+ Keyboard class registered.
+ Mouse class registered.
+ Draw System class registered.
+ Application class registered.
+ Class[Keyboard].ConstructInstances(1, 000000000019c150, 000000000019c158)
+ Constructing instance 00000000002eca00 of Keyboard : HID.
+ Constructing instance 00000000002eca00 of HID.
+ Constructing instance 00000000002eca00 of Keyboard.
+ Instance 00000000002eca00[kbd]^1 built.
+ Instance 00000000002e9020[sys]^1 built.
+ Class[Draw System].ConstructInstances(1, 000000000019e520, 000000000019e528)
+ Constructing instance 00000000002ed2c0 of Draw System.
+ Class[Allocator].ConstructInstances(1, 000000000019df50, 000000000019df58)
+ Constructing instance 00000000002ed4e0 of Allocator.
+ Instance 00000000002ed4e0[all]^1 built.
+ Draw Driver class registered.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ Class[Module].ConstructInstances(1, 000000000019de80, 000000000019de88)
+ Constructing instance 00000000002b3630 of Module.
+ Instance 00000000002b3630[mdle]^1 built.
+ Listing all available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ glCopyTexSubImage3D @ 65 found.
+ glActiveTexture @ 66 found.
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ glCompressedTexImage2D @ 69 found.
+ glCompressedTexImage1D @ 70 found.
+ glCompressedTexSubImage3D @ 71 found.
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ glPointParameteriv @ 81 found.
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ glGetShaderiv @ 124 found.
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ glUniform4fv @ 150 found.
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ glVertexAttrib1f @ 161 found.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ glClipControl @ 543 found.
+ glNamedBufferStorage @ 551 found.
+ glTextureBufferRange @ 589 found.
+ glTextureParameteri @ 606 found.
+ glMemoryBarrierByRegion @ 641 found.
+ glGetGraphicsResetStatus @ 644 found.
+ glGetnCompressedTexImage @ 645 found.
+ glGetnTexImage @ 646 found.
+ glGetnUniformdv @ 647 found.
+ glGetnUniformfv @ 648 found.
+ glGetnUniformiv @ 649 found.
+ glGetnUniformuiv @ 650 found.
+ glReadnPixels @ 651 found.
+ Class[Draw Driver].ConstructInstances(1, 000000000019da10, 000000000019da18)
+ Constructing instance 0000000003bbae00 of Draw Driver.
+ Draw Context class registered.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Instance 0000000003bbae00[ddrv]^1 built.
+ Loading draw ICDs...
+ Reacquired. (mdle)00000000002b3630^3
+ Class[Module].ConstructInstances(1, 000000000019dbc0, 000000000019dbc8)
+ Constructing instance 0000000003bbd210 of Module.
+ Instance 0000000003bbd210[mdle]^1 built.
+ Instance 00000000002ed2c0[dsys]^1 built.
+ Class[Draw Context].ConstructInstances(1, 000000000019e520, 000000000019e528)
+ Constructing instance 0000000003ebfbe0 of Draw Context.
+ Class[Allocator].ConstructInstances(1, 000000000019e090, 000000000019e098)
+ Constructing instance 0000000003be61e0 of Allocator.
+ Instance 0000000003be61e0[all]^1 built.
+ Draw Script class registered.
+ Draw Input class registered.
+ Draw Engine class registered.
+ Buffer class registered.
+ Vertex Buffer class registered.
+ Index Buffer class registered.
+ Sampler class registered.
+ Texture class registered.
+ Surface class registered.
+ Canvas class registered.
+ Pipeline Module class registered.
+ Pipeline Rig class registered.
+ Pipeline class registered.
+ Lego class registered.
+ Draw Output class registered.
+ Class[Draw Engine].ConstructInstances(1, 000000000019e0a0, 000000000019e0a8)
+ Constructing instance 0000000002a793b0 of Draw Engine.
+ Class[Uniform Resource Dictionary].ConstructInstances(1, 0000000000194c30, 0000000000194c38)
+ Constructing instance 0000000003eca1e0 of Uniform Resource Dictionary.
+ Class[I/O Stream].ConstructInstances(1, 00000000001948c0, 00000000001948c8)
+ Constructing instance 000000000036d7d0 of I/O Stream.
+ Acquired. (ios)000000000036d7d0^1 <-> "E:/qwadro/afx/data/pipeline/rgbaToRgbaYFlipped.pip.urd"
+ Instance 000000000036d7d0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 0000000000194980, 000007feebb61cbe)
+ Destructing instance 000000000036d7d0 of I/O Stream class.
+ Instance 000000000036d7d0[ios]^0 destroyed.
+ Instance 0000000003eca1e0[urd]^1 built.
+ Class[Uniform Resource Dictionary].DestructInstances(1, 0000000000194ce0, 0000000034727473)
+ Destructing instance 0000000003eca1e0 of Uniform Resource Dictionary class.
+ Instance 0000000003eca1e0[urd]^0 destroyed.
+ Class[Pipeline].ConstructInstances(1, 0000000000194d40, 0000000000194d48)
+ Constructing instance 0000000002ab8d90 of Pipeline : Resource.
+ Constructing instance 0000000002ab8d90 of Resource.
+ Constructing instance 0000000002ab8d90 of Pipeline.
+ Class[Pipeline Module].ConstructInstances(1, 0000000000194910, 0000000000194918)
+ Constructing instance 0000000003d7d4f0 of Pipeline Module.
+ Instance 0000000003d7d4f0[pipm]^1 built.
+ Taking connection 0000000002ab8f28 connecting 0000000003d7d4f0?pipm#1 to holder 0000000002ab8d90?pip#1.
+ Class[Pipeline Module].ConstructInstances(1, 0000000000194910, 0000000000194918)
+ Constructing instance 0000000003d7d5d0 of Pipeline Module.
+ Instance 0000000003d7d5d0[pipm]^1 built.
+ Taking connection 0000000002ab8f88 connecting 0000000003d7d5d0?pipm#1 to holder 0000000002ab8d90?pip#1.
+ Class[Pipeline Rig].ConstructInstances(1, 0000000000194910, 0000000000194918)
+ Constructing instance 000000000036d7d0 of Pipeline Rig.
+ Instance 000000000036d7d0[pipa]^1 built.
+ Instance 0000000002ab8d90[pip]^1 built.
+ Class[Sampler].ConstructInstances(1, 000000000019dc50, 000000000019dc58)
+ Constructing instance 0000000003be4510 of Sampler.
+ Instance 0000000003be4510[smp]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000019dc40, 000000000019dc48)
+ Constructing instance 0000000003bbc2d0 of Lego.
+ Instance 0000000003bbc2d0[bset]^1 built.
+ Instance 0000000002a793b0[deng]^1 built.
+ Instance 0000000003ebfbe0[dctx]^1 built.
+ Class[Application].ConstructInstances(1, 000000000019e520, 000000000019e528)
+ Constructing instance 0000000002ab03a0 of Application.
+ Class[Mouse].ConstructInstances(1, 000000000019e0b0, 000000000019e0b8)
+ Constructing instance 0000000003bbd310 of Mouse : HID.
+ Constructing instance 0000000003bbd310 of HID.
+ Constructing instance 0000000003bbd310 of Mouse.
+ Instance 0000000003bbd310[mse]^1 built.
+ Taking connection 0000000002ab0478 connecting 0000000003bbd310?mse#1 to holder 0000000002ab03a0?app#1.
+ Class[Allocator].ConstructInstances(1, 000000000019e0a0, 000000000019e0a8)
+ Constructing instance 0000000003be63f0 of Allocator.
+ Instance 0000000003be63f0[all]^1 built.
+ Taking connection 0000000002ab0420 connecting 0000000003be63f0?all#1 to holder 0000000002ab03a0?app#1.
+ Class[Draw Input].ConstructInstances(1, 000000000019e0c0, 000000000019e0c8)
+ Constructing instance 000000000203f990 of Draw Input.
+ Class[Allocator].ConstructInstances(1, 000000000019dc00, 000000000019dc08)
+ Constructing instance 0000000003be7aa0 of Allocator.
+ Instance 0000000003be7aa0[all]^1 built.
+ Instance 000000000203f990[din]^1 built.
+ Taking connection 0000000002ab09b0 connecting 000000000203f990?din#1 to holder 0000000002ab03a0?app#1.
+ Widget class registered.
+ Simulation class registered.
+ Instance 0000000002ab03a0[app]^1 built.
+ Class[Simulation].ConstructInstances(1, 000000000019e2a0, 000000000019e2a8)
+ Constructing instance 0000000000372d00 of Simulation.
+ Class[Allocator].ConstructInstances(1, 000000000019dec0, 000000000019dec8)
+ Constructing instance 0000000003be7cb0 of Allocator.
+ Instance 0000000003be7cb0[all]^1 built.
+ Material class registered.
+ Mesh class registered.
+ Node class registered.
+ Skeleton class registered.
+ Model class registered.
+ Body class registered.
+ Entity class registered.
+ Camera class registered.
+ Light class registered.
+ Instance 0000000000372d00[sim]^1 built.
+ Class[Draw Output].ConstructInstances(1, 000000000019e2d0, 000000000019e2d8)
+ Constructing instance 000000000036f160 of Draw Output.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000019cf30, 000000000019cf38)
+ Constructing instance 0000000002044bc0 of Surface : Texture.
+ Constructing instance 0000000002044bc0 of Texture : Resource.
+ Constructing instance 0000000002044bc0 of Resource.
+ Constructing instance 0000000002044bc0 of Texture.
+ Constructing instance 0000000002044bc0 of Surface.
+ Instance 0000000002044bc0[surf]^1 built.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000019cf30, 000000000019cf38)
+ Constructing instance 0000000002041fc0 of Surface : Texture.
+ Constructing instance 0000000002041fc0 of Texture : Resource.
+ Constructing instance 0000000002041fc0 of Resource.
+ Constructing instance 0000000002041fc0 of Texture.
+ Constructing instance 0000000002041fc0 of Surface.
+ Instance 0000000002041fc0[surf]^1 built.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000019cf30, 000000000019cf38)
+ Constructing instance 000000000037e2b0 of Surface : Texture.
+ Constructing instance 000000000037e2b0 of Texture : Resource.
+ Constructing instance 000000000037e2b0 of Resource.
+ Constructing instance 000000000037e2b0 of Texture.
+ Constructing instance 000000000037e2b0 of Surface.
+ Instance 000000000037e2b0[surf]^1 built.
+ Extent readjusted. (dout)000000000036f160 -> 1272, 0.662500 of 1920; 693 0.641667 of 1080
+ Instance 000000000036f160[dout]^1 built.
+ Class[Draw Input].ConstructInstances(1, 000000000019e2f0, 000000000019e2f8)
+ Constructing instance 00000000003737c0 of Draw Input.
+ Class[Allocator].ConstructInstances(1, 000000000019de30, 000000000019de38)
+ Constructing instance 0000000003be7890 of Allocator.
+ Instance 0000000003be7890[all]^1 built.
+ Instance 00000000003737c0[din]^1 built.
+ Class[Camera].ConstructInstances(1, 000000000019e290, 000000000019e298)
+ Constructing instance 0000000002aac3d0 of Camera : Node.
+ Constructing instance 0000000002aac3d0 of Node.
+ Constructing instance 0000000002aac3d0 of Camera.
+ Instance 0000000002aac3d0[cam]^1 built.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Texture].ConstructInstances(1, 000000000019c4c0, 000000000019c4c8)
+ Constructing instance 0000000000373990 of Texture : Resource.
+ Constructing instance 0000000000373990 of Resource.
+ Constructing instance 0000000000373990 of Texture.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/right.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/left.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/bottom.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/top.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/front.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Class[I/O Stream].ConstructInstances(1, 000000000019bf50, 000000000019bf58)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/art/skybox/day/back.tga"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 000000000019c010, 0000000000000002)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Instance 0000000000373990[tex]^1 built.
+ Class[Vertex Buffer].ConstructInstances(1, 000000000019c4d0, 000000000019c4d8)
+ Constructing instance 0000000003ec88a0 of Vertex Buffer : Buffer.
+ Constructing instance 0000000003ec88a0 of Buffer.
+ Constructing instance 0000000003ec88a0 of Vertex Buffer.
+ Instance 0000000003ec88a0[vbuf]^1 built.
+ Class[Uniform Resource Dictionary].ConstructInstances(1, 0000000000193500, 0000000000193508)
+ Constructing instance 0000000003eca1e0 of Uniform Resource Dictionary.
+ Class[I/O Stream].ConstructInstances(1, 0000000000193190, 0000000000193198)
+ Constructing instance 0000000002a980a0 of I/O Stream.
+ Acquired. (ios)0000000002a980a0^1 <-> "E:/qwadro/afx/data/pipeline/skybox.pip.urd"
+ Instance 0000000002a980a0[ios]^1 built.
+ Class[I/O Stream].DestructInstances(1, 0000000000193250, 000007feebb61cbe)
+ Destructing instance 0000000002a980a0 of I/O Stream class.
+ Instance 0000000002a980a0[ios]^0 destroyed.
+ Instance 0000000003eca1e0[urd]^1 built.
+ Class[Uniform Resource Dictionary].DestructInstances(1, 00000000001935b0, 0000000034727473)
+ Destructing instance 0000000003eca1e0 of Uniform Resource Dictionary class.
+ Instance 0000000003eca1e0[urd]^0 destroyed.
+ Class[Pipeline].ConstructInstances(1, 0000000000193610, 0000000000193618)
+ Constructing instance 0000000003ecda10 of Pipeline : Resource.
+ Constructing instance 0000000003ecda10 of Resource.
+ Constructing instance 0000000003ecda10 of Pipeline.
+ Class[Pipeline Module].ConstructInstances(1, 00000000001931e0, 00000000001931e8)
+ Constructing instance 0000000003bc3bc0 of Pipeline Module.
+ Instance 0000000003bc3bc0[pipm]^1 built.
+ Taking connection 0000000003ecdba8 connecting 0000000003bc3bc0?pipm#1 to holder 0000000003ecda10?pip#1.
+ Class[Pipeline Module].ConstructInstances(1, 00000000001931e0, 00000000001931e8)
+ Constructing instance 0000000003bd2a00 of Pipeline Module.
+ Instance 0000000003bd2a00[pipm]^1 built.
+ Taking connection 0000000003ecdc08 connecting 0000000003bd2a00?pipm#1 to holder 0000000003ecda10?pip#1.
+ Class[Pipeline Rig].ConstructInstances(1, 00000000001931e0, 00000000001931e8)
+ Constructing instance 0000000002a96e70 of Pipeline Rig.
+ Instance 0000000002a96e70[pipa]^1 built.
+ Instance 0000000003ecda10[pip]^1 built.
+ Class[Sampler].ConstructInstances(1, 000000000019c520, 000000000019c528)
+ Constructing instance 0000000003be4840 of Sampler.
+ Instance 0000000003be4840[smp]^1 built.
+ Class[Canvas].ConstructInstances(1, 000000000019c510, 000000000019c518)
+ Constructing instance 0000000003ec89c0 of Canvas.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000019b150, 000000000019b158)
+ Constructing instance 0000000002a980a0 of Surface : Texture.
+ Constructing instance 0000000002a980a0 of Texture : Resource.
+ Constructing instance 0000000002a980a0 of Resource.
+ Constructing instance 0000000002a980a0 of Texture.
+ Constructing instance 0000000002a980a0 of Surface.
+ Instance 0000000002a980a0[surf]^1 built.
+ Instance 0000000003ec89c0[canv]^1 built.
+ Class[Buffer].ConstructInstances(1, 000000000019c520, 000000000019c528)
+ Constructing instance 0000000003be42f0 of Buffer.
+ Instance 0000000003be42f0[buf]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000019c510, 000000000019c518)
+ Constructing instance 0000000002ab0dc0 of Lego.
+ Instance 0000000002ab0dc0[bset]^1 built.
+ Class[Canvas].ConstructInstances(1, 000000000019c510, 000000000019c518)
+ Constructing instance 0000000003ec8ae0 of Canvas.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000019b150, 000000000019b158)
+ Constructing instance 0000000002ab4dc0 of Surface : Texture.
+ Constructing instance 0000000002ab4dc0 of Texture : Resource.
+ Constructing instance 0000000002ab4dc0 of Resource.
+ Constructing instance 0000000002ab4dc0 of Texture.
+ Constructing instance 0000000002ab4dc0 of Surface.
+ Instance 0000000002ab4dc0[surf]^1 built.
+ Instance 0000000003ec8ae0[canv]^1 built.
+ Class[Buffer].ConstructInstances(1, 000000000019c520, 000000000019c528)
+ Constructing instance 0000000003be4a60 of Buffer.
+ Instance 0000000003be4a60[buf]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000019c510, 000000000019c518)
+ Constructing instance 0000000002ab10f0 of Lego.
+ Instance 0000000002ab10f0[bset]^1 built.
+ Class[Draw Script].ConstructInstances(1, 000000000019dbf0, 000000000019dbf8)
+ Constructing instance 0000000002a97da0 of Draw Script.
+ Instance 0000000002a97da0[dib]^1 built.
+ ADV sglTexture.c:424?SglTexImageInit
+    tex 0000000000000de1, gl/target 32856, gl/intFmt 6408, gl/fmt 5121, gl/type 6408
+ tex 0000000002044bc0, instanced.
+ ADV sglTexture.c:424?SglTexImageInit
+    tex 0000000000000de1, gl/target 35056, gl/intFmt 34041, gl/fmt 34042, gl/type 34041
+ tex 0000000002a980a0, instanced.
+ canv 0000000003ec89c0, reinstanced.
+ Shader 0000000003bc3bc0 reinstanced.
+ Shader 0000000003bd2a00 reinstanced.
+ Draw pipeline 0000000003ecda10 reinstanced.
+ buf 0000000003be42f0, instanced.
+ Sampler 0000000003be4840 reinstanced.
+ ADV sglTexture.c:424?SglTexImageInit
+    tex 0000000000008513, gl/target 32849, gl/intFmt 6407, gl/fmt 5121, gl/type 6407
+ tex 0000000000373990, instanced.
+ buf 0000000003ec88a0, instanced.
+ Shader 0000000003d7d4f0 reinstanced.
+ Shader 0000000003d7d5d0 reinstanced.
+ Draw pipeline 0000000002ab8d90 reinstanced.
+ Sampler 0000000003be4510 reinstanced.
+ ADV afxSystem.c:995?AfxSystemProcess
+    User input requested application break.
+ Class[Draw Input].DestructInstances(1, 000000000019e500, 0000000002ab03a0)
+ Destructing instance 00000000003737c0 of Draw Input class.
+ Instance 00000000003737c0[din]^0 destroyed.
+ aaaaaaaaaaaa
+ Class[Application].DestructInstances(1, 000000000019e5c0, 000007feebb47070)
+ Dropping connection 0000000002ab09b0 from 000000000203f990?din#1 to holder 0000000002ab03a0?app#0.
+ Dropping connection 0000000002ab0420 from 0000000003be63f0?all#1 to holder 0000000002ab03a0?app#0.
+ Dropping connection 0000000002ab0478 from 0000000003bbd310?mse#1 to holder 0000000002ab03a0?app#0.
+ Destructing instance 0000000002ab03a0 of Application class.
+ Deregistering Simulation class...
+ Class[Simulation].DestructInstances(1, 000000000019e280, 000007feec34f02b)
+ Destructing instance 0000000000372d00 of Simulation class.
+ Deregistering Light class...
+ Light class deregistered.
+ Deregistering Camera class...
+ Class[Camera].DestructInstances(1, 000000000019df40, 0000000000000000)
+ Destructing instance 0000000002aac3d0 of Camera class.
+ Destructing instance 0000000002aac3d0 of Camera : Node class.
+ Destructing instance 0000000002aac3d0 of Node class.
+ Instance 0000000002aac3d0[cam]^0 destroyed.
+ Camera class deregistered.
+ Deregistering Entity class...
+ Entity class deregistered.
+ Deregistering Body class...
+ Body class deregistered.
+ Deregistering Model class...
+ Model class deregistered.
+ Deregistering Skeleton class...
+ Skeleton class deregistered.
+ Deregistering Node class...
+ Node class deregistered.
+ Deregistering Mesh class...
+ Mesh class deregistered.
+ Deregistering Material class...
+ Material class deregistered.
+ Class[Allocator].DestructInstances(1, 000000000019e010, 0000000000373068)
+ Destructing instance 0000000003be7cb0 of Allocator class.
+ Instance 0000000003be7cb0[all]^0 destroyed.
+ Instance 0000000000372d00[sim]^0 destroyed.
+ Simulation class deregistered.
+ Deregistering Widget class...
+ Widget class deregistered.
+ Instance 0000000002ab03a0[app]^0 destroyed.
+ Class[Draw System].DestructInstances(1, 000000000019e5c0, 000007feebb64ed4)
+ Destructing instance 00000000002ed2c0 of Draw System class.
+ Deregistering Draw Driver class...
+ Class[Draw Driver].DestructInstances(1, 000000000019e260, 0000000000000000)
+ Destructing instance 0000000003bbae00 of Draw Driver class.
+ Deregistering Draw Context class...
+ Class[Draw Context].DestructInstances(1, 000000000019def0, 00000000002ed418)
+ Destructing instance 0000000003ebfbe0 of Draw Context class.
+ Deregistering Draw Output class...
+ Class[Draw Output].DestructInstances(1, 000000000019dbb0, 0000000000000001)
+ Destructing instance 000000000036f160 of Draw Output class.
+ Extent readjusted. (dout)000000000036f160 -> 1272, 0.662500 of 1920; 693 0.641667 of 1080
+ Class[Surface].DestructInstances(1, 000000000019d920, 0000000000000000)
+ Destructing instance 000000000037e2b0 of Surface class.
+ Destructing instance 000000000037e2b0 of Surface : Texture class.
+ Destructing instance 000000000037e2b0 of Texture class.
+ Destructing instance 000000000037e2b0 of Texture : Resource class.
+ Destructing instance 000000000037e2b0 of Resource class.
+ Instance 000000000037e2b0[surf]^0 destroyed.
+ Instance 000000000036f160[dout]^0 destroyed.
+ Draw Output class deregistered.
+ Deregistering Lego class...
+ Class[Lego].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000002ab10f0 of Lego class.
+ Instance 0000000002ab10f0[bset]^0 destroyed.
+ Class[Lego].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000002ab0dc0 of Lego class.
+ Instance 0000000002ab0dc0[bset]^0 destroyed.
+ Class[Lego].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003bbc2d0 of Lego class.
+ Instance 0000000003bbc2d0[bset]^0 destroyed.
+ Lego class deregistered.
+ Deregistering Pipeline class...
+ Class[Pipeline].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Dropping connection 0000000003ecdc08 from 0000000003bd2a00?pipm#1 to holder 0000000003ecda10?pip#0.
+ Dropping connection 0000000003ecdba8 from 0000000003bc3bc0?pipm#1 to holder 0000000003ecda10?pip#0.
+ Destructing instance 0000000003ecda10 of Pipeline class.
+ Class[Pipeline Rig].DestructInstances(1, 000000000019d920, 000007feebb64ed4)
+ Destructing instance 0000000002a96e70 of Pipeline Rig class.
+ Instance 0000000002a96e70[pipa]^0 destroyed.
+ Destructing instance 0000000003ecda10 of Pipeline : Resource class.
+ Destructing instance 0000000003ecda10 of Resource class.
+ Instance 0000000003ecda10[pip]^0 destroyed.
+ Class[Pipeline].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Dropping connection 0000000002ab8f88 from 0000000003d7d5d0?pipm#1 to holder 0000000002ab8d90?pip#0.
+ Dropping connection 0000000002ab8f28 from 0000000003d7d4f0?pipm#1 to holder 0000000002ab8d90?pip#0.
+ Destructing instance 0000000002ab8d90 of Pipeline class.
+ Class[Pipeline Rig].DestructInstances(1, 000000000019d920, 000007feebb64ed4)
+ Destructing instance 000000000036d7d0 of Pipeline Rig class.
+ Instance 000000000036d7d0[pipa]^0 destroyed.
+ Destructing instance 0000000002ab8d90 of Pipeline : Resource class.
+ Destructing instance 0000000002ab8d90 of Resource class.
+ Instance 0000000002ab8d90[pip]^0 destroyed.
+ Pipeline class deregistered.
+ Deregistering Pipeline Rig class...
+ Pipeline Rig class deregistered.
+ Deregistering Pipeline Module class...
+ Class[Pipeline Module].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003bd2a00 of Pipeline Module class.
+ Instance 0000000003bd2a00[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003bc3bc0 of Pipeline Module class.
+ Instance 0000000003bc3bc0[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003d7d5d0 of Pipeline Module class.
+ Instance 0000000003d7d5d0[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003d7d4f0 of Pipeline Module class.
+ Instance 0000000003d7d4f0[pipm]^0 destroyed.
+ Pipeline Module class deregistered.
+ Deregistering Canvas class...
+ Class[Canvas].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003ec8ae0 of Canvas class.
+ Class[Surface].DestructInstances(1, 000000000019d930, 00000000000000f2)
+ Destructing instance 0000000002041fc0 of Surface class.
+ Destructing instance 0000000002041fc0 of Surface : Texture class.
+ Destructing instance 0000000002041fc0 of Texture class.
+ Destructing instance 0000000002041fc0 of Texture : Resource class.
+ Destructing instance 0000000002041fc0 of Resource class.
+ Instance 0000000002041fc0[surf]^0 destroyed.
+ Class[Surface].DestructInstances(1, 000000000019d930, 000007feebb64ed4)
+ Destructing instance 0000000002ab4dc0 of Surface class.
+ Destructing instance 0000000002ab4dc0 of Surface : Texture class.
+ Destructing instance 0000000002ab4dc0 of Texture class.
+ Destructing instance 0000000002ab4dc0 of Texture : Resource class.
+ Destructing instance 0000000002ab4dc0 of Resource class.
+ Instance 0000000002ab4dc0[surf]^0 destroyed.
+ Instance 0000000003ec8ae0[canv]^0 destroyed.
+ Class[Canvas].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003ec89c0 of Canvas class.
+ Class[Surface].DestructInstances(1, 000000000019d930, 000007feebb64ed4)
+ Destructing instance 0000000002044bc0 of Surface class.
+ Destructing instance 0000000002044bc0 of Surface : Texture class.
+ Destructing instance 0000000002044bc0 of Texture class.
+ Destructing instance 0000000002044bc0 of Texture : Resource class.
+ Destructing instance 0000000002044bc0 of Resource class.
+ Instance 0000000002044bc0[surf]^0 destroyed.
+ Class[Surface].DestructInstances(1, 000000000019d930, 000007feebb64ed4)
+ Destructing instance 0000000002a980a0 of Surface class.
+ Destructing instance 0000000002a980a0 of Surface : Texture class.
+ Destructing instance 0000000002a980a0 of Texture class.
+ Destructing instance 0000000002a980a0 of Texture : Resource class.
+ Destructing instance 0000000002a980a0 of Resource class.
+ Instance 0000000002a980a0[surf]^0 destroyed.
+ Instance 0000000003ec89c0[canv]^0 destroyed.
+ Canvas class deregistered.
+ Deregistering Surface class...
+ Surface class deregistered.
+ Deregistering Texture class...
+ Class[Texture].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000000373990 of Texture class.
+ Destructing instance 0000000000373990 of Texture : Resource class.
+ Destructing instance 0000000000373990 of Resource class.
+ Instance 0000000000373990[tex]^0 destroyed.
+ Texture class deregistered.
+ Deregistering Sampler class...
+ Class[Sampler].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003be4840 of Sampler class.
+ Instance 0000000003be4840[smp]^0 destroyed.
+ Class[Sampler].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003be4510 of Sampler class.
+ Instance 0000000003be4510[smp]^0 destroyed.
+ Sampler class deregistered.
+ Deregistering Index Buffer class...
+ Index Buffer class deregistered.
+ Deregistering Vertex Buffer class...
+ Class[Vertex Buffer].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003ec88a0 of Vertex Buffer class.
+ Destructing instance 0000000003ec88a0 of Vertex Buffer : Buffer class.
+ Destructing instance 0000000003ec88a0 of Buffer class.
+ Instance 0000000003ec88a0[vbuf]^0 destroyed.
+ Vertex Buffer class deregistered.
+ Deregistering Buffer class...
+ Class[Buffer].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003be4a60 of Buffer class.
+ Instance 0000000003be4a60[buf]^0 destroyed.
+ Class[Buffer].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000003be42f0 of Buffer class.
+ Instance 0000000003be42f0[buf]^0 destroyed.
+ Buffer class deregistered.
+ Deregistering Draw Engine class...
+ Class[Draw Engine].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000002a793b0 of Draw Engine class.
+ Instance 0000000002a793b0[deng]^0 destroyed.
+ Draw Engine class deregistered.
+ Deregistering Draw Input class...
+ Class[Draw Input].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 000000000203f990 of Draw Input class.
+ Instance 000000000203f990[din]^0 destroyed.
+ Draw Input class deregistered.
+ Deregistering Draw Script class...
+ Class[Draw Script].DestructInstances(1, 000000000019dbb0, 000007feebb64ed4)
+ Destructing instance 0000000002a97da0 of Draw Script class.
+ Instance 0000000002a97da0[dib]^0 destroyed.
+ Draw Script class deregistered.
+ Class[Allocator].DestructInstances(1, 000000000019dc80, 0000000003ec0890)
+ Destructing instance 0000000003be61e0 of Allocator class.
+ Instance 0000000003be61e0[all]^0 destroyed.
+ Instance 0000000003ebfbe0[dctx]^0 destroyed.
+ Draw Context class deregistered.
+ Instance 0000000003bbae00[ddrv]^0 destroyed.
+ Draw Driver class deregistered.
+ Class[Allocator].DestructInstances(1, 000000000019e330, 00000000002ed418)
+ Destructing instance 00000000002ed4e0 of Allocator class.
+ Instance 00000000002ed4e0[all]^0 destroyed.
+ Instance 00000000002ed2c0[dsys]^0 destroyed.
+ Class[Core Execution System].DestructInstances(1, 000000000019e5c0, 000007feebb64ed4)
+ Destructing instance 00000000002e9020 of Core Execution System class.
+ Point "sound" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../sound".
+ Point "data" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../data".
+ Point "art" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/../art".
+ Point "system" rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64".
+ Point "." rwx[1,0,0] unmounted -> "E:/qwadro/afx/system64/..".
+ Deregistering Application class...
+ Application class deregistered.
+ Deregistering Draw System class...
+ Draw System class deregistered.
+ Deregistering Mouse class...
+ Class[Mouse].DestructInstances(1, 000000000019e240, 00000000002ea220)
+ Destructing instance 0000000003bbd310 of Mouse class.
+ Destructing instance 0000000003bbd310 of Mouse : HID class.
+ Destructing instance 0000000003bbd310 of HID class.
+ Instance 0000000003bbd310[mse]^0 destroyed.
+ Mouse class deregistered.
+ Deregistering Keyboard class...
+ Class[Keyboard].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 00000000002eca00 of Keyboard class.
+ Destructing instance 00000000002eca00 of Keyboard : HID class.
+ Destructing instance 00000000002eca00 of HID class.
+ Instance 00000000002eca00[kbd]^0 destroyed.
+ Keyboard class deregistered.
+ Deregistering HID class...
+ HID class deregistered.
+ Deregistering Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deregistered.
+ Deregistering Resource class...
+ Resource class deregistered.
+ Deregistering Archive class...
+ Archive class deregistered.
+ Deregistering I/O Stream class...
+ I/O Stream class deregistered.
+ Deregistering Module class...
+ Class[Module].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 0000000003bbd210 of Module class.
+ Instance 0000000003bbd210[mdle]^0 destroyed.
+ Class[Module].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 00000000002b3630 of Module class.
+ Instance 00000000002b3630[mdle]^0 destroyed.
+ Class[Module].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 00000000002b3530 of Module class.
+ Instance 00000000002b3530[mdle]^0 destroyed.
+ Module class deregistered.
+ Deregistering Thread class...
+ Thread class deregistered.
+ Deregistering Allocator class...
+ Class[Allocator].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 0000000003be7890 of Allocator class.
+ Instance 0000000003be7890[all]^0 destroyed.
+ Class[Allocator].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 0000000003be7aa0 of Allocator class.
+ Instance 0000000003be7aa0[all]^0 destroyed.
+ Class[Allocator].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 0000000003be63f0 of Allocator class.
+ Instance 0000000003be63f0[all]^0 destroyed.
+ Class[Allocator].DestructInstances(1, 000000000019e240, 000007feebb64ed4)
+ Destructing instance 00000000002e4a30 of Allocator class.
+ Instance 00000000002e4a30[all]^0 destroyed.
+ Allocator class deregistered.
+ Instance 00000000002e9020[sys]^0 destroyed.

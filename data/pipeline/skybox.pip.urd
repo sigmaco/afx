@@ -9,8 +9,6 @@
 
                 layout(std140, row_major) uniform sgl_view
                 {
-                    vec3 camPos;
-                    mat4 c;
                     mat4 v;
                     mat4 p;
                     mat4 vp;

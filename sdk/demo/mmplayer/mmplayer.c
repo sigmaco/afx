@@ -107,14 +107,14 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxUriFormat(&uri.uri, "window");
     afxDrawOutputSpecification doutSpec;
     doutSpec.endpoint = &uri.uri;
-    doutSpec.bufCnt = 3;
+    doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
-    doutSpec.compositeAlpha = FALSE;
+    doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_MAILBOX;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_RASTER_BUFFER;
+    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 1280, 720, 1 };
 
 #ifdef ENABLE_DOUT1
@@ -125,7 +125,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     afxSurfaceSpecification surfSpec[] =
     {
         { NIL, doutSpec.pixelFmt, doutSpec.bufUsage },
-        { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_DEPTH_BUFFER },
+        { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH },
     };
 
     for (afxNat i = 0; i < doutSpec.bufCnt; i++)
@@ -150,7 +150,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     }
 #endif
 #ifdef ENABLE_DOUT3
-    doutSpec.presentMode = AFX_PRESENT_MODE_MAILBOX;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     dout[2] = AfxDrawContextAcquireOutput(dctx, &doutSpec, &uri);
     AfxAssert(dout[2]);
 
@@ -255,7 +255,7 @@ int main(int argc, char const* argv[])
 
         afxDrawContextSpecification dctxSpec = { 0 };
         dctxSpec.driverId = 0;
-        dctxSpec.queueCnt = 2;
+        dctxSpec.queueCnt = 1;
         dctxSpec.autonomousQueue = FALSE;
 
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
