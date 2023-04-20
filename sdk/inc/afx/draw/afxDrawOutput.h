@@ -30,51 +30,54 @@ AFX_DEFINE_HANDLE(afxDrawOutput);
 
 typedef enum afxColorSpace
 {
-    AFX_COLOR_SPC_SRGB,
-    AFX_COLOR_SPC_LINEAR
+    AFX_COLOR_SPACE_LINEAR,
+    AFX_COLOR_SPACE_SRGB
 } afxColorSpace;
 
 typedef enum afxPresentTransform
 {
+    //NIL // Identity
     AFX_PRESENT_TRANSFORM_FLIP_V = AFX_FLAG(0), // invert pixel grid vertically.
     AFX_PRESENT_TRANSFORM_FLIP_H = AFX_FLAG(1) // invert pixel grid horizontally.
 } afxPresentTransform;
 
-typedef enum afxPresentCompositing
+typedef enum afxPresentAlpha
 {
-    AFX_PRESENT_IGNORE_ALPHA,
-    AFX_PRESENT_PREMUL_ALPHA,
-    AFX_PRESENT_POSTMUL_ALPHA
-} afxPresentCompositing;
+    // NIL // Ignore. Let desktop window manager do whatever it want to do about transparency.
+    AFX_PRESENT_ALPHA_OPAQUE = 1,
+    AFX_PRESENT_ALPHA_PREMUL,
+    AFX_PRESENT_ALPHA_POSTMUL
+} afxPresentAlpha;
 
 typedef enum afxPresentMode
 {
+    AFX_PRESENT_MODE_LIFO, // triple-buffered mode
+    // Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
+    // Tearing cannot be observed. An internal single-entry queue is used to hold pending presentation requests. 
+    // If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. 
+    // One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.
+
     AFX_PRESENT_MODE_FIFO, // double-buffered mode
     // Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
     // Tearing cannot be observed. An internal queue is used to hold pending presentation requests. 
     // New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. 
     // This is the only value of presentMode that is required to be supported.
-    
+
     AFX_PRESENT_MODE_IMMEDIATE,
     // Specifies that the presentation engine does not wait for a vertical blanking period to update the current image, meaning this mode may result in visible tearing. 
     // No internal queuing of presentation requests is needed, as the requests are applied immediately.
-    
-    AFX_PRESENT_MODE_MAILBOX, // triple-buffered mode
-    // Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
-    // Tearing cannot be observed. An internal single-entry queue is used to hold pending presentation requests. 
-    // If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. 
-    // One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.
+
 } afxPresentMode;
 
 AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
 {
     afxUri const            *endpoint; // window, desktop, etc
     afxPixelFormat          pixelFmt; // RGBA8; pixel format of raster surfaces.
-    afxColorSpace           colorSpc; // AFX_COLOR_SPC_SRGB; if sRGB isn't present, fall down to LINEAR.
+    afxColorSpace           colorSpc; // AFX_COLOR_SPACE_SRGB; if sRGB isn't present, fall down to LINEAR.
     afxTextureUsage         bufUsage; // RASTER; used as (color) rasterization surface.
     afxNat                  bufCnt; // 2 or 3; double or triple-buffered.
 
-    afxPresentCompositing   compositeAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
+    afxPresentAlpha         presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
     afxPresentTransform     presentTransform; // NIL; don't do any transform.
     afxPresentMode          presentMode; // FIFO; respect the sequence.
     afxBool                 clipped; // TRUE; don't do off-screen draw.
@@ -99,7 +102,7 @@ AFX afxNat*                 AfxDrawOutputGetExtent(afxDrawOutput dout, afxWhd ex
 AFX afxReal*                AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 
 AFX afxSurface              AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat idx);
-AFX afxResult               AfxDrawOutputForEachBuffer(afxDrawOutput dout, afxResult(*f)(afxSurface, void*), void *data);
+AFX afxResult               AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
 AFX afxError                AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 
 #endif//AFX_DRAW_OUTPUT_H

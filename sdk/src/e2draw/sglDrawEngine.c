@@ -599,18 +599,16 @@ _SGL void _SglDengSetInputStreams(afxDrawEngine deng, afxNat cnt, afxPipelineInp
     sglVmt const*gl = &deng->wglVmt;
 
     deng->activeVaoIdx = (deng->activeVaoIdx + 1) % _SGL_MAX_VAO_PER_TIME;
+
 #if !0
-    if (!deng->vao[deng->activeVaoIdx])
-    {
-        gl->GenVertexArrays(1, &(deng->vao[deng->activeVaoIdx])); _SglThrowErrorOccuried();
-    }
-    else
+    if (deng->vao[deng->activeVaoIdx])
     {
         gl->DeleteVertexArrays(1, &(deng->vao[deng->activeVaoIdx])); _SglThrowErrorOccuried();
-        gl->GenVertexArrays(1, &(deng->vao[deng->activeVaoIdx])); _SglThrowErrorOccuried();
     }
+    gl->GenVertexArrays(1, &(deng->vao[deng->activeVaoIdx])); _SglThrowErrorOccuried();
     gl->BindVertexArray(deng->vao[deng->activeVaoIdx]); _SglThrowErrorOccuried();
 #endif
+
     for (afxNat i = 0; i < cnt; i++)
     {
         deng->state.inStreams[i] = streams[i];
@@ -732,9 +730,7 @@ _SGL void _SglDengBindIndexBuffer(afxDrawEngine deng, afxIndexBuffer ibuf, afxNa
     deng->state.ibuf = ibuf;
     deng->state.baseIdx = baseIdx;
 
-    sglVmt const *gl = &deng->wglVmt;
-
-    gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, deng->state.ibuf->buf.glHandle); _SglThrowErrorOccuried();
+    _SglBufBindAndSync(&ibuf->buf, 0, 0, 0, GL_ELEMENT_ARRAY_BUFFER, GL_STATIC_DRAW, deng);
 }
 
 /*
@@ -757,8 +753,6 @@ _SGL void _SglDengBindVertexBuffers(afxDrawEngine deng, afxNat base, afxNat cnt,
     AfxAssert(_SGL_MAX_VBO_PER_BIND > base);
     AfxAssert(_SGL_MAX_VBO_PER_BIND >= cnt);
     AfxAssert(_SGL_MAX_VBO_PER_BIND >= base + cnt);
-
-    sglVmt const *gl = &deng->wglVmt;
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -786,10 +780,7 @@ _SGL void _SglDengBindVertexBuffers(afxDrawEngine deng, afxNat base, afxNat cnt,
         }
 
         AfxAssert(stride);
-        //gl->BindVertexBuffer(base + i, glHandle, offset, stride); _SglThrowErrorOccuried();
-        _SglBufBindAndSync(vbuf[i] ? &(vbuf[i]->buf) : NIL, base + i, offset, stride, GL_ARRAY_BUFFER, GL_STATIC_DRAW, deng);
-        // gl->VertexAttribBinding(base + i, );
-        //gl->VertexAttribFormat();
+        _SglBufBindAndSync(vbuf[i] ? &(vbuf[i]->buf) : NIL, base + i, offset, stride, GL_ARRAY_BUFFER, GL_STATIC_DRAW, deng);        
     }
     deng->state.vertexBindingCnt = cnt;
 
@@ -814,12 +805,14 @@ _SGL void _SglDengBindWildVertexBuffers(afxDrawEngine deng, afxNat base, afxNat 
         deng->state.vertexBindings[base + i].siz = size[i];
         deng->state.vertexBindings[base + i].stride = stride[i];
 
+        AfxAssert(stride[i]);
         _SglBufBindAndSync(buf[i], base + i, offset[i], stride[i], GL_ARRAY_BUFFER, GL_STATIC_DRAW, deng);
     }
     deng->state.vertexBindingCnt = cnt;
 
     //_SglDengPushNextVao(deng);
 }
+
 #if 0
 _SGL void _SglDengPushNextVao(afxDrawEngine deng)
 {
@@ -939,6 +932,7 @@ _SGL void _SglDengPushNextVao(afxDrawEngine deng)
     }
 }
 #endif
+
 // DO WORK
 
 _SGL void _SglDengCopyTexture(afxDrawEngine deng, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[])
@@ -1015,11 +1009,11 @@ _SGL void _SglDengDrawIndexed(afxDrawEngine deng, afxNat idxCnt, afxNat instCnt,
 
     if (instCnt > 1)
     {
-        gl->DrawElementsInstancedBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)(idxSiz * firstIdx), instCnt, vtxOff2); _SglThrowErrorOccuried();
+        gl->DrawElementsInstancedBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)(idxSiz * (deng->state.baseIdx + firstIdx)), instCnt, vtxOff2); _SglThrowErrorOccuried();
     }
     else
     {
-        gl->DrawElementsBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)(idxSiz * firstIdx), vtxOff2); _SglThrowErrorOccuried();
+        gl->DrawElementsBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)(idxSiz * (deng->state.baseIdx + firstIdx)), vtxOff2); _SglThrowErrorOccuried();
     }
 
     deng->numOfFedIndices += idxCnt;
@@ -1075,7 +1069,7 @@ _SGL afxResult _SglDengImplDrawWorkStreaming(afxDrawEngine deng, afxDrawWork con
     }
 
     AfxGetTime(&deng->lastStreamEndTime);
-
+    
     return err;
 }
 
@@ -1426,7 +1420,7 @@ _SGL afxError _SglDengPresentSurface(afxDrawEngine deng, afxDrawOutput dout, afx
 #else
         //if (dout->presentMode == AFX_PRESENT_MODE_FIFO)
             //surf = AfxContainerOf(AfxChainGetLastLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
-        //else //if (dout->presentMode == AFX_PRESENT_MODE_MAILBOX)
+        //else //if (dout->presentMode == AFX_PRESENT_MODE_LIFO)
             //surf = AfxContainerOf(AfxChainGetFirstLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
         //else AfxError("Not implemented yet.");
 
@@ -1885,7 +1879,7 @@ _SGL afxError _AfxDengCtor(afxDrawEngine deng, _afxDqueCtorArgs *args)
     presentVbufSpec[1].src = vtxUv;
     presentVbufSpec[1].srcFmt = AFX_VTX_FMT_XYZW32;
     presentVbufSpec[1].usage = AFX_VTX_USAGE_UV;
-    deng->presentVbuf = AfxDrawContextAcquireVertexBuffer(dctx, 4, 2, presentVbufSpec);
+    deng->presentVbuf = AfxDrawContextAcquireVertexBuffer(dctx, 4, 1, presentVbufSpec);
     AfxAssertObject(deng->presentVbuf, AFX_FCC_VBUF);
 
     if (args->autonomous)

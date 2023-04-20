@@ -1048,70 +1048,50 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 */
 
                 RECT rect;
-                GetClientRect(GetDesktopWindow(), &(rect));
+                GetClientRect(NULL, &(rect));
 
                 dout->whdMax[0] = rect.right - rect.left;
                 dout->whdMax[1] = rect.bottom - rect.top;
                 dout->whdMax[2] = 1;
 
-                afxNat extent[3] = { LOWORD(lParam), HIWORD(lParam), 1 };
+                afxWhd whdNew = { LOWORD(lParam), HIWORD(lParam), 1 };
 
-                if (extent[0] * extent[1] * extent[2]) // don't set to zero
-                    AfxDrawOutputSetExtent(dout, extent);
+                if (whdNew[0] * whdNew[1] * whdNew[2]) // don't set to zero
+                {
+                    afxWhd whd;
+                    AfxDrawOutputGetExtent(dout, whd);
+
+                    if (whd[0] != whdNew[0] || whd[1] != whdNew[1] || whd[2] != whdNew[2])
+                        AfxDrawOutputSetExtent(dout, whdNew);
+                }
             }
             //AfxDrawOutputProcess(dout);
             break;
         }
-        case WM_SIZING:
-        {
-            // Sent to a window that the user is resizing.By processing this message, an application can monitor the size and position of the drag rectangle and, if needed, change its size or position. A window receives this message through its WindowProc function.
-            /*
-                wParam-- - The edge of the window that is being sized.This parameter canv be one of the following values.
-                WMSZ_BOTTOM 6 -- - Bottom edge
-                WMSZ_BOTTOMLEFT 7 -- - Bottom - left corner
-                WMSZ_BOTTOMRIGHT 8 -- - Bottom - right corner
-                WMSZ_LEFT 1 -- - Left edge
-                WMSZ_RIGHT 2 -- - Right edge
-                WMSZ_TOP = 3 -- - Top edge
-                WMSZ_TOPLEFT = 4 -- - Top - left corner
-                WMSZ_TOPRIGHT = 5 -- - Top - right corner
-            */
-
-
-
-            //if (dout->resizable)
-            {
-
-                /*
-                    WM_SIZING
-                        Sent to a window that the user is resizing. By processing this message, an application canv monitor the size and position of the drag rectangle and, if needed, change its size or position.
-
-
-                */
-
-                RECT rect;
-                GetClientRect(GetDesktopWindow(), &(rect));
-
-                dout->whdMax[0] = rect.right - rect.left;
-                dout->whdMax[1] = rect.bottom - rect.top;
-                dout->whdMax[2] = 1;
-
-                //afxNat extent[3] = { LOWORD(data2->lParam), HIWORD(data2->lParam), 1 };
-                AfxDrawOutputSetExtent(dout, dout->whd);
-            }
-            //AfxDrawOutputProcess(dout);
-            break;
-        }
-        case WM_MOVING:
-        {
-            //AfxDrawOutputProcess(dout);
-            break;
-        }
+        case WM_DISPLAYCHANGE:
         case WM_STYLECHANGED:
         {
             // Sent to a window after the SetWindowLong function has changed one or more of the window's styles. A window receives this message through its WindowProc function.
             // wParam = Indicates whether the window's styles or extended window styles have changed. This parameter can be one or more of the following values.
-            AfxDrawOutputSetExtent(dout, dout->whd);
+            
+            RECT rect;
+            GetClientRect(NULL, &(rect));
+
+            dout->whdMax[0] = rect.right - rect.left;
+            dout->whdMax[1] = rect.bottom - rect.top;
+            dout->whdMax[2] = 1;
+
+            GetClientRect(dout->wglWnd, &(rect));
+            afxWhd whdNew = { rect.right - rect.left, rect.bottom - rect.top, 1 };
+
+            if (whdNew[0] * whdNew[1] * whdNew[2]) // don't set to zero
+            {
+                afxWhd whd;
+                AfxDrawOutputGetExtent(dout, whd);
+
+                if (whd[0] != whdNew[0] || whd[1] != whdNew[1] || whd[2] != whdNew[2])
+                    AfxDrawOutputSetExtent(dout, whdNew);
+            }
             break;
         }
         case WM_MOUSEMOVE:
@@ -1200,18 +1180,6 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             //BinkPause(Back_Bink, 0);
             //BinkPause(Alpha_Bink, 0);
             break;
-        }
-        case WM_ERASEBKGND:
-        {
-            // Sent when the window background must be erased (for example, when a window is resized). The message is sent to prepare an invalidated portion of a window for painting.
-            // wParam = A handle to the device context.
-            // lParam = This parameter is not used.
-            // An application should return nonzero if it erases the background; otherwise, it should return zero.
-
-            //AfxDrawOutputSetExtent(dout, dout->whd);
-            //_AfxDrawOutputProcess(dout);
-            break;
-            //return 1; // handled
         }
         default: break;
         }
