@@ -10,6 +10,85 @@ typedef struct
     afxLegoPoint const *points;
 } _afxLegoParadigm;
 
+
+_SGL afxError _SglLegoBindAndSync(afxLego lego, afxNat unit, afxDrawEngine deng)
+{
+    //AfxEntry("pip=%p", pip);
+    afxError err = NIL;
+    AfxAssertObject(lego, AFX_FCC_LEGO);
+    sglVmt const* gl = &deng->wglVmt;
+    
+    AfxAssert(deng->state.pip);
+    afxPipelineRig pipr = AfxPipelineGetRig(deng->state.pip);
+    AfxAssertObject(pipr, AFX_FCC_PIPR);
+
+    afxLegoSchema const *schema = &(lego->schema);
+    afxLegoSchema const *schema2 = &(pipr->sockets[unit]);
+    AfxAssert(schema->entryCnt == schema2->entryCnt);
+
+    for (afxNat j = 0; j < schema->entryCnt; j++)
+    {
+        afxLegoSchemaEntry const *entry = &schema->entries[j];
+        afxLegoSchemaEntry const *entry2 = &schema2->entries[j];
+        AfxAssert(entry->binding == entry2->binding);
+        AfxAssert(entry->visibility == entry2->visibility);
+        AfxAssert(entry->type == entry2->type);
+
+        afxLegoPoint const *point = &lego->points[j];
+
+        afxNat setId = (unit * _SGL_MAX_ENTRY_PER_LEGO);
+        afxNat binding = setId + entry->binding;
+
+        switch (entry->type)
+        {
+        case AFX_SUPPLY_TYPE_SAMPLER:
+        {
+            AfxAssertObject(point->resource.img.smp, AFX_FCC_SMP);
+            _SglSmpBindAndSync(point->resource.img.smp, binding, deng);
+            break;
+        }
+        case AFX_SUPPLY_TYPE_SAMPLED_IMAGE:
+        {
+            AfxAssertObject(point->resource.img.tex, AFX_FCC_TEX);
+            _SglTexBindAndSync(point->resource.img.tex, binding, deng);
+            break;
+        }
+        case AFX_SUPPLY_TYPE_COMBINED_IMAGE_SAMPLER:
+        {
+            AfxAssertObject(point->resource.img.tex, AFX_FCC_TEX);
+            _SglTexBindAndSync(point->resource.img.tex, binding, deng);
+
+            AfxAssertObject(point->resource.img.smp, AFX_FCC_SMP);
+            _SglSmpBindAndSync(point->resource.img.smp, binding, deng);
+#if 0
+            afxUri128 uri;
+            AfxUri128(&uri, NIL);
+            AfxTextureDownload(point->resource.img.tex, AfxUriFormat(&uri.uri, "system/tex-%u-%u.tga", i, entry->binding));
+#endif
+            break;
+        }
+        case AFX_SUPPLY_TYPE_CONSTANT_BUFFER:
+        {
+            AfxAssertObject(point->resource.data.buf, AFX_FCC_BUF);
+
+            // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
+
+            //loc = gl->GetUniformBlockIndex(deng->state.pip->gpuHandle[deng->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
+            //gl->UniformBlockBinding(deng->state.pip->gpuHandle[deng->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
+            _SglBufBindAndSync(point->resource.data.buf, binding, point->resource.data.base, point->resource.data.range, GL_UNIFORM_BUFFER, GL_DYNAMIC_DRAW, deng); _SglThrowErrorOccuried();
+            //gl->BindBufferRange(GL_UNIFORM_BUFFER, binding, point->resource.data.buf->gpuHandle, point->resource.data.base, point->resource.data.range); _SglThrowErrorOccuried();
+
+            break;
+        }
+        default:
+        {
+            AfxError("");
+        }
+        }
+    }
+    return err;
+}
+
 _SGL afxLegoSchema const* _AfxLegoGetSchema(afxLego lego)
 {
     afxError err = NIL;

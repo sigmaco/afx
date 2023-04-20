@@ -17,59 +17,65 @@ typedef struct
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _AfxStdPipmUpdate(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng)
+_SGL afxError _SglPipmSync(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng)
 {
     //AfxEntry("pipm=%p", pipm);
     afxError err = NIL;
     AfxAssertObject(pipm, AFX_FCC_PIPM);
 
     sglVmt const* gl = &deng->wglVmt;
-    afxDrawContext dctx = AfxDrawEngineGetContext(deng);
 
-    if (pipm->lastUpdTime || !(pipm->gpuHandle))
+    if ((pipm->updFlags & SGL_UPD_FLAG_DEVICE))
     {
-        //AfxTransistorEnterExclusive(&dctx->pipmInstantiationLock);
-
-        if (deng->queueIdx != 0)
-            return err;
-
-        if (!(pipm->gpuHandle))
+        if ((pipm->updFlags & SGL_UPD_FLAG_DEVICE_INST))
         {
-            if (!(pipm->gpuHandle = gl->CreateShader(AfxToGlShaderStage(stage))))
-                AfxThrowError();
-            
-            _SglThrowErrorOccuried();
-        }
+            if (pipm->glHandle)
+            {
+                gl->DeleteShader(pipm->glHandle); _SglThrowErrorOccuried();
+                pipm->glHandle = NIL;
+            }
 
-        if (pipm->gpuHandle)
-        {
-            AfxAssert(gl->IsShader(pipm->gpuHandle));
-            const GLint codeLens[] = { pipm->len };
-            GLchar const* const codes[] = { (GLchar const*)pipm->code };
-            gl->ShaderSource(pipm->gpuHandle, 1, codes, codeLens); _SglThrowErrorOccuried();
-            gl->CompileShader(pipm->gpuHandle); _SglThrowErrorOccuried();
-            GLint status = 0;
-            gl->GetShaderiv(pipm->gpuHandle, GL_COMPILE_STATUS, &status); _SglThrowErrorOccuried();
+            AfxAssert(NIL == pipm->glHandle);
 
-            if (status == GL_FALSE)
+            if (!(pipm->glHandle = gl->CreateShader(AfxToGlShaderStage(stage))))
             {
                 AfxThrowError();
-                afxChar str[1024];
-                gl->GetShaderInfoLog(pipm->gpuHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
-                AfxError(str);
+                _SglThrowErrorOccuried();
             }
             else
             {
-                pipm->compiled = TRUE;
-                pipm->lastUpdTime = 0;// pipm->lastUpdTime;
-                AfxEcho("Shader %p reinstanced.", pipm);
-                return err;
-            }
+                AfxAssert(pipm);
+                AfxAssert(gl->IsShader(pipm->glHandle));
+                const GLint codeLens[] = { pipm->len };
+                GLchar const* const codes[] = { (GLchar const*)pipm->code };
+                gl->ShaderSource(pipm->glHandle, 1, codes, codeLens); _SglThrowErrorOccuried();
+                gl->CompileShader(pipm->glHandle); _SglThrowErrorOccuried();
+                GLint status = 0;
+                gl->GetShaderiv(pipm->glHandle, GL_COMPILE_STATUS, &status); _SglThrowErrorOccuried();
 
-            gl->DeleteShader(pipm->gpuHandle); _SglThrowErrorOccuried();
-            pipm->gpuHandle = NIL;
+                if (status == GL_FALSE)
+                {
+                    AfxThrowError();
+                    afxChar str[1024];
+                    gl->GetShaderInfoLog(pipm->glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
+                    AfxError(str);
+                    gl->DeleteShader(pipm->glHandle); _SglThrowErrorOccuried();
+                    pipm->glHandle = NIL;
+                }
+                else
+                {
+                    pipm->compiled = TRUE;
+                    pipm->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                    AfxEcho("Shader %p reinstanced.", pipm);
+                }
+            }
         }
-        //AfxTransistorExitExclusive(&dctx->pipmInstantiationLock);
+        else if ((pipm->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+        {
+            AfxAssert(pipm->glHandle);
+            
+            AfxThrowError(); // can't be modified
+        }
     }
     return err;
 }
@@ -113,11 +119,11 @@ _SGL afxError _AfxPipmDtor(afxPipelineModule pipm)
     afxError err = NIL;
     AfxAssertObject(pipm, AFX_FCC_PIPM);
 
-    if (pipm->gpuHandle)
+    if (pipm->glHandle)
     {
         afxDrawContext dctx = AfxPipelineModuleGetContext(pipm);
-        _SglEnqueueGlResourceDeletion(dctx, 0, 6, pipm->gpuHandle);
-        pipm->gpuHandle = 0;
+        _SglEnqueueGlResourceDeletion(dctx, 0, 6, pipm->glHandle);
+        pipm->glHandle = 0;
     }
 
     if (pipm->code)
@@ -158,10 +164,8 @@ _SGL afxError _AfxPipmCtor(afxPipelineModule pipm, _afxShdrCtorArgs *args)
                 pipm->code = codecpy;
                 pipm->len = args->len;
 
-                pipm->lastUpdTime = AfxGetTimer();
-                
-                pipm->gpuHandle = NIL;
-                pipm->lastUpdTime = NIL;
+                pipm->glHandle = NIL;
+                pipm->updFlags = SGL_UPD_FLAG_DEVICE_INST;
                 pipm->compiled = FALSE;
 
                 if(err)

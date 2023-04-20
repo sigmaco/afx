@@ -44,6 +44,7 @@ typedef enum afxTextureUsage
     AFX_TEX_USAGE_INPUT_BUFFER          = AFX_FLAG(7),
 
     AFX_TEX_CUBEMAP                     = AFX_FLAG(30),
+    AFX_TEX_VOLUME                      = AFX_FLAG(31) // to be used as 3D instead of layered
 } afxTextureUsage;
 
 AFX_DEFINE_STRUCT(afxTextureRegion)

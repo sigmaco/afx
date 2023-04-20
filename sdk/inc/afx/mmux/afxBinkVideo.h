@@ -39,6 +39,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     BINKTEXTURESET      set; // Bink Buffer
     afxPipeline         pip; // actually two for experiments
     afxSampler          smp;
+    afxVertexBuffer     vbuf;
 
     afxNat64            Last_timer;
     afxNat32            Frame_count;
