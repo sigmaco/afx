@@ -264,18 +264,11 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target,
     SglToGlFormat(tex->fmt, intFmt, fmt, type);
 }
 
-_SGL afxError SglTexImageInit(afxTexture tex, afxDrawEngine deng)
+_SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
 {
     afxError err = NIL;
 
-    sglVmt const* gl = &deng->wglVmt;
-
-    SglDetermineGlTargetInternalFormatType(tex, &tex->glTarget, &tex->glIntFmt, &tex->glFmt, &tex->glType);
-
-    AfxAssert(NIL == tex->gpuTexHandle);
-    gl->GenTextures(1, &(tex->gpuTexHandle)); _SglThrowErrorOccuried();
-    gl->BindTexture(tex->glTarget, tex->gpuTexHandle); _SglThrowErrorOccuried();
-    AfxAssert(gl->IsTexture(tex->gpuTexHandle));
+    AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_INST) == SGL_UPD_FLAG_DEVICE_INST);
 
     //gl->TexStorage2D();
 
@@ -420,22 +413,24 @@ _SGL afxError SglTexImageInit(afxTexture tex, afxDrawEngine deng)
         break;
     }
 
-    gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
-    AfxAdvertise("tex %p, gl/target %i, gl/intFmt %i, gl/fmt %i, gl/type %i", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
+    {
+        //gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
+    }
+    AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
     AfxEcho("tex %p, instanced.", tex);
 
     // build or rebuild forces total data update
     tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
     tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
-    tex->layoutAltered = FALSE;
+    tex->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
     return err;
 }
 
-_SGL afxError SglTexSubImageUpdate(afxTexture tex, afxDrawEngine deng)
+_SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl)
 {
     afxError err = NIL;
 
-    sglVmt const* gl = &deng->wglVmt;
+    AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH) == SGL_UPD_FLAG_DEVICE_FLUSH);
 
     afxWhd const xyz = { 0, 0, 0 };
     afxWhd extent;
@@ -536,71 +531,97 @@ _SGL afxError SglTexSubImageUpdate(afxTexture tex, afxDrawEngine deng)
         AfxThrowError();
         break;
     }
+    tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
+    tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
+    tex->updFlags &= ~(SGL_UPD_FLAG_DEVICE_FLUSH);
     return err;
 }
 
-_SGL afxError _SglTexImplDtor(afxTexture tex)
+_SGL afxError _SglTexDtor(afxTexture tex)
 {
     afxError err = NIL;
     AfxEntry("img=%p", tex);
     AfxAssertObject(tex, AFX_FCC_TEX);
 
-    if (tex->gpuTexHandle)
+    if (tex->glHandle)
     {
         afxDrawContext dctx = AfxObjectGetProvider(&tex->res.obj);
         AfxAssertObject(dctx, AFX_FCC_DCTX);
         sglVmt const* gl = &(dctx->queues[0]->wglVmt);
 
-        gl->DeleteTextures(1, &(tex->gpuTexHandle)); _SglThrowErrorOccuried();
-        tex->gpuTexHandle = NIL;
+        gl->DeleteTextures(1, &(tex->glHandle)); _SglThrowErrorOccuried();
+        tex->glHandle = NIL;
     }
 
     return err;
 }
 
-_SGL afxError _SglTexUpdate(afxTexture tex, afxDrawEngine deng)
+_SGL afxError _SglTexBindAndSync(afxTexture tex, afxNat unit, afxDrawEngine deng)
 {
     //AfxEntry("img=%p", img);
     afxError err = NIL;
-    AfxAssertObject(tex, AFX_FCC_TEX);
+    sglVmt const* gl = &deng->wglVmt;
 
-    if (tex->layoutAltered || (tex->lastUpdRange[0] + tex->lastUpdRange[1] + tex->lastUpdRange[2]) || !tex->gpuTexHandle)
+    if (tex)
     {
-        afxDrawContext dctx = AfxDrawEngineGetContext(deng);
-        AfxTransistorEnterExclusive(&dctx->texInstantiationLock);
+        AfxAssertObject(tex, AFX_FCC_TEX);
 
-        if (tex->layoutAltered)
+        if ((tex->updFlags & SGL_UPD_FLAG_DEVICE))
         {
-            _SglTexImplDtor(tex); // rebuild
-        }
+            if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            {
+                if (tex->glHandle)
+                {
+                    gl->DeleteTextures(1, &(tex->glHandle)); _SglThrowErrorOccuried();
+                    tex->glHandle = NIL;
+                }
 
-        sglVmt const* gl = &deng->wglVmt;
+                SglDetermineGlTargetInternalFormatType(tex, &tex->glTarget, &tex->glIntFmt, &tex->glFmt, &tex->glType);
 
-        if (!tex->gpuTexHandle)
-        {
-            SglTexImageInit(tex, deng);
+                AfxAssert(NIL == tex->glHandle);
+                gl->GenTextures(1, &(tex->glHandle)); _SglThrowErrorOccuried();
+                gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
+                gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsTexture(tex->glHandle));
+
+                _SglTexInstDevice(tex, unit, gl); // already clear flags
+            }
+            else if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            {
+                AfxAssert(tex->glHandle);
+                gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
+
+                _SglTexFlushDevice(tex, gl); // already clear flags
+            }
         }
         else
         {
-            AfxAssert(gl->IsTexture(tex->gpuTexHandle));
-            gl->BindTexture(tex->glTarget, tex->gpuTexHandle); _SglThrowErrorOccuried();
+            AfxAssert(tex->glHandle);
+            AfxAssert(tex->glTarget);
 
-            if (SglTexSubImageUpdate(tex, deng))
+            if (gl->BindTextureUnit)
             {
-                AfxThrowError();
+                gl->BindTextureUnit(unit, tex->glHandle); _SglThrowErrorOccuried();
             }
-
+            else
+            {
+                gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
+                gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
+            }
         }
-
-        gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
-        tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
-        tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
-        tex->layoutAltered = FALSE;
-        AfxTransistorExitExclusive(&dctx->texInstantiationLock);
-
     }
-
-    return err;
+    else
+    {
+        if (gl->BindTextureUnit)
+        {
+            gl->BindTextureUnit(unit, 0); _SglThrowErrorOccuried();
+        }
+        else
+        {
+            gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
+            gl->BindTexture(GL_TEXTURE_1D, 0); _SglThrowErrorOccuried();
+        }
+    }
 }
 
 _SGL afxBool _AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags)
@@ -682,6 +703,7 @@ _SGL afxError _AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const
     AfxAssert(extent[0]);
     AfxAssert(extent[1]);
     AfxAssert(extent[2]);
+    AfxAssert(extent[0] != tex->whd[0] || extent[1] != tex->whd[1] || extent[2] != tex->whd[2]);
 
     if (tex->locked) AfxThrowError();
     else
@@ -724,9 +746,7 @@ _SGL afxError _AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const
             tex->lastUpdRange[1] = extent[1];
             tex->lastUpdRange[2] = extent[2];
 
-            tex->layoutAltered = TRUE;
-
-            AfxGetTime(&tex->lastUpdTime);
+            tex->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
         }
 
         tex->locked = FALSE;
@@ -801,7 +821,7 @@ _SGL void _AfxTextureUnmap(afxTexture tex)
 {
     afxError err = NIL;
     AfxAssertObject(tex, AFX_FCC_TEX);
-    AfxGetTime(&tex->lastUpdTime);
+    tex->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
     tex->locked = FALSE;
 };
 
@@ -901,7 +921,7 @@ _SGL afxError _AfxTextureUpdateRegions(afxTexture tex, afxNat cnt, afxTextureReg
         AfxCopy(bytemap, src[i], range);
     }
 
-    AfxGetTime(&tex->lastUpdTime);
+    tex->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
     return err;
 }
 
@@ -916,10 +936,10 @@ _SGL afxError _AfxTexDtor(afxTexture tex)
     afxAllocator all = AfxDrawContextGetAllocator(dctx);
     AfxAssertObject(all, AFX_FCC_ALL);
 
-    if (tex->gpuTexHandle)
+    if (tex->glHandle)
     {
-        _SglEnqueueGlResourceDeletion(dctx, 0, 1, tex->gpuTexHandle);
-        tex->gpuTexHandle = 0;
+        _SglEnqueueGlResourceDeletion(dctx, 0, 1, tex->glHandle);
+        tex->glHandle = 0;
     }
 
     if (tex->sidecar)
@@ -997,17 +1017,14 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
         tex->lastUpdRange[0] = tex->whd[0];
         tex->lastUpdRange[1] = tex->whd[1];
         tex->lastUpdRange[2] = tex->whd[2];
-        tex->layoutAltered = FALSE;
         tex->locked = FALSE;
-
-        AfxGetTime(&tex->lastUpdTime);
-        tex->lastDevUpdTime = 0;
 
         tex->glFmt = 0;
         tex->glIntFmt = 0;
         tex->glTarget = 0;
         tex->glType = 0;
-        tex->gpuTexHandle = 0;
+        tex->glHandle = 0;
+        tex->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
         for (afxNat i = 0; i < tex->lodCnt; i++)
         {

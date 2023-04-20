@@ -294,11 +294,9 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
             //AfxM4dCopy(renderer->p, p);
 
             afxViewConstants view;
-            AfxM4dCopy(view.c, camMtx);
             AfxM4dCopy(view.v, v);
             AfxM4dCopy(view.p, p);
             AfxM4dCopy(renderer->p, p);
-            AfxV3dSet(view.camPos, camMtx[3][0], camMtx[3][1], camMtx[3][2]);
             AfxBufferUpdate(renderer->sets[0].viewConstants, 0, sizeof(view), &view);
 
             AfxDrawScriptCmdBindLegos(dscr, 0, 1, &renderer->sets[0].viewLego);

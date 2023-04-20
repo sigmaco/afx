@@ -9,25 +9,50 @@ AFX_DEFINE_STRUCT(_afxSurfCtorArgs)
     afxTextureParadigm tex;
 };
 
-_SGL afxError _AfxStdSurfUpdate(afxSurface surf, afxDrawEngine deng)
+_SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng)
 {
     afxError err = NIL;
 
     sglVmt const* gl = &deng->wglVmt;
 
-    if (surf->tex.layoutAltered)
+    if (surf)
     {
-        gl->DeleteRenderbuffers(1, &(surf->gpuRboHandle)); _SglThrowErrorOccuried();
-        surf->gpuRboHandle = NIL;
-    }
+        if ((surf->updFlags & SGL_UPD_FLAG_DEVICE))
+        {
+            if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            {
+                if (surf->glHandle)
+                {
+                    gl->DeleteRenderbuffers(1, &(surf->glHandle)); _SglThrowErrorOccuried();
+                    surf->glHandle = NIL;
+                }
 
-    if (!surf->gpuRboHandle)
+                AfxAssert(NIL == surf->glHandle);
+                gl->GenRenderbuffers(1, &(surf->glHandle)); _SglThrowErrorOccuried();
+                gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsRenderBuffer(surf->glHandle));
+                AfxAssert(1 < surf->tex.whd[0]);
+                AfxAssert(1 < surf->tex.whd[1]);
+                gl->RenderbufferStorage(GL_RENDERBUFFER, surf->tex.glIntFmt, surf->tex.whd[0], surf->tex.whd[1]); _SglThrowErrorOccuried();
+                gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
+
+                surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+            }
+            else if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            {
+                AfxAssert(surf->glHandle);
+                //gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+                AfxThrowError(); // cant't be modified by host
+            }
+        }
+        else
+        {
+            AfxAssert(surf->glHandle);
+            //gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+        }
+    }
+    else
     {
-        gl->GenRenderbuffers(1, &(surf->gpuRboHandle)); _SglThrowErrorOccuried();
-        gl->BindRenderbuffer(GL_RENDERBUFFER, surf->gpuRboHandle); _SglThrowErrorOccuried();
-        AfxAssert(gl->IsRenderBuffer(surf->gpuRboHandle));
-        AfxAssert(1 < surf->tex.whd[1]);
-        gl->RenderbufferStorage(GL_RENDERBUFFER, surf->tex.glIntFmt, surf->tex.whd[0], surf->tex.whd[1]); _SglThrowErrorOccuried();
         gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
     }
     return err;
@@ -86,11 +111,11 @@ _SGL afxError _AfxSurfDtor(afxSurface surf)
         }
     }
 
-    if (surf->gpuRboHandle)
+    if (surf->glHandle)
     {
         afxDrawContext dctx = AfxTextureGetContext(&surf->tex);
-        _SglEnqueueGlResourceDeletion(dctx, 0, 2, surf->gpuRboHandle);
-        surf->gpuRboHandle = 0;
+        _SglEnqueueGlResourceDeletion(dctx, 0, 2, surf->glHandle);
+        surf->glHandle = 0;
     }
 
     return err;
@@ -107,7 +132,8 @@ _SGL afxError _AfxSurfCtor(afxSurface surf, void *args)
 
     AfxLinkageDeploy(&surf->swapchain, NIL);
 
-    surf->gpuRboHandle = 0;
+    surf->glHandle = 0;
+    surf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
     return err;
 }

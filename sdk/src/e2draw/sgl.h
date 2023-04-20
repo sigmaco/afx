@@ -14,11 +14,22 @@
 #define _SGL_MAX_ENTRY_PER_LEGO 10 
 #define _SGL_MAX_STAGE_PER_PIP 8
 #define _SGL_MAX_VBO_PER_BIND 8
-#define _SGL_MAX_VAO_PER_TIME 8
+#define _SGL_MAX_VAO_PER_TIME 60
 #define _SGL_MAX_VP_PER_SET 8
 #define _SGL_MAX_SCISSOR_PER_SET 8
 #define _SGL_MAX_INSTREAM_PER_SET 8
 #define _SGL_MAX_SURF_PER_CANV 8
+
+typedef enum sglUpdateFlags
+{
+    SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_FLAG(0), // flush from host to device
+    SGL_UPD_FLAG_HOST_FLUSH     = AFX_FLAG(1), // flush from device to host
+    SGL_UPD_FLAG_DEVICE_INST    = AFX_FLAG(2), // (re)instantiate on device
+    SGL_UPD_FLAG_HOST_INST      = AFX_FLAG(3), // (re)instantiate on host
+    
+    SGL_UPD_FLAG_HOST           = (SGL_UPD_FLAG_HOST_INST | SGL_UPD_FLAG_HOST_FLUSH),
+    SGL_UPD_FLAG_DEVICE         = (SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH),
+} sglUpdateFlags;
 
 AFX_DEFINE_STRUCT(_sglDriverIdd)
 {
@@ -157,7 +168,21 @@ AFX_OBJECT(afxDrawEngine)
         afxPipelineColorBlendState      colorBlend;
 
     }                       state;
-
+    struct
+    {
+        afxBool             pipBound;
+        afxBool             vbufBound;
+        afxNat              vbufBase;
+        afxNat              vbufCnt;
+        afxBool             ibufBound;
+        afxBool             iaSet;
+        afxBool             scisSet;
+        afxNat              scisBase;
+        afxNat              scisCnt;
+        afxBool             vpSet;
+        afxNat              vpBase;
+        afxNat              vpCnt;
+    }                       stateChanges;
 
     // idd
     afxBool         instanced;
@@ -345,9 +370,9 @@ AFX_OBJECT(afxPipeline)
     afxPipelineColorBlendState      colorBlending;
 
 
-    afxNat      gpuHandle[_SGL_MAX_DQUE_PER_DCTX];
-    afxBool     linked;
-    afxTime     lastUpdTime;
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle[_SGL_MAX_DQUE_PER_DCTX];
+    afxBool         assembled;
 };
 
 AFX_OBJECT(afxPipelineModule)
@@ -357,9 +382,9 @@ AFX_OBJECT(afxPipelineModule)
     afxNat              len;
     afxByte             *code;
 
-    afxNat      gpuHandle;
-    afxBool     compiled;
-    afxSize     lastUpdTime;
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle;
+    afxBool         compiled;
 };
 
 AFX_OBJECT(afxPipelineRig) // A GPUPipelineLayout defines the mapping between resources of all GPUBindGroup objects set up during command encoding in setBindGroup(), and the shaders of the pipeline set by GPURenderCommandsMixin.setPipeline or GPUComputePassEncoder.setPipeline.
@@ -374,11 +399,11 @@ AFX_OBJECT(afxPipelineRig) // A GPUPipelineLayout defines the mapping between re
 
 AFX_OBJECT(afxLego) // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 {
-    afxObject               obj;
-    afxLegoSchema       schema; // The GPUBindGroupLayout associated with this GPUBindGroup. Read-only
-    //afxNat                      pointCnt;
-    afxLegoPoint points[_SGL_MAX_ENTRY_PER_LEGO]; // The set of GPUBindGroupEntrys this GPUBindGroup describes. Read-only
-    afxNat                  usedResources; // The set of buffer and texture subresources used by this bind group, associated with lists of the internal usage flags. Read-only
+    afxObject       obj;
+    afxLegoSchema   schema; // The GPUBindGroupLayout associated with this GPUBindGroup. Read-only
+    //afxNat        pointCnt;
+    afxLegoPoint    points[_SGL_MAX_ENTRY_PER_LEGO]; // The set of GPUBindGroupEntrys this GPUBindGroup describes. Read-only
+    afxNat          usedResources; // The set of buffer and texture subresources used by this bind group, associated with lists of the internal usage flags. Read-only
 };
 
 AFX_OBJECT(afxSampler)
@@ -399,8 +424,9 @@ AFX_OBJECT(afxSampler)
     afxColor            borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
     afxBool             unnormalizedCoords;
 
-    afxNat      gpuHandle;
-    afxSize     lastUpdTime;
+
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle;
 };
 
 AFX_OBJECT(afxBuffer)
@@ -413,13 +439,13 @@ AFX_OBJECT(afxBuffer)
 
     afxBool             locked;
     afxSize             lastUpdOffset, lastUpdRange;
-    afxTime             lastUpdTime;
-    afxTime             lastDevUpdTime;
 
     // idd
-    GLenum  glTarget;
-    GLenum  glUsage;
-    afxNat  gpuHandle;
+
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle;
+    GLenum          glTarget;
+    GLenum          glUsage;
 };
 
 
@@ -454,20 +480,17 @@ AFX_OBJECT(afxTexture)
     afxBool                 linearTiling; // optimal tiling (for driver) if false.
     afxFlags                usage;
     afxColorSwizzling const *swizzling;
-    //afxSize                         lastUpdTime;
 
     afxBool                 locked;
     afxNat                  lastUpdOffset[3];
     afxNat                  lastUpdRange[3];
-    afxBool                 layoutAltered;
-
-    afxTime                 lastUpdTime;
-    afxTime                 lastDevUpdTime;
 
     // idd
-    GLint       glIntFmt;
-    GLenum      glTarget, glFmt, glType;
-    afxNat      gpuTexHandle;
+
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle;
+    GLint           glIntFmt;
+    GLenum          glTarget, glFmt, glType;
 };
 
 AFX_OBJECT(afxSurface) // our concept of a framebuffer
@@ -478,7 +501,8 @@ AFX_OBJECT(afxSurface) // our concept of a framebuffer
 
     // idd
 
-    afxNat      gpuRboHandle; // if depth/stencil, should have a sidecar GL render buffer.
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle; // if depth/stencil, should have a sidecar GL render buffer.
 };
 
 AFX_OBJECT(afxCanvas) // our concept of a framebuffer
@@ -489,11 +513,10 @@ AFX_OBJECT(afxCanvas) // our concept of a framebuffer
     afxNat              surfaceCnt;
     afxSurface          surfaces[_SGL_MAX_SURF_PER_CANV]; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
 
-    afxBool             layoutAltered;
-
     // idd
 
-    afxNat      gpuHandle[_SGL_MAX_DQUE_PER_DCTX];
+    sglUpdateFlags  updFlags;
+    afxNat          glHandle[_SGL_MAX_DQUE_PER_DCTX];
 };
 
 typedef struct _DrawPipelineResource
@@ -708,7 +731,6 @@ SGL afxResult _SglGlCtxW32Create(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *
 SGL void _SglEnqueueGlResourceDeletion(afxDrawContext dctx, afxNat queueIdx, afxNat type, GLuint gpuHandle);
 
 // buf
-SGL afxError _AfxStdBufUpdate(afxBuffer buf, GLenum target, GLenum usage, afxDrawEngine deng);
 SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride);
 SGL afxError _AfxBufferDump(afxBuffer buf, afxSize base, afxSize range, void *dst);
 SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, afxNat cnt, void const *src, afxSize srcStride);
@@ -720,14 +742,14 @@ SGL afxSize _AfxBufferGetSize(afxBuffer buf);
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
-SGL afxResult _AfxStdSmpUpdate(afxSampler smp, afxDrawEngine deng);
-SGL afxResult _AfxStdSmpImplCtor(afxSampler smp);
-
-SGL afxResult _AfxStdPipmUpdate(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng);
-SGL afxResult _AfxStdPipmImplCtor(afxPipelineModule pipm);
-
-SGL afxError _AfxStdSurfUpdate(afxSurface surf, afxDrawEngine deng); // must be used before texUpdate
-SGL afxResult _SglTexUpdate(afxTexture tex, afxDrawEngine deng);
+SGL afxError _SglSmpBindAndSync(afxSampler smp, afxNat unit, afxDrawEngine deng);
+SGL afxError _SglPipmSync(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng);
+SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng); // must be used before texUpdate
+SGL afxError _SglTexBindAndSync(afxTexture tex, afxNat unit, afxDrawEngine deng);
+SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng);
+SGL afxError _SglLegoBindAndSync(afxLego lego, afxNat unit, afxDrawEngine deng);
+SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine deng);
+SGL afxError _SglBufBindAndSync(afxBuffer buf, afxNat unit, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, afxDrawEngine deng);
 
 SGL afxBool _AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags);
 SGL afxNat _AfxTextureGetLodCount(afxTexture tex);
@@ -745,11 +767,6 @@ SGL void const* _AfxTextureGetData(afxTexture tex, afxNat lod, afxNat layer, afx
 SGL afxError _AfxTextureUpdateRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], void const *src[], afxPixelFormat const fmt[]);
 SGL afxError _AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt);
 
-SGL afxResult _AfxStdCanvUpdate(afxCanvas canv, afxDrawEngine deng);
-SGL afxResult _AfxStdCanvImplCtor(afxCanvas canv);
-
-SGL afxResult _AfxStdPipUpdate(afxPipeline pip, afxDrawEngine deng);
-SGL afxResult _AfxStdPipImplCtor(afxPipeline pip);
 
 SGL afxResult _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri);
 

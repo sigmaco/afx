@@ -142,72 +142,153 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 }
 #endif
 
-_SGL afxError _AfxStdPipUpdate(afxPipeline pip, afxDrawEngine deng)
+_SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = NIL;
-    AfxAssertObject(pip, AFX_FCC_PIP);
     sglVmt const* gl = &deng->wglVmt;
 
-    if (pip->lastUpdTime || !pip->gpuHandle[deng->queueIdx])
+    if (pip)
     {
-        if (!pip->gpuHandle[deng->queueIdx])
-        {
-            if (!(pip->gpuHandle[deng->queueIdx] = gl->CreateProgram()))
-                AfxThrowError();
+        AfxAssertObject(pip, AFX_FCC_PIP);
 
-            _SglThrowErrorOccuried();
+        GLuint glHandle = pip->glHandle[deng->queueIdx];
+
+        if ((pip->updFlags & SGL_UPD_FLAG_DEVICE))
+        {
+            if ((pip->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            {
+                if (glHandle)
+                {
+                    gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
+                    glHandle = NIL;
+                }
+
+                AfxAssert(NIL == glHandle);
+
+                if (!(glHandle = gl->CreateProgram()))
+                {
+                    AfxThrowError();
+                    _SglThrowErrorOccuried();
+                }
+                else
+                {
+                    AfxAssert(gl->IsProgram(glHandle));
+
+                    for (afxNat i = 0; i < pip->stageCnt; i++)
+                    {
+                        afxConnection *objc = &pip->stages[i].shader;
+                        afxPipelineModule pipm = AfxConnectionGetObject(objc);
+
+                        if (pipm)
+                        {
+                            _SglPipmSync(pipm, pip->stages[i].type, deng);
+                            AfxAssert(gl->IsShader(pipm->glHandle));
+                            gl->AttachShader(glHandle, pipm->glHandle); _SglThrowErrorOccuried();
+                        }
+                    }
+
+                    gl->LinkProgram(glHandle); _SglThrowErrorOccuried();
+                    afxBool linked;
+                    gl->GetProgramiv(glHandle, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
+
+                    if (linked == GL_FALSE)
+                    {
+                        AfxThrowError();
+                        afxChar str[1024];
+                        gl->GetProgramInfoLog(glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
+                        AfxError(str);
+                        gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
+                        glHandle = NIL;
+                    }
+                    else
+                    {
+                        pip->assembled = linked;
+
+                        gl->UseProgram(glHandle); _SglThrowErrorOccuried();
+                        //_AfxRegisterOpenGlResourcesToQwadroDrawPipeline(pip);
+                        AfxEcho("Draw pipeline %p reinstanced.", pip);
+                        pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                    }
+                }
+                pip->glHandle[deng->queueIdx] = glHandle;
+            }
+            else if ((pip->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            {
+                AfxAssert(glHandle);
+                AfxThrowError(); // can't be modified
+            }
+        }
+        else
+        {
+            AfxAssert(glHandle);
+            gl->UseProgram(glHandle); _SglThrowErrorOccuried();
         }
 
-        if (pip->gpuHandle[deng->queueIdx])
+        if (!err)
         {
-            AfxAssert(gl->IsProgram(pip->gpuHandle[deng->queueIdx]));
+            afxPipelineRig pipr = AfxPipelineGetRig(deng->state.pip);
+            AfxAssertObject(pipr, AFX_FCC_PIPR);
+            afxNat setCnt = pipr->socketCnt;
 
-            for (afxNat i = 0; i < pip->stageCnt; i++)
+            for (afxNat i = 0; i < setCnt; i++)
             {
-                afxConnection *objc = &pip->stages[i].shader;
-                afxPipelineModule pipm = AfxConnectionGetObject(objc);
-                
-                if (pipm)
+                afxLegoSchema *schema = &pipr->sockets[i];
+
+                for (afxNat j = 0; j < schema->entryCnt; j++)
                 {
-                    _AfxStdPipmUpdate(pipm, pip->stages[i].type, deng);
+                    afxLegoSchemaEntry const *entry = &schema->entries[j];
+                    AfxAssert(!AfxStringIsEmpty(&entry->name.str));
+                    AfxAssert(entry->type);
+                    //AfxAssert(entry->visibility);
+                    //AfxAssert(entry->cnt);
 
-                    AfxAssert(gl->IsShader(pipm->gpuHandle));
-                    gl->AttachShader(pip->gpuHandle[deng->queueIdx], pipm->gpuHandle); _SglThrowErrorOccuried();
+                    afxNat setId = (i * _SGL_MAX_ENTRY_PER_LEGO);
+                    afxNat binding = setId + entry->binding;
+
+                    afxNat loc = gl->GetUniformLocation(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)); _SglThrowErrorOccuried();
+
+                    switch (entry->type)
+                    {
+                    case AFX_SUPPLY_TYPE_SAMPLER:
+                    {
+                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        break;
+                    }
+                    case AFX_SUPPLY_TYPE_SAMPLED_IMAGE:
+                    {
+                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        break;
+                    }
+                    case AFX_SUPPLY_TYPE_COMBINED_IMAGE_SAMPLER:
+                    {
+                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        break;
+                    }
+                    case AFX_SUPPLY_TYPE_CONSTANT_BUFFER:
+                    {
+                        // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
+
+                        //loc = gl->GetUniformBlockIndex(deng->state.pip->gpuHandle[deng->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
+                        //gl->UniformBlockBinding(deng->state.pip->gpuHandle[deng->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
+
+                        gl->UniformBlockBinding(glHandle, gl->GetUniformBlockIndex(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)), binding);
+
+                        break;
+                    }
+                    default:
+                    {
+                        AfxError("");
+                    }
+                    }
                 }
-            }
-
-            gl->LinkProgram(pip->gpuHandle[deng->queueIdx]); _SglThrowErrorOccuried();
-            afxBool linked;
-            gl->GetProgramiv(pip->gpuHandle[deng->queueIdx], GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
-
-            if (linked == GL_FALSE)
-            {
-                AfxThrowError();
-                afxChar str[1024];
-                gl->GetProgramInfoLog(pip->gpuHandle[deng->queueIdx], sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
-                AfxError(str);
-            }
-            else
-            {
-                pip->linked = linked;
-
-                gl->UseProgram(pip->gpuHandle[deng->queueIdx]); _SglThrowErrorOccuried();
-                //_AfxRegisterOpenGlResourcesToQwadroDrawPipeline(pip);
-                gl->UseProgram(0); _SglThrowErrorOccuried();
-
-                pip->lastUpdTime = 0;// pip->res.lastUpdTime;
-                AfxEcho("Draw pipeline %p reinstanced.", pip);
-            }
-
-            if (err)
-            {
-                gl->DeleteProgram(pip->gpuHandle[deng->queueIdx]); _SglThrowErrorOccuried();
-                pip->gpuHandle[deng->queueIdx] = NIL;
             }
         }
     }
-
+    else
+    {
+        gl->UseProgram(0); _SglThrowErrorOccuried();
+    }
     return err;
 }
 
@@ -490,10 +571,10 @@ _SGL afxError _AfxPipDtor(afxPipeline pip)
 
     for (afxNat i = 0; i < dctx->queueCnt; i++)
     {
-        if (pip->gpuHandle[i])
+        if (pip->glHandle[i])
         {
-            _SglEnqueueGlResourceDeletion(dctx, i, 5, pip->gpuHandle[i]);
-            pip->gpuHandle[i] = 0;
+            _SglEnqueueGlResourceDeletion(dctx, i, 5, pip->glHandle[i]);
+            pip->glHandle[i] = 0;
         }
     }
 
@@ -739,10 +820,8 @@ _SGL afxError _AfxPipCtor(afxPipeline pip, afxPipelineParadigm const *paradigm)
         {
             AfxLinkageDeploy(&pip->rig, &(pipr->pipelines));
 
-            pip->gpuHandle[0] = 0;
-            pip->gpuHandle[1] = 0;
-            pip->gpuHandle[2] = 0;
-            pip->gpuHandle[3] = 0;
+            AfxZero(pip->glHandle, sizeof(pip->glHandle));
+            pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
         }
 
         if (err)

@@ -37,7 +37,7 @@ _SGL afxError _SglSwapBuffersNow(afxDrawOutput dout)
 
         //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks all threads on exit
         //UpdateWindow(dout->wglWnd);
-        AfxYield();
+        //AfxYield();
 
     }
     return err;
@@ -214,6 +214,11 @@ _SGL afxError _AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent)
 {
     afxError err = NIL;
     AfxAssertObject(dout, AFX_FCC_DOUT);
+    AfxAssert(extent);
+    AfxAssert(extent[0]);
+    AfxAssert(extent[1]);
+    AfxAssert(extent[2]);
+    AfxAssert(extent[0] != dout->whd[0] || extent[1] != dout->whd[1] || extent[2] != dout->whd[2]);
     afxBool resizable;
 
     if ((resizable = dout->resizable))
