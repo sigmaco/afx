@@ -10,34 +10,34 @@
 #pragma comment(lib, "opengl32")
 
 HMODULE opengl32 = NIL;
-HGLRC (WINAPI* wsglCreateContext)(HDC) = NIL;
-BOOL  (WINAPI* wsglDeleteContext)(HGLRC) = NIL;
-HGLRC (WINAPI* wsglGetCurrentContext)(VOID) = NIL;
-HDC   (WINAPI* wsglGetCurrentDC)(VOID) = NIL;
-PROC  (WINAPI* wsglGetProcAddress)(LPCSTR) = NIL;
-BOOL  (WINAPI* wsglMakeCurrent)(HDC, HGLRC) = NIL;
-int(WINAPI* wsglChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd) = NIL;
-int(WINAPI* wsglDescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd) = NIL;
-BOOL(WINAPI* wsglSetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd) = NIL;
-int(WINAPI* wsglGetPixelFormat)(HDC hdc) = NIL;
-BOOL(WINAPI* wsglSwapBuffers)(HDC) = NIL;
+HGLRC (WINAPI* _wglCreateContext)(HDC) = NIL;
+BOOL  (WINAPI* _wglDeleteContext)(HGLRC) = NIL;
+HGLRC (WINAPI* _wglGetCurrentContext)(VOID) = NIL;
+HDC   (WINAPI* _wglGetCurrentDC)(VOID) = NIL;
+PROC  (WINAPI* _wglGetProcAddress)(LPCSTR) = NIL;
+BOOL  (WINAPI* _wglMakeCurrent)(HDC, HGLRC) = NIL;
+int(WINAPI* _wglChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd) = NIL;
+int(WINAPI* _wglDescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd) = NIL;
+BOOL(WINAPI* _wglSetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd) = NIL;
+int(WINAPI* _wglGetPixelFormat)(HDC hdc) = NIL;
+BOOL(WINAPI* _wglSwapBuffers)(HDC) = NIL;
 
 afxBool _AfxLoadOpengl(void)
 {
     if (!opengl32 && !(opengl32 = LoadLibraryA("opengl32.dll"))) AfxError("");
     else
     {
-        wsglCreateContext = (void*)GetProcAddress(opengl32, "wglCreateContext");
-        wsglDeleteContext = (void*)GetProcAddress(opengl32, "wglDeleteContext");
-        wsglGetCurrentContext = (void*)GetProcAddress(opengl32, "wglGetCurrentContext");
-        wsglGetCurrentDC = (void*)GetProcAddress(opengl32, "wglGetCurrentDC");
-        wsglGetProcAddress = (void*)GetProcAddress(opengl32, "wglGetProcAddress");
-        wsglMakeCurrent = (void*)GetProcAddress(opengl32, "wglMakeCurrent");
-        wsglChoosePixelFormat = (void*)GetProcAddress(opengl32, "wglChoosePixelFormat"); // "wglChoosePixelFormat" funciona com Intel mas não com AMD.
-        wsglSetPixelFormat = (void*)GetProcAddress(opengl32, "wglSetPixelFormat"); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
-        wsglDescribePixelFormat = (void*)GetProcAddress(opengl32, "wglDescribePixelFormat");
-        wsglGetPixelFormat = (void*)GetProcAddress(opengl32, "wglGetPixelFormat");
-        wsglSwapBuffers = (void*)GetProcAddress(opengl32, "wglSwapBuffers");
+        _wglCreateContext = (void*)GetProcAddress(opengl32, "wglCreateContext");
+        _wglDeleteContext = (void*)GetProcAddress(opengl32, "wglDeleteContext");
+        _wglGetCurrentContext = (void*)GetProcAddress(opengl32, "wglGetCurrentContext");
+        _wglGetCurrentDC = (void*)GetProcAddress(opengl32, "wglGetCurrentDC");
+        _wglGetProcAddress = (void*)GetProcAddress(opengl32, "wglGetProcAddress");
+        _wglMakeCurrent = (void*)GetProcAddress(opengl32, "wglMakeCurrent");
+        _wglChoosePixelFormat = (void*)GetProcAddress(opengl32, "wglChoosePixelFormat"); // "wglChoosePixelFormat" funciona com Intel mas não com AMD.
+        _wglSetPixelFormat = (void*)GetProcAddress(opengl32, "wglSetPixelFormat"); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
+        _wglDescribePixelFormat = (void*)GetProcAddress(opengl32, "wglDescribePixelFormat");
+        _wglGetPixelFormat = (void*)GetProcAddress(opengl32, "wglGetPixelFormat");
+        _wglSwapBuffers = (void*)GetProcAddress(opengl32, "wglSwapBuffers");
         return TRUE;
     }
     return FALSE;
@@ -988,6 +988,59 @@ afxChar const sigglSigmaSignature[] =
 "\n \"Y88888P\"   88    `\"Y88888P\"     `\"Y88888P\"   88888888888  "
 };
 
+
+_SGL afxError _SglSwapBuffers(HDC hdc)
+{
+    afxError err = NIL;
+
+    
+    if (!(_wglSwapBuffers(hdc)))
+        if (!(SwapBuffers(hdc)))
+            AfxThrowError();
+
+    //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks all threads on exit
+    //UpdateWindow(dout->wglWnd);
+    //AfxYield();
+
+    return err;
+}
+
+_SGL int _SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd)
+{
+    afxError err = NIL;
+    int fmt;
+
+    if (!(fmt = _wglChoosePixelFormat(hdc, ppfd)))
+        if (!(fmt = ChoosePixelFormat(hdc, ppfd)))
+            AfxThrowError();
+
+    return fmt;
+}
+
+_SGL BOOL _SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd)
+{
+    afxError err = NIL;
+    BOOL rslt;
+
+    if (!(rslt = _wglSetPixelFormat(hdc, format, ppfd)))
+        if (!(rslt = SetPixelFormat(hdc, format, ppfd)))
+            AfxThrowError();
+
+    return rslt;
+}
+
+_SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd)
+{
+    afxError err = NIL;
+    int rslt;
+
+    if (!(rslt = _wglDescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd)))
+        if (!(rslt = DescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd)))
+            AfxThrowError();
+
+    return rslt;
+}
+
 _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     afxError err = NIL;
@@ -1007,7 +1060,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             // lParam = This parameter is not used.
             // If an application processes this message, it should return zero.
 
-            //_AfxDrawOutputProcess(dout);
+            //_SglDoutProcess(dout);
 
             //while (0 < AfxObjectRelease(&dout->obj));
 #if 0
@@ -1183,20 +1236,20 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
         }
         default: break;
         }
-        //_AfxDrawOutputProcess(dout);
+        //_SglDoutProcess(dout);
     }
     return DefWindowProcA(hWnd, message, wParam, lParam);
 }
 
-_SGL afxError _SglGlCtxW32Create(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc)
+_SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc)
 {
     AfxEntry("oglWndClss=%p,shareCtx=%p,phwnd=%p,phdc=%p,phrc=%p", oglWndClss, shareCtx, phwnd, phdc, phrc);
     afxError err = NIL;
 
-    HDC bkpHdc = wsglGetCurrentDC();
-    HGLRC bkpGlrc = wsglGetCurrentContext();
+    HDC bkpHdc = _wglGetCurrentDC();
+    HGLRC bkpGlrc = _wglGetCurrentContext();
 
-    HWND tmpHwnd = CreateWindowA(oglWndClss->lpszClassName, "", /*WS_POPUP*/WS_OVERLAPPEDWINDOW, 0, 0, 1, 1, NIL, NIL, oglWndClss->hInstance, NIL);
+    HWND tmpHwnd = CreateWindowA(oglWndClss->lpszClassName, "", /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, oglWndClss->hInstance, NIL);
 
     if (!(tmpHwnd)) AfxThrowError();
     else
@@ -1212,124 +1265,124 @@ _SGL afxError _SglGlCtxW32Create(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *
             pfd.nVersion = 1;
             pfd.dwFlags = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DIRECT3D_ACCELERATED | PFD_SUPPORT_COMPOSITION | PFD_SWAP_EXCHANGE;
             pfd.iPixelType = PFD_TYPE_RGBA;
-            pfd.cColorBits = 24;
-            pfd.cAlphaBits = 8;
-            pfd.cDepthBits = 24;
-            pfd.cStencilBits = 8;
+            pfd.cColorBits = 32;
+            //pfd.cDepthBits = 24;
+            //pfd.cStencilBits = 8;
 
             int pxlfmt = _SglChoosePixelFormat(tmpHdc, &(pfd));
+            _SglDescribePixelFormat(tmpHdc, pxlfmt, sizeof(pfd), &pfd);
 
             if (!_SglSetPixelFormat(tmpHdc, pxlfmt, &(pfd))) AfxThrowError();
             else
             {
-                HGLRC tmpHrc = wsglCreateContext(tmpHdc);
+                HGLRC tmpHrc = _wglCreateContext(tmpHdc);
 
                 if (!tmpHrc) AfxThrowError();
                 else
                 {
-                    if (!(wsglMakeCurrent(tmpHdc, tmpHrc))) AfxThrowError();
+                    if (!(_wglMakeCurrent(tmpHdc, tmpHrc))) AfxThrowError();
                     else
                     {
-                        PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)glcGetProcAddress(NIL, "wglChoosePixelFormatARB");
+                        PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)_wglGetProcAddress("wglChoosePixelFormatARB");
                         
                         if (!wglChoosePixelFormatARB) AfxThrowError();
                         else
                         {
-                            /*
-                            WGL_SWAP_METHOD_ARB
-                            If the pixel format supports a back buffer, then this indicates
-                            how they are swapped. If this attribute is set to
-                            WGL_SWAP_EXCHANGE_ARB then swapping exchanges the front and back
-                            buffer contents; if it is set to WGL_SWAP_COPY_ARB then swapping
-                            copies the back buffer contents to the front buffer; if it is
-                            set to WGL_SWAP_UNDEFINED_ARB then the back buffer contents are
-                            copied to the front buffer but the back buffer contents are
-                            undefined after the operation. If the pixel format does not
-                            support a back buffer then this parameter is set to
-                            WGL_SWAP_UNDEFINED_ARB. The <iLayerPlane> parameter is ignored
-                            if this attribute is specified.
-                            */
-                            int pxlAttrPairs[16][2] = {0};
-                            
-                            pxlAttrPairs[0][0] = WGL_DRAW_TO_WINDOW_ARB;
-                            pxlAttrPairs[0][1] = GL_TRUE;
+                            HWND hwnd2 = CreateWindowA(oglWndClss->lpszClassName, "", /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, oglWndClss->hInstance, NIL);
 
-                            pxlAttrPairs[1][0] = WGL_SUPPORT_OPENGL_ARB;
-                            pxlAttrPairs[1][1] = GL_TRUE;
-
-                            pxlAttrPairs[2][0] = WGL_ACCELERATION_ARB;
-                            pxlAttrPairs[2][1] = WGL_FULL_ACCELERATION_ARB;
-
-                            pxlAttrPairs[3][0] = WGL_DOUBLE_BUFFER_ARB;
-                            pxlAttrPairs[3][1] = GL_TRUE;
-
-                            pxlAttrPairs[4][0] = WGL_PIXEL_TYPE_ARB;
-                            pxlAttrPairs[4][1] = WGL_TYPE_RGBA_ARB; // WGL_TYPE_RGBA_FLOAT_ARB
-
-                            pxlAttrPairs[5][0] = WGL_COLOR_BITS_ARB;
-                            pxlAttrPairs[5][1] = 24;
-
-                            pxlAttrPairs[6][0] = WGL_ALPHA_BITS_ARB;
-                            pxlAttrPairs[6][1] = 8;
-
-                            pxlAttrPairs[7][0] = WGL_DEPTH_BITS_ARB;
-                            pxlAttrPairs[7][1] = 24;
-
-                            pxlAttrPairs[8][0] = WGL_STENCIL_BITS_ARB;
-                            pxlAttrPairs[8][1] = 8;
-
-                            pxlAttrPairs[9][0] = WGL_TRANSPARENT_ARB;
-                            pxlAttrPairs[9][1] = TRUE;
-
-                            pxlAttrPairs[10][0] = WGL_SWAP_METHOD_ARB;
-                            pxlAttrPairs[10][1] = WGL_SWAP_EXCHANGE_ARB;
-
-                            //pxlAttrPairs[10][0] = WGL_SAMPLE_BUFFERS_ARB; // works on Intel, didn't work on Mesa
-                            //pxlAttrPairs[10][1] = GL_TRUE;
-
-                            //pxlAttrPairs[11][0] = WGL_SAMPLES_ARB; // works on Intel, didn't work on Mesa
-                            //pxlAttrPairs[11][1] = 8;
-
-                            //[11][0] = WGL_COLORSPACE_EXT; // works on Mesa, didn't work on Intel
-                            //pxlAttrPairs[11][1] = WGL_COLORSPACE_SRGB_EXT; // WGL_COLORSPACE_LINEAR_EXT
-
-                            //pxlAttrPairs[12][0] = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB;  // works on Mesa, didn't work on Intel
-                            //pxlAttrPairs[12][1] = GL_TRUE;
-
-                            pxlAttrPairs[11][0] = NIL;
-                            pxlAttrPairs[11][1] = NIL;
-
-                            UINT formatCount;
-                            pxlfmt = 0;
-
-                            if (!wglChoosePixelFormatARB(tmpHdc, pxlAttrPairs, 0, 1, &(pxlfmt), &(formatCount))) AfxThrowError();
+                            if (!(hwnd2)) AfxThrowError();
                             else
                             {
-                                AfxAssert(pxlfmt);
-                                AfxAssert(formatCount);
+                                HDC hdc2 = GetDC(hwnd2);
 
-                                HWND hwnd2 = CreateWindowA(oglWndClss->lpszClassName, "", /*WS_POPUP*/WS_OVERLAPPEDWINDOW, 0, 0, 1, 1, NIL, NIL, oglWndClss->hInstance, NIL);
-
-                                if (!(hwnd2)) AfxThrowError();
+                                if (!(hdc2)) AfxThrowError();
                                 else
                                 {
-                                    HDC hdc2 = GetDC(hwnd2);
+                                    /*
+                                    WGL_SWAP_METHOD_ARB
+                                    If the pixel format supports a back buffer, then this indicates
+                                    how they are swapped. If this attribute is set to
+                                    WGL_SWAP_EXCHANGE_ARB then swapping exchanges the front and back
+                                    buffer contents; if it is set to WGL_SWAP_COPY_ARB then swapping
+                                    copies the back buffer contents to the front buffer; if it is
+                                    set to WGL_SWAP_UNDEFINED_ARB then the back buffer contents are
+                                    copied to the front buffer but the back buffer contents are
+                                    undefined after the operation. If the pixel format does not
+                                    support a back buffer then this parameter is set to
+                                    WGL_SWAP_UNDEFINED_ARB. The <iLayerPlane> parameter is ignored
+                                    if this attribute is specified.
+                                    */
+                                    int pxlAttrPairs[16][2] = {0};
+                            
+                                    pxlAttrPairs[0][0] = WGL_DRAW_TO_WINDOW_ARB;
+                                    pxlAttrPairs[0][1] = GL_TRUE;
 
-                                    if (!(hdc2)) AfxThrowError();
+                                    pxlAttrPairs[1][0] = WGL_SUPPORT_OPENGL_ARB;
+                                    pxlAttrPairs[1][1] = GL_TRUE;
+
+                                    pxlAttrPairs[2][0] = WGL_ACCELERATION_ARB;
+                                    pxlAttrPairs[2][1] = WGL_FULL_ACCELERATION_ARB;
+
+                                    pxlAttrPairs[3][0] = WGL_DOUBLE_BUFFER_ARB;
+                                    pxlAttrPairs[3][1] = GL_TRUE;
+
+                                    pxlAttrPairs[4][0] = WGL_PIXEL_TYPE_ARB;
+                                    pxlAttrPairs[4][1] = WGL_TYPE_RGBA_ARB; // WGL_TYPE_RGBA_FLOAT_ARB
+
+                                    pxlAttrPairs[5][0] = WGL_COLOR_BITS_ARB;
+                                    pxlAttrPairs[5][1] = 32;
+
+                                    pxlAttrPairs[6][0] = WGL_ALPHA_BITS_ARB;
+                                    pxlAttrPairs[6][1] = 8;
+
+                                    //pxlAttrPairs[7][0] = WGL_DEPTH_BITS_ARB;
+                                    //pxlAttrPairs[7][1] = 24;
+
+                                    //pxlAttrPairs[8][0] = WGL_STENCIL_BITS_ARB;
+                                    //pxlAttrPairs[8][1] = 8;
+
+                                    pxlAttrPairs[7][0] = WGL_TRANSPARENT_ARB;
+                                    pxlAttrPairs[7][1] = TRUE;
+
+                                    pxlAttrPairs[8][0] = WGL_SWAP_METHOD_ARB;
+                                    pxlAttrPairs[8][1] = WGL_SWAP_EXCHANGE_ARB;
+
+                                    //pxlAttrPairs[10][0] = WGL_SAMPLE_BUFFERS_ARB; // works on Intel, didn't work on Mesa
+                                    //pxlAttrPairs[10][1] = GL_TRUE;
+
+                                    //pxlAttrPairs[11][0] = WGL_SAMPLES_ARB; // works on Intel, didn't work on Mesa
+                                    //pxlAttrPairs[11][1] = 8;
+
+                                    //[11][0] = WGL_COLORSPACE_EXT; // works on Mesa, didn't work on Intel
+                                    //pxlAttrPairs[11][1] = WGL_COLORSPACE_SRGB_EXT; // WGL_COLORSPACE_LINEAR_EXT
+
+                                    //pxlAttrPairs[12][0] = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB;  // works on Mesa, didn't work on Intel
+                                    //pxlAttrPairs[12][1] = GL_TRUE;
+
+                                    pxlAttrPairs[9][0] = NIL;
+                                    pxlAttrPairs[9][1] = NIL;
+
+                                    UINT formatCount;
+                                    pxlfmt = 0;
+
+                                    if (!wglChoosePixelFormatARB(hdc2, pxlAttrPairs, 0, 1, &(pxlfmt), &(formatCount))) AfxThrowError();
                                     else
                                     {
-                                        //_SglDescribePixelFormat(hdc2, pxlfmt, sizeof(pfd), &(pfd));
+                                        AfxAssert(pxlfmt);
+                                        AfxAssert(formatCount);
+
                                         AFX_ZERO(&pfd);
+                                        _SglDescribePixelFormat(hdc2, pxlfmt, sizeof(pfd), &(pfd));
 
                                         if (!(_SglSetPixelFormat(hdc2, pxlfmt, &(pfd)))) AfxThrowError();
                                         else
                                         {
                                             PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
 
-                                            if (!(wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wsglGetProcAddress("wglCreateContextAttribsARB"))) AfxThrowError();
+                                            if (!(wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)_wglGetProcAddress("wglCreateContextAttribsARB"))) AfxThrowError();
                                             else
                                             {
-                                                int ctxAttrPairs[6][2];
+                                                int ctxAttrPairs[6][2] = { 0 };
 
                                                 ctxAttrPairs[0][0] = WGL_CONTEXT_MAJOR_VERSION_ARB;
                                                 ctxAttrPairs[0][1] = 3;
@@ -1357,44 +1410,51 @@ _SGL afxError _SglGlCtxW32Create(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *
                                                 if (!hrc2) AfxThrowError();
                                                 else
                                                 {
-                                                    if (!wsglMakeCurrent(hdc2, hrc2)) AfxThrowError();
+                                                    if (!_wglMakeCurrent(hdc2, hrc2)) AfxThrowError();
                                                     else
                                                     {
-
-                                                        PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = glcGetProcAddress(NIL, "wglSwapIntervalEXT");
+                                                        PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)_wglGetProcAddress("wglSwapIntervalEXT");
 
                                                         if (wglSwapIntervalEXT)
-                                                            wglSwapIntervalEXT(1);
+                                                            wglSwapIntervalEXT(0);
 
-                                                        if (phwnd) *phwnd = hwnd2;
-                                                        else AfxAdvertise("");
+                                                        AfxAssert(phwnd);
+                                                        *phwnd = hwnd2;
+                                                        AfxAssert(phdc);
+                                                        *phdc = hdc2;
+                                                        AfxAssert(phrc);
+                                                        *phrc = hrc2;
 
-                                                        if (phdc) *phdc = hdc2;
-                                                        else AfxAdvertise("");
-
-                                                        if (phrc) *phrc = hrc2;
-                                                        else wsglDeleteContext(hrc2);
+                                                        if (err)
+                                                            _wglMakeCurrent(bkpHdc, bkpGlrc);
                                                     }
+
+                                                    if (err)
+                                                        _wglDeleteContext(hrc2);
                                                 }
                                             }
                                         }
-                                        if (err)
-                                            ReleaseDC(hwnd2, hdc2);
                                     }
+
                                     if (err)
-                                        DestroyWindow(hwnd2);
+                                        ReleaseDC(hwnd2, hdc2);
                                 }
+
+                                if (err)
+                                    DestroyWindow(hwnd2);
                             }
                         }
+
+                        if (err)
+                            _wglMakeCurrent(bkpHdc, bkpGlrc);
                     }
-                    wsglMakeCurrent(bkpHdc, bkpGlrc);
-                    wsglDeleteContext(tmpHrc);
+                    _wglDeleteContext(tmpHrc);
                 }
             }
             ReleaseDC(tmpHwnd, tmpHdc);
         }
         DestroyWindow(tmpHwnd);
-        wsglMakeCurrent(bkpHdc, bkpGlrc);
+        _wglMakeCurrent(bkpHdc, bkpGlrc);
     }
     return err;
 }
@@ -1404,8 +1464,8 @@ _SGL afxError iddDtor(afxDrawDriver ddrv)
     afxError err = NIL;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     _sglDriverIdd *idd = ddrv->idd;
-    wsglMakeCurrent(NIL, NIL);
-    wsglDeleteContext(idd->wglPrimeGlrc);
+    _wglMakeCurrent(NIL, NIL);
+    _wglDeleteContext(idd->wglPrimeGlrc);
     ReleaseDC(idd->wglPrimeWnd, idd->wglPrimeDc);
     DestroyWindow(idd->wglPrimeWnd);
     UnregisterClassA(idd->oglWndClss.lpszClassName, idd->oglWndClss.hInstance);
@@ -1429,17 +1489,31 @@ _SGL afxError _AfxDdrvProcessFn(afxDrawDriver ddrv)
 
             for (afxNat j = 0; j < AfxClassGetInstanceCount(cls); j++)
             {
-                afxDrawEngine deng;
+                afxDrawQueue dque;
 
-                if (1 != AfxDrawContextEnumerateEngines(dctx, j, 1, &deng)) AfxThrowError();
+                if (1 != AfxDrawContextEnumerateQueues(dctx, j, 1, &dque)) AfxThrowError();
                 else
                 {
-                    AfxAssertObject(deng, AFX_FCC_DENG);
+                    AfxAssertObject(dque, AFX_FCC_DQUE);
                     
-                    if (!deng->thread)
+                    if (!dque->thread)
                     {
-                        _AfxStdDqueProcess(deng);
+                        _SglDqueProcess(dque);
                     }
+                }
+            }
+
+            cls = AfxDrawContextGetOutputClass(dctx);
+
+            for (afxNat j = 0; j < AfxClassGetInstanceCount(cls); j++)
+            {
+                afxDrawOutput dout;
+
+                if (1 != AfxDrawContextEnumerateOutputs(dctx, j, 1, &dout)) AfxThrowError();
+                else
+                {
+                    AfxAssertObject(dout, AFX_FCC_DOUT);
+                    _SglDoutProcess(dout);
                 }
             }
         }
@@ -1515,12 +1589,12 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
                 }
             };
 
-            if (_SglGlCtxW32Create(&idd->oglWndClss, NIL, &(idd->wglPrimeWnd), &(idd->wglPrimeDc), &(idd->wglPrimeGlrc))) AfxThrowError();
+            if (_SglCreateCombinedDeviceContext(&idd->oglWndClss, NIL, &(idd->wglPrimeWnd), &(idd->wglPrimeDc), &(idd->wglPrimeGlrc))) AfxThrowError();
             else
             {
-                idd->wglPrimeDcPxlFmt = wsglGetPixelFormat(idd->wglPrimeDc);
+                idd->wglPrimeDcPxlFmt = _wglGetPixelFormat(idd->wglPrimeDc);
 
-                if (!(wsglMakeCurrent(idd->wglPrimeDc, idd->wglPrimeGlrc))) AfxThrowError();
+                if (!(_wglMakeCurrent(idd->wglPrimeDc, idd->wglPrimeGlrc))) AfxThrowError();
                 else
                 {
                     sglVmt* gl = (sglVmt*)&idd->wglPrimeVmt;
@@ -1543,8 +1617,8 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
 
                 if (err)
                 {
-                    wsglMakeCurrent(NIL, NIL);
-                    wsglDeleteContext(idd->wglPrimeGlrc);
+                    _wglMakeCurrent(NIL, NIL);
+                    _wglDeleteContext(idd->wglPrimeGlrc);
                     ReleaseDC(idd->wglPrimeWnd, idd->wglPrimeDc);
                     DestroyWindow(idd->wglPrimeWnd);
                 }

@@ -69,7 +69,7 @@ _SGL void _AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipeline
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_INPUT_ASSEMBLY_STATE, &cmd->cmd);
 }
 
-_SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxRenderTarget const rasters[], afxRenderTarget const *depth, afxRenderTarget const *stencil)
+_SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil)
 {
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);

@@ -105,4 +105,6 @@ AFX afxSurface              AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat id
 AFX afxResult               AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
 AFX afxError                AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 
+AFX afxCanvas               AfxDrawOutputBuildCanvas(afxDrawOutput dout, afxNat natBufIdx, afxNat addSurfCnt, afxSurfaceSpecification addSurfSpec[]);
+
 #endif//AFX_DRAW_OUTPUT_H

@@ -23,19 +23,19 @@ SGL afxClassSpecification const _AfxPiprClassSpec;
 SGL afxClassSpecification const _AfxLegoClassSpec;
 SGL afxClassSpecification const _AfxDscrClassSpec;
 SGL afxClassSpecification const _AfxDinClassSpec;
-SGL afxClassSpecification const _AfxDengClassSpec;
+SGL afxClassSpecification const _AfxDqueClassSpec;
 SGL afxClassSpecification const _AfxDoutClassSpec;
 
 // FOR EACH
 
-_SGL afxResult _AfxDrawContextEnumerateEngines(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawEngine deng[])
+_SGL afxResult _AfxDrawContextEnumerateQueues(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawQueue dque[])
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     afxClass *cls = &dctx->dengClass;
     AfxAssertType(cls, AFX_FCC_CLS);
     AfxAssert(AfxClassGetInstanceCount(cls) >= base + cnt);
-    return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)deng);
+    return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)dque);
 }
 
 _SGL afxResult _AfxDrawContextEnumerateInputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawInput din[])
@@ -333,7 +333,7 @@ afxDctxImpl const _AfxStdDctxImpl =
     _AfxDrawContextEnumerateOutputs,
     _AfxDrawContextEnumeratePipelineModules,
     _AfxDrawContextEnumeratePipelines,
-    _AfxDrawContextEnumerateEngines,
+    _AfxDrawContextEnumerateQueues,
     _AfxDrawContextEnumerateSamplers,
     _AfxDrawContextEnumerateScripts,
     _AfxDrawContextEnumerateSurfaces,
@@ -378,7 +378,7 @@ afxDctxImpl const _AfxStdDctxImpl =
         _AfxDrawContextFetchPipeline,
         _AfxDrawContextFindPipeline,
         _AfxDrawContextUploadPipeline,
-        _AfxDrawContextAcquireEngine,
+        _AfxDrawContextAcquireQueue,
         _AfxDrawContextAcquireInput,
         _AfxDrawContextAcquireOutput
     },
@@ -408,14 +408,14 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
     as.cap = 0;
     as.duration = AFX_ALL_DUR_TRANSIENT;
     as.resizable = TRUE;
-    as.stock = sys->memPageSize * sys->memPageSize;
+    as.stock = sys->memPageSize * 8192; // 32MB
 
     if (!(dctx->genrlAll = AfxSystemAcquireAllocator(sys, &as, AfxSpawnHint()))) AfxThrowError();
     else
     {
         afxNat queueCnt = spec->queueCnt ? spec->queueCnt : 1;
         AfxAssert(queueCnt);
-        afxClassSpecification tmp = _AfxDengClassSpec;
+        afxClassSpecification tmp = _AfxDqueClassSpec;
         tmp.maxCnt = queueCnt;
 
         AfxClassRegister(&dctx->dscrClass, provisions, NIL, &_AfxDscrClassSpec);
@@ -441,7 +441,7 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
         {
             for (afxNat i = 0; i < queueCnt; i++)
             {
-                if (!(dctx->queues[i] = _AfxDrawContextAcquireEngine(dctx, i, !!spec->autonomousQueue))) AfxThrowError();
+                if (!(dctx->queues[i] = _AfxDrawContextAcquireQueue(dctx, i, !!spec->autonomousQueue))) AfxThrowError();
                 else
                 {
                     ++dctx->queueCnt;

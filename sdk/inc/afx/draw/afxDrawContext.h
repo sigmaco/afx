@@ -22,7 +22,7 @@
 #include "afxDrawInput.h"
 #include "afxDrawOutput.h"
 #include "pipelining/afxPipeline.h"
-#include "afxDrawEngine.h"
+#include "afxDrawQueue.h"
 #include "afx/core/base/afxIterator.h"
 
 AFX_DEFINE_STRUCT(afxDrawContextSpecification)
@@ -56,7 +56,7 @@ AFX_OBJECT(afxDrawContext)
 
 #endif
 
-AFX afxDrawEngine       AfxDrawContextAcquireEngine(afxDrawContext dctx, afxNat idx, afxBool autonomous);
+AFX afxDrawQueue       AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, afxBool autonomous);
 AFX afxDrawInput        AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 AFX afxDrawOutput       AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const extent, afxDrawOutputSpecification const *spec);
 
@@ -81,7 +81,7 @@ AFX afxClass*           AfxDrawContextGetSurfaceClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetTextureClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetVertexBufferClass(afxDrawContext dctx);
 
-AFX afxResult           AfxDrawContextEnumerateEngines(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawEngine deng[]);
+AFX afxResult           AfxDrawContextEnumerateQueues(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawQueue dque[]);
 AFX afxResult           AfxDrawContextEnumerateInputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawInput din[]);
 AFX afxResult           AfxDrawContextEnumerateScripts(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawScript dscr[]);
 AFX afxResult           AfxDrawContextEnumerateTextures(afxDrawContext dctx, afxNat base, afxNat cnt, afxTexture tex[]);

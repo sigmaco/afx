@@ -19,23 +19,23 @@
 
 #include "afxDrawScript.h"
 
-// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawEngine na retaguarda.
+// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
 
-AFX_DEFINE_HANDLE(afxDrawEngine);
+AFX_DEFINE_HANDLE(afxDrawQueue);
 
 #ifndef AFX_DRAW_DRIVER_SRC
 
-AFX_OBJECT(afxDrawEngine)
+AFX_OBJECT(afxDrawQueue)
 {
-    afxObject           obj; // AFX_FCC_DENG
+    afxObject           obj; // AFX_FCC_DQUE
 };
 
 #endif
 
-AFX void* AfxDrawEngineGetContext(afxDrawEngine deng);
-AFX void* AfxDrawEngineGetDriver(afxDrawEngine deng);
-AFX void* AfxDrawEngineGetDrawSystem(afxDrawEngine deng);
+AFX void* AfxDrawQueueGetContext(afxDrawQueue dque);
+AFX void* AfxDrawQueueGetDriver(afxDrawQueue dque);
+AFX void* AfxDrawQueueGetDrawSystem(afxDrawQueue dque);
 
-AFX afxError    AfxDrawEngineWaitForIdle(afxDrawEngine deng);
+AFX afxError    AfxDrawQueueWaitForIdle(afxDrawQueue dque);
 
 #endif//AFX_DRAW_QUEUE_H

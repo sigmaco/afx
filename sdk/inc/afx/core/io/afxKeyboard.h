@@ -146,7 +146,8 @@ AFX afxBool     AfxKeyboardWereReleased(afxKeyboard kbd, afxNat cnt, afxKey code
 AFX_OBJECT(afxKeyboard)
 {
     AFX_OBJECT(afxHid)  hid;
-
+    afxNat              fnKeyCnt;
+    afxNat              keyCnt;
     afxBool             currState[AFX_KEY_TOTAL];
     afxBool             prevState[AFX_KEY_TOTAL];
 };

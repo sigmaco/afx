@@ -375,9 +375,6 @@
     <ClInclude Include="..\inc\afx\draw\afxDrawDriver.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\inc\afx\draw\afxDrawEngine.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\inc\afx\draw\afxDrawInput.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -419,6 +416,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\afx\core\mem\afxAllocator.h">
       <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\afx\draw\afxDrawQueue.h">
+      <Filter>e2coree\draw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -532,9 +532,6 @@
       <Filter>e2coree\math\volume</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2coree\draw\afxDrawDriver.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\e2coree\draw\afxDrawEngine.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2coree\draw\afxDrawInput.c">
@@ -743,6 +740,9 @@
     </ClCompile>
     <ClCompile Include="..\src\e2coree\core\mem\afxAllocator.c">
       <Filter>e2coree\core\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2coree\draw\afxDrawQueue.c">
+      <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

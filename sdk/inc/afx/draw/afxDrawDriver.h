@@ -20,7 +20,7 @@
 #include "afxDrawInput.h"
 #include "afxDrawOutput.h"
 #include "pipelining/afxPipeline.h"
-#include "afxDrawEngine.h"
+#include "afxDrawQueue.h"
 
 AFX_DEFINE_STRUCT(afxDrawDriverFeatures)
 {

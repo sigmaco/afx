@@ -57,7 +57,7 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxNat qid, afxBinkVideo *bnk
             AfxDrawOutputRequestBuffer(dout[0], 0, &outBufIdx);
 
             //AfxBinkDoFrame(bnk, TRUE, TRUE);
-            AfxBinkBlitFrame(bnk, dscr, NIL, AfxDrawOutputGetBuffer(dout[0], outBufIdx));
+            AfxBinkBlitFrame(bnk, dscr, canv[0][outBufIdx], NIL);
             //AfxBinkBlitFrame(bnk, dscr, NIL);
             //glCopyImage2D
 
@@ -122,18 +122,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     dout[0] = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
     AfxAssert(dout[0]);
 
-    afxSurfaceSpecification surfSpec[] =
-    {
-        { NIL, doutSpec.pixelFmt, doutSpec.bufUsage },
-        { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH },
-    };
+    afxSurfaceSpecification const depthSurfSpec = { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH };
 
     for (afxNat i = 0; i < doutSpec.bufCnt; i++)
-    {
-        surfSpec[0].surf = AfxDrawOutputGetBuffer(dout[0], i);
-        AfxDrawOutputGetExtent(dout[0], extent);
-        canv[0][i] = AfxDrawContextAcquireCanvas(dctx, extent, 1, surfSpec);
-    }
+        canv[0][i] = AfxDrawOutputBuildCanvas(dout[0], i, 1, &depthSurfSpec);
 #endif
 #ifdef ENABLE_DOUT2
     doutSpec.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
