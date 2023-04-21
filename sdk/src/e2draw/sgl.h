@@ -69,7 +69,7 @@ AFX_OBJECT(afxDrawContext)
 
     afxAllocator    genrlAll;
     afxNat              queueCnt;
-    afxDrawEngine        *queues;
+    afxDrawQueue        *queues;
 
     afxBool             open;
 
@@ -84,9 +84,9 @@ AFX_DEFINE_STRUCT(_sglDeleteGlRes)
     GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 pipm
 };
 
-AFX_OBJECT(afxDrawEngine)
+AFX_OBJECT(afxDrawQueue)
 {
-    afxObject           obj; // AFX_FCC_DENG
+    afxObject           obj; // AFX_FCC_DQUE
     afxNat              queueIdx;
     afxThread           thread;
 
@@ -118,9 +118,9 @@ AFX_OBJECT(afxDrawEngine)
 
             afxNat                      layerCnt; // dyn
             afxNat                      rasterCnt;
-            afxRenderTarget             rasters[_SGL_MAX_SURF_PER_CANV];
-            afxRenderTarget             depthRt;
-            afxRenderTarget             stencilRt;
+            afxDrawTarget               rasters[_SGL_MAX_SURF_PER_CANV];
+            afxDrawTarget               depthRt;
+            afxDrawTarget               stencilRt;
         }                               renderPass;
 
         afxPipeline                     pip;
@@ -202,7 +202,7 @@ AFX_OBJECT(afxDrawEngine)
     // submission stuff
     afxBool         submissionSuspended;
     GLuint          tmpFbo[_SGL_MAX_SWAPCHAIN_CAP];
-    afxNat          activeFboIdx;
+    afxNat          activeTmpFboIdx;
     GLuint          vao[_SGL_MAX_VAO_PER_TIME];
     afxNat          activeVaoIdx;
 
@@ -418,7 +418,7 @@ AFX_OBJECT(afxSampler)
     afxReal             anisotropyMaxDegree; // 1
     afxBool             compareEnabled;
     afxCompareOp        compareOp; // LEQUAL
-    afxReal             mipLodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
+    afxReal             lodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
     afxReal             minLod; // -1000. Sets the minimum level-of-detail parameter. This floating-point value limits the selection of highest resolution mipmap (lowest mipmap level).
     afxReal             maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
     afxColor            borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
@@ -641,9 +641,9 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBeginRendering)
     afxRect                 area;
     afxNat                  layerCnt;
     afxNat                  rasterCnt;
-    afxRenderTarget         rasters[_SGL_MAX_SURF_PER_CANV];
-    afxRenderTarget         depth;
-    afxRenderTarget         stencil;
+    afxDrawTarget         rasters[_SGL_MAX_SURF_PER_CANV];
+    afxDrawTarget         depth;
+    afxDrawTarget         stencil;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdEndRendering)
@@ -725,7 +725,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 // vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
 
 SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle);
-SGL afxResult _SglGlCtxW32Create(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc);
+SGL afxResult _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc);
 
 SGL void _SglEnqueueGlResourceDeletion(afxDrawContext dctx, afxNat queueIdx, afxNat type, GLuint gpuHandle);
 
@@ -741,14 +741,14 @@ SGL afxSize _AfxBufferGetSize(afxBuffer buf);
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
-SGL afxError _SglSmpBindAndSync(afxSampler smp, afxNat unit, afxDrawEngine deng);
-SGL afxError _SglPipmSync(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng);
-SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng); // must be used before texUpdate
-SGL afxError _SglTexBindAndSync(afxTexture tex, afxNat unit, afxDrawEngine deng);
-SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng);
-SGL afxError _SglLegoBindAndSync(afxLego lego, afxNat unit, afxDrawEngine deng);
-SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine deng);
-SGL afxError _SglBufBindAndSync(afxBuffer buf, afxNat unit, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, afxDrawEngine deng);
+SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp);
+SGL afxError _SglDqueSyncPipm(afxDrawQueue dque, afxPipelineModule pipm, afxShaderStage stage);
+SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf); // must be used before texUpdate
+SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex);
+SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip);
+SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxLego lego);
+SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum target);
+SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage);
 
 SGL afxBool _AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags);
 SGL afxNat _AfxTextureGetLodCount(afxTexture tex);
@@ -773,18 +773,18 @@ SGL afxDctxImpl const _AfxStdDctxImpl;
 SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification const *spec);
 SGL afxError _AfxDctxDtor(afxDrawContext dctx);
 
-SGL afxError _AfxDrawOutputProcess(afxDrawOutput dout);
-SGL void _AfxStdDqueProcess(afxDrawEngine deng);
-SGL afxResult _AfxDengImplDrawWorkStreaming(afxDrawEngine deng, afxDrawWork const *dwrk);
-SGL afxResult _AfxDengImplDrawWorkSubmission(afxDrawEngine deng, afxDrawWork const *dwrk);
-SGL afxResult _AfxDengImplDrawWorkPresentation(afxDrawEngine deng, afxDrawWork const *dwrk);
+SGL afxError _SglDoutProcess(afxDrawOutput dout);
+SGL void _SglDqueProcess(afxDrawQueue dque);
+SGL afxResult _AfxDqueImplDrawWorkStreaming(afxDrawQueue dque, afxDrawWork const *dwrk);
+SGL afxResult _AfxDqueImplDrawWorkSubmission(afxDrawQueue dque, afxDrawWork const *dwrk);
+SGL afxResult _AfxDqueImplDrawWorkPresentation(afxDrawQueue dque, afxDrawWork const *dwrk);
 SGL afxError _AfxDrawInputProcess(afxDrawInput din, afxNat queueIdx);
-SGL afxError _SglSwapBuffersNow(afxDrawOutput dout);
+SGL afxError _SglSwapBuffers(HDC hdc);
 SGL int _SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);
 SGL BOOL _SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd);
 SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
 
-SGL afxDrawEngine _AfxDrawContextAcquireEngine(afxDrawContext dctx, afxNat idx, afxBool autonomous);
+SGL afxDrawQueue _AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, afxBool autonomous);
 SGL afxDrawOutput _AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const extent, afxDrawOutputSpecification const *spec);
 SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 SGL afxCanvas _AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *specs);

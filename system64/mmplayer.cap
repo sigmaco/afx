@@ -5,7 +5,7 @@
         "commandLine": "",
         "environment": [
         ],
-        "executable": "E:\\qwadro\\afx\\cooked\\_system64\\mmplayer.exe",
+        "executable": "E:\\qwadro\\afx\\system64\\mmplayer.exe",
         "inject": false,
         "numQueuedFrames": 0,
         "options": {

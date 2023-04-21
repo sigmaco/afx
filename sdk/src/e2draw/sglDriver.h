@@ -35,17 +35,17 @@
 
 SGL HMODULE opengl32;
 #if !0
-SGL HGLRC(WINAPI* wsglCreateContext)(HDC);
-SGL BOOL(WINAPI* wsglDeleteContext)(HGLRC);
-SGL HGLRC(WINAPI* wsglGetCurrentContext)(VOID);
-SGL HDC(WINAPI* wsglGetCurrentDC)(VOID);
-SGL PROC(WINAPI* wsglGetProcAddress)(LPCSTR);
-SGL BOOL(WINAPI* wsglMakeCurrent)(HDC, HGLRC);
-SGL int(WINAPI* wsglChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);
-SGL int(WINAPI* wsglDescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
-SGL BOOL(WINAPI* wsglSetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd);
-SGL int(WINAPI* wsglGetPixelFormat)(HDC hdc);
-SGL BOOL(WINAPI* wsglSwapBuffers)(HDC);
+SGL HGLRC(WINAPI* _wglCreateContext)(HDC);
+SGL BOOL(WINAPI* _wglDeleteContext)(HGLRC);
+SGL HGLRC(WINAPI* _wglGetCurrentContext)(VOID);
+SGL HDC(WINAPI* _wglGetCurrentDC)(VOID);
+SGL PROC(WINAPI* _wglGetProcAddress)(LPCSTR);
+SGL BOOL(WINAPI* _wglMakeCurrent)(HDC, HGLRC);
+SGL int(WINAPI* _wglChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);
+SGL int(WINAPI* _wglDescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
+SGL BOOL(WINAPI* _wglSetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd);
+SGL int(WINAPI* _wglGetPixelFormat)(HDC hdc);
+SGL BOOL(WINAPI* _wglSwapBuffers)(HDC);
 
 #endif
 SGL afxBool _AfxLoadOpengl(void);

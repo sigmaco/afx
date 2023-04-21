@@ -89,7 +89,7 @@ AFX_DEFINE_STRUCT(afxClearRect)
     afxNat32            layerCnt;
 };
 
-AFX_DEFINE_STRUCT(afxRenderTarget)
+AFX_DEFINE_STRUCT(afxDrawTarget)
 {
     afxSurface              surf;
     afxSurfaceLoadOp        loadOp;
@@ -142,7 +142,7 @@ AFX void        AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat first, afx
 AFX void        AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
 AFX void        AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
 AFX void        AfxDrawScriptCmdEndRenderPass(afxDrawScript dscr);
-AFX void        AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxRenderTarget const rasters[], afxRenderTarget const *depth, afxRenderTarget const *stencil);
+AFX void        AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
 AFX void        AfxDrawScriptCmdEndRendering(afxDrawScript dscr);
 AFX void        AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
 AFX void        AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);

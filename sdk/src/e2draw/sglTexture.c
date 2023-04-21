@@ -134,7 +134,9 @@ _SGL GLenum SglToGlImageDimensions(afxNat d)
         GL_TEXTURE_1D,
         GL_TEXTURE_2D,
         GL_TEXTURE_3D,
-        GL_TEXTURE_CUBE_MAP
+        GL_TEXTURE_CUBE_MAP,
+
+        GL_INVALID_ENUM
     };
 
     return v[d];
@@ -146,6 +148,7 @@ _SGL GLenum SglToGlTexelFilterMode(afxTexelFilter tfm)
     {
         GL_NEAREST,
         GL_LINEAR,
+
         GL_INVALID_ENUM
     };
 
@@ -157,13 +160,17 @@ _SGL GLenum SglToGlTexelFilterModeMipmapped(afxTexelFilter min, afxTexelFilter m
     static GLenum const nearest[] =
     {
         GL_NEAREST_MIPMAP_NEAREST, // - no filtering, sharp switching between mipmaps
-        GL_NEAREST_MIPMAP_LINEAR // - no filtering, smooth transition between mipmaps
+        GL_NEAREST_MIPMAP_LINEAR, // - no filtering, smooth transition between mipmaps
+
+        GL_INVALID_ENUM
     };
 
     static GLenum const linear[] =
     {
         GL_LINEAR_MIPMAP_NEAREST, //- filtering, sharp switching between mipmaps
-        GL_LINEAR_MIPMAP_LINEAR
+        GL_LINEAR_MIPMAP_LINEAR,
+
+        GL_INVALID_ENUM
     };
 
     return min == AFX_TEXEL_FLT_LINEAR ? linear[mip] : nearest[mip];
@@ -178,6 +185,8 @@ _SGL GLenum SglToGlTexWrapMode(afxTexelAddress twm)
         GL_CLAMP_TO_EDGE,
         GL_CLAMP_TO_BORDER,
         GL_MIRROR_CLAMP_TO_EDGE,
+
+        GL_INVALID_ENUM
     };
 
     return v[twm];
@@ -192,7 +201,9 @@ _SGL GLenum SglToGlColorSwizzle(afxColorSwizzle swizzle)
         GL_BLUE,
         GL_ALPHA,
         GL_ZERO,
-        GL_ONE
+        GL_ONE,
+
+        GL_INVALID_ENUM
     };
     return v[swizzle];
 }
@@ -284,14 +295,14 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
         gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_LINEAR)); _SglThrowErrorOccuried();
         gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_LINEAR)); _SglThrowErrorOccuried();
 
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(AFX_TEXEL_ADDR_EDGE)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(AFX_TEXEL_ADDR_EDGE)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(AFX_TEXEL_ADDR_EDGE)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
     }
     else
     {
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_NEAREST)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_NEAREST)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_POINT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_POINT)); _SglThrowErrorOccuried();
 
         gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(AFX_TEXEL_ADDR_REPEAT)); _SglThrowErrorOccuried();
         gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(AFX_TEXEL_ADDR_REPEAT)); _SglThrowErrorOccuried();
@@ -556,11 +567,11 @@ _SGL afxError _SglTexDtor(afxTexture tex)
     return err;
 }
 
-_SGL afxError _SglTexBindAndSync(afxTexture tex, afxNat unit, afxDrawEngine deng)
+_SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex)
 {
     //AfxEntry("img=%p", img);
     afxError err = NIL;
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if (tex)
     {
@@ -589,6 +600,7 @@ _SGL afxError _SglTexBindAndSync(afxTexture tex, afxNat unit, afxDrawEngine deng
             else if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
                 AfxAssert(tex->glHandle);
+                gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
                 gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
 
                 _SglTexFlushDevice(tex, gl); // already clear flags

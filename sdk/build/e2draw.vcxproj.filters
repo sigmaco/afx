@@ -23,9 +23,6 @@
     <ClCompile Include="..\src\e2draw\sglDrawContext.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\e2draw\sglDrawEngine.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\e2draw\sglDrawInput.c">
       <Filter>e2draw</Filter>
     </ClCompile>
@@ -63,6 +60,9 @@
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2draw\sglVertexBuffer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2draw\sglDrawQueue.c">
       <Filter>e2draw</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,11 +9,11 @@ AFX_DEFINE_STRUCT(_afxSurfCtorArgs)
     afxTextureParadigm tex;
 };
 
-_SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng)
+_SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
 {
     afxError err = NIL;
 
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if (surf)
     {
@@ -33,10 +33,14 @@ _SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng)
                 AfxAssert(gl->IsRenderBuffer(surf->glHandle));
                 AfxAssert(1 < surf->tex.whd[0]);
                 AfxAssert(1 < surf->tex.whd[1]);
+
+                if (!surf->tex.glIntFmt)
+                    SglDetermineGlTargetInternalFormatType(&surf->tex, &surf->tex.glTarget, &surf->tex.glIntFmt, &surf->tex.glFmt, &surf->tex.glType);
+
                 gl->RenderbufferStorage(GL_RENDERBUFFER, surf->tex.glIntFmt, surf->tex.whd[0], surf->tex.whd[1]); _SglThrowErrorOccuried();
                 gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
 
-                surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
             }
             else if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -48,7 +52,7 @@ _SGL afxError _SglSurfSync(afxSurface surf, afxDrawEngine deng)
         else
         {
             AfxAssert(surf->glHandle);
-            //gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+            gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
         }
     }
     else
@@ -106,7 +110,7 @@ _SGL afxError _AfxSurfDtor(afxSurface surf)
 
             afxDrawOutput dout = AfxLinkageGetOwner(&surf->swapchain);
             AfxAssertObject(dout, AFX_FCC_DOUT);
-            //_AfxDrawOutputProcess(dout); // process until draw output ends its works and unlock this canvas.
+            //_SglDoutProcess(dout); // process until draw output ends its works and unlock this canvas.
             AfxYield();
         }
     }

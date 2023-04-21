@@ -57,8 +57,9 @@ AFX afxBool     AfxMouseWasXmb2Released(afxMouse mse);
 
 AFX_OBJECT(afxMouse)
 {
-    AFX_OBJECT(afxHid)   hid;
-
+    AFX_OBJECT(afxHid)  hid;
+    afxNat              buttonCnt;
+    afxNat              sampleRate;
     afxBool             currState[AFX_MB_TOTAL];
     afxBool             prevState[AFX_MB_TOTAL];
     afxReal             lastWheelDelta, prevWheelDelta;

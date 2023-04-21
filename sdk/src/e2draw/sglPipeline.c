@@ -142,17 +142,17 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 }
 #endif
 
-_SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
+_SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = NIL;
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if (pip)
     {
         AfxAssertObject(pip, AFX_FCC_PIP);
 
-        GLuint glHandle = pip->glHandle[deng->queueIdx];
+        GLuint glHandle = pip->glHandle[dque->queueIdx];
 
         if ((pip->updFlags & SGL_UPD_FLAG_DEVICE))
         {
@@ -182,7 +182,7 @@ _SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
 
                         if (pipm)
                         {
-                            _SglPipmSync(pipm, pip->stages[i].type, deng);
+                            _SglDqueSyncPipm(dque, pipm, pip->stages[i].type);
                             AfxAssert(gl->IsShader(pipm->glHandle));
                             gl->AttachShader(glHandle, pipm->glHandle); _SglThrowErrorOccuried();
                         }
@@ -211,7 +211,7 @@ _SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
                         pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
                     }
                 }
-                pip->glHandle[deng->queueIdx] = glHandle;
+                pip->glHandle[dque->queueIdx] = glHandle;
             }
             else if ((pip->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -227,7 +227,7 @@ _SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
 
         if (!err)
         {
-            afxPipelineRig pipr = AfxPipelineGetRig(deng->state.pip);
+            afxPipelineRig pipr = AfxPipelineGetRig(dque->state.pip);
             AfxAssertObject(pipr, AFX_FCC_PIPR);
             afxNat setCnt = pipr->socketCnt;
 
@@ -269,10 +269,10 @@ _SGL afxError _SglPipSyncAndBind(afxPipeline pip, afxDrawEngine deng)
                     {
                         // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
 
-                        //loc = gl->GetUniformBlockIndex(deng->state.pip->gpuHandle[deng->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
-                        //gl->UniformBlockBinding(deng->state.pip->gpuHandle[deng->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
+                        //loc = gl->GetUniformBlockIndex(dque->state.pip->gpuHandle[dque->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
+                        //gl->UniformBlockBinding(dque->state.pip->gpuHandle[dque->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
 
-                        gl->UniformBlockBinding(glHandle, gl->GetUniformBlockIndex(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)), binding);
+                        gl->UniformBlockBinding(glHandle, gl->GetUniformBlockIndex(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)), binding); _SglThrowErrorOccuried();
 
                         break;
                     }

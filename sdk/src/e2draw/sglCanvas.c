@@ -15,34 +15,34 @@ typedef struct
 // FRAME BUFFER                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglCanvDtor(afxCanvas canv, afxDrawEngine deng)
+_SGL afxError _SglCanvDtor(afxCanvas canv, afxDrawQueue dque)
 {
     afxError err = NIL;
     AfxEntry("canv=%p", canv);
     AfxAssertObject(canv, AFX_FCC_CANV);
     afxDrawContext dctx = AfxObjectGetProvider(&canv->obj);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    sglVmt const* gl = &(deng->wglVmt);
+    sglVmt const* gl = &(dque->wglVmt);
 
-    if (canv->glHandle[deng->queueIdx])
+    if (canv->glHandle[dque->queueIdx])
     {
-        gl->DeleteFramebuffers(1, &(canv->glHandle[deng->queueIdx])); _SglThrowErrorOccuried();
-        canv->glHandle[deng->queueIdx] = NIL;
+        gl->DeleteFramebuffers(1, &(canv->glHandle[dque->queueIdx])); _SglThrowErrorOccuried();
+        canv->glHandle[dque->queueIdx] = NIL;
     }
     return err;
 }
 
-_SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine deng)
+_SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum target)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = NIL;
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if (canv)
     {
         AfxAssertObject(canv, AFX_FCC_CANV);
 
-        GLuint glHandle = canv->glHandle[deng->queueIdx];
+        GLuint glHandle = canv->glHandle[dque->queueIdx];
 
         if ((canv->updFlags & SGL_UPD_FLAG_DEVICE))
         {
@@ -80,28 +80,25 @@ _SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine d
                     else if (isDepth) glAttachment = GL_DEPTH_STENCIL_ATTACHMENT;
                     else glAttachment = 0;
 
-                    _SglTexBindAndSync(&surf->tex, 0, deng);
-                    _SglTexBindAndSync(0, 0, deng);
+                    _SglDqueBindAndSyncTex(dque, 0, &surf->tex);
+                    _SglDqueBindAndSyncTex(dque, 0, 0);
                     AfxAssert(gl->IsTexture(surf->tex.glHandle));
 
-                    _SglSurfSync(surf, deng);
+                    _SglDqueSurfSync(dque, surf);
                     AfxAssert(gl->IsRenderBuffer(surf->glHandle));
 
                     afxBool const isCubemap = AfxTextureTestUsageFlags(&surf->tex, AFX_TEX_CUBEMAP);
                     afxBool const isLayered = surf->tex.layerCnt > 1;
-                    //gl->BindTexture(surf->tex.glTarget, surf->tex.gpuTexHandle); _SglThrowErrorOccuried();
-
-                    if (surf->glHandle)
-                    {
-                        
-                        //gl->BindRenderbuffer(GL_RENDERBUFFER, surf->gpuRboHandle); _SglThrowErrorOccuried();
-                    }
-
                     afxWhd const extent = { surf->tex.whd[0], surf->tex.whd[1], surf->tex.whd[2] };
                     AfxAssert(1 < extent[0]);
 
+
+                    AfxAssert(surf->glHandle);
+                    gl->FramebufferRenderbuffer(target, glAttachment, GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+                    
                     switch (surf->tex.glTarget)
                     {
+#if 0
                     case GL_TEXTURE_CUBE_MAP:
                     {
                         AfxAssert(isCubemap);
@@ -136,24 +133,18 @@ _SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine d
                         gl->FramebufferTexture1D(target, glAttachment, surf->tex.glTarget, surf->tex.glHandle, 0); _SglThrowErrorOccuried();
                         break;
                     }
+#endif
                     default:
-                        AfxThrowError();
+                        gl->FramebufferTexture(target, glAttachment, surf->tex.glHandle, 0); _SglThrowErrorOccuried();
                         break;
                     };
-
-                    if (surf->glHandle)
-                    {
-                        gl->FramebufferRenderbuffer(target, glAttachment, GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
-                    }
-                    //gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
-                    //gl->BindTexture(surf->tex.glTarget, 0); _SglThrowErrorOccuried();
                 }
 
                 switch (gl->CheckFramebufferStatus(target))
                 {
                 case GL_FRAMEBUFFER_COMPLETE:
                     AfxEcho("canv %p, reinstanced.", canv);
-                    canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                    canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
                     AfxError("Not all framebuffer attachment points are framebuffer attachment complete.");
@@ -188,7 +179,7 @@ _SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine d
                     break;
                 }
 
-                canv->glHandle[deng->queueIdx] = glHandle;
+                canv->glHandle[dque->queueIdx] = glHandle;
             }
             else if ((canv->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -204,7 +195,10 @@ _SGL afxError _SglCanvBindAndSync(afxCanvas canv, GLenum target, afxDrawEngine d
     }
     else
     {
-        gl->BindFramebuffer(target, 0); _SglThrowErrorOccuried();
+        if (dque->state.renderPass.canv)
+        {
+            gl->BindFramebuffer(target, 0); _SglThrowErrorOccuried();
+        }
     }
     return err;
 }

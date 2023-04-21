@@ -17,13 +17,13 @@ typedef struct
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglPipmSync(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng)
+_SGL afxError _SglDqueSyncPipm(afxDrawQueue dque, afxPipelineModule pipm, afxShaderStage stage)
 {
     //AfxEntry("pipm=%p", pipm);
     afxError err = NIL;
     AfxAssertObject(pipm, AFX_FCC_PIPM);
 
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if ((pipm->updFlags & SGL_UPD_FLAG_DEVICE))
     {

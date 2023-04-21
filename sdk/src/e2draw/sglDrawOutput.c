@@ -21,58 +21,6 @@ typedef struct
     afxDrawOutputSpecification const *spec;
 } _afxDoutCtorArgs;
 
-
-_SGL afxError _SglSwapBuffersNow(afxDrawOutput dout)
-{
-    afxError err = NIL;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    afxFcc fcc = *(afxFcc *)AfxObjectGetVmt(&dout->obj);
-
-    if (fcc == AFX_FCC_WND || fcc == AFX_FCC_WPP)
-    {
-
-        if (!(wsglSwapBuffers(dout->wglDc)))
-            if (!(SwapBuffers(dout->wglDc)))
-                AfxThrowError();
-
-        //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks all threads on exit
-        //UpdateWindow(dout->wglWnd);
-        //AfxYield();
-
-    }
-    return err;
-}
-
-_SGL int _SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd)
-{
-    int fmt = wsglChoosePixelFormat(hdc, ppfd);
-
-    if (!fmt)
-        fmt = ChoosePixelFormat(hdc, ppfd);
-
-    return fmt;
-}
-
-_SGL BOOL _SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd)
-{
-    BOOL rslt = wsglSetPixelFormat(hdc, format, ppfd);
-    
-    if (!rslt)
-        rslt = SetPixelFormat(hdc, format, ppfd);
-
-    return rslt;
-}
-
-_SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd)
-{
-    int rslt = wsglDescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd);
-
-    if (!rslt)
-        rslt = DescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd);
-
-    return rslt;
-}
-
 //############################################################################
 //##                                                                        ##
 //## Calc_window_values - calculates the extra width and height to add to   ##
@@ -103,12 +51,12 @@ _SGL void Calc_window_values(HWND window, afxInt* out_extra_width, afxInt32* out
 }
 
 
-_SGL afxError _AfxDrawOutputProcess(afxDrawOutput dout)
+_SGL afxError _SglDoutProcess(afxDrawOutput dout)
 {
     afxError err = NIL;
     AfxAssertObject(dout, AFX_FCC_DOUT);
     //_SglSwapBuffersNow(dout); // do black screen
-    //SetWindowTextA(dout->wglWnd, dout->title.buf);
+    SetWindowTextA(dout->wglWnd, dout->title.buf);
     //UpdateWindow(dout->wglWnd);
     return err;
 }
@@ -178,16 +126,16 @@ _SGL afxResult _AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, 
     AfxAssert(cnt);
     AfxAssert(dout->bufCnt >= first + cnt);
     AfxAssert(surf);
-    afxResult cnt = 0;
+    afxResult hitcnt = 0;
 
-    for (afxNat i = 0; i < dout->bufCnt; i++)
+    for (afxNat i = 0; i < cnt; i++)
     {
         afxSurface surf2 = dout->buffers[first + i];
         AfxAssertObject(surf2, AFX_FCC_SURF);
         surf[i] = surf2;
-        ++cnt;
+        ++hitcnt;
     }
-    return cnt;
+    return hitcnt;
 }
 
 _SGL afxReal* _AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
@@ -371,8 +319,8 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
     afxDrawDriver ddrv = AfxDrawOutputGetDriver(dout);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     _sglDriverIdd *ddrvIdd = ddrv->idd;
-    AfxAssert(ddrvIdd->wglPrimeGlrc == wsglGetCurrentContext());
-    //AfxAssert(ddrvIdd->wglPrimeDc == wsglGetCurrentDC());
+    AfxAssert(ddrvIdd->wglPrimeGlrc == _wglGetCurrentContext());
+    //AfxAssert(ddrvIdd->wglPrimeDc == _wglGetCurrentDC());
 
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObject(dsys, AFX_FCC_DSYS);
@@ -380,7 +328,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
     AfxString1024(&(dout->title), NIL);
     AfxStringUpdate(&(dout->title.str), 0, 0, ddrvIdd->oglWndClss.lpszClassName);
 
-    dout->wglWnd = CreateWindowA(ddrvIdd->oglWndClss.lpszClassName, ddrvIdd->oglWndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW, 0, 0, dout->whd[0], dout->whd[1], NIL, NIL, ddrvIdd->oglWndClss.hInstance, NIL);
+    dout->wglWnd = CreateWindowA(ddrvIdd->oglWndClss.lpszClassName, ddrvIdd->oglWndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, dout->whd[0], dout->whd[1], NIL, NIL, ddrvIdd->oglWndClss.hInstance, NIL);
 
     if (!(dout->wglWnd)) AfxThrowError();
     else
@@ -393,7 +341,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
         if (!(dout->wglDc)) AfxThrowError();
         else
         {
-            PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)glcGetProcAddress(NIL, "wglChoosePixelFormatARB");
+            PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)_wglGetProcAddress("wglChoosePixelFormatARB");
             
             if (!wglChoosePixelFormatARB) AfxThrowError();
             else
@@ -402,7 +350,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 afxNat colorBpp = (bpp == 32 ? 24 : bpp);
                 afxNat alphaBpp = (bpp == 32 ? 8 : 0);
                 
-                int pxlAttrPairs[16][2];
+                int pxlAttrPairs[16][2] = { 0 };
 
                 pxlAttrPairs[0][0] = WGL_DRAW_TO_WINDOW_ARB;
                 pxlAttrPairs[0][1] = GL_TRUE;
@@ -420,22 +368,22 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 pxlAttrPairs[4][1] = WGL_TYPE_RGBA_ARB; // WGL_TYPE_RGBA_FLOAT_ARB
 
                 pxlAttrPairs[5][0] = WGL_COLOR_BITS_ARB;
-                pxlAttrPairs[5][1] = colorBpp;
+                pxlAttrPairs[5][1] = bpp;
 
                 pxlAttrPairs[6][0] = WGL_ALPHA_BITS_ARB;
                 pxlAttrPairs[6][1] = alphaBpp;
 
-                pxlAttrPairs[7][0] = WGL_DEPTH_BITS_ARB;
-                pxlAttrPairs[7][1] = 24;
+                //pxlAttrPairs[7][0] = WGL_DEPTH_BITS_ARB;
+                //pxlAttrPairs[7][1] = 24;
 
-                pxlAttrPairs[8][0] = WGL_STENCIL_BITS_ARB;
-                pxlAttrPairs[8][1] = 8;
+                //pxlAttrPairs[8][0] = WGL_STENCIL_BITS_ARB;
+                //pxlAttrPairs[8][1] = 8;
 
-                pxlAttrPairs[9][0] = WGL_TRANSPARENT_ARB;
-                pxlAttrPairs[9][1] = (dout->presentAlpha != AFX_PRESENT_ALPHA_OPAQUE);
+                pxlAttrPairs[7][0] = WGL_TRANSPARENT_ARB;
+                pxlAttrPairs[7][1] = (dout->presentAlpha != AFX_PRESENT_ALPHA_OPAQUE);
 
-                pxlAttrPairs[10][0] = WGL_SWAP_METHOD_ARB;
-                pxlAttrPairs[10][1] = dout->presentMode == AFX_PRESENT_MODE_IMMEDIATE ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB;
+                pxlAttrPairs[8][0] = WGL_SWAP_METHOD_ARB;
+                pxlAttrPairs[8][1] = dout->presentMode == AFX_PRESENT_MODE_IMMEDIATE ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB;
 
                 //pxlAttrPairs[10][0] = WGL_SAMPLE_BUFFERS_ARB; // works on Intel, didn't work on Mesa
                 //pxlAttrPairs[10][1] = GL_TRUE;
@@ -450,8 +398,8 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 //pxlAttrPairs[14][1] = (dout->colorSpc == AFX_COLOR_SPACE_SRGB);
 
 
-                pxlAttrPairs[11][0] = NIL;
-                pxlAttrPairs[11][1] = NIL;
+                pxlAttrPairs[9][0] = NIL;
+                pxlAttrPairs[9][1] = NIL;
 
                 UINT formatCount;
                 dout->wglDcPxlFmt = 0;
@@ -464,6 +412,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
 
                     PIXELFORMATDESCRIPTOR pfd;
                     AFX_ZERO(&pfd);
+                    _SglDescribePixelFormat(dout->wglDc, dout->wglDcPxlFmt, sizeof(pfd), &pfd);
 #if 0
                     pfd.nSize = sizeof(pfd);
                     pfd.nVersion = 1;

@@ -13,12 +13,12 @@ typedef struct
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglSmpBindAndSync(afxSampler smp, afxNat unit, afxDrawEngine deng)
+_SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = NIL;
 
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if (smp)
     {
@@ -62,7 +62,7 @@ _SGL afxError _SglSmpBindAndSync(afxSampler smp, afxNat unit, afxDrawEngine deng
                     //gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_ANISOTROPY, 0); _SglThrowErrorOccuried();
                 }
 
-                gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_LOD_BIAS, smp->mipLodBias); _SglThrowErrorOccuried();
+                gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_LOD_BIAS, smp->lodBias); _SglThrowErrorOccuried();
                 gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MIN_LOD, smp->minLod); _SglThrowErrorOccuried();
                 gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_LOD, smp->maxLod); _SglThrowErrorOccuried();
 
@@ -74,7 +74,7 @@ _SGL afxError _SglSmpBindAndSync(afxSampler smp, afxNat unit, afxDrawEngine deng
                 gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_COMPARE_FUNC, cop); _SglThrowErrorOccuried();
                 gl->SamplerParameterfv(smp->glHandle, GL_TEXTURE_BORDER_COLOR, (void*)smp->borderColor);
 
-                smp->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                smp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
             }
             else if ((smp->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -181,7 +181,10 @@ _SGL afxError _AfxSmpCtor(afxSampler smp, _afxSmpCtorArgs *args)
     smp->compareOp = spec->compareOp;
     AfxColorSet(smp->borderColor, spec->borderColor[0], spec->borderColor[1], spec->borderColor[2], spec->borderColor[3]);
     smp->unnormalizedCoords = spec->unnormalizedCoords;
-    
+    smp->lodBias = spec->lodBias;
+    smp->minLod = spec->minLod;
+    smp->maxLod = spec->maxLod;
+
     smp->glHandle = 0;
     smp->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     return err;
