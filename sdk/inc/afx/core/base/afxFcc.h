@@ -102,7 +102,7 @@ typedef enum afxFcc
     AFX_FCC_EHND    = AfxPackFcc('e', 'h', 'n', 'd'), // afxEventHandler
 
     AFX_FCC_FSYS    = AfxPackFcc('f', 's', 'y', 's'), // afxFileSystem
-    AFX_FCC_FVOL    = AfxPackFcc('f', 'v', 'o', 'l'), // afxStorageVolume
+    AFX_FCC_FSMP    = AfxPackFcc('f', 's', 'm', 'p'), // afxFileSystemMountPoint
     AFX_FCC_FILE    = AfxPackFcc('f', 'i', 'l', 'e'), // afxFile
     
     AFX_FCC_THR     = AfxPackFcc('t', 'h', 'r', '\0'), // afxThread

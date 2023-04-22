@@ -41,6 +41,8 @@
     <ClInclude Include="..\inc\afx\core\diag\afxDebug.h" />
     <ClInclude Include="..\inc\afx\core\io\afxArchive.h" />
     <ClInclude Include="..\inc\afx\core\io\afxDatajack.h" />
+    <ClInclude Include="..\inc\afx\core\io\afxFile.h" />
+    <ClInclude Include="..\inc\afx\core\io\afxFileSystem.h" />
     <ClInclude Include="..\inc\afx\core\io\afxHid.h" />
     <ClInclude Include="..\inc\afx\core\io\afxScript.h" />
     <ClInclude Include="..\inc\afx\core\io\afxKeyboard.h" />
@@ -166,6 +168,8 @@
     <ClCompile Include="..\src\e2coree\core\diag\afxDebug.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxArchive.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxDatajack.c" />
+    <ClCompile Include="..\src\e2coree\core\io\afxFile.c" />
+    <ClCompile Include="..\src\e2coree\core\io\afxFileSystem.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxHid.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxScript.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxKeyboard.c" />

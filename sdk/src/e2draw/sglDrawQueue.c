@@ -1725,7 +1725,7 @@ _SGL void _SglDqueWorkerThreadStart(afxThread thr, afxDrawQueue dque)
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     afxDrawDriver ddrv = AfxDrawContextGetDriver(dctx);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    _sglDriverIdd *ddrvIdd = ddrv->idd;
+    _sglDriverIdd *ddrvIdd = AfxDrawDriverGetIdd(ddrv);
 
     if (_SglCreateCombinedDeviceContext(&ddrvIdd->oglWndClss, ddrvIdd->wglPrimeGlrc, &(dque->wglWnd), &(dque->wglDc), &(dque->wglGlrc))) AfxThrowError();
     else
@@ -1911,7 +1911,7 @@ _SGL afxError _AfxDqueCtor(afxDrawQueue dque, _afxDqueCtorArgs *args)
     {
         dque->thread = NIL;
 
-        _sglDriverIdd *idd = ddrv->idd;
+        _sglDriverIdd *idd = AfxDrawDriverGetIdd(ddrv);
 
         sglVmt* gl = (sglVmt*)&dque->wglVmt;
         *gl = idd->wglPrimeVmt;

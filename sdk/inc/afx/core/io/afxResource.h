@@ -46,16 +46,15 @@ AFX_DEFINE_STRUCT(afxResourceSpecification)
     afxError        (*unload)(afxResource res);
 };
 
-AFX afxError        AfxResourceAssert(afxResource res, afxFcc superset, afxHint const hint, afxChar const *exp);
-AFX afxFcc          AfxResourceGetSuperset(afxResource res);
 AFX void*           AfxResourceGetSystem(afxResource res);
+AFX void*           AfxResourceGetFileSystem(afxResource res);
+
 AFX afxUri const*   AfxResourceGetUri(afxResource res);
 AFX afxUri const*   AfxResourceExcerptName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
 AFX afxError        AfxResourceLoad(afxResource res); // find or load (if not found on dictionaries).
 AFX afxError        AfxResourceRequest(afxResource res);
 AFX afxError        AfxResourceSetMonitor(afxResource res, afxBool enable); // Connect to Datajack, such as devices to draw context
-AFX afxResult       AfxResourceTestSuperset(afxResource res, afxFcc fcc);
 AFX afxError        AfxResourceUnload(afxResource res);
 
 // Deveria emitir sinal AFX_EVENT_RES_CHANGED, para avisar observadores que o recurso necessita de ser reinstanciado.
