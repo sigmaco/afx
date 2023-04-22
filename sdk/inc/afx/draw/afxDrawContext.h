@@ -99,7 +99,7 @@ AFX afxBuffer           AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBuff
 AFX afxCanvas           AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *surfSpecs);
 AFX afxIndexBuffer      AfxDrawContextAcquireIndexBuffer(afxDrawContext dctx, afxIndexBufferSpecification const *spec);
 AFX afxSampler          AfxDrawContextAcquireSampler(afxDrawContext dctx, afxSamplerSpecification const *spec);
-AFX afxVertexBuffer     AfxDrawContextAcquireVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat arrCnt, afxVertexDataSpecification const *specs);
+AFX afxVertexBuffer     AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat arrCnt, afxVertexDataSpecification const *specs);
 
 // Texture
 AFX afxResult           AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[]);

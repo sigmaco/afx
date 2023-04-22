@@ -169,7 +169,7 @@ _SGL afxError _AfxVertexBufferOptimize(afxVertexBuffer vbuf, afxNat rowIdx, afxB
     return err;
 }
 
-_SGL afxVertexBuffer _AfxDrawContextAcquireVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat rowCnt, afxVertexDataSpecification const *specs)
+_SGL afxVertexBuffer _AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat rowCnt, afxVertexDataSpecification const *specs)
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);

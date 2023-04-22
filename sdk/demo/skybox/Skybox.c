@@ -422,7 +422,7 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     skyGeomSpec.src = skyboxVertices;
     skyGeomSpec.usage = AFX_VTX_USAGE_POS;
     skyGeomSpec.semantic = AfxStringMapConst(&skyPosSem, "a_xyz", 0);
-    renderer->skyGeom = AfxDrawContextAcquireVertexBuffer(renderer->dctx, 36, 1, &skyGeomSpec);
+    renderer->skyGeom = AfxDrawContextBuildVertexBuffer(renderer->dctx, 36, 1, &skyGeomSpec);
     AfxAssertObject(renderer->skyGeom, AFX_FCC_VBUF);
     AfxUriMapConstData(&uri, "data/pipeline/skybox.pip.urd", 0);
     renderer->skyPip = AfxDrawContextFetchPipeline(renderer->dctx, &uri);
@@ -455,7 +455,8 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     for (afxNat i = 0; i < 2; i++)
     {
         afxSurfaceSpecification const depthSurfSpec = { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH };
-        renderer->sets[i].canv = AfxDrawOutputBuildCanvas(dout, i, 1, &depthSurfSpec);
+        afxResult rslt = AfxDrawOutputBuildCanvases(dout, i, 1, 1, &depthSurfSpec, &(renderer->sets[i].canv));
+        AfxAssert(rslt == 1);
 
         renderer->sets[i].viewConstants = AfxDrawContextAcquireBuffer(renderer->dctx, &bufSpec[0]);
 
@@ -599,7 +600,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.colorSpc = NIL;
     doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 1280, 720, 1 };

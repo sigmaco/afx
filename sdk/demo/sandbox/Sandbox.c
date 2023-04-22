@@ -562,10 +562,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.colorSpc = NIL;
     doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
-    afxWhd extent = { 720, 480, 1 };
+    afxWhd extent = { 1280, 720, 1 };
 
     dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
     AfxAssert(dout);
@@ -598,8 +598,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxUriMapConstData(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
     //AfxUriMapConstData(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
     //AfxUriMapConstData(&uriMap, "art/f16/f16.obj", 0);
-    AfxUriMapConstData(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/scenario/zero/zero.obj", 0);
+    //AfxUriMapConstData(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
+    AfxUriMapConstData(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxUriMapConstData(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
 
     AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
@@ -608,11 +608,11 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 #endif
     afxString str;
-    AfxStringMapConst(&str, "bibliotheca", 0);
+    //AfxStringMapConst(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
-    //AfxString32DeployRaw(&str, "zero", 0);
+    AfxStringMapConst(&str, "zero", 0);
 #endif
 
     afxModel mdl = AfxSimulationFindModel(sim, &str);

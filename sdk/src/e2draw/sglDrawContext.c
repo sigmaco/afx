@@ -364,7 +364,7 @@ afxDctxImpl const _AfxStdDctxImpl =
         _AfxDrawContextAcquireCanvas,
         _AfxDrawContextAcquireIndexBuffer,
         _AfxDrawContextAcquireSampler,
-        _AfxDrawContextAcquireVertexBuffer,
+        _AfxDrawContextBuildVertexBuffer,
         _AfxDrawContextBuildTextures,
         _AfxDrawContextFindTextures,
         _AfxDrawContextAcquireSurface,

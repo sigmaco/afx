@@ -789,7 +789,7 @@ SGL afxDrawOutput _AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const
 SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 SGL afxCanvas _AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *specs);
 SGL afxBuffer _AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec);
-SGL afxVertexBuffer _AfxDrawContextAcquireVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat rowCnt, afxVertexDataSpecification const *specs);
+SGL afxVertexBuffer _AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat rowCnt, afxVertexDataSpecification const *specs);
 SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
 SGL afxIndexBuffer _AfxDrawContextAcquireIndexBuffer(afxDrawContext dctx, afxIndexBufferSpecification const *spec);
 SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle);
