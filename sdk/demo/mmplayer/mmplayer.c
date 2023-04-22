@@ -118,14 +118,14 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     afxWhd extent = { 1280, 720, 1 };
 
 #ifdef ENABLE_DOUT1
-    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     dout[0] = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
     AfxAssert(dout[0]);
 
     afxSurfaceSpecification const depthSurfSpec = { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH };
+    afxResult rslt = AfxDrawOutputBuildCanvases(dout[0], 0, doutSpec.bufCnt, 1, &depthSurfSpec, canv[0]);
+    AfxAssert(rslt == (afxResult)doutSpec.bufCnt);
 
-    for (afxNat i = 0; i < doutSpec.bufCnt; i++)
-        canv[0][i] = AfxDrawOutputBuildCanvas(dout[0], i, 1, &depthSurfSpec);
 #endif
 #ifdef ENABLE_DOUT2
     doutSpec.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
@@ -142,7 +142,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     }
 #endif
 #ifdef ENABLE_DOUT3
-    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
+    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
     dout[2] = AfxDrawContextAcquireOutput(dctx, &doutSpec, &uri);
     AfxAssert(dout[2]);
 
@@ -203,7 +203,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 #endif
 
     AfxDrawInputAffinePrefetchThreads(din[0], 0, 1, (afxNat[]) { 1 });
-    afxResult rslt;
+    
     return AFX_SUCCESS;
 }
 

@@ -77,14 +77,18 @@ typedef struct
 
 typedef enum
 {
-    AFX_STRM_FLAG_READABLE      = (1 << 0),
-    AFX_STRM_FLAG_WRITEABLE     = (1 << 1),
-    AFX_STRM_FLAG_BUFFERED      = (1 << 2),
-    AFX_STRM_FLAG_LITERAL       = (1 << 3),
-    AFX_STRM_FLAG_UNSEEKABLE    = (1 << 4),
-    AFX_STRM_FLAG_VIRTUAL       = (1 << 5),
+    AFX_IO_FLAG_R           = (1 << 0), // readable
+    AFX_IO_FLAG_W           = (1 << 1), // writeable
+    AFX_IO_FLAG_X           = (1 << 2),
+    AFX_IO_FLAG_RW          = (AFX_IO_FLAG_R | AFX_IO_FLAG_W),
+    AFX_IO_FLAG_RX          = (AFX_IO_FLAG_R | AFX_IO_FLAG_X),
+    AFX_IO_FLAG_WX          = (AFX_IO_FLAG_W | AFX_IO_FLAG_X),
+    AFX_IO_FLAG_RWX         = (AFX_IO_FLAG_R | AFX_IO_FLAG_W | AFX_IO_FLAG_X),
+    AFX_IO_FLAG_UNBUFFERED  = (1 << 3),
+    AFX_IO_FLAG_LITERAL     = (1 << 4),
+    AFX_IO_FLAG_VIRTUAL     = (1 << 5),
 }
-afxStreamFlags;
+afxIoFlags;
 
 typedef enum
 {
@@ -93,6 +97,8 @@ typedef enum
     AFX_STRM_ORIGIN_END
 }
 afxStreamOrigin;
+
+typedef afxNat afxRwx[3];
 
 AFX_DEFINE_HANDLE(afxStream);
 

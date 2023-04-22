@@ -1900,7 +1900,7 @@ _SGL afxError _AfxDqueCtor(afxDrawQueue dque, _afxDqueCtorArgs *args)
     presentVbufSpec[0].src = vtxPos;
     presentVbufSpec[0].srcFmt = AFX_VTX_FMT_XY32;
     presentVbufSpec[0].usage = AFX_VTX_USAGE_POS;
-    dque->presentVbuf = AfxDrawContextAcquireVertexBuffer(dctx, 4, 1, presentVbufSpec);
+    dque->presentVbuf = AfxDrawContextBuildVertexBuffer(dctx, 4, 1, presentVbufSpec);
     AfxAssertObject(dque->presentVbuf, AFX_FCC_VBUF);
 
     if (args->autonomous)

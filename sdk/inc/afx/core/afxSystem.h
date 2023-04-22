@@ -104,7 +104,7 @@ AFX_DEFINE_STRUCT(afxSystemSpecification)
     afxSize                             maxMemUsage;
 };
 
-AFX afxAllocator       AfxSystemAcquireAllocator(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
+AFX afxAllocator        AfxSystemAcquireAllocator(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
 AFX afxArchive          AfxSystemAcquireArchive(afxSystem sys, afxUri const *uri, afxChar const *access);
 AFX afxApplication      AfxSystemAcquireApplication(afxSystem sys, afxApplicationSpecification const *spec);
 AFX afxDrawSystem       AfxSystemAcquireDrawSystem(afxSystem sys);
@@ -140,19 +140,20 @@ AFX afxAllocator        AfxSystemGetAllocator(afxSystem sys);
 AFX afxUri const*       AfxSystemGetRootUri(afxSystem sys, afxUri *copy);
 AFX afxString const*    AfxSystemGetRootUriString(afxSystem sys, afxString *copy);
 
-AFX afxResult           AfxSystemForEachAllocator(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachArchive(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachApplication(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachDrawSystem(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachHid(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachKeyboard(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachModule(afxSystem sys, void(*f)(afxIterator *iter), void *data);
 AFX afxResult           AfxSystemForEachMountPoint(afxSystem sys, void(*f)(afxIterator *iter), void* data);
-AFX afxResult           AfxSystemForEachMouse(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachResource(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachStream(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachThread(afxSystem sys, void(*f)(afxIterator *iter), void *data);
-AFX afxResult           AfxSystemForEachUrd(afxSystem sys, void(*f)(afxIterator *iter), void *data);
+
+AFX afxResult           AfxSystemEnumerateAllocators(afxSystem sys, afxNat base, afxNat cnt, afxAllocator all[]);
+AFX afxResult           AfxSystemEnumerateApplications(afxSystem sys, afxNat base, afxNat cnt, afxApplication app[]);
+AFX afxResult           AfxSystemEnumerateArchives(afxSystem sys, afxNat base, afxNat cnt, afxArchive arch[]);
+AFX afxResult           AfxSystemEnumerateDrawSystems(afxSystem sys, afxNat base, afxNat cnt, afxDrawSystem dsys[]);
+AFX afxResult           AfxSystemEnumerateHids(afxSystem sys, afxNat base, afxNat cnt, afxHid hid[]);
+AFX afxResult           AfxSystemEnumerateKeyboards(afxSystem sys, afxNat base, afxNat cnt, afxKeyboard kbd[]);
+AFX afxResult           AfxSystemEnumerateModules(afxSystem sys, afxNat base, afxNat cnt, afxModule mdle[]);
+AFX afxResult           AfxSystemEnumerateMouses(afxSystem sys, afxNat base, afxNat cnt, afxMouse mse[]);
+AFX afxResult           AfxSystemEnumerateResources(afxSystem sys, afxNat base, afxNat cnt, afxResource res[]);
+AFX afxResult           AfxSystemEnumerateStreams(afxSystem sys, afxNat base, afxNat cnt, afxStream ios[]);
+AFX afxResult           AfxSystemEnumerateThreads(afxSystem sys, afxNat base, afxNat cnt, afxThread thr[]);
+AFX afxResult           AfxSystemEnumerateUrds(afxSystem sys, afxNat base, afxNat cnt, afxUrd urd[]);
 
 AFX afxResult           AfxSystemMountPoints(afxSystem sys, afxNat cnt, afxMountPointSpecification const query[]);
 AFX afxResult           AfxSystemDismountPoints(afxSystem sys, afxNat cnt, afxMountPointSpecification const query[]);
