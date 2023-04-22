@@ -59,6 +59,12 @@ AFX_DEFINE_STRUCT(afxUri128)
     afxChar             buf[128];
 };
 
+AFX_DEFINE_STRUCT(afxUri256)
+{
+    afxUri              uri;
+    afxChar             buf[256];
+};
+
 AFX_DEFINE_STRUCT(afxUri4096) // max capacity has no typed size.
 {
     afxUri              uri;
@@ -68,6 +74,7 @@ AFX_DEFINE_STRUCT(afxUri4096) // max capacity has no typed size.
 AFX afxUri*             AfxUri32(afxUri32 *uri, afxUri const *src); // deploy
 AFX afxUri*             AfxUri64(afxUri64 *uri, afxUri const *src); // deploy
 AFX afxUri*             AfxUri128(afxUri128 *uri, afxUri const *src); // deploy
+AFX afxUri*             AfxUri256(afxUri256 *uri, afxUri const *src); // deploy
 AFX afxUri*             AfxUri4096(afxUri4096 *uri, afxUri const *src); // deploy
 
 AFX afxUri*             AfxUriForkHost(afxUri *uri, afxUri const *base);

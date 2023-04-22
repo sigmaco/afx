@@ -318,7 +318,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
 
     afxDrawDriver ddrv = AfxDrawOutputGetDriver(dout);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    _sglDriverIdd *ddrvIdd = ddrv->idd;
+    _sglDriverIdd *ddrvIdd = AfxDrawDriverGetIdd(ddrv);
     AfxAssert(ddrvIdd->wglPrimeGlrc == _wglGetCurrentContext());
     //AfxAssert(ddrvIdd->wglPrimeDc == _wglGetCurrentDC());
 

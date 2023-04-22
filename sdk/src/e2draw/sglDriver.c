@@ -1463,7 +1463,7 @@ _SGL afxError iddDtor(afxDrawDriver ddrv)
 {
     afxError err = NIL;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    _sglDriverIdd *idd = ddrv->idd;
+    _sglDriverIdd *idd = AfxDrawDriverGetIdd(ddrv);
     _wglMakeCurrent(NIL, NIL);
     _wglDeleteContext(idd->wglPrimeGlrc);
     ReleaseDC(idd->wglPrimeWnd, idd->wglPrimeDc);
@@ -1545,7 +1545,10 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
     
     AfxAssert(mainThreadId == AfxGetTid());
 
-    _sglDriverIdd *idd = AfxAllocate(AfxDrawSystemGetAllocator(dsys), sizeof(*idd), AfxSpawnHint());
+    afxAllocator all = AfxDrawSystemGetAllocator(dsys);
+    AfxAssertObject(all, AFX_FCC_ALL);
+
+    _sglDriverIdd *idd = AfxAllocate(all, sizeof(*idd), AfxSpawnHint());
 
     if (!idd) AfxThrowError();
     else
@@ -1631,7 +1634,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
         }
 
         if (err)
-            AfxDeallocate(dsys->genrlAll, idd);
+            AfxDeallocate(all, idd);
     }
     return err;
 }

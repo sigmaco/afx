@@ -420,6 +420,12 @@
     <ClInclude Include="..\inc\afx\core\io\afxScript.h">
       <Filter>e2coree\core\io</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\afx\core\io\afxFileSystem.h">
+      <Filter>e2coree\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\afx\core\io\afxFile.h">
+      <Filter>e2coree\core\io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\inc\afx\README.md">
@@ -742,6 +748,12 @@
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2coree\core\io\afxScript.c">
+      <Filter>e2coree\core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2coree\core\io\afxFileSystem.c">
+      <Filter>e2coree\core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\e2coree\core\io\afxFile.c">
       <Filter>e2coree\core\io</Filter>
     </ClCompile>
   </ItemGroup>

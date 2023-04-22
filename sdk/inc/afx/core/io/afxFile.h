@@ -14,23 +14,26 @@
  *                                    www.sigmaco.org
  */
 
-// afxArchive allows you to save a complex network of objects in a permanent
-// binary form (usually disk storage) that persists after those objects are deleted.
+// SIGMA Future Storage
 
-#ifndef AFX_ARCHIVE_H
-#define AFX_ARCHIVE_H
+#ifndef AFX_FILE_H
+#define AFX_FILE_H
 
-#include "afx/core/io/afxFile.h"
+#include "afxStream.h"
 
-AFX_DEFINE_HANDLE(afxArchive);
+AFX_DEFINE_HANDLE(afxFile);
 
-AFX_OBJECT(afxArchive)
+AFX_OBJECT(afxFile)
 {
-    AFX_OBJECT(afxFile) file;
+    AFX_OBJECT(afxStream)   ios;
+    void                    *fd;
+    afxUri4096              uri;
+    afxBool                 shouldBeFlushed;
 };
 
-AFX void*       AfxArchiveGetSystem(afxArchive arch);
-AFX void*       AfxArchiveGetFileSystem(afxArchive arch);
+AFX void*       AfxFileGetSystem(afxFile file);
+AFX void*       AfxFileGetFileSystem(afxFile file);
 
+AFX afxResult   AfxFileFlush(afxFile file);
 
-#endif//AFX_ARCHIVE_H
+#endif//AFX_FILE_H

@@ -103,16 +103,12 @@ typedef afxNat afxRwx[3];
 AFX_DEFINE_HANDLE(afxStream);
 
 AFX void*               AfxStreamGetSystem(afxStream ios);
+AFX void*               AfxStreamGetFileSystem(afxStream ios);
 
 AFX afxResult           AfxStreamAdvance(afxStream ios, afxInt range);
 AFX afxNat              AfxStreamAskCursor(afxStream ios);
-AFX afxResult           AfxStreamCopyUri(afxStream ios, afxString *str);
 AFX afxResult           AfxStreamEnd(afxStream ios);
-AFX afxResult           AfxStreamFlush(afxStream ios);
-AFX afxUri const*       AfxStreamGetUri(afxStream ios);
-AFX afxString const*    AfxStreamGetUriString(afxStream ios);
 AFX afxBool             AfxStreamHasReachedEnd(afxStream ios);
-AFX afxBool             AfxStreamIsBuffered(afxStream ios);
 AFX afxBool             AfxStreamIsExecutable(afxStream ios);
 AFX afxBool             AfxStreamIsReadable(afxStream ios);
 AFX afxBool             AfxStreamIsWriteable(afxStream ios);
@@ -158,18 +154,14 @@ AFX afxError            AfxStreamWriteChunk(afxStream ios, afxNat id, afxNat cnt
 
 typedef struct
 {
-    afxResult(*free)(afxStream);
     afxNat(*read)(afxStream, afxNat cnt, afxNat const siz[], void *dst[]);
     afxNat(*readProgressFb)(afxStream, afxNat32, void*);
     afxNat(*write)(afxStream, afxNat cnt, afxNat const siz[], void const * const src[]);
     afxNat(*writeProgressFb)(afxStream, afxNat32, void*);
-    afxResult(*flush)(afxStream);
     afxNat(*tell)(afxStream);
     afxResult(*seek)(afxStream, afxInt, afxStreamOrigin);
     afxBool(*eos)(afxStream);
 } afxStreamImplementation;
-
-AFX afxStreamImplementation const _AfxStdStreamImplFile;
 
 AFX_OBJECT(afxStream)
 {
@@ -180,12 +172,8 @@ AFX_OBJECT(afxStream)
 
     afxNat32                        bufCap;
     afxByte                         *buffer;
+    afxBool                         ownedBuffer;
     afxNat32                        currPosn;
-
-    // file
-    void                            *fd;
-    afxUri4096                      uri;
-    afxBool                         shouldBeFlushed;
 };
 
 #endif//AFX_STREAM_H

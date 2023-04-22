@@ -399,6 +399,9 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
     afxSystem sys = AfxObjectGetProvider(&dsys->obj);
     AfxAssertObject(sys, AFX_FCC_SYS);
 
+    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+    AfxAssertObject(fsys, AFX_FCC_FSYS);
+
     afxChain *provisions = &dctx->provisions;
     AfxChainDeploy(provisions, dctx);
 
@@ -408,7 +411,7 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
     as.cap = 0;
     as.duration = AFX_ALL_DUR_TRANSIENT;
     as.resizable = TRUE;
-    as.stock = sys->memPageSize * 8192; // 32MB
+    as.stock = AfxSystemGetMemPageSize(sys) * 8192; // 32MB
 
     if (!(dctx->genrlAll = AfxSystemAcquireAllocator(sys, &as, AfxSpawnHint()))) AfxThrowError();
     else
@@ -425,12 +428,12 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
         AfxClassRegister(&dctx->vbufClass, provisions, AfxDrawContextGetBufferClass(dctx), &_AfxVbufClassSpec);
         AfxClassRegister(&dctx->ibufClass, provisions, AfxDrawContextGetBufferClass(dctx), &_AfxIbufClassSpec);
         AfxClassRegister(&dctx->smpClass, provisions, NIL, &_AfxSmpClassSpec);
-        AfxClassRegister(&dctx->texClass, provisions, AfxSystemGetResourceClass(sys), &_AfxTexClassSpec);
+        AfxClassRegister(&dctx->texClass, provisions, AfxFileSystemGetResourceClass(fsys), &_AfxTexClassSpec);
         AfxClassRegister(&dctx->surfClass, provisions, AfxDrawContextGetTextureClass(dctx), &_AfxSurfClassSpec);
         AfxClassRegister(&dctx->canvClass, provisions, NIL, &_AfxCanvClassSpec);
         AfxClassRegister(&dctx->pipmClass, provisions, NIL, &_AfxPipmClassSpec);
         AfxClassRegister(&dctx->pipaClass, provisions, NIL, &_AfxPiprClassSpec);
-        AfxClassRegister(&dctx->pipClass, provisions, AfxSystemGetResourceClass(sys), &_AfxPipClassSpec);
+        AfxClassRegister(&dctx->pipClass, provisions, AfxFileSystemGetResourceClass(fsys), &_AfxPipClassSpec);
         AfxClassRegister(&dctx->legoClass, provisions, NIL, &_AfxLegoClassSpec);
         AfxClassRegister(&dctx->doutClass, provisions, NIL, &_AfxDoutClassSpec);
 
