@@ -24,6 +24,10 @@
 // The backend is highly optimized and is set up for parallelization.
 // We welcome contributions from the open-source community.
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
 
 #include "core/async/afxCondition.h"
 #include "core/async/afxMutex.h"
@@ -66,8 +70,9 @@
 #include "math/volume/afxSphere.h"
 #include "math/volume/afxVolume.h"
 
-//#include "sound/afxSoundSystem.h"
-
 #include "mmux/afxWidget.h"
+#ifdef __cplusplus
+}
+#endif
 
 #endif//AFX_QWADRO_H
