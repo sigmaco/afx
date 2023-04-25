@@ -17,13 +17,13 @@ typedef struct
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglPipmSync(afxPipelineModule pipm, afxShaderStage stage, afxDrawEngine deng)
+_SGL afxError _SglDqueSyncPipm(afxDrawQueue dque, afxPipelineModule pipm, afxShaderStage stage)
 {
     //AfxEntry("pipm=%p", pipm);
     afxError err = NIL;
     AfxAssertObject(pipm, AFX_FCC_PIPM);
 
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
 
     if ((pipm->updFlags & SGL_UPD_FLAG_DEVICE))
     {
@@ -87,18 +87,27 @@ _SGL afxError _AfxPipelineModuleDownload(afxPipelineModule pipm, afxUri const *u
     AfxAssertType(uri, AFX_FCC_URI);
     AfxAssert(!(AfxUriIsBlank(uri)));
 
-    //afxDrawSystem dsys = AfxGetShaderHub(pipm);
-    afxStream ios;
+    afxDrawContext dctx = AfxPipelineModuleGetContext(pipm);
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxAllocator all = AfxDrawContextGetAllocator(dctx);
+    AfxAssertObject(all, AFX_FCC_ALL);
+    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
+    AfxAssertObject(dsys, AFX_FCC_DSYS);
+    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+    AfxAssertObject(fsys, AFX_FCC_FSYS);
 
-    if (!(ios = AfxSystemAcquireStream(AfxSystemGet(), uri, "w"))) AfxThrowError();
+    afxFile file;
+    afxRwx const rwx = { 0, 1, 0 };
+
+    if (!(file = AfxFileSystemOpenFile(fsys, rwx, uri))) AfxThrowError();
     else
     {
-        if (AfxPipelineModuleSerialize(pipm, ios)) AfxThrowError();
+        if (AfxPipelineModuleSerialize(pipm, &file->ios)) AfxThrowError();
         else
         {
             // success
         }
-        AfxObjectRelease(&ios->obj);
+        AfxObjectRelease(&file->ios.obj);
     }
     return err;
 }
@@ -205,15 +214,25 @@ _SGL afxPipelineModule _AfxDrawContextUploadPipelineModuleGlsl(afxDrawContext dc
     AfxEntry("dctx=%p", dctx);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     afxPipelineModule pipm = NIL;
-    afxStream ios;
+    
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxAllocator all = AfxDrawContextGetAllocator(dctx);
+    AfxAssertObject(all, AFX_FCC_ALL);
+    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
+    AfxAssertObject(dsys, AFX_FCC_DSYS);
+    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+    AfxAssertObject(fsys, AFX_FCC_FSYS);
 
-    if (!(ios = AfxSystemAcquireStream(AfxSystemGet(), uri, "r"))) AfxThrowError();
+    afxFile file;
+    afxRwx const rwx = { 1, 0, 0 };
+
+    if (!(file = AfxFileSystemOpenFile(fsys, rwx, uri))) AfxThrowError();
     else
     {
-        AfxAssertObject(ios, AFX_FCC_IOS);
+        AfxAssertObject(file, AFX_FCC_FILE);
         afxNat size;
 
-        if (!(size = AfxStreamMeasure(ios))) AfxThrowError();
+        if (!(size = AfxStreamMeasure(&file->ios))) AfxThrowError();
         else
         {
             void* code;
@@ -221,7 +240,7 @@ _SGL afxPipelineModule _AfxDrawContextUploadPipelineModuleGlsl(afxDrawContext dc
             if (!(code = AfxAllocate(NIL, size + sizeof(afxByte), AfxSpawnHint()))) AfxThrowError();
             else
             {
-                AfxStreamRead(ios, 1, &size, &code);
+                AfxStreamRead(&file->ios, 1, &size, &code);
                 ((afxByte*)code)[size] = '\0';
 
                 if (!(pipm = AfxDrawContextBuildPipelineModule(dctx, code, size)))
@@ -230,7 +249,7 @@ _SGL afxPipelineModule _AfxDrawContextUploadPipelineModuleGlsl(afxDrawContext dc
                 AfxDeallocate(NIL, code);
             }
         }
-        AfxObjectRelease(&ios->obj);
+        AfxObjectRelease(&file->ios.obj);
     }
     return pipm;
 }

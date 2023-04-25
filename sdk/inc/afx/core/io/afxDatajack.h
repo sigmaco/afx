@@ -17,7 +17,7 @@
 #ifndef AFX_IO_CONTEXT_H
 #define AFX_IO_CONTEXT_H
 
-#include "afxIoScript.h"
+#include "afxScript.h"
 
 AFX_DEFINE_HANDLE(afxIoContext);
 
@@ -28,7 +28,7 @@ AFX_OBJECT(afxIoContext)
 
 struct afxIoContextInterface
 {
-    afxError    (*SubmitScripts)(afxIoContext ctx, afxNat cnt, afxIoScript scripts[]);
+    afxError    (*SubmitScripts)(afxIoContext ctx, afxNat cnt, afxScript scripts[]);
 }
 AFX AfxIoContext;
 

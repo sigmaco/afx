@@ -102,7 +102,7 @@ typedef enum afxFcc
     AFX_FCC_EHND    = AfxPackFcc('e', 'h', 'n', 'd'), // afxEventHandler
 
     AFX_FCC_FSYS    = AfxPackFcc('f', 's', 'y', 's'), // afxFileSystem
-    AFX_FCC_FVOL    = AfxPackFcc('f', 'v', 'o', 'l'), // afxStorageVolume
+    AFX_FCC_FSMP    = AfxPackFcc('f', 's', 'm', 'p'), // afxFileSystemMountPoint
     AFX_FCC_FILE    = AfxPackFcc('f', 'i', 'l', 'e'), // afxFile
     
     AFX_FCC_THR     = AfxPackFcc('t', 'h', 'r', '\0'), // afxThread
@@ -142,7 +142,7 @@ typedef enum afxFcc
     AFX_FCC_DDRV    = AfxPackFcc('d', 'd', 'r', 'v'), // afxDrawDriver
     AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
     AFX_FCC_DOUT    = AfxPackFcc('d', 'o', 'u', 't'), // afxDrawOutput
-    AFX_FCC_DENG    = AfxPackFcc('d', 'e', 'n', 'g'), // afxDrawEngine
+    AFX_FCC_DQUE    = AfxPackFcc('d', 'q', 'u', 'e'), // afxDrawQueue
     AFX_FCC_CANV    = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline

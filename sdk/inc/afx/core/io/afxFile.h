@@ -14,28 +14,26 @@
  *                                    www.sigmaco.org
  */
 
-#ifndef AFX_DRAW_QUEUE_H
-#define AFX_DRAW_QUEUE_H
+// SIGMA Future Storage
 
-#include "afxDrawScript.h"
+#ifndef AFX_FILE_H
+#define AFX_FILE_H
 
-// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawEngine na retaguarda.
+#include "afxStream.h"
 
-AFX_DEFINE_HANDLE(afxDrawEngine);
+AFX_DEFINE_HANDLE(afxFile);
 
-#ifndef AFX_DRAW_DRIVER_SRC
-
-AFX_OBJECT(afxDrawEngine)
+AFX_OBJECT(afxFile)
 {
-    afxObject           obj; // AFX_FCC_DENG
+    AFX_OBJECT(afxStream)   ios;
+    void                    *fd;
+    afxUri4096              uri;
+    afxBool                 shouldBeFlushed;
 };
 
-#endif
+AFX void*       AfxFileGetSystem(afxFile file);
+AFX void*       AfxFileGetFileSystem(afxFile file);
 
-AFX void* AfxDrawEngineGetContext(afxDrawEngine deng);
-AFX void* AfxDrawEngineGetDriver(afxDrawEngine deng);
-AFX void* AfxDrawEngineGetDrawSystem(afxDrawEngine deng);
+AFX afxResult   AfxFileFlush(afxFile file);
 
-AFX afxError    AfxDrawEngineWaitForIdle(afxDrawEngine deng);
-
-#endif//AFX_DRAW_QUEUE_H
+#endif//AFX_FILE_H

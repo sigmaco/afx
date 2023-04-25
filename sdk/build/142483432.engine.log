@@ -1,0 +1,53 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 000000000024ea80, 000000000024ea88)
+ Constructing instance 0000000000362240 of Core Execution System.
+ afxSystem.c:899?_AfxSysCtor(sys=0000000000362240)
+ ADV afxSystem.c:915?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:916?_AfxSysCtor
+    Logical processor count: 2
+ Allocator class registered.
+ afxAllocator.c:471?AfxSystemAcquireAllocator(sys=0000000000362240,strategy=000000000024d150,hint="afxSystem.c:931!_AfxSysCtor")
+ Class[Allocator].ConstructInstances(1, 000000000024ce00, 000000000024ce08)
+ Constructing instance 000000000035d0d0 of Allocator.
+ afxAllocator.c:258?_AfxAllCtor(all=000000000035d0d0)
+ Instance 000000000035d0d0[all]^1 built.
+ Thread class registered.
+ File System class registered.
+ afxFileSystem.c:491?AfxSystemAcquireFileSystem(sys:0000000000362240,mnptCnt=5,spec=000000000024d430)
+ Class[File System].ConstructInstances(1, 000000000024cde0, 000000000024cde8)
+ Constructing instance 00000000003642a0 of File System.
+ afxFileSystem.c:546?_AfxFsysCtor(fsys=00000000003642a0)
+ ERR afxSystem.c:432?AfxSystemGetStreamClass
+    
+ ERR afxSystem.c:432?AfxSystemGetStreamClass
+    (cls)
+    Invalid
+ ERR afxClass.c:554?AfxClassRegister
+    
+ ERR afxClass.c:554?AfxClassRegister
+    (base)
+    Invalid
+ ERR afxClass.c:555?AfxClassRegister
+    
+ ERR afxClass.c:555?AfxClassRegister
+    (spec->size >= base->siz)
+    Invalid

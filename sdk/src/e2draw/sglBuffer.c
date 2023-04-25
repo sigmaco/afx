@@ -91,12 +91,12 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 }
 #endif//0
 
-_SGL afxError _SglBufBindAndSync(afxBuffer buf, afxNat unit, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, afxDrawEngine deng)
+_SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage)
 {
     //AfxEntry("buf=%p", buf);
     afxError err = NIL;
     AfxAssertObject(buf, AFX_FCC_BUF);
-    sglVmt const* gl = &deng->wglVmt;
+    sglVmt const* gl = &dque->wglVmt;
     
     if (buf)
     {

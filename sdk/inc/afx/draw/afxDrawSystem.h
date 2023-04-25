@@ -28,12 +28,13 @@
 #include "afxDrawOutput.h"
 #include "afx/core/afxModule.h"
 #include "../afxApplication.h"
+#include "afx/core/io/afxFileSystem.h"
 
 // Criar novo formato .tga do Qwadro.
 
 //#define _AFX_DRAW_MULTITHREADED
 
-#ifndef AFX_DRAW_SRC
+#ifndef AFX_DRAW_SYSTEM_C
 
 AFX_OBJECT(afxDrawSystem) { afxObject obj; };
 
@@ -69,24 +70,25 @@ AFX_DEFINE_STRUCT(afxTextureCodecSpecification)
     afxError            (*downloadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
 };
 
-AFX void*           AfxDrawSystemGetSystem(afxDrawSystem dsys);
+AFX void*               AfxDrawSystemGetSystem(afxDrawSystem dsys);
 
-AFX afxDrawDriver   AfxDrawSystemRegisterDriver(afxDrawSystem dsys, afxModule mdle, afxDrawDriverSpecification const *spec);
-AFX afxDrawContext  AfxDrawSystemAcquireContext(afxDrawSystem dsys, afxDrawContextSpecification const *spec);
+AFX afxDrawDriver       AfxDrawSystemRegisterDriver(afxDrawSystem dsys, afxModule mdle, afxDrawDriverSpecification const *spec);
+AFX afxDrawContext      AfxDrawSystemAcquireContext(afxDrawSystem dsys, afxDrawContextSpecification const *spec);
 
-AFX afxClass*       AfxDrawSystemGetDriverClass(afxDrawSystem dsys);
-AFX afxClass*       AfxDrawSystemGetContextClass(afxDrawSystem dsys, afxNat driverId);
-AFX afxAllocator    AfxDrawSystemGetAllocator(afxDrawSystem dsys);
-AFX afxDrawDriver   AfxDrawSystemGetDriver(afxDrawSystem dsys, afxNat idx);
-AFX afxNat          AfxDrawSystemGetDriverCount(afxDrawSystem dsys);
-AFX afxNat          AfxDrawSystemGetContextCount(afxDrawSystem dsys, afxNat driverId);
+AFX afxClass*           AfxDrawSystemGetDriverClass(afxDrawSystem dsys);
+AFX afxClass*           AfxDrawSystemGetContextClass(afxDrawSystem dsys, afxNat driverId);
+AFX afxAllocator        AfxDrawSystemGetAllocator(afxDrawSystem dsys);
+AFX afxFileSystem       AfxDrawSystemGetFileSystem(afxDrawSystem dsys);
+AFX afxDrawDriver       AfxDrawSystemGetDriver(afxDrawSystem dsys, afxNat idx);
+AFX afxNat              AfxDrawSystemGetDriverCount(afxDrawSystem dsys);
+AFX afxNat              AfxDrawSystemGetContextCount(afxDrawSystem dsys, afxNat driverId);
 
-AFX afxResult       AfxDrawSystemEnumerateDrivers(afxDrawSystem dsys, afxNat base, afxNat cnt, afxDrawDriver ddrv[]);
-AFX afxResult       AfxDrawSystemEnumerateContexts(afxDrawSystem dsys, afxNat driverId, afxNat base, afxNat cnt, afxDrawContext dctx[]);
+AFX afxResult           AfxDrawSystemEnumerateDrivers(afxDrawSystem dsys, afxNat base, afxNat cnt, afxDrawDriver ddrv[]);
+AFX afxResult           AfxDrawSystemEnumerateContexts(afxDrawSystem dsys, afxNat driverId, afxNat base, afxNat cnt, afxDrawContext dctx[]);
 
-AFX afxResult       AfxDrawSystemForEachTextureCodec(afxDrawSystem dsys, afxResult(*f)(afxTextureCodecRegistry*, void*), void *data);
-AFX afxResult       AfxDrawSystemRegisterTextureCodec(afxDrawSystem dsys, afxNat cnt, afxTextureCodecSpecification const queries[]);
+AFX afxResult           AfxDrawSystemForEachTextureCodec(afxDrawSystem dsys, afxResult(*f)(afxTextureCodecRegistry*, void*), void *data);
+AFX afxResult           AfxDrawSystemRegisterTextureCodec(afxDrawSystem dsys, afxNat cnt, afxTextureCodecSpecification const queries[]);
 
-AFX afxError        _AfxDrawSystemProcess(afxDrawSystem dsys); // Called by core execution system. Reserved for enginners at SIGMA.
+AFX afxError            _AfxDrawSystemProcess(afxDrawSystem dsys); // Called by core execution system. Reserved for enginners at SIGMA.
 
 #endif//AFX_DRAW_SYSTEM_H

@@ -20,24 +20,17 @@
 #ifndef AFX_ARCHIVE_H
 #define AFX_ARCHIVE_H
 
-#include "afxStream.h"
+#include "afx/core/io/afxFile.h"
 
 AFX_DEFINE_HANDLE(afxArchive);
 
-AFX_DEFINE_INTERFACE(afxArchive, AfxArchive)
-{
-    afxNat      (*Read)(afxArchive arch, void *to, afxSize len);
-    afxObject*  (*ReadObject)(afxArchive arch, afxClass const *meta);
-    afxResult   (*ReadString)(afxArchive arch, afxString *str);
-
-    afxNat      (*Write)(afxArchive arch, void const *from, afxSize len);
-    afxResult   (*WriteObject)(afxArchive arch, afxObject const *obj);
-    afxResult   (*WriteString)(afxArchive arch, afxString const *str);
-};
-
 AFX_OBJECT(afxArchive)
 {
-    AFX_OBJECT(afxStream)   ios;
+    AFX_OBJECT(afxFile) file;
 };
+
+AFX void*       AfxArchiveGetSystem(afxArchive arch);
+AFX void*       AfxArchiveGetFileSystem(afxArchive arch);
+
 
 #endif//AFX_ARCHIVE_H

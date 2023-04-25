@@ -41,8 +41,10 @@
     <ClInclude Include="..\inc\afx\core\diag\afxDebug.h" />
     <ClInclude Include="..\inc\afx\core\io\afxArchive.h" />
     <ClInclude Include="..\inc\afx\core\io\afxDatajack.h" />
+    <ClInclude Include="..\inc\afx\core\io\afxFile.h" />
+    <ClInclude Include="..\inc\afx\core\io\afxFileSystem.h" />
     <ClInclude Include="..\inc\afx\core\io\afxHid.h" />
-    <ClInclude Include="..\inc\afx\core\io\afxIoScript.h" />
+    <ClInclude Include="..\inc\afx\core\io\afxScript.h" />
     <ClInclude Include="..\inc\afx\core\io\afxKeyboard.h" />
     <ClInclude Include="..\inc\afx\core\io\afxMouse.h" />
     <ClInclude Include="..\inc\afx\core\io\afxResource.h" />
@@ -60,7 +62,7 @@
     <ClInclude Include="..\inc\afx\core\time\afxTime.h" />
     <ClInclude Include="..\inc\afx\draw\afxDrawContext.h" />
     <ClInclude Include="..\inc\afx\draw\afxDrawDriver.h" />
-    <ClInclude Include="..\inc\afx\draw\afxDrawEngine.h" />
+    <ClInclude Include="..\inc\afx\draw\afxDrawQueue.h" />
     <ClInclude Include="..\inc\afx\draw\afxDrawInput.h" />
     <ClInclude Include="..\inc\afx\draw\afxDrawOutput.h" />
     <ClInclude Include="..\inc\afx\draw\afxDrawScript.h" />
@@ -166,8 +168,10 @@
     <ClCompile Include="..\src\e2coree\core\diag\afxDebug.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxArchive.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxDatajack.c" />
+    <ClCompile Include="..\src\e2coree\core\io\afxFile.c" />
+    <ClCompile Include="..\src\e2coree\core\io\afxFileSystem.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxHid.c" />
-    <ClCompile Include="..\src\e2coree\core\io\afxIoScript.c" />
+    <ClCompile Include="..\src\e2coree\core\io\afxScript.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxKeyboard.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxMouse.c" />
     <ClCompile Include="..\src\e2coree\core\io\afxResource.c" />
@@ -203,7 +207,7 @@
     <ClCompile Include="..\src\e2coree\deps\glus\glus_wavefront.c" />
     <ClCompile Include="..\src\e2coree\draw\afxDrawContext.c" />
     <ClCompile Include="..\src\e2coree\draw\afxDrawDriver.c" />
-    <ClCompile Include="..\src\e2coree\draw\afxDrawEngine.c" />
+    <ClCompile Include="..\src\e2coree\draw\afxDrawQueue.c" />
     <ClCompile Include="..\src\e2coree\draw\afxDrawInput.c" />
     <ClCompile Include="..\src\e2coree\draw\afxDrawOutput.c" />
     <ClCompile Include="..\src\e2coree\draw\afxDrawScript.c" />

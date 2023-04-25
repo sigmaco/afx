@@ -20,7 +20,7 @@
 #include "afxDrawInput.h"
 #include "afxDrawOutput.h"
 #include "pipelining/afxPipeline.h"
-#include "afxDrawEngine.h"
+#include "afxDrawQueue.h"
 
 AFX_DEFINE_STRUCT(afxDrawDriverFeatures)
 {
@@ -103,7 +103,7 @@ AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
     afxError                    (*iddDtor)(afxDrawDriver ddrv);
 };
 
-#ifndef AFX_DRAW_SRC
+#ifndef AFX_DRAW_DRIVER_C
 
 AFX_OBJECT(afxDrawDriver) { afxObject obj; };
 
@@ -116,6 +116,7 @@ AFX afxResult   AfxDrawDriverEnumerateContexts(afxDrawDriver ddrv, afxNat base, 
 AFX afxClass*   AfxDrawDriverGetContextClass(afxDrawDriver ddrv);
 
 AFX void*       AfxDrawDriverGetDrawSystem(afxDrawDriver ddrv);
+AFX void*       AfxDrawDriverGetIdd(afxDrawDriver ddrv);
 
 AFX afxError    _AfxDrawDriverProcess(afxDrawDriver ddrv); // Called by draw system. Reserved for enginners at SIGMA.
 

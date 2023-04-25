@@ -27,8 +27,8 @@
 // A single QMetaObject instance is created for each QObject subclass that is used in an application, and this instance stores all the cls-information for the QObject subclass.
 // This object is available as QObject::typeObject().
 
-AFX_DEFINE_HANDLE(afxStream);
 AFX_DEFINE_HANDLE(afxAllocator);
+
 AFX_DECLARE_STRUCT(afxClassExtension);
 AFX_DECLARE_STRUCT(afxObject);
 AFX_DECLARE_STRUCT(afxClass);
@@ -44,12 +44,12 @@ AFX_DEFINE_STRUCT(afxClass)
     afxChain        deriveds;
 
     afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
-    afxAllocator    all;
+    void*           all; // afxAllocator
     afxSize         siz;
     afxError        (*ctor)(afxObject* obj, void const *paradigm); // void to avoid warnings
     afxError        (*dtor)(afxObject* obj);
-    afxError        (*output)(afxObject* obj, afxStream ios);
-    afxError        (*input)(afxObject* obj, afxStream ios);
+    afxError        (*output)(afxObject* obj, void* ios); // afxStream
+    afxError        (*input)(afxObject* obj, void* ios);
     
     afxBool         (*event)(afxObject *obj, afxEvent *ev);
 

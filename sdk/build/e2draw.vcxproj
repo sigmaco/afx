@@ -159,7 +159,7 @@
     <ClCompile Include="..\src\e2draw\sglBuffer.c" />
     <ClCompile Include="..\src\e2draw\sglCanvas.c" />
     <ClCompile Include="..\src\e2draw\sglDrawContext.c" />
-    <ClCompile Include="..\src\e2draw\sglDrawEngine.c" />
+    <ClCompile Include="..\src\e2draw\sglDrawQueue.c" />
     <ClCompile Include="..\src\e2draw\sglDrawInput.c" />
     <ClCompile Include="..\src\e2draw\sglDrawOutput.c" />
     <ClCompile Include="..\src\e2draw\sglDrawScript.c" />

@@ -12,12 +12,12 @@
                     vec2 uv0;
                 } sgl_v;
 
-                layout(location = 0) in vec4 a_xyzw;
+                layout(location = 0) in vec2 a_xy;
 
                 void main()
                 {
-                    gl_Position = a_xyzw;
-                    sgl_v.uv0 = gl_Position.xy * 0.5 + 0.5;
+                    gl_Position = vec4(a_xy, 0.0, 1.0);
+                    sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
                 }
                 ]]>
             </Module>
@@ -51,7 +51,7 @@
                 ]]>
             </Module>
             <Input topology='TRI_STRIP' restart='false'>
-                <Stream location='0' binding='0' format='XYZW32' />
+                <Stream location='0' binding='0' format='XY32' />
             </Input>
             <Rasterization>
                 <DepthClampEnable>false</DepthClampEnable>

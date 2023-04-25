@@ -240,18 +240,19 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
         {
             afxNat outBufIdx = 0;
             AfxDrawOutputRequestBuffer(dout, 0, &outBufIdx);
+            afxCanvas canv = renderer->sets[outBufIdx].canv;
 
-            AfxAssertObject(renderer->sets[0].canv, AFX_FCC_CANV);
-
-            afxRenderPassAnnex const fbufAnnexes[] = { { TRUE, FALSE, {.color = { 0.3, 0.3, 0.3, 1 } } }, { TRUE, FALSE, {.depth = 1.f,.stencil = 0 } } };
             afxRect drawArea = { 0 };
-            AfxCanvasGetExtent(renderer->sets[0].canv, drawArea.extent);
-            AfxDrawScriptCmdBeginRenderPass(dscr, renderer->sets[0].canv, &drawArea, 2, fbufAnnexes);
+            AfxAssertObject(canv, AFX_FCC_CANV);
+            AfxCanvasGetExtent(canv, drawArea.extent);
+
+            afxRenderPassAnnex const fbufAnnexes[] = { { TRUE, FALSE, {.color = { 0.3, 0.2, 0.1, 1 } } }, { TRUE, FALSE, {.depth = 1.f,.stencil = 0 } } };
+            AfxDrawScriptCmdBeginRenderPass(dscr, canv, &drawArea, 2, fbufAnnexes);
 
             AfxDrawScriptCmdBindPipeline(dscr, renderer->skyPip);
 
             afxWhd extent;
-            AfxCanvasGetExtent(renderer->sets[0].canv, extent);
+            AfxCanvasGetExtent(canv, extent);
             afxViewport vp = { 0 };
             vp.extent[0] = extent[0];
             vp.extent[1] = extent[1];
@@ -287,9 +288,7 @@ _AFXEXPORT afxError _AfxRendererDoDraw(afxDrawInput din, afxNat qid, afxRenderer
             //AfxM4dCopy(renderer->v, v);
 
             afxM4d p;
-            afxWhd doutExtent;
-            AfxDrawOutputGetExtent(dout, doutExtent);
-            AfxM4dMakePerspective(p, fov, AfxScalar(doutExtent[0]) / AfxScalar(doutExtent[1]), clipPlanes[0], clipPlanes[1]);
+            AfxM4dMakePerspective(p, fov, AfxScalar(vp.extent[0]) / AfxScalar(vp.extent[1]), clipPlanes[0], clipPlanes[1]);
             //AfxM4dMakeRwProjection(p, vp.offset, vp.extent, clipPlanes[0], clipPlanes[1], renderer->cam->perspective);
             //AfxM4dCopy(renderer->p, p);
 
@@ -423,7 +422,7 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     skyGeomSpec.src = skyboxVertices;
     skyGeomSpec.usage = AFX_VTX_USAGE_POS;
     skyGeomSpec.semantic = AfxStringMapConst(&skyPosSem, "a_xyz", 0);
-    renderer->skyGeom = AfxDrawContextAcquireVertexBuffer(renderer->dctx, 36, 1, &skyGeomSpec);
+    renderer->skyGeom = AfxDrawContextBuildVertexBuffer(renderer->dctx, 36, 1, &skyGeomSpec);
     AfxAssertObject(renderer->skyGeom, AFX_FCC_VBUF);
     AfxUriMapConstData(&uri, "data/pipeline/skybox.pip.urd", 0);
     renderer->skyPip = AfxDrawContextFetchPipeline(renderer->dctx, &uri);
@@ -440,29 +439,14 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
         { sizeof(afxViewConstants), AFX_BUF_USAGE_CONSTANT, NIL }
     };
 
-    afxSamplerSpecification const smpSpec =
-    {
-        AFX_TEXEL_FLT_LINEAR,
-        AFX_TEXEL_FLT_LINEAR,
-        AFX_TEXEL_FLT_LINEAR,
-
-        { AFX_TEXEL_ADDR_EDGE, AFX_TEXEL_ADDR_EDGE, AFX_TEXEL_ADDR_EDGE },
-
-        FALSE,
-        16,
-
-        FALSE,
-        NIL,
-
-        0.f,
-        -1000.f,
-        1000.f,
-
-        { 0.f, 0.f, 0.f, 1.f },
-
-        FALSE
-    };
-
+    afxSamplerSpecification smpSpec = { 0 };
+    smpSpec.magFilter = AFX_TEXEL_FLT_LINEAR;
+    smpSpec.minFilter = AFX_TEXEL_FLT_LINEAR;
+    smpSpec.mipmapFilter = AFX_TEXEL_FLT_LINEAR;
+    smpSpec.uvw[0] = AFX_TEXEL_ADDR_CLAMP;
+    smpSpec.uvw[1] = AFX_TEXEL_ADDR_CLAMP;
+    smpSpec.uvw[2] = AFX_TEXEL_ADDR_CLAMP;
+    
     renderer->skySmp = AfxDrawContextAcquireSampler(dctx, &smpSpec);
     AfxAssertObject(renderer->skySmp, AFX_FCC_SMP);
 
@@ -470,15 +454,9 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
 
     for (afxNat i = 0; i < 2; i++)
     {
-        afxSurfaceSpecification const surfSpec[] =
-        {
-            { AfxDrawOutputGetBuffer(dout, i), AfxTextureGetFormat(&(surfSpec[0].surf->tex)), AFX_TEX_USAGE_SURFACE_RASTER },
-            { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH },
-        };
-
-        afxWhd extent;
-        AfxDrawOutputGetExtent(dout, extent);
-        renderer->sets[i].canv = AfxDrawContextAcquireCanvas(dctx, extent, 2, surfSpec);
+        afxSurfaceSpecification const depthSurfSpec = { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH };
+        afxResult rslt = AfxDrawOutputBuildCanvases(dout, i, 1, 1, &depthSurfSpec, &(renderer->sets[i].canv));
+        AfxAssert(rslt == 1);
 
         renderer->sets[i].viewConstants = AfxDrawContextAcquireBuffer(renderer->dctx, &bufSpec[0]);
 
@@ -622,7 +600,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.colorSpc = NIL;
     doutSpec.presentAlpha = FALSE;
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
+    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
     afxWhd extent = { 1280, 720, 1 };
