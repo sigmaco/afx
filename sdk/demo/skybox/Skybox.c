@@ -590,11 +590,22 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     afxStoragePointSpecification mpSpec = { 0 };
     afxUri256 uri256;
     AfxUri256(&uri256, NIL);
-    mpSpec.hostPath = AfxUriFormat(&uri256.uri, "art/hf2iso.zip");
+    mpSpec.hostPath = AfxUriFormat(&uri256.uri, "art/mnt.zip");
     mpSpec.namespace = AfxUriMapConstData(&uriMap, "art", 0);
     mpSpec.perm = AFX_IO_FLAG_R;
     afxResult rslt = AfxFileSystemMountStoragePoints(fsys, 1, &mpSpec);
     AfxAssert(rslt == 1);
+
+    afxArchive arc = AfxFileSystemAcquireArchive(fsys, AFX_IO_FLAG_R, &uri256.uri);
+    AfxAssertObject(arc, AFX_FCC_ARC);
+    afxUri itemNam;
+    AfxUriMapConstData(&itemNam, "art/worldtest.tga", 0);
+    afxNat itemIdx = AfxArchiveFindItem(arc, &itemNam);
+    afxStream item = AfxArchiveOpenItem(arc, itemIdx);
+
+
+    AfxUriMapConstData(&itemNam, "system/worldtest.tga", 0);
+    AfxArchiveDownloadItem(arc, itemIdx, &itemNam);
 
     AfxUriMapConstData(&uriMap, "e2newton.icd", 0);
     afxSimulationSpecification simSpec = { 0 };

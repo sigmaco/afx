@@ -42,9 +42,10 @@ AFX_OBJECT(afxArchive)
 AFX_DEFINE_STRUCT(afxArchiveItemDescriptor)
 {
     afxSize     offset;
-    afxNat      size;
+    afxNat32    size;
+    afxNat32    compressedSize;
+    afxNat32    codec;
     afxNat32    crc32;
-    afxNat      codec;
 };
 
 AFX void*       AfxArchiveGetSystem(afxArchive arc);
@@ -53,9 +54,9 @@ AFX void*       AfxArchiveGetFileSystem(afxArchive arc);
 AFX afxNat      AfxArchiveGetItemCount(afxArchive arc);
 
 AFX afxBool     AfxArchiveItemIsFile(afxArchive arc, afxNat idx);
-AFX afxResult   AfxArchiveExtractItem(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
-AFX afxResult   AfxArchiveExtractItemToStream(afxArchive arc, afxNat idx, afxStream ios);
-AFX afxResult   AfxArchiveDownloadItem(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
+AFX afxError    AfxArchiveExtractItem(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
+AFX afxError    AfxArchiveExtractItemToStream(afxArchive arc, afxNat idx, afxStream ios);
+AFX afxError    AfxArchiveDownloadItem(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
 AFX afxNat      AfxArchiveFindItem(afxArchive arc, afxUri const *name);
 AFX afxStream   AfxArchiveOpenItem(afxArchive arc, afxNat idx);
 
