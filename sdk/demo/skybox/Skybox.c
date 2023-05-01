@@ -417,7 +417,7 @@ afxError _AfxSetUpRenderer(afxRenderer *renderer, afxSimulation sim)
     //    skyboxVertices[i] *= 100;
 
     afxString skyPosSem;
-    afxVertexDataSpecification skyGeomSpec;
+    afxVertexDataSpecification skyGeomSpec = { 0 };
     skyGeomSpec.fmt = (skyGeomSpec.srcFmt = AFX_VTX_FMT_XYZ32);
     skyGeomSpec.src = skyboxVertices;
     skyGeomSpec.usage = AFX_VTX_USAGE_POS;
@@ -582,7 +582,20 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     afxError err = NIL;
     AfxEntry("app=%p", app);
 
+    afxString str, str2;
     afxUri uriMap;
+
+    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+    AfxAssertObject(fsys, AFX_FCC_FSYS);
+    afxStoragePointSpecification mpSpec = { 0 };
+    afxUri256 uri256;
+    AfxUri256(&uri256, NIL);
+    mpSpec.hostPath = AfxUriFormat(&uri256.uri, "art/hf2iso.zip");
+    mpSpec.namespace = AfxUriMapConstData(&uriMap, "art", 0);
+    mpSpec.perm = AFX_IO_FLAG_R;
+    afxResult rslt = AfxFileSystemMountStoragePoints(fsys, 1, &mpSpec);
+    AfxAssert(rslt == 1);
+
     AfxUriMapConstData(&uriMap, "e2newton.icd", 0);
     afxSimulationSpecification simSpec = { 0 };
     simSpec.bounding = NIL;
@@ -619,7 +632,6 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     din = AfxDrawContextAcquireInput(dctx, &dinSpec);
     AfxAssert(din);
 
-    afxString str;
     AfxStringMapConst(&str, "viewer", 0);
     cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
     AfxAssert(cam);
@@ -629,7 +641,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     
     _AfxSetUpRenderer(&TheRenderer, sim);
     AfxDrawInputAffinePrefetchThreads(din, 0, 1, (afxNat[]) { 1 });
-    afxResult rslt;
+    
     return AFX_SUCCESS; 
 }
 
@@ -660,8 +672,8 @@ int main(int argc, char const* argv[])
     while (reboot)
     {
         sys = AfxSystemBootUp(NIL);
-
-        dsys = AfxSystemAcquireDrawSystem(sys);
+        afxDrawSystemSpecification dsysSpec = { 0 };
+        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
@@ -672,7 +684,7 @@ int main(int argc, char const* argv[])
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
         AfxAssert(dctx);
 
-        afxApplicationSpecification appSpec;
+        afxApplicationSpecification appSpec = { 0 };
         appSpec.argc = argc;
         appSpec.argv = argv;
         appSpec.dctx = dctx;

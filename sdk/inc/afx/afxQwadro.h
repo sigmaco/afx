@@ -25,49 +25,49 @@
 // We welcome contributions from the open-source community.
 
 
-#include "core/async/afxCondition.h"
-#include "core/async/afxMutex.h"
-#include "core/async/afxThread.h"
+#include "afx/core/async/afxCondition.h"
+#include "afx/core/async/afxMutex.h"
+#include "afx/core/async/afxThread.h"
 
-#include "core/base/afxCoreDefs.h"
-#include "core/base/afxFcc.h"
-#include "core/base/afxLinkedList.h"
-#include "core/base/afxLinkedList.h"
-#include "core/base/afxObject.h"
-#include "core/base/afxSimd.h"
-#include "core/base/afxString.h"
+#include "afx/core/afxCoreDefs.h"
+#include "afx/core/afxFcc.h"
+#include "afx/core/afxLinkedList.h"
+#include "afx/core/afxLinkedList.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/afxSimd.h"
+#include "afx/core/afxString.h"
 
-#include "core/diag/afxDebug.h"
+#include "afx/core/diag/afxDebug.h"
 
-#include "core/afxSystem.h"
-#include "core/io/afxStream.h"
-#include "core/io/afxUri.h"
+#include "afx/core/afxSystem.h"
+#include "afx/core/io/afxStream.h"
+#include "afx/core/io/afxUri.h"
 
-#include "core/mem/afxAllocator.h"
-#include "core/mem/afxArray.h"
-#include "core/mem/afxMemory.h"
+#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxArray.h"
+#include "afx/core/mem/afxMemory.h"
 
-#include "core/time/afxTime.h"
+#include "afx/core/time/afxTime.h"
 
-#include "afxApplication.h"
-#include "core/afxTerminal.h"
+#include "afx/afxApplication.h"
+#include "afx/core/afxTerminal.h"
 
-#include "draw/afxDrawContext.h"
-#include "draw/afxDrawInput.h"
-#include "draw/afxDrawOutput.h"
-#include "draw/afxDrawSystem.h"
+#include "afx/draw/afxDrawContext.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/draw/afxDrawOutput.h"
+#include "afx/draw/afxDrawSystem.h"
 
-#include "math/afxMatrix.h"
-#include "math/afxQuat.h"
-#include "math/afxVector.h"
-#include "math/volume/afxAabb.h"
-#include "math/volume/afxFrustum.h"
-#include "math/volume/afxPlane.h"
-#include "math/volume/afxSphere.h"
-#include "math/volume/afxVolume.h"
+#include "afx/math/afxMatrix.h"
+#include "afx/math/afxQuat.h"
+#include "afx/math/afxVector.h"
+#include "afx/math/volume/afxAabb.h"
+#include "afx/math/volume/afxFrustum.h"
+#include "afx/math/volume/afxPlane.h"
+#include "afx/math/volume/afxSphere.h"
+#include "afx/math/volume/afxVolume.h"
 
-//#include "sound/afxSoundSystem.h"
+//#include "afx/sound/afxSoundSystem.h"
 
-#include "mmux/afxWidget.h"
+#include "afx/mmux/afxWidget.h"
 
 #endif//AFX_QWADRO_H

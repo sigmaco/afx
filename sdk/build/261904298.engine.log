@@ -1,0 +1,112 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 000000000014e4d0, 000000000014e4d8)
+ Constructing instance 00000000001d2220 of Core Execution System.
+ afxSystem.c:802?_AfxSysCtor(sys=00000000001d2220)
+ ADV afxSystem.c:818?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:819?_AfxSysCtor
+    Logical processor count: 2
+ Allocator class registered.
+ Memory Arena class registered.
+ afxArena.c:799?AfxSystemAcquireArena(sys=00000000001d2220,strategy=000000000014cae0,hint="afxSystem.c:837!_AfxSysCtor")
+ Class[Memory Arena].ConstructInstances(1, 000000000014c790, 000000000014c798)
+ Constructing instance 00000000001d3e10 of Memory Arena : Allocator.
+ Constructing instance 00000000001d3e10 of Allocator.
+ afxAllocator.c:281?_AfxAllCtor(all=00000000001d3e10)
+ Constructing instance 00000000001d3e10 of Memory Arena.
+ afxArena.c:778?_AfxArenCtor(aren=00000000001d3e10)
+ Instance 00000000001d3e10[aren]^1 built.
+ Thread class registered.
+ File System class registered.
+ afxFileSystem.c:497?AfxSystemAcquireFileSystem(sys:00000000001d2220,mnptCnt=5,spec=000000000014cdc0)
+ Class[File System].ConstructInstances(1, 000000000014c780, 000000000014c788)
+ Constructing instance 00000000001d6420 of File System.
+ afxFileSystem.c:552?_AfxFsysCtor(fsys=00000000001d6420)
+ I/O Stream class registered.
+ File class registered.
+ Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ ERR afxMemory.c:274?AfxAllocate
+    
+ ERR afxFileSystem.c:379?AfxFileSystemMountPoints
+    
+ ERR afxFileSystem.c:584?_AfxFsysCtor
+    
+ Deregistering Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deregistered.
+ Deregistering Resource class...
+ Resource class deregistered.
+ Deregistering Archive class...
+ Archive class deregistered.
+ Deregistering File class...
+ File class deregistered.
+ Deregistering I/O Stream class...
+ I/O Stream class deregistered.
+ ERR afxClass.c:190?_AfxClsRunSubsetCtor
+    
+ ERR afxClass.c:228?AfxClassConstructInstances
+    
+ ERR afxObject.c:466?AfxObjectAcquire
+    
+ ERR afxFileSystem.c:512?AfxSystemAcquireFileSystem
+    
+ ERR afxSystem.c:914?_AfxSysCtor
+    
+ Class[Memory Arena].DestructInstances(1, 000000000014c938, 000000000014d6d9)
+ Destructing instance 00000000001d3e10 of Memory Arena class.
+ afxArena.c:769?_AfxArenDtor(aren=00000000001d3e10)
+ Destructing instance 00000000001d3e10 of Memory Arena : Allocator class.
+ Destructing instance 00000000001d3e10 of Allocator class.
+ afxAllocator.c:265?_AfxAllDtor(all=00000000001d3e10)
+ Instance 00000000001d3e10[aren]^0 destroyed.
+ Deregistering File System class...
+ File System class deregistered.
+ Deregistering Thread class...
+ Thread class deregistered.
+ Deregistering Memory Arena class...
+ Memory Arena class deregistered.
+ Deregistering Allocator class...
+ Allocator class deregistered.
+ ERR afxClass.c:190?_AfxClsRunSubsetCtor
+    
+ ERR afxClass.c:228?AfxClassConstructInstances
+    
+ ERR afxObject.c:466?AfxObjectAcquire
+    
+ ERR afxSystem.c:767?AfxSystemBootUp
+    
+ afxDrawSystem.c:254?AfxSystemAcquireDrawSystem(sys=0000000000000000)
+ ERR afxObject.c:275?AfxObjectAssert
+    
+ ERR afxObject.c:275?AfxObjectAssert
+    (obj)
+    Invalid
+ ERR afxObject.c:156?AfxObjectTestFcc
+    
+ ERR afxObject.c:156?AfxObjectTestFcc
+    (obj)
+    Invalid
+ ERR afxObject.c:203?AfxObjectGetClass
+    
+ ERR afxObject.c:203?AfxObjectGetClass
+    (obj)
+    Invalid

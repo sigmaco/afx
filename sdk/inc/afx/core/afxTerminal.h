@@ -17,7 +17,7 @@
 #ifndef AFX_TERMINAL_H
 #define AFX_TERMINAL_H
 
-#include "afx/core/base/afxCoreDefs.h"
+#include "afx/core/afxCoreDefs.h"
 
 AFX afxResult AfxRequestIntervention(afxString *str);
 

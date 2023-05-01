@@ -17,13 +17,13 @@
 #ifndef AFX_SLAB_ALLOCATOR_H
 #define AFX_SLAB_ALLOCATOR_H
 
-#include "afxAllocator.h"
+#include "afx/core/mem/afxMemory.h"
 
-AFX_DEFINE_HANDLE(afxSlabAllocator);
+AFX_DEFINE_HANDLE(afxSlabMemory);
 
-AFX_OBJECT(afxSlabAllocator)
+AFX_OBJECT(afxSlabMemory)
 {
-    AFX_OBJECT(afxAllocator)    all;
+    AFX_OBJECT(afxMemory)    all;
 };
 
 #endif//AFX_SLAB_ALLOCATOR_H

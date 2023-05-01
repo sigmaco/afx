@@ -17,7 +17,7 @@
 #ifndef AFX_URI_H
 #define AFX_URI_H
 
-#include "../base/afxString.h"
+#include "afx/core/afxString.h"
 
 #define AFX_URI_FILE_EXT_SEP '.'
 #define AFX_URI_PATH_HERE '.'

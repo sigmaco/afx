@@ -11,7 +11,7 @@
 
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawOutput.h"
-#include "afx/core/base/afxString.h"
+#include "afx/core/afxString.h"
 #include "afx/math/afxVector.h"
 
 typedef struct
@@ -404,7 +404,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                 UINT formatCount;
                 dout->wglDcPxlFmt = 0;
 
-                if (!wglChoosePixelFormatARB(dout->wglDc, pxlAttrPairs, 0, 1, &(dout->wglDcPxlFmt), &(formatCount))) AfxThrowError();
+                if (!wglChoosePixelFormatARB(dout->wglDc, &pxlAttrPairs[0][0], 0, 1, &(dout->wglDcPxlFmt), &(formatCount))) AfxThrowError();
                 else
                 {
                     AfxAssert(dout->wglDcPxlFmt);

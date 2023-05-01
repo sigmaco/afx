@@ -14,13 +14,16 @@
  *                                    www.sigmaco.org
  */
 
+// SIGMA bring back to you the old "bring your own driver" paradigm.
+
 #ifndef AFX_DRAW_DRIVER_H
 #define AFX_DRAW_DRIVER_H
 
-#include "afxDrawInput.h"
-#include "afxDrawOutput.h"
-#include "pipelining/afxPipeline.h"
-#include "afxDrawQueue.h"
+#include "afx/core/afxClass.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/draw/afxDrawOutput.h"
+#include "afx/draw/pipelining/afxPipeline.h"
+#include "afx/draw/afxDrawQueue.h"
 
 AFX_DEFINE_STRUCT(afxDrawDriverFeatures)
 {
@@ -103,21 +106,38 @@ AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
     afxError                    (*iddDtor)(afxDrawDriver ddrv);
 };
 
-#ifndef AFX_DRAW_DRIVER_C
+AFX_OBJECT(afxDrawDriver)
+{
+    afxObject                   obj;
+#ifdef _AFX_DRAW_DRIVER_C
+    afxChain                    provisions;
+    afxClass                    dctxClass; // uses dque, din, dout
+    afxModule                   mdle;
 
-AFX_OBJECT(afxDrawDriver) { afxObject obj; };
+    afxString128                name; // driver name: SIGGL
+    afxString128                author; // author: SIGMA Technology Group
+    afxString128                website; // website: sigmaco.org
+    afxString4096               note; // The standard QWADRO draw system implementation.
+    afxNat                      verMajor; // 1
+    afxNat                      verMinor; // 0
+    afxNat                      verPatch; // 0
 
+    afxDrawDriverFeatures       features;
+    afxError                    (*process)(afxDrawDriver ddrv); // things to be processed on main thread
+    void*                       idd;
+    afxError                    (*iddDtor)(afxDrawDriver ddrv);
 #endif
+};
 
-AFX afxError    AfxDrawDriverGetFeatures(afxDrawDriver ddrv, afxDrawDriverFeatures *features);
+AFX afxError                    AfxDrawDriverGetFeatures(afxDrawDriver ddrv, afxDrawDriverFeatures *features);
 
-AFX afxNat      AfxDrawDriverGetContextCount(afxDrawDriver ddrv);
-AFX afxResult   AfxDrawDriverEnumerateContexts(afxDrawDriver ddrv, afxNat base, afxNat cnt, afxDrawContext dctx[]);
-AFX afxClass*   AfxDrawDriverGetContextClass(afxDrawDriver ddrv);
+AFX afxNat                      AfxDrawDriverGetContextCount(afxDrawDriver ddrv);
+AFX afxResult                   AfxDrawDriverEnumerateContexts(afxDrawDriver ddrv, afxNat base, afxNat cnt, afxDrawContext dctx[]);
+AFX afxClass*                   AfxDrawDriverGetContextClass(afxDrawDriver ddrv);
 
-AFX void*       AfxDrawDriverGetDrawSystem(afxDrawDriver ddrv);
-AFX void*       AfxDrawDriverGetIdd(afxDrawDriver ddrv);
+AFX void*                       AfxDrawDriverGetDrawSystem(afxDrawDriver ddrv);
+AFX void*                       AfxDrawDriverGetIdd(afxDrawDriver ddrv);
 
-AFX afxError    _AfxDrawDriverProcess(afxDrawDriver ddrv); // Called by draw system. Reserved for enginners at SIGMA.
+AFX afxError                    _AfxDrawDriverProcess(afxDrawDriver ddrv); // Called by draw system. Reserved for enginners at SIGMA.
 
 #endif//AFX_DRAW_DRIVER_H

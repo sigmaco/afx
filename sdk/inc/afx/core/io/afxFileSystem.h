@@ -46,8 +46,7 @@ contents may be returned.
 
 typedef struct afxUriResolver
 {
-    afxChar         *access; // "rwx"
-    afxNat          _dropParts;
+    afxIoFlags      permissions;
     afxUri const    *in;
     afxUri          *out;
     afxTime         *lastUpdTime;
@@ -72,37 +71,57 @@ typedef struct afxResourceInfo
 
 // Mounting is a process by which the operating system makes files and directories on a storage device available for users to access via the computer's file system.
 
-AFX_DEFINE_STRUCT(afxMountPointSpecification)
+AFX_DEFINE_STRUCT(afxStoragePointSpecification)
 {
-    afxUri const    *namespace;
+    afxUri const    *namespace; // exchange point
     afxUri const    *hostPath;
-    afxBool         rwx[3];
+    afxIoFlags      perm;
     afxBool         isZip;
+};
+
+AFX_DEFINE_STRUCT(afxFileSystemSpecification)
+{
+    afxMemory                        genrlMem;
+    afxNat                              mpCnt;
+    afxStoragePointSpecification const*   mpSpec;
 };
 
 AFX_DEFINE_HANDLE(afxFileSystem);
 
-#ifndef AFX_FILE_SYSTEM_C
-
-AFX_OBJECT(afxFileSystem) { afxObject obj; };
-
+AFX_OBJECT(afxFileSystem)
+{
+    afxObject       obj;
+#ifdef _AFX_FILE_SYSTEM_C
+    afxSystem       sys;
+    afxChain        provisions;
+    afxMemory       genrlMem;
+    afxClass        iosClass;
+    afxClass        fileClass;
+    afxClass        archClass;
+    afxClass        urdClass;
+    afxClass        resClass;
+    afxChain        mountPoints;
+    afxChain        aliveRsrcs;
 #endif
+};
 
-AFX void*           AfxFileSystemGetSystem(afxFileSystem fsys);
-AFX afxAllocator    AfxFileSystemGetAllocator(afxFileSystem fsys);
+AFX afxSystem       AfxFileSystemGetSystem(afxFileSystem fsys);
+AFX afxMemory       AfxFileSystemGetMemory(afxFileSystem fsys);
 
-AFX afxStream       AfxFileSystemAcquireStream(afxFileSystem fsys, afxRwx const rwx, void *buf, afxNat bufCap);
-AFX afxFile         AfxFileSystemOpenFile(afxFileSystem fsys, afxRwx const rwx, afxUri const *uri);
-AFX afxFile         AfxFileSystemLoadFile(afxFileSystem fsys, afxRwx const rwx, afxUri const *uri);
+AFX afxStream       AfxFileSystemAcquireStream(afxFileSystem fsys, afxIoFlags flags, void *buf, afxNat bufCap);
+AFX afxFile         AfxFileSystemOpenFile(afxFileSystem fsys, afxIoFlags flags, afxUri const *uri);
+AFX afxFile         AfxFileSystemOpenReadableFile(afxFileSystem fsys, afxUri const *uri);
+AFX afxFile         AfxFileSystemOpenWritableFile(afxFileSystem fsys, afxUri const *uri);
+AFX afxStream       AfxFileSystemLoadFile(afxFileSystem fsys, afxIoFlags flags, afxUri const *uri); // will fully load the opened file then close it.
 
-AFX afxArchive      AfxFileSystemAcquireArchive(afxFileSystem fsys, afxUri const *uri, afxChar const *access);
+AFX afxArchive      AfxFileSystemAcquireArchive(afxFileSystem fsys, afxIoFlags flags, afxUri const *uri);
 AFX afxResource     AfxFileSystemAcquireResource(afxFileSystem fsys, afxResourceSpecification const *spec);
 AFX afxUrd          AfxFileSystemLoadUrd(afxFileSystem fsys, afxUri const *uri);
 
-AFX afxResult       AfxFileSystemMountPoints(afxFileSystem fsys, afxNat cnt, afxMountPointSpecification const spec[]);
-AFX afxResult       AfxFileSystemDismountPoints(afxFileSystem fsys, afxNat cnt, afxMountPointSpecification const spec[]);
-AFX afxResult       AfxFileSystemDescribeMountPoints(afxFileSystem fsys, afxNat base, afxNat cnt, afxMountPointSpecification spec[]);
-AFX afxNat          AfxFileSystemGetMountPointCount(afxFileSystem fsys);
+AFX afxResult       AfxFileSystemMountStoragePoints(afxFileSystem fsys, afxNat cnt, afxStoragePointSpecification const spec[]);
+AFX afxResult       AfxFileSystemDismountStoragePoints(afxFileSystem fsys, afxNat cnt, afxStoragePointSpecification const spec[]);
+AFX afxResult       AfxFileSystemDescribeStoragePoints(afxFileSystem fsys, afxNat base, afxNat cnt, afxStoragePointSpecification spec[]);
+AFX afxNat          AfxFileSystemGetStoragePointCount(afxFileSystem fsys);
 
 AFX afxResult       AfxFileSystemEnumerateArchives(afxFileSystem fsys, afxNat base, afxNat cnt, afxArchive arch[]);
 AFX afxResult       AfxFileSystemEnumerateResources(afxFileSystem fsys, afxNat base, afxNat cnt, afxResource res[]);

@@ -35,9 +35,6 @@
     <ClCompile Include="..\src\e2draw\sglDriver.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\e2draw\sglIndexBuffer.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\e2draw\sglLego.c">
       <Filter>e2draw</Filter>
     </ClCompile>
@@ -57,9 +54,6 @@
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2draw\sglTexture.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\e2draw\sglVertexBuffer.c">
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\src\e2draw\sglDrawQueue.c">

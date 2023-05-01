@@ -25,13 +25,13 @@
 #ifndef AFX_DRAW_SCRIPT_H
 #define AFX_DRAW_SCRIPT_H
 
-#include "pipelining/afxPipeline.h"
-#include "pipelining/afxLego.h"
-#include "pipelining/afxSampler.h"
-#include "res/afxCanvas.h"
-#include "res/afxIndexBuffer.h"
-#include "res/afxVertexBuffer.h"
-#include "res/afxBuffer.h"
+#include "afx/draw/pipelining/afxPipeline.h"
+#include "afx/draw/pipelining/afxLego.h"
+#include "afx/draw/pipelining/afxSampler.h"
+#include "afx/draw/res/afxCanvas.h"
+#include "afx/draw/res/afxIndexBuffer.h"
+#include "afx/draw/res/afxVertexBuffer.h"
+#include "afx/draw/res/afxBuffer.h"
 
 /*
 Each command buffer is always in one of the following states:

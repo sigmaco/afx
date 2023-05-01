@@ -83,7 +83,7 @@ AFX_OBJECT(afxDrawContext)
     afxClass      doutClass; // uses canv
 
 
-    afxAllocator    genrlAll;
+    afxMemory    genrlMem;
     afxNat              queueCnt;
     afxDrawQueue        *queues;
 
@@ -314,7 +314,7 @@ AFX_OBJECT(afxDrawInput)
 {
     afxObject           obj;
 
-    afxAllocator        cmdAll;
+    afxMemory        cmdAll;
 
     afxTransistor       streamingLock;
     afxQueue            streamingQueue;
@@ -337,6 +337,7 @@ AFX_OBJECT(afxDrawInput)
 AFX_DEFINE_STRUCT(_afxDscrCmd)
 {
     afxNat              id;
+    afxNat              siz;
     afxLinkage          script;
 };
 
@@ -346,7 +347,7 @@ AFX_OBJECT(afxDrawScript)
     afxDrawScriptState  state;
     afxNat32            lastUpdTime;
 
-    afxAllocator        cachedCmdAll; // Owned by draw input. Don't release it.
+    afxMemory        cmdAll; // Owned by draw input. Don't release it.
     _afxDscrCmd         cmdBegin;
     _afxDscrCmd         cmdEnd;
     afxChain            commands;
@@ -445,12 +446,8 @@ AFX_OBJECT(afxSampler)
     afxNat          glHandle;
 };
 
-AFX_OBJECT(afxBuffer)
+typedef struct
 {
-    afxObject           obj;
-
-    afxSize             siz;
-    afxBufferUsage      usage;
     afxByte             *bytemap;
 
     afxBool             locked;
@@ -462,23 +459,9 @@ AFX_OBJECT(afxBuffer)
     afxNat          glHandle;
     GLenum          glTarget;
     GLenum          glUsage;
-};
+} sglBufIdd;
 
-
-AFX_OBJECT(afxIndexBuffer)
-{
-    AFX_OBJECT(afxBuffer)   buf; // IBUF
-    afxNat                  idxCnt;
-    afxNat                  idxSiz;
-};
-
-AFX_OBJECT(afxVertexBuffer)
-{
-    AFX_OBJECT(afxBuffer)   buf;
-    afxNat                  vtxCnt;
-    afxNat                  rowCnt;
-    afxVertexDataRow        *row;
-};
+static_assert(AFX_BUF_IDD >= sizeof(sglBufIdd), "");
 
 AFX_OBJECT(afxTexture)
 {
@@ -746,6 +729,7 @@ SGL afxResult _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
 SGL void _SglEnqueueGlResourceDeletion(afxDrawContext dctx, afxNat queueIdx, afxNat type, GLuint gpuHandle);
 
 // buf
+SGL afxBufImpl const _SglBufImpl;
 SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride);
 SGL afxError _AfxBufferDump(afxBuffer buf, afxSize base, afxSize range, void *dst);
 SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, afxNat cnt, void const *src, afxSize srcStride);
@@ -805,9 +789,7 @@ SGL afxDrawOutput _AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const
 SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 SGL afxCanvas _AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *specs);
 SGL afxBuffer _AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec);
-SGL afxVertexBuffer _AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat rowCnt, afxVertexDataSpecification const *specs);
 SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
-SGL afxIndexBuffer _AfxDrawContextAcquireIndexBuffer(afxDrawContext dctx, afxIndexBufferSpecification const *spec);
 SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle);
 SGL afxError _AfxDrawContextFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
 SGL afxError _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[]);

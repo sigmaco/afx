@@ -164,7 +164,6 @@
     <ClCompile Include="..\src\e2draw\sglDrawOutput.c" />
     <ClCompile Include="..\src\e2draw\sglDrawScript.c" />
     <ClCompile Include="..\src\e2draw\sglDriver.c" />
-    <ClCompile Include="..\src\e2draw\sglIndexBuffer.c" />
     <ClCompile Include="..\src\e2draw\sglLego.c" />
     <ClCompile Include="..\src\e2draw\sglPipeline.c" />
     <ClCompile Include="..\src\e2draw\sglPipelineModule.c" />
@@ -172,7 +171,6 @@
     <ClCompile Include="..\src\e2draw\sglSampler.c" />
     <ClCompile Include="..\src\e2draw\sglSurface.c" />
     <ClCompile Include="..\src\e2draw\sglTexture.c" />
-    <ClCompile Include="..\src\e2draw\sglVertexBuffer.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -32,7 +32,7 @@ The contained bindings need to be a superset of the resources used by the shader
 
 */
 
-#include "afxSampler.h"
+#include "afx/draw/pipelining/afxSampler.h"
 
 typedef enum afxPipelineAccessType
 {
