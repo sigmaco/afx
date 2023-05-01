@@ -17,9 +17,10 @@
 #ifndef AFX_THREAD_H
 #define AFX_THREAD_H
 
-#include "../base/afxObject.h"
-#include "../mem/afxQueue.h"
-#include "../time/afxTime.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/mem/afxQueue.h"
+#include "afx/core/time/afxTime.h"
+#include "afx/core/mem/afxMemory.h"
 
 // The afxThread class provides a platform-independent way to manage threads.
 
@@ -30,6 +31,7 @@ AFX_DEFINE_HANDLE(afxThread);
 AFX_OBJECT(afxThread)
 {
     afxObject       obj;
+#ifdef _AFX_THREAD_C
     afxNat32        tid;
     afxSize         osHandle;
     afxHint         hint;
@@ -42,10 +44,12 @@ AFX_OBJECT(afxThread)
     afxBool         interruptionRequested;
     afxQueue        events;
     void            (*exec)(afxThread thr);
-    afxAllocator    all;
+    afxMemory       mem;
+#endif
 };
 
 AFX void*       AfxThreadGetSystem(afxThread thr);
+AFX void*       AfxThreadGetUdd(afxThread thr);
 
 AFX afxNat32    AfxThreadGetId(afxThread thr);
 AFX void        AfxThreadStart(afxThread thr);

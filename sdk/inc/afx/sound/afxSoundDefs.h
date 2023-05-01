@@ -1,11 +1,11 @@
 #ifndef AFX_SOUND_DEFS_H
 #define AFX_SOUND_DEFS_H
 
-#include "afx/core/base/afxObject.h"
-#include "afx/core/base/afxLinkedList.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/afxLinkedList.h"
 #include "afx/core/async/AfxCondition.h"
-#include "afx/core/base/afxEvent.h"
-#include "afx/core/mem/afxAllocator.h"
+#include "afx/core/afxEvent.h"
+#include "afx/core/mem/afxMemory.h"
 
 typedef enum
 {

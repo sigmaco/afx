@@ -17,7 +17,7 @@
 #ifndef AFX_HID_H
 #define AFX_HID_H
 
-#include "../base/afxObject.h"
+#include "afx/core/afxObject.h"
 
 typedef enum afxHidFlag
 {
@@ -26,16 +26,18 @@ typedef enum afxHidFlag
 
 AFX_DEFINE_HANDLE(afxHid);
 
+AFX_OBJECT(afxHid)
+{
+    afxObject   obj;
+#ifdef _AFX_HID_C
+    afxHidFlag  flags;
+    afxNat      port;
+#endif
+};
+
 AFX void*       AfxHidGetSystem(afxHid hid);
 
 AFX afxNat      AfxHidGetPort(afxHid hid);
 AFX afxResult   AfxHidTestFlags(afxHid hid, afxHidFlag flags);
-
-AFX_OBJECT(afxHid)
-{
-    afxObject   obj;
-    afxHidFlag  flags;
-    afxNat      port;
-};
 
 #endif//AFX_HID_H

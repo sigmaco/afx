@@ -21,9 +21,9 @@
 #include "afx/core/io/afxMouse.h"
 #include "afx/core/io/afxStream.h"
 #include "afx/core/io/afxUri.h"
-#include "afx/core/mem/afxAllocator.h"
+#include "afx/core/mem/afxArena.h"
 #include "afx/core/time/afxTime.h"
-#include "afxModule.h"
+#include "afx/core/afxModule.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/io/afxFileSystem.h"
 
@@ -42,20 +42,45 @@ AFX_DEFINE_STRUCT(afxSystemSpecification)
 {
     afxChar const                       *root;
     afxNat                              mntCnt;
-    afxMountPointSpecification const    *mntSpecs;
+    afxStoragePointSpecification const    *mntSpecs;
     afxSize                             maxMemUsage;
 };
 
-#ifndef AFX_SYSTEM_C
 
-AFX_OBJECT(afxSystem) { afxObject obj; };
+AFX_OBJECT(afxSystem)
+{
+    afxObject           obj;
+#ifdef _AFX_SYSTEM_C
+    afxChain            provisions;
 
+    afxUri4096          rootDir;
+
+    afxClass            allClass;
+    afxClass            arenClass;
+    afxClass            thrClass;
+    afxClass            fsysClass;
+    afxClass            mdleClass;
+    afxClass            hidClass;
+    afxClass            kbdClass;
+    afxClass            mseClass;
+    afxClass            dsysClass;
+    afxClass            appClass; // can use everything
+
+    afxNat              nofProcessors;
+    afxNat              memPageSize; // The page size and the granularity of page protection and commitment.
+    afxFileSystem       baseFsys;
+    afxMemory        genrlMem;
+    afxModule           e2coree;
+    afxThread           deusExMachina;
+    afxKeyboard         stdKbd;
 #endif
+};
 
-AFX afxAllocator        AfxSystemAcquireAllocator(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
+AFX afxMemory           AfxSystemAcquireMemory(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
+AFX afxArena            AfxSystemAcquireArena(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
 AFX afxApplication      AfxSystemAcquireApplication(afxSystem sys, afxApplicationSpecification const *spec);
-AFX afxDrawSystem       AfxSystemAcquireDrawSystem(afxSystem sys);
-AFX afxFileSystem       AfxSystemAcquireFileSystem(afxSystem sys, afxNat mnptCnt, afxMountPointSpecification const spec[]);
+AFX afxDrawSystem       AfxSystemAcquireDrawSystem(afxSystem sys, afxDrawSystemSpecification const *spec);
+AFX afxFileSystem       AfxSystemAcquireFileSystem(afxSystem sys, afxFileSystemSpecification const *spec);
 AFX afxHid              AfxSystemAcquireHid(afxSystem sys, afxNat port);
 AFX afxKeyboard         AfxSystemAcquireKeyboard(afxSystem sys, afxNat port);
 AFX afxModule           AfxSystemAcquireModule(afxSystem sys, afxUri const *uri);
@@ -67,7 +92,8 @@ AFX afxKeyboard         AfxSystemFindKeyboard(afxSystem sys, afxNat port);
 AFX afxModule           AfxSystemFindModule(afxSystem sys, afxUri const *uri);
 AFX afxMouse            AfxSystemFindMouse(afxSystem sys, afxNat port);
 
-AFX afxClass*           AfxSystemGetAllocatorClass(afxSystem sys);
+AFX afxClass*           AfxSystemGetMemoryClass(afxSystem sys);
+AFX afxClass*           AfxSystemGetArenaClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetApplicationClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetDrawSystemClass(afxSystem sys);
 AFX afxClass*           AfxSystemGetFileSystemClass(afxSystem sys);
@@ -79,12 +105,13 @@ AFX afxClass*           AfxSystemGetThreadClass(afxSystem sys);
 
 AFX afxNat              AfxSystemGetMemPageSize(afxSystem sys);
 AFX afxNat              AfxSystemGetProcessorCount(afxSystem sys);
-AFX afxAllocator        AfxSystemGetAllocator(afxSystem sys);
+AFX afxMemory           AfxSystemGetMemory(afxSystem sys);
 AFX afxFileSystem       AfxSystemGetFileSystem(afxSystem sys);
 AFX afxUri const*       AfxSystemGetRootUri(afxSystem sys, afxUri *copy);
 AFX afxString const*    AfxSystemGetRootUriString(afxSystem sys, afxString *copy);
 
-AFX afxResult           AfxSystemEnumerateAllocators(afxSystem sys, afxNat base, afxNat cnt, afxAllocator all[]);
+AFX afxResult           AfxSystemEnumerateMemories(afxSystem sys, afxNat base, afxNat cnt, afxMemory mem[]);
+AFX afxResult           AfxSystemEnumerateArenas(afxSystem sys, afxNat base, afxNat cnt, afxArena aren[]);
 AFX afxResult           AfxSystemEnumerateApplications(afxSystem sys, afxNat base, afxNat cnt, afxApplication app[]);
 AFX afxResult           AfxSystemEnumerateDrawSystems(afxSystem sys, afxNat base, afxNat cnt, afxDrawSystem dsys[]);
 AFX afxResult           AfxSystemEnumerateFileSystems(afxSystem sys, afxNat base, afxNat cnt, afxFileSystem fsys[]);

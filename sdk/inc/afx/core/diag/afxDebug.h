@@ -17,8 +17,8 @@
 #ifndef AFX_DEBUG_H
 #define AFX_DEBUG_H
 
-#include "../base/afxCoreDefs.h"
-#include "../base/afxFcc.h"
+#include "afx/core/afxCoreDefs.h"
+#include "afx/core/afxFcc.h"
 
 #if _DEBUG
 #define _AFX_DEBUG 1

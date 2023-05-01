@@ -17,8 +17,8 @@
 #ifndef AFX_LEGO_H
 #define AFX_LEGO_H
 
-#include "afxPipelineRig.h"
-#include "../res/afxBuffer.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
+#include "afx/draw/res/afxBuffer.h"
 
 // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 

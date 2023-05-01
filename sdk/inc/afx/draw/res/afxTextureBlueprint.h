@@ -17,7 +17,7 @@
 #ifndef AFX_TEXTURE_BLUEPRINT_H
 #define AFX_TEXTURE_BLUEPRINT_H
 
-#include "afxTexture.h"
+#include "afx/draw/res/afxTexture.h"
 
 // Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de uma afxTexture.
 

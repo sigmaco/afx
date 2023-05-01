@@ -284,7 +284,7 @@ _SGL afxError _AfxDinCtor(afxDrawInput din, afxDrawInputSpecification const *spe
         din->presentationThreadEnabled[i] = spec->enabledPresentationThreads ? spec->enabledPresentationThreads[i] : TRUE;
     }
 
-    if (!(din->cmdAll = AfxSystemAcquireAllocator(sys, &as, AfxSpawnHint()))) AfxThrowError();
+    if (!(din->cmdAll = AfxSystemAcquireArena(sys, &as, AfxSpawnHint()))) AfxThrowError();
     else
     {
         if (AfxTransistorDeploy(&din->streamingLock)) AfxThrowError();

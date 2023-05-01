@@ -380,7 +380,7 @@ _SGL void _SglDqueSetScissor(afxDrawQueue dque, afxNat first, afxNat cnt, afxRec
                 v[i][2] = rect[i].extent[0],
                 v[i][3] = rect[i].extent[1];
 
-            gl->ScissorArrayv(first, cnt, v); _SglThrowErrorOccuried();
+            gl->ScissorArrayv(first, cnt, &v[0][0]); _SglThrowErrorOccuried();
         }
         else
         {
@@ -424,7 +424,7 @@ _SGL void _SglDqueSetViewport(afxDrawQueue dque, afxNat first, afxNat cnt, afxVi
                 v[i][2] = vp[i].extent[0],
                 v[i][3] = vp[i].extent[1];
 
-            gl->ViewportArrayv(first, cnt, v); _SglThrowErrorOccuried();
+            gl->ViewportArrayv(first, cnt, &v[0][0]); _SglThrowErrorOccuried();
         }
         else
         {
@@ -445,7 +445,7 @@ _SGL void _SglDqueSetViewport(afxDrawQueue dque, afxNat first, afxNat cnt, afxVi
                 v[i][0] = vp[i].depth[0],
                 v[i][1] = vp[i].depth[1];
 
-            gl->DepthRangeArrayv(first, cnt, v); _SglThrowErrorOccuried();
+            gl->DepthRangeArrayv(first, cnt, &v[0][0]); _SglThrowErrorOccuried();
         }
         else
         {
@@ -825,19 +825,16 @@ _SGL void _SglDqueBindVertexBuffers(afxDrawQueue dque, afxNat base, afxNat cnt, 
         dque->state.vertexBindings[base + i].stride = 0;
 
         afxNat offset, stride;
-        GLuint glHandle;
 
         if (vbuf[i])
         {
             offset = AfxVertexBufferGetOffset(vbuf[i], baseVtx[i], vtxArr[i]);
             stride = AfxVertexBufferGetStride(vbuf[i], vtxArr[i]);
-            glHandle = vbuf[i]->buf.glHandle;
         }
         else
         {
             offset = 0;
             stride = 0;
-            glHandle = 0;
         }
 
         AfxAssert(stride);
@@ -1452,9 +1449,9 @@ _SGL afxError _SglDquePresentSurface(afxDrawQueue dque, afxDrawOutput dout, afxN
         //gl->DeleteFramebuffers(1, &(gpuHandle)); _SglThrowErrorOccuried();
 #else
         //if (dout->presentMode == AFX_PRESENT_MODE_FIFO)
-            //surf = AfxContainerOf(AfxChainGetLastLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
+            //surf = AfxContainerOf(AfxChainGetEnd(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
         //else //if (dout->presentMode == AFX_PRESENT_MODE_LIFO)
-            //surf = AfxContainerOf(AfxChainGetFirstLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
+            //surf = AfxContainerOf(AfxChainGetBegin(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
         //else AfxError("Not implemented yet.");
 
         afxLegoPoint point = { 0 };
@@ -1700,7 +1697,7 @@ _SGL void _SglDqueWorkerThreadExec(afxThread thr)
 {
     afxError err = NIL;
     AfxAssertObject(thr, AFX_FCC_THR);
-    afxDrawQueue dque = thr->udd;
+    afxDrawQueue dque = AfxThreadGetUdd(thr);
     _SglDqueProcess(dque);
 }
 

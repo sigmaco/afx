@@ -1,0 +1,1852 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 000000000017ea50, 000000000017ea58)
+ Constructing instance 0000000000251e70 of Core Execution System.
+ afxSystem.c:802?_AfxSysCtor(sys=0000000000251e70)
+ ADV afxSystem.c:818?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:819?_AfxSysCtor
+    Logical processor count: 2
+ Memory Context class registered.
+ Memory Arena class registered.
+ afxMemory.c:255?AfxSystemAcquireMemory(sys=0000000000251e70,strategy=000000000017d080,hint="afxSystem.c:837!_AfxSysCtor")
+ Class[Memory Context].ConstructInstances(1, 000000000017cd00, 000000000017cd08)
+ Constructing instance 000000000024c580 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=000000000024c580)
+ Instance 000000000024c580[mem]^1 built.
+ Thread class registered.
+ File System class registered.
+ afxFileSystem.c:524?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(0000000000251e70,5,000000000017d360))
+ Class[File System].ConstructInstances(1, 000000000017cd00, 000000000017cd08)
+ Constructing instance 0000000000253ca0 of File System.
+ afxFileSystem.c:572?_AfxFsysCtor(fsys=0000000000253ca0)
+ I/O Stream class registered.
+ File class registered.
+ ZIP-compatible Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ afxFileSystem.c:375?AfxFileSystemMountPoints(Afx.FileSystem.MountPoints(0000000000253ca0,5,000000000017d360))
+ Point "." 1 mounted -> "E:/qwadro/afx".
+ Point "system" 1 mounted -> "E:/qwadro/afx/system64".
+ Point "art" 1 mounted -> "E:/qwadro/afx/art".
+ Point "data" 1 mounted -> "E:/qwadro/afx/data".
+ Point "sound" 1 mounted -> "E:/qwadro/afx/sound".
+ Instance 0000000000253ca0[fsys]^1 built.
+ Module class registered.
+ afxModule.c:72?AfxSystemAcquireModule(sys=0000000000251e70,uri=system/e2coree.dll)
+ Class[Module].ConstructInstances(1, 000000000017cc40, 000000000017cc48)
+ Constructing instance 00000000002558f0 of Module.
+ afxModule.c:123?_AfxMdleCtor(uri:system/e2coree.dll)
+ Instance 00000000002558f0[mdle]^1 built.
+ HID class registered.
+ Keyboard class registered.
+ Mouse class registered.
+ Draw System class registered.
+ Application class registered.
+ afxKeyboard.c:163?AfxSystemAcquireKeyboard(sys=0000000000251e70,port=0)
+ Class[Keyboard].ConstructInstances(1, 000000000017cd40, 000000000017cd48)
+ Constructing instance 0000000000255a10 of Keyboard : HID.
+ Constructing instance 0000000000255a10 of HID.
+ afxHid.c:56?_AfxHidCtor(hid=0000000000255a10)
+ Constructing instance 0000000000255a10 of Keyboard.
+ afxKeyboard.c:203?_AfxKbdCtor(kbd=0000000000255a10)
+ Instance 0000000000255a10[kbd]^1 built.
+ Instance 0000000000251e70[sys]^1 built.
+ afxDrawSystem.c:320?AfxSystemAcquireDrawSystem(sys=0000000000251e70)
+ Class[Draw System].ConstructInstances(1, 000000000017ea60, 000000000017ea68)
+ Constructing instance 0000000000256300 of Draw System.
+ afxDrawSystem.c:399?_AfxDsysCtor(dsys=0000000000256300)
+ Draw Driver class registered.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:72?AfxSystemAcquireModule(sys=0000000000251e70,uri=e2draw.icd)
+ Class[Module].ConstructInstances(1, 000000000017e090, 000000000017e098)
+ Constructing instance 0000000000256550 of Module.
+ afxModule.c:123?_AfxMdleCtor(uri:e2draw.icd)
+ Instance 0000000000256550[mdle]^1 built.
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDriver.c:1251?_SglCreateCombinedDeviceContext(oglWndClss=000000000025c040,shareCtx=0000000000000000,phwnd=000000000025c090,phdc=000000000025c098,phrc=000000000025c0a8)
+ sglDriver.c:770?_SglLoadVmt(vmt=000000000025c0b0,verMajor=1,verMinor=0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ sglDriver.c:770?_SglLoadVmt(vmt=000000000025c0b0,verMajor=4,verMinor=6)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ glCopyTexSubImage3D @ 65 found.
+ glActiveTexture @ 66 found.
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ glCompressedTexImage2D @ 69 found.
+ glCompressedTexImage1D @ 70 found.
+ glCompressedTexSubImage3D @ 71 found.
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ glPointParameteriv @ 81 found.
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ glGetShaderiv @ 124 found.
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ glUniform4fv @ 150 found.
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ glVertexAttrib1f @ 161 found.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ glClipControl @ 543 found.
+ glNamedBufferStorage @ 551 found.
+ glTextureBufferRange @ 589 found.
+ glTextureParameteri @ 606 found.
+ glMemoryBarrierByRegion @ 641 found.
+ glGetGraphicsResetStatus @ 644 found.
+ glGetnCompressedTexImage @ 645 found.
+ glGetnTexImage @ 646 found.
+ glGetnUniformdv @ 647 found.
+ glGetnUniformfv @ 648 found.
+ glGetnUniformiv @ 649 found.
+ glGetnUniformuiv @ 650 found.
+ glReadnPixels @ 651 found.
+ afxDrawDriver.c:77?AfxDrawSystemRegisterDriver(dsys=0000000000256300,mdle=0000000000256550,spec=000000000017dee8)
+ Class[Draw Driver].ConstructInstances(1, 000000000017dc30, 000000000017dc38)
+ Constructing instance 0000000002beb6a0 of Draw Driver.
+ afxDrawDriver.c:119?_AfxDdrvCtor(ddrv=0000000002beb6a0)
+ Draw Context class registered.
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Instance 0000000002beb6a0[ddrv]^1 built.
+ Loading draw ICDs...
+ afxModule.c:72?AfxSystemAcquireModule(sys=0000000000251e70,uri=e2draw.icd)
+ afxModule.c:72?AfxSystemAcquireModule(sys=0000000000251e70,uri=e2newton.icd)
+ Class[Module].ConstructInstances(1, 000000000017ddc0, 000000000017ddc8)
+ Constructing instance 0000000003056810 of Module.
+ afxModule.c:123?_AfxMdleCtor(uri:e2newton.icd)
+ Instance 0000000003056810[mdle]^1 built.
+ Instance 0000000000256300[dsys]^1 built.
+ afxDrawContext.c:266?AfxDrawSystemAcquireContext(dsys=0000000000256300,spec=000000000017ec98)
+ Class[Draw Context].ConstructInstances(1, 000000000017e9e0, 000000000017e9e8)
+ Constructing instance 0000000002c0a5c0 of Draw Context.
+ sglDrawContext.c:389?_AfxDctxCtor(dctx=0000000002c0a5c0)
+ Draw Script class registered.
+ Draw Input class registered.
+ Draw Queue class registered.
+ Buffer class registered.
+ Vertex Buffer class registered.
+ Index Buffer class registered.
+ Sampler class registered.
+ Texture class registered.
+ Surface class registered.
+ Canvas class registered.
+ Pipeline Module class registered.
+ Pipeline Rig class registered.
+ Pipeline class registered.
+ Lego class registered.
+ Draw Output class registered.
+ sglDrawQueue.c:1769?_AfxDrawContextAcquireQueue(dctx=0000000002c0a5c0)
+ Class[Draw Queue].ConstructInstances(1, 000000000017e180, 000000000017e188)
+ Constructing instance 0000000002c196a0 of Draw Queue.
+ sglDrawQueue.c:1820?_AfxDqueCtor(dque=0000000002c196a0)
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=0000000002c0a5c0,uri=data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=0000000002c0a5c0)
+ afxUrd.c:1109?AfxFileSystemLoadUrd(uri=data/pipeline/rgbaToRgbaYFlipped.pip.urdp)
+ Class[Uniform Resource Dictionary].ConstructInstances(1, 0000000000174410, 0000000000174418)
+ Constructing instance 000000000023c2b0 of Uniform Resource Dictionary.
+ afxUrd.c:1068?_AfxUrdCtor(uri:data/pipeline/rgbaToRgbaYFlipped.pip.urd)
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,data/pipeline/rgbaToRgbaYFlipped.pip.urd))
+ Class[File].ConstructInstances(1, 0000000000173d40, 0000000000173d48)
+ Constructing instance 0000000002c0b690 of File : I/O Stream.
+ Constructing instance 0000000002c0b690 of I/O Stream.
+ Constructing instance 0000000002c0b690 of File.
+ Instance 0000000002c0b690[file]^1 built.
+ Class[File].DestructInstances(1, 0000000000173ee8, 0000000002d844d0)
+ Destructing instance 0000000002c0b690 of File class.
+ Destructing instance 0000000002c0b690 of File : I/O Stream class.
+ Destructing instance 0000000002c0b690 of I/O Stream class.
+ Instance 0000000002c0b690[file]^0 destroyed.
+ Instance 000000000023c2b0[urd]^1 built.
+ Class[Uniform Resource Dictionary].DestructInstances(1, 0000000000174578, 0000000173797366)
+ Destructing instance 000000000023c2b0 of Uniform Resource Dictionary class.
+ afxUrd.c:1047?_AfxUrdDtor(urd=000000000023c2b0)
+ Instance 000000000023c2b0[urd]^0 destroyed.
+ Class[Pipeline].ConstructInstances(1, 0000000000174670, 0000000000174678)
+ Constructing instance 0000000002c22f30 of Pipeline : Resource.
+ Constructing instance 0000000002c22f30 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000002c22f30)
+ Constructing instance 0000000002c22f30 of Pipeline.
+ sglPipeline.c:637?_AfxPipCtor(pip=0000000002c22f30)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000174f90,len=560)
+ sglPipelineModule.c:201?_AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000174f90,len=560)
+ Class[Pipeline Module].ConstructInstances(1, 0000000000173c50, 0000000000173c58)
+ Constructing instance 0000000002d71e20 of Pipeline Module.
+ sglPipelineModule.c:159?_AfxPipmCtor(pipm=0000000002d71e20)
+ Instance 0000000002d71e20[pipm]^1 built.
+ Taking connection 0000000002c230c8 connecting 0000000002d71e20?pipm#1 to holder 0000000002c22f30?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000175fb0,len=398)
+ sglPipelineModule.c:201?_AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000175fb0,len=398)
+ Class[Pipeline Module].ConstructInstances(1, 0000000000173c50, 0000000000173c58)
+ Constructing instance 0000000002d71f20 of Pipeline Module.
+ sglPipelineModule.c:159?_AfxPipmCtor(pipm=0000000002d71f20)
+ Instance 0000000002d71f20[pipm]^1 built.
+ Taking connection 0000000002c23128 connecting 0000000002d71f20?pipm#1 to holder 0000000002c22f30?pip#1.
+ Class[Pipeline Rig].ConstructInstances(1, 0000000000173d20, 0000000000173d28)
+ Constructing instance 0000000002c0b690 of Pipeline Rig.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=0000000002c0b690)
+ Instance 0000000002c0b690[pipa]^1 built.
+ Instance 0000000002c22f30[pip]^1 built.
+ sglSampler.c:120?_AfxDrawContextAcquireSampler(dctx=0000000002c0a5c0,spec=000000000017dce0)
+ Class[Sampler].ConstructInstances(1, 000000000017d750, 000000000017d758)
+ Constructing instance 0000000003056650 of Sampler.
+ sglSampler.c:167?_AfxSmpCtor(smp=0000000003056650)
+ Instance 0000000003056650[smp]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000017d820, 000000000017d828)
+ Constructing instance 0000000002d80f50 of Lego.
+ sglLego.c:147?_AfxLegoCtor(lego=0000000002d80f50)
+ Instance 0000000002d80f50[bset]^1 built.
+ Class[Vertex Buffer].ConstructInstances(1, 000000000017d7e0, 000000000017d7e8)
+ Constructing instance 0000000002f38f00 of Vertex Buffer : Buffer.
+ Constructing instance 0000000002f38f00 of Buffer.
+ sglBuffer.c:440?_AfxBufCtor(buf=0000000002f38f00)
+ Constructing instance 0000000002f38f00 of Vertex Buffer.
+ afxVertexBuffer.c:251?_AfxVbufCtor(vbuf=0000000002f38f00)
+ Instance 0000000002f38f00[vbuf]^1 built.
+ Instance 0000000002c196a0[dque]^1 built.
+ Instance 0000000002c0a5c0[dctx]^1 built.
+ afxApplication.c:368?AfxSystemAcquireApplication(sys=00005b728832eab2,spec=0000000000000040)
+ Class[Application].ConstructInstances(1, 000000000017ea40, 000000000017ea48)
+ Constructing instance 00000000022bcda0 of Application.
+ afxApplication.c:399?_AfxAppCtor(app=00000000022bcda0)
+ afxMouse.c:232?AfxSystemAcquireMouse(sys=0000000000251e70,port=0)
+ Class[Mouse].ConstructInstances(1, 000000000017e2a0, 000000000017e2a8)
+ Constructing instance 0000000002d844d0 of Mouse : HID.
+ Constructing instance 0000000002d844d0 of HID.
+ afxHid.c:56?_AfxHidCtor(hid=0000000002d844d0)
+ Constructing instance 0000000002d844d0 of Mouse.
+ afxMouse.c:270?_AfxMseCtor(mse=0000000002d844d0)
+ Instance 0000000002d844d0[mse]^1 built.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=0000000002c0a5c0,spec=000000000017e500)
+ Class[Draw Input].ConstructInstances(1, 000000000017e230, 000000000017e238)
+ Constructing instance 0000000002d7da80 of Draw Input.
+ sglDrawInput.c:252?_AfxDinCtor(din=0000000002d7da80)
+ afxArena.c:800?AfxSystemAcquireArena(sys=0000000000251e70,strategy=000000000017dcb0,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Class[Memory Arena].ConstructInstances(1, 000000000017da10, 000000000017da18)
+ Constructing instance 00000000022bb9a0 of Memory Arena : Memory Context.
+ Constructing instance 00000000022bb9a0 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=00000000022bb9a0)
+ Constructing instance 00000000022bb9a0 of Memory Arena.
+ afxArena.c:778?_AfxArenCtor(aren=00000000022bb9a0)
+ Instance 00000000022bb9a0[aren]^1 built.
+ Instance 0000000002d7da80[din]^1 built.
+ Widget class registered.
+ Simulation class registered.
+ Instance 00000000022bcda0[app]^1 built.
+ afxApplication.c:320?AfxApplicationExecute(app=00000000022bcda0)
+ Skybox.c:583?AfxEnterApplication(app=00000000022bcda0)
+ afxFileSystem.c:375?AfxFileSystemMountPoints(Afx.FileSystem.MountPoints(0000000000253ca0,1,000000000017e798))
+ afxArchive.c:530?AfxFileSystemAcquireArchive(Afx.FileSystem.AcquireArchive(0000000000253ca0,1,"E:/qwadro/afx/art/hf2iso.zip"))
+ Class[ZIP-compatible Archive].ConstructInstances(1, 000000000017e190, 000000000017e198)
+ Constructing instance 000000000304c2b0 of ZIP-compatible Archive : File.
+ Constructing instance 000000000304c2b0 of File : I/O Stream.
+ Constructing instance 000000000304c2b0 of I/O Stream.
+ Constructing instance 000000000304c2b0 of File.
+ Constructing instance 000000000304c2b0 of ZIP-compatible Archive.
+ afxArchive.c:555?_AfxArcCtor(arc=000000000304c2b0)
+ signature: 0x6054B50
+ diskNumber: 0
+ centralDirectoryDiskNumber: 0
+ numEntriesThisDisk: 14
+ numEntries: 14
+ centralDirectorySize: 1120 0x460
+ centralDirectoryOffset: 512755 0x7d2f3
+ zipCommentLength: 0
+ ERR afxMemory.c:42?_AfxMemRememocStd
+    
+ ERR afxMemory.c:42?_AfxMemRememocStd
+    (p)
+    Invalid
+ Archived item 0 -> 512755 0x7d2f3
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 27429 0x6b25
+ lastModFileDate: 14409 0x3849
+ crc32: 0x42ddf2a5
+ compressedSize: 1014
+ uncompressedSize: 2130
+ fileNameLength: 24
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 0 0
+ Archived item 0, 75 0x4b
+ 2008/02/09 13:25:10 hf2iso/hf2iso_forest.inc
+ Archived item 1 -> 512838 0x7d346
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 28823 0x7097
+ lastModFileDate: 14409 0x3849
+ crc32: 0x2bf8fd9e
+ compressedSize: 2523
+ uncompressedSize: 6888
+ fileNameLength: 17
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 1089 0x441
+ Archived item 1, 1157 0x485
+ 2008/02/09 14:04:46 hf2iso/hf2iso.pov
+ Archived item 2 -> 512914 0x7d392
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 26353 0x66f1
+ lastModFileDate: 14409 0x3849
+ crc32: 0x4fd6d87e
+ compressedSize: 951
+ uncompressedSize: 2451
+ fileNameLength: 25
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 3680 0xe60
+ Archived item 2, 3756 0xeac
+ 2008/02/09 12:55:34 hf2iso/hf2iso_terrain.inc
+ Archived item 3 -> 512998 0x7d3e6
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 26392 0x6718
+ lastModFileDate: 14409 0x3849
+ crc32: 0x37619c9f
+ compressedSize: 1318
+ uncompressedSize: 4035
+ fileNameLength: 26
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 4707 0x1263
+ Archived item 3, 4784 0x12b0
+ 2008/02/09 12:56:48 hf2iso/hf2iso_textures.inc
+ Archived item 4 -> 513083 0x7d43b
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 20690 0x50d2
+ lastModFileDate: 14409 0x3849
+ crc32: 0x699e6a35
+ compressedSize: 363
+ uncompressedSize: 542
+ fileNameLength: 21
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 6102 0x17d6
+ Archived item 4, 6174 0x181e
+ 2008/02/09 10:06:36 hf2iso/hf_convert.pov
+ Archived item 5 -> 513163 0x7d48b
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 46844 0xb6fc
+ lastModFileDate: 14408 0x3848
+ crc32: 0x27783a2c
+ compressedSize: 473228
+ uncompressedSize: 786450
+ fileNameLength: 21
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 6537 0x1989
+ Archived item 5, 6609 0x19d1
+ 2008/02/08 22:55:56 hf2iso/hf_convert.tga
+ Archived item 6 -> 513243 0x7d4db
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 20666 0x50ba
+ lastModFileDate: 14409 0x3849
+ crc32: 0x9f6b987a
+ compressedSize: 589
+ uncompressedSize: 1055
+ fileNameLength: 23
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 479837 0x7525d
+ Archived item 6, 479911 0x752a7
+ 2008/02/09 10:05:52 hf2iso/hf_generator.pov
+ Archived item 7 -> 513325 0x7d52d
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 20611 0x5083
+ lastModFileDate: 14409 0x3849
+ crc32: 0x545c82c8
+ compressedSize: 522
+ uncompressedSize: 883
+ fileNameLength: 22
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 480500 0x754f4
+ Archived item 7, 480573 0x7553d
+ 2008/02/09 10:04:06 hf2iso/hf_slopemap.pov
+ Archived item 8 -> 513406 0x7d57e
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 46849 0xb701
+ lastModFileDate: 14408 0x3848
+ crc32: 0x56a7c9a3
+ compressedSize: 25837
+ uncompressedSize: 49170
+ fileNameLength: 22
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 481095 0x75747
+ Archived item 8, 481168 0x75790
+ 2008/02/08 22:56:02 hf2iso/hf_slopemap.tga
+ Archived item 9 -> 513487 0x7d5cf
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 20552 0x5048
+ lastModFileDate: 14409 0x3849
+ crc32: 0x2978733c
+ compressedSize: 633
+ uncompressedSize: 1354
+ fileNameLength: 19
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 507005 0x7bc7d
+ Archived item 9, 507075 0x7bcc3
+ 2008/02/09 10:02:16 hf2iso/i_cirrus.inc
+ Archived item 10 -> 513565 0x7d61d
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 777 0x309
+ lastModFileDate: 14028 0x36cc
+ crc32: 0xe0f83610
+ compressedSize: 848
+ uncompressedSize: 2405
+ fileNameLength: 18
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 507708 0x7bf3c
+ Archived item 10, 507777 0x7bf81
+ 2007/06/12 00:24:18 hf2iso/i_flock.inc
+ Archived item 11 -> 513642 0x7d66a
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 28533 0x6f75
+ lastModFileDate: 14409 0x3849
+ crc32: 0x270bcb86
+ compressedSize: 682
+ uncompressedSize: 2389
+ fileNameLength: 21
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 508625 0x7c2d1
+ Archived item 11, 508697 0x7c319
+ 2008/02/09 13:59:42 hf2iso/i_skylight.inc
+ Archived item 12 -> 513722 0x7d6ba
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 20527 0x502f
+ lastModFileDate: 14409 0x3849
+ crc32: 0x744b6f07
+ compressedSize: 656
+ uncompressedSize: 1379
+ fileNameLength: 18
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 509379 0x7c5c3
+ Archived item 12, 509448 0x7c608
+ 2008/02/09 10:01:30 hf2iso/i_water.inc
+ Archived item 13 -> 513799 0x7d707
+ signature: 33639248 0x2014b50
+ versionMadeBy: 791 0x317
+ versionNeededToExtract: 20 0x14
+ generalPurposeBitFlag: 0 0
+ compressionMethod: 8 0x8
+ lastModFileTime: 25146 0x623a
+ lastModFileDate: 14409 0x3849
+ crc32: 0x9b4e0434
+ compressedSize: 2583
+ uncompressedSize: 6491
+ fileNameLength: 17
+ textraFieldLength: 13
+ fileCommentLength: 0
+ diskNumberStart: 0
+ internalFileAttributes: 0x1
+ externalFileAttributes: 0x81b40000
+ relativeOffsetOflocalHeader: 510104 0x7c898
+ Archived item 13, 510172 0x7c8dc
+ 2008/02/09 12:17:52 hf2iso/README.txt
+ Instance 000000000304c2b0[arc]^1 built.
+ Point "art" 1 mounted -> "E:/qwadro/afx/art/hf2iso.zip".
+ afxSimulation.c:461?AfxApplicationAcquireSimulation(app=00000000022bcda0,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ Class[Simulation].ConstructInstances(1, 000000000017e3b0, 000000000017e3b8)
+ Constructing instance 000000000304e510 of Simulation.
+ afxSimulation.c:384?_AfxSimCtor(sim=000000000304e510)
+ afxMemory.c:255?AfxSystemAcquireMemory(sys=0000000000251e70,strategy=000000000017def8,hint="afxSimulation.c:404!_AfxSimCtor")
+ Class[Memory Context].ConstructInstances(1, 000000000017dc10, 000000000017dc18)
+ Constructing instance 0000000002d81760 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=0000000002d81760)
+ Instance 0000000002d81760[mem]^1 built.
+ Material class registered.
+ Mesh class registered.
+ Node class registered.
+ Skeleton class registered.
+ Model class registered.
+ Body class registered.
+ Entity class registered.
+ Camera class registered.
+ Light class registered.
+ Instance 000000000304e510[sim]^1 built.
+ afxDrawOutput.c:134?AfxDrawContextAcquireOutput(dctx=0000000002c0a5c0,extent=000000000017e900,spec=000000000017e720)
+ sglDrawOutput.c:255?_AfxDrawContextAcquireOutput(dctx=0000000002c0a5c0,extent=000000000017e900,spec=000000000017e720)
+ Class[Draw Output].ConstructInstances(1, 000000000017e360, 000000000017e368)
+ Constructing instance 0000000002c0c5e0 of Draw Output.
+ sglDrawOutput.c:509?_AfxDoutCtor(dout=0000000002c0c5e0)
+ sglSurface.c:75?_AfxDrawContextAcquireSurface(dctx=0000000002c0a5c0,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000017c990, 000000000017c998)
+ Constructing instance 0000000002c0a0a0 of Surface : Texture.
+ Constructing instance 0000000002c0a0a0 of Texture : Resource.
+ Constructing instance 0000000002c0a0a0 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000002c0a0a0)
+ Constructing instance 0000000002c0a0a0 of Texture.
+ sglTexture.c:988?_AfxTexCtor(tex=0000000002c0a0a0)
+ Constructing instance 0000000002c0a0a0 of Surface.
+ sglSurface.c:131?_AfxSurfCtor(surf=0000000002c0a0a0)
+ Instance 0000000002c0a0a0[surf]^1 built.
+ sglSurface.c:75?_AfxDrawContextAcquireSurface(dctx=0000000002c0a5c0,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000017c990, 000000000017c998)
+ Constructing instance 0000000003053e40 of Surface : Texture.
+ Constructing instance 0000000003053e40 of Texture : Resource.
+ Constructing instance 0000000003053e40 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000003053e40)
+ Constructing instance 0000000003053e40 of Texture.
+ sglTexture.c:988?_AfxTexCtor(tex=0000000003053e40)
+ Constructing instance 0000000003053e40 of Surface.
+ sglSurface.c:131?_AfxSurfCtor(surf=0000000003053e40)
+ Instance 0000000003053e40[surf]^1 built.
+ sglDrawOutput.c:462?_AfxStdDoutImplCtor(dout=0000000002c0c5e0,uri=window)
+ sglDrawOutput.c:313?_AfxStdDoutImplCtorWnd(dout=0000000002c0c5e0)
+ Extent readjusted. (dout)0000000002c0c5e0 -> 1272, 0.000001 of 2342674728; 693 0.000041 of 16843007
+ Instance 0000000002c0c5e0[dout]^1 built.
+ sglDrawInput.c:203?_AfxDrawContextAcquireInput(dctx=0000000002c0a5c0,spec=000000000017e6f0)
+ Class[Draw Input].ConstructInstances(1, 000000000017e390, 000000000017e398)
+ Constructing instance 0000000002c2c100 of Draw Input.
+ sglDrawInput.c:252?_AfxDinCtor(din=0000000002c2c100)
+ afxArena.c:800?AfxSystemAcquireArena(sys=0000000000251e70,strategy=000000000017de10,hint="sglDrawInput.c:287!_AfxDinCtor")
+ Class[Memory Arena].ConstructInstances(1, 000000000017db70, 000000000017db78)
+ Constructing instance 0000000002cb70d0 of Memory Arena : Memory Context.
+ Constructing instance 0000000002cb70d0 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=0000000002cb70d0)
+ Constructing instance 0000000002cb70d0 of Memory Arena.
+ afxArena.c:778?_AfxArenCtor(aren=0000000002cb70d0)
+ Instance 0000000002cb70d0[aren]^1 built.
+ Instance 0000000002c2c100[din]^1 built.
+ afxCamera.c:276?AfxSimulationAcquireCamera(sim=000000000304e510,name=viewer,perspective=1)
+ Class[Camera].ConstructInstances(1, 000000000017e3b0, 000000000017e3b8)
+ Constructing instance 0000000002cb7420 of Camera : Node.
+ Constructing instance 0000000002cb7420 of Node.
+ Constructing instance 0000000002cb7420 of Camera.
+ afxCamera.c:305?_AfxCamCtor(cam=0000000002cb7420)
+ Instance 0000000002cb7420[cam]^1 built.
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ sglTexture.c:1091?_AfxDrawContextBuildTextures(dctx=0000000002c0a5c0,fmt=3,whd=[2048,2048,1],lodCnt=1,usage=40000000)
+ Class[Texture].ConstructInstances(1, 000000000017c2a0, 000000000017c2a8)
+ Constructing instance 0000000002cb7840 of Texture : Resource.
+ Constructing instance 0000000002cb7840 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000002cb7840)
+ Constructing instance 0000000002cb7840 of Texture.
+ sglTexture.c:988?_AfxTexCtor(tex=0000000002cb7840)
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/right.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/left.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/bottom.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/top.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/front.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,art/skybox/day/back.tga))
+ Class[File].ConstructInstances(1, 000000000017b660, 000000000017b668)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ ERR afxFileSystem.c:303?AfxFileSystemResolveUri
+    
+ Instance 0000000003045350[file]^1 built.
+ ERR afxStream.c:382?AfxStreamReadSegmentsNEW
+    
+ ERR afxTarga.c:331?_AfxTgaLoad
+    
+ ERR afxTarga.c:798?AfxTextureUploadRegionsTarga
+    
+ Class[File].DestructInstances(1, 000000000017b808, 000007feda021581)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ ERR afxTexture.c:91?AfxTextureUploadRegions
+    
+ Instance 0000000002cb7840[tex]^1 built.
+ Class[Vertex Buffer].ConstructInstances(1, 000000000017c460, 000000000017c468)
+ Constructing instance 00000000022bff00 of Vertex Buffer : Buffer.
+ Constructing instance 00000000022bff00 of Buffer.
+ sglBuffer.c:440?_AfxBufCtor(buf=00000000022bff00)
+ Constructing instance 00000000022bff00 of Vertex Buffer.
+ afxVertexBuffer.c:251?_AfxVbufCtor(vbuf=00000000022bff00)
+ Instance 00000000022bff00[vbuf]^1 built.
+ afxUniformPipelineDescriptor.c:603?_AfxDrawContextUploadPipelineUrd(dctx=0000000002c0a5c0,uri=data/pipeline/skybox.pip.urd)
+ afxUniformPipelineDescriptor.c:559?_AfxLoadAndParsePipelineUrd(dctx=0000000002c0a5c0)
+ afxUrd.c:1109?AfxFileSystemLoadUrd(uri=data/pipeline/skybox.pip.urdp)
+ Class[Uniform Resource Dictionary].ConstructInstances(1, 0000000000173090, 0000000000173098)
+ Constructing instance 0000000002bf8ad0 of Uniform Resource Dictionary.
+ afxUrd.c:1068?_AfxUrdCtor(uri:data/pipeline/skybox.pip.urd)
+ afxFile.c:252?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(0000000000253ca0,0000000000000001,data/pipeline/skybox.pip.urd))
+ Class[File].ConstructInstances(1, 00000000001729c0, 00000000001729c8)
+ Constructing instance 0000000003045350 of File : I/O Stream.
+ Constructing instance 0000000003045350 of I/O Stream.
+ Constructing instance 0000000003045350 of File.
+ Instance 0000000003045350[file]^1 built.
+ Class[File].DestructInstances(1, 0000000000172b68, 0000000003051af0)
+ Destructing instance 0000000003045350 of File class.
+ Destructing instance 0000000003045350 of File : I/O Stream class.
+ Destructing instance 0000000003045350 of I/O Stream class.
+ Instance 0000000003045350[file]^0 destroyed.
+ Instance 0000000002bf8ad0[urd]^1 built.
+ Class[Uniform Resource Dictionary].DestructInstances(1, 00000000001731f8, 0000000173797366)
+ Destructing instance 0000000002bf8ad0 of Uniform Resource Dictionary class.
+ afxUrd.c:1047?_AfxUrdDtor(urd=0000000002bf8ad0)
+ Instance 0000000002bf8ad0[urd]^0 destroyed.
+ Class[Pipeline].ConstructInstances(1, 00000000001732f0, 00000000001732f8)
+ Constructing instance 0000000003045350 of Pipeline : Resource.
+ Constructing instance 0000000003045350 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000003045350)
+ Constructing instance 0000000003045350 of Pipeline.
+ sglPipeline.c:637?_AfxPipCtor(pip=0000000003045350)
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000173c10,len=642)
+ sglPipelineModule.c:201?_AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000173c10,len=642)
+ Class[Pipeline Module].ConstructInstances(1, 00000000001728d0, 00000000001728d8)
+ Constructing instance 0000000002d72120 of Pipeline Module.
+ sglPipelineModule.c:159?_AfxPipmCtor(pipm=0000000002d72120)
+ Instance 0000000002d72120[pipm]^1 built.
+ Taking connection 00000000030454e8 connecting 0000000002d72120?pipm#1 to holder 0000000003045350?pip#1.
+ afxPipelineModule.c:58?AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000174c30,len=402)
+ sglPipelineModule.c:201?_AfxDrawContextBuildPipelineModule(dctx=0000000002c0a5c0,code=0000000000174c30,len=402)
+ Class[Pipeline Module].ConstructInstances(1, 00000000001728d0, 00000000001728d8)
+ Constructing instance 0000000002d72220 of Pipeline Module.
+ sglPipelineModule.c:159?_AfxPipmCtor(pipm=0000000002d72220)
+ Instance 0000000002d72220[pipm]^1 built.
+ Taking connection 0000000003045548 connecting 0000000002d72220?pipm#1 to holder 0000000003045350?pip#1.
+ Class[Pipeline Rig].ConstructInstances(1, 00000000001729a0, 00000000001729a8)
+ Constructing instance 0000000003045cf0 of Pipeline Rig.
+ sglPipelineRig.c:100?_AfxPiprCtor(pipr=0000000003045cf0)
+ Instance 0000000003045cf0[pipa]^1 built.
+ Instance 0000000003045350[pip]^1 built.
+ sglSampler.c:120?_AfxDrawContextAcquireSampler(dctx=0000000002c0a5c0,spec=000000000017c990)
+ Class[Sampler].ConstructInstances(1, 000000000017c3d0, 000000000017c3d8)
+ Constructing instance 000000000304be30 of Sampler.
+ sglSampler.c:167?_AfxSmpCtor(smp=000000000304be30)
+ Instance 000000000304be30[smp]^1 built.
+ sglCanvas.c:274?_AfxDrawContextAcquireCanvas(dctx=0000000002c0a5c0,extent=[1272,693,1],surfaceCnt=2)
+ Class[Canvas].ConstructInstances(1, 000000000017bf20, 000000000017bf28)
+ Constructing instance 0000000003051af0 of Canvas.
+ sglCanvas.c:357?_AfxCanvCtor(canv=0000000003051af0)
+ sglSurface.c:75?_AfxDrawContextAcquireSurface(dctx=0000000002c0a5c0,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000017a430, 000000000017a438)
+ Constructing instance 0000000003046c40 of Surface : Texture.
+ Constructing instance 0000000003046c40 of Texture : Resource.
+ Constructing instance 0000000003046c40 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000003046c40)
+ Constructing instance 0000000003046c40 of Texture.
+ sglTexture.c:988?_AfxTexCtor(tex=0000000003046c40)
+ Constructing instance 0000000003046c40 of Surface.
+ sglSurface.c:131?_AfxSurfCtor(surf=0000000003046c40)
+ Instance 0000000003046c40[surf]^1 built.
+ Instance 0000000003051af0[canv]^1 built.
+ Class[Buffer].ConstructInstances(1, 000000000017c440, 000000000017c448)
+ Constructing instance 0000000003056db0 of Buffer.
+ sglBuffer.c:440?_AfxBufCtor(buf=0000000003056db0)
+ Instance 0000000003056db0[buf]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000017c4a0, 000000000017c4a8)
+ Constructing instance 0000000003046f00 of Lego.
+ sglLego.c:147?_AfxLegoCtor(lego=0000000003046f00)
+ Instance 0000000003046f00[bset]^1 built.
+ sglCanvas.c:274?_AfxDrawContextAcquireCanvas(dctx=0000000002c0a5c0,extent=[1272,693,1],surfaceCnt=2)
+ Class[Canvas].ConstructInstances(1, 000000000017bf20, 000000000017bf28)
+ Constructing instance 0000000003047250 of Canvas.
+ sglCanvas.c:357?_AfxCanvCtor(canv=0000000003047250)
+ sglSurface.c:75?_AfxDrawContextAcquireSurface(dctx=0000000002c0a5c0,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTextureBlueprint.c:23?AfxTextureBlueprintDeploy
+    texb->fcc == AFX_FCC_TEXB
+ Class[Surface].ConstructInstances(1, 000000000017a430, 000000000017a438)
+ Constructing instance 0000000003047390 of Surface : Texture.
+ Constructing instance 0000000003047390 of Texture : Resource.
+ Constructing instance 0000000003047390 of Resource.
+ afxResource.c:99?_AfxResCtor(res=0000000003047390)
+ Constructing instance 0000000003047390 of Texture.
+ sglTexture.c:988?_AfxTexCtor(tex=0000000003047390)
+ Constructing instance 0000000003047390 of Surface.
+ sglSurface.c:131?_AfxSurfCtor(surf=0000000003047390)
+ Instance 0000000003047390[surf]^1 built.
+ Instance 0000000003047250[canv]^1 built.
+ Class[Buffer].ConstructInstances(1, 000000000017c440, 000000000017c448)
+ Constructing instance 0000000003056ed0 of Buffer.
+ sglBuffer.c:440?_AfxBufCtor(buf=0000000003056ed0)
+ Instance 0000000003056ed0[buf]^1 built.
+ Class[Lego].ConstructInstances(1, 000000000017c4a0, 000000000017c4a8)
+ Constructing instance 0000000003047790 of Lego.
+ sglLego.c:147?_AfxLegoCtor(lego=0000000003047790)
+ Instance 0000000003047790[bset]^1 built.
+ sglDrawScript.c:397?_AfxDrawInputAcquireScript(din=0000000002c2c100)
+ Class[Draw Script].ConstructInstances(1, 000000000017de10, 000000000017de18)
+ Constructing instance 0000000002f7f160 of Draw Script.
+ sglDrawScript.c:441?_AfxDscrCtor(dscr=0000000002f7f160)
+ Instance 0000000002f7f160[dscr]^1 built.
+ ADV sglTexture.c:430?_SglTexInstDevice
+    tex 0000000000000de1, gl/target 8058, gl/intFmt 1908, gl/fmt 1401, gl/type 1908
+ tex 0000000002c0a0a0, instanced.
+ ADV sglTexture.c:430?_SglTexInstDevice
+    tex 0000000000000de1, gl/target 88f0, gl/intFmt 84f9, gl/fmt 84fa, gl/type 84f9
+ tex 0000000003046c40, instanced.
+ canv 0000000003051af0, reinstanced.
+ Shader 0000000002d72120 reinstanced.
+ Shader 0000000002d72220 reinstanced.
+ Draw pipeline 0000000003045350 reinstanced.
+ buf 0000000003056db0, instanced.
+ ADV sglTexture.c:430?_SglTexInstDevice
+    tex 0000000000008513, gl/target 8051, gl/intFmt 1907, gl/fmt 1401, gl/type 1907
+ tex 0000000002cb7840, instanced.
+ buf 00000000022bff00, instanced.
+ Shader 0000000002d71e20 reinstanced.
+ Shader 0000000002d71f20 reinstanced.
+ Draw pipeline 0000000002c22f30 reinstanced.
+ buf 0000000002f38f00, instanced.
+ ADV sglTexture.c:430?_SglTexInstDevice
+    tex 0000000000000de1, gl/target 8058, gl/intFmt 1908, gl/fmt 1401, gl/type 1908
+ tex 0000000003053e40, instanced.
+ ADV sglTexture.c:430?_SglTexInstDevice
+    tex 0000000000000de1, gl/target 88f0, gl/intFmt 84f9, gl/fmt 84fa, gl/type 84f9
+ tex 0000000003047390, instanced.
+ canv 0000000003047250, reinstanced.
+ ADV afxSystem.c:574?AfxSystemProcess
+    User input requested application break.
+ afxApplication.c:293?AfxApplicationExit(app=00000000022bcda0)
+ Skybox.c:650?AfxLeaveApplication(app=00000000022bcda0)
+ Class[Draw Input].DestructInstances(1, 000000000017ea28, 000007feda0275f8)
+ Destructing instance 0000000002c2c100 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=0000000002c2c100)
+ Instance 0000000002c2c100[din]^0 destroyed.
+ aaaaaaaaaaaa
+ Class[Application].DestructInstances(1, 000000000017eb48, 00000000022bd430)
+ Destructing instance 00000000022bcda0 of Application class.
+ afxApplication.c:382?_AfxAppDtor(app=00000000022bcda0)
+ Deregistering Simulation class...
+ Class[Simulation].DestructInstances(1, 000000000017e448, 0000000000000000)
+ Destructing instance 000000000304e510 of Simulation class.
+ afxSimulation.c:369?_AfxSimDtor(sim=000000000304e510)
+ Deregistering Light class...
+ Light class deregistered.
+ Deregistering Camera class...
+ Class[Camera].DestructInstances(1, 000000000017dd38, 000000000a003933)
+ Destructing instance 0000000002cb7420 of Camera class.
+ afxCamera.c:297?_AfxCamDtor(cam=0000000002cb7420)
+ Destructing instance 0000000002cb7420 of Camera : Node class.
+ Destructing instance 0000000002cb7420 of Node class.
+ Instance 0000000002cb7420[cam]^0 destroyed.
+ Camera class deregistered.
+ Deregistering Entity class...
+ Entity class deregistered.
+ Deregistering Body class...
+ Body class deregistered.
+ Deregistering Model class...
+ Model class deregistered.
+ Deregistering Skeleton class...
+ Skeleton class deregistered.
+ Deregistering Node class...
+ Node class deregistered.
+ Deregistering Mesh class...
+ Mesh class deregistered.
+ Deregistering Material class...
+ Material class deregistered.
+ Class[Memory Context].DestructInstances(1, 000000000017df78, 00000001006d656d)
+ Destructing instance 0000000002d81760 of Memory Context class.
+ afxMemory.c:276?_AfxMemDtor(mem=0000000002d81760)
+ afxMemory.c:215?AfxMemoryExhaust(mem=0000000002d81760)
+ Exhausted. (mem)0000000002d81760
+ Instance 0000000002d81760[mem]^0 destroyed.
+ Instance 000000000304e510[sim]^0 destroyed.
+ Simulation class deregistered.
+ Deregistering Widget class...
+ Widget class deregistered.
+ Class[Draw Input].DestructInstances(1, 000000000017e688, 000007feda01e220)
+ Destructing instance 0000000002d7da80 of Draw Input class.
+ sglDrawInput.c:215?_AfxDinDtor(din=0000000002d7da80)
+ Instance 0000000002d7da80[din]^0 destroyed.
+ Class[Mouse].DestructInstances(1, 000000000017e688, 0000000000000001)
+ Destructing instance 0000000002d844d0 of Mouse class.
+ afxMouse.c:261?_AfxMseDtor(mse=0000000002d844d0)
+ Destructing instance 0000000002d844d0 of Mouse : HID class.
+ Destructing instance 0000000002d844d0 of HID class.
+ afxHid.c:47?_AfxHidDtor(hid=0000000002d844d0)
+ Instance 0000000002d844d0[mse]^0 destroyed.
+ Instance 00000000022bcda0[app]^0 destroyed.
+ Class[Draw Context].DestructInstances(1, 000000000017eb48, 0000000000000001)
+ Destructing instance 0000000002c0a5c0 of Draw Context class.
+ sglDrawContext.c:309?_AfxDctxDtor(dctx=0000000002c0a5c0)
+ Deregistering Draw Output class...
+ Class[Draw Output].DestructInstances(1, 000000000017e438, 00000000022bcd01)
+ Destructing instance 0000000002c0c5e0 of Draw Output class.
+ sglDrawOutput.c:275?_AfxDoutDtor(dout=0000000002c0c5e0)
+ sglDrawOutput.c:229?_AfxDoutDropAllSurfaces(dout=0000000002c0c5e0)
+ Instance 0000000002c0c5e0[dout]^0 destroyed.
+ Draw Output class deregistered.
+ Deregistering Lego class...
+ Class[Lego].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003047790 of Lego class.
+ sglLego.c:130?_AfxLegoDtor(pipa=0000000003047790)
+ Instance 0000000003047790[bset]^0 destroyed.
+ Class[Lego].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003046f00 of Lego class.
+ sglLego.c:130?_AfxLegoDtor(pipa=0000000003046f00)
+ Instance 0000000003046f00[bset]^0 destroyed.
+ Class[Lego].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002d80f50 of Lego class.
+ sglLego.c:130?_AfxLegoDtor(pipa=0000000002d80f50)
+ Instance 0000000002d80f50[bset]^0 destroyed.
+ Lego class deregistered.
+ Deregistering Pipeline class...
+ Class[Pipeline].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Dropping connection 0000000003045548 from 0000000002d72220?pipm#1 to holder 0000000003045350?pip#0.
+ Dropping connection 00000000030454e8 from 0000000002d72120?pipm#1 to holder 0000000003045350?pip#0.
+ Destructing instance 0000000003045350 of Pipeline class.
+ sglPipeline.c:566?_AfxPipDtor(pip=0000000003045350)
+ Class[Pipeline Rig].DestructInstances(1, 000000000017dee8, 0000000000000000)
+ Destructing instance 0000000003045cf0 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=0000000003045cf0)
+ Instance 0000000003045cf0[pipa]^0 destroyed.
+ Destructing instance 0000000003045350 of Pipeline : Resource class.
+ Destructing instance 0000000003045350 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000003045350)
+ Instance 0000000003045350[pip]^0 destroyed.
+ Class[Pipeline].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Dropping connection 0000000002c23128 from 0000000002d71f20?pipm#1 to holder 0000000002c22f30?pip#0.
+ Dropping connection 0000000002c230c8 from 0000000002d71e20?pipm#1 to holder 0000000002c22f30?pip#0.
+ Destructing instance 0000000002c22f30 of Pipeline class.
+ sglPipeline.c:566?_AfxPipDtor(pip=0000000002c22f30)
+ Class[Pipeline Rig].DestructInstances(1, 000000000017dee8, 0000000000000000)
+ Destructing instance 0000000002c0b690 of Pipeline Rig class.
+ sglPipelineRig.c:82?_AfxPiprDtor(pipr=0000000002c0b690)
+ Instance 0000000002c0b690[pipa]^0 destroyed.
+ Destructing instance 0000000002c22f30 of Pipeline : Resource class.
+ Destructing instance 0000000002c22f30 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000002c22f30)
+ Instance 0000000002c22f30[pip]^0 destroyed.
+ Pipeline class deregistered.
+ Deregistering Pipeline Rig class...
+ Pipeline Rig class deregistered.
+ Deregistering Pipeline Module class...
+ Class[Pipeline Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002d72220 of Pipeline Module class.
+ Instance 0000000002d72220[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002d72120 of Pipeline Module class.
+ Instance 0000000002d72120[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002d71f20 of Pipeline Module class.
+ Instance 0000000002d71f20[pipm]^0 destroyed.
+ Class[Pipeline Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002d71e20 of Pipeline Module class.
+ Instance 0000000002d71e20[pipm]^0 destroyed.
+ Pipeline Module class deregistered.
+ Deregistering Canvas class...
+ Class[Canvas].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003047250 of Canvas class.
+ sglCanvas.c:335?_AfxCanvDtor(canv=0000000003047250)
+ sglCanvas.c:309?_AfxCanvDropAllSurfaces(canv=0000000003047250)
+ Class[Surface].DestructInstances(1, 000000000017deb8, 0000000000000000)
+ Destructing instance 0000000003053e40 of Surface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=0000000003053e40)
+ Destructing instance 0000000003053e40 of Surface : Texture class.
+ Destructing instance 0000000003053e40 of Texture class.
+ sglTexture.c:943?_AfxTexDtor(tex=0000000003053e40)
+ Destructing instance 0000000003053e40 of Texture : Resource class.
+ Destructing instance 0000000003053e40 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000003053e40)
+ Instance 0000000003053e40[surf]^0 destroyed.
+ Class[Surface].DestructInstances(1, 000000000017deb8, 0000000000000001)
+ Destructing instance 0000000003047390 of Surface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=0000000003047390)
+ Destructing instance 0000000003047390 of Surface : Texture class.
+ Destructing instance 0000000003047390 of Texture class.
+ sglTexture.c:943?_AfxTexDtor(tex=0000000003047390)
+ Destructing instance 0000000003047390 of Texture : Resource class.
+ Destructing instance 0000000003047390 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000003047390)
+ Instance 0000000003047390[surf]^0 destroyed.
+ Instance 0000000003047250[canv]^0 destroyed.
+ Class[Canvas].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003051af0 of Canvas class.
+ sglCanvas.c:335?_AfxCanvDtor(canv=0000000003051af0)
+ sglCanvas.c:309?_AfxCanvDropAllSurfaces(canv=0000000003051af0)
+ Class[Surface].DestructInstances(1, 000000000017deb8, 0000000000000000)
+ Destructing instance 0000000002c0a0a0 of Surface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=0000000002c0a0a0)
+ Destructing instance 0000000002c0a0a0 of Surface : Texture class.
+ Destructing instance 0000000002c0a0a0 of Texture class.
+ sglTexture.c:943?_AfxTexDtor(tex=0000000002c0a0a0)
+ Destructing instance 0000000002c0a0a0 of Texture : Resource class.
+ Destructing instance 0000000002c0a0a0 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000002c0a0a0)
+ Instance 0000000002c0a0a0[surf]^0 destroyed.
+ Class[Surface].DestructInstances(1, 000000000017deb8, 0000000000000001)
+ Destructing instance 0000000003046c40 of Surface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=0000000003046c40)
+ Destructing instance 0000000003046c40 of Surface : Texture class.
+ Destructing instance 0000000003046c40 of Texture class.
+ sglTexture.c:943?_AfxTexDtor(tex=0000000003046c40)
+ Destructing instance 0000000003046c40 of Texture : Resource class.
+ Destructing instance 0000000003046c40 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000003046c40)
+ Instance 0000000003046c40[surf]^0 destroyed.
+ Instance 0000000003051af0[canv]^0 destroyed.
+ Canvas class deregistered.
+ Deregistering Surface class...
+ Surface class deregistered.
+ Deregistering Texture class...
+ Class[Texture].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002cb7840 of Texture class.
+ sglTexture.c:943?_AfxTexDtor(tex=0000000002cb7840)
+ Destructing instance 0000000002cb7840 of Texture : Resource class.
+ Destructing instance 0000000002cb7840 of Resource class.
+ afxResource.c:88?_AfxResDtor(res=0000000002cb7840)
+ Instance 0000000002cb7840[tex]^0 destroyed.
+ Texture class deregistered.
+ Deregistering Sampler class...
+ Class[Sampler].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 000000000304be30 of Sampler class.
+ sglSampler.c:140?_AfxSmpDtor(smp=000000000304be30)
+ Instance 000000000304be30[smp]^0 destroyed.
+ Class[Sampler].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003056650 of Sampler class.
+ sglSampler.c:140?_AfxSmpDtor(smp=0000000003056650)
+ Instance 0000000003056650[smp]^0 destroyed.
+ Sampler class deregistered.
+ Deregistering Index Buffer class...
+ Index Buffer class deregistered.
+ Deregistering Vertex Buffer class...
+ Class[Vertex Buffer].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 00000000022bff00 of Vertex Buffer class.
+ afxVertexBuffer.c:233?_AfxVbufDtor(vbuf=00000000022bff00)
+ Destructing instance 00000000022bff00 of Vertex Buffer : Buffer class.
+ Destructing instance 00000000022bff00 of Buffer class.
+ sglBuffer.c:401?_AfxBufDtor(buf=00000000022bff00)
+ Instance 00000000022bff00[vbuf]^0 destroyed.
+ Class[Vertex Buffer].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002f38f00 of Vertex Buffer class.
+ afxVertexBuffer.c:233?_AfxVbufDtor(vbuf=0000000002f38f00)
+ Destructing instance 0000000002f38f00 of Vertex Buffer : Buffer class.
+ Destructing instance 0000000002f38f00 of Buffer class.
+ sglBuffer.c:401?_AfxBufDtor(buf=0000000002f38f00)
+ Instance 0000000002f38f00[vbuf]^0 destroyed.
+ Vertex Buffer class deregistered.
+ Deregistering Buffer class...
+ Class[Buffer].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003056ed0 of Buffer class.
+ sglBuffer.c:401?_AfxBufDtor(buf=0000000003056ed0)
+ Instance 0000000003056ed0[buf]^0 destroyed.
+ Class[Buffer].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003056db0 of Buffer class.
+ sglBuffer.c:401?_AfxBufDtor(buf=0000000003056db0)
+ Instance 0000000003056db0[buf]^0 destroyed.
+ Buffer class deregistered.
+ Deregistering Draw Queue class...
+ Class[Draw Queue].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002c196a0 of Draw Queue class.
+ sglDrawQueue.c:1787?_AfxDqueDtor(dque=0000000002c196a0)
+ Instance 0000000002c196a0[dque]^0 destroyed.
+ Draw Queue class deregistered.
+ Deregistering Draw Input class...
+ Draw Input class deregistered.
+ Deregistering Draw Script class...
+ Class[Draw Script].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002f7f160 of Draw Script class.
+ sglDrawScript.c:415?_AfxDscrDtor(dscr=0000000002f7f160)
+ Instance 0000000002f7f160[dscr]^0 destroyed.
+ Draw Script class deregistered.
+ Instance 0000000002c0a5c0[dctx]^0 destroyed.
+ Class[Draw System].DestructInstances(1, 000000000017eb48, 0000000000000001)
+ Destructing instance 0000000000256300 of Draw System class.
+ afxDrawSystem.c:332?_AfxDsysDtor(dsys=0000000000256300)
+ Deregistering Draw Driver class...
+ Class[Draw Driver].DestructInstances(1, 000000000017e3d8, 000007fe00000001)
+ Destructing instance 0000000002beb6a0 of Draw Driver class.
+ afxDrawDriver.c:97?_AfxDdrvDtor(ddrv=0000000002beb6a0)
+ Deregistering Draw Context class...
+ Draw Context class deregistered.
+ Instance 0000000002beb6a0[ddrv]^0 destroyed.
+ Draw Driver class deregistered.
+ Instance 0000000000256300[dsys]^0 destroyed.
+ Class[Core Execution System].DestructInstances(1, 000000000017eb48, 0000000000000001)
+ Destructing instance 0000000000251e70 of Core Execution System class.
+ afxSystem.c:782?_AfxSysDtor(sys=0000000000251e70)
+ Deregistering Application class...
+ Application class deregistered.
+ Deregistering Draw System class...
+ Draw System class deregistered.
+ Deregistering Mouse class...
+ Mouse class deregistered.
+ Deregistering Keyboard class...
+ Class[Keyboard].DestructInstances(1, 000000000017e438, 0000000000256201)
+ Destructing instance 0000000000255a10 of Keyboard class.
+ afxKeyboard.c:193?_AfxKbdDtor(kbd=0000000000255a10)
+ Destructing instance 0000000000255a10 of Keyboard : HID class.
+ Destructing instance 0000000000255a10 of HID class.
+ afxHid.c:47?_AfxHidDtor(hid=0000000000255a10)
+ Instance 0000000000255a10[kbd]^0 destroyed.
+ Keyboard class deregistered.
+ Deregistering HID class...
+ HID class deregistered.
+ Deregistering Module class...
+ Class[Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000003056810 of Module class.
+ afxModule.c:107?_AfxMdleDtor(mdle=0000000003056810)
+ Instance 0000000003056810[mdle]^0 destroyed.
+ Class[Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000000256550 of Module class.
+ afxModule.c:107?_AfxMdleDtor(mdle=0000000000256550)
+ Instance 0000000000256550[mdle]^0 destroyed.
+ Class[Module].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 00000000002558f0 of Module class.
+ afxModule.c:107?_AfxMdleDtor(mdle=00000000002558f0)
+ Instance 00000000002558f0[mdle]^0 destroyed.
+ Module class deregistered.
+ Deregistering File System class...
+ Class[File System].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000000253ca0 of File System class.
+ afxFileSystem.c:543?_AfxFsysDtor(fsys=0000000000253ca0)
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "art" 1 unmounted -> "E:/qwadro/afx/art/hf2iso.zip".
+ Class[ZIP-compatible Archive].DestructInstances(1, 000000000017dd28, 0000000000255801)
+ Destructing instance 000000000304c2b0 of ZIP-compatible Archive class.
+ Destructing instance 000000000304c2b0 of ZIP-compatible Archive : File class.
+ Destructing instance 000000000304c2b0 of File class.
+ Destructing instance 000000000304c2b0 of File : I/O Stream class.
+ Destructing instance 000000000304c2b0 of I/O Stream class.
+ Instance 000000000304c2b0[arc]^0 destroyed.
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "sound" 1 unmounted -> "E:/qwadro/afx/sound".
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "data" 1 unmounted -> "E:/qwadro/afx/data".
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "art" 1 unmounted -> "E:/qwadro/afx/art".
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "system" 1 unmounted -> "E:/qwadro/afx/system64".
+ afxFileSystem.c:332?AfxFileSystemDismountPoints(Afx.FileSystem.DismountPoints(0000000000253ca0,1,000000000017dfa8))
+ Point "." 1 unmounted -> "E:/qwadro/afx".
+ Deregistering Uniform Resource Dictionary class...
+ Uniform Resource Dictionary class deregistered.
+ Deregistering Resource class...
+ Resource class deregistered.
+ Deregistering ZIP-compatible Archive class...
+ ZIP-compatible Archive class deregistered.
+ Deregistering File class...
+ File class deregistered.
+ Deregistering I/O Stream class...
+ I/O Stream class deregistered.
+ Instance 0000000000253ca0[fsys]^0 destroyed.
+ File System class deregistered.
+ Deregistering Thread class...
+ Thread class deregistered.
+ Deregistering Memory Arena class...
+ Class[Memory Arena].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 0000000002cb70d0 of Memory Arena class.
+ afxArena.c:768?_AfxArenDtor(aren=0000000002cb70d0)
+ Destructing instance 0000000002cb70d0 of Memory Arena : Memory Context class.
+ Destructing instance 0000000002cb70d0 of Memory Context class.
+ afxMemory.c:276?_AfxMemDtor(mem=0000000002cb70d0)
+ afxMemory.c:215?AfxMemoryExhaust(mem=0000000002cb70d0)
+ Exhausted. (mem)0000000002cb70d0
+ Instance 0000000002cb70d0[aren]^0 destroyed.
+ Class[Memory Arena].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 00000000022bb9a0 of Memory Arena class.
+ afxArena.c:768?_AfxArenDtor(aren=00000000022bb9a0)
+ Destructing instance 00000000022bb9a0 of Memory Arena : Memory Context class.
+ Destructing instance 00000000022bb9a0 of Memory Context class.
+ afxMemory.c:276?_AfxMemDtor(mem=00000000022bb9a0)
+ afxMemory.c:215?AfxMemoryExhaust(mem=00000000022bb9a0)
+ Exhausted. (mem)00000000022bb9a0
+ Instance 00000000022bb9a0[aren]^0 destroyed.
+ Memory Arena class deregistered.
+ Deregistering Memory Context class...
+ Class[Memory Context].DestructInstances(1, 000000000017e438, 0000000000000001)
+ Destructing instance 000000000024c580 of Memory Context class.
+ afxMemory.c:276?_AfxMemDtor(mem=000000000024c580)
+ afxMemory.c:215?AfxMemoryExhaust(mem=000000000024c580)
+ Exhausted. (mem)000000000024c580
+ Instance 000000000024c580[mem]^0 destroyed.
+ Memory Context class deregistered.
+ Instance 0000000000251e70[sys]^0 destroyed.

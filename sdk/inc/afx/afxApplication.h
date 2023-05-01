@@ -17,9 +17,10 @@
 #ifndef AFX_APPLICATION_H
 #define AFX_APPLICATION_H
 
-#include "draw/afxDrawInput.h"
-#include "simul/afxSimulation.h"
-#include "mmux/afxWidget.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/simul/afxSimulation.h"
+#include "afx/mmux/afxWidget.h"
+#include "afx/core/io/afxMouse.h"
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 
@@ -30,7 +31,9 @@ AFX_DEFINE_STRUCT(afxApplicationSpecification)
     afxNat                  argc;
     afxChar const           **argv;
 
+    afxMemory               genrlMem;
     afxDrawContext          dctx;
+    afxDrawInput            din;
 
     afxResult               (*enter)(afxApplication);
     afxResult               (*update)(afxApplication);
@@ -72,10 +75,10 @@ AFX_OBJECT(afxApplication)
     afxChain                provisions;
 
     // memory allocation service
-    afxConnection           genrlAlloc;
+    afxMemory               genrlMem;
 
     // human input service
-    afxConnection           stdMse;
+    afxMouse                stdMse;
 
     afxNat                  argc;
     afxChar const           **argv;
@@ -95,8 +98,8 @@ AFX_OBJECT(afxApplication)
     afxSize                 lastFrameTime, lastAnimTime;
     afxReal                 deltaTime;
 
-    afxConnection           dctx;
-    afxConnection           din; // Used for draw widgets.
+    afxDrawContext          dctx;
+    afxDrawInput            din; // Used for draw widgets.
     afxWidget               hoveredWidg;
     afxV2d                  hoverPoint;
     afxWidget               focusedWidg;

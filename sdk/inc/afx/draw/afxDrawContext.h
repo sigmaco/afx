@@ -19,11 +19,11 @@
 #ifndef AFX_DRAW_CONTEXT_H
 #define AFX_DRAW_CONTEXT_H
 
-#include "afxDrawInput.h"
-#include "afxDrawOutput.h"
-#include "pipelining/afxPipeline.h"
-#include "afxDrawQueue.h"
-#include "afx/core/base/afxIterator.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/draw/afxDrawOutput.h"
+#include "afx/draw/pipelining/afxPipeline.h"
+#include "afx/draw/afxDrawQueue.h"
+#include "afx/core/afxIterator.h"
 
 AFX_DEFINE_STRUCT(afxDrawContextSpecification)
 {
@@ -32,6 +32,7 @@ AFX_DEFINE_STRUCT(afxDrawContextSpecification)
 
     afxNat              queueCnt;
     afxBool             autonomousQueue;
+    afxMemory        genrlMem;
 
     afxNat              maxBufCnt;
     afxNat              maxSmpCnt;
@@ -63,7 +64,7 @@ AFX afxDrawOutput       AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd 
 AFX void*               AfxDrawContextGetDriver(afxDrawContext dctx);
 AFX void*               AfxDrawContextGetDrawSystem(afxDrawContext dctx);
 
-AFX afxAllocator        AfxDrawContextGetAllocator(afxDrawContext dctx);
+AFX afxMemory        AfxDrawContextGetMemory(afxDrawContext dctx);
 
 AFX afxClass*           AfxDrawContextGetBufferClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetCanvasClass(afxDrawContext dctx);

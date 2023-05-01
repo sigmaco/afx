@@ -671,18 +671,18 @@ int main(int argc, char const* argv[])
     while (reboot)
     {
         sys = AfxSystemBootUp(NIL);
-
-        dsys = AfxSystemAcquireDrawSystem(sys);
+        afxDrawSystemSpecification dsysSpec = { 0 };
+        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec;
+        afxDrawContextSpecification dctxSpec = { 0 };
         dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 1;
 
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
         AfxAssert(dctx);
 
-        afxApplicationSpecification appSpec;
+        afxApplicationSpecification appSpec = { 0 };
         appSpec.argc = argc;
         appSpec.argv = argv;
         appSpec.dctx = dctx;

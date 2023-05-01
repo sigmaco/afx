@@ -17,7 +17,7 @@
 #ifndef AFX_TARGA_H
 #define AFX_TARGA_H
 
-#include "../afxDrawContext.h"
+#include "afx/draw/afxDrawContext.h"
 
 AFX afxError    AfxDrawContextUploadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 

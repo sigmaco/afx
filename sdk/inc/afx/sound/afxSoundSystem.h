@@ -6,7 +6,7 @@
 #define AFX_SOUND_SYSTEM_H
 
 #include "afxSoundContext.h"
-#include "afx/core/base/afxClass.h"
+#include "afx/core/afxClass.h"
 
 // Criar um formato de música tracker do Qwadro? Possível extensão seria ".mix"
 

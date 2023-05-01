@@ -1,18 +1,19 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
+
 #include "sgl.h"
 #include "afx/core/afxTerminal.h"
 #include "afx/core/afxSystem.h"
 #include "sgl.h"
 #include "afx/math/afxVector.h"
 #include "afx/core/afxSystem.h"
-#include "afx/core/base/afxString.h"
+#include "afx/core/afxString.h"
 #include "../e2coree/draw/afxDrawParadigms.h"
 
 SGL afxClassSpecification const _AfxBufClassSpec;
-SGL afxClassSpecification const _AfxVbufClassSpec;
-SGL afxClassSpecification const _AfxIbufClassSpec;
+AFX afxClassSpecification const _AfxVbufClassSpec;
+AFX afxClassSpecification const _AfxIbufClassSpec;
 SGL afxClassSpecification const _AfxSmpClassSpec;
 SGL afxClassSpecification const _AfxTexClassSpec;
 SGL afxClassSpecification const _AfxSurfClassSpec;
@@ -296,11 +297,11 @@ _SGL afxClass* _AfxDrawContextGetCanvasClass(afxDrawContext dctx)
     return cls;
 }
 
-_SGL afxAllocator _AfxDrawContextGetAllocator(afxDrawContext dctx)
+_SGL afxMemory _AfxDrawContextGetMemory(afxDrawContext dctx)
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    return dctx->genrlAll;
+    return dctx->genrlMem;
 }
 
 _SGL afxError _AfxDctxDtor(afxDrawContext dctx)
@@ -313,10 +314,10 @@ _SGL afxError _AfxDctxDtor(afxDrawContext dctx)
 
     if (dctx->queues)
     {
-        AfxDeallocate(dctx->genrlAll, dctx->queues);
+        AfxDeallocate(dctx->genrlMem, dctx->queues);
     }
     
-    AfxObjectRelease(&(dctx->genrlAll->obj));
+    AfxObjectRelease(&(dctx->genrlMem->obj));
 
     return AFX_SUCCESS;
 }
@@ -362,9 +363,7 @@ afxDctxImpl const _AfxStdDctxImpl =
     {
         _AfxDrawContextAcquireBuffer,
         _AfxDrawContextAcquireCanvas,
-        _AfxDrawContextAcquireIndexBuffer,
         _AfxDrawContextAcquireSampler,
-        _AfxDrawContextBuildVertexBuffer,
         _AfxDrawContextBuildTextures,
         _AfxDrawContextFindTextures,
         _AfxDrawContextAcquireSurface,
@@ -382,7 +381,7 @@ afxDctxImpl const _AfxStdDctxImpl =
         _AfxDrawContextAcquireInput,
         _AfxDrawContextAcquireOutput
     },
-    _AfxDrawContextGetAllocator
+    _AfxDrawContextGetMemory
 };
 
 _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification const *spec)
@@ -392,30 +391,31 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     AfxAssert(spec);
 
-    afxDrawDriver ddrv = AfxObjectGetProvider(&dctx->obj);
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxDrawSystem dsys = AfxObjectGetProvider(&ddrv->obj);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-    afxSystem sys = AfxObjectGetProvider(&dsys->obj);
-    AfxAssertObject(sys, AFX_FCC_SYS);
+    if (!(dctx->genrlMem = spec->genrlMem))
+    {
+        afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
+        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        dctx->genrlMem = AfxDrawSystemGetMemory(dsys);
+    }
 
-    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
-    AfxAssertObject(fsys, AFX_FCC_FSYS);
+    AfxAssertObject(dctx->genrlMem, AFX_FCC_MEM);
 
-    afxChain *provisions = &dctx->provisions;
-    AfxChainDeploy(provisions, dctx);
-
-    afxAllocationStrategy as;
-    as.size = sizeof(afxByte);
-    as.align = AFX_SIMD_ALIGN;
-    as.cap = 0;
-    as.duration = AFX_ALL_DUR_TRANSIENT;
-    as.resizable = TRUE;
-    as.stock = AfxSystemGetMemPageSize(sys) * 8192; // 32MB
-
-    if (!(dctx->genrlAll = AfxSystemAcquireAllocator(sys, &as, AfxSpawnHint()))) AfxThrowError();
+    if (!(AfxObjectReacquire(&dctx->genrlMem->obj, &dctx->obj, NIL, NIL, NIL))) AfxThrowError();
     else
     {
+        afxDrawDriver ddrv = AfxObjectGetProvider(&dctx->obj);
+        AfxAssertObject(ddrv, AFX_FCC_DDRV);
+        afxDrawSystem dsys = AfxObjectGetProvider(&ddrv->obj);
+        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        afxSystem sys = AfxObjectGetProvider(&dsys->obj);
+        AfxAssertObject(sys, AFX_FCC_SYS);
+
+        afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+        AfxAssertObject(fsys, AFX_FCC_FSYS);
+
+        afxChain *provisions = &dctx->provisions;
+        AfxChainDeploy(provisions, dctx);
+
         afxNat queueCnt = spec->queueCnt ? spec->queueCnt : 1;
         AfxAssert(queueCnt);
         afxClassSpecification tmp = _AfxDqueClassSpec;
@@ -425,8 +425,12 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
         AfxClassRegister(&dctx->dinClass, provisions, NIL, &_AfxDinClassSpec);
         AfxClassRegister(&dctx->dengClass, provisions, NIL, &tmp);
         AfxClassRegister(&dctx->bufClass, provisions, NIL, &_AfxBufClassSpec);
-        AfxClassRegister(&dctx->vbufClass, provisions, AfxDrawContextGetBufferClass(dctx), &_AfxVbufClassSpec);
-        AfxClassRegister(&dctx->ibufClass, provisions, AfxDrawContextGetBufferClass(dctx), &_AfxIbufClassSpec);
+        tmp = _AfxVbufClassSpec;
+        tmp.vmt = &_SglBufImpl;
+        AfxClassRegister(&dctx->vbufClass, provisions, AfxDrawContextGetBufferClass(dctx), &tmp);
+        tmp = _AfxIbufClassSpec;
+        tmp.vmt = &_SglBufImpl;
+        AfxClassRegister(&dctx->ibufClass, provisions, AfxDrawContextGetBufferClass(dctx), &tmp);
         AfxClassRegister(&dctx->smpClass, provisions, NIL, &_AfxSmpClassSpec);
         AfxClassRegister(&dctx->texClass, provisions, AfxFileSystemGetResourceClass(fsys), &_AfxTexClassSpec);
         AfxClassRegister(&dctx->surfClass, provisions, AfxDrawContextGetTextureClass(dctx), &_AfxSurfClassSpec);
@@ -439,7 +443,7 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
 
         dctx->queueCnt = 0; // increased by init on each one
 
-        if (!(dctx->queues = AfxAllocate(dctx->genrlAll, sizeof(dctx->queues[0]) * queueCnt, AfxSpawnHint()))) AfxThrowError();
+        if (!(dctx->queues = AfxAllocate(dctx->genrlMem, sizeof(dctx->queues[0]) * queueCnt, AfxSpawnHint()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < queueCnt; i++)
@@ -472,17 +476,16 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
                 for (afxNat i = 0; i < dctx->queueCnt; i++)
                     while (0 < AfxObjectRelease(&dctx->queues[i]->obj));
 
-                AfxDeallocate(dctx->genrlAll, dctx->queues);
+                AfxDeallocate(dctx->genrlMem, dctx->queues);
             }
         }
 
         if (err)
         {
             _AfxDropClassChain(&dctx->provisions);
-        }
 
-        if (err)
-            AfxObjectRelease(&(dctx->genrlAll->obj));
+            AfxObjectRelease(&(dctx->genrlMem->obj));
+        }
     }
     return err;
 }

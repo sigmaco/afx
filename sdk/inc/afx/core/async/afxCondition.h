@@ -17,7 +17,7 @@
 #ifndef AFX_CONDITION_H
 #define AFX_CONDITION_H
 
-#include "afxMutex.h"
+#include "afx/core/async/afxMutex.h"
 
 // The QWaitCondition class provides a condition variable for synchronizing threads.
 

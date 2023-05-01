@@ -24,7 +24,7 @@
 #ifndef AFX_DRAW_OUTPUT_H
 #define AFX_DRAW_OUTPUT_H
 
-#include "res/afxSurface.h"
+#include "afx/draw/res/afxSurface.h"
 
 AFX_DEFINE_HANDLE(afxDrawOutput);
 
@@ -81,6 +81,7 @@ AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
     afxPresentTransform     presentTransform; // NIL; don't do any transform.
     afxPresentMode          presentMode; // FIFO; respect the sequence.
     afxBool                 clipped; // TRUE; don't do off-screen draw.
+    afxBool                 resizable;
 };
 
 #ifndef AFX_DRAW_DRIVER_SRC

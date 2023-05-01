@@ -17,7 +17,7 @@
 #ifndef AFX_KEYBOARD_H
 #define AFX_KEYBOARD_H
 
-#include "afxHid.h"
+#include "afx/core/io/afxHid.h"
 
 typedef enum // layout de HID
 {
@@ -133,6 +133,18 @@ typedef enum // layout de HID
 
 AFX_DEFINE_HANDLE(afxKeyboard);
 
+
+AFX_OBJECT(afxKeyboard)
+{
+    AFX_OBJECT(afxHid)  hid;
+#ifdef _AFX_KEYBOARD_C
+    afxNat              fnKeyCnt;
+    afxNat              keyCnt;
+    afxBool             currState[AFX_KEY_TOTAL];
+    afxBool             prevState[AFX_KEY_TOTAL];
+#endif
+};
+
 AFX void*       AfxKeyboardGetSystem(afxKeyboard kbd);
 
 AFX afxBool     AfxKeyboardArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
@@ -142,14 +154,5 @@ AFX afxBool     AfxKeyboardWasPressed(afxKeyboard kbd, afxKey code);
 AFX afxBool     AfxKeyboardWasReleased(afxKeyboard kbd, afxKey code);
 AFX afxBool     AfxKeyboardWerePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
 AFX afxBool     AfxKeyboardWereReleased(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
-
-AFX_OBJECT(afxKeyboard)
-{
-    AFX_OBJECT(afxHid)  hid;
-    afxNat              fnKeyCnt;
-    afxNat              keyCnt;
-    afxBool             currState[AFX_KEY_TOTAL];
-    afxBool             prevState[AFX_KEY_TOTAL];
-};
 
 #endif//AFX_KEYBOARD_H

@@ -1,0 +1,44 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 000000000013e810, 000000000013e818)
+ Constructing instance 0000000000272080 of Core Execution System.
+ afxSystem.c:802?_AfxSysCtor(sys=0000000000272080)
+ ADV afxSystem.c:818?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:819?_AfxSysCtor
+    Logical processor count: 2
+ Memory Context class registered.
+ Memory Arena class registered.
+ afxMemory.c:255?AfxSystemAcquireMemory(sys=0000000000272080,strategy=000000000013ce20,hint="afxSystem.c:837!_AfxSysCtor")
+ Class[Memory Context].ConstructInstances(1, 000000000013caa0, 000000000013caa8)
+ Constructing instance 000000000026cc10 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=000000000026cc10)
+ Instance 000000000026cc10[mem]^1 built.
+ Thread class registered.
+ File System class registered.
+ afxFileSystem.c:526?AfxSystemAcquireFileSystem(AfxSystem[0000000000272080].AcquireFileSystem(5,000000000013d100))
+ Class[File System].ConstructInstances(1, 000000000013caa0, 000000000013caa8)
+ Constructing instance 00000000002740c0 of File System.
+ afxFileSystem.c:574?_AfxFsysCtor(fsys=00000000002740c0)
+ I/O Stream class registered.
+ File class registered.
+ Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
