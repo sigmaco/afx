@@ -39,46 +39,46 @@ struct afxLinkage
 
 struct afxChain
 {
+    afxLinkage      anchor;
     union
     {
         void        *owner;
-        afxFcc      *fcc;
+        afxFcc      *ownerFcc;
     };
     afxNat          cnt;
-    afxLinkage      anchor;
 };
 
 // GRANT CHANGE MONITORING
 
-AFXINL void AfxChainDeploy(afxChain *ch, void *owner);
+AFXINL void                 AfxChainDeploy(afxChain *ch, void *owner);
 
-AFXINL afxNat AfxChainGetLength(afxChain const *ch);
+AFXINL afxNat               AfxChainGetLength(afxChain const *ch);
+AFXINL void*                AfxChainGetOwner(afxChain const *ch);
 
-AFXINL void* AfxChainGetOwner(afxChain const *ch);
+AFXINL afxLinkage*          AfxChainGetBegin(afxChain const *ch);
+AFXINL afxLinkage*          AfxChainGetEnd(afxChain const *ch);
+AFXINL afxLinkage*          AfxChainGetAnchor(afxChain *ch);
+AFXINL afxLinkage const*    AfxChainGetAnchorConst(afxChain const *ch);
 
-AFXINL afxLinkage* AfxChainGetBegin(afxChain const *ch);
+AFXINL afxNat               AfxChainFindLinkage(afxChain const *ch, afxLinkage *lnk);
+AFXINL afxLinkage*          AfxChainGetLinkage(afxChain *ch, afxNat idx);
+AFXINL afxError             AfxChainPushLinkageAfter(afxChain *ch, afxNat idx);
+AFXINL afxError             AfxChainPopLinkage(afxChain *ch, afxNat idx);
 
-AFXINL afxLinkage* AfxChainGetEnd(afxChain const *ch);
 
-AFXINL afxLinkage* AfxChainGetAnchor(afxChain *ch);
+AFXINL afxResult            AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxNat base, afxNat cnt, afxLinkage *lnk[]);
 
-AFXINL afxLinkage const* AfxChainGetAnchorConst(afxChain const *ch);
+
 
 AFXINL void AfxLinkageDeploy(afxLinkage *lnk, afxChain *ch);
 
 AFXINL void AfxLinkageDrop(afxLinkage *lnk);
-
-AFXINL afxLinkage* AfxChainFindLinkage(afxChain *ch, afxNat idx);
-
-AFXINL afxNat AfxChainFindLinkageIndex(afxChain const *ch, afxLinkage *lnk);
 
 AFXINL void* AfxLinkageGetOwner(afxLinkage const *lnk);
 
 AFXINL afxLinkage* AfxLinkageGetNext(afxLinkage const *lnk);
 
 AFXINL afxLinkage* AfxLinkageGetPrev(afxLinkage const *lnk);
-
-AFXINL afxResult AfxChainEnumerateLinkages(afxChain *ch, afxBool reverse, afxNat base, afxNat cnt, afxLinkage *lnk[]);
 
 #define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLinkage *_next##lnk2_ = (afxLinkage*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AfxContainerOf(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
 #define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLinkage *_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AfxContainerOf(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)

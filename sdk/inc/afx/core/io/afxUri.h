@@ -14,6 +14,8 @@
  *                                    www.sigmaco.org
  */
 
+// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #ifndef AFX_URI_H
 #define AFX_URI_H
 

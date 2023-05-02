@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// SIGMA Future Storage
+// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 #ifndef AFX_FILE_SYSTEM_H
 #define AFX_FILE_SYSTEM_H
@@ -118,12 +118,13 @@ AFX afxArchive      AfxFileSystemAcquireArchive(afxFileSystem fsys, afxIoFlags f
 AFX afxResource     AfxFileSystemAcquireResource(afxFileSystem fsys, afxResourceSpecification const *spec);
 AFX afxUrd          AfxFileSystemLoadUrd(afxFileSystem fsys, afxUri const *uri);
 
+AFX afxNat          AfxFileSystemGetStoragePointCount(afxFileSystem fsys);
 AFX afxResult       AfxFileSystemMountStoragePoints(afxFileSystem fsys, afxNat cnt, afxStoragePointSpecification const spec[]);
 AFX afxResult       AfxFileSystemDismountStoragePoints(afxFileSystem fsys, afxNat cnt, afxStoragePointSpecification const spec[]);
 AFX afxResult       AfxFileSystemDescribeStoragePoints(afxFileSystem fsys, afxNat base, afxNat cnt, afxStoragePointSpecification spec[]);
-AFX afxNat          AfxFileSystemGetStoragePointCount(afxFileSystem fsys);
 
 AFX afxResult       AfxFileSystemEnumerateArchives(afxFileSystem fsys, afxNat base, afxNat cnt, afxArchive arch[]);
+AFX afxResult       AfxFileSystemEnumerateFiles(afxFileSystem fsys, afxNat base, afxNat cnt, afxFile file[]);
 AFX afxResult       AfxFileSystemEnumerateResources(afxFileSystem fsys, afxNat base, afxNat cnt, afxResource res[]);
 AFX afxResult       AfxFileSystemEnumerateStreams(afxFileSystem fsys, afxNat base, afxNat cnt, afxStream ios[]);
 AFX afxResult       AfxFileSystemEnumerateUrds(afxFileSystem fsys, afxNat base, afxNat cnt, afxUrd urd[]);
@@ -133,8 +134,8 @@ AFX afxError        AfxFileSystemResolveUris(afxFileSystem fsys, afxNat cnt, afx
 
 AFX afxError        AfxFileSystemEnableResourceMonitoring(afxFileSystem fsys, afxResource res, afxBool enable);
 
-AFX afxClass*       AfxFileSystemGetFileClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetArchiveClass(afxFileSystem fsys);
+AFX afxClass*       AfxFileSystemGetFileClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetResourceClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetStreamClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetUrdClass(afxFileSystem fsys);

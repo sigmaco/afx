@@ -104,7 +104,7 @@ AFX afxVertexBuffer     AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afx
 
 // Texture
 AFX afxResult           AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[]);
-AFX afxResult           AfxDrawContextFetchTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
+AFX afxResult           AfxDrawContextAcquireTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 AFX afxResult           AfxDrawContextFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
 AFX afxResult           AfxDrawContextUploadTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 

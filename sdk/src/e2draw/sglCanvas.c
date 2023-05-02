@@ -143,8 +143,8 @@ _SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum 
                 switch (gl->CheckFramebufferStatus(target))
                 {
                 case GL_FRAMEBUFFER_COMPLETE:
-                    AfxEcho("canv %p, reinstanced.", canv);
                     canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                    AfxEcho("afxCanvas %p GPU-side data instanced.", canv);
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
                     AfxError("Not all framebuffer attachment points are framebuffer attachment complete.");

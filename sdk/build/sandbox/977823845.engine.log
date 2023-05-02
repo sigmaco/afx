@@ -1,0 +1,103 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ Core Execution System class registered.
+ Class[Core Execution System].ConstructInstances(1, 00000000002cea40, 00000000002cea48)
+ Constructing instance 00000000004a20d0 of Core Execution System.
+ afxSystem.c:802?_AfxSysCtor(sys=00000000004a20d0)
+ ADV afxSystem.c:818?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:819?_AfxSysCtor
+    Logical processor count: 2
+ Memory Context class registered.
+ Memory Arena class registered.
+ afxMemory.c:255?AfxSystemAcquireMemory(sys=00000000004a20d0,strategy=00000000002cd070,hint="afxSystem.c:837!_AfxSysCtor")
+ Class[Memory Context].ConstructInstances(1, 00000000002cccf0, 00000000002cccf8)
+ Constructing instance 000000000049ce00 of Memory Context.
+ afxMemory.c:294?_AfxMemCtor(mem=000000000049ce00)
+ Instance 000000000049ce00[mem]^1 built.
+ Thread class registered.
+ File System class registered.
+ afxFileSystem.c:543?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(00000000004a20d0,5,00000000002cd350))
+ Class[File System].ConstructInstances(1, 00000000002cccf0, 00000000002cccf8)
+ Constructing instance 00000000004a4110 of File System.
+ afxFileSystem.c:591?_AfxFsysCtor(fsys=00000000004a4110)
+ I/O Stream class registered.
+ File class registered.
+ ZIP-compatible Archive class registered.
+ Resource class registered.
+ Uniform Resource Dictionary class registered.
+ afxFileSystem.c:374?AfxFileSystemMountStoragePoints(Afx.FileSystem.MountStoragePoints(00000000004a4110,5,00000000002cd350))
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 7 mounted -> "E:/qwadro/afx/system64".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Instance 00000000004a4110[fsys]^1 built.
+ Module class registered.
+ afxModule.c:72?AfxSystemAcquireModule(sys=00000000004a20d0,uri=system/e2coree.dll)
+ Class[Module].ConstructInstances(1, 00000000002ccc30, 00000000002ccc38)
+ Constructing instance 00000000004a6780 of Module.
+ afxModule.c:123?_AfxMdleCtor(uri:system/e2coree.dll)
+ Instance 00000000004a6780[mdle]^1 built.
+ HID class registered.
+ Keyboard class registered.
+ Mouse class registered.
+ Draw System class registered.
+ Application class registered.
+ afxKeyboard.c:163?AfxSystemAcquireKeyboard(sys=00000000004a20d0,port=0)
+ Class[Keyboard].ConstructInstances(1, 00000000002ccd30, 00000000002ccd38)
+ Constructing instance 00000000004a7fb0 of Keyboard : HID.
+ Constructing instance 00000000004a7fb0 of HID.
+ afxHid.c:56?_AfxHidCtor(hid=00000000004a7fb0)
+ Constructing instance 00000000004a7fb0 of Keyboard.
+ afxKeyboard.c:203?_AfxKbdCtor(kbd=00000000004a7fb0)
+ Instance 00000000004a7fb0[kbd]^1 built.
+ Instance 00000000004a20d0[sys]^1 built.
+ afxDrawSystem.c:320?AfxSystemAcquireDrawSystem(sys=00000000004a20d0)
+ Class[Draw System].ConstructInstances(1, 00000000002cea50, 00000000002cea58)
+ Constructing instance 00000000004a68a0 of Draw System.
+ afxDrawSystem.c:399?_AfxDsysCtor(dsys=00000000004a68a0)
+ Draw Driver class registered.
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:72?AfxSystemAcquireModule(sys=00000000004a20d0,uri=e2draw.icd)
+ Class[Module].ConstructInstances(1, 00000000002ce080, 00000000002ce088)
+ Constructing instance 00000000004a6af0 of Module.
+ afxModule.c:123?_AfxMdleCtor(uri:e2draw.icd)
+ Instance 00000000004a6af0[mdle]^1 built.
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDriver.c:1251?_SglCreateCombinedDeviceContext(oglWndClss=00000000004aa7d0,shareCtx=0000000000000000,phwnd=00000000004aa820,phdc=00000000004aa828,phrc=00000000004aa838)

@@ -1410,6 +1410,10 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
                                                 ctxAttrPairs[4][0] = NIL;
                                                 ctxAttrPairs[4][1] = NIL;
 
+                                                _wglMakeCurrent(bkpHdc, bkpGlrc);
+                                                _wglDeleteContext(tmpHrc);
+                                                tmpHrc = NIL;
+
                                                 HGLRC  hrc2 = wglCreateContextAttribsARB(hdc2, shareCtx, (void*)ctxAttrPairs);
 
                                                 if (!hrc2) AfxThrowError();
@@ -1441,25 +1445,28 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
                                         }
                                     }
 
-                                    if (err)
+                                    if (err && hdc2)
                                         ReleaseDC(hwnd2, hdc2);
                                 }
 
-                                if (err)
+                                if (err && hwnd2)
                                     DestroyWindow(hwnd2);
                             }
                         }
-
-                        if (err)
-                            _wglMakeCurrent(bkpHdc, bkpGlrc);
                     }
-                    _wglDeleteContext(tmpHrc);
+                    _wglMakeCurrent(bkpHdc, bkpGlrc);
+
+                    if (tmpHrc)
+                        _wglDeleteContext(tmpHrc);
                 }
             }
-            ReleaseDC(tmpHwnd, tmpHdc);
+
+            if (tmpHdc)
+                ReleaseDC(tmpHwnd, tmpHdc);
         }
-        DestroyWindow(tmpHwnd);
-        _wglMakeCurrent(bkpHdc, bkpGlrc);
+
+        if (tmpHwnd)
+            DestroyWindow(tmpHwnd);
     }
     return err;
 }
