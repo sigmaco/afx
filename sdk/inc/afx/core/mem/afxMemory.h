@@ -17,7 +17,9 @@
 #ifndef AFX_MEMORY_H
 #define AFX_MEMORY_H
 
-//#define VLD_FORCE_ENABLE
+#ifdef _DEBUG
+#   define VLD_FORCE_ENABLE
+#endif
 
 #include <stdlib.h>
 #if (defined(_WIN64) || defined(_WIN32))
@@ -26,9 +28,10 @@
 #   endif
 #endif
 
-#include "../base/afxLinkedList.h"
-#include "../base/afxFcc.h"
-#include "../diag/afxDebug.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/afxLinkedList.h"
+#include "afx/core/afxFcc.h"
+#include "afx/core/diag/afxDebug.h"
 
 //#define _AFX_TRY_ASSERT_ALLOCATION_AREA 1
 
@@ -37,7 +40,7 @@
 // alignment is an additional size used to pad elements in memory.
 // stride is the sum of size with alignment.
 
-AFX_DEFINE_HANDLE(afxAllocator);
+AFX_DEFINE_HANDLE(afxMemory);
 AFX_DECLARE_STRUCT(afxSegment);
 AFX_DECLARE_STRUCT(afxAllocation);
 
@@ -58,51 +61,111 @@ AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize st
 
 typedef enum afxAllocationFlags
 {
-    AFX_MEM_FLAG_USED,
-    AFX_MEM_FLAG_UNPAGED,
-    AFX_MEM_FLAG_RESIZABLE,
+    AFX_ALL_FLAG_RESIZABLE  = (1 << 8),
+    AFX_ALL_FLAG_ZEROED     = (1 << 9),
 } afxAllocationFlags;
 
 typedef enum afxAllocationDuration
 {
-    AFX_ALL_DUR_TEMPORARY = (1 << 0), // to be used just inside "this" function.
-    AFX_ALL_DUR_TRANSIENT = (1 << 1), // to be used across functions, as example signaling objects about an event occurance.
-    AFX_ALL_DUR_PERMANENT = (1 << 2), // to be used across the entire system and or subsystem, 
+    AFX_ALL_DUR_TEMPORARY, // to be used just inside "this" function.
+    AFX_ALL_DUR_TRANSIENT, // to be used across functions, as example signaling objects about an event occurance.
+    AFX_ALL_DUR_PERMANENT, // to be used across the entire system and or subsystem, 
 } afxAllocationDuration;
 
-struct afxAllocation
+#define AfxFlagsGetDuration(dur_) (dur_ & 0x00000003)
+
+#define AFX_ALL_EXTRA_DATA 256
+
+AFX_DEFINE_STRUCT(afxAllocationStrategy)
 {
-#ifndef _AFX_DONT_DEBUG_MEM_LEAK
-    afxChar const       *func;
-    afxSize             line;
-    afxChar const       *file;
-#endif
-    afxNat              siz;
-    afxLinkage          all;
-    afxAllocationFlags  flags;
-    afxFcc              fcc;
-    uintptr_t           data[];
+    afxSize                 size;    // size of an fixed-size allocation or size of afxByte for arbitrary allocations.
+    afxSize                 align;  // useful when element requires alignment, such as 128-bit alignment for SIMD instructions. If zero, Qwadro will align to 16 bytes.
+    afxSize                 cap;    // useful to restrict space to a certain capacity or, when elemSiz is equal to afxByte it will be the max totality of bytes for arbitrary allocations.
+    afxSize                 stock;  // useful to preallocate space for fixed-size allocations.
+    afxAllocationDuration   duration;   // the expected duration of allocations.
+    afxBool                 resizable;  // flag to indicate if allocations may be required to be resized.    
 };
 
-AFX void*           AfxAllocate(afxAllocator all, afxSize siz, afxHint const hint);
+#if 0
+AFX_DEFINE_STRUCT(afxAllocation)
+{
+    void                    *old; // old allocation to be reallocated.
+    afxSize                 size;    // count of an fixed-size allocation or size of afxByte sequence for arbitrary allocations.
+    afxSize                 align;  // useful when element requires alignment, such as 128-bit alignment for SIMD instructions. If zero, Qwadro will align to 16 bytes.
+    afxFlags                flags;  // flag to indicate if allocations may be required to be resized and the expected duration of allocations.
+    void                    *src;
+};
 
-AFX void*           AfxCoallocate(afxAllocator all, afxSize cnt, afxSize siz, afxHint const hint);
+//AFX afxError        AfxMemoryRequest(afxMemory mem, afxAllocation const *a, );
+//AFX afxError        AfxMemoryDispose(afxMemory mem, afxNat cnt, void *mem[]);
+#endif
 
-AFX void*           AfxReallocate(afxAllocator all, void *p, afxSize siz, afxHint const hint);
+AFX_DEFINE_STRUCT(afxMemoryPage)
+{
+    afxFcc                  fcc; // MPAG
+    afxLinkage              all;
+    afxSize                 siz;
+    afxSize                 freeSiz;
+    afxChain                slices;
+};
 
-AFX afxResult       AfxDeallocate(afxAllocator all, void *p);
+AFX_OBJECT(afxMemory)
+{
+    afxObject               obj;
+#ifdef _AFX_ALLOCATOR_C
+    afxChain                pages; // slabs, pages, arenas, etc
+    afxChain                unpagedChunks;
 
-AFX afxResult       AfxCopy(void *dst, void const *src, afxSize range);
+    afxSize                 elemSiz; // for fixed-size allocators
+    afxSize                 align;
+    afxSize                 cap; // when the max growth of memory pool is limited, or (afxSize)-1 for "infinity".
+    afxNat                  stock;
+    afxSize                 heapSiz; // when preallocate pages
+    afxAllocationDuration   duration; // the expected duration of allocations.
+    afxBool                 resizable; // flag to indicate if allocations may be required to be resized.
 
-AFX afxResult       AfxFill(void *p, afxSize range, afxInt value);
+// debug
+    afxNat                  dbgLevel; // 0 - nothing, 1 - mechanism activity, 2 - block activity, 3 - portion (de)allocations, 4 - [implementation-dependent]
+    afxChar const           *func;
+    afxChar const           *fname;
+    afxSize                 fline;
 
-AFX afxResult       AfxZero(void *p, afxSize range);
+    void*                   (*alloc)(afxMemory mem, afxSize rawsiz, afxHint const hint);
+    void*                   (*coalloc)(afxMemory mem, afxSize cnt, afxSize rawsiz, afxHint const hint);
+    void*                   (*realloc)(afxMemory mem, void* p, afxSize rawsiz, afxHint const hint);
+    afxResult               (*dealloc)(afxMemory mem, void* p);
 
-AFX afxResult       AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
+    afxError                (*exhaust)(afxMemory mem, afxBool disposeSpace, afxBool disposeStock);
+    afxError                (*optimize)(afxMemory mem);
+    afxResult               (*enumPages)(afxMemory mem, afxBool reverse, afxNat base, afxNat cnt, afxMemoryPage *mpag[]);
+    afxResult               (*enumChunks)(afxMemory mem, afxBool reverse, afxNat base, afxNat cnt, void *chunks[]);
 
-AFX afxAllocator    AfxGetAllocator(void *p);
+    afxFcc                  extFourCc;
+    afxByte                 extData[AFX_ALL_EXTRA_DATA];
+#endif
+};
 
-AFX afxBool         AfxIsAnValidAllocation(void const *p);
+AFX afxError                AfxMemoryEnableDebugging(afxMemory mem, afxNat level);
+AFX afxError                AfxMemoryExhaust(afxMemory mem, afxBool disposeSpace, afxBool disposeStock); // free all allocations
+AFX afxResult               AfxMemoryEnumeratePages(afxMemory mem, afxBool reverse, afxNat base, afxNat cnt, afxMemoryPage *mpag[]);
+AFX afxResult               AfxMemoryEnumerateChunks(afxMemory mem, afxBool reverse, afxNat base, afxNat cnt, void *chunks[]);
+AFX afxSize                 AfxMemoryGetAlignment(afxMemory mem);
+AFX afxSize                 AfxMemoryGetCapacity(afxMemory mem);
+AFX afxSize                 AfxMemoryGetPop(afxMemory mem);
+AFX afxSize                 AfxMemoryGetStock(afxMemory mem); // useful to get restant capacity of a preallocated memory pool.
+AFX afxError                AfxMemoryOptimize(afxMemory mem); // try to defragment, reorder allocations and/or free unused reserved space.
+AFX afxError                AfxMemoryDescribeStrategy(afxMemory mem, afxAllocationStrategy *as);
+
+AFX void*                   AfxAllocate(afxMemory mem, afxSize siz, afxHint const hint);
+AFX void*                   AfxCoallocate(afxMemory mem, afxSize cnt, afxSize siz, afxHint const hint);
+AFX void*                   AfxReallocate(afxMemory mem, void *p, afxSize siz, afxHint const hint);
+AFX afxResult               AfxDeallocate(afxMemory mem, void *p);
+
+AFX afxResult               AfxCopy(void *dst, void const *src, afxSize range);
+AFX afxResult               AfxFill(void *p, afxSize range, afxInt value);
+AFX afxResult               AfxZero(void *p, afxSize range);
+
+AFX afxResult               AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
 
 #define AFX_ALIGN(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 

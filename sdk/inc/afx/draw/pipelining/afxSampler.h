@@ -17,8 +17,8 @@
 #ifndef AFX_SAMPLER_H
 #define AFX_SAMPLER_H
 
-#include "../base/afxDrawDefs.h"
-#include "../res/afxTexture.h"
+#include "afx/draw/afxDrawDefs.h"
+#include "afx/draw/res/afxTexture.h"
 
 typedef enum afxTexelAddress
 {

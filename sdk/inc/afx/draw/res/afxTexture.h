@@ -17,7 +17,7 @@
 #ifndef AFX_TEXTURE_H
 #define AFX_TEXTURE_H
 
-#include "../base/afxColor.h"
+#include "afx/draw/afxColor.h"
 #include "afx/core/io/afxResource.h"
 
 // Textures in Granny are stored in as straightforward a manner as possible.
@@ -68,6 +68,7 @@ AFX afxNat                      AfxTextureGetLodCount(afxTexture tex);
 AFX afxNat                      AfxTextureGetLayerCount(afxTexture tex);
 AFX afxNat                      AfxTextureGetSampleCount(afxTexture tex);
 AFX afxColorSwizzling const*    AfxTextureGetColorSwizzling(afxTexture tex);
+AFX afxError                    AfxTextureSwapChannels(afxTexture tex, afxColorSwizzle a, afxColorSwizzle b);
 
 AFX afxError                    AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt);
 

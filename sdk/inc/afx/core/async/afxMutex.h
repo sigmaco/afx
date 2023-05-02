@@ -17,7 +17,7 @@
 #ifndef AFX_MUTEX_H
 #define AFX_MUTEX_H
 
-#include "../time/afxTime.h"
+#include "afx/core/time/afxTime.h"
 
 // The afxMutex class provides access serialization between threads.
 

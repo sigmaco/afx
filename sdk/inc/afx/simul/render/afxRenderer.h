@@ -9,6 +9,9 @@ AFX_DEFINE_STRUCT(afxViewConstants)
     afxM4d v;
     afxM4d p;
     afxM4d vp;
+    afxV3d viewPos;
+    afxV3d sunPos;
+    afxV3d sunKd;
 };
 
 AFX_DEFINE_STRUCT(afxShaderConstants)
@@ -18,8 +21,15 @@ AFX_DEFINE_STRUCT(afxShaderConstants)
 
 AFX_DEFINE_STRUCT(afxMaterialConstants)
 {
-    afxColor color;
+    //afxColor    Ka; // ambient color
+    afxV3d  Kd; // diffuse color
+    afxV3d  Ks; // specular color
+    afxReal Ns; // specular color is weighted by the specular exponent Ns. Ranges between [0...1000].
+    afxReal d; // dissolution. 1.0 means fully opaque.
+    afxReal Ni; // index of refraction
+    afxNat  illum; // illumination model. 0 = diffuse color, 1 = diffuse color and ambient, etc.
     afxBool hasDiffTex;
+    afxBool hasSpecTex;
 };
 
 AFX_DEFINE_STRUCT(afxObjectConstants)
@@ -55,19 +65,21 @@ AFX_DEFINE_STRUCT(afxRenderer)
 
     struct
     {
-        afxSurface  depth;
-        afxCanvas   canv;
+        afxSurface      depth;
+        afxCanvas       canv;
 
-        afxBuffer   viewConstants; // p, v
-        afxBuffer   shdConstants;
-        afxBuffer   mtlConstants;
-        afxBuffer   objConstants; // m
+        afxBuffer       viewConstants; // p, v
+        afxBuffer       shdConstants;
+        afxBuffer       mtlConstants;
+        afxBuffer       objConstants; // m
 
-        afxLego     viewLego;
-        afxLego     shdLego;
-        afxLego     mtlLego;
-        afxLego     objLego;
-    }               sets[2];
+        afxLego         viewLego;
+        afxLego         shdLego;
+        afxLego         mtlLego;
+        afxLego         objLego;
+    }                   sets[2];
+    afxNat              frameCnt;
+    afxNat              frameIdx;
 
 };
 
@@ -91,6 +103,9 @@ for each view{
 }
 #endif
 
-//afxResult _AfxSetUpRenderer(afxDrawInput din, afxDrawOutput dout);
+AFX afxError _AfxBuildRenderer(afxRenderer *renderer, afxDrawOutput dout, afxSimulation sim);
+AFX afxError _AfxDismantleRenderer(afxRenderer *renderer);
+
+AFX afxError _AfxRendererDoWork(afxDrawInput din, afxNat qid, afxRenderer *renderer);
 
 #endif///RENDERER_H

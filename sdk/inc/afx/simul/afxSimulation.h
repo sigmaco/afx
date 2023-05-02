@@ -17,6 +17,7 @@
 #ifndef AFX_SIMULATION_H
 #define AFX_SIMULATION_H
 
+#include "afx/core/afxClass.h"
 #include "afxEntity.h"
 #include "afxLight.h"
 #include "afxCamera.h"
@@ -74,7 +75,7 @@ AFX_OBJECT(afxSimulation)
     afxClass        sklObjt;
     afxClass        nodObjt;
 
-    afxAllocator    genrlAll;
+    afxMemory    genrlMem;
     afxArray        roots;
 
     afxAabb         area;
@@ -113,17 +114,17 @@ AFX void*           AfxSimulationGetSystem(afxSimulation sim);
 AFX void*           AfxSimulationGetDrawSystem(afxSimulation sim);
 AFX void*           AfxSimulationGetApplication(afxSimulation sim);
 
-AFX afxAllocator    AfxSimulationGetAllocator(afxSimulation sim);
+AFX afxMemory       AfxSimulationGetMemory(afxSimulation sim);
 
-AFX afxClass*  AfxSimulationGetBodyClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetCameraClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetEntityClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetLightClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetMaterialClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetMeshClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetModelClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetNodeClass(afxSimulation sim);
-AFX afxClass*  AfxSimulationGetSkeletonClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetBodyClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetCameraClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetEntityClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetLightClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetMaterialClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetMeshClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetModelClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetNodeClass(afxSimulation sim);
+AFX afxClass*       AfxSimulationGetSkeletonClass(afxSimulation sim);
 
 AFX afxResult       AfxSimulationForEachBody(afxSimulation sim, void (*f)(afxIterator *iter), void *data);
 AFX afxResult       AfxSimulationForEachCamera(afxSimulation sim, void (*f)(afxIterator *iter), void *data);

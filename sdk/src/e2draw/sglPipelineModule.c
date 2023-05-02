@@ -66,7 +66,7 @@ _SGL afxError _SglDqueSyncPipm(afxDrawQueue dque, afxPipelineModule pipm, afxSha
                 {
                     pipm->compiled = TRUE;
                     pipm->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
-                    AfxEcho("Shader %p reinstanced.", pipm);
+                    AfxEcho("afxPipelineModule %p GPU-side data instanced.", pipm);
                 }
             }
         }
@@ -89,17 +89,16 @@ _SGL afxError _AfxPipelineModuleDownload(afxPipelineModule pipm, afxUri const *u
 
     afxDrawContext dctx = AfxPipelineModuleGetContext(pipm);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxAllocator all = AfxDrawContextGetAllocator(dctx);
-    AfxAssertObject(all, AFX_FCC_ALL);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObject(dsys, AFX_FCC_DSYS);
     afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
     AfxAssertObject(fsys, AFX_FCC_FSYS);
 
     afxFile file;
-    afxRwx const rwx = { 0, 1, 0 };
 
-    if (!(file = AfxFileSystemOpenFile(fsys, rwx, uri))) AfxThrowError();
+    if (!(file = AfxFileSystemOpenFile(fsys, AFX_IO_FLAG_W, uri))) AfxThrowError();
     else
     {
         if (AfxPipelineModuleSerialize(pipm, &file->ios)) AfxThrowError();
@@ -118,7 +117,7 @@ _SGL afxError _AfxPipelineModuleSerialize(afxPipelineModule pipm, afxStream ios)
     AfxAssertObject(pipm, AFX_FCC_PIPM);
     AfxAssertObject(ios, AFX_FCC_IOS);
 
-    AfxStreamWrite(ios, 1, &pipm->len, (void const*[]) { pipm->code });
+    AfxStreamWrite(ios, pipm->code, pipm->len);
 
     return err;
 }
@@ -136,8 +135,14 @@ _SGL afxError _AfxPipmDtor(afxPipelineModule pipm)
     }
 
     if (pipm->code)
-        AfxDeallocate(NIL, pipm->code);
+    {
+        afxDrawContext dctx = AfxPipelineModuleGetContext(pipm);
+        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        afxMemory mem = AfxDrawContextGetMemory(dctx);
+        AfxAssertObject(mem, AFX_FCC_MEM);
 
+        AfxDeallocate(mem, pipm->code);
+    }
     return err;
 }
 
@@ -162,9 +167,14 @@ _SGL afxError _AfxPipmCtor(afxPipelineModule pipm, _afxShdrCtorArgs *args)
         if (2 > args->len) AfxThrowError();
         else
         {
+            afxDrawContext dctx = args->dctx;
+            AfxAssertObject(dctx, AFX_FCC_DCTX);
+            afxMemory mem = AfxDrawContextGetMemory(dctx);
+            AfxAssertObject(mem, AFX_FCC_MEM);
+
             void* codecpy;
 
-            if (!(codecpy = AfxAllocate(NIL, args->len + sizeof(afxByte), AfxSpawnHint()))) AfxThrowError();
+            if (!(codecpy = AfxAllocate(mem, args->len + sizeof(afxByte), AfxSpawnHint()))) AfxThrowError();
             else
             {
                 AfxCopy(codecpy, args->code, args->len);
@@ -178,7 +188,7 @@ _SGL afxError _AfxPipmCtor(afxPipelineModule pipm, _afxShdrCtorArgs *args)
                 pipm->compiled = FALSE;
 
                 if(err)
-                    AfxDeallocate(NIL, codecpy);
+                    AfxDeallocate(mem, codecpy);
             }
         }
     }
@@ -206,84 +216,6 @@ _SGL afxPipelineModule _AfxDrawContextBuildPipelineModule(afxDrawContext dctx, a
         AfxThrowError();
 
     return pipm;
-}
-
-_SGL afxPipelineModule _AfxDrawContextUploadPipelineModuleGlsl(afxDrawContext dctx, afxUri const *uri)
-{
-    afxError err = NIL;
-    AfxEntry("dctx=%p", dctx);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxPipelineModule pipm = NIL;
-    
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxAllocator all = AfxDrawContextGetAllocator(dctx);
-    AfxAssertObject(all, AFX_FCC_ALL);
-    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
-    AfxAssertObject(fsys, AFX_FCC_FSYS);
-
-    afxFile file;
-    afxRwx const rwx = { 1, 0, 0 };
-
-    if (!(file = AfxFileSystemOpenFile(fsys, rwx, uri))) AfxThrowError();
-    else
-    {
-        AfxAssertObject(file, AFX_FCC_FILE);
-        afxNat size;
-
-        if (!(size = AfxStreamMeasure(&file->ios))) AfxThrowError();
-        else
-        {
-            void* code;
-
-            if (!(code = AfxAllocate(NIL, size + sizeof(afxByte), AfxSpawnHint()))) AfxThrowError();
-            else
-            {
-                AfxStreamRead(&file->ios, 1, &size, &code);
-                ((afxByte*)code)[size] = '\0';
-
-                if (!(pipm = AfxDrawContextBuildPipelineModule(dctx, code, size)))
-                    AfxThrowError();
-
-                AfxDeallocate(NIL, code);
-            }
-        }
-        AfxObjectRelease(&file->ios.obj);
-    }
-    return pipm;
-}
-
-_SGL afxPipelineModule _AfxDrawContextUploadPipelineModule(afxDrawContext dctx, afxUri const *uri)
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertType(uri, AFX_FCC_URI);
-    AfxAssert(!AfxUriIsBlank(uri));
-
-    afxUri fext;
-    AfxUriForkExtension(&fext, uri);
-
-    if (AfxUriIsBlank(uri)) AfxThrowError();
-    else
-    {
-        afxPipelineModule pipm = NIL;
-
-        if (0 == AfxStringCompareRawCi(AfxUriGetStringConst(&fext), 0, 4, ".urd"))
-        {
-            AfxAdvertise("Uniform Resource Dictionary (.urd) is NOT supported yet.");
-            AfxThrowError();
-        }
-        else
-        {
-            if (!(pipm = _AfxDrawContextUploadPipelineModuleGlsl(dctx, uri))) AfxThrowError();
-            else
-            {
-                return pipm;
-            }
-        }
-    }
-    return NIL;
 }
 
 _SGL void _AfxIteratorCompareResourceNameCiPipm(afxIterator *iter)
@@ -317,26 +249,6 @@ _SGL afxPipelineModule _AfxDrawContextFindPipelineModule(afxDrawContext dctx, af
         return (afxPipelineModule)data.obj;
 
     return NIL;
-}
-
-_SGL afxPipelineModule _AfxDrawContextFetchPipelineModule(afxDrawContext dctx, afxUri const *uri)
-{
-    afxError err = NIL;
-    AfxEntry("dctx=%p,uri=%.*s", dctx, AfxPushString(AfxUriGetStringConst(uri)));
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertType(uri, AFX_FCC_URI);
-
-    afxUri name;
-    AfxUriForkName(&name, uri);
-    afxPipelineModule pipm = AfxDrawContextFindPipelineModule(dctx, &name);
-
-    if (pipm) AfxObjectReacquire(&pipm->obj, NIL, NIL, NIL, NIL);
-    else
-    {
-        if (!(pipm = AfxDrawContextUploadPipelineModule(dctx, uri)))
-            AfxThrowError();
-    }
-    return pipm;
 }
 
 _SGL afxClassSpecification const _AfxPipmClassSpec;

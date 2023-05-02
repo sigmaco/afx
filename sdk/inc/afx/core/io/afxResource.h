@@ -17,10 +17,10 @@
 #ifndef AFX_RESOURCE_H
 #define AFX_RESOURCE_H
 
-#include "afxUri.h"
-#include "afxUrd.h"
-#include "../time/afxTime.h"
-#include "../afxModule.h"
+#include "afx/core/io/afxUri.h"
+#include "afx/core/io/afxUrd.h"
+#include "afx/core/time/afxTime.h"
+#include "afx/core/afxModule.h"
 
 // Base class for all resources.
 // Resource is the base class for all resource types.
@@ -54,7 +54,6 @@ AFX afxUri const*   AfxResourceExcerptName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
 AFX afxError        AfxResourceLoad(afxResource res); // find or load (if not found on dictionaries).
 AFX afxError        AfxResourceRequest(afxResource res);
-AFX afxError        AfxResourceSetMonitor(afxResource res, afxBool enable); // Connect to Datajack, such as devices to draw context
 AFX afxError        AfxResourceUnload(afxResource res);
 
 // Deveria emitir sinal AFX_EVENT_RES_CHANGED, para avisar observadores que o recurso necessita de ser reinstanciado.

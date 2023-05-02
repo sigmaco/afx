@@ -14,10 +14,12 @@
  *                                    www.sigmaco.org
  */
 
+// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #ifndef AFX_URD_H
 #define AFX_URD_H
 
-#include "afxStream.h"
+#include "afx/core/io/afxStream.h"
 
 // URD --- UNIFORM RESOURCE DICTIONARY
 
@@ -38,12 +40,14 @@ AFX_DEFINE_HANDLE(afxUrd);
 AFX_OBJECT(afxUrd)
 {
     afxObject       obj; // AFX_FCC_URD
+#ifdef _AFX_URD_C
     struct
     {
         afxByte*    buffer;
         afxSize     length;
     }               buffer;
     afxUrdNode      *root;
+#endif
 };
 
 AFX void*       AfxUrdGetSystem(afxUrd urd);

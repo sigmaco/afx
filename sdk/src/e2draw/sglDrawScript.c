@@ -8,11 +8,12 @@ typedef struct
 
 // DRAW CODE API ///////////////////////////////////////////////////////////////
 
-_SGL void _AfxDrawScriptCmdCommand(afxDrawScript dscr, afxNat id, _afxDscrCmd *cmd)
+_SGL void _AfxDrawScriptCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _afxDscrCmd *cmd)
 {
     afxError err = NIL;
     AfxAssertObject(dscr, AFX_FCC_DSCR);
     cmd->id = id;
+    cmd->siz = siz;
     AfxLinkageDeploy(&cmd->script, &dscr->commands);
 }
 
@@ -21,7 +22,7 @@ _SGL void _AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTe
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdCopyTex *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdCopyTex *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->dst = dst;
     cmd->src = src;
@@ -30,7 +31,7 @@ _SGL void _AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTe
     for (afxNat i = 0; i < rgnCnt; i++)
         cmd->rgn[i] = rgn[i];
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_COPY_TEXTURE, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_COPY_TEXTURE, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state)
@@ -38,11 +39,11 @@ _SGL void _AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRas
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdSetRasterizerState *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdSetRasterizerState *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->state = *state;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_RASTERIZATION_STATE, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_RASTERIZATION_STATE, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state)
@@ -50,11 +51,11 @@ _SGL void _AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthSta
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdSetDepthState *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdSetDepthState *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->state = *state;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_DEPTH_STENCIL_STATE, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_DEPTH_STENCIL_STATE, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state)
@@ -62,11 +63,11 @@ _SGL void _AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipeline
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdSetInputAssemblyState *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdSetInputAssemblyState *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->state = *state;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_INPUT_ASSEMBLY_STATE, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_INPUT_ASSEMBLY_STATE, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil)
@@ -74,7 +75,7 @@ _SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *are
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBeginRendering *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBeginRendering *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     AfxRectCopy(&cmd->area, area);
     cmd->layerCnt = layerCnt;
@@ -93,7 +94,7 @@ _SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *are
     else
         cmd->stencil.surf = NIL;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDERING, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDERING, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdEndRendering(afxDrawScript dscr)
@@ -101,9 +102,9 @@ _SGL void _AfxDrawScriptCmdEndRendering(afxDrawScript dscr)
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdEndRendering *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdEndRendering *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END_RENDERING, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END_RENDERING, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[])
@@ -111,7 +112,7 @@ _SGL void _AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, a
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBeginRenderPass *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBeginRenderPass *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->canv = canv;
 
@@ -125,7 +126,7 @@ _SGL void _AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, a
     for (afxNat i = 0; i < annexCnt; i++)
         cmd->annexes[i] = annexes[i];
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDER_PASS, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDER_PASS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdEndRenderPass(afxDrawScript dscr)
@@ -133,9 +134,9 @@ _SGL void _AfxDrawScriptCmdEndRenderPass(afxDrawScript dscr)
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdEndRenderPass *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdEndRenderPass *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END_RENDER_PASS, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END_RENDER_PASS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
@@ -143,7 +144,7 @@ _SGL void _AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat32 first, afxNa
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdSetVp *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdSetVp *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -151,7 +152,7 @@ _SGL void _AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat32 first, afxNa
     for (afxNat i = 0; i < cnt; i++)
         cmd->vp[i] = vp[i];
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_VIEWPORT, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_VIEWPORT, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat32 first, afxNat32 cnt, afxRect const rect[])
@@ -159,7 +160,7 @@ _SGL void _AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat32 first, afxNat
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdSetScissor *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdSetScissor *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -167,7 +168,7 @@ _SGL void _AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat32 first, afxNat
     for (afxNat i = 0; i < cnt; i++)
         cmd->rect[i] = rect[i];
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_SCISSOR, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_SCISSOR, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip)
@@ -175,11 +176,11 @@ _SGL void _AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip)
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindPip *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBindPip *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->pip = pip;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_PIPELINE, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_PIPELINE, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBindIndexBuffer(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat32 baseIdx)
@@ -187,12 +188,12 @@ _SGL void _AfxDrawScriptCmdBindIndexBuffer(afxDrawScript dscr, afxIndexBuffer ib
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindIbuf *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBindIbuf *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->ibuf = ibuf;
     cmd->baseIdx = baseIdx;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_INDEX_BUFFER, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_INDEX_BUFFER, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBindLegos(afxDrawScript dscr, afxNat32 first, afxNat32 cnt, afxLego lego[])
@@ -200,7 +201,7 @@ _SGL void _AfxDrawScriptCmdBindLegos(afxDrawScript dscr, afxNat32 first, afxNat3
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindLego *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBindLego *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -208,7 +209,7 @@ _SGL void _AfxDrawScriptCmdBindLegos(afxDrawScript dscr, afxNat32 first, afxNat3
     for (afxNat i = 0; i < cnt; i++)
         cmd->lego[i] = lego[i];
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_PIPELINE_PLUGS, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_PIPELINE_PLUGS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBindWildVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const size[], afxSize const stride[])
@@ -216,7 +217,7 @@ _SGL void _AfxDrawScriptCmdBindWildVertexBuffers(afxDrawScript dscr, afxNat firs
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindVbuf *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBindVbuf *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -229,7 +230,7 @@ _SGL void _AfxDrawScriptCmdBindWildVertexBuffers(afxDrawScript dscr, afxNat firs
         cmd->vtxStride[i] = stride ? stride[i] : 0;
         cmd->wild = TRUE;
     }
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_WILD_VERTEX_BUFFERS, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_WILD_VERTEX_BUFFERS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[])
@@ -237,7 +238,7 @@ _SGL void _AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, a
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindVbuf *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdBindVbuf *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -249,7 +250,7 @@ _SGL void _AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, a
         cmd->vtxArr[i] = vtxArr ? vtxArr[i] : 0;
         cmd->wild = FALSE;
     }
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_VERTEX_BUFFERS, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BIND_VERTEX_BUFFERS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
@@ -257,7 +258,7 @@ _SGL void _AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxN
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdDrawIndexed *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdDrawIndexed *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->idxCnt = idxCnt;
     cmd->instCnt = instCnt;
@@ -265,7 +266,7 @@ _SGL void _AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxN
     cmd->vtxOff = vtxOff;
     cmd->firstInst = firstInst;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_DRAW_INDEXED, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_DRAW_INDEXED, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdDraw(afxDrawScript dscr, afxNat32 vtxCnt, afxNat32 instCnt, afxNat32 firstVtx, afxNat32 firstInst)
@@ -273,14 +274,14 @@ _SGL void _AfxDrawScriptCmdDraw(afxDrawScript dscr, afxNat32 vtxCnt, afxNat32 in
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdDraw *cmd = AfxAllocate(dscr->cachedCmdAll, sizeof(*cmd), AfxSpawnHint());
+    _afxDscrCmdDraw *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
     cmd->vtxCnt = vtxCnt;
     cmd->instCnt = instCnt;
     cmd->firstVtx = firstVtx;
     cmd->firstInst = firstInst;
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_DRAW, &cmd->cmd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_DRAW, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL afxError _AfxDrawScriptReset(afxDrawScript dscr)
@@ -291,7 +292,7 @@ _SGL afxError _AfxDrawScriptReset(afxDrawScript dscr)
     while (1)
     {
         afxChain *commands = &dscr->commands;
-        afxLinkage *first = AfxChainGetFirstLinkage(commands), *dummy = AfxChainGetDummyLinkage(commands);
+        afxLinkage *first = AfxChainGetBegin(commands), *dummy = AfxChainGetAnchor(commands);
 
         if (first == dummy) break;
         else
@@ -301,7 +302,9 @@ _SGL afxError _AfxDrawScriptReset(afxDrawScript dscr)
 
             if (cmd != &dscr->cmdBegin && cmd != &dscr->cmdEnd)
             {
-                AfxDeallocate(NIL, cmd);
+                //AfxDeallocate(all, cmd);
+                AfxAssertObject(dscr->cmdAll, AFX_FCC_AREN);
+                AfxArenaRecycle(dscr->cmdAll, cmd, cmd->siz);
             }
         }
     }
@@ -316,7 +319,7 @@ _SGL afxError _AfxDrawScriptEnd(afxDrawScript dscr)
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END, &dscr->cmdEnd);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END, sizeof(dscr->cmdEnd), &dscr->cmdEnd);
 
     dscr->state = AFX_DSCR_STATE_EXECUTABLE;
     dscr->lastUpdTime = AfxGetTimer();
@@ -330,7 +333,7 @@ _SGL afxError _AfxDrawScriptBegin(afxDrawScript dscr, afxNat flags)
     (void)flags;
 
     dscr->state = AFX_DSCR_STATE_RECORDING;
-    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN, &dscr->cmdBegin);
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN, sizeof(dscr->cmdBegin), &dscr->cmdBegin);
     return err;
 }
 
@@ -407,21 +410,6 @@ _SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle)
     return dscr;
 }
 
-_SGL afxError _AfxDscrCtor(afxDrawScript dscr, _afxDscrCtorArgs *args)
-{
-    AfxEntry("dscr=%p", dscr);
-    afxError err = NIL;
-    AfxAssertObject(dscr, AFX_FCC_DSCR);
-
-    dscr->cachedCmdAll = args->din->cmdAll;
-    dscr->state = AFX_DSCR_STATE_INITIAL;
-    AfxChainDeploy(&dscr->commands, dscr);
-
-    dscr->lastUpdTime = AfxGetTimer();
-
-    return err;
-}
-
 _SGL afxError _AfxDscrDtor(afxDrawScript dscr)
 {
     AfxEntry("dscr=%p", dscr);
@@ -443,8 +431,27 @@ _SGL afxError _AfxDscrDtor(afxDrawScript dscr)
     }
 
     AfxDrawScriptReset(dscr);
-    //AfxObjectRelease(&(dscr->cmds->obj));
+    AfxObjectRelease(&(dscr->cmdAll->obj));
 
+    return err;
+}
+
+_SGL afxError _AfxDscrCtor(afxDrawScript dscr, _afxDscrCtorArgs *args)
+{
+    AfxEntry("dscr=%p", dscr);
+    afxError err = NIL;
+    AfxAssertObject(dscr, AFX_FCC_DSCR);
+
+    dscr->cmdAll = args->din->cmdAll;
+
+    if (!(AfxObjectReacquire(&dscr->cmdAll->obj, &dscr->obj, NIL, NIL, NIL))) AfxThrowError();
+    else
+    {
+        dscr->state = AFX_DSCR_STATE_INITIAL;
+        AfxChainDeploy(&dscr->commands, dscr);
+
+        dscr->lastUpdTime = AfxGetTimer();
+    }
     return err;
 }
 

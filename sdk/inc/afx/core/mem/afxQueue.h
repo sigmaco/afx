@@ -1,8 +1,8 @@
 #ifndef AFX_QUEUE_H
 #define AFX_QUEUE_H
 
-#include "../base/afxCoreDefs.h"
-#include "../base/afxFcc.h"
+#include "afx/core/afxCoreDefs.h"
+#include "afx/core/afxFcc.h"
 
 AFX_DEFINE_STRUCT(afxQueue)
 {

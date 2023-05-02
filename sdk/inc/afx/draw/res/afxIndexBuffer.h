@@ -17,20 +17,20 @@
 #ifndef AFX_INDEX_BUFFER_H
 #define AFX_INDEX_BUFFER_H
 
-#include "afxVertexBuffer.h"
+#include "afx/draw/res/afxVertexBuffer.h"
 
 // Index buffer não armazena informação de tipo de primitivo porque, como o nome sugere, é um buffer de índice, não de primitivos.
 
 AFX_DEFINE_HANDLE(afxIndexBuffer);
 
-#ifndef AFX_DRAW_DRIVER_SRC
-
 AFX_OBJECT(afxIndexBuffer)
 {
     AFX_OBJECT(afxBuffer)   buf; // IBUF
-};
-
+#ifdef _AFX_INDEX_BUFFER_C
+    afxNat                  idxCnt;
+    afxNat                  idxSiz;
 #endif
+};
 
 AFX_DEFINE_STRUCT(afxIndexBufferSpecification)
 {

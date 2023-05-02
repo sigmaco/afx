@@ -17,9 +17,9 @@
 #ifndef AFX_VERTEX_BUFFER_H
 #define AFX_VERTEX_BUFFER_H
 
-#include "../base/afxDrawDefs.h"
+#include "afx/draw/afxDrawDefs.h"
 
-#include "../res/afxBuffer.h"
+#include "afx/draw/res/afxBuffer.h"
 
 typedef enum afxVertexUsage
 {
@@ -38,49 +38,40 @@ typedef enum afxVertexUsage
 
 AFX_DEFINE_STRUCT(afxVertexDataSpecification)
 {
-    afxString const     *semantic;
-    afxVertexFormat     fmt;
-    afxVertexUsage      usage;
-    void const          *src;
-    afxVertexFormat     srcFmt;
+    afxString const         *semantic;
+    afxVertexFormat         fmt;
+    afxVertexUsage          usage;
+    void const              *src;
+    afxVertexFormat         srcFmt;
 };
 
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 
-AFX afxError            AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstVtxStride); // copy out
-AFX afxNat              AfxVertexBufferFindArrange(afxVertexBuffer vbuf, afxString const *name);
-AFX afxNat              AfxVertexBufferGetRowCount(afxVertexBuffer vbuf);
-AFX void const*         AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afxNat vtxIdx);
-AFX afxVertexFormat     AfxVertexBufferGetFormat(afxVertexBuffer vbuf, afxNat rowIdx);
-AFX afxString const*    AfxVertexBufferGetSemantic(afxVertexBuffer vbuf, afxNat rowIdx);
-AFX afxNat              AfxVertexBufferGetRange(afxVertexBuffer vbuf, afxNat baseRow, afxNat rowCnt); // get whole memory range used by a arrange
-AFX afxNat              AfxVertexBufferGetOffset(afxVertexBuffer vbuf, afxNat vtxIdx, afxNat rowIdx); // get whole memory range used by a arrange
-AFX afxNat              AfxVertexBufferGetStride(afxVertexBuffer vbuf, afxNat rowIdx); // get element stride
-AFX afxNat              AfxVertexBufferGetCount(afxVertexBuffer vbuf);
-AFX afxNat              AfxVertexBufferGetPerVertexSize(afxVertexBuffer vbuf);
-AFX afxError            AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void (*f)(void const *vtx,void*data), void *data);
-AFX afxError            AfxVertexBufferOptimize(afxVertexBuffer vbuf, afxNat rowIdx, afxBool favorSpeedOverSize);
-AFX afxError            AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void const *src, afxVertexFormat srcFmt); // copy into
-
-
-AFX_DEFINE_STRUCT(afxVertexDataRow)
-{
-    afxString8          semantic;
-    afxNat              offset;
-    afxNat              stride;
-    afxVertexUsage      usage;
-    afxVertexFormat     fmt;
-
-};
-
-#ifndef AFX_DRAW_DRIVER_SRC
+AFX_DECLARE_STRUCT(afxVertexDataRow);
 
 AFX_OBJECT(afxVertexBuffer)
 {
     AFX_OBJECT(afxBuffer)   buf;
+#ifdef _AFX_VERTEX_BUFFER_C
+    afxNat                  vtxCnt;
+    afxNat                  rowCnt;
+    afxVertexDataRow        *row;
+#endif
 };
 
-#endif
-
+AFX afxError                AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstVtxStride); // copy out
+AFX afxNat                  AfxVertexBufferFindArrange(afxVertexBuffer vbuf, afxString const *name);
+AFX afxNat                  AfxVertexBufferGetRowCount(afxVertexBuffer vbuf);
+AFX void const*             AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afxNat vtxIdx);
+AFX afxVertexFormat         AfxVertexBufferGetFormat(afxVertexBuffer vbuf, afxNat rowIdx);
+AFX afxString const*        AfxVertexBufferGetSemantic(afxVertexBuffer vbuf, afxNat rowIdx);
+AFX afxNat                  AfxVertexBufferGetRange(afxVertexBuffer vbuf, afxNat baseRow, afxNat rowCnt); // get whole memory range used by a arrange
+AFX afxNat                  AfxVertexBufferGetOffset(afxVertexBuffer vbuf, afxNat vtxIdx, afxNat rowIdx); // get whole memory range used by a arrange
+AFX afxNat                  AfxVertexBufferGetStride(afxVertexBuffer vbuf, afxNat rowIdx); // get element stride
+AFX afxNat                  AfxVertexBufferGetCount(afxVertexBuffer vbuf);
+AFX afxNat                  AfxVertexBufferGetPerVertexSize(afxVertexBuffer vbuf);
+AFX afxError                AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void (*f)(void const *vtx,void*data), void *data);
+AFX afxError                AfxVertexBufferOptimize(afxVertexBuffer vbuf, afxNat rowIdx, afxBool favorSpeedOverSize);
+AFX afxError                AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void const *src, afxVertexFormat srcFmt); // copy into
 
 #endif//AFX_VERTEX_BUFFER_H

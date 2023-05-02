@@ -96,7 +96,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     AfxUriFormat(&uri.uri, "art/world.tga");
     
-    if (1 != AfxDrawContextFetchTextures(dctx, 1, &uri.uri, &dumpImg))
+    if (1 != AfxDrawContextAcquireTextures(dctx, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
@@ -105,7 +105,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxObjectRelease(&dumpImg->res.obj);
 
     AfxUriFormat(&uri.uri, "window");
-    afxDrawOutputSpecification doutSpec;
+    afxDrawOutputSpecification doutSpec = { 0 };
     doutSpec.endpoint = &uri.uri;
     doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
@@ -242,13 +242,12 @@ int main(int argc, char const* argv[])
     {
         sys = AfxSystemBootUp(NIL);
 
-        dsys = AfxSystemAcquireDrawSystem(sys);
+        afxDrawSystemSpecification dsysSpec = { 0 };
+        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
-        dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 1;
-        dctxSpec.autonomousQueue = FALSE;
 
         dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
         AfxAssert(dctx);

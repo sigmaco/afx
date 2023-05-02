@@ -998,7 +998,7 @@ _SGL afxError _SglSwapBuffers(HDC hdc)
         if (!(SwapBuffers(hdc)))
             AfxThrowError();
 
-    //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks all threads on exit
+    //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks mem threads on exit
     //UpdateWindow(dout->wglWnd);
     //AfxYield();
 
@@ -1088,9 +1088,9 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                         Sent to a window after its size has changed.
 
                     wParam --- The type of resizing requested. This parameter canv be one of the following values.
-                        SIZE_MAXHIDE = 4 --- Message is sent to all pop-up windows when some other window is maximized.
+                        SIZE_MAXHIDE = 4 --- Message is sent to mem pop-up windows when some other window is maximized.
                         SIZE_MAXIMIZED = 2 --- The window has been maximized.
-                        SIZE_MAXSHOW = 3 --- Message is sent to all pop-up windows when some other window has been restored to its former size.
+                        SIZE_MAXSHOW = 3 --- Message is sent to mem pop-up windows when some other window has been restored to its former size.
                         SIZE_MINIMIZED = 1 --- The window has been minimized.
                         SIZE_RESTORED = 0 --- The window has been resized, but neither the SIZE_MINIMIZED nor SIZE_MAXIMIZED value applies.
 
@@ -1187,11 +1187,16 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             afxNat len = 0;
             afxNat i;
 
+            afxDrawContext dctx = AfxDrawOutputGetContext(dout);
+            AfxAssertObject(dctx, AFX_FCC_DCTX);
+            afxMemory mem = AfxDrawContextGetMemory(dctx);
+            AfxAssertObject(mem, AFX_FCC_MEM);
+
             for (i = 0; i < cnt; i++)
             {
                 len = DragQueryFileA(hDrop, i, NIL, 0);
 
-                if (!(name = AfxAllocate(NIL, len + 1, AfxSpawnHint()))) AfxError("");
+                if (!(name = AfxAllocate(mem, len + 1, AfxSpawnHint()))) AfxError("");
                 else
                 {
                     DragQueryFileA(hDrop, i, name, len + 1);
@@ -1208,7 +1213,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             for (i = 0; i < AfxArrayGetPop(&fdrop.files); i++)
             {
-                AfxDeallocate(NIL, *(afxChar**)AfxArrayGetElement(&fdrop.files, i));
+                AfxDeallocate(mem, *(afxChar**)AfxArrayGetElement(&fdrop.files, i));
             }
 
             AfxArrayDrop(&fdrop.files);
@@ -1365,7 +1370,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
                                     UINT formatCount;
                                     pxlfmt = 0;
 
-                                    if (!wglChoosePixelFormatARB(hdc2, pxlAttrPairs, 0, 1, &(pxlfmt), &(formatCount))) AfxThrowError();
+                                    if (!wglChoosePixelFormatARB(hdc2, &pxlAttrPairs[0][0], 0, 1, &(pxlfmt), &(formatCount))) AfxThrowError();
                                     else
                                     {
                                         AfxAssert(pxlfmt);
@@ -1405,6 +1410,10 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
                                                 ctxAttrPairs[4][0] = NIL;
                                                 ctxAttrPairs[4][1] = NIL;
 
+                                                _wglMakeCurrent(bkpHdc, bkpGlrc);
+                                                _wglDeleteContext(tmpHrc);
+                                                tmpHrc = NIL;
+
                                                 HGLRC  hrc2 = wglCreateContextAttribsARB(hdc2, shareCtx, (void*)ctxAttrPairs);
 
                                                 if (!hrc2) AfxThrowError();
@@ -1436,25 +1445,28 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
                                         }
                                     }
 
-                                    if (err)
+                                    if (err && hdc2)
                                         ReleaseDC(hwnd2, hdc2);
                                 }
 
-                                if (err)
+                                if (err && hwnd2)
                                     DestroyWindow(hwnd2);
                             }
                         }
-
-                        if (err)
-                            _wglMakeCurrent(bkpHdc, bkpGlrc);
                     }
-                    _wglDeleteContext(tmpHrc);
+                    _wglMakeCurrent(bkpHdc, bkpGlrc);
+
+                    if (tmpHrc)
+                        _wglDeleteContext(tmpHrc);
                 }
             }
-            ReleaseDC(tmpHwnd, tmpHdc);
+
+            if (tmpHdc)
+                ReleaseDC(tmpHwnd, tmpHdc);
         }
-        DestroyWindow(tmpHwnd);
-        _wglMakeCurrent(bkpHdc, bkpGlrc);
+
+        if (tmpHwnd)
+            DestroyWindow(tmpHwnd);
     }
     return err;
 }
@@ -1545,10 +1557,10 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
     
     AfxAssert(mainThreadId == AfxGetTid());
 
-    afxAllocator all = AfxDrawSystemGetAllocator(dsys);
-    AfxAssertObject(all, AFX_FCC_ALL);
+    afxMemory mem = AfxDrawSystemGetMemory(dsys);
+    AfxAssertObject(mem, AFX_FCC_MEM);
 
-    _sglDriverIdd *idd = AfxAllocate(all, sizeof(*idd), AfxSpawnHint());
+    _sglDriverIdd *idd = AfxAllocate(mem, sizeof(*idd), AfxSpawnHint());
 
     if (!idd) AfxThrowError();
     else
@@ -1575,7 +1587,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
         if (!(RegisterClassEx(&(idd->oglWndClss)))) AfxThrowError();
         else
         {
-            AfxComment("Listing all available display devices...\n");
+            AfxComment("Listing mem available display devices...\n");
 
             //HDC hdc = NIL;
             afxNat idx = 0;
@@ -1634,7 +1646,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
         }
 
         if (err)
-            AfxDeallocate(all, idd);
+            AfxDeallocate(mem, idd);
     }
     return err;
 }

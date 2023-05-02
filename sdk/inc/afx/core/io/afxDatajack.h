@@ -17,7 +17,7 @@
 #ifndef AFX_IO_CONTEXT_H
 #define AFX_IO_CONTEXT_H
 
-#include "afxScript.h"
+#include "afx/core/io/afxScript.h"
 
 AFX_DEFINE_HANDLE(afxIoContext);
 

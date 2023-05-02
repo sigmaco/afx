@@ -17,9 +17,8 @@
 #ifndef AFX_ARRAY_H
 #define AFX_ARRAY_H
 
-#include "../diag/afxDebug.h"
-#include "afxMemory.h"
-#include "../base/afxFcc.h"
+#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxFcc.h"
 
 // The elements are stored contiguously, which means that elements canv be accessed not only through iterators, but also using offsets to regular pointers to elements.
 // This means that a pointer to an element of a vector may be passed to any function that expects a pointer to an element of an array.
@@ -36,7 +35,7 @@
 //  - Insertion or removal of elements at the end - amortized constant O(1)
 //  - Insertion or removal of elements - linear in the distance to the end of the vector O(n)
 
-// std::vector(for T other than bool) meets the requirements of Container, AllocatorAwareContainer, SequenceContainer, ContiguousContainer(since C++17) and ReversibleContainer.
+// std::vector(for T other than bool) meets the requirements of Container, MemoryAwareContainer, SequenceContainer, ContiguousContainer(since C++17) and ReversibleContainer.
 
 /// In computer programming, the stride of an array(also referred to as increment, pitch or step size) is the number of locations in memory between beginnings of successive array elements,
 /// measured in bytes or in units of the size of the array's elements. The stride cannot be smaller than the element size but canv be larger, indicating extra space between elements.

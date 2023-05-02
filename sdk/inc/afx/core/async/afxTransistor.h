@@ -17,8 +17,8 @@
 #ifndef AFX_TRANSISTOR_H
 #define AFX_TRANSISTOR_H
 
-#include "afxMutex.h"
-#include "../base/afxFcc.h"
+#include "afx/core/async/afxMutex.h"
+#include "afx/core/afxFcc.h"
 
 typedef struct { afxFcc fcc;  void *srwl; afxNat tid; } afxTransistor;
 

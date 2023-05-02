@@ -17,7 +17,7 @@
 #ifndef AFX_UNIFORM_TEXTURE_DESCRIPTOR
 #define AFX_UNIFORM_TEXTURE_DESCRIPTOR
 
-#include "../afxDrawContext.h"
+#include "afx/draw/afxDrawContext.h"
 
 AFX afxTexture _AfxDrawContextUploadTextureUrd(afxDrawContext dctx, afxUri const *uri);
 

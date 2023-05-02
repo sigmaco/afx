@@ -17,7 +17,7 @@
 #ifndef AFX_DRAW_QUEUE_H
 #define AFX_DRAW_QUEUE_H
 
-#include "afxDrawScript.h"
+#include "afx/draw/afxDrawScript.h"
 
 // No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
 

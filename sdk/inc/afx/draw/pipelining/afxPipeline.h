@@ -21,11 +21,11 @@
 #ifndef AFX_PIPELINE_H
 #define AFX_PIPELINE_H
 
-#include "afxPipelineModule.h"
-#include "afxPipelineRig.h"
-#include "afxSampler.h"
+#include "afx/draw/pipelining/afxPipelineModule.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
+#include "afx/draw/pipelining/afxSampler.h"
 #include "afx/core/io/afxResource.h"
-#include "../res/afxVertexBuffer.h"
+#include "afx/draw/res/afxVertexBuffer.h"
 
 // sgl_frame
 // sgl_pass

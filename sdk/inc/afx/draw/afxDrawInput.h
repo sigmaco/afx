@@ -22,18 +22,18 @@
 #ifndef AFX_DRAW_INPUT_H
 #define AFX_DRAW_INPUT_H
 
-#include "afxDrawScript.h"
-#include "afxDrawOutput.h"
+#include "afx/draw/afxDrawScript.h"
+#include "afx/draw/afxDrawOutput.h"
 
-#include "pipelining/afxLego.h"
-#include "pipelining/afxPipelineBlueprint.h"
-#include "pipelining/afxSampler.h"
-#include "res/afxBuffer.h"
-#include "res/afxCanvas.h"
-#include "res/afxIndexBuffer.h"
-#include "res/afxVertexBuffer.h"
-#include "afxDrawScript.h"
-#include "res/afxTextureBlueprint.h"
+#include "afx/draw/pipelining/afxLego.h"
+#include "afx/draw/pipelining/afxPipelineBlueprint.h"
+#include "afx/draw/pipelining/afxSampler.h"
+#include "afx/draw/res/afxBuffer.h"
+#include "afx/draw/res/afxCanvas.h"
+#include "afx/draw/res/afxIndexBuffer.h"
+#include "afx/draw/res/afxVertexBuffer.h"
+#include "afx/draw/afxDrawScript.h"
+#include "afx/draw/res/afxTextureBlueprint.h"
 #include "afx/core/mem/afxQueue.h"
 
 AFX_DEFINE_HANDLE(afxDrawInput);

@@ -75,6 +75,7 @@ _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler 
                 gl->SamplerParameterfv(smp->glHandle, GL_TEXTURE_BORDER_COLOR, (void*)smp->borderColor);
 
                 smp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                AfxEcho("afxSampler %p GPU-side data instanced.", smp);
             }
             else if ((smp->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {

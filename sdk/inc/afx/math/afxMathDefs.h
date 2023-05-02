@@ -18,7 +18,7 @@
 #define AFX_MATH_DEFS_H
 
 #include "afx/core/diag/afxDebug.h"
-#include "afx/core/base/afxSimd.h"
+#include "afx/core/afxSimd.h"
 #include <math.h>
 //#include <stdalign.h>
 

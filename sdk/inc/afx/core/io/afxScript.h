@@ -17,7 +17,7 @@
 #ifndef AFX_SCRIPT_H
 #define AFX_SCRIPT_H
 
-#include "afxStream.h"
+#include "afx/core/io/afxStream.h"
 
 AFX_DEFINE_HANDLE(afxScript);
 

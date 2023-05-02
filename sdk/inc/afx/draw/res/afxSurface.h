@@ -17,7 +17,7 @@
 #ifndef AFX_SURFACE_H
 #define AFX_SURFACE_H
 
-#include "afxTexture.h"
+#include "afx/draw/res/afxTexture.h"
 
 typedef enum afxSurfaceState
 {

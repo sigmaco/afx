@@ -427,9 +427,8 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
     {
         //gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
     }
-    AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
-    AfxEcho("tex %p, instanced.", tex);
-
+    //AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
+    
     // build or rebuild forces total data update
     tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
     tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
@@ -596,6 +595,7 @@ _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture 
                 AfxAssert(gl->IsTexture(tex->glHandle));
 
                 _SglTexInstDevice(tex, unit, gl); // already clear flags
+                AfxEcho("afxTexture %p GPU-side data instanced.", tex);
             }
             else if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -735,12 +735,12 @@ _SGL afxError _AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const
 
         afxDrawContext dctx = AfxTextureGetContext(tex);
         AfxAssertObject(dctx, AFX_FCC_DCTX);
-        afxAllocator all = AfxDrawContextGetAllocator(dctx);
-        AfxAssertObject(all, AFX_FCC_ALL);
+        afxMemory mem = AfxDrawContextGetMemory(dctx);
+        AfxAssertObject(mem, AFX_FCC_MEM);
 
         void *bytemap;
 
-        if (!(bytemap = AfxReallocate(all, tex->bytemap, totalSiz, AfxSpawnHint()))) AfxThrowError();
+        if (!(bytemap = AfxReallocate(mem, tex->bytemap, totalSiz, AfxSpawnHint()))) AfxThrowError();
         else
         {
             tex->bytemap = bytemap;
@@ -945,8 +945,8 @@ _SGL afxError _AfxTexDtor(afxTexture tex)
 
     afxDrawContext dctx = AfxTextureGetContext(tex);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxAllocator all = AfxDrawContextGetAllocator(dctx);
-    AfxAssertObject(all, AFX_FCC_ALL);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
 
     if (tex->glHandle)
     {
@@ -955,10 +955,10 @@ _SGL afxError _AfxTexDtor(afxTexture tex)
     }
 
     if (tex->sidecar)
-        AfxDeallocate(all, tex->sidecar);
+        AfxDeallocate(mem, tex->sidecar);
 
     if (tex->bytemap)
-        AfxDeallocate(all, tex->bytemap);
+        AfxDeallocate(mem, tex->bytemap);
 
     return err;
 }
@@ -1019,10 +1019,10 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
     for (afxNat i = 0; i < tex->lodCnt; i++)
         lodSum += layerSum >> i;
 
-    afxAllocator all = AfxDrawContextGetAllocator(dctx);
-    AfxAssertObject(all, AFX_FCC_ALL);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
 
-    if (!(tex->bytemap = AfxAllocate(all, lodSum, AfxSpawnHint()))) AfxThrowError();
+    if (!(tex->bytemap = AfxAllocate(mem, lodSum, AfxSpawnHint()))) AfxThrowError();
     else
     {
         tex->lastUpdOffset[0] = tex->lastUpdOffset[1] = tex->lastUpdOffset[2] = 0;
@@ -1077,7 +1077,7 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
         }
         
         if (err)
-            AfxDeallocate(all, tex->bytemap);
+            AfxDeallocate(mem, tex->bytemap);
     }
     return err;
 }

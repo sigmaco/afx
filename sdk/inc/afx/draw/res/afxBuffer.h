@@ -17,7 +17,7 @@
 #ifndef AFX_BUFFER_H
 #define AFX_BUFFER_H
 
-#include "../base/afxDrawDefs.h"
+#include "afx/draw/afxDrawDefs.h"
 
 typedef enum afxBufferUsage
 {
@@ -34,14 +34,17 @@ typedef enum afxBufferUsage
 
 AFX_DEFINE_HANDLE(afxBuffer);
 
-#ifndef AFX_DRAW_DRIVER_SRC
+#define AFX_BUF_IDD 48
 
 AFX_OBJECT(afxBuffer)
 {
     afxObject           obj;
-};
-
+#ifdef _AFX_BUFFER_C
+    afxSize             siz;
+    afxBufferUsage      usage;
+    afxByte             idd[AFX_BUF_IDD];
 #endif
+};
 
 AFX_DEFINE_STRUCT(afxBufferSpecification)
 {
@@ -61,6 +64,7 @@ AFX_DEFINE_STRUCT(afxBufferRef)
 AFX void*           AfxBufferGetContext(afxBuffer buf);
 AFX void*           AfxBufferGetDriver(afxBuffer buf);
 AFX void*           AfxBufferGetDrawSystem(afxBuffer buf);
+AFX void*           AfxBufferGetIdd(afxBuffer buf);
 
 AFX void const*     AfxBufferGetData(afxBuffer buf, afxSize offset);
 AFX afxSize         AfxBufferGetSize(afxBuffer buf);

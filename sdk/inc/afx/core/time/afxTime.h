@@ -14,10 +14,12 @@
  *                                    www.sigmaco.org
  */
 
-#ifndef AFX_TIMER_H
-#define AFX_TIMER_H
+#ifndef AFX_TIME_H
+#define AFX_TIME_H
 
-#include "../base/afxCoreDefs.h"
+#include "afx/core/afxCoreDefs.h"
+
+typedef afxNat16    afxCompactTime; // DOS time
 
 typedef afxInt64 afxTime;
 
@@ -38,4 +40,15 @@ AFX afxNat64 AfxGetTickCounter(void);
 
 AFX afxNat64 AfxGetTicksPerSecond(void);
 
-#endif//AFX_TIMER_H
+
+#define AfxCompactTimeGetHour(t) ((t)>>11)
+#define AfxCompactTimeGetMin(t) (((t)>>5) & 63)
+#define AfxCompactTimeGetSec(t) (((t) & 31) * 2)
+#define AfxCompactTimeGetTime(h,m,s) (((h)<<11) + ((m)<<5) + (s)/2)
+
+#define AfxCompactTimeGetYear(t) (((t)>>9) + 1980)
+#define AfxCompactTimeGetMonth(t) (((t)>>5) & 15)
+#define AfxCompactTimeGetDay(t) ((t) & 31)
+#define AfxCompactTimeGetDate(y,m,d) ((((y)-1980)<<9) + ((m)<<5) + (d))
+
+#endif//AFX_TIME_H

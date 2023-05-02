@@ -17,7 +17,8 @@
 #ifndef AFX_LIGHT_H
 #define AFX_LIGHT_H
 
-#include "dag/afxNode.h"
+#include "afx/simul/dag/afxNode.h"
+#include "afx/core/mem/afxArray.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGN
 

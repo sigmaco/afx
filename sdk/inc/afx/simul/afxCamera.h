@@ -23,6 +23,25 @@
 
 #define AFX_CAM_ALIGN AFX_SIMD_ALIGN
 
+/*
+    There are a number of annoying details involved in 3D camera specification.
+    It is generally desirable to have target-based camera control, with parameteric elevation, azimuth, and roll, and both absolute and camera-relative movement.
+    It is also a good idea to correct for physical display device aspect ratios (ie., for compensating between a regular TV and an HDTV, for example).
+    Furthermore, there are a number of useful queries you might want to make, such as where the camera is, what its axes are, and where the mouse cursor on the screen would be in world-space (for object picking and such).
+
+    To eliminate these annoyances, and make camera manipulation quick and easy, Qwadro supplies the afxCamera object.
+    It helps out with all of the common camera tasks listed above, and quite a few not-so-common ones as well.
+
+    It is often useful to have a camera that orbits and zooms in and out on a specific target.
+    You can turn a afxCamera into this type of camera by setting the Elevation/Azimuth/Roll (EAR) vector and the Offset vector in the afxCamera structure.
+    The EAR vector has the elevation as its first component, azimuth as its second, and roll as its third (all three are in radians).
+    The offset vector has horizontal and vertical offsets as its first two components (respectively), and the distance from camera as its third component.
+
+    Note that elevation is measured as rotation about the X (right) axis (hence, it is negative if it is above the horizontal, positive if it is below), azimuth is measured as rotation about the Y (up) axis, and, and roll is measured as rotation about the Z (back) axis.
+
+
+*/
+
 AFX_DEFINE_HANDLE(afxCamera);
 
 typedef enum
@@ -36,18 +55,18 @@ typedef enum
 AFX_OBJECT(afxCamera)
 {
     AFX_OBJECT(afxNode) nod;
-    afxBool                 perspective; // is projection perspective or orthographic.
+    afxBool             perspective; // is projection perspective or orthographic.
 
-    afxV4d                  focus, up;
+    afxV4d              focus, up;
 
-    afxReal                 fov; // in perspective projection only
-    afxReal                 nearClip, farClip; // clipping planes
+    afxReal             fov; // in perspective projection only
+    afxReal             nearClip, farClip; // clipping planes
 
-    afxBool                 leftHanded;
-    afxInt                  cullingMask;
+    afxBool             leftHanded;
+    afxInt              cullingMask;
 
-    afxM4d                  vMtx;
-    afxFrustum              frustum;
+    afxM4d              vMtx;
+    afxFrustum          frustum;
 };
 
 //static_assert(offsetof(afxCamera, focus) % AFX_CAM_ALIGN == 0, "");

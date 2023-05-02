@@ -6,9 +6,10 @@
 #define AFX_WIDGET_H
 
 #include "afxMmuiDefs.h"
-#include "afx/draw/base/afxColor.h"
-#include "afx/core/base/afxLinkedList.h"
-#include "afx/core/base/afxObject.h"
+#include "afx/draw/afxColor.h"
+#include "afx/core/afxLinkedList.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/io/afxUri.h"
 //#include "afxViewport.h"
 //#include "afx/draw/afxDrawInput.h"
 

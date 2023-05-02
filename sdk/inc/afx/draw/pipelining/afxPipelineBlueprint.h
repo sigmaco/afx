@@ -17,9 +17,9 @@
 #ifndef AFX_PIPELINE_BLUEPRINT_H
 #define AFX_PIPELINE_BLUEPRINT_H
 
-#include "afxPipeline.h"
-#include "afxPipelineRig.h"
-#include "afxPipelineModule.h"
+#include "afx/draw/pipelining/afxPipeline.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
+#include "afx/draw/pipelining/afxPipelineModule.h"
 
 AFX_DEFINE_STRUCT(afxPipelineStageBlueprint)
 {

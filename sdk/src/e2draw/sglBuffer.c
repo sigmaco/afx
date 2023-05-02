@@ -1,3 +1,5 @@
+
+#define _AFX_BUFFER_C
 #include "sgl.h"
 #include "afx/draw/res/afxBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
@@ -71,7 +73,7 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
             gl->BindBuffer(target, 0); _SglThrowErrorOccuried();
 
             base->lastUpdTime = AfxGetTimer();
-            buf->lastUpdTime = AfxGetTimer();
+            idd->lastUpdTime = AfxGetTimer();
         }
     }
 }
@@ -100,49 +102,51 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
     
     if (buf)
     {
-        if ((buf->updFlags & SGL_UPD_FLAG_DEVICE))
+        sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+        if ((idd->updFlags & SGL_UPD_FLAG_DEVICE))
         {
-            if ((buf->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_INST))
             {
-                if (buf->glHandle)
+                if (idd->glHandle)
                 {
-                    gl->DeleteBuffers(1, &(buf->glHandle)); _SglThrowErrorOccuried();
-                    buf->glHandle = NIL;
+                    gl->DeleteBuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                    idd->glHandle = NIL;
                 }
 
-                AfxAssert(NIL == buf->glHandle);
+                AfxAssert(NIL == idd->glHandle);
 
-                buf->glTarget = target;
-                buf->glUsage = usage;
-                gl->GenBuffers(1, &(buf->glHandle)); _SglThrowErrorOccuried();
-                gl->BindBuffer(buf->glTarget, buf->glHandle); _SglThrowErrorOccuried();
-                AfxAssert(gl->IsBuffer(buf->glHandle));
+                idd->glTarget = target;
+                idd->glUsage = usage;
+                gl->GenBuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                gl->BindBuffer(idd->glTarget, idd->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsBuffer(idd->glHandle));
 
-                gl->BufferData(buf->glTarget, buf->siz, buf->bytemap, buf->glUsage); _SglThrowErrorOccuried();
-                buf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxEcho("buf %p, instanced.", buf);
+                gl->BufferData(idd->glTarget, buf->siz, idd->bytemap, idd->glUsage); _SglThrowErrorOccuried();
+                idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                AfxEcho("afxBuffer %p GPU-side data instanced.", buf);
             }
-            else if ((buf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
-                AfxAssert(buf->glHandle);
-                AfxAssert(buf->glTarget == target);
-                AfxAssert(buf->glUsage == usage);
+                AfxAssert(idd->glHandle);
+                AfxAssert(idd->glTarget == target);
+                AfxAssert(idd->glUsage == usage);
 
-                gl->BindBuffer(buf->glTarget, buf->glHandle); _SglThrowErrorOccuried();
-                gl->BufferSubData(buf->glTarget, buf->lastUpdOffset, buf->lastUpdRange, &(buf->bytemap[buf->lastUpdOffset])); _SglThrowErrorOccuried();
-                buf->updFlags &= ~(SGL_UPD_FLAG_DEVICE_FLUSH);
+                gl->BindBuffer(idd->glTarget, idd->glHandle); _SglThrowErrorOccuried();
+                gl->BufferSubData(idd->glTarget, idd->lastUpdOffset, idd->lastUpdRange, &(idd->bytemap[idd->lastUpdOffset])); _SglThrowErrorOccuried();
+                idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_FLUSH);
             }
 
-            gl->BindBuffer(buf->glTarget, 0); _SglThrowErrorOccuried();
-            buf->lastUpdOffset = 0;
-            buf->lastUpdRange = 0;
+            gl->BindBuffer(idd->glTarget, 0); _SglThrowErrorOccuried();
+            idd->lastUpdOffset = 0;
+            idd->lastUpdRange = 0;
         }
         
 
 
         {
-            AfxAssert(buf->glHandle);
-            AfxAssert(buf->glTarget);
+            AfxAssert(idd->glHandle);
+            AfxAssert(idd->glTarget);
 
             switch (target)
             {
@@ -150,11 +154,11 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
             {
                 if (gl->BindVertexBuffer)
                 {
-                    gl->BindVertexBuffer(unit, buf->glHandle, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
+                    gl->BindVertexBuffer(unit, idd->glHandle, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
                 }
                 else
                 {
-                    gl->BindBuffer(target, buf->glHandle); _SglThrowErrorOccuried();
+                    gl->BindBuffer(target, idd->glHandle); _SglThrowErrorOccuried();
                     AfxAssert(offset == 0);
                     AfxAssert(rangeOrVtxStride == 0);
                     AfxAssert(unit == 0);
@@ -163,18 +167,18 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
             }
             case GL_ELEMENT_ARRAY_BUFFER:
             {
-                gl->BindBuffer(target, buf->glHandle); _SglThrowErrorOccuried();
+                gl->BindBuffer(target, idd->glHandle); _SglThrowErrorOccuried();
                 break;
             }
             default:
             {
                 if (rangeOrVtxStride)
                 {
-                    gl->BindBufferRange(target, unit, buf->glHandle, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
+                    gl->BindBufferRange(target, unit, idd->glHandle, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
                 }
                 else
                 {
-                    gl->BindBufferBase(target, unit, buf->glHandle); _SglThrowErrorOccuried();
+                    gl->BindBufferBase(target, unit, idd->glHandle); _SglThrowErrorOccuried();
                 }
                 break;
             }
@@ -234,12 +238,14 @@ _SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afx
     AfxAssert(buf->siz >= offset + (cnt * stride));
     AfxAssert(dst);
 
-    if (buf->locked) AfxThrowError();
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (idd->locked) AfxThrowError();
     else
     {
-        buf->locked = TRUE;
+        idd->locked = TRUE;
 
-        afxByte const *bytemap = &(buf->bytemap[offset]);
+        afxByte const *bytemap = &(idd->bytemap[offset]);
 
         if (!dstStride || dstStride == stride)
         {
@@ -255,7 +261,7 @@ _SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afx
             }
         }
 
-        buf->locked = FALSE;
+        idd->locked = FALSE;
     }
     return err;
 }
@@ -267,14 +273,16 @@ _SGL afxError _AfxBufferDump(afxBuffer buf, afxSize base, afxSize range, void *d
     AfxAssert(dst);
     AfxAssert(range);
 
-    if (buf->locked) AfxThrowError();
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (idd->locked) AfxThrowError();
     else
     {
-        buf->locked = TRUE;
+        idd->locked = TRUE;
 
-        AfxCopy(dst, &buf->bytemap[base], range);
+        AfxCopy(dst, &idd->bytemap[base], range);
 
-        buf->locked = FALSE;
+        idd->locked = FALSE;
     }
     return err;
 }
@@ -288,12 +296,14 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
     AfxAssert(buf->siz >= offset + (cnt * stride));
     AfxAssert(src);
 
-    if (buf->locked) AfxThrowError();
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (idd->locked) AfxThrowError();
     else
     {
-        buf->locked = TRUE;
+        idd->locked = TRUE;
 
-        afxByte *bytemap = &(buf->bytemap[offset]);
+        afxByte *bytemap = &(idd->bytemap[offset]);
 
         if (!srcStride || srcStride == stride)
         {
@@ -309,14 +319,14 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
             }
         }
 
-        if (buf->lastUpdOffset > offset)
-            buf->lastUpdOffset = offset;
+        if (idd->lastUpdOffset > offset)
+            idd->lastUpdOffset = offset;
 
-        if (buf->lastUpdRange < buf->lastUpdOffset + (cnt * stride))
-            buf->lastUpdRange = buf->lastUpdRange + (cnt * stride);
+        if (idd->lastUpdRange < idd->lastUpdOffset + (cnt * stride))
+            idd->lastUpdRange = idd->lastUpdRange + (cnt * stride);
 
-        buf->locked = FALSE;
-        buf->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
+        idd->locked = FALSE;
+        idd->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
     }
     return err;
 }
@@ -328,21 +338,23 @@ _SGL afxError _AfxBufferUpdate(afxBuffer buf, afxSize base, afxSize range, void 
     AfxAssert(src);
     AfxAssert(range);
 
-    if (buf->locked) AfxThrowError();
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (idd->locked) AfxThrowError();
     else
     {
-        buf->locked = TRUE;
+        idd->locked = TRUE;
 
-        AfxCopy(&buf->bytemap[base], src, range);
+        AfxCopy(&idd->bytemap[base], src, range);
 
-        if (buf->lastUpdOffset > base)
-            buf->lastUpdOffset = base;
+        if (idd->lastUpdOffset > base)
+            idd->lastUpdOffset = base;
 
-        if (buf->lastUpdRange < buf->lastUpdOffset + range)
-            buf->lastUpdRange = buf->lastUpdRange + range;
+        if (idd->lastUpdRange < idd->lastUpdOffset + range)
+            idd->lastUpdRange = idd->lastUpdRange + range;
 
-        buf->locked = FALSE;
-        buf->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
+        idd->locked = FALSE;
+        idd->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
     }
     return err;
 }
@@ -352,7 +364,8 @@ _SGL void const* _AfxBufferGetData(afxBuffer buf, afxSize offset)
     afxError err = NIL;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(offset < buf->siz);
-    return &(buf->bytemap[offset]);
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+    return &(idd->bytemap[offset]);
 }
 
 _SGL afxSize _AfxBufferGetSize(afxBuffer buf)
@@ -388,21 +401,29 @@ _SGL afxError _AfxBufDtor(afxBuffer buf)
     AfxEntry("buf=%p", buf);
     AfxAssertObject(buf, AFX_FCC_BUF);
 
-    if (buf->glHandle)
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (idd->glHandle)
     {
         afxDrawContext dctx = AfxBufferGetContext(buf);
-        _SglEnqueueGlResourceDeletion(dctx, 0, 0, buf->glHandle);
-        buf->glHandle = 0;
+        _SglEnqueueGlResourceDeletion(dctx, 0, 0, idd->glHandle);
+        idd->glHandle = 0;
     }
 
-    if (buf->bytemap)
-        AfxDeallocate(NIL, buf->bytemap);
+    if (idd->bytemap)
+    {
+        afxDrawContext dctx = AfxBufferGetContext(buf);
+        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        afxMemory mem = AfxDrawContextGetMemory(dctx);
+        AfxAssertObject(mem, AFX_FCC_MEM);
 
+        AfxDeallocate(mem, idd->bytemap);
+    }
     return err;
 }
 
-_SGL afxBufImpl const _AfxStdBufImpl;
-afxBufImpl const _AfxStdBufImpl =
+_SGL afxBufImpl const _SglBufImpl;
+afxBufImpl const _SglBufImpl =
 {
     _AfxBufferGetData,
     _AfxBufferGetSize,
@@ -426,22 +447,29 @@ _SGL afxError _AfxBufCtor(afxBuffer buf, _afxUbufCtorArgs *args)
     buf->siz = spec->siz;
     buf->usage = spec->usage;
 
-    if (!(buf->bytemap = AfxAllocate(NIL, buf->siz, AfxSpawnHint()))) AfxThrowError();
+    afxDrawContext dctx = args->dctx;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    sglBufIdd *idd = AfxBufferGetIdd(buf);
+
+    if (!(idd->bytemap = AfxAllocate(mem, buf->siz, AfxSpawnHint()))) AfxThrowError();
     else
     {
         if (spec->src)
-            AfxCopy(buf->bytemap, spec->src, buf->siz);
+            AfxCopy(idd->bytemap, spec->src, buf->siz);
 
-        buf->lastUpdOffset = 0;
-        buf->lastUpdRange = buf->siz;
-        buf->locked = FALSE;
+        idd->lastUpdOffset = 0;
+        idd->lastUpdRange = buf->siz;
+        idd->locked = FALSE;
 
         // idd
-        buf->glHandle = NIL;
-        buf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+        idd->glHandle = NIL;
+        idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
         if (err)
-            AfxDeallocate(NIL, buf->bytemap);
+            AfxDeallocate(mem, idd->bytemap);
     }
     return err;
 }
@@ -458,5 +486,5 @@ afxClassSpecification const _AfxBufClassSpec =
     (void*)_AfxBufCtor,
     (void*)_AfxBufDtor,
     "Buffer",
-    &_AfxStdBufImpl
+    &_SglBufImpl
 };

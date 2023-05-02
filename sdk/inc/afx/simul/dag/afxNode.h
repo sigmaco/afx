@@ -17,8 +17,8 @@
 #ifndef AFX_NODE_H
 #define AFX_NODE_H
 
-#include "afx/core/base/afxObject.h"
-#include "afx/core/base/afxString.h"
+#include "afx/core/afxObject.h"
+#include "afx/core/afxString.h"
 #include "../../math/afxMatrix.h"
 #include "../../math/volume/afxAabb.h"
 #include "../../math/volume/afxSphere.h"

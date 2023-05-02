@@ -17,7 +17,7 @@
 #ifndef AFX_UNIFORM_PIPELINE_DESCRIPTOR
 #define AFX_UNIFORM_PIPELINE_DESCRIPTOR
 
-#include "../afxDrawContext.h"
+#include "afx/draw/afxDrawContext.h"
 
 AFX afxPipeline _AfxDrawContextUploadPipelineUrd(afxDrawContext dctx, afxUri const *uri);
 

@@ -17,7 +17,7 @@
 #ifndef AFX_CANVAS_H
 #define AFX_CANVAS_H
 
-#include "afxSurface.h"
+#include "afx/draw/res/afxSurface.h"
 
 AFX_DEFINE_HANDLE(afxCanvas);
 

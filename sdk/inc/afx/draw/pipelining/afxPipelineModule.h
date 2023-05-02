@@ -17,8 +17,9 @@
 #ifndef AFX_PIPELINE_MODULE_H
 #define AFX_PIPELINE_MODULE_H
 
-#include "../base/afxDrawDefs.h"
+#include "afx/draw/afxDrawDefs.h"
 #include "afx/core/io/afxStream.h"
+#include "afx/core/io/afxUri.h"
 
 AFX_DEFINE_HANDLE(afxPipelineModule);
 

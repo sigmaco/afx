@@ -20,7 +20,7 @@
 #include "afxCadDefs.h"
 #include "afx/core/mem/afxArray.h"
 #include "../../math/volume/afxAabb.h"
-#include "afx/core/base/afxObject.h"
+#include "afx/core/afxObject.h"
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afxMaterial.h"

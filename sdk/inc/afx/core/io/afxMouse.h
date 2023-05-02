@@ -17,7 +17,7 @@
 #ifndef AFX_MOUSE_H
 #define AFX_MOUSE_H
 
-#include "afxHid.h"
+#include "afx/core/io/afxHid.h"
 
 typedef enum
 {
@@ -31,6 +31,19 @@ typedef enum
 } afxMouseButton;
 
 AFX_DEFINE_HANDLE(afxMouse);
+
+AFX_OBJECT(afxMouse)
+{
+    AFX_OBJECT(afxHid)  hid;
+#ifdef _AFX_MOUSE_C
+    afxNat              buttonCnt;
+    afxNat              sampleRate;
+    afxBool             currState[AFX_MB_TOTAL];
+    afxBool             prevState[AFX_MB_TOTAL];
+    afxReal             lastWheelDelta, prevWheelDelta;
+    afxReal             lastMotion[2], prevMotion[2];
+#endif
+};
 
 AFX void*       AfxMouseGetSystem(afxMouse mse);
 
@@ -54,16 +67,5 @@ AFX afxBool     AfxMouseWasXmb1Pressed(afxMouse mse);
 AFX afxBool     AfxMouseWasXmb1Released(afxMouse mse);
 AFX afxBool     AfxMouseWasXmb2Pressed(afxMouse mse);
 AFX afxBool     AfxMouseWasXmb2Released(afxMouse mse);
-
-AFX_OBJECT(afxMouse)
-{
-    AFX_OBJECT(afxHid)  hid;
-    afxNat              buttonCnt;
-    afxNat              sampleRate;
-    afxBool             currState[AFX_MB_TOTAL];
-    afxBool             prevState[AFX_MB_TOTAL];
-    afxReal             lastWheelDelta, prevWheelDelta;
-    afxReal             lastMotion[2], prevMotion[2];
-};
 
 #endif//AFX_MOUSE_H

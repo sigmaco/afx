@@ -1,7 +1,7 @@
 #ifndef AFX_DIRECTDRAW_SURFACE_H
 #define AFX_DIRECTDRAW_SURFACE_H
 
-#include "../afxDrawContext.h"
+#include "afx/draw/afxDrawContext.h"
 
 AFX afxError    AfxDrawContextUploadTexturesDds(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 

@@ -1,0 +1,434 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\afx\afxApplication.h" />
+    <ClInclude Include="..\..\inc\afx\afxQwadro.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxClass.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxCoreDefs.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxEvent.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxFcc.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxIterator.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxLinkedList.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxModule.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxObject.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxRawString.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxSimd.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxString.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxSystem.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxTerminal.h" />
+    <ClInclude Include="..\..\inc\afx\core\async\afxCondition.h" />
+    <ClInclude Include="..\..\inc\afx\core\async\afxMutex.h" />
+    <ClInclude Include="..\..\inc\afx\core\async\afxThread.h" />
+    <ClInclude Include="..\..\inc\afx\core\async\afxTransistor.h" />
+    <ClInclude Include="..\..\inc\afx\core\diag\afxDebug.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxArchive.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxDatajack.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxFile.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxFileSystem.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxHid.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxScript.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxKeyboard.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxMouse.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxResource.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxStream.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxUrd.h" />
+    <ClInclude Include="..\..\inc\afx\core\io\afxUri.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxArena.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxArray.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxDatabase.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxMemory.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxQueue.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxSlabAllocator.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxStack.h" />
+    <ClInclude Include="..\..\inc\afx\core\time\afxTime.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxColor.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawContext.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawDefs.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawDriver.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawQueue.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawOutput.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawScript.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawSystem.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxVertex.h" />
+    <ClInclude Include="..\..\inc\afx\draw\io\afxDirectDrawSurface.h" />
+    <ClInclude Include="..\..\inc\afx\draw\io\afxDirectDrawTexture.h" />
+    <ClInclude Include="..\..\inc\afx\draw\io\afxTarga.h" />
+    <ClInclude Include="..\..\inc\afx\draw\io\afxUniformPipelineDescriptor.h" />
+    <ClInclude Include="..\..\inc\afx\draw\io\afxUniformTextureDescriptor.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxLego.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipeline.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineModule.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxSampler.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxBuffer.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxCanvas.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxIndexBuffer.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxSurface.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxTexture.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxTextureBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\draw\res\afxVertexBuffer.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxMathDefs.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxMatrix.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxQuat.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxScalar.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxVector.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxAabb.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxFrustum.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxPlane.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxSphere.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxTriangle.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxVertex.h" />
+    <ClInclude Include="..\..\inc\afx\math\volume\afxVolume.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxBinkVideo.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxBrush.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxMmuiDefs.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxRoqVideo.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxViewport.h" />
+    <ClInclude Include="..\..\inc\afx\mmux\afxWidget.h" />
+    <ClInclude Include="..\..\inc\afx\simul\afxBody.h" />
+    <ClInclude Include="..\..\inc\afx\simul\afxCamera.h" />
+    <ClInclude Include="..\..\inc\afx\simul\afxEntity.h" />
+    <ClInclude Include="..\..\inc\afx\simul\afxLight.h" />
+    <ClInclude Include="..\..\inc\afx\simul\afxSimulation.h" />
+    <ClInclude Include="..\..\inc\afx\simul\dag\afxNode.h" />
+    <ClInclude Include="..\..\inc\afx\simul\dag\afxSkeleton.h" />
+    <ClInclude Include="..\..\inc\afx\simul\dag\afxSkeletonBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\simul\io\afxGranny2Model.h" />
+    <ClInclude Include="..\..\inc\afx\simul\io\afxMD5Model.h" />
+    <ClInclude Include="..\..\inc\afx\simul\io\afxWavefrontObject.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxCadDefs.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxMaterialBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxMesh.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxMeshBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxModel.h" />
+    <ClInclude Include="..\..\inc\afx\simul\modeling\afxModelBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\simul\render\afxRenderer.h" />
+    <ClInclude Include="..\..\inc\afx\sound\afxSoundContext.h" />
+    <ClInclude Include="..\..\inc\afx\sound\afxSoundDefs.h" />
+    <ClInclude Include="..\..\inc\afx\sound\afxSoundInput.h" />
+    <ClInclude Include="..\..\inc\afx\sound\afxSoundOutput.h" />
+    <ClInclude Include="..\..\inc\afx\sound\afxSoundSystem.h" />
+    <ClInclude Include="..\..\src\e2coree\core\afxCoreParadigms.h" />
+    <ClInclude Include="..\..\src\e2coree\draw\afxDrawParadigms.h" />
+    <ClInclude Include="..\..\src\e2coree\draw\_classified\afxDrawClassified.h" />
+    <ClInclude Include="..\..\src\e2coree\mmux\afxMmuxParadigms.h" />
+    <ClInclude Include="..\..\src\e2coree\simul\afxSimulParadigms.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\inc\afx\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\inc\afx\go-horse.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\e2coree\afxApplication.c" />
+    <ClCompile Include="..\..\src\e2coree\afxQwadro.c" />
+    <ClCompile Include="..\..\src\e2coree\afxQwadroCpp.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxClass.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxCoreDefs.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxLinkedList.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxModule.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxObject.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxRawString.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxSimd.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxString.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxSystem.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxTerminal.c" />
+    <ClCompile Include="..\..\src\e2coree\core\async\afxCondition.c" />
+    <ClCompile Include="..\..\src\e2coree\core\async\afxMutex.c" />
+    <ClCompile Include="..\..\src\e2coree\core\async\afxThread.c" />
+    <ClCompile Include="..\..\src\e2coree\core\async\afxTransistor.c" />
+    <ClCompile Include="..\..\src\e2coree\core\diag\afxDebug.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxArchive.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxDatajack.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxFile.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxFileSystem.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxHid.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxScript.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxKeyboard.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxMouse.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxResource.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxStream.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxUrd.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxUri.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxArena.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxArray.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxDatabase.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxMemory.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxQueue.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxSlabAllocator.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\time\afxTime.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_complex.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_line.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_math.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_matrix.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_point.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_quaternion.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_shape.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_vector.c" />
+    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_wavefront.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxColor.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawContext.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawDefs.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawDriver.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawQueue.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawInput.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawOutput.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawScript.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawSystem.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxVertex.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\io\afxDirectDrawSurface.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\io\afxDirectDrawTexture.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\io\afxTarga.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\io\afxUniformPipelineDescriptor.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\io\afxUniformTextureDescriptor.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxLego.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineModule.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxSampler.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxCanvas.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxIndexBuffer.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxSurface.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxTexture.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxTextureBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\res\afxVertexBuffer.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxMatrix.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxQuat.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxVector.c" />
+    <ClCompile Include="..\..\src\e2coree\math\volume\afxAabb.c" />
+    <ClCompile Include="..\..\src\e2coree\math\volume\afxFrustum.c" />
+    <ClCompile Include="..\..\src\e2coree\mmux\afxBinkVideo.c" />
+    <ClCompile Include="..\..\src\e2coree\mmux\afxBrush.c" />
+    <ClCompile Include="..\..\src\e2coree\mmux\afxRoqVideo.c" />
+    <ClCompile Include="..\..\src\e2coree\mmux\afxWidget.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\afxBody.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\afxCamera.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\afxEntity.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\afxLight.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\afxSimulation.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\dag\afxNode.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\dag\afxSkeleton.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\dag\afxSkeletonBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\io\afxGranny2Model.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\simul\io\afxMD5Model.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\io\afxWavefrontObject.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxMaterial.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxMaterialBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxMesh.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxMeshBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxModel.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\modeling\afxModelBlueprint.c" />
+    <ClCompile Include="..\..\src\e2coree\simul\render\afxRenderer.c" />
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundContext.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundInput.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundOutput.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundSystem.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</ProjectGuid>
+    <RootNamespace>e2coree</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClangClAdditionalOptions>
+    </ClangClAdditionalOptions>
+    <LldLinkAdditionalOptions>
+    </LldLinkAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClangClAdditionalOptions>
+    </ClangClAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClangClAdditionalOptions>
+    </ClangClAdditionalOptions>
+    <LldLinkAdditionalOptions>
+    </LldLinkAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClangClAdditionalOptions>
+    </ClangClAdditionalOptions>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link />
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link />
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
