@@ -96,7 +96,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     AfxUriFormat(&uri.uri, "art/world.tga");
     
-    if (1 != AfxDrawContextFetchTextures(dctx, 1, &uri.uri, &dumpImg))
+    if (1 != AfxDrawContextAcquireTextures(dctx, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);

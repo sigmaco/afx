@@ -427,9 +427,8 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
     {
         //gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
     }
-    AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
-    AfxEcho("tex %p, instanced.", tex);
-
+    //AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
+    
     // build or rebuild forces total data update
     tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
     tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
@@ -596,6 +595,7 @@ _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture 
                 AfxAssert(gl->IsTexture(tex->glHandle));
 
                 _SglTexInstDevice(tex, unit, gl); // already clear flags
+                AfxEcho("afxTexture %p GPU-side data instanced.", tex);
             }
             else if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {

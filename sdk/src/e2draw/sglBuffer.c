@@ -124,7 +124,7 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
 
                 gl->BufferData(idd->glTarget, buf->siz, idd->bytemap, idd->glUsage); _SglThrowErrorOccuried();
                 idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxEcho("buf %p, instanced.", buf);
+                AfxEcho("afxBuffer %p GPU-side data instanced.", buf);
             }
             else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {

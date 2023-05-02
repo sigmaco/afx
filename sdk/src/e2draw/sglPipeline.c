@@ -207,7 +207,7 @@ _SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip)
 
                         gl->UseProgram(glHandle); _SglThrowErrorOccuried();
                         //_AfxRegisterOpenGlResourcesToQwadroDrawPipeline(pip);
-                        AfxEcho("Draw pipeline %p reinstanced.", pip);
+                        AfxEcho("afxPipeline %p GPU-side data instanced.", pip);
                         pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
                     }
                 }
@@ -245,24 +245,38 @@ _SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip)
 
                     afxNat setId = (i * _SGL_MAX_ENTRY_PER_LEGO);
                     afxNat binding = setId + entry->binding;
-
-                    afxNat loc = gl->GetUniformLocation(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)); _SglThrowErrorOccuried();
+                    afxNat loc;
 
                     switch (entry->type)
                     {
                     case AFX_SUPPLY_TYPE_SAMPLER:
                     {
-                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        loc = gl->GetUniformLocation(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)); _SglThrowErrorOccuried();
+
+                        if (loc != GL_INVALID_INDEX)
+                        {
+                            gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        }
                         break;
                     }
                     case AFX_SUPPLY_TYPE_SAMPLED_IMAGE:
                     {
-                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        loc = gl->GetUniformLocation(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)); _SglThrowErrorOccuried();
+                        
+                        if (loc != GL_INVALID_INDEX)
+                        {
+                            gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        }
                         break;
                     }
                     case AFX_SUPPLY_TYPE_COMBINED_IMAGE_SAMPLER:
                     {
-                        gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        loc = gl->GetUniformLocation(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)); _SglThrowErrorOccuried();
+
+                        if (loc != GL_INVALID_INDEX)
+                        {
+                            gl->Uniform1i(loc, binding); _SglThrowErrorOccuried();
+                        }
                         break;
                     }
                     case AFX_SUPPLY_TYPE_CONSTANT_BUFFER:
@@ -272,8 +286,12 @@ _SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip)
                         //loc = gl->GetUniformBlockIndex(dque->state.pip->gpuHandle[dque->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
                         //gl->UniformBlockBinding(dque->state.pip->gpuHandle[dque->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
 
-                        gl->UniformBlockBinding(glHandle, gl->GetUniformBlockIndex(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str)), binding); _SglThrowErrorOccuried();
+                        GLuint unifBlckIdx = gl->GetUniformBlockIndex(glHandle, (void const *)AfxStringGetDataConst(&entry->name.str));
 
+                        if (unifBlckIdx != GL_INVALID_INDEX)
+                        {
+                            gl->UniformBlockBinding(glHandle, unifBlckIdx, binding); _SglThrowErrorOccuried();
+                        }
                         break;
                     }
                     default:
@@ -870,38 +888,6 @@ _SGL afxPipeline _AfxDrawContextBuildPipeline(afxDrawContext dctx, afxPipelineBl
     return pip;
 }
 
-_SGL afxPipeline _AfxDrawContextUploadPipeline(afxDrawContext dctx, afxUri const *uri)
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertType(uri, AFX_FCC_URI);
-    AfxAssert(!AfxUriIsBlank(uri));
-
-    afxUri fext;
-    AfxUriForkExtension(&fext, uri);
-
-    if (AfxUriIsBlank(uri)) AfxThrowError();
-    else
-    {
-        afxPipeline pip = NIL;
-
-        if (0 != AfxStringCompareRawCi(AfxUriGetStringConst(&fext), 0, 4, ".urd"))
-        {
-            AfxAdvertise("Uniform Resource Dictionary (.urd) is the only supported format.");
-            AfxThrowError();
-        }
-        else
-        {
-            if (!(pip = _AfxDrawContextUploadPipelineUrd(dctx, uri))) AfxThrowError();
-            else
-            {
-                return pip;
-            }
-        }
-    }
-    return NIL;
-}
-
 _SGL void _AfxIteratorCompareResourceNameCiPip(afxIterator *iter)
 {
     struct { afxUri const *name; afxObject *obj; } *data = iter->udd;
@@ -933,26 +919,6 @@ _SGL afxPipeline _AfxDrawContextFindPipeline(afxDrawContext dctx, afxUri const *
         return (afxPipeline)data.obj;
 
     return NIL;
-}
-
-_SGL afxPipeline _AfxDrawContextFetchPipeline(afxDrawContext dctx, afxUri const *uri)
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertType(uri, AFX_FCC_URI);
-    AfxAssert(!AfxUriIsBlank(uri));
-
-    afxUri name;
-    AfxUriForkName(&name, uri);
-    afxPipeline pip = AfxDrawContextFindPipeline(dctx, &name);
-
-    if (pip) AfxObjectReacquire(&pip->res.obj, NIL, NIL, NIL, NIL);
-    else
-    {
-        if (!(pip = AfxDrawContextUploadPipeline(dctx, uri)))
-            AfxThrowError();
-    }
-    return pip;
 }
 
 _SGL afxClassSpecification const _AfxPipClassSpec;

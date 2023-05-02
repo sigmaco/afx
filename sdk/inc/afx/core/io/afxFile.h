@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// SIGMA Future Storage
+// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 #ifndef AFX_FILE_H
 #define AFX_FILE_H

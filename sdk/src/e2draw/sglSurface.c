@@ -41,6 +41,7 @@ _SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
                 gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
 
                 surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                AfxEcho("afxSurface %p GPU-side data instanced.", surf);
             }
             else if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {

@@ -14,6 +14,8 @@
  *                                    www.sigmaco.org
  */
 
+// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 // afxStream, data I/O stream, is the base object for objects representing files in Qwadro.
 
 #ifndef AFX_STREAM_H
