@@ -33,7 +33,6 @@
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afx/draw/afxDrawScript.h"
-#include "afx/draw/res/afxTextureBlueprint.h"
 #include "afx/core/mem/afxQueue.h"
 
 AFX_DEFINE_HANDLE(afxDrawInput);

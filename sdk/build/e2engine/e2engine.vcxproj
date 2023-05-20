@@ -184,9 +184,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\demo\e2engine\afxBootstrap.c" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
@@ -196,6 +193,9 @@
     <ProjectReference Include="..\e2newton\e2newton.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\demo\e2engine\afxBootstrap.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

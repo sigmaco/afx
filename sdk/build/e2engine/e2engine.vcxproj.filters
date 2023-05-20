@@ -6,7 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\demo\e2engine\afxBootstrap.c">
+    <ClCompile Include="..\..\demo\e2engine\afxBootstrap.c">
       <Filter>e2engine</Filter>
     </ClCompile>
   </ItemGroup>

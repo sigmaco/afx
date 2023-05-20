@@ -98,7 +98,7 @@ AFX afxError                        AfxMeshBlueprintDefineSection(afxMeshBluepri
 AFX afxError                        AfxMeshBlueprintDefineTopology(afxMeshBlueprint *mshb, afxPrimTopology prim, afxNat idxCnt, void const *idxSrc, afxNat idxSrcSiz);
 
 // Adiciona um novo arranjo de vértice a malha. Ao menos uma, especificando posição, é necessária.
-AFX afxError                        AfxMeshBlueprintDefineVertexArrange(afxMeshBlueprint *mshb, afxNat rowIdx, afxVertexDataSpecification const *spec);
+AFX afxError                        AfxMeshBlueprintDefineVertexArrange(afxMeshBlueprint *mshb, afxNat rowIdx, afxVertexRowSpecification const *spec);
 
 // Tenta completar uma blueprint com os dados já fornecidos, se suficentes para serem usados para gerar um novo afxMesh.
 AFX afxError                        AfxMeshBlueprintValidate(afxMeshBlueprint *mshb);

@@ -1,3 +1,18 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
 
 #define _AFX_IOS_IMPL
 #define _AFX_RES_IMPL
@@ -275,7 +290,7 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target,
     SglToGlFormat(tex->fmt, intFmt, fmt, type);
 }
 
-_SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
+_SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be bound.
 {
     afxError err = NIL;
 
@@ -311,11 +326,6 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
 #endif
 
     afxWhd extent;
-
-    afxBool const isRasterBuffer = AfxTextureTestUsageFlags(tex, AFX_TEX_USAGE_SURFACE_RASTER);
-    afxBool const isDepthBuffer = AfxTextureTestUsageFlags(tex, AFX_TEX_USAGE_SURFACE_DEPTH);
-    AfxAssert(!(isRasterBuffer && isDepthBuffer)); // can't be both at same time
-    afxBool const isRenderBuffer = (isRasterBuffer || isDepthBuffer);
 
     if (tex->swizzling)
     {
@@ -436,7 +446,7 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, afxNat unit, sglVmt const* gl)
     return err;
 }
 
-_SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl)
+_SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must be bound
 {
     afxError err = NIL;
 
@@ -594,8 +604,8 @@ _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture 
                 gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
                 AfxAssert(gl->IsTexture(tex->glHandle));
 
-                _SglTexInstDevice(tex, unit, gl); // already clear flags
-                AfxEcho("afxTexture %p GPU-side data instanced.", tex);
+                _SglTexInstDevice(tex, gl); // already clear flags
+                AfxEcho("afxTexture %p hardware-side data instanced.", tex);
             }
             else if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -634,6 +644,7 @@ _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture 
             gl->BindTexture(GL_TEXTURE_1D, 0); _SglThrowErrorOccuried();
         }
     }
+    return err;
 }
 
 _SGL afxBool _AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags)
@@ -689,6 +700,7 @@ _SGL afxError _AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt)
 {
     afxError err = NIL;
     AfxAssertObject(tex, AFX_FCC_TEX);
+    (void)base;
     AfxAssert(cnt);
     AfxThrowError();
     return err;
@@ -851,7 +863,7 @@ _SGL void* _AfxTextureMap(afxTexture tex, afxTextureRegion const *rgn, afxSize *
 
         AfxAssert(rgn);
         afxNat lod = rgn->lod;
-        afxNat layerCnt = rgn->layerCnt;
+        //afxNat layerCnt = rgn->layerCnt;
         AfxAssert(tex->lodCnt > lod);
         AfxAssert(tex->whd[0] > rgn->offset[0]);
         AfxAssert(tex->whd[1] > rgn->offset[1]);
@@ -993,6 +1005,14 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
     afxDrawContext dctx = paradigm->dctx;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
 
+    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
+    AfxAssertObject(dsys, AFX_FCC_DSYS);
+    afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
+    AfxAssertObject(fsys, AFX_FCC_FSYS);
+
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
     tex->sidecar = NIL;
     tex->swizzling = &AFX_STD_COLOR_SWIZZLING;
     tex->sampleCnt = 1;
@@ -1019,9 +1039,6 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
     for (afxNat i = 0; i < tex->lodCnt; i++)
         lodSum += layerSum >> i;
 
-    afxMemory mem = AfxDrawContextGetMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
-
     if (!(tex->bytemap = AfxAllocate(mem, lodSum, AfxSpawnHint()))) AfxThrowError();
     else
     {
@@ -1042,27 +1059,19 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
         {
             for (afxNat j = 0; j < tex->layerCnt; j++)
             {
-                afxTextureLayerBlueprint const *layer = &(texb->layers[j]);
+                afxTextureSource const *layer = &(texb->images[j]);
                 AfxAssert(layer);
                 //AfxAssert(layer->src);
 
-                if (layer->srcIsUrl)
+                switch (layer->type)
                 {
-                    afxTextureRegion rgn;
-                    rgn.lod = i;
-                    rgn.baseLayer = j;
-                    rgn.layerCnt = 1;
-                    rgn.offset[0] = 0;
-                    rgn.offset[1] = 0;
-                    rgn.offset[2] = 0;
-                    AfxTextureGetExtent(tex, i, rgn.extent);
-                    AfxTextureUploadRegions(tex, 1, &rgn, &layer->uri.uri);
-                }
-                else
+                case AFX_FCC_NIL:
                 {
-                    if (layer->src)
+                    //afxNat siz = layer->data.range;
+
+                    if (layer->data.start)
                     {
-                        afxTextureRegion rgn;
+                        afxTextureRegion rgn = { 0 };
                         rgn.lod = i;
                         rgn.baseLayer = j;
                         rgn.layerCnt = 1;
@@ -1070,31 +1079,79 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
                         rgn.offset[1] = 0;
                         rgn.offset[2] = 0;
                         AfxTextureGetExtent(tex, i, rgn.extent);
-                        AfxTextureUpdateRegions(tex, 1, &rgn, (void const**)&layer->src, &layer->fmt);
+                        AfxTextureUpdateRegions(tex, 1, &rgn, (void const**)&layer->data.start, &layer->data.fmt);
                     }
+                    break;
+                }
+                case AFX_FCC_URI:
+                {
+                    afxTextureRegion rgn = { 0 };
+                    rgn.lod = i;
+                    rgn.baseLayer = j;
+                    rgn.layerCnt = 1;
+                    rgn.offset[0] = 0;
+                    rgn.offset[1] = 0;
+                    rgn.offset[2] = 0;
+                    AfxTextureGetExtent(tex, i, rgn.extent);
+                    AfxTextureUploadRegions(tex, 1, &rgn, &layer->uri);
+                    break;
+                }
+                case AFX_FCC_IOS:
+                {
+                    afxNat range = layer->stream.range;
+                    AfxAssert(range);
+                    void *buf;
+
+                    if (!(buf = AfxAllocate(mem, range, AfxSpawnHint()))) AfxThrowError();
+                    else
+                    {
+                        afxStream ios = layer->stream.ios;
+                        AfxAssertObject(ios, AFX_FCC_IOS);
+                        afxSize offset = layer->stream.offset;
+                        afxNat posn = AfxStreamAsk(ios);
+
+                        if (AfxStreamGoToBegin(ios, offset)) AfxThrowError();
+                        else
+                        {
+                            if (AfxStreamRead(ios, buf, range)) AfxThrowError();
+                            else
+                            {
+                                afxTextureRegion rgn = { 0 };
+                                rgn.lod = i;
+                                rgn.baseLayer = j;
+                                rgn.layerCnt = 1;
+                                rgn.offset[0] = 0;
+                                rgn.offset[1] = 0;
+                                rgn.offset[2] = 0;
+                                AfxTextureGetExtent(tex, i, rgn.extent);
+                                AfxTextureUpdateRegions(tex, 1, &rgn, (void const**)buf, &layer->stream.fmt);
+                            }
+                        }
+                        AfxStreamGoToBegin(ios, (afxInt)posn);
+                        AfxDeallocate(mem, buf);
+                    }
+                    break;
+                }
+                default: AfxThrowError(); break;
                 }
             }
         }
-        
+
         if (err)
             AfxDeallocate(mem, tex->bytemap);
     }
     return err;
 }
 
-_SGL afxResult _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[])
+_SGL afxResult _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const blueprint[], afxTexture tex[])
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(texb);
-    AfxAssert(texb->whd);
-    AfxEntry("dctx=%p,fmt=%x,whd=[%d,%d,%d],lodCnt=%u,usage=%x", dctx, texb->fmt, texb->whd[0], texb->whd[1], texb->whd[2], texb->lodCnt, texb->usage);
-    
-    AfxAssert(texb->fmt);
-    AfxAssert(texb->whd[0]);
-    AfxAssert(texb->whd[1]);
-    AfxAssert(texb->whd[2]);
-    afxResult sucCnt = 0;
+    AfxAssert(cnt);
+    AfxAssert(blueprint);
+    AfxAssert(tex);
+    AfxEntry("dctx=%p,cnt=%u,blueprint=%p,tex=%p", dctx, cnt, blueprint, tex);
+    afxResult rslt = 0;
 
     afxSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObject(dsys, AFX_FCC_DSYS);
@@ -1105,17 +1162,16 @@ _SGL afxResult _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afx
         {
             .res = { AfxObjectGetProvider(&dsys->obj), NIL },
             dctx,
-            &texb[i]
+            &blueprint[i]
         };
 
         if (!(tex[i] = AfxObjectAcquire(AfxDrawContextGetTextureClass(dctx), &paradigm, AfxSpawnHint()))) AfxThrowError();
         else
         {
-            ++sucCnt;
+            ++rslt;
         }
-
     }
-    return sucCnt;
+    return rslt;
 }
 
 _SGL void _AfxIteratorCompareResourceNameCi(afxIterator *iter)

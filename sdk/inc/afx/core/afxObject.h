@@ -46,6 +46,8 @@ typedef enum afxObjectFlag
     AFX_OBJ_FLAG_LOCKED = (1 << 2)
 } afxObjectFlag;
 
+//AFX afxBool (*afxObjectEventFilter)(afxObject *obj, afxObject *watched, afxEvent *ev);
+
 AFX_DEFINE_STRUCT(afxObject)
 {
     afxFcc              fcc;
@@ -53,6 +55,9 @@ AFX_DEFINE_STRUCT(afxObject)
     afxInt32            refCnt;
     afxList             signaling; // slot holders
     afxList             handling; // slot helds
+    
+    afxList             filters;
+    afxList             filtering;
     afxBool             (*event)(afxObject *obj, afxEvent *ev);
     afxNat32            tid;
     afxObjectFlag       flags;

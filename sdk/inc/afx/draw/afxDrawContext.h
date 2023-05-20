@@ -24,6 +24,7 @@
 #include "afx/draw/pipelining/afxPipeline.h"
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/core/afxIterator.h"
+#include "afx/draw/afxDrawOperation.h"
 
 AFX_DEFINE_STRUCT(afxDrawContextSpecification)
 {
@@ -40,7 +41,7 @@ AFX_DEFINE_STRUCT(afxDrawContextSpecification)
     afxNat              maxCanvCnt;
     afxNat              maxPipCnt;
     afxNat              maxLegoCnt;
-    afxNat              maxPipmCnt;
+    afxNat              maxShdCnt;
     afxNat              maxDoutCnt;
     afxNat              maxDinCnt;
     afxNat              maxDscrCnt;
@@ -57,14 +58,13 @@ AFX_OBJECT(afxDrawContext)
 
 #endif
 
-AFX afxDrawQueue       AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, afxBool autonomous);
+AFX afxDrawQueue        AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, afxBool autonomous);
 AFX afxDrawInput        AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
 AFX afxDrawOutput       AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const extent, afxDrawOutputSpecification const *spec);
 
 AFX void*               AfxDrawContextGetDriver(afxDrawContext dctx);
 AFX void*               AfxDrawContextGetDrawSystem(afxDrawContext dctx);
-
-AFX afxMemory        AfxDrawContextGetMemory(afxDrawContext dctx);
+AFX afxMemory           AfxDrawContextGetMemory(afxDrawContext dctx);
 
 AFX afxClass*           AfxDrawContextGetBufferClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetCanvasClass(afxDrawContext dctx);
@@ -72,55 +72,66 @@ AFX afxClass*           AfxDrawContextGetIndexBufferClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetInputClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetOutputClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetPipelineRigClass(afxDrawContext dctx);
-AFX afxClass*           AfxDrawContextGetPipelineModuleClass(afxDrawContext dctx);
+AFX afxClass*           AfxDrawContextGetShaderClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetPipelineClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetLegoClass(afxDrawContext dctx);
+AFX afxClass*           AfxDrawContextGetLegoTemplateClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetQueueClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetSamplerClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetScriptClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetSurfaceClass(afxDrawContext dctx);
+AFX afxClass*           AfxDrawContextGetOperationClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetTextureClass(afxDrawContext dctx);
 AFX afxClass*           AfxDrawContextGetVertexBufferClass(afxDrawContext dctx);
 
 AFX afxResult           AfxDrawContextEnumerateQueues(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawQueue dque[]);
 AFX afxResult           AfxDrawContextEnumerateInputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawInput din[]);
 AFX afxResult           AfxDrawContextEnumerateScripts(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawScript dscr[]);
+AFX afxResult           AfxDrawContextEnumerateOperations(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawOperation dop[]);
 AFX afxResult           AfxDrawContextEnumerateTextures(afxDrawContext dctx, afxNat base, afxNat cnt, afxTexture tex[]);
 AFX afxResult           AfxDrawContextEnumerateIndexBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxIndexBuffer ibuf[]);
 AFX afxResult           AfxDrawContextEnumerateVertexBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxVertexBuffer vbuf[]);
 AFX afxResult           AfxDrawContextEnumerateBuffers(afxDrawContext dctx, afxNat base, afxNat cnt, afxBuffer buf[]);
 AFX afxResult           AfxDrawContextEnumerateSamplers(afxDrawContext dctx, afxNat base, afxNat cnt, afxSampler smp[]);
-AFX afxResult           AfxDrawContextEnumeratePipelineModules(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipelineModule pipm[]);
+AFX afxResult           AfxDrawContextEnumerateShaders(afxDrawContext dctx, afxNat base, afxNat cnt, afxShader shd[]);
 AFX afxResult           AfxDrawContextEnumeratePipelines(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipeline pip[]);
 AFX afxResult           AfxDrawContextEnumerateSurfaces(afxDrawContext dctx, afxNat base, afxNat cnt, afxSurface surf[]);
 AFX afxResult           AfxDrawContextEnumerateCanvases(afxDrawContext dctx, afxNat base, afxNat cnt, afxCanvas canv[]);
 AFX afxResult           AfxDrawContextEnumerateOutputs(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawOutput dout[]);
 
 AFX afxBuffer           AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec);
-AFX afxCanvas           AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *surfSpecs);
-AFX afxIndexBuffer      AfxDrawContextAcquireIndexBuffer(afxDrawContext dctx, afxIndexBufferSpecification const *spec);
 AFX afxSampler          AfxDrawContextAcquireSampler(afxDrawContext dctx, afxSamplerSpecification const *spec);
-AFX afxVertexBuffer     AfxDrawContextBuildVertexBuffer(afxDrawContext dctx, afxNat vtxCnt, afxNat arrCnt, afxVertexDataSpecification const *specs);
+AFX afxResult           AfxDrawContextBuildCanvases(afxDrawContext dctx, afxNat cnt, afxCanvasBlueprint const blueprint[], afxCanvas canv[]);
+AFX afxResult           AfxDrawContextBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferBlueprint const blueprint[], afxIndexBuffer ibuf[]);
+AFX afxResult           AfxDrawContextBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBufferBlueprint const blueprint[], afxVertexBuffer vbuf[]);
 
 // Texture
-AFX afxResult           AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[]);
+AFX afxResult           AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const blueprint[], afxTexture tex[]);
 AFX afxResult           AfxDrawContextAcquireTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 AFX afxResult           AfxDrawContextFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
 AFX afxResult           AfxDrawContextUploadTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 
 AFX afxSurface          AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
 
-AFX afxPipelineModule   AfxDrawContextBuildPipelineModule(afxDrawContext dctx, afxByte const code[], afxNat len);
-AFX afxPipelineModule   AfxDrawContextFetchPipelineModule(afxDrawContext dctx, afxUri const *uri);
-AFX afxPipelineModule   AfxDrawContextFindPipelineModule(afxDrawContext dctx, afxUri const *uri);
-AFX afxPipelineModule   AfxDrawContextUploadPipelineModule(afxDrawContext dctx, afxUri const *uri);
+AFX afxResult           AfxDrawContextAcquireShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
+AFX afxResult           AfxDrawContextBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);
+AFX afxResult           AfxDrawContextFindShaders(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxShader shd[]);
+AFX afxResult           AfxDrawContextReviveShaders(afxDrawContext dctx, afxNat cnt, afxUrdNode const desc[], afxShader shd[]);
+AFX afxResult           AfxDrawContextUploadShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
 
-AFX afxPipelineRig      AfxDrawContextBuildPipelineRig(afxDrawContext dctx, afxNat socketCnt, afxLegoSchema const sockets[]);
-AFX afxLego             AfxDrawContextAcquireLego(afxDrawContext dctx, afxLegoSchema const *schema, afxLegoPoint const points[]);
+AFX afxPipelineRig      AfxDrawContextBuildPipelineRig(afxDrawContext dctx, afxNat legtCnt, afxLegoTemplate legt[]);
+AFX afxResult           AfxDrawContextAcquireLegos(afxDrawContext dctx, afxNat cnt, afxLegoTemplate legt[], afxLegoData const data[], afxLego lego[]);
+AFX afxLegoTemplate     AfxDrawContextBuildLegoTemplate(afxDrawContext dctx, afxNat bindDeclCnt, afxLegoBindingDecl const bindDecl[]);
 
 AFX afxPipeline         AfxDrawContextBuildPipeline(afxDrawContext dctx, afxPipelineBlueprint const *pipb);
 AFX afxPipeline         AfxDrawContextFetchPipeline(afxDrawContext dctx, afxUri const *uri);
 AFX afxPipeline         AfxDrawContextFindPipeline(afxDrawContext dctx, afxUri const *name);
 AFX afxPipeline         AfxDrawContextUploadPipeline(afxDrawContext dctx, afxUri const *uri);
+
+AFX afxResult           AfxDrawContextAcquireOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[]);
+AFX afxResult           AfxDrawContextBuildOperations(afxDrawContext dctx, afxNat cnt, afxDrawOperationBlueprint const blueprint[], afxDrawOperation dop[]);
+AFX afxResult           AfxDrawContextFindOperations(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxDrawOperation dop[]);
+AFX afxResult           AfxDrawContextReviveOperations(afxDrawContext dctx, afxNat cnt, afxUrdNode const desc[], afxDrawOperation dop[]);
+AFX afxResult           AfxDrawContextUploadOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[]);
 
 #endif//AFX_DRAW_CONTEXT_H

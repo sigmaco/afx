@@ -1,3 +1,19 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
 #include "sgl.h"
 #include "afx/afxQwadro.h"
 
@@ -32,6 +48,28 @@ _SGL void _AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTe
         cmd->rgn[i] = rgn[i];
 
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_COPY_TEXTURE, sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _AfxDrawScriptCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx)
+{
+    afxError err = NIL;
+    AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
+
+    _afxDscrCmdEmployTec *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
+    AfxAssert(cmd);
+    cmd->tecIdx = tecIdx;
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_EMPLOY_TECHNIQUE, sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _AfxDrawScriptCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts)
+{
+    afxError err = NIL;
+    AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
+
+    _afxDscrCmdNextPass *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
+    AfxAssert(cmd);
+    cmd->useAuxScripts = !!useAuxScripts;
+    _AfxDrawScriptCmdCommand(dscr, AFX_DSC_NEXT_SUBPASS, sizeof(cmd), &cmd->cmd);
 }
 
 _SGL void _AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state)
@@ -70,7 +108,7 @@ _SGL void _AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipeline
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_SET_INPUT_ASSEMBLY_STATE, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil)
+_SGL void _AfxDrawScriptCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil)
 {
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
@@ -97,7 +135,7 @@ _SGL void _AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *are
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDERING, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _AfxDrawScriptCmdEndRendering(afxDrawScript dscr)
+_SGL void _AfxDrawScriptCmdEndCombination(afxDrawScript dscr)
 {
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
@@ -107,13 +145,15 @@ _SGL void _AfxDrawScriptCmdEndRendering(afxDrawScript dscr)
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_END_RENDERING, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[])
+_SGL void _AfxDrawScriptCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[])
 {
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
     _afxDscrCmdBeginRenderPass *cmd = AfxAllocate(dscr->cmdAll, sizeof(*cmd), AfxSpawnHint());
     AfxAssert(cmd);
+    cmd->dop = dop;
+    cmd->tecIdx = tecIdx;
     cmd->canv = canv;
 
     if (area)
@@ -129,7 +169,7 @@ _SGL void _AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, a
     _AfxDrawScriptCmdCommand(dscr, AFX_DSC_BEGIN_RENDER_PASS, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _AfxDrawScriptCmdEndRenderPass(afxDrawScript dscr)
+_SGL void _AfxDrawScriptCmdEndOperation(afxDrawScript dscr)
 {
     afxError err = NIL;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
@@ -359,13 +399,15 @@ _SGL afxDscrImpl _AfxDscrImpl =
     _AfxDrawScriptCmdCopyTexture,
     _AfxDrawScriptCmdSetScissor,
     _AfxDrawScriptCmdSetViewport,
-    _AfxDrawScriptCmdBeginRenderPass,
-    _AfxDrawScriptCmdEndRenderPass,
-    _AfxDrawScriptCmdBeginRendering,
-    _AfxDrawScriptCmdEndRendering,
+    _AfxDrawScriptCmdBeginOperation,
+    _AfxDrawScriptCmdEndOperation,
+    _AfxDrawScriptCmdBeginCombination,
+    _AfxDrawScriptCmdEndCombination,
     _AfxDrawScriptCmdSetRasterizerState,
     _AfxDrawScriptCmdSetDepthState,
-    _AfxDrawScriptCmdSetInputAssemblyState
+    _AfxDrawScriptCmdSetInputAssemblyState,
+    _AfxDrawScriptCmdNextPass,
+    _AfxDrawScriptCmdEmployTechnique
 };
 
 _SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle)

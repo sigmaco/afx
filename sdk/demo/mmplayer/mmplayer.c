@@ -122,8 +122,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     dout[0] = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
     AfxAssert(dout[0]);
 
-    afxSurfaceSpecification const depthSurfSpec = { NIL, AFX_PIXEL_FMT_D24S8, AFX_TEX_USAGE_SURFACE_DEPTH };
-    afxResult rslt = AfxDrawOutputBuildCanvases(dout[0], 0, doutSpec.bufCnt, 1, &depthSurfSpec, canv[0]);
+    afxResult rslt = AfxDrawOutputBuildCanvases(dout[0], doutSpec.bufCnt, (afxNat[]) { 0, 1 }, (afxPixelFormat[]) { AFX_PIXEL_FMT_D32, AFX_PIXEL_FMT_D32 }, NIL, canv[0]);
     AfxAssert(rslt == (afxResult)doutSpec.bufCnt);
 
 #endif
@@ -138,7 +137,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     for (afxNat i = 0; i < doutSpec.bufCnt; i++)
     {
         surfSpec.surf = AfxDrawOutputGetBuffer(dout[1], i);
-        canv[1][i] = AfxDrawContextAcquireCanvas(dctx, dout[1]->whd, 1, &surfSpec);
+        canv[1][i] = AfxDrawContextBuildCanvases(dctx, dout[1]->whd, 1, &surfSpec);
     }
 #endif
 #ifdef ENABLE_DOUT3
@@ -152,7 +151,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     for (afxNat i = 0; i < doutSpec.bufCnt; i++)
     {
         surfSpec.surf = AfxDrawOutputGetBuffer(dout[2], i);
-        canv[2][i] = AfxDrawContextAcquireCanvas(dctx, dout[2]->whd, 1, &surfSpec);
+        canv[2][i] = AfxDrawContextBuildCanvases(dctx, dout[2]->whd, 1, &surfSpec);
     }
 #endif
 

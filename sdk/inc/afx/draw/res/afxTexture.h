@@ -25,8 +25,6 @@
 // It then has a list of images, and each image lists its MIP levels.
 // That's about all there is to textures. How the texture is meant to be used (ie., as a diffuse map or a normal map or something else) is not specified in the texture itself, since it might be used differently in different materials.
 
-AFX_DEFINE_HANDLE(afxTexture);
-
 typedef enum afxTextureFlag
 {
     AFX_TEX_FLAG_DUMMY = (1 << 0)
@@ -34,26 +32,76 @@ typedef enum afxTextureFlag
 
 typedef enum afxTextureUsage
 {
-    AFX_TEX_USAGE_TRANSFER_SRC          = AFX_FLAG(0),
-    AFX_TEX_USAGE_TRANSFER_DST          = AFX_FLAG(1),
-    AFX_TEX_USAGE_SAMPLED               = AFX_FLAG(2),
-    AFX_TEX_USAGE_STORAGE               = AFX_FLAG(3),
-    AFX_TEX_USAGE_SURFACE_RASTER         = AFX_FLAG(4), // used as color buffer; a surface of canvases.
-    AFX_TEX_USAGE_SURFACE_DEPTH          = AFX_FLAG(5), // used as depth/stencil buffer; a surface of canvases.
-    AFX_TEX_USAGE_TRANSIENT_BUFFER      = AFX_FLAG(6),
-    AFX_TEX_USAGE_INPUT_BUFFER          = AFX_FLAG(7),
+    AFX_TEX_USAGE_TRANSFER_SRC      = AFX_FLAG(0),
+    AFX_TEX_USAGE_TRANSFER_DST      = AFX_FLAG(1),
+    AFX_TEX_USAGE_SAMPLED           = AFX_FLAG(2),
+    AFX_TEX_USAGE_STORAGE           = AFX_FLAG(3),
+    AFX_TEX_USAGE_SURFACE_RASTER    = AFX_FLAG(4), // used as color buffer; a surface of canvases.
+    AFX_TEX_USAGE_SURFACE_DEPTH     = AFX_FLAG(5), // used as depth/stencil buffer; a surface of canvases.
+    AFX_TEX_USAGE_SURFACE           = (AFX_TEX_USAGE_SURFACE_RASTER | AFX_TEX_USAGE_SURFACE_DEPTH),
+    AFX_TEX_USAGE_TRANSIENT_BUFFER  = AFX_FLAG(6),
+    AFX_TEX_USAGE_INPUT_BUFFER      = AFX_FLAG(7),
 
-    AFX_TEX_CUBEMAP                     = AFX_FLAG(30),
-    AFX_TEX_VOLUME                      = AFX_FLAG(31) // to be used as 3D instead of layered
+    AFX_TEX_CUBEMAP                 = AFX_FLAG(30),
+    AFX_TEX_VOLUME                  = AFX_FLAG(31) // to be used as 3D instead of layered
 } afxTextureUsage;
+
+AFX_DEFINE_HANDLE(afxTexture);
+
+#ifndef AFX_DRAW_DRIVER_SRC
+
+AFX_OBJECT(afxTexture)
+{
+    AFX_OBJECT(afxResource) res;
+};
+
+#endif
 
 AFX_DEFINE_STRUCT(afxTextureRegion)
 {
-    afxNat  lod; // mip level
-    afxNat  baseLayer;
-    afxNat  layerCnt;
-    afxWhd  offset;
-    afxWhd  extent;
+    afxNat                      lod; // mip level
+    afxNat                      baseLayer;
+    afxNat                      layerCnt;
+    afxWhd                      offset;
+    afxWhd                      extent;
+};
+
+AFX_DEFINE_STRUCT(afxTextureSource) // source for blueprints
+{
+    afxFcc                      type; // NIL (raw data), URI or IOS
+    union
+    {
+        struct
+        {
+            afxPixelFormat      fmt;
+            afxWhd              extent; // d always 1
+            void const*         start;
+            afxSize             range;
+        }                       data;
+        struct
+        {
+            afxPixelFormat      fmt;
+            afxWhd              extent; // d always 1
+            afxStream           ios;
+            afxSize             offset;
+            afxNat              range;
+        }                       stream;
+        afxObject               *obj;
+        afxUri                  uri; // map subentry uri to don't use in-place URI storage.
+    };
+};
+
+AFX_DEFINE_STRUCT(afxTextureBlueprint)
+{
+    afxFcc                      fcc;
+    afxString32                 name;
+    afxPixelFormat              fmt;
+    afxNat                      whd[3];
+    afxNat                      layerCnt;
+    afxTextureSource            images[16];
+    afxNat                      lodCnt; // aka mip level. // at least 1.
+    afxBool                     generateLods;
+    afxFlags                    usage; // CUBEMAP, etc
 };
 
 AFX void*                       AfxTextureGetContext(afxTexture tex);
@@ -87,15 +135,13 @@ AFX afxError                    AfxTextureUploadRegions(afxTexture tex, afxNat c
 AFX afxBool                     AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags);
 AFX afxResult                   AfxTextureTestUsageFlags(afxTexture tex, afxFlags flags);
 
-#ifndef AFX_DRAW_DRIVER_SRC
-#define AFX_TEX_IDD
+////////////////////////////////////////////////////////////////////////////////
+// TEXTURE BLUEPRINT                                                          //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX_OBJECT(afxTexture)
-{
-    AFX_OBJECT(afxResource) res;
-    AFX_TEX_IDD
-};
-
-#endif
+AFX afxError                    AfxTextureBlueprintReset(afxTextureBlueprint *blueprint, afxString const *name, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
+AFX afxError                    AfxTextureBlueprintAddImage(afxTextureBlueprint *blueprint, afxPixelFormat fmt, afxWhd const extent, void const *start, afxNat range);
+AFX afxError                    AfxTextureBlueprintAddImageFromStream(afxTextureBlueprint *blueprint, afxPixelFormat fmt, afxWhd const extent, afxStream ios, afxSize offset, afxNat range);
+AFX afxError                    AfxTextureBlueprintAddImagesFromResource(afxTextureBlueprint *blueprint, afxNat cnt, afxUri const uri[]);
 
 #endif//AFX_TEXTURE_H

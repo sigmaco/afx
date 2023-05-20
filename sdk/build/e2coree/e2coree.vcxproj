@@ -63,6 +63,7 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawContext.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawDefs.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawDriver.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawOperation.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawQueue.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawInput.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawOutput.h" />
@@ -77,7 +78,7 @@
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxLego.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipeline.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineBlueprint.h" />
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineModule.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxShader.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxSampler.h" />
     <ClInclude Include="..\..\inc\afx\draw\res\afxBuffer.h" />
@@ -85,7 +86,6 @@
     <ClInclude Include="..\..\inc\afx\draw\res\afxIndexBuffer.h" />
     <ClInclude Include="..\..\inc\afx\draw\res\afxSurface.h" />
     <ClInclude Include="..\..\inc\afx\draw\res\afxTexture.h" />
-    <ClInclude Include="..\..\inc\afx\draw\res\afxTextureBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\res\afxVertexBuffer.h" />
     <ClInclude Include="..\..\inc\afx\math\afxMathDefs.h" />
     <ClInclude Include="..\..\inc\afx\math\afxMatrix.h" />
@@ -202,6 +202,7 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawDefs.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawDriver.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawOperation.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawQueue.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawInput.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawOutput.c" />
@@ -221,7 +222,7 @@
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxLego.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineBlueprint.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineModule.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxShader.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxSampler.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c" />
@@ -229,7 +230,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\res\afxIndexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxSurface.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxTexture.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxTextureBlueprint.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxVertexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxMatrix.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxQuat.c" />

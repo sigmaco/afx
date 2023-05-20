@@ -21,11 +21,15 @@
 
 AFX_DEFINE_HANDLE(afxCanvas);
 
-AFX_DEFINE_STRUCT(afxSurfaceSpecification)
+AFX_DEFINE_STRUCT(afxCanvasBlueprint)
 {
-    afxSurface          surf;
-    afxPixelFormat      fmt;
-    afxTextureUsage     usage;
+    afxWhd              extent;
+    afxNat              rasterCnt;
+    afxSurface          rasterExistingObj[8]; // one for each rasCnt. pass NIL to it be created using rasFmt and rasUsage. If exists must has been created with AFX_TEX_USAGE_SURFACE_RASTER flag.
+    afxPixelFormat      rasterFmt[8]; // one for each rasCnt
+    afxTextureUsage     rasterUsage[8]; // one for each rasCnt
+    afxPixelFormat      depthFmt; // AFX_PIXEL_FMT_D24. Pass nil to it doesn't have depth.
+    afxPixelFormat      stencilFmt; // AFX_PIXEL_FMT_S8. Pass nil to it doesn't have stencil.
 };
 
 #ifndef AFX_DRAW_DRIVER_SRC
@@ -47,6 +51,18 @@ AFX afxNat*             AfxCanvasGetExtent(afxCanvas canv, afxWhd extent);
 AFX afxResult           AfxCanvasSetExtent(afxCanvas canv, afxWhd const extent);
 
 AFX afxNat              AfxCanvasGetSurfaceCount(afxCanvas canv);
-AFX afxSurface          AfxCanvasGetSurface(afxCanvas canv, afxNat idx);
+AFX afxSurface          AfxCanvasGetSurface(afxCanvas canv, afxNat surfIdx);
+AFX afxNat              AfxCanvasGetRasterCount(afxCanvas canv);
+AFX afxSurface          AfxCanvasGetRaster(afxCanvas canv, afxNat rasIdx);
+AFX afxSurface          AfxCanvasGetDepth(afxCanvas canv);
+AFX afxSurface          AfxCanvasGetStencil(afxCanvas canv);
+
+////////////////////////////////////////////////////////////////////////////////
+// CANVAS BLUEPRINT                                                           //
+////////////////////////////////////////////////////////////////////////////////
+
+AFXINL afxError         AfxCanvasBlueprintReset(afxCanvasBlueprint *blueprint, afxWhd extent, afxPixelFormat depth, afxPixelFormat stencil);
+AFXINL afxError         AfxCanvasBlueprintAddRaster(afxCanvasBlueprint *blueprint, afxSurface existing, afxPixelFormat fmt, afxTextureUsage usage);
+AFXINL afxError         AfxCanvasBlueprintResetRaster(afxCanvasBlueprint *blueprint, afxNat idx, afxSurface existing, afxPixelFormat fmt, afxTextureUsage usage);
 
 #endif//AFX_CANVAS_H

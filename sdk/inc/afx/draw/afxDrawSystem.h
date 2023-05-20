@@ -26,6 +26,7 @@
 #include "afx/draw/afxDrawDriver.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawOutput.h"
+#include "afx/draw/afxDrawOperation.h"
 #include "afx/core/afxModule.h"
 #include "afx/afxApplication.h"
 #include "afx/core/io/afxFileSystem.h"

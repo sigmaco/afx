@@ -1,3 +1,18 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
 
 #define _AFX_BUFFER_C
 #include "sgl.h"
@@ -124,7 +139,7 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
 
                 gl->BufferData(idd->glTarget, buf->siz, idd->bytemap, idd->glUsage); _SglThrowErrorOccuried();
                 idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxEcho("afxBuffer %p GPU-side data instanced.", buf);
+                AfxEcho("afxBuffer %p hardware-side data instanced.", buf);
             }
             else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {

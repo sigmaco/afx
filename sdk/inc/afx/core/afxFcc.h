@@ -24,6 +24,7 @@
 
 typedef enum afxFcc
 {
+    AFX_FCC_NIL,
     //NIL,
 
     // base type has one or two letter chars.
@@ -138,7 +139,6 @@ typedef enum afxFcc
     // *** e2draw ***
 
     AFX_FCC_DSYS    = AfxPackFcc('d', 's', 'y', 's'), // afxDrawSystem
-
     AFX_FCC_DDEV    = AfxPackFcc('d', 'd', 'e', 'v'), // afxDrawDevice
     AFX_FCC_DDRV    = AfxPackFcc('d', 'd', 'r', 'v'), // afxDrawDriver
     AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
@@ -148,14 +148,18 @@ typedef enum afxFcc
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     AFX_FCC_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
-    AFX_FCC_PIPS    = AfxPackFcc('p', 'i', 'p', 's'), // afxLegoSchema
-    AFX_FCC_LEGO    = AfxPackFcc('b', 's', 'e', 't'), // afxLego
-    AFX_FCC_PIPM    = AfxPackFcc('p', 'i', 'p', 'm'), // afxPipelineModule
+    AFX_FCC_LEGT    = AfxPackFcc('l', 'e', 'g', 't'), // afxLegoTemplate
+    AFX_FCC_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxLego
+    AFX_FCC_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
+    AFX_FCC_SHDB    = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint
     AFX_FCC_PIPB    = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint
     AFX_FCC_DRES    = AfxPackFcc('d', 'r', 'e', 's'), // afxDrawResourceSet
     AFX_FCC_DSCR    = AfxPackFcc('d', 's', 'c', 'r'), // afxDrawScript
     AFX_FCC_DDBG    = AfxPackFcc('d', 'd', 'b', 'g'), // afxDrawDebugger
-    //AFX_FCC_DTEC    = AfxPackFcc('d', 't', 'e', 'c'), // afxDrawTechnique
+    AFX_FCC_DOP     = AfxPackFcc('d', 'o', 'p', '\0'), // afxDrawOperation
+    AFX_FCC_DOPB    = AfxPackFcc('d', 'o', 'p', 'b'), // afxDrawOperationBlueprint
+    AFX_FCC_DTEC    = AfxPackFcc('d', 't', 'e', 'c'), // afxDrawTechnique
+    AFX_FCC_DPAS    = AfxPackFcc('d', 'p', 'a', 's'), // afxDrawPass
     AFX_FCC_VPNT    = AfxPackFcc('v', 'p', 'n', 't'), // afxViewpoint
     AFX_FCC_WIMP    = AfxPackFcc('o', 'v', 'l', 'y'), // afxWimp
     AFX_FCC_WID     = AfxPackFcc('w', 'i', 'd', '\0'), // afxWidget
@@ -197,6 +201,7 @@ typedef enum afxFcc
     AFX_FCC_IMG     = AfxPackFcc('i', 'm', 'g', '\0'), // afxImage
     AFX_FCC_SMP     = AfxPackFcc('s', 'm', 'p', '\0'), // afxSampler
     AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f', '\0'), // afxBuffer
+    AFX_FCC_VBUB    = AfxPackFcc('v', 'b', 'u', 'b'), // afxVertexBufferBlueprint
     AFX_FCC_VBUF    = AfxPackFcc('v', 'b', 'u', 'f'), // afxVertexBuffer
     AFX_FCC_IBUF    = AfxPackFcc('i', 'b', 'u', 'f'), // afxIndexBuffer
     AFX_FCC_IMGH    = AfxPackFcc('i', 'm', 'g', 'h'), // AfxImageHub

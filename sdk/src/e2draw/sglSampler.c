@@ -1,3 +1,19 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
 #include "sgl.h"
 
 #include "afx/draw/pipelining/afxSampler.h"
@@ -75,7 +91,7 @@ _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler 
                 gl->SamplerParameterfv(smp->glHandle, GL_TEXTURE_BORDER_COLOR, (void*)smp->borderColor);
 
                 smp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxEcho("afxSampler %p GPU-side data instanced.", smp);
+                AfxEcho("afxSampler %p hardware-side data instanced.", smp);
             }
             else if ((smp->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -169,6 +185,9 @@ _SGL afxError _AfxSmpCtor(afxSampler smp, _afxSmpCtorArgs *args)
     AfxAssertObject(smp, AFX_FCC_SMP);
     afxSamplerSpecification const *spec = args->spec;
     AfxAssert(spec);
+
+    smp->crc32 = 0;
+    AfxCrc32(&smp->crc32, spec, sizeof(*spec));
 
     smp->magFilter = spec->magFilter;
     smp->minFilter = spec->minFilter;

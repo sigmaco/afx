@@ -54,12 +54,12 @@ AFX void*       AfxUrdGetSystem(afxUrd urd);
 AFX void*       AfxUrdGetFileSystem(afxUrd urd);
 
 AFX afxUrdNode* AfxUrdGetRootNode(afxUrd urd);
-AFX afxString*  AfxUrdNodeGetName(afxUrdNode *node);
-AFX afxString*  AfxUrdNodeGetContent(afxUrdNode *node);
-AFX afxNat      AfxUrdNodeGetChildrenCount(afxUrdNode *node);
-AFX afxUrdNode* AfxUrdNodeGetChild(afxUrdNode *node, afxNat idx);
-AFX afxNat      AfxUrdNodeGetAttributeCount(afxUrdNode *node);
-AFX afxString*  AfxUrdNodeGetAttributeName(afxUrdNode *node, afxNat idx);
-AFX afxString*  AfxUrdNodeGetAttributeContent(afxUrdNode *node, afxNat idx);
+AFX afxString const*  AfxUrdNodeGetName(afxUrdNode const *node);
+AFX afxString const*  AfxUrdNodeGetContent(afxUrdNode const *node);
+AFX afxNat      AfxUrdNodeGetChildrenCount(afxUrdNode const *node);
+AFX afxUrdNode const* AfxUrdNodeGetChild(afxUrdNode const *node, afxNat idx);
+AFX afxNat      AfxUrdNodeGetAttributeCount(afxUrdNode const *node);
+AFX afxString*  AfxUrdNodeGetAttributeName(afxUrdNode const *node, afxNat idx);
+AFX afxString*  AfxUrdNodeGetAttributeContent(afxUrdNode const *node, afxNat idx);
 
 #endif//AFX_URD_H

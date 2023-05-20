@@ -27,7 +27,7 @@ AFX_DEFINE_HANDLE(afxLight);
 typedef enum
 {
     /// A light placed infinitely far away. It affects everything in the scene.
-    AFX_LIGHT_DIRECTIONAL = 1,
+    AFX_LIGHT_DIRECTIONAL,
 
     /// A light that shines equally in all directions from its location, affecting all objects within its Range.
     AFX_LIGHT_POINT,

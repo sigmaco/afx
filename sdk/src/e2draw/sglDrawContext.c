@@ -1,4 +1,20 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 1
+﻿/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
+#define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 
@@ -11,23 +27,35 @@
 #include "afx/core/afxString.h"
 #include "../e2coree/draw/afxDrawParadigms.h"
 
-SGL afxClassSpecification const _AfxBufClassSpec;
 AFX afxClassSpecification const _AfxVbufClassSpec;
 AFX afxClassSpecification const _AfxIbufClassSpec;
+AFX afxClassSpecification const _AfxDopClassSpec;
+SGL afxClassSpecification const _AfxBufClassSpec;
 SGL afxClassSpecification const _AfxSmpClassSpec;
 SGL afxClassSpecification const _AfxTexClassSpec;
 SGL afxClassSpecification const _AfxSurfClassSpec;
 SGL afxClassSpecification const _AfxCanvClassSpec;
 SGL afxClassSpecification const _AfxPipClassSpec;
-SGL afxClassSpecification const _AfxPipmClassSpec;
+SGL afxClassSpecification const _AfxShdClassSpec;
 SGL afxClassSpecification const _AfxPiprClassSpec;
 SGL afxClassSpecification const _AfxLegoClassSpec;
+SGL afxClassSpecification const _AfxLegtClassSpec;
 SGL afxClassSpecification const _AfxDscrClassSpec;
 SGL afxClassSpecification const _AfxDinClassSpec;
 SGL afxClassSpecification const _AfxDqueClassSpec;
 SGL afxClassSpecification const _AfxDoutClassSpec;
 
 // FOR EACH
+
+_SGL afxResult _AfxDrawContextEnumerateOperations(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawOperation dop[])
+{
+    afxError err = NIL;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxClass *cls = &dctx->dopClass;
+    AfxAssertType(cls, AFX_FCC_CLS);
+    AfxAssert(AfxClassGetInstanceCount(cls) >= base + cnt);
+    return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)dop);
+}
 
 _SGL afxResult _AfxDrawContextEnumerateQueues(afxDrawContext dctx, afxNat base, afxNat cnt, afxDrawQueue dque[])
 {
@@ -109,14 +137,14 @@ _SGL afxResult _AfxDrawContextEnumerateSamplers(afxDrawContext dctx, afxNat base
     return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)smp);
 }
 
-_SGL afxResult _AfxDrawContextEnumeratePipelineModules(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipelineModule pipm[])
+_SGL afxResult _AfxDrawContextEnumerateShaders(afxDrawContext dctx, afxNat base, afxNat cnt, afxShader shd[])
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->pipmClass;
+    afxClass *cls = &dctx->shdClass;
     AfxAssertType(cls, AFX_FCC_CLS);
     AfxAssert(AfxClassGetInstanceCount(cls) >= base + cnt);
-    return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)pipm);
+    return AfxClassEnumerateInstances(cls, FALSE, base, cnt, (afxObject**)shd);
 }
 
 _SGL afxResult _AfxDrawContextEnumeratePipelines(afxDrawContext dctx, afxNat base, afxNat cnt, afxPipeline pip[])
@@ -160,6 +188,15 @@ _SGL afxResult _AfxDrawContextEnumerateOutputs(afxDrawContext dctx, afxNat base,
 }
 
 // GET CLASS
+
+_SGL afxClass* _AfxDrawContextGetOperationClass(afxDrawContext dctx)
+{
+    afxError err = NIL;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxClass *cls = &dctx->dopClass;
+    AfxAssertType(cls, AFX_FCC_CLS);
+    return cls;
+}
 
 
 _SGL afxClass* _AfxDrawContextGetSurfaceClass(afxDrawContext dctx)
@@ -252,11 +289,11 @@ _SGL afxClass* _AfxDrawContextGetSamplerClass(afxDrawContext dctx)
     return cls;
 }
 
-_SGL afxClass* _AfxDrawContextGetPipelineModuleClass(afxDrawContext dctx)
+_SGL afxClass* _AfxDrawContextGetShaderClass(afxDrawContext dctx)
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->pipmClass;
+    afxClass *cls = &dctx->shdClass;
     AfxAssertType(cls, AFX_FCC_CLS);
     return cls;
 }
@@ -275,6 +312,15 @@ _SGL afxClass* _AfxDrawContextGetLegoClass(afxDrawContext dctx)
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     afxClass *cls = &dctx->legoClass;
+    AfxAssertType(cls, AFX_FCC_CLS);
+    return cls;
+}
+
+_SGL afxClass* _AfxDrawContextGetLegoTemplateClass(afxDrawContext dctx)
+{
+    afxError err = NIL;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxClass *cls = &dctx->legtClass;
     AfxAssertType(cls, AFX_FCC_CLS);
     return cls;
 }
@@ -332,14 +378,15 @@ afxDctxImpl const _AfxStdDctxImpl =
     _AfxDrawContextEnumerateIndexBuffers,
     _AfxDrawContextEnumerateInputs,
     _AfxDrawContextEnumerateOutputs,
-    _AfxDrawContextEnumeratePipelineModules,
+    _AfxDrawContextEnumerateShaders,
     _AfxDrawContextEnumeratePipelines,
     _AfxDrawContextEnumerateQueues,
     _AfxDrawContextEnumerateSamplers,
     _AfxDrawContextEnumerateScripts,
     _AfxDrawContextEnumerateSurfaces,
     _AfxDrawContextEnumerateTextures,
-    _AfxDrawContextEnumerateVertexBuffers
+    _AfxDrawContextEnumerateVertexBuffers,
+    _AfxDrawContextEnumerateOperations
     },
     .getClass =
     {
@@ -349,28 +396,31 @@ afxDctxImpl const _AfxStdDctxImpl =
     _AfxDrawContextGetInputClass,
     _AfxDrawContextGetOutputClass,
     _AfxDrawContextGetPipelineRigClass,
-    _AfxDrawContextGetPipelineModuleClass,
+    _AfxDrawContextGetShaderClass,
     _AfxDrawContextGetPipelineClass,
     _AfxDrawContextGetLegoClass,
+    _AfxDrawContextGetLegoTemplateClass,
     _AfxDrawContextGetQueueClass,
     _AfxDrawContextGetSamplerClass,
     _AfxDrawContextGetScriptClass,
     _AfxDrawContextGetSurfaceClass,
     _AfxDrawContextGetTextureClass,
-    _AfxDrawContextGetVertexBufferClass
+    _AfxDrawContextGetVertexBufferClass,
+    _AfxDrawContextGetOperationClass,
     },
     .other =
     {
         _AfxDrawContextAcquireBuffer,
-        _AfxDrawContextAcquireCanvas,
+        _AfxDrawContextBuildCanvases,
         _AfxDrawContextAcquireSampler,
         _AfxDrawContextBuildTextures,
         _AfxDrawContextFindTextures,
         _AfxDrawContextAcquireSurface,
-        _AfxDrawContextBuildPipelineModule,
-        _AfxDrawContextFindPipelineModule,
-        _AfxDrawContextBuildPipelineRig,
-        _AfxDrawContextAcquireLego,
+        _AfxDrawContextBuildShaders,
+        _AfxDrawContextFindShaders,
+        _AfxDrawContextAcquirePipelineRig,
+        _AfxDrawContextAcquireLegos,
+        _AfxDrawContextAcquireLegoTemplate,
         _AfxDrawContextBuildPipeline,
         _AfxDrawContextFindPipeline,
         _AfxDrawContextAcquireQueue,
@@ -380,11 +430,12 @@ afxDctxImpl const _AfxStdDctxImpl =
     _AfxDrawContextGetMemory
 };
 
-_SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification const *spec)
+_SGL afxError _AfxDctxCtor(afxDrawContext dctx, _afxDctxCtorArgs const *args)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawContextSpecification const *spec = args->spec;
     AfxAssert(spec);
 
     if (!(dctx->genrlMem = spec->genrlMem))
@@ -431,9 +482,11 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
         AfxClassRegister(&dctx->texClass, provisions, AfxFileSystemGetResourceClass(fsys), &_AfxTexClassSpec);
         AfxClassRegister(&dctx->surfClass, provisions, AfxDrawContextGetTextureClass(dctx), &_AfxSurfClassSpec);
         AfxClassRegister(&dctx->canvClass, provisions, NIL, &_AfxCanvClassSpec);
-        AfxClassRegister(&dctx->pipmClass, provisions, NIL, &_AfxPipmClassSpec);
+        AfxClassRegister(&dctx->shdClass, provisions, NIL, &_AfxShdClassSpec);
         AfxClassRegister(&dctx->pipaClass, provisions, NIL, &_AfxPiprClassSpec);
         AfxClassRegister(&dctx->pipClass, provisions, AfxFileSystemGetResourceClass(fsys), &_AfxPipClassSpec);
+        AfxClassRegister(&dctx->dopClass, provisions, NIL, &_AfxDopClassSpec);
+        AfxClassRegister(&dctx->legtClass, provisions, NIL, &_AfxLegtClassSpec);
         AfxClassRegister(&dctx->legoClass, provisions, NIL, &_AfxLegoClassSpec);
         AfxClassRegister(&dctx->doutClass, provisions, NIL, &_AfxDoutClassSpec);
 
@@ -452,7 +505,7 @@ _SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification cons
             }
 
             AfxTransistorDeploy(&dctx->texInstantiationLock);
-            AfxTransistorDeploy(&dctx->pipmInstantiationLock);
+            AfxTransistorDeploy(&dctx->shdInstantiationLock);
 
             dctx->open = TRUE;
 

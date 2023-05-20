@@ -21,4 +21,8 @@
 
 AFX afxPipeline _AfxDrawContextUploadPipelineUrd(afxDrawContext dctx, afxUri const *uri);
 
+AFX afxError AfxReflectSerializedPipelineRasterizerState(afxPipelineRasterizerState *state, afxUrdNode const *node);
+AFX afxError AfxReflectSerializedPipelineDepthState(afxPipelineDepthState *state, afxUrdNode const *node);
+AFX afxError AfxReflectSerializedPipelineInputAssemblyState(afxPipelineInputAssemblyState *state, afxUrdNode const *node);
+
 #endif//AFX_UNIFORM_PIPELINE_DESCRIPTOR

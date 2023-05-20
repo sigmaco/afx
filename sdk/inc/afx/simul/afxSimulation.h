@@ -107,7 +107,12 @@ AFX afxModel        AfxSimulationFindModel(afxSimulation sim, afxString const *n
 AFX afxBody         AfxSimulationAcquireBody(afxSimulation sim, afxString const *name, afxNode parent, afxModel mdl);
 AFX afxCamera       AfxSimulationAcquireCamera(afxSimulation sim, afxString const *name, afxNode parent, afxBool perspective);
 AFX afxEntity       AfxSimulationAcquireEntity(afxSimulation sim, afxString const *name, afxNode parent, afxBody bod);
-AFX afxLight        AfxSimulationAcquireLight(afxSimulation sim, afxString const *name, afxNode parent, afxLightType type);
+
+AFX afxLight        AfxSimulationAcquireDirectionalLight(afxSimulation sim, afxColor color);
+AFX afxLight        AfxSimulationAcquirePointLight(afxSimulation sim, afxColor color, afxReal range);
+AFX afxLight        AfxSimulationAcquireSpotLight(afxSimulation sim, afxColor color, afxReal range, afxReal radians);
+AFX afxLight        AfxSimulationAcquireAreaLight(afxSimulation sim, afxColor color);
+
 AFX afxNode         AfxSimulationAcquireNode(afxSimulation sim, afxNodeSpecification const *spec);
 
 AFX void*           AfxSimulationGetSystem(afxSimulation sim);

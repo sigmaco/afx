@@ -37,7 +37,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     afxNat              whd[3];
     
     BINKTEXTURESET      set; // Bink Buffer
-    afxPipeline         pip; // actually two for experiments
+    afxDrawOperation    dop;
     afxSampler          smp;
     afxVertexBuffer     vbuf;
 

@@ -4,7 +4,7 @@
 
 #include "../../afxQwadro.h"
 
-AFX_DEFINE_STRUCT(afxViewConstants)
+AFX_DEFINE_STRUCT(afxViewConstants) // frame
 {
     afxM4d v;
     afxM4d p;
@@ -14,7 +14,7 @@ AFX_DEFINE_STRUCT(afxViewConstants)
     afxV3d sunKd;
 };
 
-AFX_DEFINE_STRUCT(afxShaderConstants)
+AFX_DEFINE_STRUCT(afxShaderConstants) // pass
 {
     afxV3d wirecolor;
 };
