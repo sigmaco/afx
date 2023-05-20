@@ -24,7 +24,7 @@
 #include "afx/core/afxObject.h"
 #include "afx/core/mem/afxMemory.h"
 
-typedef enum
+typedef enum afxIoFlags
 {
     // permissions
     AFX_IO_FLAG_R           = AFX_FLAG(0), // Readable
@@ -49,6 +49,8 @@ typedef enum
     AFX_IO_FLAG_E           = AFX_FLAG(12), // Encrypted. The data is encrypted. For a file, all data streams in the file are encrypted. This is used by SIGMA Future Storage.
     AFX_IO_FLAG_O           = AFX_FLAG(13), // Offline. The data isn't available immediately. This flag indicates that the data is physically moved to remote/offline storage. This is used by SIGMA Future Storage.
     AFX_IO_FLAG_S           = AFX_FLAG(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
+
+    AFX_IO_FLAG_FORCE_NAT   = AFX_N32_MAX
 }
 afxIoFlags;
 

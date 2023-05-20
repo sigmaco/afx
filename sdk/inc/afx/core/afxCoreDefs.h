@@ -47,7 +47,6 @@
 #define AFX_INTERFACE(object, symbol) object##Interface const symbol
 
 #define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object;
-#define AFX_DEFINE_INTERFACE(object, symbol) typedef struct object##Interface object##Interface; AFX object##Interface const symbol; struct object##Interface
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_
 #define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_
@@ -58,11 +57,11 @@
 
 #ifdef _WIN64
 #   define AFX_ARCH_AMD64
-#   define AFX_PLAT_W64
+#   define AFX_HOST_W64
 #   define _AFX_USE_ALT_DIR_PATH
 #elif _WIN32
 #   define AFX_ARCH_IA32
-#   define AFX_PLAT_W32
+#   define AFX_HOST_W32
 #else
 #   error ""
 #endif//_WIN64
@@ -175,10 +174,10 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AFX_FLAG(bit) ((afxNat)1 << (afxNat)bit)
 #define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
 
-#define AfxFlagsTest(_var_,_mask_) (((afxFlags)(_var_) & (afxFlags)(_mask_)) == (_mask_))
-#define AfxFlagsSet(_var_,_mask_) ((afxFlags)(_var_) = (afxFlags)(_mask_))
-#define AfxFlagsMark(_var_,_mask_) ((afxFlags)(_var_) |= (afxFlags)(_mask_))
-#define AfxFlagsClear(_var_,_mask_) ((afxFlags)(_var_) &= ~(afxFlags)(_mask_))
+#define AfxFlagsTest(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
+#define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
+#define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
+#define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
 #define AFX_INVALID_INDEX (~((afxNat)0))
 
@@ -294,5 +293,7 @@ afxCriterion;
 
 AFX_DEFINE_HANDLE(afxSystem);
 AFX_DEFINE_HANDLE(afxFileSystem);
+
+AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 #endif//AFX_CORE_DEFS_H

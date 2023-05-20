@@ -39,7 +39,8 @@ AFX_DEFINE_STRUCT(afxUri)
     afxString           str;
     struct
     {
-        afxNat          off, range;
+        afxNat16        off;
+        afxNat16        range;
     }                   schem, user, pass, host, port, dir, file, ext, query, frag;    
 };
 
@@ -79,32 +80,38 @@ AFX afxUri*             AfxUri128(afxUri128 *uri, afxUri const *src); // deploy
 AFX afxUri*             AfxUri256(afxUri256 *uri, afxUri const *src); // deploy
 AFX afxUri*             AfxUri4096(afxUri4096 *uri, afxUri const *src); // deploy
 
-AFX afxUri*             AfxUriForkHost(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkPort(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkUsername(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkPassword(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkPath(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkDirectory(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkFile(afxUri *uri, afxUri const *base); // file name + extension
-AFX afxUri*             AfxUriForkName(afxUri *uri, afxUri const *base); // just file name, without extension
-AFX afxUri*             AfxUriForkExtension(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkQuery(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkFragment(afxUri *uri, afxUri const *base);
-AFX afxUri*             AfxUriForkScheme(afxUri *uri, afxUri const *base); // "https"
+AFX afxUri*             AfxUriExcerptHost(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptPort(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptUsername(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptPassword(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptPath(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptDirectory(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptFile(afxUri *uri, afxUri const *base); // file name + extension
+AFX afxUri*             AfxUriExcerptName(afxUri *uri, afxUri const *base); // just file name, without extension
+AFX afxUri*             AfxUriExcerptExtension(afxUri *uri, afxUri const *base, afxBool skipDot);
+AFX afxUri*             AfxUriExcerptQuery(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptFragment(afxUri *uri, afxUri const *base);
+AFX afxUri*             AfxUriExcerptScheme(afxUri *uri, afxUri const *base); // "https"
 
-AFX afxUri*             AfxUriForkPathEditable(afxUri *uri, afxUri *base);
-AFX afxUri*             AfxUriForkDirectoryEditable(afxUri *uri, afxUri *base);
-AFX afxUri*             AfxUriForkFileEditable(afxUri *uri, afxUri *base); // file name + extension
-AFX afxUri*             AfxUriForkNameEditable(afxUri *uri, afxUri *base); // just file name, without extension
-AFX afxUri*             AfxUriForkExtensionEditable(afxUri *uri, afxUri *base);
+AFX afxUri*             AfxUriExcerptPathWriteable(afxUri *uri, afxUri *base);
+AFX afxUri*             AfxUriExcerptDirectoryWriteable(afxUri *uri, afxUri *base);
+AFX afxUri*             AfxUriExcerptFileWriteable(afxUri *uri, afxUri *base); // file name + extension
+AFX afxUri*             AfxUriExcerptNameWriteable(afxUri *uri, afxUri *base); // just file name, without extension
+AFX afxUri*             AfxUriExcerptExtensionWriteable(afxUri *uri, afxUri *base);
 
-AFX afxUri*             AfxUriReset(afxUri *uri);
-AFX afxUri*             AfxUriMapString(afxUri *uri, afxString const *src);
-AFX afxUri*             AfxUriMapStringConst(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
-AFX afxUri*             AfxUriMapData(afxUri *uri, afxChar *start, afxNat range);
-AFX afxUri*             AfxUriMapConstData(afxUri *uri, afxChar const *start, afxNat range); // will not set capacity (will be read only)
+AFX afxUri*             AfxUriReflect(afxUri *uri, afxUri const *in); // pointers and handle same data handled by 'in' without doing any copy or change.
 
-AFX afxUri*             AfxUriErase(afxUri *uri);
+AFX afxUri*             AfxUriReflectString(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
+AFX afxUri*             AfxUriReflectStringWriteable(afxUri *uri, afxString const *src);
+
+AFX afxUri*             AfxUriReflectData(afxUri *uri, void const *start, afxNat range); // will not set capacity (will be read only)
+AFX afxUri*             AfxUriReflectDataWriteable(afxUri *uri, void *start, afxNat range);
+
+AFX afxUri*             AfxUriReset(afxUri *uri); // WARNING string storaged is resetted too. Any storage assigned will be nulled.
+
+// require initalized URI.
+
+AFX afxUri*             AfxUriErase(afxUri *uri); // just zero ranges preserving storage.
 AFX afxUri*             AfxUriFormat(afxUri *uri, afxChar const *fmt, ...);
 
 AFX afxUri*             AfxUriCopy(afxUri *uri, afxUri const *src);

@@ -1,4 +1,20 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 1
+﻿/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
+#define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <dwmapi.h>
 #include <shlwapi.h>
@@ -902,12 +918,13 @@ _SGL GLuint AfxToGlShaderStage(afxShaderStage s)
 {
     static GLuint const v[] =
     {
-        GL_COMPUTE_SHADER,
+        NIL,
         GL_VERTEX_SHADER,
+        GL_FRAGMENT_SHADER,
+        GL_GEOMETRY_SHADER,
         GL_TESS_CONTROL_SHADER,
         GL_TESS_EVALUATION_SHADER,
-        GL_GEOMETRY_SHADER,
-        GL_FRAGMENT_SHADER,
+        GL_COMPUTE_SHADER,
         NIL
     };
 
@@ -1540,10 +1557,10 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
     afxString name, author, website, note;
     afxDrawDriverFeatures const features = { 0 };
     afxDrawDriverSpecification spec;
-    spec.name = AfxStringMapConst(&name, "SIGGL", 0);
-    spec.author = AfxStringMapConst(&author, "SIGMA Technology Group", 0);
-    spec.website = AfxStringMapConst(&website, "www.sigmaco.org", 0);
-    spec.note = AfxStringMapConst(&note, sigglSigmaSignature, 0);
+    spec.name = AfxStringMap(&name, "SIGGL", 0);
+    spec.author = AfxStringMap(&author, "SIGMA Technology Group", 0);
+    spec.website = AfxStringMap(&website, "www.sigmaco.org", 0);
+    spec.note = AfxStringMap(&note, sigglSigmaSignature, 0);
     spec.verMajor = 0;
     spec.verMinor = 7;
     spec.verPatch = 2;
@@ -1616,7 +1633,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
                     _SglLoadVmt(gl, 1, 0);
 
                     afxString ver;
-                    AfxStringMapConst(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
+                    AfxStringMap(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
                     AfxStringScan(&ver, "%u.%u.%u", &idd->wglPrimeGlrcVerMajor, &idd->wglPrimeGlrcVerMinor, &idd->wglPrimeGlrcVerPatch);
                     gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(idd->wglPrimeGlrcVerMajor));
                     gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(idd->wglPrimeGlrcVerMinor));

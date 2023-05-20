@@ -165,7 +165,7 @@
     <ClCompile Include="..\..\src\e2draw\sglDriver.c" />
     <ClCompile Include="..\..\src\e2draw\sglLego.c" />
     <ClCompile Include="..\..\src\e2draw\sglPipeline.c" />
-    <ClCompile Include="..\..\src\e2draw\sglPipelineModule.c" />
+    <ClCompile Include="..\..\src\e2draw\sglShader.c" />
     <ClCompile Include="..\..\src\e2draw\sglPipelineRig.c" />
     <ClCompile Include="..\..\src\e2draw\sglSampler.c" />
     <ClCompile Include="..\..\src\e2draw\sglSurface.c" />

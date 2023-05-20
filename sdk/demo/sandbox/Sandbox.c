@@ -207,7 +207,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxEntry("app=%p", app);
 
     afxUri uriMap;
-    AfxUriMapConstData(&uriMap, "e2newton.icd", 0);
+    AfxUriReflectData(&uriMap, "e2newton.icd", 0);
     afxSimulationSpecification simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
@@ -216,7 +216,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     sim = AfxApplicationAcquireSimulation(TheApp, &simSpec);
     AfxAssertObject(sim, AFX_FCC_SIM);
 
-    AfxUriMapConstData(&uriMap, "window", 0);
+    AfxUriReflectData(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = {0};
     doutSpec.endpoint = &uriMap;
     doutSpec.bufCnt = 2;
@@ -240,19 +240,19 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxLoadAssets(sim, &uri);
 
 #if 0
-    AfxUriMapConstData(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
+    AfxUriReflectData(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
     AfxSimulationLoadMD5Assets(sim, &uri, NIL);
 
     afxString32 str;
     AfxStringDeployRaw32(&str, "/hellknight.md5mesh", 0);
 #else
-    //AfxUriMapConstData(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/f16/f16.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/scenario/zero/zero.obj", 0);
-    //AfxUriMapConstData(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
-    AfxUriMapConstData(&uriMap, "art/object/container/container.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/f16/f16.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/scenario/zero/zero.obj", 0);
+    //AfxUriReflectData(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
+    AfxUriReflectData(&uriMap, "art/object/container/container.obj", 0);
 
     AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 #if 0
@@ -260,12 +260,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 #endif
     afxString str;
-    //AfxStringMapConst(&str, "bibliotheca", 0);
+    //AfxStringMap(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
-    //AfxStringMapConst(&str, "zero", 0);
-    AfxStringMapConst(&str, "container", 0);
+    //AfxStringMap(&str, "zero", 0);
+    AfxStringMap(&str, "container", 0);
 #endif
 
     afxModel mdl = AfxSimulationFindModel(sim, &str);
@@ -283,7 +283,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
-    AfxStringMapConst(&str, "viewer", 0);
+    AfxStringMap(&str, "viewer", 0);
     cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
     AfxAssert(cam);
     //cam->farClip = -100000.0;

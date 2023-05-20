@@ -21,7 +21,7 @@
 #ifndef AFX_PIPELINE_H
 #define AFX_PIPELINE_H
 
-#include "afx/draw/pipelining/afxPipelineModule.h"
+#include "afx/draw/pipelining/afxShader.h"
 #include "afx/draw/pipelining/afxPipelineRig.h"
 #include "afx/draw/pipelining/afxSampler.h"
 #include "afx/core/io/afxResource.h"
@@ -46,6 +46,15 @@ The final resulting primitives are clipped to a clip volume in preparation for t
 These fragments are processed by fragment operations to determine whether generated values will be written to the framebuffer. Fragment shading determines the values to be written to the framebuffer attachments. Framebuffer operations then read and write the color and depth/stencil attachments of the framebuffer for a given subpass of a render pass instance.
 The attachments can be used as input attachments in the fragment shader in a later subpass of the same render pass.
 */
+
+typedef enum
+{
+    _AFX_PIP_STATE_TYPE_ASSEMBLER,
+    _AFX_PIP_STATE_TYPE_DEPTH,
+    _AFX_PIP_STATE_TYPE_RASTERIZER,
+    _AFX_PIP_STATE_TYPE_MULTISAMPLE,
+    _AFX_PIP_STATE_TYPE_COLORBLEND,
+} afxPipelineStateType;
 
 AFX_DEFINE_STRUCT(afxPipelineInputStream) // vertex attribute input stream
 {
@@ -135,11 +144,12 @@ AFX_DEFINE_HANDLE(afxPipeline);
 AFX void*               AfxPipelineGetContext(afxPipeline pip);
 AFX void*               AfxPipelineGetDriver(afxPipeline pip);
 AFX void*               AfxPipelineGetDrawSystem(afxPipeline pip);
+AFX afxPipelineRig      AfxPipelineGetRig(afxPipeline pip);
 
 AFX afxResult           AfxPipelineForEachColorBlendAnnex(afxPipeline pip, afxResult (*f)(afxColorBlendAnnex const*, void*), void *data);
 AFX afxResult           AfxPipelineForEachScissor(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxRect const*, void*), void *data);
 
-AFX afxResult           AfxPipelineForEachStage(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxPipelineModule pipm, void *data), void *data);
+AFX afxResult           AfxPipelineForEachStage(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxShader shd, void *data), void *data);
 AFX afxResult           AfxPipelineForEachInputStream(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxPipelineInputStream const*, void*), void *data);
 AFX afxResult           AfxPipelineForEachViewport(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxViewport const*, void*), void *data);
 
@@ -149,8 +159,7 @@ AFX afxResult           AfxPipelineGetScissors(afxPipeline pip, afxNat first, af
 AFX afxNat              AfxPipelineGetInputStreamCount(afxPipeline pip);
 AFX afxResult           AfxPipelineGetInputStreams(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputStream streams[]);
 
-AFX afxResult           AfxPipelineGetModules(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineModule pipm[]);
-AFX afxPipelineRig      AfxPipelineGetRig(afxPipeline pip);
+AFX afxResult           AfxPipelineGetModules(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
 AFX afxNat              AfxPipelineGetStageCount(afxPipeline pip);
 
 AFX afxNat              AfxPipelineGetViewportCount(afxPipeline pip);

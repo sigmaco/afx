@@ -26,7 +26,7 @@
 #define _SGL_MAX_DQUE_PER_DCTX 4
 #define _SGL_MAX_SWAPCHAIN_CAP 3
 #define _SGL_MAX_SURF_PER_DOUT 3
-#define _SGL_MAX_LEGO_PER_BIND 8
+#define _SGL_MAX_LEGO_PER_BIND 4
 #define _SGL_MAX_ENTRY_PER_LEGO 10 
 #define _SGL_MAX_STAGE_PER_PIP 8
 #define _SGL_MAX_VBO_PER_BIND 8
@@ -34,7 +34,8 @@
 #define _SGL_MAX_VP_PER_SET 8
 #define _SGL_MAX_SCISSOR_PER_SET 8
 #define _SGL_MAX_INSTREAM_PER_SET 8
-#define _SGL_MAX_SURF_PER_CANV 8
+#define _SGL_MAX_RASTER_SURF_PER_CANV 8
+#define _SGL_MAX_SURF_PER_CANV _SGL_MAX_RASTER_SURF_PER_CANV + 2
 
 typedef enum sglUpdateFlags
 {
@@ -72,10 +73,12 @@ AFX_OBJECT(afxDrawContext)
     afxClass      surfClass;
     afxClass      canvClass; // uses surf
 
-    afxClass      pipmClass;
+    afxClass      shdClass;
     afxClass      pipaClass;
-    afxClass      pipClass; // uses pipm, pipa, canv
+    afxClass      pipClass; // uses shd, pipa, canv
+    afxClass      legtClass;
     afxClass      legoClass; // can use smp, tex, buf
+    afxClass      dopClass;
 
     afxClass      dscrClass;
     afxClass      dinClass;
@@ -91,13 +94,13 @@ AFX_OBJECT(afxDrawContext)
 
 
     afxTransistor       texInstantiationLock;
-    afxTransistor       pipmInstantiationLock;
+    afxTransistor       shdInstantiationLock;
 };
 
 AFX_DEFINE_STRUCT(_sglDeleteGlRes)
 {
     GLuint  gpuHandle;
-    GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 pipm
+    GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 shd, 7 shd (separate) program
 };
 
 AFX_OBJECT(afxDrawQueue)
@@ -127,6 +130,9 @@ AFX_OBJECT(afxDrawQueue)
     {
         struct
         {
+            afxDrawOperation            dop;
+            afxNat                      activeTec;
+            afxNat                      activePass;
             afxCanvas                   canv;
             afxRect                     area;
             afxNat                      annexCnt;
@@ -139,7 +145,13 @@ AFX_OBJECT(afxDrawQueue)
             afxDrawTarget               stencilRt;
         }                               renderPass;
 
-        afxPipeline                     pip;
+        struct
+        {
+            afxPipeline                 pip;
+            afxNat                      shdCnt;
+            afxShader                   shd[6];
+            afxShaderStage              stages[6];
+        };
         afxNat                          legoCnt;
         afxLego                         lego[_SGL_MAX_LEGO_PER_BIND];
 
@@ -225,7 +237,7 @@ AFX_OBJECT(afxDrawQueue)
     // presentation stuff
     afxBool         presentationSuspended;
     GLuint          presentFboGpuHandle;
-    afxPipeline     presentPip;
+    afxDrawOperation    presentDop;
     afxLego         presentLego;
     afxSampler      presentSmp;
     afxVertexBuffer presentVbuf;
@@ -366,7 +378,8 @@ AFX_OBJECT(afxPipeline)
     afxNat                          inStreamCnt;
     afxPipelineInputStream          inStreams[_SGL_MAX_INSTREAM_PER_SET];
 
-    afxLinkage                      rig;
+    afxLinkage                      pipr;
+    afxBool                         piprAlreadyResolved;
 
     afxBool                         hasVtxInAssembling;
     afxPipelineInputAssemblyState   vtxInAssembling;
@@ -392,41 +405,75 @@ AFX_OBJECT(afxPipeline)
     afxBool         assembled;
 };
 
-AFX_OBJECT(afxPipelineModule)
+AFX_OBJECT(afxShader)
 {
     afxObject           obj;
+    afxString32         name;
+    afxShaderStage      stage;
 
-    afxNat              len;
-    afxByte             *code;
+    afxByte*            code;
+    afxNat              codeLen;
+    afxString8          entry;
 
-    sglUpdateFlags  updFlags;
-    afxNat          glHandle;
-    afxBool         compiled;
+    afxNat              legtCnt;
+    afxLegoTemplate     legt[4];
+    afxBool             legtAlreadyResolved[4];
+
+    afxNat              inDeclCnt;
+    afxShaderInDecl     inDecls[8];
+
+    afxNat              outDeclCnt;
+    afxShaderOutDecl    outDecls[8];
+
+    sglUpdateFlags      updFlags;
+    afxNat              glHandle;
+    afxNat              glProgHandle[4];
+    afxBool             compiled;
+};
+
+AFX_DEFINE_STRUCT(afxLegoTemplateEntry) // A GPUBindGroupLayoutEntry describes a single shader resource binding to be included in a GPUBindGroupLayout.
+{
+    // A afxLegoDataScheme describes a single shader resource binding to be included in a afxLegoScheme.
+    afxNat32                binding; // A unique identifier for a resource binding within the afxLegoScheme, corresponding to a afxLegoDataScheme.binding and a @binding attribute in the afxShader.
+    afxFlags                visibility; // A bitset of the members of afxShaderStage. Each set bit indicates that a afxLegoDataScheme's resource will be accessible from the associated shader stage.
+    afxShaderResourceType   type;
+    afxNat                  cnt;
+    afxString16             name; // by QWADRO
+};
+
+AFX_OBJECT(afxLegoTemplate) // A GPUBindGroupLayout defines the interface between a set of resources bound in a GPUBindGroup and their accessibility in shader stages.
+{
+    // A afxLegoScheme defines the interface between a set of resources bound in a GPUBindGroup and their accessibility in shader stages.
+    afxObject               obj;
+    afxNat32                crc32;
+    afxNat                  entryCnt;
+    afxLegoTemplateEntry    entry[_SGL_MAX_ENTRY_PER_LEGO]; // The map of binding indices pointing to the GPUBindGroupLayoutEntrys, which this GPUBindGroupLayout describes.
+    afxChain                instances;
 };
 
 AFX_OBJECT(afxPipelineRig) // A GPUPipelineLayout defines the mapping between resources of all GPUBindGroup objects set up during command encoding in setBindGroup(), and the shaders of the pipeline set by GPURenderCommandsMixin.setPipeline or GPUComputePassEncoder.setPipeline.
 {
     afxObject               obj;
     afxChain                pipelines;
-    afxNat32                socketCnt;
-    afxLegoSchema       sockets[_SGL_MAX_LEGO_PER_BIND];
+    afxNat32                crc32;
+    afxNat32                legtCnt;
+    afxLegoTemplate         legt[_SGL_MAX_LEGO_PER_BIND];
     //afxNat32                      pushConstantRangeCount;
     //VkPushConstantRange const*    pPushConstantRanges;
 };
 
 AFX_OBJECT(afxLego) // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 {
-    afxObject       obj;
-    afxLegoSchema   schema; // The GPUBindGroupLayout associated with this GPUBindGroup. Read-only
-    //afxNat        pointCnt;
-    afxLegoPoint    points[_SGL_MAX_ENTRY_PER_LEGO]; // The set of GPUBindGroupEntrys this GPUBindGroup describes. Read-only
-    afxNat          usedResources; // The set of buffer and texture subresources used by this bind group, associated with lists of the internal usage flags. Read-only
+    afxObject           obj;
+    afxLinkage          legt;
+    afxLegoData         data[_SGL_MAX_ENTRY_PER_LEGO]; // The set of GPUBindGroupEntrys this GPUBindGroup describes. Read-only
+    afxNat              usedResources; // The set of buffer and texture subresources used by this bind group, associated with lists of the internal usage flags. Read-only
 };
 
 AFX_OBJECT(afxSampler)
 {
     afxObject           obj;
-
+    afxNat32            crc32;
     afxTexelFilter      magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified.
     afxTexelFilter      minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions.
     afxTexelFilter      mipmapFilter; // LINEAR.
@@ -506,12 +553,15 @@ AFX_OBJECT(afxSurface) // our concept of a framebuffer
 
 AFX_OBJECT(afxCanvas) // our concept of a framebuffer
 {
-    afxObject           obj;
+    afxObject       obj;
 
-    afxNat              whd[3]; // d= layers; just for 3D images, else case its 1.
-    afxNat              surfaceCnt;
-    afxSurface          surfaces[_SGL_MAX_SURF_PER_CANV]; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
+    afxNat          whd[3]; // d= layers; just for 3D images, else case its 1.
 
+    afxNat          surfCnt;
+    afxSurface      surfaces[_SGL_MAX_SURF_PER_CANV]; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
+    afxNat          rasterCnt;
+    afxNat          depthIdx;
+    afxNat          stencilIdx; // should be the same as depth.
     // idd
 
     sglUpdateFlags  updFlags;
@@ -521,7 +571,7 @@ AFX_OBJECT(afxCanvas) // our concept of a framebuffer
 typedef struct _DrawPipelineResource
 {
     afxShaderStage stages;
-    afxPipelineAccessType resType;
+    afxShaderResourceType resType;
     //afxShaerBaseResType baseType;
     //VkAccessFlags access;
     afxNat set;
@@ -591,6 +641,7 @@ typedef enum afxDrawScriptCmdId
     AFX_DSC_COPY_TEXTURE,
     AFX_DSC_BEGIN_RENDERING,
     AFX_DSC_END_RENDERING,
+    AFX_DSC_EMPLOY_TECHNIQUE,
     AFX_DSC_TOTAL
 } afxDrawScriptCmdId;
 
@@ -628,9 +679,11 @@ AFX_DEFINE_STRUCT(_afxDscrCmdSetInputAssemblyState)
 AFX_DEFINE_STRUCT(_afxDscrCmdBeginRenderPass)
 {
     _afxDscrCmd                     cmd;
+    afxDrawOperation                dop;
+    afxNat                          tecIdx;
     afxCanvas                       canv;
     afxRect                         area;
-    afxNat                          annexCnt;
+    afxNat32                        annexCnt;
     afxRenderPassAnnex              annexes[_SGL_MAX_SURF_PER_CANV];
 };
 
@@ -638,8 +691,8 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBeginRendering)
 {
     _afxDscrCmd             cmd;
     afxRect                 area;
-    afxNat                  layerCnt;
-    afxNat                  rasterCnt;
+    afxNat32                layerCnt;
+    afxNat32                rasterCnt;
     afxDrawTarget         rasters[_SGL_MAX_SURF_PER_CANV];
     afxDrawTarget         depth;
     afxDrawTarget         stencil;
@@ -713,12 +766,24 @@ AFX_DEFINE_STRUCT(_afxDscrCmdSetVp)
     afxViewport                     vp[_SGL_MAX_VP_PER_SET];
 };
 
+AFX_DEFINE_STRUCT(_afxDscrCmdEmployTec)
+{
+    _afxDscrCmd                     cmd;
+    afxNat                          tecIdx;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdNextPass)
+{
+    _afxDscrCmd                     cmd;
+    afxBool32                       useAuxScripts;
+};
+
 AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 {
     _afxDscrCmd                     cmd;
     afxTexture                      dst;
     afxTexture                      src;
-    afxNat                          rgnCnt;
+    afxNat32                        rgnCnt;
     afxTextureRegion                rgn[16];
 };
 // vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
@@ -742,7 +807,7 @@ SGL afxSize _AfxBufferGetSize(afxBuffer buf);
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
 SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp);
-SGL afxError _SglDqueSyncPipm(afxDrawQueue dque, afxPipelineModule pipm, afxShaderStage stage);
+SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage);
 SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf); // must be used before texUpdate
 SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex);
 SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip);
@@ -770,7 +835,7 @@ SGL afxError _AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt);
 SGL afxResult _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri);
 
 SGL afxDctxImpl const _AfxStdDctxImpl;
-SGL afxError _AfxDctxCtor(afxDrawContext dctx, afxDrawContextSpecification const *spec);
+SGL afxError _AfxDctxCtor(afxDrawContext dctx, _afxDctxCtorArgs const *args);
 SGL afxError _AfxDctxDtor(afxDrawContext dctx);
 
 SGL afxError _SglDoutProcess(afxDrawOutput dout);
@@ -784,18 +849,20 @@ SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELF
 SGL afxDrawQueue _AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, afxBool autonomous);
 SGL afxDrawOutput _AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd const extent, afxDrawOutputSpecification const *spec);
 SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec);
-SGL afxCanvas _AfxDrawContextAcquireCanvas(afxDrawContext dctx, afxWhd const extent, afxNat surfaceCnt, afxSurfaceSpecification const *specs);
+SGL afxResult _AfxDrawContextBuildCanvases(afxDrawContext dctx, afxNat cnt, afxCanvasBlueprint const blueprint[], afxCanvas canv[]);
 SGL afxBuffer _AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec);
 SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
 SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle);
 SGL afxError _AfxDrawContextFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
 SGL afxError _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const texb[], afxTexture tex[]);
 SGL afxSampler _AfxDrawContextAcquireSampler(afxDrawContext dctx, afxSamplerSpecification const *spec);
-SGL afxPipelineModule _AfxDrawContextFindPipelineModule(afxDrawContext dctx, afxUri const *name);
-SGL afxPipelineModule _AfxDrawContextBuildPipelineModule(afxDrawContext dctx, afxByte const code[], afxNat len);
+SGL afxResult _AfxDrawContextFindShaders(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxShader shd[]);
+SGL afxResult _AfxDrawContextBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);
 SGL afxPipeline _AfxDrawContextFindPipeline(afxDrawContext dctx, afxUri const *name);
 SGL afxPipeline _AfxDrawContextBuildPipeline(afxDrawContext dctx, afxPipelineBlueprint const *pipb);
-SGL afxPipelineRig _AfxDrawContextBuildPipelineRig(afxDrawContext dctx, afxNat socketCnt, afxLegoSchema const socket[]);
-SGL afxLego _AfxDrawContextAcquireLego(afxDrawContext dctx, afxLegoSchema const *socket, afxLegoPoint const points[]);
+SGL afxPipelineRig _AfxDrawContextAcquirePipelineRig(afxDrawContext dctx, afxNat legtCnt, afxLegoTemplate legt[]);
+SGL afxResult _AfxDrawContextAcquireLegos(afxDrawContext dctx, afxNat cnt, afxLegoTemplate legt[], afxLegoData const data[], afxLego lego[]);
+SGL afxLegoTemplate _AfxDrawContextAcquireLegoTemplate(afxDrawContext dctx, afxNat bindCnt, afxLegoBindingDecl const bindings[]);
+SGL afxResult _AfxLegoTemplateDescribe(afxLegoTemplate legt, afxNat base, afxNat cnt, afxLegoBindingDecl decl[]);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

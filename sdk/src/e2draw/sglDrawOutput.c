@@ -1,3 +1,19 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
@@ -462,14 +478,14 @@ _SGL afxError _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri)
     AfxEntry("dout=%p,uri=%.*s", dout, AfxPushString(AfxUriGetStringConst(uri)));
     afxError err = NIL;
     afxUri name;
-    AfxUriForkName(&name, uri);
+    AfxUriExcerptName(&name, uri);
     afxString const *surface = AfxUriGetStringConst(&name);
     afxString tmp;
 
     if (AfxStringIsEmpty(surface)) AfxThrowError();
     else
     {
-        AfxStringMapConst(&tmp, _AfxStdDoutWndImpl.name, 0);
+        AfxStringMap(&tmp, _AfxStdDoutWndImpl.name, 0);
 
         if (0 == AfxStringCompare(surface, &tmp)) // print to window surface
         {
@@ -478,7 +494,7 @@ _SGL afxError _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri)
         }
         else
         {
-            //AfxStringMapConst(&tmp, _AfxStdDoutWppImpl.name, 0);
+            //AfxStringMap(&tmp, _AfxStdDoutWppImpl.name, 0);
 
             if (0 == AfxStringCompare(surface, &tmp)) // print to desktop background surface
             {
@@ -486,7 +502,7 @@ _SGL afxError _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri)
             }
             else
             {
-                //AfxStringMapConst(&tmp, _AfxStdDoutFileImpl.name, 0);
+                //AfxStringMap(&tmp, _AfxStdDoutFileImpl.name, 0);
 
                 if (0 == AfxStringCompare(surface, &tmp)) // print to file
                 {

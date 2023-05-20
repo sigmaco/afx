@@ -99,13 +99,14 @@ AFX_DEFINE_STRUCT(afxString4096)
     afxChar     buf[4096];
 };
 
-// NOTE: When 'cap' is zero, a string canv't be modified.
+// NOTE: When 'cap' is zero, a string can't be modified.
 
 //#define AfxAssertString(str_) AfxAssert3(((afxChar*)&((str_)->fcc))[0] == 's', ((afxChar*)&((str_)->fcc))[1] == 't', ((afxChar*)&((str_)->fcc))[2] == 'r')
 
 // used for formatted string input with %.*s specifier.
 // %.*s
 #define AfxPushString(str_) (str_) ? AfxStringGetSize((str_)) : 1, (str_) ? AfxStringGetDataConst((str_)) : ""
+#define AfxSpawnStaticString(text_) (afxString const[])AFX_STRING(text_);
 
 AFX afxString*          AfxString8(afxString8 *str, afxString const *src);
 AFX afxString*          AfxString16(afxString16 *str, afxString const *src);
@@ -129,14 +130,14 @@ AFX afxString*          AfxString1024DeployRaw(afxString1024 *str, afxChar const
 AFX afxString*          AfxString2048DeployRaw(afxString2048 *str, afxChar const *src, afxNat range);
 AFX afxString*          AfxString4096DeployRaw(afxString4096 *str, afxChar const *src, afxNat range);
 
-AFX afxString*          AfxStringMap(afxString *str, void *start, afxNat range);
-AFX afxString const*    AfxStringMapConst(afxString *str, void const *start, afxNat range);
+AFX afxString const*    AfxStringMap(afxString *str, void const *start, afxNat range); // wraps constant (read-only) data as a Qwadro string.
+AFX afxString*          AfxStringMapWriteable(afxString *str, void *start, afxNat range); // wraps dynamic (writeable) data as a Qwadro string.
 
-AFX afxString*          AfxStringFork(afxString *str, afxString const *in); // instead of copy the content it maps the same content.
-AFX afxString*          AfxStringForkConst(afxString *str, afxString const *in); // instead of copy the content it maps the same content.
-AFX afxString*          AfxStringForkRange(afxString *str, afxString const *in, afxNat base, afxNat range); // instead of copy the content it only maps the same content.
-AFX afxString*          AfxStringForkRangeConst(afxString *str, afxString const *in, afxNat base, afxNat range); // instead of copy the content it only maps the same content.
-    
+AFX afxString*          AfxStringReflect(afxString *str, afxString const *in); // wraps the same content mapped or buffered by other string as read-only data.
+AFX afxString*          AfxStringReflectWriteable(afxString *str, afxString const *in); // wraps the same content mapped or buffered by other string as writeable data.
+AFX afxString*          AfxStringReflectRange(afxString *str, afxString const *in, afxNat base, afxNat range); // wraps the same content mapped or buffered by other string as read-only data.
+AFX afxString*          AfxStringReflectRangeWriteable(afxString *str, afxString const *in, afxNat base, afxNat range); // wraps the same content mapped or buffered by other string as writeable data.
+
 AFX afxChar*            AfxStringGetData(afxString *str);
 AFX afxChar const*      AfxStringGetDataConst(afxString const *str);
 AFX afxNat              AfxStringGetSize(afxString const *str);

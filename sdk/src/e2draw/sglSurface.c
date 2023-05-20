@@ -1,3 +1,18 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
 
 #include "sgl.h"
 #include "afx/draw/afxDrawSystem.h"
@@ -41,7 +56,7 @@ _SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
                 gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
 
                 surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxEcho("afxSurface %p GPU-side data instanced.", surf);
+                AfxEcho("afxSurface %p hardware-side data instanced.", surf);
             }
             else if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
@@ -72,13 +87,20 @@ _SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelForma
     AfxAssert(extent[0]);
     AfxAssert(extent[1]);
     AfxAssert(extent[2]);
-    AfxAssert(usage & AFX_TEX_USAGE_SURFACE_RASTER | AFX_TEX_USAGE_SURFACE_DEPTH);
+    AfxAssert(usage & AFX_TEX_USAGE_SURFACE);
     AfxEntry("dctx=%p,fmt=%u,whd=[%u,%u,%u],usage=%u", dctx, fmt, extent[0], extent[1], extent[2], usage);
     afxSurface surf = NIL;
 
+    usage &= AFX_TEX_USAGE_SURFACE;
+
+    if (fmt >= AFX_PIXEL_FMT_S8 && fmt <= AFX_PIXEL_FMT_D32FS8)
+        usage |= AFX_TEX_USAGE_SURFACE_DEPTH;
+    else
+        usage |= AFX_TEX_USAGE_SURFACE_RASTER;
+
     afxTextureBlueprint texb;
-    AfxTextureBlueprintDeploy(&texb, NIL, fmt, extent, 1, 1, usage);
-    AfxTextureBlueprintDefineLayer(&texb, 0, NIL, fmt, NIL);
+    AfxTextureBlueprintReset(&texb, NIL, fmt, extent, usage);
+    AfxTextureBlueprintAddImage(&texb, fmt, extent, NIL, NIL);
 
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObject(dsys, AFX_FCC_DSYS);

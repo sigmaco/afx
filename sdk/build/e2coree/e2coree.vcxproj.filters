@@ -285,9 +285,6 @@
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineBlueprint.h">
       <Filter>e2coree\draw\pipelining</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineModule.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h">
       <Filter>e2coree\draw\pipelining</Filter>
     </ClInclude>
@@ -307,9 +304,6 @@
       <Filter>e2coree\draw\res</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\res\afxSurface.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxTextureBlueprint.h">
       <Filter>e2coree\draw\res</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\res\afxVertexBuffer.h">
@@ -416,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\afxString.h">
       <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxShader.h">
+      <Filter>e2coree\draw\pipelining</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawOperation.h">
+      <Filter>e2coree\draw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -558,9 +558,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\res\afxTexture.c">
       <Filter>e2coree\draw\res</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxTextureBlueprint.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\res\afxVertexBuffer.c">
       <Filter>e2coree\draw\res</Filter>
     </ClCompile>
@@ -568,9 +565,6 @@
       <Filter>e2coree\draw\res</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineBlueprint.c">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineModule.c">
       <Filter>e2coree\draw\pipelining</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c">
@@ -742,6 +736,12 @@
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxShader.c">
+      <Filter>e2coree\draw\pipelining</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawOperation.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>

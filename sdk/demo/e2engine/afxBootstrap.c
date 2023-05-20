@@ -25,7 +25,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxEntry("app=%p", app);
 
     afxUri uriMap;
-    AfxUriMapConstData(&uriMap, "e2newton.icd", 0);
+    AfxUriReflectData(&uriMap, "e2newton.icd", 0);
     afxSimulationSpecification simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
@@ -34,7 +34,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     sim = AfxApplicationAcquireSimulation(TheApp, &simSpec);
     AfxAssertObject(sim, AFX_FCC_SIM);
 
-    AfxUriMapConstData(&uriMap, "window", 0);
+    AfxUriReflectData(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = { 0 };
     doutSpec.endpoint = &uriMap;
     doutSpec.bufCnt = 2;
@@ -94,10 +94,11 @@ int main(int argc, char const* argv[])
     {
         sys = AfxSystemBootUp(NIL);
 
-        dsys = AfxSystemAcquireDrawSystem(sys);
+        afxDrawSystemSpecification dsysSpec = { 0 };
+        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec;
+        afxDrawContextSpecification dctxSpec = { 0 };
         dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 1;
 

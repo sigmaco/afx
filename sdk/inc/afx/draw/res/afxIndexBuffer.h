@@ -27,21 +27,20 @@ AFX_OBJECT(afxIndexBuffer)
 {
     AFX_OBJECT(afxBuffer)   buf; // IBUF
 #ifdef _AFX_INDEX_BUFFER_C
-    afxNat                  idxCnt;
-    afxNat                  idxSiz;
+    afxNat                  cap;
+    afxNat                  stride;
 #endif
 };
 
-AFX_DEFINE_STRUCT(afxIndexBufferSpecification)
+AFX_DEFINE_STRUCT(afxIndexBufferBlueprint)
 {
-    afxNat                  cnt;
-    afxNat                  siz;
+    afxNat                  cap;
     void const              *src;
-    afxNat                  stride;
+    afxNat                  srcStride;
 };
 
 AFX void const*             AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat baseIdx);
-AFX afxNat                  AfxIndexBufferGetCount(afxIndexBuffer ibuf);
+AFX afxNat                  AfxIndexBufferGetCap(afxIndexBuffer ibuf);
 AFX afxNat                  AfxIndexBufferGetStride(afxIndexBuffer ibuf);
 AFX afxError                AfxIndexBufferOptimize(afxIndexBuffer ibuf);
 
@@ -49,5 +48,11 @@ AFX afxError                AfxIndexBufferDump(afxIndexBuffer ibuf, afxNat baseI
 AFX afxError                AfxIndexBufferUpdate(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt, void const *src, afxNat srcIdxSiz); // copy into
 
 AFX afxError                AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt, afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, void(*f)(void const *vtx, void*data), void *data);
+
+////////////////////////////////////////////////////////////////////////////////
+// INDEX BUFFER BLUEPRINT                                                     //
+////////////////////////////////////////////////////////////////////////////////
+
+AFXINL afxError             AfxIndexBufferBlueprintReset(afxIndexBufferBlueprint *blueprint, afxNat cap, void const *src, afxNat srcStride);
 
 #endif//AFX_INDEX_BUFFER_H

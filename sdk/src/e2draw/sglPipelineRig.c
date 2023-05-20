@@ -1,3 +1,19 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                                    www.sigmaco.org
+ */
+
 #include "sgl.h"
 
 #include "afx/draw/pipelining/afxPipelineRig.h"
@@ -6,76 +22,36 @@
 typedef struct
 {
     afxDrawContext dctx;
-    afxNat socketCnt;
-    afxLegoSchema const *socket;
-} _afxPipaParadigm;
+    afxNat legtCnt;
+    afxLegoTemplate const *legt;
+} _afxPiprParadigm;
 
-_SGL afxResult _AfxPipelineRigForEachSocket(afxPipelineRig pipr, afxNat first, afxNat cnt, afxResult(*f)(afxLegoSchema const*, void*), void *data)
+_SGL afxResult _AfxPipelineRigEnumerateTemplates(afxPipelineRig pipr, afxNat first, afxNat cnt, afxLegoTemplate legt[])
 {
     afxError err = NIL;
     AfxAssertObject(pipr, AFX_FCC_PIPR);
+    AfxAssert(legt);
     AfxAssert(cnt);
-    AfxAssert(cnt <= pipr->socketCnt - first);
-    AfxAssert(f);
-    afxResult cnt2 = 0;
-
+    afxResult rslt = 0;
+    
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxLegoSchema const *sch = &pipr->sockets[i];
-        cnt2++;
-
-        if (!f(sch, data))
-            break;
-    }
-    return cnt2;
-}
-
-_SGL afxResult _AfxPipelineRigFindEntries(afxPipelineRig pipr, afxNat socket, afxNat cnt, afxString const names[], afxLegoSchemaEntry entries[])
-{
-    afxError err = NIL;
-    AfxAssertObject(pipr, AFX_FCC_PIPR);
-    AfxAssert(cnt);
-    AfxAssert(socket <= pipr->socketCnt);
-    AfxAssert(names);
-    AfxAssert(entries);
-    afxResult hitCnt = 0;
-
-    for (afxNat h = 0; h < cnt; h++)
-    {
-        for (afxNat j = 0; j < pipr->sockets[socket].entryCnt; j++)
+        if (i >= cnt) break;
+        else
         {
-            if (0 == AfxStringCompareCi(&names[h], &(pipr->sockets[socket].entries[j].name.str)))
-            {
-                entries[j] = pipr->sockets[socket].entries[j];
-                hitCnt++;
-            }
+            legt[i] = pipr->legt[first + i];
+            ++rslt;
         }
     }
-    return hitCnt;
+    return rslt;
 }
 
-_SGL afxResult _AfxPipelineRigGetSockets(afxPipelineRig pipr, afxNat first, afxNat cnt, afxLegoSchema sockets[])
+ 
+_SGL afxPiprImpl const _AfxStdPiprImpl;
+afxPiprImpl const _AfxStdPiprImpl =
 {
-    afxError err = NIL;
-    AfxAssertObject(pipr, AFX_FCC_PIPR);
-    AfxAssert(cnt);
-    AfxAssert(sockets);
-    AfxAssert(cnt <= pipr->socketCnt - first);
-    afxResult hitCnt = 0;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        sockets[i] = pipr->sockets[first + i];
-    }
-    return hitCnt;
-}
-
-_SGL afxNat _AfxPipelineRigGetSocketCount(afxPipelineRig pipr)
-{
-    afxError err = NIL;
-    AfxAssertObject(pipr, AFX_FCC_PIPR);
-    return pipr->socketCnt;
-}
+    _AfxPipelineRigEnumerateTemplates
+};
 
 _SGL afxError _AfxPiprDtor(afxPipelineRig pipr)
 {
@@ -83,19 +59,19 @@ _SGL afxError _AfxPiprDtor(afxPipelineRig pipr)
     afxError err = NIL;
     AfxAssertObject(pipr, AFX_FCC_PIPR);
 
+    afxPipeline pip;
+    AfxChainForEveryLinkage(&pipr->pipelines, AFX_OBJECT(afxPipeline), pipr, pip)
+    {
+        AfxAssertObject(pip, AFX_FCC_PIP);
+        while (0 < AfxObjectRelease(&pip->res.obj));
+    };
+
+    AfxAssert(pipr->pipelines.cnt == 0);
+
     return err;
 }
 
-_SGL afxPipelineRigImpl const _AfxStdPiprImpl;
-afxPipelineRigImpl const _AfxStdPiprImpl =
-{
-    _AfxPipelineRigFindEntries,
-    _AfxPipelineRigForEachSocket,
-    _AfxPipelineRigGetSocketCount,
-    _AfxPipelineRigGetSockets
-};
-
-_SGL afxError _AfxPiprCtor(afxPipelineRig pipr, _afxPipaParadigm const *paradigm)
+_SGL afxError _AfxPiprCtor(afxPipelineRig pipr, _afxPiprParadigm const *paradigm)
 {
     AfxEntry("pipr=%p", pipr);
     afxError err = NIL;
@@ -103,48 +79,82 @@ _SGL afxError _AfxPiprCtor(afxPipelineRig pipr, _afxPipaParadigm const *paradigm
 
     AfxChainDeploy(&pipr->pipelines, pipr);
 
-    pipr->socketCnt = 0;
+    pipr->legtCnt = 0;
 
-    for (afxNat i = 0; i < paradigm->socketCnt; i++)
+    for (afxNat i = 0; i < paradigm->legtCnt; i++)
     {
-        pipr->sockets[i].entryCnt = 0;
+        afxLegoTemplate legt = paradigm->legt[i];
+        AfxAssertObject(legt, AFX_FCC_LEGT);
+        afxBool existing = FALSE;
 
-        for (afxNat j = 0; j < paradigm->socket[i].entryCnt; j++)
+        for (afxNat j = 0; j < pipr->legtCnt; j++)
         {
-            AfxString16(&(pipr->sockets[i].entries[j].name), &(paradigm->socket[i].entries[j].name.str));
-            pipr->sockets[i].entries[j].binding = paradigm->socket[i].entries[j].binding;
-            pipr->sockets[i].entries[j].visibility = paradigm->socket[i].entries[j].visibility;
-            pipr->sockets[i].entries[j].type = paradigm->socket[i].entries[j].type;
-
-            pipr->sockets[i].entryCnt++;
+            if ((existing = (pipr->legt[j] == legt)))
+                break;
         }
-        pipr->socketCnt++;
+
+        if (!existing)
+        {
+            AfxObjectReacquire(&legt->obj, NIL, NIL, NIL, NIL);
+            pipr->legt[pipr->legtCnt] = legt;
+            ++pipr->legtCnt;
+        }
     }
 
-    if (!err)
-    {
-        
-    }
+    afxNat32 crc = 0;
+    AfxCrc32(&crc, pipr->legt, sizeof(pipr->legt[0]) * pipr->legtCnt);
+    pipr->crc32 = crc;
 
     return err;
 }
 
-_SGL afxPipelineRig _AfxDrawContextBuildPipelineRig(afxDrawContext dctx, afxNat socketCnt, afxLegoSchema const socket[])
+_SGL afxPipelineRig _SglDrawContextFindPipelineRig(afxDrawContext dctx, afxNat legtCnt, afxLegoTemplate legt[])
 {
     afxError err = NIL;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxPipelineRig pipr = NIL;
+    AfxAssert(legtCnt);
+    AfxAssert(legt);
 
-    _afxPipaParadigm paradigm =
+    afxNat32 crc = 0;
+    AfxCrc32(&crc, legt, sizeof(legt[0]) * legtCnt);
+
+    afxPipelineRig pipr;
+    AfxChainForEveryLinkage(&(AfxDrawContextGetPipelineRigClass(dctx)->instances), AFX_OBJECT(afxPipelineRig), obj.cls, pipr)
     {
-        dctx,
-        socketCnt,
-        socket
-    };
+        AfxAssertObject(pipr, AFX_FCC_PIPR);
 
-    if (!(pipr = AfxObjectAcquire(AfxDrawContextGetPipelineRigClass(dctx), &paradigm, AfxSpawnHint())))
-        AfxThrowError();
+        if (pipr->crc32 == crc)
+        {
+            return pipr;
+        }
+    }
+    return NIL;
+}
 
+_SGL afxPipelineRig _AfxDrawContextAcquirePipelineRig(afxDrawContext dctx, afxNat legtCnt, afxLegoTemplate legt[])
+{
+    afxError err = NIL;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxPipelineRig pipr = _SglDrawContextFindPipelineRig(dctx, legtCnt, legt);
+
+    if (pipr)
+    {
+        AfxAssertObject(pipr, AFX_FCC_PIPR);
+        AfxObjectReacquire(&pipr->obj, NIL, NIL, NIL, NIL);
+    }
+    else
+    {
+        _afxPiprParadigm paradigm =
+        {
+            dctx,
+            legtCnt,
+            legt
+        };
+
+        if (!(pipr = AfxObjectAcquire(AfxDrawContextGetPipelineRigClass(dctx), &paradigm, AfxSpawnHint())))
+            AfxThrowError();
+
+    }
     return pipr;
 }
 

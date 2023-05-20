@@ -26,6 +26,7 @@
 #define AFX_DRAW_SCRIPT_H
 
 #include "afx/draw/pipelining/afxPipeline.h"
+#include "afx/draw/afxDrawOperation.h"
 #include "afx/draw/pipelining/afxLego.h"
 #include "afx/draw/pipelining/afxSampler.h"
 #include "afx/draw/res/afxCanvas.h"
@@ -140,10 +141,12 @@ AFX void        AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip
 AFX void        AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
 AFX void        AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
 AFX void        AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
-AFX void        AfxDrawScriptCmdBeginRenderPass(afxDrawScript dscr, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
-AFX void        AfxDrawScriptCmdEndRenderPass(afxDrawScript dscr);
-AFX void        AfxDrawScriptCmdBeginRendering(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
-AFX void        AfxDrawScriptCmdEndRendering(afxDrawScript dscr);
+AFX void        AfxDrawScriptCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
+AFX void        AfxDrawScriptCmdEndOperation(afxDrawScript dscr);
+AFX void        AfxDrawScriptCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
+AFX void        AfxDrawScriptCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
+AFX void        AfxDrawScriptCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
+AFX void        AfxDrawScriptCmdEndCombination(afxDrawScript dscr);
 AFX void        AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
 AFX void        AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);
 AFX void        AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state);
