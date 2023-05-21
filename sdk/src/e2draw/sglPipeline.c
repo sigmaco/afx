@@ -597,6 +597,25 @@ _SGL void _AfxPipShdrHandler(afxObject *obj, afxEvent *ev)
     }
 }
 
+_SGL afxBool _SglPipEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxPipeline pip = (void*)obj;
+    AfxAssertObject(pip, AFX_FCC_PIP);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglPipEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxPipeline pip = (void*)obj;
+    AfxAssertObject(pip, AFX_FCC_PIP);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxPipDtor(afxPipeline pip)
 {
     AfxEntry("pip=%p", pip);
@@ -1045,6 +1064,8 @@ afxClassSpecification const _AfxPipClassSpec =
     NIL,
     (void*)_AfxPipCtor,
     (void*)_AfxPipDtor,
-    "Pipeline",
+    .event = _SglPipEventHandler,
+    .eventFilter = _SglPipEventFilter,
+    "afxPipeline",
     &_AfxStdPipImpl
 };

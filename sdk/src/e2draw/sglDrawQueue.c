@@ -1848,6 +1848,25 @@ _SGL afxDrawQueue _AfxDrawContextAcquireQueue(afxDrawContext dctx, afxNat idx, a
     return dque;
 };
 
+_SGL afxBool _SglDqueEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawQueue dque = (void*)obj;
+    AfxAssertObject(dque, AFX_FCC_DQUE);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglDqueEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawQueue dque = (void*)obj;
+    AfxAssertObject(dque, AFX_FCC_DQUE);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxDqueDtor(afxDrawQueue dque)
 {
     AfxEntry("dque=%p", dque);
@@ -2013,6 +2032,8 @@ afxClassSpecification const _AfxDqueClassSpec =
     NIL,
     (void*)_AfxDqueCtor,
     (void*)_AfxDqueDtor,
-    "Draw Queue",
+    .event = _SglDqueEventHandler,
+    .eventFilter = _SglDqueEventFilter,
+    "afxDrawQueue",
     NIL
 };

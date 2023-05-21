@@ -387,6 +387,25 @@ afxCanvImpl const _AfxStdCanvImpl =
     _AfxCanvasGetStencil,
 };
 
+_SGL afxBool _SglCanvEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxCanvas canv = (void*)obj;
+    AfxAssertObject(canv, AFX_FCC_CANV);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglCanvEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxCanvas canv = (void*)obj;
+    AfxAssertObject(canv, AFX_FCC_CANV);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxCanvDtor(afxCanvas canv)
 {
 	AfxEntry("canv=%p", canv);
@@ -530,6 +549,8 @@ afxClassSpecification const _AfxCanvClassSpec =
     NIL,
     (void*)_AfxCanvCtor,
     (void*)_AfxCanvDtor,
-    "Canvas",
+    .event = _SglCanvEventHandler,
+    .eventFilter = _SglCanvEventFilter,
+    "afxCanvas",
     &_AfxStdCanvImpl
 };

@@ -54,6 +54,7 @@ AFX afxUri const*   AfxResourceExcerptName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
 AFX afxError        AfxResourceLoad(afxResource res); // find or load (if not found on dictionaries).
 AFX afxError        AfxResourceRequest(afxResource res);
+AFX afxError        AfxResourceDispense(afxResource res);
 AFX afxError        AfxResourceUnload(afxResource res);
 
 // Deveria emitir sinal AFX_EVENT_RES_CHANGED, para avisar observadores que o recurso necessita de ser reinstanciado.

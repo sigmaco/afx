@@ -1221,7 +1221,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 }
             }
 
-            AfxObjectSignal(&dout->obj, AFX_EVENT_DOUT_DRAGNDROP, &fdrop);
+            AfxObjectSignalConnections(&dout->obj, AFX_EVENT_DOUT_DRAGNDROP, &fdrop);
 
             for (i = 0; i < AfxArrayGetPop(&fdrop.files); i++)
             {
@@ -1556,7 +1556,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
 
     afxString name, author, website, note;
     afxDrawDriverFeatures const features = { 0 };
-    afxDrawDriverSpecification spec;
+    afxDrawDriverSpecification spec = { 0 };
     spec.name = AfxStringMap(&name, "SIGGL", 0);
     spec.author = AfxStringMap(&author, "SIGMA Technology Group", 0);
     spec.website = AfxStringMap(&website, "www.sigmaco.org", 0);
@@ -1569,6 +1569,8 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
     spec.dctxMaxCnt = 0;
     spec.dctxCtor = (void*)_AfxDctxCtor;
     spec.dctxDtor = (void*)_AfxDctxDtor;
+    spec.dctxEvent = (void*)_SglDctxEventHandler;
+    spec.dctxEventFilter = (void*)_SglDctxEventFilter;
     spec.dctxVmt = &_AfxStdDctxImpl;
     spec.process = _AfxDdrvProcessFn;
     

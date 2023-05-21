@@ -350,6 +350,25 @@ _SGL afxMemory _AfxDrawContextGetMemory(afxDrawContext dctx)
     return dctx->genrlMem;
 }
 
+_SGL afxBool _SglDctxEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawContext dctx = (void*)obj;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglDctxEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawContext dctx = (void*)obj;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxDctxDtor(afxDrawContext dctx)
 {
     AfxEntry("dctx=%p", dctx);

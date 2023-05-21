@@ -949,6 +949,25 @@ _SGL afxError _AfxTextureUpdateRegions(afxTexture tex, afxNat cnt, afxTextureReg
     return err;
 }
 
+_SGL afxBool _SglTexEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxTexture tex = (void*)obj;
+    AfxAssertObject(tex, AFX_FCC_TEX);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglTexEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxTexture tex = (void*)obj;
+    AfxAssertObject(tex, AFX_FCC_TEX);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxTexDtor(afxTexture tex)
 {
     afxError err = NIL;
@@ -1222,6 +1241,8 @@ afxClassSpecification const _AfxTexClassSpec =
     NIL,
     (void*)_AfxTexCtor,
     (void*)_AfxTexDtor,
-    "Texture",
+    .event = _SglTexEventHandler,
+    .eventFilter = _SglTexEventFilter,
+    "afxTexture",
     &_AfxStdTexImpl
 };

@@ -35,6 +35,9 @@ AFX_DECLARE_STRUCT(afxObject);
 AFX_DECLARE_STRUCT(afxClass);
 AFX_DECLARE_STRUCT(afxEvent);
 
+#define _AFX_CLASS_LEVEL_MASK 0xF
+#define _AFX_CLASS_BASE_LEVEL 1 // 0 is reserved for afxObject only stuff
+
 // A afxClass is a model for something which explains it or shows how it canv be produced.
 
 AFX_DEFINE_STRUCT(afxClass)
@@ -43,6 +46,8 @@ AFX_DEFINE_STRUCT(afxClass)
     afxFcc          objFcc;
     afxLinkage      base; // inherit this object.
     afxChain        deriveds;
+    afxNat          level;
+    afxNat          levelMask;
 
     afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
     void*           all; // afxMemory
@@ -53,7 +58,8 @@ AFX_DEFINE_STRUCT(afxClass)
     afxError        (*input)(afxObject* obj, void* ios);
     
     afxBool         (*event)(afxObject *obj, afxEvent *ev);
-
+    afxBool         (*eventFilter)(afxObject *obj, afxObject *watched, afxEvent *ev);
+    
     afxTransistor   transitor;
     afxChain        instances;
 
@@ -86,6 +92,8 @@ AFX_DEFINE_STRUCT(afxClassSpecification)
     afxClass*       base;
     afxError        (*ctor)(afxObject* obj, void const *paradigm);
     afxError        (*dtor)(afxObject* obj);
+    afxBool         (*event)(afxObject *obj, afxEvent *ev);
+    afxBool         (*eventFilter)(afxObject *obj, afxObject *watched, afxEvent *ev);
     afxChar const*  name;
     void const*     vmt;
 };

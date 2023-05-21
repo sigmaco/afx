@@ -226,6 +226,25 @@ _SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputS
     return din;
 }
 
+_SGL afxBool _SglDinEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawInput din = (void*)obj;
+    AfxAssertObject(din, AFX_FCC_DIN);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglDinEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawInput din = (void*)obj;
+    AfxAssertObject(din, AFX_FCC_DIN);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxDinDtor(afxDrawInput din)
 {
     AfxEntry("din=%p", din);
@@ -373,6 +392,8 @@ afxClassSpecification const _AfxDinClassSpec =
     NIL,
     (void*)_AfxDinCtor,
     (void*)_AfxDinDtor,
-    "Draw Input",
+    .event = _SglDinEventHandler,
+    .eventFilter = _SglDinEventFilter,
+    "afxDrawInput",
     &_AfxStdDinImpl
 };

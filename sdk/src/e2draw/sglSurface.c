@@ -116,6 +116,25 @@ _SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelForma
     return surf;
 };
 
+_SGL afxBool _SglSurfEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxSurface surf = (void*)obj;
+    AfxAssertObject(surf, AFX_FCC_SURF);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglSurfEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxSurface surf = (void*)obj;
+    AfxAssertObject(surf, AFX_FCC_SURF);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxSurfDtor(afxSurface surf)
 {
     AfxEntry("surf=%p", surf);
@@ -198,6 +217,8 @@ afxClassSpecification const _AfxSurfClassSpec =
     NIL,
     (void*)_AfxSurfCtor,
     (void*)_AfxSurfDtor,
-    "Surface",
+    .event = _SglSurfEventHandler,
+    .eventFilter = _SglSurfEventFilter,
+    "afxSurface",
     &_AfxStdSurfImpl
 };

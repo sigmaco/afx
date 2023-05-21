@@ -837,6 +837,8 @@ SGL afxResult _AfxStdDoutImplCtor(afxDrawOutput dout, afxUri const *uri);
 SGL afxDctxImpl const _AfxStdDctxImpl;
 SGL afxError _AfxDctxCtor(afxDrawContext dctx, _afxDctxCtorArgs const *args);
 SGL afxError _AfxDctxDtor(afxDrawContext dctx);
+SGL afxBool _SglDctxEventHandler(afxObject *obj, afxEvent *ev);
+SGL afxBool _SglDctxEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev);
 
 SGL afxError _SglDoutProcess(afxDrawOutput dout);
 SGL void _SglDqueProcess(afxDrawQueue dque);
