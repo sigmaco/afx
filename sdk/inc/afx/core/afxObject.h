@@ -46,7 +46,7 @@ typedef enum afxObjectFlag
     AFX_OBJ_FLAG_LOCKED = (1 << 2)
 } afxObjectFlag;
 
-//AFX afxBool (*afxObjectEventFilter)(afxObject *obj, afxObject *watched, afxEvent *ev);
+typedef afxBool (*afxEventFilterFn)(afxObject *obj, afxObject *watched, afxEvent *ev);
 
 AFX_DEFINE_STRUCT(afxObject)
 {
@@ -56,12 +56,22 @@ AFX_DEFINE_STRUCT(afxObject)
     afxList             signaling; // slot holders
     afxList             handling; // slot helds
     
-    afxList             filters;
-    afxList             filtering;
-    afxBool             (*event)(afxObject *obj, afxEvent *ev);
+    afxChain            *watchers;
+    afxChain            *watching;
     afxNat32            tid;
     afxObjectFlag       flags;
 };
+
+AFX_DEFINE_STRUCT(afxEventFilter)
+{
+    afxLinkage          holder; // obj->watching
+    afxLinkage          watched; // obj->watchers
+    //afxEventFilterFn    fn;
+};
+
+AFX afxError AfxObjectInstallEventFilter(afxObject *obj, afxObject *filter); // if filter is already filtering this object, callback will be replaced.
+AFX afxError AfxObjectRemoveEventFilter(afxObject *obj, afxObject *filter);
+AFX afxBool AfxObjectEmitEvent(afxObject *obj, afxEvent *ev);
 
 AFX_DEFINE_STRUCT(afxConnection)
 {
@@ -100,7 +110,7 @@ AFX afxInt32            AfxObjectGetRefCount(afxObject const *obj);
 
 AFX afxNat32            AfxObjectGetTid(afxObject const *obj);
 
-AFX afxResult           AfxObjectSignal(afxObject *obj, afxEventType evtype, void *data);
+AFX afxResult           AfxObjectSignalConnections(afxObject *obj, afxEventType evtype, void *data);
 AFX afxConnection*      AfxObjectConnect(afxObject *obj, afxObject *holder, void(*handler)(afxObject*,afxEvent*), afxNat32 filter, afxConnection *objc);
 AFX afxResult           AfxObjectDisconnect(afxObject *obj, afxObject *holder, void(*handler)(afxObject*,afxEvent*));
 

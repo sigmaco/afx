@@ -53,6 +53,25 @@ afxPiprImpl const _AfxStdPiprImpl =
     _AfxPipelineRigEnumerateTemplates
 };
 
+_SGL afxBool _SglPiprEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxPipelineRig pipr = (void*)obj;
+    AfxAssertObject(pipr, AFX_FCC_PIPR);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglPiprEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxPipelineRig pipr = (void*)obj;
+    AfxAssertObject(pipr, AFX_FCC_PIPR);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxPiprDtor(afxPipelineRig pipr)
 {
     AfxEntry("pipr=%p", pipr);
@@ -169,6 +188,8 @@ afxClassSpecification const _AfxPiprClassSpec =
     NIL,
     (void*)_AfxPiprCtor,
     (void*)_AfxPiprDtor,
-    "Pipeline Rig",
+    .event = _SglPiprEventHandler,
+    .eventFilter = _SglPiprEventFilter,
+    "afxPipelineRig",
     &_AfxStdPiprImpl
 };

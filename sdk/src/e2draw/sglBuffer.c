@@ -410,6 +410,25 @@ _SGL afxBuffer _AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecif
     return buf;
 }
 
+_SGL afxBool _SglBufEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxBuffer buf = (void*)obj;
+    AfxAssertObject(buf, AFX_FCC_BUF);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglBufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxBuffer buf = (void*)obj;
+    AfxAssertObject(buf, AFX_FCC_BUF);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxBufDtor(afxBuffer buf)
 {
     afxError err = NIL;
@@ -500,6 +519,8 @@ afxClassSpecification const _AfxBufClassSpec =
     NIL,
     (void*)_AfxBufCtor,
     (void*)_AfxBufDtor,
-    "Buffer",
+    .event = _SglBufEventHandler,
+    .eventFilter = _SglBufEventFilter,
+    "afxBuffer",
     &_SglBufImpl
 };

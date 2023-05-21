@@ -215,6 +215,25 @@ _SGL afxError _AfxLegoUpdate(afxLego lego, afxNat cnt, afxLegoData const data[])
     return err;
 }
 
+_SGL afxBool _SglLegoEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxLego lego = (void*)obj;
+    AfxAssertObject(lego, AFX_FCC_LEGO);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglLegoEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxLego lego = (void*)obj;
+    AfxAssertObject(lego, AFX_FCC_LEGO);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxLegoDtor(afxLego lego)
 {
     AfxEntry("lego=%p", lego);
@@ -227,6 +246,25 @@ _SGL afxError _AfxLegoDtor(afxLego lego)
     AfxObjectRelease(&legt->obj);
 
     return err;
+}
+
+_SGL afxBool _SglLegtEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxLegoTemplate legt = (void*)obj;
+    AfxAssertObject(legt, AFX_FCC_LEGT);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglLegtEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxLegoTemplate legt = (void*)obj;
+    AfxAssertObject(legt, AFX_FCC_LEGT);
+    (void)watched;
+    (void)ev;
+    return FALSE;
 }
 
 _SGL afxError _AfxLegtDtor(afxLegoTemplate legt)
@@ -461,7 +499,9 @@ afxClassSpecification const _AfxLegoClassSpec =
     NIL,
     (void*)_AfxLegoCtor,
     (void*)_AfxLegoDtor,
-    "Lego",
+    .event = _SglLegoEventHandler,
+    .eventFilter = _SglLegoEventFilter,
+    "afxLego",
     &_AfxStdLegoImpl
 };
 
@@ -474,6 +514,8 @@ afxClassSpecification const _AfxLegtClassSpec =
     NIL,
     (void*)_AfxLegtCtor,
     (void*)_AfxLegtDtor,
-    "Lego Template",
+    .event = _SglLegtEventHandler,
+    .eventFilter = _SglLegtEventFilter,
+    "afxLegoTemplate",
     NIL
 };

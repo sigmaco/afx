@@ -286,6 +286,25 @@ _SGL afxDrawOutput _AfxDrawContextAcquireOutput(afxDrawContext dctx, afxWhd cons
     return dout;
 }
 
+_SGL afxBool _SglDoutEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawOutput dout = (void*)obj;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglDoutEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawOutput dout = (void*)obj;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxDoutDtor(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
@@ -629,6 +648,8 @@ afxClassSpecification const _AfxDoutClassSpec =
     NIL,
     (void*)_AfxDoutCtor,
     (void*)_AfxDoutDtor,
-    "Draw Output",
+    .event = _SglDoutEventHandler,
+    .eventFilter = _SglDoutEventFilter,
+    "afxDrawOutput",
     &_AfxStdDoutWndImpl
 };

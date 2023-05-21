@@ -452,6 +452,25 @@ _SGL afxDrawScript _AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle)
     return dscr;
 }
 
+_SGL afxBool _SglDscrEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawScript dscr = (void*)obj;
+    AfxAssertObject(dscr, AFX_FCC_DSCR);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglDscrEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxDrawScript dscr = (void*)obj;
+    AfxAssertObject(dscr, AFX_FCC_DSCR);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxDscrDtor(afxDrawScript dscr)
 {
     AfxEntry("dscr=%p", dscr);
@@ -508,6 +527,8 @@ afxClassSpecification const _AfxDscrClassSpec =
     NIL,
     (void*)_AfxDscrCtor,
     (void*)_AfxDscrDtor,
-    "Draw Script",
+    .event = _SglDscrEventHandler,
+    .eventFilter = _SglDscrEventFilter,
+    "afxDrawScript",
     &_AfxDscrImpl
 };

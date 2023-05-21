@@ -162,6 +162,45 @@ _SGL afxShaderStage _AfxShaderGetStage(afxShader shd)
     return shd->stage;
 }
 
+_SGL afxBool _SglShdEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxShader shd = (void*)obj;
+    AfxAssertObject(shd, AFX_FCC_SHD);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglShdEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxShader shd = (void*)obj;
+    AfxAssertObject(shd, AFX_FCC_SHD);
+    (void)watched;
+    (void)ev;
+
+    if (ev->type == AFX_EVENT_OBJ_DESTROYED)
+    {
+        afxFcc fcc = AfxObjectGetFcc(watched);
+
+        if (fcc == AFX_FCC_LEGT)
+        {
+            for (afxNat i = 0; i < shd->legtCnt; i++)
+            {
+                afxLegoTemplate legt = shd->legt[i];
+                AfxAssertObject(legt, AFX_FCC_LEGT);
+
+                if (legt == watched)
+                {
+                    shd->legt[i] = NIL;
+                }
+            }
+        }
+    }
+
+    return FALSE;
+}
+
 _SGL afxError _AfxShdDtor(afxShader shd)
 {
     afxError err = NIL;
@@ -184,8 +223,12 @@ _SGL afxError _AfxShdDtor(afxShader shd)
     for (afxNat i = 0; i < shd->legtCnt; i++)
     {
         afxLegoTemplate legt = shd->legt[i];
-        AfxAssertObject(legt, AFX_FCC_LEGT);
-        AfxObjectRelease(&legt->obj);
+
+        if (legt)
+        {
+            AfxAssertObject(legt, AFX_FCC_LEGT);
+            AfxObjectRelease(&legt->obj);
+        }
     }
 
     if (shd->code)
@@ -342,20 +385,28 @@ _SGL afxError _AfxShdCtor(afxShader shd, _afxShdCtorArgs *args)
                 }
             }
 
-            if (!bindDeclCnt)
-                shd->legt[shd->legtCnt] = NIL;
+            if (!bindDeclCnt) shd->legt[shd->legtCnt] = NIL;
             else
             {
                 if (!(shd->legt[shd->legtCnt] = AfxDrawContextBuildLegoTemplate(args->dctx, bindDeclCnt, bindDecl)))
                 {
                     AfxThrowError();
-                    break;
                 }
                 else
                 {
-                    ++shd->legtCnt;
+                    if (AfxObjectInstallEventFilter(&(shd->legt[shd->legtCnt]->obj), &shd->obj))
+                    {
+                        AfxThrowError();
+                    }
+                    else
+                    {
+                        ++shd->legtCnt;
+                    }
                 }
             }
+
+            if (err)
+                break;
         }
         
         if (!err)
@@ -481,6 +532,8 @@ afxClassSpecification const _AfxShdClassSpec =
     NIL,
     (void*)_AfxShdCtor,
     (void*)_AfxShdDtor,
-    "Shader",
+    .event = _SglShdEventHandler,
+    .eventFilter = _SglShdEventFilter,
+    "afxShader",
     &_AfxStdShdImpl
 };

@@ -151,6 +151,25 @@ _SGL afxSampler _AfxDrawContextAcquireSampler(afxDrawContext dctx, afxSamplerSpe
     return smp;
 }
 
+_SGL afxBool _SglSmpEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxSampler smp = (void*)obj;
+    AfxAssertObject(smp, AFX_FCC_SMP);
+    (void)ev;
+    return FALSE;
+}
+
+_SGL afxBool _SglSmpEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = NIL;
+    afxSampler smp = (void*)obj;
+    AfxAssertObject(smp, AFX_FCC_SMP);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
 _SGL afxError _AfxSmpDtor(afxSampler smp)
 {
     afxError err = NIL;
@@ -221,6 +240,8 @@ afxClassSpecification const _AfxSmpClassSpec =
     NIL,
     (void*)_AfxSmpCtor,
     (void*)_AfxSmpDtor,
-    "Sampler",
+    .event = _SglSmpEventHandler,
+    .eventFilter = _SglSmpEventFilter,
+    "afxSampler",
     &_AfxStdSmpImpl
 };

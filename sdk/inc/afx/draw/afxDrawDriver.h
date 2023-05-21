@@ -100,6 +100,8 @@ AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
     afxNat                      dctxMaxCnt;
     afxError                    (*dctxCtor)(afxDrawContext dctx, void *args);
     afxError                    (*dctxDtor)(afxDrawContext dctx);
+    afxBool                     (*dctxEvent)(afxObject *obj, afxEvent *ev);
+    afxBool                     (*dctxEventFilter)(afxObject *obj, afxObject *watched, afxEvent *ev);
     void const*                 dctxVmt;
     afxError                    (*process)(afxDrawDriver ddrv); // things to be processed on main thread
     void*                       idd;
