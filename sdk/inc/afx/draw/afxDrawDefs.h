@@ -24,6 +24,7 @@
 #include "afx/core/io/afxStream.h"
 
 AFX_DEFINE_HANDLE(afxDrawSystem); // exception
+AFX_DEFINE_HANDLE(afxDrawContext);
 
 typedef afxNat afxSimd(afxWhd[3]);
 typedef afxReal afxSimd(afxNdc[3]);
@@ -190,11 +191,10 @@ typedef enum
 
 typedef enum afxVertexFormat
 {
-    AFX_VTX_FMT_X32,
-    AFX_VTX_FMT_XY32,
-    AFX_VTX_FMT_XYZ32,
-    AFX_VTX_FMT_XYZW32,
-    AFX_VTX_FMT_XYZW32Q, // quaternion
+    AFX_VTX_FMT_REAL,
+    AFX_VTX_FMT_V2D,
+    AFX_VTX_FMT_V3D,
+    AFX_VTX_FMT_V4D,
 
     AFX_VTX_FMT_TOTAL
 } afxVertexFormat;
@@ -216,9 +216,9 @@ AFX afxString const g_str_Qwadro;
 AFX afxString const g_str_Draw;
 AFX afxString const g_str_Shader;
 AFX afxString const g_str_Include;
-AFX afxString const g_str_DeclareResource;
-AFX afxString const g_str_DeclareIn;
-AFX afxString const g_str_DeclareOut;
+AFX afxString const g_str_Resource;
+AFX afxString const g_str_In;
+AFX afxString const g_str_Out;
 AFX afxString const g_str_stage;
 AFX afxString const g_str_name;
 AFX afxString const g_str_entry;
@@ -239,6 +239,36 @@ AFX afxString const g_str_Pass;
 AFX afxString const g_str_Rasterization;
 AFX afxString const g_str_DepthHandling;
 AFX afxString const g_str_Input;
+
+AFX afxString const g_str_DepthClampEnable;
+AFX afxString const g_str_RasterizerDiscardEnable;
+AFX afxString const g_str_FillMode;
+AFX afxString const g_str_CullMode;
+AFX afxString const g_str_FrontFace;
+AFX afxString const g_str_DepthBias;
+AFX afxString const g_str_LineWidth;
+
+AFX afxString const g_str_DepthTestEnable;
+AFX afxString const g_str_DepthWriteEnable;
+AFX afxString const g_str_DepthCompareOp;
+AFX afxString const g_str_DepthBoundsTest;
+AFX afxString const g_str_StencilTest;
+AFX afxString const g_str_Front;
+AFX afxString const g_str_Back;
+AFX afxString const g_str_fail;
+AFX afxString const g_str_pass;
+AFX afxString const g_str_depthFail;
+AFX afxString const g_str_compare;
+AFX afxString const g_str_min;
+AFX afxString const g_str_max;
+
+AFX afxString const g_str_true;
+AFX afxString const g_str_false;
+
+AFX afxString const g_str_enable;
+AFX afxString const g_str_constant;
+AFX afxString const g_str_slope;
+AFX afxString const g_str_clamp;
 
 
 AFX afxPrimTopology         AfxFindPrimitiveTopology(afxString const *str);

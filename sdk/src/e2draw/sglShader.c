@@ -22,12 +22,6 @@
 #include "afx/core/afxSystem.h"
 #include "afx/core/io/afxUri.h"
 
-typedef struct
-{
-    afxDrawContext dctx;
-    afxShaderBlueprint const* blueprint;
-} _afxShdCtorArgs;
-
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +29,7 @@ typedef struct
 _SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage)
 {
     //AfxEntry("shd=%p", shd);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
 
     sglVmt const* gl = &dque->wglVmt;
@@ -98,7 +92,7 @@ _SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage s
 
 _SGL afxError _AfxShaderDownload(afxShader shd, afxUri const *uri)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
     AfxAssertType(uri, AFX_FCC_URI);
     AfxAssert(!(AfxUriIsBlank(uri)));
@@ -129,7 +123,7 @@ _SGL afxError _AfxShaderDownload(afxShader shd, afxUri const *uri)
 
 _SGL afxError _AfxShaderSerialize(afxShader shd, afxStream ios)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
     AfxAssertObject(ios, AFX_FCC_IOS);
 
@@ -138,33 +132,52 @@ _SGL afxError _AfxShaderSerialize(afxShader shd, afxStream ios)
     return err;
 }
 
-_SGL afxNat _AfxShaderGetLegoTemplateCount(afxShader shd)
+_SGL afxNat _AfxShaderGetInterfaceCount(afxShader shd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
-    return shd->legtCnt;
+    return shd->resDeclCnt;
 }
 
-_SGL afxLegoTemplate _AfxShaderGetLegoTemplate(afxShader shd, afxNat idx)
+_SGL afxResult _AfxShaderDescribeInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
-    AfxAssert(shd->legtCnt > idx);
-    afxLegoTemplate legt = shd->legt[idx];
-    AfxAssertObject(legt, AFX_FCC_LEGT);
-    return legt;
+    AfxAssert(rsrc);
+    AfxAssert(cnt);
+    AfxAssert(first < shd->resDeclCnt);
+    AfxAssert(first + cnt <= shd->resDeclCnt);
+    afxResult rslt = 0;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        rsrc[i].set = shd->resDecls[first + i].set;
+        rsrc[i].binding = shd->resDecls[first + i].binding;
+        rsrc[i].type = shd->resDecls[first + i].type;
+        rsrc[i].cnt = shd->resDecls[first + i].cnt;
+        rsrc[i].name = shd->resDecls[first + i].name;
+        ++rslt;
+    }
+    return rslt;
 }
 
 _SGL afxShaderStage _AfxShaderGetStage(afxShader shd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
     return shd->stage;
 }
 
+_SGL afxUri const* _AfxShaderGetUri(afxShader shd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(shd, AFX_FCC_SHD);
+    return shd->uri;
+}
+
 _SGL afxBool _SglShdEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxShader shd = (void*)obj;
     AfxAssertObject(shd, AFX_FCC_SHD);
     (void)ev;
@@ -173,38 +186,22 @@ _SGL afxBool _SglShdEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglShdEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxShader shd = (void*)obj;
     AfxAssertObject(shd, AFX_FCC_SHD);
     (void)watched;
     (void)ev;
-
-    if (ev->type == AFX_EVENT_OBJ_DESTROYED)
-    {
-        afxFcc fcc = AfxObjectGetFcc(watched);
-
-        if (fcc == AFX_FCC_LEGT)
-        {
-            for (afxNat i = 0; i < shd->legtCnt; i++)
-            {
-                afxLegoTemplate legt = shd->legt[i];
-                AfxAssertObject(legt, AFX_FCC_LEGT);
-
-                if (legt == watched)
-                {
-                    shd->legt[i] = NIL;
-                }
-            }
-        }
-    }
 
     return FALSE;
 }
 
 _SGL afxError _AfxShdDtor(afxShader shd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
+
+    afxDrawContext dctx = AfxShaderGetContext(shd);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
 
     if (shd->glHandle)
     {
@@ -220,15 +217,26 @@ _SGL afxError _AfxShdDtor(afxShader shd)
         shd->glProgHandle[0] = 0;
     }
 
-    for (afxNat i = 0; i < shd->legtCnt; i++)
+    if (shd->resDecls)
     {
-        afxLegoTemplate legt = shd->legt[i];
-
-        if (legt)
+        for (afxNat j = 0; j < shd->resDeclCnt; j++)
         {
-            AfxAssertObject(legt, AFX_FCC_LEGT);
-            AfxObjectRelease(&legt->obj);
+            if (shd->resDecls[j].name)
+                AfxStringDeallocate(shd->resDecls[j].name);
         }
+
+        AfxDeallocate(mem, shd->resDecls);
+    }
+
+    if (shd->ioDecls)
+    {
+        for (afxNat j = 0; j < shd->ioDeclCnt; j++)
+        {
+            if (shd->ioDecls[j].semantic)
+                AfxStringDeallocate(shd->ioDecls[j].semantic);
+        }
+
+        AfxDeallocate(mem, shd->ioDecls);
     }
 
     if (shd->code)
@@ -240,6 +248,10 @@ _SGL afxError _AfxShdDtor(afxShader shd)
 
         AfxDeallocate(mem, shd->code);
     }
+
+    if (shd->uri)
+        AfxUriDeallocate(shd->uri);
+
     return err;
 }
 
@@ -247,278 +259,114 @@ _SGL afxShdImpl const _AfxStdShdImpl;
 
 afxShdImpl const _AfxStdShdImpl =
 {
+    _AfxShaderGetUri,
     _AfxShaderGetStage,
-    _AfxShaderGetLegoTemplate,
-    _AfxShaderGetLegoTemplateCount,
+    _AfxShaderDescribeInterfaces,
+    _AfxShaderGetInterfaceCount,
     _AfxShaderDownload,
     _AfxShaderSerialize
 };
 
-_SGL afxError _AfxShdCtor(afxShader shd, _afxShdCtorArgs *args)
+_SGL afxError _AfxShdCtor(void *cache, afxNat idx, afxShader shd, afxShaderBlueprint const *blueprints)
 {
     AfxEntry("shd=%p", shd);
-    afxError err = NIL;
-    AfxAssertObject(args->dctx, AFX_FCC_DCTX);
-    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(args->dctx);
+    afxError err = AFX_ERR_NONE;
+    afxDrawContext dctx = AfxObjectGetProvider(&shd->obj);
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObject(dsys, AFX_FCC_DSYS);
     afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
     AfxAssertObject(fsys, AFX_FCC_FSYS);
 
-    afxMemory mem = AfxDrawContextGetMemory(args->dctx);
+    afxMemory mem = AfxDrawContextGetMemory(dctx);
     AfxAssertObject(mem, AFX_FCC_MEM);
 
-    afxShaderBlueprint const *blueprint = args->blueprint;
-    AfxString32(&shd->name, &blueprint->name.str);
+    afxShaderBlueprint const *blueprint = &blueprints[idx];
+
+    shd->uri = AfxUriIsBlank(&blueprint->uri.uri) ? NIL : AfxUriClone(&blueprint->uri.uri);
 
     shd->stage = blueprint->stage;
 
-    static afxString l_str_main = AFX_STRING("main");
-    AfxString8(&shd->entry, AfxStringIsEmpty(&blueprint->entry.str) ? &l_str_main : &blueprint->entry.str);
+    shd->entry = AfxStringIsEmpty(&blueprint->entry.str) ? NIL : AfxStringClone(&blueprint->entry.str);
 
     shd->code = NIL;
-    shd->codeLen = 0;
-    afxByte *bytecode;
+    afxNat codeLen = AfxArrayGetPop(&blueprint->codes);
 
-    AfxAssert(blueprint->srcCnt <= sizeof(blueprint->srcs) / sizeof(blueprint->srcs[0]));
-
-    for (afxNat i = 0; i < blueprint->srcCnt; i++)
+    if (codeLen && !(shd->code = AfxAllocate(mem, codeLen, AfxSpawnHint()))) AfxThrowError();
+    else
     {
-        AfxAssert(i <= sizeof(blueprint->srcs) / sizeof(blueprint->srcs[0]));
-
-        switch (blueprint->srcs[i].type)
-        {
-        case AFX_FCC_NIL:
-        {
-            afxNat siz = blueprint->srcs[i].data.range;
-
-            if (!(bytecode = AfxReallocate(mem, shd->code, shd->codeLen + siz, AfxSpawnHint()))) AfxThrowError();
-            else
-            {
-                AfxAssert(blueprint->srcs[i].data.start);
-                AfxCopy(&bytecode[shd->codeLen], blueprint->srcs[i].data.start, siz);
-                shd->codeLen += siz;
-                bytecode[shd->codeLen] = '\0';
-                shd->code = bytecode;
-            }
-            break;
-        }
-        case AFX_FCC_URI:
-        {
-            afxFile file;
-            AfxAssertType(&blueprint->srcs[i].uri, AFX_FCC_URI);
-
-            if (!(file = AfxFileSystemOpenReadableFile(fsys, &blueprint->srcs[i].uri))) AfxThrowError();
-            else
-            {
-                AfxAssertObject(file, AFX_FCC_FILE);
-                afxNat size = AfxStreamMeasure(&file->ios);
-                AfxAssert(size);
-
-                if (!(bytecode = AfxReallocate(mem, shd->code, shd->codeLen + size, AfxSpawnHint()))) AfxThrowError();
-                else
-                {
-                    if (AfxStreamRead(&file->ios, &bytecode[shd->codeLen], size)) AfxThrowError();
-                    else
-                    {
-                        shd->codeLen += size;
-                        bytecode[shd->codeLen] = '\0';
-                    }
-                    shd->code = bytecode;
-                }
-                AfxObjectRelease(&file->ios.obj);
-            }
-            break;
-        }
-        case AFX_FCC_IOS:
-        {
-            afxNat range = blueprint->srcs[i].stream.range;
-            AfxAssert(range);
-
-            if (!(bytecode = AfxReallocate(mem, shd->code, shd->codeLen + range, AfxSpawnHint()))) AfxThrowError();
-            else
-            {
-                afxStream ios = blueprint->srcs[i].stream.ios;
-                AfxAssertObject(ios, AFX_FCC_IOS);
-                afxSize offset = blueprint->srcs[i].stream.offset;
-                afxNat posn = AfxStreamAsk(ios);
-                
-                if (AfxStreamGoToBegin(ios, offset)) AfxThrowError();
-                else
-                {
-                    if (AfxStreamRead(ios, &bytecode[shd->codeLen], range)) AfxThrowError();
-                    else
-                    {
-                        shd->codeLen += range;
-                        bytecode[shd->codeLen] = '\0';
-                    }
-                }
-                AfxStreamGoToBegin(ios, (afxInt)posn);
-                shd->code = bytecode;
-            }
-            break;
-        }
-        default: AfxThrowError(); break;
-        }
+        AfxAssertType(&blueprint->codes, AFX_FCC_ARR);
+        AfxCopy(shd->code, AfxArrayGetPool(&blueprint->codes), codeLen);
     }
+
+    shd->codeLen = codeLen;
+    //shd->code[shd->codeLen] = '\0';
 
     AfxComment("%.*s", shd->codeLen, shd->code);
 
     if (!err)
     {
-        shd->legtCnt = 0;
+        shd->resDeclCnt = 0;
+        shd->resDecls = NIL;
 
-        for (afxNat i = 0; i < _SGL_MAX_LEGO_PER_BIND; i++)
+        afxNat resDeclCnt = AfxArrayGetPop(&blueprint->resources);
+
+        if (resDeclCnt && !(shd->resDecls = AfxAllocate(mem, resDeclCnt * sizeof(shd->resDecls[0]), AfxSpawnHint()))) AfxThrowError();
+        else
         {
-            afxNat bindDeclCnt = 0;
-            afxLegoBindingDecl bindDecl[_SGL_MAX_ENTRY_PER_LEGO];
-
-            for (afxNat j = 0; j < blueprint->resDeclCnt; j++)
+            for (afxNat j = 0; j < resDeclCnt; j++)
             {
-                if (blueprint->resDecls[j].set == i)
-                {
-                    bindDecl[bindDeclCnt].binding = blueprint->resDecls[j].binding;
-                    bindDecl[bindDeclCnt].visibility = blueprint->resDecls[j].visibility;
-                    bindDecl[bindDeclCnt].type = blueprint->resDecls[j].type;
-                    bindDecl[bindDeclCnt].cnt = blueprint->resDecls[j].cnt;
-                    bindDecl[bindDeclCnt].name = &blueprint->resDecls[j].name.str;
-                    ++bindDeclCnt;
-                }
+                afxShaderBlueprintResource const *decl = AfxArrayGetElement(&blueprint->resources, j);
+                shd->resDecls[j].set = decl->set;
+                AfxAssert(_SGL_MAX_LEGO_PER_BIND > shd->resDecls[j].set);
+                shd->resDecls[j].binding = decl->binding;
+                AfxAssert(_SGL_MAX_ENTRY_PER_LEGO > shd->resDecls[j].binding);
+                //shd->resDecls[j].visibility = decl->visibility;
+                shd->resDecls[j].type = decl->type;
+                AfxAssert(shd->resDecls[j].type != AFX_SHD_RES_TYPE_OUTPUT);
+                shd->resDecls[j].cnt = decl->cnt;
+                shd->resDecls[j].name = decl->name && !AfxStringIsEmpty(decl->name) ? AfxStringClone(decl->name) : NIL;
+                ++shd->resDeclCnt;
             }
-
-            if (!bindDeclCnt) shd->legt[shd->legtCnt] = NIL;
-            else
-            {
-                if (!(shd->legt[shd->legtCnt] = AfxDrawContextBuildLegoTemplate(args->dctx, bindDeclCnt, bindDecl)))
-                {
-                    AfxThrowError();
-                }
-                else
-                {
-                    if (AfxObjectInstallEventFilter(&(shd->legt[shd->legtCnt]->obj), &shd->obj))
-                    {
-                        AfxThrowError();
-                    }
-                    else
-                    {
-                        ++shd->legtCnt;
-                    }
-                }
-            }
-
-            if (err)
-                break;
         }
         
         if (!err)
         {
-            shd->inDeclCnt = 0;
-
-            for (afxNat i = 0; i < blueprint->inDeclCnt; i++)
+            afxNat ioCnt = AfxArrayGetPop(&blueprint->inOuts);
+            shd->ioDeclCnt = 0;
+            shd->ioDecls = NIL;
+            
+            if (ioCnt && !(shd->ioDecls = AfxAllocate(mem, ioCnt * sizeof(shd->ioDecls[0]), AfxSpawnHint()))) AfxThrowError();
+            else
             {
-                shd->inDecls[i] = blueprint->inDecls[i];
-                ++shd->inDeclCnt;
+                for (afxNat i = 0; i < ioCnt; i++)
+                {
+                    afxShaderBlueprintInOut* ioBp = AfxArrayGetElement(&blueprint->inOuts, i);
+                    shd->ioDecls[i] = *ioBp;
+                    shd->ioDecls[i].semantic = ioBp->semantic && !AfxStringIsEmpty(ioBp->semantic) ? AfxStringClone(ioBp->semantic) : NIL;
+                    ++shd->ioDeclCnt;
+                }
             }
 
-            shd->outDeclCnt = 0;
-
-            for (afxNat i = 0; i < blueprint->outDeclCnt; i++)
-            {
-                shd->outDecls[i] = blueprint->outDecls[i];
-                ++shd->outDeclCnt;
-            }
+            shd->topology = blueprint->topology;
 
             shd->glHandle = NIL;
             shd->glProgHandle[0] = NIL;
             shd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
             shd->compiled = FALSE;
+
+            if (err && shd->ioDecls)
+                AfxDeallocate(mem, shd->ioDecls);
         }
 
-        if (err)
-        {
-            for (afxNat i = 0; i < shd->legtCnt; i++)
-            {
-                afxLegoTemplate legt = shd->legt[i];
-                AfxAssertObject(legt, AFX_FCC_LEGT);
-                AfxObjectRelease(&legt->obj);
-            }
-        }
+        if (err && shd->resDecls)
+            AfxDeallocate(mem, shd->resDecls);
     }
 
     if (err && shd->code)
         AfxDeallocate(mem, shd->code);
 
     return err;
-}
-
-_SGL afxResult _AfxDrawContextBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[])
-{
-    afxError err = NIL;
-    AfxEntry("dctx=%p,cnt=%u,blueprint=%p,shd=%p", dctx, cnt, blueprint, shd);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(cnt);
-    AfxAssert(blueprint);
-    AfxAssert(shd);
-    afxResult rslt = NIL;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        _afxShdCtorArgs args =
-        {
-            dctx,
-            &blueprint[i]
-        };
-
-        AfxEcho("Building draw operation '%.*s'", AfxPushString(&blueprint[i].name.str));
-
-
-        if (!(shd[i] = AfxObjectAcquire(AfxDrawContextGetShaderClass(dctx), &args, AfxSpawnHint()))) AfxThrowError();
-        else
-        {
-            ++rslt;
-        }
-
-    }
-    return rslt;
-}
-
-_SGL void _SglIteratorCompareNameCiShd(afxIterator *iter)
-{
-    struct { afxUri const *name; afxObject *obj; } *data = iter->udd;
-    afxShader shd = iter->voidItem;
-
-    afxUri name;
-    AfxUriExcerptName(&name, data->name);
-
-    if (!AfxUriIsBlank(&name))
-    {
-        if (0 == AfxStringCompareCi(&shd->name.str, AfxUriGetStringConst(&name)))
-        {
-            data->obj = &shd->obj;
-            iter->abort = TRUE;
-        }
-    }
-}
-
-_SGL afxResult _AfxDrawContextFindShaders(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxShader shd[])
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(cnt);
-    AfxAssert(name);
-    AfxAssert(shd);
-    afxResult foundCnt = 0;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxAssert(!AfxUriIsBlank(&name[i]));
-
-        struct { afxUri const *name; afxObject *obj; } data = { &name[i], NIL };
-        AfxClassForEveryInstance(&dctx->shdClass, FALSE, _SglIteratorCompareNameCiShd, &data);
-
-        if ((shd[i] = (afxShader)data.obj))
-            ++foundCnt;
-    }
-    return foundCnt;
 }
 
 _SGL afxClassSpecification const _AfxShdClassSpec;

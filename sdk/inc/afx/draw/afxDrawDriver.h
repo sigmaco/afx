@@ -116,10 +116,10 @@ AFX_OBJECT(afxDrawDriver)
     afxClass                    dctxClass; // uses dque, din, dout
     afxModule                   mdle;
 
-    afxString128                name; // driver name: SIGGL
-    afxString128                author; // author: SIGMA Technology Group
-    afxString128                website; // website: sigmaco.org
-    afxString4096               note; // The standard QWADRO draw system implementation.
+    afxString const*            name; // driver name: SIGGL
+    afxString const*            author; // author: SIGMA Technology Group
+    afxString const*            website; // website: sigmaco.org
+    afxString const*            note; // The standard QWADRO draw system implementation.
     afxNat                      verMajor; // 1
     afxNat                      verMinor; // 0
     afxNat                      verPatch; // 0

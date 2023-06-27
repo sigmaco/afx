@@ -47,9 +47,11 @@ AFX_OBJECT(afxMouse)
 
 AFX void*       AfxMouseGetSystem(afxMouse mse);
 
-AFX afxResult   AfxMouseEmulateButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
-AFX afxResult   AfxMouseEmulateMotion(afxMouse mse, afxReal const motion[2]);
-AFX afxResult   AfxMouseEmulateWheelAction(afxMouse mse, afxReal delta);
+AFX afxError    AfxMouseEmulateButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
+AFX afxError    AfxMouseEmulateMotion(afxMouse mse, afxReal const motion[2]);
+AFX afxError    AfxMouseEmulateWheelAction(afxMouse mse, afxReal delta);
+AFX void        AfxMouseGetLastMotion(afxMouse mse, afxReal motion[2]);
+AFX afxReal     AfxMouseGetLastWheelData(afxMouse mse);
 AFX afxBool     AfxMouseHasHorizontalChanged(afxMouse mse, afxInt tolerance);
 AFX afxBool     AfxMouseHasVerticalChanged(afxMouse mse, afxInt tolerance);
 AFX afxBool     AfxMouseIsLmbPressed(afxMouse mse);

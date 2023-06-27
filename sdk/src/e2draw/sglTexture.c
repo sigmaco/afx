@@ -233,7 +233,7 @@ _SGL void SglToGlColorSwizzling(afxColorSwizzling const *swizzling, GLenum *arra
 
 _SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target, GLint *intFmt, GLenum *fmt, GLenum *type)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(target);
     AfxAssert(intFmt);
     AfxAssert(fmt);
@@ -292,7 +292,7 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target,
 
 _SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be bound.
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_INST) == SGL_UPD_FLAG_DEVICE_INST);
 
@@ -448,7 +448,7 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be
 
 _SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must be bound
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH) == SGL_UPD_FLAG_DEVICE_FLUSH);
 
@@ -559,13 +559,13 @@ _SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must b
 
 _SGL afxError _SglTexDtor(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("img=%p", tex);
     AfxAssertObject(tex, AFX_FCC_TEX);
 
     if (tex->glHandle)
     {
-        afxDrawContext dctx = AfxObjectGetProvider(&tex->res.obj);
+        afxDrawContext dctx = AfxObjectGetProvider(&tex->obj);
         AfxAssertObject(dctx, AFX_FCC_DCTX);
         sglVmt const* gl = &(dctx->queues[0]->wglVmt);
 
@@ -579,7 +579,7 @@ _SGL afxError _SglTexDtor(afxTexture tex)
 _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex)
 {
     //AfxEntry("img=%p", img);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     sglVmt const* gl = &dque->wglVmt;
 
     if (tex)
@@ -649,56 +649,63 @@ _SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture 
 
 _SGL afxBool _AfxTextureTestFlags(afxTexture tex, afxTextureFlag flags)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->flags & flags;
 }
 
+_SGL afxUri const* _AfxTextureGetUri(afxTexture tex)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(tex, AFX_FCC_TEX);
+    return tex->uri;
+}
+
 _SGL afxNat _AfxTextureGetLodCount(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->lodCnt;
 }
 
 _SGL afxNat _AfxTextureGetLayerCount(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->layerCnt;
 }
 
 _SGL afxColorSwizzling const* _AfxTextureGetColorSwizzling(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->swizzling;
 }
 
 _SGL afxNat _AfxTextureGetSampleCount(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->sampleCnt;
 }
 
 _SGL afxResult _AfxTextureTestUsageFlags(afxTexture tex, afxFlags flags)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->usage & flags;
 }
 
 _SGL afxPixelFormat _AfxTextureGetFormat(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     return tex->fmt;
 }
 
 _SGL afxError _AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     (void)base;
     AfxAssert(cnt);
@@ -708,7 +715,7 @@ _SGL afxError _AfxTextureGenerateLods(afxTexture tex, afxNat base, afxNat cnt)
 
 _SGL afxNat* _AfxTextureGetExtent(afxTexture tex, afxNat lod, afxWhd extent)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(tex->lodCnt > lod);
     AfxAssert(extent);
@@ -720,7 +727,7 @@ _SGL afxNat* _AfxTextureGetExtent(afxTexture tex, afxNat lod, afxWhd extent)
 
 _SGL afxError _AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const extent)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(layerCnt);
     AfxAssert(extent);
@@ -780,7 +787,7 @@ _SGL afxError _AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const
 
 _SGL afxSize _AfxTextureMeasure(afxTexture tex, afxNat baseLod, afxNat lodCnt, afxNat layerCnt, afxWhd const offset, afxWhd const extent) // can't be multiple because regions couldn't be continous.
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(tex->lodCnt >= baseLod);
     AfxAssert(tex->lodCnt >= lodCnt);
@@ -815,7 +822,7 @@ _SGL afxSize _AfxTextureMeasure(afxTexture tex, afxNat baseLod, afxNat lodCnt, a
 
 _SGL afxSize _AfxTextureGetOffset(afxTexture tex, afxNat lod, afxNat layer, afxWhd const offset)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(tex->lodCnt > lod);
     AfxAssert(tex->layerCnt > layer);
@@ -843,7 +850,7 @@ _SGL afxSize _AfxTextureGetOffset(afxTexture tex, afxNat lod, afxNat layer, afxW
 
 _SGL void _AfxTextureUnmap(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     tex->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
     tex->locked = FALSE;
@@ -851,7 +858,7 @@ _SGL void _AfxTextureUnmap(afxTexture tex)
 
 _SGL void* _AfxTextureMap(afxTexture tex, afxTextureRegion const *rgn, afxSize *size)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     // TODO implement lodIdx
     void *map = NIL;
@@ -900,7 +907,7 @@ _SGL void* _AfxTextureMap(afxTexture tex, afxTextureRegion const *rgn, afxSize *
 
 _SGL void const* _AfxTextureGetData(afxTexture tex, afxNat lod, afxNat layer, afxWhd const offset)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(tex->lodCnt > lod);
     AfxAssert(tex->layerCnt > layer);
@@ -915,7 +922,7 @@ _SGL void const* _AfxTextureGetData(afxTexture tex, afxNat lod, afxNat layer, af
 
 _SGL afxError _AfxTextureUpdateRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], void const *src[], afxPixelFormat const fmt[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     AfxAssert(cnt);
     AfxAssert(rgn);
@@ -951,7 +958,7 @@ _SGL afxError _AfxTextureUpdateRegions(afxTexture tex, afxNat cnt, afxTextureReg
 
 _SGL afxBool _SglTexEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxTexture tex = (void*)obj;
     AfxAssertObject(tex, AFX_FCC_TEX);
     (void)ev;
@@ -960,7 +967,7 @@ _SGL afxBool _SglTexEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglTexEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxTexture tex = (void*)obj;
     AfxAssertObject(tex, AFX_FCC_TEX);
     (void)watched;
@@ -970,7 +977,7 @@ _SGL afxBool _SglTexEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 
 _SGL afxError _AfxTexDtor(afxTexture tex)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("tex=%p", tex);
     AfxAssertObject(tex, AFX_FCC_TEX);
 
@@ -991,6 +998,9 @@ _SGL afxError _AfxTexDtor(afxTexture tex)
     if (tex->bytemap)
         AfxDeallocate(mem, tex->bytemap);
 
+    if (tex->uri)
+        AfxUriDeallocate(tex->uri);
+
     return err;
 }
 
@@ -1002,6 +1012,7 @@ afxTexImpl const _AfxStdTexImpl =
     //_AfxTextureMeasure,
     _AfxTextureGetExtent,
     _AfxTextureGenerateLods,
+    _AfxTextureGetUri,
     _AfxTextureGetFormat,
     _AfxTextureGetLodCount,
     _AfxTextureGetLayerCount,
@@ -1014,14 +1025,14 @@ afxTexImpl const _AfxStdTexImpl =
     _AfxTextureUpdateRegions
 };
 
-_SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
+_SGL afxError _AfxTexCtor(void *cache, afxNat idx, afxTexture tex, afxTextureBlueprint const *paradigms)
 {
     AfxEntry("tex=%p", tex);
-    afxError err = 0;
+    afxError err = AFX_ERR_NONE;
+    afxTextureBlueprint const *paradigm = &paradigms[idx];
+    afxTextureBlueprint const *texb = paradigm;
 
-    afxTextureBlueprint const *texb = paradigm->blueprint;
-
-    afxDrawContext dctx = paradigm->dctx;
+    afxDrawContext dctx = AfxObjectGetProvider(&tex->obj);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
 
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
@@ -1036,6 +1047,8 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
     tex->swizzling = &AFX_STD_COLOR_SWIZZLING;
     tex->sampleCnt = 1;
     tex->linearTiling = FALSE;
+
+    tex->uri = AfxUriIsBlank(&texb->name.uri) ? NIL : AfxUriClone(&texb->name.uri);
 
     AfxAssert(texb->layerCnt);
     tex->layerCnt = texb->layerCnt;
@@ -1112,7 +1125,7 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
                     rgn.offset[1] = 0;
                     rgn.offset[2] = 0;
                     AfxTextureGetExtent(tex, i, rgn.extent);
-                    AfxTextureUploadRegions(tex, 1, &rgn, &layer->uri);
+                    AfxTextureUploadRegions(tex, 1, &rgn, layer->uri);
                     break;
                 }
                 case AFX_FCC_IOS:
@@ -1160,74 +1173,6 @@ _SGL afxError _AfxTexCtor(afxTexture tex, afxTextureParadigm *paradigm)
             AfxDeallocate(mem, tex->bytemap);
     }
     return err;
-}
-
-_SGL afxResult _AfxDrawContextBuildTextures(afxDrawContext dctx, afxNat cnt, afxTextureBlueprint const blueprint[], afxTexture tex[])
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(cnt);
-    AfxAssert(blueprint);
-    AfxAssert(tex);
-    AfxEntry("dctx=%p,cnt=%u,blueprint=%p,tex=%p", dctx, cnt, blueprint, tex);
-    afxResult rslt = 0;
-
-    afxSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxTextureParadigm paradigm =
-        {
-            .res = { AfxObjectGetProvider(&dsys->obj), NIL },
-            dctx,
-            &blueprint[i]
-        };
-
-        if (!(tex[i] = AfxObjectAcquire(AfxDrawContextGetTextureClass(dctx), &paradigm, AfxSpawnHint()))) AfxThrowError();
-        else
-        {
-            ++rslt;
-        }
-    }
-    return rslt;
-}
-
-_SGL void _AfxIteratorCompareResourceNameCi(afxIterator *iter)
-{
-    struct { afxUri const *name; afxObject *obj; } *data = iter->udd;
-    afxResource res = iter->voidItem;
-
-    afxUri name;
-    AfxResourceExcerptName(res, &name);
-
-    if (!AfxUriIsBlank(&name))
-    {
-        if (0 == AfxStringCompareCi(AfxUriGetStringConst(data->name), AfxUriGetStringConst(&name)))
-        {
-            data->obj = &res->obj;
-            iter->abort = TRUE;
-        }
-    }
-}
-
-_SGL afxResult _AfxDrawContextFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[])
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxResult foundCnt = 0;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxAssert(!AfxUriIsBlank(&name[i]));
-
-        struct { afxUri const *name; afxObject *obj; } data = { &name[i], NIL };
-        AfxClassForEveryInstance(&dctx->texClass, FALSE, _AfxIteratorCompareResourceNameCi, &data);
-
-        if ((tex[i] = (afxTexture)data.obj))
-            ++foundCnt;
-    }
-    return foundCnt;
 }
 
 _SGL afxClassSpecification const _AfxTexClassSpec;

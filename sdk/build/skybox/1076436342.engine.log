@@ -1,0 +1,71 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxClass<afxSystem>::Register(0f28adf0, 00000000, 00000000, 0f269718)
+ afxClass<afxSystem>::AllocateInstances(1, 003cec38, 003cec48)
+ afxClass<afxSystem>::ConstructInstances(1, 003cec38, 003cec6c)
+ afxClass<afxSystem>::ConstructInstance(0012f520)
+ afxSystem.c:818?_AfxSysCtor(sys=0012f520)
+ ADV afxSystem.c:834?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:835?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Register(001305a0, 0012f554, 00000000, 0f26d93c)
+ afxClass<Memory Arena>::Register(00130648, 0012f554, 001305a0, 0f26d2c0)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=0012f520,strategy=003cd7c4,hint="afxSystem.c:853!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateInstances(1, 003cd64c, 003cd65c)
+ afxClass<afxMemory>::ConstructInstances(1, 003cd64c, 003cd640)
+ afxClass<afxMemory>::ConstructInstance(00130ca0)
+ afxMemory.c:317?_AfxMemCtor(mem=00130ca0)
+ afxClass<afxThread>::Register(001306f0, 0012f554, 00000000, 0f269de0)
+ afxClass<afxFileSystem>::Register(00130798, 0012f554, 00000000, 0f26b2b4)
+ afxFileSystem.c:564?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(0012f520,5,003cd984))
+ afxClass<afxFileSystem>::AllocateInstances(1, 003cd634, 003cd644)
+ afxClass<afxFileSystem>::ConstructInstances(1, 003cd634, 003cd62c)
+ afxClass<afxFileSystem>::ConstructInstance(001312d0)
+ afxFileSystem.c:629?_AfxFsysCtor(fsys=001312d0)
+ afxClass<afxStream>::Register(00131320, 00131308, 00000000, 0f26c6d4)
+ afxClass<afxFile>::Register(001313c8, 00131308, 00131320, 0f26b030)
+ afxClass<afxArchive>::Register(00131470, 00131308, 001313c8, 0f26a9bc)
+ afxClass<afxResource>::Register(00131668, 00131308, 00000000, 0f26c534)
+ afxClass<afxXml>::Register(00131518, 00131308, 00000000, 0f26cbcc)
+ afxClass<afxUrd>::Register(001315c0, 00131308, 00000000, 0f26caec)
+ afxFileSystem.c:395?AfxFileSystemMountStoragePoints(Afx.FileSystem.MountStoragePoints(001312d0,5,003cd984))
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 7 mounted -> "E:/qwadro/afx/system32".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ afxClass<afxModule>::Register(00130840, 0012f554, 00000000, 0f267f28)
+ afxModule.c:72?AfxSystemAcquireModule(sys=0012f520,uri=system/e2coree.dll)
+ ERR afxSystem.c:340?AfxSystemGetApplicationClass
+    
+ ERR afxSystem.c:340?AfxSystemGetApplicationClass
+    (var_)
+    Invalid
+ ERR afxClass.c:698?AfxClassAcquireObjects
+    
+ ERR afxClass.c:698?AfxClassAcquireObjects
+    (cls)
+    Invalid
+ ERR afxClass.c:333?AfxClassAllocateObjects
+    
+ ERR afxClass.c:333?AfxClassAllocateObjects
+    (cls)
+    Invalid
+ afxClass<様様様様様様様様様様様様様様様様様様様様様様>::AllocateInstances(1, 003cd5ec, 003cd634)

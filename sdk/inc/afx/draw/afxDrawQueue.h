@@ -21,20 +21,26 @@
 
 // No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
 
+AFX_DEFINE_STRUCT(afxDrawQueueSpecification)
+{
+    afxNat      idx;
+    afxBool     autonomous;
+};
+
 AFX_DEFINE_HANDLE(afxDrawQueue);
 
 #ifndef AFX_DRAW_DRIVER_SRC
 
 AFX_OBJECT(afxDrawQueue)
 {
-    afxObject           obj; // AFX_FCC_DQUE
+    afxObject   obj; // AFX_FCC_DQUE
 };
 
 #endif
 
-AFX void* AfxDrawQueueGetContext(afxDrawQueue dque);
-AFX void* AfxDrawQueueGetDriver(afxDrawQueue dque);
-AFX void* AfxDrawQueueGetDrawSystem(afxDrawQueue dque);
+AFX void*       AfxDrawQueueGetContext(afxDrawQueue dque);
+AFX void*       AfxDrawQueueGetDriver(afxDrawQueue dque);
+AFX void*       AfxDrawQueueGetDrawSystem(afxDrawQueue dque);
 
 AFX afxError    AfxDrawQueueWaitForIdle(afxDrawQueue dque);
 

@@ -120,31 +120,31 @@ AFX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
 
 AFXINL afxNat AfxPixelFormatGetBpp(afxPixelFormat pf);
 
-AFXINL afxReal* AfxColorSet(afxColor color, afxReal r, afxReal g, afxReal b, afxReal a)
+AFXINL void AfxColorSet(afxColor color, afxReal r, afxReal g, afxReal b, afxReal a)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(color);
-    return AfxV4dSet(color, r, g, b, a);
+    AfxV4dSet(color, r, g, b, a);
 }
 
-AFXINL afxReal* AfxColorCopy(afxColor color, afxColor const in)
+AFXINL void AfxColorCopy(afxColor color, afxColor const in)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(color);
     AfxAssert(in);
-    return AfxV4dCopy(color, in);
+    AfxV4dCopy(color, in);
 }
 
-AFXINL afxReal* AfxColorReset(afxColor color)
+AFXINL void AfxColorReset(afxColor color)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(color);
-    return AfxV4dReset(color);
+    AfxV4dMakeIdentity(color);
 }
 
 AFXINL afxReal* AfxColorCopyRaw(afxColor color, afxColorLayout const* layout, void* raw)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(color);
     AfxAssert(layout);
     AfxAssert(raw);

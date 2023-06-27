@@ -111,7 +111,7 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage)
 {
     //AfxEntry("buf=%p", buf);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     sglVmt const* gl = &dque->wglVmt;
     
@@ -167,10 +167,13 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
             {
             case GL_ARRAY_BUFFER:
             {
+                AfxAssert(gl->BindVertexBuffer);
+
                 if (gl->BindVertexBuffer)
                 {
                     gl->BindVertexBuffer(unit, idd->glHandle, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
                 }
+#if 0
                 else
                 {
                     gl->BindBuffer(target, idd->glHandle); _SglThrowErrorOccuried();
@@ -178,6 +181,7 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
                     AfxAssert(rangeOrVtxStride == 0);
                     AfxAssert(unit == 0);
                 }
+#endif
                 break;
             }
             case GL_ELEMENT_ARRAY_BUFFER:
@@ -206,10 +210,13 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
         {
         case GL_ARRAY_BUFFER:
         {
+            AfxAssert(gl->BindVertexBuffer);
+
             if (gl->BindVertexBuffer)
             {
                 gl->BindVertexBuffer(unit, 0, offset, rangeOrVtxStride); _SglThrowErrorOccuried();
             }
+#if 0
             else
             {
                 gl->BindBuffer(target, 0); _SglThrowErrorOccuried();
@@ -217,6 +224,7 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
                 AfxAssert(rangeOrVtxStride == 0);
                 AfxAssert(unit == 0);
             }
+#endif
             break;
         }
         case GL_ELEMENT_ARRAY_BUFFER:
@@ -246,7 +254,7 @@ _SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer b
 
 _SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(buf->siz > offset);
     AfxAssert(stride);
@@ -283,7 +291,7 @@ _SGL afxError _AfxBufferDump2(afxBuffer buf, afxSize offset, afxSize stride, afx
 
 _SGL afxError _AfxBufferDump(afxBuffer buf, afxSize base, afxSize range, void *dst)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(dst);
     AfxAssert(range);
@@ -304,12 +312,13 @@ _SGL afxError _AfxBufferDump(afxBuffer buf, afxSize base, afxSize range, void *d
 
 _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, afxNat cnt, void const *src, afxSize srcStride)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(buf->siz > offset);
     AfxAssert(stride);
     AfxAssert(buf->siz >= offset + (cnt * stride));
     AfxAssert(src);
+    AfxAssert(srcStride);
 
     sglBufIdd *idd = AfxBufferGetIdd(buf);
 
@@ -320,7 +329,7 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
 
         afxByte *bytemap = &(idd->bytemap[offset]);
 
-        if (!srcStride || srcStride == stride)
+        if (srcStride == stride)
         {
             AfxCopy(bytemap, src, (cnt * stride));
         }
@@ -330,6 +339,10 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
 
             for (afxNat i = 0; i < cnt; i++)
             {
+                AfxAssert(stride != 1 || (stride == 1 && AFX_N8_MAX >= (afxNat8)(src2[i * srcStride])));
+                AfxAssert(stride != 2 || (stride == 2 && AFX_N16_MAX >= (afxNat16)(src2[i * srcStride])));
+                AfxAssert(stride != 4 || (stride == 4 && AFX_N32_MAX >= (afxNat32)(src2[i * srcStride])));
+
                 AfxCopy(&(bytemap[i * stride]), &(src2[i * srcStride]), stride);
             }
         }
@@ -337,8 +350,8 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
         if (idd->lastUpdOffset > offset)
             idd->lastUpdOffset = offset;
 
-        if (idd->lastUpdRange < idd->lastUpdOffset + (cnt * stride))
-            idd->lastUpdRange = idd->lastUpdRange + (cnt * stride);
+        if (idd->lastUpdRange < offset + (cnt * stride))
+            idd->lastUpdRange = offset + (cnt * stride);
 
         idd->locked = FALSE;
         idd->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
@@ -348,7 +361,7 @@ _SGL afxError _AfxBufferUpdate2(afxBuffer buf, afxSize offset, afxSize stride, a
 
 _SGL afxError _AfxBufferUpdate(afxBuffer buf, afxSize base, afxSize range, void const *src)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(src);
     AfxAssert(range);
@@ -365,8 +378,8 @@ _SGL afxError _AfxBufferUpdate(afxBuffer buf, afxSize base, afxSize range, void 
         if (idd->lastUpdOffset > base)
             idd->lastUpdOffset = base;
 
-        if (idd->lastUpdRange < idd->lastUpdOffset + range)
-            idd->lastUpdRange = idd->lastUpdRange + range;
+        if (idd->lastUpdRange < base + range)
+            idd->lastUpdRange = base + range;
 
         idd->locked = FALSE;
         idd->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
@@ -376,7 +389,7 @@ _SGL afxError _AfxBufferUpdate(afxBuffer buf, afxSize base, afxSize range, void 
 
 _SGL void const* _AfxBufferGetData(afxBuffer buf, afxSize offset)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     AfxAssert(offset < buf->siz);
     sglBufIdd *idd = AfxBufferGetIdd(buf);
@@ -385,34 +398,14 @@ _SGL void const* _AfxBufferGetData(afxBuffer buf, afxSize offset)
 
 _SGL afxSize _AfxBufferGetSize(afxBuffer buf)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     return buf->siz;
 }
 
-_SGL afxBuffer _AfxDrawContextAcquireBuffer(afxDrawContext dctx, afxBufferSpecification const *spec)
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(spec);
-    //AfxEntry("dsys=%p,siz=%u,usage=%x", dsys, siz, usage);
-    afxBuffer buf = NIL;
-
-    _afxUbufCtorArgs args =
-    {
-        dctx,
-        spec
-    };
-
-    if (!(buf = AfxObjectAcquire(AfxDrawContextGetBufferClass(dctx), &args, AfxSpawnHint())))
-        AfxThrowError();
-
-    return buf;
-}
-
 _SGL afxBool _SglBufEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxBuffer buf = (void*)obj;
     AfxAssertObject(buf, AFX_FCC_BUF);
     (void)ev;
@@ -421,7 +414,7 @@ _SGL afxBool _SglBufEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglBufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxBuffer buf = (void*)obj;
     AfxAssertObject(buf, AFX_FCC_BUF);
     (void)watched;
@@ -431,7 +424,7 @@ _SGL afxBool _SglBufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 
 _SGL afxError _AfxBufDtor(afxBuffer buf)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("buf=%p", buf);
     AfxAssertObject(buf, AFX_FCC_BUF);
 
@@ -469,19 +462,19 @@ afxBufImpl const _SglBufImpl =
     NIL
 };
 
-_SGL afxError _AfxBufCtor(afxBuffer buf, _afxUbufCtorArgs *args)
+_SGL afxError _AfxBufCtor(void *cache, afxNat idx, afxBuffer buf, afxBufferSpecification const *specs)
 {
     AfxEntry("buf=%p", buf);
     afxResult err = NIL;
     AfxAssertObject(buf, AFX_FCC_BUF);
 
-    afxBufferSpecification const *spec = args->spec;
+    afxBufferSpecification const *spec = &specs[idx];
     AfxAssert(spec);
 
     buf->siz = spec->siz;
     buf->usage = spec->usage;
 
-    afxDrawContext dctx = args->dctx;
+    afxDrawContext dctx = AfxObjectGetProvider(&buf->obj);
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     afxMemory mem = AfxDrawContextGetMemory(dctx);
     AfxAssertObject(mem, AFX_FCC_MEM);

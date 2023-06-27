@@ -19,7 +19,7 @@
 
 #include "afxMathDefs.h"
 
-AFXINL afxBool      AfxTestScalarEquality(afxReal a, afxReal b) { return !!(AfxAbs(a - b) < AFX_EPSILON); }
+AFXINL afxBool      AfxRealIsEqual(afxReal a, afxReal b) { return !!(AfxAbs(a - b) < AFX_EPSILON); }
 
 AFXINL afxReal    AfxRecip(afxReal value) { return AfxScalar(1) / value; }
 

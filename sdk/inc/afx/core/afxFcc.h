@@ -63,7 +63,9 @@ typedef enum afxFcc
     //AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f'), // afxBuffer
     AFX_FCC_ARR     = AfxPackFcc('a', 'r', 'r', '\0'), // afxArray
     AFX_FCC_QUE     = AfxPackFcc('q', 'u', 'e', '\0'), // afxQueue
-    AFX_FCC_STR     = AfxPackFcc('s', 't', 'r', '\0'), // afxString
+    AFX_FCC_STR     = (('q'<<8)|'s'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
+    AFX_FCC_STRB    = (('q' << 8) | 'z'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
+#if 0
     AFX_FCC_STR0    = AfxPackFcc('s', 't', 'r', '0'), // afxString8
     AFX_FCC_STR1    = AfxPackFcc('s', 't', 'r', '1'), // afxString16
     AFX_FCC_STR2    = AfxPackFcc('s', 't', 'r', '2'), // afxString32
@@ -77,6 +79,7 @@ typedef enum afxFcc
     AFX_FCC_STRC    = AfxPackFcc('s', 't', 'r', 'c'), // afxString
     AFX_FCC_STRE    = AfxPackFcc('s', 't', 'r', 'e'), // afxString excerpt; It is just a view of another string; canv't modify data.
     AFX_FCC_STRF    = AfxPackFcc('s', 't', 'r', 'f'), // afxString
+#endif
     AFX_FCC_URI     = AfxPackFcc('u', 'r', 'i', '\0'), // afxUri
     AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', '\0'), // afxSignal
     AFX_FCC_SIGH    = AfxPackFcc('s', 'i', 'g', 'h'), // afxSignalHandler
@@ -95,6 +98,7 @@ typedef enum afxFcc
     AFX_FCC_FSSP    = AfxPackFcc('f', 's', 's', 'p'), // afxStoragePoint
     AFX_FCC_ARC     = AfxPackFcc('a', 'r', 'c', '\0'), // afxArchive
     AFX_FCC_RES     = AfxPackFcc('r', 'e', 's', '\0'), // afxResource
+    AFX_FCC_XML     = AfxPackFcc('x', 'm', 'l', '\0'), // afxXml
     AFX_FCC_URD     = AfxPackFcc('u', 'r', 'd', '\0'), // afxUrd
     AFX_FCC_STD     = AfxPackFcc('s', 't', 'd', '\0'), // for standard implementations
     AFX_FCC_LCK     = AfxPackFcc('l', 'c', 'k', '\0'), // afxTransistor
@@ -148,7 +152,7 @@ typedef enum afxFcc
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     AFX_FCC_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
-    AFX_FCC_LEGT    = AfxPackFcc('l', 'e', 'g', 't'), // afxLegoTemplate
+    AFX_FCC_LEGT    = AfxPackFcc('l', 'e', 'g', 't'), // afxLego
     AFX_FCC_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxLego
     AFX_FCC_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
     AFX_FCC_SHDB    = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint
@@ -238,7 +242,10 @@ typedef enum afxFcc
     AFX_FCC_TERR    = AfxPackFcc('t', 'e', 'r', 'r'), // afxTerrain
     AFX_FCC_BRN     = AfxPackFcc('b', 'r', 'n', '\0'), // afxBrain
     AFX_FCC_BOD     = AfxPackFcc('b', 'o', 'd', '\0'), // afxBody
+    AFX_FCC_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // afxBodyControl
     AFX_FCC_BODP    = AfxPackFcc('b', 'o', 'd', 'p'), // afxBodyPart
+
+    AFX_FCC_RND     = AfxPackFcc('r', 'n', 'd', '\0'), // afxRenderer
 
     AFX_FCC_MAX_    = 0x7FFFFFFF
 } afxFcc;

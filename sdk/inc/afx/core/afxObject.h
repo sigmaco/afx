@@ -36,6 +36,7 @@
 #define AFX_OBJ_NAME_LEN 32
 #define AFX_OBJ_EVENT_LAYER 0
 
+AFX_DECLARE_STRUCT(afxObject);
 AFX_DECLARE_STRUCT(afxClass);
 
 //#include "../mem/afxArray.h"
@@ -91,7 +92,6 @@ AFX_DEFINE_STRUCT(afxConnection)
     afxInt32            tenacity; // reference counter
 };
 
-AFX void*               AfxObjectAcquire(afxClass *cls, void const *paradigm, afxHint const hint);
 AFX afxResult           AfxObjectReacquire(afxObject *obj, afxObject *holder, void(*handler)(afxObject*, afxEvent*), afxNat32 filter, afxConnection *objc);
 AFX afxResult           AfxObjectRelease(afxObject *obj);
 
@@ -139,7 +139,7 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxResult)__LINE__,AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxError)__LINE__,AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
 #   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxObject const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))));
 #   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || (err = AfxObjectAssert(((afxObject const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_)))));

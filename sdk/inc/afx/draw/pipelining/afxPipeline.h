@@ -22,7 +22,7 @@
 #define AFX_PIPELINE_H
 
 #include "afx/draw/pipelining/afxShader.h"
-#include "afx/draw/pipelining/afxPipelineRig.h"
+#include "afx/draw/pipelining/afxLego.h"
 #include "afx/draw/pipelining/afxSampler.h"
 #include "afx/core/io/afxResource.h"
 #include "afx/draw/res/afxVertexBuffer.h"
@@ -58,16 +58,16 @@ typedef enum
 
 AFX_DEFINE_STRUCT(afxPipelineInputStream) // vertex attribute input stream
 {
-    afxNat32            location; // is the shader input location number for this attribute.
-    afxNat32            binding; // is the binding number which this attribute takes its data from.
+    afxNat8             location; // is the shader input location number for this attribute.
+    afxNat8             binding; // is the binding number which this attribute takes its data from.
     afxVertexFormat     format; // is the size and type of the vertex attribute data.
     afxNat32            offset; // is a byte offset of this attribute relative to the start of an element in the vertex input binding.
 };
 
 AFX_DEFINE_STRUCT(afxPipelineInputAssemblyState)
 {
-    afxPrimTopology     topology; // AFX_PRIM_TOPOLOGY_TRIANGLE // defines the primitive topology, as described below.
-    afxBool             primRestartEnable; // FALSE // controls whether a special vertex index value is treated as restarting the assembly of primitives.
+    afxPrimTopology     topology; // AFX_PRIM_TOPOLOGY_TRIANGLE --- 0 // defines the primitive topology, as described below.
+    afxBool             primRestartEnable; // FALSE --- 1 // controls whether a special vertex index value is treated as restarting the assembly of primitives.
 };
 
 AFX_DEFINE_STRUCT(afxViewport)
@@ -79,33 +79,34 @@ AFX_DEFINE_STRUCT(afxViewport)
 
 AFX_DEFINE_STRUCT(afxPipelineDepthState)
 {
-    afxBool             depthTestEnable; // FALSE
-    afxBool             depthWriteEnable; // FALSE
-    afxCompareOp        depthCompareOp; // LESS
-    afxBool             depthBoundsTestEnable;
-    afxBool             stencilTestEnable;
+    afxBool             depthTestEnable; // FALSE --- 0
+    afxBool             depthWriteEnable; // FALSE --- 1
+    afxCompareOp        depthCompareOp; // LESS --- 2
+    afxBool             depthBoundsTestEnable; // --- 3
+    afxBool             stencilTestEnable; // --- 4
     struct
     {
-        afxStencilOp    failOp;
-        afxStencilOp    passOp;
-        afxStencilOp    depthFailOp;
-        afxCompareOp    compareOp;
+        afxStencilOp    failOp; // --- 7/11
+        afxStencilOp    passOp; // --- 8/12
+        afxStencilOp    depthFailOp; // --- 9/13
+        afxCompareOp    compareOp; // --- 10/14
     }                   stencilOpFront, stencilOpBack;
-    afxReal             minDepthBounds, maxDepthBounds;
+    afxReal             minDepthBounds; // --- 5
+    afxReal             maxDepthBounds; // --- 6
 };
 
 AFX_DEFINE_STRUCT(afxPipelineRasterizerState)
 {
-    afxBool             depthClampEnable; // FALSE
-    afxBool             rasterizerDiscardEnable; // FALSE
-    afxFillMode         fillMode; // AFX_FILL_MODE_SOLID
-    afxCullMode         cullMode; // AFX_CULL_MODE_BACK
-    afxFrontFace        frontFace; // AFX_FRONT_FACE_CCW
-    afxBool             depthBiasEnable; // FALSE
-    afxReal             depthBiasConstantFactor; // 0.f
-    afxReal             depthBiasClamp; // 0.f
-    afxReal             depthBiasSlopeFactor; // 0.f
-    afxReal             lineWidth; // 1.f
+    afxBool             depthClampEnable; // FALSE --- 0
+    afxBool             rasterizerDiscardEnable; // FALSE --- 1
+    afxFillMode         fillMode; // AFX_FILL_MODE_SOLID --- 2
+    afxCullMode         cullMode; // AFX_CULL_MODE_BACK --- 3
+    afxFrontFace        frontFace; // AFX_FRONT_FACE_CCW --- 4
+    afxBool             depthBiasEnable; // FALSE --- 5
+    afxReal             depthBiasConstantFactor; // 0.f --- 6
+    afxReal             depthBiasClamp; // 0.f --- 7
+    afxReal             depthBiasSlopeFactor; // 0.f --- 8
+    afxReal             lineWidth; // 1.f --- 9
 };
 
 AFX_DEFINE_STRUCT(afxPipelineMultisampleState)
@@ -139,19 +140,44 @@ AFX_DEFINE_STRUCT(afxPipelineColorBlendState)
     afxReal             blendConstants[4];
 };
 
+AFX_DEFINE_STRUCT(afxPipelineBlueprint)
+{
+    afxFcc                          fcc; // PIPB
+    afxDrawContext                  dctx;
+
+    afxArray                        shaders;
+    afxArray                        viewports;
+    afxArray                        scissors;
+
+    afxBool                         hasAssembling;
+    afxBool                         hasRasterization;
+    afxBool                         hasDepthHandling;
+    afxBool                         hasMultisampling;
+    afxBool                         hasColorBlending;
+
+    afxPipelineInputAssemblyState   inAssembling;
+    afxPipelineRasterizerState      rasterization;
+    afxPipelineDepthState           depthHandling;
+    afxPipelineMultisampleState     multisampling;
+    afxPipelineColorBlendState      colorBlending;
+};
+
 AFX_DEFINE_HANDLE(afxPipeline);
+
+#ifndef AFX_DRAW_DRIVER_SRC
+
+AFX_OBJECT(afxPipeline)
+{
+    afxObject       obj;
+};
+
+#endif
 
 AFX void*               AfxPipelineGetContext(afxPipeline pip);
 AFX void*               AfxPipelineGetDriver(afxPipeline pip);
 AFX void*               AfxPipelineGetDrawSystem(afxPipeline pip);
-AFX afxPipelineRig      AfxPipelineGetRig(afxPipeline pip);
-
-AFX afxResult           AfxPipelineForEachColorBlendAnnex(afxPipeline pip, afxResult (*f)(afxColorBlendAnnex const*, void*), void *data);
-AFX afxResult           AfxPipelineForEachScissor(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxRect const*, void*), void *data);
-
-AFX afxResult           AfxPipelineForEachStage(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxShader shd, void *data), void *data);
-AFX afxResult           AfxPipelineForEachInputStream(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxPipelineInputStream const*, void*), void *data);
-AFX afxResult           AfxPipelineForEachViewport(afxPipeline pip, afxNat first, afxNat cnt, afxResult (*f)(afxViewport const*, void*), void *data);
+AFX afxNat              AfxPipelineGetWiringCount(afxPipeline pip);
+AFX afxError            AfxPipelineGetWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt);
 
 AFX afxNat              AfxPipelineGetScissorCount(afxPipeline pip);
 AFX afxResult           AfxPipelineGetScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[]);
@@ -171,13 +197,25 @@ AFX afxBool             AfxPipelineHasMultisampling(afxPipeline pip);
 AFX afxBool             AfxPipelineHasRasterization(afxPipeline pip);
 AFX afxBool             AfxPipelineHasInputAssembling(afxPipeline pip);
 
-#ifndef AFX_DRAW_DRIVER_SRC
+////////////////////////////////////////////////////////////////////////////////
+// PIPELINE BLUEPRINT                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX_OBJECT(afxPipeline)
-{
-    AFX_OBJECT(afxResource) res;
-};
+AFX void                AfxPipelineBlueprintFormulate(afxPipelineBlueprint* blueprint, afxDrawContext dctx);
+AFX void                AfxPipelineBlueprintDiscard(afxPipelineBlueprint *blueprint);
+AFX void                AfxPipelineBlueprintErase(afxPipelineBlueprint *blueprint);
 
-#endif
+AFX afxError            AfxPipelineBlueprintAddShaders(afxPipelineBlueprint *blueprint, afxNat cnt, afxUri const uri[]);
+AFX afxError            AfxPipelineBlueprintAddViewports(afxPipelineBlueprint *blueprint, afxNat cnt, afxViewport const vp[]);
+AFX afxError            AfxPipelineBlueprintAddScissors(afxPipelineBlueprint *blueprint, afxNat cnt, afxRect const rc[]);
+
+AFX void                AfxPipelineBlueprintConfigInputAssemblyState(afxPipelineBlueprint *blueprint, afxPipelineInputAssemblyState const *state);
+AFX void                AfxPipelineBlueprintConfigRasterizerState(afxPipelineBlueprint *blueprint, afxPipelineRasterizerState const *state);
+AFX void                AfxPipelineBlueprintConfigDepthState(afxPipelineBlueprint *blueprint, afxPipelineDepthState const *state);
+AFX void                AfxPipelineBlueprintConfigMultisampleState(afxPipelineBlueprint *blueprint, afxPipelineMultisampleState const *state);
+AFX void                AfxPipelineBlueprintConfigColorBlendState(afxPipelineBlueprint *blueprint, afxPipelineColorBlendState const *state);
+
+AFX afxChar const *shdResTypeNames[AFX_SHD_RES_TYPE_TOTAL];
+AFX afxChar const *fmtNames[AFX_FMT_TOTAL];
 
 #endif//AFX_PIPELINE_H

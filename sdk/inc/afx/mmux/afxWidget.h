@@ -67,8 +67,8 @@ AFX_OBJECT(afxWidget)
     // common
     afxV2d                          anchor; // -1 ... 0 ... 1, left-center-right, top-middle-bottom
     
-    afxString2048           text;
-    afxString2048           hint;
+    afxString*                      text; // 2048
+    afxString*                      hint; // 2048
     afxByte                         extra[512];
     struct
     {
@@ -87,7 +87,7 @@ AFX_OBJECT(afxWidget)
 
         struct
         {
-            afxString32     face; // "sans"
+            afxString*              face; // 32 // "sans"
             afxReal                 size; // 18.0 (px)
             afxNat                  style; // normal
             afxNat                  weight; // 400
@@ -112,7 +112,7 @@ AFX void        AfxWidgetSetTranslation(afxWidget wid, afxV4d const translation)
 AFX void        AfxWidgetAddRotation(afxWidget wid, afxQuat const rotation);
 AFX void        AfxWidgetSetRotation(afxWidget wid, afxQuat const rotation);
 
-AFX void        AfxWidgetAddScale(afxWidget wid, afxV3d const scale);
+AFX void        AfxWidgetAddMakeScale(afxWidget wid, afxV3d const scale);
 AFX void        AfxWidgetSetScale(afxWidget wid, afxV3d const scale);
 
 AFX afxResult   AfxWidgetExecuteQuery(afxWidget wid, afxUri const *uri);

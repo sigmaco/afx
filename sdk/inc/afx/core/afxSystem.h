@@ -53,7 +53,7 @@ AFX_OBJECT(afxSystem)
 #ifdef _AFX_SYSTEM_C
     afxChain            provisions;
 
-    afxUri4096          rootDir;
+    afxUri*             rootDir;
 
     afxClass            allClass;
     afxClass            arenClass;
@@ -130,7 +130,7 @@ AFX afxError            AfxSystemPostEvents(afxSystem sys, afxNat cnt, afxObject
 
 AFX afxSystem           AfxSystemGet(void);
 AFX afxSystem           AfxSystemBootUp(afxSystemSpecification const *spec);
-AFX afxError            AfxSystemProcess(afxSystem sys);
+AFX afxResult           AfxSystemProcess(afxSystem sys);
 
 AFX afxNat mainThreadId;
 

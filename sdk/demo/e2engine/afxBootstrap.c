@@ -14,18 +14,18 @@ afxDrawInput din = NIL;
 
 _AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     return AFX_SUCCESS;
 }
 
 _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("app=%p", app);
 
     afxUri uriMap;
-    AfxUriReflectData(&uriMap, "e2newton.icd", 0);
+    AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
     afxSimulationSpecification simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
@@ -34,9 +34,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     sim = AfxApplicationAcquireSimulation(TheApp, &simSpec);
     AfxAssertObject(sim, AFX_FCC_SIM);
 
-    AfxUriReflectData(&uriMap, "window", 0);
+    AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = { 0 };
     doutSpec.endpoint = &uriMap;
+    doutSpec.whd[0] = 1280;
+    doutSpec.whd[1] = 720;
+    doutSpec.whd[2] = 1;
     doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
@@ -45,14 +48,13 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
-    afxWhd extent = { 1280, 720, 1 };
 
-    dout = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
+    dout = AfxDrawContextAcquireOutput(dctx, &doutSpec);
     AfxAssert(dout);
 
     afxDrawInputSpecification dinSpec = { 0 };
     dinSpec.prefetch = (void*)NIL;
-    dinSpec.udd = NIL;
+    dinSpec.udd[0] = NIL;
     dinSpec.cmdPoolMemStock = 4096;
     dinSpec.estimatedSubmissionCnt = 3;
     dinSpec.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
@@ -82,11 +84,11 @@ int AfxMain(afxApplication app, int argc, char const* argv[])
 
 int main(int argc, char const* argv[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri4096 romUri;
-    AfxUri4096(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxUri2048(&romUri);
     AfxUriFormat(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

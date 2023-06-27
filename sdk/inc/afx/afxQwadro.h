@@ -57,9 +57,7 @@
 #include "afx/draw/afxDrawOutput.h"
 #include "afx/draw/afxDrawSystem.h"
 
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxQuat.h"
-#include "afx/math/afxVector.h"
+#include "afx/math/afxMathDefs.h"
 #include "afx/math/volume/afxAabb.h"
 #include "afx/math/volume/afxFrustum.h"
 #include "afx/math/volume/afxPlane.h"

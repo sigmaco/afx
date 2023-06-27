@@ -22,6 +22,7 @@
 #include "afx/core/io/afxFile.h"
 #include "afx/core/io/afxArchive.h"
 #include "afx/core/io/afxResource.h"
+#include "afx/core/io/afxUrd.h"
 
 #if 0
 A implentação atual de sistema de arquivos é mentalizada de forma simples.
@@ -98,10 +99,19 @@ AFX_OBJECT(afxFileSystem)
     afxClass        iosClass;
     afxClass        fileClass;
     afxClass        archClass;
+    afxClass        xmlClass;
     afxClass        urdClass;
     afxClass        resClass;
     afxChain        mountPoints;
     afxChain        aliveRsrcs;
+    struct
+    {
+        struct
+        {
+            afxFcc      type;
+            afxChain    resources;
+        }           supplyChain[1];
+    }               resourcing;
 #endif
 };
 
@@ -116,6 +126,7 @@ AFX afxStream       AfxFileSystemLoadFile(afxFileSystem fsys, afxIoFlags flags, 
 
 AFX afxArchive      AfxFileSystemAcquireArchive(afxFileSystem fsys, afxIoFlags flags, afxUri const *uri);
 AFX afxResource     AfxFileSystemAcquireResource(afxFileSystem fsys, afxResourceSpecification const *spec);
+AFX afxXml          AfxFileSystemLoadXml(afxFileSystem fsys, afxUri const *uri);
 AFX afxUrd          AfxFileSystemLoadUrd(afxFileSystem fsys, afxUri const *uri);
 
 AFX afxNat          AfxFileSystemGetStoragePointCount(afxFileSystem fsys);
@@ -127,6 +138,7 @@ AFX afxResult       AfxFileSystemEnumerateArchives(afxFileSystem fsys, afxNat ba
 AFX afxResult       AfxFileSystemEnumerateFiles(afxFileSystem fsys, afxNat base, afxNat cnt, afxFile file[]);
 AFX afxResult       AfxFileSystemEnumerateResources(afxFileSystem fsys, afxNat base, afxNat cnt, afxResource res[]);
 AFX afxResult       AfxFileSystemEnumerateStreams(afxFileSystem fsys, afxNat base, afxNat cnt, afxStream ios[]);
+AFX afxResult       AfxFileSystemEnumerateXmls(afxFileSystem fsys, afxNat base, afxNat cnt, afxXml xml[]);
 AFX afxResult       AfxFileSystemEnumerateUrds(afxFileSystem fsys, afxNat base, afxNat cnt, afxUrd urd[]);
 
 AFX afxError        AfxFileSystemResolveUri(afxFileSystem fsys, afxUriResolver const *resolver);
@@ -138,6 +150,7 @@ AFX afxClass*       AfxFileSystemGetArchiveClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetFileClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetResourceClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetStreamClass(afxFileSystem fsys);
+AFX afxClass*       AfxFileSystemGetXmlClass(afxFileSystem fsys);
 AFX afxClass*       AfxFileSystemGetUrdClass(afxFileSystem fsys);
 
 AFX afxError        _AfxFileSystemProcess(afxFileSystem fsys);

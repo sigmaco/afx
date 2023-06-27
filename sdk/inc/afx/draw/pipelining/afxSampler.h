@@ -44,8 +44,8 @@ typedef enum afxTexelFilter
 
 AFX_DEFINE_STRUCT(afxSamplerSpecification)
 {
-    afxTexelFilter      magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified.
-    afxTexelFilter      minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions.
+    afxTexelFilter      magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
+    afxTexelFilter      minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
     afxTexelFilter      mipmapFilter; // LINEAR.
     afxTexelAddress     uvw[3]; // REPEAT. Sets the wrap parameter for texture coordinates.
     afxBool             anisotropyEnabled; // FALSE

@@ -26,7 +26,6 @@
 #include "afx/draw/afxDrawOutput.h"
 
 #include "afx/draw/pipelining/afxLego.h"
-#include "afx/draw/pipelining/afxPipelineBlueprint.h"
 #include "afx/draw/pipelining/afxSampler.h"
 #include "afx/draw/res/afxBuffer.h"
 #include "afx/draw/res/afxCanvas.h"
@@ -45,7 +44,7 @@ AFX_DEFINE_STRUCT(afxDrawInputSpecification)
     afxNat const*       enabledSubmissionThreads;
     afxNat const*       enabledStreamingThreads;
     afxError            (*prefetch)(afxDrawInput din, afxNat queueIdx, void *udd);
-    void*               udd;
+    void*               udd[4];
 };
 
 #ifndef AFX_DRAW_DRIVER_SRC
@@ -63,9 +62,9 @@ AFX void*               AfxDrawInputGetContext(afxDrawInput din);
 AFX void*               AfxDrawInputGetDriver(afxDrawInput din);
 AFX void*               AfxDrawInputGetDrawSystem(afxDrawInput din);
 
-AFX afxError            AfxDrawInputEnqueueStreaming(afxDrawInput din, afxNat objectCnt, afxObject *objects[]);
-AFX afxError            AfxDrawInputEnqueueSubmission(afxDrawInput din, afxNat scriptCnt, afxDrawScript scripts[]);
-AFX afxError            AfxDrawInputEnqueuePresentation(afxDrawInput din, afxNat outputCnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
+AFX afxError            AfxDrawInputTransferResources(afxDrawInput din, afxNat objectCnt, afxObject *objects[]);
+AFX afxError            AfxDrawInputSubmitScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
+AFX afxError            AfxDrawInputPresentRasters(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
 
 AFX afxError            AfxDrawInputAffineStreamingThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);
 AFX afxError            AfxDrawInputAffineSubmissionThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);

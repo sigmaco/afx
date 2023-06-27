@@ -52,7 +52,7 @@ AFX_DEFINE_HANDLE(afxTexture);
 
 AFX_OBJECT(afxTexture)
 {
-    AFX_OBJECT(afxResource) res;
+    afxObject               obj;
 };
 
 #endif
@@ -87,14 +87,15 @@ AFX_DEFINE_STRUCT(afxTextureSource) // source for blueprints
             afxNat              range;
         }                       stream;
         afxObject               *obj;
-        afxUri                  uri; // map subentry uri to don't use in-place URI storage.
+        afxUri*                 uri; // map subentry uri to don't use in-place URI storage.
     };
 };
 
 AFX_DEFINE_STRUCT(afxTextureBlueprint)
 {
     afxFcc                      fcc;
-    afxString32                 name;
+    void*                       dctx;
+    afxUri128                   name; // 128
     afxPixelFormat              fmt;
     afxNat                      whd[3];
     afxNat                      layerCnt;
@@ -111,6 +112,7 @@ AFX void*                       AfxTextureGetDrawSystem(afxTexture tex);
 AFX afxNat*                     AfxTextureGetExtent(afxTexture tex, afxNat lod, afxWhd extent);
 AFX afxError                    AfxTextureSetExtent(afxTexture tex, afxNat layerCnt, afxWhd const extent);
 
+AFX afxUri const*               AfxTextureGetUri(afxTexture tex);
 AFX afxPixelFormat              AfxTextureGetFormat(afxTexture tex);
 AFX afxNat                      AfxTextureGetLodCount(afxTexture tex);
 AFX afxNat                      AfxTextureGetLayerCount(afxTexture tex);
@@ -139,7 +141,9 @@ AFX afxResult                   AfxTextureTestUsageFlags(afxTexture tex, afxFlag
 // TEXTURE BLUEPRINT                                                          //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError                    AfxTextureBlueprintReset(afxTextureBlueprint *blueprint, afxString const *name, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
+AFX afxError                    AfxTextureBlueprintBegin(afxTextureBlueprint *blueprint, void* dctx, afxUri const *name, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
+AFX afxError                    AfxTextureBlueprintEnd(afxTextureBlueprint *blueprint, afxNat cnt, afxTexture tex[]);
+
 AFX afxError                    AfxTextureBlueprintAddImage(afxTextureBlueprint *blueprint, afxPixelFormat fmt, afxWhd const extent, void const *start, afxNat range);
 AFX afxError                    AfxTextureBlueprintAddImageFromStream(afxTextureBlueprint *blueprint, afxPixelFormat fmt, afxWhd const extent, afxStream ios, afxSize offset, afxNat range);
 AFX afxError                    AfxTextureBlueprintAddImagesFromResource(afxTextureBlueprint *blueprint, afxNat cnt, afxUri const uri[]);

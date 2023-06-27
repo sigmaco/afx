@@ -214,6 +214,8 @@ AFXINL afxReal      AfxMaxiReal(afxReal a, afxReal b);
 #define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
 
+#define AfxAtLeast(var_,min_) 
+
 AFXINL afxInt    AfxRandom(void);
 AFXINL afxInt    AfxRandom2(afxInt mini, afxInt maxi);
 
@@ -222,7 +224,7 @@ AFXINL afxReal      AfxRandomReal2(afxReal mini, afxReal maxi);
 
 AFX afxChar const* errorMsg[];
 
-typedef enum afxError
+typedef enum afxError3
 {
     // NIL, // The operation completed successfully.    
     AFXERR_UNKNOWN = 1,
@@ -239,7 +241,12 @@ typedef enum afxError
     AFXERR_CORRUPTED, // Corruption in data integrity was detected for the given object.
     AFXERR_UNSUPPORTED, // Operation unsupported.
     AFXERR_UNINITIALIZED, // Object or resource wasn't initialized yet.
-} afxError;
+
+    FORCE_ERROR_SIZE = AFX_N64_MAX
+} afxError3;
+
+typedef afxInt afxError;
+#define AFX_ERR_NONE (afxError)0;
 
 enum
 {

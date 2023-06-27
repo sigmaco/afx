@@ -1,0 +1,4978 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxClass<afxSystem>::Mount(0ff31e00, 00000000, 00000000, 0ff10684)
+ afxClass<afxSystem>::AllocateObjects(1, 0043f36c, 0043f37c)
+ afxClass<afxSystem>::BuildObjects(1, 0043f36c, 00000000)
+ afxClass<afxSystem>::ConstructObject(008cf080)
+ afxSystem.c:814?_AfxSysCtor(sys=008cf080)
+ ADV afxSystem.c:830?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:831?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(008cf0cc, 008cf0b4, 00000000, 0ff14ae0)
+ afxClass<Memory Arena>::Mount(008cf18c, 008cf0b4, 008cf0cc, 0ff14460)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=008cf080,strategy=0043e46c,hint="afxSystem.c:849!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0043e320, 0043e330)
+ afxClass<afxMemory>::BuildObjects(1, 0043e320, 0043e314)
+ afxClass<afxMemory>::ConstructObject(008cf8c0)
+ afxMemory.c:317?_AfxMemCtor(mem=008cf8c0)
+ afxClass<afxThread>::Mount(008cf24c, 008cf0b4, 00000000, 0ff10d58)
+ afxClass<afxFileSystem>::Mount(008cf30c, 008cf0b4, 00000000, 0ff12214)
+ afxFileSystem.c:597?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(008cf080,6,0043e618))
+ afxClass<afxFileSystem>::AllocateObjects(1, 0043e308, 0043e318)
+ afxClass<afxFileSystem>::BuildObjects(1, 0043e308, 0043e43c)
+ afxClass<afxFileSystem>::ConstructObject(008cff00)
+ afxFileSystem.c:656?_AfxFsysCtor(fsys=008cff00)
+ afxClass<afxStream>::Mount(008cff50, 008cff38, 00000000, 0ff13634)
+ afxClass<afxFile>::Mount(008d0010, 008cff38, 008cff50, 0ff11f90)
+ afxClass<afxArchive>::Mount(008d00d0, 008cff38, 008d0010, 0ff11934)
+ afxClass<afxResource>::Mount(008d0310, 008cff38, 00000000, 0ff13494)
+ afxClass<afxXml>::Mount(008d0190, 008cff38, 00000000, 0ff13b2c)
+ afxClass<afxUrd>::Mount(008d0250, 008cff38, 00000000, 0ff13a4c)
+ afxFileSystem.c:396?AfxFileSystemMountStoragePoints(Afx.FileSystem.MountStoragePoints(008cff00,6,0043e618))
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(008cf3cc, 008cf0b4, 00000000, 0ff0ef08)
+ afxModule.c:71?AfxSystemAcquireModule(sys=008cf080,uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0043e2d4, 0043e308)
+ afxClass<afxModule>::BuildObjects(1, 0043e2d4, 0043e550)
+ afxClass<afxModule>::ConstructObject(008d3b10)
+ afxModule.c:140?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(008cf48c, 008cf0b4, 00000000, 0ff1272c)
+ afxClass<afxKeyboard>::Mount(008cf54c, 008cf0b4, 008cf48c, 0ff1302c)
+ afxClass<afxMouse>::Mount(008cf60c, 008cf0b4, 008cf48c, 0ff131ec)
+ afxClass<afxDrawSystem>::Mount(008cf6cc, 008cf0b4, 00000000, 0ff182e0)
+ afxClass<afxApplication>::Mount(008cf78c, 008cf0b4, 00000000, 0ff0e000)
+ afxKeyboard.c:165?AfxSystemAcquireKeyboard(sys=008cf080,port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0043e32c, 0043e33c)
+ afxClass<afxKeyboard>::BuildObjects(1, 0043e32c, 0043e324)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(008d1980)
+ afxClass<afxHid>::ConstructObject(008d1980)
+ afxHid.c:75?_AfxHidCtor(hid=008d1980)
+ afxClass<afxKeyboard>::ConstructObject(008d1980)
+ afxKeyboard.c:221?_AfxKbdCtor(kbd=008d1980)
+ afxDrawSystem.c:317?AfxSystemAcquireDrawSystem(sys=008cf080)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0043f368, 0043f378)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0043f368, 0043f46c)
+ afxClass<afxDrawSystem>::ConstructObject(008d3c30)
+ afxDrawSystem.c:415?_AfxDsysCtor(dsys=008d3c30)
+ afxClass<afxDrawDriver>::Mount(008d3c78, 008d3c64, 00000000, 0ff16e20)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:71?AfxSystemAcquireModule(sys=008cf080,uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0043ee9c, 0043eed0)
+ afxClass<afxModule>::BuildObjects(1, 0043ee9c, 0043efb0)
+ afxClass<afxModule>::ConstructObject(008d3e70)
+ afxModule.c:140?_AfxMdleCtor(uri:e2draw.icd)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDriver.c:1281?_SglCreateCombinedDeviceContext(oglWndClss=008d57d0,shareCtx=00000000,phwnd=008d5800,phdc=008d5804,phrc=008d580c)
+ sglDriver.c:786?_SglLoadVmt(vmt=008d5810,verMajor=1,verMinor=0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ sglDriver.c:786?_SglLoadVmt(vmt=008d5810,verMajor=4,verMinor=6)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ glCopyTexSubImage3D @ 65 found.
+ glActiveTexture @ 66 found.
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ glCompressedTexImage2D @ 69 found.
+ glCompressedTexImage1D @ 70 found.
+ glCompressedTexSubImage3D @ 71 found.
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ glPointParameteriv @ 81 found.
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ glGetShaderiv @ 124 found.
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ glUniform4fv @ 150 found.
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ glVertexAttrib1f @ 161 found.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ glClipControl @ 543 found.
+ glNamedBufferStorage @ 551 found.
+ glTextureBufferRange @ 589 found.
+ glTextureParameteri @ 606 found.
+ glMemoryBarrierByRegion @ 641 found.
+ glGetGraphicsResetStatus @ 644 found.
+ glGetnCompressedTexImage @ 645 found.
+ glGetnTexImage @ 646 found.
+ glGetnUniformdv @ 647 found.
+ glGetnUniformfv @ 648 found.
+ glGetnUniformiv @ 649 found.
+ glGetnUniformuiv @ 650 found.
+ glReadnPixels @ 651 found.
+ afxDrawDriver.c:77?AfxDrawSystemRegisterDriver(dsys=008d3c30,mdle=008d3e70,spec=0043eba4)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 0043eaa4, 0043eab4)
+ afxClass<afxDrawDriver>::BuildObjects(1, 0043eaa4, 0043ea98)
+ afxClass<afxDrawDriver>::ConstructObject(0270c140)
+ afxDrawDriver.c:138?_AfxDdrvCtor(ddrv=0270c140)
+ afxClass<Draw Context>::Mount(0270c188, 0270c174, 00000000, 0043e718)
+New draw driver registered.
+Name: 4DGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+     .::::         :::::::::         ::::::::        :::        
+    :+:+:+         :+:    :+:       :+:    :+:       :+:        
+   +:+ +:+         +:+    +:+       +:+              +:+        
+  +#+  +:+         +#+    +:+       :#:              +#+        
+ +#+#+#+#+#+       +#+    +#+       +#+   +#+#       +#+        
+       #+#         #+#    #+#       #+#    #+#       #+#        
+       ###         #########         ########        ########## 
+ Loading draw ICDs...
+ afxModule.c:71?AfxSystemAcquireModule(sys=008cf080,uri=e2draw.icd)
+ afxModule.c:71?AfxSystemAcquireModule(sys=008cf080,uri=e2newton.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0043ecbc, 0043ecf0)
+ afxClass<afxModule>::BuildObjects(1, 0043ecbc, 0043eda0)
+ afxClass<afxModule>::ConstructObject(0098bc20)
+ afxModule.c:140?_AfxMdleCtor(uri:e2newton.icd)
+ afxDrawContext.c:309?AfxDrawSystemAcquireContext(dsys=008d3c30,spec=0043f430)
+ afxClass<Draw Context>::AllocateObjects(1, 0043f334, 0043f344)
+ afxClass<Draw Context>::BuildObjects(1, 0043f334, 0043f32c)
+ afxClass<Draw Context>::ConstructObject(030e8e50)
+ sglDrawContext.c:258?_AfxDctxCtor(dctx=030e8e50)
+ afxClass<afxDrawScript>::Mount(030e96d8, 030e8e84, 00000000, 5190fe18)
+ afxClass<afxDrawInput>::Mount(030e9798, 030e8e84, 00000000, 5190f6ec)
+ afxClass<afxDrawQueue>::Mount(030e9858, 030e8e84, 00000000, 0043ef88)
+ afxClass<afxBuffer>::Mount(030e8e98, 030e8e84, 00000000, 5190e020)
+ afxClass<afxVertexBuffer>::Mount(030e8f58, 030e8e84, 030e8e98, 0043ef88)
+ afxClass<afxIndexBuffer>::Mount(030e9018, 030e8e84, 030e8e98, 0043ef88)
+ afxClass<afxSampler>::Mount(030e90d8, 030e8e84, 00000000, 5191467c)
+ afxClass<afxTexture>::Mount(030e9198, 030e8e84, 00000000, 51914b2c)
+ afxClass<afxSurface>::Mount(030e9258, 030e8e84, 030e9198, 519147f4)
+ afxClass<afxCanvas>::Mount(030e9318, 030e8e84, 00000000, 5190e334)
+ afxClass<afxShader>::Mount(030e93d8, 030e8e84, 00000000, 5191440c)
+ afxClass<afxPipeline>::Mount(030e9498, 030e8e84, 00000000, 51914020)
+ afxClass<afxDrawOperation>::Mount(030e9618, 030e8e84, 00000000, 0ff170a8)
+ afxClass<afxLego>::Mount(030e9558, 030e8e84, 00000000, 51913e24)
+ afxClass<afxDrawOutput>::Mount(030e9918, 030e8e84, 00000000, 5190fa1c)
+ afxDrawQueue.c:47?AfxDrawContextAcquireQueue(dctx=030e8e50)
+ afxClass<afxDrawQueue>::AllocateObjects(1, 0043ee64, 0043ee80)
+ afxClass<afxDrawQueue>::BuildObjects(1, 0043ee64, 0043ef80)
+ afxClass<afxDrawQueue>::ConstructObject(030ea0c0)
+ sglDrawQueue.c:1835?_AfxDqueCtor(dque=030ea0c0)
+ Uploading draw operation 'data/pipeline/rgbaToRgba.xml'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043e330, 0043e340)
+ afxClass<afxXml>::BuildObjects(1, 0043e330, 0043e328)
+ afxClass<afxXml>::ConstructObject(02704140)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043dfa0, 0043dfb0)
+ afxClass<afxFile>::BuildObjects(1, 0043dfa0, 0043df8c)
+ afxClass<afxFile, afxStream>ConstructingObject(026af5d0)
+ afxClass<afxStream>::ConstructObject(026af5d0)
+ afxClass<afxFile>::ConstructObject(026af5d0)
+ afxClass<afxFile>::DismantleObjects(1, 0043e004)
+ Destructing instance 026af5d0 of afxFile class.
+ Destructing instance 026af5d0 of afxFile : afxStream class.
+ Destructing instance 026af5d0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043e004)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 030eb738, 0043e31c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 030eb738, 0043e59c)
+ afxClass<afxDrawOperation>::ConstructObject(0098b6d0)
+ afxDrawOperation.c:665?_AfxDopCtor(dop=0098b6d0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=030e8e50)
+ afxClass<afxPipeline>::AllocateObjects(1, 026ea888, 0043dcc4)
+ afxClass<afxPipeline>::BuildObjects(1, 026ea888, 0043ddb0)
+ afxClass<afxPipeline>::ConstructObject(030e9a50)
+ sglPipeline.c:517?_AfxPipCtor(pip=030e9a50)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0098b800,shd=0043d740)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043cfe8, 0043cff8)
+ afxClass<afxXml>::BuildObjects(1, 0043cfe8, 0043cfe0)
+ afxClass<afxXml>::ConstructObject(030e9d30)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043cc58, 0043cc68)
+ afxClass<afxFile>::BuildObjects(1, 0043cc58, 0043cc44)
+ afxClass<afxFile, afxStream>ConstructingObject(0098b930)
+ afxClass<afxStream>::ConstructObject(0098b930)
+ afxClass<afxFile>::ConstructObject(0098b930)
+ afxClass<afxFile>::DismantleObjects(1, 0043ccbc)
+ Destructing instance 0098b930 of afxFile class.
+ Destructing instance 0098b930 of afxFile : afxStream class.
+ Destructing instance 0098b930 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043ccbc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043cd4c, 0043cd5c)
+ afxClass<afxFile>::BuildObjects(1, 0043cd4c, 0043cd38)
+ afxClass<afxFile, afxStream>ConstructingObject(0098b930)
+ afxClass<afxStream>::ConstructObject(0098b930)
+ afxClass<afxFile>::ConstructObject(0098b930)
+ afxClass<afxFile>::DismantleObjects(1, 0043cdac)
+ Destructing instance 0098b930 of afxFile class.
+ Destructing instance 0098b930 of afxFile : afxStream class.
+ Destructing instance 0098b930 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043cdac)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043d2dc,shd=0043d740)
+ afxClass<afxShader>::AllocateObjects(1, 0043d740, 0043cfc8)
+ afxClass<afxShader>::BuildObjects(1, 0043d740, 0043d2dc)
+ afxClass<afxShader>::ConstructObject(0098b930)
+ sglShader.c:272?_AfxShdCtor(shd=0098b930)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        layout(location = 0) in vec2 a_xy;
+
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043d04c)
+ Destructing instance 030e9d30 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=030e9d30)
+ afxClass<afxXml>::DeallocateObjects(1, 0043d04c)
+ afxObject<0098b930>::InstallEventFilter(030e9a50)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0098b8a0,shd=0043d740)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043cfe8, 0043cff8)
+ afxClass<afxXml>::BuildObjects(1, 0043cfe8, 0043cfe0)
+ afxClass<afxXml>::ConstructObject(030e9d30)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043cc58, 0043cc68)
+ afxClass<afxFile>::BuildObjects(1, 0043cc58, 0043cc44)
+ afxClass<afxFile, afxStream>ConstructingObject(0098a5f0)
+ afxClass<afxStream>::ConstructObject(0098a5f0)
+ afxClass<afxFile>::ConstructObject(0098a5f0)
+ afxClass<afxFile>::DismantleObjects(1, 0043ccbc)
+ Destructing instance 0098a5f0 of afxFile class.
+ Destructing instance 0098a5f0 of afxFile : afxStream class.
+ Destructing instance 0098a5f0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043ccbc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043cd4c, 0043cd5c)
+ afxClass<afxFile>::BuildObjects(1, 0043cd4c, 0043cd38)
+ afxClass<afxFile, afxStream>ConstructingObject(0098a5f0)
+ afxClass<afxStream>::ConstructObject(0098a5f0)
+ afxClass<afxFile>::ConstructObject(0098a5f0)
+ afxClass<afxFile>::DismantleObjects(1, 0043cdac)
+ Destructing instance 0098a5f0 of afxFile class.
+ Destructing instance 0098a5f0 of afxFile : afxStream class.
+ Destructing instance 0098a5f0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043cdac)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043d2dc,shd=0043d740)
+ afxClass<afxShader>::AllocateObjects(1, 0043d740, 0043cfc8)
+ afxClass<afxShader>::BuildObjects(1, 0043d740, 0043d2dc)
+ afxClass<afxShader>::ConstructObject(0098a5f0)
+ sglShader.c:272?_AfxShdCtor(shd=0098a5f0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043d04c)
+ Destructing instance 030e9d30 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=030e9d30)
+ afxClass<afxXml>::DeallocateObjects(1, 0043d04c)
+ afxObject<0098a5f0>::InstallEventFilter(030e9a50)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 026e8cf4, 0043d59c)
+ afxClass<afxLego>::BuildObjects(1, 026e8cf4, 0043d8d8)
+ afxClass<afxLego>::ConstructObject(0309de60)
+ sglLego.c:299?_AfxLegtCtor(legt=0309de60)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=030e8e50)
+ afxClass<afxPipeline>::AllocateObjects(1, 026ea8e8, 0043dcc4)
+ afxClass<afxPipeline>::BuildObjects(1, 026ea8e8, 0043ddb0)
+ afxClass<afxPipeline>::ConstructObject(030eb9e0)
+ sglPipeline.c:517?_AfxPipCtor(pip=030eb9e0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0098b800,shd=0043d740)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vsFlippedY'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043cfe8, 0043cff8)
+ afxClass<afxXml>::BuildObjects(1, 0043cfe8, 0043cfe0)
+ afxClass<afxXml>::ConstructObject(0309df90)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043cc58, 0043cc68)
+ afxClass<afxFile>::BuildObjects(1, 0043cc58, 0043cc44)
+ afxClass<afxFile, afxStream>ConstructingObject(0309fee0)
+ afxClass<afxStream>::ConstructObject(0309fee0)
+ afxClass<afxFile>::ConstructObject(0309fee0)
+ afxClass<afxFile>::DismantleObjects(1, 0043ccbc)
+ Destructing instance 0309fee0 of afxFile class.
+ Destructing instance 0309fee0 of afxFile : afxStream class.
+ Destructing instance 0309fee0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043ccbc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043cd4c, 0043cd5c)
+ afxClass<afxFile>::BuildObjects(1, 0043cd4c, 0043cd38)
+ afxClass<afxFile, afxStream>ConstructingObject(0309fee0)
+ afxClass<afxStream>::ConstructObject(0309fee0)
+ afxClass<afxFile>::ConstructObject(0309fee0)
+ afxClass<afxFile>::DismantleObjects(1, 0043cdac)
+ Destructing instance 0309fee0 of afxFile class.
+ Destructing instance 0309fee0 of afxFile : afxStream class.
+ Destructing instance 0309fee0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043cdac)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043d2dc,shd=0043d740)
+ afxClass<afxShader>::AllocateObjects(1, 0043d740, 0043cfc8)
+ afxClass<afxShader>::BuildObjects(1, 0043d740, 0043d2dc)
+ afxClass<afxShader>::ConstructObject(0098a120)
+ sglShader.c:272?_AfxShdCtor(shd=0098a120)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        
+        layout(location = 0) in vec2 a_xy;
+        
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043d04c)
+ Destructing instance 0309df90 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309df90)
+ afxClass<afxXml>::DeallocateObjects(1, 0043d04c)
+ afxObject<0098a120>::InstallEventFilter(030eb9e0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0309def0,shd=0043d740)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043cfe8, 0043cff8)
+ afxClass<afxXml>::BuildObjects(1, 0043cfe8, 0043cfe0)
+ afxClass<afxXml>::ConstructObject(0309df90)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043cc58, 0043cc68)
+ afxClass<afxFile>::BuildObjects(1, 0043cc58, 0043cc44)
+ afxClass<afxFile, afxStream>ConstructingObject(030ebf90)
+ afxClass<afxStream>::ConstructObject(030ebf90)
+ afxClass<afxFile>::ConstructObject(030ebf90)
+ afxClass<afxFile>::DismantleObjects(1, 0043ccbc)
+ Destructing instance 030ebf90 of afxFile class.
+ Destructing instance 030ebf90 of afxFile : afxStream class.
+ Destructing instance 030ebf90 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043ccbc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043cd4c, 0043cd5c)
+ afxClass<afxFile>::BuildObjects(1, 0043cd4c, 0043cd38)
+ afxClass<afxFile, afxStream>ConstructingObject(030ebf90)
+ afxClass<afxStream>::ConstructObject(030ebf90)
+ afxClass<afxFile>::ConstructObject(030ebf90)
+ afxClass<afxFile>::DismantleObjects(1, 0043cdac)
+ Destructing instance 030ebf90 of afxFile class.
+ Destructing instance 030ebf90 of afxFile : afxStream class.
+ Destructing instance 030ebf90 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043cdac)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043d2dc,shd=0043d740)
+ afxClass<afxShader>::AllocateObjects(1, 0043d740, 0043cfc8)
+ afxClass<afxShader>::BuildObjects(1, 0043d740, 0043d2dc)
+ afxClass<afxShader>::ConstructObject(0098a1f0)
+ sglShader.c:272?_AfxShdCtor(shd=0098a1f0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043d04c)
+ Destructing instance 0309df90 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309df90)
+ afxClass<afxXml>::DeallocateObjects(1, 0043d04c)
+ afxObject<0098a1f0>::InstallEventFilter(030eb9e0)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 026e8f34, 0043d59c)
+ afxClass<afxLego>::BuildObjects(1, 026e8f34, 0043d8d8)
+ afxClass<afxLego>::ConstructObject(0309df90)
+ sglLego.c:299?_AfxLegtCtor(legt=0309df90)
+ afxClass<afxXml>::DismantleObjects(1, 0043e394)
+ Destructing instance 02704140 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=02704140)
+ afxClass<afxXml>::DeallocateObjects(1, 0043e394)
+ afxSampler.c:47?AfxDrawContextAcquireSamplers(dctx=030e8e50,spec=0043eb10)
+ afxClass<afxSampler>::AllocateObjects(1, 030eb73c, 0043e7d4)
+ afxClass<afxSampler>::BuildObjects(1, 030eb73c, 0043eb10)
+ afxClass<afxSampler>::ConstructObject(026af5d0)
+ sglSampler.c:184?_AfxSmpCtor(smp=026af5d0)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 030eb740, 0043e828)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 030eb740, 0043e800)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(0098b800)
+ afxClass<afxBuffer>::ConstructObject(0098b800)
+ sglBuffer.c:454?_AfxBufCtor(buf=0098b800)
+ afxClass<afxVertexBuffer>::ConstructObject(0098b800)
+ afxVertexBuffer.c:350?_AfxVbufCtor(vbuf=0098b800)
+ afxApplication.c:372?AfxSystemAcquireApplication(sys=0043f430,spec=030e8e50)
+ afxClass<afxApplication>::AllocateObjects(1, 0043f360, 0043f370)
+ afxClass<afxApplication>::BuildObjects(1, 0043f360, 0043f400)
+ afxClass<afxApplication>::ConstructObject(0272fad0)
+ afxApplication.c:422?_AfxAppCtor(app=0272fad0)
+ afxMouse.c:249?AfxSystemAcquireMouse(sys=008cf080,port=0)
+ afxClass<afxMouse>::AllocateObjects(1, 0043ef48, 0043ef58)
+ afxClass<afxMouse>::BuildObjects(1, 0043ef48, 0043ef40)
+ afxClass<afxMouse, afxHid>ConstructingObject(030d62a0)
+ afxClass<afxHid>::ConstructObject(030d62a0)
+ afxHid.c:75?_AfxHidCtor(hid=030d62a0)
+ afxClass<afxMouse>::ConstructObject(030d62a0)
+ afxMouse.c:304?_AfxMseCtor(mse=030d62a0)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=030e8e50,spec=0043f01c)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0043ef30, 0043ef4c)
+ afxClass<afxDrawInput>::BuildObjects(1, 0043ef30, 0043f01c)
+ afxClass<afxDrawInput>::ConstructObject(030cf730)
+ sglDrawInput.c:321?_AfxDinCtor(din=030cf730)
+ afxArena.c:822?AfxSystemAcquireArena(sys=008cf080,strategy=0043eba8,hint="sglDrawInput.c:357!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0043eaf4, 0043eb04)
+ afxClass<Memory Arena>::BuildObjects(1, 0043eaf4, 0043eae8)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(0272fd90)
+ afxClass<afxMemory>::ConstructObject(0272fd90)
+ afxMemory.c:317?_AfxMemCtor(mem=0272fd90)
+ afxClass<Memory Arena>::ConstructObject(0272fd90)
+ afxArena.c:799?_AfxArenCtor(aren=0272fd90)
+ afxClass<afxWidget>::Mount(0272fba8, 0272fb04, 00000000, 0ff1c950)
+ afxClass<afxSimulation>::Mount(0272fc68, 0272fb04, 00000000, 0ff1d408)
+ afxApplication.c:322?AfxApplicationExecute(app=0272fad0)
+ Sandbox.c:84?AfxEnterApplication(app=0272fad0)
+ afxSimulation.c:437?AfxApplicationAcquireSimulation(app=0272fad0,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ afxClass<afxSimulation>::AllocateObjects(1, 0043f0e8, 0043f0f8)
+ afxClass<afxSimulation>::BuildObjects(1, 0043f0e8, 0043f0e0)
+ afxClass<afxSimulation>::ConstructObject(0309ff80)
+ afxSimulation.c:355?_AfxSimCtor(sim=0309ff80)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=008cf080,strategy=0043ed78,hint="afxSimulation.c:377!_AfxSimCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0043ec6c, 0043ec7c)
+ afxClass<afxMemory>::BuildObjects(1, 0043ec6c, 0043ec60)
+ afxClass<afxMemory>::ConstructObject(030ced20)
+ afxMemory.c:317?_AfxMemCtor(mem=030ced20)
+ afxClass<afxMaterial>::Mount(030a0388, 0309ffb4, 00000000, 0ff1e2c0)
+ afxClass<afxMesh>::Mount(030a0448, 0309ffb4, 00000000, 0ff1e620)
+ afxClass<afxNode>::Mount(030a0688, 0309ffb4, 00000000, 0ff1d808)
+ afxClass<afxSkeleton>::Mount(030a05c8, 0309ffb4, 00000000, 0ff1dbb0)
+ afxClass<afxModel>::Mount(030a0508, 0309ffb4, 00000000, 0ff1ed7c)
+ afxClass<afxBody>::Mount(0309ffc8, 0309ffb4, 00000000, 0ff1cbd0)
+ afxClass<afxBodyControl>::Mount(030a0088, 0309ffb4, 00000000, 0ff1cdcc)
+ afxClass<afxEntity>::Mount(030a0148, 0309ffb4, 030a0688, 0ff1d1d8)
+ afxClass<afxCamera>::Mount(030a0208, 0309ffb4, 030a0688, 0ff1cefc)
+ afxClass<afxLight>::Mount(030a02c8, 0309ffb4, 030a0688, 0ff1d2bc)
+ afxClass<afxRenderer>::Mount(030a0748, 0309ffb4, 00000000, 0ff1f258)
+ afxDrawOutput.c:137?AfxDrawContextAcquireOutput(dctx=030e8e50,spec=0043f2b0)
+ afxClass<afxDrawOutput>::AllocateObjects(1, 0043f118, 0043f134)
+ afxClass<afxDrawOutput>::BuildObjects(1, 0043f118, 0043f2b0)
+ afxClass<afxDrawOutput>::ConstructObject(0309d830)
+ sglDrawOutput.c:524?_AfxDoutCtor(dout=0309d830)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=030e8e50,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0043e7f8, 0043e814)
+ afxClass<afxSurface>::BuildObjects(1, 0043e7f8, 0043e820)
+ afxClass<afxSurface, afxTexture>ConstructingObject(02ffa990)
+ afxClass<afxTexture>::ConstructObject(02ffa990)
+ sglTexture.c:1030?_AfxTexCtor(tex=02ffa990)
+ afxClass<afxSurface>::ConstructObject(02ffa990)
+ sglSurface.c:131?_AfxSurfCtor(surf=02ffa990)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=030e8e50,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0043e7f8, 0043e814)
+ afxClass<afxSurface>::BuildObjects(1, 0043e7f8, 0043e820)
+ afxClass<afxSurface, afxTexture>ConstructingObject(02ffaaa0)
+ afxClass<afxTexture>::ConstructObject(02ffaaa0)
+ sglTexture.c:1030?_AfxTexCtor(tex=02ffaaa0)
+ afxClass<afxSurface>::ConstructObject(02ffaaa0)
+ sglSurface.c:131?_AfxSurfCtor(surf=02ffaaa0)
+ sglDrawOutput.c:476?_AfxStdDoutImplCtor(dout=0309d830,uri=window)
+ sglDrawOutput.c:324?_AfxStdDoutImplCtorWnd(dout=0309d830)
+ Extent readjusted. (dout)0309d830 -> 1272, 0.000000 of 4243990486; 693 0.000000 of 1728769267
+ afxClass<afxRenderer>::AllocateObjects(1, 0009503c, 0043f140)
+ afxClass<afxRenderer>::BuildObjects(1, 0009503c, 00000000)
+ afxClass<afxRenderer>::ConstructObject(0272cc10)
+ afxRenderer.c:318?_AfxRndCtor(rnd=0272cc10)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=030e8e50,spec=0043ee48)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0043e2b0, 0043e2cc)
+ afxClass<afxDrawInput>::BuildObjects(1, 0043e2b0, 0043ee48)
+ afxClass<afxDrawInput>::ConstructObject(030a25d0)
+ sglDrawInput.c:321?_AfxDinCtor(din=030a25d0)
+ afxArena.c:822?AfxSystemAcquireArena(sys=008cf080,strategy=0043df28,hint="sglDrawInput.c:357!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0043de74, 0043de84)
+ afxClass<Memory Arena>::BuildObjects(1, 0043de74, 0043de68)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(030a2730)
+ afxClass<afxMemory>::ConstructObject(030a2730)
+ afxMemory.c:317?_AfxMemCtor(mem=030a2730)
+ afxClass<Memory Arena>::ConstructObject(030a2730)
+ afxArena.c:799?_AfxArenCtor(aren=030a2730)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=030e8e50,cnt=1,blueprint=0043e930,tex=0272ed78)
+ afxClass<afxTexture>::AllocateObjects(1, 0272ed78, 0043e29c)
+ afxClass<afxTexture>::BuildObjects(1, 0272ed78, 0043e930)
+ afxClass<afxTexture>::ConstructObject(031898c0)
+ sglTexture.c:1030?_AfxTexCtor(tex=031898c0)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/right.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/left.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/bottom.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/top.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/front.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/skybox/day/back.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043daf4, 0043db04)
+ afxClass<afxFile>::BuildObjects(1, 0043daf4, 0043dae0)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043db58)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043db58)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 0272ed74, 0043e278)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 0272ed74, 0043e250)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(02ffabc0)
+ afxClass<afxBuffer>::ConstructObject(02ffabc0)
+ sglBuffer.c:454?_AfxBufCtor(buf=02ffabc0)
+ afxClass<afxVertexBuffer>::ConstructObject(02ffabc0)
+ afxVertexBuffer.c:350?_AfxVbufCtor(vbuf=02ffabc0)
+ Uploading draw operation 'data/pipeline/skybox.xml'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043dd80, 0043dd90)
+ afxClass<afxXml>::BuildObjects(1, 0043dd80, 0043dd78)
+ afxClass<afxXml>::ConstructObject(0309def0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043d9f0, 0043da00)
+ afxClass<afxFile>::BuildObjects(1, 0043d9f0, 0043d9dc)
+ afxClass<afxFile, afxStream>ConstructingObject(031899c0)
+ afxClass<afxStream>::ConstructObject(031899c0)
+ afxClass<afxFile>::ConstructObject(031899c0)
+ afxClass<afxFile>::DismantleObjects(1, 0043da54)
+ Destructing instance 031899c0 of afxFile class.
+ Destructing instance 031899c0 of afxFile : afxStream class.
+ Destructing instance 031899c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043da54)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 0272eda0, 0043dd6c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 0272eda0, 0043dfec)
+ afxClass<afxDrawOperation>::ConstructObject(0309e1f0)
+ afxDrawOperation.c:665?_AfxDopCtor(dop=0309e1f0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=030e8e50)
+ afxClass<afxPipeline>::AllocateObjects(1, 026ea228, 0043d714)
+ afxClass<afxPipeline>::BuildObjects(1, 026ea228, 0043d800)
+ afxClass<afxPipeline>::ConstructObject(0318b260)
+ sglPipeline.c:517?_AfxPipCtor(pip=0318b260)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0309e280,shd=0043d190)
+ Uploading shader 'data/pipeline/skybox.xml?vs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309e3b0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318b530)
+ afxClass<afxStream>::ConstructObject(0318b530)
+ afxClass<afxFile>::ConstructObject(0318b530)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318b530 of afxFile class.
+ Destructing instance 0318b530 of afxFile : afxStream class.
+ Destructing instance 0318b530 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bf20)
+ afxClass<afxStream>::ConstructObject(0318bf20)
+ afxClass<afxFile>::ConstructObject(0318bf20)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318bf20 of afxFile class.
+ Destructing instance 0318bf20 of afxFile : afxStream class.
+ Destructing instance 0318bf20 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdView.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bf20)
+ afxClass<afxStream>::ConstructObject(0318bf20)
+ afxClass<afxFile>::ConstructObject(0318bf20)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318bf20 of afxFile class.
+ Destructing instance 0318bf20 of afxFile : afxStream class.
+ Destructing instance 0318bf20 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(0318bf20)
+ sglShader.c:272?_AfxShdCtor(shd=0318bf20)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    vec4 viewpoint; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        out block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        void main()
+        {
+            sgl_v.uvw0 = a_xyz;
+            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            gl_Position = pos.xyww;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309e3b0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309e3b0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<0318bf20>::InstallEventFilter(0318b260)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0309e320,shd=0043d190)
+ Uploading shader 'data/pipeline/skybox.xml?fs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309e3b0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318b530)
+ afxClass<afxStream>::ConstructObject(0318b530)
+ afxClass<afxFile>::ConstructObject(0318b530)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318b530 of afxFile class.
+ Destructing instance 0318b530 of afxFile : afxStream class.
+ Destructing instance 0318b530 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318b530)
+ afxClass<afxStream>::ConstructObject(0318b530)
+ afxClass<afxFile>::ConstructObject(0318b530)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318b530 of afxFile class.
+ Destructing instance 0318b530 of afxFile : afxStream class.
+ Destructing instance 0318b530 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(03189d10)
+ sglShader.c:272?_AfxShdCtor(shd=03189d10)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform samplerCube samp;
+
+        in block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uvw0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309e3b0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309e3b0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<03189d10>::InstallEventFilter(0318b260)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 026e9f24, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 026e9f24, 0043d328)
+ afxClass<afxLego>::ConstructObject(0309e3b0)
+ sglLego.c:299?_AfxLegtCtor(legt=0309e3b0)
+ afxClass<afxXml>::DismantleObjects(1, 0043dde4)
+ Destructing instance 0309def0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309def0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043dde4)
+ afxSampler.c:47?AfxDrawContextAcquireSamplers(dctx=030e8e50,spec=0043e4d0)
+ afxClass<afxSampler>::AllocateObjects(1, 0272eda4, 0043e224)
+ afxClass<afxSampler>::BuildObjects(1, 0272eda4, 0043e4d0)
+ afxClass<afxSampler>::ConstructObject(0318b530)
+ sglSampler.c:184?_AfxSmpCtor(smp=0318b530)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272d700, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272d700, 0043e494)
+ afxClass<afxBuffer>::ConstructObject(008d6980)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6980)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272d704, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272d704, 0043e4a0)
+ afxClass<afxBuffer>::ConstructObject(008d6a40)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6a40)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272d708, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272d708, 0043e4ac)
+ afxClass<afxBuffer>::ConstructObject(008d6b00)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6b00)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272d70c, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272d70c, 0043e4b8)
+ afxClass<afxBuffer>::ConstructObject(008d6bc0)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6bc0)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272e180, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272e180, 0043e494)
+ afxClass<afxBuffer>::ConstructObject(008d6c80)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6c80)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272e184, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272e184, 0043e4a0)
+ afxClass<afxBuffer>::ConstructObject(008d6d40)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6d40)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272e188, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272e188, 0043e4ac)
+ afxClass<afxBuffer>::ConstructObject(008d6e00)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6e00)
+ afxClass<afxBuffer>::AllocateObjects(1, 0272e18c, 0043e2a8)
+ afxClass<afxBuffer>::BuildObjects(1, 0272e18c, 0043e4b8)
+ afxClass<afxBuffer>::ConstructObject(008d6ec0)
+ sglBuffer.c:454?_AfxBufCtor(buf=008d6ec0)
+ Uploading draw operation 'data/pipeline/body.xml'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043dd80, 0043dd90)
+ afxClass<afxXml>::BuildObjects(1, 0043dd80, 0043dd78)
+ afxClass<afxXml>::ConstructObject(0309e0c0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043d9f0, 0043da00)
+ afxClass<afxFile>::BuildObjects(1, 0043d9f0, 0043d9dc)
+ afxClass<afxFile, afxStream>ConstructingObject(0318b170)
+ afxClass<afxStream>::ConstructObject(0318b170)
+ afxClass<afxFile>::ConstructObject(0318b170)
+ afxClass<afxFile>::DismantleObjects(1, 0043da54)
+ Destructing instance 0318b170 of afxFile class.
+ Destructing instance 0318b170 of afxFile : afxStream class.
+ Destructing instance 0318b170 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043da54)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 0272edb8, 0043dd6c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 0272edb8, 0043dfec)
+ afxClass<afxDrawOperation>::ConstructObject(0309e6b0)
+ afxDrawOperation.c:665?_AfxDopCtor(dop=0309e6b0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=030e8e50)
+ afxClass<afxPipeline>::AllocateObjects(1, 026e9958, 0043d714)
+ afxClass<afxPipeline>::BuildObjects(1, 026e9958, 0043d800)
+ afxClass<afxPipeline>::ConstructObject(03194db0)
+ sglPipeline.c:517?_AfxPipCtor(pip=03194db0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0309e740,shd=0043d190)
+ Uploading shader 'data/pipeline/body.xml?vsRigid'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309e7e0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bce0)
+ afxClass<afxStream>::ConstructObject(0318bce0)
+ afxClass<afxFile>::ConstructObject(0318bce0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318bce0 of afxFile class.
+ Destructing instance 0318bce0 of afxFile : afxStream class.
+ Destructing instance 0318bce0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bce0)
+ afxClass<afxStream>::ConstructObject(0318bce0)
+ afxClass<afxFile>::ConstructObject(0318bce0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318bce0 of afxFile class.
+ Destructing instance 0318bce0 of afxFile : afxStream class.
+ Destructing instance 0318bce0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdView.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bce0)
+ afxClass<afxStream>::ConstructObject(0318bce0)
+ afxClass<afxFile>::ConstructObject(0318bce0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318bce0 of afxFile class.
+ Destructing instance 0318bce0 of afxFile : afxStream class.
+ Destructing instance 0318bce0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdObject.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(031a7ed0)
+ afxClass<afxStream>::ConstructObject(031a7ed0)
+ afxClass<afxFile>::ConstructObject(031a7ed0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 031a7ed0 of afxFile class.
+ Destructing instance 031a7ed0 of afxFile : afxStream class.
+ Destructing instance 031a7ed0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(03195800)
+ sglShader.c:272?_AfxShdCtor(shd=03195800)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    vec4 viewpoint; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+layout(std140) uniform sgl_obj
+{
+    int boneCnt;
+    mat4 m;
+    mat4 w[32];
+};
+
+        
+        layout (location = 0) in vec4 aPos;
+        layout (location = 1) in vec3 aNormal;
+        layout (location = 2) in vec2 aUv;
+
+        const vec4 AmbientColour = vec4(0.2, 0.2, 0.2, 0.2);
+        
+        out block
+        {
+            vec3 Position;
+            vec4 Diffuse;
+            vec2 Tex0;
+        } sgl_v;
+
+        void main()
+        {
+            vec3 ObjNormal = vec3(v * inverse(m[0]) * vec4(aNormal, 0));
+
+            gl_Position = p * v * m * aPos;
+            sgl_v.Tex0     = aUv;
+            sgl_v.Diffuse  = starKd * (dot(ObjNormal, starDir)) + AmbientColour;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309e7e0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309e7e0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<03195800>::InstallEventFilter(03194db0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0318bc50,shd=0043d190)
+ Uploading shader 'data/pipeline/body.xml?fs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309e7e0)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bce0)
+ afxClass<afxStream>::ConstructObject(0318bce0)
+ afxClass<afxFile>::ConstructObject(0318bce0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318bce0 of afxFile class.
+ Destructing instance 0318bce0 of afxFile : afxStream class.
+ Destructing instance 0318bce0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318bce0)
+ afxClass<afxStream>::ConstructObject(0318bce0)
+ afxClass<afxFile>::ConstructObject(0318bce0)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318bce0 of afxFile class.
+ Destructing instance 0318bce0 of afxFile : afxStream class.
+ Destructing instance 0318bce0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(0318bce0)
+ sglShader.c:272?_AfxShdCtor(shd=0318bce0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D diffuse_sampler;
+        
+        in block
+        {
+            vec3 Position;
+            vec4 Diffuse;
+            vec2 Tex0;
+        } sgl_v;
+        
+        out vec4 FragColor;
+        
+        void main()
+        {
+            FragColor = /*texture( diffuse_sampler, sgl_v.Tex0 ) * */sgl_v.Diffuse;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309e7e0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309e7e0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<0318bce0>::InstallEventFilter(03194db0)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 03098bd4, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 03098bd4, 0043d328)
+ afxClass<afxLego>::ConstructObject(0309e7e0)
+ sglLego.c:299?_AfxLegtCtor(legt=0309e7e0)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 03098be0, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 03098be0, 0043d370)
+ afxClass<afxLego>::ConstructObject(0309e910)
+ sglLego.c:299?_AfxLegtCtor(legt=0309e910)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 03098bec, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 03098bec, 0043d394)
+ afxClass<afxLego>::ConstructObject(0309e9a0)
+ sglLego.c:299?_AfxLegtCtor(legt=0309e9a0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=030e8e50)
+ afxClass<afxPipeline>::AllocateObjects(1, 026e8c98, 0043d714)
+ afxClass<afxPipeline>::BuildObjects(1, 026e8c98, 0043d800)
+ afxClass<afxPipeline>::ConstructObject(031a7de0)
+ sglPipeline.c:517?_AfxPipCtor(pip=031a7de0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0309e740,shd=0043d190)
+ Uploading shader 'data/pipeline/body.xml?vsSkinned'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309ea40)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdView.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdObject.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(03195340)
+ sglShader.c:272?_AfxShdCtor(shd=03195340)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    vec4 viewpoint; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+layout(std140) uniform sgl_obj
+{
+    int boneCnt;
+    mat4 m;
+    mat4 w[32];
+};
+
+        
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aNormal;
+        layout (location = 2) in vec2 aUv;
+        layout (location = 3) in vec4 aBlendIndices;
+        layout (location = 4) in vec4 aBlendWeights;
+
+        out block
+        {
+            vec3 Position;
+            vec4 Diffuse;
+            vec2 Tex0;
+        } sgl_v;
+
+        const vec4 AmbientColour = vec4(0.2, 0.2, 0.2, 0.2);
+        
+        void main()
+        {
+            vec4 InPos     = vec4( aPos, 1 );
+            vec4 WorldPos    = 0;
+            vec3 WorldNormal = 0;
+            
+            // We're going to assume that we can transform the normal by the matrix, which is not
+            // technically correct unless we're positive there's not a scaling factor involved.
+
+            for( int i = 0; i < 4; ++i )
+            {
+                mat4 BoneMatrix = m[int(aBlendIndices[i])];
+                WorldPos    += (aBlendWeights[i] * vec4( InPos * BoneMatrix ));
+                WorldNormal += vec3(vec4(aBlendWeights[i] * vec4( vec4( aNormal, 0 ) * BoneMatrix )));
+            }
+
+            vec4 ViewPosL = (WorldPos * v);
+            vec4 ClipPos = (ViewPosL * p);
+            gl_Position = ClipPos;
+            sgl_v.Position   = vec3(ClipPos);
+            sgl_v.Tex0    = aUv;
+            sgl_v.Diffuse = starKd * (dot(normalize(WorldNormal), starDir)) + AmbientColour;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309ea40 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309ea40)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<03195340>::InstallEventFilter(031a7de0)
+ afxShader.c:537?AfxDrawContextAcquireShaders(dctx=030e8e50,cnt=1,uri=0318bc50,shd=0043d190)
+ Uploading shader 'data/pipeline/body.xml?fs'
+ afxXml.c:1047?AfxFileSystemLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0043ca38, 0043ca48)
+ afxClass<afxXml>::BuildObjects(1, 0043ca38, 0043ca30)
+ afxClass<afxXml>::ConstructObject(0309ea40)
+ afxXml.c:1006?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0043c6a8, 0043c6b8)
+ afxClass<afxFile>::BuildObjects(1, 0043c6a8, 0043c694)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c70c)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c70c)
+ afxFile.c:300?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(008cff00,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0043c79c, 0043c7ac)
+ afxClass<afxFile>::BuildObjects(1, 0043c79c, 0043c788)
+ afxClass<afxFile, afxStream>ConstructingObject(0318be40)
+ afxClass<afxStream>::ConstructObject(0318be40)
+ afxClass<afxFile>::ConstructObject(0318be40)
+ afxClass<afxFile>::DismantleObjects(1, 0043c7fc)
+ Destructing instance 0318be40 of afxFile class.
+ Destructing instance 0318be40 of afxFile : afxStream class.
+ Destructing instance 0318be40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043c7fc)
+ afxShader.c:376?AfxDrawContextBuildShaders(dctx=030e8e50,cnt=1,blueprint=0043cd2c,shd=0043d190)
+ afxClass<afxShader>::AllocateObjects(1, 0043d190, 0043ca18)
+ afxClass<afxShader>::BuildObjects(1, 0043d190, 0043cd2c)
+ afxClass<afxShader>::ConstructObject(0318be40)
+ sglShader.c:272?_AfxShdCtor(shd=0318be40)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D diffuse_sampler;
+        
+        in block
+        {
+            vec3 Position;
+            vec4 Diffuse;
+            vec2 Tex0;
+        } sgl_v;
+        
+        out vec4 FragColor;
+        
+        void main()
+        {
+            FragColor = /*texture( diffuse_sampler, sgl_v.Tex0 ) * */sgl_v.Diffuse;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0043ca9c)
+ Destructing instance 0309ea40 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309ea40)
+ afxClass<afxXml>::DeallocateObjects(1, 0043ca9c)
+ afxObject<0318be40>::InstallEventFilter(031a7de0)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 03098544, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 03098544, 0043d328)
+ afxClass<afxLego>::ConstructObject(0309ea40)
+ sglLego.c:299?_AfxLegtCtor(legt=0309ea40)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 03098550, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 03098550, 0043d370)
+ afxClass<afxLego>::ConstructObject(0309eb70)
+ sglLego.c:299?_AfxLegtCtor(legt=0309eb70)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=030e8e50)
+ afxClass<afxLego>::AllocateObjects(1, 0309855c, 0043cfec)
+ afxClass<afxLego>::BuildObjects(1, 0309855c, 0043d394)
+ afxClass<afxLego>::ConstructObject(0309ec00)
+ sglLego.c:299?_AfxLegtCtor(legt=0309ec00)
+ afxClass<afxXml>::DismantleObjects(1, 0043dde4)
+ Destructing instance 0309e0c0 of afxXml class.
+ afxXml.c:983?_AfxXmlDtor(xml=0309e0c0)
+ afxClass<afxXml>::DeallocateObjects(1, 0043dde4)
+ afxCanvas.c:156?AfxDrawContextBuildCanvases(dctx=030e8e50,cnt=1,blueprint=0043eff0,canv=0272cc74)
+ afxClass<afxCanvas>::AllocateObjects(1, 0272cc74, 0043eeec)
+ afxClass<afxCanvas>::BuildObjects(1, 0272cc74, 0043eff0)
+ afxClass<afxCanvas>::ConstructObject(031956d0)
+ sglCanvas.c:399?_AfxCanvCtor(canv=031956d0)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=030e8e50,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0043e4c8, 0043e4e4)
+ afxClass<afxSurface>::BuildObjects(1, 0043e4c8, 0043e4f0)
+ afxClass<afxSurface, afxTexture>ConstructingObject(0318ba70)
+ afxClass<afxTexture>::ConstructObject(0318ba70)
+ sglTexture.c:1030?_AfxTexCtor(tex=0318ba70)
+ afxClass<afxSurface>::ConstructObject(0318ba70)
+ sglSurface.c:131?_AfxSurfCtor(surf=0318ba70)
+ afxCanvas.c:156?AfxDrawContextBuildCanvases(dctx=030e8e50,cnt=1,blueprint=0043eff0,canv=0272cc78)
+ afxClass<afxCanvas>::AllocateObjects(1, 0272cc78, 0043eeec)
+ afxClass<afxCanvas>::BuildObjects(1, 0272cc78, 0043eff0)
+ afxClass<afxCanvas>::ConstructObject(0318bb80)
+ sglCanvas.c:399?_AfxCanvCtor(canv=0318bb80)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=030e8e50,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0043e4c8, 0043e4e4)
+ afxClass<afxSurface>::BuildObjects(1, 0043e4c8, 0043e4f0)
+ afxClass<afxSurface, afxTexture>ConstructingObject(031a9da0)
+ afxClass<afxTexture>::ConstructObject(031a9da0)
+ sglTexture.c:1030?_AfxTexCtor(tex=031a9da0)
+ afxClass<afxSurface>::ConstructObject(031a9da0)
+ sglSurface.c:131?_AfxSurfCtor(surf=031a9da0)
+ ADV glus_wavefront.c:866?__ldrWavefrontParse
+    MTL NAME art/object/container/container.mtl
+ ADV glus_wavefront.c:291?_ldrWavefrontLoadMaterial
+    MTL FNAME art/object/container/container.mtl
+ Mesh name container
+ afxClass<afxMaterial>::AllocateObjects(1, 0043e2a4, 0043e048)
+ afxClass<afxMaterial>::BuildObjects(1, 0043e2a4, 0043e540)
+ afxClass<afxMaterial>::ConstructObject(030d6370)
+ afxMaterial.c:248?_AfxMtlCtor(mtl=030d6370)
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043d2fc, 0043d30c)
+ afxClass<afxFile>::BuildObjects(1, 0043d2fc, 0043d2e8)
+ afxClass<afxFile, afxStream>ConstructingObject(0318cc80)
+ afxClass<afxStream>::ConstructObject(0318cc80)
+ afxClass<afxFile>::ConstructObject(0318cc80)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=030e8e50,cnt=1,blueprint=0043d3f0,tex=030d63b0)
+ afxClass<afxTexture>::AllocateObjects(1, 030d63b0, 0043d2dc)
+ afxClass<afxTexture>::BuildObjects(1, 030d63b0, 0043d3f0)
+ afxClass<afxTexture>::ConstructObject(031ba350)
+ sglTexture.c:1030?_AfxTexCtor(tex=031ba350)
+ afxClass<afxFile>::DismantleObjects(1, 0043d360)
+ Destructing instance 0318cc80 of afxFile class.
+ Destructing instance 0318cc80 of afxFile : afxStream class.
+ Destructing instance 0318cc80 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043d360)
+ afxClass<afxMaterial>::AllocateObjects(1, 0043e2a4, 0043e048)
+ afxClass<afxMaterial>::BuildObjects(1, 0043e2a4, 0043e540)
+ afxClass<afxMaterial>::ConstructObject(030d6450)
+ afxMaterial.c:248?_AfxMtlCtor(mtl=030d6450)
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043d2fc, 0043d30c)
+ afxClass<afxFile>::BuildObjects(1, 0043d2fc, 0043d2e8)
+ afxClass<afxFile, afxStream>ConstructingObject(0318cc80)
+ afxClass<afxStream>::ConstructObject(0318cc80)
+ afxClass<afxFile>::ConstructObject(0318cc80)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=030e8e50,cnt=1,blueprint=0043d3f0,tex=030d6490)
+ afxClass<afxTexture>::AllocateObjects(1, 030d6490, 0043d2dc)
+ afxClass<afxTexture>::BuildObjects(1, 030d6490, 0043d3f0)
+ afxClass<afxTexture>::ConstructObject(031ba450)
+ sglTexture.c:1030?_AfxTexCtor(tex=031ba450)
+ afxClass<afxFile>::DismantleObjects(1, 0043d360)
+ Destructing instance 0318cc80 of afxFile class.
+ Destructing instance 0318cc80 of afxFile : afxStream class.
+ Destructing instance 0318cc80 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043d360)
+ Mesh name air_conditioning
+ afxClass<afxMaterial>::AllocateObjects(1, 0043e2a4, 0043e048)
+ afxClass<afxMaterial>::BuildObjects(1, 0043e2a4, 0043e540)
+ afxClass<afxMaterial>::ConstructObject(030d6520)
+ afxMaterial.c:248?_AfxMtlCtor(mtl=030d6520)
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043d2fc, 0043d30c)
+ afxClass<afxFile>::BuildObjects(1, 0043d2fc, 0043d2e8)
+ afxClass<afxFile, afxStream>ConstructingObject(0318cc80)
+ afxClass<afxStream>::ConstructObject(0318cc80)
+ afxClass<afxFile>::ConstructObject(0318cc80)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=030e8e50,cnt=1,blueprint=0043d3f0,tex=030d6560)
+ afxClass<afxTexture>::AllocateObjects(1, 030d6560, 0043d2dc)
+ afxClass<afxTexture>::BuildObjects(1, 030d6560, 0043d3f0)
+ afxClass<afxTexture>::ConstructObject(031ba550)
+ sglTexture.c:1030?_AfxTexCtor(tex=031ba550)
+ afxClass<afxFile>::DismantleObjects(1, 0043d360)
+ Destructing instance 0318cc80 of afxFile class.
+ Destructing instance 0318cc80 of afxFile : afxStream class.
+ Destructing instance 0318cc80 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043d360)
+ afxClass<afxMaterial>::AllocateObjects(1, 0043e2a4, 0043e048)
+ afxClass<afxMaterial>::BuildObjects(1, 0043e2a4, 0043e540)
+ afxClass<afxMaterial>::ConstructObject(030d6600)
+ afxMaterial.c:248?_AfxMtlCtor(mtl=030d6600)
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:279?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(008cff00,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0043d2fc, 0043d30c)
+ afxClass<afxFile>::BuildObjects(1, 0043d2fc, 0043d2e8)
+ afxClass<afxFile, afxStream>ConstructingObject(0318cc80)
+ afxClass<afxStream>::ConstructObject(0318cc80)
+ afxClass<afxFile>::ConstructObject(0318cc80)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=030e8e50,cnt=1,blueprint=0043d3f0,tex=030d6640)
+ afxClass<afxTexture>::AllocateObjects(1, 030d6640, 0043d2dc)
+ afxClass<afxTexture>::BuildObjects(1, 030d6640, 0043d3f0)
+ afxClass<afxTexture>::ConstructObject(031ba650)
+ sglTexture.c:1030?_AfxTexCtor(tex=031ba650)
+ afxClass<afxFile>::DismantleObjects(1, 0043d360)
+ Destructing instance 0318cc80 of afxFile class.
+ Destructing instance 0318cc80 of afxFile : afxStream class.
+ Destructing instance 0318cc80 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0043d360)
+ afxClass<afxSkeleton>::AllocateObjects(1, 0043e24c, 0043e048)
+ afxClass<afxSkeleton>::BuildObjects(1, 0043e24c, 0043e250)
+ afxClass<afxSkeleton>::ConstructObject(0309e0c0)
+ afxSkeleton.c:798?_AfxSklCtor(skl=0309e0c0)
+ ADV afxSkeleton.c:813?_AfxSklCtor
+    TODO: Reparent base to skeleton node
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 0043e00c, 0043c2d8)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 0043e00c, 0043c2b0)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(0318cc80)
+ afxClass<afxBuffer>::ConstructObject(0318cc80)
+ sglBuffer.c:454?_AfxBufCtor(buf=0318cc80)
+ afxClass<afxVertexBuffer>::ConstructObject(0318cc80)
+ afxVertexBuffer.c:350?_AfxVbufCtor(vbuf=0318cc80)
+ afxIndexBuffer.c:131?AfxDrawContextBuildIndexBuffers(dctx=030e8e50,cnt=1,stride=0043c420)
+ afxClass<afxIndexBuffer>::AllocateObjects(1, 0043e04c, 0043c2fc)
+ afxClass<afxIndexBuffer>::BuildObjects(1, 0043e04c, 0043c2d4)
+ afxClass<afxIndexBuffer, afxBuffer>ConstructingObject(031ba040)
+ afxClass<afxBuffer>::ConstructObject(031ba040)
+ sglBuffer.c:454?_AfxBufCtor(buf=031ba040)
+ afxClass<afxIndexBuffer>::ConstructObject(031ba040)
+ afxIndexBuffer.c:200?_AfxIbufCtor(ibuf=031ba040)
+ afxClass<afxMesh>::AllocateObjects(2, 026e9b60, 0043c438)
+ afxClass<afxMesh>::BuildObjects(2, 026e9b60, 0318c9d0)
+ afxClass<afxMesh>::ConstructObject(031ba100)
+ afxMesh.c:1022?_AfxMshCtor(msh=031ba100)
+ afxClass<afxMesh>::ConstructObject(031ba1c0)
+ afxMesh.c:1022?_AfxMshCtor(msh=031ba1c0)
+ afxClass<afxModel>::AllocateObjects(1, 0043e208, 0043e048)
+ afxClass<afxModel>::BuildObjects(1, 0043e208, 0043e370)
+ afxClass<afxModel>::ConstructObject(0318c9d0)
+ afxModel.c:196?_AfxMdlCtor(mdl=0318c9d0)
+ ERR glus_wavefront.c:251?_ldrWavefrontDestroyMaterial
+    
+ afxModel.c:396?AfxSimulationAcquireModels(sim=0309ff80,cnt=1,uri=0043f240,mdl=0043f1f8)
+ afxClass<afxBody>::AllocateObjects(1, 00095044, 0043f140)
+ afxClass<afxBody>::BuildObjects(1, 00095044, 0043f1f8)
+ afxClass<afxBody>::ConstructObject(031a9eb0)
+ afxBody.c:636?_AfxBodCtor(bod=031a9eb0)
+ afxCamera.c:749?AfxSimulationAcquireCamera(sim=0309ff80,name=viewer,perspective=1)
+ afxClass<afxCamera>::AllocateObjects(1, 0043ef84, 0043ef94)
+ afxClass<afxCamera>::BuildObjects(1, 0043ef84, 0043efa0)
+ afxClass<afxCamera, afxNode>ConstructingObject(0318bff0)
+ afxClass<afxNode>::ConstructObject(0318bff0)
+ afxClass<afxCamera>::ConstructObject(0318bff0)
+ afxCamera.c:825?_AfxCamCtor(cam=0318bff0)
+ afxObject<030d62a0>::InstallEventFilter(0318bff0)
+ afxDrawScript.c:298?AfxDrawInputAcquireScript(din=030a25d0)
+ afxClass<afxDrawScript>::AllocateObjects(1, 0043f018, 0043f028)
+ afxClass<afxDrawScript>::BuildObjects(1, 0043f018, 0043f080)
+ afxClass<afxDrawScript>::ConstructObject(008d6f80)
+ sglDrawScript.c:464?_AfxDscrCtor(dscr=008d6f80)
+ afxBuffer 008d6c80 hardware-side data instanced.
+ afxTexture 02ffaaa0 hardware-side data instanced.
+ afxSurface 02ffaaa0 hardware-side data instanced.
+ afxTexture 031a9da0 hardware-side data instanced.
+ afxSurface 031a9da0 hardware-side data instanced.
+ afxCanvas 0318bb80 hardware-side data instanced.
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ afxShader 0318bce0 hardware-side data instanced.
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ afxBuffer 0318cc80 hardware-side data instanced.
+ afxBuffer 031ba040 hardware-side data instanced.
+ afxBuffer 008d6ec0 hardware-side data instanced.
+ afxShader 0098a120 hardware-side data instanced.
+ afxShader 0098a1f0 hardware-side data instanced.
+ afxPipeline 030eb9e0 hardware-side data instanced.
+ afxBuffer 0098b800 hardware-side data instanced.
+ afxTexture 02ffa990 hardware-side data instanced.
+ afxSampler 026af5d0 hardware-side data instanced.
+ afxBuffer 008d6980 hardware-side data instanced.
+ afxSurface 02ffa990 hardware-side data instanced.
+ afxTexture 0318ba70 hardware-side data instanced.
+ afxSurface 0318ba70 hardware-side data instanced.
+ afxCanvas 031956d0 hardware-side data instanced.
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ afxBuffer 008d6bc0 hardware-side data instanced.
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:55: 'inverse' : no matching overloaded function found (using implicit conversion) 
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Fragment shader contains a user varying, but is linked without a vertex shader.
+
+ ADV afxSystem.c:529?AfxSystemProcess
+    User input requested application break.
+ afxApplication.c:293?AfxApplicationExit(app=0272fad0)
+ Sandbox.c:190?AfxLeaveApplication(app=0272fad0)
+ aaaaaaaaaaaa
+ afxClass<afxApplication>::DismantleObjects(1, 0043f3a4)
+ Destructing instance 0272fad0 of afxApplication class.
+ afxApplication.c:405?_AfxAppDtor(app=0272fad0)
+ afxClass<afxSimulation>::Dismount(0272fc68)
+ afxClass<afxSimulation>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0309ff80 of afxSimulation class.
+ afxSimulation.c:340?_AfxSimDtor(sim=0309ff80)
+ afxClass<afxRenderer>::Dismount(030a0748)
+ afxClass<afxRenderer>::DismantleObjects(1, 0043eae8)
+ Destructing instance 0272cc10 of afxRenderer class.
+ afxRenderer.c:286?_AfxRndDtor(rnd=0272cc10)
+ afxClass<afxDrawInput>::DismantleObjects(1, 0043e78c)
+ Destructing instance 030a25d0 of afxDrawInput class.
+ sglDrawInput.c:282?_AfxDinDtor(din=030a25d0)
+ afxClass<afxDrawInput>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxCanvas>::DismantleObjects(1, 0043e78c)
+ Destructing instance 031956d0 of afxCanvas class.
+ sglCanvas.c:377?_AfxCanvDtor(canv=031956d0)
+ sglCanvas.c:327?_AfxCanvDropAllSurfaces(canv=031956d0)
+ afxClass<afxSurface>::DismantleObjects(1, 0043e3f0)
+ Destructing instance 0318ba70 of afxSurface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=0318ba70)
+ Destructing instance 0318ba70 of afxSurface : afxTexture class.
+ Destructing instance 0318ba70 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=0318ba70)
+ afxClass<afxSurface>::DeallocateObjects(1, 0043e3f0)
+ afxClass<afxCanvas>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxCanvas>::DismantleObjects(1, 0043e78c)
+ Destructing instance 0318bb80 of afxCanvas class.
+ sglCanvas.c:377?_AfxCanvDtor(canv=0318bb80)
+ sglCanvas.c:327?_AfxCanvDropAllSurfaces(canv=0318bb80)
+ afxClass<afxSurface>::DismantleObjects(1, 0043e3f0)
+ Destructing instance 031a9da0 of afxSurface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=031a9da0)
+ Destructing instance 031a9da0 of afxSurface : afxTexture class.
+ Destructing instance 031a9da0 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031a9da0)
+ afxClass<afxSurface>::DeallocateObjects(1, 0043e3f0)
+ afxClass<afxCanvas>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6980 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6980)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6a40 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6a40)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6b00 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6b00)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6bc0 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6bc0)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6c80 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6c80)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6d40 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6d40)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6e00 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6e00)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 008d6ec0 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=008d6ec0)
+ afxClass<afxBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxTexture>::DismantleObjects(1, 0043e78c)
+ Destructing instance 031898c0 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031898c0)
+ afxClass<afxTexture>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxVertexBuffer>::DismantleObjects(1, 0043e78c)
+ Destructing instance 02ffabc0 of afxVertexBuffer class.
+ afxVertexBuffer.c:326?_AfxVbufDtor(vbuf=02ffabc0)
+ Destructing instance 02ffabc0 of afxVertexBuffer : afxBuffer class.
+ Destructing instance 02ffabc0 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=02ffabc0)
+ afxClass<afxVertexBuffer>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxDrawOperation>::DismantleObjects(1, 0043e78c)
+ Destructing instance 0309e1f0 of afxDrawOperation class.
+ afxDrawOperation.c:628?_AfxDopDtor(dop=0309e1f0)
+ afxClass<afxPipeline>::DismantleObjects(1, 0043e400)
+ afxObject<03189d10>::RemoveEventFilter(0318b260)
+ afxObject<0318bf20>::RemoveEventFilter(0318b260)
+ Destructing instance 0318b260 of afxPipeline class.
+ sglPipeline.c:447?_AfxPipDtor(pip=0318b260)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309e3b0 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309e3b0)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxPipeline>::DeallocateObjects(1, 0043e400)
+ afxClass<afxDrawOperation>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxSampler>::DismantleObjects(1, 0043e78c)
+ Destructing instance 0318b530 of afxSampler class.
+ sglSampler.c:157?_AfxSmpDtor(smp=0318b530)
+ afxClass<afxSampler>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxDrawOperation>::DismantleObjects(1, 0043e78c)
+ Destructing instance 0309e6b0 of afxDrawOperation class.
+ afxDrawOperation.c:628?_AfxDopDtor(dop=0309e6b0)
+ afxClass<afxPipeline>::DismantleObjects(1, 0043e400)
+ afxObject<0318bce0>::RemoveEventFilter(03194db0)
+ afxObject<03195800>::RemoveEventFilter(03194db0)
+ Destructing instance 03194db0 of afxPipeline class.
+ sglPipeline.c:447?_AfxPipDtor(pip=03194db0)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309e7e0 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309e7e0)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309e910 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309e910)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309e9a0 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309e9a0)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxPipeline>::DeallocateObjects(1, 0043e400)
+ afxClass<afxPipeline>::DismantleObjects(1, 0043e400)
+ afxObject<0318be40>::RemoveEventFilter(031a7de0)
+ afxObject<03195340>::RemoveEventFilter(031a7de0)
+ Destructing instance 031a7de0 of afxPipeline class.
+ sglPipeline.c:447?_AfxPipDtor(pip=031a7de0)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309ea40 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309ea40)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309eb70 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309eb70)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxLego>::DismantleObjects(1, 0043e080)
+ Destructing instance 0309ec00 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309ec00)
+ afxClass<afxLego>::DeallocateObjects(1, 0043e080)
+ afxClass<afxPipeline>::DeallocateObjects(1, 0043e400)
+ afxClass<afxDrawOperation>::DeallocateObjects(1, 0043e78c)
+ afxClass<afxRenderer>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxLight>::Dismount(030a02c8)
+ afxClass<afxCamera>::Dismount(030a0208)
+ afxClass<afxCamera>::DismantleObjects(1, 0043eae8)
+ afxObject<030d62a0>::RemoveEventFilter(0318bff0)
+ Destructing instance 0318bff0 of afxCamera class.
+ afxCamera.c:817?_AfxCamDtor(cam=0318bff0)
+ Destructing instance 0318bff0 of afxCamera : afxNode class.
+ Destructing instance 0318bff0 of afxNode class.
+ afxClass<afxCamera>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxEntity>::Dismount(030a0148)
+ afxClass<afxBodyControl>::Dismount(030a0088)
+ afxClass<afxBody>::Dismount(0309ffc8)
+ afxClass<afxBody>::DismantleObjects(1, 0043eae8)
+ Destructing instance 031a9eb0 of afxBody class.
+ afxBody.c:623?_AfxBodDtor(bod=031a9eb0)
+ afxClass<afxBody>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxModel>::Dismount(030a0508)
+ afxClass<afxModel>::DismantleObjects(1, 0043eae8)
+ Destructing instance 0318c9d0 of afxModel class.
+ afxModel.c:169?_AfxMdlDtor(mdl=0318c9d0)
+ afxClass<afxMesh>::DismantleObjects(1, 0043e790)
+ Destructing instance 031ba100 of afxMesh class.
+ afxMesh.c:979?_AfxMshDtor(msh=031ba100)
+ afxClass<afxMesh>::DeallocateObjects(1, 0043e790)
+ afxClass<afxMesh>::DismantleObjects(1, 0043e790)
+ Destructing instance 031ba1c0 of afxMesh class.
+ afxMesh.c:979?_AfxMshDtor(msh=031ba1c0)
+ afxClass<afxIndexBuffer>::DismantleObjects(1, 0043e434)
+ Destructing instance 031ba040 of afxIndexBuffer class.
+ afxIndexBuffer.c:190?_AfxIbufDtor(ibuf=031ba040)
+ Destructing instance 031ba040 of afxIndexBuffer : afxBuffer class.
+ Destructing instance 031ba040 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=031ba040)
+ afxClass<afxIndexBuffer>::DeallocateObjects(1, 0043e434)
+ afxClass<afxVertexBuffer>::DismantleObjects(1, 0043e434)
+ Destructing instance 0318cc80 of afxVertexBuffer class.
+ afxVertexBuffer.c:326?_AfxVbufDtor(vbuf=0318cc80)
+ Destructing instance 0318cc80 of afxVertexBuffer : afxBuffer class.
+ Destructing instance 0318cc80 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=0318cc80)
+ afxClass<afxVertexBuffer>::DeallocateObjects(1, 0043e434)
+ afxClass<afxMesh>::DeallocateObjects(1, 0043e790)
+ afxClass<afxSkeleton>::DismantleObjects(1, 0043e790)
+ Destructing instance 0309e0c0 of afxSkeleton class.
+ afxSkeleton.c:541?_AfxSklDtor(skl=0309e0c0)
+ afxClass<afxSkeleton>::DeallocateObjects(1, 0043e790)
+ afxClass<afxModel>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxSkeleton>::Dismount(030a05c8)
+ afxClass<afxNode>::Dismount(030a0688)
+ afxClass<afxMesh>::Dismount(030a0448)
+ afxClass<afxMaterial>::Dismount(030a0388)
+ afxClass<afxMaterial>::DismantleObjects(1, 0043eae8)
+ Destructing instance 030d6600 of afxMaterial class.
+ afxMaterial.c:221?_AfxMtlDtor(mtl=030d6600)
+ afxClass<afxTexture>::DismantleObjects(1, 0043e7a8)
+ Destructing instance 031ba650 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031ba650)
+ afxClass<afxTexture>::DeallocateObjects(1, 0043e7a8)
+ afxClass<afxMaterial>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxMaterial>::DismantleObjects(1, 0043eae8)
+ Destructing instance 030d6520 of afxMaterial class.
+ afxMaterial.c:221?_AfxMtlDtor(mtl=030d6520)
+ afxClass<afxTexture>::DismantleObjects(1, 0043e7a8)
+ Destructing instance 031ba550 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031ba550)
+ afxClass<afxTexture>::DeallocateObjects(1, 0043e7a8)
+ afxClass<afxMaterial>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxMaterial>::DismantleObjects(1, 0043eae8)
+ Destructing instance 030d6450 of afxMaterial class.
+ afxMaterial.c:221?_AfxMtlDtor(mtl=030d6450)
+ afxClass<afxTexture>::DismantleObjects(1, 0043e7a8)
+ Destructing instance 031ba450 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031ba450)
+ afxClass<afxTexture>::DeallocateObjects(1, 0043e7a8)
+ afxClass<afxMaterial>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxMaterial>::DismantleObjects(1, 0043eae8)
+ Destructing instance 030d6370 of afxMaterial class.
+ afxMaterial.c:221?_AfxMtlDtor(mtl=030d6370)
+ afxClass<afxTexture>::DismantleObjects(1, 0043e7a8)
+ Destructing instance 031ba350 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=031ba350)
+ afxClass<afxTexture>::DeallocateObjects(1, 0043e7a8)
+ afxClass<afxMaterial>::DeallocateObjects(1, 0043eae8)
+ afxClass<afxMemory>::DismantleObjects(1, 0043ec0c)
+ Destructing instance 030ced20 of afxMemory class.
+ afxMemory.c:299?_AfxMemDtor(mem=030ced20)
+ afxMemory.c:219?AfxMemoryExhaust(mem=030ced20)
+ Exhausted. (mem)030ced20
+ afxClass<afxMemory>::DeallocateObjects(1, 0043ec0c)
+ afxClass<afxSimulation>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxWidget>::Dismount(0272fba8)
+ afxClass<afxDrawInput>::DismantleObjects(1, 0043f06c)
+ Destructing instance 030cf730 of afxDrawInput class.
+ sglDrawInput.c:282?_AfxDinDtor(din=030cf730)
+ afxClass<afxDrawInput>::DeallocateObjects(1, 0043f06c)
+ afxClass<afxMouse>::DismantleObjects(1, 0043f06c)
+ Destructing instance 030d62a0 of afxMouse class.
+ afxMouse.c:295?_AfxMseDtor(mse=030d62a0)
+ Destructing instance 030d62a0 of afxMouse : afxHid class.
+ Destructing instance 030d62a0 of afxHid class.
+ afxHid.c:66?_AfxHidDtor(hid=030d62a0)
+ afxClass<afxMouse>::DeallocateObjects(1, 0043f06c)
+ afxClass<afxApplication>::DeallocateObjects(1, 0043f3a4)
+ afxClass<Draw Context>::DismantleObjects(1, 0043f3a4)
+ Destructing instance 030e8e50 of Draw Context class.
+ sglDrawContext.c:212?_AfxDctxDtor(dctx=030e8e50)
+ afxClass<afxDrawOutput>::Dismount(030e9918)
+ afxClass<afxDrawOutput>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0309d830 of afxDrawOutput class.
+ sglDrawOutput.c:283?_AfxDoutDtor(dout=0309d830)
+ sglDrawOutput.c:238?_AfxDoutDropAllSurfaces(dout=0309d830)
+ afxClass<afxSurface>::DismantleObjects(1, 0043eb5c)
+ Destructing instance 02ffa990 of afxSurface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=02ffa990)
+ Destructing instance 02ffa990 of afxSurface : afxTexture class.
+ Destructing instance 02ffa990 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=02ffa990)
+ afxClass<afxSurface>::DeallocateObjects(1, 0043eb5c)
+ afxClass<afxSurface>::DismantleObjects(1, 0043eb5c)
+ Destructing instance 02ffaaa0 of afxSurface class.
+ sglSurface.c:98?_AfxSurfDtor(surf=02ffaaa0)
+ Destructing instance 02ffaaa0 of afxSurface : afxTexture class.
+ Destructing instance 02ffaaa0 of afxTexture class.
+ sglTexture.c:981?_AfxTexDtor(tex=02ffaaa0)
+ afxClass<afxSurface>::DeallocateObjects(1, 0043eb5c)
+ afxClass<afxDrawOutput>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxLego>::Dismount(030e9558)
+ afxClass<afxLego>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0309df90 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309df90)
+ afxClass<afxLego>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxLego>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0309de60 of afxLego class.
+ sglLego.c:274?_AfxLegtDtor(legt=0309de60)
+ afxClass<afxLego>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxDrawOperation>::Dismount(030e9618)
+ afxClass<afxDrawOperation>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098b6d0 of afxDrawOperation class.
+ afxDrawOperation.c:628?_AfxDopDtor(dop=0098b6d0)
+ afxClass<afxPipeline>::DismantleObjects(1, 0043ebbc)
+ afxObject<0098a5f0>::RemoveEventFilter(030e9a50)
+ afxObject<0098b930>::RemoveEventFilter(030e9a50)
+ Destructing instance 030e9a50 of afxPipeline class.
+ sglPipeline.c:447?_AfxPipDtor(pip=030e9a50)
+ ERR afxObject.c:568?AfxObjectRelease
+    
+ ERR afxObject.c:568?AfxObjectRelease
+    (obj)
+    Invalid
+ afxClass<afxPipeline>::DeallocateObjects(1, 0043ebbc)
+ afxClass<afxPipeline>::DismantleObjects(1, 0043ebbc)
+ afxObject<0098a1f0>::RemoveEventFilter(030eb9e0)
+ afxObject<0098a120>::RemoveEventFilter(030eb9e0)
+ Destructing instance 030eb9e0 of afxPipeline class.
+ sglPipeline.c:447?_AfxPipDtor(pip=030eb9e0)
+ ERR afxObject.c:568?AfxObjectRelease
+    
+ ERR afxObject.c:568?AfxObjectRelease
+    (obj)
+    Invalid
+ afxClass<afxPipeline>::DeallocateObjects(1, 0043ebbc)
+ afxClass<afxDrawOperation>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxPipeline>::Dismount(030e9498)
+ afxClass<afxShader>::Dismount(030e93d8)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0318be40 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 03195340 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0318bce0 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 03195800 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 03189d10 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0318bf20 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098a1f0 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098a120 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098a5f0 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxShader>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098b930 of afxShader class.
+ afxClass<afxShader>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxCanvas>::Dismount(030e9318)
+ afxClass<afxSurface>::Dismount(030e9258)
+ afxClass<afxTexture>::Dismount(030e9198)
+ afxClass<afxSampler>::Dismount(030e90d8)
+ afxClass<afxSampler>::DismantleObjects(1, 0043ef48)
+ Destructing instance 026af5d0 of afxSampler class.
+ sglSampler.c:157?_AfxSmpDtor(smp=026af5d0)
+ afxClass<afxSampler>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxIndexBuffer>::Dismount(030e9018)
+ afxClass<afxVertexBuffer>::Dismount(030e8f58)
+ afxClass<afxVertexBuffer>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098b800 of afxVertexBuffer class.
+ afxVertexBuffer.c:326?_AfxVbufDtor(vbuf=0098b800)
+ Destructing instance 0098b800 of afxVertexBuffer : afxBuffer class.
+ Destructing instance 0098b800 of afxBuffer class.
+ sglBuffer.c:415?_AfxBufDtor(buf=0098b800)
+ afxClass<afxVertexBuffer>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxBuffer>::Dismount(030e8e98)
+ afxClass<afxDrawQueue>::Dismount(030e9858)
+ afxClass<afxDrawQueue>::DismantleObjects(1, 0043ef48)
+ Destructing instance 030ea0c0 of afxDrawQueue class.
+ sglDrawQueue.c:1798?_AfxDqueDtor(dque=030ea0c0)
+ afxClass<afxDrawQueue>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxDrawInput>::Dismount(030e9798)
+ afxClass<afxDrawScript>::Dismount(030e96d8)
+ afxClass<afxDrawScript>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008d6f80 of afxDrawScript class.
+ sglDrawScript.c:438?_AfxDscrDtor(dscr=008d6f80)
+ afxClass<afxDrawScript>::DeallocateObjects(1, 0043ef48)
+ afxClass<Draw Context>::DeallocateObjects(1, 0043f3a4)
+ afxClass<afxDrawSystem>::DismantleObjects(1, 0043f3a4)
+ Destructing instance 008d3c30 of afxDrawSystem class.
+ afxDrawSystem.c:348?_AfxDsysDtor(dsys=008d3c30)
+ afxClass<afxDrawDriver>::Dismount(008d3c78)
+ afxClass<afxDrawDriver>::DismantleObjects(1, 0043ef14)
+ Destructing instance 0270c140 of afxDrawDriver class.
+ afxDrawDriver.c:116?_AfxDdrvDtor(ddrv=0270c140)
+ afxClass<Draw Context>::Dismount(0270c188)
+ afxClass<afxDrawDriver>::DeallocateObjects(1, 0043ef14)
+ afxClass<afxDrawSystem>::DeallocateObjects(1, 0043f3a4)
+ afxClass<afxSystem>::DismantleObjects(1, 0043f3a4)
+ Destructing instance 008cf080 of afxSystem class.
+ afxSystem.c:791?_AfxSysDtor(sys=008cf080)
+ afxClass<afxApplication>::Dismount(008cf78c)
+ afxClass<afxDrawSystem>::Dismount(008cf6cc)
+ afxClass<afxMouse>::Dismount(008cf60c)
+ afxClass<afxKeyboard>::Dismount(008cf54c)
+ afxClass<afxKeyboard>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008d1980 of afxKeyboard class.
+ afxKeyboard.c:211?_AfxKbdDtor(kbd=008d1980)
+ Destructing instance 008d1980 of afxKeyboard : afxHid class.
+ Destructing instance 008d1980 of afxHid class.
+ afxHid.c:66?_AfxHidDtor(hid=008d1980)
+ afxClass<afxKeyboard>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxHid>::Dismount(008cf48c)
+ afxClass<afxModule>::Dismount(008cf3cc)
+ afxClass<afxModule>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0098bc20 of afxModule class.
+ afxModule.c:117?_AfxMdleDtor(mdle=0098bc20)
+ afxClass<afxModule>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxModule>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008d3e70 of afxModule class.
+ afxModule.c:117?_AfxMdleDtor(mdle=008d3e70)
+ afxClass<afxModule>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxModule>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008d3b10 of afxModule class.
+ afxModule.c:117?_AfxMdleDtor(mdle=008d3b10)
+ afxClass<afxModule>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxFileSystem>::Dismount(008cf30c)
+ afxClass<afxFileSystem>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008cff00 of afxFileSystem class.
+ afxFileSystem.c:627?_AfxFsysDtor(fsys=008cff00)
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "art" 5 unmounted -> "E:/qwadro/afx/art".
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "data" 5 unmounted -> "E:/qwadro/afx/data".
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "tmp" 7 unmounted -> "E:/qwadro/afx/tmp".
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "sound" 5 unmounted -> "E:/qwadro/afx/sound".
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "system" 5 unmounted -> "E:/qwadro/afx/system32".
+ afxFileSystem.c:349?AfxFileSystemDismountStoragePoints(Afx.FileSystem.DismountStoragePoints(008cff00,1,0043ebec))
+ Point "." 5 unmounted -> "E:/qwadro/afx".
+ afxClass<afxUrd>::Dismount(008d0250)
+ afxClass<afxXml>::Dismount(008d0190)
+ afxClass<afxResource>::Dismount(008d0310)
+ afxClass<afxArchive>::Dismount(008d00d0)
+ afxClass<afxFile>::Dismount(008d0010)
+ afxClass<afxStream>::Dismount(008cff50)
+ afxClass<afxFileSystem>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxThread>::Dismount(008cf24c)
+ afxClass<Memory Arena>::Dismount(008cf18c)
+ afxClass<Memory Arena>::DismantleObjects(1, 0043ef48)
+ Destructing instance 030a2730 of Memory Arena class.
+ afxArena.c:789?_AfxArenDtor(aren=030a2730)
+ Destructing instance 030a2730 of Memory Arena : afxMemory class.
+ Destructing instance 030a2730 of afxMemory class.
+ afxMemory.c:299?_AfxMemDtor(mem=030a2730)
+ afxMemory.c:219?AfxMemoryExhaust(mem=030a2730)
+ Exhausted. (mem)030a2730
+ afxClass<Memory Arena>::DeallocateObjects(1, 0043ef48)
+ afxClass<Memory Arena>::DismantleObjects(1, 0043ef48)
+ Destructing instance 0272fd90 of Memory Arena class.
+ afxArena.c:789?_AfxArenDtor(aren=0272fd90)
+ Destructing instance 0272fd90 of Memory Arena : afxMemory class.
+ Destructing instance 0272fd90 of afxMemory class.
+ afxMemory.c:299?_AfxMemDtor(mem=0272fd90)
+ afxMemory.c:219?AfxMemoryExhaust(mem=0272fd90)
+ Exhausted. (mem)0272fd90
+ afxClass<Memory Arena>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxMemory>::Dismount(008cf0cc)
+ afxClass<afxMemory>::DismantleObjects(1, 0043ef48)
+ Destructing instance 008cf8c0 of afxMemory class.
+ afxMemory.c:299?_AfxMemDtor(mem=008cf8c0)
+ afxMemory.c:219?AfxMemoryExhaust(mem=008cf8c0)
+ Exhausted. (mem)008cf8c0
+ afxClass<afxMemory>::DeallocateObjects(1, 0043ef48)
+ afxClass<afxSystem>::DeallocateObjects(1, 0043f3a4)

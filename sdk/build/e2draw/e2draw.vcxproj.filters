@@ -41,9 +41,6 @@
     <ClCompile Include="..\..\src\e2draw\sglPipeline.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglPipelineRig.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglSampler.c">
       <Filter>e2draw</Filter>
     </ClCompile>

@@ -9,6 +9,8 @@ Quando houver erros a respeito da alocação de memória em si, como corrupção anôm
 
 Evite usar union's para converter valores. O compilador pode arranjar os dados com alinhamentos diferentes.
 
+Quando usando afxArray's (mas pode ser qualquer alocação), tipos que se auto-referenciem, tais como afxString e afxLinkage, terão suas referêncais quebradas em caso de realocação onde o buffer mude de endereço.
+
 // POSSÍVEIS ABORDAGENS
 
 NORM#1 O Qwadro não mais vai tentar evitar erros internos, apenas em entrada e saída de dados. O Qwadro apenas vai tentar informar argumentos inválidos. É responsabilidade do programador a resiliência e qualidade do código.

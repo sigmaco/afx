@@ -20,7 +20,7 @@
 #include "afxAabb.h"
 #include "afxPlane.h"
 #include "afxSphere.h"
-#include "../afxMatrix.h"
+#include "afx/math/afxMathDefs.h"
 
 typedef enum
 {
