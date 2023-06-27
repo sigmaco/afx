@@ -20,7 +20,6 @@
 #include "afx/draw/afxDrawDefs.h"
 #include "afx/core/io/afxStream.h"
 #include "afx/core/io/afxUri.h"
-#include "afx/draw/pipelining/afxPipelineRig.h"
 
 AFX_DEFINE_HANDLE(afxShader);
 
@@ -33,67 +32,68 @@ AFX_OBJECT(afxShader)
 
 #endif
 
-AFX_DEFINE_STRUCT(afxShaderSource) // source for blueprints
+typedef enum afxShaderResourceType
 {
-    afxFcc                  type; // NIL (raw data), URI or IOS
-    union
-    {
-        struct
-        {
-            void const*     start;
-            afxSize         range;
-        }                   data;
-        struct
-        {
-            afxStream       ios;
-            afxSize         offset;
-            afxNat          range;
-        }                   stream;
-        afxObject           *obj;
-        afxUri              uri; // map subentry uri to don't use in-place URI storage.
-    };
-};
+    AFX_SHD_RES_TYPE_INPUT = 0,
+    AFX_SHD_RES_TYPE_OUTPUT = 1,
+    AFX_SHD_RES_TYPE_SAMPLER = 2,
+    AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER = 3, // when an image is bound without a sampler
+    AFX_SHD_RES_TYPE_SAMPLED_IMAGE = 4,
+    AFX_SHD_RES_TYPE_STORAGE_IMAGE = 5,
+    AFX_SHD_RES_TYPE_UNIFORM_TEXEL_BUFFER = 6,
+    AFX_SHD_RES_TYPE_STORAGE_TEXEL_BUFFER = 7,
+    AFX_SHD_RES_TYPE_CONSTANT_BUFFER = 8,
+    AFX_SHD_RES_TYPE_STORAGE_BUFFER = 9,
+    AFX_SHD_RES_TYPE_INPUT_ATTACHMENT = 10,
+    AFX_SHD_RES_TYPE_PUSH_CONSTANT_BUFFER = 11,
 
-AFX_DEFINE_STRUCT(afxShaderResourceDecl)
+    AFX_SHD_RES_TYPE_TOTAL
+} afxShaderResourceType;
+
+AFX_DEFINE_STRUCT(afxShaderResource)
 {
-    afxNat                  set;
-    afxNat                  binding;
-    afxFlags                visibility; // A bitset of the members of afxShaderStage.
+    afxNat8                 set;
+    afxNat8                 binding;
     afxShaderResourceType   type;
-    afxNat                  cnt;
-    afxString16             name; // by QWADRO
+    afxNat8                 cnt;
+    afxString*              name; // 16
 };
 
-AFX_DEFINE_STRUCT(afxShaderInDecl)
+AFX_DEFINE_STRUCT(afxShaderInOut)
 {
-    afxNat                  location;
+    afxNat8                 location;
     afxVertexFormat         fmt;
 };
 
-AFX_DEFINE_STRUCT(afxShaderOutDecl)
+AFX_DEFINE_STRUCT(afxShaderBlueprintResource)
 {
-    afxNat                  location;
+    afxNat8                 set;
+    afxNat8                 binding;
+    afxShaderResourceType   type;
+    afxNat8                 cnt;
+    afxString*              name; // 16
+};
+
+AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
+{
+    afxNat8                 location;
     afxVertexFormat         fmt;
+    afxString*              semantic; // 8
 };
 
 AFX_DEFINE_STRUCT(afxShaderBlueprint)
 {
     afxFcc                  fcc;
-    afxString32             name;
+    afxDrawContext          dctx;
+    afxUri128               uri; // 128
     afxShaderStage          stage;
 
-    afxNat                  srcCnt;
-    afxShaderSource         srcs[16];
-    afxString8              entry;
+    afxString8              entry; // 8
+    afxArray                codes; // afxByte    
+    afxArray                inOuts; // afxShaderBlueprintInOut
+    afxArray                resources; // afxShaderBlueprintResource
+    afxPrimTopology         topology;
     
-    afxNat                  resDeclCnt;
-    afxShaderResourceDecl   resDecls[8];
-
-    afxNat                  inDeclCnt;
-    afxShaderInDecl         inDecls[8];
-
-    afxNat                  outDeclCnt;
-    afxShaderOutDecl        outDecls[8];
     // push constants?
     // specialization?
 };
@@ -102,6 +102,10 @@ AFX void*                   AfxShaderGetContext(afxShader shd);
 AFX void*                   AfxShaderGetDriver(afxShader shd);
 AFX void*                   AfxShaderGetDrawSystem(afxShader shd);
 
+AFX afxNat                  AfxShaderGetInterfaceCount(afxShader shd);
+AFX afxResult               AfxShaderDescribeInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);
+
+AFX afxBool                 AfxShaderIsDummy(afxShader shd);
 AFX afxShaderStage          AfxShaderGetStage(afxShader shd);
 AFX afxError                AfxShaderDownload(afxShader shd, afxUri const *uri);
 AFX afxError                AfxShaderSerialize(afxShader shd, afxStream ios);
@@ -110,19 +114,19 @@ AFX afxError                AfxShaderSerialize(afxShader shd, afxStream ios);
 // SHADER BLUEPRINT                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL afxError                 AfxShaderBlueprintReset(afxShaderBlueprint *blueprint, afxString const *name, afxShaderStage stage, afxString const *entry);
-AFXINL afxError                 AfxShaderBlueprintReflectUrd(afxShaderBlueprint *blueprint, afxUrdNode const *node);
+AFX void                AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxDrawContext dctx, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt);
+AFX afxError            AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[]);
+AFX void                AfxShaderBlueprintErase(afxShaderBlueprint *blueprint);
 
-AFXINL afxError                 AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxString const *name);
-AFXINL afxError                 AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry);
-AFXINL afxError                 AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage);
+AFX void                AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxUri const *uri);
+AFX void                AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry);
+AFX void                AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage);
 
-AFXINL afxShaderSource*         AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range);
-AFXINL afxShaderSource*         AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range);
-AFXINL afxShaderSource*         AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri);
+AFX afxError            AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range);
+AFX afxError            AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range);
+AFX afxError            AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri);
 
-AFXINL afxShaderResourceDecl*   AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name);
-AFXINL afxShaderInDecl*         AfxShaderBlueprintDeclareIn(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat format);
-AFXINL afxShaderOutDecl*        AfxShaderBlueprintDeclareOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat format);
+AFX afxError            AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name);
+AFX afxError            AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxString const *semantic);
 
 #endif//AFX_SHADER_H

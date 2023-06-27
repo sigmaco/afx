@@ -34,4 +34,6 @@ SIGMA GL (SGL), distribuído pelo arquivo "e2draw.icd", é um modelo de referên
 
 Diferente das APIs de baixo nível, o Qwadro todo segue uma filosofia de rapid application development (RAD), onde entrega várias utilidades para acelerar e automatizar operações, ainda permitindo que o usuário faça a sua própria maneira se assim quiser.
 
+Grande parte do Qwadro ainda está em código fechado devido a tecnologia proprietária. Mas estamos trabalhando para substituí-las e liberar o restante do código.
+
 Junte-se a nós no Discord. https://sigmaco.org/discord

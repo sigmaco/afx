@@ -27,7 +27,7 @@ AFX_DEFINE_STRUCT(afxPlane)
 
 AFXINL afxPlane* AfxPlaneCopy(afxPlane *p, afxPlane const *in)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(p);
     AfxAssert(in);
     AfxV3dCopy(p->normal, in->normal); // dist also will be copied
@@ -37,37 +37,35 @@ AFXINL afxPlane* AfxPlaneCopy(afxPlane *p, afxPlane const *in)
 
 AFXINL afxPlane* AfxPlaneSet(afxPlane* plan, afxV3d const normal, afxReal dist)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(plan);
     AfxAssert(normal);
-    afxV3d invLen;
-    AfxV3dLengthRecip(invLen, normal);
-    AfxV3dMul(plan->normal, normal, invLen); // normaliza
-    plan->dist = dist * invLen[0];
+    afxReal invLen = AfxV3dMagnitudeRecip(normal);
+    AfxV3dScale(normal, invLen, plan->normal); // normaliza
+    plan->dist = dist * invLen;
     return plan;
 }
 
 AFXINL afxReal* AfxPlaneGetOrigin(afxPlane* plan)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(plan);
     return plan->normal;
 }
 
 AFXINL afxReal AfxPlaneGetDistance(afxPlane const* plan)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(plan);
     return plan->dist;
 }
 
 AFXINL afxReal AfxPlaneGetDistanceToPoint(afxPlane const* plan, afxV3d const point)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(plan);
     AfxAssert(point);
-    afxV3d dot;
-    return AfxV3dDot(dot, plan->normal, point)[0] + plan->dist;
+    return AfxV3dDot(plan->normal, point) + plan->dist;
 }
 
 #endif//AFX_PLANE_H

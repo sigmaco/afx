@@ -19,14 +19,9 @@
 #include "afx/draw/res/afxSurface.h"
 #include "../src/e2coree/draw/afxDrawParadigms.h"
 
-AFX_DEFINE_STRUCT(_afxSurfCtorArgs)
-{
-    afxTextureParadigm tex;
-};
-
 _SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     sglVmt const* gl = &dque->wglVmt;
 
@@ -79,46 +74,9 @@ _SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
 }
 
 
-_SGL afxSurface _AfxDrawContextAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage)
-{
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssert(extent);
-    AfxAssert(extent[0]);
-    AfxAssert(extent[1]);
-    AfxAssert(extent[2]);
-    AfxAssert(usage & AFX_TEX_USAGE_SURFACE);
-    AfxEntry("dctx=%p,fmt=%u,whd=[%u,%u,%u],usage=%u", dctx, fmt, extent[0], extent[1], extent[2], usage);
-    afxSurface surf = NIL;
-
-    usage &= AFX_TEX_USAGE_SURFACE;
-
-    if (fmt >= AFX_PIXEL_FMT_S8 && fmt <= AFX_PIXEL_FMT_D32FS8)
-        usage |= AFX_TEX_USAGE_SURFACE_DEPTH;
-    else
-        usage |= AFX_TEX_USAGE_SURFACE_RASTER;
-
-    afxTextureBlueprint texb;
-    AfxTextureBlueprintReset(&texb, NIL, fmt, extent, usage);
-    AfxTextureBlueprintAddImage(&texb, fmt, extent, NIL, NIL);
-
-    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-
-    _afxSurfCtorArgs args =
-    {
-        {.res = { AfxObjectGetProvider(&dsys->obj), NIL }, dctx, &texb }
-    };
-
-    if (!(surf = AfxObjectAcquire(AfxDrawContextGetSurfaceClass(dctx), &args, AfxSpawnHint())))
-        AfxThrowError();
-
-    return surf;
-};
-
 _SGL afxBool _SglSurfEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxSurface surf = (void*)obj;
     AfxAssertObject(surf, AFX_FCC_SURF);
     (void)ev;
@@ -127,7 +85,7 @@ _SGL afxBool _SglSurfEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglSurfEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxSurface surf = (void*)obj;
     AfxAssertObject(surf, AFX_FCC_SURF);
     (void)watched;
@@ -138,7 +96,7 @@ _SGL afxBool _SglSurfEventFilter(afxObject *obj, afxObject *watched, afxEvent *e
 _SGL afxError _AfxSurfDtor(afxSurface surf)
 {
     AfxEntry("surf=%p", surf);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
 
     while (1)
@@ -167,16 +125,18 @@ _SGL afxError _AfxSurfDtor(afxSurface surf)
     return err;
 }
 
-_SGL afxError _AfxSurfCtor(afxSurface surf, void *args)
+_SGL afxError _AfxSurfCtor(void *cache, afxNat idx, afxSurface surf, void *args)
 {
     (void)args;
     AfxEntry("surf=%p", surf);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
 
     surf->state = AFX_SURF_STATE_IDLE;
 
     AfxLinkageDeploy(&surf->swapchain, NIL);
+
+    //AfxInterlinkDeployAsB(&surf->interlinkSentinel, surf);
 
     surf->glHandle = 0;
     surf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
@@ -193,6 +153,7 @@ afxSurfImpl const _AfxStdSurfImpl =
         //_AfxTextureMeasure,
         _AfxTextureGetExtent,
         _AfxTextureGenerateLods,
+        _AfxTextureGetUri,
         _AfxTextureGetFormat,
         _AfxTextureGetLodCount,
         _AfxTextureGetLayerCount,

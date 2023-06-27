@@ -19,6 +19,7 @@
 
 #include "afx/core/diag/afxDebug.h"
 #include "afx/core/afxFcc.h"
+#include "afx/core/mem/afxMemory.h"
 
 // The elements are stored contiguously, which means that elements canv be accessed not only through iterators, but also using offsets to regular pointers to elements.
 // This means that a pointer to an element of a vector may be passed to any function that expects a pointer to an element of an array.
@@ -46,43 +47,48 @@
 AFX_DEFINE_STRUCT(afxArray)
 {
     afxFcc      fcc;
-    afxNat32    stride;
-    afxNat32    cap;
-    afxNat32    pop;
-    void       (*cpy)(void *arrel, void *arrel2);
-    afxByte     *bytemap;
+    afxNat32    _stride;
+    afxNat32    _cap;
+    afxNat32    _pop;
+    afxMemory   _mem;
+    void       (*_cpy)(void *arrel, void *arrel2);
+    union
+    {
+        afxByte *_bytemap;
+        //afxByte *_inplace[];
+    };
 };
 
 #define afxArray(typ_) afxArray // just a memo
 
-AFX afxResult   AfxArrayDeploy(afxArray *arr, afxNat stride, afxNat cap);
-AFX afxResult   AfxArrayDrop(afxArray *arr);
+AFX void        AfxArrayDeploy(afxArray *arr, afxMemory mem, afxNat stride, afxNat cap);
+AFX void        AfxArrayDrop(afxArray *arr);
 
-AFX afxResult   AfxArrayAppend(afxArray *arr, afxArray const *src);
-AFX afxResult   AfxArrayCopyElement(afxArray *arr, afxNat idx, void *elem); // copy out from element at index
-AFX afxResult   AfxArrayCopyElements(afxArray *arr, afxNat cnt, afxNat idx[], void *elem[]); // copy out from element at index
+AFX afxError    AfxArrayAppend(afxArray *arr, afxArray const *src);
+AFX void        AfxArrayCopyElement(afxArray *arr, afxNat idx, void *elem); // copy out from element at index
+AFX void        AfxArrayCopyElements(afxArray *arr, afxNat cnt, afxNat idx[], void *elem[]); // copy out from element at index
 AFX void        AfxArrayEmpty(afxArray *arr);
-AFX afxResult   AfxArrayEraseElement(afxArray *arr, afxNat idx);
-AFX afxResult   AfxArrayEraseElements(afxArray *arr, afxNat cnt, afxNat idx[]);
+AFX void        AfxArrayEraseElement(afxArray *arr, afxNat idx);
+AFX void        AfxArrayEraseElements(afxArray *arr, afxNat cnt, afxNat idx[]);
 AFX afxNat      AfxArrayFetchElement(afxArray *arr, void const **elem);
 AFX afxNat      AfxArrayFetchElements(afxArray *arr, afxNat cnt, void const *elem[]);
-AFX afxResult   AfxArrayFill(afxArray *arr, afxNat base, afxNat cnt, void const *elem);
+AFX afxError    AfxArrayFill(afxArray *arr, afxNat base, afxNat cnt, void const *elem);
 AFX afxResult   AfxArrayForEachElement(afxArray *arr, afxResult(*f)(void *arrel, void *data), void *data);
 AFX afxNat      AfxArrayGetCap(afxArray const *arr);
 AFX void*       AfxArrayGetElement(afxArray const *arr, afxNat idx);
-AFX void*       AfxArrayGetFirstElement(afxArray const *arr);
+AFX void*       AfxArrayGetPool(afxArray const *arr);
 AFX void*       AfxArrayGetLastElement(afxArray const *arr);
 AFX afxNat      AfxArrayGetPop(afxArray const *arr);
 AFX afxBool     AfxArrayIsEmpty(afxArray const *arr);
 AFX afxBool     AfxArrayIsFull(afxArray const *arr);
-AFX afxResult   AfxArrayOccupy(afxArray *arr, void const *dummyData);
-AFX afxResult   AfxArrayOptimize(afxArray *arr);
+AFX afxError    AfxArrayOccupy(afxArray *arr, void const *dummyData);
+AFX afxError    AfxArrayOptimize(afxArray *arr);
 AFX afxNat      AfxArrayPushElement(afxArray *arr, void const *elem);
 AFX afxNat      AfxArrayPushElements(afxArray *arr, afxNat cnt, void const *elems);
 AFX afxError    AfxArrayReserve(afxArray *arr, afxNat cap);
-AFX afxResult   AfxArraySwap(afxArray *arr, afxArray *other);
-AFX afxResult   AfxArrayUpdateElement(afxArray *arr, afxNat idx, void const *elem); // copy into element at index
-AFX afxResult   AfxArrayUpdateElements(afxArray *arr, afxNat cnt, afxNat idx[], void const *elem[]); // copy into element at index
+AFX afxError    AfxArraySwap(afxArray *arr, afxArray *other);
+AFX void        AfxArrayUpdateElement(afxArray *arr, afxNat idx, void const *elem); // copy into element at index
+AFX void        AfxArrayUpdateElements(afxArray *arr, afxNat cnt, afxNat idx[], void const *elem[]); // copy into element at index
 
 AFX void        AfxArraySetCopyFn(afxArray *arr, void(*f)(void *from, void *to));
 AFX void        AfxArray_SetPop(afxArray *arr, afxNat pop);

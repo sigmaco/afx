@@ -71,41 +71,42 @@ typedef enum afxPresentMode
 
 AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
 {
-    afxUri const            *endpoint; // window, desktop, etc
-    afxPixelFormat          pixelFmt; // RGBA8; pixel format of raster surfaces.
-    afxColorSpace           colorSpc; // AFX_COLOR_SPACE_SRGB; if sRGB isn't present, fall down to LINEAR.
-    afxTextureUsage         bufUsage; // RASTER; used as (color) rasterization surface.
-    afxNat                  bufCnt; // 2 or 3; double or triple-buffered.
+    afxUri const        *endpoint; // window, desktop, etc
+    afxWhd              whd;
+    afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces.
+    afxColorSpace       colorSpc; // AFX_COLOR_SPACE_SRGB; if sRGB isn't present, fall down to LINEAR.
+    afxTextureUsage     bufUsage; // RASTER; used as (color) rasterization surface.
+    afxNat              bufCnt; // 2 or 3; double or triple-buffered.
 
-    afxPresentAlpha         presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
-    afxPresentTransform     presentTransform; // NIL; don't do any transform.
-    afxPresentMode          presentMode; // FIFO; respect the sequence.
-    afxBool                 clipped; // TRUE; don't do off-screen draw.
-    afxBool                 resizable;
+    afxPresentAlpha     presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
+    afxPresentTransform presentTransform; // NIL; don't do any transform.
+    afxPresentMode      presentMode; // FIFO; respect the sequence.
+    afxBool             clipped; // TRUE; don't do off-screen draw.
+    afxBool             resizable;
 };
 
 #ifndef AFX_DRAW_DRIVER_SRC
 
 AFX_OBJECT(afxDrawOutput)
 {
-    afxObject               obj;
+    afxObject           obj;
 };
 
 #endif
 
-AFX void*                   AfxDrawOutputGetContext(afxDrawOutput dout);
-AFX void*                   AfxDrawOutputGetDriver(afxDrawOutput dout);
-AFX void*                   AfxDrawOutputGetDrawSystem(afxDrawOutput dout);
+AFX void*               AfxDrawOutputGetContext(afxDrawOutput dout);
+AFX void*               AfxDrawOutputGetDriver(afxDrawOutput dout);
+AFX void*               AfxDrawOutputGetDrawSystem(afxDrawOutput dout);
 
-AFX afxError                AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent);
-AFX afxError                AfxDrawOutputSetExtentNdc(afxDrawOutput dout, afxV3d const extent);
-AFX afxNat*                 AfxDrawOutputGetExtent(afxDrawOutput dout, afxWhd extent); // d is always 1; it is here just for compatibility.
-AFX afxReal*                AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+AFX afxError            AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent);
+AFX afxError            AfxDrawOutputSetExtentNdc(afxDrawOutput dout, afxV3d const extent);
+AFX void                AfxDrawOutputGetExtent(afxDrawOutput dout, afxWhd extent); // d is always 1; it is here just for compatibility.
+AFX void                AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 
-AFX afxSurface              AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat idx);
-AFX afxResult               AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
-AFX afxError                AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+AFX afxSurface          AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat idx);
+AFX afxResult           AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
+AFX afxError            AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 
-AFX afxResult               AfxDrawOutputBuildCanvases(afxDrawOutput dout, afxNat cnt, afxNat rasIdx[], afxPixelFormat depthFmt[], afxPixelFormat stencilFmt[], afxCanvas canv[]);
+AFX afxError            AfxDrawOutputBuildCanvases(afxDrawOutput dout, afxNat cnt, afxNat rasIdx[], afxPixelFormat depthFmt[], afxPixelFormat stencilFmt[], afxCanvas canv[]);
 
 #endif//AFX_DRAW_OUTPUT_H

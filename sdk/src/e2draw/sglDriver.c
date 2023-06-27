@@ -742,23 +742,23 @@ static const char *glsyms[] =
 
 afxError _SglLoadVmtSubset(sglVmt* vmt, afxNat base, afxNat cnt, afxChar const *names[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxString128 sym;
-    AfxString128(&sym, NIL);
+    AfxString128(&sym);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxStringFormat(&sym.str, "%s", names[i]);
 
-        if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, sym.buf)))
+        if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, (void*)sym.buf)))
         {
             AfxStringFormat(&sym.str, "%sARB", names[i]);
 
-            if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, sym.buf)))
+            if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, (void*)sym.buf)))
             {
                 AfxStringFormat(&sym.str, "%sEXT", names[i]);
 
-                if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, sym.buf)))
+                if (!(vmt->ptr[base + i] = glcGetProcAddress(NIL, (void*)sym.buf)))
                 {
                     //AfxError("%s @ %i not found.", names[i], i);
                     //AfxThrowError();
@@ -849,7 +849,7 @@ void _SglLoadVmt(sglVmt* vmt, afxNat verMajor, afxNat verMinor)
 void* glcGetProcAddress(void *deviceHandle, const GLchar *funcName)
 {
     (void)deviceHandle;
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(funcName);
     PROC proc = NIL;
     PROC(WINAPI *f)(LPCSTR) = (void*)GetProcAddress(opengl32, "wglGetProcAddress");
@@ -1005,10 +1005,21 @@ afxChar const sigglSigmaSignature[] =
 "\n \"Y88888P\"   88    `\"Y88888P\"     `\"Y88888P\"   88888888888  "
 };
 
+afxChar const quadroGlSigmaSignature[] =
+{
+    "\n     .::::         :::::::::         ::::::::        :::        "
+    "\n    :+:+:+         :+:    :+:       :+:    :+:       :+:        "
+    "\n   +:+ +:+         +:+    +:+       +:+              +:+        "
+    "\n  +#+  +:+         +#+    +:+       :#:              +#+        "
+    "\n +#+#+#+#+#+       +#+    +#+       +#+   +#+#       +#+        "
+    "\n       #+#         #+#    #+#       #+#    #+#       #+#        "
+    "\n       ###         #########         ########        ########## "
+};
+
 
 _SGL afxError _SglSwapBuffers(HDC hdc)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     
     if (!(_wglSwapBuffers(hdc)))
@@ -1024,7 +1035,7 @@ _SGL afxError _SglSwapBuffers(HDC hdc)
 
 _SGL int _SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     int fmt;
 
     if (!(fmt = _wglChoosePixelFormat(hdc, ppfd)))
@@ -1036,7 +1047,7 @@ _SGL int _SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd)
 
 _SGL BOOL _SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     BOOL rslt;
 
     if (!(rslt = _wglSetPixelFormat(hdc, format, ppfd)))
@@ -1048,7 +1059,7 @@ _SGL BOOL _SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * 
 
 _SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     int rslt;
 
     if (!(rslt = _wglDescribePixelFormat(hdc, iPixelFormat, nBytes, ppfd)))
@@ -1060,7 +1071,7 @@ _SGL int _SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXEL
 
 _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxDrawOutput dout = (void*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
     if (dout)
@@ -1172,7 +1183,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxV2d curr = { AfxScalar(points.x), AfxScalar(points.y) };
 
-            AfxV2dSub(dout->absCursorMove, dout->absCursorPos, curr);
+            AfxV2dSub(dout->absCursorPos, curr, dout->absCursorMove);
             AfxV2dCopy(dout->absCursorPos, curr);
 
             afxV2d screen = { AfxScalar(dout->whd[0]), AfxScalar(dout->whd[1]) };
@@ -1198,7 +1209,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             fdrop.y = ppt.y;
             afxNat cnt = DragQueryFileA(hDrop, 0xFFFFFFFF, NIL, NIL);
 
-            AfxArrayDeploy(&fdrop.files, sizeof(afxChar const*), 0);
+            AfxArrayDeploy(&fdrop.files, NIL, sizeof(afxChar const*), 0);
 
             afxChar* name = NIL;
             afxNat len = 0;
@@ -1221,7 +1232,9 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 }
             }
 
-            AfxObjectSignalConnections(&dout->obj, AFX_EVENT_DOUT_DRAGNDROP, &fdrop);
+            afxEvent ev;
+            AfxEventDeploy(&ev, AFX_EVENT_DOUT_DRAGNDROP, &dout->obj, &fdrop);
+            AfxObjectEmitEvent(&dout->obj, &ev);
 
             for (i = 0; i < AfxArrayGetPop(&fdrop.files); i++)
             {
@@ -1266,7 +1279,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc)
 {
     AfxEntry("oglWndClss=%p,shareCtx=%p,phwnd=%p,phdc=%p,phrc=%p", oglWndClss, shareCtx, phwnd, phdc, phrc);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     HDC bkpHdc = _wglGetCurrentDC();
     HGLRC bkpGlrc = _wglGetCurrentContext();
@@ -1490,7 +1503,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC sha
 
 _SGL afxError iddDtor(afxDrawDriver ddrv)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     _sglDriverIdd *idd = AfxDrawDriverGetIdd(ddrv);
     _wglMakeCurrent(NIL, NIL);
@@ -1498,12 +1511,16 @@ _SGL afxError iddDtor(afxDrawDriver ddrv)
     ReleaseDC(idd->wglPrimeWnd, idd->wglPrimeDc);
     DestroyWindow(idd->wglPrimeWnd);
     UnregisterClassA(idd->oglWndClss.lpszClassName, idd->oglWndClss.hInstance);
+    
+    if (idd->subsysName)
+        AfxStringDeallocate(idd->subsysName);
+
     return err;
 }
 
 _SGL afxError _AfxDdrvProcessFn(afxDrawDriver ddrv)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
 
     for (afxNat i = 0; i < AfxDrawDriverGetContextCount(ddrv); i++)
@@ -1516,7 +1533,7 @@ _SGL afxError _AfxDdrvProcessFn(afxDrawDriver ddrv)
             AfxAssertObject(dctx, AFX_FCC_DCTX);
             afxClass *cls = AfxDrawContextGetQueueClass(dctx);
 
-            for (afxNat j = 0; j < AfxClassGetInstanceCount(cls); j++)
+            for (afxNat j = 0; j < AfxClassGetObjectCount(cls); j++)
             {
                 afxDrawQueue dque;
 
@@ -1534,7 +1551,7 @@ _SGL afxError _AfxDdrvProcessFn(afxDrawDriver ddrv)
 
             cls = AfxDrawContextGetOutputClass(dctx);
 
-            for (afxNat j = 0; j < AfxClassGetInstanceCount(cls); j++)
+            for (afxNat j = 0; j < AfxClassGetObjectCount(cls); j++)
             {
                 afxDrawOutput dout;
 
@@ -1552,15 +1569,19 @@ _SGL afxError _AfxDdrvProcessFn(afxDrawDriver ddrv)
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     afxString name, author, website, note;
+    AfxStringWrapLiteral(&name, "4DGL", 0);
+    AfxStringWrapLiteral(&author, "SIGMA Technology Group", 0);
+    AfxStringWrapLiteral(&website, "www.sigmaco.org", 0);
+    AfxStringWrapLiteral(&note, /*sigglSigmaSignature*/quadroGlSigmaSignature, 0);
     afxDrawDriverFeatures const features = { 0 };
     afxDrawDriverSpecification spec = { 0 };
-    spec.name = AfxStringMap(&name, "SIGGL", 0);
-    spec.author = AfxStringMap(&author, "SIGMA Technology Group", 0);
-    spec.website = AfxStringMap(&website, "www.sigmaco.org", 0);
-    spec.note = AfxStringMap(&note, sigglSigmaSignature, 0);
+    spec.name = &name;
+    spec.author = &author;
+    spec.website = &website;
+    spec.note = &note;
     spec.verMajor = 0;
     spec.verMinor = 7;
     spec.verPatch = 2;
@@ -1635,18 +1656,22 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
                     _SglLoadVmt(gl, 1, 0);
 
                     afxString ver;
-                    AfxStringMap(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
+                    AfxStringWrapLiteral(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
                     AfxStringScan(&ver, "%u.%u.%u", &idd->wglPrimeGlrcVerMajor, &idd->wglPrimeGlrcVerMinor, &idd->wglPrimeGlrcVerPatch);
                     gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(idd->wglPrimeGlrcVerMajor));
                     gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(idd->wglPrimeGlrcVerMinor));
 
                     _SglLoadVmt(gl, 4, 6);
 
-                    AfxString128(&idd->subsysName, NIL);
-                    AfxStringUpdate(&idd->subsysName.str, 0, 0, (afxChar const*)gl->GetString(GL_RENDERER));
+                    afxString tmp;
+                    AfxStringWrapLiteral(&tmp, (afxChar const*)gl->GetString(GL_RENDERER), 0);
+                    idd->subsysName = !AfxStringIsEmpty(&tmp) ? AfxStringClone(&tmp) : NIL;
 
                     if (!(AfxDrawSystemRegisterDriver(dsys, mdle, &spec)))
                         AfxThrowError();
+
+                    if (err && idd->subsysName)
+                        AfxStringDeallocate(idd->subsysName);
                 }
 
                 if (err)

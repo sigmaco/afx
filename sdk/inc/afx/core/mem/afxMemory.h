@@ -53,7 +53,7 @@ struct afxSegment
 
 AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize stride)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(seg); AfxAssert(siz);
     seg->off = off, seg->siz = siz;
     seg->stride = stride ? stride : siz;
@@ -161,9 +161,9 @@ AFX void*                   AfxCoallocate(afxMemory mem, afxSize cnt, afxSize si
 AFX void*                   AfxReallocate(afxMemory mem, void *p, afxSize siz, afxHint const hint);
 AFX afxResult               AfxDeallocate(afxMemory mem, void *p);
 
-AFX afxResult               AfxCopy(void *dst, void const *src, afxSize range);
-AFX afxResult               AfxFill(void *p, afxSize range, afxInt value);
-AFX afxResult               AfxZero(void *p, afxSize range);
+AFX void                    AfxCopy(void *dst, void const *src, afxSize range);
+AFX void                    AfxFill(void *p, afxSize range, afxInt value);
+AFX void                    AfxZero(void *p, afxSize range);
 
 AFX afxResult               AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
 

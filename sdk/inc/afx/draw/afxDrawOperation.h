@@ -25,90 +25,89 @@
 
 #include "afx/draw/pipelining/afxPipeline.h"
 
-AFX_DEFINE_STRUCT(afxDrawPassBlueprint)
+AFX_DEFINE_HANDLE(afxDrawOperation);
+
+AFX_DEFINE_STRUCT(afxDrawOperationBlueprintTechniquePass)
 {
-    afxString32                 name;
-    afxBool                     hasRs;
-    afxPipelineRasterizerState  rasterization;
-    afxBool                     hasDs;
-    afxPipelineDepthState       depthHandling;
-    afxBool                     hasIa;
-    afxPipelineInputAssemblyState inputAssembly;
-    afxNat                      shaderCnt;
-    afxNat                      shaderIdx[6];
+    afxString*                      name; // 32
+    afxBool                         hasIa;
+    afxBool                         hasRs;
+    afxBool                         hasDs;
+    afxPipelineInputAssemblyState   inputAssembly;
+    afxPipelineRasterizerState      rasterization;
+    afxPipelineDepthState           depthHandling;
+    afxArray                        usedShaders;
 };
 
-AFX_DEFINE_STRUCT(afxDrawTechniqueBlueprint)
+AFX_DEFINE_STRUCT(afxDrawOperationBlueprintTechnique)
 {
-    afxString32                 name;
-    afxNat                      passCnt;
-    afxDrawPassBlueprint        passes[16];
+    afxString*                      name; // 32
+    afxArray                        passes;
 };
 
 AFX_DEFINE_STRUCT(afxDrawOperationBlueprint)
 {
-    afxFcc                      fcc;
-    afxString32                 name;
-    afxNat                      reqShaderCnt;
-    afxUri                      reqShaders[32];
-    afxNat                      techCnt;
-    afxDrawTechniqueBlueprint   techs[16];
+    afxFcc                          fcc;
+    afxDrawContext                  dctx;
+    afxUri128                       uri; // 128
+    afxArray                        reqShaders;
+    afxArray                        techniques;
 };
 
 AFX_DEFINE_STRUCT(afxDrawPass)
 {
-    afxFcc                      fcc; // AFX_FCC_DPAS
-    afxString32                 name;
-    afxPipeline                 pip;
+    afxFcc                          fcc; // AFX_FCC_DPAS
+    afxString*                      name; // 32
+    afxPipeline                     pip;
 };
 
 AFX_DEFINE_STRUCT(afxDrawTechnique)
 {
-    afxFcc                      fcc; // AFX_FCC_DTEC
-    afxString32                 name;
-    afxNat                      passCnt;
-    afxDrawPass*                passes;
+    afxFcc                          fcc; // AFX_FCC_DTEC
+    afxString*                      name; // 32
+    afxNat                          passCnt;
+    afxDrawPass*                    passes;
 };
-
-AFX_DEFINE_HANDLE(afxDrawOperation);
 
 AFX_OBJECT(afxDrawOperation)
 {
-    afxObject                   obj; // AFX_FCC_DOP
-    afxString32                 name;
-    afxNat                      techCnt;
-    afxDrawTechnique*           techniques;
+    afxObject                       obj; // AFX_FCC_DOP
+    afxUri*                         uri; // 128
+    afxNat                          techCnt;
+    afxDrawTechnique*               techniques;
 };
 
-AFX void*                       AfxDrawOperationGetContext(afxDrawOperation dop);
-AFX void*                       AfxDrawOperationGetDriver(afxDrawOperation dop);
-AFX void*                       AfxDrawOperationGetDrawSystem(afxDrawOperation dop);
+AFX void*                           AfxDrawOperationGetContext(afxDrawOperation dop);
+AFX void*                           AfxDrawOperationGetDriver(afxDrawOperation dop);
+AFX void*                           AfxDrawOperationGetDrawSystem(afxDrawOperation dop);
 
-AFX afxNat                      AfxDrawOperationGetTechniqueCount(afxDrawOperation dop);
-AFX afxNat                      AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const *name);
-AFX afxString const*            AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afxNat tecIdx);
+AFX afxNat                          AfxDrawOperationGetTechniqueCount(afxDrawOperation dop);
+AFX afxBool                         AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const *name, afxNat *idx);
+AFX afxString const*                AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afxNat tecIdx);
 
-AFX afxNat                      AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx);
-AFX afxNat                      AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxString const *name);
-AFX afxString const*            AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
-AFX afxPipeline                 AfxDrawOperationGetPipeline(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
+AFX afxNat                          AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx);
+AFX afxBool                         AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxString const *name, afxNat *idx);
+AFX afxString const*                AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
+AFX afxPipeline                     AfxDrawOperationGetPipeline(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW OPERATION BLUEPRINT                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError                    AfxDrawOperationBlueprintReset(afxDrawOperationBlueprint *blueprint, afxString const *name);
-AFX afxError                    AfxDrawOperationBlueprintReflectUrd(afxDrawOperationBlueprint *blueprint, afxUrdNode const *node);
-AFX afxError                    AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxString const *name);
+AFX void                            AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, afxDrawContext dctx, afxUri const *uri, afxNat estShaderCnt, afxNat estTechCnt);
+AFX afxError                        AfxDrawOperationBlueprintEnd(afxDrawOperationBlueprint *blueprint, afxNat cnt, afxDrawOperation dop[]);
+AFX void                            AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint);
 
-AFX afxNat                      AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint *blueprint, afxString const *name);
-AFX afxError                    AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxString const *name);
+AFX void                            AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxUri const *name);
 
-AFX afxNat                      AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxString const *name, afxNat shaderCnt, afxUri const shaders[], afxPipelineRasterizerState const* rasterization, afxPipelineDepthState const* depthHandling);
-AFX afxError                    AfxDrawOperationBlueprintRenamePass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxString const *name);
-AFX afxError                    AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxNat cnt, afxUri const uri[]);
-AFX afxError                    AfxDrawOperationBlueprintConfigRasterizerState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineRasterizerState const *state);
-AFX afxError                    AfxDrawOperationBlueprintConfigDepthState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineDepthState const *state);
-AFX afxError                    AfxDrawOperationBlueprintConfigInputAssemblyState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineInputAssemblyState const *state);
+AFX afxError                        AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint *blueprint, afxNat *tecIdx, afxString const *name);
+AFX void                            AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxString const *name);
+
+AFX afxError                        AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat *passIdx, afxString const *name);
+AFX void                            AfxDrawOperationBlueprintRenamePass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxString const *name);
+AFX afxError                        AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxNat cnt, afxUri const uri[]);
+AFX void                            AfxDrawOperationBlueprintConfigRasterizerState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineRasterizerState const *state);
+AFX void                            AfxDrawOperationBlueprintConfigDepthState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineDepthState const *state);
+AFX void                            AfxDrawOperationBlueprintConfigInputAssemblyState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineInputAssemblyState const *state);
 
 #endif//AFX_DRAW_OPERATION_H

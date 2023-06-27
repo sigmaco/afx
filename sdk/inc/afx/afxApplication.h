@@ -18,7 +18,7 @@
 #define AFX_APPLICATION_H
 
 #include "afx/draw/afxDrawInput.h"
-#include "afx/simul/afxSimulation.h"
+#include "afx/sim/afxSimulation.h"
 #include "afx/mmux/afxWidget.h"
 #include "afx/core/io/afxMouse.h"
 
@@ -28,6 +28,7 @@ AFX_DEFINE_HANDLE(afxApplication);
 
 AFX_DEFINE_STRUCT(afxApplicationSpecification)
 {
+    afxBlueprint            base;
     afxNat                  argc;
     afxChar const           **argv;
 
@@ -65,7 +66,7 @@ AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidg
 AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
 
 AFX afxResult               _AfxApplicationProcess(afxApplication app);
-AFX afxResult               AfxApplicationStep(afxApplication app, afxReal dt);
+AFX afxError                AfxApplicationStep(afxApplication app, afxReal dt);
 
 #ifndef _AFX_API_ONLY
 
@@ -87,7 +88,7 @@ AFX_OBJECT(afxApplication)
     afxBool                 excludeInputEvents, waitForNewEvents;
 
     // application
-    afxString1024           path;
+    afxString               path; // 1024
     afxBool                 running;
     afxResult               exitCode;
 

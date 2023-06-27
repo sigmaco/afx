@@ -17,7 +17,7 @@
 #ifndef AFX_AABB_H
 #define AFX_AABB_H
 
-#include "../afxVector.h"
+#include "afx/math/afxMathDefs.h"
 #include "afxSphere.h"
 #include "afxVolume.h"
 
@@ -30,26 +30,26 @@ AFX_DEFINE_STRUCT(afxAabb)
     afxV4d      sup, inf;
 };
 
-AFXINL afxAabb*     AfxAabbReset(afxAabb *aabb); // make identity
+AFXINL void         AfxAabbMakeIdentity(afxAabb *aabb); // make identity
 
 AFXINL void         AfxAabbEncapsulatePoint(afxAabb *aabb, afxV4d const point);
 
 AFXINL void         AfxAabbEncapsulateSphere(afxAabb *aabb, afxSphere const *sph);
 
-AFXINL afxAabb*     AfxAabbRecompute(afxAabb *aabb, afxV4d const points[], afxNat cnt);
+AFXINL void         AfxAabbRecompute(afxAabb *aabb, afxV4d const points[], afxNat cnt);
 
 AFXINL afxBool      AfxAabbDoesContain(afxAabb const *aabb, afxV4d const point);
 
-AFXINL afxReal*     AfxAabbGetExtent(afxAabb const *aabb, afxV3d extent);
+AFXINL void         AfxAabbGetExtent(afxAabb const *aabb, afxV4d extent);
 
-AFXINL afxReal*     AfxAabbGetOrigin(afxAabb const *aabb, afxV4d origin);
+AFXINL void         AfxAabbGetOrigin(afxAabb const *aabb, afxV4d origin);
 
-AFXINL afxReal*     AfxAabbExtractCorner(afxAabb const *aabb, afxNat index, afxV4d corner);
+AFXINL void         AfxAabbExtractCorner(afxAabb const *aabb, afxNat index, afxV4d corner);
 
-AFXINL afxAabb*     AfxAabbCopy(afxAabb *aabb, afxAabb const *src);
+AFXINL void         AfxAabbCopy(afxAabb *aabb, afxAabb const *src);
 
-AFXINL afxAabb*     AfxAabbEncapsulateAabb(afxAabb *aabb, afxAabb const *other);
+AFXINL void         AfxAabbEncapsulateAabb(afxAabb *aabb, afxAabb const *other);
 
-AFXINL afxAabb*     AfxAabbTransform(afxAabb const *aabb, afxM4d const m, afxAabb *to);
+AFXINL void         AfxAabbTransform(afxAabb const *aabb, afxM4d const m, afxAabb *to);
 
 #endif//AFX_AABB_H

@@ -18,7 +18,7 @@
 #define AFX_RESOURCE_H
 
 #include "afx/core/io/afxUri.h"
-#include "afx/core/io/afxUrd.h"
+#include "afx/core/io/afxXml.h"
 #include "afx/core/time/afxTime.h"
 #include "afx/core/afxModule.h"
 
@@ -50,7 +50,7 @@ AFX void*           AfxResourceGetSystem(afxResource res);
 AFX void*           AfxResourceGetFileSystem(afxResource res);
 
 AFX afxUri const*   AfxResourceGetUri(afxResource res);
-AFX afxUri const*   AfxResourceExcerptName(afxResource res, afxUri *name);
+AFX afxNat          AfxResourceExcerptName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
 AFX afxError        AfxResourceLoad(afxResource res); // find or load (if not found on dictionaries).
 AFX afxError        AfxResourceRequest(afxResource res);
@@ -61,9 +61,11 @@ AFX afxError        AfxResourceUnload(afxResource res);
 
 AFX_OBJECT(afxResource)
 {
-    afxObject           obj; // resource name
-    afxUri128           uri; // resource path
+    afxObject           obj;
+    afxUri*             uri; // 128 // resource path
     afxResourceState    state;
+    afxChain            instances;
+    afxNat              reqCnt;
     afxLinkage          monitor; // queued for monitoring for external changes.
     afxTime             lastUpdTime;
     afxTime             lastReqTime; // will be used to liberate space if needed.

@@ -17,7 +17,7 @@
 #ifndef AFX_VOLUME_H
 #define AFX_VOLUME_H
 
-#include "../afxMathDefs.h"
+#include "afx/math/afxMathDefs.h"
 
 typedef enum
 {

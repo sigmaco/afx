@@ -9,15 +9,8 @@
 
 AFX_DEFINE_STRUCT(BINKFRAMETEXTURES)
 {
-    afxNat32                Ysize;
-    afxNat32                cRsize;
-    afxNat32                cBsize;
-    afxNat32                Asize;
-    afxLego    lego;
-    afxSurface              Ytexture;
-    afxSurface              cRtexture;
-    afxSurface              cBtexture;
-    afxSurface              Atexture;
+    afxNat      sizes[4]; // Y, cR, cB, A.
+    afxSurface  surfaces[4]; // Y, cR, cB, A.
 };
 
 AFX_DEFINE_STRUCT(BINKTEXTURESET)

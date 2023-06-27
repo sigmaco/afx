@@ -4,7 +4,7 @@
 #include "afx/core/afxSystem.h"
 #include "afx/core/diag/afxDebug.h"
 
-#include "afx/simul/dag/afxNode.h"
+#include "afx/sim/dag/afxNode.h"
 
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/afxQwadro.h"
@@ -31,7 +31,7 @@ afxDrawContext dctx = NIL;
 
 afxCanvas canv[3][3] = { NIL };
 
-afxUri4096 uri, uri2;
+afxUri2048 uri, uri2;
 
 afxVertexBuffer vbo = NIL;
 afxBuffer ubo = NIL;
@@ -40,9 +40,10 @@ afxTexture tex[4] = { NIL, NIL, NIL, NIL };
 
 afxBinkVideo bnk = { 0 };
 
-_AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxNat qid, afxBinkVideo *bnk) // called by draw context
+_AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxNat qid, void**udd) // called by draw context
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
+    afxBinkVideo *bnk = udd[0];
     
     afxDrawScript dscr = AfxDrawInputAcquireScript(din, 1);
     //return 0;
@@ -64,11 +65,11 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxNat qid, afxBinkVideo *bnk
             if (AfxDrawScriptEnd(dscr)) AfxThrowError();
             else
             {
-                if (AfxDrawInputEnqueueSubmission(din, 1, &dscr)) // draw output count hardcoded to 1.
+                if (AfxDrawInputSubmitScripts(din, 1, &dscr)) // draw output count hardcoded to 1.
                     AfxThrowError();
 
                 //if (qid == 0)
-                    if (AfxDrawInputEnqueuePresentation(din, 1, dout, &outBufIdx)) // draw output count hardcoded to 1.
+                    if (AfxDrawInputPresentRasters(din, 1, dout, &outBufIdx)) // draw output count hardcoded to 1.
                         AfxThrowError();
             }
         }
@@ -78,7 +79,7 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxNat qid, afxBinkVideo *bnk
 
 _AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     //AfxUriFormat(&uri, "?text=timer %u, timer^2 %u", AfxGetTimer(), AfxGetTimer() * AfxGetTimer());
     
     //AfxBinkDoFrame(&bnk, TRUE, TRUE);
@@ -89,24 +90,27 @@ _AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
 
 _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     AfxEntry("app=%p", app);
-    AfxUri4096(&uri, NIL);
+    AfxUri2048(&uri);
 
     AfxUriFormat(&uri.uri, "art/world.tga");
     
-    if (1 != AfxDrawContextAcquireTextures(dctx, 1, &uri.uri, &dumpImg))
+    if (AfxDrawContextAcquireTextures(dctx, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
-    AfxUriFormat(&uri.uri, "system/world2.tga");
+    AfxUriFormat(&uri.uri, "tmp/world2.tga");
     AfxTextureDownload(dumpImg, &uri.uri);
-    AfxObjectRelease(&dumpImg->res.obj);
+    AfxObjectRelease(&dumpImg->obj);
 
     AfxUriFormat(&uri.uri, "window");
     afxDrawOutputSpecification doutSpec = { 0 };
     doutSpec.endpoint = &uri.uri;
+    doutSpec.whd[0] = 1280;
+    doutSpec.whd[1] = 720;
+    doutSpec.whd[2] = 1;
     doutSpec.bufCnt = 2;
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
@@ -115,15 +119,14 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
-    afxWhd extent = { 1280, 720, 1 };
 
 #ifdef ENABLE_DOUT1
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
-    dout[0] = AfxDrawContextAcquireOutput(dctx, extent, &doutSpec);
+    dout[0] = AfxDrawContextAcquireOutput(dctx, &doutSpec);
     AfxAssert(dout[0]);
 
     afxResult rslt = AfxDrawOutputBuildCanvases(dout[0], doutSpec.bufCnt, (afxNat[]) { 0, 1 }, (afxPixelFormat[]) { AFX_PIXEL_FMT_D32, AFX_PIXEL_FMT_D32 }, NIL, canv[0]);
-    AfxAssert(rslt == (afxResult)doutSpec.bufCnt);
+    AfxAssert(!rslt);
 
 #endif
 #ifdef ENABLE_DOUT2
@@ -157,7 +160,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     afxDrawInputSpecification dinSpec;
     dinSpec.prefetch = (void*)DinFetcherFn;
-    dinSpec.udd = &bnk;
+    dinSpec.udd[0] = &bnk;
     dinSpec.cmdPoolMemStock = 4096;
     dinSpec.estimatedSubmissionCnt = 2;
     dinSpec.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
@@ -229,11 +232,11 @@ _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
 
 int main(int argc, char const* argv[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri4096 romUri;
-    AfxUri4096(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxUri2048(&romUri);
     AfxUriFormat(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

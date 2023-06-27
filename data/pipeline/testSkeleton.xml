@@ -1,0 +1,18 @@
+<Qwadro>
+    <Skeleton name='testSkeleton' lodTyp=''>
+        <Bone name='' parentIdx='' lodError='' origin='1.0, 1.0, 1.0' orientation='0.0, 0.0, 0.0, 1.0' scaleShear='1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0'></Bone>
+    </Skeleton>
+    <Mesh name='testMsh'>
+        <Section name='' mtlIdx='0' baseTriIdx='0' triCnt=''></Section>
+        <Articulation boneName='' triCnt=''></Articulation>
+    </Mesh>
+    <Model name=''>
+        <Skeleton>data/pipeline/testSkeleton.xml?testSkeleton</Skeleton>
+        <InitialPlacement>
+            <Origin>1.0, 1.0, 1.0</Origin>
+            <Orientation>0.0, 0.0, 0.0, 1.0</Orientation>
+            <ScaleShear>1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0</ScaleShear>
+        </InitialPlacement>
+        <Mesh>data/pipeline/testSkeleton.xml?testMsh</Mesh>
+    </Model>
+</Qwadro>

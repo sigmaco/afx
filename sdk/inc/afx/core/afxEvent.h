@@ -78,7 +78,7 @@ AFX_DEFINE_STRUCT(afxEvent)
 
 AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxObject *receiver, void *udd)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(ev);
     ev->fcc = AFX_FCC_EVNT;
     ev->type = type;
@@ -88,9 +88,9 @@ AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxObject *receiver,
     ev->udd = udd;
 }
 
-AFXINL void AfxEventAccept(afxEvent* ev) { afxError err = NIL; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = TRUE; }
-AFXINL void AfxEventIgnore(afxEvent* ev) { afxError err = NIL; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = FALSE; }
+AFXINL void AfxEventAccept(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = TRUE; }
+AFXINL void AfxEventIgnore(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = FALSE; }
 
-AFXINL afxBool AfxEventIsAccepted(afxEvent* ev) { afxError err = NIL; AfxAssertType(ev, AFX_FCC_EVNT); return ev->accepted; }
+AFXINL afxBool AfxEventIsAccepted(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); return ev->accepted; }
 
 #endif//AFX_EVENT_H

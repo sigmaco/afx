@@ -1,0 +1,11 @@
+<Qwadro>
+    <Shader stage='GEOMETRY' name='triListDummyGs'>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+    </Shader>
+    <Shader stage='GEOMETRY' name='triStripDummyGs'>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
+    </Shader>
+    <Shader stage='GEOMETRY' name='triFanDummyGs'>
+        <PrimitiveTopology>TRI_FAN</PrimitiveTopology>
+    </Shader>
+</Qwadro>

@@ -18,7 +18,7 @@
 #define AFX_SPHERE_H
 
 #include "afxVolume.h"
-#include "../afxVector.h"
+#include "afx/math/afxMathDefs.h"
 
 AFX_DEFINE_STRUCT(afxSphere)
 {
@@ -29,7 +29,7 @@ AFX_DEFINE_STRUCT(afxSphere)
 
 AFXINL afxSphere* AfxSphereDeploy(afxSphere* sph, afxV3d const origin, afxReal radius)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssert(sph);
     AfxAssert(origin);
     sph->vol.type = AFX_VOL_SPHERE;

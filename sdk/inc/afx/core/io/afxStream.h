@@ -73,7 +73,7 @@ AFX_DEFINE_STRUCT(afxStreamImplementation)
     afxError    (*write)(afxStream, void const * const src, afxNat len);
     afxResult   (*writeProgressFb)(afxStream, afxNat32, void*);
     afxNat      (*tell)(afxStream);
-    afxResult   (*seek)(afxStream, afxInt, afxStreamOrigin);
+    afxError    (*seek)(afxStream, afxInt, afxStreamOrigin);
     afxBool     (*eos)(afxStream);
 };
 
@@ -115,7 +115,7 @@ AFX afxBool             AfxStreamIsHidden(afxStream ios);
 AFX afxBool             AfxStreamIsReserved(afxStream ios);
 
 AFX afxResult           AfxStreamRead(afxStream ios, void *dst, afxNat len);
-AFX afxResult           AfxStreamResizeBuffer(afxStream ios, afxNat siz);
+AFX afxError            AfxStreamResizeBuffer(afxStream ios, afxNat siz);
 AFX afxResult           AfxStreamWrite(afxStream ios, void const *src, afxNat len);
 
 #endif//AFX_STREAM_H

@@ -41,7 +41,7 @@ typedef afxSize afxHint[3];
 #define AfxSpawnHint() ((afxHint const){ (afxSize)(__FILE__), (afxSize)(__LINE__), (afxSize)(__func__) })
 
 //#define AFX_SUCCESS ((afxResult)NIL)
-#define AfxThrowError() ((err) = (-((afxResult)__LINE__)), AfxOutputError(AfxSpawnHint(),""))
+#define AfxThrowError() ((err) = (afxError)(-((afxNat16)__LINE__)), AfxOutputError(AfxSpawnHint(),""))
 #define AfxResetResult(rslt) (rslt = AFX_SUCCESS)
 #define AfxCatchError(rslt) if (rslt) { AfxOutputError(((afxHint const){ (afxSize)(__FILE__), (afxSize)(rslt), (afxSize)(__func__) }),""); }
 
@@ -75,12 +75,17 @@ AFXINL afxChar* AfxFindPathTarget(afxChar const* path)
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
 #   define AfxAssert(cond_)             ((!!((cond_)))||(AfxThrowError(),AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertSoft(cond_)         ((!!((cond_)))||(AfxThrowError(),AfxOutputAdvertence(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertDiff(a_,b_)         ((!!(((void*)(a_) != (void*)(b_))))||(AfxThrowError(),AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertDiffSoft(a_,b_)         ((!!(((void*)(a_) != (void*)(b_))))||(AfxThrowError(),AfxOutputAdvertence(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertType(var_, fcc_)    ((!!((var_) && ((var_)->fcc == (fcc_))))||(AfxThrowError(),AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxTryAssertType(var_, fcc_) ((!!(!(var_) || ((var_)->fcc == (fcc_))))||(AfxThrowError(),AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
 #else
 
 #   define AfxAssert(cond_) ((void)(err))
+#   define AfxAssertDiff(a_,b_) ((void)(err))
+#   define AfxAssertDiffSoft(a_,b_) ((void)(err)) // when input causes just computational power loss
 #   define AfxAssertType(var_, fcc_) ((void)(err))
 #   define AfxTryAssertType(var_, fcc_) ((void)(err))
 
@@ -109,6 +114,14 @@ AFXINL afxChar* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssist(msg, ...)
 #   define AfxAdvertise(msg, ...)
 
+#endif
+
+#ifdef _AFX_DEBUG
+#   define _AFX_DBG_FCC     afxFcc    fcc
+#   define _AFX_DBG_FCC16   afxNat16  fcc
+#else
+#   define _AFX_DBG_FCC 
+#   define _AFX_DBG_FCC16 
 #endif
 
 #endif//AFX_DEBUG_H

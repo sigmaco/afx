@@ -59,9 +59,10 @@ AFXINL afxLinkage*          AfxChainGetBegin(afxChain const *ch);
 AFXINL afxLinkage*          AfxChainGetEnd(afxChain const *ch);
 AFXINL afxLinkage*          AfxChainGetAnchor(afxChain *ch);
 AFXINL afxLinkage const*    AfxChainGetAnchorConst(afxChain const *ch);
+AFXINL afxBool              AfxChainIsEmpty(afxChain const *ch);
 
-AFXINL afxNat               AfxChainFindLinkage(afxChain const *ch, afxLinkage *lnk);
-AFXINL afxLinkage*          AfxChainGetLinkage(afxChain *ch, afxNat idx);
+AFXINL afxBool              AfxChainFindLinkageIndex(afxChain const *ch, afxLinkage *lnk, afxNat *idx);
+AFXINL afxLinkage*          AfxChainFindLinkage(afxChain *ch, afxNat idx);
 AFXINL afxError             AfxChainPushLinkageAfter(afxChain *ch, afxNat idx);
 AFXINL afxError             AfxChainPopLinkage(afxChain *ch, afxNat idx);
 
@@ -71,6 +72,7 @@ AFXINL afxResult            AfxChainEnumerateLinkages(afxChain *ch, afxBool reve
 
 
 AFXINL void AfxLinkageDeploy(afxLinkage *lnk, afxChain *ch);
+AFXINL void AfxLinkageDeployAtEnd(afxLinkage *lnk, afxChain *ch);
 
 AFXINL void AfxLinkageDrop(afxLinkage *lnk);
 

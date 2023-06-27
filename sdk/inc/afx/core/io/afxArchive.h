@@ -59,7 +59,7 @@ AFX afxBool     AfxArchiveItemIsFile(afxArchive arc, afxNat idx);
 AFX afxError    AfxArchiveExtractItem(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
 AFX afxError    AfxArchiveExtractItemToStream(afxArchive arc, afxNat idx, afxStream ios);
 AFX afxError    AfxArchiveDownloadItem(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
-AFX afxNat      AfxArchiveFindItem(afxArchive arc, afxUri const *name);
+AFX afxBool     AfxArchiveFindItem(afxArchive arc, afxUri const *name, afxNat *idx);
 AFX afxStream   AfxArchiveOpenItem(afxArchive arc, afxNat idx);
 
 AFX afxError    AfxArchiveDescribeItem(afxArchive arc, afxNat idx, afxArchiveItemDescriptor *desc);

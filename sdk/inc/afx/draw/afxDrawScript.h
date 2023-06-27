@@ -92,10 +92,10 @@ AFX_DEFINE_STRUCT(afxClearRect)
 
 AFX_DEFINE_STRUCT(afxDrawTarget)
 {
-    afxSurface              surf;
-    afxSurfaceLoadOp        loadOp;
-    afxSurfaceStoreOp       storeOp;
-    afxClearValue           clearValue;
+    afxSurface          surf;
+    afxSurfaceLoadOp    loadOp;
+    afxSurfaceStoreOp   storeOp;
+    afxClearValue       clearValue;
 };
 
 AFX_DEFINE_STRUCT(afxRenderPassAnnex)
@@ -131,24 +131,34 @@ AFX afxError            AfxDrawScriptBegin(afxDrawScript dscr, afxNat flags);
 AFX afxError            AfxDrawScriptEnd(afxDrawScript dscr);
 AFX afxError            AfxDrawScriptReset(afxDrawScript dscr);
 
-AFX void        AfxDrawScriptCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);
-AFX void        AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
-AFX void        AfxDrawScriptCmdBindLegos(afxDrawScript dscr, afxNat first, afxNat cnt, afxLego lego[]);
-AFX void        AfxDrawScriptCmdBindWildVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const size[], afxSize const stride[]);
-AFX void        AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
-AFX void        AfxDrawScriptCmdBindIndexBuffer(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat baseIdx);
-AFX void        AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip);
-AFX void        AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
-AFX void        AfxDrawScriptCmdSetScissor(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
-AFX void        AfxDrawScriptCmdSetViewport(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
-AFX void        AfxDrawScriptCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
-AFX void        AfxDrawScriptCmdEndOperation(afxDrawScript dscr);
-AFX void        AfxDrawScriptCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
-AFX void        AfxDrawScriptCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
-AFX void        AfxDrawScriptCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
-AFX void        AfxDrawScriptCmdEndCombination(afxDrawScript dscr);
-AFX void        AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
-AFX void        AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);
-AFX void        AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state);
+AFX void                AfxDrawScriptCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);
+AFX void                AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
+
+AFX void                AfxDrawScriptCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
+AFX void                AfxDrawScriptCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxTexture tex[]);
+
+AFX void                AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[]);
+AFX void                AfxDrawScriptCmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const size[], afxSize const stride[]);
+AFX void                AfxDrawScriptCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
+AFX void                AfxDrawScriptCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+AFX void                AfxDrawScriptCmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+
+AFX void                AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip);
+
+AFX void                AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
+
+AFX void                AfxDrawScriptCmdSetScissors(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
+AFX void                AfxDrawScriptCmdSetViewports(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
+
+AFX void                AfxDrawScriptCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
+AFX void                AfxDrawScriptCmdEndOperation(afxDrawScript dscr);
+AFX void                AfxDrawScriptCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
+AFX void                AfxDrawScriptCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
+AFX void                AfxDrawScriptCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
+AFX void                AfxDrawScriptCmdEndCombination(afxDrawScript dscr);
+
+AFX void                AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
+AFX void                AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);
+AFX void                AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state);
 
 #endif//AFX_DRAW_SCRIPT_H

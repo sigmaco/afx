@@ -19,7 +19,7 @@
 
 _SGL void _AfxDinDscrHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxDrawInput din = (void*)obj;
     AfxAssertObject(din, AFX_FCC_DIN);
     AfxAssertObject(ev->obj, AFX_FCC_DSCR);
@@ -35,7 +35,7 @@ _SGL void _AfxDinDscrHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxError _AfxDrawInputProcess(afxDrawInput din, afxNat queueIdx)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
 
     if (din->prefetchThreadEnabled[queueIdx])
@@ -53,7 +53,7 @@ _SGL afxError _AfxDrawInputProcess(afxDrawInput din, afxNat queueIdx)
 
 _SGL afxError _AfxDrawInputAffinePrefetchThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
     AfxAssert(cnt);
 
@@ -65,7 +65,7 @@ _SGL afxError _AfxDrawInputAffinePrefetchThreads(afxDrawInput din, afxNat base, 
 
 _SGL afxError _AfxDrawInputAffineStreamingThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
     AfxAssert(cnt);
 
@@ -77,7 +77,7 @@ _SGL afxError _AfxDrawInputAffineStreamingThreads(afxDrawInput din, afxNat base,
 
 _SGL afxError _AfxDrawInputAffineSubmissionThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
     AfxAssert(cnt);
 
@@ -89,7 +89,7 @@ _SGL afxError _AfxDrawInputAffineSubmissionThreads(afxDrawInput din, afxNat base
 
 _SGL afxError _AfxDrawInputAffinePresentationThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
     AfxAssert(cnt);
 
@@ -99,11 +99,11 @@ _SGL afxError _AfxDrawInputAffinePresentationThreads(afxDrawInput din, afxNat ba
     return err;
 }
 
-_SGL afxError _AfxDrawInputEnqueueSubmission(afxDrawInput din, afxNat scriptCnt, afxDrawScript scripts[])
+_SGL afxError _AfxDrawInputSubmitScripts(afxDrawInput din, afxNat scriptCnt, afxDrawScript scripts[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
-    afxDrawWork dwrk;
+    afxDrawWorkload dwrk;
     AfxGetTime(&dwrk.timestamp);
     dwrk.type = AFX_DRAW_WORK_TYPE_SUBMISSION;
     dwrk.submission.scriptCnt = 0;
@@ -134,11 +134,11 @@ _SGL afxError _AfxDrawInputEnqueueSubmission(afxDrawInput din, afxNat scriptCnt,
     return err;
 }
 
-_SGL afxError _AfxDrawInputEnqueuePresentation(afxDrawInput din, afxNat outputCnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
+_SGL afxError _AfxDrawInputPresentRasters(afxDrawInput din, afxNat outputCnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
-    afxDrawWork dwrk;
+    afxDrawWorkload dwrk;
     AfxGetTime(&dwrk.timestamp);
     dwrk.type = AFX_DRAW_WORK_TYPE_PRESENTATION;
     dwrk.presentation.outputCnt = 0;
@@ -168,11 +168,11 @@ _SGL afxError _AfxDrawInputEnqueuePresentation(afxDrawInput din, afxNat outputCn
     return err;
 }
 
-_SGL afxError _AfxDrawInputEnqueueStreaming(afxDrawInput din, afxNat resCnt, afxObject *resources[])
+_SGL afxError _AfxDrawInputTransferResources(afxDrawInput din, afxNat resCnt, afxObject *resources[])
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
-    afxDrawWork dwrk;
+    afxDrawWorkload dwrk;
     AfxGetTime(&dwrk.timestamp);
     dwrk.type = AFX_DRAW_WORK_TYPE_STREAMING;
     dwrk.streaming.resCnt = 0;
@@ -202,33 +202,65 @@ _SGL afxError _AfxDrawInputEnqueueStreaming(afxDrawInput din, afxNat resCnt, afx
     return err;
 }
 
+_SGL afxError _SglDinDiscardWorkloads(afxDrawInput din)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxDrawWorkload const *dwrk;
+    AfxTransistorEnterExclusive(&din->streamingLock);
+    AfxTransistorEnterExclusive(&din->submissionLock);
+    AfxTransistorEnterExclusive(&din->presentationLock);
+
+    while ((dwrk = AfxQueuePull(&din->streamingQueue)))
+    {
+        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_STREAMING);
+
+        AfxQueuePop(&din->streamingQueue);
+    }
+
+    while ((dwrk = AfxQueuePull(&din->submissionQueue)))
+    {
+        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_SUBMISSION);
+
+        for (afxNat i = 0; i < dwrk->submission.scriptCnt; ++i)
+        {
+            AfxAssertObject(dwrk->submission.scripts[i], AFX_FCC_DSCR);
+            dwrk->submission.scripts[i]->state = AFX_DSCR_STATE_EXECUTABLE;
+        }
+        AfxQueuePop(&din->submissionQueue);
+    }
+
+    while ((dwrk = AfxQueuePull(&din->presentationQueue)))
+    {
+        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_PRESENTATION);
+
+        for (afxNat i = 0; i < dwrk->presentation.outputCnt; ++i)
+        {
+            AfxAssertObject(dwrk->presentation.outputs[i], AFX_FCC_DOUT);
+            dwrk->presentation.outputs[i]->buffers[dwrk->presentation.outputBufIdx[i]]->state = AFX_SURF_STATE_PRESENTABLE;            
+        }
+        AfxQueuePop(&din->presentationQueue);
+    }
+
+    AfxTransistorExitExclusive(&din->streamingLock);
+    AfxTransistorExitExclusive(&din->submissionLock);
+    AfxTransistorExitExclusive(&din->presentationLock);
+}
+
 _SGL afxDinImpl _AfxStdDinImpl =
 {
-    _AfxDrawInputAcquireScript,
-    _AfxDrawInputEnqueueStreaming,
-    _AfxDrawInputEnqueueSubmission,
-    _AfxDrawInputEnqueuePresentation,
+    _AfxDrawInputTransferResources,
+    _AfxDrawInputSubmitScripts,
+    _AfxDrawInputPresentRasters,
     _AfxDrawInputAffineStreamingThreads,
     _AfxDrawInputAffineSubmissionThreads,
     _AfxDrawInputAffinePresentationThreads,
     _AfxDrawInputAffinePrefetchThreads
 };
 
-_SGL afxDrawInput _AfxDrawContextAcquireInput(afxDrawContext dctx, afxDrawInputSpecification const *spec)
-{
-    AfxEntry("dctx=%p,spec=%p", dctx, spec);
-    afxError err = NIL;
-    afxDrawInput din = NIL;
-
-    if (!(din = AfxObjectAcquire(AfxDrawContextGetInputClass(dctx), spec, AfxSpawnHint())))
-        AfxThrowError();
-
-    return din;
-}
-
 _SGL afxBool _SglDinEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxDrawInput din = (void*)obj;
     AfxAssertObject(din, AFX_FCC_DIN);
     (void)ev;
@@ -237,7 +269,7 @@ _SGL afxBool _SglDinEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglDinEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxDrawInput din = (void*)obj;
     AfxAssertObject(din, AFX_FCC_DIN);
     (void)watched;
@@ -248,7 +280,7 @@ _SGL afxBool _SglDinEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 _SGL afxError _AfxDinDtor(afxDrawInput din)
 {
     AfxEntry("din=%p", din);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
     
     afxNat falses[] = { FALSE, FALSE, FALSE, FALSE };
@@ -258,6 +290,8 @@ _SGL afxError _AfxDinDtor(afxDrawInput din)
     AfxDrawInputAffineSubmissionThreads(din, 0, 4, falses);
     AfxDrawInputAffinePresentationThreads(din, 0, 4, falses);
     AfxDrawInputAffinePrefetchThreads(din, 0, 4, falses);
+
+    _SglDinDiscardWorkloads(din);
     AfxYield();
 #if 0
     AfxTransistorEnterExclusive(&din->presentationLock);
@@ -282,11 +316,12 @@ _SGL afxError _AfxDinDtor(afxDrawInput din)
     return err;
 }
 
-_SGL afxError _AfxDinCtor(afxDrawInput din, afxDrawInputSpecification const *spec)
+_SGL afxError _AfxDinCtor(void *cache, afxNat idx, afxDrawInput din, afxDrawInputSpecification const *specs)
 {
     AfxEntry("din=%p", din);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
+    afxDrawInputSpecification const *spec = &specs[idx];
     AfxAssert(spec);
     AfxAssert(spec->estimatedSubmissionCnt);
     afxNat estimatedSubmissionCnt = spec->estimatedSubmissionCnt;
@@ -325,26 +360,30 @@ _SGL afxError _AfxDinCtor(afxDrawInput din, afxDrawInputSpecification const *spe
         if (AfxTransistorDeploy(&din->streamingLock)) AfxThrowError();
         else
         {
-            if (AfxQueueDeploy(&din->streamingQueue, sizeof(afxDrawWork), 32)) AfxThrowError();
+            if (AfxQueueDeploy(&din->streamingQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
             else
             {
                 if (AfxTransistorDeploy(&din->submissionLock)) AfxThrowError();
                 else
                 {
-                    if (AfxQueueDeploy(&din->submissionQueue, sizeof(afxDrawWork), 32)) AfxThrowError();
+                    if (AfxQueueDeploy(&din->submissionQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
                     else
                     {
                         if (AfxTransistorDeploy(&din->presentationLock)) AfxThrowError();
                         else
                         {
-                            if (AfxQueueDeploy(&din->presentationQueue, sizeof(afxDrawWork), 32)) AfxThrowError();
+                            if (AfxQueueDeploy(&din->presentationQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
                             else
                             {
                                 if (AfxTransistorDeploy(&din->prefetchLock)) AfxThrowError();
                                 else
                                 {
                                     din->prefetchProc = spec->prefetch;
-                                    din->udd = spec->udd;
+
+                                    din->udd[0] = spec->udd[0];
+                                    din->udd[1] = spec->udd[1];
+                                    din->udd[2] = spec->udd[2];
+                                    din->udd[3] = spec->udd[3];
 
                                     if (err)
                                         AfxTransistorDrop(&din->prefetchLock);

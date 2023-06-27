@@ -1,0 +1,4331 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxClass<afxSystem>::Mount(517acdf0, 00000000, 00000000, 5178b708)
+ afxClass<afxSystem>::AllocateObjects(1, 0030e890, 0030e8a0)
+ afxClass<afxSystem>::BuildObjects(1, 0030e890, 00000000)
+ afxClass<afxSystem>::ConstructObject(005ff080)
+ afxSystem.c:813?_AfxSysCtor(sys=005ff080)
+ ADV afxSystem.c:828?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:829?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(00600100, 005ff0b4, 00000000, 5178f94c)
+ afxClass<Memory Arena>::Mount(006001c0, 005ff0b4, 00600100, 5178f2c4)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=005ff080,strategy=0030d40c,hint="afxSystem.c:847!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0030d28c, 0030d29c)
+ afxClass<afxMemory>::BuildObjects(1, 0030d28c, 0030d280)
+ afxClass<afxMemory>::ConstructObject(006008f0)
+ afxMemory.c:317?_AfxMemCtor(mem=006008f0)
+ afxClass<afxThread>::Mount(00600280, 005ff0b4, 00000000, 5178bdd0)
+ afxClass<afxFileSystem>::Mount(00600340, 005ff0b4, 00000000, 5178d2a4)
+ afxFileSystem.c:558?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(005ff080,5,0030d5cc))
+ afxClass<afxFileSystem>::AllocateObjects(1, 0030d274, 0030d284)
+ afxClass<afxFileSystem>::BuildObjects(1, 0030d274, 0030d3c8)
+ afxClass<afxFileSystem>::ConstructObject(00600f30)
+ afxFileSystem.c:617?_AfxFsysCtor(fsys=00600f30)
+ afxClass<afxStream>::Mount(00600f80, 00600f68, 00000000, 5178e6c4)
+ afxClass<afxFile>::Mount(00601040, 00600f68, 00600f80, 5178d020)
+ afxClass<afxArchive>::Mount(00601100, 00600f68, 00601040, 5178c9ac)
+ afxClass<afxResource>::Mount(00601340, 00600f68, 00000000, 5178e524)
+ afxClass<afxXml>::Mount(006011c0, 00600f68, 00000000, 5178ebbc)
+ afxClass<afxUrd>::Mount(00601280, 00600f68, 00000000, 5178eadc)
+ afxFileSystem.c:389?AfxFileSystemMountStoragePoints(Afx.FileSystem.MountStoragePoints(00600f30,5,0030d5cc))
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 7 mounted -> "E:/qwadro/afx/system32".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ afxClass<afxModule>::Mount(00600400, 005ff0b4, 00000000, 51789f08)
+ afxModule.c:71?AfxSystemAcquireModule(sys=005ff080,uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0030d22c, 0030d274)
+ afxClass<afxModule>::BuildObjects(1, 0030d22c, 0030d4f0)
+ afxClass<afxModule>::ConstructObject(00604010)
+ afxModule.c:135?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(006004c0, 005ff0b4, 00000000, 5178d7bc)
+ afxClass<afxKeyboard>::Mount(00600580, 005ff0b4, 006004c0, 5178e0bc)
+ afxClass<afxMouse>::Mount(00600640, 005ff0b4, 006004c0, 5178e27c)
+ afxClass<afxDrawSystem>::Mount(00600700, 005ff0b4, 00000000, 51792fdc)
+ afxClass<afxApplication>::Mount(006007c0, 005ff0b4, 00000000, 51789000)
+ afxKeyboard.c:165?AfxSystemAcquireKeyboard(sys=005ff080,port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0030d298, 0030d2a8)
+ afxClass<afxKeyboard>::BuildObjects(1, 0030d298, 0030d290)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(00602950)
+ afxClass<afxHid>::ConstructObject(00602950)
+ afxHid.c:75?_AfxHidCtor(hid=00602950)
+ afxClass<afxKeyboard>::ConstructObject(00602950)
+ afxKeyboard.c:221?_AfxKbdCtor(kbd=00602950)
+ afxDrawSystem.c:320?AfxSystemAcquireDrawSystem(sys=005ff080)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0030e88c, 0030e89c)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0030e88c, 0030e998)
+ afxClass<afxDrawSystem>::ConstructObject(006031f0)
+ afxDrawSystem.c:418?_AfxDsysCtor(dsys=006031f0)
+ afxClass<afxDrawDriver>::Mount(00603238, 00603224, 00000000, 51791b0c)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:71?AfxSystemAcquireModule(sys=005ff080,uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0030e358, 0030e3a0)
+ afxClass<afxModule>::BuildObjects(1, 0030e358, 0030e484)
+ afxClass<afxModule>::ConstructObject(006040d0)
+ afxModule.c:135?_AfxMdleCtor(uri:e2draw.icd)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDriver.c:1270?_SglCreateCombinedDeviceContext(oglWndClss=00607c60,shareCtx=00000000,phwnd=00607c90,phdc=00607c94,phrc=00607c9c)
+ sglDriver.c:786?_SglLoadVmt(vmt=00607ca0,verMajor=1,verMinor=0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ sglDriver.c:786?_SglLoadVmt(vmt=00607ca0,verMajor=4,verMinor=6)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ glCopyTexSubImage3D @ 65 found.
+ glActiveTexture @ 66 found.
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ glCompressedTexImage2D @ 69 found.
+ glCompressedTexImage1D @ 70 found.
+ glCompressedTexSubImage3D @ 71 found.
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ glPointParameteriv @ 81 found.
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ glGetShaderiv @ 124 found.
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ glUniform4fv @ 150 found.
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ glVertexAttrib1f @ 161 found.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ glClipControl @ 543 found.
+ glNamedBufferStorage @ 551 found.
+ glTextureBufferRange @ 589 found.
+ glTextureParameteri @ 606 found.
+ glMemoryBarrierByRegion @ 641 found.
+ glGetGraphicsResetStatus @ 644 found.
+ glGetnCompressedTexImage @ 645 found.
+ glGetnTexImage @ 646 found.
+ glGetnUniformdv @ 647 found.
+ glGetnUniformfv @ 648 found.
+ glGetnUniformiv @ 649 found.
+ glGetnUniformuiv @ 650 found.
+ glReadnPixels @ 651 found.
+ afxDrawDriver.c:77?AfxDrawSystemRegisterDriver(dsys=006031f0,mdle=006040d0,spec=0030e084)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 0030dfa0, 0030dfb0)
+ afxClass<afxDrawDriver>::BuildObjects(1, 0030dfa0, 0030df94)
+ afxClass<afxDrawDriver>::ConstructObject(02d59130)
+ afxDrawDriver.c:138?_AfxDdrvCtor(ddrv=02d59130)
+ afxClass<Draw Context>::Mount(02d59178, 02d59164, 00000000, 0030dc14)
+New draw driver registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+ ad88888ba   88    ,ad8888ba,     ,ad8888ba,   88           
+d8"     "8b  88   d8"'    `"8b   d8"'    `"8b  88           
+Y8,          88  d8'            d8'            88           
+`Y8aaaaa,    88  88             88             88           
+  `"""""8b,  88  88      88888  88      88888  88
+        `8b  88  Y8,        88  Y8,        88  88           
+Y8a     a8P  88   Y8a.    .a88   Y8a.    .a88  88           
+ "Y88888P"   88    `"Y88888P"     `"Y88888P"   88888888888  
+ Loading draw ICDs...
+ afxModule.c:71?AfxSystemAcquireModule(sys=005ff080,uri=e2draw.icd)
+ afxModule.c:71?AfxSystemAcquireModule(sys=005ff080,uri=e2newton.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0030e14c, 0030e194)
+ afxClass<afxModule>::BuildObjects(1, 0030e14c, 0030e248)
+ afxClass<afxModule>::ConstructObject(00604310)
+ afxModule.c:135?_AfxMdleCtor(uri:e2newton.icd)
+ afxDrawContext.c:318?AfxDrawSystemAcquireContext(dsys=006031f0,spec=0030e95c)
+ afxClass<Draw Context>::AllocateObjects(1, 0030e858, 0030e868)
+ afxClass<Draw Context>::BuildObjects(1, 0030e858, 0030e850)
+ afxClass<Draw Context>::ConstructObject(027cfdd0)
+ sglDrawContext.c:270?_AfxDctxCtor(dctx=027cfdd0)
+ afxClass<afxDrawScript>::Mount(027d0718, 027cfe04, 00000000, 5af2fd74)
+ afxClass<afxDrawInput>::Mount(027d07d8, 027cfe04, 00000000, 5af2f724)
+ afxClass<afxDrawQueue>::Mount(027d0898, 027cfe04, 00000000, 0030e4ac)
+ afxClass<afxBuffer>::Mount(027cfe18, 027cfe04, 00000000, 5af2e020)
+ afxClass<afxVertexBuffer>::Mount(027cfed8, 027cfe04, 027cfe18, 0030e4ac)
+ afxClass<afxIndexBuffer>::Mount(027cff98, 027cfe04, 027cfe18, 0030e4ac)
+ afxClass<afxSampler>::Mount(027d0058, 027cfe04, 00000000, 5af344a8)
+ afxClass<afxTexture>::Mount(027d0118, 027cfe04, 00000000, 5af34958)
+ afxClass<afxSurface>::Mount(027d01d8, 027cfe04, 027d0118, 5af34620)
+ afxClass<afxCanvas>::Mount(027d0298, 027cfe04, 00000000, 5af2e334)
+ afxClass<afxShader>::Mount(027d0358, 027cfe04, 00000000, 5af34168)
+ afxClass<afxPipelineRig>::Mount(027d0418, 027cfe04, 00000000, 5af3437c)
+ afxClass<afxPipeline>::Mount(027d04d8, 027cfe04, 00000000, 5af33d68)
+ afxClass<afxDrawOperation>::Mount(027d0658, 027cfe04, 00000000, 51791d90)
+ afxClass<afxLegoTemplate>::Mount(027d0598, 027cfe04, 00000000, 5af33b9c)
+ afxClass<afxDrawOutput>::Mount(027d0958, 027cfe04, 00000000, 5af2f978)
+ afxDrawQueue.c:47?AfxDrawContextAcquireQueue(dctx=027cfdd0)
+ afxClass<afxDrawQueue>::AllocateObjects(1, 0030e384, 0030e3a0)
+ afxClass<afxDrawQueue>::BuildObjects(1, 0030e384, 0030e4a4)
+ afxClass<afxDrawQueue>::ConstructObject(0280e0c0)
+ sglDrawQueue.c:1825?_AfxDqueCtor(dque=0280e0c0)
+ Uploading draw operation 'data/pipeline/rgbaToRgba.xml'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030d66c, 0030d67c)
+ afxClass<afxXml>::BuildObjects(1, 0030d66c, 0030d664)
+ afxClass<afxXml>::ConstructObject(02d63940)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030d2e4, 0030d2f4)
+ afxClass<afxFile>::BuildObjects(1, 0030d2e4, 0030d2d0)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030d348)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d348)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 0280f7e0, 0030d658)
+ afxClass<afxDrawOperation>::BuildObjects(1, 0280f7e0, 0030da94)
+ afxClass<afxDrawOperation>::ConstructObject(027d0aa0)
+ afxDrawOperation.c:576?_AfxDopCtor(dop=027d0aa0)
+ afxPipeline.c:316?AfxDrawContextBuildPipelines(dctx=027cfdd0)
+ afxClass<afxPipeline>::AllocateObjects(1, 02de3780, 0030d000)
+ afxClass<afxPipeline>::BuildObjects(1, 02de3780, 0030d0ec)
+ afxClass<afxPipeline>::ConstructObject(027d0be0)
+ sglPipeline.c:574?_AfxPipCtor(pip=027d0be0)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=027cf490,shd=0030c7cc)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bea4, 0030beb4)
+ afxClass<afxXml>::BuildObjects(1, 0030bea4, 0030be9c)
+ afxClass<afxXml>::ConstructObject(02d639d0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb1c, 0030bb2c)
+ afxClass<afxFile>::BuildObjects(1, 0030bb1c, 0030bb08)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bb80)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bb80)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb88, 0030bb98)
+ afxClass<afxFile>::BuildObjects(1, 0030bb88, 0030bb74)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bbe8)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bbe8)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030c2cc,shd=0030c7cc)
+ afxClass<afxShader>::AllocateObjects(1, 0030c7cc, 0030be84)
+ afxClass<afxShader>::BuildObjects(1, 0030c7cc, 0030c2cc)
+ afxClass<afxShader>::ConstructObject(027cebd0)
+ sglShader.c:238?_AfxShdCtor(shd=027cebd0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        layout(location = 0) in vec2 a_xy;
+
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bf08)
+ Destructing instance 02d639d0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02d639d0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bf08)
+ afxObject<027cebd0>::InstallEventFilter(027d0be0)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=027cf4c8,shd=0030c7cc)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bea4, 0030beb4)
+ afxClass<afxXml>::BuildObjects(1, 0030bea4, 0030be9c)
+ afxClass<afxXml>::ConstructObject(02d639d0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb1c, 0030bb2c)
+ afxClass<afxFile>::BuildObjects(1, 0030bb1c, 0030bb08)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bb80)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bb80)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb88, 0030bb98)
+ afxClass<afxFile>::BuildObjects(1, 0030bb88, 0030bb74)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bbe8)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bbe8)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030c2cc,shd=0030c7cc)
+ afxClass<afxShader>::AllocateObjects(1, 0030c7cc, 0030be84)
+ afxClass<afxShader>::BuildObjects(1, 0030c7cc, 0030c2cc)
+ afxClass<afxShader>::ConstructObject(02810b90)
+ sglShader.c:238?_AfxShdCtor(shd=02810b90)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bf08)
+ Destructing instance 02d639d0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02d639d0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bf08)
+ afxObject<02810b90>::InstallEventFilter(027d0be0)
+ afxClass<afxLegoTemplate>::AllocateObjects(1, 0030c5e0, 0030c5fc)
+ afxClass<afxLegoTemplate>::BuildObjects(1, 0030c5e0, 0030c5d4)
+ afxClass<afxLegoTemplate>::ConstructObject(02810850)
+ sglLego.c:199?_AfxLegtCtor(legt=02810850)
+ afxClass<afxPipelineRig>::AllocateObjects(1, 0030c5ec, 0030c5fc)
+ afxClass<afxPipelineRig>::BuildObjects(1, 0030c5ec, 0030c5e0)
+ afxClass<afxPipelineRig>::ConstructObject(02810a90)
+ sglPipelineRig.c:118?_AfxPiprCtor(pipr=02810a90)
+ afxPipeline.c:316?AfxDrawContextBuildPipelines(dctx=027cfdd0)
+ afxClass<afxPipeline>::AllocateObjects(1, 02de35f0, 0030d000)
+ afxClass<afxPipeline>::BuildObjects(1, 02de35f0, 0030d0ec)
+ afxClass<afxPipeline>::ConstructObject(006c9aa0)
+ sglPipeline.c:574?_AfxPipCtor(pip=006c9aa0)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=027cf490,shd=0030c7cc)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vsFlippedY'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bea4, 0030beb4)
+ afxClass<afxXml>::BuildObjects(1, 0030bea4, 0030be9c)
+ afxClass<afxXml>::ConstructObject(02d639d0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb1c, 0030bb2c)
+ afxClass<afxFile>::BuildObjects(1, 0030bb1c, 0030bb08)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bb80)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bb80)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb88, 0030bb98)
+ afxClass<afxFile>::BuildObjects(1, 0030bb88, 0030bb74)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bbe8)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bbe8)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030c2cc,shd=0030c7cc)
+ afxClass<afxShader>::AllocateObjects(1, 0030c7cc, 0030be84)
+ afxClass<afxShader>::BuildObjects(1, 0030c7cc, 0030c2cc)
+ afxClass<afxShader>::ConstructObject(02d75d40)
+ sglShader.c:238?_AfxShdCtor(shd=02d75d40)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        
+        layout(location = 0) in vec2 a_xy;
+        
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bf08)
+ Destructing instance 02d639d0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02d639d0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bf08)
+ afxObject<02d75d40>::InstallEventFilter(006c9aa0)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=027cf4c8,shd=0030c7cc)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/rgbaToRgba.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bea4, 0030beb4)
+ afxClass<afxXml>::BuildObjects(1, 0030bea4, 0030be9c)
+ afxClass<afxXml>::ConstructObject(02d639d0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb1c, 0030bb2c)
+ afxClass<afxFile>::BuildObjects(1, 0030bb1c, 0030bb08)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bb80)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bb80)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030bb88, 0030bb98)
+ afxClass<afxFile>::BuildObjects(1, 0030bb88, 0030bb74)
+ afxClass<afxFile, afxStream>ConstructingObject(02d5a540)
+ afxClass<afxStream>::ConstructObject(02d5a540)
+ afxClass<afxFile>::ConstructObject(02d5a540)
+ afxClass<afxFile>::DismantleObjects(1, 0030bbe8)
+ Destructing instance 02d5a540 of afxFile class.
+ Destructing instance 02d5a540 of afxFile : afxStream class.
+ Destructing instance 02d5a540 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bbe8)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030c2cc,shd=0030c7cc)
+ afxClass<afxShader>::AllocateObjects(1, 0030c7cc, 0030be84)
+ afxClass<afxShader>::BuildObjects(1, 0030c7cc, 0030c2cc)
+ afxClass<afxShader>::ConstructObject(02d58b70)
+ sglShader.c:238?_AfxShdCtor(shd=02d58b70)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bf08)
+ Destructing instance 02d639d0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02d639d0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bf08)
+ afxObject<02d58b70>::InstallEventFilter(006c9aa0)
+ afxClass<afxXml>::DismantleObjects(1, 0030d6d0)
+ Destructing instance 02d63940 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02d63940)
+ afxClass<afxXml>::DeallocateObjects(1, 0030d6d0)
+ afxSampler.c:47?AfxDrawContextAcquireSamplers(dctx=027cfdd0,spec=0030e030)
+ afxClass<afxSampler>::AllocateObjects(1, 0280f7e4, 0030dcf4)
+ afxClass<afxSampler>::BuildObjects(1, 0280f7e4, 0030e030)
+ afxClass<afxSampler>::ConstructObject(02844b90)
+ sglSampler.c:184?_AfxSmpCtor(smp=02844b90)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 0280f7e8, 0030dd48)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 0280f7e8, 0030dd20)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(006c9da0)
+ afxClass<afxBuffer>::ConstructObject(006c9da0)
+ sglBuffer.c:454?_AfxBufCtor(buf=006c9da0)
+ afxClass<afxVertexBuffer>::ConstructObject(006c9da0)
+ afxVertexBuffer.c:342?_AfxVbufCtor(vbuf=006c9da0)
+ afxApplication.c:372?AfxSystemAcquireApplication(sys=0030e95c,spec=027cfdd0)
+ afxClass<afxApplication>::AllocateObjects(1, 0030e884, 0030e894)
+ afxClass<afxApplication>::BuildObjects(1, 0030e884, 0030e92c)
+ afxClass<afxApplication>::ConstructObject(02d5a540)
+ afxApplication.c:422?_AfxAppCtor(app=02d5a540)
+ afxMouse.c:249?AfxSystemAcquireMouse(sys=005ff080,port=0)
+ afxClass<afxMouse>::AllocateObjects(1, 0030e474, 0030e484)
+ afxClass<afxMouse>::BuildObjects(1, 0030e474, 0030e46c)
+ afxClass<afxMouse, afxHid>ConstructingObject(02d63940)
+ afxClass<afxHid>::ConstructObject(02d63940)
+ afxHid.c:75?_AfxHidCtor(hid=02d63940)
+ afxClass<afxMouse>::ConstructObject(02d63940)
+ afxMouse.c:304?_AfxMseCtor(mse=02d63940)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=027cfdd0,spec=0030e528)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0030e45c, 0030e478)
+ afxClass<afxDrawInput>::BuildObjects(1, 0030e45c, 0030e528)
+ afxClass<afxDrawInput>::ConstructObject(027cef10)
+ sglDrawInput.c:274?_AfxDinCtor(din=027cef10)
+ afxArena.c:822?AfxSystemAcquireArena(sys=005ff080,strategy=0030e0d4,hint="sglDrawInput.c:310!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0030e020, 0030e030)
+ afxClass<Memory Arena>::BuildObjects(1, 0030e020, 0030e014)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(027cf2c0)
+ afxClass<afxMemory>::ConstructObject(027cf2c0)
+ afxMemory.c:317?_AfxMemCtor(mem=027cf2c0)
+ afxClass<Memory Arena>::ConstructObject(027cf2c0)
+ afxArena.c:799?_AfxArenCtor(aren=027cf2c0)
+ afxClass<afxWidget>::Mount(02d5aa18, 02d5a574, 00000000, 51797808)
+ afxClass<afxSimulation>::Mount(02d5aad8, 02d5a574, 00000000, 51798290)
+ afxApplication.c:322?AfxApplicationExecute(app=02d5a540)
+ Sandbox.c:169?AfxEnterApplication(app=02d5a540)
+ afxSimulation.c:425?AfxApplicationAcquireSimulation(app=02d5a540,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ afxClass<afxSimulation>::AllocateObjects(1, 0030e5e8, 0030e5f8)
+ afxClass<afxSimulation>::BuildObjects(1, 0030e5e8, 0030e5e0)
+ afxClass<afxSimulation>::ConstructObject(02d71330)
+ afxSimulation.c:345?_AfxSimCtor(sim=02d71330)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=005ff080,strategy=0030e278,hint="afxSimulation.c:367!_AfxSimCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0030e16c, 0030e17c)
+ afxClass<afxMemory>::BuildObjects(1, 0030e16c, 0030e160)
+ afxClass<afxMemory>::ConstructObject(02d58730)
+ afxMemory.c:317?_AfxMemCtor(mem=02d58730)
+ afxClass<afxMaterial>::Mount(02d71738, 02d71364, 00000000, 517991c4)
+ afxClass<afxMesh>::Mount(02d717f8, 02d71364, 00000000, 51799528)
+ afxClass<afxNode>::Mount(02d71a38, 02d71364, 00000000, 51798674)
+ afxClass<afxSkeleton>::Mount(02d71978, 02d71364, 00000000, 51798ab4)
+ afxClass<afxModel>::Mount(02d718b8, 02d71364, 00000000, 51799c8c)
+ afxClass<afxBody>::Mount(02d71378, 02d71364, 00000000, 51797a94)
+ afxClass<afxBodyControl>::Mount(02d71438, 02d71364, 00000000, 5179815c)
+ afxClass<afxEntity>::Mount(02d714f8, 02d71364, 02d71a38, 51797f2c)
+ afxClass<afxCamera>::Mount(02d715b8, 02d71364, 02d71a38, 51797c50)
+ afxClass<afxLight>::Mount(02d71678, 02d71364, 02d71a38, 51798010)
+ afxDrawOutput.c:137?AfxDrawContextAcquireOutput(dctx=027cfdd0,spec=0030e7e0)
+ afxClass<afxDrawOutput>::AllocateObjects(1, 0030e618, 0030e634)
+ afxClass<afxDrawOutput>::BuildObjects(1, 0030e618, 0030e7e0)
+ afxClass<afxDrawOutput>::ConstructObject(02dfbf00)
+ sglDrawOutput.c:518?_AfxDoutCtor(dout=02dfbf00)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=027cfdd0,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0030dc68, 0030dc84)
+ afxClass<afxSurface>::BuildObjects(1, 0030dc68, 0030dc90)
+ afxClass<afxSurface, afxTexture>ConstructingObject(02dfba40)
+ afxClass<afxTexture>::ConstructObject(02dfba40)
+ sglTexture.c:1027?_AfxTexCtor(tex=02dfba40)
+ afxClass<afxSurface>::ConstructObject(02dfba40)
+ sglSurface.c:131?_AfxSurfCtor(surf=02dfba40)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=027cfdd0,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0030dc68, 0030dc84)
+ afxClass<afxSurface>::BuildObjects(1, 0030dc68, 0030dc90)
+ afxClass<afxSurface, afxTexture>ConstructingObject(006caed0)
+ afxClass<afxTexture>::ConstructObject(006caed0)
+ sglTexture.c:1027?_AfxTexCtor(tex=006caed0)
+ afxClass<afxSurface>::ConstructObject(006caed0)
+ sglSurface.c:131?_AfxSurfCtor(surf=006caed0)
+ sglDrawOutput.c:470?_AfxStdDoutImplCtor(dout=02dfbf00,uri=window)
+ sglDrawOutput.c:321?_AfxStdDoutImplCtorWnd(dout=02dfbf00)
+ Extent readjusted. (dout)02dfbf00 -> 1272, 0.000000 of 4263526662; 693 0.000017 of 41748800
+ ADV glus_wavefront.c:865?__ldrWavefrontParse
+    MTL NAME art/object/container/container.mtl
+ ADV glus_wavefront.c:291?_ldrWavefrontLoadMaterial
+    MTL FNAME art/object/container/container.mtl
+ Mesh name container
+ afxClass<afxMaterial>::AllocateObjects(1, 0030cfd0, 0030cd18)
+ afxClass<afxMaterial>::BuildObjects(1, 0030cfd0, 0030d244)
+ afxClass<afxMaterial>::ConstructObject(02da5d30)
+ afxMaterial.c:239?_AfxMtlCtor(mtl=02da5d30)
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030befc, 0030bf0c)
+ afxClass<afxFile>::BuildObjects(1, 0030befc, 0030bee8)
+ afxClass<afxFile, afxStream>ConstructingObject(047a9dd0)
+ afxClass<afxStream>::ConstructObject(047a9dd0)
+ afxClass<afxFile>::ConstructObject(047a9dd0)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:401?AfxDrawContextBuildTextures(dctx=027cfdd0,cnt=1,blueprint=0030bfe0,tex=02da5e24)
+ afxClass<afxTexture>::AllocateObjects(1, 02da5e24, 0030bedc)
+ afxClass<afxTexture>::BuildObjects(1, 02da5e24, 0030bfe0)
+ afxClass<afxTexture>::ConstructObject(02da6110)
+ sglTexture.c:1027?_AfxTexCtor(tex=02da6110)
+ afxClass<afxFile>::DismantleObjects(1, 0030bf60)
+ Destructing instance 047a9dd0 of afxFile class.
+ Destructing instance 047a9dd0 of afxFile : afxStream class.
+ Destructing instance 047a9dd0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bf60)
+ afxClass<afxMaterial>::AllocateObjects(1, 0030cfd0, 0030cd18)
+ afxClass<afxMaterial>::BuildObjects(1, 0030cfd0, 0030d244)
+ afxClass<afxMaterial>::ConstructObject(02da5eb0)
+ afxMaterial.c:239?_AfxMtlCtor(mtl=02da5eb0)
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030befc, 0030bf0c)
+ afxClass<afxFile>::BuildObjects(1, 0030befc, 0030bee8)
+ afxClass<afxFile, afxStream>ConstructingObject(047a9dd0)
+ afxClass<afxStream>::ConstructObject(047a9dd0)
+ afxClass<afxFile>::ConstructObject(047a9dd0)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:401?AfxDrawContextBuildTextures(dctx=027cfdd0,cnt=1,blueprint=0030bfe0,tex=02da5fa4)
+ afxClass<afxTexture>::AllocateObjects(1, 02da5fa4, 0030bedc)
+ afxClass<afxTexture>::BuildObjects(1, 02da5fa4, 0030bfe0)
+ afxClass<afxTexture>::ConstructObject(02da6520)
+ sglTexture.c:1027?_AfxTexCtor(tex=02da6520)
+ afxClass<afxFile>::DismantleObjects(1, 0030bf60)
+ Destructing instance 047a9dd0 of afxFile class.
+ Destructing instance 047a9dd0 of afxFile : afxStream class.
+ Destructing instance 047a9dd0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bf60)
+ Mesh name air_conditioning
+ afxClass<afxMaterial>::AllocateObjects(1, 0030cfd0, 0030cd18)
+ afxClass<afxMaterial>::BuildObjects(1, 0030cfd0, 0030d244)
+ afxClass<afxMaterial>::ConstructObject(02da62c0)
+ afxMaterial.c:239?_AfxMtlCtor(mtl=02da62c0)
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030befc, 0030bf0c)
+ afxClass<afxFile>::BuildObjects(1, 0030befc, 0030bee8)
+ afxClass<afxFile, afxStream>ConstructingObject(047a9dd0)
+ afxClass<afxStream>::ConstructObject(047a9dd0)
+ afxClass<afxFile>::ConstructObject(047a9dd0)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:401?AfxDrawContextBuildTextures(dctx=027cfdd0,cnt=1,blueprint=0030bfe0,tex=02da63b4)
+ afxClass<afxTexture>::AllocateObjects(1, 02da63b4, 0030bedc)
+ afxClass<afxTexture>::BuildObjects(1, 02da63b4, 0030bfe0)
+ afxClass<afxTexture>::ConstructObject(02ef2150)
+ sglTexture.c:1027?_AfxTexCtor(tex=02ef2150)
+ afxClass<afxFile>::DismantleObjects(1, 0030bf60)
+ Destructing instance 047a9dd0 of afxFile class.
+ Destructing instance 047a9dd0 of afxFile : afxStream class.
+ Destructing instance 047a9dd0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bf60)
+ afxClass<afxMaterial>::AllocateObjects(1, 0030cfd0, 0030cd18)
+ afxClass<afxMaterial>::BuildObjects(1, 0030cfd0, 0030d244)
+ afxClass<afxMaterial>::ConstructObject(02da66d0)
+ afxMaterial.c:239?_AfxMtlCtor(mtl=02da66d0)
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ ERR afxUri.c:338?AfxUriGetStringConst
+    
+ ERR afxUri.c:338?AfxUriGetStringConst
+    (uri)
+    Invalid
+ ERR afxString.c:218?AfxStringCompareCi
+    (str)
+    Invalid
+ Uploading texture 'art/object/container/Container_DiffuseMap.tga'
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/object/container/Container_DiffuseMap.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030befc, 0030bf0c)
+ afxClass<afxFile>::BuildObjects(1, 0030befc, 0030bee8)
+ afxClass<afxFile, afxStream>ConstructingObject(047a9dd0)
+ afxClass<afxStream>::ConstructObject(047a9dd0)
+ afxClass<afxFile>::ConstructObject(047a9dd0)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:401?AfxDrawContextBuildTextures(dctx=027cfdd0,cnt=1,blueprint=0030bfe0,tex=02da67c4)
+ afxClass<afxTexture>::AllocateObjects(1, 02da67c4, 0030bedc)
+ afxClass<afxTexture>::BuildObjects(1, 02da67c4, 0030bfe0)
+ afxClass<afxTexture>::ConstructObject(02ef2560)
+ sglTexture.c:1027?_AfxTexCtor(tex=02ef2560)
+ afxClass<afxFile>::DismantleObjects(1, 0030bf60)
+ Destructing instance 047a9dd0 of afxFile class.
+ Destructing instance 047a9dd0 of afxFile : afxStream class.
+ Destructing instance 047a9dd0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030bf60)
+ afxClass<afxSkeleton>::AllocateObjects(1, 0030cf64, 0030cd18)
+ afxClass<afxSkeleton>::BuildObjects(1, 0030cf64, 0030cf68)
+ afxClass<afxSkeleton>::ConstructObject(02ef2710)
+ afxSkeleton.c:797?_AfxSklCtor(skl=02ef2710)
+ ADV afxSkeleton.c:812?_AfxSklCtor
+    TODO: Reparent base to skeleton node
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 0030ccdc, 0030b1a8)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 0030ccdc, 0030b180)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(02da6450)
+ afxClass<afxBuffer>::ConstructObject(02da6450)
+ sglBuffer.c:454?_AfxBufCtor(buf=02da6450)
+ afxClass<afxVertexBuffer>::ConstructObject(02da6450)
+ afxVertexBuffer.c:342?_AfxVbufCtor(vbuf=02da6450)
+ afxIndexBuffer.c:131?AfxDrawContextBuildIndexBuffers(dctx=027cfdd0,cnt=1,stride=0030b2f0)
+ afxClass<afxIndexBuffer>::AllocateObjects(1, 0030cd1c, 0030b1cc)
+ afxClass<afxIndexBuffer>::BuildObjects(1, 0030cd1c, 0030b1a4)
+ afxClass<afxIndexBuffer, afxBuffer>ConstructingObject(02da6860)
+ afxClass<afxBuffer>::ConstructObject(02da6860)
+ sglBuffer.c:454?_AfxBufCtor(buf=02da6860)
+ afxClass<afxIndexBuffer>::ConstructObject(02da6860)
+ afxIndexBuffer.c:200?_AfxIbufCtor(ibuf=02da6860)
+ afxClass<afxMesh>::AllocateObjects(2, 02d76a40, 0030b308)
+ afxClass<afxMesh>::BuildObjects(2, 02d76a40, 02da5b50)
+ afxClass<afxMesh>::ConstructObject(02ef2300)
+ afxMesh.c:989?_AfxMshCtor(msh=02ef2300)
+ afxClass<afxMesh>::ConstructObject(02ef2990)
+ afxMesh.c:989?_AfxMshCtor(msh=02ef2990)
+ afxClass<afxModel>::AllocateObjects(1, 0030cf0c, 0030cd18)
+ afxClass<afxModel>::BuildObjects(1, 0030cf0c, 0030d0d0)
+ afxClass<afxModel>::ConstructObject(02da5b50)
+ afxModel.c:193?_AfxMdlCtor(mdl=02da5b50)
+ ERR glus_wavefront.c:251?_ldrWavefrontDestroyMaterial
+    
+ afxModel.c:391?AfxSimulationAcquireModels(sim=02d71330,cnt=1,uri=0030e748,mdl=0030e704)
+ afxClass<afxBody>::AllocateObjects(1, 00836060, 0030e640)
+ afxClass<afxBody>::BuildObjects(1, 00836060, 0030e704)
+ afxClass<afxBody>::ConstructObject(02ef2d30)
+ afxBody.c:636?_AfxBodCtor(bod=02ef2d30)
+ afxCamera.c:863?AfxSimulationAcquireCamera(sim=02d71330,name=viewer,perspective=1)
+ afxClass<afxCamera>::AllocateObjects(1, 0030e484, 0030e494)
+ afxClass<afxCamera>::BuildObjects(1, 0030e484, 0030e4a0)
+ afxClass<afxCamera, afxNode>ConstructingObject(047a9040)
+ afxClass<afxNode>::ConstructObject(047a9040)
+ afxClass<afxCamera>::ConstructObject(047a9040)
+ afxCamera.c:939?_AfxCamCtor(cam=047a9040)
+ afxObject<02d63940>::InstallEventFilter(047a9040)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=027cfdd0,spec=0030db9c)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0030da00, 0030da1c)
+ afxClass<afxDrawInput>::BuildObjects(1, 0030da00, 0030db9c)
+ afxClass<afxDrawInput>::ConstructObject(02ef2e60)
+ sglDrawInput.c:274?_AfxDinCtor(din=02ef2e60)
+ afxArena.c:822?AfxSystemAcquireArena(sys=005ff080,strategy=0030d678,hint="sglDrawInput.c:310!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0030d5c4, 0030d5d4)
+ afxClass<Memory Arena>::BuildObjects(1, 0030d5c4, 0030d5b8)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(02d739e0)
+ afxClass<afxMemory>::ConstructObject(02d739e0)
+ afxMemory.c:317?_AfxMemCtor(mem=02d739e0)
+ afxClass<Memory Arena>::ConstructObject(02d739e0)
+ afxArena.c:799?_AfxArenCtor(aren=02d739e0)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:401?AfxDrawContextBuildTextures(dctx=027cfdd0,cnt=1,blueprint=0030e060,tex=008361f4)
+ afxClass<afxTexture>::AllocateObjects(1, 008361f4, 0030d9ec)
+ afxClass<afxTexture>::BuildObjects(1, 008361f4, 0030e060)
+ afxClass<afxTexture>::ConstructObject(02da5900)
+ sglTexture.c:1027?_AfxTexCtor(tex=02da5900)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/right.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/left.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/top.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/bottom.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/back.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,art/skybox/blue/front.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0030d244, 0030d254)
+ afxClass<afxFile>::BuildObjects(1, 0030d244, 0030d230)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030d2a8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030d2a8)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 008361f0, 0030d9c8)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 008361f0, 0030d9a0)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(02d70260)
+ afxClass<afxBuffer>::ConstructObject(02d70260)
+ sglBuffer.c:454?_AfxBufCtor(buf=02d70260)
+ afxClass<afxVertexBuffer>::ConstructObject(02d70260)
+ afxVertexBuffer.c:342?_AfxVbufCtor(vbuf=02d70260)
+ Uploading draw operation 'data/pipeline/skybox.xml'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030d2ec, 0030d2fc)
+ afxClass<afxXml>::BuildObjects(1, 0030d2ec, 0030d2e4)
+ afxClass<afxXml>::ConstructObject(02de7a80)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030cf64, 0030cf74)
+ afxClass<afxFile>::BuildObjects(1, 0030cf64, 0030cf50)
+ afxClass<afxFile, afxStream>ConstructingObject(047f5f60)
+ afxClass<afxStream>::ConstructObject(047f5f60)
+ afxClass<afxFile>::ConstructObject(047f5f60)
+ afxClass<afxFile>::DismantleObjects(1, 0030cfc8)
+ Destructing instance 047f5f60 of afxFile class.
+ Destructing instance 047f5f60 of afxFile : afxStream class.
+ Destructing instance 047f5f60 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030cfc8)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 00836220, 0030d2d8)
+ afxClass<afxDrawOperation>::BuildObjects(1, 00836220, 0030d714)
+ afxClass<afxDrawOperation>::ConstructObject(045c0d80)
+ afxDrawOperation.c:576?_AfxDopCtor(dop=045c0d80)
+ afxPipeline.c:316?AfxDrawContextBuildPipelines(dctx=027cfdd0)
+ afxClass<afxPipeline>::AllocateObjects(1, 02de3ab0, 0030cc80)
+ afxClass<afxPipeline>::BuildObjects(1, 02de3ab0, 0030cd6c)
+ afxClass<afxPipeline>::ConstructObject(047f5f60)
+ sglPipeline.c:574?_AfxPipCtor(pip=047f5f60)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=045c0ed0,shd=0030c44c)
+ Uploading shader 'data/pipeline/skybox.xml?vs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(047f8cf0)
+ afxClass<afxStream>::ConstructObject(047f8cf0)
+ afxClass<afxFile>::ConstructObject(047f8cf0)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 047f8cf0 of afxFile class.
+ Destructing instance 047f8cf0 of afxFile : afxStream class.
+ Destructing instance 047f8cf0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(047f8410)
+ sglShader.c:238?_AfxShdCtor(shd=047f8410)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        layout(std140, row_major) uniform sgl_view
+        {
+            mat4 v;
+            mat4 p;
+            mat4 vp;
+        };
+
+        layout(location = 0) in vec3 a_xyz;
+
+        out block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        void main()
+        {
+            sgl_v.uvw0 = a_xyz;
+            vec4 pos = vec4(a_xyz, 1.0) * v * p;
+            gl_Position = pos.xyww;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<047f8410>::InstallEventFilter(047f5f60)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=045c0f08,shd=0030c44c)
+ Uploading shader 'data/pipeline/skybox.xml?fs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/skybox.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(047f8f30)
+ afxClass<afxStream>::ConstructObject(047f8f30)
+ afxClass<afxFile>::ConstructObject(047f8f30)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 047f8f30 of afxFile class.
+ Destructing instance 047f8f30 of afxFile : afxStream class.
+ Destructing instance 047f8f30 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(047f8f30)
+ afxClass<afxStream>::ConstructObject(047f8f30)
+ afxClass<afxFile>::ConstructObject(047f8f30)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 047f8f30 of afxFile class.
+ Destructing instance 047f8f30 of afxFile : afxStream class.
+ Destructing instance 047f8f30 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(047f8f30)
+ sglShader.c:238?_AfxShdCtor(shd=047f8f30)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        uniform samplerCube samp;
+
+        in block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uvw0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<047f8f30>::InstallEventFilter(047f5f60)
+ afxClass<afxLegoTemplate>::AllocateObjects(1, 0030c260, 0030c27c)
+ afxClass<afxLegoTemplate>::BuildObjects(1, 0030c260, 0030c254)
+ afxClass<afxLegoTemplate>::ConstructObject(047f7e90)
+ sglLego.c:199?_AfxLegtCtor(legt=047f7e90)
+ afxClass<afxPipelineRig>::AllocateObjects(1, 0030c26c, 0030c27c)
+ afxClass<afxPipelineRig>::BuildObjects(1, 0030c26c, 0030c260)
+ afxClass<afxPipelineRig>::ConstructObject(047f80e0)
+ sglPipelineRig.c:118?_AfxPiprCtor(pipr=047f80e0)
+ afxClass<afxXml>::DismantleObjects(1, 0030d350)
+ Destructing instance 02de7a80 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de7a80)
+ afxClass<afxXml>::DeallocateObjects(1, 0030d350)
+ Uploading draw operation 'data/pipeline/body.xml'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/body.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030d2ec, 0030d2fc)
+ afxClass<afxXml>::BuildObjects(1, 0030d2ec, 0030d2e4)
+ afxClass<afxXml>::ConstructObject(02de7a80)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030cf64, 0030cf74)
+ afxClass<afxFile>::BuildObjects(1, 0030cf64, 0030cf50)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030cfc8)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030cfc8)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 00836230, 0030d2d8)
+ afxClass<afxDrawOperation>::BuildObjects(1, 00836230, 0030d714)
+ afxClass<afxDrawOperation>::ConstructObject(045c0bd0)
+ afxDrawOperation.c:576?_AfxDopCtor(dop=045c0bd0)
+ afxPipeline.c:316?AfxDrawContextBuildPipelines(dctx=027cfdd0)
+ afxClass<afxPipeline>::AllocateObjects(1, 02de3810, 0030cc80)
+ afxClass<afxPipeline>::BuildObjects(1, 02de3810, 0030cd6c)
+ afxClass<afxPipeline>::ConstructObject(047f8840)
+ sglPipeline.c:574?_AfxPipCtor(pip=047f8840)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=047f8780,shd=0030c44c)
+ Uploading shader 'data/pipeline/body.xml?vsRigid'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/body.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(047f8b40)
+ sglShader.c:238?_AfxShdCtor(shd=047f8b40)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        layout(std140, row_major) uniform sgl_view
+        {
+            mat4 v;
+            mat4 p;
+            mat4 vp;
+            vec3 viewPos;
+            vec3 sunPos;
+            vec3 sunKd;
+        };
+
+        layout(std140, row_major) uniform sgl_obj
+        {
+            mat4 m;
+            mat3 n;
+        };
+
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aNormal;
+        layout (location = 2) in vec2 aUv;
+
+        uniform vec3 DirFromLight;
+        uniform vec4 LightColour;
+        uniform vec4 AmbientColour;
+        
+        out block
+        {
+            vec3 Position;
+            vec3 Diffuse;
+            vec2 Tex0;
+        } sgl_v;
+
+        void main()
+        {
+            vec3 WorldPos = vec4(aPos, 1) * w;
+            vec3 ViewPos  = vec4(WorldPos, 1) * v;
+            vec4 ClipPos  = vec4(ViewPos, 1) * p;
+
+            vec4 InNormal  = vec4(aNormal, 0);
+            vec3 ObjNormal = InNormal * w;
+
+            sgl_v.Position = ClipPos;
+            sgl_v.Tex0     = aUv;
+            sgl_v.Diffuse  = LightColour * vec4(dot(ObjNormal * DirFromLight)) + AmbientColour;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<047f8b40>::InstallEventFilter(047f8840)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=047f87b8,shd=0030c44c)
+ Uploading shader 'data/pipeline/body.xml?fs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/body.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(02ea1fb0)
+ afxClass<afxStream>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 02ea1fb0 of afxFile class.
+ Destructing instance 02ea1fb0 of afxFile : afxStream class.
+ Destructing instance 02ea1fb0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(02ea1fb0)
+ afxClass<afxStream>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 02ea1fb0 of afxFile class.
+ Destructing instance 02ea1fb0 of afxFile : afxStream class.
+ Destructing instance 02ea1fb0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(047f97c0)
+ sglShader.c:238?_AfxShdCtor(shd=047f97c0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        uniform sampler2D diffuse_sampler;
+        
+        in block
+        {
+            vec3 Diffuse;
+            vec2 Texture;
+        } sgl_v;
+        
+        out vec4 FragColor;
+        
+        void main()
+        {
+            vec3 DiffuseSamp = texture( diffuse_sampler, sgl_v.Texture );
+            DiffuseSamp *= sgl_v.Diffuse;
+
+            FragColor = vec4(DiffuseSamp, 1);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<047f97c0>::InstallEventFilter(047f8840)
+ afxClass<afxLegoTemplate>::AllocateObjects(1, 0030c260, 0030c27c)
+ afxClass<afxLegoTemplate>::BuildObjects(1, 0030c260, 0030c254)
+ afxClass<afxLegoTemplate>::ConstructObject(047f9240)
+ sglLego.c:199?_AfxLegtCtor(legt=047f9240)
+ afxClass<afxPipelineRig>::AllocateObjects(1, 0030c26c, 0030c27c)
+ afxClass<afxPipelineRig>::BuildObjects(1, 0030c26c, 0030c260)
+ afxClass<afxPipelineRig>::ConstructObject(047f9950)
+ sglPipelineRig.c:118?_AfxPiprCtor(pipr=047f9950)
+ afxPipeline.c:316?AfxDrawContextBuildPipelines(dctx=027cfdd0)
+ afxClass<afxPipeline>::AllocateObjects(1, 02de3560, 0030cc80)
+ afxClass<afxPipeline>::BuildObjects(1, 02de3560, 0030cd6c)
+ afxClass<afxPipeline>::ConstructObject(047f9490)
+ sglPipeline.c:574?_AfxPipCtor(pip=047f9490)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=047f8780,shd=0030c44c)
+ Uploading shader 'data/pipeline/body.xml?vsSkinned'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/body.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(02ea1fb0)
+ afxClass<afxStream>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 02ea1fb0 of afxFile class.
+ Destructing instance 02ea1fb0 of afxFile : afxStream class.
+ Destructing instance 02ea1fb0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(02ea1fb0)
+ afxClass<afxStream>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::ConstructObject(02ea1fb0)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 02ea1fb0 of afxFile class.
+ Destructing instance 02ea1fb0 of afxFile : afxStream class.
+ Destructing instance 02ea1fb0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(02ea1fb0)
+ sglShader.c:238?_AfxShdCtor(shd=02ea1fb0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        layout(std140, row_major) uniform sgl_view
+        {
+            mat4 v;
+            mat4 p;
+            mat4 vp;
+            vec3 viewPos;
+            vec3 sunPos;
+            vec3 sunKd;
+        };
+
+        layout(std140, row_major) uniform sgl_obj
+        {
+            mat4 m;
+            mat3 n;
+        };
+
+        layout (location = 0) in vec3 aPos;
+        layout (location = 1) in vec3 aNormal;
+        layout (location = 2) in vec2 aUv;
+        layout (location = 3) in vec4 aBlendIndices;
+        layout (location = 4) in vec4 aBlendWeights;
+
+        out block
+        {
+            vec3 Position;
+            vec3 Diffuse;
+            vec3 Normal;
+        } sgl_v;
+
+        uniform mat4 BoneMatrices[32];
+
+        uniform vec3 DirFromLight;
+        uniform vec4 LightColour;
+        uniform vec4 AmbientColour;
+        
+        void main()
+        {
+            float BoneWeights[4] = (float[4])aBoneWeights;
+            int BoneIndices[4]   = (int[4])aBoneIndices;
+
+            vec4 InPos     = vec4( aPosition, 1 );
+            vec4 InNormal  = vec4( aNormal, 0 );
+            vec4 WorldPos    = 0;
+            vec3 WorldNormal = 0;
+            
+            // We're going to assume that we can transform the normal by the matrix, which is not
+            // technically correct unless we're positive there's not a scaling factor involved.
+
+            for( int i = 0; i < 4; ++i )
+            {
+                mat4 BoneMatrix = BoneMatrices[int(BoneIndices[i])];
+                WorldPos    += (BoneWeights[i] * ( InPos * BoneMatrix ));
+                WorldNormal += vec3(BoneWeights[i] * ( InNormal * BoneMatrix ));
+            }
+
+            vec4 ViewPos = (WorldPos * WorldToView);
+            vec4 ClipPos = (ViewPos * ViewToClip);
+            sgl_v.Position   = ClipPos;
+
+            sgl_v.Tex0    = aUv;
+            sgl_v.Diffuse = LightColour * dot(normalize(WorldNormal), DirFromLight) + AmbientColour;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<02ea1fb0>::InstallEventFilter(047f9490)
+ afxShader.c:461?AfxDrawContextAcquireShaders(dctx=027cfdd0,cnt=1,uri=047f87b8,shd=0030c44c)
+ Uploading shader 'data/pipeline/body.xml?fs'
+ afxXml.c:1036?AfxFileSystemLoadXml(uri=data/pipeline/body.xmlp)
+ afxClass<afxXml>::AllocateObjects(1, 0030bb24, 0030bb34)
+ afxClass<afxXml>::BuildObjects(1, 0030bb24, 0030bb1c)
+ afxClass<afxXml>::ConstructObject(02de79f0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:273?AfxFileSystemOpenFile(Afx.FileSystem.OpenFile(00600f30,00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0030b79c, 0030b7ac)
+ afxClass<afxFile>::BuildObjects(1, 0030b79c, 0030b788)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030b800)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b800)
+ afxFile.c:294?AfxFileSystemOpenReadableFile(Afx.FileSystem.OpenReadableFile(00600f30,data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0030b808, 0030b818)
+ afxClass<afxFile>::BuildObjects(1, 0030b808, 0030b7f4)
+ afxClass<afxFile, afxStream>ConstructingObject(047f6260)
+ afxClass<afxStream>::ConstructObject(047f6260)
+ afxClass<afxFile>::ConstructObject(047f6260)
+ afxClass<afxFile>::DismantleObjects(1, 0030b868)
+ Destructing instance 047f6260 of afxFile class.
+ Destructing instance 047f6260 of afxFile : afxStream class.
+ Destructing instance 047f6260 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0030b868)
+ afxShader.c:304?AfxDrawContextBuildShaders(dctx=027cfdd0,cnt=1,blueprint=0030bf4c,shd=0030c44c)
+ afxClass<afxShader>::AllocateObjects(1, 0030c44c, 0030bb04)
+ afxClass<afxShader>::BuildObjects(1, 0030c44c, 0030bf4c)
+ afxClass<afxShader>::ConstructObject(02dac8c0)
+ sglShader.c:238?_AfxShdCtor(shd=02dac8c0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+        
+        uniform sampler2D diffuse_sampler;
+        
+        in block
+        {
+            vec3 Diffuse;
+            vec2 Texture;
+        } sgl_v;
+        
+        out vec4 FragColor;
+        
+        void main()
+        {
+            vec3 DiffuseSamp = texture( diffuse_sampler, sgl_v.Texture );
+            DiffuseSamp *= sgl_v.Diffuse;
+
+            FragColor = vec4(DiffuseSamp, 1);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0030bb88)
+ Destructing instance 02de79f0 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de79f0)
+ afxClass<afxXml>::DeallocateObjects(1, 0030bb88)
+ afxObject<02dac8c0>::InstallEventFilter(047f9490)
+ afxClass<afxXml>::DismantleObjects(1, 0030d350)
+ Destructing instance 02de7a80 of afxXml class.
+ afxXml.c:972?_AfxXmlDtor(xml=02de7a80)
+ afxClass<afxXml>::DeallocateObjects(1, 0030d350)
+ afxCanvas.c:156?AfxDrawContextBuildCanvases(dctx=027cfdd0,cnt=1,blueprint=0030d950,canv=00836238)
+ afxClass<afxCanvas>::AllocateObjects(1, 00836238, 0030d84c)
+ afxClass<afxCanvas>::BuildObjects(1, 00836238, 0030d950)
+ afxClass<afxCanvas>::ConstructObject(045c0ae0)
+ sglCanvas.c:399?_AfxCanvCtor(canv=045c0ae0)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=027cfdd0,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0030cd98, 0030cdb4)
+ afxClass<afxSurface>::BuildObjects(1, 0030cd98, 0030cdc0)
+ afxClass<afxSurface, afxTexture>ConstructingObject(02dacc80)
+ afxClass<afxTexture>::ConstructObject(02dacc80)
+ sglTexture.c:1027?_AfxTexCtor(tex=02dacc80)
+ afxClass<afxSurface>::ConstructObject(02dacc80)
+ sglSurface.c:131?_AfxSurfCtor(surf=02dacc80)
+ afxClass<afxBuffer>::AllocateObjects(1, 0083623c, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 0083623c, 0030dbf8)
+ afxClass<afxBuffer>::ConstructObject(00604490)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604490)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836240, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836240, 0030dc04)
+ afxClass<afxBuffer>::ConstructObject(00604550)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604550)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836244, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836244, 0030dc10)
+ afxClass<afxBuffer>::ConstructObject(00604610)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604610)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836248, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836248, 0030dc1c)
+ afxClass<afxBuffer>::ConstructObject(006046d0)
+ sglBuffer.c:454?_AfxBufCtor(buf=006046d0)
+ afxCanvas.c:156?AfxDrawContextBuildCanvases(dctx=027cfdd0,cnt=1,blueprint=0030d950,canv=00836250)
+ afxClass<afxCanvas>::AllocateObjects(1, 00836250, 0030d84c)
+ afxClass<afxCanvas>::BuildObjects(1, 00836250, 0030d950)
+ afxClass<afxCanvas>::ConstructObject(047f8260)
+ sglCanvas.c:399?_AfxCanvCtor(canv=047f8260)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=027cfdd0,fmt=24,whd=[1272,693,1],usage=32)
+ ADV afxTexture.c:15?AfxTextureBlueprintReset
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0030cd98, 0030cdb4)
+ afxClass<afxSurface>::BuildObjects(1, 0030cd98, 0030cdc0)
+ afxClass<afxSurface, afxTexture>ConstructingObject(047f85a0)
+ afxClass<afxTexture>::ConstructObject(047f85a0)
+ sglTexture.c:1027?_AfxTexCtor(tex=047f85a0)
+ afxClass<afxSurface>::ConstructObject(047f85a0)
+ sglSurface.c:131?_AfxSurfCtor(surf=047f85a0)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836254, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836254, 0030dbf8)
+ afxClass<afxBuffer>::ConstructObject(00604790)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604790)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836258, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836258, 0030dc04)
+ afxClass<afxBuffer>::ConstructObject(00604850)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604850)
+ afxClass<afxBuffer>::AllocateObjects(1, 0083625c, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 0083625c, 0030dc10)
+ afxClass<afxBuffer>::ConstructObject(00604910)
+ sglBuffer.c:454?_AfxBufCtor(buf=00604910)
+ afxClass<afxBuffer>::AllocateObjects(1, 00836260, 0030d9f8)
+ afxClass<afxBuffer>::BuildObjects(1, 00836260, 0030dc1c)
+ afxClass<afxBuffer>::ConstructObject(006049d0)
+ sglBuffer.c:454?_AfxBufCtor(buf=006049d0)
+ afxDrawScript.c:298?AfxDrawInputAcquireScript(din=02ef2e60)
+ afxClass<afxDrawScript>::AllocateObjects(1, 0030e258, 0030e268)
+ afxClass<afxDrawScript>::BuildObjects(1, 0030e258, 0030e2c0)
+ afxClass<afxDrawScript>::ConstructObject(00604a90)
+ sglDrawScript.c:464?_AfxDscrCtor(dscr=00604a90)
+ afxTexture 006caed0 hardware-side data instanced.
+ afxSurface 006caed0 hardware-side data instanced.
+ afxTexture 047f85a0 hardware-side data instanced.
+ afxSurface 047f85a0 hardware-side data instanced.
+ afxCanvas 047f8260 hardware-side data instanced.
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ afxShader 02d75d40 hardware-side data instanced.
+ afxShader 02d58b70 hardware-side data instanced.
+ afxPipeline 006c9aa0 hardware-side data instanced.
+ afxBuffer 006c9da0 hardware-side data instanced.
+ afxTexture 02dfba40 hardware-side data instanced.
+ afxSampler 02844b90 hardware-side data instanced.
+ afxSurface 02dfba40 hardware-side data instanced.
+ afxTexture 02dacc80 hardware-side data instanced.
+ afxSurface 02dacc80 hardware-side data instanced.
+ afxCanvas 045c0ae0 hardware-side data instanced.
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:36: 'w' : undeclared identifier 
+ERROR: 0:36: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:37: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:41: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+ERROR: 0:43: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+ERROR: 0:45: 'dot' : no matching overloaded function found (using implicit conversion) 
+ERROR: 0:45: 'assign' :  cannot convert from '4-component vector of float' to 'varying 3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglShader.c:67?_SglDqueSyncShd
+    
+ ERR sglShader.c:70?_SglDqueSyncShd
+    ERROR: 0:15: '=' :  cannot convert from '4-component vector of float' to '3-component vector of float'
+
+
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:196?_SglDqueBindAndSyncPip
+    (gl->IsShader(shd->glHandle))
+    Invalid
+ ERR sglPipeline.c:197?_SglDqueBindAndSyncPip
+    GL: INVAL_VALUE
+ ERR sglPipeline.c:206?_SglDqueBindAndSyncPip
+    
+ ERR sglPipeline.c:209?_SglDqueBindAndSyncPip
+    Link called without any attached shader objects.
+
+ ADV afxSystem.c:591?AfxSystemProcess
+    User input requested application reboot.
+ afxApplication.c:293?AfxApplicationExit(app=02d5a540)
+ Sandbox.c:270?AfxLeaveApplication(app=02d5a540)
+ aaaaaaaaaaaa
+ afxClass<afxApplication>::DismantleObjects(1, 0030e8c8)
+ Destructing instance 02d5a540 of afxApplication class.
+ afxApplication.c:405?_AfxAppDtor(app=02d5a540)
+ afxClass<afxSimulation>::Dismount(02d5aad8)
+ afxClass<afxSimulation>::DismantleObjects(1, 0030e46c)
+ Destructing instance 02d71330 of afxSimulation class.
+ afxSimulation.c:330?_AfxSimDtor(sim=02d71330)
+ afxClass<afxLight>::Dismount(02d71678)
+ afxClass<afxCamera>::Dismount(02d715b8)
+ afxClass<afxCamera>::DismantleObjects(1, 0030e00c)
+ afxObject<02d63940>::RemoveEventFilter(047a9040)
+ Destructing instance 047a9040 of afxCamera class.
+ afxCamera.c:931?_AfxCamDtor(cam=047a9040)
+ Destructing instance 047a9040 of afxCamera : afxNode class.
+ Destructing instance 047a9040 of afxNode class.
+ afxClass<afxCamera>::DeallocateObjects(1, 0030e00c)
+ afxClass<afxEntity>::Dismount(02d714f8)
+ afxClass<afxBodyControl>::Dismount(02d71438)
+ afxClass<afxBody>::Dismount(02d71378)
+ afxClass<afxBody>::DismantleObjects(1, 0030e00c)
+ Destructing instance 02ef2d30 of afxBody class.
+ afxBody.c:623?_AfxBodDtor(bod=02ef2d30)

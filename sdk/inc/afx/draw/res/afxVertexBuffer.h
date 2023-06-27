@@ -47,7 +47,7 @@ AFX_DEFINE_STRUCT(afxVertexRowSpecification)
 
 AFX_DEFINE_STRUCT(afxVertexRowBlueprint)
 {
-    afxString8              semantic;
+    afxString8              semantic; // 8
     afxVertexFormat         fmt;
     afxVertexUsage          usage;
     void const              *src;
@@ -96,7 +96,10 @@ AFX afxError                AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat r
 // VERTEX BUFFER BLUEPRINT                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL afxError             AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, afxNat cap);
+AFXINL void                 AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, afxNat cap);
+AFXINL void                 AfxVertexBufferBlueprintDiscard(afxVertexBufferBlueprint *blueprint);
+AFXINL void                 AfxVertexBufferBlueprintErase(afxVertexBufferBlueprint *blueprint);
+
 AFXINL afxError             AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *blueprint, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
 AFXINL afxError             AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blueprint, afxNat idx, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
 

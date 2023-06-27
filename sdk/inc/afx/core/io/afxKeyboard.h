@@ -148,7 +148,7 @@ AFX_OBJECT(afxKeyboard)
 AFX void*       AfxKeyboardGetSystem(afxKeyboard kbd);
 
 AFX afxBool     AfxKeyboardArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
-AFX afxResult   AfxKeyboardEmulateActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
+AFX afxError    AfxKeyboardEmulateActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
 AFX afxBool     AfxKeyboardIsPressed(afxKeyboard kbd, afxKey code);
 AFX afxBool     AfxKeyboardWasPressed(afxKeyboard kbd, afxKey code);
 AFX afxBool     AfxKeyboardWasReleased(afxKeyboard kbd, afxKey code);

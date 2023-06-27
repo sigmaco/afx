@@ -29,7 +29,7 @@ AFX_OBJECT(afxFile)
     AFX_OBJECT(afxStream)   ios;
 #ifdef _AFX_FILE_C
     void                    *fd;
-    afxUri4096              uri;
+    afxUri*                 uri;
     afxBool                 shouldBeFlushed;
 #endif
 };

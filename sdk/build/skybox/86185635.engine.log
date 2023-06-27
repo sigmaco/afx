@@ -1,0 +1,48 @@
+
+ afxDebug.c:363?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+             S I G M A   C O . ,   T E C H N O L O G Y   G R O U P             
+                                                                             
+                                    4D AFX                                   
+                              Public Test Build                              
+                     (c) 2017 SIGMA Co., Technology Group                    
+                               www.sigmaco.org                               
+                                                                             
+                                                                             
+ afxClass<afxSystem>::Mount(51911e00, 00000000, 00000000, 518f0684)
+ afxClass<afxSystem>::AllocateObjects(1, 003af314, 003af324)
+ afxClass<afxSystem>::BuildObjects(1, 003af314, 00000000)
+ afxClass<afxSystem>::ConstructObject(004bf070)
+ afxSystem.c:814?_AfxSysCtor(sys=004bf070)
+ ADV afxSystem.c:830?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:831?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(004bf0bc, 004bf0a4, 00000000, 518f4ad8)
+ afxClass<Memory Arena>::Mount(004bf17c, 004bf0a4, 004bf0bc, 518f4458)
+ afxMemory.c:259?AfxSystemAcquireMemory(sys=004bf070,strategy=003ae414,hint="afxSystem.c:849!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 003ae2c8, 003ae2d8)
+ afxClass<afxMemory>::BuildObjects(1, 003ae2c8, 003ae2bc)
+ afxClass<afxMemory>::ConstructObject(004bf8b0)
+ afxMemory.c:317?_AfxMemCtor(mem=004bf8b0)
+ afxClass<afxThread>::Mount(004bf23c, 004bf0a4, 00000000, 518f0d58)
+ afxClass<afxFileSystem>::Mount(004bf2fc, 004bf0a4, 00000000, 518f2214)
+ afxFileSystem.c:595?AfxSystemAcquireFileSystem(Afx.System.AcquireFileSystem(004bf070,6,003ae5c0))
+ afxClass<afxFileSystem>::AllocateObjects(1, 003ae2b0, 003ae2c0)
+ afxClass<afxFileSystem>::BuildObjects(1, 003ae2b0, 003ae3e4)
+ afxClass<afxFileSystem>::ConstructObject(004bfef0)
+ afxFileSystem.c:654?_AfxFsysCtor(fsys=004bfef0)
+ afxClass<afxStream>::Mount(004bff40, 004bff28, 00000000, 518f3634)
+ afxClass<afxFile>::Mount(004c0000, 004bff28, 004bff40, 518f1f90)
+ afxClass<afxArchive>::Mount(004c00c0, 004bff28, 004c0000, 518f1934)
+ afxClass<afxResource>::Mount(004c0300, 004bff28, 00000000, 518f3494)
+ afxClass<afxXml>::Mount(004c0180, 004bff28, 00000000, 518f3b2c)
+ afxClass<afxUrd>::Mount(004c0240, 004bff28, 00000000, 518f3a4c)
+ afxFileSystem.c:396?AfxFileSystemMountStoragePoints(Afx.FileSystem.MountStoragePoints(004bfef0,6,003ae5c0))

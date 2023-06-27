@@ -1,0 +1,60 @@
+<Qwadro>
+    <Shader stage='VERTEX' name='vs'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <In format='V3D'>a_xyz</In>
+        <![CDATA[
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        out block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        void main()
+        {
+            sgl_v.uvw0 = a_xyz;
+            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            gl_Position = pos.xyww;
+        }
+        ]]>
+    </Shader>
+    <Shader stage='FRAGMENT' name='fs'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
+        <Out format='V4D'></Out>
+        <![CDATA[
+        
+        uniform samplerCube samp;
+
+        in block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uvw0);
+        }
+        ]]>
+    </Shader>
+    <DrawOperation>
+        <Technique>
+            <Pass>
+                <FillMode>SOLID</FillMode>
+                <CullMode>BACK</CullMode>
+                <FrontFace>CCW</FrontFace>
+                <DepthTestEnable>true</DepthTestEnable>
+                <DepthWriteEnable>true</DepthWriteEnable>
+                <DepthCompareOp>LEQUAL</DepthCompareOp>
+                <Input topology='TRI_LIST' />
+                <Shader stage='VERTEX'>data/pipeline/skybox.xml?vs</Shader>
+                <Shader stage='FRAGMENT'>data/pipeline/skybox.xml?fs</Shader>
+            </Pass>
+        </Technique>
+    </DrawOperation>
+</Qwadro>

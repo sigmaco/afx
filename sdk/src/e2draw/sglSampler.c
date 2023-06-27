@@ -32,7 +32,7 @@ typedef struct
 _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp)
 {
     //AfxEntry("smp=%p", smp);
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
 
     sglVmt const* gl = &dque->wglVmt;
 
@@ -116,7 +116,7 @@ _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler 
 
 _SGL void _AfxSamplerDescribe(afxSampler smp, afxSamplerSpecification *spec)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxAssertObject(smp, AFX_FCC_SMP);
     spec->magFilter = smp->magFilter;
     spec->minFilter = smp->minFilter;
@@ -132,28 +132,9 @@ _SGL void _AfxSamplerDescribe(afxSampler smp, afxSamplerSpecification *spec)
     spec->unnormalizedCoords = smp->unnormalizedCoords;
 }
 
-_SGL afxSampler _AfxDrawContextAcquireSampler(afxDrawContext dctx, afxSamplerSpecification const *spec)
-{
-    AfxEntry("dctx=%p,spec=%p", dctx, spec);
-    afxError err = NIL;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxSampler smp = NIL;
-
-    _afxSmpCtorArgs args =
-    {
-        dctx,
-        spec
-    };
-
-    if (!(smp = AfxObjectAcquire(AfxDrawContextGetSamplerClass(dctx), &args, AfxSpawnHint())))
-        AfxThrowError();
-
-    return smp;
-}
-
 _SGL afxBool _SglSmpEventHandler(afxObject *obj, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxSampler smp = (void*)obj;
     AfxAssertObject(smp, AFX_FCC_SMP);
     (void)ev;
@@ -162,7 +143,7 @@ _SGL afxBool _SglSmpEventHandler(afxObject *obj, afxEvent *ev)
 
 _SGL afxBool _SglSmpEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     afxSampler smp = (void*)obj;
     AfxAssertObject(smp, AFX_FCC_SMP);
     (void)watched;
@@ -172,7 +153,7 @@ _SGL afxBool _SglSmpEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
 
 _SGL afxError _AfxSmpDtor(afxSampler smp)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("smp=%p", smp);
     AfxAssertObject(smp, AFX_FCC_SMP);
 
@@ -197,12 +178,13 @@ afxSmpImpl const _AfxStdSmpImpl =
     _AfxSamplerDescribe
 };
 
-_SGL afxError _AfxSmpCtor(afxSampler smp, _afxSmpCtorArgs *args)
+_SGL afxError _AfxSmpCtor(void *cache, afxNat idx, afxSampler smp, afxSamplerSpecification const *specs)
 {
-    afxError err = NIL;
+    afxError err = AFX_ERR_NONE;
     AfxEntry("smp=%p", smp);
     AfxAssertObject(smp, AFX_FCC_SMP);
-    afxSamplerSpecification const *spec = args->spec;
+
+    afxSamplerSpecification const *spec = &specs[idx];
     AfxAssert(spec);
 
     smp->crc32 = 0;

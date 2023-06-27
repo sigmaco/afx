@@ -25,14 +25,14 @@ AFX_OBJECT(afxModule)
 {
     afxObject           obj;
 #ifdef _AFX_MODULE_C
-    afxString32         name;
+    afxUri*             uri; // 128
     void                *osHandle;
     afxBool             hasBeenLoaded;
 #endif
 };
 
 AFX void*               AfxModuleGetSystem(afxModule mdle);
-AFX afxString const*    AfxModuleGetName(afxModule mdle);
+AFX afxUri const*       AfxModuleGetUri(afxModule mdle);
 
 AFX void*               AfxModuleFindSymbol(afxModule mdle, afxChar const *name);
 AFX afxResult           AfxModuleFindSymbols(afxModule mdle, afxNat cnt, afxChar const *name[], void *sym[]);

@@ -17,39 +17,64 @@
 #ifndef AFX_LEGO_H
 #define AFX_LEGO_H
 
-#include "afx/draw/pipelining/afxPipelineRig.h"
 #include "afx/draw/res/afxBuffer.h"
+#include "afxShader.h"
+#include "afx/draw/pipelining/afxSampler.h"
 
-// A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
-
-AFX_DEFINE_UNION(afxLegoData) // A GPUBindGroupEntry describes a single resource to be bound in a GPUBindGroup, and has the following members:
+AFX_DEFINE_STRUCT(afxLegoBlueprintBinding)
 {
-    struct
-    {
-        afxBuffer           buf; // The GPUBuffer to bind.
-        afxNat              base; // The offset, in bytes, from the beginning of buffer to the beginning of the range exposed to the shader by the buffer binding.
-        afxNat              range; // The size, in bytes, of the buffer binding. If undefined, specifies the range starting at offset and ending at the end of buffer.
-    };
-    struct
-    {
-        afxSampler          smp;
-        afxTexture          tex;
-    };
+    afxNat                  binding;
+    afxFlags                visibility;
+    afxShaderResourceType   type;
+    afxNat                  cnt;
+    afxString*              name; // 16
+};
+
+AFX_DEFINE_STRUCT(afxLegoBlueprint)
+{
+    afxFcc                  fcc;
+    afxDrawContext          dctx;
+    afxArray                bindings; // afxLegoBlueprintBinding
+};
+
+
+
+
+AFX_DEFINE_STRUCT(afxLegoBindingDecl)
+{
+    afxNat                  binding; // A unique identifier for a resource binding within the afxLegoScheme, corresponding to a afxLegoDataScheme.binding and a @binding attribute in the afxShader.
+    afxFlags                visibility; // A bitset of the members of afxShaderStage. Each set bit indicates that a afxLegoDataScheme's resource will be accessible from the associated shader stage.
+    afxShaderResourceType   type;
+    afxNat                  cnt;
+    afxString const*        name;
 };
 
 AFX_DEFINE_HANDLE(afxLego);
 
 #ifndef AFX_DRAW_DRIVER_SRC
 
-AFX_OBJECT(afxLego) // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
+AFX_OBJECT(afxLego)
 {
-    afxObject               obj;
+    afxObject           obj;
 };
 
 #endif
 
-AFX afxError                AfxLegoUpdate(afxLego lego, afxNat cnt, afxLegoData const data[]);
-AFX afxError                AfxLegoCopy(afxLego lego, afxLego in);
-AFX afxLegoTemplate         AfxLegoGetTemplate(afxLego lego);
+
+// A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
+
+AFX afxResult AfxLegoDescribeBinding(afxLego legt, afxNat first, afxNat cnt, afxLegoBindingDecl decl[]);
+AFX afxNat32 AfxLegoGetCrc32(afxLego legt);
+
+////////////////////////////////////////////////////////////////////////////////
+// BLUEPRINT                                                                  //
+////////////////////////////////////////////////////////////////////////////////
+
+AFXINL void     AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxDrawContext dctx, afxNat estBindCnt);
+AFXINL void     AfxLegoBlueprintErase(afxLegoBlueprint *blueprint);
+AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *legt);
+
+AFXINL afxError AfxLegoBlueprintAddBinding(afxLegoBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name);
+AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *blueprint, afxNat set, afxNat cnt, afxShader shd[]);
 
 #endif//AFX_LEGO_H
