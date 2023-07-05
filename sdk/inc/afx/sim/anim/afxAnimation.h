@@ -27,19 +27,11 @@
  // When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
  // When you want to play an animation on such an instance, you create a afxBodyControl.
 
-#include "../afxBody.h"
+#include "afxCurve2.h"
 
 AFX_DEFINE_HANDLE(afxAnimation);
 
-AFX_DEFINE_STRUCT(granny_transform)
-{
-    afxNat Flags;
-    afxV3d Position;
-    afxQuat Orientation;
-    afxM3d ScaleShear;
-};
-
-AFX_DEFINE_STRUCT(granny_vector_track)
+AFX_DEFINE_STRUCT(afxVectorTrack)
 {
     afxString32 Name;
     afxNat TrackKey;
@@ -47,7 +39,7 @@ AFX_DEFINE_STRUCT(granny_vector_track)
     afxCurve2 ValueCurve;
 };
 
-AFX_DEFINE_STRUCT(granny_transform_track)
+AFX_DEFINE_STRUCT(afxTransformTrack)
 {
     afxString32 Name;
     afxInt Flags;
@@ -56,20 +48,20 @@ AFX_DEFINE_STRUCT(granny_transform_track)
     afxCurve2 ScaleShearCurve;
 };
 
-AFX_DEFINE_STRUCT(granny_text_track_entry)
+AFX_DEFINE_STRUCT(afxTextTrackEntry)
 {
     afxReal TimeStamp;
     afxString128 Text;
 };
 
-AFX_DEFINE_STRUCT(granny_text_track)
+AFX_DEFINE_STRUCT(afxTextTrack)
 {
     char const * Name;
     afxInt EntryCount;
-    granny_text_track_entry * Entries;
+    afxTextTrackEntry * Entries;
 };
 
-AFX_DEFINE_STRUCT(granny_periodic_loop)
+AFX_DEFINE_STRUCT(afxPeriodicLoop)
 {
     afxReal Radius;
     afxReal dAngle;
@@ -79,23 +71,22 @@ AFX_DEFINE_STRUCT(granny_periodic_loop)
     afxV3d Axis;
 };
 
-
 AFX_DEFINE_STRUCT(afxAnimTrackGroup)
 {
     char const * Name;
     afxInt VectorTrackCount;
-    granny_vector_track * VectorTracks;
+    afxVectorTrack * VectorTracks;
     afxInt TransformTrackCount;
-    granny_transform_track * TransformTracks;
+    afxTransformTrack * TransformTracks;
     afxInt TransformLODErrorCount;
     afxReal * TransformLODErrors;
     afxInt TextTrackCount;
-    granny_text_track * TextTracks;
-    granny_transform InitialPlacement;
+    afxTextTrack * TextTracks;
+    afxTransform InitialPlacement;
     afxInt Flags;
     afxV3d LoopTranslation;
-    granny_periodic_loop * PeriodicLoop;
-    granny_transform_track * RootMotion;
+    afxPeriodicLoop * PeriodicLoop;
+    afxTransformTrack * RootMotion;
     struct ExtendedData { afxNat32 type; void*obj; };
 };
 

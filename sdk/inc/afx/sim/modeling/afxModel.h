@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -18,34 +18,14 @@
 #define AFX_MODEL_H
 
 #include "afxMesh.h"
-#include "../dag/afxSkeleton.h"
+#include "afxSkeleton.h"
 
-// The granny_model structure describes a named collection of meshes that are all bound to the same skeleton.
-// It is essentially any connected group of meshes that animate together.
-// A character would be a model, so would a tank, or even an entire building if it was modeled as a single hierarchy.
-// A complete granny_model is made up of a granny_skeleton and a set of granny_mesh objects, both of which canv be accessed directly from the granny_model structure.
+/// O objeto afxModel descreve uma coleção de afxMesh'es que são todas ligadas ao mesmo afxSkeleton.
+/// Isso é essencialmente qualquer grupo conectado de malhas que são animadas em conjuntura.
+/// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
+/// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
 AFX_DEFINE_HANDLE(afxModel);
-
-// Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de um modelo.
-
-typedef enum afxModelBlueprintFlag
-{
-    AFX_MDLP_FLAG_DONT_SHARE_VBUF = AFX_FLAG(0),
-    AFX_MDLP_FLAG_DONT_SHARE_IBUF = AFX_FLAG(1)
-} afxModelBlueprintFlag;
-
-AFX_DEFINE_STRUCT(afxModelBlueprint)
-{
-    afxFcc          fcc;
-    void*           sim;
-    afxUri128       uri;
-    afxSkeleton     skl;
-    afxTransform    init;
-    afxArray        meshes;
-};
-
-// The information needed to construct a malleable model.
 
 AFX_DEFINE_STRUCT(afxMeshSlot)
 {
@@ -71,22 +51,5 @@ AFX void                AfxModelTransform(afxModel mdl, afxV3d const affine, afx
 
 AFX afxMesh             AfxModelGetBoundMesh(afxModel mdl, afxNat mshIdx);
 AFX afxNat              AfxModelGetMeshBindingCount(afxModel mdl);
-
-////////////////////////////////////////////////////////////////////////////////
-// BLUEPRINT                                                                  //
-////////////////////////////////////////////////////////////////////////////////
-
-// Inicializa uma blueprint, e reserva recursos.
-AFX void                    AfxModelBlueprintDeploy(afxModelBlueprint *mdlb, void* sim, afxUri const *uri, afxSkeleton skl, afxTransform *initialPlacement, afxNat estMeshCnt);
-
-// Retira de uso uma blueprint, e libera recursos.
-AFX void                    AfxModelBlueprintDiscard(afxModelBlueprint *mdlb);
-
-AFX void                    AfxModelBlueprintErase(afxModelBlueprint *mdlb);
-
-// Obtém o blueprint do afxSkeleton.
-AFX void                    AfxModelBlueprintSetSkeleton(afxModelBlueprint *mdlb, afxSkeleton skl);
-
-AFX afxError                AfxModelBlueprintAddMeshes(afxModelBlueprint *mdlb, afxNat cnt, afxMesh msh[]);
 
 #endif//AFX_MODEL_H

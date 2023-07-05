@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -34,13 +34,6 @@ AFX_DEFINE_STRUCT(afxFileDrop)
     afxNat                      x, y;
     afxArray(afxChar const*)    files;
 };
-
-typedef afxNat32 afxVertexIndex;
-typedef afxVertexIndex afxPoint[1];
-typedef afxVertexIndex afxLine[2];
-typedef afxVertexIndex afxTriangle[3];
-
-#define AFX_INVALID_VTX_IDX (afxVertexIndex)0xffffffff
 
 typedef enum
 {

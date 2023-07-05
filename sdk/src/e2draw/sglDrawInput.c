@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -414,7 +414,7 @@ _SGL afxError _AfxDinCtor(void *cache, afxNat idx, afxDrawInput din, afxDrawInpu
         }
 
         if (err)
-            AfxObjectRelease(&din->cmdAll->obj);
+            AfxObjectRelease((void*)din->cmdAll);
     }
 
     return err;

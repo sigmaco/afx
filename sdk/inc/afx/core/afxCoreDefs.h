@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -179,7 +179,7 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
-#define AFX_INVALID_INDEX (~((afxNat)0))
+#define AFX_INVALID_INDEX (afxNat)(~((afxNat)0))
 
 // The QWADRO Specification is regularly updated with bug fixes and clarifications.
 // Occasionally new functionality is added to the core and at some point it is expected that there will be a desire to perform a large, 

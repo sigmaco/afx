@@ -10,14 +10,14 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_LIGHT_H
 #define AFX_LIGHT_H
 
-#include "afx/sim/dag/afxNode.h"
+#include "afx/sim/afxNode.h"
 #include "afx/core/mem/afxArray.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGN

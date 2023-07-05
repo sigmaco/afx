@@ -25,9 +25,9 @@
 
         void main()
         {
-            vec3 ObjNormal = vec3(v * inverse(m) * vec4(aNormal, 0));
+            vec3 ObjNormal = vec3(v * inverse(w[0]) * vec4(aNormal, 0));
 
-            gl_Position = p * v * m * aPos;
+            gl_Position = p * v * w[0] * aPos;
             sgl_v.Tex0     = aUv;
             sgl_v.Diffuse  = starKd * (dot(ObjNormal, starDir)) + AmbientColour;
         }
@@ -72,7 +72,7 @@
 
             for( int i = 0; i < 4; ++i )
             {
-                mat4 BoneMatrix = m[int(aBlendIndices[i])];
+                mat4 BoneMatrix = w[int(aBlendIndices[i])];
                 WorldPos    += (aBlendWeights[i] * vec4( InPos * BoneMatrix ));
                 WorldNormal += vec3(vec4(aBlendWeights[i] * vec4( vec4( aNormal, 0 ) * BoneMatrix )));
             }

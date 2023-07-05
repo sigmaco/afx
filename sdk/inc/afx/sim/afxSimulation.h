@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,15 +19,17 @@
 
 #include "afx/core/afxClass.h"
 #include "afx/sim/afxEntity.h"
-#include "afx/sim/afxLight.h"
-#include "afx/sim/afxCamera.h"
-#include "afx/sim/dag/afxSkeleton.h"
+#include "afx/sim/rendering/afxLight.h"
+#include "afx/sim/rendering/afxCamera.h"
+#include "afx/sim/modeling/afxSkeleton.h"
+#include "afx/sim/modeling/afxSkeletonBlueprint.h"
 #include "afx/sim/modeling/afxModel.h"
+#include "afx/sim/modeling/afxModelBlueprint.h"
 #include "afx/sim/modeling/afxMaterial.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawContext.h"
-#include "afx/sim/afxBodyControl.h"
-#include "afx/sim/render/afxRenderer.h"
+#include "afx/sim/anim/afxBodyControl.h"
+#include "afx/sim/rendering/afxRenderer.h"
 
 // A computer simulation (or "sim") is an attempt to model a real-life or hypothetical situation on a computer so that it can be studied to see how the system works. By changing variables in the simulation, predictions may be made about the behaviour of the system. It is a tool to virtually investigate the behaviour of the system under study.
 

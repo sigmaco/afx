@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,9 +19,9 @@
 
 #include "afx/core/afxObject.h"
 #include "afx/core/afxString.h"
-#include "../../math/afxMathDefs.h"
-#include "../../math/volume/afxAabb.h"
-#include "../../math/volume/afxSphere.h"
+#include "../math/afxMathDefs.h"
+#include "../math/volume/afxAabb.h"
+#include "../math/volume/afxSphere.h"
 
 // Frames define the spatial relationships between the objects to which they are attached.
 // The newly created frame has no parent and is its own root.

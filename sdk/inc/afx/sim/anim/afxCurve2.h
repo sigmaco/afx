@@ -27,7 +27,7 @@
  // When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
  // When you want to play an animation on such an instance, you create a afxBodyControl.
 
-#include "../afxBody.h"
+#include "afx/math/afxMathDefs.h"
 
 AFX_DEFINE_STRUCT(afxCurveBlueprint)
 {

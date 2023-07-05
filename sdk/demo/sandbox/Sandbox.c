@@ -11,7 +11,7 @@
 
 #ifdef ENABLE_DRAW
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/sim/render/afxRenderer.h"
+#include "afx/sim/rendering/afxRenderer.h"
 #endif
 
 const afxReal CameraSpeed = 30.0f;
@@ -115,7 +115,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     AfxRendererBindOutput(rnd, dout);
 
-
+    afxUri uriMap2;
+    afxString str;
+    afxModel mdl;
     //AfxAcquireSky();
 
     //AfxUriFormat(&uri, "%.*s/scenario/zero/zero.obj", AfxPushString(AfxApplication_GetArtDirectory(app)));
@@ -123,13 +125,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxDeployArray(&assets, NIL, 0, sizeof(void*));
     //AfxLoadAssets(sim, &uri);
 
-#if 0
     AfxUriWrapLiteral(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
-    AfxSimulationLoadMD5Assets(sim, &uri, NIL);
+    AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
-    afxString32 str;
-    AfxStringDeployRaw32(&str, "/hellknight.md5mesh", 0);
-#else
+    AfxUriExcerptObject(&uriMap, &uriMap2);
+    AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
+
     //AfxUriWrapLiteral(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/f16/f16.obj", 0);
@@ -137,23 +138,18 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxUriWrapLiteral(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
     AfxUriWrapLiteral(&uriMap, "art/object/container/container.obj", 0);
+    AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
-    AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
-#if 0
-    
-    AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
-#endif
-    afxString str;
     //AfxStringWrapLiteral(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
     //AfxStringWrapLiteral(&str, "zero", 0);
-    AfxStringWrapLiteral(&str, "container", 0);
-#endif
+    //AfxStringWrapLiteral(&str, "container", 0);
 
-    afxModel mdl;
-    AfxSimulationAcquireModels(sim, 1, &uriMap, &mdl);
+
+    AfxUriExcerptObject(&uriMap, &uriMap2);
+    AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
     AfxSimulationAcquireBodies(sim, 1, &mdl, &bod);

@@ -10,30 +10,27 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_BODY_H
 #define AFX_BODY_H
 
-#include "dag/afxSkeleton.h"
-#include "modeling/afxModel.h"
+#include "../modeling/afxModel.h"
 
-// The afxBody object helps you manage the run-time state of a afxModel.
-// The afxModel is just the structured data for a particular model - it does not have any concept of where it is, what state it's in, or what animations are playing on it.
-// The afxBody keeps track of this and provides a number of handy utility functions to ease working with model states. 
+/// O objeto afxBody aloja o estado de um afxModel no tempo de execução.
+/// O afxModel é apenas dados estruturados para um modelo particular --- isto é, este não há qualquer conceito de onde este está, qual estado este está em, ou quais animações estão interagindo em si.
+/// O afxBody mantém rastreio disto e provém um número de funções úteis para facilitar o trabalho com estados de modelo. 
 
-// While all your identical entities should share the same afxModel, since their mesh and skeletal data is identical, each should still have its own afxBody.
-// This is because the afxBody data is all dynamic, and is not shared across multiple models even if they are made from the same afxModel data.
-// So while it is common to cache the afxModel hierarchy of structures and instantiate them multiple times, you never want to cache or reuse afxBody objects.
-// They should always be instantiated and freed along with the entities they represent in your application.
+/// Enquanto todas as suas entidades idênticas deveriam compartilhar o mesmo afxModel, desde que seus dados de malha e esqueleto sejam idênticos, cada um deveria ainda haver seu próprio afxBody.
+/// Dito isto porque os dados do afxBody são todos dinâmicos, e não são compartilhados através de múltiplos modelos, mesmo se estes foram feitos do mesmo afxModel.
+/// Assim, enquanto é comum colocar a hierarquia de estruturas do afxModel no cache e instanciá-las múltiplas vezes, você nunca deveria colocar objetos afxBody no cache e reusá-los.
+/// Eles deveriam sempre ser instanciados e liberados ao longo da existência das entidades que eles representam na sua aplicação.
 
-// Note, however, that these are simply pointers into the original data you passed during instantiation. 
-// The afxBody does not keep copies of the data (to minimize memory use), so you cannot free the original model data and expect to get valid pointers back here. 
-// For that matter, if you free the original model data, none of the afxBody calls will work either, since they all rely on that data, as you would expect.
-
-// afxBody is a instanced afxModel, following the Granny concept.
+/// Note, no entanto, que estes são simplesmente ponteiros para os dados originais que vocÊ passou durante a instanciação.
+/// O afxBody não mantém cópias dos dados (para minimizar uso de memória), então você não pode liberar os dados originais do modelo e esperar obter ponteiros válidos de volta aqui.
+/// Para aquilo que importa, se você liberar os dados originais do modelo, nenhuma das chamadas para afxBody funcionarão, desde que elas todas dependem daqueles dados, como você esperaria.
 
 AFX_DEFINE_HANDLE(afxBody);
 

@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,6 +19,7 @@
 
 #include "../src/e2coree/draw/_classified/afxDrawClassified.h"
 #include "sglDriver.h"
+#include "afx/core/mem/afxArena.h"
 
 #define _SGL_MAX_DOUT_PER_PRESENTATION 4
 #define _SGL_MAX_DSCR_PER_SUBMISSION 4
@@ -329,7 +330,7 @@ AFX_OBJECT(afxDrawInput)
 {
     afxObject           obj;
 
-    afxMemory        cmdAll;
+    afxArena            cmdAll;
 
     afxTransistor       streamingLock;
     afxQueue            streamingQueue;
@@ -362,7 +363,7 @@ AFX_OBJECT(afxDrawScript)
     afxDrawScriptState  state;
     afxNat32            lastUpdTime;
 
-    afxMemory           cmdAll; // Owned by draw input. Don't release it.
+    afxArena            cmdAll; // Owned by draw input. Don't release it.
     _afxDscrCmd         cmdEnd;
     afxChain            commands;
     afxNat              drawCallCount;
