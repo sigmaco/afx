@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,6 +19,7 @@
 
 #include "afx/core/diag/afxDebug.h"
 #include "afx/core/afxSimd.h"
+#include "volume/afxVertex.h"
 #include <math.h>
 //#include <stdalign.h>
 
@@ -181,18 +182,18 @@ The vertex shader needs to produce clip coordinates (which as previously explain
 
 typedef enum afxTransformFlags
 {
-    AFX_TRANSFORM_FLAG_ORIGIN = AFX_FLAG(0), // has non-identity position
-    AFX_TRANSFORM_FLAG_ORIENTATION = AFX_FLAG(1), // has non-identity orientation
-    AFX_TRANSFORM_FLAG_SCALESHEAR = AFX_FLAG(2), // has non-identity scale/shear
-    AFX_TRANSFORM_FLAG_ALL = (AFX_TRANSFORM_FLAG_ORIGIN | AFX_TRANSFORM_FLAG_ORIENTATION | AFX_TRANSFORM_FLAG_SCALESHEAR)
+    AFX_TRANSFORM_FLAG_ORIGIN       = AFX_FLAG(0), // has non-identity position
+    AFX_TRANSFORM_FLAG_ORIENTATION  = AFX_FLAG(1), // has non-identity orientation
+    AFX_TRANSFORM_FLAG_SCALESHEAR   = AFX_FLAG(2), // has non-identity scale/shear
+    AFX_TRANSFORM_FLAG_ALL          = (AFX_TRANSFORM_FLAG_ORIGIN | AFX_TRANSFORM_FLAG_ORIENTATION | AFX_TRANSFORM_FLAG_SCALESHEAR)
 } afxTransformFlags;
 
 AFX_DEFINE_STRUCT(afxTransform)
 {
+    afxTransformFlags   flags;
     afxV4d              origin;
     afxQuat             orientation;
     afxM3d              scaleShear;
-    afxTransformFlags   flags;
 };
 
 AFX afxV2d  const AFX_V2D_X;

@@ -33,7 +33,7 @@ AFX_DEFINE_HANDLE(afxBodyControl);
 
 AFX_DECLARE_STRUCT(afxControlledAnimation);
 AFX_DECLARE_STRUCT(afxControlledPose);
-AFX_DECLARE_STRUCT(afxLocalPose);
+AFX_DECLARE_STRUCT(afxPose);
 AFX_DECLARE_STRUCT(afxWorldPose);
 
 AFX_DECLARE_STRUCT(afxBodyControlInterlinkCallbacks);
@@ -52,7 +52,7 @@ AFX_DEFINE_STRUCT(afxBodyControlInterlinkCallbacks)
     afxControlledAnimation*(*GetControlledAnimation)(afxBodyControlInterlink*);
     afxControlledPose*(*GetControlledPose)(afxBodyControlInterlink*);
     afxBool(*InitializeBindingState)(afxBodyControlInterlink*, void*);
-    void(*AccumulateBindingState)(afxBodyControlInterlink*, afxInt, afxInt, afxLocalPose*, afxReal, afxInt const*);
+    void(*AccumulateBindingState)(afxBodyControlInterlink*, afxInt, afxInt, afxPose*, afxReal, afxInt const*);
     void(*BuildBindingDirect)(afxBodyControlInterlink*, afxInt, afxReal const*, afxWorldPose*, afxReal);
     void(*AccumulateLoopTransform)(afxBodyControlInterlink*, afxReal, afxReal*, afxReal*, afxReal*, afxBool);
     void(*CleanupBindingState)(afxBodyControlInterlink*);

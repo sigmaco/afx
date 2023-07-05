@@ -64,14 +64,11 @@
     <Filter Include="e2coree\sim\io">
       <UniqueIdentifier>{ef2bf69f-14df-4850-b265-3451df81300d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="e2coree\sim\render">
-      <UniqueIdentifier>{a7abff6b-8d2a-40d8-a903-0f62693d808c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\sim\dag">
-      <UniqueIdentifier>{34a67399-b287-45fb-b548-c3b325caf4e2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="e2coree\sim\anim">
       <UniqueIdentifier>{d917f02c-6a4e-4ac9-9147-11687c3e68bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="e2coree\sim\rendering">
+      <UniqueIdentifier>{a7abff6b-8d2a-40d8-a903-0f62693d808c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -354,34 +351,16 @@
     <ClInclude Include="..\..\src\e2coree\sim\afxSimulParadigms.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\afxBody.h">
-      <Filter>e2coree\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\afxBodyControl.h">
-      <Filter>e2coree\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\afxCamera.h">
-      <Filter>e2coree\sim</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\afxEntity.h">
-      <Filter>e2coree\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\afxLight.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\afxSimulation.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\render\afxRenderer.h">
-      <Filter>e2coree\sim\render</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMesh.h">
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxCadDefs.h">
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMaterial.h">
@@ -396,17 +375,47 @@
     <ClInclude Include="..\..\inc\afx\sim\io\afxGranny2Model.h">
       <Filter>e2coree\sim\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\dag\afxSkeleton.h">
-      <Filter>e2coree\sim\dag</Filter>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxModelBlueprint.h">
+      <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\dag\afxNode.h">
-      <Filter>e2coree\sim\dag</Filter>
+    <ClInclude Include="..\..\inc\afx\sim\afxSimDefs.h">
+      <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimation.h">
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxLight.h">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxRenderer.h">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxCamera.h">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxBody.h">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxBodyControl.h">
       <Filter>e2coree\sim\anim</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\anim\afxCurve2.h">
       <Filter>e2coree\sim\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimation.h">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxPose.h">
+      <Filter>e2coree\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxWorldPose.h">
+      <Filter>e2coree\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeletonBlueprint.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeleton.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxNode.h">
+      <Filter>e2coree\sim</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -678,19 +687,7 @@
     <ClCompile Include="..\..\src\e2coree\math\afxRotationOps.c">
       <Filter>e2coree\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\afxBody.c">
-      <Filter>e2coree\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\afxBodyControl.c">
-      <Filter>e2coree\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\afxCamera.c">
-      <Filter>e2coree\sim</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\afxEntity.c">
-      <Filter>e2coree\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\afxLight.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\afxSimulation.c">
@@ -705,9 +702,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c">
       <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\render\afxRenderer.c">
-      <Filter>e2coree\sim\render</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\io\afxGranny2Model.c">
       <Filter>e2coree\sim\io</Filter>
     </ClCompile>
@@ -716,18 +710,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\io\afxWavefrontObject.c">
       <Filter>e2coree\sim\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\dag\afxNode.c">
-      <Filter>e2coree\sim\dag</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\dag\afxSkeleton.c">
-      <Filter>e2coree\sim\dag</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">
-      <Filter>e2coree\sim\anim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c">
-      <Filter>e2coree\sim\anim</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\afxMathTransference.c">
       <Filter>e2coree\math</Filter>
@@ -743,6 +725,39 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\afxMathProjection.c">
       <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxBodyControl.c">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxPose.c">
+      <Filter>e2coree\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxWorldPose.c">
+      <Filter>e2coree\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxSkeleton.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxNode.c">
+      <Filter>e2coree\sim</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

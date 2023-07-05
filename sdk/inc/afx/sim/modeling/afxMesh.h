@@ -10,48 +10,47 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_MESH_H
 #define AFX_MESH_H
 
-#include "afxCadDefs.h"
+#include "afx/sim/afxSimDefs.h"
 #include "afx/core/mem/afxArray.h"
 #include "../../math/volume/afxAabb.h"
 #include "afx/core/afxObject.h"
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afxMaterial.h"
+#include "afx/sim/modeling/afxSkeleton.h"
 
-// The granny_mesh is the primary structure for geometric data in Granny.
-// It references vertex data, triangle data, materials, morph targets, and bone bindings.
-// Standard Granny files contain an array of meshes in the granny_file_info structure, and meshes are also referenced by the granny_model objects that use them.
-// Each mesh is broken into chunks along material boundaries.
-// The granny_tri_material_group structure is the primary structure you iterate over to get these chunks.
-// The granny_tri_material_group structure references the index array for the mesh, which in turn references the vertex array.
-// If the mesh is deforming, the vertices in the vertex array reference the bones in the bone binding array.
-// The vertex data for a mesh, given by a granny_vertex_data referenced by the PrimaryVertexData member, contains all the unique vertices in the mesh.
+/// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
+/// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshArticulation's.
+/// Assets padrões do Qwadro contêm um arranjo de afxMesh na estrutura de informação do arquivo, e afxMesh'es são também referenciadas pelos objetos afxModel que as usam.
+/// Cada afxMesh é separada em afxMeshSection's delitmitadas por afxMaterial's.
+/// A estrutura afxMeshSection é a estrutura primária que você interage para obter estas porções.
+/// A estrutura afxMeshSection referencia o arranjo de índices para a afxMesh, a qual em sua vez referencia o arranjo de vértice.
+/// Se a afxMesh é deformável, as vértices no arranjo de vértice referenciam as articulações no arranjo de afxMeshArticulation's.
+/// Os dados de vértice para uma afxMesh, dados por um afxVertexBuffer referenciado pelo afxMesh, contêm todos os vértices únicos na afxMesh.
 
-// The GrannyPNT332VertexType passed to GrannyCopyMeshVertices is an arbitrary choice - you canv pass any granny_data_type_definition that describes a vertex format, and you will get vertices in that format.
+/// As vértices no Qwadro são rígidos ou deformáveis.
+/// afxMesh'es deformáveis são aquelas que estão ligadas a múltiplas articulações, onde afxMesh'es rígidas são aquelas que estão ligadas a uma singela articulação (e portanto movem-se "rigidamente" com aquela articulação).
 
-// The vertices in a Granny mesh are either deforming or rigid.
-// Deforming meshes are ones that are bound to multiple bones, whereas rigid meshes are ones that are bound to a single bone (and thus move "rigidly" with that bone). 
+/// Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshArticulation's. 
+/// Este arranjo contém nomes das articulações as quais a afxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da afxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
+/// Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshArticulation diretamente, porque você pode usar um objeto afxMeshRigging para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
-// To determine which bones a mesh is bound to (one for rigid meshes, many for deforming meshes), you canv access the granny_bone_binding array. 
-// This array contains the names of the bones to which the mesh is bound, as well as oriented bounding box parameters for the parts of the mesh that are bound to that bone and other information pertinent to the mesh-to-bone binding.
-// Note that in most cases you will not need to use the bone names in the granny_bone_binding directly, because you canv use a granny_mesh_binding object to do this work (and other necessary binding work) for you.
+/// Os dados de índice para uma afxMesh, dado por um afxMeshTopology referenciado pelo afxMesh, contém todos os índices para os triângulos na afxMesh.
+/// Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
 
-// The index data for a mesh, given by a granny_tri_topology referenced by the PrimaryTopology member, contains all the indices for the triangles in the mesh.
-// These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way.
-
-// Once you have vertices and indices, you basically have all the mesh data you need except for which chunks of the indices go with which materials.
-// The granny_tri_material_group structure provides this information.
+/// Uma vez que você tem vértices e índices, você basicamente tem todos os dados da afxMesh que você necessita para quais porções de índice vão com quais afxMaterial's.
+/// A estrutura afxMeshSection provém esta informação.
 
 AFX_DEFINE_HANDLE(afxMesh);
 
-// A serialization wrapper for the relationship between a Vertex buffer and a set of primitives.
+/// A serialization wrapper for the relationship between a Vertex buffer and a set of primitives.
 
 AFX_DEFINE_STRUCT(afxMeshBlueprintArticulation)
 {
@@ -81,7 +80,7 @@ AFX_DEFINE_STRUCT(afxMeshBlueprintVertexArrange)
     afxVertexFormat         srcFmt;
 };
 
-// Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de uma malha. Dependendo apenas das referências das fontes de vértices e índices, para evitar alocações desnecessárias.
+/// Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de uma malha. Dependendo apenas das referências das fontes de vértices e índices, para evitar alocações desnecessárias.
 
 AFX_DEFINE_STRUCT(afxMeshBlueprint)
 {
@@ -206,6 +205,16 @@ AFX_DEFINE_STRUCT(afxMeshArticulation)
     afxNat                  *triIndices;
 };
 
+AFX_DEFINE_STRUCT(afxMeshRigging)
+{
+    afxMesh                 msh;
+    afxNat                  boneCnt;
+    afxSkeleton             srcSkl;
+    afxNat*                 srcBoneIndices;
+    afxSkeleton             dstSkl;
+    afxNat*                 dstBoneIndices;
+};
+
 AFX_DEFINE_STRUCT(afxMaterialSlot)
 {
     afxMaterial             mtl;
@@ -249,8 +258,9 @@ AFX afxBool                 AfxMeshIsRigid(afxMesh msh);
 AFX afxNat                  AfxMeshGetArticulationCount(afxMesh msh);
 AFX afxMeshArticulation*    AfxMeshGetArticulation(afxMesh msh, afxNat artIdx);
 
-
 AFX void                    AfxMeshTransform(afxMesh msh, afxV3d const affine, afxM3d const linear, afxM3d const invLinear, afxReal affineTol, afxReal linearTol, afxFlags flags);
+
+AFX afxMeshRigging*             AfxMeshGenerateRig(afxMesh msh, afxSkeleton src, afxSkeleton dst);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //

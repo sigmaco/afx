@@ -18,8 +18,8 @@
 #define AFX_CAMERA_H
 
 #include "afx/core/mem/afxArray.h"
-#include "../math/volume/afxFrustum.h"
-#include "dag/afxNode.h"
+#include "afx/math/volume/afxFrustum.h"
+#include "../afxNode.h"
 
 #define AFX_CAM_ALIGN AFX_SIMD_ALIGN
 

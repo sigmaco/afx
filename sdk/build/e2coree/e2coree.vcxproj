@@ -102,24 +102,28 @@
     <ClInclude Include="..\..\inc\afx\mmux\afxRoqVideo.h" />
     <ClInclude Include="..\..\inc\afx\mmux\afxViewport.h" />
     <ClInclude Include="..\..\inc\afx\mmux\afxWidget.h" />
-    <ClInclude Include="..\..\inc\afx\sim\afxBody.h" />
-    <ClInclude Include="..\..\inc\afx\sim\afxBodyControl.h" />
-    <ClInclude Include="..\..\inc\afx\sim\afxCamera.h" />
     <ClInclude Include="..\..\inc\afx\sim\afxEntity.h" />
-    <ClInclude Include="..\..\inc\afx\sim\afxLight.h" />
+    <ClInclude Include="..\..\inc\afx\sim\afxNode.h" />
+    <ClInclude Include="..\..\inc\afx\sim\afxPose.h" />
+    <ClInclude Include="..\..\inc\afx\sim\afxSimDefs.h" />
     <ClInclude Include="..\..\inc\afx\sim\afxSimulation.h" />
+    <ClInclude Include="..\..\inc\afx\sim\afxWorldPose.h" />
     <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimation.h" />
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxBody.h" />
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxBodyControl.h" />
     <ClInclude Include="..\..\inc\afx\sim\anim\afxCurve2.h" />
-    <ClInclude Include="..\..\inc\afx\sim\dag\afxNode.h" />
-    <ClInclude Include="..\..\inc\afx\sim\dag\afxSkeleton.h" />
     <ClInclude Include="..\..\inc\afx\sim\io\afxGranny2Model.h" />
     <ClInclude Include="..\..\inc\afx\sim\io\afxMD5Model.h" />
     <ClInclude Include="..\..\inc\afx\sim\io\afxWavefrontObject.h" />
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxCadDefs.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMaterial.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMesh.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h" />
-    <ClInclude Include="..\..\inc\afx\sim\render\afxRenderer.h" />
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxModelBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeleton.h" />
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeletonBlueprint.h" />
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxCamera.h" />
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxLight.h" />
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxRenderer.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundContext.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundDefs.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundInput.h" />
@@ -235,26 +239,25 @@
     <ClCompile Include="..\..\src\e2coree\mmux\afxBrush.c" />
     <ClCompile Include="..\..\src\e2coree\mmux\afxRoqVideo.c" />
     <ClCompile Include="..\..\src\e2coree\mmux\afxWidget.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\afxBody.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\afxBodyControl.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\afxCamera.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxEntity.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\afxLight.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\afxNode.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\afxPose.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxSimulation.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\afxWorldPose.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxBodyControl.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\dag\afxNode.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\dag\afxSkeleton.c" />
     <ClCompile Include="..\..\src\e2coree\sim\io\afxGranny2Model.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
@@ -266,7 +269,10 @@
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMaterial.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMesh.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\render\afxRenderer.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxSkeleton.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c" />
     <ClCompile Include="..\..\src\e2coree\sound\afxSoundContext.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>

@@ -10,7 +10,7 @@
  *                      S I G M A   T E C H N O L O G Y   G R O U P
  *
  *                                   Public Test Build
- *                      (c) 2017 SIGMA Co. & SIGMA Technology Group
+ *                               (c) 2017 Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -1491,7 +1491,7 @@ _SGL afxError _SglDquePresentSurface(afxDrawQueue dque, afxDrawOutput dout, afxN
         cmdBindVbuf.buf[0] = &dque->presentVbuf->buf;
         cmdBindVbuf.offset[0] = 0;
         cmdBindVbuf.vtxArrSiz[0] = 0;
-        cmdBindVbuf.vtxStride[0] = AfxVertexBufferGetStride(cmdBindVbuf.buf[0], 0);
+        cmdBindVbuf.vtxStride[0] = AfxVertexBufferGetStride(dque->presentVbuf, 0);
     
         _SglDqueBindVertexBuffers(dque, &cmdBindVbuf);
 
