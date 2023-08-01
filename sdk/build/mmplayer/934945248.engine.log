@@ -1,0 +1,44 @@
+
+ afxDebug.c:373?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(0f6a0c00, 00000000, 00000000, 0f67f618)
+ afxClass<afxSystem>::AllocateObjects(1, 0028f2dc, 0028f2ec)
+ afxClass<afxSystem>::BuildObjects(1, 0028f2dc, 00000000)
+ afxClass<afxSystem>::ConstructObject(0051f630)
+ afxSystem.c:892?_AfxSysCtor(sys=0051f630)
+ ADV afxSystem.c:915?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:916?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0051f67c, 0051f664, 00000000, 0f6839b4)
+ afxMemory.c:259?AfxAcquireMemory(strategy=0028e3f4,hint="afxSystem.c:932!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0028e2b4, 0028e2c4)
+ afxClass<afxMemory>::BuildObjects(1, 0028e2b4, 0028e2ac)
+ afxClass<afxMemory>::ConstructObject(0051fde0)
+ afxMemory.c:315?_AfxMemCtor(mem=0051fde0)
+ afxClass<afxThread>::Mount(0051f73c, 0051f664, 00000000, 0f67fcc0)
+ afxClass<afxIoSystem>::Mount(0051f7fc, 0051f664, 00000000, 0f681380)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0028e298, 0028e2a8)
+ afxClass<afxIoSystem>::BuildObjects(1, 0028e298, 0028e3c0)
+ afxClass<afxIoSystem>::ConstructObject(00520510)
+ afxIoSystem.c:689?_AfxIoCtor(io=00520510)
+ afxArena.c:751?AfxAcquireArena(aren=0052055c)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:705!_AfxIoCtor")
+ ERR afxArena.c:754?AfxAcquireArena
+    
+ ERR afxArena.c:754?AfxAcquireArena
+    (spec)
+    Invalid

@@ -24,8 +24,6 @@
 
 #include "afx/core/io/afxFile.h"
 
-AFX_DEFINE_HANDLE(afxArchive);
-
 AFX_OBJECT(afxArchive)
 {
     AFX_OBJECT(afxFile) file;
@@ -50,23 +48,20 @@ AFX_DEFINE_STRUCT(afxArchiveItemDescriptor)
     afxNat32    crc32;
 };
 
-AFX void*       AfxArchiveGetSystem(afxArchive arc);
-AFX void*       AfxArchiveGetFileSystem(afxArchive arc);
-
-AFX afxNat      AfxArchiveGetItemCount(afxArchive arc);
+AFX afxNat      AfxGetArchiveItemCount(afxArchive arc);
 
 AFX afxBool     AfxArchiveItemIsFile(afxArchive arc, afxNat idx);
-AFX afxError    AfxArchiveExtractItem(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
-AFX afxError    AfxArchiveExtractItemToStream(afxArchive arc, afxNat idx, afxStream ios);
-AFX afxError    AfxArchiveDownloadItem(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
-AFX afxBool     AfxArchiveFindItem(afxArchive arc, afxUri const *name, afxNat *idx);
-AFX afxStream   AfxArchiveOpenItem(afxArchive arc, afxNat idx);
+AFX afxError    AfxExtractArchiveItem(afxArchive arc, afxNat idx, afxNat bufSiz, void *buf);
+AFX afxError    AfxExtractArchiveItemToStream(afxArchive arc, afxNat idx, afxStream *ios);
+AFX afxError    AfxDownloadArchiveItem(afxArchive arc, afxNat idx, afxUri const *uri); // extract to file directory.
+AFX afxBool     AfxFindArchiveItem(afxArchive arc, afxUri const *name, afxNat *idx);
+AFX afxError    AfxOpenArchiveItem(afxArchive arc, afxNat idx, afxStream *in);
 
 AFX afxError    AfxArchiveDescribeItem(afxArchive arc, afxNat idx, afxArchiveItemDescriptor *desc);
-AFX afxSize     AfxArchiveGetItemOffset(afxArchive arc, afxNat idx);
-AFX afxNat      AfxArchiveGetItemCodec(afxArchive arc, afxNat idx);
-AFX afxNat      AfxArchiveGetItemSize(afxArchive arc, afxNat idx);
-AFX afxString*  AfxArchiveGetItemName(afxArchive arc, afxNat idx, afxUri *name);
-AFX afxNat32    AfxArchiveGetItemHash(afxArchive arc, afxNat idx);
+AFX afxSize     AfxGetArchiveItemOffset(afxArchive arc, afxNat idx);
+AFX afxNat      AfxGetArchiveItemCodec(afxArchive arc, afxNat idx);
+AFX afxNat      AfxGetArchiveItemSize(afxArchive arc, afxNat idx);
+AFX afxString*  AfxGetArchiveItemName(afxArchive arc, afxNat idx, afxUri *name);
+AFX afxNat32    AfxGetArchiveItemHash(afxArchive arc, afxNat idx);
 
 #endif//AFX_ARCHIVE_H

@@ -19,12 +19,12 @@
 
 #include "afx/draw/afxDrawContext.h"
 
-AFX afxError    AfxDrawContextUploadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
+AFX afxError    AfxLoadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
 
-AFX afxError    AfxTextureUploadTarga(afxTexture tex, afxUri const *uri);
-AFX afxError    AfxTextureUploadRegionsTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
+AFX afxError    AfxFetchTextureFromTarga(afxTexture tex, afxUri const *uri);
+AFX afxError    AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
 
-AFX afxError    AfxTextureDownloadTarga(afxTexture tex, afxUri const *uri);
-AFX afxError    AfxTextureDownloadRegionsTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
+AFX afxError    AfxPrintTextureToTarga(afxTexture tex, afxUri const *uri);
+AFX afxError    AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
 
 #endif//AFX_TARGA_H

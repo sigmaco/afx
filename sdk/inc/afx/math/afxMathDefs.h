@@ -19,7 +19,6 @@
 
 #include "afx/core/diag/afxDebug.h"
 #include "afx/core/afxSimd.h"
-#include "volume/afxVertex.h"
 #include <math.h>
 //#include <stdalign.h>
 

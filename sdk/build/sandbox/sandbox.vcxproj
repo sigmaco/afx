@@ -161,6 +161,9 @@
     <ClCompile Include="..\..\demo\sandbox\Sandbox.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\e2cad\e2cad.vcxproj">
+      <Project>{60b64922-a066-4894-90ac-66ff7a934804}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
@@ -169,6 +172,9 @@
     </ProjectReference>
     <ProjectReference Include="..\e2newton\e2newton.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\idtech\idtech.vcxproj">
+      <Project>{55bb14fb-8087-49f3-bb3f-1f06d8c336a0}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

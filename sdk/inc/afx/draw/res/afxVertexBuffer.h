@@ -33,6 +33,9 @@ typedef enum afxVertexUsage
     AFX_VTX_USAGE_BTN           = AFX_FLAG(12),
     AFX_VTX_USAGE_UV            = AFX_FLAG(13),
 
+    AFX_VTX_HINT_POSITIONAL     = AFX_FLAG(14),
+    AFX_VTX_HINT_SPATIAL        = AFX_FLAG(15),
+
     AFX_VTX_USAGE_RASTERIZATION = AFX_FLAG(16),
 } afxVertexUsage;
 
@@ -45,26 +48,77 @@ AFX_DEFINE_STRUCT(afxVertexRowSpecification)
     afxVertexFormat         srcFmt;
 };
 
-AFX_DEFINE_STRUCT(afxVertexRowBlueprint)
+/*
+    Microsoft DirectX 8.0 introduced the notion of a stream to bind data to input registers. 
+    A stream is a uniform array of component data. 
+    Each component consists of one or more elements that represent a single entity, such as position, normal, color, texture coordinate set, and so on. 
+    With streams, GPUs are able to perform a direct memory access (DMA) from multiple vertex buffers in parallel.
+*/
+
+AFX_DEFINE_STRUCT(afxVertexBufferRegion)
 {
-    afxString8              semantic; // 8
-    afxVertexFormat         fmt;
-    afxVertexUsage          usage;
-    void const              *src;
-    afxVertexFormat         srcFmt;
+    afxNat streamIdx;
+    afxNat baseAttr; // component of stream (aka set of attributes)
+    afxNat attrCnt;
+    afxNat baseElem;
+    afxNat elemCnt;
 };
 
-AFX_DEFINE_STRUCT(afxVertexBufferBlueprint)
-{
-    afxFcc                  fcc; // VBUB
-    afxNat                  cap;
-    afxNat                  rowCnt;
-    afxVertexRowBlueprint   row[8];
-};
+/*
+{ // mem
+    { // lod0
+        { // stream0
+            { // pos
+                x, y, z
+            },
+            { // wgt
 
-AFX_DEFINE_HANDLE(afxVertexBuffer);
+            },
+            { // idx
+
+            }
+        },
+        { // stream1
+
+        }
+    },
+    { // lod1
+        { // stream0
+
+        },
+        { // stream1
+
+        }
+    }
+}
+
+struct // lod
+{
+    struct
+    {
+        afxV4d pos;
+        afxNat8 wgt[4];
+        afxNat8 idx[4];
+    } stream0;
+    struct
+    {
+        afxV3d bit;
+        afxV3d tan;
+        afxV3d nrm;
+    } stream1;
+    struct
+    {
+        afxV3d rgb;
+        afxV2d uv;
+    } stream2;
+};
+*/
 
 AFX_DECLARE_STRUCT(afxVertexDataRow);
+
+#if (defined(_AFX_VERTEX_BUFFER_C) && !defined(_AFX_BUFFER_C))
+#   error "afxBuffer not exposed"
+#endif
 
 AFX_OBJECT(afxVertexBuffer)
 {
@@ -73,6 +127,28 @@ AFX_OBJECT(afxVertexBuffer)
     afxNat                  cap;
     afxNat                  rowCnt;
     afxVertexDataRow        *row;
+#if !0
+    // NEW
+    afxNat                  streamCnt;
+    struct
+    {
+        afxNat              rowCnt;
+        struct
+        {
+            afxNat          stride;
+        }*                  rows;
+    }*                      streams;
+    afxNat                  attrCnt;
+    struct
+    {
+        afxNat              streamIdx;
+        afxNat              cachedElemStride; // aside fmt because it could be padded/aligned.
+        afxNat              cachedElemCnt; // aside fmt because it could be a arbitrary array.
+        afxVertexUsage      usage;
+        afxVertexFormat     fmt;
+        afxString*          semantic;
+    }*                      attrs;
+#endif
 #endif
 };
 
@@ -80,7 +156,7 @@ AFX afxError                AfxVertexBufferDescribeRow(afxVertexBuffer vbuf, afx
 AFX afxError                AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstVtxStride); // copy out
 AFX afxNat                  AfxVertexBufferFindArrange(afxVertexBuffer vbuf, afxString const *name);
 AFX afxNat                  AfxVertexBufferGetRowCount(afxVertexBuffer vbuf);
-AFX void const*             AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afxNat vtxIdx);
+//AFX void const*             AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afxNat vtxIdx);
 AFX afxVertexFormat         AfxVertexBufferGetFormat(afxVertexBuffer vbuf, afxNat rowIdx);
 AFX afxString const*        AfxVertexBufferGetSemantic(afxVertexBuffer vbuf, afxNat rowIdx);
 AFX afxNat                  AfxVertexBufferGetRange(afxVertexBuffer vbuf, afxNat baseRow, afxNat rowCnt); // get whole memory range used by a arrange
@@ -92,15 +168,16 @@ AFX afxError                AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, a
 AFX afxError                AfxVertexBufferOptimize(afxVertexBuffer vbuf, afxNat rowIdx, afxBool favorSpeedOverSize);
 AFX afxError                AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void const *src, afxVertexFormat srcFmt); // copy into
 
-////////////////////////////////////////////////////////////////////////////////
-// VERTEX BUFFER BLUEPRINT                                                    //
-////////////////////////////////////////////////////////////////////////////////
 
-AFXINL void                 AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, afxNat cap);
-AFXINL void                 AfxVertexBufferBlueprintDiscard(afxVertexBufferBlueprint *blueprint);
-AFXINL void                 AfxVertexBufferBlueprintErase(afxVertexBufferBlueprint *blueprint);
 
-AFXINL afxError             AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *blueprint, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
-AFXINL afxError             AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blueprint, afxNat idx, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
+
+AFX afxNat                  AfxGetVertexStreamCount(afxVertexBuffer vbuf);
+
+AFX afxError                AfxBufferizeVertexBuffer(afxVertexBuffer vbuf);
+AFX afxNat                  AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn);
+AFX afxNat                  AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, afxNat attrIdx, afxNat elemIdx);
+
+AFX afxError                AfxUpdateVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn, void const *src, afxVertexFormat const fmt[]);
+
 
 #endif//AFX_VERTEX_BUFFER_H

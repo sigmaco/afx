@@ -25,6 +25,7 @@
 #include "afx/sim/modeling/afxSkeletonBlueprint.h"
 #include "afx/sim/modeling/afxModel.h"
 #include "afx/sim/modeling/afxModelBlueprint.h"
+#include "afx/sim/modeling/afxMeshBlueprint.h"
 #include "afx/sim/modeling/afxMaterial.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawContext.h"
@@ -34,6 +35,58 @@
 // A computer simulation (or "sim") is an attempt to model a real-life or hypothetical situation on a computer so that it can be studied to see how the system works. By changing variables in the simulation, predictions may be made about the behaviour of the system. It is a tool to virtually investigate the behaviour of the system under study.
 
 // space is a purely mathematical representation of a world within space and its interactions.
+
+AFX_DEFINE_STRUCT(afxArtToolInfo)
+{
+    afxString const*    name; // from art tool name
+    afxInt              majorRevision;
+    afxInt              minorRevision;
+    afxReal             unitsPerMeter;
+    afxV3d              origin;
+    afxV3d              right;
+    afxV3d              up;
+    afxV3d              back;
+    void*               udd;
+};
+
+AFX_DEFINE_STRUCT(afxArtExporterInfo)
+{
+    afxString const*    name;
+    afxInt              majorRevision;
+    afxInt              minorRevision;
+    afxInt              customization;
+    afxInt              buildNum;
+    void*               udd;
+};
+
+AFX_DEFINE_STRUCT(afxArtAssetInfo)
+{
+    afxArtToolInfo*     toolInfo;
+    afxArtExporterInfo* exporterInfo;
+    afxUri*             uri; // from file
+    afxNat              texCnt;
+    afxTexture*         texs;
+    afxNat              mtlCnt;
+    afxMaterial*        mtls;
+    afxNat              sklCnt;
+    afxSkeleton*        skls;
+    afxNat              vdCnt;
+    //granny_vertex_data* vertexDatas;
+    afxNat              mshtCnt;
+    afxMeshTopology*    mshts;
+    afxNat              mshCnt;
+    afxMesh*            mshs;
+    afxNat              mdlCnt;
+    afxModel*           mdls;
+    afxNat              trackGroupCnt;
+    //granny_track_group* trackGroups;
+    afxNat              animCnt;
+    //afxAnimation*       anims;
+    void*               udd;
+};
+
+
+
 
 AFX_DEFINE_STRUCT(afxSimulationSpecification)
 {
@@ -52,8 +105,6 @@ AFX_DEFINE_STRUCT(afxSimulationSpecification)
     afxNat                  maxSklCnt;
     afxNat                  maxNodCnt;
 };
-
-AFX_DEFINE_HANDLE(afxSimulation);
 
 #ifndef _AFX_API_ONLY
 
@@ -127,8 +178,6 @@ AFX afxLight        AfxSimulationAcquireAreaLight(afxSimulation sim, afxColor co
 
 AFX afxNode         AfxSimulationAcquireNode(afxSimulation sim, afxNodeSpecification const *spec);
 
-AFX void*           AfxSimulationGetSystem(afxSimulation sim);
-AFX void*           AfxSimulationGetDrawSystem(afxSimulation sim);
 AFX void*           AfxSimulationGetApplication(afxSimulation sim);
 
 AFX afxMemory       AfxSimulationGetMemory(afxSimulation sim);
@@ -145,17 +194,14 @@ AFX afxClass*       AfxSimulationGetNodeClass(afxSimulation sim);
 AFX afxClass*       AfxSimulationGetSkeletonClass(afxSimulation sim);
 AFX afxClass*       AfxSimulationGetRendererClass(afxSimulation sim);
 
-AFX afxResult       AfxSimulationEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bod[]);
-AFX afxResult       AfxSimulationEnumerateCameras(afxSimulation sim, afxNat base, afxNat cnt, afxCamera cam[]);
-AFX afxResult       AfxSimulationEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, afxEntity ent[]);
-AFX afxResult       AfxSimulationEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[]);
-AFX afxResult       AfxSimulationEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);
-AFX afxResult       AfxSimulationEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[]);
-AFX afxResult       AfxSimulationEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[]);
-AFX afxResult       AfxSimulationForEachNode(afxSimulation sim, void (*f)(afxIterator *iter), void *data);
-
-AFX afxResult       AfxSimulationLoadObjAssets(afxSimulation sim, afxUri const *uri, afxArray(void) *assets);
-AFX afxResult       AfxSimulationLoadMD5Assets(afxSimulation sim, afxUri const *uri, afxArray(void) *assets);
+AFX afxNat          AfxSimulationEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bod[]);
+AFX afxNat          AfxSimulationEnumerateCameras(afxSimulation sim, afxNat base, afxNat cnt, afxCamera cam[]);
+AFX afxNat          AfxSimulationEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, afxEntity ent[]);
+AFX afxNat          AfxSimulationEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[]);
+AFX afxNat          AfxSimulationEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);
+AFX afxNat          AfxSimulationEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[]);
+AFX afxNat          AfxSimulationEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[]);
+AFX afxNat          AfxSimulationForEachNode(afxSimulation sim, void (*f)(afxIterator *iter), void *data);
 
 AFX afxError        _AfxSimulationProcess(afxSimulation sim);
 AFX afxError        AfxSimulationRender(afxSimulation sim, afxCamera cam, afxV4d point, afxDrawInput din);

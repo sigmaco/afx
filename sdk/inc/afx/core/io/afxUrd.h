@@ -24,29 +24,6 @@
 
 // URD --- UNIFORM RESOURCE DICTIONARY
 
-AFX_DEFINE_STRUCT(afxMaterialMap0)
-{
-    afxString           usage; // 16 // usage
-    afxConnection       subMtl; // afxMaterial
-};
-
-AFX_OBJECT(afxMaterial0)
-{
-    afxObject           obj;
-    afxString           name; // 32
-
-    afxNat              mapCnt;
-    afxMaterialMap0      *maps;
-    afxConnection       tex;
-    void                *extData;
-
-    // non-Granny stuff
-    afxInt              s[3];
-    afxReal             shininess;
-};
-
-AFX_DEFINE_HANDLE(afxUrd);
-
 AFX_DEFINE_STRUCT(afxResourceHandler)
 {
     afxFcc              type;
@@ -74,44 +51,117 @@ AFX_DEFINE_STRUCT(afxResourceLinkage)
     afxChain            allocations;
 };
 
-AFX_DEFINE_STRUCT(afxResourceChain)
+AFX_DEFINE_STRUCT(afxUrdEntry)
 {
-    afxFcc      type;
-    afxChain    resources;
-    afxLinkage  system;
+    afxUri              *name; // 32
+    afxUrd              urd; // link back to file backing this resource
+    afxInt              reqCnt;
+    afxResourceState    status;
+    afxTime             lastReqTime;
 };
 
-AFX_DEFINE_STRUCT(afxFileBackedMaterial)
+AFX_DEFINE_STRUCT(afxUrdReference)
 {
-    afxFcc      type;
-    afxChain    resources;
-    afxLinkage  system;
+    afxNat              secIdx;
+    afxSize             offset;
 };
 
-AFX_DEFINE_STRUCT(afxFileBackedMesh)
+AFX_DEFINE_STRUCT(afxUrdHeader)
 {
-    afxFcc      type;
-    afxChain    resources;
-    afxLinkage  system;
+    afxNat              ver;
+    afxNat              totalSiz;
+    afxNat32            crc;
+    afxNat              secOffset;
+    afxNat              secCnt;
+    afxUrdReference     rootObjectTypeDef;
+    afxUrdReference     rootObject;
+    afxNat              typeTag;
+    afxNat              extraTags[4];
+    afxNat              stringDatabaseCrc;
+    afxNat              reserved[3];
 };
 
-AFX_DEFINE_STRUCT(afxFileBackedModel)
+AFX_DEFINE_STRUCT(afxUrdMagicValue)
 {
-    afxLinkage  res;
+    afxNat              magicVal[4];
+    afxNat              hdrSiz;
+    afxNat              hdrFmt;
+    afxNat              reserved[2];
+};
+
+AFX_DEFINE_STRUCT(afxUrdSection)
+{
+    afxNat              fmt; // codec
+    afxNat              dataOffset;
+    afxNat              dataSiz;
+    afxNat              expandedDataSiz;
+    afxNat              internalAlignment;
+
+
+    afxInt              reqCnt;
+    afxResourceState    status;
+    afxTime             lastReqTime;
 };
 
 AFX_OBJECT(afxUrd)
 {
     afxObject           obj; // AFX_FCC_URD
 //#ifdef _AFX_URD_C
-    afxUri              uri; // 128
-    afxResourceChain    *chain;
-    afxNat              chainCnt;
+    afxUrdHeader        *hdr;
+    afxUrdMagicValue    *srcMagicVal;
+    afxNat              secCnt;
+    void                **sections;
+    afxBool             *marshalled;
+    afxBool             *isUserMem;
+    void                *conversionBuf;
+
+    afxUri              *path; // 128
+    afxTime             lastUpdTime;
+    afxNat              entryCnt;
+    afxUrdEntry         *entries;
 //#endif
 };
 
-AFX void*       AfxUrdGetSystem(afxUrd urd);
-AFX void*       AfxUrdGetFileSystem(afxUrd urd);
+AFX afxBool     AfxUrdOpenSection(afxUrd urd, afxNat secIdx, void *buf);
+AFX afxBool     AfxUrdOpenSections(afxUrd urd, afxNat baseIdx, afxNat secCnt, void *buf[]);
+
+AFX void        AfxUrdCloseSection(afxUrd urd, afxNat secIdx);
+AFX void        AfxUrdCloseSections(afxUrd urd, afxNat baseIdx, afxNat secCnt);
+AFX void        AfxUrdCloseAllSections(afxUrd urd);
+
+/// In addition to the basic GrannyReadEntireFile and GrannyFreeFile calls, Granny provides a number of more flexible alternatives that can be used to fine - tune the way your app loads data.
+
+/// Instead of reading an entire Granny file from disk, you can easily read one from your own memory buffer instead :
+
+//  granny_file *File = GrannyReadEntireFileFromMemory(BufferSize, Buffer);
+
+/// Note that GrannyReadEntireFileFromMemory unpacks the file into its own memory buffers, so you are free to recycle your memory buffer after GrannyReadEntireFileFromMemory returns.
+
+/// You can also opt to read directly from a granny_file_reader of your own creation, which allows you to provide the data in any way you want :
+
+//  granny_file *File = GrannyReadEntireFileFromReader(Reader);
+
+/// and, you also have the option of only reading the header of the file, and deferring loads of the rest of the portions until you actually need them :
+
+// granny_file *File = GrannyReadPartialFileFromReader(Reader);
+
+/// This will fill in just the header section of the granny_file object, and will leave the section buffers empty(and unallocated).You can then choose when and which sections to load by calling GrannyReadFileSection and GrannyFixupFileSectionPhase1 / GrannyFixupFileSectionPhase2.
+
+/// You can control which sections of a file are memory - resident and which are not at any time like this:
+
+// Load section 5 into memory
+// GrannyReadFileSection(FileReader, File, 5);
+
+// Load section 6 into your memory
+// GrannyReadFileSectionInPlace(FileReader, File, 6, MyMemory);
+
+// Now free section 5
+// GrannyFreeFileSection(File, 5);
+
+// Free any sections currently loaded
+// (marks section 6 as free, but does not touch the memory itself)
+// GrannyFreeAllFileSections(File);
+
 
 
 #endif//AFX_URD_H

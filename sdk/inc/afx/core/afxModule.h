@@ -19,22 +19,25 @@
 
 #include "afx/core/afxObject.h"
 
-AFX_DEFINE_HANDLE(afxModule);
+/// Um afxModule é uma API do QWADRO para Applicable Service Interface (.asi) e Installable Client Driver (.icd), 
+/// estes que são os dois formatos executáveis e vinculáveis que expandem o sistema de execução QWADRO.
 
 AFX_OBJECT(afxModule)
 {
     afxObject           obj;
 #ifdef _AFX_MODULE_C
-    afxUri*             uri; // 128
+    afxUri*             path; // 128
     void                *osHandle;
     afxBool             hasBeenLoaded;
 #endif
 };
 
-AFX void*               AfxModuleGetSystem(afxModule mdle);
-AFX afxUri const*       AfxModuleGetUri(afxModule mdle);
+AFX afxUri const*       AfxGetModulePath(afxModule mdle);
 
-AFX void*               AfxModuleFindSymbol(afxModule mdle, afxChar const *name);
-AFX afxResult           AfxModuleFindSymbols(afxModule mdle, afxNat cnt, afxChar const *name[], void *sym[]);
+AFX void*               AfxFindModuleSymbol(afxModule mdle, afxChar const *name);
+AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar const *name[], void *sym[]);
+
+AFX void                AfxGetModuleVendor(afxModule mdle, afxString const* name);
+AFX void                AfxGetModuleVersion(afxModule mdle, afxNat *major, afxNat *minor, afxNat *patch);
 
 #endif//AFX_MODULE_H

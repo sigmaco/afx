@@ -23,8 +23,11 @@
 #include <stdio.h>
 #pragma comment(lib,"dwmapi.lib")
 //#pragma comment(lib, "opengl32")
-#include "sgl.h"
 
+#define _AFX_DRAW_OUTPUT_C
+#define _AFX_TEXTURE_C
+#define _AFX_SURFACE_C
+#include "sgl.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawOutput.h"
 #include "afx/core/afxString.h"
@@ -61,59 +64,37 @@ _SGL void Calc_window_values(HWND window, afxInt* out_extra_width, afxInt32* out
 }
 
 
-_SGL afxError _SglDoutProcess(afxDrawOutput dout)
+_SGL afxError _AfxDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dout, AFX_FCC_DOUT);
-    //_SglSwapBuffersNow(dout); // do black screen
-    SetWindowTextA(dout->wglWnd, AfxStringGetDataConst(dout->title, 0));
-    //UpdateWindow(dout->wglWnd);
-    return err;
-}
-
-_SGL afxSurface _AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat idx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxTransistorEnterShared(&dout->buffersLock);
-    AfxAssert(idx < dout->bufCnt);
-    afxSurface surf = dout->buffers[idx];
-    AfxAssertObject(surf, AFX_FCC_SURF);
-    AfxTransistorExitShared(&dout->buffersLock);
-    return surf;
-}
-
-_SGL afxError _AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
-{
     (void)timeout;
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
     *bufIdx = AFX_INVALID_INDEX;
 
-    AfxTransistorEnterExclusive(&dout->buffersLock);
-
-    afxNat idx = (dout->lastAcqBufIdx + 1) % dout->bufCnt;
-    afxNat time = AfxGetTimer();
+    afxNat idx = dout->lastReqBufIdx;
+    afxTime time, t2;
+    AfxGetTime(&time);
 
     for (;;)
     {
+        idx = (idx + 1) % dout->bufCnt;
         afxSurface surf = dout->buffers[idx];
-        AfxAssertObject(surf, AFX_FCC_SURF);
 
-        if (NIL == surf->swapchain.chain && surf->state == AFX_SURF_STATE_IDLE)
-        {
-            AfxAssert(!surf->swapchain.chain);
-
-            surf->state = AFX_SURF_STATE_PRESENTABLE;
-            *bufIdx = idx;
-            break;
-        }
+        if (!surf) AfxThrowError();
         else
         {
-            idx = (idx + 1) % dout->bufCnt;
+            AfxAssertObject(surf, AFX_FCC_SURF);
+
+            if (AFX_SURF_STATE_PRESENTABLE >= AfxGetSurfaceState(surf))
+            {
+                //AfxAssert(!surf->swapchain.chain);
+                surf->state = AFX_SURF_STATE_PRESENTABLE;
+                *bufIdx = idx;
+                break;
+            }
         }
 
-        if (timeout > AfxGetTimer() - time)
+        if (timeout > AfxGetTime(&t2) - time)
         {
             AfxThrowError();
             *bufIdx = AFX_INVALID_INDEX;
@@ -122,311 +103,247 @@ _SGL afxError _AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, a
     }
 
     if (!err)
-        dout->lastAcqBufIdx = idx;
-
-    AfxTransistorExitExclusive(&dout->buffersLock);
+        dout->lastReqBufIdx = idx;
 
     return err;
 }
 
-_SGL afxResult _AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[])
+_SGL afxError _AfxDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssert(cnt);
-    AfxAssert(dout->bufCnt >= first + cnt);
-    AfxAssert(surf);
-    afxResult hitcnt = 0;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxSurface surf2 = dout->buffers[first + i];
-        AfxAssertObject(surf2, AFX_FCC_SURF);
-        surf[i] = surf2;
-        ++hitcnt;
-    }
-    return hitcnt;
-}
-
-_SGL void _AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssert(extent);
-    AfxV3dSet(extent, AfxToNdc(dout->whd[0], dout->whdMax[0]), AfxToNdc(dout->whd[1], dout->whdMax[1]), (afxReal)1);
-}
-
-_SGL void _AfxDrawOutputGetExtent(afxDrawOutput dout, afxWhd extent)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    extent[0] = dout->whd[0];
-    extent[1] = dout->whd[1];
-    extent[2] = dout->whd[2];
-}
-
-_SGL afxError _AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssert(extent);
-    AfxAssert(extent[0]);
-    AfxAssert(extent[1]);
-    AfxAssert(extent[2]);
-    AfxAssert(extent[0] != dout->whd[0] || extent[1] != dout->whd[1] || extent[2] != dout->whd[2]);
-    afxBool resizable;
-
-    if ((resizable = dout->resizable))
-    {
-        dout->resizable = FALSE; // temporarily lock it to avoid reentrance of platform hooks.
-
-        AfxAssert(extent);
-        AfxAssert(extent[0]);
-        AfxAssert(extent[1]);
-        AfxAssert(extent[2]);
-
-        dout->whd[0] = extent[0];
-        dout->whd[1] = extent[1];
-        dout->whd[2] = extent[2];
-
-        dout->aspectRatio = (dout->whd[0] * dout->whd[1]) ? dout->whd[0] / dout->whd[1] : 0;
-
-        for (afxNat i = 0; i < dout->bufCnt; i++)
-        {
-            afxSurface surf = dout->buffers[i];
-            AfxAssertObject(surf, AFX_FCC_SURF);
-            AfxTextureSetExtent(&surf->tex, surf->tex.layerCnt, dout->whd);
-        }
-
-        //if (dout->impl->readjust(dout, whd))
-            //AfxThrowError();
-        // estava desativado?
-
-        afxFcc fcc = *(afxFcc *)AfxObjectGetVmt(&dout->obj);
-
-        if (fcc == AFX_FCC_WND || fcc == AFX_FCC_WPP)
-        {
-            RECT rect;
-            GetClientRect(NULL, &(rect));
-            dout->whdMax[0] = rect.right - rect.left;
-            dout->whdMax[1] = rect.bottom - rect.top;
-            dout->whdMax[2] = 1;
-        }
-
-        afxV3d extent;
-        AfxDrawOutputGetExtentNdc(dout, extent);
-        AfxEcho("Extent readjusted. (dout)%p -> %u, %f of %u; %u %f of %u", dout, dout->whd[0], extent[0], dout->whdMax[0], dout->whd[1], extent[1], dout->whdMax[1]);
-
-        dout->resizable = resizable;
-    }
+    (void)timeout;
     return err;
 }
 
-_SGL afxError _AfxDrawOutputSetExtentNdc(afxDrawOutput dout, afxV3d const extent) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+_SGL afxError _AfxDoutVmtDctxCb(afxDrawOutput dout, afxDrawContext from, afxDrawContext to)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssert(extent);
-    dout->whd[0] = (afxNat)AfxFromNdc(extent[0], dout->whdMax[0]);
-    dout->whd[1] = (afxNat)AfxFromNdc(extent[1], dout->whdMax[1]);
-    dout->whd[2] = (afxNat)AfxFromNdc(extent[2], dout->whdMax[2]);
-    return _AfxDrawOutputSetExtent(dout, dout->whd);
-}
+    // TODO discard pull request submissions too.
+    (void)from;
+    (void)to;
 
-_SGL afxError _AfxDoutDropAllSurfaces(afxDrawOutput dout)
-{
-    AfxEntry("dout=%p", dout);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-
-    for (afxNat i = 0; i < dout->bufCnt; i++)
-    {
-        afxSurface surf = dout->buffers[i];
-        AfxAssertObject(surf, AFX_FCC_SURF);
-
-        if (surf->swapchain.chain)
-        {
-            AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
-            AfxAssert(surf->swapchain.chain == &dout->swapchain);
-            AfxLinkageDrop(&surf->swapchain);
-        }
-
-        AfxObjectRelease(&surf->tex.obj);
-        dout->buffers[i] = NIL;
-    }
-
-    dout->bufCnt = 0;
-    return err;
-}
-
-_SGL afxBool _SglDoutEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawOutput dout = (void*)obj;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxBool _SglDoutEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawOutput dout = (void*)obj;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxError _AfxDoutDtor(afxDrawOutput dout)
-{
-    AfxEntry("dout=%p", dout);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    afxFcc fcc = *(afxFcc *)AfxObjectGetVmt(&dout->obj);
-
-    if (fcc == AFX_FCC_WND || fcc == AFX_FCC_WPP)
-    {
-        DragAcceptFiles(dout->wglWnd, FALSE);
-        ReleaseDC(dout->wglWnd, dout->wglDc);
-        CloseWindow(dout->wglWnd);
-        DestroyWindow(dout->wglWnd);
-    }
-
-    _AfxDoutDropAllSurfaces(dout);
-
-    AfxAssert(dout->swapchain.cnt == 0);
-    AfxTransistorDrop(&dout->buffersLock);
-
-    if (dout->title)
-        AfxStringDeallocate(dout->title);
-
-    return err;
-}
-
-_SGL afxDoutImpl const _AfxStdDoutWndImpl;
-afxDoutImpl const _AfxStdDoutWndImpl =
-{
-    AFX_FCC_WND,
-    "window",
-    _AfxDrawOutputSetExtent,
-    _AfxDrawOutputSetExtentNdc,
-    _AfxDrawOutputGetExtent,
-    _AfxDrawOutputGetExtentNdc,
-    _AfxDrawOutputGetBuffer,
-    _AfxDrawOutputEnumerateBuffers,
-    _AfxDrawOutputRequestBuffer,
-};
-
-_SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxEntry("dout=%p", dout);
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-
-    afxDrawContext dctx = AfxObjectGetProvider(&dout->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-
-    afxDrawDriver ddrv = AfxDrawOutputGetDriver(dout);
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    _sglDriverIdd *ddrvIdd = AfxDrawDriverGetIdd(ddrv);
-    AfxAssert(ddrvIdd->wglPrimeGlrc == _wglGetCurrentContext());
-    //AfxAssert(ddrvIdd->wglPrimeDc == _wglGetCurrentDC());
-
-    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-
-    dout->title = AfxStringAllocate(512, NIL, 0);
-
-    afxString title;
-    AfxStringWrapLiteral(&title, ddrvIdd->oglWndClss.lpszClassName, 0);
-    AfxStringCopy(dout->title, &title);
-
-    dout->wglWnd = CreateWindowA(ddrvIdd->oglWndClss.lpszClassName, ddrvIdd->oglWndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, dout->whd[0], dout->whd[1], NIL, NIL, ddrvIdd->oglWndClss.hInstance, NIL);
-
-    if (!(dout->wglWnd)) AfxThrowError();
+    if (from && from->vmt->cout(from, dout, FALSE)) AfxThrowError(); // ask dctx to unlink this dout
     else
     {
-        SetWindowLongPtr(dout->wglWnd, GWLP_USERDATA, (LONG_PTR)dout);
+        //AfxRegenerateDrawOutputBuffers(dout);
 
-        dout->wglDc = GetDC(dout->wglWnd);
-        //hdc = GetWindowDC(hwnd);
-
-        if (!(dout->wglDc)) AfxThrowError();
+        if (to && to->vmt->cout(to, dout, TRUE)) AfxThrowError(); // ask dctx to unlink this dout
         else
         {
+
+        }
+    }
+
+    AfxFormatString(dout->caption, "Draw Output %p (%s) --- Public Test Build --- QWADRO (c) 2017 SIGMA", dout, to && !err ? "On line" : "Off line");
+
+    return err;
+}
+
+_SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+    (void)timeout;
+    //_SglSwapBuffersNow(dout); // do black screen
+    sglDoutIdd *idd = dout->idd;
+
+    //if (idd->fcc == AFX_FCC_WND || idd->fcc == AFX_FCC_WPP)
+    {
+        SetWindowTextA(idd->wglWnd, AfxGetStringDataConst(dout->caption, 0));
+        //UpdateWindow(dout->wglWnd);
+    }
+    return err;
+}
+
+_SGL afxError _SglDoutVmtProcCb(afxDrawOutput dout, afxDrawThread dthr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+
+    return err;
+}
+
+_SGL afxError _SglDoutVmtDtorCb(afxDrawOutput dout)
+{
+    AfxEntry("dout=%p", dout);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+
+    sglDoutIdd *idd = dout->idd;
+
+    DragAcceptFiles(idd->wglWnd, FALSE);
+    ReleaseDC(idd->wglWnd, idd->wglDc);
+    CloseWindow(idd->wglWnd);
+    DestroyWindow(idd->wglWnd);
+    
+    AfxDeallocate(AfxGetDrawMemory(), idd);
+    dout->idd = NIL;
+
+    return err;
+}
+
+_SGL _afxDoutVmt SglDoutVmtWnd =
+{
+    _SglDoutVmtDtorCb,
+    _SglDoutVmtProcCb,
+    _AfxDoutVmtDctxCb,
+    _SglDoutVmtFlushCb,
+    _AfxDoutVmtReqCb,
+};
+
+_SGL _afxDoutVmt SglDoutVmtDsktp =
+{
+    _SglDoutVmtDtorCb,
+    _SglDoutVmtProcCb,
+    _AfxDoutVmtDctxCb,
+    _SglDoutVmtFlushCb,
+    _AfxDoutVmtReqCb,
+};
+
+_SGL BOOL CALLBACK _AfxFindShellWorkerWindowW32(HWND hwnd, LPARAM lParam)
+{
+    HWND* found = (HWND*)lParam;
+
+    if (FindWindowExA(hwnd, NULL, "SHELLDLL_DefView", NULL))
+        *found = FindWindowExA(NULL, hwnd, "WorkerW", NULL);
+
+    return TRUE;
+}
+
+_SGL HWND _AfxFindShellBackgroundWindowW32(void)
+{
+    HWND p = FindWindow("ProgMan", NULL);
+    HWND s = FindWindowEx(p, NULL, "SHELLDLL_DefView", NULL);
+    HWND dtw = FindWindowEx(s, NULL, "SysListView32", NULL);
+    return dtw;
+
+    // Windows 10 Method
+
+    SendMessageTimeoutA(FindWindowA("ProgMan", NULL), 0x052C, 0, 0, SMTO_NORMAL, 1000, NULL);
+    HWND hwnd = 0;
+    EnumWindows(_AfxFindShellWorkerWindowW32, (LPARAM)&(hwnd));
+    return hwnd;
+}
+
+static const afxString g_str_desktop = AFX_STRING_LITERAL("wallpapper");
+static const afxString g_str_window = AFX_STRING_LITERAL("window");
+
+_SGL afxError _SglDdrvVmtDoutCb(afxDrawOutput dout, afxUri const* endpoint, afxDrawOutputSpecification const *spec)
+{
+    AfxEntry("dout=%p,uri=%.*s", dout, AfxPushString(endpoint ? AfxUriGetStringConst(endpoint) : &AFX_STR_EMPTY));
+    afxError err = AFX_ERR_NONE;
+
+    afxDrawDriver ddrv = AfxGetDrawOutputDriver(dout);
+    AfxAssertObject(ddrv, AFX_FCC_DDRV);
+    _sglDdrvIdd *ddrvIdd = ddrv->idd;
+    //AfxAssert(ddrvIdd->wglPrimeGlrc == _wglGetCurrentContext());
+    //AfxAssert(ddrvIdd->wglPrimeDc == _wglGetCurrentDC());
+    afxNat unitIdx = AfxGetSystemProcessor();
+    if (!_wglMakeCurrent(ddrvIdd->dpus[unitIdx].wglDc, ddrvIdd->dpus[unitIdx].wglGlrc))
+        AfxThrowError();
+
+    afxString title;
+    AfxWrapStringLiteral(&title, ddrvIdd->oglWndClss.lpszClassName, 0);
+    AfxCopyString(dout->caption, &title);
+
+    sglDoutIdd *idd = AfxAllocate(AfxGetDrawMemory(), sizeof(*idd), 0, AfxSpawnHint());
+    dout->idd = idd;
+
+    afxBool isDesk = FALSE;
+    afxBool isWnd = FALSE;
+
+    afxUri name;
+
+    if (endpoint)
+        AfxExcerptUriName(&name, endpoint);
+    else
+        AfxResetUri(&name);
+
+    afxString const *surface = AfxUriGetStringConst(&name);
+
+    if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &g_str_window)) // print to window surface
+    {
+        idd->wglWnd = CreateWindowA(ddrvIdd->oglWndClss.lpszClassName, ddrvIdd->oglWndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddrvIdd->oglWndClss.hInstance, NIL);
+        isWnd = TRUE;
+    }
+    else if (0 == AfxCompareString(surface, &g_str_desktop))
+    {
+        idd->wglWnd = _AfxFindShellBackgroundWindowW32();// GetDesktopWindow();
+        isDesk = TRUE;
+    }
+
+    dout->vmt = &SglDoutVmtWnd;
+
+    if (!(idd->wglWnd)) AfxThrowError();
+    else
+    {
+        SetWindowLongPtr(idd->wglWnd, GWLP_USERDATA, (LONG_PTR)dout);
+
+        idd->wglDc = GetDC(idd->wglWnd);
+        //hdc = GetWindowDC(hwnd);
+
+        if (!(idd->wglDc)) AfxThrowError();
+        else
+        {
+            afxWhd const resolution = { GetDeviceCaps(idd->wglDc, HORZRES), GetDeviceCaps(idd->wglDc, VERTRES), GetDeviceCaps(idd->wglDc, PLANES) };
+            dout->refreshRate = GetDeviceCaps(idd->wglDc, VREFRESH);
+            afxReal64 physAspRatio = (afxReal64)GetDeviceCaps(idd->wglDc, HORZSIZE) / (afxReal64)GetDeviceCaps(idd->wglDc, VERTSIZE);
+            AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
+            AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.5, 0.5, 1));
+
             PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)_wglGetProcAddress("wglChoosePixelFormatARB");
-            
+
             if (!wglChoosePixelFormatARB) AfxThrowError();
             else
             {
-                afxNat bpp = AfxPixelFormatGetBpp(dout->pixelFmt);
-                afxNat colorBpp = (bpp == 32 ? 24 : bpp);
+                afxNat bpp = dout->pixelFmt ? AfxPixelFormatGetBpp(dout->pixelFmt) : GetDeviceCaps(idd->wglDc, BITSPIXEL);
+
+                if (!dout->pixelFmt)
+                    dout->pixelFmt = AFX_PIXEL_FMT_RGBA8;
+
+                //afxNat colorBpp = (bpp == 32 ? 24 : bpp);
                 afxNat alphaBpp = (bpp == 32 ? 8 : 0);
-                
-                int pxlAttrPairs[16][2] = { 0 };
 
-                pxlAttrPairs[0][0] = WGL_DRAW_TO_WINDOW_ARB;
-                pxlAttrPairs[0][1] = GL_TRUE;
+                if (!dout->bufCnt)
+                    dout->bufCnt = 2;
 
-                pxlAttrPairs[1][0] = WGL_SUPPORT_OPENGL_ARB;
-                pxlAttrPairs[1][1] = GL_TRUE;
+                if (!dout->bufUsage)
+                    dout->bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 
-                pxlAttrPairs[2][0] = WGL_ACCELERATION_ARB;
-                pxlAttrPairs[2][1] = WGL_FULL_ACCELERATION_ARB;
-
-                pxlAttrPairs[3][0] = WGL_DOUBLE_BUFFER_ARB;
-                pxlAttrPairs[3][1] = (dout->bufCnt > 1);
-
-                pxlAttrPairs[4][0] = WGL_PIXEL_TYPE_ARB;
-                pxlAttrPairs[4][1] = WGL_TYPE_RGBA_ARB; // WGL_TYPE_RGBA_FLOAT_ARB
-
-                pxlAttrPairs[5][0] = WGL_COLOR_BITS_ARB;
-                pxlAttrPairs[5][1] = bpp;
-
-                pxlAttrPairs[6][0] = WGL_ALPHA_BITS_ARB;
-                pxlAttrPairs[6][1] = alphaBpp;
-
-                //pxlAttrPairs[7][0] = WGL_DEPTH_BITS_ARB;
-                //pxlAttrPairs[7][1] = 24;
-
-                //pxlAttrPairs[8][0] = WGL_STENCIL_BITS_ARB;
-                //pxlAttrPairs[8][1] = 8;
-
-                pxlAttrPairs[7][0] = WGL_TRANSPARENT_ARB;
-                pxlAttrPairs[7][1] = (dout->presentAlpha != AFX_PRESENT_ALPHA_OPAQUE);
-
-                pxlAttrPairs[8][0] = WGL_SWAP_METHOD_ARB;
-                pxlAttrPairs[8][1] = dout->presentMode == AFX_PRESENT_MODE_IMMEDIATE ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB;
-
-                //pxlAttrPairs[10][0] = WGL_SAMPLE_BUFFERS_ARB; // works on Intel, didn't work on Mesa
-                //pxlAttrPairs[10][1] = GL_TRUE;
-
-                //pxlAttrPairs[11][0] = WGL_SAMPLES_ARB; // works on Intel, didn't work on Mesa
-                //pxlAttrPairs[11][1] = 8;
-
-                //pxlAttrPairs[13][0] = WGL_COLORSPACE_EXT; // works on Mesa, didn't work on Intel
-                //pxlAttrPairs[13][1] = dout->colorSpc == AFX_COLOR_SPACE_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == AFX_COLOR_SPACE_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL);
-
-                //pxlAttrPairs[14][0] = WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB; // works on Mesa, didn't work on Intel
-                //pxlAttrPairs[14][1] = (dout->colorSpc == AFX_COLOR_SPACE_SRGB);
-
-
-                pxlAttrPairs[9][0] = NIL;
-                pxlAttrPairs[9][1] = NIL;
+                int pxlAttrPairs[][2] =
+                {
+                    { WGL_DRAW_TO_WINDOW_ARB, GL_TRUE },
+                    { WGL_SUPPORT_OPENGL_ARB, GL_TRUE },
+                    { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB },
+                    { WGL_DOUBLE_BUFFER_ARB, (dout->bufCnt > 1)},
+                    { WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB}, // WGL_TYPE_RGBA_FLOAT_ARB
+                    { WGL_COLOR_BITS_ARB, bpp },
+                    { WGL_ALPHA_BITS_ARB, alphaBpp },
+                  //{ WGL_DEPTH_BITS_ARB, 24 }, // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
+                  //{ WGL_STENCIL_BITS_ARB, 8 },  // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
+                    { WGL_TRANSPARENT_ARB, (dout->presentAlpha != AFX_PRESENT_ALPHA_OPAQUE) },
+                    { WGL_SWAP_METHOD_ARB, (dout->presentMode == AFX_PRESENT_MODE_IMMEDIATE) ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB },
+                  //{ WGL_SAMPLE_BUFFERS_ARB,  GL_TRUE },  // works on Intel, didn't work on Mesa
+                  //{ WGL_SAMPLES_ARB, 8 }, // works on Intel, didn't work on Mesa
+                  //{ WGL_COLORSPACE_EXT, dout->colorSpc == AFX_COLOR_SPACE_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == AFX_COLOR_SPACE_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL) }, // works on Mesa, didn't work on Intel
+                  //{ WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, (dout->colorSpc == AFX_COLOR_SPACE_SRGB) }, // works on Mesa, didn't work on Intel
+                    { NIL, NIL },
+                };
 
                 UINT formatCount;
-                dout->wglDcPxlFmt = 0;
+                idd->wglDcPxlFmt = 0;
 
-                if (!wglChoosePixelFormatARB(dout->wglDc, &pxlAttrPairs[0][0], 0, 1, &(dout->wglDcPxlFmt), &(formatCount))) AfxThrowError();
+                if (!wglChoosePixelFormatARB(idd->wglDc, &pxlAttrPairs[0][0], 0, 1, &(idd->wglDcPxlFmt), &(formatCount))) AfxThrowError();
                 else
                 {
-                    AfxAssert(dout->wglDcPxlFmt);
+                    AfxAssert(idd->wglDcPxlFmt);
                     AfxAssert(formatCount);
 
                     PIXELFORMATDESCRIPTOR pfd;
                     AFX_ZERO(&pfd);
-                    _SglDescribePixelFormat(dout->wglDc, dout->wglDcPxlFmt, sizeof(pfd), &pfd);
+                    SglDescribePixelFormat(idd->wglDc, idd->wglDcPxlFmt, sizeof(pfd), &pfd);
 #if 0
                     pfd.nSize = sizeof(pfd);
                     pfd.nVersion = 1;
@@ -439,7 +356,7 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
 #endif
                     //dout->wglDcPxlFmt = _SglChoosePixelFormat(dout->wglDc, &(pfd));
 
-                    if (!_SglSetPixelFormat(dout->wglDc, dout->wglDcPxlFmt, &(pfd))) AfxThrowError();
+                    if (!SglSetPixelFormat(idd->wglDc, idd->wglDcPxlFmt, &(pfd))) AfxThrowError();
                     else
                     {
                         if (dout->presentAlpha)
@@ -448,192 +365,30 @@ _SGL afxError _AfxStdDoutImplCtorWnd(afxDrawOutput dout)
                             bb.dwFlags = DWM_BB_ENABLE;
                             bb.fEnable = TRUE;
                             bb.hRgnBlur = NULL;
-                            DwmEnableBlurBehindWindow(dout->wglWnd, &(bb));
+                            DwmEnableBlurBehindWindow(idd->wglWnd, &(bb));
                         }
 
                         //DragAcceptFiles(dout->wglWnd, TRUE);
 
-                        UpdateWindow(dout->wglWnd);
-                        ShowWindow(dout->wglWnd, SHOW_OPENWINDOW);
+                        if (isWnd)
+                        {
+                            SetWindowPos(idd->wglWnd, NULL, 0, 0, dout->resolution[0] / 2, dout->resolution[1] / 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+                        }
 
-                        dout->instanced = TRUE;
+                        UpdateWindow(idd->wglWnd);
+                        ShowWindow(idd->wglWnd, SHOW_OPENWINDOW);
+
+                        idd->instanced = TRUE;
                     }
                 }
             }
 
             if (err)
-                ReleaseDC(dout->wglWnd, dout->wglDc);
+                ReleaseDC(idd->wglWnd, idd->wglDc);
         }
 
-        if (err)
-            DestroyWindow(dout->wglWnd);
+        if (err && isWnd)
+            DestroyWindow(idd->wglWnd);
     }
     return err;
 }
-
-_SGL afxError _AfxStdDoutImplCtor(void *cache, afxDrawOutput dout, afxUri const *uri)
-{
-    AfxEntry("dout=%p,uri=%.*s", dout, AfxPushString(AfxUriGetStringConst(uri)));
-    afxError err = AFX_ERR_NONE;
-
-    afxUri name;
-    AfxUriExcerptName(uri, &name);
-    afxString const *surface = AfxUriGetStringConst(&name);
-    afxString tmp;
-
-    if (AfxStringIsEmpty(surface)) AfxThrowError();
-    else
-    {
-        AfxStringWrapLiteral(&tmp, _AfxStdDoutWndImpl.name, 0);
-
-        if (0 == AfxStringDiffer(surface, &tmp)) // print to window surface
-        {
-            if (_AfxStdDoutImplCtorWnd(dout))
-                AfxThrowError();
-        }
-        else
-        {
-            //AfxStringWrapLiteral(&tmp, _AfxStdDoutWppImpl.name, 0);
-
-            if (0 == AfxStringDiffer(surface, &tmp)) // print to desktop background surface
-            {
-                AfxError("Not implemented");
-            }
-            else
-            {
-                //AfxStringWrapLiteral(&tmp, _AfxStdDoutFileImpl.name, 0);
-
-                if (0 == AfxStringDiffer(surface, &tmp)) // print to file
-                {
-                    AfxError("Not implemented");
-                }
-                else
-                {
-                    AfxThrowError();
-                    AfxError("Not supported");
-                }
-            }
-        }
-    }
-
-    return err;
-}
-
-_SGL afxError _AfxDoutCtor(void *cache, afxNat idx, afxDrawOutput dout, afxDrawOutputSpecification const *specs)
-{
-    AfxEntry("dout=%p", dout);
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawOutputSpecification const *spec = &specs[idx];
-
-    afxDrawContext dctx = AfxDrawOutputGetContext(dout);
-
-    // absolute extent
-    dout->whdMax[0] = 1280;
-    dout->whdMax[1] = 720;
-    dout->whdMax[2] = 1;
-
-    dout->whd[0] = 1280;
-    dout->whd[1] = 720;
-    dout->whd[2] = 1;
-
-    dout->aspectRatio = dout->whd[0] / dout->whd[1];
-    dout->resizable = TRUE;
-
-    // swapchain-related data
-    dout->flags = NIL;
-    dout->surface = NIL; // usually a OS window handle
-    dout->pixelFmt = AFX_PIXEL_FMT_RGBA8; // or AFX_PIXEL_FMT_RGBA8R ?
-    dout->colorSpc = AFX_COLOR_SPACE_SRGB; // sRGB is the default
-    dout->bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
-    dout->bufCnt = 0;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
-    dout->lastAcqBufIdx = 0;
-    AfxChainDeploy(&dout->swapchain, dout);
-    AfxTransistorDeploy(&dout->buffersLock);
-
-    dout->presentAlpha = TRUE; // consider transparency for window composing.
-    dout->presentTransform = AFX_PRESENT_TRANSFORM_FLIP_V; // NIL leaves it as it is.
-    dout->presentMode = AFX_PRESENT_MODE_FIFO;
-    dout->clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
-
-    AfxV2dZero(dout->absCursorPos);
-    AfxV2dZero(dout->absCursorMove);
-    AfxV2dZero(dout->ndcCursorPos);
-    AfxV2dZero(dout->ndcCursorMove);
-
-    if (spec)
-    {
-        AfxAssert(spec->whd[0]);
-        AfxAssert(spec->whd[1]);
-        AfxAssert(spec->whd[2]);
-
-        dout->whd[0] = 1 + (spec->whd[0] - 1);
-        dout->whd[1] = 1 + (spec->whd[1] - 1);
-        dout->whd[2] = 1 + (spec->whd[2] - 1);
-    }
-    dout->aspectRatio = dout->whd[0] / dout->whd[1];
-    dout->resizable = TRUE;
-
-    if (spec)
-    {
-        // swapchain-related data
-        dout->pixelFmt = spec->pixelFmt;
-        dout->colorSpc = spec->colorSpc;
-        dout->bufUsage = spec->bufUsage;
-        dout->bufCnt = 0;// spec->bufCnt;
-        dout->presentAlpha = spec->presentAlpha;
-        dout->presentTransform = spec->presentTransform;
-        dout->presentMode = spec->presentMode;
-        dout->clipped = spec->clipped;
-    }
-
-    afxNat bufCnt = (1 + (spec->bufCnt - 1));
-    AfxAssert(bufCnt <= sizeof(dout->buffers) / sizeof(dout->buffers[0]));
-
-    for (afxNat i = 0; i < bufCnt; i++)
-    {
-        if (!(dout->buffers[i] = AfxDrawContextAcquireSurface(dctx, dout->pixelFmt, dout->whd, dout->bufUsage)))
-        {
-            AfxThrowError();
-            break;
-        }
-        else
-        {
-            ++dout->bufCnt;
-        }
-    }
-
-    dout->swapping = FALSE;
-    dout->lastAcqBufIdx = dout->bufCnt - 1; // to start at 0 instead of 1 we set to last one.
-
-    if (!err)
-    {
-        if ((AFX_SUCCESS != _AfxStdDoutImplCtor(cache, dout, spec->endpoint))) AfxThrowError();
-        else
-        {
-            dout->open = TRUE;
-        }
-    }
-
-    if (err)
-        _AfxDoutDropAllSurfaces(dout);
-
-    return err;
-}
-
-_SGL afxClassSpecification const _AfxDoutClassSpec;
-
-afxClassSpecification const _AfxDoutClassSpec =
-{
-    AFX_FCC_DOUT,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxDrawOutput)),
-    NIL,
-    (void*)_AfxDoutCtor,
-    (void*)_AfxDoutDtor,
-    .event = _SglDoutEventHandler,
-    .eventFilter = _SglDoutEventFilter,
-    "afxDrawOutput",
-    &_AfxStdDoutWndImpl
-};

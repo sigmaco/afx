@@ -91,8 +91,8 @@ AFX_OBJECT(afxCamera)
 
 AFX afxNode     AfxCameraGetNode(afxCamera cam);
 AFX afxFrustum* AfxCameraCopyFrustum(afxCamera cam, afxFrustum *frustum);
-AFX afxResult   AfxCameraCaptureNodes(afxCamera cam, afxM4d p, afxNode root, afxArray(afxNode)*captures);
-AFX afxResult   AfxCameraCaptureSpecificNodes(afxCamera cam, afxM4d p, afxNode root, afxArray(afxObject)*captures, afxNat typeCnt, afxFcc types[]);
+AFX afxResult   AfxCameraCaptureNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedNods);
+AFX afxResult   AfxCameraCaptureSpecificNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedObjs, afxNat typeCnt, afxFcc types[]);
 
 
 

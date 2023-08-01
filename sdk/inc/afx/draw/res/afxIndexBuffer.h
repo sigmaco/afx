@@ -21,7 +21,9 @@
 
 // Index buffer não armazena informação de tipo de primitivo porque, como o nome sugere, é um buffer de índice, não de primitivos.
 
-AFX_DEFINE_HANDLE(afxIndexBuffer);
+#if (defined(_AFX_INDEX_BUFFER_C) && !defined(_AFX_BUFFER_C))
+#   error "afxBuffer not exposed"
+#endif
 
 AFX_OBJECT(afxIndexBuffer)
 {
@@ -50,9 +52,10 @@ AFX_DEFINE_STRUCT(afxIndexBufferBlueprint)
     afxArray                regions;
 };
 
-AFX void const*             AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx);
+//AFX void const*             AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx);
 AFX afxNat                  AfxIndexBufferGetCap(afxIndexBuffer ibuf, afxNat rgnIdx);
 AFX afxNat                  AfxIndexBufferGetStride(afxIndexBuffer ibuf, afxNat rgnIdx);
+AFX afxNat                  AfxIndexBufferGetOffset(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx);
 AFX afxError                AfxIndexBufferOptimize(afxIndexBuffer ibuf);
 
 AFX afxError                AfxIndexBufferDump(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, void *dst, afxNat dstIdxStride); // copy out

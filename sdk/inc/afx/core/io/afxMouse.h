@@ -30,8 +30,6 @@ typedef enum
     AFX_MB_TOTAL
 } afxMouseButton;
 
-AFX_DEFINE_HANDLE(afxMouse);
-
 AFX_OBJECT(afxMouse)
 {
     AFX_OBJECT(afxHid)  hid;
@@ -45,29 +43,30 @@ AFX_OBJECT(afxMouse)
 #endif
 };
 
-AFX void*       AfxMouseGetSystem(afxMouse mse);
+AFX afxError    AfxEmulateMouseButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
+AFX afxError    AfxEmulateMouseMotion(afxMouse mse, afxReal const motion[2]);
+AFX afxError    AfxEmulateMouseWheelAction(afxMouse mse, afxReal delta);
 
-AFX afxError    AfxMouseEmulateButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
-AFX afxError    AfxMouseEmulateMotion(afxMouse mse, afxReal const motion[2]);
-AFX afxError    AfxMouseEmulateWheelAction(afxMouse mse, afxReal delta);
-AFX void        AfxMouseGetLastMotion(afxMouse mse, afxReal motion[2]);
-AFX afxReal     AfxMouseGetLastWheelData(afxMouse mse);
+AFX void        AfxGetLastMouseMotion(afxMouse mse, afxReal motion[2]);
+AFX afxReal     AfxGetLastMouseWheelData(afxMouse mse);
+
 AFX afxBool     AfxMouseHasHorizontalChanged(afxMouse mse, afxInt tolerance);
 AFX afxBool     AfxMouseHasVerticalChanged(afxMouse mse, afxInt tolerance);
-AFX afxBool     AfxMouseIsLmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseIsMmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseIsRmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseIsXmb1Pressed(afxMouse mse);
-AFX afxBool     AfxMouseIsXmb2Pressed(afxMouse mse);
-AFX afxBool     AfxMouseWasLmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseWasLmbReleased(afxMouse mse);
-AFX afxBool     AfxMouseWasMmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseWasMmbReleased(afxMouse mse);
-AFX afxBool     AfxMouseWasRmbPressed(afxMouse mse);
-AFX afxBool     AfxMouseWasRmbReleased(afxMouse mse);
-AFX afxBool     AfxMouseWasXmb1Pressed(afxMouse mse);
-AFX afxBool     AfxMouseWasXmb1Released(afxMouse mse);
-AFX afxBool     AfxMouseWasXmb2Pressed(afxMouse mse);
-AFX afxBool     AfxMouseWasXmb2Released(afxMouse mse);
+
+AFX afxBool     AfxIsLmbPressed(afxMouse mse);
+AFX afxBool     AfxIsMmbPressed(afxMouse mse);
+AFX afxBool     AfxIsRmbPressed(afxMouse mse);
+AFX afxBool     AfxIsXmb1Pressed(afxMouse mse);
+AFX afxBool     AfxIsXmb2Pressed(afxMouse mse);
+AFX afxBool     AfxWasLmbPressed(afxMouse mse);
+AFX afxBool     AfxWasLmbReleased(afxMouse mse);
+AFX afxBool     AfxWasMmbPressed(afxMouse mse);
+AFX afxBool     AfxWasMmbReleased(afxMouse mse);
+AFX afxBool     AfxWasRmbPressed(afxMouse mse);
+AFX afxBool     AfxWasRmbReleased(afxMouse mse);
+AFX afxBool     AfxWasXmb1Pressed(afxMouse mse);
+AFX afxBool     AfxWasXmb1Released(afxMouse mse);
+AFX afxBool     AfxWasXmb2Pressed(afxMouse mse);
+AFX afxBool     AfxWasXmb2Released(afxMouse mse);
 
 #endif//AFX_MOUSE_H

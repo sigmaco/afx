@@ -25,7 +25,9 @@
 #include "afx/core/time/afxTime.h"
 #include "afx/core/afxModule.h"
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/core/io/afxFileSystem.h"
+#include "afx/core/io/afxIoSystem.h"
+#include "afx/core/time/afxClock.h"
+#include "afx/core/async/afxThread.h"
 
 enum // opcodes used for primitive communication bethween engine and modules.
 {
@@ -42,10 +44,9 @@ AFX_DEFINE_STRUCT(afxSystemSpecification)
 {
     afxChar const                       *root;
     afxNat                              mntCnt;
-    afxStoragePointSpecification const    *mntSpecs;
+    afxStoragePointSpecification const  *mntSpecs;
     afxSize                             maxMemUsage;
 };
-
 
 AFX_OBJECT(afxSystem)
 {
@@ -55,8 +56,7 @@ AFX_OBJECT(afxSystem)
 
     afxUri*             rootDir;
 
-    afxClass            allClass;
-    afxClass            arenClass;
+    afxClass            memClass;
     afxClass            thrClass;
     afxClass            fsysClass;
     afxClass            mdleClass;
@@ -66,71 +66,80 @@ AFX_OBJECT(afxSystem)
     afxClass            dsysClass;
     afxClass            appClass; // can use everything
 
-    afxNat              nofProcessors;
+    afxMemory           genrlMem;
     afxNat              memPageSize; // The page size and the granularity of page protection and commitment.
-    afxFileSystem       baseFsys;
-    afxMemory        genrlMem;
-    afxModule           e2coree;
+    afxNat              hwConcurrencyCap; // # of logical proc units (hardware threads)
+    afxProcessor        procUnits[2];
+    afxNat              procUnitCnt;
     afxThread           deusExMachina;
+    afxModule           e2coree;
     afxKeyboard         stdKbd;
+
+    afxBool             isInBootUp;
+    afxBool             isInShutdown;
+    afxBool             operating;
+    afxBool             interruptionRequested;
 #endif
 };
 
-AFX afxMemory           AfxSystemAcquireMemory(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
-AFX afxArena            AfxSystemAcquireArena(afxSystem sys, afxAllocationStrategy const *strategy, afxHint const hint);
-AFX afxApplication      AfxSystemAcquireApplication(afxSystem sys, afxApplicationSpecification const *spec);
-AFX afxDrawSystem       AfxSystemAcquireDrawSystem(afxSystem sys, afxDrawSystemSpecification const *spec);
-AFX afxFileSystem       AfxSystemAcquireFileSystem(afxSystem sys, afxFileSystemSpecification const *spec);
-AFX afxHid              AfxSystemAcquireHid(afxSystem sys, afxNat port);
-AFX afxKeyboard         AfxSystemAcquireKeyboard(afxSystem sys, afxNat port);
-AFX afxModule           AfxSystemAcquireModule(afxSystem sys, afxUri const *uri);
-AFX afxMouse            AfxSystemAcquireMouse(afxSystem sys, afxNat port);
-AFX afxThread           AfxSystemAcquireThread(afxSystem sys, void (*start)(afxThread thr, void *udd), void *udd, void (*exec)(afxThread thr), afxHint const hint);
+AFX afxSystem           AfxGetSystem(void);
+AFX void                AfxShutdownSystem(void);
+AFX afxSystem           AfxBootUpSystem(afxSystemSpecification const *spec);
+AFX afxResult           AfxDoSystemThreading(afxTime timeout);
 
-AFX afxHid              AfxSystemFindHid(afxSystem sys, afxNat port);
-AFX afxKeyboard         AfxSystemFindKeyboard(afxSystem sys, afxNat port);
-AFX afxModule           AfxSystemFindModule(afxSystem sys, afxUri const *uri);
-AFX afxMouse            AfxSystemFindMouse(afxSystem sys, afxNat port);
+AFX afxMemory           AfxAcquireMemory(afxAllocationStrategy const *strategy, afxHint const hint);
+AFX afxApplication      AfxAcquireApplication(afxApplicationSpecification const *spec);
+AFX afxHid              AfxAcquireHid(afxNat port);
+AFX afxKeyboard         AfxAcquireKeyboard(afxNat port);
+AFX afxModule           AfxAcquireModule(afxUri const *uri);
+AFX afxMouse            AfxAcquireMouse(afxNat port);
 
-AFX afxClass*           AfxSystemGetMemoryClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetArenaClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetApplicationClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetDrawSystemClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetFileSystemClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetHidClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetKeyboardClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetModuleClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetMouseClass(afxSystem sys);
-AFX afxClass*           AfxSystemGetThreadClass(afxSystem sys);
+AFX afxHid              AfxFindHid(afxNat port);
+AFX afxKeyboard         AfxFindKeyboard(afxNat port);
+AFX afxModule           AfxFindModule(afxUri const *uri);
+AFX afxMouse            AfxFindMouse(afxNat port);
 
-AFX afxNat              AfxSystemGetMemPageSize(afxSystem sys);
-AFX afxNat              AfxSystemGetProcessorCount(afxSystem sys);
-AFX afxMemory           AfxSystemGetMemory(afxSystem sys);
-AFX afxFileSystem       AfxSystemGetFileSystem(afxSystem sys);
-AFX afxUri const*       AfxSystemGetRootUri(afxSystem sys, afxUri *copy);
-AFX afxString const*    AfxSystemGetRootUriString(afxSystem sys, afxString *copy);
+AFX afxClass*           AfxGetMemoryClass(void);
+AFX afxClass*           AfxGetApplicationClass(void);
+AFX afxClass*           AfxGetDrawSystemClass(void);
+AFX afxClass*           AfxGetIoSystemClass(void);
+AFX afxClass*           AfxGetHidClass(void);
+AFX afxClass*           AfxGetKeyboardClass(void);
+AFX afxClass*           AfxGetModuleClass(void);
+AFX afxClass*           AfxGetMouseClass(void);
+AFX afxClass*           AfxGetThreadClass(void);
 
-AFX afxResult           AfxSystemEnumerateMemories(afxSystem sys, afxNat base, afxNat cnt, afxMemory mem[]);
-AFX afxResult           AfxSystemEnumerateArenas(afxSystem sys, afxNat base, afxNat cnt, afxArena aren[]);
-AFX afxResult           AfxSystemEnumerateApplications(afxSystem sys, afxNat base, afxNat cnt, afxApplication app[]);
-AFX afxResult           AfxSystemEnumerateDrawSystems(afxSystem sys, afxNat base, afxNat cnt, afxDrawSystem dsys[]);
-AFX afxResult           AfxSystemEnumerateFileSystems(afxSystem sys, afxNat base, afxNat cnt, afxFileSystem fsys[]);
-AFX afxResult           AfxSystemEnumerateHids(afxSystem sys, afxNat base, afxNat cnt, afxHid hid[]);
-AFX afxResult           AfxSystemEnumerateKeyboards(afxSystem sys, afxNat base, afxNat cnt, afxKeyboard kbd[]);
-AFX afxResult           AfxSystemEnumerateModules(afxSystem sys, afxNat base, afxNat cnt, afxModule mdle[]);
-AFX afxResult           AfxSystemEnumerateMouses(afxSystem sys, afxNat base, afxNat cnt, afxMouse mse[]);
-AFX afxResult           AfxSystemEnumerateThreads(afxSystem sys, afxNat base, afxNat cnt, afxThread thr[]);
+AFX afxNat              AfxGetMemoryPageSize(void);
 
-AFX afxBool             AfxSystemNotify(afxSystem sys, afxObject *receiver, afxEvent *ev);
-AFX afxBool             AfxSystemEmitEvent(afxSystem sys, afxObject *receiver, afxEvent *ev);
-AFX afxBool             AfxSystemEmitEvents(afxSystem sys, afxNat cnt, afxObject *receiver[], afxEvent ev[]);
-AFX afxBool             AfxSystemReemitEvent(afxSystem sys, afxNat cnt, afxObject *receiver[], afxEvent *ev);
-AFX afxError            AfxSystemPostEvent(afxSystem sys, afxObject *receiver, afxEvent *ev);
-AFX afxError            AfxSystemPostEvents(afxSystem sys, afxNat cnt, afxObject *receiver[], afxEvent ev[]);
+/// Returns the ideal number of threads that this process can run in parallel. 
+/// This is done by querying the number of logical processors available to this process (if supported by this OS) or the total number of logical processors in the system. 
+/// This function returns 1 if neither value could be determined.
+AFX afxNat              AfxGetSystemConcurrencyCapacity(void);
 
-AFX afxSystem           AfxSystemGet(void);
-AFX afxSystem           AfxSystemBootUp(afxSystemSpecification const *spec);
-AFX afxResult           AfxSystemProcess(afxSystem sys);
+AFX afxMemory           AfxGetMainMemory(void);
+AFX afxUri const*       AfxGetSystemRootPath(afxUri *copy);
+AFX afxString const*    AfxGetSystemRootPathString(afxString *copy);
+
+AFX afxNat              AfxEnumerateMemories(afxNat first, afxNat cnt, afxMemory mem[]);
+AFX afxNat              AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication app[]);
+AFX afxNat              AfxEnumerateDrawSystems(afxNat first, afxNat cnt, afxDrawSystem dsys[]);
+AFX afxNat              AfxEnumerateIoSystems(afxNat first, afxNat cnt, afxIoSystem fsys[]);
+AFX afxNat              AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hid[]);
+AFX afxNat              AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[]);
+AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule mdle[]);
+AFX afxNat              AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[]);
+AFX afxNat              AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[]);
+
+AFX afxNat              AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
+
+// Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
+AFX afxBool             AfxEmitEvent(afxObject *receiver, afxEvent *ev);
+AFX afxBool             AfxEmitEvents(afxNat cnt, afxObject *receiver[], afxEvent ev[]);
+AFX afxBool             AfxReemitEvent(afxNat cnt, afxObject *receiver[], afxEvent *ev);
+
+
+AFX afxError            AfxPostEvent(afxObject *receiver, afxEvent *ev);
+AFX afxError            AfxPostEvents(afxNat cnt, afxObject *receiver[], afxEvent ev[]);
 
 AFX afxNat mainThreadId;
 

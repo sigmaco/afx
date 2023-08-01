@@ -20,20 +20,16 @@
 #define AFX_DRAW_SYSTEM_H
 
 #include "afx/draw/afxDrawDefs.h"
-#include "afx/draw/afxColor.h"
-#include "afx/draw/afxVertex.h"
-#include "afx/draw/afxDrawContext.h"
 #include "afx/draw/afxDrawDriver.h"
-#include "afx/draw/afxDrawInput.h"
-#include "afx/draw/afxDrawOutput.h"
-#include "afx/draw/afxDrawOperation.h"
+#include "afx/draw/afxDrawThread.h"
+
+#include "afx/draw/afxColor.h"
+#include "afx/draw/afxVertex1.h"
+
+#include "afx/draw/pipelining/afxDrawOperation.h"
 #include "afx/core/afxModule.h"
 #include "afx/afxApplication.h"
-#include "afx/core/io/afxFileSystem.h"
-
-// Criar novo formato .tga do Qwadro.
-
-//#define _AFX_DRAW_MULTITHREADED
+#include "afx/core/io/afxIoSystem.h"
 
 AFX_DECLARE_STRUCT(afxTextureStorageRegistry);
 
@@ -65,46 +61,57 @@ AFX_DEFINE_STRUCT(afxTextureStorageSpecification)
     afxError            (*downloadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
 };
 
+AFX_DEFINE_STRUCT(afxDrawSystemSpecification)
+{
+    afxMemory           genrlMem;
+};
+
 AFX_OBJECT(afxDrawSystem)
 {
     afxObject           obj;
 #ifdef _AFX_DRAW_SYSTEM_C
     afxChain            provisions;
     afxClass            ddrvClass;
-    afxFileSystem       fsys;
-    afxMemory        genrlMem;
+    afxClass            dthrClass;
+
+    afxMemory           mem;
+    afxArena            aren;
+
     afxChain            texIoCodecs;
-    afxModule           e2draw; // SIGGL is required for minimal support
+
+    afxModule           e2draw; // SIGMA GL is required for minimal operability
 #endif
 };
 
-AFX_DEFINE_STRUCT(afxDrawSystemSpecification)
-{
-    afxMemory           genrlMem;
-    afxFileSystem       fsys;
-};
+AFX afxDrawSystem       AfxGetDrawSystem(void);
+AFX void                AfxShutdownDrawSystem(void);
+AFX afxError            AfxBootUpDrawSystem(afxDrawSystemSpecification const *spec, afxDrawSystem *dsys);
 
-AFX void*               AfxDrawSystemGetSystem(afxDrawSystem dsys);
+AFX afxMemory           AfxGetDrawMemory(void);
 
-AFX afxDrawDriver       AfxDrawSystemRegisterDriver(afxDrawSystem dsys, afxModule mdle, afxDrawDriverSpecification const *spec);
-AFX afxDrawContext      AfxDrawSystemAcquireContext(afxDrawSystem dsys, afxDrawContextSpecification const *spec);
+AFX afxBool             AfxGetDrawDriver(afxNat drvIdx, afxDrawDriver *ddrv);
+AFX afxError            AfxRegisterDrawDriver(afxDrawDriverSpecification const *spec, afxDrawDriver *ddrv);
 
-AFX afxClass*           AfxDrawSystemGetDriverClass(afxDrawSystem dsys);
-AFX afxClass*           AfxDrawSystemGetContextClass(afxDrawSystem dsys, afxNat driverId);
-AFX afxMemory           AfxDrawSystemGetMemory(afxDrawSystem dsys);
-AFX afxFileSystem       AfxDrawSystemGetFileSystem(afxDrawSystem dsys);
-AFX afxDrawDriver       AfxDrawSystemGetDriver(afxDrawSystem dsys, afxNat idx);
-AFX afxNat              AfxDrawSystemGetDriverCount(afxDrawSystem dsys);
-AFX afxNat              AfxDrawSystemGetContextCount(afxDrawSystem dsys, afxNat driverId);
+AFX afxError            AfxAcquireDrawThreads(afxDrawThreadSpecification const *spec, afxNat cnt, afxDrawThread dthr[]);
+AFX afxError            AfxAcquireDrawContexts(afxDrawContextSpecification const *spec, afxNat cnt, afxDrawContext dctx[]);
+AFX afxError            AfxAcquireDrawOutputs(afxDrawOutputSpecification const *spec, afxNat cnt, afxDrawOutput dout[]);
+AFX afxError            AfxAcquireDrawInputs(afxDrawInputSpecification const *spec, afxNat cnt, afxDrawInput din[]);
 
-AFX afxResult           AfxDrawSystemEnumerateDrivers(afxDrawSystem dsys, afxNat base, afxNat cnt, afxDrawDriver ddrv[]);
-AFX afxResult           AfxDrawSystemEnumerateContexts(afxDrawSystem dsys, afxNat driverId, afxNat base, afxNat cnt, afxDrawContext dctx[]);
+AFX afxNat              AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread dthr[]);
+AFX afxNat              AfxEnumerateDrawDrivers(afxNat first, afxNat cnt, afxDrawDriver ddrv[]);
 
-AFX afxNat              AfxDrawSystemChooseTextureStorage(afxDrawSystem dsys, afxTexture tex, afxTextureRegion const *rgn);
-AFX afxResult           AfxDrawSystemDescribeTextureStorages(afxDrawSystem dsys, afxNat base, afxNat cnt, afxTextureStorageSpecification spec[]);
-AFX afxResult           AfxDrawSystemEnumerateTextureStorages(afxDrawSystem dsys, afxNat base, afxNat cnt, afxTextureStorageRegistry *storage[]);
-AFX afxResult           AfxDrawSystemRegisterTextureStorages(afxDrawSystem dsys, afxNat cnt, afxTextureStorageSpecification const spec[]);
+AFX afxNat              AfxCurateDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
+AFX afxNat              AfxCurateDrawDrivers(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDriver, void*), void *udd);
 
-AFX afxError            _AfxDrawSystemProcess(afxDrawSystem dsys); // Called by core execution system. Reserved for enginners at SIGMA.
+AFX afxNat              AfxGetDrawThreadCount(void);
+AFX afxNat              AfxGetDrawDriverCount(void);
+
+AFX afxClass*           AfxGetDrawThreadClass(void);
+AFX afxClass*           AfxGetDrawDriverClass(void);
+
+AFX afxNat              AfxChooseTextureStorage(afxTexture tex, afxTextureRegion const *rgn);
+AFX afxResult           AfxDescribeTextureStorages(afxNat first, afxNat cnt, afxTextureStorageSpecification spec[]);
+AFX afxResult           AfxEnumerateTextureStorages(afxNat first, afxNat cnt, afxTextureStorageRegistry *storage[]);
+AFX afxResult           AfxRegisterTextureStorages(afxNat cnt, afxTextureStorageSpecification const spec[]);
 
 #endif//AFX_DRAW_SYSTEM_H

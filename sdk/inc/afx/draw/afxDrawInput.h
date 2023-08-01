@@ -22,53 +22,57 @@
 #ifndef AFX_DRAW_INPUT_H
 #define AFX_DRAW_INPUT_H
 
-#include "afx/draw/afxDrawScript.h"
-#include "afx/draw/afxDrawOutput.h"
-
-#include "afx/draw/pipelining/afxLego.h"
-#include "afx/draw/pipelining/afxSampler.h"
-#include "afx/draw/res/afxBuffer.h"
-#include "afx/draw/res/afxCanvas.h"
-#include "afx/draw/res/afxIndexBuffer.h"
-#include "afx/draw/res/afxVertexBuffer.h"
-#include "afx/draw/afxDrawScript.h"
-#include "afx/core/mem/afxQueue.h"
-
-AFX_DEFINE_HANDLE(afxDrawInput);
+#include "afx/draw/afxDrawQueue.h"
+#include "afx/core/io/afxUri.h"
 
 AFX_DEFINE_STRUCT(afxDrawInputSpecification)
 {
+    afxNat              drvIdx;
+    afxUri const*       endpoint;
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
-    afxNat const*       enabledPresentationThreads;
-    afxNat const*       enabledSubmissionThreads;
-    afxNat const*       enabledStreamingThreads;
-    afxError            (*prefetch)(afxDrawInput din, afxNat queueIdx, void *udd);
-    void*               udd[4];
+    afxError            (*prefetch)(afxDrawInput,afxDrawThread);
+    void*               udd;
 };
 
-#ifndef AFX_DRAW_DRIVER_SRC
+AFX_DECLARE_STRUCT(_afxDinVmt);
 
 AFX_OBJECT(afxDrawInput)
 {
     afxObject           obj;
+    _afxDinVmt const*   vmt;
+    void*               idd;
+#ifdef _AFX_DRAW_INPUT_C
+    afxDrawContext      dctx; // bound context
+    afxMemory           mem;
+
+    afxArray            scripts;
+    afxNat              minScriptReserve;
+
+    afxError            (*userPrefetchProc)(afxDrawInput din, afxDrawThread dthr);
+    //afxSlock              prefetchSlock;
+    afxBool             prefetching;
+    afxBool             prefetchEnabled;
+    void*               udd;
+#endif
 };
 
-#endif
+AFX afxDrawDriver       AfxGetDrawInputDriver(afxDrawInput din);
 
-AFX afxDrawScript       AfxDrawInputAcquireScript(afxDrawInput din, afxBool recycle);
+AFX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[]);
 
-AFX void*               AfxDrawInputGetContext(afxDrawInput din);
-AFX void*               AfxDrawInputGetDriver(afxDrawInput din);
-AFX void*               AfxDrawInputGetDrawSystem(afxDrawInput din);
+// Connection
+AFX afxBool             AfxDrawInputIsConnected(afxDrawInput din);
+AFX afxDrawContext      AfxGetDrawInputConnectedContext(afxDrawInput din);
+AFX afxError            AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AFX afxError            AfxDisconnectDrawInput(afxDrawInput din);
 
-AFX afxError            AfxDrawInputTransferResources(afxDrawInput din, afxNat objectCnt, afxObject *objects[]);
-AFX afxError            AfxDrawInputSubmitScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
-AFX afxError            AfxDrawInputPresentRasters(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
+AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
+AFX afxError            AfxRecycleDrawInputScripts(afxDrawInput din, afxNat firstScrIdx, afxNat scrCnt);
 
-AFX afxError            AfxDrawInputAffineStreamingThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);
-AFX afxError            AfxDrawInputAffineSubmissionThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);
-AFX afxError            AfxDrawInputAffinePresentationThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);
-AFX afxError            AfxDrawInputAffinePrefetchThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[]);
+AFX afxError            AfxSubmitDrawInputScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
+AFX afxError            AfxSubmitDrawOutputPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
+
+AFX afxError            AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled);
 
 #endif//AFX_DRAW_INPUT_H

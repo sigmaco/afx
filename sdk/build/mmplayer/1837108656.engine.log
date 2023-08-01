@@ -1,0 +1,67 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(779e0c10, 00000000, 00000000, 779be664)
+ afxClass<afxSystem>::AllocateObjects(1, 0038eff8, 0038f008)
+ afxClass<afxSystem>::BuildObjects(1, 0038eff8, 00000000)
+ afxClass<afxSystem>::ConstructObject(0069f0f0)
+ afxSystem.c:893?_AfxSysCtor(sys=0069f0f0)
+ ADV afxSystem.c:916?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:917?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0069f13c, 0069f124, 00000000, 779c29d0)
+ afxMemory.c:128?AfxAcquireMemory(strategy=0038e110,hint="afxSystem.c:933!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0038dfd0, 0038dfe0)
+ afxClass<afxMemory>::BuildObjects(1, 0038dfd0, 0038dfc8)
+ afxClass<afxMemory>::ConstructObject(0069f8b0)
+ afxMemory.c:182?_AfxMemCtor(mem=0069f8b0)
+ afxClass<afxThread>::Mount(0069f1fc, 0069f124, 00000000, 779bed10)
+ afxClass<afxIoSystem>::Mount(0069f2bc, 0069f124, 00000000, 779c0438)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0038dfb4, 0038dfc4)
+ afxClass<afxIoSystem>::BuildObjects(1, 0038dfb4, 0038e0dc)
+ afxClass<afxIoSystem>::ConstructObject(0069fe90)
+ afxIoSystem.c:683?_AfxIoCtor(io=0069fe90)
+ afxArena.c:751?AfxAcquireArena(aren=0069fedc)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0069ff34, 0069fec4, 00000000, 779c017c)
+ afxClass<afxArchive>::Mount(0069fff4, 0069fec4, 0069ff34, 779bfb18)
+ afxClass<afxResource>::Mount(006a0174, 0069fec4, 00000000, 779c1448)
+ afxClass<afxUrd>::Mount(006a00b4, 0069fec4, 00000000, 779c1a28)
+ afxIoSystem.c:384?AfxMountStoragePoints(0069fe90,6,0038e2bc)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0069f37c, 0069f124, 00000000, 779bcf4c)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0038df84, 0038dfb8)
+ afxClass<afxModule>::BuildObjects(1, 0038df84, 0038e1f4)
+ afxClass<afxModule>::ConstructObject(006a4550)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ ERR afxUri.c:548?AfxExcerptUriPath
+    
+ ERR afxUri.c:548?AfxExcerptUriPath
+    (parent)
+    Invalid
+ ERR afxString.c:584?AfxExcerptStringRange
+    (parent)
+    Invalid
+ ERR afxString.c:58?AfxGetStringSize
+    (str)
+    Invalid

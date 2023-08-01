@@ -1,0 +1,200 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77a61c10, 00000000, 00000000, 77a3f664)
+ afxClass<afxSystem>::AllocateObjects(1, 003af440, 003af450)
+ afxClass<afxSystem>::BuildObjects(1, 003af440, 00000000)
+ afxClass<afxSystem>::ConstructObject(0015f070)
+ afxSystem.c:1005?_AfxSysCtor(sys=0015f070)
+ ADV afxSystem.c:1028?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1029?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0015f0bc, 0015f0a4, 00000000, 77a439b4)
+ afxMemory.c:128?AfxAcquireMemory(strategy=003ae510,hint="afxSystem.c:1045!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 003ae3a8, 003ae3b8)
+ afxClass<afxMemory>::BuildObjects(1, 003ae3a8, 003ae3a0)
+ afxClass<afxMemory>::ConstructObject(0015ac10)
+ afxMemory.c:182?_AfxMemCtor(mem=0015ac10)
+ afxClass<afxThread>::Mount(0015f17c, 0015f0a4, 00000000, 77a3fd78)
+ afxClass<afxIoSystem>::Mount(0015f23c, 0015f0a4, 00000000, 77a4141c)
+ afxClass<afxIoSystem>::AllocateObjects(1, 003ae38c, 003ae39c)
+ afxClass<afxIoSystem>::BuildObjects(1, 003ae38c, 003ae4dc)
+ afxClass<afxIoSystem>::ConstructObject(0015fde0)
+ afxIoSystem.c:683?_AfxIoCtor(io=0015fde0)
+ afxArena.c:751?AfxAcquireArena(aren=0015fe2c)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0015fe84, 0015fe14, 00000000, 77a41160)
+ afxClass<afxArchive>::Mount(0015ff44, 0015fe14, 0015fe84, 77a40afc)
+ afxClass<afxResource>::Mount(001600c4, 0015fe14, 00000000, 77a4242c)
+ afxClass<afxUrd>::Mount(00160004, 0015fe14, 00000000, 77a42a0c)
+ afxIoSystem.c:384?AfxMountStoragePoints(0015fde0,6,003ae704)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0015f2fc, 0015f0a4, 00000000, 77a3df4c)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 003ae35c, 003ae390)
+ afxClass<afxModule>::BuildObjects(1, 003ae35c, 003ae63c)
+ afxClass<afxModule>::ConstructObject(00164470)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0015f3bc, 0015f0a4, 00000000, 77a41780)
+ afxClass<afxKeyboard>::Mount(0015f47c, 0015f0a4, 0015f3bc, 77a42068)
+ afxClass<afxMouse>::Mount(0015f53c, 0015f0a4, 0015f3bc, 77a421e8)
+ afxClass<afxDrawSystem>::Mount(0015f5fc, 0015f0a4, 00000000, 77a46a1c)
+ afxClass<afxApplication>::Mount(0015f6bc, 0015f0a4, 00000000, 77a3d000)
+ afxKeyboard.c:156?AfxAcquireKeyboard(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 003ae3b0, 003ae3c0)
+ afxClass<afxKeyboard>::BuildObjects(1, 003ae3b0, 003ae3ac)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(001645a0)
+ afxClass<afxHid>::ConstructObject(001645a0)
+ afxHid.c:66?_AfxHidCtor(hid=001645a0)
+ afxClass<afxKeyboard>::ConstructObject(001645a0)
+ afxKeyboard.c:212?_AfxKbdCtor(kbd=001645a0)
+ ERR afxSystem.c:984?startCbOnSysProcUnit
+    
+ ERR afxSystem.c:984?startCbOnSysProcUnit
+    (osHandle == procUnit->osHandle)
+    Invalid
+ ERR afxSystem.c:985?startCbOnSysProcUnit
+    
+ ERR afxSystem.c:985?startCbOnSysProcUnit
+    (tid == procUnit->tid)
+    Invalid
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    (first)(0) + (cnt)(1) is out of range [0, 2007234523]
+ ERR afxSystem.c:1154?_AfxSysCtor
+    
+ ERR afxSystem.c:1154?_AfxSysCtor
+    (osHandle == procUnit->osHandle)
+    Invalid

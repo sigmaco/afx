@@ -1,0 +1,1408 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(50481c10, 00000000, 00000000, 5045f664)
+ afxClass<afxSystem>::AllocateObjects(1, 0028f344, 0028f354)
+ afxClass<afxSystem>::BuildObjects(1, 0028f344, 00000000)
+ afxClass<afxSystem>::ConstructObject(002ef070)
+ afxSystem.c:997?_AfxSysCtor(sys=002ef070)
+ ADV afxSystem.c:1020?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1021?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(002ef0bc, 002ef0a4, 00000000, 50463998)
+ afxMemory.c:128?AfxAcquireMemory(strategy=0028e42c,hint="afxSystem.c:1037!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0028e2b0, 0028e2c0)
+ afxClass<afxMemory>::BuildObjects(1, 0028e2b0, 0028e2a8)
+ afxClass<afxMemory>::ConstructObject(002eac10)
+ afxMemory.c:182?_AfxMemCtor(mem=002eac10)
+ afxClass<afxThread>::Mount(002ef17c, 002ef0a4, 00000000, 5045fd54)
+ afxClass<afxIoSystem>::Mount(002ef23c, 002ef0a4, 00000000, 50461400)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0028e294, 0028e2a4)
+ afxClass<afxIoSystem>::BuildObjects(1, 0028e294, 0028e3f8)
+ afxClass<afxIoSystem>::ConstructObject(002efde0)
+ afxIoSystem.c:683?_AfxIoCtor(io=002efde0)
+ afxArena.c:751?AfxAcquireArena(aren=002efe2c)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(002efe84, 002efe14, 00000000, 50461144)
+ afxClass<afxArchive>::Mount(002eff44, 002efe14, 002efe84, 50460ae0)
+ afxClass<afxResource>::Mount(002f00c4, 002efe14, 00000000, 50462410)
+ afxClass<afxUrd>::Mount(002f0004, 002efe14, 00000000, 504629f0)
+ afxIoSystem.c:384?AfxMountStoragePoints(002efde0,6,0028e608)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(002ef2fc, 002ef0a4, 00000000, 5045df4c)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0028e264, 0028e298)
+ afxClass<afxModule>::BuildObjects(1, 0028e264, 0028e540)
+ afxClass<afxModule>::ConstructObject(002f4470)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(002ef3bc, 002ef0a4, 00000000, 50461764)
+ afxClass<afxKeyboard>::Mount(002ef47c, 002ef0a4, 002ef3bc, 5046204c)
+ afxClass<afxMouse>::Mount(002ef53c, 002ef0a4, 002ef3bc, 504621cc)
+ afxClass<afxDrawSystem>::Mount(002ef5fc, 002ef0a4, 00000000, 504669fc)
+ afxClass<afxApplication>::Mount(002ef6bc, 002ef0a4, 00000000, 5045d000)
+ afxKeyboard.c:156?AfxAcquireKeyboard(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0028e2b8, 0028e2c8)
+ afxClass<afxKeyboard>::BuildObjects(1, 0028e2b8, 0028e2b4)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(002f45a0)
+ afxClass<afxHid>::ConstructObject(002f45a0)
+ afxHid.c:66?_AfxHidCtor(hid=002f45a0)
+ afxClass<afxKeyboard>::ConstructObject(002f45a0)
+ afxKeyboard.c:212?_AfxKbdCtor(kbd=002f45a0)
+ afxThread.c:807?AfxAcquireThread(spec=0028e3e0,start=00000000,udd=00000000,exec=00000000,hint="null:2679948!¢öEP]")
+ afxClass<afxThread>::AllocateObjects(1, 002ef85c, 0028e29c)
+ afxClass<afxThread>::BuildObjects(1, 002ef85c, 0028e3e0)
+ afxClass<afxThread>::ConstructObject(002f4e30)
+ afxThread.c:873?_AfxThrCtor(002f4e30)
+ afxThread.c:792?AfxStartThread(thr=002f4e30)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0028f344, 0028f354)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0028f344, 0028f430)
+ afxClass<afxDrawSystem>::ConstructObject(002f5c30)
+ afxDrawSystem.c:407?_AfxDsysCtor(dsys=002f5c30)
+ afxClass<afxDrawDriver>::Mount(002f5c78, 002f5c64, 00000000, 50465644)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:62?AfxAcquireModule(uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0028eeb4, 0028eee8)
+ afxClass<afxModule>::BuildObjects(1, 0028eeb4, 0028efb4)
+ afxClass<afxModule>::ConstructObject(002f5eb0)
+ afxModule.c:130?_AfxMdleCtor(uri:e2draw.icd)
+ afxDrawDriver.c:155?AfxRegisterDrawDriver(spec=519c8c40)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 0028eeb4, 0028eec4)
+ afxClass<afxDrawDriver>::BuildObjects(1, 0028eeb4, 519c8c40)
+ afxClass<afxDrawDriver>::ConstructObject(002f7db0)
+ afxDrawDriver.c:206?_AfxDdrvCtor(ddrv=002f7db0)
+ afxClass<afxDrawThread>::Mount(002f7e00, 002f7dec, 00000000, 50466d20)
+ afxClass<afxDrawContext>::Mount(002f7ec0, 002f7dec, 00000000, 50464154)
+ afxClass<afxDrawOutput>::Mount(002f7f80, 002f7dec, 00000000, 50465b10)
+ afxClass<afxDrawInput>::Mount(002f8040, 002f7dec, 00000000, 50465918)
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ Listing mem available display devices...
+
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ afxDrawThread.c:27?_AfxAcquireDrawThread(ddrv=002f7db0)
+ afxClass<afxDrawThread>::AllocateObjects(1, 0028e81c, 0028e838)
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid
+ afxClass<afxDrawThread>::BuildObjects(1, 0028e81c, 0028e8bc)
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    
+ ERR afxDrawSystem.c:122?AfxProcessDrawSystem
+    (mainThreadId == AfxGetTid())
+    Invalid

@@ -14,56 +14,62 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SURFACE_C
+#define _AFX_TEXTURE_C
+#define _AFX_DRAW_QUEUE_C
 #include "sgl.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/res/afxSurface.h"
 #include "../src/e2coree/draw/afxDrawParadigms.h"
 
-_SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
+_SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf, sglVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
-
-    sglVmt const* gl = &dque->wglVmt;
+    sglDqueIdd *dqueIdd = dque->idd;
 
     if (surf)
     {
-        if ((surf->updFlags & SGL_UPD_FLAG_DEVICE))
+        sglSurfIdd *idd = surf->idd;
+
+        if ((idd->updFlags & SGL_UPD_FLAG_DEVICE))
         {
-            if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_INST))
             {
-                if (surf->glHandle)
+                if (idd->glHandle)
                 {
-                    gl->DeleteRenderbuffers(1, &(surf->glHandle)); _SglThrowErrorOccuried();
-                    surf->glHandle = NIL;
+                    gl->DeleteRenderbuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                    idd->glHandle = NIL;
                 }
 
-                AfxAssert(NIL == surf->glHandle);
-                gl->GenRenderbuffers(1, &(surf->glHandle)); _SglThrowErrorOccuried();
-                gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
-                AfxAssert(gl->IsRenderBuffer(surf->glHandle));
+                AfxAssert(NIL == idd->glHandle);
+                gl->GenRenderbuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                gl->BindRenderbuffer(GL_RENDERBUFFER, idd->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsRenderBuffer(idd->glHandle));
                 AfxAssert(1 < surf->tex.whd[0]);
                 AfxAssert(1 < surf->tex.whd[1]);
 
-                if (!surf->tex.glIntFmt)
-                    SglDetermineGlTargetInternalFormatType(&surf->tex, &surf->tex.glTarget, &surf->tex.glIntFmt, &surf->tex.glFmt, &surf->tex.glType);
+                sglTexIdd*texIdd = surf->tex.idd;
 
-                gl->RenderbufferStorage(GL_RENDERBUFFER, surf->tex.glIntFmt, surf->tex.whd[0], surf->tex.whd[1]); _SglThrowErrorOccuried();
+                if (!texIdd->glIntFmt)
+                    SglDetermineGlTargetInternalFormatType(&surf->tex, &texIdd->glTarget, &texIdd->glIntFmt, &texIdd->glFmt, &texIdd->glType);
+
+                gl->RenderbufferStorage(GL_RENDERBUFFER, texIdd->glIntFmt, surf->tex.whd[0], surf->tex.whd[1]); _SglThrowErrorOccuried();
                 gl->BindRenderbuffer(GL_RENDERBUFFER, 0); _SglThrowErrorOccuried();
 
-                surf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
                 AfxEcho("afxSurface %p hardware-side data instanced.", surf);
             }
-            else if ((surf->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
-                AfxAssert(surf->glHandle);
+                AfxAssert(idd->glHandle);
                 //gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
                 AfxThrowError(); // cant't be modified by host
             }
         }
         else
         {
-            AfxAssert(surf->glHandle);
-            gl->BindRenderbuffer(GL_RENDERBUFFER, surf->glHandle); _SglThrowErrorOccuried();
+            AfxAssert(idd->glHandle);
+            gl->BindRenderbuffer(GL_RENDERBUFFER, idd->glHandle); _SglThrowErrorOccuried();
         }
     }
     else
@@ -73,113 +79,50 @@ _SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf)
     return err;
 }
 
-
-_SGL afxBool _SglSurfEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSurface surf = (void*)obj;
-    AfxAssertObject(surf, AFX_FCC_SURF);
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxBool _SglSurfEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSurface surf = (void*)obj;
-    AfxAssertObject(surf, AFX_FCC_SURF);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
 _SGL afxError _AfxSurfDtor(afxSurface surf)
 {
     AfxEntry("surf=%p", surf);
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
+    afxDrawContext dctx = AfxGetTextureContext(&surf->tex);
+    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
 
-    while (1)
+    sglSurfIdd *idd = surf->idd;
+
+    if (idd)
     {
-        if (!surf->swapchain.chain) break;
-        else
+        if (idd->glHandle)
         {
-            AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
-
-            // AfxLinkageDrop(&canv->queue); // we can't do it here. We need wait for draw context to liberate it.
-
-            afxDrawOutput dout = AfxLinkageGetOwner(&surf->swapchain);
-            AfxAssertObject(dout, AFX_FCC_DOUT);
-            //_SglDoutProcess(dout); // process until draw output ends its works and unlock this canvas.
-            AfxYield();
+            _SglDeleteGlRes(dctx, 2, idd->glHandle);
+            idd->glHandle = 0;
         }
-    }
-
-    if (surf->glHandle)
-    {
-        afxDrawContext dctx = AfxTextureGetContext(&surf->tex);
-        _SglEnqueueGlResourceDeletion(dctx, 0, 2, surf->glHandle);
-        surf->glHandle = 0;
+        AfxDeallocate(mem, idd);
+        surf->idd = NIL;
     }
 
     return err;
 }
 
-_SGL afxError _AfxSurfCtor(void *cache, afxNat idx, afxSurface surf, void *args)
+_SGL _afxSurfVmt _SglSurfVmt =
 {
-    (void)args;
+    _AfxSurfDtor
+};
+
+_SGL afxError _AfxSurfCtor(afxSurface surf)
+{
     AfxEntry("surf=%p", surf);
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
+    afxDrawContext dctx = AfxGetTextureContext(&surf->tex);
+    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
 
-    surf->state = AFX_SURF_STATE_IDLE;
-
-    AfxLinkageDeploy(&surf->swapchain, NIL);
-
-    //AfxInterlinkDeployAsB(&surf->interlinkSentinel, surf);
-
-    surf->glHandle = 0;
-    surf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+    surf->vmt = &_SglSurfVmt;
+    sglSurfIdd *idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint());
+    surf->idd = idd;
+    idd->glHandle = 0;
+    idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
     return err;
 }
-
-_SGL afxSurfImpl const _AfxStdSurfImpl;
-afxSurfImpl const _AfxStdSurfImpl =
-{
-    {
-        _AfxTextureGetColorSwizzling,
-        _AfxTextureGetData,
-        //_AfxTextureMeasure,
-        _AfxTextureGetExtent,
-        _AfxTextureGenerateLods,
-        _AfxTextureGetUri,
-        _AfxTextureGetFormat,
-        _AfxTextureGetLodCount,
-        _AfxTextureGetLayerCount,
-        _AfxTextureGetSampleCount,
-        _AfxTextureMap,
-        _AfxTextureSetExtent,
-        _AfxTextureTestFlags,
-        _AfxTextureTestUsageFlags,
-        _AfxTextureUnmap,
-        _AfxTextureUpdateRegions
-    }
-};
-
-_SGL afxClassSpecification const _AfxSurfClassSpec;
-
-afxClassSpecification const _AfxSurfClassSpec =
-{
-    AFX_FCC_SURF,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxSurface)),
-    NIL,
-    (void*)_AfxSurfCtor,
-    (void*)_AfxSurfDtor,
-    .event = _SglSurfEventHandler,
-    .eventFilter = _SglSurfEventFilter,
-    "afxSurface",
-    &_AfxStdSurfImpl
-};

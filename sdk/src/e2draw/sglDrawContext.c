@@ -18,6 +18,10 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 
+#define _AFX_DRAW_THREAD_C
+#define _AFX_THREAD_C
+#define _AFX_DRAW_QUEUE_C
+#define _AFX_DRAW_CONTEXT_C
 #include "sgl.h"
 #include "afx/core/afxTerminal.h"
 #include "afx/core/afxSystem.h"
@@ -27,339 +31,295 @@
 #include "afx/core/afxString.h"
 #include "../e2coree/draw/afxDrawParadigms.h"
 
-AFX afxClassSpecification const _AfxVbufClassSpec;
-AFX afxClassSpecification const _AfxIbufClassSpec;
-AFX afxClassSpecification const _AfxDopClassSpec;
-SGL afxClassSpecification const _AfxBufClassSpec;
-SGL afxClassSpecification const _AfxSmpClassSpec;
-SGL afxClassSpecification const _AfxTexClassSpec;
-SGL afxClassSpecification const _AfxSurfClassSpec;
-SGL afxClassSpecification const _AfxCanvClassSpec;
-SGL afxClassSpecification const _AfxPipClassSpec;
-SGL afxClassSpecification const _AfxShdClassSpec;
-SGL afxClassSpecification const _AfxLegtClassSpec;
-SGL afxClassSpecification const _AfxDscrClassSpec;
-SGL afxClassSpecification const _AfxDinClassSpec;
-SGL afxClassSpecification const _AfxDqueClassSpec;
-SGL afxClassSpecification const _AfxDoutClassSpec;
-
-// GET CLASS
-
-_SGL afxClass* _AfxDrawContextGetOperationClass(afxDrawContext dctx)
+_SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->dopClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-
-_SGL afxClass* _AfxDrawContextGetSurfaceClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->surfClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetOutputClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->doutClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetScriptClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->dscrClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetQueueClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->dengClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetInputClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->dinClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetTextureClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->texClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetIndexBufferClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->ibufClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetVertexBufferClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->vbufClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetBufferClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->bufClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetSamplerClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->smpClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetShaderClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->shdClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetLegoClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->legtClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetPipelineClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->pipClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxClass* _AfxDrawContextGetCanvasClass(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxClass *cls = &dctx->canvClass;
-    AfxAssertType(cls, AFX_FCC_CLS);
-    return cls;
-}
-
-_SGL afxMemory _AfxDrawContextGetMemory(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    return dctx->genrlMem;
-}
-
-_SGL afxBool _SglDctxEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawContext dctx = (void*)obj;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxBool _SglDctxEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawContext dctx = (void*)obj;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxError _AfxDctxDtor(afxDrawContext dctx)
-{
-    AfxEntry("dctx=%p", dctx);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-
-    _AfxDropClassChain(&dctx->provisions);
-
-    if (dctx->queues)
-    {
-        AfxDeallocate(dctx->genrlMem, dctx->queues);
-    }
+    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawThread dthr = udd;
+    AfxAssertObject(dthr, AFX_FCC_DTHR);
     
-    AfxObjectRelease(&(dctx->genrlMem->obj));
+    if (din->vmt->proc(din, dthr))
+        AfxThrowError();
 
-    return AFX_SUCCESS;
+    return FALSE; // don't interrupt curation;
 }
 
-_SGL afxDctxImpl const _AfxStdDctxImpl;
-afxDctxImpl const _AfxStdDctxImpl =
+_SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 {
-    .getClass =
-    {
-    _AfxDrawContextGetBufferClass,
-    _AfxDrawContextGetCanvasClass,
-    _AfxDrawContextGetIndexBufferClass,
-    _AfxDrawContextGetInputClass,
-    _AfxDrawContextGetOutputClass,
-    _AfxDrawContextGetShaderClass,
-    _AfxDrawContextGetPipelineClass,
-    _AfxDrawContextGetLegoClass,
-    _AfxDrawContextGetQueueClass,
-    _AfxDrawContextGetSamplerClass,
-    _AfxDrawContextGetScriptClass,
-    _AfxDrawContextGetSurfaceClass,
-    _AfxDrawContextGetTextureClass,
-    _AfxDrawContextGetVertexBufferClass,
-    _AfxDrawContextGetOperationClass,
-    },
-    .other =
-    {
-        _SglDrawContextFindLego
-    },
-    _AfxDrawContextGetMemory
-};
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawThread dthr = udd;
+    AfxAssertObject(dthr, AFX_FCC_DTHR);
 
-_SGL afxError _AfxDctxCtor(void *cache, afxNat idx, afxDrawContext dctx, _afxDctxCtorArgs const *args)
+    if (dout->vmt->proc(dout, dthr))
+        AfxThrowError();
+
+    return FALSE; // don't interrupt curation;
+}
+
+_SGL afxError _AfxDctxVmtProcCb(afxDrawContext dctx, afxDrawThread dthr)
 {
-    AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxDrawContextSpecification const *spec = args[idx].spec;
-    AfxAssert(spec);
+    AfxAssertObject(dthr, AFX_FCC_DTHR);
 
-    if (!(dctx->genrlMem = spec->genrlMem))
+    afxNat unitIdx = dthr->portIdx;
+    AfxAssertRange(dctx->cachedPortCnt, unitIdx, 1);
+
+    AfxCurateConnectedDrawInputs(dctx, 0, AfxGetConnectedDrawInputCount(dctx), _SglProcessInputCb, dthr);
+
+    for (afxNat i = 0; i < dctx->ports[unitIdx].queueCnt; i++)
     {
-        afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
-        dctx->genrlMem = AfxDrawSystemGetMemory(dsys);
+        afxDrawQueue dque = dctx->ports[unitIdx].queues[i];
+        AfxAssertObject(dque, AFX_FCC_DQUE);
+
+        dthr->dque = dque;
+        dthr->queueIdx = i;
+
+        if (dque->vmt->proc(dque, dthr))
+            AfxThrowError();
+
+        dthr->dque = NIL;
     }
 
-    AfxAssertObject(dctx->genrlMem, AFX_FCC_MEM);
+    AfxCurateConnectedDrawOutputs(dctx, 0, AfxGetConnectedDrawOutputCount(dctx), _SglProcessOutputCb, dthr);
 
-    if (!(AfxObjectReacquire(&dctx->genrlMem->obj, &dctx->obj, NIL, NIL, NIL))) AfxThrowError();
-    else
+    return err;
+}
+
+_SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssertObject(din, AFX_FCC_DIN);
+    afxNat slotIdx = AFX_INVALID_INDEX;
+
+    if (dctx->inputs)
     {
-        afxDrawDriver ddrv = AfxObjectGetProvider(&dctx->obj);
-        AfxAssertObject(ddrv, AFX_FCC_DDRV);
-        afxDrawSystem dsys = AfxObjectGetProvider(&ddrv->obj);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
-        afxSystem sys = AfxObjectGetProvider(&dsys->obj);
-        AfxAssertObject(sys, AFX_FCC_SYS);
+        for (afxNat i = 0; i < dctx->inputCap; i++)
+        {
+            if (din == dctx->inputs[i])
+            {
+                slotIdx = i;
+                break;
+            }
+        }
+    }
 
-        afxFileSystem fsys = AfxDrawSystemGetFileSystem(dsys);
-        AfxAssertObject(fsys, AFX_FCC_FSYS);
+    if (slotIdx != AFX_INVALID_INDEX)
+    {
+        AfxAssert(dctx->inputs);
 
-        afxChain *provisions = &dctx->provisions;
-        AfxChainDeploy(provisions, dctx);
-
-        afxNat queueCnt = spec->queueCnt ? spec->queueCnt : 1;
-        AfxAssert(queueCnt);
-        afxClassSpecification tmp = _AfxDqueClassSpec;
-        tmp.maxCnt = queueCnt;
-
-        AfxClassMount(&dctx->dscrClass, provisions, &_AfxDscrClassSpec);
-        AfxClassMount(&dctx->dinClass, provisions, &_AfxDinClassSpec);
-        AfxClassMount(&dctx->dengClass, provisions, &tmp);
-        AfxClassMount(&dctx->bufClass, provisions, &_AfxBufClassSpec);
-        tmp = _AfxVbufClassSpec;
-        tmp.vmt = &_SglBufImpl;
-        AfxClassMountInherited(&dctx->vbufClass, AfxDrawContextGetBufferClass(dctx), provisions, &tmp);
-        tmp = _AfxIbufClassSpec;
-        tmp.vmt = &_SglBufImpl;
-        AfxClassMountInherited(&dctx->ibufClass, AfxDrawContextGetBufferClass(dctx), provisions, &tmp);
-        AfxClassMount(&dctx->smpClass, provisions, &_AfxSmpClassSpec);
-        AfxClassMount(&dctx->texClass, provisions, &_AfxTexClassSpec);
-        AfxClassMountInherited(&dctx->surfClass, AfxDrawContextGetTextureClass(dctx), provisions, &_AfxSurfClassSpec);
-        AfxClassMount(&dctx->canvClass, provisions, &_AfxCanvClassSpec);
-        AfxClassMount(&dctx->shdClass, provisions, &_AfxShdClassSpec);
-        AfxClassMount(&dctx->pipClass, provisions, &_AfxPipClassSpec);
-        AfxClassMount(&dctx->dopClass, provisions, &_AfxDopClassSpec);
-        AfxClassMount(&dctx->legtClass, provisions, &_AfxLegtClassSpec);
-        AfxClassMount(&dctx->doutClass, provisions, &_AfxDoutClassSpec);
-
-        dctx->queueCnt = 0; // increased by init on each one
-
-        if (!(dctx->queues = AfxAllocate(dctx->genrlMem, sizeof(dctx->queues[0]) * queueCnt, AfxSpawnHint()))) AfxThrowError();
+        if (connect)
+        {
+            AfxThrowError(); // already connected to connect
+        }
         else
         {
-            for (afxNat i = 0; i < queueCnt; i++)
-            {
-                afxDrawQueueSpecification dqueSpec = { 0 };
-                dqueSpec.idx = i;
-                dqueSpec.autonomous = !!spec->autonomousQueue;
-
-                if (!(dctx->queues[i] = AfxDrawContextAcquireQueue(dctx, &dqueSpec))) AfxThrowError();
-                else
-                {
-                    ++dctx->queueCnt;
-                }
-            }
-
-            AfxTransistorDeploy(&dctx->texInstantiationLock);
-            AfxTransistorDeploy(&dctx->shdInstantiationLock);
-
-            dctx->open = TRUE;
-
-            if (spec->autonomousQueue)
-            {
-                for (afxNat i = 0; i < dctx->queueCnt; i++)
-                {
-                    AfxThreadStart(dctx->queues[i]->thread);
-                    AfxYield();
-                }
-            }
-
-            if (err)
-            {
-                AfxAssert(dctx->queues);
-
-                for (afxNat i = 0; i < dctx->queueCnt; i++)
-                    while (0 < AfxObjectRelease(&dctx->queues[i]->obj));
-
-                AfxDeallocate(dctx->genrlMem, dctx->queues);
-            }
-        }
-
-        if (err)
-        {
-            _AfxDropClassChain(&dctx->provisions);
-
-            AfxObjectRelease(&(dctx->genrlMem->obj));
+            dctx->inputs[slotIdx] = NIL; // disconnect
+            --dctx->inputCnt;
         }
     }
+    else
+    {
+        if (!connect)
+        {
+            AfxThrowError(); // not connected to disconnect
+        }
+        else
+        {
+            if (dctx->inputCap > dctx->inputCnt)
+            {
+                for (afxNat i = 0; i < dctx->inputCap; i++)
+                {
+                    if (!dctx->inputs[i])
+                    {
+                        dctx->inputs[i] = din;
+                        ++dctx->inputCnt;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                AfxAssert(dctx->inputCap == dctx->inputCnt);
+                afxMemory mem = AfxGetDrawContextMemory(dctx);
+                AfxAssertObject(mem, AFX_FCC_MEM);
+                void *boundDins = AfxReallocate(mem, dctx->inputs, (dctx->inputCap + 1) * sizeof(dctx->inputs[0]), 0, AfxSpawnHint());
+
+                if (!boundDins) AfxThrowError();
+                else
+                {
+                    dctx->inputs = boundDins;
+                    dctx->inputs[dctx->inputCnt] = din;
+                    ++dctx->inputCap;
+                    ++dctx->inputCnt;
+                }
+            }
+        }
+    }
+    return err;
+}
+
+_SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxNat slotIdx = AFX_INVALID_INDEX;
+
+    if (dctx->outputs)
+    {
+        for (afxNat i = 0; i < dctx->outputCap; i++)
+        {
+            if (dout == dctx->outputs[i])
+            {
+                slotIdx = i;
+                break;
+            }
+        }
+    }
+
+    if (slotIdx != AFX_INVALID_INDEX)
+    {
+        AfxAssert(dctx->outputs);
+
+        if (connect)
+        {
+            AfxThrowError(); // already connected to connect
+        }
+        else
+        {
+            dctx->outputs[slotIdx] = NIL; // disconnect
+            --dctx->outputCnt;
+        }
+    }
+    else
+    {
+        if (!connect)
+        {
+            AfxThrowError(); // not connected to disconnect
+        }
+        else
+        {
+            if (dctx->outputCap > dctx->outputCnt)
+            {
+                for (afxNat i = 0; i < dctx->outputCap; i++)
+                {
+                    if (!dctx->outputs[i])
+                    {
+                        dctx->outputs[i] = dout;
+                        ++dctx->outputCnt;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                AfxAssert(dctx->outputCap == dctx->outputCnt);
+                afxMemory mem = AfxGetDrawContextMemory(dctx);
+                AfxAssertObject(mem, AFX_FCC_MEM);
+                void *boundDouts = AfxReallocate(mem, dctx->outputs, (dctx->outputCap + 1) * sizeof(dctx->outputs[0]), 0, AfxSpawnHint());
+
+                if (!boundDouts) AfxThrowError();
+                else
+                {
+                    dctx->outputs = boundDouts;
+                    dctx->outputs[dctx->outputCnt] = dout;
+                    ++dctx->outputCap;
+                    ++dctx->outputCnt;
+                }
+            }
+        }
+    }
+    return err;
+}
+
+_SGL afxError _SglDctxVmtDtor(afxDrawContext dctx)
+{
+    AfxEntry("dctx=%p", dctx);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    sglDctxIdd*idd = dctx->idd;
+
+    /// Deinstantiate all items here
+
+    AfxDeallocate(dctx->mem, dctx->idd);
+    dctx->idd = NIL;
+
+    return err;
+}
+
+_SGL _afxDctxVmt SglDctxVmt = 
+{
+    _SglDctxVmtDtor,
+    _AfxDctxVmtProcCb,
+    _AfxDctxVmtDoutCb,
+    _AfxDctxVmtDinCb,
+    _SglDctxVmtDscrCb,
+    _AfxCanvCtor,
+    _SglTexCtor,
+    _AfxSurfCtor,
+    _AfxShdCtor,
+    _AfxPipCtor,
+    _SglBufCtor,
+    NIL,
+    _AfxSmpCtor
+};
+
+_SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextSpecification const *spec)
+{
+    AfxEntry("dctx=%p", dctx);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    //AfxAssert(spec);
+
+    afxDrawDriver ddrv = AfxGetDrawContextDriver(dctx);
+    AfxAssertObject(ddrv, AFX_FCC_DDRV);
+    
+    dctx->vmt = &SglDctxVmt;
+
+    sglDctxIdd *idd = AfxAllocate(dctx->mem, sizeof(*idd), 0, AfxSpawnHint());
+    dctx->idd = idd;
+
+    afxUri uri;
+    AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba.xml", 0);
+    //AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
+    //idd->presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
+
+    AfxAcquireDrawOperations(dctx, 1, &uri, &idd->presentDop);
+
+    AfxAssertObject(idd->presentDop, AFX_FCC_DOP);
+
+    afxSamplerSpecification smpSpec = { 0 };
+    smpSpec.magFilter = AFX_TEXEL_FLT_POINT;
+    smpSpec.minFilter = AFX_TEXEL_FLT_POINT;
+    smpSpec.mipmapFilter = AFX_TEXEL_FLT_POINT;
+    smpSpec.uvw[0] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
+    smpSpec.uvw[1] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
+    smpSpec.uvw[2] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
+
+    AfxAcquireSamplers(dctx, 1, &smpSpec, &idd->presentSmp);
+    AfxAssertObject(idd->presentSmp, AFX_FCC_SAMP);
+
+    afxString tmpStr;
+    AfxWrapStringLiteral(&tmpStr, "a_xy", 0);
+    const afxV2d vtxPos[] =
+    {
+        { -1.0,  1.0 },
+        { -1.0, -1.0 },
+        {  1.0,  1.0 },
+        {  1.0, -1.0 },
+    };
+
+    afxVertexBufferBlueprint vbub;
+    AfxVertexBufferBlueprintReset(&vbub, 4);
+    AfxVertexBufferBlueprintAddRow(&vbub, &tmpStr, AFX_VTX_FMT_V2D, AFX_VTX_USAGE_POS, vtxPos, AFX_VTX_FMT_V2D);
+    AfxBuildVertexBuffers(dctx, 1, &vbub, &idd->presentVbuf);
+    AfxAssertObject(idd->presentVbuf, AFX_FCC_VBUF);
+
+    idd->presentFboGpuHandle = 0;
+
+
     return err;
 }

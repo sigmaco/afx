@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="e2idtech">
+      <UniqueIdentifier>{003959cc-8184-4c5f-8ad0-75685a0917fc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\e2idtech\afxIdTech.c">
+      <Filter>e2idtech</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2idtech\afxMD5Model.c">
+      <Filter>e2idtech</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2idtech\afxRoqVideo.c">
+      <Filter>e2idtech</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\e2idtech\afxMD5Model.h">
+      <Filter>e2idtech</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\e2idtech\afxRoqVideo.h">
+      <Filter>e2idtech</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -41,12 +41,12 @@ typedef enum afxMutexType
     AFX_MTX_RECURSIVE
 } afxMutexType;
 
-AFX afxResult       AfxMutexDeploy(afxMutex *mtx, afxMutexType type);
-AFX void            AfxMutexDrop(afxMutex *mtx);
+AFX afxResult       AfxAcquireMutex(afxMutex *mtx, afxMutexType type);
+AFX void            AfxReleaseMutex(afxMutex *mtx);
 
-AFX afxResult       AfxMutexLock(afxMutex *mtx);
-AFX afxResult       AfxMutexLockTimed(afxMutex *mtx, afxTimeSpec const* ts);
-AFX afxResult       AfxMutexTryLock(afxMutex *mtx);
-AFX afxResult       AfxMutexUnlock(afxMutex *mtx);
+AFX afxResult       AfxLockMutex(afxMutex *mtx);
+AFX afxResult       AfxLockMutexTimed(afxMutex *mtx, afxTimeSpec const* ts);
+AFX afxResult       AfxTryLockMutex(afxMutex *mtx);
+AFX afxResult       AfxUnlockMutex(afxMutex *mtx);
 
 #endif//AFX_MUTEX_H

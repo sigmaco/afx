@@ -14,425 +14,70 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_INPUT_C
+#define _AFX_DRAW_CONTEXT_C
 #include "sgl.h"
 #include "afx/afxQwadro.h"
+#include "afx/draw/afxDrawInput.h"
 
-_SGL void _AfxDinDscrHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawInput din = (void*)obj;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssertObject(ev->obj, AFX_FCC_DSCR);
-    //AfxAssertConnection(&dout->din);
-    //AfxAssert(AfxConnectionGetObject(&dout->din) == ev->obj);
 
-    if (ev->type == AFX_EVENT_OBJ_DESTROYED)
-    {
-        AfxError("Draw script %p attached to draw input device %p was destroyed.", ev->obj, obj);
-        while (0 < AfxObjectRelease(&din->obj));
-    }
-}
 
-_SGL afxError _AfxDrawInputProcess(afxDrawInput din, afxNat queueIdx)
+_SGL afxError _AfxDinVmtDctxCb(afxDrawInput din, afxDrawContext from, afxDrawContext to)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
+    // TODO discard pull request submissions too.
+    (void)from;
+    (void)to;
 
-    if (din->prefetchThreadEnabled[queueIdx])
-    {
-        if (AfxTransistorTryEnterExclusive(&din->prefetchLock))
-        {
-            if (din->prefetchProc)
-                din->prefetchProc(din, queueIdx, din->udd);
+    //AfxDiscardAllDrawInputSubmissions(din);
 
-            AfxTransistorExitExclusive(&din->prefetchLock);
-        }
-    }
-    return err;
-}
-
-_SGL afxError _AfxDrawInputAffinePrefetchThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssert(cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        din->prefetchThreadEnabled[base + i] = enabled[i];
-
-    return err;
-}
-
-_SGL afxError _AfxDrawInputAffineStreamingThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssert(cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        din->streamingThreadEnabled[base + i] = enabled[i];
-
-    return err;
-}
-
-_SGL afxError _AfxDrawInputAffineSubmissionThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssert(cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        din->submissionThreadEnabled[base + i] = enabled[i];
-
-    return err;
-}
-
-_SGL afxError _AfxDrawInputAffinePresentationThreads(afxDrawInput din, afxNat base, afxNat cnt, afxNat const enabled[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssert(cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        din->presentationThreadEnabled[base + i] = enabled[i];
-
-    return err;
-}
-
-_SGL afxError _AfxDrawInputSubmitScripts(afxDrawInput din, afxNat scriptCnt, afxDrawScript scripts[])
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawWorkload dwrk;
-    AfxGetTime(&dwrk.timestamp);
-    dwrk.type = AFX_DRAW_WORK_TYPE_SUBMISSION;
-    dwrk.submission.scriptCnt = 0;
-
-    for (afxNat i = 0; i < scriptCnt; ++i)
-    {
-        AfxAssertObject(scripts[i], AFX_FCC_DSCR);
-
-        if (scripts[i]->state != AFX_DSCR_STATE_EXECUTABLE)
-        {
-            AfxThrowError();
-            break;
-        }
-
-        scripts[i]->state = AFX_DSCR_STATE_PENDING;
-        //AfxObjectReacquire(&scripts[i]->obj, &din->obj, NIL, 0, NIL);
-        dwrk.submission.scripts[i] = scripts[i];
-        ++dwrk.submission.scriptCnt;
-    }
-
-    AfxTransistorEnterExclusive(&din->submissionLock);
-
-    if (AfxQueuePush(&din->submissionQueue, &dwrk))
-        AfxThrowError();
-
-    AfxTransistorExitExclusive(&din->submissionLock);
-
-    return err;
-}
-
-_SGL afxError _AfxDrawInputPresentRasters(afxDrawInput din, afxNat outputCnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawWorkload dwrk;
-    AfxGetTime(&dwrk.timestamp);
-    dwrk.type = AFX_DRAW_WORK_TYPE_PRESENTATION;
-    dwrk.presentation.outputCnt = 0;
-
-    for (afxNat i = 0; i < outputCnt; ++i)
-    {
-        AfxAssertObject(outputs[i], AFX_FCC_DOUT);
-
-        if (outputs[i]->buffers[outputBufIdx[i]]->state == AFX_SURF_STATE_PENDING)
-        {
-            AfxThrowError();
-            break;
-        }
-        //AfxObjectReacquire(&outputs[i]->obj, &din->obj, NIL, 0, NIL);
-        dwrk.presentation.outputs[i] = outputs[i];
-        dwrk.presentation.outputBufIdx[i] = outputBufIdx[i];
-        ++dwrk.presentation.outputCnt;
-    }
-
-    AfxTransistorEnterExclusive(&din->presentationLock);
-
-    if (AfxQueuePush(&din->presentationQueue, &dwrk))
-        AfxThrowError();
-
-    AfxTransistorExitExclusive(&din->presentationLock);
-    
-    return err;
-}
-
-_SGL afxError _AfxDrawInputTransferResources(afxDrawInput din, afxNat resCnt, afxObject *resources[])
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawWorkload dwrk;
-    AfxGetTime(&dwrk.timestamp);
-    dwrk.type = AFX_DRAW_WORK_TYPE_STREAMING;
-    dwrk.streaming.resCnt = 0;
-
-    for (afxNat i = 0; i < resCnt; ++i)
-    {
-        //AfxAssertObject(resources[i], AFX_FCC_DOUT);
-
-        //if (outputs[i]->buffers[outputBufIdx[i]]->state == AFX_SURF_STATE_PENDING)
-        {
-            //AfxThrowError();
-            //break;
-        }
-
-        //AfxObjectReacquire(resources[i], &din->obj, NIL, 0, NIL);
-        dwrk.streaming.resources[i] = resources[i];
-        ++dwrk.streaming.resCnt;
-    }
-
-    AfxTransistorEnterExclusive(&din->streamingLock);
-
-    if (AfxQueuePush(&din->streamingQueue, &dwrk))
-        AfxThrowError();
-
-    AfxTransistorExitExclusive(&din->streamingLock);
-    
-    return err;
-}
-
-_SGL afxError _SglDinDiscardWorkloads(afxDrawInput din)
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawWorkload const *dwrk;
-    AfxTransistorEnterExclusive(&din->streamingLock);
-    AfxTransistorEnterExclusive(&din->submissionLock);
-    AfxTransistorEnterExclusive(&din->presentationLock);
-
-    while ((dwrk = AfxQueuePull(&din->streamingQueue)))
-    {
-        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_STREAMING);
-
-        AfxQueuePop(&din->streamingQueue);
-    }
-
-    while ((dwrk = AfxQueuePull(&din->submissionQueue)))
-    {
-        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_SUBMISSION);
-
-        for (afxNat i = 0; i < dwrk->submission.scriptCnt; ++i)
-        {
-            AfxAssertObject(dwrk->submission.scripts[i], AFX_FCC_DSCR);
-            dwrk->submission.scripts[i]->state = AFX_DSCR_STATE_EXECUTABLE;
-        }
-        AfxQueuePop(&din->submissionQueue);
-    }
-
-    while ((dwrk = AfxQueuePull(&din->presentationQueue)))
-    {
-        AfxAssert(dwrk->type == AFX_DRAW_WORK_TYPE_PRESENTATION);
-
-        for (afxNat i = 0; i < dwrk->presentation.outputCnt; ++i)
-        {
-            AfxAssertObject(dwrk->presentation.outputs[i], AFX_FCC_DOUT);
-            dwrk->presentation.outputs[i]->buffers[dwrk->presentation.outputBufIdx[i]]->state = AFX_SURF_STATE_PRESENTABLE;            
-        }
-        AfxQueuePop(&din->presentationQueue);
-    }
-
-    AfxTransistorExitExclusive(&din->streamingLock);
-    AfxTransistorExitExclusive(&din->submissionLock);
-    AfxTransistorExitExclusive(&din->presentationLock);
-}
-
-_SGL afxDinImpl _AfxStdDinImpl =
-{
-    _AfxDrawInputTransferResources,
-    _AfxDrawInputSubmitScripts,
-    _AfxDrawInputPresentRasters,
-    _AfxDrawInputAffineStreamingThreads,
-    _AfxDrawInputAffineSubmissionThreads,
-    _AfxDrawInputAffinePresentationThreads,
-    _AfxDrawInputAffinePrefetchThreads
-};
-
-_SGL afxBool _SglDinEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawInput din = (void*)obj;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxBool _SglDinEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawInput din = (void*)obj;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxError _AfxDinDtor(afxDrawInput din)
-{
-    AfxEntry("din=%p", din);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    
-    afxNat falses[] = { FALSE, FALSE, FALSE, FALSE };
-
-    // avoid draw thread entrance
-    AfxDrawInputAffineStreamingThreads(din, 0, 4, falses);
-    AfxDrawInputAffineSubmissionThreads(din, 0, 4, falses);
-    AfxDrawInputAffinePresentationThreads(din, 0, 4, falses);
-    AfxDrawInputAffinePrefetchThreads(din, 0, 4, falses);
-
-    _SglDinDiscardWorkloads(din);
-    AfxYield();
-#if 0
-    AfxTransistorEnterExclusive(&din->presentationLock);
-    AfxTransistorEnterExclusive(&din->submissionLock);
-    AfxTransistorEnterExclusive(&din->streamingLock);
-    AfxTransistorEnterExclusive(&din->fetchLock);
-#else
-    while (!AfxTransistorTryEnterExclusive(&din->prefetchLock)) AfxYield();
-    while (!AfxTransistorTryEnterExclusive(&din->streamingLock)) AfxYield();
-    while (!AfxTransistorTryEnterExclusive(&din->submissionLock)) AfxYield();
-    while (!AfxTransistorTryEnterExclusive(&din->presentationLock)) AfxYield();
-#endif
-    AfxQueueDrop(&din->presentationQueue);
-    AfxQueueDrop(&din->submissionQueue);
-    AfxQueueDrop(&din->streamingQueue);
-
-    AfxTransistorDrop(&din->presentationLock);
-    AfxTransistorDrop(&din->submissionLock);
-    AfxTransistorDrop(&din->streamingLock);
-    AfxTransistorDrop(&din->prefetchLock);
-
-    return err;
-}
-
-_SGL afxError _AfxDinCtor(void *cache, afxNat idx, afxDrawInput din, afxDrawInputSpecification const *specs)
-{
-    AfxEntry("din=%p", din);
-    afxError err = AFX_ERR_NONE;
-
-    afxDrawInputSpecification const *spec = &specs[idx];
-    AfxAssert(spec);
-    AfxAssert(spec->estimatedSubmissionCnt);
-    afxNat estimatedSubmissionCnt = spec->estimatedSubmissionCnt;
-
-    afxDrawContext dctx = AfxDrawInputGetContext(din);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-
-    afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
-
-    afxSystem sys = AfxObjectGetProvider(&(dsys->obj));
-    AfxAssertObject(sys, AFX_FCC_SYS);
-
-    afxAllocationStrategy const as =
-    {
-        sizeof(afxByte),
-        AFX_SIMD_ALIGN,
-        spec->cmdPoolMemStock,
-        spec->cmdPoolMemStock,
-        AFX_ALL_DUR_TRANSIENT,
-        FALSE
-    };
-
-    for (afxNat i = 0; i < dctx->queueCnt; i++)
-    {
-        din->prefetchThreadEnabled[i] = FALSE; // must be explicitally enabled to avoid unready fetches.
-
-        din->streamingThreadEnabled[i] = spec->enabledStreamingThreads ? spec->enabledStreamingThreads[i] : TRUE;
-        din->submissionThreadEnabled[i] = spec->enabledSubmissionThreads ? spec->enabledSubmissionThreads[i] : TRUE;
-        din->presentationThreadEnabled[i] = spec->enabledPresentationThreads ? spec->enabledPresentationThreads[i] : TRUE;
-    }
-
-    if (!(din->cmdAll = AfxSystemAcquireArena(sys, &as, AfxSpawnHint()))) AfxThrowError();
+    if (from && from->vmt->cin(from, din, FALSE)) AfxThrowError(); // ask dctx to unlink this dout
     else
     {
-        if (AfxTransistorDeploy(&din->streamingLock)) AfxThrowError();
+        if (to && to->vmt->cin(to, din, TRUE)) AfxThrowError(); // ask dctx to unlink this dout
         else
         {
-            if (AfxQueueDeploy(&din->streamingQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
-            else
-            {
-                if (AfxTransistorDeploy(&din->submissionLock)) AfxThrowError();
-                else
-                {
-                    if (AfxQueueDeploy(&din->submissionQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
-                    else
-                    {
-                        if (AfxTransistorDeploy(&din->presentationLock)) AfxThrowError();
-                        else
-                        {
-                            if (AfxQueueDeploy(&din->presentationQueue, sizeof(afxDrawWorkload), 32)) AfxThrowError();
-                            else
-                            {
-                                if (AfxTransistorDeploy(&din->prefetchLock)) AfxThrowError();
-                                else
-                                {
-                                    din->prefetchProc = spec->prefetch;
-
-                                    din->udd[0] = spec->udd[0];
-                                    din->udd[1] = spec->udd[1];
-                                    din->udd[2] = spec->udd[2];
-                                    din->udd[3] = spec->udd[3];
-
-                                    if (err)
-                                        AfxTransistorDrop(&din->prefetchLock);
-                                }
-
-                                if (err)
-                                    AfxQueueDrop(&din->presentationQueue);
-                            }
-
-                            if (err)
-                                AfxTransistorDrop(&din->presentationLock);
-                        }
-
-                        if (err)
-                            AfxQueueDrop(&din->submissionQueue);
-                    }
-                    
-                    if (err)
-                        AfxTransistorDrop(&din->submissionLock);
-                }
-
-                if (err)
-                    AfxQueueDrop(&din->streamingQueue);
-            }
-            
-            if (err)
-                AfxTransistorDrop(&din->streamingLock);
+            //AfxDiscardAllDrawInputSubmissions(din);
         }
-
-        if (err)
-            AfxObjectRelease((void*)din->cmdAll);
     }
+
+    //AfxDiscardAllDrawInputSubmissions(din);
 
     return err;
 }
 
-_SGL afxClassSpecification const _AfxDinClassSpec;
-
-afxClassSpecification const _AfxDinClassSpec =
+_SGL afxError _AfxDinVmtProcCb(afxDrawInput din, afxDrawThread dthr)
 {
-    AFX_FCC_DIN,
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(din, AFX_FCC_DIN);
+
+    if (din->prefetchEnabled)
+    {
+        //if (AfxTryEnterSlockExclusive(&din->prefetchSlock))
+        {
+            if (din->userPrefetchProc)
+                din->userPrefetchProc(din, dthr);
+
+            //AfxExitSlockExclusive(&din->prefetchSlock);
+        }
+    }
+    return err;
+}
+
+_SGL _afxDinVmt const _SglDinVmt =
+{
     NIL,
-    0,
-    sizeof(AFX_OBJECT(afxDrawInput)),
-    NIL,
-    (void*)_AfxDinCtor,
-    (void*)_AfxDinDtor,
-    .event = _SglDinEventHandler,
-    .eventFilter = _SglDinEventFilter,
-    "afxDrawInput",
-    &_AfxStdDinImpl
+    _AfxDinVmtProcCb,
+    _AfxDinVmtDctxCb,
 };
+
+_SGL afxError _SglDdrvVmtDinCb(afxDrawInput din, afxUri const* endpoint, afxDrawInputSpecification const *spec)
+{
+    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxUriGetStringConst(endpoint)) : &AFX_STR_EMPTY);
+    afxError err = AFX_ERR_NONE;
+
+    din->vmt = &_SglDinVmt;
+
+    return err;
+}

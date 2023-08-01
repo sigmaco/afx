@@ -6,6 +6,8 @@
 #include "afx/core/diag/afxDebug.h"
 #include "afx/math/afxMathDefs.h"
 #include "afx/core/io/afxMouse.h"
+#include "../src/e2idtech/afxMD5Model.h"
+#include "../src/e2cad/afxWavefrontObject.h"
 
 #define ENABLE_DRAW 1
 
@@ -41,8 +43,8 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
     // camera up and down, but it should be clear how to add one.
-    const afxReal ForwardSpeed = (AfxKeyboardIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyboardIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
-    const afxReal RightSpeed = (AfxKeyboardIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyboardIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
+    const afxReal ForwardSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
+    const afxReal RightSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
 
     AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
@@ -106,10 +108,11 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
+    doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 
-    dout = AfxDrawContextAcquireOutput(dctx, &doutSpec);
+    dout = AfxAcquireDrawOutputs(&doutSpec);
     AfxAssert(dout);
+    AfxReconnectDrawOutput(dout, dctx);
 
     AfxSimulationAcquireRenderers(sim, 1, NIL, &rnd);
 
@@ -120,7 +123,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     afxModel mdl;
     //AfxAcquireSky();
 
-    //AfxUriFormat(&uri, "%.*s/scenario/zero/zero.obj", AfxPushString(AfxApplication_GetArtDirectory(app)));
+    //AfxFormatUri(&uri, "%.*s/scenario/zero/zero.obj", AfxPushString(AfxApplication_GetArtDirectory(app)));
     //afxArray assets;
     //AfxDeployArray(&assets, NIL, 0, sizeof(void*));
     //AfxLoadAssets(sim, &uri);
@@ -128,7 +131,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxUriWrapLiteral(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
     AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
-    AfxUriExcerptObject(&uriMap, &uriMap2);
+    AfxExcerptUriObject(&uriMap2, &uriMap);
     AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
 
     //AfxUriWrapLiteral(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
@@ -138,17 +141,17 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     //AfxUriWrapLiteral(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
     AfxUriWrapLiteral(&uriMap, "art/object/container/container.obj", 0);
-    AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
+    //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
-    //AfxStringWrapLiteral(&str, "bibliotheca", 0);
+    //AfxWrapStringLiteral(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
-    //AfxStringWrapLiteral(&str, "zero", 0);
-    //AfxStringWrapLiteral(&str, "container", 0);
+    //AfxWrapStringLiteral(&str, "zero", 0);
+    //AfxWrapStringLiteral(&str, "container", 0);
 
 
-    AfxUriExcerptObject(&uriMap, &uriMap2);
+    AfxExcerptUriObject(&uriMap2, &uriMap);
     AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
@@ -159,12 +162,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     body = AfxSimulationAcquireBody(sim, &str, NIL, mdl);
     AfxAssert(body);
 #endif
-    //AfxStringCopyLiteral(&str, 0, "zero");
+    //AfxCopyStringLiteral(&str, 0, "zero");
     //afxBody body2;
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
-    AfxStringWrapLiteral(&str, "viewer", 0);
+    AfxWrapStringLiteral(&str, "viewer", 0);
     cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
     AfxAssert(cam);
     //cam->farClip = -100000.0;
@@ -172,11 +175,11 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     //AfxAttachViewpoint(vpnt, cam);
 
-    kbd = AfxSystemFindKeyboard(sys, 0);
-    mse = AfxSystemFindMouse(sys, 0);
+    kbd = AfxFindKeyboard(0);
+    mse = AfxFindMouse(0);
     AfxObjectInstallEventFilter(&mse->hid.obj, &cam->nod.obj);
 
-    AfxDrawInputAffinePrefetchThreads(rnd->din, 0, 1, (afxNat[]) { 1 }); // bug: sem isso não desenha
+    AfxEnableDrawInputPrefetching(rnd->din, 1); // bug: sem isso não desenha
 
     return AFX_SUCCESS; 
 }
@@ -184,7 +187,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
 {
     AfxEntry("app=%p", app);
-    //AfxObjectRelease(&din->obj);
+    //AfxReleaseObject(&din->obj);
     AfxEcho("aaaaaaaaaaaa");
 
     return AFX_SUCCESS;
@@ -202,43 +205,41 @@ int main(int argc, char const* argv[])
 
     afxUri2048 romUri;
     AfxUri2048(&romUri);
-    AfxUriFormat(&romUri.uri, "%s", argv[0]); // hardcoded name
+    AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;
     while (reboot)
     {
-        sys = AfxSystemBootUp(NIL);
+        sys = AfxBootUpSystem(NIL);
+
         afxDrawSystemSpecification dsysSpec = { 0 };
-        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
+        dsys = AfxBootUpDrawSystem(&dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
-        dctxSpec.driverId = 0;
-        dctxSpec.queueCnt = 1;
 
-        dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
+        dctx = AfxAcquireDrawContexts(&dctxSpec);
         AfxAssert(dctx);
 
-        afxApplicationSpecification appSpec = { 0 };
+        afxApplicationSpecification appSpec;
         appSpec.argc = argc;
         appSpec.argv = argv;
         appSpec.dctx = dctx;
         appSpec.enter = AfxEnterApplication;
         appSpec.exit = AfxLeaveApplication;
         appSpec.update = AfxUpdateApplication;
-        TheApp = AfxSystemAcquireApplication(sys, &appSpec);
+        TheApp = AfxAcquireApplication(&appSpec);
         AfxAssertObject(TheApp, AFX_FCC_APP);
 
-        if (AFX_OPCODE_BREAK == AfxApplicationExecute(TheApp))
+        if (AFX_OPCODE_BREAK == AfxRunApplication(TheApp))
             reboot = 0;
 
-        AfxObjectRelease(&TheApp->obj);
+        AfxReleaseObject(&TheApp->obj);
 
-        AfxObjectRelease(&dctx->obj);
+        AfxReleaseObject(&dctx->obj);
 
-        AfxObjectRelease(&dsys->obj);
-
-        AfxObjectRelease(&sys->obj);
+        AfxShutdownDrawSystem();
+        AfxShutdownSystem();
     }
     Sleep(3000);
     return 0;

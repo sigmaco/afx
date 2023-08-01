@@ -17,7 +17,15 @@
 /sdk/exp
 /sdk/src/e2coree/**/*.h
 /sdk/src/e2coree/**/*.c
-/sdk/src/e2coree/deps/
+/sdk/src/e2bang/**/*.c
+/sdk/src/e2bink/**/*.c
+/sdk/src/e2cad/**/*.c
+/sdk/src/e2miles/**/*.c
+/sdk/src/e2granny3d/**/*.c
+/sdk/src/e2idtech/**/*.c
+/sdk/src/e2rw/**/*.c
+/sdk/src/e2goldsrc/**/*.c
+/sdk/src/e2coree/deps/**
 /art/building/sponza
 /art/exp
 /art/fmv/ubi.bik

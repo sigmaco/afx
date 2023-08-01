@@ -28,12 +28,12 @@ AFX_DEFINE_STRUCT(AfxCondition)
     afxByte             data[48];
 };
 
-AFX afxResult           AfxConditionDeploy(AfxCondition *cond);
-AFX void                AfxConditionDrop(AfxCondition *cond);
+AFX afxResult           AfxAcquireWaitCondition(AfxCondition *cond);
+AFX void                AfxReleaseWaitCondition(AfxCondition *cond);
 
-AFX afxResult           AfxConditionSignalSingle(AfxCondition *cond);
-AFX afxResult           AfxConditionSignalMultiple(AfxCondition *cond);
-AFX afxResult           AfxConditionWait(AfxCondition *cond, afxMutex *mtx);
-AFX afxResult           AfxConditionWaitTimed(AfxCondition *cond, afxMutex *mtx, afxTimeSpec const *ts);
+AFX afxResult           AfxSignalSingleCondition(AfxCondition *cond);
+AFX afxResult           AfxSignalMultipleCondition(AfxCondition *cond);
+AFX afxResult           AfxWaitCondition(AfxCondition *cond, afxMutex *mtx);
+AFX afxResult           AfxWaitTimedCondition(AfxCondition *cond, afxMutex *mtx, afxTimeSpec const *ts);
 
 #endif//AFX_CONDITION_H

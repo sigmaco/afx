@@ -171,7 +171,7 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 
 #define AFX_FLAG_MIN ((afxNat)1 << (afxNat)0)
 #define AFX_FLAG_MAX ((afxNat)1 << (afxNat)31)
-#define AFX_FLAG(bit) ((afxNat)1 << (afxNat)bit)
+#define AFX_FLAG(bit) ((afxNat)1 << (afxNat)(bit))
 #define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
 
 #define AfxFlagsTest(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
@@ -180,26 +180,6 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
 #define AFX_INVALID_INDEX (afxNat)(~((afxNat)0))
-
-// The QWADRO Specification is regularly updated with bug fixes and clarifications.
-// Occasionally new functionality is added to the core and at some point it is expected that there will be a desire to perform a large, 
-// breaking change to the API. In order to indicate to developers how and when these changes are made to the specification, 
-// and to provide a way to identify each set of changes, the QWADRO API maintains a version number.
-
-// The major version indicates a significant change in the API, which will encompass a wholly new version of the specification.
-// The minor version indicates the incorporation of new functionality into the core specification.
-// The patch version indicates bug fixes, clarifications, and language improvements have been incorporated into the specification.
-
-// Compatibility guarantees made about versions of the API sharing any of the same version numbers are documented in Core Versions
-// The version number is used in several places in the API.In each such use, the version numbers are packed into a 32 - bit integer as follows :
-// - The major version is a 10 - bit integer packed into bits 31 - 22.
-// - The minor version number is a 10 - bit integer packed into bits 21 - 12.
-// - The patch version number is a 12 - bit integer packed into bits 11 - 0.
-
-#define AFX_MAKE_VERSION(major_, minor_, patch_) ((((afxNat32)(major_)) << 22) | (((afxNat32)(minor_)) << 12) | ((afxNat32)(patch_)))
-#define AFX_VER_MAJOR(ver_) ((afxNat32)(ver_) >> 22)
-#define AFX_VER_MINOR(ver_) (((afxNat32)(ver_) >> 12) & 0x3FFU)
-#define AFX_VER_PATCH(ver_) ((afxNat32)(ver_) & 0xFFFU)
 
 #define AfxContainerOf(link_, type_, entry_) ((type_ *)(((afxByte *)(link_)) - offsetof(type_, entry_)))
 
@@ -297,9 +277,24 @@ typedef enum afxCriterion
 }
 afxCriterion;
 
+// Object handles defined by Core Execution System
 
 AFX_DEFINE_HANDLE(afxSystem);
-AFX_DEFINE_HANDLE(afxFileSystem);
+AFX_DEFINE_HANDLE(afxIoSystem);
+AFX_DEFINE_HANDLE(afxThread);
+AFX_DEFINE_HANDLE(afxMemory);
+AFX_DEFINE_HANDLE(afxDatabase);
+AFX_DEFINE_HANDLE(afxModule);
+AFX_DEFINE_HANDLE(afxUrd);
+AFX_DEFINE_HANDLE(afxArchive);
+AFX_DEFINE_HANDLE(afxFile);
+AFX_DEFINE_HANDLE(afxApplication);
+AFX_DEFINE_HANDLE(afxIoSystem);
+AFX_DEFINE_HANDLE(afxHid);
+AFX_DEFINE_HANDLE(afxKeyboard);
+AFX_DEFINE_HANDLE(afxMouse);
+AFX_DEFINE_HANDLE(afxResource);
+
 
 AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len);
 

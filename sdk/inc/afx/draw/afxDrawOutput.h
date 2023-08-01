@@ -14,19 +14,26 @@
  *                                    www.sigmaco.org
  */
 
-// afxDrawOutput é um objeto que abstrai a ideia de swapchain junto a surface da plataforma.
+/// afxDrawOutput é um objeto que abstrai a ideia de swapchain junto a surface da plataforma.
 
-// Swapchains are a list of images, accessible by the operating system for display to the screen.
-// You canv create swapchains with more or less images, but generally you will want only 2 or 3 images to perform double - buffer or triple - buffer rendering.
+/// Swapchains are a list of images, accessible by the operating system for display to the screen.
+/// You canv create swapchains with more or less images, but generally you will want only 2 or 3 images to perform double-buffer or triple-buffer rendering.
 
-// afxDrawOutput devices operates framebuffers, swapchains, windowSurface and window(?).
+/// afxDrawOutput devices operates framebuffers, swapchains, windowSurface and window(?).
 
 #ifndef AFX_DRAW_OUTPUT_H
 #define AFX_DRAW_OUTPUT_H
 
 #include "afx/draw/res/afxSurface.h"
+#include "afx/core/async/afxSlock.h"
 
-AFX_DEFINE_HANDLE(afxDrawOutput);
+typedef enum afxEventDout
+{
+    AFX_EVENT_DOUT_RECON = AFX_FCC_DOUT,
+    AFX_EVENT_DOUT_EXTENT,
+    AFX_EVENT_DOUT_SWAPBUF,
+    AFX_EVENT_DOUT_REBUF,
+} afxEventDout;
 
 typedef enum afxColorSpace
 {
@@ -71,42 +78,101 @@ typedef enum afxPresentMode
 
 AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
 {
-    afxUri const        *endpoint; // window, desktop, etc
+    afxNat              drvIdx; // registered on draw system.
+    afxUri const*       endpoint; // window, desktop, etc
     afxWhd              whd;
-    afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces.
+    afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
     afxColorSpace       colorSpc; // AFX_COLOR_SPACE_SRGB; if sRGB isn't present, fall down to LINEAR.
-    afxTextureUsage     bufUsage; // RASTER; used as (color) rasterization surface.
+    afxTextureFlags     bufUsage; // RASTER; used as (color) rasterization surface.
     afxNat              bufCnt; // 2 or 3; double or triple-buffered.
 
     afxPresentAlpha     presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
     afxPresentTransform presentTransform; // NIL; don't do any transform.
     afxPresentMode      presentMode; // FIFO; respect the sequence.
     afxBool             clipped; // TRUE; don't do off-screen draw.
-    afxBool             resizable;
+    void*               udd;
 };
 
-#ifndef AFX_DRAW_DRIVER_SRC
+AFX_DECLARE_STRUCT(_afxDoutVmt);
 
 AFX_OBJECT(afxDrawOutput)
 {
-    afxObject           obj;
+    afxObject               obj;
+    _afxDoutVmt const*      vmt;
+    void*                   idd; // implementation-defined data
+#ifdef _AFX_DRAW_OUTPUT_C
+    afxDrawContext          dctx; // bound context
+    afxNat                  suspendCnt;
+    afxSlock                suspendSlock;
+
+    afxWhd                  extent;
+    afxWhd                  resolution; // Screen resolution. Absolute extent available.
+    afxReal                 wpOverHp; // physical w/h
+    afxReal                 wrOverHr; // (usually screen) resolution w/h
+    afxReal                 wwOverHw; // window w/h
+    afxNat                  refreshRate;
+    afxBool                 focused;
+
+    afxBool                 resizable;
+    afxBool                 resizing;
+
+    // swapchain-related data
+    afxFlags                flags;
+    afxPixelFormat          pixelFmt; // pixel format of raster surfaces.
+    afxColorSpace           colorSpc; // color space of raster surfaces. sRGB is the default.
+    
+    afxTextureFlags         bufUsage; // what evil things we will do with it? Usually AFX_TEX_FLAG_SURFACE_RASTER
+    afxNat                  bufCnt; // usually 2 or 3; double or triple buffered.
+    afxSurface*             buffers; // afxCanvas // should have 1 fb for each swapchain raster.
+    afxSlock                buffersLock;
+    afxBool                 bufferLockCnt;
+    afxNat                  lastReqBufIdx;
+    afxBool                 swapping;
+    afxChain                swapchain; // display order
+    
+    afxPresentAlpha         presentAlpha; // consider transparency for external composing (usually on windowing system).
+    afxPresentTransform     presentTransform; // NIL leaves it as it is.
+    afxPresentMode          presentMode; // FIFO
+    afxBool                 clipped; // usually true to don't do off-screen draw.
+
+    afxV2d                  absCursorPos,
+                            absCursorMove,
+                            ndcCursorPos,
+                            ndcCursorMove;
+
+    afxString*              caption;
+
+    void*                   udd; // user-defined data
+#endif
 };
 
-#endif
+AFX afxDrawDriver       AfxGetDrawOutputDriver(afxDrawOutput dout);
 
-AFX void*               AfxDrawOutputGetContext(afxDrawOutput dout);
-AFX void*               AfxDrawOutputGetDriver(afxDrawOutput dout);
-AFX void*               AfxDrawOutputGetDrawSystem(afxDrawOutput dout);
+// Connection
 
-AFX afxError            AfxDrawOutputSetExtent(afxDrawOutput dout, afxWhd const extent);
-AFX afxError            AfxDrawOutputSetExtentNdc(afxDrawOutput dout, afxV3d const extent);
-AFX void                AfxDrawOutputGetExtent(afxDrawOutput dout, afxWhd extent); // d is always 1; it is here just for compatibility.
-AFX void                AfxDrawOutputGetExtentNdc(afxDrawOutput dout, afxV3d extent); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+AFX afxDrawContext      AfxGetDrawOutputConnectedContext(afxDrawOutput dout);
+AFX afxBool             AfxDrawOutputIsConnected(afxDrawOutput dout);
+AFX afxError            AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
+AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
 
-AFX afxSurface          AfxDrawOutputGetBuffer(afxDrawOutput dout, afxNat idx);
-AFX afxResult           AfxDrawOutputEnumerateBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
-AFX afxError            AfxDrawOutputRequestBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+// Extent
 
-AFX afxError            AfxDrawOutputBuildCanvases(afxDrawOutput dout, afxNat cnt, afxNat rasIdx[], afxPixelFormat depthFmt[], afxPixelFormat stencilFmt[], afxCanvas canv[]);
+AFX afxError            AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const extent);
+AFX afxError            AfxReadjustDrawOutputNdc(afxDrawOutput dout, afxV3d const extent);
+AFX void                AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd extent); // d is always 1; it is here just for compatibility.
+AFX void                AfxGetDrawOutputExtentNdc(afxDrawOutput dout, afxV3d extent); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution);
+
+// Buffer
+
+AFX afxSurface          AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx);
+AFX afxNat              AfxGetDrawOutputBufferCount(afxDrawOutput dout);
+AFX afxResult           AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
+AFX afxError            AfxRequestNextDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
+
+// Utility
+
+AFX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxPixelFormat depth, afxPixelFormat stencil, afxCanvas canv[]);
 
 #endif//AFX_DRAW_OUTPUT_H
