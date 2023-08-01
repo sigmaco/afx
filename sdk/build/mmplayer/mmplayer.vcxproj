@@ -171,6 +171,9 @@
     <ClCompile Include="..\..\demo\mmplayer\mmplayer.c" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\e2bink\e2bink.vcxproj">
+      <Project>{696ebd89-fcda-44b6-b1a6-28bc64671216}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>

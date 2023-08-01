@@ -47,9 +47,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_USAGE_SURFACE_RASTER;
+    doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 
-    dout = AfxDrawContextAcquireOutput(dctx, &doutSpec);
+    dout = AfxAcquireDrawOutputs(dctx, &doutSpec);
     AfxAssert(dout);
 
     afxDrawInputSpecification dinSpec = { 0 };
@@ -60,9 +60,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     dinSpec.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
     dinSpec.enabledStreamingThreads = (afxNat[]) { 1, 1, 1, 1 };
     dinSpec.enabledSubmissionThreads = (afxNat[]) { 1, 1, 1, 1 };
-    din = AfxDrawContextAcquireInput(dctx, &dinSpec);
+    din = AfxAcquireDrawInputs(dctx, &dinSpec);
     AfxAssert(din);
-    //AfxDrawInputAffinePrefetchThreads(din, 0, 1, (afxNat[]) { 1 });
+    //AfxEnableDrawInputPrefetching(din, 0, 1, (afxNat[]) { 1 });
 
     afxResult rslt;
     return AFX_SUCCESS;
@@ -71,7 +71,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
 {
     AfxEntry("app=%p", app);
-    AfxObjectRelease(&din->obj);
+    AfxReleaseObject(&din->obj);
     AfxEcho("aaaaaaaaaaaa");
 
     return AFX_SUCCESS;
@@ -89,22 +89,21 @@ int main(int argc, char const* argv[])
 
     afxUri2048 romUri;
     AfxUri2048(&romUri);
-    AfxUriFormat(&romUri.uri, "%s", argv[0]); // hardcoded name
+    AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;
     while (reboot)
     {
-        sys = AfxSystemBootUp(NIL);
+        sys = AfxBootUpSystem(NIL);
 
         afxDrawSystemSpecification dsysSpec = { 0 };
-        dsys = AfxSystemAcquireDrawSystem(sys, &dsysSpec);
+        dsys = AfxBootUpDrawSystem(&dsysSpec);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
-        dctxSpec.driverId = 0;
         dctxSpec.queueCnt = 1;
 
-        dctx = AfxDrawSystemAcquireContext(dsys, &dctxSpec);
+        dctx = AfxAcquireDrawContexts(&dctxSpec);
         AfxAssert(dctx);
 
         afxApplicationSpecification appSpec;
@@ -114,19 +113,18 @@ int main(int argc, char const* argv[])
         appSpec.enter = AfxEnterApplication;
         appSpec.exit = AfxLeaveApplication;
         appSpec.update = AfxUpdateApplication;
-        TheApp = AfxSystemAcquireApplication(sys, &appSpec);
+        TheApp = AfxAcquireApplication(&appSpec);
         AfxAssertObject(TheApp, AFX_FCC_APP);
 
-        if (AFX_OPCODE_BREAK == AfxApplicationExecute(TheApp))
+        if (AFX_OPCODE_BREAK == AfxRunApplication(TheApp))
             reboot = 0;
 
-        AfxObjectRelease(&TheApp->obj);
+        AfxReleaseObject(&TheApp->obj);
 
-        AfxObjectRelease(&dctx->obj);
+        AfxReleaseObject(&dctx->obj);
 
-        AfxObjectRelease(&dsys->obj);
-
-        AfxObjectRelease(&sys->obj);
+        AfxShutdownDrawSystem();
+        AfxShutdownSystem();
     }
     Sleep(3000);
     return 0;

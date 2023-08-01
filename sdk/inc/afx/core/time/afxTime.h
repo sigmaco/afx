@@ -23,6 +23,8 @@ typedef afxNat16    afxCompactTime; // DOS time
 
 typedef afxInt64 afxTime;
 
+#define AFX_TIME_INFINITE (afxTime)AFX_I64_MAX
+
 AFX_DEFINE_STRUCT(afxTimeSpec)
 {
     afxTime     sec;  // Seconds - >= 0

@@ -22,30 +22,75 @@
 #include "afx/core/io/afxStream.h"
 #include "afx/core/io/afxUri.h"
 
-AFX_DEFINE_HANDLE(afxFile);
+typedef enum afxFileFlags
+{
+    // permissions
+    AFX_FILE_FLAG_R         = AFX_FLAG(0), // Readable
+    AFX_FILE_FLAG_W         = AFX_FLAG(1), // Writeable
+    AFX_FILE_FLAG_X         = AFX_FLAG(2), // Executable (seekable)
+    AFX_FILE_FLAG_RW        = (AFX_FILE_FLAG_R | AFX_FILE_FLAG_W),
+    AFX_FILE_FLAG_RX        = (AFX_FILE_FLAG_R | AFX_FILE_FLAG_X),
+    AFX_FILE_FLAG_WX        = (AFX_FILE_FLAG_W | AFX_FILE_FLAG_X),
+    AFX_FILE_FLAG_RWX       = (AFX_FILE_FLAG_R | AFX_FILE_FLAG_W | AFX_FILE_FLAG_X),
+    AFX_FILE_PERM_MASK        = AFX_FILE_FLAG_RWX,
+
+    // attributes
+    AFX_FILE_FLAG_U         = AFX_FLAG(3), // Unbuffered.
+    AFX_FILE_FLAG_L         = AFX_FLAG(4), // Literal
+    AFX_FILE_FLAG_V         = AFX_FLAG(5), // Virtual. This flag is reserved for system use.
+    AFX_FILE_FLAG_Q         = AFX_FLAG(6), // Qwadro. This flag is reserved for system use.
+    AFX_FILE_FLAG_D         = AFX_FLAG(7),  // Device. This flag is reserved for system use.
+    AFX_FILE_FLAG_H         = AFX_FLAG(8),  // Hidden. The stream is hidden. It shouldn't be included in an ordinary listing.
+    AFX_FILE_FLAG_A         = AFX_FLAG(9),  // Archived. The stream is an archive-derived stream.
+    AFX_FILE_FLAG_T         = AFX_FLAG(10), // Temporary. Used for temporary storage. File systems avoid writing data back to mass storage if sufficient cache memory is available, because typically, an application deletes a temporary file after the handle is closed. In that scenario, the system can entirely avoid writing the data. Otherwise, the data is written after the handle is closed. This is used by SIGMA Future Storage.
+    AFX_FILE_FLAG_Z         = AFX_FLAG(11), // Compressed. The data is compressed. For a file, all of the data in the file is compressed. This is used by SIGMA Future Storage.
+    AFX_FILE_FLAG_E         = AFX_FLAG(12), // Encrypted. The data is encrypted. For a file, all data streams in the file are encrypted. This is used by SIGMA Future Storage.
+    AFX_FILE_FLAG_O         = AFX_FLAG(13), // Offline. The data isn't available immediately. This flag indicates that the data is physically moved to remote/offline storage. This is used by SIGMA Future Storage.
+    AFX_FILE_FLAG_S         = AFX_FLAG(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
+
+    AFX_FILE_FLAG_FORCE_NAT = AFX_N32_MAX
+}
+afxFileFlags;
 
 AFX_OBJECT(afxFile)
 {
-    AFX_OBJECT(afxStream)   ios;
+    afxObject               obj;
 #ifdef _AFX_FILE_C
+    afxStream               ios;
     void                    *fd;
-    afxUri*                 uri;
+    afxUri*                 path;
     afxBool                 shouldBeFlushed;
+    afxFileFlags            flags;
 #endif
 };
 
-AFX void*                   AfxFileGetSystem(afxFile file);
-AFX void*                   AfxFileGetFileSystem(afxFile file);
-AFX void*                   AfxFileGetHostDescriptor(afxFile file);
+AFX afxFile                 AfxOpenFile(afxFileFlags flags, afxUri const *uri);
+AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
+AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
+AFX afxStream               AfxLoadFile(afxIoFlags flags, afxUri const *uri); // will fully load the opened file then close it.
 
-AFX afxError                AfxFileReopen(afxFile file, afxRwx const rwx, afxUri const *uri);
-AFX afxError                AfxFileReload(afxFile file, afxRwx const rwx, afxUri const *uri);
+AFX void*                   AfxGetFileHostDescriptor(afxFile file);
 
-AFX afxResult               AfxFileCopyUri(afxFile file, afxString *str);
-AFX afxString const*        AfxFileGetUriString(afxFile file);
-AFX afxUri const*           AfxFileGetUri(afxFile file);
+AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);
+AFX afxError                AfxReloadFile(afxFile file, afxRwx const rwx, afxUri const *uri);
 
-AFX afxResult               AfxFileFlush(afxFile file);
+AFX afxResult               AfxExtractFilePath(afxFile file, afxString *str);
+AFX afxString const*        AfxGetFilePathString(afxFile file);
+AFX afxUri const*           AfxGetFilePath(afxFile file);
+
+AFX afxStream*              AfxGetFileStream(afxFile file);
+
+AFX afxResult               AfxFlushFile(afxFile file);
 AFX afxBool                 AfxFileShouldBeFlushed(afxFile file);
+AFX afxError                AfxBufferizeFile(afxFile file, afxNat siz);
+
+AFX afxBool                 AfxFileIsVirtual(afxFile file);
+AFX afxBool                 AfxFileIsTemporary(afxFile file);
+AFX afxBool                 AfxFileIsSparse(afxFile file);
+AFX afxBool                 AfxFileIsCompressed(afxFile file);
+AFX afxBool                 AfxFileIsEncrypted(afxFile file);
+AFX afxBool                 AfxFileIsArchive(afxFile file);
+AFX afxBool                 AfxFileIsHidden(afxFile file);
+AFX afxBool                 AfxFileIsReserved(afxFile file);
 
 #endif//AFX_FILE_H

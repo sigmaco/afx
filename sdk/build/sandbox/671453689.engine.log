@@ -1,0 +1,1555 @@
+
+ afxDebug.c:373?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(503acc00, 00000000, 00000000, 5038b620)
+ afxClass<afxSystem>::AllocateObjects(1, 0028ef98, 0028efa8)
+ afxClass<afxSystem>::BuildObjects(1, 0028ef98, 00000000)
+ afxClass<afxSystem>::ConstructObject(0067f800)
+ afxSystem.c:914?_AfxSysCtor(sys=0067f800)
+ ADV afxSystem.c:937?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:938?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0067f84c, 0067f834, 00000000, 5038fa74)
+ afxClass<Memory Arena>::Mount(0067f90c, 0067f834, 0067f84c, 5038f400)
+ afxMemory.c:259?AfxAcquireMemory(strategy=0028e098,hint="afxSystem.c:956!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0028df54, 0028df64)
+ afxClass<afxMemory>::BuildObjects(1, 0028df54, 0028df4c)
+ afxClass<afxMemory>::ConstructObject(00680070)
+ afxMemory.c:315?_AfxMemCtor(mem=00680070)
+ afxClass<afxThread>::Mount(0067f9cc, 0067f834, 00000000, 5038bcf0)
+ afxClass<afxIoSystem>::Mount(0067fa8c, 0067f834, 00000000, 5038d30c)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0028df38, 0028df48)
+ afxClass<afxIoSystem>::BuildObjects(1, 0028df38, 0028e068)
+ afxClass<afxIoSystem>::ConstructObject(00680750)
+ afxIoSystem.c:707?_AfxIoCtor(io=00680750)
+ afxClass<afxStream>::Mount(006807a0, 00680788, 00000000, 5038e5ac)
+ afxClass<afxFile>::Mount(00680860, 00680788, 006807a0, 5038d0dc)
+ afxClass<afxArchive>::Mount(00680920, 00680788, 00680860, 5038ca5c)
+ afxClass<afxResource>::Mount(00680b60, 00680788, 00000000, 5038e444)
+ afxClass<afxXml>::Mount(006809e0, 00680788, 00000000, 5038eb00)
+ afxClass<afxUrd>::Mount(00680aa0, 00680788, 00000000, 5038e988)
+ afxIoSystem.c:428?AfxMountStoragePoints(Afx.FileSystem.MountStoragePoints(00680750,6,0028e244))
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0067fb4c, 0067f834, 00000000, 50389f04)
+ afxModule.c:71?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0028df08, 0028df3c)
+ afxClass<afxModule>::BuildObjects(1, 0028df08, 0028e17c)
+ afxClass<afxModule>::ConstructObject(00684610)
+ afxModule.c:139?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0067fc0c, 0067f834, 00000000, 5038d6f8)
+ afxClass<afxKeyboard>::Mount(0067fccc, 0067f834, 0067fc0c, 5038dff0)
+ afxClass<afxMouse>::Mount(0067fd8c, 0067f834, 0067fc0c, 5038e1a4)
+ afxClass<afxDrawSystem>::Mount(0067fe4c, 0067f834, 00000000, 50392a8c)
+ afxClass<afxApplication>::Mount(0067ff0c, 0067f834, 00000000, 50389000)
+ afxKeyboard.c:165?AfxAcquireKeyboard(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0028df5c, 0028df6c)
+ afxClass<afxKeyboard>::BuildObjects(1, 0028df5c, 0028df58)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(00684740)
+ afxClass<afxHid>::ConstructObject(00684740)
+ afxHid.c:75?_AfxHidCtor(hid=00684740)
+ afxClass<afxKeyboard>::ConstructObject(00684740)
+ afxKeyboard.c:221?_AfxKbdCtor(kbd=00684740)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0028ef98, 0028efa8)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0028ef98, 0028f08c)
+ afxClass<afxDrawSystem>::ConstructObject(00682320)
+ afxDrawSystem.c:437?_AfxDsysCtor(dsys=00682320)
+ afxClass<afxDrawDriver>::Mount(00682368, 00682354, 00000000, 50391590)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:71?AfxAcquireModule(uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0028eb08, 0028eb3c)
+ afxClass<afxModule>::BuildObjects(1, 0028eb08, 0028ec08)
+ afxClass<afxModule>::ConstructObject(00682550)
+ afxModule.c:139?_AfxMdleCtor(uri:e2draw.icd)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDriver.c:1281?_SglCreateCombinedDeviceContext(oglWndClss=00685980,shareCtx=00000000,phwnd=006859b0,phdc=006859b4,phrc=006859bc)
+ sglDriver.c:786?_SglLoadVmt(vmt=006859c0,verMajor=1,verMinor=0)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ sglDriver.c:786?_SglLoadVmt(vmt=006859c0,verMajor=4,verMinor=6)
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ glStencilOp @ 28 found.
+ glDepthFunc @ 29 found.
+ glPixelStoref @ 30 found.
+ glPixelStorei @ 31 found.
+ glReadBuffer @ 32 found.
+ glReadPixels @ 33 found.
+ glGetBooleanv @ 34 found.
+ glGetDoublev @ 35 found.
+ glGetError @ 36 found.
+ glGetFloatv @ 37 found.
+ glGetIntegerv @ 38 found.
+ glGetString @ 39 found.
+ glGetTexImage @ 40 found.
+ glGetTexParameterfv @ 41 found.
+ glGetTexParameteriv @ 42 found.
+ glGetTexLevelParameterfv @ 43 found.
+ glGetTexLevelParameteriv @ 44 found.
+ glIsEnabled @ 45 found.
+ glDepthRange @ 46 found.
+ glViewport @ 47 found.
+ glDrawArrays @ 48 found.
+ glDrawElements @ 49 found.
+ glGetPointerv @ 50 found.
+ glPolygonOffset @ 51 found.
+ glCopyTexImage1D @ 52 found.
+ glCopyTexImage2D @ 53 found.
+ glCopyTexSubImage1D @ 54 found.
+ glCopyTexSubImage2D @ 55 found.
+ glTexSubImage1D @ 56 found.
+ glTexSubImage2D @ 57 found.
+ glBindTexture @ 58 found.
+ glDeleteTextures @ 59 found.
+ glGenTextures @ 60 found.
+ glIsTexture @ 61 found.
+ glDrawRangeElements @ 62 found.
+ glTexImage3D @ 63 found.
+ glTexSubImage3D @ 64 found.
+ glCopyTexSubImage3D @ 65 found.
+ glActiveTexture @ 66 found.
+ glSampleCoverage @ 67 found.
+ glCompressedTexImage3D @ 68 found.
+ glCompressedTexImage2D @ 69 found.
+ glCompressedTexImage1D @ 70 found.
+ glCompressedTexSubImage3D @ 71 found.
+ glCompressedTexSubImage2D @ 72 found.
+ glCompressedTexSubImage1D @ 73 found.
+ glGetCompressedTexImage @ 74 found.
+ glBlendFuncSeparate @ 75 found.
+ glMultiDrawArrays @ 76 found.
+ glMultiDrawElements @ 77 found.
+ glPointParameterf @ 78 found.
+ glPointParameterfv @ 79 found.
+ glPointParameteri @ 80 found.
+ glPointParameteriv @ 81 found.
+ glBlendColor @ 82 found.
+ glBlendEquation @ 83 found.
+ glGenQueries @ 84 found.
+ glDeleteQueries @ 85 found.
+ glIsQuery @ 86 found.
+ glBeginQuery @ 87 found.
+ glEndQuery @ 88 found.
+ glGetQueryiv @ 89 found.
+ glGetQueryObjectiv @ 90 found.
+ glGetQueryObjectuiv @ 91 found.
+ glBindBuffer @ 92 found.
+ glDeleteBuffers @ 93 found.
+ glGenBuffers @ 94 found.
+ glIsBuffer @ 95 found.
+ glBufferData @ 96 found.
+ glBufferSubData @ 97 found.
+ glGetBufferSubData @ 98 found.
+ glMapBuffer @ 99 found.
+ glUnmapBuffer @ 100 found.
+ glGetBufferParameteriv @ 101 found.
+ glGetBufferPointerv @ 102 found.
+ glBlendEquationSeparate @ 103 found.
+ glDrawBuffers @ 104 found.
+ glStencilOpSeparate @ 105 found.
+ glStencilFuncSeparate @ 106 found.
+ glStencilMaskSeparate @ 107 found.
+ glAttachShader @ 108 found.
+ glBindAttribLocation @ 109 found.
+ glCompileShader @ 110 found.
+ glCreateProgram @ 111 found.
+ glCreateShader @ 112 found.
+ glDeleteProgram @ 113 found.
+ glDeleteShader @ 114 found.
+ glDetachShader @ 115 found.
+ glDisableVertexAttribArray @ 116 found.
+ glEnableVertexAttribArray @ 117 found.
+ glGetActiveAttrib @ 118 found.
+ glGetActiveUniform @ 119 found.
+ glGetAttachedShaders @ 120 found.
+ glGetAttribLocation @ 121 found.
+ glGetProgramiv @ 122 found.
+ glGetProgramInfoLog @ 123 found.
+ glGetShaderiv @ 124 found.
+ glGetShaderInfoLog @ 125 found.
+ glGetShaderSource @ 126 found.
+ glGetUniformLocation @ 127 found.
+ glGetUniformfv @ 128 found.
+ glGetUniformiv @ 129 found.
+ glGetVertexAttribdv @ 130 found.
+ glGetVertexAttribfv @ 131 found.
+ glGetVertexAttribiv @ 132 found.
+ glGetVertexAttribPointerv @ 133 found.
+ glIsProgram @ 134 found.
+ glIsShader @ 135 found.
+ glLinkProgram @ 136 found.
+ glShaderSource @ 137 found.
+ glUseProgram @ 138 found.
+ glUniform1f @ 139 found.
+ glUniform2f @ 140 found.
+ glUniform3f @ 141 found.
+ glUniform4f @ 142 found.
+ glUniform1i @ 143 found.
+ glUniform2i @ 144 found.
+ glUniform3i @ 145 found.
+ glUniform4i @ 146 found.
+ glUniform1fv @ 147 found.
+ glUniform2fv @ 148 found.
+ glUniform3fv @ 149 found.
+ glUniform4fv @ 150 found.
+ glUniform1iv @ 151 found.
+ glUniform2iv @ 152 found.
+ glUniform3iv @ 153 found.
+ glUniform4iv @ 154 found.
+ glUniformMatrix2fv @ 155 found.
+ glUniformMatrix3fv @ 156 found.
+ glUniformMatrix4fv @ 157 found.
+ glValidateProgram @ 158 found.
+ glVertexAttrib1d @ 159 found.
+ glVertexAttrib1dv @ 160 found.
+ glVertexAttrib1f @ 161 found.
+ glVertexAttrib1fv @ 162 found.
+ glVertexAttrib1s @ 163 found.
+ glVertexAttrib1sv @ 164 found.
+ glVertexAttrib2d @ 165 found.
+ glVertexAttrib2dv @ 166 found.
+ glVertexAttrib2f @ 167 found.
+ glVertexAttrib2fv @ 168 found.
+ glVertexAttrib2s @ 169 found.
+ glVertexAttrib2sv @ 170 found.
+ glVertexAttrib3d @ 171 found.
+ glVertexAttrib3dv @ 172 found.
+ glVertexAttrib3f @ 173 found.
+ glVertexAttrib3fv @ 174 found.
+ glVertexAttrib3s @ 175 found.
+ glVertexAttrib3sv @ 176 found.
+ glVertexAttrib4Nbv @ 177 found.
+ glVertexAttrib4Niv @ 178 found.
+ glVertexAttrib4Nsv @ 179 found.
+ glVertexAttrib4Nub @ 180 found.
+ glVertexAttrib4Nubv @ 181 found.
+ glVertexAttrib4Nuiv @ 182 found.
+ glVertexAttrib4Nusv @ 183 found.
+ glVertexAttrib4bv @ 184 found.
+ glVertexAttrib4d @ 185 found.
+ glVertexAttrib4dv @ 186 found.
+ glVertexAttrib4f @ 187 found.
+ glVertexAttrib4fv @ 188 found.
+ glVertexAttrib4iv @ 189 found.
+ glVertexAttrib4s @ 190 found.
+ glVertexAttrib4sv @ 191 found.
+ glVertexAttrib4ubv @ 192 found.
+ glVertexAttrib4uiv @ 193 found.
+ glVertexAttrib4usv @ 194 found.
+ glVertexAttribPointer @ 195 found.
+ glUniformMatrix2x3fv @ 196 found.
+ glUniformMatrix3x2fv @ 197 found.
+ glUniformMatrix2x4fv @ 198 found.
+ glUniformMatrix4x2fv @ 199 found.
+ glUniformMatrix3x4fv @ 200 found.
+ glUniformMatrix4x3fv @ 201 found.
+ glColorMaski @ 202 found.
+ glGetBooleani_v @ 203 found.
+ glGetIntegeri_v @ 204 found.
+ glEnablei @ 205 found.
+ glDisablei @ 206 found.
+ glIsEnabledi @ 207 found.
+ glBeginTransformFeedback @ 208 found.
+ glEndTransformFeedback @ 209 found.
+ glBindBufferRange @ 210 found.
+ glBindBufferBase @ 211 found.
+ glTransformFeedbackVaryings @ 212 found.
+ glGetTransformFeedbackVarying @ 213 found.
+ glClampColor @ 214 found.
+ glBeginConditionalRender @ 215 found.
+ glEndConditionalRender @ 216 found.
+ glVertexAttribIPointer @ 217 found.
+ glGetVertexAttribIiv @ 218 found.
+ glGetVertexAttribIuiv @ 219 found.
+ glVertexAttribI1i @ 220 found.
+ glVertexAttribI2i @ 221 found.
+ glVertexAttribI3i @ 222 found.
+ glVertexAttribI4i @ 223 found.
+ glVertexAttribI1ui @ 224 found.
+ glVertexAttribI2ui @ 225 found.
+ glVertexAttribI3ui @ 226 found.
+ glVertexAttribI4ui @ 227 found.
+ glVertexAttribI1iv @ 228 found.
+ glVertexAttribI2iv @ 229 found.
+ glVertexAttribI3iv @ 230 found.
+ glVertexAttribI4iv @ 231 found.
+ glVertexAttribI1uiv @ 232 found.
+ glVertexAttribI2uiv @ 233 found.
+ glVertexAttribI3uiv @ 234 found.
+ glVertexAttribI4uiv @ 235 found.
+ glVertexAttribI4bv @ 236 found.
+ glVertexAttribI4sv @ 237 found.
+ glVertexAttribI4ubv @ 238 found.
+ glVertexAttribI4usv @ 239 found.
+ glGetUniformuiv @ 240 found.
+ glBindFragDataLocation @ 241 found.
+ glGetFragDataLocation @ 242 found.
+ glUniform1ui @ 243 found.
+ glUniform2ui @ 244 found.
+ glUniform3ui @ 245 found.
+ glUniform4ui @ 246 found.
+ glUniform1uiv @ 247 found.
+ glUniform2uiv @ 248 found.
+ glUniform3uiv @ 249 found.
+ glUniform4uiv @ 250 found.
+ glTexParameterIiv @ 251 found.
+ glTexParameterIuiv @ 252 found.
+ glGetTexParameterIiv @ 253 found.
+ glGetTexParameterIuiv @ 254 found.
+ glClearBufferiv @ 255 found.
+ glClearBufferuiv @ 256 found.
+ glClearBufferfv @ 257 found.
+ glClearBufferfi @ 258 found.
+ glGetStringi @ 259 found.
+ glIsRenderbuffer @ 260 found.
+ glBindRenderbuffer @ 261 found.
+ glDeleteRenderbuffers @ 262 found.
+ glGenRenderbuffers @ 263 found.
+ glRenderbufferStorage @ 264 found.
+ glGetRenderbufferParameteriv @ 265 found.
+ glIsFramebuffer @ 266 found.
+ glBindFramebuffer @ 267 found.
+ glDeleteFramebuffers @ 268 found.
+ glGenFramebuffers @ 269 found.
+ glCheckFramebufferStatus @ 270 found.
+ glFramebufferTexture1D @ 271 found.
+ glFramebufferTexture2D @ 272 found.
+ glFramebufferTexture3D @ 273 found.
+ glFramebufferRenderbuffer @ 274 found.
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+ glGenerateMipmap @ 276 found.
+ glBlitFramebuffer @ 277 found.
+ glRenderbufferStorageMultisample @ 278 found.
+ glFramebufferTextureLayer @ 279 found.
+ glMapBufferRange @ 280 found.
+ glFlushMappedBufferRange @ 281 found.
+ glBindVertexArray @ 282 found.
+ glDeleteVertexArrays @ 283 found.
+ glGenVertexArrays @ 284 found.
+ glIsVertexArray @ 285 found.
+ glDrawArraysInstanced @ 286 found.
+ glDrawElementsInstanced @ 287 found.
+ glTexBuffer @ 288 found.
+ glPrimitiveRestartIndex @ 289 found.
+ glCopyBufferSubData @ 290 found.
+ glGetUniformIndices @ 291 found.
+ glGetActiveUniformsiv @ 292 found.
+ glGetActiveUniformName @ 293 found.
+ glGetUniformBlockIndex @ 294 found.
+ glGetActiveUniformBlockiv @ 295 found.
+ glGetActiveUniformBlockName @ 296 found.
+ glUniformBlockBinding @ 297 found.
+ glDrawElementsBaseVertex @ 298 found.
+ glDrawRangeElementsBaseVertex @ 299 found.
+ glDrawElementsInstancedBaseVertex @ 300 found.
+ glMultiDrawElementsBaseVertex @ 301 found.
+ glProvokingVertex @ 302 found.
+ glFenceSync @ 303 found.
+ glIsSync @ 304 found.
+ glDeleteSync @ 305 found.
+ glClientWaitSync @ 306 found.
+ glWaitSync @ 307 found.
+ glGetInteger64v @ 308 found.
+ glGetSynciv @ 309 found.
+ glGetInteger64i_v @ 310 found.
+ glGetBufferParameteri64v @ 311 found.
+ glFramebufferTexture @ 312 found.
+ glTexImage2DMultisample @ 313 found.
+ glTexImage3DMultisample @ 314 found.
+ glGetMultisamplefv @ 315 found.
+ glSampleMaski @ 316 found.
+ glBindFragDataLocationIndexed @ 317 found.
+ glGetFragDataIndex @ 318 found.
+ glGenSamplers @ 319 found.
+ glDeleteSamplers @ 320 found.
+ glIsSampler @ 321 found.
+ glBindSampler @ 322 found.
+ glSamplerParameteri @ 323 found.
+ glSamplerParameteriv @ 324 found.
+ glSamplerParameterf @ 325 found.
+ glSamplerParameterfv @ 326 found.
+ glSamplerParameterIiv @ 327 found.
+ glSamplerParameterIuiv @ 328 found.
+ glGetSamplerParameteriv @ 329 found.
+ glGetSamplerParameterIiv @ 330 found.
+ glGetSamplerParameterfv @ 331 found.
+ glGetSamplerParameterIuiv @ 332 found.
+ glQueryCounter @ 333 found.
+ glGetQueryObjecti64v @ 334 found.
+ glGetQueryObjectui64v @ 335 found.
+ glVertexAttribDivisor @ 336 found.
+ glVertexAttribP1ui @ 337 found.
+ glVertexAttribP1uiv @ 338 found.
+ glVertexAttribP2ui @ 339 found.
+ glVertexAttribP2uiv @ 340 found.
+ glVertexAttribP3ui @ 341 found.
+ glVertexAttribP3uiv @ 342 found.
+ glVertexAttribP4ui @ 343 found.
+ glVertexAttribP4uiv @ 344 found.
+ glMinSampleShading @ 345 found.
+ glBlendEquationi @ 346 found.
+ glBlendEquationSeparatei @ 347 found.
+ glBlendFunci @ 348 found.
+ glBlendFuncSeparatei @ 349 found.
+ glDrawArraysIndirect @ 350 found.
+ glDrawElementsIndirect @ 351 found.
+ glUniform1d @ 352 found.
+ glUniform2d @ 353 found.
+ glUniform3d @ 354 found.
+ glUniform4d @ 355 found.
+ glUniform1dv @ 356 found.
+ glUniform2dv @ 357 found.
+ glUniform3dv @ 358 found.
+ glUniform4dv @ 359 found.
+ glUniformMatrix2dv @ 360 found.
+ glUniformMatrix3dv @ 361 found.
+ glUniformMatrix4dv @ 362 found.
+ glUniformMatrix2x3dv @ 363 found.
+ glUniformMatrix2x4dv @ 364 found.
+ glUniformMatrix3x2dv @ 365 found.
+ glUniformMatrix3x4dv @ 366 found.
+ glUniformMatrix4x2dv @ 367 found.
+ glUniformMatrix4x3dv @ 368 found.
+ glGetUniformdv @ 369 found.
+ glGetSubroutineUniformLocation @ 370 found.
+ glGetSubroutineIndex @ 371 found.
+ glGetActiveSubroutineUniformiv @ 372 found.
+ glGetActiveSubroutineUniformName @ 373 found.
+ glGetActiveSubroutineName @ 374 found.
+ glUniformSubroutinesuiv @ 375 found.
+ glGetUniformSubroutineuiv @ 376 found.
+ glGetProgramStageiv @ 377 found.
+ glPatchParameteri @ 378 found.
+ glPatchParameterfv @ 379 found.
+ glBindTransformFeedback @ 380 found.
+ glDeleteTransformFeedbacks @ 381 found.
+ glGenTransformFeedbacks @ 382 found.
+ glIsTransformFeedback @ 383 found.
+ glPauseTransformFeedback @ 384 found.
+ glResumeTransformFeedback @ 385 found.
+ glDrawTransformFeedback @ 386 found.
+ glDrawTransformFeedbackStream @ 387 found.
+ glBeginQueryIndexed @ 388 found.
+ glEndQueryIndexed @ 389 found.
+ glGetQueryIndexediv @ 390 found.
+ glReleaseShaderCompiler @ 391 found.
+ glShaderBinary @ 392 found.
+ glGetShaderPrecisionFormat @ 393 found.
+ glDepthRangef @ 394 found.
+ glClearDepthf @ 395 found.
+ glGetProgramBinary @ 396 found.
+ glProgramBinary @ 397 found.
+ glProgramParameteri @ 398 found.
+ glUseProgramStages @ 399 found.
+ glActiveShaderProgram @ 400 found.
+ glCreateShaderProgramv @ 401 found.
+ glBindProgramPipeline @ 402 found.
+ glDeleteProgramPipelines @ 403 found.
+ glGenProgramPipelines @ 404 found.
+ glIsProgramPipeline @ 405 found.
+ glGetProgramPipelineiv @ 406 found.
+ glProgramUniform1i @ 407 found.
+ glProgramUniform1iv @ 408 found.
+ glProgramUniform1f @ 409 found.
+ glProgramUniform1fv @ 410 found.
+ glProgramUniform1d @ 411 found.
+ glProgramUniform1dv @ 412 found.
+ glProgramUniform1ui @ 413 found.
+ glProgramUniform1uiv @ 414 found.
+ glProgramUniform2i @ 415 found.
+ glProgramUniform2iv @ 416 found.
+ glProgramUniform2f @ 417 found.
+ glProgramUniform2fv @ 418 found.
+ glProgramUniform2d @ 419 found.
+ glProgramUniform2dv @ 420 found.
+ glProgramUniform2ui @ 421 found.
+ glProgramUniform2uiv @ 422 found.
+ glProgramUniform3i @ 423 found.
+ glProgramUniform3iv @ 424 found.
+ glProgramUniform3f @ 425 found.
+ glProgramUniform3fv @ 426 found.
+ glProgramUniform3d @ 427 found.
+ glProgramUniform3dv @ 428 found.
+ glProgramUniform3ui @ 429 found.
+ glProgramUniform3uiv @ 430 found.
+ glProgramUniform4i @ 431 found.
+ glProgramUniform4iv @ 432 found.
+ glProgramUniform4f @ 433 found.
+ glProgramUniform4fv @ 434 found.
+ glProgramUniform4d @ 435 found.
+ glProgramUniform4dv @ 436 found.
+ glProgramUniform4ui @ 437 found.
+ glProgramUniform4uiv @ 438 found.
+ glProgramUniformMatrix2fv @ 439 found.
+ glProgramUniformMatrix3fv @ 440 found.
+ glProgramUniformMatrix4fv @ 441 found.
+ glProgramUniformMatrix2dv @ 442 found.
+ glProgramUniformMatrix3dv @ 443 found.
+ glProgramUniformMatrix4dv @ 444 found.
+ glProgramUniformMatrix2x3fv @ 445 found.
+ glProgramUniformMatrix3x2fv @ 446 found.
+ glProgramUniformMatrix2x4fv @ 447 found.
+ glProgramUniformMatrix4x2fv @ 448 found.
+ glProgramUniformMatrix3x4fv @ 449 found.
+ glProgramUniformMatrix4x3fv @ 450 found.
+ glProgramUniformMatrix2x3dv @ 451 found.
+ glProgramUniformMatrix3x2dv @ 452 found.
+ glProgramUniformMatrix2x4dv @ 453 found.
+ glProgramUniformMatrix4x2dv @ 454 found.
+ glProgramUniformMatrix3x4dv @ 455 found.
+ glProgramUniformMatrix4x3dv @ 456 found.
+ glValidateProgramPipeline @ 457 found.
+ glGetProgramPipelineInfoLog @ 458 found.
+ glVertexAttribL1d @ 459 found.
+ glVertexAttribL2d @ 460 found.
+ glVertexAttribL3d @ 461 found.
+ glVertexAttribL4d @ 462 found.
+ glVertexAttribL1dv @ 463 found.
+ glVertexAttribL2dv @ 464 found.
+ glVertexAttribL3dv @ 465 found.
+ glVertexAttribL4dv @ 466 found.
+ glVertexAttribLPointer @ 467 found.
+ glGetVertexAttribLdv @ 468 found.
+ glViewportArrayv @ 469 found.
+ glViewportIndexedf @ 470 found.
+ glViewportIndexedfv @ 471 found.
+ glScissorArrayv @ 472 found.
+ glScissorIndexed @ 473 found.
+ glScissorIndexedv @ 474 found.
+ glDepthRangeArrayv @ 475 found.
+ glDepthRangeIndexed @ 476 found.
+ glGetFloati_v @ 477 found.
+ glGetDoublei_v @ 478 found.
+ glDrawArraysInstancedBaseInstance @ 479 found.
+ glDrawElementsInstancedBaseInstance @ 480 found.
+ glDrawElementsInstancedBaseVertexBaseInstance @ 481 found.
+ glGetInternalformativ @ 482 found.
+ glGetActiveAtomicCounterBufferiv @ 483 found.
+ glBindImageTexture @ 484 found.
+ glMemoryBarrier @ 485 found.
+ glTexStorage1D @ 486 found.
+ glTexStorage2D @ 487 found.
+ glTexStorage3D @ 488 found.
+ glDrawTransformFeedbackInstanced @ 489 found.
+ glDrawTransformFeedbackStreamInstanced @ 490 found.
+ glDispatchCompute @ 493 found.
+ glDispatchComputeIndirect @ 494 found.
+ glFramebufferParameteri @ 496 found.
+ glGetFramebufferParameteriv @ 497 found.
+ glGetInternalformati64v @ 498 found.
+ glInvalidateFramebuffer @ 503 found.
+ glInvalidateSubFramebuffer @ 504 found.
+ glMultiDrawArraysIndirect @ 505 found.
+ glMultiDrawElementsIndirect @ 506 found.
+ glGetProgramInterfaceiv @ 507 found.
+ glGetProgramResourceIndex @ 508 found.
+ glGetProgramResourceName @ 509 found.
+ glGetProgramResourceiv @ 510 found.
+ glGetProgramResourceLocation @ 511 found.
+ glGetProgramResourceLocationIndex @ 512 found.
+ glShaderStorageBlockBinding @ 513 found.
+ glTexBufferRange @ 514 found.
+ glTexStorage2DMultisample @ 515 found.
+ glTexStorage3DMultisample @ 516 found.
+ glBindVertexBuffer @ 518 found.
+ glVertexAttribFormat @ 519 found.
+ glVertexAttribIFormat @ 520 found.
+ glVertexAttribLFormat @ 521 found.
+ glVertexAttribBinding @ 522 found.
+ glVertexBindingDivisor @ 523 found.
+ glDebugMessageControl @ 524 found.
+ glDebugMessageInsert @ 525 found.
+ glDebugMessageCallback @ 526 found.
+ glGetDebugMessageLog @ 527 found.
+ glPushDebugGroup @ 528 found.
+ glPopDebugGroup @ 529 found.
+ glObjectLabel @ 530 found.
+ glGetObjectLabel @ 531 found.
+ glObjectPtrLabel @ 532 found.
+ glGetObjectPtrLabel @ 533 found.
+ glBufferStorage @ 534 found.
+ glClipControl @ 543 found.
+ glNamedBufferStorage @ 551 found.
+ glTextureBufferRange @ 589 found.
+ glTextureParameteri @ 606 found.
+ glMemoryBarrierByRegion @ 641 found.
+ glGetGraphicsResetStatus @ 644 found.
+ glGetnCompressedTexImage @ 645 found.
+ glGetnTexImage @ 646 found.
+ glGetnUniformdv @ 647 found.
+ glGetnUniformfv @ 648 found.
+ glGetnUniformiv @ 649 found.
+ glGetnUniformuiv @ 650 found.
+ glReadnPixels @ 651 found.
+ afxDrawDriver.c:76?AfxRegisterDrawDriver(mdle=00682550,spec=0028e804)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 0028e710, 0028e720)
+ afxClass<afxDrawDriver>::BuildObjects(1, 0028e710, 0028e708)
+ afxClass<afxDrawDriver>::ConstructObject(04930ca0)
+ afxDrawDriver.c:132?_AfxDdrvCtor(ddrv=04930ca0)
+ afxClass<Draw Context>::Mount(04930ce8, 04930cd4, 00000000, 0028e39c)
+New draw driver registered.
+Name: 4DGL
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+     .::::         :::::::::         ::::::::        :::        
+    :+:+:+         :+:    :+:       :+:    :+:       :+:        
+   +:+ +:+         +:+    +:+       +:+              +:+        
+  +#+  +:+         +#+    +:+       :#:              +#+        
+ +#+#+#+#+#+       +#+    +#+       +#+   +#+#       +#+        
+       #+#         #+#    #+#       #+#    #+#       #+#        
+       ###         #########         ########        ########## 
+ Loading draw ICDs...
+ afxModule.c:71?AfxAcquireModule(uri=e2draw.icd)
+ afxModule.c:71?AfxAcquireModule(uri=e2newton.icd)
+ afxClass<afxModule>::AllocateObjects(1, 0028e928, 0028e95c)
+ afxClass<afxModule>::BuildObjects(1, 0028e928, 0028ea00)
+ afxClass<afxModule>::ConstructObject(029e2c80)
+ afxModule.c:139?_AfxMdleCtor(uri:e2newton.icd)
+ afxDrawContext.c:309?AfxAcquireDrawContext(spec=0028f050)
+ afxClass<Draw Context>::AllocateObjects(1, 0028ef70, 0028ef80)
+ afxClass<Draw Context>::BuildObjects(1, 0028ef70, 0028ef6c)
+ afxClass<Draw Context>::ConstructObject(048f6e60)
+ sglDrawContext.c:258?_AfxDctxCtor(dctx=048f6e60)
+ afxClass<afxDrawScript>::Mount(048f76e8, 048f6e94, 00000000, 0fc2ef60)
+ afxClass<afxDrawInput>::Mount(048f77a8, 048f6e94, 00000000, 0fc2e830)
+ afxClass<afxDrawQueue>::Mount(048f7868, 048f6e94, 00000000, 0028ec08)
+ afxClass<afxBuffer>::Mount(048f6ea8, 048f6e94, 00000000, 0fc2d020)
+ afxClass<afxVertexBuffer>::Mount(048f6f68, 048f6e94, 048f6ea8, 0028ec08)
+ afxClass<afxIndexBuffer>::Mount(048f7028, 048f6e94, 048f6ea8, 0028ec08)
+ afxClass<afxSampler>::Mount(048f70e8, 048f6e94, 00000000, 0fc33814)
+ afxClass<afxTexture>::Mount(048f71a8, 048f6e94, 00000000, 0fc33cc4)
+ afxClass<afxSurface>::Mount(048f7268, 048f6e94, 048f71a8, 0fc3398c)
+ afxClass<afxCanvas>::Mount(048f7328, 048f6e94, 00000000, 0fc2d468)
+ afxClass<afxShader>::Mount(048f73e8, 048f6e94, 00000000, 0fc335a4)
+ afxClass<afxPipeline>::Mount(048f74a8, 048f6e94, 00000000, 0fc331b8)
+ afxClass<afxDrawOperation>::Mount(048f7628, 048f6e94, 00000000, 5039180c)
+ afxClass<afxLego>::Mount(048f7568, 048f6e94, 00000000, 0fc32fbc)
+ afxClass<afxDrawOutput>::Mount(048f7928, 048f6e94, 00000000, 0fc2eb60)
+ afxDrawQueue.c:47?AfxDrawContextAcquireQueue(dctx=048f6e60)
+ afxClass<afxDrawQueue>::AllocateObjects(1, 0028eaf8, 0028eb14)
+ afxClass<afxDrawQueue>::BuildObjects(1, 0028eaf8, 0028ec00)
+ afxClass<afxDrawQueue>::ConstructObject(04852680)
+ sglDrawQueue.c:1826?_AfxDqueCtor(dque=04852680)
+ Uploading draw operation 'data/pipeline/rgbaToRgba.xml'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028dff0, 0028e000)
+ afxClass<afxXml>::BuildObjects(1, 0028dff0, 0028dfec)
+ afxClass<afxXml>::ConstructObject(0480c3c0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028dc8c, 0028dc9c)
+ afxClass<afxFile>::BuildObjects(1, 0028dc8c, 0028dc7c)
+ afxClass<afxFile, afxStream>ConstructingObject(048e6370)
+ afxClass<afxStream>::ConstructObject(048e6370)
+ afxClass<afxFile>::ConstructObject(048e6370)
+ afxClass<afxFile>::DismantleObjects(1, 0028dcdc)
+ Destructing instance 048e6370 of afxFile class.
+ Destructing instance 048e6370 of afxFile : afxStream class.
+ Destructing instance 048e6370 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028dcdc)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 04853cb8, 0028dfcc)
+ afxClass<afxDrawOperation>::BuildObjects(1, 04853cb8, 0028e244)
+ afxClass<afxDrawOperation>::ConstructObject(048520c0)
+ afxDrawOperation.c:661?_AfxDopCtor(dop=048520c0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=048f6e60)
+ afxClass<afxPipeline>::AllocateObjects(1, 0486d9c8, 0028d974)
+ afxClass<afxPipeline>::BuildObjects(1, 0486d9c8, 0028da60)
+ afxClass<afxPipeline>::ConstructObject(0073a350)
+ sglPipeline.c:517?_AfxPipCtor(pip=0073a350)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=048521f0,shd=0028d3f0)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vs'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028ccc8, 0028ccd8)
+ afxClass<afxXml>::BuildObjects(1, 0028ccc8, 0028ccc4)
+ afxClass<afxXml>::ConstructObject(0073a620)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c964, 0028c974)
+ afxClass<afxFile>::BuildObjects(1, 0028c964, 0028c954)
+ afxClass<afxFile, afxStream>ConstructingObject(04853f10)
+ afxClass<afxStream>::ConstructObject(04853f10)
+ afxClass<afxFile>::ConstructObject(04853f10)
+ afxClass<afxFile>::DismantleObjects(1, 0028c9b4)
+ Destructing instance 04853f10 of afxFile class.
+ Destructing instance 04853f10 of afxFile : afxStream class.
+ Destructing instance 04853f10 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c9b4)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028ca4c, 0028ca5c)
+ afxClass<afxFile>::BuildObjects(1, 0028ca4c, 0028ca3c)
+ afxClass<afxFile, afxStream>ConstructingObject(04853f10)
+ afxClass<afxStream>::ConstructObject(04853f10)
+ afxClass<afxFile>::ConstructObject(04853f10)
+ afxClass<afxFile>::DismantleObjects(1, 0028ca9c)
+ Destructing instance 04853f10 of afxFile class.
+ Destructing instance 04853f10 of afxFile : afxStream class.
+ Destructing instance 04853f10 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028ca9c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028cfa4,shd=0028d3f0)
+ afxClass<afxShader>::AllocateObjects(1, 0028d3f0, 0028cc98)
+ afxClass<afxShader>::BuildObjects(1, 0028d3f0, 0028cfa4)
+ afxClass<afxShader>::ConstructObject(04853f10)
+ sglShader.c:263?_AfxShdCtor(shd=04853f10)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        layout(location = 0) in vec2 a_xy;
+
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028cd1c)
+ Destructing instance 0073a620 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=0073a620)
+ afxClass<afxXml>::DeallocateObjects(1, 0028cd1c)
+ afxObject<04853f10>::InstallEventFilter(0073a350)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=04853e80,shd=0028d3f0)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028ccc8, 0028ccd8)
+ afxClass<afxXml>::BuildObjects(1, 0028ccc8, 0028ccc4)
+ afxClass<afxXml>::ConstructObject(02a1ff80)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c964, 0028c974)
+ afxClass<afxFile>::BuildObjects(1, 0028c964, 0028c954)
+ afxClass<afxFile, afxStream>ConstructingObject(0073a620)
+ afxClass<afxStream>::ConstructObject(0073a620)
+ afxClass<afxFile>::ConstructObject(0073a620)
+ afxClass<afxFile>::DismantleObjects(1, 0028c9b4)
+ Destructing instance 0073a620 of afxFile class.
+ Destructing instance 0073a620 of afxFile : afxStream class.
+ Destructing instance 0073a620 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c9b4)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028ca4c, 0028ca5c)
+ afxClass<afxFile>::BuildObjects(1, 0028ca4c, 0028ca3c)
+ afxClass<afxFile, afxStream>ConstructingObject(0073a620)
+ afxClass<afxStream>::ConstructObject(0073a620)
+ afxClass<afxFile>::ConstructObject(0073a620)
+ afxClass<afxFile>::DismantleObjects(1, 0028ca9c)
+ Destructing instance 0073a620 of afxFile class.
+ Destructing instance 0073a620 of afxFile : afxStream class.
+ Destructing instance 0073a620 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028ca9c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028cfa4,shd=0028d3f0)
+ afxClass<afxShader>::AllocateObjects(1, 0028d3f0, 0028cc98)
+ afxClass<afxShader>::BuildObjects(1, 0028d3f0, 0028cfa4)
+ afxClass<afxShader>::ConstructObject(0073a620)
+ sglShader.c:263?_AfxShdCtor(shd=0073a620)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028cd1c)
+ Destructing instance 02a1ff80 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=02a1ff80)
+ afxClass<afxXml>::DeallocateObjects(1, 0028cd1c)
+ afxObject<0073a620>::InstallEventFilter(0073a350)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=048f6e60)
+ afxClass<afxLego>::AllocateObjects(1, 0486bab4, 0028d24c)
+ afxClass<afxLego>::BuildObjects(1, 0486bab4, 0028d588)
+ afxClass<afxLego>::ConstructObject(04894ca0)
+ sglLego.c:299?_AfxLegtCtor(legt=04894ca0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=048f6e60)
+ afxClass<afxPipeline>::AllocateObjects(1, 0486da28, 0028d974)
+ afxClass<afxPipeline>::BuildObjects(1, 0486da28, 0028da60)
+ afxClass<afxPipeline>::ConstructObject(00738da0)
+ sglPipeline.c:517?_AfxPipCtor(pip=00738da0)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=02a1ff80,shd=0028d3f0)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vsFlippedY'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028ccc8, 0028ccd8)
+ afxClass<afxXml>::BuildObjects(1, 0028ccc8, 0028ccc4)
+ afxClass<afxXml>::ConstructObject(04894dd0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c964, 0028c974)
+ afxClass<afxFile>::BuildObjects(1, 0028c964, 0028c954)
+ afxClass<afxFile, afxStream>ConstructingObject(048521f0)
+ afxClass<afxStream>::ConstructObject(048521f0)
+ afxClass<afxFile>::ConstructObject(048521f0)
+ afxClass<afxFile>::DismantleObjects(1, 0028c9b4)
+ Destructing instance 048521f0 of afxFile class.
+ Destructing instance 048521f0 of afxFile : afxStream class.
+ Destructing instance 048521f0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c9b4)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028ca4c, 0028ca5c)
+ afxClass<afxFile>::BuildObjects(1, 0028ca4c, 0028ca3c)
+ afxClass<afxFile, afxStream>ConstructingObject(048521f0)
+ afxClass<afxStream>::ConstructObject(048521f0)
+ afxClass<afxFile>::ConstructObject(048521f0)
+ afxClass<afxFile>::DismantleObjects(1, 0028ca9c)
+ Destructing instance 048521f0 of afxFile class.
+ Destructing instance 048521f0 of afxFile : afxStream class.
+ Destructing instance 048521f0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028ca9c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028cfa4,shd=0028d3f0)
+ afxClass<afxShader>::AllocateObjects(1, 0028d3f0, 0028cc98)
+ afxClass<afxShader>::BuildObjects(1, 0028d3f0, 0028cfa4)
+ afxClass<afxShader>::ConstructObject(048521f0)
+ sglShader.c:263?_AfxShdCtor(shd=048521f0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+        
+        layout(location = 0) in vec2 a_xy;
+        
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            gl_Position = vec4(a_xy, 0.0, 1.0);
+            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028cd1c)
+ Destructing instance 04894dd0 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04894dd0)
+ afxClass<afxXml>::DeallocateObjects(1, 0028cd1c)
+ afxObject<048521f0>::InstallEventFilter(00738da0)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=04894d40,shd=0028d3f0)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?fs'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/rgbaToRgba.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028ccc8, 0028ccd8)
+ afxClass<afxXml>::BuildObjects(1, 0028ccc8, 0028ccc4)
+ afxClass<afxXml>::ConstructObject(04894dd0)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/rgbaToRgba.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c964, 0028c974)
+ afxClass<afxFile>::BuildObjects(1, 0028c964, 0028c954)
+ afxClass<afxFile, afxStream>ConstructingObject(02a1fab0)
+ afxClass<afxStream>::ConstructObject(02a1fab0)
+ afxClass<afxFile>::ConstructObject(02a1fab0)
+ afxClass<afxFile>::DismantleObjects(1, 0028c9b4)
+ Destructing instance 02a1fab0 of afxFile class.
+ Destructing instance 02a1fab0 of afxFile : afxStream class.
+ Destructing instance 02a1fab0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c9b4)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028ca4c, 0028ca5c)
+ afxClass<afxFile>::BuildObjects(1, 0028ca4c, 0028ca3c)
+ afxClass<afxFile, afxStream>ConstructingObject(048f80c0)
+ afxClass<afxStream>::ConstructObject(048f80c0)
+ afxClass<afxFile>::ConstructObject(048f80c0)
+ afxClass<afxFile>::DismantleObjects(1, 0028ca9c)
+ Destructing instance 048f80c0 of afxFile class.
+ Destructing instance 048f80c0 of afxFile : afxStream class.
+ Destructing instance 048f80c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028ca9c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028cfa4,shd=0028d3f0)
+ afxClass<afxShader>::AllocateObjects(1, 0028d3f0, 0028cc98)
+ afxClass<afxShader>::BuildObjects(1, 0028d3f0, 0028cfa4)
+ afxClass<afxShader>::ConstructObject(048f7a60)
+ sglShader.c:263?_AfxShdCtor(shd=048f7a60)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028cd1c)
+ Destructing instance 04894dd0 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04894dd0)
+ afxClass<afxXml>::DeallocateObjects(1, 0028cd1c)
+ afxObject<048f7a60>::InstallEventFilter(00738da0)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=048f6e60)
+ afxClass<afxLego>::AllocateObjects(1, 0486bcf4, 0028d24c)
+ afxClass<afxLego>::BuildObjects(1, 0486bcf4, 0028d588)
+ afxClass<afxLego>::ConstructObject(04894dd0)
+ sglLego.c:299?_AfxLegtCtor(legt=04894dd0)
+ afxClass<afxXml>::DismantleObjects(1, 0028e044)
+ Destructing instance 0480c3c0 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=0480c3c0)
+ afxClass<afxXml>::DeallocateObjects(1, 0028e044)
+ afxSampler.c:47?AfxDrawContextAcquireSamplers(dctx=048f6e60,spec=0028e7a0)
+ afxClass<afxSampler>::AllocateObjects(1, 04853cbc, 0028e464)
+ afxClass<afxSampler>::BuildObjects(1, 04853cbc, 0028e7a0)
+ afxClass<afxSampler>::ConstructObject(02982830)
+ sglSampler.c:184?_AfxSmpCtor(smp=02982830)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 04853cc0, 0028e4b8)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 04853cc0, 0028e490)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(048f6590)
+ afxClass<afxBuffer>::ConstructObject(048f6590)
+ sglBuffer.c:467?_AfxBufCtor(buf=048f6590)
+ afxClass<afxVertexBuffer>::ConstructObject(048f6590)
+ afxVertexBuffer.c:350?_AfxVbufCtor(vbuf=048f6590)
+ afxApplication.c:370?AfxAcquireApplication(sys=0101efc8,spec=0028f050)
+ afxClass<afxApplication>::AllocateObjects(1, 0028ef8c, 0028ef9c)
+ afxClass<afxApplication>::BuildObjects(1, 0028ef8c, 0028f020)
+ afxClass<afxApplication>::ConstructObject(0486ae70)
+ afxApplication.c:421?_AfxAppCtor(app=0486ae70)
+ afxMouse.c:249?AfxAcquireMouse(port=0)
+ afxClass<afxMouse>::AllocateObjects(1, 0028eb8c, 0028eb9c)
+ afxClass<afxMouse>::BuildObjects(1, 0028eb8c, 0028eb88)
+ afxClass<afxMouse, afxHid>ConstructingObject(048e14a0)
+ afxClass<afxHid>::ConstructObject(048e14a0)
+ afxHid.c:75?_AfxHidCtor(hid=048e14a0)
+ afxClass<afxMouse>::ConstructObject(048e14a0)
+ afxMouse.c:304?_AfxMseCtor(mse=048e14a0)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=048f6e60,spec=0028ec54)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0028eb6c, 0028eb88)
+ afxClass<afxDrawInput>::BuildObjects(1, 0028eb6c, 0028ec54)
+ afxClass<afxDrawInput>::ConstructObject(048f7b30)
+ sglDrawInput.c:321?_AfxDinCtor(din=048f7b30)
+ afxArena.c:822?AfxAcquireArena(strategy=0028e7fc,hint="sglDrawInput.c:351!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0028e750, 0028e760)
+ afxClass<Memory Arena>::BuildObjects(1, 0028e750, 0028e748)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(0486b120)
+ afxClass<afxMemory>::ConstructObject(0486b120)
+ afxMemory.c:315?_AfxMemCtor(mem=0486b120)
+ afxClass<Memory Arena>::ConstructObject(0486b120)
+ afxArena.c:799?_AfxArenCtor(aren=0486b120)
+ afxClass<afxWidget>::Mount(0486af48, 0486aea4, 00000000, 503963f0)
+ afxClass<afxSimulation>::Mount(0486b008, 0486aea4, 00000000, 50396c94)
+ afxApplication.c:322?AfxApplicationExecute(app=0486ae70)
+ Sandbox.c:86?AfxEnterApplication(app=0486ae70)
+ afxSimulation.c:398?AfxApplicationAcquireSimulation(app=0486ae70,bounding=[[0.000000,0.000000,0.000000,1.000000],[0.000000,0.000000,0.000000,1.000000]])
+ afxClass<afxSimulation>::AllocateObjects(1, 0028ecf8, 0028ed08)
+ afxClass<afxSimulation>::BuildObjects(1, 0028ecf8, 0028ecf0)
+ afxClass<afxSimulation>::ConstructObject(0489ec90)
+ afxSimulation.c:319?_AfxSimCtor(sim=0489ec90)
+ afxMemory.c:259?AfxAcquireMemory(strategy=0028e998,hint="afxSimulation.c:338!_AfxSimCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0028e898, 0028e8a8)
+ afxClass<afxMemory>::BuildObjects(1, 0028e898, 0028e890)
+ afxClass<afxMemory>::ConstructObject(048f80c0)
+ afxMemory.c:315?_AfxMemCtor(mem=048f80c0)
+ afxClass<afxMaterial>::Mount(0489f098, 0489ecc4, 00000000, 503973b8)
+ afxClass<afxMesh>::Mount(0489f158, 0489ecc4, 00000000, 503976d8)
+ afxClass<afxNode>::Mount(0489f398, 0489ecc4, 00000000, 50396840)
+ afxClass<afxSkeleton>::Mount(0489f2d8, 0489ecc4, 00000000, 503981e8)
+ afxClass<afxModel>::Mount(0489f218, 0489ecc4, 00000000, 50397f74)
+ afxClass<afxBody>::Mount(0489ecd8, 0489ecc4, 00000000, 5039715c)
+ afxClass<afxBodyControl>::Mount(0489ed98, 0489ecc4, 00000000, 50397280)
+ afxClass<afxEntity>::Mount(0489ee58, 0489ecc4, 0489f398, 50396670)
+ afxClass<afxCamera>::Mount(0489ef18, 0489ecc4, 0489f398, 50398ee8)
+ afxClass<afxLight>::Mount(0489efd8, 0489ecc4, 0489f398, 5039914c)
+ afxClass<afxRenderer>::Mount(0489f458, 0489ecc4, 00000000, 50399598)
+ afxDrawOutput.c:137?AfxDrawContextAcquireOutput(dctx=048f6e60,spec=0028eef0)
+ afxClass<afxDrawOutput>::AllocateObjects(1, 0028ed28, 0028ed44)
+ afxClass<afxDrawOutput>::BuildObjects(1, 0028ed28, 0028eef0)
+ afxClass<afxDrawOutput>::ConstructObject(04854b50)
+ sglDrawOutput.c:524?_AfxDoutCtor(dout=04854b50)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=048f6e60,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0028e408, 0028e424)
+ afxClass<afxSurface>::BuildObjects(1, 0028e408, 0028e430)
+ afxClass<afxSurface, afxTexture>ConstructingObject(04854cd0)
+ afxClass<afxTexture>::ConstructObject(04854cd0)
+ sglTexture.c:1030?_AfxTexCtor(tex=04854cd0)
+ afxClass<afxSurface>::ConstructObject(04854cd0)
+ sglSurface.c:131?_AfxSurfCtor(surf=04854cd0)
+ afxSurface.c:12?AfxDrawContextAcquireSurface(dctx=048f6e60,fmt=4,whd=[1280,720,1],usage=16)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxClass<afxSurface>::AllocateObjects(1, 0028e408, 0028e424)
+ afxClass<afxSurface>::BuildObjects(1, 0028e408, 0028e430)
+ afxClass<afxSurface, afxTexture>ConstructingObject(0486b370)
+ afxClass<afxTexture>::ConstructObject(0486b370)
+ sglTexture.c:1030?_AfxTexCtor(tex=0486b370)
+ afxClass<afxSurface>::ConstructObject(0486b370)
+ sglSurface.c:131?_AfxSurfCtor(surf=0486b370)
+ sglDrawOutput.c:476?_AfxStdDoutImplCtor(dout=04854b50,uri=window)
+ sglDrawOutput.c:324?_AfxStdDoutImplCtorWnd(dout=04854b50)
+ Extent readjusted. (dout)04854b50 -> 1272, 0.000000 of 4219122870; 693 0.000001 of 655617699
+ afxClass<afxRenderer>::AllocateObjects(1, 00ec503c, 0028ed50)
+ afxClass<afxRenderer>::BuildObjects(1, 00ec503c, 00000000)
+ afxClass<afxRenderer>::ConstructObject(048a5090)
+ afxRenderer.c:320?_AfxRndCtor(rnd=048a5090)
+ afxDrawInput.c:102?AfxDrawContextAcquireInput(dctx=048f6e60,spec=0028ea58)
+ afxClass<afxDrawInput>::AllocateObjects(1, 0028dec0, 0028dedc)
+ afxClass<afxDrawInput>::BuildObjects(1, 0028dec0, 0028ea58)
+ afxClass<afxDrawInput>::ConstructObject(048a7290)
+ sglDrawInput.c:321?_AfxDinCtor(din=048a7290)
+ afxArena.c:822?AfxAcquireArena(strategy=0028db50,hint="sglDrawInput.c:351!_AfxDinCtor")
+ afxClass<Memory Arena>::AllocateObjects(1, 0028daa4, 0028dab4)
+ afxClass<Memory Arena>::BuildObjects(1, 0028daa4, 0028da9c)
+ afxClass<Memory Arena, afxMemory>ConstructingObject(048a73f0)
+ afxClass<afxMemory>::ConstructObject(048a73f0)
+ afxMemory.c:315?_AfxMemCtor(mem=048a73f0)
+ afxClass<Memory Arena>::ConstructObject(048a73f0)
+ afxArena.c:799?_AfxArenCtor(aren=048a73f0)
+ ADV afxTexture.c:52?AfxTextureBlueprintBegin
+    texb->fcc == AFX_FCC_TEXB
+ afxTexture.c:442?AfxDrawContextBuildTextures(dctx=048f6e60,cnt=1,blueprint=0028e540,tex=048a71f8)
+ afxClass<afxTexture>::AllocateObjects(1, 048a71f8, 0028deac)
+ afxClass<afxTexture>::BuildObjects(1, 048a71f8, 0028e540)
+ afxClass<afxTexture>::ConstructObject(048f8cb0)
+ sglTexture.c:1030?_AfxTexCtor(tex=048f8cb0)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/right.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/left.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/bottom.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/top.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/front.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,art/skybox/day/back.tga))
+ afxClass<afxFile>::AllocateObjects(1, 0028d758, 0028d768)
+ afxClass<afxFile>::BuildObjects(1, 0028d758, 0028d748)
+ afxClass<afxFile, afxStream>ConstructingObject(048aa9e0)
+ afxClass<afxStream>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::ConstructObject(048aa9e0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d7a8)
+ Destructing instance 048aa9e0 of afxFile class.
+ Destructing instance 048aa9e0 of afxFile : afxStream class.
+ Destructing instance 048aa9e0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d7a8)
+ afxClass<afxVertexBuffer>::AllocateObjects(1, 048a71f4, 0028de88)
+ afxClass<afxVertexBuffer>::BuildObjects(1, 048a71f4, 0028de60)
+ afxClass<afxVertexBuffer, afxBuffer>ConstructingObject(048aa7a0)
+ afxClass<afxBuffer>::ConstructObject(048aa7a0)
+ sglBuffer.c:467?_AfxBufCtor(buf=048aa7a0)
+ afxClass<afxVertexBuffer>::ConstructObject(048aa7a0)
+ afxVertexBuffer.c:350?_AfxVbufCtor(vbuf=048aa7a0)
+ Uploading draw operation 'data/pipeline/skybox.xml'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028d9c0, 0028d9d0)
+ afxClass<afxXml>::BuildObjects(1, 0028d9c0, 0028d9bc)
+ afxClass<afxXml>::ConstructObject(04894d40)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028d65c, 0028d66c)
+ afxClass<afxFile>::BuildObjects(1, 0028d65c, 0028d64c)
+ afxClass<afxFile, afxStream>ConstructingObject(048aaa70)
+ afxClass<afxStream>::ConstructObject(048aaa70)
+ afxClass<afxFile>::ConstructObject(048aaa70)
+ afxClass<afxFile>::DismantleObjects(1, 0028d6ac)
+ Destructing instance 048aaa70 of afxFile class.
+ Destructing instance 048aaa70 of afxFile : afxStream class.
+ Destructing instance 048aaa70 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d6ac)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 048a7220, 0028d99c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 048a7220, 0028dc14)
+ afxClass<afxDrawOperation>::ConstructObject(04895030)
+ afxDrawOperation.c:661?_AfxDopCtor(dop=04895030)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=048f6e60)
+ afxClass<afxPipeline>::AllocateObjects(1, 0486d368, 0028d344)
+ afxClass<afxPipeline>::BuildObjects(1, 0486d368, 0028d430)
+ afxClass<afxPipeline>::ConstructObject(048aab60)
+ sglPipeline.c:517?_AfxPipCtor(pip=048aab60)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=048950d0,shd=0028cdc0)
+ Uploading shader 'data/pipeline/skybox.xml?vs'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028c698, 0028c6a8)
+ afxClass<afxXml>::BuildObjects(1, 0028c698, 0028c694)
+ afxClass<afxXml>::ConstructObject(04895200)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c334, 0028c344)
+ afxClass<afxFile>::BuildObjects(1, 0028c334, 0028c324)
+ afxClass<afxFile, afxStream>ConstructingObject(048aae40)
+ afxClass<afxStream>::ConstructObject(048aae40)
+ afxClass<afxFile>::ConstructObject(048aae40)
+ afxClass<afxFile>::DismantleObjects(1, 0028c384)
+ Destructing instance 048aae40 of afxFile class.
+ Destructing instance 048aae40 of afxFile : afxStream class.
+ Destructing instance 048aae40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c384)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028c41c, 0028c42c)
+ afxClass<afxFile>::BuildObjects(1, 0028c41c, 0028c40c)
+ afxClass<afxFile, afxStream>ConstructingObject(048aae40)
+ afxClass<afxStream>::ConstructObject(048aae40)
+ afxClass<afxFile>::ConstructObject(048aae40)
+ afxClass<afxFile>::DismantleObjects(1, 0028c46c)
+ Destructing instance 048aae40 of afxFile class.
+ Destructing instance 048aae40 of afxFile : afxStream class.
+ Destructing instance 048aae40 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c46c)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdView.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028c41c, 0028c42c)
+ afxClass<afxFile>::BuildObjects(1, 0028c41c, 0028c40c)
+ afxClass<afxFile, afxStream>ConstructingObject(048ab330)
+ afxClass<afxStream>::ConstructObject(048ab330)
+ afxClass<afxFile>::ConstructObject(048ab330)
+ afxClass<afxFile>::DismantleObjects(1, 0028c46c)
+ Destructing instance 048ab330 of afxFile class.
+ Destructing instance 048ab330 of afxFile : afxStream class.
+ Destructing instance 048ab330 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c46c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028c974,shd=0028cdc0)
+ afxClass<afxShader>::AllocateObjects(1, 0028cdc0, 0028c668)
+ afxClass<afxShader>::BuildObjects(1, 0028cdc0, 0028c974)
+ afxClass<afxShader>::ConstructObject(048ac160)
+ sglShader.c:263?_AfxShdCtor(shd=048ac160)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    vec4 viewpoint; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        out block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        void main()
+        {
+            sgl_v.uvw0 = a_xyz;
+            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            gl_Position = pos.xyww;
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028c6ec)
+ Destructing instance 04895200 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04895200)
+ afxClass<afxXml>::DeallocateObjects(1, 0028c6ec)
+ afxObject<048ac160>::InstallEventFilter(048aab60)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=04895160,shd=0028cdc0)
+ Uploading shader 'data/pipeline/skybox.xml?fs'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/skybox.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028c698, 0028c6a8)
+ afxClass<afxXml>::BuildObjects(1, 0028c698, 0028c694)
+ afxClass<afxXml>::ConstructObject(04895200)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/skybox.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/skybox.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c334, 0028c344)
+ afxClass<afxFile>::BuildObjects(1, 0028c334, 0028c324)
+ afxClass<afxFile, afxStream>ConstructingObject(048ab190)
+ afxClass<afxStream>::ConstructObject(048ab190)
+ afxClass<afxFile>::ConstructObject(048ab190)
+ afxClass<afxFile>::DismantleObjects(1, 0028c384)
+ Destructing instance 048ab190 of afxFile class.
+ Destructing instance 048ab190 of afxFile : afxStream class.
+ Destructing instance 048ab190 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c384)
+ afxFile.c:276?AfxOpenReadableFile(Afx.IoSystem.OpenReadableFile(data/pipeline/stdEnv.inc))
+ afxClass<afxFile>::AllocateObjects(1, 0028c41c, 0028c42c)
+ afxClass<afxFile>::BuildObjects(1, 0028c41c, 0028c40c)
+ afxClass<afxFile, afxStream>ConstructingObject(048ab190)
+ afxClass<afxStream>::ConstructObject(048ab190)
+ afxClass<afxFile>::ConstructObject(048ab190)
+ afxClass<afxFile>::DismantleObjects(1, 0028c46c)
+ Destructing instance 048ab190 of afxFile class.
+ Destructing instance 048ab190 of afxFile : afxStream class.
+ Destructing instance 048ab190 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c46c)
+ afxShader.c:371?AfxDrawContextBuildShaders(dctx=048f6e60,cnt=1,blueprint=0028c974,shd=0028cdc0)
+ afxClass<afxShader>::AllocateObjects(1, 0028cdc0, 0028c668)
+ afxClass<afxShader>::BuildObjects(1, 0028cdc0, 0028c974)
+ afxClass<afxShader>::ConstructObject(048ab3d0)
+ sglShader.c:263?_AfxShdCtor(shd=048ab3d0)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+        
+        uniform samplerCube samp;
+
+        in block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uvw0);
+        }
+       
+ afxClass<afxXml>::DismantleObjects(1, 0028c6ec)
+ Destructing instance 04895200 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04895200)
+ afxClass<afxXml>::DeallocateObjects(1, 0028c6ec)
+ afxObject<048ab3d0>::InstallEventFilter(048aab60)
+ afxLego.c:185?AfxDrawContextBuildLegos(dctx=048f6e60)
+ afxClass<afxLego>::AllocateObjects(1, 0486d064, 0028cc1c)
+ afxClass<afxLego>::BuildObjects(1, 0486d064, 0028cf58)
+ afxClass<afxLego>::ConstructObject(04895200)
+ sglLego.c:299?_AfxLegtCtor(legt=04895200)
+ afxClass<afxXml>::DismantleObjects(1, 0028da14)
+ Destructing instance 04894d40 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04894d40)
+ afxClass<afxXml>::DeallocateObjects(1, 0028da14)
+ afxSampler.c:47?AfxDrawContextAcquireSamplers(dctx=048f6e60,spec=0028e0e0)
+ afxClass<afxSampler>::AllocateObjects(1, 048a7224, 0028de34)
+ afxClass<afxSampler>::BuildObjects(1, 048a7224, 0028e0e0)
+ afxClass<afxSampler>::ConstructObject(048aaa70)
+ sglSampler.c:184?_AfxSmpCtor(smp=048aaa70)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a5b80, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a5b80, 0028e0a4)
+ afxClass<afxBuffer>::ConstructObject(048ab190)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab190)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a5b84, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a5b84, 0028e0b0)
+ afxClass<afxBuffer>::ConstructObject(048ac040)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ac040)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a5b88, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a5b88, 0028e0bc)
+ afxClass<afxBuffer>::ConstructObject(048ab250)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab250)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a5b8c, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a5b8c, 0028e0c8)
+ afxClass<afxBuffer>::ConstructObject(048ab310)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab310)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a6600, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a6600, 0028e0a4)
+ afxClass<afxBuffer>::ConstructObject(048ab4a0)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab4a0)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a6604, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a6604, 0028e0b0)
+ afxClass<afxBuffer>::ConstructObject(048ab780)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab780)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a6608, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a6608, 0028e0bc)
+ afxClass<afxBuffer>::ConstructObject(048ab840)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab840)
+ afxClass<afxBuffer>::AllocateObjects(1, 048a660c, 0028deb8)
+ afxClass<afxBuffer>::BuildObjects(1, 048a660c, 0028e0c8)
+ afxClass<afxBuffer>::ConstructObject(048ab900)
+ sglBuffer.c:467?_AfxBufCtor(buf=048ab900)
+ Uploading draw operation 'data/pipeline/body.xml'
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028d9c0, 0028d9d0)
+ afxClass<afxXml>::BuildObjects(1, 0028d9c0, 0028d9bc)
+ afxClass<afxXml>::ConstructObject(04894f00)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028d65c, 0028d66c)
+ afxClass<afxFile>::BuildObjects(1, 0028d65c, 0028d64c)
+ afxClass<afxFile, afxStream>ConstructingObject(048ab9c0)
+ afxClass<afxStream>::ConstructObject(048ab9c0)
+ afxClass<afxFile>::ConstructObject(048ab9c0)
+ afxClass<afxFile>::DismantleObjects(1, 0028d6ac)
+ Destructing instance 048ab9c0 of afxFile class.
+ Destructing instance 048ab9c0 of afxFile : afxStream class.
+ Destructing instance 048ab9c0 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028d6ac)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 048a7238, 0028d99c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 048a7238, 0028dc14)
+ afxClass<afxDrawOperation>::ConstructObject(048954f0)
+ afxDrawOperation.c:661?_AfxDopCtor(dop=048954f0)
+ afxPipeline.c:341?AfxDrawContextBuildPipelines(dctx=048f6e60)
+ afxClass<afxPipeline>::AllocateObjects(1, 0486c718, 0028d344)
+ afxClass<afxPipeline>::BuildObjects(1, 0486c718, 0028d430)
+ afxClass<afxPipeline>::ConstructObject(04992520)
+ sglPipeline.c:517?_AfxPipCtor(pip=04992520)
+ afxShader.c:528?AfxDrawContextAcquireShaders(dctx=048f6e60,cnt=1,uri=04895590,shd=0028cdc0)
+ Uploading shader 'data/pipeline/body.xml?vsRigid'
+ ERR afxString.c:585?AfxStringExcerptRange
+    
+ ERR afxString.c:585?AfxStringExcerptRange
+        (base) + (range)(str->range) is out of range [0, ãÖlˇˇˇÅƒò]
+ afxXml.c:1013?AfxLoadXml(uri=data/pipeline/body.xml)
+ afxClass<afxXml>::AllocateObjects(1, 0028c698, 0028c6a8)
+ afxClass<afxXml>::BuildObjects(1, 0028c698, 0028c694)
+ afxClass<afxXml>::ConstructObject(04895620)
+ afxXml.c:995?_AfxXmlCtor(uri:data/pipeline/body.xml)
+ afxFile.c:256?AfxOpenFile(Afx.IoSystem.OpenFile(00000001,data/pipeline/body.xml))
+ afxClass<afxFile>::AllocateObjects(1, 0028c334, 0028c344)
+ afxClass<afxFile>::BuildObjects(1, 0028c334, 0028c324)
+ afxClass<afxFile, afxStream>ConstructingObject(04992800)
+ afxClass<afxStream>::ConstructObject(04992800)
+ afxClass<afxFile>::ConstructObject(04992800)
+ afxClass<afxFile>::DismantleObjects(1, 0028c384)
+ Destructing instance 04992800 of afxFile class.
+ Destructing instance 04992800 of afxFile : afxStream class.
+ Destructing instance 04992800 of afxStream class.
+ afxClass<afxFile>::DeallocateObjects(1, 0028c384)
+ afxClass<afxXml>::DismantleObjects(1, 0028c6ec)
+ Destructing instance 04895620 of afxXml class.
+ afxXml.c:974?_AfxXmlDtor(xml=04895620)
+ afxClass<afxXml>::DeallocateObjects(1, 0028c6ec)
+ ERR afxObject.c:279?AfxObjectAssert
+    
+ ERR afxObject.c:279?AfxObjectAssert
+    (obj)
+    Invalid
+ ERR afxObject.c:157?AfxObjectTestFcc
+    
+ ERR afxObject.c:157?AfxObjectTestFcc
+    (obj)
+    Invalid
+ ERR afxObject.c:204?AfxObjectGetClass
+    
+ ERR afxObject.c:204?AfxObjectGetClass
+    (obj)
+    Invalid

@@ -25,6 +25,8 @@
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afxMaterial.h"
 #include "afx/sim/modeling/afxSkeleton.h"
+#include "afx/core/io/afxUrd.h"
+#include "afx/sim/modeling/afxVertex.h"
 
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
 /// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshArticulation's.
@@ -50,109 +52,6 @@
 
 AFX_DEFINE_HANDLE(afxMesh);
 
-/// A serialization wrapper for the relationship between a Vertex buffer and a set of primitives.
-
-AFX_DEFINE_STRUCT(afxMeshBlueprintArticulation)
-{
-    afxString*              boneName; // 32
-    afxNat                  triCnt;
-    void const              *tris;
-};
-
-AFX_DEFINE_STRUCT(afxMeshBlueprintSection) // aka tri material group
-{
-    afxString*              name; // 32
-    afxNat                  mtlIdx;
-    afxNat                  firstTriIdx;
-    afxNat                  triCnt;
-
-    void const              *idxSrc;
-    afxNat                  srcIdxSiz;
-};
-
-AFX_DEFINE_STRUCT(afxMeshBlueprintVertexArrange)
-{
-    afxString*              semantic; // 8
-    afxVertexFormat         fmt;
-    afxVertexUsage          usage;
-
-    void const              *src;
-    afxVertexFormat         srcFmt;
-};
-
-/// Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de uma malha. Dependendo apenas das referências das fontes de vértices e índices, para evitar alocações desnecessárias.
-
-AFX_DEFINE_STRUCT(afxMeshBlueprint)
-{
-    afxFcc                  fcc;
-    void*                   sim;
-    afxUri128               uri;
-
-    // vertex data
-    afxNat                  vtxCnt; // must be greater than zero.
-    afxArray                arranges; // afxMeshBlueprintVertexArrange
-
-    // topology data
-    afxNat                  idxCnt;
-    void const              *idxSrc;
-    afxNat                  srcIdxSiz;
-    afxPrimTopology         prim;
-    afxArray                sections; // afxMeshBlueprintSection
-
-    // rigging data
-    afxArray                articulations; // afxMeshBlueprintArticulation
-
-    // material data
-    afxArray                materials; // afxUri
-};
-
-#if 0
-struct mesh_builder
-{
-    float NormalTolerance;
-    float TangentTolerance;
-    float BinormalTolerance;
-    float TangentBinormalCrossTolerance;
-    float TangentMergingMinCosine;
-    float ChannelTolerance[256];
-    const data_type_definition *VertexType;
-    int VertexSize;
-    int ChannelCount;
-    int MaximumVertexCount;
-    int VertexCount;
-    stack_allocator VertexStack;
-    stack_allocator NextCoincidentVertStack;
-    stack_allocator FromTriangleStack;
-    float Point[3];
-    int BoneCount;
-    float *BoneWeights;
-    int WeightCount;
-    vertex_weight_arrays WeightArrays;
-    stack_allocator VertexIndexStack;
-    stack_allocator NextInMaterialStack;
-    int MaterialCount;
-    int UsedMaterialCount;
-    int *FirstMaterialTriangle;
-    stack_allocator EdgeStack;
-    int *EdgeHashHeads;
-    int NextUnusedTriangle;
-    int MaterialIndex;
-    int VertexIndex[3];
-    data_type_definition *BufferedVertexType;
-    data_type_definition *ChannelTypes;
-    int BufferedPrefixSize;
-    int BufferedChannelSize;
-    int BufferedVertexSize;
-    buffered_vertex_prefix *BufferedVertex[3];
-    buffered_vertex_prefix *ComparisonVertex;
-    void *TruncatedVertex;
-    stack_allocator TriangleTangentStack;
-    stack_allocator VertexTangentStack;
-    int VertexComponentNameCount;
-    char **VertexComponentNames;
-}
-#endif
-
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
     afxFcc                  fcc;
@@ -175,25 +74,27 @@ AFX_DEFINE_STRUCT(afxMeshSection) // aka tri material group
 
 AFX_DEFINE_STRUCT(afxMeshTopology)
 {
+    // Mesh triangle topology is described by the afxMeshTopology structure, which is pointed to by the topology field. The afxMeshTopology structure provides a number of useful arrays of data, including the mesh triangulation, edge connectivity, and vertex relationships.
+
     afxFcc                  fcc;
     afxNat                  secCnt;
-    afxMeshSection          *sections; // aka tri material group
+    afxMeshSection          *sections; // The 'sections' array specifies the actual triangulation of the mesh. Each afxMeshSection structure indexes into either the Indices array, for the indices that make up the triangles. The MaterialIndex field indexes into the MaterialBindings array, and specifies the material used for the group of triangles.
     afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
     afxIndexBuffer          ibuf; // afxIndexBuffer --- aka triangles
     afxNat                  idxRgn; // if ibuf is shared among other meshes, it should be a base for sections.    
-    afxPrimTopology         primType;
+    afxPrimTopology         primType; // added by SIGMA
 
-    // democratizado mas não sei o que fazer com isso k
-    afxInt                  _vtx2vtxCnt;
-    afxInt                  *_vtx2vtxMap;
-    afxInt                  _vtx2triCnt;
-    afxInt                  *_vtx2triMap;
-    afxInt                  _side2neighborCnt;
-    afxInt                  *_side2neighborMap;
-    afxInt                  _bonesForTriCnt;
-    afxInt                  *_bonesForTri;
-    afxInt                  _tri2boneCnt;
-    afxInt                  *_tri2boneIndices;
+
+    afxInt                  vtxToVtxCnt;
+    afxInt                  *vtxToVtxMap; // The vtxToVtxMap array has, for each vertex in the corresponding vertex data, an index of the next vertex which was originally the same vertex. This is used to track vertices that are split during exporting, for example because of material boundaries. It is a circular list, so that each vertex points to the next coincident vertex, and then the final vertex points back to the first. If a vertex has no coincident vertices, then it simply points to itself.
+    afxInt                  vtxToTriCnt;
+    afxInt                  *vtxToTriMap; // The vtxToTriMap specifies, for each vertex, what triangle caused it to be created. So, for example, for the original vertices, it is simply the first triangle to reference it in the index list. But, for a vertex which was generated because of a material boundary or something similar, then it is the index of the first triangle who forced the vertex to be generated.
+    afxInt                  sideToNeighborCnt;
+    afxInt                  *sideToNeighborMap; // The sideToNeighborMap specifies, for each edge of a triangle, what the corresponding triangle and edge is across that edge. This array lines up with the Indices arrays such that, for each index, the "edge" corresponding to that index is the edge between that index and the next index in its triangle. The value stored in the sideToNeighborMap array is actually bit-packed. The two lowest-order bits of the value are the corresponding edge index in the corresponding triangle (ie., 00 would be the 0th edge, 01 the 1st, 10 the 2nd, and 11 is undefined). The rest of the bits (the high-order 30 bits) specify the actual triangle index - you would multiply it by three to get its location in the Indices arrays.
+    afxInt                  bonesForTriCnt;
+    afxInt                  *bonesForTri;
+    afxInt                  triToBoneCnt;
+    afxInt                  *triToBoneIndices;
 };
 
 AFX_DEFINE_STRUCT(afxMeshArticulation)
@@ -202,7 +103,7 @@ AFX_DEFINE_STRUCT(afxMeshArticulation)
     afxString*              boneName; // 16
     afxAabb                 aabb; // originally oobb;
     afxNat                  triCnt;
-    afxNat                  *triIndices;
+    afxNat                  *triIdx;
 };
 
 AFX_DEFINE_STRUCT(afxMeshRigging)
@@ -218,6 +119,32 @@ AFX_DEFINE_STRUCT(afxMeshRigging)
 AFX_DEFINE_STRUCT(afxMaterialSlot)
 {
     afxMaterial             mtl;
+};
+
+AFX_DEFINE_STRUCT(afxFileBackedMesh)
+{
+    afxUri                  *name;
+    afxUrd                  *urd;
+    afxUrdReference         primaryVtxData;
+    afxUrdReference         *morphVtxData;
+    struct
+    {
+        afxUrdReference     indexData;
+        afxUrdReference     vtxToVtxMap;
+        afxUrdReference     vtxToTriMap;
+        afxUrdReference     sideToNeighborMap;
+        afxUrdReference     bonesForTri;
+        afxUrdReference     triToBoneIndices;
+    }                       primaryTopology;
+    afxUrdReference         *artTriIdx;
+};
+
+AFX_DEFINE_STRUCT(afxMeshVertexData)
+{
+    afxVertexLayout         layout;
+    afxNat                  vtxCnt;
+    void                    **vtxComps;
+    afxString const         **vtxCompNames;
 };
 
 AFX_OBJECT(afxMesh)
@@ -260,36 +187,6 @@ AFX afxMeshArticulation*    AfxMeshGetArticulation(afxMesh msh, afxNat artIdx);
 
 AFX void                    AfxMeshTransform(afxMesh msh, afxV3d const affine, afxM3d const linear, afxM3d const invLinear, afxReal affineTol, afxReal linearTol, afxFlags flags);
 
-AFX afxMeshRigging*             AfxMeshGenerateRig(afxMesh msh, afxSkeleton src, afxSkeleton dst);
-
-////////////////////////////////////////////////////////////////////////////////
-// BLUEPRINT                                                                  //
-////////////////////////////////////////////////////////////////////////////////
-
-// Inicializa uma blueprint, e reserva recursos.
-AFX void                    AfxMeshBlueprintDeploy(afxMeshBlueprint *mshb, void *sim, afxUri const *name, afxNat vtxCnt, afxNat estVtxArrCnt, afxNat estSecCnt, afxNat estArtCnt, afxNat estMtlCnt);
-
-// Retira de uso uma blueprint, e libera recursos.
-AFX void                    AfxMeshBlueprintDiscard(afxMeshBlueprint *mshb);
-
-AFX void                    AfxMeshBlueprintErase(afxMeshBlueprint *mshb);
-
-// Buscar por um nomeado material se já inserido.
-AFX afxBool                 AfxMeshBlueprintFindMaterial(afxMeshBlueprint *mshb, afxUri const *uri, afxNat *idx);
-
-// Adiciona numa nova articulação a malha. Ao menos uma deve existir.
-AFX afxError                AfxMeshBlueprintAddArticulation(afxMeshBlueprint *mshb, afxString const *name, afxNat triCnt, void const *tris);
-
-// Adiciona um novo material a malha.
-AFX afxError                AfxMeshBlueprintAddMaterial(afxMeshBlueprint *mshb, afxMaterial mtl);
-
-// Adiciona numa nova seção a malha. Ao menos uma deve existir.
-AFX afxError                AfxMeshBlueprintAddSection(afxMeshBlueprint *mshb, afxString const *name, afxNat mtlIdx, afxNat firstTriIdx, afxNat triCnt, void const *idxSrc, afxNat idxSrcSiz);
-
-// Define dados de topologia da malha. Se um 'ibuf' não for oferecido, um novo será gerado com a capacidade de 'idxCnt'. Noutro caso, 'baseIdx' deve ser usado para delimitar o início do espaço utilizável num 'ibuf' compartilhado.
-AFX void                    AfxMeshBlueprintSetTopology(afxMeshBlueprint *mshb, afxPrimTopology prim, afxNat idxCnt, void const *idxSrc, afxNat idxSrcSiz);
-
-// Adiciona um novo arranjo de vértice a malha. Ao menos uma, especificando posição, é necessária.
-AFX afxError                AfxMeshBlueprintAddVertexArrange(afxMeshBlueprint *mshb, afxVertexRowSpecification const *spec);
+AFX afxMeshRigging*         AfxMeshGenerateRig(afxMesh msh, afxSkeleton src, afxSkeleton dst);
 
 #endif//AFX_MESH_H

@@ -26,13 +26,14 @@
 #define AFX_DRAW_SCRIPT_H
 
 #include "afx/draw/pipelining/afxPipeline.h"
-#include "afx/draw/afxDrawOperation.h"
+#include "afx/draw/pipelining/afxDrawOperation.h"
 #include "afx/draw/pipelining/afxLego.h"
-#include "afx/draw/pipelining/afxSampler.h"
-#include "afx/draw/res/afxCanvas.h"
+#include "afx/draw/res/afxSampler.h"
+#include "afx/draw/pipelining/afxCanvas.h"
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afx/draw/res/afxBuffer.h"
+#include "afx/core/mem/afxArena.h"
 
 /*
 Each command buffer is always in one of the following states:
@@ -104,16 +105,57 @@ AFX_DEFINE_STRUCT(afxRenderPassAnnex)
     afxClearValue       clearValue;
 };
 
-AFX_DEFINE_HANDLE(afxDrawScript);
-
-#ifndef AFX_DRAW_DRIVER_SRC
+AFX_DECLARE_STRUCT(_afxDscrVmt);
+AFX_DECLARE_STRUCT(_afxDcmdVmt);
 
 AFX_OBJECT(afxDrawScript)
 {
     afxObject           obj;
-};
+    _afxDscrVmt const*  vmt;
+    void*               idd;
+#ifdef _AFX_DRAW_SCRIPT_C
+    _afxDcmdVmt const*  cmd;
+    afxDrawScriptState  state;
+    afxNat              submRefCnt;
 
+    afxNat              portIdx;
+    afxArena            cmdArena; // owned by dctx data for specific port
+    afxBool             disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
+
+    afxDrawInput        din;
+
+    // move to instance data, together with command chain
+    afxChain            drawCalls;
+    afxChain            stateChanges;
+    afxChain            pipBinds;
+    afxChain            vbufBinds;
+    afxChain            ibufBinds;
+    afxChain            bufBinds;
+    afxChain            texBinds;
+    
+    afxNat              totalCmdCnt;
+    afxNat              lastDrawCmdIdx;
+    afxNat              drawCmdCnt;
+    afxNat              lastPipBindCmdIdx;
+    afxNat              pipBindCmdCnt;
+    afxNat              lastVbufBindCmdIdx;
+    afxNat              vbufBindCmdCnt;
+    afxNat              lastIbufBindCmdIdx;
+    afxNat              ibufBindCmdCnt;
+    afxNat              lastBufBindCmdIdx;
+    afxNat              bufBindCmdCnt;
+    afxNat              lastTexBindCmdIdx;
+    afxNat              texBindCmdCnt;
+    afxNat              lastRasUpdCmdIdx;
+    afxNat              rasUpdCmdCnt;
+    afxNat              lastDepthUpdCmdIdx;
+    afxNat              depthUpdCmdCnt;
+    afxNat              lastVpCmdIdx; // viewport and/or scissor changes
+    afxNat              vpUpdCmdCnt;
+    afxNat              lastScisCmdIdx; // viewport and/or scissor changes
+    afxNat              scisUpdCmdCnt;
 #endif
+};
 
 /*
 When a pipeline object is bound, any pipeline object state that is not specified as dynamic is applied to the command buffer state. 
@@ -121,44 +163,43 @@ Pipeline object state that is specified as dynamic is not applied to the command
 Instead, dynamic state canv be modified at any time and persists for the lifetime of the command buffer, or until modified by another dynamic state setting command, or made invalid by another pipeline bind with that state specified as static.
 */
 
-AFX void*               AfxDrawScriptGetContext(afxDrawScript dscr);
-AFX void*               AfxDrawScriptGetDriver(afxDrawScript dscr);
-AFX void*               AfxDrawScriptGetDrawSystem(afxDrawScript dscr);
+AFX afxDrawDriver       AfxGetDrawScriptDriver(afxDrawScript dscr);
+AFX afxDrawInput        AfxGetDrawScriptInput(afxDrawScript dscr);
+AFX afxDrawScriptState  AfxGetDrawScriptState(afxDrawScript dscr);
+AFX afxNat              AfxGetDrawScriptPort(afxDrawScript dscr);
 
-AFX afxDrawScriptState  AfxDrawScriptGetState(afxDrawScript dscr);
+AFX afxError            AfxBeginDrawScript(afxDrawScript dscr, afxBool permanent);
+AFX afxError            AfxEndDrawScript(afxDrawScript dscr);
+AFX afxError            AfxResetDrawScript(afxDrawScript dscr);
 
-AFX afxError            AfxDrawScriptBegin(afxDrawScript dscr, afxNat flags);
-AFX afxError            AfxDrawScriptEnd(afxDrawScript dscr);
-AFX afxError            AfxDrawScriptReset(afxDrawScript dscr);
+AFX void                AfxDrawCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);
+AFX void                AfxDrawCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
 
-AFX void                AfxDrawScriptCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);
-AFX void                AfxDrawScriptCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
+AFX void                AfxDrawCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
+AFX void                AfxDrawCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxTexture tex[]);
 
-AFX void                AfxDrawScriptCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-AFX void                AfxDrawScriptCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxTexture tex[]);
+AFX void                AfxDrawCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[]);
+AFX void                AfxDrawCmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const stride[]);
+AFX void                AfxDrawCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
+AFX void                AfxDrawCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+AFX void                AfxDrawCmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
 
-AFX void                AfxDrawScriptCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[]);
-AFX void                AfxDrawScriptCmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const size[], afxSize const stride[]);
-AFX void                AfxDrawScriptCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
-AFX void                AfxDrawScriptCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
-AFX void                AfxDrawScriptCmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+AFX void                AfxDrawCmdBindPipeline(afxDrawScript dscr, afxPipeline pip);
 
-AFX void                AfxDrawScriptCmdBindPipeline(afxDrawScript dscr, afxPipeline pip);
+AFX void                AfxDrawCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
 
-AFX void                AfxDrawScriptCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
+AFX void                AfxDrawCmdSetScissors(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
+AFX void                AfxDrawCmdSetViewports(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
 
-AFX void                AfxDrawScriptCmdSetScissors(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
-AFX void                AfxDrawScriptCmdSetViewports(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
+AFX void                AfxDrawCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
+AFX void                AfxDrawCmdEndOperation(afxDrawScript dscr);
+AFX void                AfxDrawCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
+AFX void                AfxDrawCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
+AFX void                AfxDrawCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
+AFX void                AfxDrawCmdEndCombination(afxDrawScript dscr);
 
-AFX void                AfxDrawScriptCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
-AFX void                AfxDrawScriptCmdEndOperation(afxDrawScript dscr);
-AFX void                AfxDrawScriptCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
-AFX void                AfxDrawScriptCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
-AFX void                AfxDrawScriptCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
-AFX void                AfxDrawScriptCmdEndCombination(afxDrawScript dscr);
-
-AFX void                AfxDrawScriptCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
-AFX void                AfxDrawScriptCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);
-AFX void                AfxDrawScriptCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state);
+AFX void                AfxDrawCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
+AFX void                AfxDrawCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);
+AFX void                AfxDrawCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemblyState const *state);
 
 #endif//AFX_DRAW_SCRIPT_H

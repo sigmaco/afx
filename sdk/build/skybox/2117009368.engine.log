@@ -1,0 +1,164 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77a61c10, 00000000, 00000000, 77a3f664)
+ afxClass<afxSystem>::AllocateObjects(1, 002cf448, 002cf458)
+ afxClass<afxSystem>::BuildObjects(1, 002cf448, 00000000)
+ afxClass<afxSystem>::ConstructObject(0051f070)
+ afxSystem.c:1005?_AfxSysCtor(sys=0051f070)
+ ADV afxSystem.c:1028?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:1029?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0051f0bc, 0051f0a4, 00000000, 77a439fc)
+ afxMemory.c:128?AfxAcquireMemory(strategy=002ce518,hint="afxSystem.c:1045!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 002ce3b4, 002ce3c4)
+ afxClass<afxMemory>::BuildObjects(1, 002ce3b4, 002ce3ac)
+ afxClass<afxMemory>::ConstructObject(0051ac10)
+ afxMemory.c:182?_AfxMemCtor(mem=0051ac10)
+ afxClass<afxThread>::Mount(0051f17c, 0051f0a4, 00000000, 77a3fdc0)
+ afxClass<afxIoSystem>::Mount(0051f23c, 0051f0a4, 00000000, 77a41464)
+ afxClass<afxIoSystem>::AllocateObjects(1, 002ce398, 002ce3a8)
+ afxClass<afxIoSystem>::BuildObjects(1, 002ce398, 002ce4e4)
+ afxClass<afxIoSystem>::ConstructObject(0051fde0)
+ afxIoSystem.c:683?_AfxIoCtor(io=0051fde0)
+ afxArena.c:751?AfxAcquireArena(aren=0051fe2c)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0051fe84, 0051fe14, 00000000, 77a411a8)
+ afxClass<afxArchive>::Mount(0051ff44, 0051fe14, 0051fe84, 77a40b44)
+ afxClass<afxResource>::Mount(005200c4, 0051fe14, 00000000, 77a42474)
+ afxClass<afxUrd>::Mount(00520004, 0051fe14, 00000000, 77a42a54)
+ afxIoSystem.c:384?AfxMountStoragePoints(0051fde0,6,002ce70c)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0051f2fc, 0051f0a4, 00000000, 77a3df4c)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 002ce368, 002ce39c)
+ afxClass<afxModule>::BuildObjects(1, 002ce368, 002ce644)
+ afxClass<afxModule>::ConstructObject(00524470)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0051f3bc, 0051f0a4, 00000000, 77a417c8)
+ afxClass<afxKeyboard>::Mount(0051f47c, 0051f0a4, 0051f3bc, 77a420b0)
+ afxClass<afxMouse>::Mount(0051f53c, 0051f0a4, 0051f3bc, 77a42230)
+ afxClass<afxDrawSystem>::Mount(0051f5fc, 0051f0a4, 00000000, 77a46a5c)
+ afxClass<afxApplication>::Mount(0051f6bc, 0051f0a4, 00000000, 77a3d000)
+ afxKeyboard.c:156?AfxAcquireKeyboard(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 002ce3bc, 002ce3cc)
+ afxClass<afxKeyboard>::BuildObjects(1, 002ce3bc, 002ce3b8)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(005245a0)
+ afxClass<afxHid>::ConstructObject(005245a0)
+ afxHid.c:66?_AfxHidCtor(hid=005245a0)
+ afxClass<afxKeyboard>::ConstructObject(005245a0)
+ afxKeyboard.c:212?_AfxKbdCtor(kbd=005245a0)
+ ERR afxSystem.c:1152?_AfxSysCtor
+    
+ ERR afxSystem.c:1152?_AfxSysCtor
+    (osHandle == sys->procUnits[i].osHandle)
+    Invalid
+ ERR afxSystem.c:1153?_AfxSysCtor
+    
+ ERR afxSystem.c:1153?_AfxSysCtor
+    (tid == sys->procUnits[i].tid)
+    Invalid
+ afxThread.c:807?AfxAcquireThread(start=00000000,udd=00000000,exec=00000000,hint="afxSystem.c:1162!_AfxSysCtor")
+ afxClass<afxThread>::AllocateObjects(1, 002ce3c0, 002ce3d0)
+ afxClass<afxThread>::BuildObjects(1, 002ce3c0, 002ce3b0)
+ afxClass<afxThread>::ConstructObject(00525b00)
+ afxThread.c:881?_AfxThrCtor(00525b00)
+ afxThread.c:792?AfxStartThread(thr=00525b00)
+ afxClass<afxKeyboard>::DismantleObjects(1, 002ce40c)
+ Destructing instance 005245a0 of afxKeyboard class.
+ afxKeyboard.c:202?_AfxKbdDtor(kbd=005245a0)
+ Destructing instance 005245a0 of afxKeyboard : afxHid class.
+ Destructing instance 005245a0 of afxHid class.
+ afxHid.c:57?_AfxHidDtor(hid=005245a0)
+ afxClass<afxKeyboard>::DeallocateObjects(1, 002ce40c)
+ afxClass<afxModule>::DismantleObjects(1, 002ce40c)
+ Destructing instance 00524470 of afxModule class.
+ afxModule.c:107?_AfxMdleDtor(mdle=00524470)
+ afxClass<afxModule>::DeallocateObjects(1, 002ce40c)
+ afxClass<afxIoSystem>::DismantleObjects(1, 002ce40c)
+ Destructing instance 0051fde0 of afxIoSystem class.
+ afxIoSystem.c:650?_AfxIoDtor(io=0051fde0)
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ Point "art" 5 unmounted -> "E:/qwadro/afx/art".
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ ERR afxSystem.c:984?startCbOnSysProcUnit
+    
+ ERR afxSystem.c:984?startCbOnSysProcUnit
+    (osHandle == procUnit->osHandle)
+    Invalid
+ Point "data" 5 unmounted -> "E:/qwadro/afx/data".
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ Point "tmp" 7 unmounted -> "E:/qwadro/afx/tmp".
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ Point "sound" 5 unmounted -> "E:/qwadro/afx/sound".
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ Point "system" 5 unmounted -> "E:/qwadro/afx/system32".
+ afxIoSystem.c:336?AfxDismountStoragePoints(0051fde0,1,002ce0b0)
+ Point "." 5 unmounted -> "E:/qwadro/afx".
+ afxClass<afxUrd>::Dismount(00520004)
+ afxClass<afxResource>::Dismount(005200c4)
+ afxClass<afxArchive>::Dismount(0051ff44)
+ afxClass<afxFile>::Dismount(0051fe84)
+ afxArena.c:742?AfxReleaseArena(aren=0051fe2c)
+ afxClass<afxIoSystem>::DeallocateObjects(1, 002ce40c)
+ afxClass<afxMemory>::DismantleObjects(1, 002ce40c)
+ ERR afxSystem.c:412?AfxEnumerateThreads
+    
+ Destructing instance 0051ac10 of afxMemory class.
+ afxMemory.c:166?_AfxMemDtor(mem=0051ac10)
+ afxClass<afxMemory>::DeallocateObjects(1, 002ce40c)
+ afxClass<afxApplication>::Dismount(0051f6bc)
+ afxClass<afxDrawSystem>::Dismount(0051f5fc)
+ afxClass<afxMouse>::Dismount(0051f53c)
+ afxClass<afxKeyboard>::Dismount(0051f47c)
+ afxClass<afxHid>::Dismount(0051f3bc)
+ afxClass<afxModule>::Dismount(0051f2fc)
+ afxClass<afxIoSystem>::Dismount(0051f23c)
+ afxClass<afxThread>::Dismount(0051f17c)
+ afxClass<afxThread>::DismantleObjects(1, 002ce2f0)
+ Destructing instance 00525b00 of afxThread class.
+ afxThread.c:852?_AfxThrDtor(thr=00525b00)
+ afxClass<afxThread>::DeallocateObjects(1, 002ce2f0)
+ afxClass<afxMemory>::Dismount(0051f0bc)
+ ERR afxClass.c:529?_AfxClsRunSubsetCtor
+    
+ ERR afxClass.c:569?AfxClassBuildObjects
+    
+ ERR afxClass.c:715?AfxClassAcquireObjects
+    
+ ERR afxSystem.c:910?AfxBootUpSystem
+    
+ ERR afxObject.c:313?AfxObjectAssert
+    
+ ERR afxObject.c:313?AfxObjectAssert
+    (obj)
+    Invalid
+ ERR afxObject.c:191?AfxObjectTestFcc
+    
+ ERR afxObject.c:191?AfxObjectTestFcc
+    (obj)
+    Invalid
+ ERR afxObject.c:238?AfxObjectGetClass
+    
+ ERR afxObject.c:238?AfxObjectGetClass
+    (obj)
+    Invalid

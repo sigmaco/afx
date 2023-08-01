@@ -21,9 +21,9 @@
 #ifndef AFX_PIPELINE_H
 #define AFX_PIPELINE_H
 
-#include "afx/draw/pipelining/afxShader.h"
+#include "afx/draw/res/afxShader.h"
 #include "afx/draw/pipelining/afxLego.h"
-#include "afx/draw/pipelining/afxSampler.h"
+#include "afx/draw/res/afxSampler.h"
 #include "afx/core/io/afxResource.h"
 #include "afx/draw/res/afxVertexBuffer.h"
 
@@ -140,42 +140,50 @@ AFX_DEFINE_STRUCT(afxPipelineColorBlendState)
     afxReal             blendConstants[4];
 };
 
-AFX_DEFINE_STRUCT(afxPipelineBlueprint)
-{
-    afxFcc                          fcc; // PIPB
-    afxDrawContext                  dctx;
-
-    afxArray                        shaders;
-    afxArray                        viewports;
-    afxArray                        scissors;
-
-    afxBool                         hasAssembling;
-    afxBool                         hasRasterization;
-    afxBool                         hasDepthHandling;
-    afxBool                         hasMultisampling;
-    afxBool                         hasColorBlending;
-
-    afxPipelineInputAssemblyState   inAssembling;
-    afxPipelineRasterizerState      rasterization;
-    afxPipelineDepthState           depthHandling;
-    afxPipelineMultisampleState     multisampling;
-    afxPipelineColorBlendState      colorBlending;
-};
-
-AFX_DEFINE_HANDLE(afxPipeline);
-
-#ifndef AFX_DRAW_DRIVER_SRC
+AFX_DECLARE_STRUCT(_afxPipVmt);
 
 AFX_OBJECT(afxPipeline)
 {
-    afxObject       obj;
+    afxObject                       obj;
+    _afxPipVmt const*               vmt;
+    void*                           idd;
+#ifdef _AFX_PIPELINE_C
+    afxNat                          shaderCnt;
+    afxShader*                      shaders;
+
+    struct
+    {
+        afxNat                      set;
+        afxLego                     legt;
+        afxBool                     resolved;
+    }                               *wiring;
+    afxNat                          wiringCnt;
+
+    afxNat                          inCnt;
+    afxPipelineInputStream          ins[8];
+
+    afxBool                         hasVtxInAssembling;
+    afxPipelineInputAssemblyState   vtxInAssembling;
+
+    // viewport state --- render area state
+    afxNat                          vpCnt;
+    afxViewport*                    vps;
+    afxNat                          scissorCnt;
+    afxRect*                        scissors;
+
+    afxBool                         hasRasterization;
+    afxPipelineRasterizerState      rasterization;
+    afxBool                         hasMultisampling;
+    afxPipelineMultisampleState     multisampling;
+    afxBool                         hasDepthHandling;
+    afxPipelineDepthState           depthHandling;
+    afxBool                         hasColorBlending;
+    afxPipelineColorBlendState      colorBlending;
+#endif
 };
 
-#endif
+AFX afxDrawContext      AfxGetPipelineContext(afxPipeline pip);
 
-AFX void*               AfxPipelineGetContext(afxPipeline pip);
-AFX void*               AfxPipelineGetDriver(afxPipeline pip);
-AFX void*               AfxPipelineGetDrawSystem(afxPipeline pip);
 AFX afxNat              AfxPipelineGetWiringCount(afxPipeline pip);
 AFX afxError            AfxPipelineGetWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt);
 
@@ -185,8 +193,8 @@ AFX afxResult           AfxPipelineGetScissors(afxPipeline pip, afxNat first, af
 AFX afxNat              AfxPipelineGetInputStreamCount(afxPipeline pip);
 AFX afxResult           AfxPipelineGetInputStreams(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputStream streams[]);
 
-AFX afxResult           AfxPipelineGetModules(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
-AFX afxNat              AfxPipelineGetStageCount(afxPipeline pip);
+AFX afxResult           AfxPipelineGetShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
+AFX afxNat              AfxPipelineGetShaderCount(afxPipeline pip);
 
 AFX afxNat              AfxPipelineGetViewportCount(afxPipeline pip);
 AFX afxResult           AfxPipelineGetViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[]);
@@ -196,26 +204,5 @@ AFX afxBool             AfxPipelineHasDepthHandling(afxPipeline pip);
 AFX afxBool             AfxPipelineHasMultisampling(afxPipeline pip);
 AFX afxBool             AfxPipelineHasRasterization(afxPipeline pip);
 AFX afxBool             AfxPipelineHasInputAssembling(afxPipeline pip);
-
-////////////////////////////////////////////////////////////////////////////////
-// PIPELINE BLUEPRINT                                                         //
-////////////////////////////////////////////////////////////////////////////////
-
-AFX void                AfxPipelineBlueprintFormulate(afxPipelineBlueprint* blueprint, afxDrawContext dctx);
-AFX void                AfxPipelineBlueprintDiscard(afxPipelineBlueprint *blueprint);
-AFX void                AfxPipelineBlueprintErase(afxPipelineBlueprint *blueprint);
-
-AFX afxError            AfxPipelineBlueprintAddShaders(afxPipelineBlueprint *blueprint, afxNat cnt, afxUri const uri[]);
-AFX afxError            AfxPipelineBlueprintAddViewports(afxPipelineBlueprint *blueprint, afxNat cnt, afxViewport const vp[]);
-AFX afxError            AfxPipelineBlueprintAddScissors(afxPipelineBlueprint *blueprint, afxNat cnt, afxRect const rc[]);
-
-AFX void                AfxPipelineBlueprintConfigInputAssemblyState(afxPipelineBlueprint *blueprint, afxPipelineInputAssemblyState const *state);
-AFX void                AfxPipelineBlueprintConfigRasterizerState(afxPipelineBlueprint *blueprint, afxPipelineRasterizerState const *state);
-AFX void                AfxPipelineBlueprintConfigDepthState(afxPipelineBlueprint *blueprint, afxPipelineDepthState const *state);
-AFX void                AfxPipelineBlueprintConfigMultisampleState(afxPipelineBlueprint *blueprint, afxPipelineMultisampleState const *state);
-AFX void                AfxPipelineBlueprintConfigColorBlendState(afxPipelineBlueprint *blueprint, afxPipelineColorBlendState const *state);
-
-AFX afxChar const *shdResTypeNames[AFX_SHD_RES_TYPE_TOTAL];
-AFX afxChar const *fmtNames[AFX_FMT_TOTAL];
 
 #endif//AFX_PIPELINE_H

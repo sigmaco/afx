@@ -1,0 +1,359 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77bcfc10, 00000000, 00000000, 77bae224)
+ afxClass<afxSystem>::AllocateObjects(1, 0014f1f8, 0014f208)
+ afxClass<afxSystem>::BuildObjects(1, 0014f1f8, 00000000)
+ afxClass<afxSystem>::ConstructObject(0065f070)
+ afxSystem.c:728?_AfxSysCtor(sys=0065f070)
+ ADV afxSystem.c:748?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:749?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0065f0bc, 0065f0a4, 00000000, 77bb29b8)
+ afxMemory.c:128?AfxAcquireMemory(strategy=0014e300,hint="afxSystem.c:770!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0014e19c, 0014e1ac)
+ afxClass<afxMemory>::BuildObjects(1, 0014e19c, 0014e194)
+ afxClass<afxMemory>::ConstructObject(0065ac10)
+ afxMemory.c:182?_AfxMemCtor(mem=0065ac10)
+ afxClass<afxThread>::Mount(0065f17c, 0065f0a4, 00000000, 77bae774)
+ afxClass<afxIoSystem>::Mount(0065f23c, 0065f0a4, 00000000, 77baffb8)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0014e180, 0014e190)
+ afxClass<afxIoSystem>::BuildObjects(1, 0014e180, 0014e2cc)
+ afxClass<afxIoSystem>::ConstructObject(0065fdb0)
+ afxIoSystem.c:683?_AfxIoCtor(io=0065fdb0)
+ afxArena.c:751?AfxAcquireArena(aren=0065fdfc)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0065fe54, 0065fde4, 00000000, 77bafcfc)
+ afxClass<afxArchive>::Mount(0065ff14, 0065fde4, 0065fe54, 77baf698)
+ afxClass<afxResource>::Mount(00660094, 0065fde4, 00000000, 77bb1448)
+ afxClass<afxUrd>::Mount(0065ffd4, 0065fde4, 00000000, 77bb1a28)
+ afxIoSystem.c:384?AfxMountStoragePoints(0065fdb0,6,0014e4b8)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0065f2fc, 0065f0a4, 00000000, 77bacf00)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ afxClass<afxModule>::AllocateObjects(1, 0014e150, 0014e184)
+ afxClass<afxModule>::BuildObjects(1, 0014e150, 0014e3f0)
+ afxClass<afxModule>::ConstructObject(00664460)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0065f3bc, 0065f0a4, 00000000, 77bb0738)
+ afxClass<afxKeyboard>::Mount(0065f47c, 0065f0a4, 0065f3bc, 77bb1084)
+ afxClass<afxMouse>::Mount(0065f53c, 0065f0a4, 0065f3bc, 77bb1204)
+ afxClass<afxDrawSystem>::Mount(0065f5fc, 0065f0a4, 00000000, 77bb5a2c)
+ afxClass<afxApplication>::Mount(0065f6bc, 0065f0a4, 0065f17c, 77bac000)
+ afxKeyboard.c:156?AfxAcquireKeyboard(port=0)
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ afxClass<afxKeyboard>::AllocateObjects(1, 0014e1a4, 0014e1b4)
+ afxClass<afxKeyboard>::BuildObjects(1, 0014e1a4, 0014e1a0)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(00664590)
+ afxClass<afxHid>::ConstructObject(00664590)
+ afxHid.c:210?_AfxHidCtor(hid=00664590)
+ afxClass<afxKeyboard>::ConstructObject(00664590)
+ afxKeyboard.c:212?_AfxKbdCtor(kbd=00664590)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0014f1f8, 0014f208)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0014f1f8, 0014f2dc)
+ afxClass<afxDrawSystem>::ConstructObject(00664e20)
+ afxDrawSystem.c:407?_AfxDsysCtor(dsys=00664e20)
+ afxClass<afxDrawDriver>::Mount(00664e68, 00664e54, 00000000, 77bb466c)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+    :::::::::::     :::     :::::::::   ::::::::      :::        
+        :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:      
+        +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+     
+        +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:    
+        +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+    
+        #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#    
+        ###     ###     ### ###    ###  ########  ###     ###    
+                                                                 
+                      SIGMA Technology Group                     
+ Truecolor Targa texture serializer installed!
+ afxModule.c:62?AfxAcquireModule(uri=e2draw.icd)
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ afxClass<afxModule>::AllocateObjects(1, 0014ed64, 0014ed98)
+ afxClass<afxModule>::BuildObjects(1, 0014ed64, 0014ee64)
+ afxClass<afxModule>::ConstructObject(00665d80)
+ afxModule.c:130?_AfxMdleCtor(uri:e2draw.icd)
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    
+ ERR afxLinkedList.c:167?AfxFindChainLinkageB2F
+    (idx < ch->cnt)
+    Invalid

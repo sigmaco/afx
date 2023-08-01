@@ -53,7 +53,7 @@ typedef enum afxEventType
     AFX_EVENT_NOD_CURTAILED, // DAG curtailed by child node isolation (removal).
 
     AFX_EVENT_APP_RUN,
-    AFX_EVENT_APP_QUIT,
+    AFX_EVENT_APP_EXIT,
 
     AFX_EVENT_DOUT_DRAGNDROP,
 
@@ -65,15 +65,15 @@ AFX_DECLARE_STRUCT(afxObject);
 
 AFX_DEFINE_STRUCT(afxEvent)
 {
-    afxFcc          fcc;
+    _AFX_DBG_FCC
     afxEventType    type;
     afxBool         posted, accepted;
     union
     {
-        afxObject       *receiver;
-        afxObject       *obj;
+        afxObject   *receiver;
+        afxObject   *obj;
     };
-    void            *udd;
+    void            *udd[4];
 };
 
 AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxObject *receiver, void *udd)
@@ -85,11 +85,22 @@ AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxObject *receiver,
     ev->posted = FALSE;
     ev->accepted = FALSE;
     ev->receiver = receiver;
-    ev->udd = udd;
+    ev->udd[0] = udd;
+    
 }
 
-AFXINL void AfxEventAccept(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = TRUE; }
-AFXINL void AfxEventIgnore(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = FALSE; }
+// Sets the accept flag of the event object, the equivalent of calling setAccepted(true).
+// Setting the accept parameter indicates that the event receiver wants the event. Unwanted events might be propagated to the parent widget.
+
+AFXINL void AfxAcceptEvent(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = TRUE; }
+
+// Clears the accept flag parameter of the event object, the equivalent of calling setAccepted(false).
+// Clearing the accept parameter indicates that the event receiver does not want the event. Unwanted events might be propagated to the parent widget.
+
+AFXINL void AfxIgnoreEvent(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); ev->accepted = FALSE; }
+
+// This property holds the accept flag of the event object.
+// Setting the accept parameter indicates that the event receiver wants the event. Unwanted events might be propagated to the parent widget. By default, isAccepted() is set to true, but don't rely on this as subclasses may choose to clear it in their constructor.
 
 AFXINL afxBool AfxEventIsAccepted(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, AFX_FCC_EVNT); return ev->accepted; }
 

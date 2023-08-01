@@ -17,9 +17,11 @@
 #ifndef AFX_LEGO_H
 #define AFX_LEGO_H
 
+// A afxLego defines the interface between a set of resources bound in a GPUBindGroup and their accessibility in shader stages.
+
 #include "afx/draw/res/afxBuffer.h"
-#include "afxShader.h"
-#include "afx/draw/pipelining/afxSampler.h"
+#include "afx/draw/res/afxShader.h"
+#include "afx/draw/res/afxSampler.h"
 
 AFX_DEFINE_STRUCT(afxLegoBlueprintBinding)
 {
@@ -37,9 +39,6 @@ AFX_DEFINE_STRUCT(afxLegoBlueprint)
     afxArray                bindings; // afxLegoBlueprintBinding
 };
 
-
-
-
 AFX_DEFINE_STRUCT(afxLegoBindingDecl)
 {
     afxNat                  binding; // A unique identifier for a resource binding within the afxLegoScheme, corresponding to a afxLegoDataScheme.binding and a @binding attribute in the afxShader.
@@ -49,17 +48,39 @@ AFX_DEFINE_STRUCT(afxLegoBindingDecl)
     afxString const*        name;
 };
 
-AFX_DEFINE_HANDLE(afxLego);
+AFX_DEFINE_STRUCT(afxLegoEntry) // A GPUBindGroupLayoutEntry describes a single shader resource binding to be included in a GPUBindGroupLayout.
+{
+    // A afxLegoDataScheme describes a single shader resource binding to be included in a afxLegoScheme.
+    afxNat32                binding; // A unique identifier for a resource binding within the afxLegoScheme, corresponding to a afxLegoDataScheme.binding and a @binding attribute in the afxShader.
+    afxFlags                visibility; // A bitset of the members of afxShaderStage. Each set bit indicates that a afxLegoDataScheme's resource will be accessible from the associated shader stage.
+    afxShaderResourceType   type;
+    afxNat                  cnt;
+    afxString*              name; // by QWADRO
 
-#ifndef AFX_DRAW_DRIVER_SRC
+    union
+    {
+        struct
+        {
+            afxBool hasDynOffsets; // if exist it is a push constant block?
+            afxNat  minSizeBound;
+            afxBool writeable; // if true it is no uniform buffer?
+        } buf;
+        struct
+        {
+            int a;
+        } img;
+    };
+};
 
 AFX_OBJECT(afxLego)
 {
-    afxObject           obj;
-};
-
+    afxObject       obj;
+#ifdef _AFX_LEGO_C
+    afxNat32        crc32;
+    afxNat          entryCnt;
+    afxLegoEntry    *entries; // The map of binding indices pointing to the GPUBindGroupLayoutEntrys, which this GPUBindGroupLayout describes.
 #endif
-
+};
 
 // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 

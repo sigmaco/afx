@@ -93,7 +93,7 @@ AFX_DEFINE_STRUCT(afxConnection)
 };
 
 AFX afxResult           AfxObjectReacquire(afxObject *obj, afxObject *holder, void(*handler)(afxObject*, afxEvent*), afxNat32 filter, afxConnection *objc);
-AFX afxResult           AfxObjectRelease(afxObject *obj);
+AFX afxResult           AfxReleaseObject(afxObject *obj);
 
 AFX afxResult           AfxObjectTestFcc(afxObject const *obj, afxFcc fcc);
 AFX afxFcc              AfxObjectGetFcc(afxObject const *obj);
@@ -139,10 +139,10 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxError)__LINE__,AfxOutputError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
 #   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxObject const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))));
-#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || (err = AfxObjectAssert(((afxObject const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_)))));
+#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxObject const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))))));
 
 #else
 

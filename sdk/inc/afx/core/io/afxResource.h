@@ -37,8 +37,6 @@ typedef enum afxResourceState
     AFX_RES_STATE_READY
 }afxResourceState;
 
-AFX_DEFINE_HANDLE(afxResource);
-
 AFX_DEFINE_STRUCT(afxResourceSpecification)
 {
     afxUri const    *uri;
@@ -46,16 +44,13 @@ AFX_DEFINE_STRUCT(afxResourceSpecification)
     afxError        (*unload)(afxResource res);
 };
 
-AFX void*           AfxResourceGetSystem(afxResource res);
-AFX void*           AfxResourceGetFileSystem(afxResource res);
-
-AFX afxUri const*   AfxResourceGetUri(afxResource res);
-AFX afxNat          AfxResourceExcerptName(afxResource res, afxUri *name);
+AFX afxUri const*   AfxGetResourceUri(afxResource res);
+AFX afxNat          AfxExcerptResourceName(afxResource res, afxUri *name);
 AFX afxBool         AfxResourceIsReady(afxResource res);
-AFX afxError        AfxResourceLoad(afxResource res); // find or load (if not found on dictionaries).
-AFX afxError        AfxResourceRequest(afxResource res);
-AFX afxError        AfxResourceDispense(afxResource res);
-AFX afxError        AfxResourceUnload(afxResource res);
+AFX afxError        AfxLoadResource(afxResource res); // find or load (if not found on dictionaries).
+AFX afxError        AfxRequestResource(afxResource res);
+AFX afxError        AfxDispenseResource(afxResource res);
+AFX afxError        AfxUnloadResource(afxResource res);
 
 // Deveria emitir sinal AFX_EVENT_RES_CHANGED, para avisar observadores que o recurso necessita de ser reinstanciado.
 
@@ -72,6 +67,10 @@ AFX_OBJECT(afxResource)
     afxError            (*load)(afxResource res);
     afxError            (*unload)(afxResource res);
     afxFcc              superset; // AFX_FCC_MSH, por exemplo
+
+
+    //afxUri              *name;
+    //afxUrd              *urd;
 };
 
 #endif//AFX_RESOURCE_H

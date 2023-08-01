@@ -14,33 +14,30 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SAMPLER_C
+#define _AFX_DRAW_CONTEXT_C
+#define _AFX_DRAW_QUEUE_C
 #include "sgl.h"
 
-#include "afx/draw/pipelining/afxSampler.h"
+#include "afx/draw/res/afxSampler.h"
 #include "afx/draw/afxDrawSystem.h"
-
-typedef struct
-{
-    afxDrawContext dctx;
-    afxSamplerSpecification const *spec;
-} _afxSmpCtorArgs;
 
 ////////////////////////////////////////////////////////////////////////////////
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp)
+_SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp, sglVmt const* gl)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = AFX_ERR_NONE;
-
-    sglVmt const* gl = &dque->wglVmt;
+    sglDqueIdd *dqueIdd=dque->idd;
 
     if (smp)
     {
-        AfxAssertObject(smp, AFX_FCC_SMP);
+        sglSampIdd *idd = smp->idd;
+        AfxAssertObject(smp, AFX_FCC_SAMP);
 
-        if ((smp->updFlags & SGL_UPD_FLAG_DEVICE))
+        if ((idd->updFlags & SGL_UPD_FLAG_DEVICE))
         {
             GLenum magF = SglToGlTexelFilterMode(smp->magFilter);
             GLenum minF = SglToGlTexelFilterModeMipmapped(smp->minFilter, smp->mipmapFilter);
@@ -49,61 +46,61 @@ _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler 
             GLint wrapR = SglToGlTexWrapMode(smp->uvw[2]);
             GLint cop = SglToGlCompareOp(smp->compareOp);
 
-            if ((smp->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_INST))
             {
-                if (smp->glHandle)
+                if (idd->glHandle)
                 {
-                    gl->DeleteSamplers(1, &(smp->glHandle)); _SglThrowErrorOccuried();
-                    smp->glHandle = NIL;
+                    gl->DeleteSamplers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                    idd->glHandle = NIL;
                 }
 
-                AfxAssert(NIL == smp->glHandle);
-                gl->GenSamplers(1, &(smp->glHandle)); _SglThrowErrorOccuried();
-                gl->BindSampler(unit, smp->glHandle); _SglThrowErrorOccuried();
-                AfxAssert(gl->IsSampler(smp->glHandle));
+                AfxAssert(NIL == idd->glHandle);
+                gl->GenSamplers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
+                gl->BindSampler(unit, idd->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsSampler(idd->glHandle));
 
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_MAG_FILTER, magF); _SglThrowErrorOccuried();
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_MIN_FILTER, minF); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_MAG_FILTER, magF); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_MIN_FILTER, minF); _SglThrowErrorOccuried();
 
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_WRAP_S, wrapS); _SglThrowErrorOccuried();
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_WRAP_T, wrapT); _SglThrowErrorOccuried();
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_WRAP_R, wrapR); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_WRAP_S, wrapS); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_WRAP_T, wrapT); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_WRAP_R, wrapR); _SglThrowErrorOccuried();
 
                 if (smp->anisotropyEnabled)
                 {
-                    gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_ANISOTROPY, smp->anisotropyMaxDegree); _SglThrowErrorOccuried();
+                    gl->SamplerParameterf(idd->glHandle, GL_TEXTURE_MAX_ANISOTROPY, smp->anisotropyMaxDegree); _SglThrowErrorOccuried();
                 }
                 else
                 {
                     //gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_ANISOTROPY, 0); _SglThrowErrorOccuried();
                 }
 
-                gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_LOD_BIAS, smp->lodBias); _SglThrowErrorOccuried();
-                gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MIN_LOD, smp->minLod); _SglThrowErrorOccuried();
-                gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_LOD, smp->maxLod); _SglThrowErrorOccuried();
+                gl->SamplerParameterf(idd->glHandle, GL_TEXTURE_LOD_BIAS, smp->lodBias); _SglThrowErrorOccuried();
+                gl->SamplerParameterf(idd->glHandle, GL_TEXTURE_MIN_LOD, smp->minLod); _SglThrowErrorOccuried();
+                gl->SamplerParameterf(idd->glHandle, GL_TEXTURE_MAX_LOD, smp->maxLod); _SglThrowErrorOccuried();
 
                 if (smp->compareEnabled)
                 {
                     // what about GL_TEXTURE_COMPARE_MODE?
                 }
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_COMPARE_MODE, GL_NONE); _SglThrowErrorOccuried();
-                gl->SamplerParameteri(smp->glHandle, GL_TEXTURE_COMPARE_FUNC, cop); _SglThrowErrorOccuried();
-                gl->SamplerParameterfv(smp->glHandle, GL_TEXTURE_BORDER_COLOR, (void*)smp->borderColor);
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_COMPARE_MODE, GL_NONE); _SglThrowErrorOccuried();
+                gl->SamplerParameteri(idd->glHandle, GL_TEXTURE_COMPARE_FUNC, cop); _SglThrowErrorOccuried();
+                gl->SamplerParameterfv(idd->glHandle, GL_TEXTURE_BORDER_COLOR, (void*)smp->borderColor);
 
-                smp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+                idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
                 AfxEcho("afxSampler %p hardware-side data instanced.", smp);
             }
-            else if ((smp->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
             {
-                AfxAssert(smp->glHandle);
-                gl->BindSampler(unit, smp->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(idd->glHandle);
+                gl->BindSampler(unit, idd->glHandle); _SglThrowErrorOccuried();
                 AfxThrowError(); // shoudn't be mutable
             }
         }
         else
         {
-            AfxAssert(smp->glHandle);
-            gl->BindSampler(unit, smp->glHandle); _SglThrowErrorOccuried();
+            AfxAssert(idd->glHandle);
+            gl->BindSampler(unit, idd->glHandle); _SglThrowErrorOccuried();
         }
     }
     else
@@ -114,116 +111,43 @@ _SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler 
     return err;
 }
 
-_SGL void _AfxSamplerDescribe(afxSampler smp, afxSamplerSpecification *spec)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(smp, AFX_FCC_SMP);
-    spec->magFilter = smp->magFilter;
-    spec->minFilter = smp->minFilter;
-    spec->mipmapFilter = smp->mipmapFilter;
-    spec->uvw[0] = smp->uvw[0];
-    spec->uvw[1] = smp->uvw[1];
-    spec->uvw[2] = smp->uvw[2];
-    spec->anisotropyEnabled = smp->anisotropyEnabled;
-    spec->anisotropyMaxDegree = smp->anisotropyMaxDegree;
-    spec->compareEnabled = smp->compareEnabled;
-    spec->compareOp = smp->compareOp;
-    AfxColorSet(spec->borderColor, smp->borderColor[0], smp->borderColor[1], smp->borderColor[2], smp->borderColor[3]);
-    spec->unnormalizedCoords = smp->unnormalizedCoords;
-}
-
-_SGL afxBool _SglSmpEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSampler smp = (void*)obj;
-    AfxAssertObject(smp, AFX_FCC_SMP);
-    (void)ev;
-    return FALSE;
-}
-
-_SGL afxBool _SglSmpEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSampler smp = (void*)obj;
-    AfxAssertObject(smp, AFX_FCC_SMP);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
 _SGL afxError _AfxSmpDtor(afxSampler smp)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("smp=%p", smp);
-    AfxAssertObject(smp, AFX_FCC_SMP);
+    AfxAssertObject(smp, AFX_FCC_SAMP);
 
-    afxDrawContext dctx = AfxObjectGetProvider(&smp->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    sglVmt const* gl = &(dctx->queues[0]->wglVmt);
+    sglSampIdd *idd = smp->idd;
 
-    if (smp->glHandle)
+    if (idd && idd->glHandle)
     {
-        afxDrawContext dctx = AfxSamplerGetContext(smp);
-        _SglEnqueueGlResourceDeletion(dctx, 0, 4, smp->glHandle);
-        smp->glHandle = 0;
+        afxDrawContext dctx = AfxGetSamplerContext(smp);
+        _SglDeleteGlRes(dctx, 4, idd->glHandle);
+        idd->glHandle = 0;
+
+        AfxDeallocate(AfxGetDrawContextMemory(dctx), idd);
+        smp->idd = NIL;
     }
 
     return err;
 }
 
-_SGL afxSmpImpl const _AfxStdSmpImpl;
-
-afxSmpImpl const _AfxStdSmpImpl =
+_SGL _afxSampVmt _SglSampVmt =
 {
-    _AfxSamplerDescribe
+    _AfxSmpDtor
 };
 
-_SGL afxError _AfxSmpCtor(void *cache, afxNat idx, afxSampler smp, afxSamplerSpecification const *specs)
+_SGL afxError _AfxSmpCtor(afxSampler smp)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("smp=%p", smp);
-    AfxAssertObject(smp, AFX_FCC_SMP);
+    AfxAssertObject(smp, AFX_FCC_SAMP);
+    afxDrawContext dctx = AfxGetSamplerContext(smp);
 
-    afxSamplerSpecification const *spec = &specs[idx];
-    AfxAssert(spec);
-
-    smp->crc32 = 0;
-    AfxCrc32(&smp->crc32, spec, sizeof(*spec));
-
-    smp->magFilter = spec->magFilter;
-    smp->minFilter = spec->minFilter;
-    smp->mipmapFilter = spec->mipmapFilter;
-    smp->uvw[0] = spec->uvw[0];
-    smp->uvw[1] = spec->uvw[1];
-    smp->uvw[2] = spec->uvw[2];
-    smp->anisotropyEnabled = spec->anisotropyEnabled;
-    smp->anisotropyMaxDegree = spec->anisotropyMaxDegree;
-    smp->compareEnabled = spec->compareEnabled;
-    smp->compareOp = spec->compareOp;
-    AfxColorSet(smp->borderColor, spec->borderColor[0], spec->borderColor[1], spec->borderColor[2], spec->borderColor[3]);
-    smp->unnormalizedCoords = spec->unnormalizedCoords;
-    smp->lodBias = spec->lodBias;
-    smp->minLod = spec->minLod;
-    smp->maxLod = spec->maxLod;
-
-    smp->glHandle = 0;
-    smp->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+    smp->vmt = &_SglSampVmt;
+    sglSampIdd *idd = AfxAllocate(AfxGetDrawContextMemory(dctx), sizeof(*idd), 0, AfxSpawnHint());
+    smp->idd = idd;
+    idd->glHandle = 0;
+    idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     return err;
 }
-
-_SGL afxClassSpecification const _AfxSmpClassSpec;
-
-afxClassSpecification const _AfxSmpClassSpec =
-{
-    AFX_FCC_SMP,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxSampler)),
-    NIL,
-    (void*)_AfxSmpCtor,
-    (void*)_AfxSmpDtor,
-    .event = _SglSmpEventHandler,
-    .eventFilter = _SglSmpEventFilter,
-    "afxSampler",
-    &_AfxStdSmpImpl
-};

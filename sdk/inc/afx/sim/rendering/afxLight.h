@@ -59,6 +59,6 @@ AFX_OBJECT(afxLight)
 
 
 AFX afxNode     AfxLightGetNode(afxLight lit);
-AFX afxResult   AfxLightCaptureAffectedNodes(afxLight lit, afxNode root, afxArray(afxNode) *captures);
+AFX afxResult   AfxLightCaptureAffectedNodes(afxLight lit, afxNode root, afxArray *capturedNods);
 
 #endif//AFX_LIGHT_H

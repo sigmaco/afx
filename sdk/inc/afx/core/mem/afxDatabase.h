@@ -19,8 +19,6 @@
 
 #include "afx/core/mem/afxMemory.h"
 
-AFX_DEFINE_HANDLE(afxDatabase);
-
 AFX_DEFINE_STRUCT(afxIndexedStringData) // at afxString._data
 {
     afxDatabase db;

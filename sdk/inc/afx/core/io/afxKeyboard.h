@@ -131,9 +131,6 @@ typedef enum // layout de HID
     AFX_KEY_TOTAL = 256
 } afxKey;
 
-AFX_DEFINE_HANDLE(afxKeyboard);
-
-
 AFX_OBJECT(afxKeyboard)
 {
     AFX_OBJECT(afxHid)  hid;
@@ -145,14 +142,12 @@ AFX_OBJECT(afxKeyboard)
 #endif
 };
 
-AFX void*       AfxKeyboardGetSystem(afxKeyboard kbd);
-
-AFX afxBool     AfxKeyboardArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
-AFX afxError    AfxKeyboardEmulateActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
-AFX afxBool     AfxKeyboardIsPressed(afxKeyboard kbd, afxKey code);
-AFX afxBool     AfxKeyboardWasPressed(afxKeyboard kbd, afxKey code);
-AFX afxBool     AfxKeyboardWasReleased(afxKeyboard kbd, afxKey code);
-AFX afxBool     AfxKeyboardWerePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
-AFX afxBool     AfxKeyboardWereReleased(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
+AFX afxError    AfxEmulateKeyActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
+AFX afxBool     AfxKeysIsPressed(afxKeyboard kbd, afxKey code);
+AFX afxBool     AfxKeysArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
+AFX afxBool     AfxKeysWasPressed(afxKeyboard kbd, afxKey code);
+AFX afxBool     AfxKeysWasReleased(afxKeyboard kbd, afxKey code);
+AFX afxBool     AfxKeysWerePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
+AFX afxBool     AfxKeysWereReleased(afxKeyboard kbd, afxNat cnt, afxKey codes[]);
 
 #endif//AFX_KEYBOARD_H

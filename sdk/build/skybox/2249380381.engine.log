@@ -1,0 +1,72 @@
+
+ afxDebug.c:370?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77990c10, 00000000, 00000000, 7796f224)
+ afxClass<afxSystem>::AllocateObjects(1, 0036f0d4, 0036f0e4)
+ afxClass<afxSystem>::BuildObjects(1, 0036f0d4, 00000000)
+ afxClass<afxSystem>::ConstructObject(006bf070)
+ afxSystem.c:727?_AfxSysCtor(sys=006bf070)
+ ADV afxSystem.c:747?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:748?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(006bf0bc, 006bf0a4, 00000000, 779739b8)
+ afxMemory.c:128?AfxAcquireMemory(strategy=0036e1b8,hint="afxSystem.c:767!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0036e03c, 0036e04c)
+ afxClass<afxMemory>::BuildObjects(1, 0036e03c, 0036e034)
+ afxClass<afxMemory>::ConstructObject(006bac10)
+ afxMemory.c:182?_AfxMemCtor(mem=006bac10)
+ afxClass<afxThread>::Mount(006bf17c, 006bf0a4, 00000000, 7796f788)
+ afxClass<afxIoSystem>::Mount(006bf23c, 006bf0a4, 00000000, 77970fb8)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0036e020, 0036e030)
+ afxClass<afxIoSystem>::BuildObjects(1, 0036e020, 0036e184)
+ afxClass<afxIoSystem>::ConstructObject(006bfdb0)
+ afxIoSystem.c:683?_AfxIoCtor(io=006bfdb0)
+ afxArena.c:751?AfxAcquireArena(aren=006bfdfc)
+ afxArena.c:752?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:699!_AfxIoCtor")
+ afxClass<afxFile>::Mount(006bfe54, 006bfde4, 00000000, 77970cfc)
+ afxClass<afxArchive>::Mount(006bff14, 006bfde4, 006bfe54, 77970698)
+ afxClass<afxResource>::Mount(006c0094, 006bfde4, 00000000, 77972448)
+ afxClass<afxUrd>::Mount(006bffd4, 006bfde4, 00000000, 77972a28)
+ afxIoSystem.c:384?AfxMountStoragePoints(006bfdb0,6,0036e394)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(006bf2fc, 006bf0a4, 00000000, 7796defc)
+ afxModule.c:62?AfxAcquireModule(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0036dff0, 0036e024)
+ afxClass<afxModule>::BuildObjects(1, 0036dff0, 0036e2cc)
+ afxClass<afxModule>::ConstructObject(006c4460)
+ afxModule.c:130?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(006bf3bc, 006bf0a4, 00000000, 77971738)
+ afxClass<afxKeyboard>::Mount(006bf47c, 006bf0a4, 006bf3bc, 77972084)
+ afxClass<afxMouse>::Mount(006bf53c, 006bf0a4, 006bf3bc, 77972204)
+ afxClass<afxDrawSystem>::Mount(006bf5fc, 006bf0a4, 00000000, 77976a2c)
+ afxClass<afxApplication>::Mount(006bf6bc, 006bf0a4, 006bf17c, 7796d000)
+ afxKeyboard.c:156?AfxAcquireKeyboard(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0036e044, 0036e054)
+ afxClass<afxKeyboard>::BuildObjects(1, 0036e044, 0036e040)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(006c4590)
+ afxClass<afxHid>::ConstructObject(006c4590)
+ afxHid.c:210?_AfxHidCtor(hid=006c4590)
+ afxClass<afxKeyboard>::ConstructObject(006c4590)
+ afxKeyboard.c:212?_AfxKbdCtor(kbd=006c4590)
+ afxThread.c:1127?AfxAcquireThread(spec=0036e174,hint="afxSystem.c:892!_AfxSysCtor")
+ afxClass<afxThread>::AllocateObjects(1, 006bf85c, 0036e028)
+ afxClass<afxThread>::BuildObjects(1, 006bf85c, 0036e174)

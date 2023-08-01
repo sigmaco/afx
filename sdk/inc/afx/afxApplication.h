@@ -21,14 +21,12 @@
 #include "afx/sim/afxSimulation.h"
 #include "afx/mmux/afxWidget.h"
 #include "afx/core/io/afxMouse.h"
+#include "afx/core/async/afxThread.h"
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 
-AFX_DEFINE_HANDLE(afxApplication);
-
 AFX_DEFINE_STRUCT(afxApplicationSpecification)
 {
-    afxBlueprint            base;
     afxNat                  argc;
     afxChar const           **argv;
 
@@ -36,44 +34,23 @@ AFX_DEFINE_STRUCT(afxApplicationSpecification)
     afxDrawContext          dctx;
     afxDrawInput            din;
 
-    afxResult               (*enter)(afxApplication);
-    afxResult               (*update)(afxApplication);
-    afxResult               (*exit)(afxApplication);
+    afxError                (*proc)(afxThread thr, afxApplication app, afxThreadOpcode opcode);
 
     afxNat                  maxWidCnt;
     afxNat                  maxSimCnt;
 };
 
-AFX void                    AfxApplicationExit(afxApplication app, afxResult exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
-AFX void                    AfxApplicationQuit(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
-AFX afxResult               AfxApplicationExecute(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
-
-AFX afxSimulation           AfxApplicationAcquireSimulation(afxApplication app, afxSimulationSpecification const *spec);
-AFX afxWidget               AfxApplicationAcquireWidget(afxApplication app, afxString const *name, afxWidget parent, afxUri const *uri, afxResult(*f)(afxWidget, afxUri const*, void *data));
-
-AFX void*                   AfxApplicationGetSystem(afxApplication app);
-AFX void*                   AfxApplicationGetDrawContext(afxApplication app);
-AFX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
-
-
-AFX afxClass*               AfxApplicationGetSimulationClass(afxApplication app);
-AFX afxClass*               AfxApplicationGetWidgetClass(afxApplication app);
-AFX afxResult               AfxApplicationForEachSimulation(afxApplication app, void(*f)(afxIterator *iter), void *data);
-AFX afxResult               AfxApplicationForEachWidget(afxApplication app, void(*f)(afxIterator *iter), void *data);
-
-AFX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
-AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
-AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
-
-AFX afxResult               _AfxApplicationProcess(afxApplication app);
-AFX afxError                AfxApplicationStep(afxApplication app, afxReal dt);
-
-#ifndef _AFX_API_ONLY
+#if (defined(_AFX_APPLICATION_C) && (!defined(_AFX_THREAD_C)))
+#   error "afxThread not exposed"
+#endif
 
 AFX_OBJECT(afxApplication)
 {
-    afxObject               obj;
+    AFX_OBJECT(afxThread)   thr;
+#ifdef _AFX_APPLICATION_C
     afxChain                provisions;
+    afxClass                widClass;
+    afxClass                simClass;
 
     // memory allocation service
     afxMemory               genrlMem;
@@ -84,20 +61,10 @@ AFX_OBJECT(afxApplication)
     afxNat                  argc;
     afxChar const           **argv;
 
-    afxArray(afxEvent)      postedEvents;
-    afxBool                 excludeInputEvents, waitForNewEvents;
-
     // application
     afxString               path; // 1024
-    afxBool                 running;
-    afxResult               exitCode;
-
-    afxResult               (*enter)(afxApplication);
-    afxResult               (*update)(afxApplication);
-    afxResult               (*exit)(afxApplication);
-
-    afxSize                 lastFrameTime, lastAnimTime;
-    afxReal                 deltaTime;
+    //afxThread               thr;
+    afxError                (*proc)(afxThread thr, afxApplication app, afxThreadOpcode opcode);
 
     afxDrawContext          dctx;
     afxDrawInput            din; // Used for draw widgets.
@@ -106,11 +73,30 @@ AFX_OBJECT(afxApplication)
     afxWidget               focusedWidg;
     afxWidget               grabbedWidg;
     afxV2d                  grabPoint;
-    afxClass                widClass;
-    afxClass                simClass;
+#endif//_AFX_APPLICATION_C
 };
 
-#endif
+AFX void                    AfxEndApplication(afxApplication app, afxInt exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
+AFX void                    AfxQuitApplication(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
+AFX afxResult               AfxRunApplication(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
 
+AFX afxSimulation           AfxApplicationAcquireSimulation(afxApplication app, afxSimulationSpecification const *spec);
+AFX afxWidget               AfxApplicationAcquireWidget(afxApplication app, afxString const *name, afxWidget parent, afxUri const *uri, afxResult(*f)(afxWidget, afxUri const*, void *data));
+
+AFX void*                   AfxApplicationGetDrawContext(afxApplication app);
+AFX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
+
+AFX afxObject*              AfxGetApplicationObject(afxApplication app);
+AFX afxThread               AfxGetApplicationThread(afxApplication app);
+
+AFX afxClass*               AfxGetWidgetClass(afxApplication app);
+AFX afxClass*               AfxGetSimulationClass(afxApplication app);
+
+AFX afxNat                  AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[]);
+AFX afxNat                  AfxEnumerateSimulations(afxApplication app, afxNat first, afxNat cnt, afxSimulation sim[]);
+
+AFX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
+AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
+AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
 
 #endif//AFX_APPLICATION_H

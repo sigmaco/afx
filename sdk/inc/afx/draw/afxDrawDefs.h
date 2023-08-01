@@ -23,8 +23,30 @@
 #include "afx/core/async/afxCondition.h"
 #include "afx/core/io/afxStream.h"
 
-AFX_DEFINE_HANDLE(afxDrawSystem); // exception
+// Object handles defined by SIGMA Future Draw Systems
+
+AFX_DEFINE_HANDLE(afxDrawSystem);
+AFX_DEFINE_HANDLE(afxDrawDriver);
+AFX_DEFINE_HANDLE(afxDrawThread);
 AFX_DEFINE_HANDLE(afxDrawContext);
+AFX_DEFINE_HANDLE(afxDrawQueue);
+AFX_DEFINE_HANDLE(afxDrawInput);
+AFX_DEFINE_HANDLE(afxDrawScript);
+AFX_DEFINE_HANDLE(afxDrawOutput);
+
+AFX_DEFINE_HANDLE(afxDrawOperation);
+AFX_DEFINE_HANDLE(afxPipeline);
+AFX_DEFINE_HANDLE(afxShader);
+AFX_DEFINE_HANDLE(afxLego);
+AFX_DEFINE_HANDLE(afxSampler);
+
+AFX_DEFINE_HANDLE(afxBuffer);
+AFX_DEFINE_HANDLE(afxIndexBuffer);
+AFX_DEFINE_HANDLE(afxVertexBuffer);
+
+AFX_DEFINE_HANDLE(afxTexture);
+AFX_DEFINE_HANDLE(afxSurface);
+AFX_DEFINE_HANDLE(afxCanvas);
 
 typedef afxNat afxSimd(afxWhd[3]);
 typedef afxReal afxSimd(afxNdc[3]);
@@ -32,7 +54,7 @@ typedef afxReal afxSimd(afxNdc[3]);
 AFX_DEFINE_STRUCT(afxFileDrop)
 {
     afxNat                      x, y;
-    afxArray(afxChar const*)    files;
+    afxArray                    files; // afxChar const*
 };
 
 typedef enum
@@ -189,6 +211,9 @@ typedef enum afxVertexFormat
     AFX_VTX_FMT_V3D,
     AFX_VTX_FMT_V4D,
 
+    AFX_VTX_FMT_V4B, // afxInt8[4]
+    AFX_VTX_FMT_V8B, // afxInt8[8]
+
     AFX_VTX_FMT_TOTAL
 } afxVertexFormat;
 
@@ -287,5 +312,8 @@ AFX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxStr
 AFX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt);
 
 AFX afxResult       AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz);
+
+AFX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint);
+#define                     AfxAssertWhd(max_,base_,range_) _AfxAssertWhd((max_),(base_),(range_))
 
 #endif//AFX_DRAW_DEFS_H

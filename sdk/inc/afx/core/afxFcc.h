@@ -101,14 +101,14 @@ typedef enum afxFcc
     AFX_FCC_XML     = AfxPackFcc('x', 'm', 'l', '\0'), // afxXml
     AFX_FCC_URD     = AfxPackFcc('u', 'r', 'd', '\0'), // afxUrd
     AFX_FCC_STD     = AfxPackFcc('s', 't', 'd', '\0'), // for standard implementations
-    AFX_FCC_LCK     = AfxPackFcc('l', 'c', 'k', '\0'), // afxTransistor
+    AFX_FCC_SLCK     = AfxPackFcc('l', 'c', 'k', '\0'), // afxSlock
 
     AFX_FCC_EMEC    = AfxPackFcc('e', 's', 'y', 's'), // afxEventMechanism
     AFX_FCC_ETRG    = AfxPackFcc('e', 't', 'r', 'g'), // afxEventTrigger
     AFX_FCC_EHND    = AfxPackFcc('e', 'h', 'n', 'd'), // afxEventHandler
 
-    AFX_FCC_FSYS    = AfxPackFcc('f', 's', 'y', 's'), // afxFileSystem
-    AFX_FCC_FSMP    = AfxPackFcc('f', 's', 'm', 'p'), // afxFileSystemStoragePoint
+    AFX_FCC_FSYS    = AfxPackFcc('f', 's', 'y', 's'), // afxIoSystem
+    AFX_FCC_FSMP    = AfxPackFcc('f', 's', 'm', 'p'), // afxIoSystemStoragePoint
     AFX_FCC_FILE    = AfxPackFcc('f', 'i', 'l', 'e'), // afxFile
     
     AFX_FCC_THR     = AfxPackFcc('t', 'h', 'r', '\0'), // afxThread
@@ -148,6 +148,7 @@ typedef enum afxFcc
     AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
     AFX_FCC_DOUT    = AfxPackFcc('d', 'o', 'u', 't'), // afxDrawOutput
     AFX_FCC_DQUE    = AfxPackFcc('d', 'q', 'u', 'e'), // afxDrawQueue
+    AFX_FCC_DTHR    = AfxPackFcc('d', 't', 'h', 'r'), // afxDrawThread
     AFX_FCC_CANV    = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
@@ -203,7 +204,7 @@ typedef enum afxFcc
     AFX_FCC_PVT     = AfxPackFcc('p', 'v', 't', '\0'), // afxNode
 
     AFX_FCC_IMG     = AfxPackFcc('i', 'm', 'g', '\0'), // afxImage
-    AFX_FCC_SMP     = AfxPackFcc('s', 'm', 'p', '\0'), // afxSampler
+    AFX_FCC_SAMP     = AfxPackFcc('s', 'm', 'p', '\0'), // afxSampler
     AFX_FCC_BUF     = AfxPackFcc('b', 'u', 'f', '\0'), // afxBuffer
     AFX_FCC_VBUB    = AfxPackFcc('v', 'b', 'u', 'b'), // afxVertexBufferBlueprint
     AFX_FCC_VBUF    = AfxPackFcc('v', 'b', 'u', 'f'), // afxVertexBuffer

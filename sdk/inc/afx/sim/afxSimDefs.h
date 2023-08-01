@@ -34,4 +34,6 @@
 
 #include "../math/afxMathDefs.h"
 
+AFX_DEFINE_HANDLE(afxSimulation);
+
 #endif//AFX_CAD_DEFS_H
