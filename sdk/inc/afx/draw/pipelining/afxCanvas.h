@@ -104,12 +104,13 @@ AFX_OBJECT(afxCanvas) // our concept of a framebuffer
     afxNat              rasterCnt;
     afxNat              dsIdx[2];
     afxCanvasFlags      flags;
+    void*               udd[2];
 #endif
 };
 
 // An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 
-AFX afxDrawContext  AfxGetCanvasContext(afxCanvas canv);
+AFX void            AfxGetCanvasContext(afxCanvas canv, afxDrawContext *dctx);
 
 AFX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd extent);
 AFX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const extent);
@@ -119,11 +120,11 @@ AFX void            AfxFlagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 AFX void            AfxUnflagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 
 AFX afxNat          AfxGetAnnexedSurfaceCount(afxCanvas canv);
-AFX afxSurface      AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx);
+AFX afxBool         AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxSurface *surf);
 AFX afxNat          AfxGetAnnexedRasterSurfaceCount(afxCanvas canv);
-AFX afxSurface      AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx);
-AFX afxSurface      AfxGetAnnexedDepthSurface(afxCanvas canv);
-AFX afxSurface      AfxGetAnnexedStencilSurface(afxCanvas canv);
+AFX afxBool         AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxSurface *raster);
+AFX afxBool         AfxGetAnnexedDepthSurface(afxCanvas canv, afxSurface *depth);
+AFX afxBool         AfxGetAnnexedStencilSurface(afxCanvas canv, afxSurface *stencil);
 
 AFX afxError        AfxAnnexRasterSurface(afxCanvas canv, afxSurface ras);
 AFX afxError        AfxAnnexDepthSurface(afxCanvas canv, afxSurface d);

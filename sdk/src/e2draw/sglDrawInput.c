@@ -22,7 +22,7 @@
 
 
 
-_SGL afxError _AfxDinVmtDctxCb(afxDrawInput din, afxDrawContext from, afxDrawContext to)
+_SGL afxError _AfxDinVmtDctxCb(afxDrawInput din, afxDrawContext from, afxDrawContext to, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(din, AFX_FCC_DIN);
@@ -32,10 +32,10 @@ _SGL afxError _AfxDinVmtDctxCb(afxDrawInput din, afxDrawContext from, afxDrawCon
 
     //AfxDiscardAllDrawInputSubmissions(din);
 
-    if (from && from->vmt->cin(from, din, FALSE)) AfxThrowError(); // ask dctx to unlink this dout
+    if (from && from->vmt->cin(from, din, FALSE, slotIdx)) AfxThrowError(); // ask dctx to unlink this dout
     else
     {
-        if (to && to->vmt->cin(to, din, TRUE)) AfxThrowError(); // ask dctx to unlink this dout
+        if (to && to->vmt->cin(to, din, TRUE, slotIdx)) AfxThrowError(); // ask dctx to unlink this dout
         else
         {
             //AfxDiscardAllDrawInputSubmissions(din);

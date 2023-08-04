@@ -142,6 +142,9 @@ AFX_OBJECT(afxKeyboard)
 #endif
 };
 
+AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxNat port[], afxKeyboard kbd[]);
+AFX void        AfxReleaseKeyboards(afxNat cnt, afxKeyboard kbd[]);
+
 AFX afxError    AfxEmulateKeyActions(afxKeyboard kbd, afxNat cnt, afxKey const key[], afxBool const pressed[]);
 AFX afxBool     AfxKeysIsPressed(afxKeyboard kbd, afxKey code);
 AFX afxBool     AfxKeysArePressed(afxKeyboard kbd, afxNat cnt, afxKey codes[]);

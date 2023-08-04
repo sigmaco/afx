@@ -30,7 +30,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     afxNat              whd[3];
     
     BINKTEXTURESET      set; // Bink Buffer
-    afxDrawOperation    dop;
+    afxPipeline         yv12ToRgbaPip;
     afxSampler          smp;
     afxVertexBuffer     vbuf;
 
@@ -52,7 +52,7 @@ AFXBINK afxError AfxBinkDrop(afxBinkVideo *bnk);
 AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
-AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
+AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip, afxNat outBufIdx, afxDrawScript dscr, afxCanvas canv, afxSurface surf);
 AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr, afxCanvas canv, afxSurface surf);
 
 #endif//AFX_BINK_VIDEO_H

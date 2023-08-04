@@ -1,0 +1,280 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77eb33d0, 00000000, 00000000, 77e912b4)
+ afxClass<afxSystem>::AllocateObjects(1, 003af64c, 003af564)
+ afxClass<afxSystem>::BuildObjects(1, 003af64c, 00000000)
+ afxClass<afxSystem>::ConstructObject(0016f0f0)
+ afxSystem.c:885?_AfxSysCtor(sys=0016f0f0)
+ ADV afxSystem.c:906?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:907?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0016f13c, 0016f124, 00000000, 77e95ac0)
+ afxMemory.c:144?AfxAcquireMemory(strategy=003ae650,hint="afxSystem.c:928!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 003ae4ec, 003ae4fc)
+ afxClass<afxMemory>::BuildObjects(1, 003ae4ec, 003ae4e4)
+ afxClass<afxMemory>::ConstructObject(0016f950)
+ afxMemory.c:198?_AfxMemCtor(mem=0016f950)
+ afxClass<afxThread>::Mount(0016f1fc, 0016f124, 00000000, 77e918dc)
+ afxClass<afxIoSystem>::Mount(0016f2bc, 0016f124, 00000000, 77e93094)
+ afxClass<afxIoSystem>::AllocateObjects(1, 003ae618, 003ae4ec)
+ afxClass<afxIoSystem>::BuildObjects(1, 003ae618, 003ae61c)
+ afxClass<afxIoSystem>::ConstructObject(0016ff30)
+ afxIoSystem.c:706?_AfxIoCtor(io=0016ff30)
+ afxArena.c:767?AfxAcquireArena(aren=0016ff7c)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:722!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0016ffd4, 0016ff64, 00000000, 77e92dd8)
+ afxClass<afxArchive>::Mount(00170094, 0016ff64, 0016ffd4, 77e92758)
+ afxClass<afxResource>::Mount(00170214, 0016ff64, 00000000, 77e94550)
+ afxClass<afxUrd>::Mount(00170154, 0016ff64, 00000000, 77e94b30)
+ afxIoSystem.c:412?AfxMountStoragePoints(0016ff30,6,003ae814)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0016f37c, 0016f124, 00000000, 77e8ff68)
+ afxModule.c:93?AfxAcquireModules(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0016f8e0, 003ae4d0)
+ afxClass<afxModule>::BuildObjects(1, 0016f8e0, 003ae740)
+ afxClass<afxModule>::ConstructObject(001745f0)
+ afxModule.c:170?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0016f43c, 0016f124, 00000000, 77e93800)
+ afxClass<afxKeyboard>::Mount(0016f4fc, 0016f124, 0016f43c, 77e9414c)
+ afxClass<afxMouse>::Mount(0016f5bc, 0016f124, 0016f43c, 77e942ec)
+ afxClass<afxDrawSystem>::Mount(0016f67c, 0016f124, 00000000, 77e98734)
+ afxClass<afxApplication>::Mount(0016f73c, 0016f124, 0016f1fc, 77e8f000)
+ afxKeyboard.c:189?AfxAcquireKeyboards(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0016f8e4, 003ae504)
+ afxClass<afxKeyboard>::BuildObjects(1, 0016f8e4, 003ae4f4)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(00174720)
+ afxClass<afxHid>::ConstructObject(00174720)
+ afxHid.c:226?_AfxHidCtor(hid=00174720)
+ afxClass<afxKeyboard>::ConstructObject(00174720)
+ afxKeyboard.c:252?_AfxKbdCtor(kbd=00174720)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 003af648, 003af564)
+ afxClass<afxDrawSystem>::BuildObjects(1, 003af648, 003af644)
+ afxClass<afxDrawSystem>::ConstructObject(00174fb0)
+ afxDrawSystem.c:461?_AfxDsysCtor(dsys=00174fb0)
+ afxClass<afxDrawDriver>::Mount(00174ff8, 00174fe4, 00000000, 77e974e4)
+ afxClass<afxDrawThread>::Mount(001750b8, 00174fe4, 0016f1fc, 77e98a64)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:93?AfxAcquireModules(uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 001751e4, 003af088)
+ afxClass<afxModule>::BuildObjects(1, 001751e4, 003af174)
+ afxClass<afxModule>::ConstructObject(00175fd0)
+ afxModule.c:170?_AfxMdleCtor(uri:e2draw.icd)
+ afxDrawDriver.c:215?AfxRegisterDrawDriver(spec=509e7de8)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 003af0c4, 003af064)
+ afxClass<afxDrawDriver>::BuildObjects(1, 003af0c4, 509e7de8)
+ afxClass<afxDrawDriver>::ConstructObject(001776c0)
+ afxDrawDriver.c:271?_AfxDdrvCtor(ddrv=001776c0)
+ afxClass<afxDrawScript>::Mount(00177710, 001776fc, 00000000, 77e98194)
+ afxClass<afxDrawQueue>::Mount(001777d0, 001776fc, 00000000, 77e98054)
+ afxClass<afxDrawContext>::Mount(00177890, 001776fc, 00000000, 77e96020)
+ afxClass<afxDrawOutput>::Mount(00177950, 001776fc, 00000000, 77e97a94)
+ afxClass<afxDrawInput>::Mount(00177a10, 001776fc, 00000000, 77e97860)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDrawDriver.c:1241?_SglCreateCombinedDeviceContext(oglWndClss=00177be4,shareCtx=00000000,phwnd=0017c680,phdc=0017c684,phrc=0017c68c)
+ wglCreateContext fallback @ 0 found.
+ wglDeleteContext fallback @ 1 found.
+ wglGetCurrentContext fallback @ 2 found.
+ wglGetCurrentDC fallback @ 3 found.
+ wglGetProcAddress fallback @ 4 found.
+ wglMakeCurrent fallback @ 5 found.
+ wglChoosePixelFormatARB @ 6 found.
+ wglDescribePixelFormat fallback @ 7 found.
+ wglSetPixelFormat fallback @ 8 found.
+ wglGetPixelFormat fallback @ 9 found.
+ wglSwapBuffers fallback @ 10 found.
+ wglChoosePixelFormatARB @ 11 found.
+ wglMakeContextCurrentARB @ 12 found.
+ wglGetCurrentReadDCARB @ 13 found.
+ wglCreateContextAttribsARB @ 14 found.
+ wglGetExtensionsStringARB @ 15 found.
+ wglSwapIntervalEXT @ 16 found.
+ wglCreateContext fallback @ 0 found.
+ wglDeleteContext fallback @ 1 found.
+ wglGetCurrentContext fallback @ 2 found.
+ wglGetCurrentDC fallback @ 3 found.
+ wglGetProcAddress fallback @ 4 found.
+ wglMakeCurrent fallback @ 5 found.
+ wglChoosePixelFormat fallback @ 6 found.
+ wglDescribePixelFormat fallback @ 7 found.
+ wglSetPixelFormat fallback @ 8 found.
+ wglGetPixelFormat fallback @ 9 found.
+ wglSwapBuffers fallback @ 10 found.
+ ADV sglDrawDriver.c:1557?_SglBuildDpu
+    677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+ ERR sglDrawDriver.c:1025?SglGetPixelFormat
+    
+ ERR sglDrawDriver.c:1025?SglGetPixelFormat
+    
+ ERR sglDrawDriver.c:1013?SglDescribePixelFormat
+    
+ ERR sglDrawDriver.c:1013?SglDescribePixelFormat
+    
+ glPixelStoref @ 0 found.
+ glPixelStorei @ 1 found.
+ glReadBuffer @ 2 found.
+ glReadPixels @ 3 found.
+ glGetBooleanv @ 4 found.
+ glGetDoublev @ 5 found.
+ glGetError @ 6 found.
+ glGetFloatv @ 7 found.
+ glGetIntegerv @ 8 found.
+ glGetString @ 9 found.
+ glGetTexImage @ 10 found.
+ glGetTexParameterfv @ 11 found.
+ glGetTexParameteriv @ 12 found.
+ glGetTexLevelParameterfv @ 13 found.
+ glGetTexLevelParameteriv @ 14 found.
+ glIsEnabled @ 15 found.
+ glDepthRange @ 16 found.
+ glViewport @ 17 found.
+ glCullFace @ 0 found.
+ glFrontFace @ 1 found.
+ glHint @ 2 found.
+ glLineWidth @ 3 found.
+ glPointSize @ 4 found.
+ glPolygonMode @ 5 found.
+ glScissor @ 6 found.
+ glTexParameterf @ 7 found.
+ glTexParameterfv @ 8 found.
+ glTexParameteri @ 9 found.
+ glTexParameteriv @ 10 found.
+ glTexImage1D @ 11 found.
+ glTexImage2D @ 12 found.
+ glDrawBuffer @ 13 found.
+ glClear @ 14 found.
+ glClearColor @ 15 found.
+ glClearStencil @ 16 found.
+ glClearDepth @ 17 found.
+ glStencilMask @ 18 found.
+ glColorMask @ 19 found.
+ glDepthMask @ 20 found.
+ glDisable @ 21 found.
+ glEnable @ 22 found.
+ glFinish @ 23 found.
+ glFlush @ 24 found.
+ glBlendFunc @ 25 found.
+ glLogicOp @ 26 found.
+ glStencilFunc @ 27 found.
+ ADV sglDrawDriver.c:1586?_SglBuildDpu
+    DPU#0 Intel(R) HD Graphics
+ ADV sglDrawDriver.c:1587?_SglBuildDpu
+    DPU#0 3.3.0 - Build 10.18.10.5161
+New draw driver registered.
+Name: OpenGL/Vulkan Continuous Integration over Qwadro
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ Loading draw ICDs...
+ afxModule.c:93?AfxAcquireModules(uri=e2draw.icd)
+ afxModule.c:93?AfxAcquireModules(uri=e2newton.icd)
+ afxClass<afxModule>::AllocateObjects(1, 003aef4c, 003aeea8)
+ afxClass<afxModule>::BuildObjects(1, 003aef4c, 003aef50)
+ afxClass<afxModule>::ConstructObject(02e116d0)
+ afxModule.c:170?_AfxMdleCtor(uri:e2newton.icd)
+ afxDrawThread.c:63?AfxAcquireDrawThreads(spec=00000000,cnt=2)
+ afxClass<afxDrawThread>::AllocateObjects(1, 003af1f8, 003af0cc)
+ afxClass<afxDrawThread>::BuildObjects(1, 003af1f8, 00000000)
+ afxClass<afxDrawThread, afxThread>ConstructingObject(02f2fe10)
+ afxClass<afxThread>::ConstructObject(02f2fe10)
+ afxThread.c:1258?_AfxThrCtor(02f2fe10)
+ afxClass<afxDrawThread>::ConstructObject(02f2fe10)
+ afxDrawThread.c:156?_AfxDthrCtor(dthr=02f2fe10)
+ afxClass<afxDrawThread>::AllocateObjects(1, 003af1fc, 003af0cc)
+ afxClass<afxDrawThread>::BuildObjects(1, 003af1fc, 00000000)
+ afxClass<afxDrawThread, afxThread>ConstructingObject(0023a8b0)
+ afxClass<afxThread>::ConstructObject(0023a8b0)
+ afxThread.c:1258?_AfxThrCtor(0023a8b0)
+ afxClass<afxDrawThread>::ConstructObject(0023a8b0)
+ afxDrawThread.c:156?_AfxDthrCtor(dthr=0023a8b0)
+ afxThread.c:1133?AfxSetThreadAffinity(thr=02f2fe10)
+ afxThread.c:1144?AfxRunThread(thr=02f2fe10)
+ afxThread.c:1133?AfxSetThreadAffinity(thr=0023a8b0)
+ afxThread.c:1144?AfxRunThread(thr=0023a8b0)
+ afxDrawContext.c:560?AfxAcquireDrawContexts(spec=003af610,cnt=1)
+ afxClass<afxDrawContext>::AllocateObjects(1, 008c5038, 003af544)
+ afxClass<afxDrawContext>::BuildObjects(1, 008c5038, 003af610)
+ afxClass<afxDrawContext>::ConstructObject(0448b530)
+ afxDrawContext.c:639?_AfxDctxCtor(dctx=0448b530)
+ afxArena.c:767?AfxAcquireArena(aren=0448bdc8)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxDrawContext.c:658!_AfxDctxCtor")
+ afxClass<afxBuffer>::Mount(0448b884, 0448b570, 00000000, 77e9a048)
+ afxClass<afxVertexBuffer>::Mount(0448b944, 0448b570, 0448b884, 77e9b6fc)
+ afxClass<afxIndexBuffer>::Mount(0448ba04, 0448b570, 0448b884, 77e9a314)
+ afxClass<afxSampler>::Mount(0448bac4, 0448b570, 00000000, 77e9a714)
+ afxClass<afxTexture>::Mount(0448bb84, 0448b570, 00000000, 77e9aed8)
+ afxClass<afxSurface>::Mount(0448bc44, 0448b570, 0448bb84, 77e9ad5c)
+ afxClass<afxShader>::Mount(0448bd04, 0448b570, 00000000, 77e9a934)
+ afxClass<afxLego>::Mount(0448b704, 0448b570, 00000000, 77e99904)
+ afxClass<afxCanvas>::Mount(0448b584, 0448b570, 00000000, 77e98e80)
+ afxClass<afxPipeline>::Mount(0448b644, 0448b570, 00000000, 77e99b90)
+ afxClass<afxDrawOperation>::Mount(0448b7c4, 0448b570, 00000000, 77e99300)
+ sglDrawContext.c:272?_SglDdrvVmtDctxCb(dctx=0448b530)
+ Uploading draw operation 'data/pipeline/rgbaToRgba.xml'
+ afxXml.c:976?AfxLoadXml(uri:data/pipeline/rgbaToRgba.xml)
+ afxFile.c:344?AfxOpenFile(00000001,data/pipeline/rgbaToRgba.xml)
+ afxClass<afxFile>::AllocateObjects(1, 003ae7e4, 003ae7f4)
+ afxClass<afxFile>::BuildObjects(1, 003ae7e4, 003ae7dc)
+ afxClass<afxFile>::ConstructObject(02e2beb0)
+ afxStream.c:600?AfxAcquireStream(ios=02e2bee4,flags=1,start=00000000,len=0)
+ afxClass<afxFile>::DismantleObjects(1, 003ae834)
+ Destructing instance 02e2beb0 of afxFile class.
+ afxClass<afxFile>::DeallocateObjects(1, 003ae834)
+ afxClass<afxDrawOperation>::AllocateObjects(1, 00239a68, 003ae82c)
+ afxClass<afxDrawOperation>::BuildObjects(1, 00239a68, 003aeab0)
+ afxClass<afxDrawOperation>::ConstructObject(0448d1f0)
+ afxDrawOperation.c:659?_AfxDopCtor(dop=0448d1f0)
+ afxPipeline.c:380?AfxBuildPipelines(dctx=0448b530)
+ afxClass<afxPipeline>::AllocateObjects(1, 04490c28, 003ae1d4)
+ afxClass<afxPipeline>::BuildObjects(1, 04490c28, 003ae2c8)
+ afxClass<afxPipeline>::ConstructObject(044a6c00)
+ afxPipeline.c:452?_AfxPipCtor(pip=044a6c00)
+ afxShader.c:550?AfxAcquireShaders(cnt=1,uri=044a6ad0,shd=003adc38)
+ Uploading shader 'data/pipeline/rgbaToRgba.xml?vs'
+ ERR afxString.c:601?AfxExcerptStringRange
+    
+ ERR afxString.c:601?AfxExcerptStringRange
+    (offset)(29) + (range)(25) is out of range [0, 2011763170]

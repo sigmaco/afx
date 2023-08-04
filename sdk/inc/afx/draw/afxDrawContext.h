@@ -144,6 +144,7 @@ AFX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, 
 AFX afxNat              AfxEnumerateDrawOperations(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawOperation dop[]);
 AFX afxNat              AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[]);
 AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[]);
+AFX afxNat              AfxEnumerateLegos(afxDrawContext dctx, afxNat first, afxNat cnt, afxLego lego[]);
 AFX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler smp[]);
 AFX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[]);
 AFX afxNat              AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[]);
@@ -157,6 +158,7 @@ AFX afxNat              AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat fi
 
 
 AFX afxError            AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPipelineBlueprint const blueprint[], afxPipeline pip[]);
+AFX afxError            AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxPipeline pip[]);
 AFX afxError            AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLegoBlueprint const blueprint[], afxLego legt[]);
 
 AFX afxError            AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[]);

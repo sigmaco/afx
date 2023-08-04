@@ -1,0 +1,13 @@
+<Qwadro>
+    <Pipeline>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>false</DepthTestEnable>
+        <DepthWriteEnable>false</DepthWriteEnable>
+        <DepthCompareOp>ALWAYS</DepthCompareOp>
+        <Input topology='TRI_STRIP'/>
+        <Shader stage='VERTEX'>data/pipeline/yv12ToRgba/yv12ToRgbaShdVtx.xml?vs</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/yv12ToRgba/yv12ToRgbaShdFrg.xml?fsSigma</Shader>
+    </Pipeline>
+</Qwadro>

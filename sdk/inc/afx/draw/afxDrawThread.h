@@ -43,6 +43,9 @@ AFX_OBJECT(afxDrawThread)
 #endif
 };
 
+AFX afxError                AfxAcquireDrawThreads(afxDrawThreadSpecification const *spec, afxNat cnt, afxDrawThread dthr[]);
+AFX void                    AfxReleaseDrawThreads(afxNat cnt, afxDrawThread dthr[]);
+
 AFX afxDrawDriver           AfxGetDrawThreadActiveDriver(afxDrawThread dthr);
 AFX afxDrawContext          AfxGetDrawThreadActiveContext(afxDrawThread dthr);
 AFX afxDrawQueue            AfxGetDrawThreadActiveQueue(afxDrawThread dthr);

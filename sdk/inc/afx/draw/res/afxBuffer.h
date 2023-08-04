@@ -21,24 +21,28 @@
 
 typedef enum afxBufferUsage
 {
-    AFX_BUF_USAGE_SRC               = AFX_FLAG(0), // source for transfer ops.
-    AFX_BUF_USAGE_DST               = AFX_FLAG(1), // destination for transfer ops.
-    AFX_BUF_USAGE_CONSTANT_TEXELS   = AFX_FLAG(2),
-    AFX_BUF_USAGE_STORAGE_TEXELS    = AFX_FLAG(3),
-    AFX_BUF_USAGE_CONSTANT          = AFX_FLAG(4), // 'uniform' constant buffer
-    AFX_BUF_USAGE_STORAGE           = AFX_FLAG(5), // volatile storage buffer
-    AFX_BUF_USAGE_INDICES           = AFX_FLAG(6), // vertex index buffer
-    AFX_BUF_USAGE_VERTICES          = AFX_FLAG(7), // vertex buffer
-    AFX_BUF_USAGE_INDIRECT          = AFX_FLAG(8),
+    AFX_BUF_USAGE_UPSTREAM          = AFX_FLAG(0), // The buffer can be mapped for reading. May only be combined with DST.
+    AFX_BUF_USAGE_DOWNSTREAM        = AFX_FLAG(1), // The buffer can be mapped for writing. May only be combined with SRC.
+    AFX_BUF_USAGE_MAP               = (AFX_BUF_USAGE_UPSTREAM | AFX_BUF_USAGE_DOWNSTREAM),
+    AFX_BUF_USAGE_SRC               = AFX_FLAG(2), // The buffer can be used as the source of a copy operation.
+    AFX_BUF_USAGE_DST               = AFX_FLAG(3), // The buffer can be used as the destination of a copy or write operation.
+    AFX_BUF_USAGE_COPY              = (AFX_BUF_USAGE_SRC | AFX_BUF_USAGE_DST),
+    AFX_BUF_USAGE_INDEX             = AFX_FLAG(4), // The buffer can be used as an index buffer.
+    AFX_BUF_USAGE_VERTEX            = AFX_FLAG(5), // The buffer can be used as a vertex buffer.
+    AFX_BUF_USAGE_UNIFORM           = AFX_FLAG(6), // The buffer can be used as a uniform buffer.
+    AFX_BUF_USAGE_STORAGE           = AFX_FLAG(7), // The buffer can be used as a storage buffer.
+    AFX_BUF_USAGE_INDIRECT          = AFX_FLAG(8), // The buffer can be used as to store indirect command arguments.
+    AFX_BUF_USAGE_QUERY             = AFX_FLAG(9), // The buffer can be used to capture query results.
 } afxBufferUsage;
 
 typedef enum afxBufferMap
 {
-    AFX_BUF_MAP_R                   = AFX_FLAG(0),
-    AFX_BUF_MAP_W                   = AFX_FLAG(1),
+    AFX_BUF_MAP_R                   = AFX_FLAG(0), // Only valid with buffers created with the MAP/UPSTREAM/READ usage.
+    AFX_BUF_MAP_W                   = AFX_FLAG(1), // Only valid with buffers created with the MAP/DOWSTREAM/WRITE usage.
+    
     AFX_BUF_MAP_X                   = AFX_FLAG(2),
-    AFX_BUF_MAP_PERSISTENT = AFX_FLAG(1),
-    AFX_BUF_MAP_COHERENT = AFX_FLAG(1),
+    AFX_BUF_MAP_PERSISTENT          = AFX_FLAG(3),
+    AFX_BUF_MAP_COHERENT            = AFX_FLAG(4),
 } afxBufferMap;
 
 #define AFX_BUF_IDD 48

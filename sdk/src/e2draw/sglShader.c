@@ -29,7 +29,7 @@
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage, sglVmt const* gl)
+_SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage, glVmt const* gl)
 {
     //AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;

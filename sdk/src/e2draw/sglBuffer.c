@@ -38,21 +38,21 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
 
         if (base->gpuHandle)
         {
-            sglVmt const* gl = &(((afxDrawSystem)AfxObjectGetProvider(&buf->obj))->vmt);
+            glVmt const* gl = &(((afxDrawSystem)AfxObjectGetProvider(&buf->obj))->vmt);
             afxFlags usage = base->usage;
             GLenum target = NIL;
 
-            if (usage & AFX_BUF_USAGE_VERTICES)
+            if (usage & AFX_BUF_USAGE_VERTEX)
                 target = GL_ARRAY_BUFFER;
-            else if (usage & AFX_BUF_USAGE_INDICES)
+            else if (usage & AFX_BUF_USAGE_INDEX)
                 target = GL_ELEMENT_ARRAY_BUFFER;
-            else if (usage & AFX_BUF_USAGE_CONSTANT)
+            else if (usage & AFX_BUF_USAGE_UNIFORM)
                 target = GL_UNIFORM_BUFFER;
             else if (usage & AFX_BUF_USAGE_STORAGE)
                 target = GL_SHADER_STORAGE_BUFFER;
             else if (usage & AFX_BUF_USAGE_INDIRECT)
                 target = GL_DRAW_INDIRECT_BUFFER;
-            else if (usage & AFX_BUF_USAGE_CONSTANT_TEXELS)
+            else if (usage & AFX_BUF_USAGE_UNIFORM_TEXELS)
                 target = GL_PIXEL_UNPACK_BUFFER;
             else if (usage & AFX_BUF_USAGE_STORAGE_TEXELS)
                 target = GL_PIXEL_PACK_BUFFER;
@@ -110,7 +110,7 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 }
 #endif//0
 
-_SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, sglVmt const* gl)
+_SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl)
 {
     //AfxEntry("buf=%p", buf);
     afxError err = AFX_ERR_NONE;

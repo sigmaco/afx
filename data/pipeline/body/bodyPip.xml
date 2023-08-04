@@ -1,0 +1,24 @@
+<Qwadro>
+    <Pipeline name='rigid'>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>true</DepthTestEnable>
+        <DepthWriteEnable>true</DepthWriteEnable>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <Input topology='TRI_LIST' />
+        <Shader stage='VERTEX'>data/pipeline/body/bodyShdVtx.xml?vsRigid</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/body/bodyShdFrg.xml?fs</Shader>
+    </Pipeline>
+    <Pipeline name='skinned'>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>true</DepthTestEnable>
+        <DepthWriteEnable>true</DepthWriteEnable>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <Input topology='TRI_LIST' />
+        <Shader stage='VERTEX'>data/pipeline/body/bodyShdVtx.xml?vsSkinned</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/body/bodyShdFrg.xml?fs</Shader>
+    </Pipeline>
+</Qwadro>

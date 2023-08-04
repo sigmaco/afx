@@ -32,17 +32,6 @@ _SGL void _SglDcmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _afxDscrCmd
     AfxPushLinkage(&cmd->script, &idd->commands);
 }
 
-_SGL void _SglDcmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
-
-    _afxDscrCmdEmployTec *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->tecIdx = tecIdx;
-    _SglDcmdCommand(dscr, AFX_DCMD_EMPLOY_TECHNIQUE, sizeof(cmd), &cmd->cmd);
-}
-
 _SGL void _SglDcmdNextPass(afxDrawScript dscr, afxBool useAuxScripts)
 {
     afxError err = AFX_ERR_NONE;
@@ -90,75 +79,42 @@ _SGL void _SglDcmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAsse
     _SglDcmdCommand(dscr, AFX_DCMD_SET_INPUT_ASSEMBLY_STATE, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil)
+_SGL void _SglDcmdBeginDrawPass(afxDrawScript dscr, afxDrawPassState const *state)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBeginComb *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
+    _afxDscrCmdBeginDrawPass *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    AfxRectCopy(&cmd->area, area);
-    cmd->layerCnt = layerCnt;
-    cmd->rasterCnt = rasterCnt;
+    AfxRectCopy(&cmd->area, &state->area);
+    cmd->layerCnt = state->layerCnt;
+    cmd->rasterCnt = state->rasterCnt;
+    cmd->canv = state->canv;
 
-    for (afxNat i = 0; i < rasterCnt; i++)
-        cmd->rasters[i] = rasters[i];
+    for (afxNat i = 0; i < state->rasterCnt; i++)
+        cmd->rasters[i] = state->rasters[i];
 
-    if (depth)
-        cmd->depth = *depth;
+    if (state->depth)
+        cmd->depth = *state->depth;
     else
-        cmd->depth.surf = NIL;
+        cmd->depth = (afxDrawTarget) { 0 };
 
-    if (stencil)
-        cmd->stencil = *stencil;
+    if (state->stencil)
+        cmd->stencil = *state->stencil;
     else
-        cmd->stencil.surf = NIL;
+        cmd->stencil = (afxDrawTarget) { 0 };
 
-    _SglDcmdCommand(dscr, AFX_DCMD_BEGIN_COMBINATION, sizeof(cmd), &cmd->cmd);
+    _SglDcmdCommand(dscr, AFX_DCMD_BEGIN_DRAW_PASS, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdEndCombination(afxDrawScript dscr)
+_SGL void _SglDcmdEndDrawPass(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
 
     _afxDscrCmd *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    _SglDcmdCommand(dscr, AFX_DCMD_END_COMBINATION, sizeof(cmd), cmd);
-}
-
-_SGL void _SglDcmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
-
-    _afxDscrCmdBeginOp *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->dop = dop;
-    cmd->tecIdx = tecIdx;
-    cmd->canv = canv;
-
-    if (area)
-        AfxRectCopy(&cmd->area, area);
-    else
-        AfxRectZero(&cmd->area);
-
-    cmd->annexCnt = annexCnt;
-
-    for (afxNat i = 0; i < annexCnt; i++)
-        cmd->annexes[i] = annexes[i];
-
-    _SglDcmdCommand(dscr, AFX_DCMD_BEGIN_OPERATION, sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _SglDcmdEndOperation(afxDrawScript dscr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->state == AFX_DSCR_STATE_RECORDING);
-
-    _afxDscrCmd *cmd = AfxRequestArenaSpace(&dscr->cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    _SglDcmdCommand(dscr, AFX_DCMD_END_OPERATION, sizeof(cmd), cmd);
+    _SglDcmdCommand(dscr, AFX_DCMD_END_DRAW_PASS, sizeof(cmd), cmd);
 }
 
 _SGL void _SglDcmdSetViewports(afxDrawScript dscr, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
@@ -440,12 +396,9 @@ _SGL afxError _SglDscrVmtDtorCb(afxDrawScript dscr)
 
 _SGL _afxDcmdVmt _SglDcmdVmt =
 {
-    _SglDcmdBeginCombination,
-    _SglDcmdBeginOperation,
-    _SglDcmdEmployTechnique,
+    _SglDcmdBeginDrawPass,
     _SglDcmdNextPass,
-    _SglDcmdEndOperation,
-    _SglDcmdEndCombination,
+    _SglDcmdEndDrawPass,
 
     _SglDcmdBindPipeline,
 

@@ -90,6 +90,9 @@ AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
     afxPresentTransform presentTransform; // NIL; don't do any transform.
     afxPresentMode      presentMode; // FIFO; respect the sequence.
     afxBool             clipped; // TRUE; don't do off-screen draw.
+
+    afxPixelFormat      auxDepthFmt;
+    afxPixelFormat      auxStencilFmt;
     void*               udd;
 };
 
@@ -123,7 +126,12 @@ AFX_OBJECT(afxDrawOutput)
     
     afxTextureFlags         bufUsage; // what evil things we will do with it? Usually AFX_TEX_FLAG_SURFACE_RASTER
     afxNat                  bufCnt; // usually 2 or 3; double or triple buffered.
-    afxSurface*             buffers; // afxCanvas // should have 1 fb for each swapchain raster.
+    struct
+    {
+        afxSurface          surf; // afxCanvas // should have 1 fb for each swapchain raster.
+        afxCanvas           canv;
+    }*                      buffers;
+    afxPixelFormat          auxDsFmt[2];
     afxSlock                buffersLock;
     afxBool                 bufferLockCnt;
     afxNat                  lastReqBufIdx;
@@ -150,10 +158,10 @@ AFX afxDrawDriver       AfxGetDrawOutputDriver(afxDrawOutput dout);
 
 // Connection
 
-AFX afxDrawContext      AfxGetDrawOutputConnectedContext(afxDrawOutput dout);
+AFX afxBool             AfxGetConnectedDrawOutputContext(afxDrawOutput dout, afxDrawContext *dctx);
 AFX afxBool             AfxDrawOutputIsConnected(afxDrawOutput dout);
-AFX afxError            AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
-AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
+AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afxNat *slotIdx);
+AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout, afxNat *slotIdx);
 
 // Extent
 
@@ -165,14 +173,16 @@ AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxR
 
 // Buffer
 
-AFX afxSurface          AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx);
-AFX afxNat              AfxGetDrawOutputBufferCount(afxDrawOutput dout);
+AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxSurface *surf);
+AFX afxBool             AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *canv);
+AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
 AFX afxResult           AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
 AFX afxError            AfxRequestNextDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 
 // Utility
 
-AFX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxPixelFormat depth, afxPixelFormat stencil, afxCanvas canv[]);
+//AFX afxError            AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelFormat depth, afxPixelFormat stencil);
+//AFX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxPixelFormat depth, afxPixelFormat stencil, afxCanvas canv[]);
 
 #endif//AFX_DRAW_OUTPUT_H

@@ -1,0 +1,24 @@
+<Qwadro>
+    <Pipeline name ='yFlipped' >
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>false</DepthTestEnable>
+        <DepthWriteEnable>false</DepthWriteEnable>
+        <DepthCompareOp>ALWAYS</DepthCompareOp>
+        <Input topology='TRI_STRIP'/>
+        <Shader stage='VERTEX'>data/pipeline/rgbaToRgba/rgbaToRgbaShdVtx.xml?vsFlippedY</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/rgbaToRgba/rgbaToRgbaShdFrg.xml?fs</Shader>
+    </Pipeline>
+    <Pipeline>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>false</DepthTestEnable>
+        <DepthWriteEnable>false</DepthWriteEnable>
+        <DepthCompareOp>ALWAYS</DepthCompareOp>
+        <Input topology='TRI_STRIP'/>
+        <Shader stage='VERTEX'>data/pipeline/rgbaToRgba/rgbaToRgbaShdVtx.xml?vs</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/rgbaToRgba/rgbaToRgbaShdFrg.xml?fs</Shader>
+    </Pipeline>
+</Qwadro>

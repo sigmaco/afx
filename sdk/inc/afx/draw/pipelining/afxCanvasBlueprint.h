@@ -36,6 +36,7 @@ AFX_DEFINE_STRUCT(afxCanvasBlueprint)
         afxPixelFormat  fmt;
         afxTextureFlags usage;
     }                   ds[2];
+    void*               udd[2];
 };
 
 //afxDrawContext dctx, afxNat cnt,

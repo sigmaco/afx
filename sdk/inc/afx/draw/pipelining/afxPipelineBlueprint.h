@@ -28,6 +28,8 @@ AFX_DEFINE_STRUCT(afxPipelineBlueprint)
     afxFcc                          fcc; // PIPB
     afxDrawContext                  dctx;
 
+    afxUri128                       uri;
+
     afxArray                        shaders;
     afxArray                        viewports;
     afxArray                        scissors;
@@ -45,7 +47,7 @@ AFX_DEFINE_STRUCT(afxPipelineBlueprint)
     afxPipelineColorBlendState      colorBlending;
 };
 
-AFX void                AfxPipelineBlueprintFormulate(afxPipelineBlueprint* blueprint, afxDrawContext dctx);
+AFX void                AfxFormulatePipelineBlueprint(afxPipelineBlueprint* blueprint, afxDrawContext dctx);
 AFX void                AfxPipelineBlueprintDiscard(afxPipelineBlueprint *blueprint);
 AFX void                AfxPipelineBlueprintErase(afxPipelineBlueprint *blueprint);
 

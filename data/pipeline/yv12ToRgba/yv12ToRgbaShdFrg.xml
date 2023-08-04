@@ -1,0 +1,206 @@
+<Qwadro>    
+    <Shader stage='FRAGMENT' name='fsSigma'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp1</Resource>
+        <Resource binding='2' type='COMBINED_IMAGE_SAMPLER'>samp2</Resource>
+        <Out format='V4D'>sgl_rgba</Out>
+        <![CDATA[
+        
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+        
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            vec3 yuv;
+            yuv.x = texture(samp0, sgl_v.uv0).r;
+            yuv.y = texture(samp2, sgl_v.uv0).r - 0.5;
+            yuv.z = texture(samp1, sgl_v.uv0).r - 0.5;
+            
+            vec3 rgb = mat3( 1, 1, 1, 0, -0.34414, 1.772, 1.402, -0.71414, 0) * yuv;
+            sgl_rgba = vec4(rgb, 1);
+        }
+        ]]>
+    </Shader>
+    <Shader stage='FRAGMENT' name='fsSigma2'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp1</Resource>
+        <Resource binding='2' type='COMBINED_IMAGE_SAMPLER'>samp2</Resource>
+        <Out format='V4D'>sgl_rgba</Out>
+        <![CDATA[
+        
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+        
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            vec4 c = vec4((texture(samp0, sgl_v.uv0).r - 16.0/255.0) * 1.164);
+            vec4 u = vec4(texture(samp2, sgl_v.uv0).r - 128.0/255.0);
+            vec4 v = vec4(texture(samp1, sgl_v.uv0).r - 128.0/255.0);
+            c += v * vec4(1.596, -0.813, 0, 0);
+            c += u * vec4(0, -0.392, 2.017, 0);
+            c.a = 1.0;
+            sgl_rgba = c;
+        }
+        ]]>
+    </Shader>
+    <Shader stage='FRAGMENT' name='fsRad'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp1</Resource>
+        <Resource binding='2' type='COMBINED_IMAGE_SAMPLER'>samp2</Resource>
+        <Out format='V4D'>sgl_rgba</Out>
+        <![CDATA[
+        
+        //#define ALPHA // enable auxiliar texture for alpha mask.
+        const vec4 crc = vec4( 1.595794678f , -0.813476563f , 0, 0.0 );
+        const vec4 crb = vec4( 0, -0.391448975f , 2.017822266f, 0.0 );
+        const vec4 adj = vec4( -0.87065506f, 0.529705048f, -1.081668854f, 0 );
+
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+        #ifdef ALPHA
+        uniform sampler2D samp3;
+        uniform vec4 consta;
+        #endif
+        vec4 consta = vec4(1.0); // gambiarra do Qwadro para evitar um constant buffer aqui nos testes.
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            // method from Bink SDK, by RAD using DX Pixel Shader 2.0
+            vec4 p;
+
+            float y = texture(samp0, sgl_v.uv0).r;
+            float cr = texture(samp1, sgl_v.uv0).r;
+            float cb = texture(samp2, sgl_v.uv0).r;
+        #   ifdef ALPHA
+            float a = texture(samp3, sgl_v.uv0)).r;
+        #   endif
+
+            p = vec4(y * 1.164123535f );
+            p += crc * cr;
+            p += crb * cb;
+            p += adj;
+            
+        #ifdef ALPHA
+            p.w = a;
+        #else
+            p.w = 1.0;
+        #endif
+            p *= consta;
+            sgl_rgba = p;
+        }
+        ]]>
+    </Shader>
+    <Shader stage='FRAGMENT' name='fsRbDoom'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp1</Resource>
+        <Resource binding='2' type='COMBINED_IMAGE_SAMPLER'>samp2</Resource>
+        <Out format='V4D'>sgl_rgba</Out>
+        <![CDATA[
+        
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            const vec3 crc = vec3( 1.595794678, -0.813476563, 0 );
+            const vec3 crb = vec3( 0, -0.391448975, 2.017822266 );
+            const vec3 adj = vec3( -0.87065506, 0.529705048f, -1.081668854f );
+            const vec3 YScalar = vec3( 1.164123535f, 1.164123535f, 1.164123535f );
+
+            float Y = texture( samp0, sgl_v.uv0).r;
+            float Cr = texture( samp1, sgl_v.uv0).r;
+            float Cb = texture( samp2, sgl_v.uv0).r;
+
+            vec3 p = ( YScalar * Y );
+            p += ( crc * Cr ) + ( crb * Cb ) + adj;
+
+            vec4 color;
+            color.xyz = p;
+            color.w = 1.0;
+            //color *= rpColor;
+
+            sgl_rgba = color;
+        }
+        ]]>
+    </Shader>
+    <Shader stage='FRAGMENT' name='fsRbDoomGui'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
+        <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp1</Resource>
+        <Resource binding='2' type='COMBINED_IMAGE_SAMPLER'>samp2</Resource>
+        <Out format='V4D'>sgl_rgba</Out>
+        <![CDATA[
+        
+        uniform sampler2D samp0;
+        uniform sampler2D samp1;
+        uniform sampler2D samp2;
+        
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            const vec3 crc = vec3( 1.595794678, -0.813476563, 0 );
+            const vec3 crb = vec3( 0, -0.391448975, 2.017822266 );
+            const vec3 adj = vec3( -0.87065506, 0.529705048f, -1.081668854f );
+            const vec3 YScalar = vec3( 1.164123535f, 1.164123535f, 1.164123535f );
+
+            float Y = texture( samp0, sgl_v.uv0).x;
+            float Cr = texture( samp1, sgl_v.uv0).x;
+            float Cb = texture( samp2, sgl_v.uv0).x;
+
+            vec3 p = ( YScalar * Y );
+            p += ( crc * Cr ) + ( crb * Cb ) + adj;
+
+            vec4 binkImage;
+            binkImage.xyz = p;
+            binkImage.w = 1.0;
+
+            //vec4 color = ( binkImage * fragment.color*/ ) + fragment.texcoord1;
+            vec4 color = binkImage;
+            sgl_rgba.xyz = color.xyz * color.w;
+            sgl_rgba.w = color.w;
+        }
+        ]]>
+    </Shader>
+</Qwadro>

@@ -74,9 +74,9 @@ AFXINL afxChar* AfxFindPathTarget(afxChar const* path)
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-#   define AfxAssertRange(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%u) + %s(%u) is out of range [0, %u]",AfxStr((base_)),(base_),AfxStr((range_)),(range_),AfxStr((total_)),(total_)),0))
-#   define AfxAssertRangei(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%i) + %s(%i) is out of range [0, %i]",AfxStr((base_)),(base_),AfxStr((range_)),(range_),AfxStr((total_)),(total_)),0))
-#   define AfxAssertRangef(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%f) + %s(%f) is out of range [0, %f]",AfxStr((base_)),(base_),AfxStr((range_)),(range_),AfxStr((total_)),(total_)),0))
+#   define AfxAssertRange(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%u) + %s(%u) is out of range [0, %s(%u)]",AfxStr(base_),(base_),AfxStr(range_),(range_),AfxStr(total_),(total_)),0))
+#   define AfxAssertRangei(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%i) + %s(%i) is out of range [0, %s(%i)]",AfxStr(base_),(base_),AfxStr(range_),(range_),AfxStr(total_),(total_)),0))
+#   define AfxAssertRangef(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%f) + %s(%f) is out of range [0, %s(%f)]",AfxStr(base_),(base_),AfxStr(range_),(range_),AfxStr(total_),(total_)),0))
 
 // diferente de um range, um extent sempre há um valor mínimo. Algo não pode ter largura igual a zero e existir.
 #   define AfxAssertExtent(total_, range_) (((!!(range_))&&(!!((total_ >= range_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s(%u) is out of range [1, %u]",AfxStr((range_)),(range_),AfxStr((total_)),(total_)),0))

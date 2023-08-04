@@ -43,6 +43,10 @@ AFX_OBJECT(afxMouse)
 #endif
 };
 
+
+AFX afxError    AfxAcquireMouses(afxNat cnt, afxNat port[], afxMouse mse[]);
+AFX void        AfxReleaseMouses(afxNat cnt, afxMouse mse[]);
+
 AFX afxError    AfxEmulateMouseButtonActions(afxMouse mse, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
 AFX afxError    AfxEmulateMouseMotion(afxMouse mse, afxReal const motion[2]);
 AFX afxError    AfxEmulateMouseWheelAction(afxMouse mse, afxReal delta);

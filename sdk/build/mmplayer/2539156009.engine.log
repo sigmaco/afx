@@ -1,0 +1,112 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<afxSystem>::Mount(77eb33d0, 00000000, 00000000, 77e912b4)
+ afxClass<afxSystem>::AllocateObjects(1, 0038ef24, 0038ee3c)
+ afxClass<afxSystem>::BuildObjects(1, 0038ef24, 00000000)
+ afxClass<afxSystem>::ConstructObject(0057f0f0)
+ afxSystem.c:885?_AfxSysCtor(sys=0057f0f0)
+ ADV afxSystem.c:906?_AfxSysCtor
+    Memoy page size: 4096
+ ADV afxSystem.c:907?_AfxSysCtor
+    Logical processor count: 2
+ afxClass<afxMemory>::Mount(0057f13c, 0057f124, 00000000, 77e95ac0)
+ afxMemory.c:144?AfxAcquireMemory(strategy=0038df28,hint="afxSystem.c:928!_AfxSysCtor")
+ afxClass<afxMemory>::AllocateObjects(1, 0038ddc4, 0038ddd4)
+ afxClass<afxMemory>::BuildObjects(1, 0038ddc4, 0038ddbc)
+ afxClass<afxMemory>::ConstructObject(0057f950)
+ afxMemory.c:198?_AfxMemCtor(mem=0057f950)
+ afxClass<afxThread>::Mount(0057f1fc, 0057f124, 00000000, 77e918dc)
+ afxClass<afxIoSystem>::Mount(0057f2bc, 0057f124, 00000000, 77e93094)
+ afxClass<afxIoSystem>::AllocateObjects(1, 0038def0, 0038ddc4)
+ afxClass<afxIoSystem>::BuildObjects(1, 0038def0, 0038def4)
+ afxClass<afxIoSystem>::ConstructObject(0057ff30)
+ afxIoSystem.c:706?_AfxIoCtor(io=0057ff30)
+ afxArena.c:767?AfxAcquireArena(aren=0057ff7c)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxIoSystem.c:722!_AfxIoCtor")
+ afxClass<afxFile>::Mount(0057ffd4, 0057ff64, 00000000, 77e92dd8)
+ afxClass<afxArchive>::Mount(00580094, 0057ff64, 0057ffd4, 77e92758)
+ afxClass<afxResource>::Mount(00580214, 0057ff64, 00000000, 77e94550)
+ afxClass<afxUrd>::Mount(00580154, 0057ff64, 00000000, 77e94b30)
+ afxIoSystem.c:412?AfxMountStoragePoints(0057ff30,6,0038e0ec)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<afxModule>::Mount(0057f37c, 0057f124, 00000000, 77e8ff68)
+ afxModule.c:93?AfxAcquireModules(uri=system/e2coree.dll)
+ afxClass<afxModule>::AllocateObjects(1, 0057f8e0, 0038dda8)
+ afxClass<afxModule>::BuildObjects(1, 0057f8e0, 0038e018)
+ afxClass<afxModule>::ConstructObject(005845f0)
+ afxModule.c:170?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxClass<afxHid>::Mount(0057f43c, 0057f124, 00000000, 77e93800)
+ afxClass<afxKeyboard>::Mount(0057f4fc, 0057f124, 0057f43c, 77e9414c)
+ afxClass<afxMouse>::Mount(0057f5bc, 0057f124, 0057f43c, 77e942ec)
+ afxClass<afxDrawSystem>::Mount(0057f67c, 0057f124, 00000000, 77e98734)
+ afxClass<afxApplication>::Mount(0057f73c, 0057f124, 0057f1fc, 77e8f000)
+ afxKeyboard.c:189?AfxAcquireKeyboards(port=0)
+ afxClass<afxKeyboard>::AllocateObjects(1, 0057f8e4, 0038dddc)
+ afxClass<afxKeyboard>::BuildObjects(1, 0057f8e4, 0038ddcc)
+ afxClass<afxKeyboard, afxHid>ConstructingObject(00584720)
+ afxClass<afxHid>::ConstructObject(00584720)
+ afxHid.c:226?_AfxHidCtor(hid=00584720)
+ afxClass<afxKeyboard>::ConstructObject(00584720)
+ afxKeyboard.c:252?_AfxKbdCtor(kbd=00584720)
+ afxClass<afxDrawSystem>::AllocateObjects(1, 0038ef20, 0038ee3c)
+ afxClass<afxDrawSystem>::BuildObjects(1, 0038ef20, 0038ef1c)
+ afxClass<afxDrawSystem>::ConstructObject(005851c0)
+ afxDrawSystem.c:461?_AfxDsysCtor(dsys=005851c0)
+ afxClass<afxDrawDriver>::Mount(00585208, 005851f4, 00000000, 77e974e4)
+ afxClass<afxDrawThread>::Mount(005852c8, 005851f4, 0057f1fc, 77e98a64)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:93?AfxAcquireModules(uri=e2draw.icd)
+ afxClass<afxModule>::AllocateObjects(1, 005853f4, 0038e960)
+ afxClass<afxModule>::BuildObjects(1, 005853f4, 0038ea4c)
+ afxClass<afxModule>::ConstructObject(00585fd0)
+ afxModule.c:170?_AfxMdleCtor(uri:e2draw.icd)
+ afxDrawDriver.c:215?AfxRegisterDrawDriver(spec=50cd7de8)
+ afxClass<afxDrawDriver>::AllocateObjects(1, 0038e99c, 0038e93c)
+ afxClass<afxDrawDriver>::BuildObjects(1, 0038e99c, 50cd7de8)
+ afxClass<afxDrawDriver>::ConstructObject(005876c0)
+ afxDrawDriver.c:271?_AfxDdrvCtor(ddrv=005876c0)
+ afxClass<afxDrawScript>::Mount(00587710, 005876fc, 00000000, 77e98194)
+ afxClass<afxDrawQueue>::Mount(005877d0, 005876fc, 00000000, 77e98054)
+ afxClass<afxDrawContext>::Mount(00587890, 005876fc, 00000000, 77e96020)
+ afxClass<afxDrawOutput>::Mount(00587950, 005876fc, 00000000, 77e97a94)
+ afxClass<afxDrawInput>::Mount(00587a10, 005876fc, 00000000, 77e97860)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ sglDrawDriver.c:1240?_SglCreateCombinedDeviceContext(oglWndClss=00587be4,shareCtx=00000000,phwnd=0058c680,phdc=0058c684,phrc=0058c68c)
+ ERR afxString.c:422?AfxFormatString
+    (str)
+    Invalid
+ ERR afxString.c:123?AfxStringIsWriteable
+    (str)
+    Invalid
+ ERR afxString.c:81?AfxGetStringBufferCap
+    (str)
+    Invalid

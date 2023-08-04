@@ -1,0 +1,13 @@
+<Qwadro>
+    <Pipeline>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>true</DepthTestEnable>
+        <DepthWriteEnable>true</DepthWriteEnable>
+        <DepthCompareOp>LEQUAL</DepthCompareOp>
+        <Input topology='TRI_LIST' />
+        <Shader stage='VERTEX'>data/pipeline/skybox/skyboxShdVtx.xml?vs</Shader>
+        <Shader stage='FRAGMENT'>data/pipeline/skybox/skyboxShdFrg.xml?fs</Shader>
+    </Pipeline>
+</Qwadro>

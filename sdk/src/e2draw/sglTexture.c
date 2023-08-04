@@ -104,14 +104,14 @@ _SGL void SglToGlFormat(afxPixelFormat pf, GLint *fmt, GLenum *layout, GLenum *t
     {
         {   NIL,                    NIL,                NIL                     },
 
-        {   GL_R8,                  GL_RED,             GL_UNSIGNED_BYTE        },
-        {   GL_RG8,                 GL_RG,              GL_UNSIGNED_BYTE        },
-        {   GL_RGB8,                GL_RGB,             GL_UNSIGNED_BYTE        },
-        {   GL_RGBA8,               GL_RGBA,            GL_UNSIGNED_BYTE        },
+        {   GL_R8,                 GL_RED,             GL_UNSIGNED_BYTE        },
+        {   GL_RG8,                  GL_RG,              GL_UNSIGNED_BYTE        },
+        {   GL_RGB8,                 GL_RGB,             GL_UNSIGNED_BYTE        },
+        {   GL_RGBA8,                GL_RGBA,            GL_UNSIGNED_BYTE        },
 
-        {   GL_RG8,                 GL_RG,              GL_UNSIGNED_BYTE        },
-        {   GL_RGB8,                GL_BGR,             GL_UNSIGNED_BYTE        },
-        {   GL_RGBA8,               GL_BGRA,            GL_UNSIGNED_BYTE        },
+        {   GL_RG8,                  GL_RG,              GL_UNSIGNED_BYTE        },
+        {   GL_RGB8,                 GL_BGR,             GL_UNSIGNED_BYTE        },
+        {   GL_RGBA8,                GL_BGRA,            GL_UNSIGNED_BYTE        },
 
         {   GL_R32F,                GL_RED,             GL_FLOAT                },
         {   GL_RG32F,               GL_RG,              GL_FLOAT                },
@@ -295,7 +295,7 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target,
     SglToGlFormat(tex->fmt, intFmt, fmt, type);
 }
 
-_SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be bound.
+_SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be bound.
 {
     afxError err = AFX_ERR_NONE;
     sglTexIdd *idd = tex->idd;
@@ -340,7 +340,7 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be
         gl->TexParameteriv(idd->glTarget, GL_TEXTURE_SWIZZLE_RGBA, (GLint*)arrayedSwizzle); _SglThrowErrorOccuried();
     }
 
-    afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_FLAG_SURFACE);
+    afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_USAGE_DRAW);
     afxBool const isCubemap = AfxTestTexture(tex, AFX_TEX_FLAG_CUBEMAP);
     AfxAssert(!(isCubemap && tex->whd[2] > 1)); // can't be both 3D and cubemap at same time
 
@@ -546,7 +546,7 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, sglVmt const* gl) // tex must be
     return err;
 }
 
-_SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must be bound
+_SGL afxError _SglTexFlushDevice(afxTexture tex, glVmt const* gl) // tex must be bound
 {
     afxError err = AFX_ERR_NONE;
     sglTexIdd *idd = tex->idd;
@@ -557,7 +557,7 @@ _SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must b
     afxWhd extent;
     //AfxImage.GetExtent(&tex->img, whd);
 
-    afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_FLAG_SURFACE);
+    afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_USAGE_DRAW);
     afxBool const isCubemap = AfxTestTexture(tex, AFX_TEX_FLAG_CUBEMAP);
     
     afxNat const lvlCnt = AfxGetTextureLodCount(tex);
@@ -751,7 +751,7 @@ _SGL afxError _SglTexFlushDevice(afxTexture tex, sglVmt const* gl) // tex must b
     return err;
 }
 
-_SGL afxError _SglTexReinstantiateIdd(afxTexture tex, afxNat unit, sglVmt const* gl)
+_SGL afxError _SglTexReinstantiateIdd(afxTexture tex, afxNat unit, glVmt const* gl)
 {
     AfxEntry("tex=%p", tex);
     afxError err = AFX_ERR_NONE;
@@ -803,7 +803,7 @@ _SGL afxError _SglTexReinstantiateIdd(afxTexture tex, afxNat unit, sglVmt const*
     return err;
 }
 
-_SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex, sglVmt const* gl)
+_SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex, glVmt const* gl)
 {
     //AfxEntry("img=%p", img);
     afxError err = AFX_ERR_NONE;
@@ -933,7 +933,7 @@ _SGL afxError _AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
         {
             idd->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
 
-            if (tex->flags & AFX_TEX_FLAG_SURFACE)
+            if (tex->flags & AFX_TEX_USAGE_DRAW)
             {
                 sglSurfIdd *surfIdd = ((afxSurface)tex)->idd;
                 

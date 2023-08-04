@@ -17,11 +17,8 @@
 #endif
 
 const afxReal CameraSpeed = 30.0f;
-afxSystem sys = NIL;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
-afxDrawSystem dsys = NIL;
-afxApplication TheApp = NIL;
 afxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
@@ -49,7 +46,7 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
 
-_AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
+_AFXEXPORT afxResult AfxUpdateApplication(afxThread thr, afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     afxSize time = AfxGetTimer();
@@ -70,17 +67,17 @@ _AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
 
     UpdateFrameMovement(dt);
 
-    AfxRendererBeginScene(rnd, cam);
+    //AfxRendererBeginScene(rnd, cam);
     //AfxRendererDrawSky(rnd, TRUE);
 
-    AfxRendererDrawBody(rnd, bod);
+    //AfxRendererDrawBody(rnd, bod);
 
-    AfxRendererEndScene(rnd);
+    //AfxRendererEndScene(rnd);
 
     return AFX_SUCCESS;
 }
 
-_AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
+_AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("app=%p", app);
@@ -92,27 +89,14 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    sim = AfxApplicationAcquireSimulation(TheApp, &simSpec);
+    sim = AfxApplicationAcquireSimulation(app, &simSpec);
     AfxAssertObject(sim, AFX_FCC_SIM);
-
+    
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = {0};
-    doutSpec.endpoint = &uriMap;
-    doutSpec.whd[0] = 1280;
-    doutSpec.whd[1] = 720;
-    doutSpec.whd[2] = 1;
-    doutSpec.bufCnt = 2;
-    doutSpec.clipped = TRUE;
-    doutSpec.colorSpc = NIL;
-    doutSpec.presentAlpha = FALSE;
-    doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
-    doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
-
-    dout = AfxAcquireDrawOutputs(&doutSpec);
+    AfxAcquireDrawOutputs(&doutSpec, 1, &dout);
     AfxAssert(dout);
-    AfxReconnectDrawOutput(dout, dctx);
+    AfxReconnectDrawOutput(dout, dctx, NIL);
 
     AfxSimulationAcquireRenderers(sim, 1, NIL, &rnd);
 
@@ -175,6 +159,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     //AfxAttachViewpoint(vpnt, cam);
 
+    rnd->activeCamera = cam;
+
     kbd = AfxFindKeyboard(0);
     mse = AfxFindMouse(0);
     AfxObjectInstallEventFilter(&mse->hid.obj, &cam->nod.obj);
@@ -184,13 +170,28 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     return AFX_SUCCESS; 
 }
 
-_AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
+_AFXEXPORT afxResult AfxLeaveApplication(afxThread thr, afxApplication app)
 {
     AfxEntry("app=%p", app);
     //AfxReleaseObject(&din->obj);
     AfxEcho("aaaaaaaaaaaa");
 
     return AFX_SUCCESS;
+}
+
+_AFXEXPORT afxError SandboxThrProc(afxThread thr, afxApplication app, afxThreadOpcode opcode)
+{
+    afxError err = AFX_ERR_NONE;
+
+    switch (opcode)
+    {
+        //case 0: break;
+    case AFX_THR_OPCODE_RUN: AfxEnterApplication(thr, app); break;
+        //case AFX_THR_OPCODE_QUIT: AfxEndApplication(thr, app); break;
+    default: AfxUpdateApplication(thr, app); break;
+    }
+
+    return err;
 }
 
 int AfxMain(afxApplication app, int argc, char const* argv[])
@@ -210,31 +211,32 @@ int main(int argc, char const* argv[])
     afxBool reboot = 1;
     while (reboot)
     {
-        sys = AfxBootUpSystem(NIL);
+        afxSystem sys;
+        AfxBootUpSystem(NIL, &sys);
 
+        afxDrawSystem dsys;
         afxDrawSystemSpecification dsysSpec = { 0 };
-        dsys = AfxBootUpDrawSystem(&dsysSpec);
+        AfxBootUpDrawSystem(&dsysSpec, &dsys);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
 
-        dctx = AfxAcquireDrawContexts(&dctxSpec);
+        AfxAcquireDrawContexts(&dctxSpec, 1, &dctx);
         AfxAssert(dctx);
 
+        afxApplication TheApp;
         afxApplicationSpecification appSpec;
         appSpec.argc = argc;
         appSpec.argv = argv;
         appSpec.dctx = dctx;
-        appSpec.enter = AfxEnterApplication;
-        appSpec.exit = AfxLeaveApplication;
-        appSpec.update = AfxUpdateApplication;
-        TheApp = AfxAcquireApplication(&appSpec);
+        appSpec.proc = SandboxThrProc;
+        AfxAcquireApplications(&appSpec, 1, &TheApp);
         AfxAssertObject(TheApp, AFX_FCC_APP);
+        AfxRunApplication(TheApp);
 
-        if (AFX_OPCODE_BREAK == AfxRunApplication(TheApp))
-            reboot = 0;
+        while (AFX_OPCODE_CONTINUE == AfxDoSystemThreading(0));
 
-        AfxReleaseObject(&TheApp->obj);
+        AfxReleaseApplications(1, &TheApp);
 
         AfxReleaseObject(&dctx->obj);
 

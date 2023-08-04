@@ -25,6 +25,7 @@ AFX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[],
 
 AFX afxError    AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, afxDrawOperationBlueprint *blueprint);
 AFX afxError    AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShaderBlueprint *blueprint);
+AFX afxError    AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipelineBlueprint *blueprint);
 
 AFX afxError    AfxParseXmlBackedPipelineDepthState(afxXmlNode const *node, afxPipelineDepthState *state, afxNat *foundMask);
 AFX afxError    AfxParseXmlBackedPipelineRasterizerState(afxXmlNode const *node, afxPipelineRasterizerState *state, afxNat *foundMask);
