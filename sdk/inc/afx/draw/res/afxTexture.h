@@ -32,18 +32,13 @@ typedef enum afxEventTexture
 
 typedef enum afxTextureFlags
 {
-    AFX_TEX_USAGE_TRANSFER_SRC      = AFX_FLAG(0),
-    AFX_TEX_USAGE_TRANSFER_DST      = AFX_FLAG(1),
-    AFX_TEX_USAGE_TRANSFER          = (AFX_TEX_USAGE_TRANSFER_SRC | AFX_TEX_USAGE_TRANSFER_DST),
-    AFX_TEX_USAGE_SAMPLED           = AFX_FLAG(2),
-    AFX_TEX_USAGE_STORAGE           = AFX_FLAG(3),
-    AFX_TEX_USAGE_TRANSIENT_BUFFER  = AFX_FLAG(6),
-    AFX_TEX_USAGE_INPUT_BUFFER      = AFX_FLAG(7),
+    AFX_TEX_USAGE_SRC               = AFX_FLAG(0), // The texture can be used as the source of a copy operation.
+    AFX_TEX_USAGE_DST               = AFX_FLAG(1), // The texture can be used as the destination of a copy or write operation.
+    AFX_TEX_USAGE_TRANSFER          = (AFX_TEX_USAGE_SRC | AFX_TEX_USAGE_DST),
+    AFX_TEX_USAGE_SAMPLING          = AFX_FLAG(2), // The texture can be bound for use as a sampled texture in a shader.
+    AFX_TEX_USAGE_STORAGE           = AFX_FLAG(3), // The texture can be bound for use as a storage texture in a shader.
+    AFX_TEX_USAGE_DRAW              = AFX_FLAG(4), // The texture can be used as a color or depth/stencil attachment in a render pass.
     AFX_TEX_USAGE                   = 0x000000FF,
-
-    AFX_TEX_FLAG_SURFACE_RASTER     = AFX_FLAG(4), // used as color buffer; a surface of canvases.
-    AFX_TEX_FLAG_SURFACE_DEPTH      = AFX_FLAG(5), // used as depth/stencil buffer; a surface of canvases.
-    AFX_TEX_FLAG_SURFACE            = (AFX_TEX_FLAG_SURFACE_RASTER | AFX_TEX_FLAG_SURFACE_DEPTH),
 
     AFX_TEX_FLAG_CUBEMAP            = AFX_FLAG(30),
     AFX_TEX_FLAG_REVALIDATE         = AFX_FLAG(31)

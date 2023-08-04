@@ -59,13 +59,14 @@ AFX_DEFINE_STRUCT(afxProcessor)
     //afxChain            threads;
     afxThread           activeThr;
 
-    afxSystemClock      startClock;
-    afxSystemClock      currProcClock;
-    afxSystemClock      lastProcClock;
-    afxReal64           currTime;
-    afxReal64           deltaTime;
-    afxSystemClock      endProcClock;
-    afxReal64           lastProcDur;
+    afxSystemClock  startClock;
+    afxSystemClock  lastClock;
+    afxSystemClock  currClock;
+    afxReal64       currTime;
+    afxReal64       deltaTime;
+    afxNat          iterCnt;
+    afxNat          lastIterCnt;
+    afxSystemClock  iterCntSwapClock;
 };
 
 #endif
@@ -79,11 +80,13 @@ AFX_OBJECT(afxThread)
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     afxNat          affineProcUnitIdx; // if set bit set, only such processor will can run this thread.
     afxSystemClock  startClock;
-    afxSystemClock  currExecClock;
-    afxSystemClock  lastExecClock;
-    afxReal64       lastExecDur;
+    afxSystemClock  lastClock;
+    afxSystemClock  currClock;
     afxReal64       currTime;
     afxReal64       deltaTime;
+    afxNat          iterCnt;
+    afxNat          lastIterCnt;
+    afxSystemClock  iterCntSwapClock;
     afxError        (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
     afxBool         started;
     afxBool         exited;
@@ -93,18 +96,14 @@ AFX_OBJECT(afxThread)
     afxBool         finished;
     afxBool         interruptionRequested;
     afxInt          exitCode;
-    afxSystemClock  endExecClock;
     void            *udd;
 #endif
 };
 
-AFX afxError    AfxAcquireThread(afxThreadSpecification const *spec, afxHint const hint, afxThread *thr);
+AFX afxError    AfxAcquireThreads(afxThreadSpecification const *spec, afxHint const hint, afxNat cnt, afxThread thr[]);
+AFX void        AfxReleaseThreads(afxNat cnt, afxThread thr[]);
 
 AFX void*       AfxGetThreadUdd(afxThread thr);
-
-AFX afxReal64   AfxGetThreadDeltaTime(afxThread thr);
-AFX afxReal64   AfxGetThreadCurrentTime(afxThread thr);
-AFX afxReal64   AfxGetThreadLastDuration(afxThread thr);
 
 AFX void        AfxSetThreadAffinity(afxThread thr, afxNat procUnitIdx);
 
@@ -135,7 +134,7 @@ AFX afxBool     AfxThreadIsRunning(afxThread thr);
 AFX afxBool     AfxThreadIsFinished(afxThread thr);
 
 /// Return true if the task running on this thread should be stopped. An interruption can be requested by RequestThreadInterruption().
-AFX afxBool     AfxThreadInterruptionIsRequested(afxThread thr);
+AFX afxBool     AfxShouldInterruptExecution(void);
 
 /// Tells the thread's event loop to exit with a return code.
 /// After calling this function, the thread leaves the event loop and returns from the call to event loop exec(). The event loop exec() function returns returnCode.
@@ -143,14 +142,14 @@ AFX afxBool     AfxThreadInterruptionIsRequested(afxThread thr);
 /// Note that unlike the C library function of the same name, this function does return to the caller – it is event processing that stops.
 /// No event loops will be started anymore in this thread until thread exec() has been called again.If the eventloop in thread exec() is not running then the next call to thread exec() will also return immediately.
 
-AFX void        AfxEndThread(afxInt code);
+AFX void        AfxExitExecution(afxInt code);
 
 AFX afxBool     AfxGetThreadExitCode(afxThread thr, afxInt *exitCode);
 
 /// Tells the thread's event loop to exit with return code 0 (success). Equivalent to calling AfxExitThread(0).
 /// This function does nothing if the thread does not have an event loop.
 
-AFX void        AfxQuitThread(void);
+AFX void        AfxQuitExecution(void);
 
 /// Blocks the thread until the thread associated with this afxThread object has finished execution (i.e. when it returns from run()). 
 /// This function will return true if the thread has finished. It also returns true if the thread has not been started yet.
@@ -159,17 +158,20 @@ AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
 
 /// Yields execution of the current thread to another runnable thread, if any. Note that the operating system decides to which thread to switch.
 
-AFX void        AfxYield(void);
+AFX void        AfxYieldThreading(void);
 
 // functions affection the currrent caller thread.
 
-AFX afxThread   AfxGetThisThread(void);
-AFX afxNat      AfxGetSystemProcessor(void);
+AFX void        AfxGetThread(afxThread *thr);
+AFX void        AfxGetThreadingUnit(afxNat *unitIdx);
+AFX void        AfxGetThreadingId(afxNat32 *tid);
 
-AFX afxNat32    AfxGetTid(void);
+AFX void        AfxGetExecutionCounter(afxNat *currIter, afxNat *lastFreq);
+AFX void        AfxGetExecutionTime(afxReal64 *curr, afxReal64 *delta);
+AFX void        AfxGetExecutionClock(afxSystemClock *curr, afxSystemClock *last);
 
-AFX void        AfxExit(afxResult exitCode);
+AFX void        AfxEndProcessor(afxResult exitCode);
 
-AFX afxResult   AfxSleep(afxTimeSpec const* dur, afxTimeSpec *remaining);
+AFX afxResult   AfxSleepProcessor(afxTimeSpec const* dur, afxTimeSpec *remaining);
 
 #endif//AFX_THREAD_H

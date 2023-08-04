@@ -15,11 +15,8 @@
 #endif
 
 const afxReal CameraSpeed = 30.0f;
-afxSystem sys = NIL;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
-afxDrawSystem dsys = NIL;
-afxApplication TheApp = NIL;
 afxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
@@ -30,7 +27,7 @@ afxCamera cam = NIL;
 afxUri2048 uri;
 
  afxSize frameTime = 0, swapTime = 0, frameNum = 0;
- afxReal dt = 0;
+ afxReal64 dt = 0;
  afxNat fps = 0;
 
 void UpdateFrameMovement(const afxReal DeltaTime)
@@ -69,14 +66,9 @@ _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
     ++frameNum;
     frameTime = time;
 
-    dt = AfxGetThreadDeltaTime(thr);
+    AfxGetExecutionTime(NIL, &dt);
     UpdateFrameMovement(dt);
-
-    AfxRendererBeginScene(rnd, cam);
-    AfxRendererDrawSky(rnd, TRUE);
-
-
-    AfxRendererEndScene(rnd);    
+ 
 }
 
 _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
@@ -117,15 +109,16 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    sim = AfxApplicationAcquireSimulation(TheApp, &simSpec);
+    sim = AfxApplicationAcquireSimulation(app, &simSpec);
     AfxAssertObject(sim, AFX_FCC_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputSpecification doutSpec = {0};
+    doutSpec.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutSpec.endpoint = &uriMap;
     AfxAcquireDrawOutputs(&doutSpec, 1, &dout);
     AfxAssert(dout);
-    AfxReconnectDrawOutput(dout, dctx);
+    AfxReconnectDrawOutput(dout, dctx, NIL);
 
     AfxSimulationAcquireRenderers(sim, 1, NIL, &rnd);
     
@@ -136,11 +129,13 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
     AfxAssert(cam);
 
+    rnd->activeCamera = cam;
+
     kbd = AfxFindKeyboard(0);
     mse = AfxFindMouse(0);
     AfxObjectInstallEventFilter(&mse->hid.obj, &cam->nod.obj);
     
-    //AfxEnableDrawInputPrefetching(rnd->din, 0, 1, (afxNat[]) { 1 }); // bug: sem isso não desenha
+    AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
     
 }
 
@@ -176,17 +171,19 @@ int main(int argc, char const* argv[])
     afxBool reboot = 1;
     while (reboot)
     {
-        sys = AfxBootUpSystem(NIL);
+        afxSystem sys = NIL;
+        AfxBootUpSystem(NIL, &sys);
 
+        afxDrawSystem dsys;
         afxDrawSystemSpecification dsysSpec = { 0 };
         AfxBootUpDrawSystem(&dsysSpec, &dsys);
         AfxAssertObject(dsys, AFX_FCC_DSYS);
 
         afxDrawContextSpecification dctxSpec = { 0 };
-
         AfxAcquireDrawContexts(&dctxSpec, 1, &dctx);
         AfxAssert(dctx);
 
+        afxApplication TheApp;
         afxApplicationSpecification appSpec = { 0 };
         appSpec.argc = argc;
         appSpec.argv = argv;
@@ -195,13 +192,13 @@ int main(int argc, char const* argv[])
         //appSpec.enter = AfxEnterApplication;
         //appSpec.exit = AfxLeaveApplication;
         //appSpec.update = AfxUpdateApplication;
-        TheApp = AfxAcquireApplication(&appSpec);
+        AfxAcquireApplications(&appSpec, 1, &TheApp);
         AfxAssertObject(TheApp, AFX_FCC_APP);
         AfxRunApplication(TheApp);
 
         while (AFX_OPCODE_CONTINUE == AfxDoSystemThreading(0));
 
-        AfxReleaseObject(&TheApp->thr.obj);
+        AfxReleaseApplications(1, &TheApp);
 
         AfxReleaseObject(&dctx->obj);
 

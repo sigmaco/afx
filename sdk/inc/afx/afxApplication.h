@@ -76,6 +76,9 @@ AFX_OBJECT(afxApplication)
 #endif//_AFX_APPLICATION_C
 };
 
+AFX afxError                AfxAcquireApplications(afxApplicationSpecification const *spec, afxNat cnt, afxApplication app[]);
+AFX void                    AfxReleaseApplications(afxNat cnt, afxApplication app[]);
+
 AFX void                    AfxEndApplication(afxApplication app, afxInt exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
 AFX void                    AfxQuitApplication(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
 AFX afxResult               AfxRunApplication(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).

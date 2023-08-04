@@ -32,6 +32,9 @@ AFX_OBJECT(afxModule)
 #endif
 };
 
+AFX afxError            AfxAcquireModules(afxNat cnt, afxUri const uri[], afxModule mdle[]);
+AFX void                AfxReleaseModules(afxNat cnt, afxModule mdle[]);
+
 AFX afxUri const*       AfxGetModulePath(afxModule mdle);
 
 AFX void*               AfxFindModuleSymbol(afxModule mdle, afxChar const *name);

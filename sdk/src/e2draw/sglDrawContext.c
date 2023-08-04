@@ -87,12 +87,12 @@ _SGL afxError _AfxDctxVmtProcCb(afxDrawContext dctx, afxDrawThread dthr)
     return err;
 }
 
-_SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect)
+_SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     AfxAssertObject(din, AFX_FCC_DIN);
-    afxNat slotIdx = AFX_INVALID_INDEX;
+    afxNat slotIdx2 = AFX_INVALID_INDEX;
 
     if (dctx->inputs)
     {
@@ -100,13 +100,13 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
         {
             if (din == dctx->inputs[i])
             {
-                slotIdx = i;
+                slotIdx2 = i;
                 break;
             }
         }
     }
 
-    if (slotIdx != AFX_INVALID_INDEX)
+    if (slotIdx2 != AFX_INVALID_INDEX)
     {
         AfxAssert(dctx->inputs);
 
@@ -116,7 +116,7 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
         }
         else
         {
-            dctx->inputs[slotIdx] = NIL; // disconnect
+            dctx->inputs[slotIdx2] = NIL; // disconnect
             --dctx->inputCnt;
         }
     }
@@ -134,7 +134,8 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
                 {
                     if (!dctx->inputs[i])
                     {
-                        dctx->inputs[i] = din;
+                        slotIdx2 = i;
+                        dctx->inputs[slotIdx2] = din;
                         ++dctx->inputCnt;
                         break;
                     }
@@ -151,22 +152,27 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
                 else
                 {
                     dctx->inputs = boundDins;
-                    dctx->inputs[dctx->inputCnt] = din;
+                    slotIdx2 = dctx->inputCnt;
+                    dctx->inputs[slotIdx2] = din;
                     ++dctx->inputCap;
                     ++dctx->inputCnt;
                 }
             }
         }
     }
+
+    if (slotIdx)
+        *slotIdx = slotIdx2;
+
     return err;
 }
 
-_SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect)
+_SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dctx, AFX_FCC_DCTX);
     AfxAssertObject(dout, AFX_FCC_DOUT);
-    afxNat slotIdx = AFX_INVALID_INDEX;
+    afxNat slotIdx2 = AFX_INVALID_INDEX;
 
     if (dctx->outputs)
     {
@@ -174,13 +180,13 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
         {
             if (dout == dctx->outputs[i])
             {
-                slotIdx = i;
+                slotIdx2 = i;
                 break;
             }
         }
     }
 
-    if (slotIdx != AFX_INVALID_INDEX)
+    if (slotIdx2 != AFX_INVALID_INDEX)
     {
         AfxAssert(dctx->outputs);
 
@@ -190,7 +196,7 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
         }
         else
         {
-            dctx->outputs[slotIdx] = NIL; // disconnect
+            dctx->outputs[slotIdx2] = NIL; // disconnect
             --dctx->outputCnt;
         }
     }
@@ -208,7 +214,8 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
                 {
                     if (!dctx->outputs[i])
                     {
-                        dctx->outputs[i] = dout;
+                        slotIdx2 = i;
+                        dctx->outputs[slotIdx2] = dout;
                         ++dctx->outputCnt;
                         break;
                     }
@@ -225,13 +232,18 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
                 else
                 {
                     dctx->outputs = boundDouts;
-                    dctx->outputs[dctx->outputCnt] = dout;
+                    slotIdx2 = dctx->outputCnt;
+                    dctx->outputs[slotIdx2] = dout;
                     ++dctx->outputCap;
                     ++dctx->outputCnt;
                 }
             }
         }
     }
+
+    if (slotIdx)
+        *slotIdx = slotIdx2;
+
     return err;
 }
 
@@ -281,15 +293,17 @@ _SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextSpecification
 
     sglDctxIdd *idd = AfxAllocate(dctx->mem, sizeof(*idd), 0, AfxSpawnHint());
     dctx->idd = idd;
+    *idd = (sglDctxIdd) { 0 };
 
     afxUri uri;
-    AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba.xml", 0);
+    AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba/rgbaToRgbaPip.xml?yFlipped", 0);
     //AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
     //idd->presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
-    AfxAcquireDrawOperations(dctx, 1, &uri, &idd->presentDop);
+    
+    AfxUploadPipelines(dctx, 1, &uri, &idd->presentPip);
 
-    AfxAssertObject(idd->presentDop, AFX_FCC_DOP);
+    AfxAssertObject(idd->presentPip, AFX_FCC_PIP);
 
     afxSamplerSpecification smpSpec = { 0 };
     smpSpec.magFilter = AFX_TEXEL_FLT_POINT;

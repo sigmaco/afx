@@ -153,7 +153,7 @@ typedef enum afxFcc
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     AFX_FCC_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
-    AFX_FCC_LEGT    = AfxPackFcc('l', 'e', 'g', 't'), // afxLego
+    AFX_FCC_LEGT2    = AfxPackFcc('l', 'e', 'g', 't'), // afxLego
     AFX_FCC_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxLego
     AFX_FCC_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
     AFX_FCC_SHDB    = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint

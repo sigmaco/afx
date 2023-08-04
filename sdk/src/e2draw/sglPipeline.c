@@ -37,7 +37,7 @@
 #if 0
 _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 {
-    sglVmt* gl = &(((afxDrawSystem)AfxObjectGetProvider(&pip->obj))->vmt);
+    glVmt* gl = &(((afxDrawSystem)AfxObjectGetProvider(&pip->obj))->vmt);
 #if 0
     afxShaderStage                      stages;
     afxShaderResourceType              type;
@@ -158,7 +158,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 }
 #endif
 
-_SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip, sglVmt const* gl)
+_SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip, glVmt const* gl)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;

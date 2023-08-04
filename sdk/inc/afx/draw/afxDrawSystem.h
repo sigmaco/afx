@@ -83,16 +83,15 @@ AFX_OBJECT(afxDrawSystem)
 #endif
 };
 
-AFX afxDrawSystem       AfxGetDrawSystem(void);
-AFX void                AfxShutdownDrawSystem(void);
+AFX afxBool             AfxGetDrawSystem(afxDrawSystem *dsys);
 AFX afxError            AfxBootUpDrawSystem(afxDrawSystemSpecification const *spec, afxDrawSystem *dsys);
+AFX void                AfxShutdownDrawSystem(void);
 
 AFX afxMemory           AfxGetDrawMemory(void);
 
 AFX afxBool             AfxGetDrawDriver(afxNat drvIdx, afxDrawDriver *ddrv);
 AFX afxError            AfxRegisterDrawDriver(afxDrawDriverSpecification const *spec, afxDrawDriver *ddrv);
 
-AFX afxError            AfxAcquireDrawThreads(afxDrawThreadSpecification const *spec, afxNat cnt, afxDrawThread dthr[]);
 AFX afxError            AfxAcquireDrawContexts(afxDrawContextSpecification const *spec, afxNat cnt, afxDrawContext dctx[]);
 AFX afxError            AfxAcquireDrawOutputs(afxDrawOutputSpecification const *spec, afxNat cnt, afxDrawOutput dout[]);
 AFX afxError            AfxAcquireDrawInputs(afxDrawInputSpecification const *spec, afxNat cnt, afxDrawInput din[]);

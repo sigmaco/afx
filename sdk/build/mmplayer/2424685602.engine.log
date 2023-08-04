@@ -1,0 +1,33 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+                  S I G M A   T E C H N O L O G Y   G R O U P                  
+                                                                               
+                               Public Test Build                               
+                           (c) 2017 Federacao SIGMA                            
+                                www.sigmaco.org                                
+                                                                               
+ ERR afxSystem.c:777?AfxBootUpSystem
+    
+ ERR afxObject.c:333?AfxObjectAssert
+    
+ ERR afxObject.c:333?AfxObjectAssert
+    (obj)
+    Invalid
+ ERR afxObject.c:206?AfxObjectTestFcc
+    
+ ERR afxObject.c:206?AfxObjectTestFcc
+    (obj)
+    Invalid
+ ERR afxObject.c:258?AfxObjectGetClass
+    
+ ERR afxObject.c:258?AfxObjectGetClass
+    (obj)
+    Invalid

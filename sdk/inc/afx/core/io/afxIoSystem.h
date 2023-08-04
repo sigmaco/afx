@@ -122,10 +122,9 @@ AFX_OBJECT(afxIoSystem)
 #endif
 };
 
-AFX afxIoSystem     AfxGetIoSystem(void);
+AFX afxBool         AfxGetIoSystem(afxIoSystem *io);
 AFX void            AfxShutdownIoSystem(void);
-AFX afxIoSystem     AfxBootUpIoSystem(afxIoSystemSpecification const *spec);
-AFX afxResult       AfxProcessIoSystem(afxTime timeout); // Called by core execution system. Reserved for enginners from SIGMA.
+AFX afxError        AfxBootUpIoSystem(afxIoSystemSpecification const *spec, afxIoSystem *io);
 
 AFX afxMemory       AfxGetIoMemory(void);
 AFX afxArena*       AfxGetIoArena(void);

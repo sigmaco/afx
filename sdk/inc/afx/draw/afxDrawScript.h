@@ -57,16 +57,16 @@ typedef enum afxDrawScriptState
 
 typedef enum afxSurfaceStoreOp
 {
-    // NIL // none
-    AFX_SURFACE_STORE_OP_STORE = 1,
-    AFX_SURFACE_STORE_OP_DONT_CARE,
+    AFX_DTS_STORE_OP_STORE,
+    AFX_DTS_STORE_OP_DISCARD,
+    AFX_DTS_STORE_OP_DONT_CARE,
 } afxSurfaceStoreOp;
 
 typedef enum afxSurfaceLoadOp
 {
-    AFX_SURFACE_LOAD_OP_LOAD,
-    AFX_SURFACE_LOAD_OP_CLEAR,
-    AFX_SURFACE_LOAD_OP_DONT_CARE
+    AFX_DTS_LOAD_OP_CLEAR,
+    AFX_DTS_LOAD_OP_LOAD,
+    AFX_DTS_LOAD_OP_DONT_CARE
 } afxSurfaceLoadOp;
 
 AFX_DEFINE_UNION(afxClearValue)
@@ -93,16 +93,22 @@ AFX_DEFINE_STRUCT(afxClearRect)
 
 AFX_DEFINE_STRUCT(afxDrawTarget)
 {
-    afxSurface          surf;
-    afxSurfaceLoadOp    loadOp;
-    afxSurfaceStoreOp   storeOp;
-    afxClearValue       clearValue;
+    afxSurface          surf; // the texture subresource that will be output to for this color attachment.
+    afxSurface          resolve; // the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
+    afxSurfaceLoadOp    loadOp; // Indicates the load operation to perform on view prior to executing the render pass.
+    afxSurfaceStoreOp   storeOp; // The store operation to perform on view after executing the render pass.
+    afxClearValue       clearValue; // Indicates the value to clear view to prior to executing the render pass.
 };
 
-AFX_DEFINE_STRUCT(afxRenderPassAnnex)
+AFX_DEFINE_STRUCT(afxDrawPassState)
 {
-    afxBool             clearOnLoad, ignoreOnStore;
-    afxClearValue       clearValue;
+    afxCanvas           canv;
+    afxRect             area;
+    afxNat              layerCnt;
+    afxNat              rasterCnt;
+    afxDrawTarget const*rasters;
+    afxDrawTarget const*depth;
+    afxDrawTarget const*stencil;
 };
 
 AFX_DECLARE_STRUCT(_afxDscrVmt);
@@ -191,12 +197,10 @@ AFX void                AfxDrawCmdCopyTexture(afxDrawScript dscr, afxTexture dst
 AFX void                AfxDrawCmdSetScissors(afxDrawScript dscr, afxNat first, afxNat cnt, afxRect const rect[]);
 AFX void                AfxDrawCmdSetViewports(afxDrawScript dscr, afxNat first, afxNat cnt, afxViewport const vp[]);
 
-AFX void                AfxDrawCmdBeginOperation(afxDrawScript dscr, afxDrawOperation dop, afxNat tecIdx, afxCanvas canv, afxRect const *area, afxNat annexCnt, afxRenderPassAnnex const annexes[]);
-AFX void                AfxDrawCmdEndOperation(afxDrawScript dscr);
-AFX void                AfxDrawCmdEmployTechnique(afxDrawScript dscr, afxNat tecIdx);
 AFX void                AfxDrawCmdNextPass(afxDrawScript dscr, afxBool useAuxScripts);
-AFX void                AfxDrawCmdBeginCombination(afxDrawScript dscr, afxRect const *area, afxNat layerCnt, afxNat rasterCnt, afxDrawTarget const rasters[], afxDrawTarget const *depth, afxDrawTarget const *stencil);
-AFX void                AfxDrawCmdEndCombination(afxDrawScript dscr);
+
+AFX void                AfxDrawCmdBeginDrawPass(afxDrawScript dscr, afxDrawPassState const *state);
+AFX void                AfxDrawCmdEndDrawPass(afxDrawScript dscr);
 
 AFX void                AfxDrawCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerState const *state);
 AFX void                AfxDrawCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *state);

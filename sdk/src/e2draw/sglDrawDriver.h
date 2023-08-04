@@ -49,6 +49,7 @@
 #   endif
 #endif//__e2draw__
 
+#if 0
 SGL HMODULE opengl32;
 #if !0
 SGL HGLRC(WINAPI* _wglCreateContext)(HDC);
@@ -64,7 +65,7 @@ SGL int(WINAPI* _wglGetPixelFormat)(HDC hdc);
 SGL BOOL(WINAPI* _wglSwapBuffers)(HDC);
 
 #endif
-SGL afxBool _AfxLoadOpengl(void);
+#endif
 
 SGL void* glcGetProcAddress(void *deviceHandle, const GLchar *funcName);
 
@@ -72,6 +73,46 @@ SGL void* glcGetProcAddress(void *deviceHandle, const GLchar *funcName);
 #define SGL_DEFAULT_CTX_VER_MINOR 3
 #define SGL_DEFAULT_CTX_LEGACY_SUPPORT FALSE
 #define SGL_DEFAULT_CTX_EXTENSIBLE_SUPPORT TRUE
+
+#define GL_VMT_RANGE_100 48
+#define GL_VMT_RANGE_110 14
+#define GL_VMT_RANGE_120 4
+#define GL_VMT_RANGE_130 9
+#define GL_VMT_RANGE_140 9
+#define GL_VMT_RANGE_150 19
+#define GL_VMT_RANGE_200 93
+#define GL_VMT_RANGE_210 6
+#define GL_VMT_RANGE_300 84
+#define GL_VMT_RANGE_310 12
+#define GL_VMT_RANGE_320 19
+#define GL_VMT_RANGE_330 28
+#define GL_VMT_RANGE_400 46
+#define GL_VMT_RANGE_410 88
+#define GL_VMT_RANGE_420 12
+#define GL_VMT_RANGE_430 43
+#define GL_VMT_RANGE_440 9
+#define GL_VMT_RANGE_450 110
+#define GL_VMT_RANGE_460 4
+
+#define GL_VMT_BASE_100 0
+#define GL_VMT_BASE_110 GL_VMT_BASE_100 + GL_VMT_RANGE_100
+#define GL_VMT_BASE_120 GL_VMT_BASE_110 + GL_VMT_RANGE_110
+#define GL_VMT_BASE_130 GL_VMT_BASE_120 + GL_VMT_RANGE_120
+#define GL_VMT_BASE_140 GL_VMT_BASE_130 + GL_VMT_RANGE_130
+#define GL_VMT_BASE_150 GL_VMT_BASE_140 + GL_VMT_RANGE_140
+#define GL_VMT_BASE_200 GL_VMT_BASE_150 + GL_VMT_RANGE_150
+#define GL_VMT_BASE_210 GL_VMT_BASE_200 + GL_VMT_RANGE_200
+#define GL_VMT_BASE_300 GL_VMT_BASE_210 + GL_VMT_RANGE_210
+#define GL_VMT_BASE_310 GL_VMT_BASE_300 + GL_VMT_RANGE_300
+#define GL_VMT_BASE_320 GL_VMT_BASE_310 + GL_VMT_RANGE_310
+#define GL_VMT_BASE_330 GL_VMT_BASE_320 + GL_VMT_RANGE_320
+#define GL_VMT_BASE_400 GL_VMT_BASE_330 + GL_VMT_RANGE_330
+#define GL_VMT_BASE_410 GL_VMT_BASE_400 + GL_VMT_RANGE_400
+#define GL_VMT_BASE_420 GL_VMT_BASE_410 + GL_VMT_RANGE_410
+#define GL_VMT_BASE_430 GL_VMT_BASE_420 + GL_VMT_RANGE_420
+#define GL_VMT_BASE_440 GL_VMT_BASE_430 + GL_VMT_RANGE_430
+#define GL_VMT_BASE_450 GL_VMT_BASE_440 + GL_VMT_RANGE_440
+#define GL_VMT_BASE_460 GL_VMT_BASE_450 + GL_VMT_RANGE_450
 
 #define SGL_VMT_SIZE_100 48 // 0-47
 #define SGL_VMT_SIZE_110 SGL_VMT_SIZE_100 + 14 // 0-13
@@ -93,7 +134,7 @@ SGL void* glcGetProcAddress(void *deviceHandle, const GLchar *funcName);
 #define SGL_VMT_SIZE_450 SGL_VMT_SIZE_440 + 110 // 0-109
 #define SGL_VMT_SIZE_460 SGL_VMT_SIZE_450 + 4 // 0-3
 
-typedef union sglVmt
+typedef union glVmt
 {
     struct
     {
@@ -138,7 +179,7 @@ typedef union sglVmt
             PFNGLGETDOUBLEVPROC GetDoublev;
             PFNGLGETERRORPROC GetError;
             PFNGLGETFLOATVPROC GetFloatv;
-            PFNGLGETINTEGERVPROC GetIntegerv;
+            PFNGLGETINTEGERVPROC GetIntegerv; // 38
             PFNGLGETSTRINGPROC GetString;
             PFNGLGETTEXIMAGEPROC GetTexImage;
             PFNGLGETTEXPARAMETERFVPROC GetTexParameterfv;
@@ -831,7 +872,7 @@ typedef union sglVmt
         };
     };
     void* ptr[1];
-} sglVmt;
+} glVmt;
 
 SGL GLenum AfxToGlFrontFace(afxFrontFace ff);
 SGL GLenum AfxToGlCullMode(afxCullMode cm);
@@ -857,6 +898,5 @@ SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target, 
 #endif//AFX_DONT_DEBUG
 
 
-SGL void _SglLoadVmt(sglVmt* vmt, afxNat verMajor, afxNat verMinor);
 
 #endif//AFX_STD_DRAW_DRIVER_DEFS_H

@@ -22,7 +22,7 @@
 #include "afx/draw/res/afxSurface.h"
 #include "../src/e2coree/draw/afxDrawParadigms.h"
 
-_SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf, sglVmt const* gl)
+_SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
     sglDqueIdd *dqueIdd = dque->idd;

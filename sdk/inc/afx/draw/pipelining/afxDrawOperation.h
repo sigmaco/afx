@@ -34,7 +34,7 @@ AFX_DEFINE_STRUCT(afxDrawOperationBlueprintTechniquePass)
     afxPipelineInputAssemblyState   inputAssembly;
     afxPipelineRasterizerState      rasterization;
     afxPipelineDepthState           depthHandling;
-    afxArray                        usedShaders;
+    afxArray                        shaders;
 };
 
 AFX_DEFINE_STRUCT(afxDrawOperationBlueprintTechnique)
@@ -48,7 +48,6 @@ AFX_DEFINE_STRUCT(afxDrawOperationBlueprint)
     afxFcc                          fcc;
     afxDrawContext                  dctx;
     afxUri128                       uri; // 128
-    afxArray                        reqShaders;
     afxArray                        techniques;
 };
 

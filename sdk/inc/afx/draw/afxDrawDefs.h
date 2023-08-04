@@ -250,6 +250,7 @@ AFX afxString const g_str_format;
 AFX afxString const g_str_topology;
 AFX afxString const g_str_restart;
 
+AFX afxString const g_str_Pipeline;
 AFX afxString const g_str_DrawOperation;
 AFX afxString const g_str_Operation;
 AFX afxString const g_str_Technique;

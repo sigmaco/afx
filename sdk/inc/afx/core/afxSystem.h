@@ -82,17 +82,13 @@ AFX_OBJECT(afxSystem)
 #endif
 };
 
-AFX afxSystem           AfxGetSystem(void);
+AFX afxBool             AfxGetSystem(afxSystem *sys);
 AFX void                AfxShutdownSystem(void);
-AFX afxSystem           AfxBootUpSystem(afxSystemSpecification const *spec);
+AFX afxError            AfxBootUpSystem(afxSystemSpecification const *spec, afxSystem *sys);
 AFX afxResult           AfxDoSystemThreading(afxTime timeout);
 
 AFX afxMemory           AfxAcquireMemory(afxAllocationStrategy const *strategy, afxHint const hint);
-AFX afxApplication      AfxAcquireApplication(afxApplicationSpecification const *spec);
 AFX afxHid              AfxAcquireHid(afxNat port);
-AFX afxKeyboard         AfxAcquireKeyboard(afxNat port);
-AFX afxModule           AfxAcquireModule(afxUri const *uri);
-AFX afxMouse            AfxAcquireMouse(afxNat port);
 
 AFX afxHid              AfxFindHid(afxNat port);
 AFX afxKeyboard         AfxFindKeyboard(afxNat port);
@@ -114,7 +110,7 @@ AFX afxNat              AfxGetMemoryPageSize(void);
 /// Returns the ideal number of threads that this process can run in parallel. 
 /// This is done by querying the number of logical processors available to this process (if supported by this OS) or the total number of logical processors in the system. 
 /// This function returns 1 if neither value could be determined.
-AFX afxNat              AfxGetSystemConcurrencyCapacity(void);
+AFX afxNat              AfxGetThreadingCapacity(void);
 
 AFX afxMemory           AfxGetMainMemory(void);
 AFX afxUri const*       AfxGetSystemRootPath(afxUri *copy);

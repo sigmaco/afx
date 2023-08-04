@@ -44,7 +44,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutSpec.clipped = TRUE;
     doutSpec.colorSpc = NIL;
     doutSpec.presentAlpha = FALSE;
-    doutSpec.pixelFmt = AFX_PIXEL_FMT_RGBA8;
+    doutSpec.pixelFmt = AFX_PFD_RGBA8;
     doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
     doutSpec.presentTransform = NIL;
     doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;

@@ -28,7 +28,7 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxLego
 {
     afxError err = AFX_ERR_NONE;
     afxLego legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, AFX_FCC_LEGT);
+    AfxAssertObject(legt, AFX_FCC_LEGO);
     AfxAssert(legt->entryCnt >= legt2->entryCnt);
 
     for (afxNat j = 0; j < legt->entryCnt; j++)
@@ -100,8 +100,8 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxLego le
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(lego, AFX_FCC_LEGO);
     afxLego legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, AFX_FCC_LEGT);
-    sglVmt const* gl = &dque->wglVmt;
+    AfxAssertObject(legt, AFX_FCC_LEGO);
+    glVmt const* gl = &dque->wglVmt;
     
     if (dque->state.pip)
     {
@@ -130,10 +130,10 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxLego le
 }
 #endif 
 
-_SGL afxError _SglDqueBindAndResolveLego(afxDrawQueue dque, afxNat unit, afxLego legt, sglVmt const* gl)
+_SGL afxError _SglDqueBindAndResolveLego(afxDrawQueue dque, afxNat unit, afxLego legt, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(legt, AFX_FCC_LEGT);
+    AfxAssertObject(legt, AFX_FCC_LEGO);
     sglDqueIdd *dqueIdd = dque->idd;
 
     AfxAssert(dqueIdd->state.pip);
@@ -241,15 +241,19 @@ _SGL afxLego _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxLeg
     afxNat32 crc = 0;
     AfxCrc32(&crc, tmpCrc, sizeof(tmpCrc[0]) * bindCnt);
 
+    afxNat bufferAntiCorrupcaoNaStack[4096];
+
+    afxNat i = 0;
     afxLego legt;
-    AfxChainForEveryLinkage(&(AfxGetLegoClass(dctx)->instances), AFX_OBJECT(afxLego), obj.cls, legt)
+    while (AfxEnumerateLegos(dctx, i, 1, &legt))
     {
-        AfxAssertObject(legt, AFX_FCC_LEGT);
+        AfxAssertObject(legt, AFX_FCC_LEGO);
         
         if (legt->crc32 == crc)
         {
             return legt;
         }
+        ++i;
     }
     return NIL;
 }

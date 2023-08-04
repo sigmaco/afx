@@ -63,16 +63,18 @@ AFX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, 
 
 // Connection
 AFX afxBool             AfxDrawInputIsConnected(afxDrawInput din);
-AFX afxDrawContext      AfxGetDrawInputConnectedContext(afxDrawInput din);
-AFX afxError            AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
-AFX afxError            AfxDisconnectDrawInput(afxDrawInput din);
+AFX afxBool             AfxGetConnectedDrawInputContext(afxDrawInput din, afxDrawContext *dctx);
+AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat *slotIdx);
+AFX afxError            AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx);
 
 AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
 AFX afxError            AfxRecycleDrawInputScripts(afxDrawInput din, afxNat firstScrIdx, afxNat scrCnt);
 
-AFX afxError            AfxSubmitDrawInputScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
-AFX afxError            AfxSubmitDrawOutputPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
+AFX afxError            AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
+AFX afxError            AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
 
 AFX afxError            AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled);
+
+AFX void*               AfxGetDrawInputUdd(afxDrawInput din);
 
 #endif//AFX_DRAW_INPUT_H

@@ -1,0 +1,746 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *
+ *                                   Public Test Build
+ *                               (c) 2017 Federação SIGMA
+ *                                    www.sigmaco.org
+ */
+
+#include "afx/draw/afxDrawSystem.h"
+#include "afx/draw/pipelining/afxDrawOperation.h"
+#include "afx/draw/io/afxXmlBackedDrawableResources.h"
+
+////////////////////////////////////////////////////////////////////////////////
+// DRAW OPERATION BLUEPRINT                                                   //
+////////////////////////////////////////////////////////////////////////////////
+
+_AFXINL void AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+
+    AfxEraseUri(&blueprint->uri.uri);
+
+    for (afxNat i = 0; i < AfxGetArrayPop(&blueprint->techniques); i++)
+    {
+        afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, i);
+        
+        if (tec->name)
+        {
+            AfxDeallocateString(tec->name);
+            tec->name = NIL;
+        }
+
+        for (afxNat j = 0; j < AfxGetArrayPop(&tec->passes); j++)
+        {
+            afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, j);
+
+            if (pass->name)
+            {
+                AfxDeallocateString(pass->name);
+                pass->name = NIL;
+            }
+
+            for (afxNat K = 0; K < AfxGetArrayPop(&pass->shaders); K++)
+            {
+                afxUri *reqShdUri = *(afxUri **)AfxGetArrayUnit(&pass->shaders, K);
+
+                if (reqShdUri)
+                    AfxUriDeallocate(reqShdUri);
+            }
+            AfxReleaseArray(&pass->shaders);
+        }
+        AfxReleaseArray(&tec->passes);
+    }
+    AfxEmptyArray(&blueprint->techniques);
+}
+
+_AFXINL afxError AfxDrawOperationBlueprintEnd(afxDrawOperationBlueprint *blueprint, afxNat cnt, afxDrawOperation dop[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+
+    if (cnt)
+    {
+        AfxAssert(dop);
+
+        for (afxNat i = 0; i < cnt; i++)
+        {
+            if (AfxBuildDrawOperations(blueprint->dctx, 1, blueprint, &dop[i]))
+            {
+                AfxThrowError();
+
+                for (afxNat j = 0; j < i; j++)
+                {
+                    AfxReleaseObject(&dop[j]->obj);
+                    dop[j] = NIL;
+                }
+                break;
+            }
+        }
+    }
+
+    afxMemory mem = AfxGetDrawContextMemory(blueprint->dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    for (afxNat i = 0; i < AfxGetArrayPop(&blueprint->techniques); i++)
+    {
+        afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, i);
+
+        if (tec->name)
+        {
+            AfxDeallocateString(tec->name);
+            tec->name = NIL;
+        }
+
+        for (afxNat j = 0; j < AfxGetArrayPop(&tec->passes); j++)
+        {
+            afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, j);
+
+            if (pass->name)
+            {
+                AfxDeallocateString(pass->name);
+                pass->name = NIL;
+            }
+
+            for (afxNat k = 0; k < AfxGetArrayPop(&pass->shaders); k++)
+            {
+                afxUri *reqShdUri = *(afxUri **)AfxGetArrayUnit(&pass->shaders, k);
+
+                if (reqShdUri)
+                    AfxUriDeallocate(reqShdUri);
+            }
+            AfxReleaseArray(&pass->shaders);
+        }
+        AfxReleaseArray(&tec->passes);
+    }
+    AfxReleaseArray(&blueprint->techniques);
+    blueprint->fcc = NIL;
+    return err;
+}
+
+_AFX void AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, afxDrawContext dctx, afxUri const *uri, afxNat estShaderCnt, afxNat estTechCnt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(blueprint);
+    blueprint->dctx = dctx;
+    blueprint->fcc = AFX_FCC_DOPB;
+    AfxUri128(&blueprint->uri);
+    
+    if (uri)
+        AfxCopyUri(&blueprint->uri.uri, uri);
+
+    AfxAcquireArray(NIL, &blueprint->techniques, sizeof(afxDrawOperationBlueprintTechnique), estTechCnt, AfxSpawnHint());
+}
+
+_AFXINL void AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxUri const *uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxTryAssertType(uri, AFX_FCC_URI);
+    AfxCopyUri(&blueprint->uri.uri, uri);
+}
+
+_AFXINL afxError AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxNat cnt, afxUri const uri[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(AfxGetArrayPop(&blueprint->techniques) > tecIdx);
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    AfxAssert(passIdx < AfxGetArrayPop(&tec->passes));
+    afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, passIdx);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxNat foundIdx = AFX_INVALID_INDEX;
+
+        for (afxNat j = 0; j < AfxGetArrayPop(&pass->shaders); j++)
+        {
+            if (AfxUriIsEquivalent(&uri[i], *(afxUri**)AfxGetArrayUnit(&pass->shaders, j)))
+            {
+                foundIdx = j;
+                break;
+            }
+        }
+
+        if (foundIdx == AFX_INVALID_INDEX)
+        {
+            afxUri **reqShdUri;
+
+            if (!(reqShdUri = AfxInsertArrayUnit(&pass->shaders, &foundIdx))) AfxThrowError();
+            else
+            {
+                *reqShdUri = AfxCloneUri(&uri[i]);
+            }
+        }
+    }
+    return err;
+}
+
+_AFXINL afxError AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint *blueprint, afxNat *tecIdx, afxString const *name)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(tecIdx);
+    afxDrawOperationBlueprintTechnique *tec;
+
+    if (!(tec = AfxInsertArrayUnit(&blueprint->techniques, tecIdx))) AfxThrowError();
+    else
+    {
+        tec->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
+        AfxAcquireArray(NIL, &tec->passes, sizeof(afxDrawOperationBlueprintTechniquePass), 1, AfxSpawnHint()); // at least one passes
+    }
+    return err;
+}
+
+_AFXINL void AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxString const *name)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxTryAssertType(name, AFX_FCC_STR);
+    AfxAssert(AfxGetArrayPop(&blueprint->techniques) > tecIdx);
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+
+    if (tec->name)
+        AfxDeallocateString(tec->name);
+
+    tec->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
+}
+
+_AFXINL afxError AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat *passIdx, afxString const *name)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(passIdx);
+    AfxAssert(AfxGetArrayPop(&blueprint->techniques) > tecIdx);
+
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    afxDrawOperationBlueprintTechniquePass *pass;
+
+    if (!(pass = AfxInsertArrayUnit(&tec->passes, passIdx))) AfxThrowError();
+    else
+    {
+        pass->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
+
+        pass->hasDs = FALSE;
+        pass->hasIa = FALSE;
+        pass->hasRs = FALSE;
+        pass->inputAssembly = (afxPipelineInputAssemblyState) { 0 };
+        pass->rasterization = (afxPipelineRasterizerState) { 0 };
+        pass->depthHandling = (afxPipelineDepthState) { 0 };
+        
+        AfxAcquireArray(NIL, &pass->shaders, sizeof(afxUri*), 2, AfxSpawnHint()); // at least vertex and fragment shaders
+    }
+    return err;
+}
+
+_AFXINL void AfxDrawOperationBlueprintRenamePass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxString const *name)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(tecIdx < AfxGetArrayPop(&blueprint->techniques));
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    AfxAssert(passIdx < AfxGetArrayPop(&tec->passes));
+    afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, passIdx);
+    
+    if (pass->name)
+        AfxDeallocateString(pass->name);
+
+    pass->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
+}
+
+_AFXINL void AfxDrawOperationBlueprintConfigRasterizerState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineRasterizerState const *state)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(tecIdx < AfxGetArrayPop(&blueprint->techniques));
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    AfxAssert(passIdx < AfxGetArrayPop(&tec->passes));
+    afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, passIdx);
+    pass->rasterization = state ? *state : (afxPipelineRasterizerState) { 0 };
+    pass->hasRs = !!state;
+}
+
+_AFXINL void AfxDrawOperationBlueprintConfigDepthState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineDepthState const *state)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(tecIdx < AfxGetArrayPop(&blueprint->techniques));
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    AfxAssert(passIdx < AfxGetArrayPop(&tec->passes));
+    afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, passIdx);
+    pass->depthHandling = state ? *state : (afxPipelineDepthState) { 0 };
+    pass->hasDs = !!state;
+}
+
+_AFXINL void AfxDrawOperationBlueprintConfigInputAssemblyState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineInputAssemblyState const *state)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssert(tecIdx < AfxGetArrayPop(&blueprint->techniques));
+    afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
+    AfxAssert(passIdx < AfxGetArrayPop(&tec->passes));
+    afxDrawOperationBlueprintTechniquePass *pass = AfxGetArrayUnit(&tec->passes, passIdx);
+    pass->inputAssembly = state ? *state : (afxPipelineInputAssemblyState) { 0 };
+    pass->hasIa = !!state;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// DRAW OPERATION                                                             //
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxPipeline AfxDrawOperationGetPipeline(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssert(dop->techCnt > tecIdx);
+    AfxAssert(dop->techniques[tecIdx].passCnt > passIdx);
+    afxPipeline pip = dop->techniques[tecIdx].passes[passIdx].pip;
+    AfxAssertObject(pip, AFX_FCC_PIP);
+    return pip;
+}
+
+_AFX afxString const* AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssert(dop->techCnt > tecIdx);
+    AfxAssert(dop->techniques[tecIdx].passCnt > passIdx);
+    return dop->techniques[tecIdx].passes[passIdx].name;
+}
+
+_AFX afxNat AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssert(dop->techCnt > tecIdx);
+    return dop->techniques[tecIdx].passCnt;
+}
+
+_AFX afxBool AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxString const *name, afxNat *idx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssert(dop->techCnt > tecIdx);
+
+    for (afxNat i = 0; i < dop->techCnt; i++)
+    {
+        afxDrawTechnique *dtec = &dop->techniques[i];
+
+        for (afxNat j = 0; j < dtec->passCnt; j++)
+        {
+            afxDrawPass *dpas = &dtec->passes[j];
+
+            if (0 == AfxCompareStringCi(name, dpas->name))
+            {
+                AfxAssert(idx);
+                *idx = j;
+                return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
+_AFX afxString const* AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afxNat tecIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssert(dop->techCnt > tecIdx);
+    return dop->techniques[tecIdx].name;
+}
+
+_AFX afxNat AfxDrawOperationGetTechniqueCount(afxDrawOperation dop)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    return dop->techCnt;
+}
+
+_AFX afxBool AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const *name, afxNat *idx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+
+    for (afxNat i = 0; i < dop->techCnt; i++)
+    {
+        afxDrawTechnique *dtec = &dop->techniques[i];
+
+        if (0 == AfxCompareStringCi(name, dtec->name))
+        {
+            AfxAssert(idx);
+            *idx = i;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
+_AFX void* AfxDrawOperationGetContext(afxDrawOperation dop)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    afxDrawContext dctx = AfxObjectGetProvider(&dop->obj);
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    return dctx;
+}
+
+_AFX afxError AfxBuildDrawOperations(afxDrawContext dctx, afxNat cnt, afxDrawOperationBlueprint const blueprint[], afxDrawOperation dop[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssert(cnt);
+    AfxAssert(blueprint);
+    AfxAssert(dop);
+    
+    if (AfxClassAcquireObjects(AfxGetDrawOperationClass(dctx), NIL, cnt, blueprint, (afxObject**)dop, AfxSpawnHint()))
+        AfxThrowError();
+
+    return err;
+}
+
+_AFX afxResult AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxDrawOperation dop[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssert(cnt);
+    AfxAssert(name);
+    AfxAssert(dop);
+    afxResult rslt = 0;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAssertType(&name[i], AFX_FCC_URI);
+        AfxAssert(!AfxUriIsBlank(name));
+    }
+
+    rslt += 0;// = AfxDrawContextGetVmt(dctx)->other.findTex(dctx, cnt, name, tex);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        dop[i] = NIL;
+        AfxTryAssertObject(dop[i], AFX_FCC_DOP);
+    }
+    return rslt;
+}
+
+_AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssert(cnt);
+    AfxAssert(uri);
+    AfxAssert(dop);
+    afxResult rslt = 0;
+
+    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssert(!AfxUriIsBlank(&uri[i]));
+        
+        AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
+        
+        afxUri fext;
+        AfxExcerptUriExtension(&fext, &uri[i], FALSE);
+        
+        if (AfxUriIsBlank(&fext)) AfxThrowError();
+        else
+        {
+            afxUri fpath, query;
+            AfxExcerptUriPath(&fpath, &uri[i]);
+            AfxExcerptUriQuery(&query, &uri[i], TRUE);
+
+            if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
+            {
+                afxXml xml;
+
+                if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
+                else
+                {
+                    AfxAssertType(&xml, AFX_FCC_XML);
+
+                    afxXmlNode const *node = AfxXmlGetRootNode(&xml);
+                    afxString const *name = AfxXmlNodeGetName(node);
+                    AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
+                    afxString const *queryStr = AfxUriGetStringConst(&query);
+                    afxBool hasQuery = !AfxStringIsEmpty(queryStr);
+                    node = AfxXmlNodeFindChild(node, &g_str_DrawOperation, hasQuery ? &g_str_name : NIL, hasQuery ? queryStr : NIL);
+
+                    if (node)
+                    {
+                        afxDrawOperationBlueprint blueprint;
+                        AfxDrawOperationBlueprintBegin(&blueprint, dctx, NIL, 0, 1);
+
+                        if (AfxParseXmlBackedDrawOperationBlueprint(node, &blueprint)) AfxThrowError();
+                        else
+                        {
+                            afxString128 tmp;
+                            AfxString128(&tmp);
+                            AfxCopyString(&tmp.str, AfxUriGetStringConst(&fpath));
+
+                            if (!AfxUriIsBlank(&blueprint.uri.uri))
+                            {
+                                AfxAppendStringLiteral(&tmp.str, "?", 1);
+                                AfxAppendString(&tmp.str, AfxUriGetStringConst(&blueprint.uri.uri));
+                            }
+
+                            afxUri tmpUri;
+                            AfxUriReflectString(&tmpUri, &tmp.str);
+                            AfxDrawOperationBlueprintRename(&blueprint, &tmpUri);
+
+                            if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();
+                            else
+                            {
+                                AfxAssertObject(dop[i], AFX_FCC_DOP);
+                                ++rslt;
+                            }
+                        }
+                        AfxDrawOperationBlueprintEnd(&blueprint, 0, NIL);
+                    }
+
+                    AfxReleaseXml(&xml);
+                }
+            }
+            else
+            {
+                AfxError("Extension (%.*s) not supported.", AfxPushString(AfxUriGetStringConst(&fext)));
+                AfxThrowError();
+            }
+        }
+
+        if (err)
+        {
+            for (afxNat j = 0; j < i; j++)
+            {
+                AfxReleaseObject(&dop[j]->obj);
+                dop[j] = NIL;
+            }
+            break;
+        }
+    }
+    return err;
+}
+
+_AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssert(cnt);
+    AfxAssert(uri);
+    AfxAssert(dop);
+    afxResult rslt = 0;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxUri name;
+        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssert(!(AfxUriIsBlank(&uri[i])));
+        AfxExcerptUriName(&name, &uri[i]);
+        AfxAssert(!(AfxUriIsBlank(&name)));
+
+        if (1 == AfxFindDrawOperations(dctx, 1, &name, &dop[i]))
+        {
+            AfxAssertObject(dop[i], AFX_FCC_DOP);
+            AfxObjectReacquire(&(dop[i]->obj), NIL, NIL, NIL, NIL);
+            rslt++;
+        }
+        else
+        {
+            if (AfxUploadDrawOperations(dctx, 1, &uri[i], &dop[i])) AfxThrowError();
+            else
+            {
+                AfxAssertObject(dop[i], AFX_FCC_DOP);
+                ++rslt;
+            }
+        }
+
+        if (err)
+        {
+            for (afxNat j = 0; j < i; j++)
+            {
+                AfxReleaseObject(&dop[j]->obj);
+                dop[j] = NIL;
+            }
+            break;
+        }
+    }
+    return err;
+}
+
+
+_AFX afxBool _AfxDopEventHandler(afxObject *obj, afxEvent *ev)
+{
+    afxError err = AFX_ERR_NONE;
+    afxDrawOperation dop = (void*)obj;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    (void)ev;
+    return FALSE;
+}
+
+_AFX afxBool _AfxDopEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = AFX_ERR_NONE;
+    afxDrawOperation dop = (void*)obj;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    (void)watched;
+    (void)ev;
+    return FALSE;
+}
+
+_AFX afxError _AfxDopDtor(afxDrawOperation dop)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxEntry("dop=%p", dop);
+
+    afxDrawContext dctx = AfxObjectGetProvider(&dop->obj);
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    for (afxNat i = 0; i < dop->techCnt; i++)
+    {
+        for (afxNat j = 0; j < dop->techniques[i].passCnt; j++)
+        {
+            AfxReleaseObject(&(dop->techniques[i].passes[j].pip->obj));
+
+            if (dop->techniques[i].passes[j].name)
+                AfxDeallocateString(dop->techniques[i].passes[j].name);
+        }
+
+        AfxAssert(dop->techniques[i].passes);
+        AfxDeallocate(mem, dop->techniques[i].passes);
+
+        if (dop->techniques[i].name)
+            AfxDeallocateString(dop->techniques[i].name);
+    }
+
+    AfxAssert(dop->techniques);
+    AfxDeallocate(mem, dop->techniques);
+
+    if (dop->uri)
+        AfxUriDeallocate(dop->uri);
+
+    return err;
+}
+
+_AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDrawOperationBlueprint const *blueprints)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObject(dop, AFX_FCC_DOP);
+    (void)cache;
+    AfxEntry("dop=%p", dop);
+    //AfxAssert(args);
+    //afxDrawOperationBlueprintTechniquePass const *spec = args->spec;
+    afxDrawOperationBlueprint const *blueprint = &blueprints[idx];
+    AfxAssert(blueprint);
+
+    afxDrawContext dctx = AfxObjectGetProvider(&dop->obj);
+    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    dop->uri = AfxUriIsBlank(&blueprint->uri.uri) ? NIL : AfxCloneUri(&blueprint->uri.uri);
+    
+    dop->techCnt = 0;
+
+    afxArray const *techniques = &blueprint->techniques;
+    afxNat techCnt = AfxGetArrayPop(techniques);
+    AfxAssert(techCnt);
+
+    if (!(dop->techniques = AfxAllocate(mem, sizeof(dop->techniques[0]) * techCnt, 0, AfxSpawnHint()))) AfxThrowError();
+    else
+    {
+        for (afxNat i = 0; i < techCnt; i++)
+        {
+            afxDrawOperationBlueprintTechnique const *dopbt = AfxGetArrayUnit(techniques, i);
+
+            dop->techniques[dop->techCnt].fcc = AFX_FCC_DTEC;
+            dop->techniques[dop->techCnt].name = dopbt->name && !AfxStringIsEmpty(dopbt->name) ? AfxCloneString(dopbt->name) : NIL;
+            dop->techniques[dop->techCnt].passCnt = 0;
+
+            afxArray const *passes = &dopbt->passes;
+            afxNat passCnt = AfxGetArrayPop(passes);
+            AfxAssert(passCnt);
+
+            if (!(dop->techniques[dop->techCnt].passes = AfxAllocate(mem, sizeof(dop->techniques[dop->techCnt].passes[0]) * passCnt, 0, AfxSpawnHint()))) AfxThrowError();
+            else
+            {
+                for (afxNat j = 0; j < passCnt; j++)
+                {
+                    afxDrawOperationBlueprintTechniquePass const *dopbtp = AfxGetArrayUnit(passes, j);
+
+                    dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].fcc = AFX_FCC_DPAS;
+                    dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].name = dopbtp->name && !AfxStringIsEmpty(dopbtp->name) ? AfxCloneString(dopbtp->name) : NIL;
+
+                    afxPipelineBlueprint pipb;
+                    AfxFormulatePipelineBlueprint(&pipb, dctx);
+
+                    afxArray const *shaders = &dopbtp->shaders;
+
+                    for (afxNat k = 0; k < AfxGetArrayPop(shaders); k++)
+                    {
+                        afxUri *reqShdUri = *(afxUri**)AfxGetArrayUnit(shaders, k);
+                        AfxPipelineBlueprintAddShaders(&pipb, 1, reqShdUri);
+                    }
+
+                    if (dopbtp->hasRs)
+                        AfxPipelineBlueprintConfigRasterizerState(&pipb, &(dopbtp->rasterization));
+
+                    if (dopbtp->hasDs)
+                        AfxPipelineBlueprintConfigDepthState(&pipb, &(dopbtp->depthHandling));
+
+                    if (dopbtp->hasIa)
+                        AfxPipelineBlueprintConfigInputAssemblyState(&pipb, &dopbtp->inputAssembly);
+
+                    if (AfxBuildPipelines(dctx, 1, &pipb, &(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip))) AfxThrowError();
+                    else
+                    {
+                        AfxAssertObject(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip, AFX_FCC_PIP);
+                        dop->techniques[dop->techCnt].passCnt++;
+                    }
+
+                    AfxPipelineBlueprintDiscard(&pipb);
+                }
+            }
+
+            if (!err)
+            {
+                dop->techCnt++;
+            }
+        }
+
+        if (err)
+        {
+            AfxDeallocate(mem, dop->techniques);
+        }
+    }
+    return err;
+}
+
+_AFX afxClassSpecification const _AfxDopClassSpec =
+{
+    AFX_FCC_DOP,
+    NIL,
+    0,
+    sizeof(AFX_OBJECT(afxDrawOperation)),
+    NIL,
+    (void*)_AfxDopCtor,
+    (void*)_AfxDopDtor,
+    .event = _AfxDopEventHandler,
+    .eventFilter = _AfxDopEventFilter,
+    "afxDrawOperation",
+    NIL
+};

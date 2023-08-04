@@ -82,7 +82,7 @@ AFX_OBJECT(afxRenderer)
     afxDrawScript       activeScript;
     afxCamera           activeCamera;
     afxRect             drawArea;
-    afxCanvas           canv[3];
+    afxCanvas           canv;
     afxNat              frameCnt;
     afxNat              frameIdx;
     struct
@@ -108,14 +108,15 @@ AFX_OBJECT(afxRenderer)
         afxTexture          cubemap;
         afxColor            emissiveColor;
         afxColor            ambientColor;
-        afxDrawOperation    dop;
+        afxPipeline    skyPip;
         afxSampler          smp;
     }                       sky;
 
     afxPipeline         wirePip;
     afxBool             drawVolumes;
 
-    afxDrawOperation    bodyDop;
+    afxPipeline    rigidBodyPip;
+    afxPipeline    skinnedBodyPip;
 
 };
 

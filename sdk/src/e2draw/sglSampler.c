@@ -26,7 +26,7 @@
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp, sglVmt const* gl)
+_SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp, glVmt const* gl)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = AFX_ERR_NONE;
