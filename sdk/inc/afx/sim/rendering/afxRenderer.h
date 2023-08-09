@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -62,7 +62,7 @@ AFX_DEFINE_STRUCT(afxMaterialConstants)
     afxBool hasSpecTex;
 };
 
-AFX_DEFINE_STRUCT(afxObjectConstants)
+AFX_DEFINE_STRUCT(afxInstanceConstants)
 {
     afxNat  boneCnt;
     afxM4d  m;
@@ -71,7 +71,7 @@ AFX_DEFINE_STRUCT(afxObjectConstants)
 
 AFX_OBJECT(afxRenderer)
 {
-    afxObject           obj;
+    afxInstance           obj;
     void*               cachedSim;
     afxDrawContext      cachedDctx;
     afxDrawInput        din;
@@ -90,7 +90,7 @@ AFX_OBJECT(afxRenderer)
         afxViewConstants    viewConstants;
         afxShaderConstants  shaderConstants;
         afxMaterialConstants materialConstants;
-        afxObjectConstants  objConstants;
+        afxInstanceConstants  objConstants;
         afxBuffer           viewConstantsBuffer; // p, v
         afxBuffer           shdConstantsBuffer;
         afxBuffer           mtlConstantsBuffer;

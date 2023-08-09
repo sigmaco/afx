@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -50,10 +50,10 @@ typedef enum afxFcc
 
     // *** e2coree ***
 
-    AFX_FCC_OBJ     = AfxPackFcc('o', 'b', 'j', '\0'), // afxObject
-    AFX_FCC_OBJC    = AfxPackFcc('o', 'b', 'j', 'c'), // afxObjectConnection
+    AFX_FCC_OBJ     = AfxPackFcc('o', 'b', 'j', '\0'), // afxInstance
+    AFX_FCC_OBJC    = AfxPackFcc('o', 'b', 'j', 'c'), // afxInstanceConnection
     AFX_FCC_SLOT    = AfxPackFcc('s', 'l', 'o', 't'), // afxSlot
-    AFX_FCC_HNDL    = AfxPackFcc('h', 'n', 'd', 'l'), // afxObject*
+    AFX_FCC_HNDL    = AfxPackFcc('h', 'n', 'd', 'l'), // 
     AFX_FCC_CLS    = AfxPackFcc('o', 'b', 'j', 't'), // afxClass
 
     AFX_FCC_DBG     = AfxPackFcc('d', 'b', 'g', '\0'), // afxDebugger
@@ -84,9 +84,9 @@ typedef enum afxFcc
     AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', '\0'), // afxSignal
     AFX_FCC_SIGH    = AfxPackFcc('s', 'i', 'g', 'h'), // afxSignalHandler
     AFX_FCC_SIGC    = AfxPackFcc('s', 'i', 'g', 'c'), // afxSignalConnection
-    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', '\0'), // afxMemory
+    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', '\0'), // afxContext
     AFX_FCC_MPAG    = AfxPackFcc('m', 'p', 'a', 'g'), // afxMemPage
-    //AFX_FCC_CHNK     = AfxPackFcc('m', 'e', 'm', '\0'), // afxMemory
+    //AFX_FCC_CHNK     = AfxPackFcc('m', 'e', 'm', '\0'), // afxContext
     AFX_FCC_ALLS    = AfxPackFcc('a', 'l', 'l', 's'), // afxSlabMemory
     AFX_FCC_SLAB    = AfxPackFcc('s', 'l', 'a', 'b'), // afxSlabHeader
     AFX_FCC_ALLR    = AfxPackFcc('a', 'l', 'l', 'r'), // afxRegionMemory
@@ -101,7 +101,11 @@ typedef enum afxFcc
     AFX_FCC_XML     = AfxPackFcc('x', 'm', 'l', '\0'), // afxXml
     AFX_FCC_URD     = AfxPackFcc('u', 'r', 'd', '\0'), // afxUrd
     AFX_FCC_STD     = AfxPackFcc('s', 't', 'd', '\0'), // for standard implementations
-    AFX_FCC_SLCK     = AfxPackFcc('l', 'c', 'k', '\0'), // afxSlock
+    AFX_FCC_SLCK    = AfxPackFcc('l', 'c', 'k', '\0'), // afxSlock
+    AFX_FCC_BMP     = AfxPackFcc('b', 'm', 'p', '\0'), // afxBitmap
+    AFX_FCC_MAP     = AfxPackFcc('m', 'a', 'p', '\0'), // afxMap
+    AFX_FCC_DICT    = AfxPackFcc('d', 'i', 'c', 't'), // afxDictionary
+    AFX_FCC_POOL    = AfxPackFcc('p', 'o', 'o', 'l'), // afxPool
 
     AFX_FCC_EMEC    = AfxPackFcc('e', 's', 'y', 's'), // afxEventMechanism
     AFX_FCC_ETRG    = AfxPackFcc('e', 't', 'r', 'g'), // afxEventTrigger

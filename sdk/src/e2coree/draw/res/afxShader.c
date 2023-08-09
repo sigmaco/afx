@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -56,8 +56,8 @@ _AFXINL afxError AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void c
 
     AfxAssert(range);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     afxNat idx;
     afxByte iniVal = 0;
@@ -87,8 +87,8 @@ _AFXINL afxError AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *bluepri
     if (AfxGoToStreamBegin(ios, offset)) AfxThrowError();
     else
     {
-        afxMemory mem = AfxGetDrawMemory();
-        AfxAssertObject(mem, AFX_FCC_MEM);
+        afxContext mem = AfxGetDrawMemory();
+        AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
         afxNat idx;
         afxByte iniVal = 0;
@@ -111,16 +111,16 @@ _AFXINL afxError AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *bluep
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, AFX_FCC_SHDB);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     afxFile file;
     AfxAssertType(uri, AFX_FCC_URI);
 
-    if (!(file = AfxOpenReadableFile(uri))) AfxThrowError();
+    if (AfxOpenFiles(1, &file, uri, (afxFileFlags[]) {AFX_FILE_FLAG_R})) AfxThrowError();
     else
     {
-        AfxAssertObject(file, AFX_FCC_FILE);
+        AfxAssertObjects(1, &file, AFX_FCC_FILE);
         afxStream *ios = AfxGetFileStream(file);
         afxNat size = AfxMeasureStream(ios);
         AfxAssert(size);
@@ -136,7 +136,7 @@ _AFXINL afxError AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *bluep
             if (AfxReadStream(ios, bytecode, size, 0))
                 AfxThrowError();
         }
-        AfxReleaseObject(&file->obj);
+        AfxCloseFiles(1, &file);
     }
     return err;
 }
@@ -159,7 +159,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint
         decl->type = type;
         AfxAssert(decl->type != AFX_SHD_RES_TYPE_OUTPUT);
         AfxAssert(cnt);
-        decl->cnt = AfxMax(cnt, 1);
+        decl->cnt = AfxMaxi(cnt, 1);
         decl->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
     }
     return err;
@@ -247,8 +247,8 @@ _AFXINL afxError AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt
         }
     }
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     AfxReleaseArray(&blueprint->codes);
 
@@ -280,8 +280,8 @@ _AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderSta
     AfxAssert(blueprint);
     blueprint->fcc = AFX_FCC_SHDB;
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     AfxUri128(&blueprint->uri);
 
@@ -295,9 +295,9 @@ _AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderSta
     if (entry)
         AfxCopyString(&blueprint->entry.str, entry);
 
-    AfxAcquireArray(mem, &blueprint->codes, sizeof(afxByte), AfxMax(estCodeLen, 512), AfxSpawnHint());
-    AfxAcquireArray(mem, &blueprint->resources, sizeof(afxShaderBlueprintResource), AfxMax(estResCnt, 16), AfxSpawnHint()); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
-    AfxAcquireArray(mem, &blueprint->inOuts, sizeof(afxShaderBlueprintInOut), AfxMax(estIoCnt, 16), AfxSpawnHint());
+    AfxAcquireArray(&blueprint->codes, sizeof(afxByte), AfxMaxi(estCodeLen, 512), AfxSpawnHint());
+    AfxAcquireArray(&blueprint->resources, sizeof(afxShaderBlueprintResource), AfxMaxi(estResCnt, 16), AfxSpawnHint()); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
+    AfxAcquireArray(&blueprint->inOuts, sizeof(afxShaderBlueprintInOut), AfxMaxi(estIoCnt, 16), AfxSpawnHint());
 
     blueprint->topology = NIL;
 }
@@ -315,7 +315,7 @@ _AFX afxError AfxShaderDownload(afxShader shd, afxUri const *uri)
 
     afxFile file;
 
-    if (!(file = AfxOpenFile(AFX_FILE_FLAG_W, uri))) AfxThrowError();
+    if (AfxOpenFiles(1, &file, uri, (afxFileFlags[]) { AFX_FILE_FLAG_W })) AfxThrowError();
     else
     {
         if (AfxShaderSerialize(shd, AfxGetFileStream(file))) AfxThrowError();
@@ -323,7 +323,7 @@ _AFX afxError AfxShaderDownload(afxShader shd, afxUri const *uri)
         {
             // success
         }
-        AfxReleaseObject(&file->obj);
+        AfxCloseFiles(1, &file);
     }
     return err;
 }
@@ -387,7 +387,17 @@ _AFX afxDrawContext AfxGetShaderContext(afxShader shd)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
     afxDrawContext dctx = AfxObjectGetProvider(&shd->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
     return dctx;
 }
 
@@ -399,7 +409,7 @@ _AFX afxError AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprin
     AfxAssert(blueprint);
     AfxAssert(shd);
 
-    if (AfxClassAcquireObjects(AfxGetShaderClass(dctx), NIL, cnt, blueprint, (afxObject**)shd, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetShaderClass(dctx), NIL, cnt, blueprint, (afxInstance**)shd, AfxSpawnHint()))
         AfxThrowError();
 
     return err;
@@ -451,8 +461,8 @@ _AFX afxError AfxUploadShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri
     AfxAssert(shd);
     afxResult rslt = 0;
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     afxShaderBlueprint blueprint;
     AfxShaderBlueprintBegin(&blueprint, NIL, NIL, NIL, 0, 0, 0);
@@ -590,7 +600,7 @@ _AFX afxError AfxAcquireShaders(afxDrawContext dctx, afxNat cnt, afxUri const ur
     return err;
 }
 
-_AFX afxBool _AfxShdEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxShdEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxShader shd = (void*)obj;
@@ -599,7 +609,7 @@ _AFX afxBool _AfxShdEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxShdEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxShdEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxShader shd = (void*)obj;
@@ -615,7 +625,7 @@ _AFX afxError _AfxShdDtor(afxShader shd)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(shd, AFX_FCC_SHD);
 
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
     
     if (shd->vmt->dtor && shd->vmt->dtor(shd))
         AfxThrowError();
@@ -662,10 +672,20 @@ _AFX afxError _AfxShdCtor(void *cache, afxNat idx, afxShader shd, afxShaderBluep
     (void)cache;
 
     afxDrawContext dctx = AfxGetShaderContext(shd);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
 
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     afxShaderBlueprint const *blueprint = &blueprints[idx];
 
@@ -738,7 +758,7 @@ _AFX afxError _AfxShdCtor(void *cache, afxNat idx, afxShader shd, afxShaderBluep
 
             shd->idd = NIL;
 
-            if (dctx->vmt->shd && dctx->vmt->shd(shd)) AfxThrowError();
+            if (dctxD->vmt->shd && dctxD->vmt->shd(shd)) AfxThrowError();
             else
             {
                 AfxAssert(shd->vmt);

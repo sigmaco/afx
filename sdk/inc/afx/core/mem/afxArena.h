@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -26,7 +26,7 @@ In typical implementations, all objects in a region are allocated in a single co
 #ifndef AFX_ARENA_H
 #define AFX_ARENA_H
 
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 #include "afx/core/io/afxStream.h"
 
 AFX_DEFINE_STRUCT(afxArenaSpecification)
@@ -40,7 +40,7 @@ AFX_DEFINE_STRUCT(afxArenaSpecification)
 AFX_DEFINE_STRUCT(afxArena)
 {
     _AFX_DBG_FCC; // AREN
-    afxMemory   mem;
+    afxContext   mem;
     afxHint     hint;
     afxNat      totalAllocated;
     afxNat      smallItems;
@@ -63,27 +63,27 @@ AFX_DEFINE_STRUCT(afxArena)
     afxNat      recycleSiz;
 };
 
-AFX afxError    AfxAcquireArena(afxMemory mem, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint);
+AFX afxError    AfxAcquireArena(afxContext mem, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint);
 AFX void        AfxReleaseArena(afxArena* aren);
 
 
 AFX afxSize     AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void*extra);
 AFX void        AfxRemoveArenaCleanup(afxArena* aren, void(*action)(void *, void*), void *data);
 
-AFX void*       AfxRequestArenaSpace(afxArena* aren, afxSize size);
-AFX void*       AfxArenaCoallocate(afxArena* aren, afxSize num, afxSize size);
+AFX void*       AfxRequestArenaUnit(afxArena* aren, afxSize size);
+AFX void*       AfxRequestArenaUnits(afxArena* aren, afxSize num, afxSize size);
 
 AFX void*       AfxRequestArenaStorage(afxArena* aren, const void *init, afxSize size);
 AFX void*       AfxRequestArenaStorages(afxArena* aren, const void *init, afxSize num, afxSize size);
 
-AFX void*       AfxRequestArenaZeroedSpace(afxArena* aren, afxSize size);
-AFX void*       AfxRequestArenaZeroedSpaces(afxArena* aren, afxSize num, afxSize size);
+AFX void*       AfxRequestZeroedArenaUnit(afxArena* aren, afxSize size);
+AFX void*       AfxRequestZeroedArenaUnits(afxArena* aren, afxSize num, afxSize size);
 
 AFX void        AfxExhaustArena(afxArena* aren);
 
 AFX char*       AfxArenaDuplicateString(afxArena* aren, const char *string);
 
-AFX void        AfxRecycleArenaSpace(afxArena* aren, void *block, afxSize size);
+AFX void        AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size);
 
 AFX void        AfxDumpArenaStats(afxArena* aren, afxStream *out);
 

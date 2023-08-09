@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -37,13 +37,21 @@ _AFXINL void AfxFormulatePipelineBlueprint(afxPipelineBlueprint* blueprint, afxD
 {
     afxError err = NIL;
     AfxAssert(blueprint);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    blueprint->fcc = AFX_FCC_PIPB;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssignFcc(blueprint, AFX_FCC_PIPB);
     blueprint->dctx = dctx;
     AfxUri128(&blueprint->uri);
-    AfxAcquireArray(NIL, &blueprint->shaders, sizeof(afxUri*), 2, AfxSpawnHint());
-    AfxAcquireArray(NIL, &blueprint->viewports, sizeof(afxViewport), 0, AfxSpawnHint());
-    AfxAcquireArray(NIL, &blueprint->scissors, sizeof(afxRect), 0, AfxSpawnHint());
+    AfxAcquireArray(&blueprint->shaders, sizeof(afxUri*), 2, AfxSpawnHint());
+    AfxAcquireArray(&blueprint->viewports, sizeof(afxViewport), 0, AfxSpawnHint());
+    AfxAcquireArray(&blueprint->scissors, sizeof(afxRect), 0, AfxSpawnHint());
     blueprint->hasAssembling = FALSE;
     blueprint->hasRasterization = FALSE;
     blueprint->hasDepthHandling = FALSE;
@@ -374,21 +382,37 @@ _AFX afxDrawContext AfxGetPipelineContext(afxPipeline pip)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(pip, AFX_FCC_PIP);
     afxDrawContext dctx = AfxObjectGetProvider(&pip->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     return dctx;
 }
 
 _AFX afxError AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxPipeline pip[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(pip);
     afxResult rslt = 0;
 
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -482,16 +506,24 @@ _AFX afxError AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPipelineBlue
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     AfxAssert(blueprint);
 
-    if (AfxClassAcquireObjects(AfxGetPipelineClass(dctx), NIL, cnt, blueprint, (afxObject**)pip, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetPipelineClass(dctx), NIL, cnt, blueprint, (afxInstance**)pip, AfxSpawnHint()))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxBool _AfxPipEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxPipEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxPipeline pip = (void*)obj;
@@ -500,7 +532,7 @@ _AFX afxBool _AfxPipEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxPipEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxPipEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxPipeline pip = (void*)obj;
@@ -517,9 +549,17 @@ _AFX afxError _AfxPipDtor(afxPipeline pip)
     AfxAssertObject(pip, AFX_FCC_PIP);
 
     afxDrawContext dctx = AfxGetPipelineContext(pip);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     if (err)
     {
@@ -562,9 +602,17 @@ _AFX afxError _AfxPipCtor(void *cache, afxNat idx, afxPipeline pip, afxPipelineB
     AfxAssertType(pipb, AFX_FCC_PIPB);
 
     afxDrawContext dctx = AfxGetPipelineContext(pip);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     pip->shaders = NIL;
     pip->vps = NIL;
@@ -727,7 +775,7 @@ _AFX afxError _AfxPipCtor(void *cache, afxNat idx, afxPipeline pip, afxPipelineB
 
                 pip->idd = NIL;
 
-                if (dctx->vmt->pip && dctx->vmt->pip(pip)) AfxThrowError();
+                if (dctxD->vmt->pip && dctxD->vmt->pip(pip)) AfxThrowError();
                 else
                 {
                     AfxAssert(pip->vmt);

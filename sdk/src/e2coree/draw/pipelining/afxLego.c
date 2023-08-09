@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -30,10 +30,10 @@ _AFXINL void AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxDrawContext d
     blueprint->fcc = AFX_FCC_SHDB;
 
     blueprint->dctx = dctx;
-    afxMemory mem = AfxGetDrawContextMemory(blueprint->dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
-    AfxAcquireArray(mem, &blueprint->bindings, sizeof(afxLegoBlueprintBinding), AfxMax(estBindCnt, 10), AfxSpawnHint());
+    AfxAcquireArray(&blueprint->bindings, sizeof(afxLegoBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
 }
 
 _AFXINL void AfxLegoBlueprintErase(afxLegoBlueprint *blueprint)
@@ -113,7 +113,7 @@ _AFXINL afxError AfxLegoBlueprintAddBinding(afxLegoBlueprint *blueprint, afxNat 
             int a = 0;
         }
         AfxAssert(cnt);
-        decl->cnt = AfxMax(cnt, 1);
+        decl->cnt = AfxMaxi(cnt, 1);
         decl->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
     }
     return err;
@@ -190,7 +190,7 @@ _AFX afxResult AfxLegoDescribeBinding(afxLego legt, afxNat first, afxNat cnt, af
     AfxAssert(decl);
     afxResult rslt = 0;
 
-    for (afxNat i = 0; i < AfxMin(legt->entryCnt, cnt); i++)
+    for (afxNat i = 0; i < AfxMini(legt->entryCnt, cnt); i++)
     {
         if (i >= cnt) break;
         else
@@ -217,16 +217,24 @@ _AFX afxError AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLegoBlueprint co
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     AfxAssert(blueprint);
 
-    if (AfxClassAcquireObjects(AfxGetLegoClass(dctx), NIL, cnt, blueprint, (afxObject**)legt, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetLegoClass(dctx), NIL, cnt, blueprint, (afxInstance**)legt, AfxSpawnHint()))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxBool _AfxLegtEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxLegtEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxLego legt = (void*)obj;
@@ -235,7 +243,7 @@ _AFX afxBool _AfxLegtEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxLegtEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxLegtEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxLego legt = (void*)obj;
@@ -252,9 +260,17 @@ _AFX afxError _AfxLegtDtor(afxLego legt)
     AfxAssertObject(legt, AFX_FCC_LEGO);
 
     afxDrawContext dctx = AfxObjectGetProvider(&legt->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     if (legt->entries)
     {
@@ -278,9 +294,17 @@ _AFX afxError _AfxLegtCtor(void *cache, afxNat idx, afxLego legt, afxLegoBluepri
     (void)cache;
 
     afxDrawContext dctx = AfxObjectGetProvider(&legt->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     AfxAssert(blueprints);
     afxLegoBlueprint const *blueprint = &blueprints[idx];

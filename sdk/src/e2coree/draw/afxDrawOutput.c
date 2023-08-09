@@ -7,77 +7,140 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #define _AFX_DRAW_OUTPUT_C
+#define _AFX_DRAW_SYSTEM_C
 //#define _AFX_SURFACE_C
 
 #include "_classified/afxDrawClassified.h"
 
+_AFX afxBool _AfxGetDoutD(afxDrawOutput dout, struct _afxDoutD **doutD, struct _afxDsysD* dsysD)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    return AfxGetObjectsResidency(1, &dout, (void**)doutD, &dsysD->outputs);
+}
+
 _AFX afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
-    AfxEnterSlockShared(&dout->buffersLock);
-    afxNat bufferLockCnt = dout->bufferLockCnt;
-    AfxExitSlockShared(&dout->buffersLock);
+    AfxEnterSlockShared(&doutD->buffersLock);
+    afxNat bufferLockCnt = doutD->bufferLockCnt;
+    AfxExitSlockShared(&doutD->buffersLock);
+    
     return bufferLockCnt;
 }
 
 _AFX afxNat _AfxDoutLockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxEnterSlockExclusive(&dout->buffersLock);
-    afxNat bufferLockCnt = ++dout->bufferLockCnt;
-    AfxExitSlockExclusive(&dout->buffersLock);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxEnterSlockExclusive(&doutD->buffersLock);
+    afxNat bufferLockCnt = ++doutD->bufferLockCnt;
+    AfxExitSlockExclusive(&doutD->buffersLock);
     return bufferLockCnt;
 }
 
 _AFX afxNat _AfxDoutUnlockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxEnterSlockExclusive(&dout->buffersLock);
-    afxNat bufferLockCnt = --dout->bufferLockCnt;
-    AfxExitSlockExclusive(&dout->buffersLock);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxEnterSlockExclusive(&doutD->buffersLock);
+    afxNat bufferLockCnt = --doutD->bufferLockCnt;
+    AfxExitSlockExclusive(&doutD->buffersLock);
     return bufferLockCnt;
 }
 
 _AFX afxNat _AfxDoutIsSuspended(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-
-    AfxEnterSlockShared(&dout->suspendSlock);
-    afxNat suspendCnt = dout->suspendCnt;
-    AfxExitSlockShared(&dout->suspendSlock);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxEnterSlockShared(&doutD->suspendSlock);
+    afxNat suspendCnt = doutD->suspendCnt;
+    AfxExitSlockShared(&doutD->suspendSlock);
     return suspendCnt;
 }
 
 _AFX afxNat _AfxDoutSuspendFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxEnterSlockExclusive(&dout->suspendSlock);
-    afxNat suspendCnt = ++dout->suspendCnt;
-    AfxExitSlockExclusive(&dout->suspendSlock);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxEnterSlockExclusive(&doutD->suspendSlock);
+    afxNat suspendCnt = ++doutD->suspendCnt;
+    AfxExitSlockExclusive(&doutD->suspendSlock);
     return suspendCnt;
 }
 
 _AFX afxNat _AfxDoutResumeFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxEnterSlockExclusive(&dout->suspendSlock);
-    afxNat suspendCnt = --dout->suspendCnt;
-    AfxExitSlockExclusive(&dout->suspendSlock);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxEnterSlockExclusive(&doutD->suspendSlock);
+    afxNat suspendCnt = --doutD->suspendCnt;
+    AfxExitSlockExclusive(&doutD->suspendSlock);
     return suspendCnt;
 }
 
@@ -85,12 +148,21 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
-    for (afxNat i = 0; i < dout->bufCnt; i++)
+    for (afxNat i = 0; i < doutD->bufCnt; i++)
     {
-        afxCanvas canv = dout->buffers[i].canv;
-        afxSurface surf = dout->buffers[i].surf;
+        afxCanvas canv = doutD->buffers[i].canv;
+        afxSurface surf = doutD->buffers[i].surf;
 
         if (!surf)
         {
@@ -102,12 +174,12 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
             AfxAssertObject(canv, AFX_FCC_CANV);
             AfxReleaseObject(&surf->tex.obj);
             AfxReleaseObject(&canv->obj);
-            dout->buffers[i].surf = NIL;
-            dout->buffers[i].canv = NIL;
+            doutD->buffers[i].surf = NIL;
+            doutD->buffers[i].canv = NIL;
         }
     }
 
-    //dout->bufCnt = 0;
+    //doutD->bufCnt = 0;
     return err;
 }
 
@@ -119,17 +191,17 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
 _AFX afxError AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelFormat depth, afxPixelFormat stencil)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
 
     if (depth && !AfxPixelFormatIsDepth(depth))
         AfxThrowError();
     else
-        dout->auxDsFmt[0] = depth;
+        doutD->auxDsFmt[0] = depth;
     
     if (stencil && !AfxPixelFormatIsStencil(stencil))
         AfxThrowError();
     else
-        dout->auxDsFmt[1] = stencil;
+        doutD->auxDsFmt[1] = stencil;
 
     AfxRegenerateDrawOutputBuffers(dout);
 
@@ -140,8 +212,17 @@ _AFX afxError AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelForm
 _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxPixelFormat depth, afxPixelFormat stencil, afxCanvas canv[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssertRange(dout->bufCnt, first, cnt);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxAssertRange(doutD->bufCnt, first, cnt);
     AfxAssert(canv);
 
     _AfxDoutLockBuffers(dout);
@@ -150,10 +231,10 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
     if (!(AfxGetConnectedDrawOutputContext(dout, &dctx))) AfxThrowError();
     else
     {
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, AFX_FCC_DCTX);
         afxResult rslt = 0;
 
-        for (afxNat i = 0; i < AfxMin(cnt, dout->bufCnt); i++)
+        for (afxNat i = 0; i < AfxMini(cnt, doutD->bufCnt); i++)
         {
             afxSurface raster;
             
@@ -178,7 +259,7 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 
                     for (afxNat j = 0; j < i; j++)
                     {
-                        AfxObjectRemoveEventFilter(&dout->obj, &canv[j]->obj);
+                        //AfxObjectRemoveEventFilter(&doutD->obj, &canv[j]->obj);
                         AfxReleaseObject(&canv[j]->obj);
                         canv[j] = NIL;
                     }
@@ -187,7 +268,7 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
                 else
                 {
                     AfxAssertObject(canv[i], AFX_FCC_CANV);
-                    AfxObjectInstallEventFilter(&dout->obj, &canv[i]->obj);
+                    //AfxObjectInstallEventFilter(&doutD->obj, &canv[i]->obj);
                     rslt++;
                 }
             }
@@ -206,14 +287,22 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 _AFX afxBool AfxGetConnectedDrawOutputContext(afxDrawOutput dout, afxDrawContext *dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-
-    afxDrawContext dctx2 = dout->dctx;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    afxDrawContext dctx2 = doutD->dctx;
     afxBool rslt;
 
     if ((rslt = !!dctx2))
     {
-        AfxAssertObject(dctx2, AFX_FCC_DCTX);
+        //AfxAssertObjects(1, &dctx2, AFX_FCC_DCTX);
         
         if (dctx)
             *dctx = dctx2;
@@ -224,27 +313,35 @@ _AFX afxBool AfxGetConnectedDrawOutputContext(afxDrawOutput dout, afxDrawContext
 _AFX afxBool AfxDrawOutputIsConnected(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
     return !!(AfxGetConnectedDrawOutputContext(dout, NIL));
 }
 
 _AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
-    if (dout->vmt->cctx(dout, dout->dctx, NIL, slotIdx))
+    if (doutD->vmt->cctx(dout, doutD->dctx, NIL, slotIdx))
     {
         AfxThrowError();
     }
     else
     {
-        dout->dctx = NIL;
+        doutD->dctx = NIL;
         AfxRegenerateDrawOutputBuffers(dout);
     }
 
-    AfxAssert(!dout->dctx);
+    AfxAssert(!doutD->dctx);
 
     return err;
 }
@@ -252,8 +349,17 @@ _AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout, afxNat *slotIdx)
 _AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
     afxDrawDriver ddrv = AfxGetDrawOutputDriver(dout);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
@@ -263,17 +369,17 @@ _AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afx
     if (ddrv != ddrv2) AfxThrowError();
     else
     {
-        if (dout->vmt->cctx(dout, dout->dctx, dctx, slotIdx))
+        if (doutD->vmt->cctx(dout, doutD->dctx, dctx, slotIdx))
         {
             AfxThrowError();
         }
         else
         {
-            dout->dctx = dctx;
+            doutD->dctx = dctx;
             AfxRegenerateDrawOutputBuffers(dout);
         }
     }
-    AfxAssert(dout->dctx == dctx);
+    AfxAssert(doutD->dctx == dctx);
     return !err;
 }
 
@@ -284,11 +390,20 @@ _AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afx
 _AFX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxSurface *surf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
     afxBool rslt;
     afxSurface surf2;
-    if ((rslt = !!(surf2 = dout->buffers[idx].surf)))
+    if ((rslt = !!(surf2 = doutD->buffers[idx].surf)))
     {
         AfxAssertObject(surf2, AFX_FCC_SURF);
 
@@ -301,12 +416,21 @@ _AFX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxSurface *
 _AFX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *canv)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssertRange(dout->bufCnt, idx, 1);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxAssertRange(doutD->bufCnt, idx, 1);
 
     afxBool rslt;
     afxCanvas canv2;    
-    if ((rslt = !!(canv2 = dout->buffers[idx].canv)))
+    if ((rslt = !!(canv2 = doutD->buffers[idx].canv)))
     {
         AfxAssertObject(canv2, AFX_FCC_CANV);
 
@@ -319,37 +443,64 @@ _AFX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *c
 _AFX afxNat AfxGetDrawOutputCapacity(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    return dout->bufCnt;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    return doutD->bufCnt;
 }
 
-_AFX afxError AfxRequestNextDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
+_AFX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
     *bufIdx = AFX_INVALID_INDEX;
 
-    if (dout->vmt->req(dout, timeout, bufIdx)) AfxThrowError();
+    if (doutD->vmt->req(dout, timeout, bufIdx)) AfxThrowError();
     else
     {
-        AfxAssertRange(dout->bufCnt, *bufIdx, 1);
+        AfxAssertRange(doutD->bufCnt, *bufIdx, 1);
         AfxAssert(AFX_INVALID_INDEX != *bufIdx);
     }
     return err;
 }
 
-_AFX afxResult AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[])
+_AFX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    AfxAssertRange(dout->bufCnt, first, cnt);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    AfxAssertRange(doutD->bufCnt, first, cnt);
     AfxAssert(surf);
-    afxResult hitcnt = 0;
+    afxNat hitcnt = 0;
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxSurface surf2 = dout->buffers[first + i].surf;
+        afxSurface surf2 = doutD->buffers[first + i].surf;
         AfxTryAssertObject(surf2, AFX_FCC_SURF);
         surf[i] = surf2;
         ++hitcnt;
@@ -362,60 +513,69 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
-    if (dout->buffers)
+    if (doutD->buffers)
     {
-        for (afxNat i = 0; i < dout->bufCnt; i++)
+        for (afxNat i = 0; i < doutD->bufCnt; i++)
         {
-            afxSurface surf = dout->buffers[i].surf;
+            afxSurface surf = doutD->buffers[i].surf;
 
             if (surf)
             {
                 AfxAssertObject(surf, AFX_FCC_SURF);
                 AfxReleaseObject(&surf->tex.obj);
-                dout->buffers[i].surf = NIL;
+                doutD->buffers[i].surf = NIL;
             }
 
             afxDrawContext dctx;
             
             if (AfxGetConnectedDrawOutputContext(dout, &dctx))
             {
-                AfxAssertObject(dctx, AFX_FCC_DCTX);
+                //AfxAssertType(dctxD, AFX_FCC_DCTX);
                 afxSurface surf2;
-                dout->buffers[i].surf = (surf2 = AfxAcquireSurface(dctx, dout->pixelFmt, dout->extent, dout->bufUsage));
+                doutD->buffers[i].surf = (surf2 = AfxAcquireSurface(dctx, doutD->pixelFmt, doutD->extent, doutD->bufUsage));
 
                 if (!(surf2)) AfxThrowError();
                 else
                 {
                     AfxAssertObject(surf2, AFX_FCC_SURF);
 
-                    afxEvent ev;
-                    AfxEventDeploy(&ev, AFX_EVENT_DOUT_REBUF, &dout->obj, NIL);
-                    ev.udd[0] = (void*)i; // from
-                    AfxObjectEmitEvent(&dout->obj, &ev);
+                    //afxEvent ev;
+                    //AfxEventDeploy(&ev, AFX_EVENT_DOUT_REBUF, &doutD->obj, NIL);
+                    //ev.udd[0] = (void*)i; // from
+                    //AfxObjectEmitEvent(&doutD->obj, &ev);
                 }
             }
         }
 
-        for (afxNat i = 0; i < dout->bufCnt; i++)
+        for (afxNat i = 0; i < doutD->bufCnt; i++)
         {
-            afxCanvas canv = dout->buffers[i].canv;
+            afxCanvas canv = doutD->buffers[i].canv;
 
             if (canv)
             {
                 AfxAssertObject(canv, AFX_FCC_CANV);
                 AfxReleaseObject(&canv->obj);
-                dout->buffers[i].canv = NIL;
+                doutD->buffers[i].canv = NIL;
             }
 
             afxDrawContext dctx;
             
             if (AfxGetConnectedDrawOutputContext(dout, &dctx))
             {
-                AfxAssertObject(dctx, AFX_FCC_DCTX);
+                //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
-                afxSurface raster = dout->buffers[i].surf;
+                afxSurface raster = doutD->buffers[i].surf;
                 AfxTryAssertObject(raster, AFX_FCC_SURF);
 
                 if (!raster) AfxThrowError();
@@ -426,7 +586,7 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
                     AfxGetTextureExtent(&raster->tex, 0, extent);
                     AfxBeginCanvasBlueprint(&blueprint, dctx, extent);
                     AfxCanvasBlueprintAddExistingRaster(&blueprint, raster);
-                    AfxCanvasBlueprintSetDepth(&blueprint, dout->auxDsFmt[0], dout->auxDsFmt[1]);
+                    AfxCanvasBlueprintSetDepth(&blueprint, doutD->auxDsFmt[0], doutD->auxDsFmt[1]);
                     blueprint.udd[0] = dout;
                     blueprint.udd[1] = (void*)i;
 
@@ -438,7 +598,7 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
                     else
                     {
                         AfxAssertObject(canv, AFX_FCC_CANV);
-                        dout->buffers[i].canv = canv;
+                        doutD->buffers[i].canv = canv;
                     }
                 }
             }
@@ -454,53 +614,80 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
 _AFX void AfxGetDrawOutputExtentNdc(afxDrawOutput dout, afxV3d extent) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
     AfxAssert(extent);
-    AfxV3dSet(extent, AfxToNdc(dout->extent[0], dout->resolution[0]), AfxToNdc(dout->extent[1], dout->resolution[1]), (afxReal)1);
+    AfxV3dSet(extent, AfxToNdc(doutD->extent[0], doutD->resolution[0]), AfxToNdc(doutD->extent[1], doutD->resolution[1]), (afxReal)1);
 }
 
 _AFX void AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
     AfxAssert(extent);
-    extent[0] = dout->extent[0];
-    extent[1] = dout->extent[1];
-    extent[2] = dout->extent[2];
+    extent[0] = doutD->extent[0];
+    extent[1] = doutD->extent[1];
+    extent[2] = doutD->extent[2];
 }
 
 _AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
     AfxAssert(extent);
-    AfxAssertExtent(dout->resolution[0], extent[0]);
-    AfxAssertExtent(dout->resolution[1], extent[1]);
-    AfxAssertExtent(dout->resolution[2], extent[2]);
+    AfxAssertExtent(doutD->resolution[0], extent[0]);
+    AfxAssertExtent(doutD->resolution[1], extent[1]);
+    AfxAssertExtent(doutD->resolution[2], extent[2]);
 
-    afxBool changed = (dout->extent[0] != extent[0] || dout->extent[1] != extent[1] || dout->extent[2] != extent[2]);
+    afxBool changed = (doutD->extent[0] != extent[0] || doutD->extent[1] != extent[1] || doutD->extent[2] != extent[2]);
 
     if (changed)
     {
-        ++dout->resizing; // temporarily lock it to avoid reentrance of platform hooks.
+        ++doutD->resizing; // temporarily lock it to avoid reentrance of platform hooks.
 
-        dout->extent[0] = AfxMax(extent[0], 1);
-        dout->extent[1] = AfxMax(extent[1], 1);
-        dout->extent[2] = AfxMax(extent[2], 1);
+        doutD->extent[0] = AfxMaxi(extent[0], 1);
+        doutD->extent[1] = AfxMaxi(extent[1], 1);
+        doutD->extent[2] = AfxMaxi(extent[2], 1);
 
-        AfxReadjustDrawOutputProportion(dout, dout->wpOverHp, dout->resolution);
+        AfxReadjustDrawOutputProportion(dout, doutD->wpOverHp, doutD->resolution);
 
         AfxRegenerateDrawOutputBuffers(dout);
 
-        afxEvent ev;
-        AfxEventDeploy(&ev, AFX_EVENT_DOUT_EXTENT, &dout->obj, dout->extent);
-        AfxObjectEmitEvent(&dout->obj, &ev);
+        //afxEvent ev;
+        //AfxEventDeploy(&ev, AFX_EVENT_DOUT_EXTENT, &doutD->obj, doutD->extent);
+        //AfxObjectEmitEvent(&doutD->obj, &ev);
 
         afxV3d extent;
         AfxGetDrawOutputExtentNdc(dout, extent);
-        AfxEcho("Draw output (%p) extent readjusted to %ux%u; %0f%%:%0f%% of %ux%u.", dout, dout->extent[0], dout->extent[1], extent[0], extent[1], dout->resolution[0], dout->resolution[1]);
+        AfxEcho("Draw output (%p) extent readjusted to %ux%u; %0f%%:%0f%% of %ux%u.", dout, doutD->extent[0], doutD->extent[1], extent[0], extent[1], doutD->resolution[0], doutD->resolution[1]);
 
-        --dout->resizing;
+        --doutD->resizing;
     }
     return err;
 }
@@ -508,30 +695,48 @@ _AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const extent)
 _AFX afxError AfxReadjustDrawOutputNdc(afxDrawOutput dout, afxV3d const extent) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
     AfxAssert(extent);
-    afxWhd const whd = { (afxNat)AfxFromNdc(extent[0], dout->resolution[0]), (afxNat)AfxFromNdc(extent[1], dout->resolution[1]), 1 };
+    afxWhd const whd = { (afxNat)AfxFromNdc(extent[0], doutD->resolution[0]), (afxNat)AfxFromNdc(extent[1], doutD->resolution[1]), 1 };
     return AfxReadjustDrawOutput(dout, whd);
 }
 
 _AFX void AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
     if (resolution)
     {
         AfxAssert(resolution[0]);
         AfxAssert(resolution[1]);
         AfxAssert(resolution[2]);
-        dout->resolution[0] = AfxMax(resolution[0], 1);
-        dout->resolution[1] = AfxMax(resolution[1], 1);
-        dout->resolution[2] = AfxMax(resolution[2], 1);
+        doutD->resolution[0] = AfxMaxi(resolution[0], 1);
+        doutD->resolution[1] = AfxMaxi(resolution[1], 1);
+        doutD->resolution[2] = AfxMaxi(resolution[2], 1);
     }
 
     if (!physicalAspectRatio)
     {
-        afxReal64 div = (afxReal64)dout->resolution[0] / (afxReal64)dout->resolution[1];
+        afxReal64 div = (afxReal64)doutD->resolution[0] / (afxReal64)doutD->resolution[1];
 
         if (div <= 1.4)
             physicalAspectRatio = 1.33;
@@ -541,9 +746,9 @@ _AFX void AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAs
             physicalAspectRatio = 1.78;
     }
 
-    dout->wpOverHp = physicalAspectRatio;
-    dout->wrOverHr = (afxReal64)dout->resolution[0] / (afxReal64)dout->resolution[1];
-    dout->wwOverHw = (afxReal64)dout->extent[0] / (afxReal64)dout->extent[1];
+    doutD->wpOverHp = physicalAspectRatio;
+    doutD->wrOverHr = (afxReal64)doutD->resolution[0] / (afxReal64)doutD->resolution[1];
+    doutD->wwOverHw = (afxReal64)doutD->extent[0] / (afxReal64)doutD->extent[1];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -553,75 +758,27 @@ _AFX void AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAs
 _AFX afxDrawDriver AfxGetDrawOutputDriver(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    afxDrawDriver ddrv = AfxObjectGetProvider(&dout->obj);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    afxDrawDriver ddrv = doutD->ddrv;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     return ddrv;
 }
 
-_AFX afxError AfxAcquireDrawOutputs(afxDrawOutputSpecification const *spec, afxNat cnt, afxDrawOutput dout[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
-{
-    AfxEntry("spec=%p,cnt=%u", spec, cnt);
-    afxError err = AFX_ERR_NONE;
-    afxDrawDriver ddrv;
-
-    if (!AfxGetDrawDriver(spec ? spec->drvIdx : 0, &ddrv)) AfxThrowError();
-    else
-    {
-        AfxAssertObject(ddrv, AFX_FCC_DDRV);
-
-        for (afxNat i = 0; i < cnt; i++)
-        {
-            if (AfxClassAcquireObjects(AfxGetDrawOutputClass(ddrv), NIL, 1, spec, (afxObject**)&dout[i], AfxSpawnHint()))
-            {
-                AfxThrowError();
-
-                for (afxNat j = 0; j < i; j++)
-                {
-                    AfxAssertObject(dout[j], AFX_FCC_DOUT);
-                    AfxReleaseObject(&dout[j]->obj);
-                    dout[j] = NIL;
-                }
-                break;
-            }
-            else
-            {
-                AfxAssertObject(dout[i], AFX_FCC_DOUT);
-            }
-        }
-    }
-
-    if (err)
-        for (afxNat i = 0; i < cnt; i++)
-            dout[i] = NIL;
-
-    return err;
-}
-
-_AFX afxBool _AfxDoutEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawOutput dout = (void*)obj;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxBool _AfxDoutEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawOutput dout = (void*)obj;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxError _AfxDoutDtor(afxDrawOutput dout)
+_AFX afxError _AfxDoutDtor(afxDrawOutput dout, struct _afxDoutD*doutD)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
     AfxDisconnectDrawOutput(dout, NIL);
 
@@ -630,147 +787,221 @@ _AFX afxError _AfxDoutDtor(afxDrawOutput dout)
 
     _AfxDoutFreeAllBuffers(dout);
 
-    if (dout->vmt->dtor)
-        if (dout->vmt->dtor(dout))
+    if (doutD->vmt->dtor)
+        if (doutD->vmt->dtor(dout))
             AfxThrowError();
     
-    AfxAssert(!dout->idd); // imp->dtor must dealloc it
+    AfxAssert(!doutD->idd); // imp->dtor must dealloc it
 
-    AfxAssert(dout->swapchain.cnt == 0);
+    AfxAssert(doutD->swapchain.cnt == 0);
 
-    if (dout->caption)
-        AfxDeallocateString(dout->caption);
+    if (doutD->caption)
+        AfxDeallocateString(doutD->caption);
 
-    AfxReleaseSlock(&dout->buffersLock);
-    AfxReleaseSlock(&dout->suspendSlock);
+    AfxReleaseSlock(&doutD->buffersLock);
+    AfxReleaseSlock(&doutD->suspendSlock);
 
     return err;
 }
 
-_AFX afxError _AfxDoutCtor(void *cache, afxNat idx, afxDrawOutput dout, afxDrawOutputSpecification const *specs)
+_AFX void _AfxObjDeallocDout(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
-    (void)cache;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDoutD *doutD;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
 
-    afxDrawOutputSpecification const *spec = &specs[idx];
+    _AfxDoutDtor(dout, doutD);
+    AfxDeallocateObjects(1, &dout, &dsysD->outputs);
+}
 
-    afxDrawDriver ddrv = AfxGetDrawOutputDriver(dout);
+_AFX void AfxReleaseDrawOutputs(afxNat cnt, afxDrawOutput dout[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(cnt, dout, AFX_FCC_DOUT);
+    AfxReleaseObjects(cnt, dout, _AfxObjDeallocDout);
+}
+
+_AFX afxError _AfxDoutCtor(afxDrawOutput dout, struct _afxDoutD*doutD, afxDrawOutputConfig const *config)
+{
+    AfxEntry("dout=%p", dout);
+    afxError err = AFX_ERR_NONE;
+
+    //afxDrawDriver ddrv = AfxGetDrawOutputDriver(dout);
+    //AfxAssertObject(ddrv, AFX_FCC_DDRV);
+
+    afxDrawDriver ddrv;
+    AfxGetDrawDriver(config ? config->drvIdx : 0, &ddrv);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
 
-    dout->dctx = NIL;
-    afxMemory mem = AfxGetDrawMemory();
+    doutD->ddrv = ddrv;
+    doutD->doutObj = dout;
+    doutD->dctx = NIL;
+    afxContext mem = AfxGetDrawMemory();
 
-    dout->suspendCnt = 1;
-    AfxAcquireSlock(&dout->suspendSlock);
+    AfxAssignFcc(doutD, AFX_FCC_DOUT);
+
+    doutD->suspendCnt = 1;
+    AfxAcquireSlock(&doutD->suspendSlock);
 
     // absolute extent
-    dout->resolution[0] = 1280;
-    dout->resolution[1] = 720;
-    dout->resolution[2] = 1;
+    doutD->resolution[0] = 1280;
+    doutD->resolution[1] = 720;
+    doutD->resolution[2] = 1;
 
-    dout->extent[0] = 1280;
-    dout->extent[1] = 720;
-    dout->extent[2] = 1;
-    dout->resizable = TRUE;
+    doutD->extent[0] = 1280;
+    doutD->extent[1] = 720;
+    doutD->extent[2] = 1;
+    doutD->resizable = TRUE;
 
     // swapchain-related data
-    dout->flags = NIL;
-    dout->pixelFmt = AFX_PFD_RGBA8; // or AFX_PFD_RGBA8R ?
-    dout->colorSpc = AFX_COLOR_SPACE_SRGB; // sRGB is the default
-    dout->bufUsage = AFX_TEX_USAGE_DRAW;
-    dout->bufferLockCnt = 1;
-    dout->bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
-    dout->lastReqBufIdx = dout->bufCnt - 1; // to start at 0 instead of 1 we set to last one.
-    AfxAcquireChain(&dout->swapchain, dout);
-    AfxAcquireSlock(&dout->buffersLock);
+    doutD->flags = NIL;
+    doutD->pixelFmt = AFX_PFD_RGBA8; // or AFX_PFD_RGBA8R ?
+    doutD->colorSpc = AFX_COLOR_SPACE_SRGB; // sRGB is the default
+    doutD->bufUsage = AFX_TEX_USAGE_DRAW;
+    doutD->bufferLockCnt = 1;
+    doutD->bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
+    doutD->lastReqBufIdx = doutD->bufCnt - 1; // to start at 0 instead of 1 we set to last one.
+    AfxAcquireChain(&doutD->swapchain, dout);
+    AfxAcquireSlock(&doutD->buffersLock);
 
-    dout->presentAlpha = TRUE; // consider transparency for window composing.
-    dout->presentTransform = AFX_PRESENT_TRANSFORM_FLIP_V; // NIL leaves it as it is.
-    dout->presentMode = AFX_PRESENT_MODE_FIFO;
-    dout->clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
-    dout->swapping = FALSE;
+    doutD->presentAlpha = TRUE; // consider transparency for window composing.
+    doutD->presentTransform = AFX_PRESENT_TRANSFORM_FLIP_V; // NIL leaves it as it is.
+    doutD->presentMode = AFX_PRESENT_MODE_FIFO;
+    doutD->clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
+    doutD->swapping = FALSE;
 
-    AfxV2dZero(dout->absCursorPos);
-    AfxV2dZero(dout->absCursorMove);
-    AfxV2dZero(dout->ndcCursorPos);
-    AfxV2dZero(dout->ndcCursorMove);
+    AfxV2dZero(doutD->absCursorPos);
+    AfxV2dZero(doutD->absCursorMove);
+    AfxV2dZero(doutD->ndcCursorPos);
+    AfxV2dZero(doutD->ndcCursorMove);
 
-    if (spec)
+    if (config)
     {
-        dout->extent[0] = spec->whd[0];
-        dout->extent[1] = spec->whd[1];
-        dout->extent[2] = spec->whd[2];
+        doutD->extent[0] = config->whd[0];
+        doutD->extent[1] = config->whd[1];
+        doutD->extent[2] = config->whd[2];
 
         // swapchain-related data
-        dout->pixelFmt = spec->pixelFmt;
-        dout->colorSpc = spec->colorSpc;
-        dout->bufUsage |= spec->bufUsage;
-        dout->bufCnt = spec->bufCnt;
+        doutD->pixelFmt = config->pixelFmt;
+        doutD->colorSpc = config->colorSpc;
+        doutD->bufUsage |= config->bufUsage;
+        doutD->bufCnt = config->bufCnt;
 
-        dout->presentAlpha = spec->presentAlpha;
-        dout->presentTransform = spec->presentTransform;
-        dout->presentMode = spec->presentMode;
-        dout->clipped = !!spec->clipped;
+        doutD->presentAlpha = config->presentAlpha;
+        doutD->presentTransform = config->presentTransform;
+        doutD->presentMode = config->presentMode;
+        doutD->clipped = !!config->clipped;
     }
 
-    dout->auxDsFmt[0] = NIL;
-    dout->auxDsFmt[1] = NIL;
+    doutD->auxDsFmt[0] = NIL;
+    doutD->auxDsFmt[1] = NIL;
 
-    dout->idd = NIL;
-    dout->vmt = NIL;
+    doutD->idd = NIL;
+    doutD->vmt = NIL;
 
-    dout->caption = AfxAllocateString(512, NIL, 0);
-    dout->buffers = NIL;
+    doutD->caption = AfxAllocateString(512, NIL, 0);
+    doutD->buffers = NIL;
 
-    if (spec && spec->udd)
-        dout->udd = spec->udd;
+    if (config && config->udd)
+        doutD->udd = config->udd;
 
-    if (ddrv->vmt->dout && ddrv->vmt->dout(dout, spec->endpoint, spec)) AfxThrowError();
+    if (ddrv->vmt->dout && ddrv->vmt->dout(dout, config->endpoint, config)) AfxThrowError();
     else
     {
-        AfxAssert(dout->vmt);
+        AfxAssert(doutD->vmt);
 
-        AfxAssert(dout->resolution[0]);
-        AfxAssert(dout->resolution[1]);
-        AfxAssert(dout->resolution[2]);
-        AfxAssertExtent(dout->resolution[0], dout->extent[0]);
-        AfxAssertExtent(dout->resolution[1], dout->extent[1]);
-        AfxAssertExtent(dout->resolution[2], dout->extent[2]);
+        AfxAssert(doutD->resolution[0]);
+        AfxAssert(doutD->resolution[1]);
+        AfxAssert(doutD->resolution[2]);
+        AfxAssertExtent(doutD->resolution[0], doutD->extent[0]);
+        AfxAssertExtent(doutD->resolution[1], doutD->extent[1]);
+        AfxAssertExtent(doutD->resolution[2], doutD->extent[2]);
 
-        AfxAssert(dout->bufCnt);
-        AfxAssert(dout->bufUsage & AFX_TEX_USAGE_DRAW);
-        AfxAssert(dout->refreshRate);
-        AfxAssert(dout->wpOverHp);
-        AfxAssert(dout->wrOverHr);
-        AfxAssert(dout->wwOverHw);
+        AfxAssert(doutD->bufCnt);
+        AfxAssert(doutD->bufUsage & AFX_TEX_USAGE_DRAW);
+        AfxAssert(doutD->refreshRate);
+        AfxAssert(doutD->wpOverHp);
+        AfxAssert(doutD->wrOverHr);
+        AfxAssert(doutD->wwOverHw);
 
-        if (!dout->buffers && !(dout->buffers = AfxAllocate(mem, dout->bufCnt * sizeof(dout->buffers[0]), 0, AfxSpawnHint()))) AfxThrowError();
-        else for(afxNat i = 0; i < dout->bufCnt; i++)
-            dout->buffers[i].surf = NIL, dout->buffers[i].canv = NIL;;
+        if (!doutD->buffers && !(doutD->buffers = AfxAllocate(mem, doutD->bufCnt * sizeof(doutD->buffers[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        else for(afxNat i = 0; i < doutD->bufCnt; i++)
+            doutD->buffers[i].surf = NIL, doutD->buffers[i].canv = NIL;;
 
-        if (err && dout->buffers)
+        if (err && doutD->buffers)
         {
             _AfxDoutFreeAllBuffers(dout);
-            AfxDeallocate(mem, dout->buffers);
+            AfxDeallocate(mem, doutD->buffers);
         }
     }
     return err;
 }
 
-_AFX afxClassSpecification const _AfxDoutClassSpec;
-
-afxClassSpecification const _AfxDoutClassSpec =
+_AFX afxError AfxAcquireDrawOutputs(afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
 {
-    AFX_FCC_DOUT,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxDrawOutput)),
-    NIL,
-    (void*)_AfxDoutCtor,
-    (void*)_AfxDoutDtor,
-    .event = _AfxDoutEventHandler,
-    .eventFilter = _AfxDoutEventFilter,
-    "afxDrawOutput",
-    NIL
-};
+    AfxEntry("cnt=%u,config=%p,dout=%p", cnt, config, dout);
+    afxError err = AFX_ERR_NONE;
+    afxDrawDriver ddrv;
+
+    if (!AfxGetDrawDriver(config ? config->drvIdx : 0, &ddrv)) AfxThrowError();
+    else
+    {
+        AfxAssertObject(ddrv, AFX_FCC_DDRV);
+
+        afxDrawSystem dsys;
+        AfxGetDrawSystem(&dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        struct _afxDsysD* dsysD;
+        _AfxGetDsysD(dsys, &dsysD);
+        AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+        if (AfxAcquireNamedObjects(cnt, dout, AFX_FCC_DOUT, "Draw Output")) AfxThrowError();
+        else
+        {
+            afxNat slots[32] = { 0 };
+
+            if (AfxAllocateObjects(cnt, dout, &dsysD->outputs)) AfxThrowError();
+            else
+            {
+                for (afxNat i = 0; i < cnt; i++)
+                {
+                    struct _afxDoutD *doutD;
+                    _AfxGetDoutD(dout[i], &doutD, dsysD);
+                    
+                    if (_AfxDoutCtor(dout[i], doutD, &config[i]))
+                    {
+                        AfxThrowError();
+                        afxNat j = i;
+
+                        for (afxNat k = 0; k < i; k++)
+                            if (_AfxDoutDtor(dout[j--], doutD))
+                                AfxThrowError();
+                    }
+                }
+            }
+
+            if (err)
+                AfxReleaseObjects(cnt, dout, NIL);
+        }
+    }
+
+    if (err)
+    {
+        for (afxNat i = 0; i < cnt; i++)
+            dout[i] = NIL;
+    }
+    else
+    {
+        AfxAssertObjects(cnt, dout, AFX_FCC_DOUT);
+    }
+    return err;
+}

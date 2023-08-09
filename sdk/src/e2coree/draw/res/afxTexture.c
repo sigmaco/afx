@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -319,9 +319,9 @@ _AFX afxNat AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
         ++lodIdx;
     } while (lodIdx < rgn->lodIdx);
     
-    extent2[0] = AfxMax(extent2[0], 1);
-    extent2[1] = AfxMax(extent2[1], 1);
-    extent2[2] = AfxMax(extent2[2], 1);
+    extent2[0] = AfxMaxi(extent2[0], 1);
+    extent2[1] = AfxMaxi(extent2[1], 1);
+    extent2[2] = AfxMaxi(extent2[2], 1);
 
     for (afxNat i = 1; i < rgn->imgCnt; i++)
         size += ((whd[2] * (whd[1] * (whd[0] * pixelSiz))));
@@ -605,7 +605,7 @@ _AFX afxError AfxUpdateTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegi
         {
             AfxAssert(fmt[i] == tex->fmt);
             AfxAssert(size >= siz[i]);
-            AfxCopy(data, src[i], AfxMin((siz[i]), size));
+            AfxCopy(data, src[i], AfxMini((siz[i]), size));
 
             AfxCloseTextureRegion(tex, &rgn[i]);
         }
@@ -703,8 +703,8 @@ _AFX afxError AfxBufferizeTexture(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     afxTextureRegion rgn;
     rgn.baseImg = 0;
@@ -859,7 +859,17 @@ _AFX afxDrawContext AfxGetTextureContext(afxTexture tex)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(tex, AFX_FCC_TEX);
     afxDrawContext dctx = AfxObjectGetProvider(&tex->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
     return dctx;
 }
 
@@ -872,7 +882,7 @@ _AFX afxError AfxBuildTextures(afxTextureBlueprint const *blueprint, afxNat cnt,
     AfxEntry("cnt=%u,blueprint=%p,tex=%p", cnt, blueprint, tex);
 
     for (afxNat i = 0; i < cnt; i++)
-        if (AfxClassAcquireObjects(AfxGetTextureClass(blueprint->dctx), NIL, cnt, blueprint, (afxObject**)&tex[i], AfxSpawnHint()))
+        if (AfxClassAcquireObjects(AfxGetTextureClass(blueprint->dctx), NIL, cnt, blueprint, (afxInstance**)&tex[i], AfxSpawnHint()))
             AfxThrowError();
 
     return err;
@@ -925,8 +935,8 @@ _AFX afxError AfxLoadTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[
     AfxAssert(uri);
     AfxAssert(tex);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -1017,7 +1027,7 @@ _AFX afxError AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxUri const u
     return err;
 }
 
-_AFX afxBool _AfxTexEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxTexEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxTexture tex = (void*)obj;
@@ -1026,7 +1036,7 @@ _AFX afxBool _AfxTexEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxTexEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxTexEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxTexture tex = (void*)obj;
@@ -1042,8 +1052,8 @@ _AFX afxError _AfxTexDtor(afxTexture tex)
     AfxEntry("tex=%p", tex);
     AfxAssertObject(tex, AFX_FCC_TEX);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
     
     if (tex->vmt->dtor && tex->vmt->dtor(tex))
         AfxThrowError();
@@ -1067,10 +1077,20 @@ _AFX afxError _AfxTexCtor(void *cache, afxNat idx, afxTexture tex, afxTextureBlu
     afxTextureBlueprint const *texb = paradigm;
 
     afxDrawContext dctx = AfxGetTextureContext(tex);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
 
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     tex->swizzling = &AFX_STD_COLOR_SWIZZLING;
     tex->sampleCnt = 1;
@@ -1095,7 +1115,7 @@ _AFX afxError _AfxTexCtor(void *cache, afxNat idx, afxTexture tex, afxTextureBlu
 
     if (!err)
     {
-        if (dctx->vmt->tex && dctx->vmt->tex(tex)) AfxThrowError();
+        if (dctxD->vmt->tex && dctxD->vmt->tex(tex)) AfxThrowError();
         else
         {
             AfxAssert(tex->vmt);

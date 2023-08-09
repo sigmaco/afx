@@ -26,9 +26,9 @@
     <ClInclude Include="..\..\inc\afx\core\afxEvent.h" />
     <ClInclude Include="..\..\inc\afx\core\afxFcc.h" />
     <ClInclude Include="..\..\inc\afx\core\afxIterator.h" />
-    <ClInclude Include="..\..\inc\afx\core\afxLinkedList.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxChain.h" />
     <ClInclude Include="..\..\inc\afx\core\afxModule.h" />
-    <ClInclude Include="..\..\inc\afx\core\afxObject.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxInstance.h" />
     <ClInclude Include="..\..\inc\afx\core\afxRawString.h" />
     <ClInclude Include="..\..\inc\afx\core\afxSimd.h" />
     <ClInclude Include="..\..\inc\afx\core\afxString.h" />
@@ -44,7 +44,6 @@
     <ClInclude Include="..\..\inc\afx\core\io\afxData.h" />
     <ClInclude Include="..\..\inc\afx\core\io\afxDatajack.h" />
     <ClInclude Include="..\..\inc\afx\core\io\afxFile.h" />
-    <ClInclude Include="..\..\inc\afx\core\io\afxIoSystem.h" />
     <ClInclude Include="..\..\inc\afx\core\io\afxHid.h" />
     <ClInclude Include="..\..\inc\afx\core\io\afxScript.h" />
     <ClInclude Include="..\..\inc\afx\core\io\afxKeyboard.h" />
@@ -56,8 +55,12 @@
     <ClInclude Include="..\..\inc\afx\core\io\afxUri.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxArena.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxArray.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxBitmap.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxResidency.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxPool.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxDatabase.h" />
-    <ClInclude Include="..\..\inc\afx\core\mem\afxMemory.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxMap.h" />
+    <ClInclude Include="..\..\inc\afx\core\mem\afxContext.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxQueue.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxStack.h" />
@@ -155,9 +158,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxClass.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxCoreDefs.c" />
-    <ClCompile Include="..\..\src\e2coree\core\afxLinkedList.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxChain.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxModule.c" />
-    <ClCompile Include="..\..\src\e2coree\core\afxObject.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxInstance.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxRawString.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxSimd.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxString.c" />
@@ -173,20 +176,38 @@
     <ClCompile Include="..\..\src\e2coree\core\io\afxData.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxDatajack.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxFile.c" />
-    <ClCompile Include="..\..\src\e2coree\core\io\afxIoSystem.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxHid.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxScript.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxKeyboard.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxMouse.c" />
-    <ClCompile Include="..\..\src\e2coree\core\io\afxResource.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxResource.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\io\afxStream.c" />
-    <ClCompile Include="..\..\src\e2coree\core\io\afxUrd.c" />
+    <ClCompile Include="..\..\src\e2coree\core\io\afxUrd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\io\afxXml.c" />
     <ClCompile Include="..\..\src\e2coree\core\io\afxUri.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxArena.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxArray.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxBitmap.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxResidency.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxPool.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxDatabase.c" />
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxMemory.c" />
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxMap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxContext.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxQueue.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxSlabAllocator.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -261,30 +282,10 @@
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c" />
-    <ClCompile Include="..\..\src\e2coree\sound\afxSoundContext.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sound\afxSoundInput.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sound\afxSoundOutput.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sound\afxSoundSystem.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundContext.c" />
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundInput.c" />
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundOutput.c" />
+    <ClCompile Include="..\..\src\e2coree\sound\afxSoundSystem.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

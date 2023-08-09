@@ -40,8 +40,8 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
     // camera up and down, but it should be clear how to add one.
-    const afxReal ForwardSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
-    const afxReal RightSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
+    const afxReal ForwardSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
+    const afxReal RightSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
 
     AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
@@ -93,8 +93,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxAssertObject(sim, AFX_FCC_SIM);
     
     AfxUriWrapLiteral(&uriMap, "window", 0);
-    afxDrawOutputSpecification doutSpec = {0};
-    AfxAcquireDrawOutputs(&doutSpec, 1, &dout);
+    afxDrawOutputConfig doutConfig = {0};
+    AfxAcquireDrawOutputs(&doutConfig, 1, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
@@ -163,7 +163,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     kbd = AfxFindKeyboard(0);
     mse = AfxFindMouse(0);
-    AfxObjectInstallEventFilter(&mse->hid.obj, &cam->nod.obj);
+    AfxObjectInstallEventFilter(&mseD->hid.obj, &cam->nod.obj);
 
     AfxEnableDrawInputPrefetching(rnd->din, 1); // bug: sem isso não desenha
 
@@ -173,7 +173,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 _AFXEXPORT afxResult AfxLeaveApplication(afxThread thr, afxApplication app)
 {
     AfxEntry("app=%p", app);
-    //AfxReleaseObject(&din->obj);
+    //AfxReleaseObject(&dinD->obj);
     AfxEcho("aaaaaaaaaaaa");
 
     return AFX_SUCCESS;
@@ -212,25 +212,25 @@ int main(int argc, char const* argv[])
     while (reboot)
     {
         afxSystem sys;
-        AfxBootUpSystem(NIL, &sys);
+        AfxBootUpBasicIoSystem(NIL, &sys);
 
         afxDrawSystem dsys;
         afxDrawSystemSpecification dsysSpec = { 0 };
-        AfxBootUpDrawSystem(&dsysSpec, &dsys);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        AfxEstablishDrawSystem(&dsysSpec, &dsys);
+        AfxAssertType(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec = { 0 };
+        afxDrawContextConfig dctxConfig = { 0 };
 
-        AfxAcquireDrawContexts(&dctxSpec, 1, &dctx);
+        AfxAcquireDrawContexts(&dctxConfig, 1, &dctx);
         AfxAssert(dctx);
 
         afxApplication TheApp;
-        afxApplicationSpecification appSpec;
-        appSpec.argc = argc;
-        appSpec.argv = argv;
-        appSpec.dctx = dctx;
-        appSpec.proc = SandboxThrProc;
-        AfxAcquireApplications(&appSpec, 1, &TheApp);
+        afxApplicationConfig appConfig;
+        appConfig.argc = argc;
+        appConfig.argv = argv;
+        appConfig.dctx = dctx;
+        appConfig.proc = SandboxThrProc;
+        AfxAcquireApplications(&appConfig, 1, &TheApp);
         AfxAssertObject(TheApp, AFX_FCC_APP);
         AfxRunApplication(TheApp);
 
@@ -238,10 +238,10 @@ int main(int argc, char const* argv[])
 
         AfxReleaseApplications(1, &TheApp);
 
-        AfxReleaseObject(&dctx->obj);
+        AfxReleaseObject(&dctxD->obj);
 
-        AfxShutdownDrawSystem();
-        AfxShutdownSystem();
+        AfxAbolishDrawSystem();
+        AfxShutdownBasicIoSystem();
     }
     Sleep(3000);
     return 0;

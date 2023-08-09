@@ -10,6 +10,7 @@
 #include "afx/afxQwadro.h"
 #include "../src/e2bink/afxBinkVideo.h"
 #include "afx/draw/afxDrawSystem.h"
+#include "afx/core/mem/afxBitmap.h"
 
 #define ENABLE_DIN1 // 
 #define ENABLE_DOUT1
@@ -57,7 +58,7 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called
         else
         {
             afxNat outBufIdx = 0;
-            AfxRequestNextDrawOutputBuffer(dout[0], 0, &outBufIdx);
+            AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
             afxCanvas canv;
             AfxGetDrawOutputCanvas(dout[0], outBufIdx, &canv);
 
@@ -117,25 +118,25 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxReleaseObject(&dumpImg->obj);
 
     AfxFormatUri(&uri.uri, "desktop");
-    afxDrawOutputSpecification doutSpec = { 0 };
-    //doutSpec.endpoint = &uri.uri;
+    afxDrawOutputConfig doutConfig = { 0 };
+    //doutConfig.endpoint = &uri.uri;
 #if 0
-    doutSpec.whd[0] = 1280;
-    doutSpec.whd[1] = 720;
-    doutSpec.whd[2] = 1;
-    doutSpec.bufCnt = 2;
-    doutSpec.clipped = TRUE;
-    doutSpec.colorSpc = NIL;
-    doutSpec.presentAlpha = FALSE;
-    doutSpec.pixelFmt = AFX_PFD_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
-    doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
+    doutConfig.whd[0] = 1280;
+    doutConfig.whd[1] = 720;
+    doutConfig.whd[2] = 1;
+    doutConfig.bufCnt = 2;
+    doutConfig.clipped = TRUE;
+    doutConfig.colorSpc = NIL;
+    doutConfig.presentAlpha = FALSE;
+    doutConfig.pixelFmt = AFX_PFD_RGBA8;
+    doutConfig.presentMode = AFX_PRESENT_MODE_LIFO;
+    doutConfig.presentTransform = NIL;
+    doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 #endif
-    doutSpec.pixelFmt = AFX_PFD_RGBA4;
+    doutConfig.pixelFmt = AFX_PFD_RGBA4;
     
 #ifdef ENABLE_DOUT1
-    AfxAcquireDrawOutputs(&doutSpec, 1, dout);
+    AfxAcquireDrawOutputs(1, dout, &doutConfig);
     AfxAssert(dout[0]);
     AfxReconnectDrawOutput(dout[0], dctx, NIL);
 
@@ -144,53 +145,53 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 #endif
 #ifdef ENABLE_DOUT2
-    doutSpec.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
-    dout[1] = AfxAcquireDrawOutputs(dctx, &doutSpec, &uri);
+    doutConfig.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
+    dout[1] = AfxAcquireDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[1]);
 
-    surfSpec.fmt = doutSpec.pixelFmt;
-    surfSpec.usage = doutSpec.bufUsage;
+    surfSpec.fmt = doutConfig.pixelFmt;
+    surfSpec.usage = doutConfig.bufUsage;
 
-    for (afxNat i = 0; i < doutSpec.bufCnt; i++)
+    for (afxNat i = 0; i < doutConfig.bufCnt; i++)
     {
         surfSpec.surf = AfxGetDrawOutputBuffer(dout[1], i);
         canv[1][i] = AfxBuildCanvases(dctx, dout[1]->whd, 1, &surfSpec);
     }
 #endif
 #ifdef ENABLE_DOUT3
-    doutSpec.presentMode = AFX_PRESENT_MODE_FIFO;
-    dout[2] = AfxAcquireDrawOutputs(dctx, &doutSpec, &uri);
+    doutConfig.presentMode = AFX_PRESENT_MODE_FIFO;
+    dout[2] = AfxAcquireDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[2]);
 
-    surfSpec.fmt = doutSpec.pixelFmt;
-    surfSpec.usage = doutSpec.bufUsage;
+    surfSpec.fmt = doutConfig.pixelFmt;
+    surfSpec.usage = doutConfig.bufUsage;
 
-    for (afxNat i = 0; i < doutSpec.bufCnt; i++)
+    for (afxNat i = 0; i < doutConfig.bufCnt; i++)
     {
         surfSpec.surf = AfxGetDrawOutputBuffer(dout[2], i);
         canv[2][i] = AfxBuildCanvases(dctx, dout[2]->whd, 1, &surfSpec);
     }
 #endif
 
-    afxDrawInputSpecification dinSpec = { 0 };
-    dinSpec.prefetch = (void*)DinFetcherFn;
-    dinSpec.udd = &bnk;
-    dinSpec.cmdPoolMemStock = 4096;
-    dinSpec.estimatedSubmissionCnt = 2;
+    afxDrawInputConfig dinConfig = { 0 };
+    dinConfig.prefetch = (void*)DinFetcherFn;
+    dinConfig.udd = &bnk;
+    dinConfig.cmdPoolMemStock = 4096;
+    dinConfig.estimatedSubmissionCnt = 2;
 
 #ifdef ENABLE_DIN1
     AfxEraseUri(&uri.uri);
-    AfxAcquireDrawInputs(&dinSpec, 1, din);
+    AfxAcquireDrawInputs(1, din, &dinConfig);
     AfxAssert(din[0]);
     AfxReconnectDrawInput(din[0], dctx, NIL);
 
 #endif
 #ifdef ENABLE_DIN2
-    din[1] = AfxAcquireDrawInputs(&dinSpec);
+    din[1] = AfxAcquireDrawInputs(&dinConfig);
     AfxAssert(din[1]);
 #endif
 #ifdef ENABLE_DIN3
-    din[2] = AfxAcquireDrawInputs(&dinSpec);
+    din[2] = AfxAcquireDrawInputs(&dinConfig);
     AfxAssert(din[2]);
 #endif
 
@@ -229,7 +230,7 @@ _AFXEXPORT afxResult AfxLeaveApplication(afxThread thr, afxApplication app)
     AfxEcho("aaaaaaaaaaaa");
     
 #ifdef ENABLE_DIN1
-    AfxReleaseObject(&din[0]->obj);
+    AfxReleaseDrawInputs(1, din);
 #endif
 #ifdef ENABLE_DIN2
     din[1]->process = NIL;
@@ -271,36 +272,40 @@ int main(int argc, char const* argv[])
     while (reboot)
     {
         afxSystem sys;
-        AfxBootUpSystem(NIL, &sys);
-        AfxAssertObject(sys, AFX_FCC_SYS);
+        afxSystemConfigWin32 sysConfig;
+        AfxChooseBasicIoSystemConfiguration(&sysConfig.base, sizeof(sysConfig));
+        AfxBootUpBasicIoSystem(&sysConfig.base, &sys);
+        AfxAssertObjects(1, &sys, AFX_FCC_SYS);
 
-        afxDrawSystem dsys = NIL;
-        afxDrawSystemSpecification dsysSpec = { 0 };
-        AfxBootUpDrawSystem(&dsysSpec, &dsys);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        afxDrawSystem dsys;
+        afxDrawSystemConfig dsysConfig;
+        AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
+        AfxEstablishDrawSystem(&dsysConfig, &dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec = { 0 };        
-        AfxAcquireDrawContexts(&dctxSpec, 1, &dctx);
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        afxDrawContextConfig dctxConfig = { 0 };        
+        AfxAcquireDrawContexts(1, &dctx, &dctxConfig);
+        //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
         afxApplication TheApp;
-        afxApplicationSpecification appSpec = { 0 };
-        appSpec.argc = argc;
-        appSpec.argv = argv;
-        appSpec.dctx = dctx;
-        appSpec.proc = MmplayerThrProc;
-        AfxAcquireApplications(&appSpec, 1, &TheApp);
-        AfxAssertObject(TheApp, AFX_FCC_APP);
+        afxApplicationConfig appConfig = { 0 };
+        appConfig.argc = argc;
+        appConfig.argv = argv;
+        appConfig.dctx = dctx;
+        appConfig.proc = MmplayerThrProc;
+        AfxAcquireApplications(1, &TheApp, &appConfig);
+        AfxAssertObjects(1, &TheApp, AFX_FCC_APP);
         AfxRunApplication(TheApp);
 
-        while (AFX_OPCODE_CONTINUE == AfxDoSystemThreading(0));
+        while (AfxSystemIsOperating())
+            AfxDoSystemThreading(0);
 
         AfxReleaseApplications(1, &TheApp);
         
-        AfxReleaseObject(&dctx->obj);
+        AfxReleaseDrawContexts(1, &dctx);
 
-        AfxShutdownDrawSystem();
-        AfxShutdownSystem();
+        AfxAbolishDrawSystem();
+        AfxShutdownBasicIoSystem(0);
     }
     Sleep(3000);
     return 0;

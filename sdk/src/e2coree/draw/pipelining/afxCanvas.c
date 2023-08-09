@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -34,9 +34,9 @@ _AFXINL void AfxCanvasBlueprintSetExtent(afxCanvasBlueprint *blueprint, afxWhd c
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
     AfxAssert(extent);
-    blueprint->extent[0] = AfxMax(extent[0], 1);
-    blueprint->extent[1] = AfxMax(extent[1], 1);
-    blueprint->extent[2] = AfxMax(extent[2], 1);
+    blueprint->extent[0] = AfxMaxi(extent[0], 1);
+    blueprint->extent[1] = AfxMaxi(extent[1], 1);
+    blueprint->extent[2] = AfxMaxi(extent[2], 1);
 }
 
 _AFXINL void AfxCanvasBlueprintSetDepth(afxCanvasBlueprint *blueprint, afxPixelFormat depth, afxPixelFormat stencil)
@@ -269,14 +269,14 @@ _AFX void AfxGetCanvasContext(afxCanvas canv, afxDrawContext *dctx)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(canv, AFX_FCC_CANV);
     afxDrawContext dctx2 = AfxObjectGetProvider(&canv->obj);
-    AfxAssertObject(dctx2, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx2, AFX_FCC_DCTX);
     *dctx = dctx2;
 }
 
 _AFX afxError AfxBuildCanvases(afxCanvasBlueprint const *blueprint, afxNat cnt, afxCanvas canv[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(blueprint->dctx, AFX_FCC_DCTX);
+    //AfxAssertObject(blueprint->dctx, AFX_FCC_DCTX);
     AfxAssert(cnt);
     AfxAssert(blueprint);
     AfxAssert(canv);
@@ -284,7 +284,7 @@ _AFX afxError AfxBuildCanvases(afxCanvasBlueprint const *blueprint, afxNat cnt, 
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (AfxClassAcquireObjects(AfxGetCanvasClass(blueprint->dctx), NIL, 1, blueprint, (afxObject**)&canv[i], AfxSpawnHint())) AfxThrowError();
+        if (AfxClassAcquireObjects(AfxGetCanvasClass(blueprint->dctx), NIL, 1, blueprint, (afxInstance**)&canv[i], AfxSpawnHint())) AfxThrowError();
         else
         {
             AfxAssertObject(canv[i], AFX_FCC_CANV);
@@ -293,7 +293,7 @@ _AFX afxError AfxBuildCanvases(afxCanvasBlueprint const *blueprint, afxNat cnt, 
     return err;
 };
 
-_AFX afxBool _AfxCanvEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxCanvEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxCanvas canv = (void*)obj;
@@ -302,7 +302,7 @@ _AFX afxBool _AfxCanvEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxCanvEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxCanvEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxCanvas canv = (void*)obj;
@@ -341,7 +341,7 @@ _AFX afxBool _AfxCanvEventFilter(afxObject *obj, afxObject *watched, afxEvent *e
     case AFX_EVENT_DOUT_EXTENT:
     {
         afxDrawOutput dout = (void*)watched;
-        AfxAssertObject(dout, AFX_FCC_DOUT);
+        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
         afxWhd extent;
         AfxGetDrawOutputExtent(dout, extent);
         AfxReadjustCanvas(canv, extent);
@@ -354,7 +354,7 @@ _AFX afxBool _AfxCanvEventFilter(afxObject *obj, afxObject *watched, afxEvent *e
         if (canv->udd[0] == watched && canv->udd[1] == ev->udd[0])
         {
             afxDrawOutput dout = (void*)watched;
-            AfxAssertObject(dout, AFX_FCC_DOUT);
+            AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
             afxSurface surf;
 
             if (AfxGetAnnexedSurface(canv, idx, &surf))
@@ -387,9 +387,17 @@ _AFX afxError _AfxCanvDtor(afxCanvas canv)
     AfxAssertObject(canv, AFX_FCC_CANV);
 
     afxDrawContext dctx = AfxObjectGetProvider(&canv->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     _AfxCanvFreeAllSurfaces(canv);
 
@@ -410,9 +418,17 @@ _AFX afxError _AfxCanvCtor(void *cache, afxNat idx, afxCanvas canv, afxCanvasBlu
     (void)cache;
     AfxAssertObject(canv, AFX_FCC_CANV);
     afxDrawContext dctx = AfxObjectGetProvider(&canv->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
     afxCanvasBlueprint const *blueprint = &blueprints[idx];
 
     canv->udd[0] = blueprint->udd[0];
@@ -436,9 +452,9 @@ _AFX afxError _AfxCanvCtor(void *cache, afxNat idx, afxCanvas canv, afxCanvasBlu
 
                 AfxGetTextureExtent(&surf->tex, 0, whd);
 
-                canv->whd[0] = AfxMin(canv->whd[0], whd[0]);
-                canv->whd[1] = AfxMin(canv->whd[1], whd[1]);
-                canv->whd[2] = AfxMin(canv->whd[2], whd[2]);
+                canv->whd[0] = AfxMini(canv->whd[0], whd[0]);
+                canv->whd[1] = AfxMini(canv->whd[1], whd[1]);
+                canv->whd[2] = AfxMini(canv->whd[2], whd[2]);
             }
         }
 
@@ -450,9 +466,9 @@ _AFX afxError _AfxCanvCtor(void *cache, afxNat idx, afxCanvas canv, afxCanvasBlu
 
                 AfxGetTextureExtent(&surf->tex, 0, whd);
 
-                canv->whd[0] = AfxMin(canv->whd[0], whd[0]);
-                canv->whd[1] = AfxMin(canv->whd[1], whd[1]);
-                canv->whd[2] = AfxMin(canv->whd[2], whd[2]);
+                canv->whd[0] = AfxMini(canv->whd[0], whd[0]);
+                canv->whd[1] = AfxMini(canv->whd[1], whd[1]);
+                canv->whd[2] = AfxMini(canv->whd[2], whd[2]);
             }
         }
     }
@@ -616,7 +632,7 @@ _AFX afxError _AfxCanvCtor(void *cache, afxNat idx, afxCanvas canv, afxCanvasBlu
                     canv->vmt = NIL;
                     canv->idd = NIL;
 
-                    if (dctx->vmt->canv && dctx->vmt->canv(canv)) AfxThrowError();
+                    if (dctxD->vmt->canv && dctxD->vmt->canv(canv)) AfxThrowError();
                     else
                     {
                         AfxAssert(canv->vmt);

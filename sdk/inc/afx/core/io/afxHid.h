@@ -7,33 +7,32 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_HID_H
 #define AFX_HID_H
 
-#include "afx/core/afxObject.h"
+#include "afx/core/afxInstance.h"
 
 typedef enum afxHidFlag
 {
     AFX_HID_FLAG_DUMMY
 } afxHidFlag;
 
-AFX_OBJECT(afxHid)
+AFX_DEFINE_STRUCT(afxHid)
 {
-    afxObject   obj;
-#ifdef _AFX_HID_C
-    afxHidFlag  flags;
+    _AFX_DBG_FCC
+    afxObject   hidObj;
     afxNat      port;
-#endif
+    afxHidFlag  flags;
 };
 
-AFX afxNat      AfxGetHidPort(afxHid hid);
-AFX afxResult   AfxTestHidFlags(afxHid hid, afxHidFlag flags);
+AFX afxNat      AfxGetHidPort(afxHid* hid);
+AFX afxResult   AfxTestHidFlags(afxHid* hid, afxHidFlag flags);
 
 #endif//AFX_HID_H

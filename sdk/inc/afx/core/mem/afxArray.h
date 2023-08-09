@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,7 +19,7 @@
 
 #include "afx/core/diag/afxDebug.h"
 #include "afx/core/afxFcc.h"
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 
 // The elements are stored contiguously, which means that elements can be accessed not only through iterators, but also using offsets to regular pointers to elements.
 // This means that a pointer to an element of a vector may be passed to any function that expects a pointer to an element of an array.
@@ -49,10 +49,10 @@ AFX_DEFINE_STRUCT(afxArray)
         afxByte*        bytemap;
         void*           data;
     };
-    afxMemory           mem;
+    afxContext           mem;
 };
 
-AFX void        AfxAcquireArray(afxMemory mem, afxArray *arr, afxNat unitSiz, afxNat cap, afxHint const hint);
+AFX void        AfxAcquireArray(afxArray *arr, afxNat unitSiz, afxNat cap, afxHint const hint);
 AFX void        AfxReleaseArray(afxArray *arr);
 
 AFX void*       AfxGetArrayUnit(afxArray const *arr, afxNat idx);
@@ -61,6 +61,7 @@ AFX afxError    AfxInsertArrayUnits(afxArray *arr, afxNat cnt, afxNat *firstIdx,
 AFX void        AfxPopArrayUnits(afxArray *arr, afxNat cnt);
 
 AFX void        AfxEmptyArray(afxArray *arr);
+AFX void        AfxZeroArray(afxArray *arr);
 
 AFX void        AfxSerializeArray(afxArray const *arr, void *dst);
 

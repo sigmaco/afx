@@ -35,32 +35,32 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxAssertObject(sim, AFX_FCC_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
-    afxDrawOutputSpecification doutSpec = { 0 };
-    doutSpec.endpoint = &uriMap;
-    doutSpec.whd[0] = 1280;
-    doutSpec.whd[1] = 720;
-    doutSpec.whd[2] = 1;
-    doutSpec.bufCnt = 2;
-    doutSpec.clipped = TRUE;
-    doutSpec.colorSpc = NIL;
-    doutSpec.presentAlpha = FALSE;
-    doutSpec.pixelFmt = AFX_PFD_RGBA8;
-    doutSpec.presentMode = AFX_PRESENT_MODE_LIFO;
-    doutSpec.presentTransform = NIL;
-    doutSpec.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
+    afxDrawOutputConfig doutConfig = { 0 };
+    doutConfig.endpoint = &uriMap;
+    doutConfig.whd[0] = 1280;
+    doutConfig.whd[1] = 720;
+    doutConfig.whd[2] = 1;
+    doutConfig.bufCnt = 2;
+    doutConfig.clipped = TRUE;
+    doutConfig.colorSpc = NIL;
+    doutConfig.presentAlpha = FALSE;
+    doutConfig.pixelFmt = AFX_PFD_RGBA8;
+    doutConfig.presentMode = AFX_PRESENT_MODE_LIFO;
+    doutConfig.presentTransform = NIL;
+    doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 
-    dout = AfxAcquireDrawOutputs(dctx, &doutSpec);
+    dout = AfxAcquireDrawOutputs(dctx, &doutConfig);
     AfxAssert(dout);
 
-    afxDrawInputSpecification dinSpec = { 0 };
-    dinSpec.prefetch = (void*)NIL;
-    dinSpec.udd[0] = NIL;
-    dinSpec.cmdPoolMemStock = 4096;
-    dinSpec.estimatedSubmissionCnt = 3;
-    dinSpec.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
-    dinSpec.enabledStreamingThreads = (afxNat[]) { 1, 1, 1, 1 };
-    dinSpec.enabledSubmissionThreads = (afxNat[]) { 1, 1, 1, 1 };
-    din = AfxAcquireDrawInputs(dctx, &dinSpec);
+    afxDrawInputConfig dinConfig = { 0 };
+    dinConfig.prefetch = (void*)NIL;
+    dinConfig.udd[0] = NIL;
+    dinConfig.cmdPoolMemStock = 4096;
+    dinConfig.estimatedSubmissionCnt = 3;
+    dinConfig.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
+    dinConfig.enabledStreamingThreads = (afxNat[]) { 1, 1, 1, 1 };
+    dinConfig.enabledSubmissionThreads = (afxNat[]) { 1, 1, 1, 1 };
+    din = AfxAcquireDrawInputs(dctx, &dinConfig);
     AfxAssert(din);
     //AfxEnableDrawInputPrefetching(din, 0, 1, (afxNat[]) { 1 });
 
@@ -71,7 +71,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
 {
     AfxEntry("app=%p", app);
-    AfxReleaseObject(&din->obj);
+    AfxReleaseObject(&dinD->obj);
     AfxEcho("aaaaaaaaaaaa");
 
     return AFX_SUCCESS;
@@ -94,26 +94,26 @@ int main(int argc, char const* argv[])
     afxBool reboot = 1;
     while (reboot)
     {
-        sys = AfxBootUpSystem(NIL);
+        sys = AfxBootUpBasicIoSystem(NIL);
 
         afxDrawSystemSpecification dsysSpec = { 0 };
-        dsys = AfxBootUpDrawSystem(&dsysSpec);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        dsys = AfxEstablishDrawSystem(&dsysSpec);
+        AfxAssertType(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec = { 0 };
-        dctxSpec.queueCnt = 1;
+        afxDrawContextConfig dctxConfig = { 0 };
+        dctxConfig.queueCnt = 1;
 
-        dctx = AfxAcquireDrawContexts(&dctxSpec);
+        dctx = AfxAcquireDrawContexts(&dctxConfig);
         AfxAssert(dctx);
 
-        afxApplicationSpecification appSpec;
-        appSpec.argc = argc;
-        appSpec.argv = argv;
-        appSpec.dctx = dctx;
-        appSpec.enter = AfxEnterApplication;
-        appSpec.exit = AfxLeaveApplication;
-        appSpec.update = AfxUpdateApplication;
-        TheApp = AfxAcquireApplication(&appSpec);
+        afxApplicationConfig appConfig;
+        appConfig.argc = argc;
+        appConfig.argv = argv;
+        appConfig.dctx = dctx;
+        appConfig.enter = AfxEnterApplication;
+        appConfig.exit = AfxLeaveApplication;
+        appConfig.update = AfxUpdateApplication;
+        TheApp = AfxAcquireApplication(&appConfig);
         AfxAssertObject(TheApp, AFX_FCC_APP);
 
         if (AFX_OPCODE_BREAK == AfxRunApplication(TheApp))
@@ -121,10 +121,10 @@ int main(int argc, char const* argv[])
 
         AfxReleaseObject(&TheApp->obj);
 
-        AfxReleaseObject(&dctx->obj);
+        AfxReleaseObject(&dctxD->obj);
 
-        AfxShutdownDrawSystem();
-        AfxShutdownSystem();
+        AfxAbolishDrawSystem();
+        AfxShutdownBasicIoSystem();
     }
     Sleep(3000);
     return 0;

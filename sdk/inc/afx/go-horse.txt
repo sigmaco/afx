@@ -23,8 +23,8 @@ Draw system poderia arranjar implementation-dependent draw contexts e dispô-los 
 
 Eventos de objetos-filho deveriam ser enviados ao parente apenas.
 
-Criar um objeto 'afxObject*' segurando um ponteiro para um afxObject. Referências poderiam ser movidas para o afxObject*, talvez.
-O afxObject* seria um conector de afxObject's tal como um binding. Venceria uma limitação de afxLinkage.
+Criar um objeto 'afxInstance*' segurando um ponteiro para um afxInstance. Referências poderiam ser movidas para o afxInstance*, talvez.
+O afxInstance* seria um conector de afxInstance's tal como um binding. Venceria uma limitação de afxLinkage.
 
 // CONVENÇÃO DE NOMENCLATURAS
 

@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -37,7 +37,7 @@
 #if _AFX_CLASSIFIED_VBUF
 #define AFX_DEFINE_HANDLE2(object) typedef struct object##_T* object;
 #else
-#define AFX_DEFINE_HANDLE2(object) typedef afxObject* object;
+#define AFX_DEFINE_HANDLE2(object) typedef afxInstance* object;
 #endif
 #define AFX_OBJECT2(handle_) struct handle_##_T
 #endif
@@ -56,15 +56,18 @@
 #define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 #ifdef _WIN64
-#   define AFX_ARCH_AMD64
-#   define AFX_HOST_W64
-#   define _AFX_USE_ALT_DIR_PATH
+#   define AFX_PLATFORM_X64
+#   define AFX_PLATFORM_WIN32
 #elif _WIN32
-#   define AFX_ARCH_IA32
-#   define AFX_HOST_W32
+#   define AFX_PLATFORM_X86
+#   define AFX_PLATFORM_WIN32
 #else
 #   error ""
 #endif//_WIN64
+
+#if !defined(AFX_ENDIANNESS_LITTLE) && !defined(AFX_ENDIANNESS_BIG)
+#   define AFX_ENDIANNESS_LITTLE
+#endif
 
 #define _AfxStr(X) #X
 #define AfxStr(X) _AfxStr(X)
@@ -169,10 +172,14 @@ typedef afxNat32    afxFlags;
 AFX afxNat AfxFlagsFindLsb(afxFlags mask);
 AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 
-#define AFX_FLAG_MIN ((afxNat)1 << (afxNat)0)
-#define AFX_FLAG_MAX ((afxNat)1 << (afxNat)31)
-#define AFX_FLAG(bit) ((afxNat)1 << (afxNat)(bit))
+#define AFX_FLAG_MIN ((afxNat32)1 << (afxNat32)0)
+#define AFX_FLAG_MAX ((afxNat32)1 << (afxNat32)31)
+#define AFX_FLAG(bit_) ((afxNat32)1 << (afxNat32)(bit_))
 #define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
+
+
+#define AfxTestBitPosition(var_,bit_) ((var_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
+#define AfxTestBitEnabled(var_,bit_) (((var_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
 
 #define AfxFlagsTest(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
 #define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
@@ -181,18 +188,14 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 
 #define AFX_INVALID_INDEX (afxNat)(~((afxNat)0))
 
-#define AfxContainerOf(link_, type_, entry_) ((type_ *)(((afxByte *)(link_)) - offsetof(type_, entry_)))
+#define AFX_REBASE(link_, type_, entry_) ((type_ *)(((afxByte *)(link_)) - offsetof(type_, entry_)))
 
 #define AfxAbs(x_) ((0 > ((afxReal)x_)) ? -((afxReal)x_) : ((afxReal)x_))
 
-AFXINL afxInt    AfxMini(afxInt a, afxInt b);
-AFXINL afxInt    AfxMaxi(afxInt a, afxInt b);
+#define AfxMini(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
+#define AfxMaxi(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
 
-AFXINL afxReal      AfxMiniReal(afxReal a, afxReal b);
-AFXINL afxReal      AfxMaxiReal(afxReal a, afxReal b);
-
-#define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
-#define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
+#define AfxElse(a_,b_) (((a_) ? (a_) : (b_))
 
 #define AfxAtLeast(var_,min_) 
 
@@ -277,25 +280,107 @@ typedef enum afxCriterion
 }
 afxCriterion;
 
+typedef enum afxProfileFlag
+{
+    afxProfileFlag_ROBUSTNESS   = AFX_FLAG(0),
+    afxProfileFlag_PERFORMANCE  = AFX_FLAG(1),
+    afxProfileFlag_QUALITY      = AFX_FLAG(2),
+} afxProfileFlag;
+
 // Object handles defined by Core Execution System
 
-AFX_DEFINE_HANDLE(afxSystem);
-AFX_DEFINE_HANDLE(afxIoSystem);
-AFX_DEFINE_HANDLE(afxThread);
-AFX_DEFINE_HANDLE(afxMemory);
+typedef afxSize afxObject;
+
+//AFX_DEFINE_HANDLE(afxSystem);
+typedef afxObject afxSystem;
+//AFX_DEFINE_HANDLE(afxIoSystem);
+//AFX_DEFINE_HANDLE(afxThread);
+typedef afxObject afxThread;
+//AFX_DEFINE_HANDLE(afxContext);
+typedef afxObject afxContext;
 AFX_DEFINE_HANDLE(afxDatabase);
-AFX_DEFINE_HANDLE(afxModule);
+//AFX_DEFINE_HANDLE(afxModule);
+typedef afxObject afxModule;
 AFX_DEFINE_HANDLE(afxUrd);
-AFX_DEFINE_HANDLE(afxArchive);
-AFX_DEFINE_HANDLE(afxFile);
-AFX_DEFINE_HANDLE(afxApplication);
-AFX_DEFINE_HANDLE(afxIoSystem);
-AFX_DEFINE_HANDLE(afxHid);
-AFX_DEFINE_HANDLE(afxKeyboard);
-AFX_DEFINE_HANDLE(afxMouse);
+//AFX_DEFINE_HANDLE(afxArchive);
+typedef afxObject afxArchive;
+//AFX_DEFINE_HANDLE(afxFile);
+typedef afxObject afxFile;
+//AFX_DEFINE_HANDLE(afxApplication);
+typedef afxObject afxApplication;
+//AFX_DEFINE_HANDLE(afxIoSystem);
+//AFX_DEFINE_HANDLE(afxHid);
+//AFX_DEFINE_HANDLE(afxKeyboard);
+typedef afxObject afxKeyboard;
+//AFX_DEFINE_HANDLE(afxMouse);
+typedef afxObject afxMouse;
 AFX_DEFINE_HANDLE(afxResource);
 
+struct _afxSysD;
 
 AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len);
+
+
+#define AFX_FUNC( _type, _name ) _type AKSOUNDENGINE_CALL _name // Declare a function
+#define AFX_EXTERN_FUNC( _type, _name ) extern _type  _name // // Declare an extern function
+#define AFX_EXTERN_API_FUNC( _type, _name ) extern _AFXIMPORT _type  _name // Declare an extern function that is exported/imported
+#define AFX_CALLBACK( _type, _name ) typedef _type (*_name ) // Declare a callback function type
+
+
+typedef afxNat afxGameObjectID;
+
+AFX_DEFINE_STRUCT(afxCallbackInfo) // Callback information structure used as base for all notifications handled by \ref AkCallbackFunc.
+{
+    void *          pCookie;        ///< User data, passed to PostEvent()
+    afxGameObjectID  gameObjID;      ///< Game object ID
+};
+
+AFX_CALLBACK(void, afxCallbackFunc) // Function called on completion of an event, or when a marker is reached.
+(
+    int in_eType,                            ///< Callback type.
+    afxCallbackInfo* in_pCallbackInfo                    ///< Structure containing desired information. You can cast it to the proper sub-type, depending on the callback type.
+);
+
+#ifndef AFX_ASSERT_HOOK // Function called on assert handling, optional
+
+AFX_CALLBACK(void, afxAssertHook)(const char * in_pszExpression, const char * in_pszFileName, int in_lineNumber);
+#define AFX_ASSERT_HOOK
+#endif
+
+typedef afxNat afxJobType;
+#define AFX_NUM_JOB_TYPES 1
+
+// Function that the host runtime must call to allow for jobs to execute.
+// in_jobType is the type originally provided by JobMgrSettings::FuncRequestJobWorker.
+// in_uExecutionTimeUsec is the number of microseconds that the function should execute for before terminating.
+// Note that the deadline is only checked after each individual job completes execution, so the function may run slightly
+// longer than intended. The "in_uExecutionTimeUsec" should be considered a suggestion or guideline, not a strict rule.
+// A value of 0 means that the function will run until there are no more jobs ready to be immediately executed.
+
+AFX_CALLBACK(void, afxJobWorkerFunc)(afxJobType in_jobType, afxNat32 in_uExecutionTimeUsec);
+
+/// Settings for the Sound Engine's internal job manager
+
+AFX_CALLBACK(void, FuncRequestJobWorker)(
+afxJobWorkerFunc in_fnJobWorker, ///< Function passed to host runtime that should be executed. Note that the function provided will exist for as long as the soundengine code is loaded, and will always be the same.
+afxJobType in_jobType,           ///< The type of job worker that has been requested. This should be passed forward to in_fnJobWorker
+afxNat32 in_uNumWorkers,        ///< Number of workers requested
+void * in_pClientData           ///< Data provided by client in AkJobMgrSettings
+);
+
+AFX_DEFINE_STRUCT(afxJobMgrSettings)
+{ // Callback function prototype definition used for handling requests from JobMgr for new workers to perform work.
+
+FuncRequestJobWorker fnRequestJobWorker; ///< Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls RenderAudio().
+afxNat32 uMaxActiveWorkers[AFX_NUM_JOB_TYPES]; ///< The maximum number of concurrent workers that will be requested. Must be >= 1 for each jobType.
+afxNat32 uNumMemorySlabs; ///< Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
+afxNat32 uMemorySlabSize; ///< Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
+    void* pClientData; ///< Arbitrary data that will be passed back to the client when calling FuncRequestJobWorker
+};
+
+typedef afxNat afxPluginID;
+typedef afxNat afxPlayingID;
+typedef afxNat afxUniqueID;
+
 
 #endif//AFX_CORE_DEFS_H

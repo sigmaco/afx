@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -520,9 +520,9 @@ SGL afxLego _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxLego
 
 SGL afxError _SglRegisterDoutEndpoints(afxDrawDriver ddrv);
 
-SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextSpecification const *spec);
-SGL afxError _SglDdrvVmtDoutCb(afxDrawOutput dout, afxUri const* endpoint, afxDrawOutputSpecification const *spec);
-SGL afxError _SglDdrvVmtDinCb(afxDrawInput din, afxUri const* endpoint, afxDrawInputSpecification const *spec);
+SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextConfig const *spec);
+SGL afxError _SglDdrvVmtDoutCb(afxDrawOutput dout, afxUri const* endpoint, afxDrawOutputConfig const *spec);
+SGL afxError _SglDdrvVmtDinCb(afxDrawInput din, afxUri const* endpoint, afxDrawInputConfig const *spec);
 
 SGL afxError _SglDctxVmtDscrCb(afxDrawScript dscr);
 SGL afxError _SglDdrvVmtDqueCb(afxDrawQueue dque, afxDrawQueueSpecification const *spec);

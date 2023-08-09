@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -116,16 +116,13 @@ AFX_DEFINE_STRUCT(afxDrawDriverSpecification)
 
 AFX_OBJECT(afxDrawDriver)
 {
-    afxObject                   obj;
+    afxInstance                   obj;
     _afxDdrvVmt const*          vmt;
     void*                       idd;
 #ifdef _AFX_DRAW_DRIVER_C
     afxChain                    provisions;
     afxClass                    dscrClass;
     afxClass                    dqueClass;
-    afxClass                    dctxClass;
-    afxClass                    doutClass;
-    afxClass                    dinClass;
 
     afxModule                   mdle;
 
@@ -153,23 +150,9 @@ AFX afxError                AfxAcquireDrawQueues(afxDrawDriver ddrv, afxDrawQueu
 
 AFX afxNat                  AfxEnumerateDrawScripts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawScript dscr[]);
 AFX afxNat                  AfxEnumerateDrawQueues(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawQueue dque[]);
-AFX afxNat                  AfxEnumerateDrawContexts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawContext dctx[]);
-AFX afxNat                  AfxEnumerateDrawOutputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawOutput dout[]);
-AFX afxNat                  AfxEnumerateDrawInputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawInput din[]);
-
-AFX afxNat                  AfxCurateDrawContexts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
-AFX afxNat                  AfxCurateDrawOutputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AFX afxNat                  AfxCurateDrawInputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
-
-AFX afxNat                  AfxGetDrawContextCount(afxDrawDriver ddrv);
-AFX afxNat                  AfxGetDrawOutputCount(afxDrawDriver ddrv);
-AFX afxNat                  AfxGetDrawInputCount(afxDrawDriver ddrv);
 
 AFX afxClass*               AfxGetDrawScriptClass(afxDrawDriver ddrv);
 AFX afxClass*               AfxGetDrawQueueClass(afxDrawDriver ddrv);
-AFX afxClass*               AfxGetDrawContextClass(afxDrawDriver ddrv);
-AFX afxClass*               AfxGetDrawOutputClass(afxDrawDriver ddrv);
-AFX afxClass*               AfxGetDrawInputClass(afxDrawDriver ddrv);
 
 AFX afxBool                 AfxDrawDriverIsRunning(afxDrawDriver ddrv);
 

@@ -8,7 +8,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
@@ -70,7 +70,7 @@ typedef enum afxBodyControlFlags
 
 AFX_OBJECT(afxBodyControl)
 {
-    afxObject   obj;
+    afxInstance   obj;
     afxChain puppets;
     afxNat flags;
     afxReal currentClock;

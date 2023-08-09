@@ -1,6 +1,18 @@
-////////////////////////////////////////////////////////////////////////////////
-//                     The Standard QWADRO Implementation                     //
-////////////////////////////////////////////////////////////////////////////////
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
+ *                                    www.sigmaco.org
+ */
 
 #ifndef AFX_SOUND_INPUT_H
 #define AFX_SOUND_INPUT_H
@@ -8,22 +20,5 @@
 #include "afxSoundDefs.h"
 
 AFX_DEFINE_HANDLE(afxSoundInput);
-AFX_DECLARE_STRUCT(afxSoundInputImplementation);
-AFX_DECLARE_STRUCT(afxSoundInputImplementationData);
-
-struct afxSoundInputImplementation
-{
-    afxFcc          fcc;
-    afxChar const   *name;
-    afxResult       (*dtor)(afxSoundInput);
-};
-
-AFX_OBJECT(afxSoundInput)
-{
-    afxObject                           obj;
-    afxSoundInputImplementation const   *impl;
-    afxSoundInputImplementationData     *data; // implementation-defined data
-    
-};
 
 #endif//AFX_SOUND_INPUT_H

@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,7 +19,7 @@
 #include "afx/draw/res/afxSampler.h"
 #include "../_classified/afxDrawClassified.h"
 
-_AFX void AfxSamplerDescribe(afxSampler samp, afxSamplerSpecification *spec)
+_AFX void AfxSamplerDescribe(afxSampler samp, afxSamplerConfig *spec)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(samp, AFX_FCC_SAMP);
@@ -43,11 +43,19 @@ _AFX afxDrawContext AfxGetSamplerContext(afxSampler samp)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(samp, AFX_FCC_SAMP);
     afxDrawContext dctx = AfxObjectGetProvider(&samp->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     return dctx;
 }
 
-_AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerSpecification const spec[], afxSampler samp[])
+_AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const spec[], afxSampler samp[])
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cnt=%u,spec=%p,spec=%p", cnt, spec, samp);
@@ -60,7 +68,7 @@ _AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerSpec
     AfxAssert(cnt);
     AfxAssert(samp);
 
-    if (AfxClassAcquireObjects(AfxGetSamplerClass(dctx), NIL, cnt, spec, (afxObject**)samp, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetSamplerClass(dctx), NIL, cnt, spec, (afxInstance**)samp, AfxSpawnHint()))
         AfxThrowError();
 
     for (afxNat i = 0; i < cnt; i++)
@@ -69,7 +77,7 @@ _AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerSpec
     return err;
 }
 
-_AFX afxBool _AfxSampEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxSampEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxSampler samp = (void*)obj;
@@ -78,7 +86,7 @@ _AFX afxBool _AfxSampEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxSampEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxSampEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxSampler samp = (void*)obj;
@@ -95,7 +103,15 @@ _AFX afxError _AfxSampDtor(afxSampler samp)
     AfxAssertObject(samp, AFX_FCC_SAMP);
 
     afxDrawContext dctx = AfxObjectGetProvider(&samp->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     
     if (samp->vmt->dtor && samp->vmt->dtor(samp))
         AfxThrowError();
@@ -105,14 +121,14 @@ _AFX afxError _AfxSampDtor(afxSampler samp)
     return err;
 }
 
-_AFX afxError _AfxSampCtor(void *cache, afxNat idx, afxSampler samp, afxSamplerSpecification const *specs)
+_AFX afxError _AfxSampCtor(void *cache, afxNat idx, afxSampler samp, afxSamplerConfig const *specs)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("samp=%p", samp);
     (void)cache;
     AfxAssertObject(samp, AFX_FCC_SAMP);
 
-    afxSamplerSpecification const *spec = &specs[idx];
+    afxSamplerConfig const *spec = &specs[idx];
     AfxAssert(spec);
 
     samp->crc32 = 0;
@@ -138,7 +154,17 @@ _AFX afxError _AfxSampCtor(void *cache, afxNat idx, afxSampler samp, afxSamplerS
 
     afxDrawContext dctx = AfxGetSamplerContext(samp);
 
-    if (dctx->vmt->samp && dctx->vmt->samp(samp)) AfxThrowError();
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    if (dctxD->vmt->samp && dctxD->vmt->samp(samp)) AfxThrowError();
     else
     {
         AfxAssert(samp->vmt);

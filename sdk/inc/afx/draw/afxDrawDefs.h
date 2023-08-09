@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -25,14 +25,19 @@
 
 // Object handles defined by SIGMA Future Draw Systems
 
-AFX_DEFINE_HANDLE(afxDrawSystem);
+//AFX_DEFINE_HANDLE(afxDrawSystem);
+typedef afxObject afxDrawSystem;
 AFX_DEFINE_HANDLE(afxDrawDriver);
-AFX_DEFINE_HANDLE(afxDrawThread);
-AFX_DEFINE_HANDLE(afxDrawContext);
+//AFX_DEFINE_HANDLE(afxDrawThread);
+typedef afxObject afxDrawThread;
+//AFX_DEFINE_HANDLE(afxDrawContext);
+typedef afxObject afxDrawContext;
 AFX_DEFINE_HANDLE(afxDrawQueue);
-AFX_DEFINE_HANDLE(afxDrawInput);
+//AFX_DEFINE_HANDLE(afxDrawInput);
+typedef afxObject afxDrawInput;
 AFX_DEFINE_HANDLE(afxDrawScript);
-AFX_DEFINE_HANDLE(afxDrawOutput);
+//AFX_DEFINE_HANDLE(afxDrawOutput);
+typedef afxObject afxDrawOutput;
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxPipeline);

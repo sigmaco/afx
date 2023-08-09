@@ -90,17 +90,11 @@
     <ClInclude Include="..\..\inc\afx\core\io\afxDatajack.h">
       <Filter>e2coree\core\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxHid.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\io\afxKeyboard.h">
       <Filter>e2coree\core\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\io\afxMouse.h">
       <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxMemory.h">
-      <Filter>e2coree\core\mem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\mem\afxQueue.h">
       <Filter>e2coree\core\mem</Filter>
@@ -270,12 +264,6 @@
     <ClInclude Include="..\..\inc\afx\core\afxIterator.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\afxLinkedList.h">
-      <Filter>e2coree\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\afxObject.h">
-      <Filter>e2coree\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\afxRawString.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
@@ -375,9 +363,6 @@
     <ClInclude Include="..\..\inc\afx\core\diag\afxVersion.h">
       <Filter>e2coree\core\diag</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxIoSystem.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\res\afxTextureBlueprint.h">
       <Filter>e2coree\draw\res</Filter>
     </ClInclude>
@@ -416,6 +401,30 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\async\afxSlock.h">
       <Filter>e2coree\core\async</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxInstance.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\mem\afxBitmap.h">
+      <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\mem\afxMap.h">
+      <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\mem\afxPool.h">
+      <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxChain.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\io\afxHid.h">
+      <Filter>e2coree\core\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\mem\afxContext.h">
+      <Filter>e2coree\core\mem</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\mem\afxResidency.h">
+      <Filter>e2coree\core\mem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -516,9 +525,6 @@
     <ClCompile Include="..\..\src\e2coree\core\mem\afxDatabase.c">
       <Filter>e2coree\core\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxMemory.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\mem\afxQueue.c">
       <Filter>e2coree\core\mem</Filter>
     </ClCompile>
@@ -529,9 +535,6 @@
       <Filter>e2coree\core\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\io\afxDatajack.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxHid.c">
       <Filter>e2coree\core\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\io\afxKeyboard.c">
@@ -577,12 +580,6 @@
       <Filter>e2coree\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxCoreDefs.c">
-      <Filter>e2coree\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\afxLinkedList.c">
-      <Filter>e2coree\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\afxObject.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxRawString.c">
@@ -702,9 +699,6 @@
     <ClCompile Include="..\..\src\e2coree\core\diag\afxVersion.c">
       <Filter>e2coree\core\diag</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxIoSystem.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\res\afxSampler.c">
       <Filter>e2coree\draw\res</Filter>
     </ClCompile>
@@ -728,6 +722,30 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\async\afxSlock.c">
       <Filter>e2coree\core\async</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxInstance.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxBitmap.c">
+      <Filter>e2coree\core\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxMap.c">
+      <Filter>e2coree\core\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxPool.c">
+      <Filter>e2coree\core\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxChain.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\io\afxHid.c">
+      <Filter>e2coree\core\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxContext.c">
+      <Filter>e2coree\core\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\mem\afxResidency.c">
+      <Filter>e2coree\core\mem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

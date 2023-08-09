@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -379,7 +379,7 @@ _AFX afxError AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBu
             &blueprint[i]
         };
 
-        if (AfxClassAcquireObjects(AfxGetVertexBufferClass(dctx), NIL, 1, &args, (afxObject**)&vbuf[i], AfxSpawnHint()))
+        if (AfxClassAcquireObjects(AfxGetVertexBufferClass(dctx), NIL, 1, &args, (afxInstance**)&vbuf[i], AfxSpawnHint()))
         {
             AfxThrowError();
 
@@ -398,7 +398,7 @@ _AFX afxError AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBu
     return err;
 }
 
-_AFX afxBool _AfxVbufEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxVbufEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxVertexBuffer vbuf = (void*)obj;
@@ -407,7 +407,7 @@ _AFX afxBool _AfxVbufEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxVbufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxVbufEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxVertexBuffer vbuf = (void*)obj;
@@ -425,8 +425,8 @@ _AFX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
 
     AfxAssert(vbuf->row);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     for (afxNat i = 0; i < vbuf->rowCnt; i++)
     {
@@ -456,9 +456,19 @@ _AFX afxError _AfxVbufCtor(void *cache, afxNat idx, afxVertexBuffer vbuf, _afxVb
     //vbuf->rowCnt = spec->rowCnt;
 
     afxDrawContext dctx = AfxObjectGetProvider(&vbuf->buf.obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     if (!(vbuf->row = AfxAllocate(mem, blueprint->rowCnt * sizeof(vbuf->row[0]), 0, AfxSpawnHint()))) AfxThrowError();
     else

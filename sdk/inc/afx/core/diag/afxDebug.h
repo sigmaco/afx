@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -86,9 +86,11 @@ AFXINL afxChar* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssertSoft(cond_)         ((!!((cond_)))||(AfxThrowError(),AfxLogAdvertence(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertDiff(a_,b_)         ((!!(((void*)(a_) != (void*)(b_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
 #   define AfxAssertDiffSoft(a_,b_)         ((!!(((void*)(a_) != (void*)(b_))))||(AfxThrowError(),AfxLogAdvertence(AfxSpawnHint(),"%s\n    %s",AfxStr((cond_)),errorMsg[AFXERR_INVALID]),0))
-#   define AfxAssertType(var_, fcc_)    ((!!((var_) && ((var_)->fcc == (fcc_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
-#   define AfxTryAssertType(var_, fcc_) ((!!(!(var_) || ((var_)->fcc == (fcc_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertType(var_, fcc_)    ((!!((var_) && (*((afxFcc*)var_) == (fcc_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxTryAssertType(var_, fcc_) ((!!(!(var_) || (*((afxFcc*)var_) == (fcc_))))||(AfxThrowError(),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
+#   define AfxAssignFcc(obj_,fcc_) (obj_)->fcc = (fcc_)
+#   define AfxAssignTypeFcc(type_,fcc_) *((afxFcc*)type_) = (fcc_)
 #else
 
 #   define AfxAssert(cond_) ((void)(err))
@@ -97,6 +99,14 @@ AFXINL afxChar* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssertType(var_, fcc_) ((void)(err))
 #   define AfxTryAssertType(var_, fcc_) ((void)(err))
 
+#   define AfxAssertRange(total_, base_, range_)
+#   define AfxAssertRangei(total_, base_, range_)
+#   define AfxAssertRangef(total_, base_, range_)
+
+// diferente de um range, um extent sempre há um valor mínimo. Algo não pode ter largura igual a zero e existir.
+#   define AfxAssertExtent(total_, range_)
+
+#   define AfxAssignTypeFcc(type_,fcc_)
 #endif
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_TRACE)))

@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -85,8 +85,8 @@ _SGL afxError _AfxSurfDtor(afxSurface surf)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
     afxDrawContext dctx = AfxGetTextureContext(&surf->tex);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     sglSurfIdd *idd = surf->idd;
 
@@ -115,8 +115,8 @@ _SGL afxError _AfxSurfCtor(afxSurface surf)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
     afxDrawContext dctx = AfxGetTextureContext(&surf->tex);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     surf->vmt = &_SglSurfVmt;
     sglSurfIdd *idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint());

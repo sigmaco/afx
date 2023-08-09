@@ -7,14 +7,18 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #define _AFX_DRAW_DRIVER_C
+#define _AFX_DRAW_CONTEXT_C
+#define _AFX_DRAW_OUTPUT_C
+#define _AFX_DRAW_INPUT_C
+#define _AFX_DRAW_SYSTEM_C
 #include "_classified/afxDrawClassified.h"
 #include "afx/core/afxSystem.h"
 
@@ -49,60 +53,6 @@ _AFX afxClass* AfxGetDrawQueueClass(afxDrawDriver ddrv)
     return cls;
 }
 
-_AFX afxClass* AfxGetDrawInputClass(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = &ddrv->dinClass;
-    AfxAssertClass(cls, AFX_FCC_DIN);
-    return cls;
-}
-
-_AFX afxClass* AfxGetDrawOutputClass(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = &ddrv->doutClass;
-    AfxAssertClass(cls, AFX_FCC_DOUT);
-    return cls;
-}
-
-_AFX afxClass* AfxGetDrawContextClass(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = &ddrv->dctxClass;
-    AfxAssertClass(cls, AFX_FCC_DCTX);
-    return cls;
-}
-
-_AFX afxNat AfxGetDrawContextCount(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawContextClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DCTX);
-    return AfxGetClassInstanceCount(cls);
-}
-
-_AFX afxNat AfxGetDrawOutputCount(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawOutputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DOUT);
-    return AfxGetClassInstanceCount(cls);
-}
-
-_AFX afxNat AfxGetDrawInputCount(afxDrawDriver ddrv)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawInputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DIN);
-    return AfxGetClassInstanceCount(cls);
-}
-
 _AFX afxNat AfxEnumerateDrawScripts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawScript dscr[])
 {
     afxError err = AFX_ERR_NONE;
@@ -110,7 +60,7 @@ _AFX afxNat AfxEnumerateDrawScripts(afxDrawDriver ddrv, afxNat first, afxNat cnt
     afxClass *cls = AfxGetDrawScriptClass(ddrv);
     AfxAssertClass(cls, AFX_FCC_DSCR);
     //AfxAssertRange(AfxGetClassInstanceCount(cls), first, cnt);
-    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxObject**)dscr);
+    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxInstance**)dscr);
 }
 
 _AFX afxNat AfxEnumerateDrawQueues(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawQueue dque[])
@@ -120,64 +70,74 @@ _AFX afxNat AfxEnumerateDrawQueues(afxDrawDriver ddrv, afxNat first, afxNat cnt,
     afxClass *cls = AfxGetDrawQueueClass(ddrv);
     AfxAssertClass(cls, AFX_FCC_DQUE);
     AfxAssertRange(AfxGetClassInstanceCount(cls), first, cnt);
-    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxObject**)dque);
+    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxInstance**)dque);
 }
 
-_AFX afxNat AfxEnumerateDrawInputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawInput din[])
+struct _DdrvCurateProxyCb
+{
+    afxDrawDriver ddrv;
+    union
+    {
+        afxBool(*f)(void*, void*);
+        afxBool(*fdctx)(afxDrawContext, void*);
+        afxBool(*fdout)(afxDrawOutput, void*);
+        afxBool(*fdin)(afxDrawInput, void*);
+    };
+    void *udd;
+};
+
+_AFX afxBool _AfxDdrvCurateProxyDctxCb(afxObject obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawInputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DIN);
-    //AfxAssertRange(AfxGetClassInstanceCount(cls), first, cnt);
-    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxObject**)din);
+    afxDrawContext dctx = (afxDrawContext)obj;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    struct _DdrvCurateProxyCb const *proxy = udd;
+    return dctxD->ddrv != proxy->ddrv || proxy->fdctx(dctx, proxy->udd); // don't interrupt curation;
 }
 
-_AFX afxNat AfxEnumerateDrawOutputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawOutput dout[])
+_AFX afxBool _AfxDdrvCurateProxyDoutCb(afxObject obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawOutputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DOUT);
-    //AfxAssertRange(AfxGetClassInstanceCount(cls), first, cnt);
-    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxObject**)dout);
+    afxDrawOutput dout = (afxDrawOutput)obj;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    struct _afxDoutD *doutD;
+    _AfxGetDoutD(dout, &doutD, dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    struct _DdrvCurateProxyCb const *proxy = udd;
+    return doutD->ddrv != proxy->ddrv || proxy->fdout(dout, proxy->udd); // don't interrupt curation;
 }
 
-_AFX afxNat AfxEnumerateDrawContexts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxDrawContext dctx[])
+_AFX afxBool _AfxDdrvCurateProxyDinCb(afxObject obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawContextClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DCTX);
-    //AfxAssertRange(AfxGetClassInstanceCount(cls), first, cnt);
-    return AfxEnumerateFirstClassInstances(cls, first, cnt, (afxObject**)dctx);
-}
-
-_AFX afxNat AfxCurateDrawContexts(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawContextClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DCTX);
-    return AfxCurateFirstClassInstances(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxCurateDrawOutputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawOutputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DOUT);
-    return AfxCurateFirstClassInstances(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxCurateDrawInputs(afxDrawDriver ddrv, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    afxClass *cls = AfxGetDrawInputClass(ddrv);
-    AfxAssertClass(cls, AFX_FCC_DIN);
-    return AfxCurateFirstClassInstances(cls, first, cnt, (void*)f, udd);
+    afxDrawInput din = (afxDrawInput)obj;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    struct _afxDinD *dinD;
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+    struct _DdrvCurateProxyCb const *proxy = udd;
+    return dinD->ddrv != proxy->ddrv || proxy->fdin(din, proxy->udd); // don't interrupt curation;
 }
 
 _AFX afxNat AfxGetDrawDriverPortCount(afxDrawDriver ddrv)
@@ -215,7 +175,7 @@ _AFX afxError AfxRegisterDrawDriver(afxDrawDriverSpecification const *spec, afxD
     AfxEntry("spec=%p", spec);
     afxError err = AFX_ERR_NONE;
 
-    if (AfxClassAcquireObjects(AfxGetDrawDriverClass(), NIL, 1, spec, (afxObject**)ddrv, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetDrawDriverClass(), NIL, 1, spec, (afxInstance**)ddrv, AfxSpawnHint()))
     {
         AfxThrowError();
         *ddrv = NIL;
@@ -227,7 +187,7 @@ _AFX afxError AfxRegisterDrawDriver(afxDrawDriverSpecification const *spec, afxD
     return err;
 }
 
-_AFX afxBool _AfxDdrvEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxDdrvEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawDriver ddrv = (void*)obj;
@@ -236,7 +196,7 @@ _AFX afxBool _AfxDdrvEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxDdrvEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxDdrvEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawDriver ddrv = (void*)obj;
@@ -252,7 +212,7 @@ _AFX afxError _AfxDdrvDtor(afxDrawDriver ddrv)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
 
-    //afxMemory mem = AfxGetDrawMemory();
+    //afxContext mem = AfxGetDrawMemory();
 
     _AfxDropClassChain(&ddrv->provisions);
 
@@ -261,7 +221,7 @@ _AFX afxError _AfxDdrvDtor(afxDrawDriver ddrv)
 
     AfxAssert(!ddrv->idd); // ddrv->vmt->dtor deveria dar fim nisto.
 
-    AfxReleaseObject(&ddrv->mdle->obj);
+    AfxReleaseModules(1, &ddrv->mdle);
 
     return err;
 }
@@ -275,11 +235,11 @@ _AFX afxError _AfxDdrvCtor(void *cache, afxNat idx, afxDrawDriver ddrv, afxDrawD
     afxDrawDriverSpecification const* spec = &specs[idx];
     AfxAssert(spec);
     
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
 
-    AfxAssertObject(spec->mdle, AFX_FCC_MDLE);
+    AfxAssertObjects(1, &spec->mdle, AFX_FCC_MDLE);
     ddrv->mdle = spec->mdle;
-    AfxObjectReacquire(&ddrv->mdle->obj, &ddrv->obj, NIL, NIL, NIL);
+    AfxReacquireObjects(1, &ddrv->mdle);
 
     AfxExcerptString(&ddrv->name, spec->name);
     AfxExcerptString(&ddrv->author, spec->author);
@@ -293,7 +253,7 @@ _AFX afxError _AfxDdrvCtor(void *cache, afxNat idx, afxDrawDriver ddrv, afxDrawD
     AfxAssert(spec->features);
     ddrv->features = (void*) spec->features;
 
-    ddrv->portCnt = AfxMax(1, spec->execPortCnt);
+    ddrv->portCnt = AfxMaxi(1, spec->execPortCnt);
     AfxAssert(ddrv->portCnt);
     ddrv->portCaps = AfxAllocate(mem, ddrv->portCnt * sizeof(ddrv->portCaps[0]), 0, AfxSpawnHint());
 
@@ -310,9 +270,6 @@ _AFX afxError _AfxDdrvCtor(void *cache, afxNat idx, afxDrawDriver ddrv, afxDrawD
 
     AfxMountClass(&ddrv->dscrClass, provisions, &_AfxDscrClassSpec);
     AfxMountClass(&ddrv->dqueClass, provisions, &_AfxDqueClassSpec);
-    AfxMountClass(&ddrv->dctxClass, provisions, &_AfxDctxClassSpec);
-    AfxMountClass(&ddrv->doutClass, provisions, &_AfxDoutClassSpec);
-    AfxMountClass(&ddrv->dinClass, provisions, &_AfxDinClassSpec);
 
     if (spec->ctor(ddrv, spec)) AfxThrowError();
     else
