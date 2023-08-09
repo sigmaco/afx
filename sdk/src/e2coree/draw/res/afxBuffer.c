@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -186,7 +186,15 @@ _AFX afxDrawContext AfxGetBufferContext(afxBuffer buf)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(buf, AFX_FCC_BUF);
     afxDrawContext dctx = AfxObjectGetProvider(&buf->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     return dctx;
 }
 
@@ -198,7 +206,7 @@ _AFX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecif
     AfxAssert(buf);
     //AfxEntry("dsys=%p,siz=%u,usage=%x", dsys, siz, usage);
     
-    if (AfxClassAcquireObjects(AfxGetBufferClass(dctx), NIL, cnt, spec, (afxObject**)buf, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetBufferClass(dctx), NIL, cnt, spec, (afxInstance**)buf, AfxSpawnHint()))
         AfxThrowError();
 
     for (afxNat i = 0; i < cnt; i++)
@@ -207,7 +215,7 @@ _AFX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecif
     return err;
 }
 
-_AFX afxBool _AfxBufEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxBufEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxBuffer buf = (void*)obj;
@@ -216,7 +224,7 @@ _AFX afxBool _AfxBufEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxBufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxBufEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxBuffer buf = (void*)obj;
@@ -234,8 +242,8 @@ _AFX afxError _AfxBufDtor(afxBuffer buf)
 
     if (buf->bytemap)
     {
-        afxMemory mem = AfxGetDrawMemory();
-        AfxAssertObject(mem, AFX_FCC_MEM);
+        afxContext mem = AfxGetDrawMemory();
+        AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
         AfxDeallocate(mem, buf->bytemap);
     }
@@ -257,8 +265,8 @@ _AFX afxError _AfxBufCtor(void *cache, afxNat idx, afxBuffer buf, afxBufferSpeci
     buf->siz = spec->siz;
     buf->usage = spec->usage;
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     if (!(buf->bytemap = AfxAllocate(mem, buf->siz, 0, AfxSpawnHint()))) AfxThrowError();
     else
@@ -272,7 +280,17 @@ _AFX afxError _AfxBufCtor(void *cache, afxNat idx, afxBuffer buf, afxBufferSpeci
 
         buf->idd = NIL;
 
-        if (dctx->vmt->buf && dctx->vmt->buf(buf))
+        afxDrawSystem dsys;
+        AfxGetDrawSystem(&dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        struct _afxDsysD* dsysD;
+        _AfxGetDsysD(dsys, &dsysD);
+        AfxAssertType(dsysD, AFX_FCC_DSYS);
+        struct _afxDctxD *dctxD;
+        _AfxGetDctxD(dctx, &dctxD, dsysD);
+        AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+        if (dctxD->vmt->buf && dctxD->vmt->buf(buf))
             AfxThrowError();
 
         AfxAssert(buf->vmt);

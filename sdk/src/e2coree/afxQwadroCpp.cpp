@@ -6,9 +6,9 @@ extern "C"
 }
 #endif
 
-//struct afxObject
+//struct afxInstance
 //{
     //int a;
 //};
 
-//typedef struct afxObject *afxObject;
+//typedef struct afxInstance *afxInstance;

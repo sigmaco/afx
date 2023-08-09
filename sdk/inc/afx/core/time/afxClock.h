@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,27 +19,27 @@
 
 #include "afx/core/afxCoreDefs.h"
 
-AFX_DEFINE_STRUCT(afxSystemClock)
+AFX_DEFINE_STRUCT(afxClock)
 {
     afxNat32 data[4];
 };
 
-AFX void        AfxGetSystemSeconds(afxSystemClock *clock);
-AFX afxReal64   AfxGetSecondsElapsed(afxSystemClock const *start, afxSystemClock const *end);
+AFX void        AfxGetClock(afxClock *clock);
+AFX afxReal64   AfxGetSecondsElapsed(afxClock const *start, afxClock const *end);
 
 /// Qwadro acessa ao relógio em tempo real do sistema para fins cronométricos internos. 
 /// Conforme esperado que você a desejar solicitar esse relógio, Qwadro expõe as funções que ele usa. 
 /// Aqui está um exemplo de como eles podem ser usados para cronometrar as iterações de um loop.
 
 /*
-    afxSystemClock lastClock, currentClock;
+    afxClock lastClock, currentClock;
 
-    AfxGetSystemSeconds(&lastClock);
+    AfxGetClock(&lastClock);
 
     while(1)
     {
         // Find out how many seconds have elapsed for the previous iteration of the loop
-        AfxGetSystemSeconds(&currentClock);
+        AfxGetClock(&currentClock);
         afxReal SecondsElapsed = AfxGetSecondsElapsed(&lastClock, &currentClock);
         lastClock = currentClock;
 

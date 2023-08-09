@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -34,11 +34,25 @@
 _SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    afxDrawThread dthr = udd;
-    AfxAssertObject(dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+    struct _afxDinD *dinD;
+    _AfxGetDinD(din, &dinD,dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+    afxDrawThread dthr = (afxDrawThread)udd;
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD, dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
     
-    if (din->vmt->proc(din, dthr))
+    if (dinD->vmt->proc(din, dthr))
         AfxThrowError();
 
     return FALSE; // don't interrupt curation;
@@ -47,11 +61,26 @@ _SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 _SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    afxDrawThread dthr = udd;
-    AfxAssertObject(dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
 
-    if (dout->vmt->proc(dout, dthr))
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+    afxDrawThread dthr = (afxDrawThread)udd;
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD,dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
+
+    struct _afxDoutD *doutD;
+    _AfxGetDoutD(dout, &doutD,dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+
+    if (doutD->vmt->proc(dout, dthr))
         AfxThrowError();
 
     return FALSE; // don't interrupt curation;
@@ -60,29 +89,43 @@ _SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 _SGL afxError _AfxDctxVmtProcCb(afxDrawContext dctx, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertObject(dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
 
-    afxNat unitIdx = dthr->portIdx;
-    AfxAssertRange(dctx->cachedPortCnt, unitIdx, 1);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
 
-    AfxCurateConnectedDrawInputs(dctx, 0, AfxGetConnectedDrawInputCount(dctx), _SglProcessInputCb, dthr);
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD,dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
 
-    for (afxNat i = 0; i < dctx->ports[unitIdx].queueCnt; i++)
+    afxNat unitIdx = dthrD->portIdx;
+    AfxAssertRange(dctxD->cachedPortCnt, unitIdx, 1);
+
+    AfxCurateConnectedDrawInputs(dctx, 0, AfxGetConnectedDrawInputCount(dctx), _SglProcessInputCb, (void*)dthr);
+
+    for (afxNat i = 0; i < dctxD->ports[unitIdx].queueCnt; i++)
     {
-        afxDrawQueue dque = dctx->ports[unitIdx].queues[i];
+        afxDrawQueue dque = dctxD->ports[unitIdx].queues[i];
         AfxAssertObject(dque, AFX_FCC_DQUE);
 
-        dthr->dque = dque;
-        dthr->queueIdx = i;
+        dthrD->dque = dque;
+        dthrD->queueIdx = i;
 
         if (dque->vmt->proc(dque, dthr))
             AfxThrowError();
 
-        dthr->dque = NIL;
+        dthrD->dque = NIL;
     }
 
-    AfxCurateConnectedDrawOutputs(dctx, 0, AfxGetConnectedDrawOutputCount(dctx), _SglProcessOutputCb, dthr);
+    AfxCurateConnectedDrawOutputs(dctx, 0, AfxGetConnectedDrawOutputCount(dctx), _SglProcessOutputCb, (void*)dthr);
 
     return err;
 }
@@ -90,15 +133,28 @@ _SGL afxError _AfxDctxVmtProcCb(afxDrawContext dctx, afxDrawThread dthr)
 _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertObject(din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+
     afxNat slotIdx2 = AFX_INVALID_INDEX;
 
-    if (dctx->inputs)
+    if (dctxD->inputs)
     {
-        for (afxNat i = 0; i < dctx->inputCap; i++)
+        for (afxNat i = 0; i < dctxD->inputCap; i++)
         {
-            if (din == dctx->inputs[i])
+            if (din == dctxD->inputs[i])
             {
                 slotIdx2 = i;
                 break;
@@ -108,7 +164,7 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
 
     if (slotIdx2 != AFX_INVALID_INDEX)
     {
-        AfxAssert(dctx->inputs);
+        AfxAssert(dctxD->inputs);
 
         if (connect)
         {
@@ -116,8 +172,8 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
         }
         else
         {
-            dctx->inputs[slotIdx2] = NIL; // disconnect
-            --dctx->inputCnt;
+            dctxD->inputs[slotIdx2] = NIL; // disconnect
+            --dctxD->inputCnt;
         }
     }
     else
@@ -128,34 +184,34 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
         }
         else
         {
-            if (dctx->inputCap > dctx->inputCnt)
+            if (dctxD->inputCap > dctxD->inputCnt)
             {
-                for (afxNat i = 0; i < dctx->inputCap; i++)
+                for (afxNat i = 0; i < dctxD->inputCap; i++)
                 {
-                    if (!dctx->inputs[i])
+                    if (!dctxD->inputs[i])
                     {
                         slotIdx2 = i;
-                        dctx->inputs[slotIdx2] = din;
-                        ++dctx->inputCnt;
+                        dctxD->inputs[slotIdx2] = din;
+                        ++dctxD->inputCnt;
                         break;
                     }
                 }
             }
             else
             {
-                AfxAssert(dctx->inputCap == dctx->inputCnt);
-                afxMemory mem = AfxGetDrawContextMemory(dctx);
-                AfxAssertObject(mem, AFX_FCC_MEM);
-                void *boundDins = AfxReallocate(mem, dctx->inputs, (dctx->inputCap + 1) * sizeof(dctx->inputs[0]), 0, AfxSpawnHint());
+                AfxAssert(dctxD->inputCap == dctxD->inputCnt);
+                afxContext mem = AfxGetDrawContextMemory(dctx);
+                AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+                void *boundDins = AfxReallocate(mem, dctxD->inputs, (dctxD->inputCap + 1) * sizeof(dctxD->inputs[0]), 0, AfxSpawnHint());
 
                 if (!boundDins) AfxThrowError();
                 else
                 {
-                    dctx->inputs = boundDins;
-                    slotIdx2 = dctx->inputCnt;
-                    dctx->inputs[slotIdx2] = din;
-                    ++dctx->inputCap;
-                    ++dctx->inputCnt;
+                    dctxD->inputs = boundDins;
+                    slotIdx2 = dctxD->inputCnt;
+                    dctxD->inputs[slotIdx2] = din;
+                    ++dctxD->inputCap;
+                    ++dctxD->inputCnt;
                 }
             }
         }
@@ -170,15 +226,28 @@ _SGL afxError _AfxDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool co
 _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    AfxAssertObject(dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+
     afxNat slotIdx2 = AFX_INVALID_INDEX;
 
-    if (dctx->outputs)
+    if (dctxD->outputs)
     {
-        for (afxNat i = 0; i < dctx->outputCap; i++)
+        for (afxNat i = 0; i < dctxD->outputCap; i++)
         {
-            if (dout == dctx->outputs[i])
+            if (dout == dctxD->outputs[i])
             {
                 slotIdx2 = i;
                 break;
@@ -188,7 +257,7 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
 
     if (slotIdx2 != AFX_INVALID_INDEX)
     {
-        AfxAssert(dctx->outputs);
+        AfxAssert(dctxD->outputs);
 
         if (connect)
         {
@@ -196,8 +265,8 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
         }
         else
         {
-            dctx->outputs[slotIdx2] = NIL; // disconnect
-            --dctx->outputCnt;
+            dctxD->outputs[slotIdx2] = NIL; // disconnect
+            --dctxD->outputCnt;
         }
     }
     else
@@ -208,34 +277,34 @@ _SGL afxError _AfxDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool
         }
         else
         {
-            if (dctx->outputCap > dctx->outputCnt)
+            if (dctxD->outputCap > dctxD->outputCnt)
             {
-                for (afxNat i = 0; i < dctx->outputCap; i++)
+                for (afxNat i = 0; i < dctxD->outputCap; i++)
                 {
-                    if (!dctx->outputs[i])
+                    if (!dctxD->outputs[i])
                     {
                         slotIdx2 = i;
-                        dctx->outputs[slotIdx2] = dout;
-                        ++dctx->outputCnt;
+                        dctxD->outputs[slotIdx2] = dout;
+                        ++dctxD->outputCnt;
                         break;
                     }
                 }
             }
             else
             {
-                AfxAssert(dctx->outputCap == dctx->outputCnt);
-                afxMemory mem = AfxGetDrawContextMemory(dctx);
-                AfxAssertObject(mem, AFX_FCC_MEM);
-                void *boundDouts = AfxReallocate(mem, dctx->outputs, (dctx->outputCap + 1) * sizeof(dctx->outputs[0]), 0, AfxSpawnHint());
+                AfxAssert(dctxD->outputCap == dctxD->outputCnt);
+                afxContext mem = AfxGetDrawContextMemory(dctx);
+                AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+                void *boundDouts = AfxReallocate(mem, dctxD->outputs, (dctxD->outputCap + 1) * sizeof(dctxD->outputs[0]), 0, AfxSpawnHint());
 
                 if (!boundDouts) AfxThrowError();
                 else
                 {
-                    dctx->outputs = boundDouts;
-                    slotIdx2 = dctx->outputCnt;
-                    dctx->outputs[slotIdx2] = dout;
-                    ++dctx->outputCap;
-                    ++dctx->outputCnt;
+                    dctxD->outputs = boundDouts;
+                    slotIdx2 = dctxD->outputCnt;
+                    dctxD->outputs[slotIdx2] = dout;
+                    ++dctxD->outputCap;
+                    ++dctxD->outputCnt;
                 }
             }
         }
@@ -251,13 +320,24 @@ _SGL afxError _SglDctxVmtDtor(afxDrawContext dctx)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    sglDctxIdd*idd = dctx->idd;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    sglDctxIdd*idd = dctxD->idd;
 
     /// Deinstantiate all items here
 
-    AfxDeallocate(dctx->mem, dctx->idd);
-    dctx->idd = NIL;
+    AfxDeallocate(dctxD->mem, dctxD->idd);
+    dctxD->idd = NIL;
 
     return err;
 }
@@ -279,20 +359,31 @@ _SGL _afxDctxVmt SglDctxVmt =
     _AfxSmpCtor
 };
 
-_SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextSpecification const *spec)
+_SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextConfig const *spec)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
     //AfxAssert(spec);
 
     afxDrawDriver ddrv = AfxGetDrawContextDriver(dctx);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     
-    dctx->vmt = &SglDctxVmt;
+    dctxD->vmt = &SglDctxVmt;
 
-    sglDctxIdd *idd = AfxAllocate(dctx->mem, sizeof(*idd), 0, AfxSpawnHint());
-    dctx->idd = idd;
+    sglDctxIdd *idd = AfxAllocate(dctxD->mem, sizeof(*idd), 0, AfxSpawnHint());
+    dctxD->idd = idd;
     *idd = (sglDctxIdd) { 0 };
 
     afxUri uri;
@@ -305,7 +396,7 @@ _SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextSpecification
 
     AfxAssertObject(idd->presentPip, AFX_FCC_PIP);
 
-    afxSamplerSpecification smpSpec = { 0 };
+    afxSamplerConfig smpSpec = { 0 };
     smpSpec.magFilter = AFX_TEXEL_FLT_POINT;
     smpSpec.minFilter = AFX_TEXEL_FLT_POINT;
     smpSpec.mipmapFilter = AFX_TEXEL_FLT_POINT;

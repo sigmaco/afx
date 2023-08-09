@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -52,19 +52,25 @@ typedef enum afxFileFlags
 }
 afxFileFlags;
 
-AFX_OBJECT(afxFile)
-{
-    afxObject               obj;
+struct _afxFileD
 #ifdef _AFX_FILE_C
+{
+    _AFX_DBG_FCC
+    afxFile                 fileObj;
     afxStream               ios;
     void                    *fd;
     afxUri*                 path;
     afxBool                 shouldBeFlushed;
     afxFileFlags            flags;
+}
 #endif
-};
+;
 
-AFX afxFile                 AfxOpenFile(afxFileFlags flags, afxUri const *uri);
+AFX afxNat                  AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile file[]);
+
+AFX void                    AfxCloseFiles(afxNat cnt, afxFile file[]);
+
+AFX afxError                AfxOpenFiles(afxNat cnt, afxFile file[], afxUri const uri[], afxFileFlags flags[]);
 AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
 AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
 AFX afxStream               AfxLoadFile(afxIoFlags flags, afxUri const *uri); // will fully load the opened file then close it.
@@ -92,5 +98,7 @@ AFX afxBool                 AfxFileIsEncrypted(afxFile file);
 AFX afxBool                 AfxFileIsArchive(afxFile file);
 AFX afxBool                 AfxFileIsHidden(afxFile file);
 AFX afxBool                 AfxFileIsReserved(afxFile file);
+
+AFX afxBool                 _AfxGetFileD(afxFile file, struct _afxFileD **fileD, struct _afxSysD* sysD);
 
 #endif//AFX_FILE_H

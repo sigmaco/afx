@@ -7,17 +7,17 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_NODE_H
 #define AFX_NODE_H
 
-#include "afx/core/afxObject.h"
+#include "afx/core/afxInstance.h"
 #include "afx/core/afxString.h"
 #include "../math/afxMathDefs.h"
 #include "../math/volume/afxAabb.h"
@@ -70,7 +70,7 @@ AFX_DEFINE_STRUCT(afxNodeSpecification)
 
 AFX_OBJECT(afxNode)
 {
-    afxObject           obj;
+    afxInstance           obj;
     afxNodeFlag         flags;
     afxString*          name; // 32
 

@@ -7,34 +7,52 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_INPUT_C
 //#define _AFX_SURFACE_C
 #define _AFX_DRAW_SCRIPT_C
 #include "afx/core/afxSystem.h"
 #include "_classified/afxDrawClassified.h"
 
+_AFX afxBool _AfxGetDinD(afxDrawInput din, struct _afxDinD **dinD, struct _afxDsysD* dsysD)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    return AfxGetObjectsResidency(1, &din, (void**)dinD, &dsysD->inputs);
+}
+
 _AFX afxError _AfxDinFreeAllBuffers(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
 
-    //AfxEnterSlockExclusive(&din->scriptChainMutex);
+    //AfxEnterSlockExclusive(&dinD->scriptChainMutex);
 
-    for (afxNat i = 0; i < din->scripts.cnt; i++)
+    for (afxNat i = 0; i < dinD->scripts.cnt; i++)
     {
-        afxDrawScript dscr = *(afxDrawScript*)AfxGetArrayUnit(&din->scripts, i);
+        afxDrawScript dscr = *(afxDrawScript*)AfxGetArrayUnit(&dinD->scripts, i);
         AfxAssertObject(dscr, AFX_FCC_DSCR);
         while (0 < AfxReleaseObject(&dscr->obj));
     }
 
-    //AfxExitSlockExclusive(&din->scriptChainMutex);
+    //AfxExitSlockExclusive(&dinD->scriptChainMutex);
     return err;
 }
 
@@ -45,13 +63,22 @@ _AFX afxError _AfxDinFreeAllBuffers(afxDrawInput din)
 _AFX afxBool AfxGetConnectedDrawInputContext(afxDrawInput din, afxDrawContext *dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
 
     afxBool rslt;
     afxDrawContext dctx2;
-    if ((rslt = !!(dctx2 = din->dctx)))
+    if ((rslt = !!(dctx2 = dinD->dctx)))
     {
-        AfxAssertObject(dctx2, AFX_FCC_DCTX);
+        AfxAssertObjects(1, &dctx2, AFX_FCC_DCTX);
 
         if (dctx)
             *dctx = dctx2;
@@ -62,28 +89,36 @@ _AFX afxBool AfxGetConnectedDrawInputContext(afxDrawInput din, afxDrawContext *d
 _AFX afxBool AfxDrawInputIsConnected(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
     return !!(AfxGetConnectedDrawInputContext(din, NIL));
 }
 
 _AFX afxError AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
 
     _AfxDinFreeAllBuffers(din);
     
-    if (din->vmt->cctx(din, din->dctx, NIL, slotIdx))
+    if (dinD->vmt->cctx(din, dinD->dctx, NIL, slotIdx))
     {
         AfxThrowError();
     }
     else
     {
-        din->dctx = NIL;
+        dinD->dctx = NIL;
     }
 
-    AfxAssert(!din->dctx);
+    AfxAssert(!dinD->dctx);
 
     return err;
 }
@@ -91,8 +126,16 @@ _AFX afxError AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx)
 _AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat *slotIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
 
     afxDrawDriver ddrv = AfxGetDrawInputDriver(din);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
@@ -104,16 +147,16 @@ _AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat
     {
         _AfxDinFreeAllBuffers(din);
 
-        if (din->vmt->cctx(din, din->dctx, dctx, slotIdx))
+        if (dinD->vmt->cctx(din, dinD->dctx, dctx, slotIdx))
         {
             AfxThrowError();
         }
         else
         {
-            din->dctx = dctx;
+            dinD->dctx = dctx;
         }
     }
-    AfxAssert(din->dctx == dctx);
+    AfxAssert(dinD->dctx == dctx);
     return !err;
 }
 
@@ -122,18 +165,36 @@ _AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat
 ////////////////////////////////////////////////////////////////////////////////
 
 _AFX void* AfxGetDrawInputUdd(afxDrawInput din)
-{
+{ 
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    return din->udd;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+    return dinD->udd;
 }
 
 _AFX afxError AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
 
-    din->prefetchEnabled = !!enabled;
+    dinD->prefetchEnabled = !!enabled;
 
     return err;
 }
@@ -141,7 +202,16 @@ _AFX afxError AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled)
 _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
     AfxAssert(cnt);
     AfxAssert(scripts);
 
@@ -155,7 +225,7 @@ _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript s
     if (!(AfxGetConnectedDrawInputContext(din, &dctx))) AfxThrowError();
     else
     {
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, AFX_FCC_DCTX);
         afxDrawDriver ddrv = AfxGetDrawContextDriver(dctx);
         AfxAssertObject(ddrv, AFX_FCC_DDRV);
         //afxNat portCnt = AfxGetDrawDriverPortCount(ddrv);
@@ -192,7 +262,16 @@ _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript s
 _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
     AfxAssert(cnt);
     AfxAssert(outputs);
     AfxAssert(outputBufIdx);
@@ -211,7 +290,7 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
     if (!(AfxGetConnectedDrawInputContext(din, &dctx))) AfxThrowError();
     else
     {
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, AFX_FCC_DCTX);
         afxDrawDriver ddrv = AfxGetDrawContextDriver(dctx);
         AfxAssertObject(ddrv, AFX_FCC_DDRV);
         //afxNat portCnt = AfxGetDrawDriverPortCount(ddrv);
@@ -219,7 +298,7 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
         for (afxNat i = 0; i < cnt; i++)
         {
             afxDrawOutput dout = outputs[i];
-            AfxAssertObject(dout, AFX_FCC_DOUT);
+            //AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
 
             afxNat portIdx = 0;
             afxNat queIdx;
@@ -253,77 +332,29 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
 _AFX afxDrawDriver AfxGetDrawInputDriver(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    afxDrawDriver ddrv = AfxObjectGetProvider(&din->obj);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+    afxDrawDriver ddrv = dinD->ddrv;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     return ddrv;
 }
 
-_AFX afxError AfxAcquireDrawInputs(afxDrawInputSpecification const *spec, afxNat cnt, afxDrawInput din[])
-{
-    AfxEntry("spec=%p,cnt=%u", spec, cnt);
-    afxError err = AFX_ERR_NONE;
-    
-    afxDrawDriver ddrv;
-
-    if (!AfxGetDrawDriver(spec ? spec->drvIdx : 0, &ddrv)) AfxThrowError();
-    else
-    {
-        AfxAssertObject(ddrv, AFX_FCC_DDRV);
-
-        for (afxNat i = 0; i < cnt; i++)
-        {
-            if (AfxClassAcquireObjects(AfxGetDrawInputClass(ddrv), NIL, 1, spec, (afxObject**)&din[i], AfxSpawnHint()))
-            {
-                AfxThrowError();
-
-                for (afxNat j = 0; j < i; j++)
-                {
-                    AfxAssertObject(din[j], AFX_FCC_DIN);
-                    AfxReleaseObject(&din[j]->obj);
-                    din[j] = NIL;
-                }
-                break;
-            }
-            else
-            {
-                AfxAssertObject(din[i], AFX_FCC_DIN);
-            }
-        }
-    }
-
-    if (err)
-        for (afxNat i = 0; i < cnt; i++)
-            din[i] = NIL;
-
-    return err;
-}
-
-_AFX afxBool _AfxDinEventHandler(afxObject *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawInput din = (void*)obj;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxBool _AfxDinEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawInput din = (void*)obj;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxError _AfxDinDtor(afxDrawInput din)
+_AFX afxError _AfxDinDtor(afxDrawInput din, struct _afxDinD *dinD)
 {
     AfxEntry("din=%p", din);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
-    
+
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+
     AfxDisconnectDrawInput(din, NIL);
 
     // avoid draw thread entrance
@@ -331,70 +362,139 @@ _AFX afxError _AfxDinDtor(afxDrawInput din)
     AfxEnableDrawInputPrefetching(din, FALSE);
     //AfxDiscardAllDrawInputSubmissions(din);
     //AfxYieldThreading();
-    //while (!AfxTryEnterSlockExclusive(&din->prefetchSlock)) AfxYieldThreading();
+    //while (!AfxTryEnterSlockExclusive(&dinD->prefetchSlock)) AfxYieldThreading();
 
-    if (din->vmt->dtor && din->vmt->dtor(din))
+    if (dinD->vmt->dtor && dinD->vmt->dtor(din))
         AfxThrowError();
 
-    AfxAssert(!din->idd);
+    AfxAssert(!dinD->idd);
 
-    //AfxReleaseSlock(&din->prefetchSlock);
+    //AfxReleaseSlock(&dinD->prefetchSlock);
 
     return err;
 }
 
-_AFX afxError _AfxDinCtor(void *cache, afxNat idx, afxDrawInput din, afxDrawInputSpecification const *specs)
+_AFX void _AfxObjDeallocDin(afxDrawInput din)
 {
     AfxEntry("din=%p", din);
     afxError err = AFX_ERR_NONE;
-    (void)cache;
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
+    _AfxDinDtor(din, dinD);
+    AfxDeallocateObjects(1, &din, &dsysD->inputs);
+}
 
-    afxDrawInputSpecification const *spec = &specs[idx];
-    AfxAssert(spec);
+_AFX void AfxReleaseDrawInputs(afxNat cnt, afxDrawInput din[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(cnt, din, AFX_FCC_DIN);
+    AfxReleaseObjects(cnt, din, _AfxObjDeallocDin);
+}
 
-    afxDrawDriver ddrv = AfxGetDrawInputDriver(din);
+_AFX afxError _AfxDinCtor(afxDrawInput din, struct _afxDinD *dinD, afxDrawInputConfig const *config)
+{
+    AfxEntry("din=%p", din);
+    afxError err = AFX_ERR_NONE;
+
+
+    AfxAssignFcc(dinD, AFX_FCC_DIN);
+
+    afxDrawDriver ddrv;
+    AfxGetDrawDriver(config ? config->drvIdx : 0, &ddrv);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    din->dctx = NIL;
-    afxMemory mem = AfxGetDrawMemory();
-    din->mem = mem;
 
-    din->prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
+    dinD->ddrv = ddrv;
+    dinD->dctx = NIL;
+    afxContext mem = AfxGetDrawMemory();
+    dinD->mem = mem;
 
-    din->userPrefetchProc = spec ? spec->prefetch : NIL;
+    dinD->prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
 
-    AfxAcquireArray(mem, &din->scripts, sizeof(afxDrawScript), 32, AfxSpawnHint());
-    din->minScriptReserve = 2;
+    dinD->userPrefetchProc = config ? config->prefetch : NIL;
 
-    din->vmt = NIL;
-    din->idd = NIL;
+    AfxAcquireArray(&dinD->scripts, sizeof(afxDrawScript), 32, AfxSpawnHint());
+    dinD->minScriptReserve = 2;
+
+    dinD->vmt = NIL;
+    dinD->idd = NIL;
             
-    if (spec && spec->udd)
+    if (config && config->udd)
     {
-        din->udd = spec->udd;
+        dinD->udd = config->udd;
     }
 
-    if (ddrv->vmt->din && ddrv->vmt->din(din, spec->endpoint, spec)) AfxThrowError();
+    if (ddrv->vmt->din && ddrv->vmt->din(din, config->endpoint, config)) AfxThrowError();
     else
     {
-        AfxAssert(din->vmt);
+        AfxAssert(dinD->vmt);
     }
 
     return err;
 }
 
-_AFX afxClassSpecification const _AfxDinClassSpec;
-
-afxClassSpecification const _AfxDinClassSpec =
+_AFX afxError AfxAcquireDrawInputs(afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[])
 {
-    AFX_FCC_DIN,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxDrawInput)),
-    NIL,
-    (void*)_AfxDinCtor,
-    (void*)_AfxDinDtor,
-    .event = _AfxDinEventHandler,
-    .eventFilter = _AfxDinEventFilter,
-    "afxDrawInput",
-    NIL
-};
+    AfxEntry("cnt=%u,config=%p,", cnt, config);
+    afxError err = AFX_ERR_NONE;
+
+    afxDrawDriver ddrv;
+
+    if (!AfxGetDrawDriver(config ? config->drvIdx : 0, &ddrv)) AfxThrowError();
+    else
+    {
+        AfxAssertObject(ddrv, AFX_FCC_DDRV);
+
+        afxDrawSystem dsys;
+        AfxGetDrawSystem(&dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        struct _afxDsysD* dsysD;
+        _AfxGetDsysD(dsys, &dsysD);
+        AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+        if (AfxAcquireNamedObjects(cnt, din, AFX_FCC_DIN, "Draw Input")) AfxThrowError();
+        else
+        {
+            if (AfxAllocateObjects(cnt, din, &dsysD->inputs)) AfxThrowError();
+            else
+            {
+                for (afxNat i = 0; i < cnt; i++)
+                {
+                    struct _afxDinD *dinD;
+                    _AfxGetDinD(din[i], &dinD, dsysD);
+
+                    if (_AfxDinCtor(din[i], dinD, &config[i]))
+                    {
+                        AfxThrowError();
+                        afxNat j = i;
+
+                        for (afxNat k = 0; k < i; k++)
+                            if (_AfxDinDtor(din[j], dinD))
+                                AfxThrowError();
+                    }
+                }
+            }
+
+            if (err)
+                AfxReleaseObjects(cnt, din, NIL);
+        }
+    }
+
+    if (err)
+    {
+        for (afxNat i = 0; i < cnt; i++)
+            din[i] = NIL;
+    }
+    else
+    {
+        AfxAssertObjects(cnt, din, AFX_FCC_DIN);
+    }
+    return err;
+}

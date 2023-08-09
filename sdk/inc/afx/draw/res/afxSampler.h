@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -56,21 +56,21 @@ typedef enum afxYuvModelConversion
     */
 } afxYuvModelConversion;
 
-AFX_DEFINE_STRUCT(afxYuvSampler)
+AFX_DEFINE_STRUCT(afxSamplerConfigYuv)
 {
-    afxPixelFormat                  fmt;
-    afxYuvModelConversion           ycbcrModel;
-    afxBool                         useNarrowRange; 
-    afxColorSwizzling               components;
-    afxBool                         xChromaOffsetAtMidpoint;
-    afxBool                         yChromaOffsetAtMidpoint;
-    afxTexelFilter                  chromaFilter;
-    afxBool                         forceExplicitReconstruction;
+    afxPixelFormat          fmt;
+    afxYuvModelConversion   ycbcrModel;
+    afxBool                 useNarrowRange; 
+    afxColorSwizzling       components;
+    afxBool                 xChromaOffsetAtMidpoint;
+    afxBool                 yChromaOffsetAtMidpoint;
+    afxTexelFilter          chromaFilter;
+    afxBool                 forceExplicitReconstruction;
 };
 
 // A afxSampler object represent the state of an image sampler which is used by the implementation to read image data and apply filtering and other transformations for the shader.
 
-AFX_DEFINE_STRUCT(afxSamplerSpecification)
+AFX_DEFINE_STRUCT(afxSamplerConfig)
 {
     afxTexelFilter  magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
     afxTexelFilter  minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
@@ -91,7 +91,7 @@ AFX_DECLARE_STRUCT(_afxSampVmt);
 
 AFX_OBJECT(afxSampler)
 {
-    afxObject           obj;
+    afxInstance           obj;
     _afxSampVmt const*  vmt;
     void*               idd; // implementation-defined data
 #ifdef _AFX_SAMPLER_C
@@ -115,6 +115,6 @@ AFX_OBJECT(afxSampler)
 
 AFX afxDrawContext  AfxGetSamplerContext(afxSampler samp);
 
-AFX void            AfxSamplerDescribe(afxSampler samp, afxSamplerSpecification *spec);
+AFX void            AfxSamplerDescribe(afxSampler samp, afxSamplerConfig *spec);
 
 #endif//AFX_SAMPLER_H

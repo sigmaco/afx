@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -100,7 +100,7 @@ _SGL afxError _AfxShdDtor(afxShader shd)
     AfxAssertObject(shd, AFX_FCC_SHD);
 
     afxDrawContext dctx = AfxGetShaderContext(shd);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
     sglShdIdd *idd = shd->idd;
 
     if (idd)
@@ -134,10 +134,20 @@ _SGL afxError _AfxShdCtor(afxShader shd)
     AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
     afxDrawContext dctx = AfxObjectGetProvider(&shd->obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
 
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     shd->vmt = &_SglShdVmt;
     sglShdIdd *idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint());

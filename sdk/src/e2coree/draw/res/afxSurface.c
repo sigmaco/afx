@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -37,7 +37,17 @@ _AFX afxDrawContext AfxGetSurfaceContext(afxSurface surf)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(surf, AFX_FCC_SURF);
     afxDrawContext dctx = AfxObjectGetProvider(&surf->tex.obj);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
     return dctx;
 }
 
@@ -63,7 +73,7 @@ _AFX afxSurface AfxAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWh
     AfxAcquireTextureBlueprint(&texb, dctx, extent, fmt, usage);
     AfxTextureBlueprintAddImage(&texb, fmt, extent, NIL, NIL);
 
-    if (AfxClassAcquireObjects(AfxGetSurfaceClass(dctx), NIL, 1, &texb, (afxObject**)&surf, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetSurfaceClass(dctx), NIL, 1, &texb, (afxInstance**)&surf, AfxSpawnHint()))
         AfxThrowError();
 
     AfxTextureBlueprintEnd(&texb, 0, NIL);
@@ -73,7 +83,7 @@ _AFX afxSurface AfxAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWh
     return surf;
 };
 
-_AFX afxBool _AfxSurfEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxSurfEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxSurface surf = (void*)obj;
@@ -82,7 +92,7 @@ _AFX afxBool _AfxSurfEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxSurfEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxSurfEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxSurface surf = (void*)obj;
@@ -108,7 +118,7 @@ _AFX afxError _AfxSurfDtor(afxSurface surf)
             // AfxPopLinkage(&canv->queue); // we can't do it here. We need wait for draw context to liberate it.
 
             afxDrawOutput dout = AfxGetLinker(&surf->swapchain);
-            AfxAssertObject(dout, AFX_FCC_DOUT);
+            AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
             //_SglDoutProcess(dout); // process until draw output ends its works and unlock this canvas.
             //AfxYieldThreading();
         }
@@ -142,7 +152,17 @@ _AFX afxError _AfxSurfCtor(void *cache, afxNat idx, afxSurface surf, void *args)
 
     surf->idd = NIL;
 
-    if (dctx->vmt->surf && dctx->vmt->surf(surf)) AfxThrowError();
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    if (dctxD->vmt->surf && dctxD->vmt->surf(surf)) AfxThrowError();
     else
     {
         AfxAssert(surf->vmt);

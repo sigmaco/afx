@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -756,9 +756,19 @@ _SGL afxError _SglTexReinstantiateIdd(afxTexture tex, afxNat unit, glVmt const* 
     AfxEntry("tex=%p", tex);
     afxError err = AFX_ERR_NONE;
     afxDrawContext dctx = AfxGetTextureContext(tex);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
     sglTexIdd *idd;
 
     if (!(idd = tex->idd))
@@ -893,7 +903,17 @@ _SGL afxError _AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
     AfxAssertRange(tex->whd[2], rgn->offset[2], rgn->extent[2]);
 
     afxDrawContext dctx = AfxGetTextureContext(tex);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
 
     if (!tex->maps)
         AfxBufferizeTexture(tex); // force texture allocation
@@ -913,18 +933,18 @@ _SGL afxError _AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
     {
         ++idd->locked;
 
-        idd->lastUpdImgBase = AfxMin(idd->lastUpdImgBase, rgn->baseImg);
-        idd->lastUpdImgRange = AfxMax(idd->lastUpdImgRange, rgn->imgCnt);
-        idd->lastUpdLodBase = AfxMin(idd->lastUpdLodBase, rgn->lodIdx);
-        idd->lastUpdLodRange = AfxMax(idd->lastUpdLodRange, rgn->lodIdx);
+        idd->lastUpdImgBase = AfxMini(idd->lastUpdImgBase, rgn->baseImg);
+        idd->lastUpdImgRange = AfxMaxi(idd->lastUpdImgRange, rgn->imgCnt);
+        idd->lastUpdLodBase = AfxMini(idd->lastUpdLodBase, rgn->lodIdx);
+        idd->lastUpdLodRange = AfxMaxi(idd->lastUpdLodRange, rgn->lodIdx);
 
-        idd->lastUpdOffset[0] = AfxMin(idd->lastUpdOffset[0], rgn->offset[0]);
-        idd->lastUpdOffset[1] = AfxMin(idd->lastUpdOffset[1], rgn->offset[1]);
-        idd->lastUpdOffset[2] = AfxMin(idd->lastUpdOffset[2], rgn->offset[2]);
+        idd->lastUpdOffset[0] = AfxMini(idd->lastUpdOffset[0], rgn->offset[0]);
+        idd->lastUpdOffset[1] = AfxMini(idd->lastUpdOffset[1], rgn->offset[1]);
+        idd->lastUpdOffset[2] = AfxMini(idd->lastUpdOffset[2], rgn->offset[2]);
 
-        idd->lastUpdRange[0] = AfxMax(idd->lastUpdRange[0], rgn->extent[0]);
-        idd->lastUpdRange[1] = AfxMax(idd->lastUpdRange[1], rgn->extent[1]);
-        idd->lastUpdRange[2] = AfxMax(idd->lastUpdRange[2], rgn->extent[2]);
+        idd->lastUpdRange[0] = AfxMaxi(idd->lastUpdRange[0], rgn->extent[0]);
+        idd->lastUpdRange[1] = AfxMaxi(idd->lastUpdRange[1], rgn->extent[1]);
+        idd->lastUpdRange[2] = AfxMaxi(idd->lastUpdRange[2], rgn->extent[2]);
 
         if (flags & AFX_TEX_OPEN_W)
             idd->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
@@ -959,9 +979,19 @@ _SGL afxError _SglTexDtor(afxTexture tex)
     if (idd)
     {
         afxDrawContext dctx = AfxGetTextureContext(tex);
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
-        afxMemory mem = AfxGetDrawContextMemory(dctx);
-        AfxAssertObject(mem, AFX_FCC_MEM);
+
+        afxDrawSystem dsys;
+        AfxGetDrawSystem(&dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        struct _afxDsysD* dsysD;
+        _AfxGetDsysD(dsys, &dsysD);
+        AfxAssertType(dsysD, AFX_FCC_DSYS);
+        struct _afxDctxD *dctxD;
+        _AfxGetDctxD(dctx, &dctxD, dsysD);
+        AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+        afxContext mem = AfxGetDrawContextMemory(dctx);
+        AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
         if (idd->glHandle)
         {

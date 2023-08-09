@@ -39,8 +39,8 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
     // camera up and down, but it should be clear how to add one.
-    const afxReal ForwardSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
-    const afxReal RightSpeed = (AfxKeysIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeysIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
+    const afxReal ForwardSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
+    const afxReal RightSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
 
     AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
@@ -48,7 +48,7 @@ void UpdateFrameMovement(const afxReal DeltaTime)
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(app, AFX_FCC_APP);
+    AfxAssertObjects(1, &app, AFX_FCC_APP);
 
     afxSize time = AfxGetTimer();
 
@@ -113,10 +113,10 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     AfxAssertObject(sim, AFX_FCC_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
-    afxDrawOutputSpecification doutSpec = {0};
-    doutSpec.pixelFmt = AFX_PFD_RGB8_SRGB;
-    doutSpec.endpoint = &uriMap;
-    AfxAcquireDrawOutputs(&doutSpec, 1, &dout);
+    afxDrawOutputConfig doutConfig = {0};
+    doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
+    doutConfig.endpoint = &uriMap;
+    AfxAcquireDrawOutputs(&doutConfig, 1, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
@@ -133,7 +133,7 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
 
     kbd = AfxFindKeyboard(0);
     mse = AfxFindMouse(0);
-    AfxObjectInstallEventFilter(&mse->hid.obj, &cam->nod.obj);
+    AfxObjectInstallEventFilter(&mseD->hid.obj, &cam->nod.obj);
     
     AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
     
@@ -172,27 +172,27 @@ int main(int argc, char const* argv[])
     while (reboot)
     {
         afxSystem sys = NIL;
-        AfxBootUpSystem(NIL, &sys);
+        AfxBootUpBasicIoSystem(NIL, &sys);
 
         afxDrawSystem dsys;
         afxDrawSystemSpecification dsysSpec = { 0 };
-        AfxBootUpDrawSystem(&dsysSpec, &dsys);
-        AfxAssertObject(dsys, AFX_FCC_DSYS);
+        AfxEstablishDrawSystem(&dsysSpec, &dsys);
+        AfxAssertType(dsys, AFX_FCC_DSYS);
 
-        afxDrawContextSpecification dctxSpec = { 0 };
-        AfxAcquireDrawContexts(&dctxSpec, 1, &dctx);
+        afxDrawContextConfig dctxConfig = { 0 };
+        AfxAcquireDrawContexts(&dctxConfig, 1, &dctx);
         AfxAssert(dctx);
 
         afxApplication TheApp;
-        afxApplicationSpecification appSpec = { 0 };
-        appSpec.argc = argc;
-        appSpec.argv = argv;
-        appSpec.proc = SkyboxThrProc;
-        appSpec.dctx = dctx;
-        //appSpec.enter = AfxEnterApplication;
-        //appSpec.exit = AfxLeaveApplication;
-        //appSpec.update = AfxUpdateApplication;
-        AfxAcquireApplications(&appSpec, 1, &TheApp);
+        afxApplicationConfig appConfig = { 0 };
+        appConfig.argc = argc;
+        appConfig.argv = argv;
+        appConfig.proc = SkyboxThrProc;
+        appConfig.dctx = dctx;
+        //appConfig.enter = AfxEnterApplication;
+        //appConfig.exit = AfxLeaveApplication;
+        //appConfig.update = AfxUpdateApplication;
+        AfxAcquireApplications(&appConfig, 1, &TheApp);
         AfxAssertObject(TheApp, AFX_FCC_APP);
         AfxRunApplication(TheApp);
 
@@ -200,10 +200,10 @@ int main(int argc, char const* argv[])
 
         AfxReleaseApplications(1, &TheApp);
 
-        AfxReleaseObject(&dctx->obj);
+        AfxReleaseObject(&dctxD->obj);
 
-        AfxShutdownDrawSystem();
-        AfxShutdownSystem();
+        AfxAbolishDrawSystem();
+        AfxShutdownBasicIoSystem();
     }
     Sleep(3000);
     return 0;

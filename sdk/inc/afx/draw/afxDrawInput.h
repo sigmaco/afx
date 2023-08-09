@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -25,7 +25,7 @@
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/core/io/afxUri.h"
 
-AFX_DEFINE_STRUCT(afxDrawInputSpecification)
+AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
     afxNat              drvIdx;
     afxUri const*       endpoint;
@@ -37,14 +37,16 @@ AFX_DEFINE_STRUCT(afxDrawInputSpecification)
 
 AFX_DECLARE_STRUCT(_afxDinVmt);
 
-AFX_OBJECT(afxDrawInput)
+struct _afxDinD
 {
-    afxObject           obj;
+    _AFX_DBG_FCC
+    afxObject           dinObj;
     _afxDinVmt const*   vmt;
     void*               idd;
 #ifdef _AFX_DRAW_INPUT_C
+    afxDrawDriver       ddrv; 
     afxDrawContext      dctx; // bound context
-    afxMemory           mem;
+    afxContext           mem;
 
     afxArray            scripts;
     afxNat              minScriptReserve;
@@ -56,6 +58,9 @@ AFX_OBJECT(afxDrawInput)
     void*               udd;
 #endif
 };
+
+AFX afxError            AfxAcquireDrawInputs(afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[]);
+AFX void                AfxReleaseDrawInputs(afxNat cnt, afxDrawInput din[]);
 
 AFX afxDrawDriver       AfxGetDrawInputDriver(afxDrawInput din);
 

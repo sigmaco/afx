@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -76,7 +76,7 @@ typedef enum afxPresentMode
 
 } afxPresentMode;
 
-AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
+AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
     afxNat              drvIdx; // registered on draw system.
     afxUri const*       endpoint; // window, desktop, etc
@@ -98,12 +98,16 @@ AFX_DEFINE_STRUCT(afxDrawOutputSpecification)
 
 AFX_DECLARE_STRUCT(_afxDoutVmt);
 
-AFX_OBJECT(afxDrawOutput)
+//typedef afxObject afxDrawOutput;
+
+struct _afxDoutD
 {
-    afxObject               obj;
+    _AFX_DBG_FCC
+    afxObject               doutObj;
     _afxDoutVmt const*      vmt;
     void*                   idd; // implementation-defined data
 #ifdef _AFX_DRAW_OUTPUT_C
+    afxDrawDriver           ddrv;
     afxDrawContext          dctx; // bound context
     afxNat                  suspendCnt;
     afxSlock                suspendSlock;
@@ -154,6 +158,9 @@ AFX_OBJECT(afxDrawOutput)
 #endif
 };
 
+AFX afxError            AfxAcquireDrawOutputs(afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]);
+AFX void                AfxReleaseDrawOutputs(afxNat cnt, afxDrawOutput dout[]);
+
 AFX afxDrawDriver       AfxGetDrawOutputDriver(afxDrawOutput dout);
 
 // Connection
@@ -176,8 +183,8 @@ AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxR
 AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxSurface *surf);
 AFX afxBool             AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *canv);
 AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
-AFX afxResult           AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
-AFX afxError            AfxRequestNextDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
+AFX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 
 // Utility

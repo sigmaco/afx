@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -22,7 +22,7 @@
 #include "afx/draw/pipelining/afxPipeline.h"
 #include "afx/draw/afxDrawScript.h"
 
-#define AfxDrawContextGetVmt(dctx_) ((afxDctxImpl const*)AfxObjectGetVmt((afxObject*)(dctx_)))
+#define AfxDrawContextGetVmt(dctx_) ((afxDctxImpl const*)AfxObjectGetVmt((afxInstance*)(dctx_)))
 
 // DRAW IMPLEMETATION HIDEOUT
 
@@ -31,9 +31,9 @@ AFX_DEFINE_STRUCT(_afxDdrvVmt)
     afxError(*dtor)(afxDrawDriver);
     afxError(*proc)(afxDrawDriver,afxDrawThread); // call their draw threads.
     afxError(*dque)(afxDrawQueue, afxDrawQueueSpecification const*);
-    afxError(*dctx)(afxDrawContext,afxDrawContextSpecification const*);
-    afxError(*dout)(afxDrawOutput,afxUri const*,afxDrawOutputSpecification const*);
-    afxError(*din)(afxDrawInput,afxUri const*,afxDrawInputSpecification const*);
+    afxError(*dctx)(afxDrawContext,afxDrawContextConfig const*);
+    afxError(*dout)(afxDrawOutput,afxUri const*,afxDrawOutputConfig const*);
+    afxError(*din)(afxDrawInput,afxUri const*,afxDrawInputConfig const*);
 };
 
 AFX_DEFINE_STRUCT(_afxDqueVmt)
@@ -154,5 +154,17 @@ AFX_DEFINE_STRUCT(_afxPipVmt)
 {
     afxError(*dtor)(afxPipeline);
 };
+
+struct _afxDsysD;
+struct _afxDinD;
+struct _afxDoutD;
+struct _afxDctxD;
+struct _afxDthrD;
+
+AFX afxBool _AfxGetDsysD(afxDrawSystem dsys, struct _afxDsysD**dsysD);
+AFX afxBool _AfxGetDinD(afxDrawInput din, struct _afxDinD **dinD, struct _afxDsysD* dsysD);
+AFX afxBool _AfxGetDoutD(afxDrawOutput dout, struct _afxDoutD **doutD, struct _afxDsysD* dsysD);
+AFX afxBool _AfxGetDctxD(afxDrawContext dctx, struct _afxDctxD **dctxD, struct _afxDsysD* dsysD);
+AFX afxBool _AfxGetDthrD(afxDrawThread dthr, struct _afxDthrD **thrD, struct _afxDsysD* dsysD);
 
 #endif//AFX_DRAW_CLASSIFIED_H

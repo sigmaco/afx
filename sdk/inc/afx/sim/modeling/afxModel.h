@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -34,7 +34,7 @@ AFX_DEFINE_STRUCT(afxMeshSlot)
 
 AFX_OBJECT(afxModel)
 {
-    afxObject           obj;
+    afxInstance           obj;
     afxUri*             uri; // 128
     afxSkeleton         skl;
     afxTransform        init;
@@ -42,6 +42,8 @@ AFX_OBJECT(afxModel)
     afxNat              meshSlotCnt;
     afxMeshSlot         *meshSlots;
 };
+
+//AFX afxError            AfxEmbodyModel(afxModel mdl, afxBody *bod);
 
 AFX afxUri const*       AfxModelGetUri(afxModel mdl);
 AFX afxSkeleton         AfxModelGetSkeleton(afxModel mdl);

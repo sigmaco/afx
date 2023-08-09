@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -265,9 +265,19 @@ _SGL afxError _AfxPipDtor(afxPipeline pip)
     AfxAssertObject(pip, AFX_FCC_PIP);
 
     afxDrawContext dctx = AfxGetPipelineContext(pip);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     sglPipIdd *idd = pip->idd;
 
@@ -295,9 +305,19 @@ _SGL afxError _AfxPipCtor(afxPipeline pip)
     AfxAssertObject(pip, AFX_FCC_PIP);
 
     afxDrawContext dctx = AfxGetPipelineContext(pip);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     pip->vmt = &_SglPipVmt;
     sglPipIdd *idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint());

@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -20,30 +20,33 @@
 #include "afx/draw/afxDrawContext.h"
 #include "afx/core/async/afxThread.h"
 
-AFX_DEFINE_STRUCT(afxDrawThreadSpecification)
+AFX_DEFINE_STRUCT(afxDrawThreadConfig)
 {
-    afxThreadSpecification  base;
+    afxThreadConfig  base;
 };
 
 #if (defined(_AFX_DRAW_THREAD_C) && !(defined(_AFX_THREAD_C)))
 #   error "afxThread not exposed.";
 #endif
 
-AFX_OBJECT(afxDrawThread)
-{
-    AFX_OBJECT(afxThread)   thr; // AFX_FCC_DTHR
+struct _afxDthrD
 #ifdef _AFX_DRAW_THREAD_C    
+{
+    _AFX_DBG_FCC
+    afxDrawThread           dthrObj;
+    afxThread               thr; // AFX_FCC_DTHR
     afxDrawDriver           ddrv;
     afxDrawContext          dctx;
     afxNat                  portIdx;
     afxDrawQueue            dque;
     afxNat                  queueIdx;
 
-    afxMemory               mem;
+    afxContext               mem;
+}
 #endif
-};
+;
 
-AFX afxError                AfxAcquireDrawThreads(afxDrawThreadSpecification const *spec, afxNat cnt, afxDrawThread dthr[]);
+AFX afxError                AfxAcquireDrawThreads(afxNat cnt, afxDrawThread dthr[], afxDrawThreadConfig const config[]);
 AFX void                    AfxReleaseDrawThreads(afxNat cnt, afxDrawThread dthr[]);
 
 AFX afxDrawDriver           AfxGetDrawThreadActiveDriver(afxDrawThread dthr);

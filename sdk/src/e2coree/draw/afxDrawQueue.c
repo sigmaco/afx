@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -60,7 +60,7 @@ _AFX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat subm
     AfxAssertRange(AfxGetDrawQueueSubmissionCount(dque), submNo, 1);
     afxLinkage *lnk = AfxFindFirstLinkage(&dque->ordinalSubmChn, submNo);
     AfxAssert(lnk);
-    return AfxContainerOf(lnk, afxDrawSubmission, ordinalSubmLnk);
+    return AFX_REBASE(lnk, afxDrawSubmission, ordinalSubmLnk);
 }
 
 _AFX afxNat AfxGetDrawQueueSubmissionCount(afxDrawQueue dque)
@@ -84,7 +84,7 @@ _AFX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first,
     {
         afxLinkage *lnk = AfxFindFirstLinkage(&dque->ordinalSubmChn, first + i);
         AfxAssert(lnk);
-        subm[i] = AfxContainerOf(lnk, afxDrawSubmission, ordinalSubmLnk);
+        subm[i] = AFX_REBASE(lnk, afxDrawSubmission, ordinalSubmLnk);
         ++hitcnt;
     }
 
@@ -317,7 +317,7 @@ _AFX afxError AfxAcquireDrawQueues(afxDrawDriver ddrv, afxDrawQueueSpecification
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (AfxClassAcquireObjects(AfxGetDrawQueueClass(ddrv), NIL, 1, spec, (afxObject**)&dque[i], AfxSpawnHint()))
+        if (AfxClassAcquireObjects(AfxGetDrawQueueClass(ddrv), NIL, 1, spec, (afxInstance**)&dque[i], AfxSpawnHint()))
         {
             AfxThrowError();
 
@@ -342,7 +342,7 @@ _AFX afxError AfxAcquireDrawQueues(afxDrawDriver ddrv, afxDrawQueueSpecification
     return err;
 };
 
-_AFX afxBool _AfxDqueEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxDqueEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawQueue dque = (void*)obj;
@@ -351,7 +351,7 @@ _AFX afxBool _AfxDqueEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxDqueEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxDqueEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawQueue dque = (void*)obj;
@@ -395,8 +395,8 @@ _AFX afxError _AfxDqueCtor(void *cache, afxNat idx, afxDrawQueue dque, afxDrawQu
 
     dque->portIdx = spec->portIdx;
     dque->owner = spec->owner;
-    AfxAssertObject(dque->owner, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dque->owner);
+    AfxAssertObjects(1, &dque->owner, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dque->owner);
     
     dque->immediate = !!spec->immedate;
 

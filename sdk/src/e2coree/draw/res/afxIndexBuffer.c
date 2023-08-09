@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -67,7 +67,7 @@ _AFXINL void AfxIndexBufferBlueprintBegin(afxIndexBufferBlueprint *blueprint, af
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
     blueprint->dctx = dctx;
-    AfxAcquireArray(AfxGetDrawMemory(), &blueprint->regions, sizeof(afxIndexBufferBlueprintRegion), estRgnCnt, AfxSpawnHint());
+    AfxAcquireArray(&blueprint->regions, sizeof(afxIndexBufferBlueprintRegion), estRgnCnt, AfxSpawnHint());
 }
 
 _AFXINL afxError AfxIndexBufferBlueprintPushRegion(afxIndexBufferBlueprint *blueprint, afxNat32 idxCnt, void const *src, afxNat srcStride)
@@ -250,7 +250,7 @@ _AFX afxError AfxBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBuff
         };
 
 
-        if (AfxClassAcquireObjects(AfxGetIndexBufferClass(dctx), NIL, 1, &args, (afxObject**)&ibuf[i], AfxSpawnHint()))
+        if (AfxClassAcquireObjects(AfxGetIndexBufferClass(dctx), NIL, 1, &args, (afxInstance**)&ibuf[i], AfxSpawnHint()))
         {
             AfxThrowError();
 
@@ -269,7 +269,7 @@ _AFX afxError AfxBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBuff
     return err;
 }
 
-_AFX afxBool _AfxIbufEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxIbufEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxIndexBuffer ibuf = (void*)obj;
@@ -278,7 +278,7 @@ _AFX afxBool _AfxIbufEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxIbufEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxIbufEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxIndexBuffer ibuf = (void*)obj;
@@ -294,7 +294,7 @@ _AFX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
     AfxEntry("ibuf=%p", ibuf);
     AfxAssertObject(ibuf, AFX_FCC_IBUF);
 
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
 
     AfxDeallocate(mem, ibuf->regions);
 
@@ -310,7 +310,7 @@ _AFX afxError _AfxIbufCtor(void *cache, afxNat idx, afxIndexBuffer ibuf, _afxIbu
     afxIndexBufferBlueprint const *blueprint = args[idx].blueprint;
     AfxAssert(blueprint);
 
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
 
     ibuf->regionCnt = 0;
 

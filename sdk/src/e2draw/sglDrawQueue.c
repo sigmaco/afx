@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -1255,17 +1255,33 @@ _SGL afxError _SglDquePresentSurf(afxDrawQueue dque, afxDrawOutput dout, afxNat 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, AFX_FCC_DQUE);
-    AfxAssertObject(dout, AFX_FCC_DOUT);
-    sglDqueIdd *idd = dque->idd;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+
     afxDrawContext dctx = dque->owner;
-    sglDctxIdd*dctxIdd = dctx->idd;
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    struct _afxDoutD *doutD;
+    _AfxGetDoutD(dout, &doutD,dsysD);
+    AfxAssertType(doutD, AFX_FCC_DOUT);
+    sglDqueIdd *idd = dque->idd;
+    
+    sglDctxIdd*dctxIdd = dctxD->idd;
     
 
-    AfxAssert(!dout->swapping);
+    AfxAssert(!doutD->swapping);
 
     {
-        dout->swapping = TRUE;
-        sglDoutIdd* doutIdd = dout->idd;
+        doutD->swapping = TRUE;
+        sglDoutIdd* doutIdd = doutD->idd;
 
         afxDrawDriver ddrv = AfxGetDrawQueueDriver(dque);
         AfxAssertObject(ddrv, AFX_FCC_DDRV);
@@ -1291,7 +1307,7 @@ _SGL afxError _SglDquePresentSurf(afxDrawQueue dque, afxDrawOutput dout, afxNat 
                 wgl->MakeCurrent(dpu->dc, dpu->glrc);
             }
         }
-        afxSurface surf = dout->buffers[outBufIdx].surf;
+        afxSurface surf = doutD->buffers[outBufIdx].surf;
         AfxAssertObject(surf, AFX_FCC_SURF);
         //AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
 #if 0
@@ -1310,10 +1326,10 @@ _SGL afxError _SglDquePresentSurf(afxDrawQueue dque, afxDrawOutput dout, afxNat 
         //gl->Finish();
         //gl->DeleteFramebuffers(1, &(gpuHandle)); _SglThrowErrorOccuried();
 #else
-        //if (dout->presentMode == AFX_PRESENT_MODE_FIFO)
-            //surf = AfxContainerOf(AfxGetFirstLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
-        //else //if (dout->presentMode == AFX_PRESENT_MODE_LIFO)
-            //surf = AfxContainerOf(AfxGetLastLinkage(&dout->swapchain), AFX_OBJECT(afxSurface), swapchain);
+        //if (doutD->presentMode == AFX_PRESENT_MODE_FIFO)
+            //surf = AFX_REBASE(AfxGetFirstLinkage(&doutD->swapchain), AFX_OBJECT(afxSurface), swapchain);
+        //else //if (doutD->presentMode == AFX_PRESENT_MODE_LIFO)
+            //surf = AFX_REBASE(AfxGetLastLinkage(&doutD->swapchain), AFX_OBJECT(afxSurface), swapchain);
         //else AfxError("Not implemented yet.");
 
         //_SglDqueBindAndSyncPip(idd->presentPip, dque);
@@ -1422,10 +1438,10 @@ _SGL afxError _SglDquePresentSurf(afxDrawQueue dque, afxDrawOutput dout, afxNat 
 
         //if (0 == AfxGetProcessorIterationCount())
         {
-            AfxFormatString(dout->caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration over Qwadro (c) 2017 SIGMA --- Public Test Build", deltaTime, lastFreq, currIter);
-            SetWindowTextA(doutIdd->wnd, AfxGetStringDataConst(dout->caption, 0));
+            AfxFormatString(doutD->caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq, currIter);
+            SetWindowTextA(doutIdd->wnd, AfxGetStringDataConst(doutD->caption, 0));
         }
-        dout->swapping = FALSE;
+        doutD->swapping = FALSE;
         (void)gl;
     }
     return err;
@@ -1440,7 +1456,7 @@ _SGL void* _AfxDqueRequestArenaSpace(afxDrawQueue dque, afxNat siz)
 
     AfxEnterSlockExclusive(&dque->arenaSlock);
 
-    void *block = AfxRequestArenaSpace(&dque->cmdArena, siz);
+    void *block = AfxRequestArenaUnit(&dque->cmdArena, siz);
 
     if (!block)
         AfxThrowError();
@@ -1461,7 +1477,7 @@ _SGL void _AfxDqueRecycleArenaSpace(afxDrawQueue dque, void *block, afxNat siz)
 
     AfxAssert(block);
 
-    AfxRecycleArenaSpace(&dque->cmdArena, block, siz);
+    AfxRecycleArenaUnit(&dque->cmdArena, block, siz);
 
     AfxExitSlockExclusive(&dque->arenaSlock);
 }
@@ -1472,13 +1488,28 @@ _SGL afxError _SglDqueVmtProcCb(afxDrawQueue dque, afxDrawThread dthr)
     AfxAssertObject(dque, AFX_FCC_DQUE);
     sglDqueIdd *idd = dque->idd;
 
-    afxDrawContext dctx = dthr->dctx;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD, dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
 
-    afxDrawDriver ddrv = dthr->ddrv;
+    afxDrawContext dctx = dthrD->dctx;
+
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+    afxDrawDriver ddrv = dthrD->ddrv;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
     _sglDdrvIdd *ddrvIdd = ddrv->idd;
-    afxNat unitIdx = dthr->portIdx;
+    afxNat unitIdx = dthrD->portIdx;
     sglDpuIdd *dpu = &ddrvIdd->dpus[unitIdx];
     wglVmt const*wgl = &dpu->wgl;
     
@@ -1542,7 +1573,10 @@ _SGL afxError _SglDqueVmtProcCb(afxDrawQueue dque, afxDrawThread dthr)
                 for (afxNat i = 0; i < subm->outputCnt; i++)
                 {
                     afxDrawOutput dout = subm->outputs[i];
-                    AfxAssertObject(dout, AFX_FCC_DOUT);
+                    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+                    struct _afxDoutD *doutD;
+                    _AfxGetDoutD(dout, &doutD,dsysD);
+                    AfxAssertType(doutD, AFX_FCC_DOUT);
 
                     afxSurface surf;
                     AfxGetDrawOutputBuffer(dout, subm->outBufIdx[i], &surf);
@@ -1558,17 +1592,17 @@ _SGL afxError _SglDqueVmtProcCb(afxDrawQueue dque, afxDrawThread dthr)
 
             AfxPopLinkage(&subm->chain);
 
-            //AfxEnterSlockExclusive(&dctx->ports[dque->portIdx].recyclSubmChainSlock);
+            //AfxEnterSlockExclusive(&dctxD->ports[dque->portIdx].recyclSubmChainSlock);
 
-            //if (dctx->ports[dque->portIdx].minRecyclSubmCnt > AfxGetChainLength(&dctx->ports[dque->portIdx].recyclSubmChain))
+            //if (dctxD->ports[dque->portIdx].minRecyclSubmCnt > AfxGetChainLength(&dctxD->ports[dque->portIdx].recyclSubmChain))
             {
-                //AfxPushLinkage(&subm->chain, &dctx->ports[dque->portIdx].recyclSubmChain);
+                //AfxPushLinkage(&subm->chain, &dctxD->ports[dque->portIdx].recyclSubmChain);
             }
             //else
             {
                 _AfxDqueRecycleArenaSpace(dque, subm, sizeof(*subm));
             }
-            //AfxExitSlockExclusive(&dctx->ports[dque->portIdx].recyclSubmChainSlock);
+            //AfxExitSlockExclusive(&dctxD->ports[dque->portIdx].recyclSubmChainSlock);
         }
 
         AfxExitSlockExclusive(&dque->pendingChainSlock);
@@ -1592,7 +1626,7 @@ _SGL afxError _SglDqueVmtSubmitCb(afxDrawQueue dque, afxDrawSubmissionSpecificat
     subm->pullTime = 0;
     subm->complTime = 0;
 
-    subm->scriptCnt = AfxMin(spec->scriptCnt, 4);
+    subm->scriptCnt = AfxMini(spec->scriptCnt, 4);
 
     for (afxNat i = 0; i < subm->scriptCnt; i++)
     {
@@ -1600,7 +1634,7 @@ _SGL afxError _SglDqueVmtSubmitCb(afxDrawQueue dque, afxDrawSubmissionSpecificat
         subm->scripts[i]->state = AFX_DSCR_STATE_PENDING;
     }
 
-    subm->outputCnt = AfxMin(spec->outputCnt, 4);
+    subm->outputCnt = AfxMini(spec->outputCnt, 4);
     
     for (afxNat i = 0; i < subm->outputCnt; i++)
     {
@@ -1633,7 +1667,7 @@ _SGL afxError _SglDqueVmtDtorCb(afxDrawQueue dque)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, AFX_FCC_DQUE);
 
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
 
     sglDqueIdd *idd = dque->idd;
 
@@ -1665,7 +1699,7 @@ _SGL afxError _SglDdrvVmtDqueCb(afxDrawQueue dque, afxDrawQueueSpecification con
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, AFX_FCC_DQUE);
 
-    afxMemory mem = AfxGetDrawMemory();
+    afxContext mem = AfxGetDrawMemory();
 
     afxDrawDriver ddrv = AfxGetDrawQueueDriver(dque);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);

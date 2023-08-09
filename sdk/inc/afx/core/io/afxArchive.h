@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -24,13 +24,16 @@
 
 #include "afx/core/io/afxFile.h"
 
-AFX_OBJECT(afxArchive)
-{
-    AFX_OBJECT(afxFile) file;
+struct _afxArcD
 #ifdef _AFX_ARCHIVE_C
+{
+    _AFX_DBG_FCC
+    afxArchive          arcObj;
+    afxFile             file;
     afxArray            entries;
+}
 #endif
-};
+;
 
 
 /* URI for open zipped streams.
@@ -48,6 +51,11 @@ AFX_DEFINE_STRUCT(afxArchiveItemDescriptor)
     afxNat32    crc32;
 };
 
+AFX afxNat      AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive arc[]);
+
+AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[], afxFileFlags flags[]);
+AFX void        AfxReleaseArchives(afxNat cnt, afxArchive arc[]);
+
 AFX afxNat      AfxGetArchiveItemCount(afxArchive arc);
 
 AFX afxBool     AfxArchiveItemIsFile(afxArchive arc, afxNat idx);
@@ -63,5 +71,7 @@ AFX afxNat      AfxGetArchiveItemCodec(afxArchive arc, afxNat idx);
 AFX afxNat      AfxGetArchiveItemSize(afxArchive arc, afxNat idx);
 AFX afxString*  AfxGetArchiveItemName(afxArchive arc, afxNat idx, afxUri *name);
 AFX afxNat32    AfxGetArchiveItemHash(afxArchive arc, afxNat idx);
+
+AFX afxBool     _AfxGetArcD(afxArchive arc, struct _afxArcD **arcD, struct _afxSysD* sysD);
 
 #endif//AFX_ARCHIVE_H

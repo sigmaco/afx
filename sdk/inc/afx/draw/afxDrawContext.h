@@ -7,14 +7,12 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
-
-// Draw context é um objeto que controla o thread de execução. O contexto real está vinculado às draw outputs.
 
 #ifndef AFX_DRAW_CONTEXT_H
 #define AFX_DRAW_CONTEXT_H
@@ -30,8 +28,9 @@
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/draw/afxDrawScript.h"
+#include "afx/core/mem/afxResidency.h"
 
-AFX_DEFINE_STRUCT(afxDrawContextSpecification)
+AFX_DEFINE_STRUCT(afxDrawContextConfig)
 {
     afxNat                      drvIdx; // registered on draw system.
     void const*                 enabledFeatures; // afxDrawDriverFeatures
@@ -40,7 +39,7 @@ AFX_DEFINE_STRUCT(afxDrawContextSpecification)
     //afxDrawQueueCapFlags const* portCaps;
     //afxNat const*               queuesPerPort;
 
-    afxMemory                   genrlMem;
+    afxContext                   genrlMem;
 
     afxNat                      maxBufCnt;
     afxNat                      maxSmpCnt;
@@ -52,16 +51,20 @@ AFX_DEFINE_STRUCT(afxDrawContextSpecification)
     afxNat                      maxDoutCnt;
     afxNat                      maxDinCnt;
     afxNat                      maxDscrCnt;
+
+    afxSize const*              attrs[2];
 };
 
 AFX_DECLARE_STRUCT(_afxDctxVmt);
 
-AFX_OBJECT(afxDrawContext)
+struct _afxDctxD
 {
-    afxObject               obj;
+    _AFX_DBG_FCC
+    afxObject               dctxObj;
     _afxDctxVmt const*      vmt;
     void*                   idd;
 #ifdef _AFX_DRAW_CONTEXT_C
+    afxDrawDriver           ddrv;
     afxBool                 running;
 
     afxChain                provisions;
@@ -75,11 +78,12 @@ AFX_OBJECT(afxDrawContext)
     afxClass            vbufClass;
     afxClass            ibufClass;
     afxClass            smpClass;
+    afxResidency         samplers;
     afxClass            texClass;
     afxClass            surfClass;
     afxClass            shdClass;
 
-    afxMemory               mem;
+    afxContext               mem;
     afxArena                aren;
     
     afxNat                  lastReqPortIdx;
@@ -105,8 +109,11 @@ AFX_OBJECT(afxDrawContext)
 #endif
 };
 
+AFX afxError            AfxAcquireDrawContexts(afxNat cnt, afxDrawContext dctx[], afxDrawContextConfig const config[]);
+AFX void                AfxReleaseDrawContexts(afxNat cnt, afxDrawContext dctx[]);
+
 AFX afxDrawDriver       AfxGetDrawContextDriver(afxDrawContext dctx);
-AFX afxMemory           AfxGetDrawContextMemory(afxDrawContext dctx);
+AFX afxContext           AfxGetDrawContextMemory(afxDrawContext dctx);
 
 AFX afxNat              AfxGetDrawQueueCount(afxDrawContext dctx, afxNat portIdx);
 AFX afxDrawQueue        AfxGetDrawQueue(afxDrawContext dctx, afxNat portIdx, afxNat queIdx);
@@ -172,7 +179,7 @@ AFX afxError            AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, a
 
 AFX afxSurface          AfxAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
 
-AFX afxError            AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerSpecification const spec[], afxSampler smp[]);
+AFX afxError            AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const spec[], afxSampler smp[]);
 
 AFX afxError            AfxAcquireShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
 AFX afxError            AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);

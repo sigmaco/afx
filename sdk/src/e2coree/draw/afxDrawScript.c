@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -291,8 +291,8 @@ _AFX afxDrawInput AfxGetDrawScriptInput(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dscr, AFX_FCC_DSCR);
-    afxDrawInput din = AfxGetLinker(&dscr->din);
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawInput din = dscr->din;
+    //AfxAssertType(dinD, AFX_FCC_DIN);
     return din;
 }
 
@@ -308,18 +308,26 @@ _AFX afxDrawDriver AfxGetDrawScriptDriver(afxDrawScript dscr)
 _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDinD *dinD;
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
     
     afxDrawContext dctx;
     if (!(AfxGetConnectedDrawInputContext(din, &dctx))) AfxThrowError();
     else
     {
-        AfxAssertObject(dctx, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, AFX_FCC_DCTX);
         afxNat cnt2 = 0;
         
-        for (afxNat i = 0; i < din->scripts.cnt; i++)
+        for (afxNat i = 0; i < dinD->scripts.cnt; i++)
         {
-            afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&din->scripts, i);
+            afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&dinD->scripts, i);
             AfxAssertObject(dscr2, AFX_FCC_DSCR);
 
             if (AFX_DSCR_STATE_INVALID == AfxGetDrawScriptState(dscr2))
@@ -346,7 +354,7 @@ _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt
             paradigm.portIdx = portIdx;
             paradigm.owner = din;
 
-            if (AfxClassAcquireObjects(AfxGetDrawScriptClass(ddrv), NIL, cnt - cnt2, &paradigm, (afxObject**)&dscr[cnt2], AfxSpawnHint()))
+            if (AfxClassAcquireObjects(AfxGetDrawScriptClass(ddrv), NIL, cnt - cnt2, &paradigm, (afxInstance**)&dscr[cnt2], AfxSpawnHint()))
                 AfxThrowError();
         }
     }
@@ -358,7 +366,7 @@ _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt
     return err;
 }
 
-_AFX afxBool _AfxDscrEventHandler(afxObject *obj, afxEvent *ev)
+_AFX afxBool _AfxDscrEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawScript dscr = (void*)obj;
@@ -367,7 +375,7 @@ _AFX afxBool _AfxDscrEventHandler(afxObject *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxDscrEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+_AFX afxBool _AfxDscrEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawScript dscr = (void*)obj;
@@ -391,22 +399,29 @@ _AFX afxError _AfxDscrDtor(afxDrawScript dscr)
             // AfxPopLinkage(&dscr->queue); // we can't do it here. We need wait for draw context to liberate it.
 
             //afxDrawContext dctx = AfxObjectGetProvider(&dscr->obj);
-            //AfxAssertObject(dctx, AFX_FCC_DCTX);
+            //AfxAssertType(dctxD, AFX_FCC_DCTX);
             //AfxDrawContextProcess(dctx); // process until draw context ends its works and unlock this script.
             //AfxYieldThreading();
         }
         break;
     }
-
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
     afxDrawInput din = dscr->din;
+    struct _afxDinD *dinD;
+    _AfxGetDinD(din, &dinD, dsysD);
 
-    for (afxNat i = 0; i < din->scripts.cnt; i++)
+    for (afxNat i = 0; i < dinD->scripts.cnt; i++)
     {
-        afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&din->scripts, i);
+        afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&dinD->scripts, i);
         
         if (dscr2 == dscr)
         {
-            *((afxDrawScript*)&din->scripts.bytemap[din->scripts.unitSiz * i]) = NIL;
+            *((afxDrawScript*)&dinD->scripts.bytemap[dinD->scripts.unitSiz * i]) = NIL;
         }
     }
 
@@ -429,13 +444,23 @@ _AFX afxError _AfxDscrCtor(void *cache, afxNat idx, afxDrawScript dscr, struct _
     (void)cache;
     (void)idx;
     AfxAssertObject(dscr, AFX_FCC_DSCR);
-
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
     afxDrawInput din = paradigm->owner;
-    AfxAssertObject(din, AFX_FCC_DIN);
+    struct _afxDinD *dinD;
+    _AfxGetDinD(din, &dinD, dsysD);
+    AfxAssertType(dinD, AFX_FCC_DIN);
     afxDrawContext dctx;
     AfxGetConnectedDrawInputContext(din, &dctx);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
+
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
 
     dscr->submRefCnt = 0;
     dscr->portIdx = paradigm->portIdx;
@@ -444,7 +469,7 @@ _AFX afxError _AfxDscrCtor(void *cache, afxNat idx, afxDrawScript dscr, struct _
     dscr->din = din;
 
     afxNat index = 0;
-    AfxInsertArrayUnits(&din->scripts, 1, &index, &dscr);
+    AfxInsertArrayUnits(&dinD->scripts, 1, &index, &dscr);
 
     dscr->disposable = TRUE;
 
@@ -453,7 +478,7 @@ _AFX afxError _AfxDscrCtor(void *cache, afxNat idx, afxDrawScript dscr, struct _
     dscr->vmt = NIL;
     dscr->cmd = NIL;
 
-    if (dctx->vmt->dscr && dctx->vmt->dscr(dscr)) AfxThrowError();
+    if (dctxD->vmt->dscr && dctxD->vmt->dscr(dscr)) AfxThrowError();
     else
     {
         

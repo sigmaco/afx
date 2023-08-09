@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -31,9 +31,9 @@
 
 #include "afx/core/afxCoreDefs.h"
 #include "afx/core/afxFcc.h"
-#include "afx/core/afxLinkedList.h"
-#include "afx/core/afxLinkedList.h"
-#include "afx/core/afxObject.h"
+#include "afx/core/afxChain.h"
+#include "afx/core/afxChain.h"
+#include "afx/core/afxInstance.h"
 #include "afx/core/afxSimd.h"
 #include "afx/core/afxString.h"
 
@@ -43,9 +43,9 @@
 #include "afx/core/io/afxStream.h"
 #include "afx/core/io/afxUri.h"
 
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 #include "afx/core/mem/afxArray.h"
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 
 #include "afx/core/time/afxTime.h"
 

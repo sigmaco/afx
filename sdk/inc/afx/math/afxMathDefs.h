@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -78,6 +78,70 @@ AFX_DEFINE_STRUCT(afxRect)
     union { afxNat extent[2]; struct { afxNat w, h; }; };
 };
 
+
+
+AFX_DEFINE_STRUCT(afxPolarCoord) // polar coordinates
+{
+    afxReal32       r; // norm/distance
+    afxReal32       theta; // azimuth
+};
+
+AFX_DEFINE_STRUCT(afxSphericalCoord) // spherical coordinates
+{
+    afxPolarCoord   polar;
+    afxReal32       phi; // elevation
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 AFXINL void         AfxRectZero(afxRect *rect) { rect->x = 0; rect->y = 0; rect->w = 1; rect->h = 1; }
 AFXINL void         AfxRectCopy(afxRect *rect, afxRect const *src) { rect->x = src->x; rect->y = src->y; rect->w = src->w; rect->h = src->h; }
 
@@ -133,7 +197,7 @@ AFXINL void AfxUnmakeV2dNdc(afxV2d v, afxV2d const total)
 
 AFXINL void AfxCorrectRwMatrix(afxM4d m, afxM4d const in);
 
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 
 //#pragma warning (push)
 //#pragma warning (disable : 4090)

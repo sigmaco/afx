@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -23,6 +23,7 @@
 #define _AFX_DRAW_OUTPUT_C
 #define _AFX_DRAW_DRIVER_C
 #define _AFX_DRAW_THREAD_C
+#define _AFX_DRAW_CONTEXT_C
 #define _AFX_THREAD_C
 #include "sglDrawDriver.h"
 #include "sgl.h"
@@ -750,7 +751,7 @@ static const char *wglNames[] =
     "wglSwapIntervalEXT",
 };
 
-afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, afxChar const *names[], void* vmt[])
+afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, char const *names[], void* vmt[])
 {
     afxError err = AFX_ERR_NONE;
     afxString128 tmp;
@@ -943,10 +944,10 @@ afxChar const targaSigmaSignature[] =
     "\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
     "\n               ###     ###     ### ###    ###  ########  ###     ###           "
     "\n                                                                               "
-    "\n                  S I G M A   T E C H N O L O G Y   G R O U P                  "
+    "\n          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          "
     "\n                                                                               "
     "\n                               Public Test Build                               "
-    "\n                           (c) 2017 Federacao SIGMA                            "
+    "\n               (c) 2017 SIGMA Technology Group — Federação SIGMA               "
     "\n                                www.sigmaco.org                                "
     "\n                                                                               "
 };
@@ -972,8 +973,8 @@ _SGL afxError SglSwapBuffers(HDC hdc, wglVmt const *wgl)
         if (!(SwapBuffers(hdc)))
             AfxThrowError();
 
-    //SetWindowTextA(dout->wglWnd, dout->title.buf); // deadlocks mem threads on exit
-    //UpdateWindow(dout->wglWnd);
+    //SetWindowTextA(doutD->wglWnd, doutD->title.buf); // deadlocks mem threads on exit
+    //UpdateWindow(doutD->wglWnd);
     //AfxYieldThreading();
 
     return err;
@@ -1030,12 +1031,23 @@ _SGL int SglGetPixelFormat(HDC hdc, wglVmt const *wgl)
 _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     afxError err = AFX_ERR_NONE;
-    afxDrawOutput dout = (void*)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+    afxDrawOutput dout = (afxDrawOutput)(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     if (dout)
     {
-        AfxAssertObject(dout, AFX_FCC_DOUT);
-        sglDoutIdd *idd = dout->idd;
+        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+
+        afxDrawSystem dsys;
+        AfxGetDrawSystem(&dsys);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        struct _afxDsysD* dsysD;
+        _AfxGetDsysD(dsys, &dsysD);
+        AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+        struct _afxDoutD *doutD;
+        _AfxGetDoutD(dout, &doutD,dsysD);
+        AfxAssertType(doutD, AFX_FCC_DOUT);
+        sglDoutIdd *idd = doutD->idd;
         AfxAssert(idd->wnd == hWnd);
 
         switch (message)
@@ -1050,7 +1062,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             //_SglDoutProcess(dout);
 
-            //while (0 < AfxReleaseObject(&dout->obj));
+            //while (0 < AfxReleaseObject(&doutD->obj));
 #if 0
             afxDrawContext dctx = AfxGetConnectedDrawOutputContext(dout);
 
@@ -1058,7 +1070,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             else
             {
                 struct msgdecl { afxSize tid; afxSize hwnd; afxSize wParam; afxSize lParam; } *msgdecl = AfxAllocate(NIL, sizeof(struct msgdecl), AfxSpawnHint());
-                msgdecl->tid = GetThreadId(dctx->thread);
+                msgdecl->tid = GetThreadId(dctxD->thread);
                 msgdecl->hwnd = hWnd;
                 msgdecl->wParam = wParam;
                 msgdecl->lParam = lParam;
@@ -1069,7 +1081,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
         }
         case WM_SIZE:
         {
-            //if (dout->resizable)
+            //if (doutD->resizable)
             {
                 /*
                     WM_SIZE
@@ -1101,7 +1113,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
         case WM_DISPLAYCHANGE: // The WM_DISPLAYCHANGE message is sent to all windows when the display resolution has changed.
         {
             afxWhd const resolution = { GetDeviceCaps(idd->dc, HORZRES), GetDeviceCaps(idd->dc, VERTRES), GetDeviceCaps(idd->dc, PLANES) };
-            dout->refreshRate = GetDeviceCaps(idd->dc, VREFRESH);
+            doutD->refreshRate = GetDeviceCaps(idd->dc, VREFRESH);
             afxReal64 physAspRatio = (afxReal64)GetDeviceCaps(idd->dc, HORZSIZE) / (afxReal64)GetDeviceCaps(idd->dc, VERTSIZE);
             
             AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
@@ -1130,17 +1142,18 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxV2d curr = { AfxScalar(points.x), AfxScalar(points.y) };
 
-            AfxV2dSub(dout->absCursorPos, curr, dout->absCursorMove);
-            AfxV2dCopy(dout->absCursorPos, curr);
+            AfxV2dSub(doutD->absCursorPos, curr, doutD->absCursorMove);
+            AfxV2dCopy(doutD->absCursorPos, curr);
 
-            afxV2d screen = { AfxScalar(dout->extent[0]), AfxScalar(dout->extent[1]) };
+            afxV2d screen = { AfxScalar(doutD->extent[0]), AfxScalar(doutD->extent[1]) };
 
-            AfxExtractV2dInNdc(dout->ndcCursorPos, dout->absCursorPos, screen);
-            AfxExtractV2dInNdc(dout->ndcCursorMove, dout->absCursorMove, screen);
+            AfxExtractV2dInNdc(doutD->ndcCursorPos, doutD->absCursorPos, screen);
+            AfxExtractV2dInNdc(doutD->ndcCursorMove, doutD->absCursorMove, screen);
 
             //data2->breake = TRUE;
             break;
         }
+#if 0
         case WM_DROPFILES: // Sent when the user drops a file on the window of an application that has registered itself as a recipient of dropped files.
         {
             // TODO build a kind of handler for draw input to deal with it.
@@ -1156,7 +1169,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             fdrop.y = ppt.y;
             afxNat cnt = DragQueryFileA(hDrop, 0xFFFFFFFF, NIL, NIL);
 
-            AfxAcquireArray(NIL, &fdrop.files, sizeof(afxChar const*), 0, AfxSpawnHint());
+            AfxAcquireArray(&fdrop.files, sizeof(afxChar const*), 0, AfxSpawnHint());
 
             afxChar* name = NIL;
             afxNat len = 0;
@@ -1164,9 +1177,9 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxDrawContext dctx;
             AfxGetConnectedDrawOutputContext(dout, &dctx);
-            AfxAssertObject(dctx, AFX_FCC_DCTX);
-            afxMemory mem = AfxGetDrawContextMemory(dctx);
-            AfxAssertObject(mem, AFX_FCC_MEM);
+            AfxAssertType(dctxD, AFX_FCC_DCTX);
+            afxContext mem = AfxGetDrawContextMemory(dctx);
+            AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
             for (i = 0; i < cnt; i++)
             {
@@ -1182,9 +1195,9 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 }
             }
 
-            afxEvent ev;
-            AfxEventDeploy(&ev, AFX_EVENT_DOUT_DRAGNDROP, &dout->obj, &fdrop);
-            AfxObjectEmitEvent(&dout->obj, &ev);
+            //afxEvent ev;
+            //AfxEventDeploy(&ev, AFX_EVENT_DOUT_DRAGNDROP, &doutD->obj, &fdrop);
+            //AfxObjectEmitEvent(&doutD->obj, &ev);
 
             for (i = 0; i < AfxGetArrayPop(&fdrop.files); i++)
             {
@@ -1203,9 +1216,10 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             //return 0;
             break;
         }
+#endif
         case WM_KILLFOCUS: // Sent to a window immediately before it loses the keyboard focus.
         {
-            dout->focused = FALSE;
+            doutD->focused = FALSE;
             // TODO pause draw input to reduce resource usage?
 
             //BinkPause(Back_Bink, 1);
@@ -1214,7 +1228,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
         }
         case WM_SETFOCUS: // Sent to a window after it has gained the keyboard focus.
         {
-            dout->focused = TRUE;
+            doutD->focused = TRUE;
             // TODO resume draw input of pause to reduce resource usage?
 
             //BinkPause(Back_Bink, 0);
@@ -1505,7 +1519,17 @@ _SGL void _SglDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    struct _afxDctxD *dctxD;
+    _AfxGetDctxD(dctx, &dctxD, dsysD);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
+
     afxDrawDriver ddrv = AfxGetDrawContextDriver(dctx);
     AfxAssertObject(ddrv, AFX_FCC_DDRV);    
     _sglDdrvIdd *idd = ddrv->idd;
@@ -1536,12 +1560,12 @@ _SGL afxError _SglBuildDpu(afxDrawDriver ddrv, afxNat unitIdx)
     if (_SglCreateCombinedDeviceContext(&idd->wndClss, idd->dpus[0].glrc, &(dpu->wnd), &(dpu->dc), &(dpu->glrc), wgl, idd->opengl32)) AfxThrowError();
     else
     {
-        SglLoadOpenGlVmt(idd->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, &wgl->ptr[0]);
+        SglLoadOpenGlVmt(idd->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), (void*)wglNames, (void*)&wgl->ptr[0]);
 
         if (!(wgl->MakeCurrent(dpu->dc, dpu->glrc))) AfxThrowError();
         else
         {
-            SglLoadOpenGlVmt(idd->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, &wgl->ptr[0]);
+            SglLoadOpenGlVmt(idd->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), (void*)wglNames, (void*)&wgl->ptr[0]);
 
             dpu->dcPxlFmt = SglGetPixelFormat(dpu->dc, wgl);
 
@@ -1595,7 +1619,7 @@ _SGL afxError _SglBuildDpu(afxDrawDriver ddrv, afxNat unitIdx)
             //gl->Enable(GL_FRAMEBUFFER_SRGB);
             gl->Enable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 
-            //dthr->thr.proc = _SglDthrProcCb;
+            //dthrD->thr.proc = _SglDthrProcCb;
 
 
             //HDC dcBkp = _wglGetCurrentDC();
@@ -1652,8 +1676,8 @@ _SGL afxError _SglDdrvVmtDtorCb(afxDrawDriver ddrv)
 
     UnregisterClass(idd->wndClss.lpszClassName, idd->wndClss.hInstance);
     
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     for (afxNat i = 0; i < idd->dpuCnt; i++)
         if (_SglDestroyDpu(ddrv, i))
@@ -1670,15 +1694,34 @@ _SGL afxError _SglDdrvVmtDtorCb(afxDrawDriver ddrv)
 _SGL afxBool _SglProcessContextCb(afxDrawContext dctx, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
-    afxDrawThread dthr = udd;
-    AfxAssertObject(dthr, AFX_FCC_DTHR);
-    dthr->dctx = dctx;
 
-    if (dctx->vmt->proc(dctx, dthr))
-        AfxThrowError();
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
 
-    dthr->dctx = NIL;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    afxDrawThread dthr = (afxDrawThread)udd;
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD,dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
+
+    if (dthrD->ddrv == AfxGetDrawContextDriver(dctx))
+    {
+        dthrD->dctx = dctx;
+
+        struct _afxDctxD *dctxD;
+        _AfxGetDctxD(dctx, &dctxD, dsysD);
+        AfxAssertType(dctxD, AFX_FCC_DCTX);
+
+        if (dctxD->vmt->proc(dctx, dthr))
+            AfxThrowError();
+
+        dthrD->dctx = NIL;
+    }
     return FALSE; // don't interrupt curation;
 }
 
@@ -1686,7 +1729,18 @@ _SGL afxError _SglDdrvVmtProcCb(afxDrawDriver ddrv, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    AfxAssertObject(dthr, AFX_FCC_DTHR);
+
+    afxDrawSystem dsys;
+    AfxGetDrawSystem(&dsys);
+    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    struct _afxDsysD* dsysD;
+    _AfxGetDsysD(dsys, &dsysD);
+    AfxAssertType(dsysD, AFX_FCC_DSYS);
+
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    struct _afxDthrD *dthrD;
+    _AfxGetDthrD(dthr, &dthrD,dsysD);
+    AfxAssertType(dthrD, AFX_FCC_DTHR);
 
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -1696,9 +1750,9 @@ _SGL afxError _SglDdrvVmtProcCb(afxDrawDriver ddrv, afxDrawThread dthr)
     if (unitIdx >= idd->dpuCnt)
         return err;
 
-    dthr->portIdx = unitIdx;
+    dthrD->portIdx = unitIdx;
 
-    AfxCurateDrawContexts(ddrv, 0, AfxGetDrawContextCount(ddrv), _SglProcessContextCb, dthr);
+    AfxCurateDrawContexts(0, AFX_N32_MAX, _SglProcessContextCb, (void*)dthr);
 
     _SglDthrProcessDpuDeletionQueue(ddrv, unitIdx); // delete after is safer?
 
@@ -1724,10 +1778,10 @@ _SGL afxError _SglDdrvCtorCb(afxDrawDriver ddrv, afxDrawDriverSpecification cons
     afxNat32 tid;
     AfxGetThreadingId(&tid);
 
-    AfxAssert(mainThreadId == tid);
+    //AfxAssert(mainThreadId == tid);
 
-    afxMemory mem = AfxGetDrawMemory();
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawMemory();
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
 
     ddrv->vmt = &SglDrvVmt;
 
@@ -1766,7 +1820,7 @@ _SGL afxError _SglDdrvCtorCb(afxDrawDriver ddrv, afxDrawDriverSpecification cons
             idd->wndClss.hCursor = NULL;
             idd->wndClss.hbrBackground = NULL;
             idd->wndClss.lpszMenuName = NULL;
-            idd->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration over Qwadro (c) 2017 SIGMA --- Public Test Build";
+            idd->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build";
             idd->wndClss.hIconSm = NULL;
 
             if (!(RegisterClassEx(&(idd->wndClss)))) AfxThrowError();
@@ -1792,17 +1846,17 @@ _SGL afxError _SglDdrvCtorCb(afxDrawDriver ddrv, afxDrawDriverSpecification cons
 #if 0
                 for (afxNat i = 0; i < AfxGetThreadingCapacity(); i++)
                 {
-                    afxDrawThreadSpecification dthrSpec = { 0 };
-                    //dthrSpec.base.affinityMask = AFX_FLAG(0);
+                    afxDrawThreadConfig dthrConfig = { 0 };
+                    //dthrConfig.base.affinityMask = AFX_FLAG(0);
 
                     afxDrawThread dthr;
 
-                    if (!(dthr = _AfxAcquireDrawThread(ddrv, &dthrSpec))) AfxThrowError();
+                    if (!(dthr = _AfxAcquireDrawThread(ddrv, &dthrConfig))) AfxThrowError();
                     else
                     {
                         AfxAssertObject(dthr, AFX_FCC_DTHR);
-                        AfxSetThreadAffinity(&dthr->thr, i);
-                        AfxRunThread(&dthr->thr);
+                        AfxSetThreadAffinity(&dthrD->thr, i);
+                        AfxRunThread(&dthrD->thr);
                     }
                 }
 #endif
@@ -1856,7 +1910,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys)
     afxError err = AFX_ERR_NONE;
 
     static afxString name, author, website, note;
-    AfxWrapStringLiteral(&name, "OpenGL/Vulkan Continuous Integration over Qwadro", 0);
+    AfxWrapStringLiteral(&name, "OpenGL/Vulkan Continuous Integration", 0);
     AfxWrapStringLiteral(&author, "SIGMA Technology Group", 0);
     AfxWrapStringLiteral(&website, "www.sigmaco.org", 0);
     AfxWrapStringLiteral(&note, /*sigglSigmaSignature*/targaSigmaSignature, 0);

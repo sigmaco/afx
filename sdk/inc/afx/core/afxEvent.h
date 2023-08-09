@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -61,7 +61,7 @@ typedef enum afxEventType
 } afxEventType;
 
 AFX_DECLARE_STRUCT(afxEvent);
-AFX_DECLARE_STRUCT(afxObject);
+AFX_DECLARE_STRUCT(afxInstance);
 
 AFX_DEFINE_STRUCT(afxEvent)
 {
@@ -70,17 +70,19 @@ AFX_DEFINE_STRUCT(afxEvent)
     afxBool         posted, accepted;
     union
     {
-        afxObject   *receiver;
-        afxObject   *obj;
+        afxInstance   *receiver;
+        afxInstance   *obj;
     };
     void            *udd[4];
 };
 
-AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxObject *receiver, void *udd)
+AFXINL void AfxEventDeploy(afxEvent* ev, afxEventType type, afxInstance *receiver, void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ev);
+#if _AFX_DEBUG
     ev->fcc = AFX_FCC_EVNT;
+#endif
     ev->type = type;
     ev->posted = FALSE;
     ev->accepted = FALSE;

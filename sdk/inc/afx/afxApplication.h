@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -25,12 +25,12 @@
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 
-AFX_DEFINE_STRUCT(afxApplicationSpecification)
+AFX_DEFINE_STRUCT(afxApplicationConfig)
 {
     afxNat                  argc;
     afxChar const           **argv;
 
-    afxMemory               genrlMem;
+    afxContext               genrlMem;
     afxDrawContext          dctx;
     afxDrawInput            din;
 
@@ -44,16 +44,19 @@ AFX_DEFINE_STRUCT(afxApplicationSpecification)
 #   error "afxThread not exposed"
 #endif
 
-AFX_OBJECT(afxApplication)
-{
-    AFX_OBJECT(afxThread)   thr;
+struct _afxAppD
 #ifdef _AFX_APPLICATION_C
+{
+    _AFX_DBG_FCC
+    afxApplication          appObj;
     afxChain                provisions;
     afxClass                widClass;
     afxClass                simClass;
 
+    afxThread               thr;
+
     // memory allocation service
-    afxMemory               genrlMem;
+    afxContext               genrlMem;
 
     // human input service
     afxMouse                stdMse;
@@ -73,10 +76,13 @@ AFX_OBJECT(afxApplication)
     afxWidget               focusedWidg;
     afxWidget               grabbedWidg;
     afxV2d                  grabPoint;
+}
 #endif//_AFX_APPLICATION_C
-};
+;
 
-AFX afxError                AfxAcquireApplications(afxApplicationSpecification const *spec, afxNat cnt, afxApplication app[]);
+AFX afxNat                  AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication app[]);
+
+AFX afxError                AfxAcquireApplications(afxNat cnt, afxApplication app[], afxApplicationConfig const config[]);
 AFX void                    AfxReleaseApplications(afxNat cnt, afxApplication app[]);
 
 AFX void                    AfxEndApplication(afxApplication app, afxInt exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
@@ -86,10 +92,9 @@ AFX afxResult               AfxRunApplication(afxApplication app); // Enters the
 AFX afxSimulation           AfxApplicationAcquireSimulation(afxApplication app, afxSimulationSpecification const *spec);
 AFX afxWidget               AfxApplicationAcquireWidget(afxApplication app, afxString const *name, afxWidget parent, afxUri const *uri, afxResult(*f)(afxWidget, afxUri const*, void *data));
 
-AFX void*                   AfxApplicationGetDrawContext(afxApplication app);
+AFX afxDrawContext            AfxApplicationGetDrawContext(afxApplication app);
 AFX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
 
-AFX afxObject*              AfxGetApplicationObject(afxApplication app);
 AFX afxThread               AfxGetApplicationThread(afxApplication app);
 
 AFX afxClass*               AfxGetWidgetClass(afxApplication app);
@@ -101,5 +106,7 @@ AFX afxNat                  AfxEnumerateSimulations(afxApplication app, afxNat f
 AFX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
 AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
 AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
+
+AFX afxBool                 _AfxGetAppD(afxApplication app, struct _afxAppD **appD, struct _afxSysD* sysD);
 
 #endif//AFX_APPLICATION_H

@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -818,16 +818,16 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("dctx=%p", dctx);
-    AfxAssertObject(dctx, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, AFX_FCC_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(dop);
     afxResult rslt = 0;
 
-    afxMemory mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObject(mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertObject(dsys, AFX_FCC_DSYS);
+    AfxAssertType(dsys, AFX_FCC_DSYS);
     afxIoSystem fsys = AfxGetDrawFileSystem(dsys);
     AfxAssertObject(fsys, AFX_FCC_FSYS);
 

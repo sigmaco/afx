@@ -7,8 +7,8 @@
 
 #include "afxMmuiDefs.h"
 #include "afx/draw/afxColor.h"
-#include "afx/core/afxLinkedList.h"
-#include "afx/core/afxObject.h"
+#include "afx/core/afxChain.h"
+#include "afx/core/afxInstance.h"
 #include "afx/core/io/afxUri.h"
 //#include "afxViewport.h"
 //#include "afx/draw/afxDrawInput.h"
@@ -50,7 +50,7 @@ AFX_DEFINE_HANDLE(afxWidget);
 
 AFX_OBJECT(afxWidget)
 {
-    afxObject                       obj;
+    afxInstance                       obj;
 
     afxLinkage                      parent;
     afxChain                        children;

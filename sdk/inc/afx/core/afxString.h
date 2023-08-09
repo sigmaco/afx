@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -82,7 +82,11 @@ AFX_DEFINE_STRUCT(afxString128)
     afxChar     buf[128];
 };
 
+#if _AFX_DEBUG
 #define AFX_STRING_LITERAL(text_) { .fcc = AFX_FCC_STR, .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
+#else
+#define AFX_STRING_LITERAL(text_) { .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
+#endif
 #define AfxSpawnString(text_) (afxString const[])AFX_STRING_LITERAL(text_)
 
 // NOTE: When 'cap' is zero, a string can't be modified.
@@ -166,8 +170,10 @@ AFXINL afxError _AfxStringAssert(afxString const *str_, afxHint const hint_, afx
     afxChar const *msg;
 
     if (!(str_)) msg = errorMsg[AFXERR_NIL];
+#if _AFX_DEBUG
     else if (!((str_)->fcc)) msg = errorMsg[AFXERR_UNINITIALIZED];
     else if (!((str_)->fcc == AFX_FCC_STR)) msg = errorMsg[AFXERR_INVALID];
+#endif
     else msg = NIL;
 
     if (!msg) return 0;

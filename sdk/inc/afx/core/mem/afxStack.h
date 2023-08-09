@@ -7,10 +7,10 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
@@ -19,7 +19,7 @@
 
 #include "afx/core/diag/afxDebug.h"
 #include "afx/core/afxFcc.h"
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 
 // A Stack is a linear data structure in which elements can be inserted and deleted only from one side of the list, called the top. 
 // A stack follows the LIFO (Last In First Out) principle, i.e., the element inserted at the last is the first element to come out. 
@@ -38,11 +38,11 @@ AFX_DEFINE_STRUCT(afxStack)
     afxNat              maxActiveBlocks;
     afxAllocationBlock  **blockDir;
 
-    afxMemory           ctx;
+    afxContext           ctx;
 };
 
-AFX void        AfxAcquireStack(afxMemory mem, afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock);
-AFX void        AfxAcquirePagedStack(afxMemory mem, afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock, afxNat maxUnits);
+AFX void        AfxAcquireStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock);
+AFX void        AfxAcquirePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock, afxNat maxUnits);
 AFX void        AfxReleaseStack(afxStack *stck);
 
 AFX void        AfxEmptyStack(afxStack *stck);

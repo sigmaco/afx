@@ -8,7 +8,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
@@ -92,7 +92,7 @@ AFX_DEFINE_STRUCT(afxAnimTrackGroup)
 
 AFX_OBJECT(afxAnimation)
 {
-    afxObject           obj;
+    afxInstance           obj;
     afxString32         name;
     afxReal             dur;
     afxReal             timeStep;

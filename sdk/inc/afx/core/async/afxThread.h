@@ -7,20 +7,20 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *                      S I G M A   T E C H N O L O G Y   G R O U P
+ *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                               (c) 2017 Federação SIGMA
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
  *                                    www.sigmaco.org
  */
 
 #ifndef AFX_THREAD_H
 #define AFX_THREAD_H
 
-#include "afx/core/afxObject.h"
+#include "afx/core/afxInstance.h"
 #include "afx/core/mem/afxQueue.h"
 #include "afx/core/time/afxTime.h"
-#include "afx/core/mem/afxMemory.h"
+#include "afx/core/mem/afxContext.h"
 #include "afx/core/time/afxClock.h"
 #include "afx/core/async/afxSlock.h"
 
@@ -43,7 +43,7 @@ typedef enum afxThreadOpcode
     AFX_THR_OPCODE_QUIT,
 } afxThreadOpcode;
 
-AFX_DEFINE_STRUCT(afxThreadSpecification)
+AFX_DEFINE_STRUCT(afxThreadConfig)
 {
     afxError        (*proc)(afxThread thr, void *udd, afxInt opcode);
     void            *udd;
@@ -59,34 +59,35 @@ AFX_DEFINE_STRUCT(afxProcessor)
     //afxChain            threads;
     afxThread           activeThr;
 
-    afxSystemClock  startClock;
-    afxSystemClock  lastClock;
-    afxSystemClock  currClock;
+    afxClock  startClock;
+    afxClock  lastClock;
+    afxClock  currClock;
     afxReal64       currTime;
     afxReal64       deltaTime;
     afxNat          iterCnt;
     afxNat          lastIterCnt;
-    afxSystemClock  iterCntSwapClock;
+    afxClock  iterCntSwapClock;
 };
 
 #endif
 
-AFX_OBJECT(afxThread)
-{
-    afxObject       obj;
+struct _afxThrD
 #ifdef _AFX_THREAD_C
+{
+    _AFX_DBG_FCC
+    afxObject       thrObj;
     //afxLinkage      procUnit;
     afxSlock        procSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     afxNat          affineProcUnitIdx; // if set bit set, only such processor will can run this thread.
-    afxSystemClock  startClock;
-    afxSystemClock  lastClock;
-    afxSystemClock  currClock;
+    afxClock  startClock;
+    afxClock  lastClock;
+    afxClock  currClock;
     afxReal64       currTime;
     afxReal64       deltaTime;
     afxNat          iterCnt;
     afxNat          lastIterCnt;
-    afxSystemClock  iterCntSwapClock;
+    afxClock  iterCntSwapClock;
     afxError        (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
     afxBool         started;
     afxBool         exited;
@@ -97,10 +98,14 @@ AFX_OBJECT(afxThread)
     afxBool         interruptionRequested;
     afxInt          exitCode;
     void            *udd;
+}
 #endif
-};
+;
 
-AFX afxError    AfxAcquireThreads(afxThreadSpecification const *spec, afxHint const hint, afxNat cnt, afxThread thr[]);
+AFX afxNat      AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[]);
+AFX afxNat      AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
+
+AFX afxError    AfxAcquireThreads(afxNat cnt, afxThread thr[], afxThreadConfig const config[], afxHint const hint);
 AFX void        AfxReleaseThreads(afxNat cnt, afxThread thr[]);
 
 AFX void*       AfxGetThreadUdd(afxThread thr);
@@ -168,10 +173,13 @@ AFX void        AfxGetThreadingId(afxNat32 *tid);
 
 AFX void        AfxGetExecutionCounter(afxNat *currIter, afxNat *lastFreq);
 AFX void        AfxGetExecutionTime(afxReal64 *curr, afxReal64 *delta);
-AFX void        AfxGetExecutionClock(afxSystemClock *curr, afxSystemClock *last);
+AFX void        AfxGetExecutionClock(afxClock *curr, afxClock *last);
 
 AFX void        AfxEndProcessor(afxResult exitCode);
 
 AFX afxResult   AfxSleepProcessor(afxTimeSpec const* dur, afxTimeSpec *remaining);
+
+
+AFX afxBool     _AfxGetThrD(afxThread thr, struct _afxThrD **thrD, struct _afxSysD* sysD);
 
 #endif//AFX_THREAD_H
