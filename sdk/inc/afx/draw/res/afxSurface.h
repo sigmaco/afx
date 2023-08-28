@@ -29,24 +29,24 @@ typedef enum afxSurfaceState
 
 AFX_DECLARE_STRUCT(_afxSurfVmt);
 
-#if (defined(_AFX_SURFACE_C) && !defined(_AFX_TEXTURE_C))
-#   error "afxTexture not exposed"
-#endif
-
-AFX_OBJECT(afxSurface) // our concept of a framebuffer
-{
-    AFX_OBJECT(afxTexture)  tex;
-    _afxSurfVmt const*      vmt;
-    void*                   idd; // implementation-defined data
 #ifdef _AFX_SURFACE_C
+AFX_OBJECT(afxSurface)
+#else
+struct afxBaseSurface
+#endif
+{
+    afxTexture              tex;
     afxSurfaceState         state;
     afxLinkage              swapchain; // if state == PENDING, must have a swapchain linked to this canvas. Used by draw context on canvas presentation to surface.
-#endif
 };
 
-AFX afxDrawContext          AfxGetSurfaceContext(afxSurface surf);
+AFX afxNat                  AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[]);
+
+AFX afxError                AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
 
 AFX afxSurfaceState         AfxGetSurfaceState(afxSurface surf);
 AFX afxBool                 AfxSurfaceIsPresentable(afxSurface surf);
+
+AFX afxTexture              AfxGetSurfaceTexture(afxSurface surf);
 
 #endif//AFX_SURFACE_H

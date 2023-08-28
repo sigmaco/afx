@@ -21,6 +21,7 @@
 #include "afx/core/afxChain.h"
 #include "afx/core/async/afxSlock.h"
 #include "afx/core/afxInstance.h"
+#include "afx/core/mem/afxPool.h"
 
 // RTTI of Qwadro
 
@@ -62,19 +63,26 @@ AFX_DEFINE_STRUCT(afxBlueprint)
     afxBlueprintFlags   flags;
 };
 
-AFX_DEFINE_STRUCT(afxClassSpecification)
+AFX_DEFINE_STRUCT(afxCookie)
+{
+    afxNat no;
+    void** udd;
+};
+
+AFX_DEFINE_STRUCT(afxClassConfig)
 {
     afxFcc          fcc;
-    afxContext       all;
+    afxContext      ctx;
     afxNat          maxCnt;
     afxNat          size;
     afxClass*       base;
-    afxError        (*ctor)(void *cache, afxNat idx, afxInstance* obj, void const *blueprint);
-    afxError        (*dtor)(afxInstance* obj);
-    afxBool         (*event)(afxInstance *obj, afxEvent *ev);
-    afxBool         (*eventFilter)(afxInstance *obj, afxInstance *watched, afxEvent *ev);
+    afxError        (*ctor)(afxHandle obj, afxCookie const* cookie);
+    afxError        (*dtor)(afxHandle obj);
+    afxBool         (*event)(afxHandle obj, afxEvent *ev);
+    afxBool         (*eventFilter)(afxHandle obj, afxHandle watched, afxEvent *ev);
     afxChar const*  name;
     void const*     vmt;
+    afxNat          unitsPerPage;
 };
 
 AFX_DEFINE_STRUCT(afxClass)
@@ -87,22 +95,19 @@ AFX_DEFINE_STRUCT(afxClass)
     afxNat          levelMask;
 
     afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
-    void*           all; // afxContext
+    afxContext      ctx; // afxContext
     afxSize         siz;
 
-    afxBlueprint*   (*formulate)(afxBlueprint *blueprint);
-    afxError        (*discard)(afxBlueprint *blueprint);
-
-    afxError        (*ctor)(void *cache, afxNat idx, afxInstance* obj, void const *blueprint); // void to avoid warnings
-    afxError        (*dtor)(afxInstance* obj);
-    afxError        (*output)(afxInstance* obj, void* ios); // afxStream
-    afxError        (*input)(afxInstance* obj, void* ios);
+    afxError        (*ctor)(afxHandle obj, afxCookie const* cookie); // void to avoid warnings
+    afxError        (*dtor)(afxHandle obj);
+    afxError        (*output)(afxHandle obj, void* ios); // afxStream
+    afxError        (*input)(afxHandle obj, void* ios);
     
-    afxBool         (*event)(afxInstance *obj, afxEvent *ev);
-    afxBool         (*eventFilter)(afxInstance *obj, afxInstance *watched, afxEvent *ev);
+    afxBool         (*event)(afxHandle obj, afxEvent *ev);
+    afxBool         (*eventFilter)(afxHandle obj, afxHandle watched, afxEvent *ev);
     
     afxSlock        slock;
-    afxChain        instances;
+    afxPool         pool;
 
     afxChar         name[32];
 
@@ -112,36 +117,29 @@ AFX_DEFINE_STRUCT(afxClass)
     void*           userData[4];
 };
 
-AFX afxError        AfxMountClass(afxClass *cls, afxChain* provider, afxClassSpecification const *spec);
-AFX afxError        AfxMountClassInherited(afxClass *cls, afxClass *base, afxChain* provider, afxClassSpecification const *spec);
-AFX afxError        AfxClassDismount(afxClass *cls);
+AFX afxError        AfxMountClass(afxClass *cls, afxChain* provider, afxClassConfig const *spec);
+AFX afxError        AfxInstallClassExtension(afxClass *cls, afxClass *base, afxChain* provider, afxClassConfig const *spec);
+AFX afxError        AfxDismountClass(afxClass *cls);
 
-AFX afxError        AfxClassAllocateObjects(afxClass *cls, afxNat cnt, afxInstance *obj[], afxHint const hint);
-AFX afxError        AfxClassDeallocateObjects(afxClass *cls, afxNat cnt, afxInstance *obj[]);
+//AFX afxError        AfxClassAllocateObjects(afxClass *cls, afxNat cnt, afxHandle obj[]);
+//AFX afxError        AfxClassDeallocateObjects(afxClass *cls, afxNat cnt, afxHandle obj[]);
 
-AFX afxError        AfxClassRequestBlueprints(afxClass *cls, afxNat cnt, afxBlueprint *blueprint[]);
-AFX afxError        AfxClassDiscardBlueprints(afxClass *cls, afxNat cnt, afxBlueprint *blueprint[]);
-
-AFX afxError        AfxClassBuildObjects(afxClass *cls, void *cache, afxNat cnt, void const *blueprint, afxInstance *obj[]);
+AFX afxError        AfxClassBuildObjects(afxClass *cls, afxNat cnt, afxHandle obj[], void* udd);
 //AFX afxError        AfxClassRebuildObjects(afxClass *cls, afxNat cnt, afxInstance *obj[], afxBlueprint const blueprint[]); // Concept: should be used only to reuse allocation for already ready objects.
-AFX afxError        AfxClassDismantleObjects(afxClass *cls, afxNat cnt, afxInstance *obj[]);
+AFX afxError        AfxClassDismantleObjects(afxClass *cls, afxNat cnt, afxHandle obj[]);
 
-AFX afxError        AfxClassAcquireObjects(afxClass *cls, void *cache, afxNat cnt, void const *blueprint, afxInstance *obj[], afxHint const hint);
+AFXINL afxNat       AfxCountInstances(afxClass const* cls);
+AFXINL afxNat       AfxGetInstanceSize(afxClass const* cls);
+AFXINL afxNat       AfxGetInstanceAddedSsize(afxClass const* cls);
 
-AFXINL afxNat       AfxGetClassInstanceCount(afxClass const* cls);
-AFXINL afxNat       AfxClassGetSizeOfObject(afxClass const* cls);
-AFXINL afxNat       AfxClassGetSizeOfSubset(afxClass const* cls);
-
-AFXINL afxClass*    AfxClassGetBase(afxClass const* cls);
+AFXINL afxClass*    AfxGetBaseClass(afxClass const* cls);
 AFXINL void const*  AfxClassGetVmt(afxClass const* cls);
-AFXINL afxInstance*   AfxClassGetObject(afxClass const* cls, afxBool b2f, afxNat idx);
-AFXINL afxBool      AfxClassFindObjectIndex(afxClass const* cls, afxBool b2f, afxInstance const* obj, afxNat *idx);
+AFXINL afxBool      AfxGetInstance(afxClass const* cls, afxNat32 uniqueId, afxHandle* obj);
+AFXINL afxBool      AfxClassFindObjectIndex(afxClass const* cls, afxBool b2f, afxHandle obj, afxNat *idx);
 
-AFXINL afxNat       AfxEnumerateFirstClassInstances(afxClass* cls, afxNat first, afxNat cnt, afxInstance *obj[]);
-AFXINL afxNat       AfxEnumerateLastClassInstances(afxClass* cls, afxNat first, afxNat cnt, afxInstance *obj[]);
+AFXINL afxNat       AfxEnumerateInstances(afxClass const* cls, afxNat first, afxNat cnt, afxHandle obj[]);
 
-AFXINL afxNat       AfxCurateFirstClassInstances(afxClass* cls, afxNat first, afxNat cnt, afxBool(*f)(afxInstance *obj, void *udd), void *udd);
-AFXINL afxNat       AfxCurateLastClassInstances(afxClass* cls, afxNat first, afxNat cnt, afxBool(*f)(afxInstance *obj, void *udd), void *udd);
+AFXINL afxNat       AfxCurateInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxHandle obj, void *udd), void *udd);
 
 AFX afxResult       AfxClassForEveryInstance(afxClass *cls, afxBool exclusive, void(*f)(afxIterator *obji), void *data);
 AFX afxResult       AfxClassForEveryDerivedInstance(afxClass *cls, afxFcc superset, afxBool exclusive, void(*f)(afxIterator *obji), void *data);
@@ -162,14 +160,6 @@ AFX afxBool AfxClassTryLockExclusive(afxClass *cls);
 #endif
 
 AFX afxResult _AfxShutdownOrphanClasses(void);
-AFX afxResult _AfxDropClassChain(afxChain *ch);
-
-
-
-
-AFX afxError        AfxClass_AllocateInstances(afxClass *cls, afxNat cnt, void *inst[], void const *substance, afxHint const hint);
-AFX afxError        AfxClass_DeallocateInstances(afxClass *cls, afxNat cnt, void *inst[]);
-AFX afxError        AfxClass_BuildInstances(afxClass *cls, afxNat cnt, void *inst[], void const *substance, void *cache);
-AFX afxError        AfxClass_RuinInstances(afxClass *cls, afxNat cnt, void *inst[]);
+AFX afxResult _AfxUninstallChainedClasses(afxChain *ch);
 
 #endif//AFX_CLASS_H

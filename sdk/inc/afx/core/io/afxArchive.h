@@ -24,17 +24,13 @@
 
 #include "afx/core/io/afxFile.h"
 
-struct _afxArcD
 #ifdef _AFX_ARCHIVE_C
+AFX_OBJECT(afxArchive)
 {
-    _AFX_DBG_FCC
-    afxArchive          arcObj;
     afxFile             file;
     afxArray            entries;
-}
+};
 #endif
-;
-
 
 /* URI for open zipped streams.
  * art.zip#idx
@@ -53,8 +49,7 @@ AFX_DEFINE_STRUCT(afxArchiveItemDescriptor)
 
 AFX afxNat      AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive arc[]);
 
-AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[], afxFileFlags flags[]);
-AFX void        AfxReleaseArchives(afxNat cnt, afxArchive arc[]);
+AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[], afxFileFlags const flags[]);
 
 AFX afxNat      AfxGetArchiveItemCount(afxArchive arc);
 
@@ -72,6 +67,6 @@ AFX afxNat      AfxGetArchiveItemSize(afxArchive arc, afxNat idx);
 AFX afxString*  AfxGetArchiveItemName(afxArchive arc, afxNat idx, afxUri *name);
 AFX afxNat32    AfxGetArchiveItemHash(afxArchive arc, afxNat idx);
 
-AFX afxBool     _AfxGetArcD(afxArchive arc, struct _afxArcD **arcD, struct _afxSysD* sysD);
+//AFX afxBool     _AfxGetArcD(afxArchive arc, struct _afxArcD **arcD, struct _afxSysD* sysD);
 
 #endif//AFX_ARCHIVE_H

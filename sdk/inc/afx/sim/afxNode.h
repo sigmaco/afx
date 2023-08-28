@@ -22,6 +22,7 @@
 #include "../math/afxMathDefs.h"
 #include "../math/volume/afxAabb.h"
 #include "../math/volume/afxSphere.h"
+#include "afxSimDefs.h"
 
 // Frames define the spatial relationships between the objects to which they are attached.
 // The newly created frame has no parent and is its own root.
@@ -43,8 +44,6 @@
 // World space is the coordinate system for the entire scene.Its origin is at the center of the scene.The grid you see in view windows shows the world space axes.
 // Object space is the coordinate system from an object's point of view.The origin of object space is at the object's pivot point, and its axes are rotated with the object.
 // Local space is similar to object space, however it uses the origin and axes of the object's parent node in the hierarchy of objects.This is useful when you haven't transformed the object itself, but it is part of a group that is transformed.
-
-AFX_DEFINE_HANDLE(afxNode);
 
 typedef enum afxNodeFlag
 {
@@ -70,9 +69,8 @@ AFX_DEFINE_STRUCT(afxNodeSpecification)
 
 AFX_OBJECT(afxNode)
 {
-    afxInstance           obj;
     afxNodeFlag         flags;
-    afxString*          name; // 32
+    afxString           name; // 32
 
     afxLinkage          parent;
     afxChain            children;

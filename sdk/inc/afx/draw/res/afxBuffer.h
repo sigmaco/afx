@@ -49,19 +49,16 @@ typedef enum afxBufferMap
 
 AFX_DECLARE_STRUCT(_afxBufVmt);
 
-AFX_OBJECT(afxBuffer)
-{
-    afxInstance           obj;
-    _afxBufVmt const*   vmt;
-    void*               idd;
 #ifdef _AFX_BUFFER_C
+AFX_OBJECT(afxBuffer)
+#else
+struct afxBaseBuffer
+#endif
+{
+    _afxBufVmt const*   vmt;
     afxSize             siz;
     afxBufferUsage      usage;
     afxByte*            bytemap;
-
-    afxBool             locked;
-    afxSize             lastUpdOffset, lastUpdRange;
-#endif
 };
 
 AFX_DEFINE_STRUCT(afxBufferSpecification)
@@ -87,11 +84,10 @@ AFX_DEFINE_STRUCT(afxMappedBufferRange)
     afxNat                  size;
 };
 
-AFX afxDrawContext  AfxGetBufferContext(afxBuffer buf);
+AFX afxNat          AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buf[]);
 
-AFX void*           AfxGetBufferIdd(afxBuffer buf);
+AFX afxError        AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBuffer buf[], afxBufferSpecification const spec[]);
 
-AFX void const*     AfxBufferGetData(afxBuffer buf, afxSize offset);
 AFX afxSize         AfxGetBufferSize(afxBuffer buf);
 
 AFX void*           AfxMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFlags flags);

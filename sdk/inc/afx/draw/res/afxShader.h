@@ -39,13 +39,31 @@ typedef enum afxShaderResourceType
     AFX_SHD_RES_TYPE_TOTAL
 } afxShaderResourceType;
 
+AFX_DEFINE_STRUCT(afxShaderBlueprint)
+{
+    afxFcc                  fcc;
+    afxDrawContext          dctx;
+    afxContext              ctx;
+    afxUri128               uri; // 128
+    afxShaderStage          stage;
+
+    afxString8              entry; // 8
+    afxArray                codes; // afxByte    
+    afxArray                inOuts; // afxShaderBlueprintInOut
+    afxArray                resources; // afxShaderBlueprintResource
+    afxPrimTopology         topology;
+
+    // push constants?
+    // specialization?
+};
+
 AFX_DEFINE_STRUCT(afxShaderResource)
 {
     afxNat8                 set;
     afxNat8                 binding;
     afxShaderResourceType   type;
     afxNat8                 cnt;
-    afxString*              name; // 16
+    afxString               name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxShaderInOut)
@@ -60,30 +78,28 @@ AFX_DEFINE_STRUCT(afxShaderBlueprintResource)
     afxNat8                 binding;
     afxShaderResourceType   type;
     afxNat8                 cnt;
-    afxString*              name; // 16
+    afxString               name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
 {
     afxNat8                 location;
     afxVertexFormat         fmt;
-    afxString*              semantic; // 8
+    afxString               semantic; // 8
 };
 
-AFX_DECLARE_STRUCT(_afxShdVmt);
-
-AFX_OBJECT(afxShader)
-{
-    afxInstance                   obj;
-    _afxShdVmt const*           vmt;
-    void*                       idd;
 #ifdef _AFX_SHADER_C
-    afxUri*                     uri;
+AFX_OBJECT(afxShader)
+#else
+struct afxBaseShader
+#endif
+{
+    afxUri                      uri;
     afxShaderStage              stage;
 
     afxByte*                    code;
     afxNat16                    codeLen;
-    afxString*                  entry;
+    afxString                   entry;
 
     afxNat8                     resDeclCnt;
     afxShaderBlueprintResource* resDecls;
@@ -91,16 +107,20 @@ AFX_OBJECT(afxShader)
     afxNat8                     ioDeclCnt;
     afxShaderBlueprintInOut*    ioDecls;
     afxPrimTopology             topology;
-#endif
 };
 
-AFX afxDrawContext          AfxGetShaderContext(afxShader shd);
+AFX afxNat                  AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[]);
 
-AFX afxNat                  AfxGetShaderInterfaceCount(afxShader shd);
+AFX afxError                AfxAcquireShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[], afxUri const uri[]);
+AFX afxError                AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[], afxShaderBlueprint const blueprint[]);
+AFX afxResult               AfxFindShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[], afxUri const uri[]);
+AFX afxError                AfxUploadShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[], afxUri const uri[]);
+
+AFX afxNat                  AfxCountShaderInterfaces(afxShader shd);
 AFX afxResult               AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);
 
 AFX afxBool                 AfxShaderIsDummy(afxShader shd);
-AFX afxShaderStage          AfxShaderGetStage(afxShader shd);
+AFX afxShaderStage          AfxGetShaderStage(afxShader shd);
 AFX afxError                AfxShaderDownload(afxShader shd, afxUri const *uri);
 AFX afxError                AfxShaderSerialize(afxShader shd, afxStream *ios);
 

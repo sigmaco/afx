@@ -1,0 +1,39 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 50a017dc by 00000000 over 00000000 with 509ff1c0)
+ afxClass<Basic I/O System>::ConstructObject(003d8090)
+ afxSystem.c:1007
+  _AfxSysCtor(sys=003d8090)
+ Installing Context at 003d80cc by 003d80b8 over 00000000 with 509ff7a4)
+ Installing Module at 003d818c by 003d80b8 over 00000000 with 509ff080)
+ Installing Thread at 003d83cc by 003d80b8 over 00000000 with 509ff1f0)
+ Installing File at 003d854c by 003d80b8 over 00000000 with 509ff314)
+ Installing Archive at 003d860c by 003d80b8 over 00000000 with 509ff2e4)
+ Installing Application at 003d848c by 003d80b8 over 00000000 with 509ff000)
+ Installing Keyboard at 003d824c by 003d80b8 over 00000000 with 509ff344)
+ Installing Mouse at 003d830c by 003d80b8 over 00000000 with 509ff374)
+ Installing Draw System at 003d86cc by 003d80b8 over 00000000 with 50a00074)
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1092?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:202
+  AfxAcquireContexts(cnt=1,app=003d878c,strategy=0024e4a8)
+ afxClass<Context>::ConstructObject(003d88f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=003d88f0)

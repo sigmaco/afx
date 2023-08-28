@@ -1,0 +1,114 @@
+
+ afxDebug.c:391
+	AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 509e17dc by 00000000 over 00000000 with 509df1c0)
+ afxClass<Basic I/O System>::ConstructObject(008d8090)
+ afxSystem.c:1006
+	_AfxSysCtor(sys=008d8090)
+ Installing Context at 008d80cc by 008d80b8 over 00000000 with 509df7a4)
+ Installing Module at 008d818c by 008d80b8 over 00000000 with 509df080)
+ Installing Thread at 008d83cc by 008d80b8 over 00000000 with 509df1f0)
+ Installing File at 008d854c by 008d80b8 over 00000000 with 509df314)
+ Installing Archive at 008d860c by 008d80b8 over 00000000 with 509df2e4)
+ Installing Application at 008d848c by 008d80b8 over 00000000 with 509df000)
+ Installing Keyboard at 008d824c by 008d80b8 over 00000000 with 509df344)
+ Installing Mouse at 008d830c by 008d80b8 over 00000000 with 509df374)
+ Installing Draw System at 008d86cc by 008d80b8 over 00000000 with 509e0074)
+ ADV afxSystem.c:1090?_AfxSysCtor
+    Memory page size: 4096
+ ADV afxSystem.c:1091?_AfxSysCtor
+    Logical processor count: 2
+ afxContext.c:202
+	AfxAcquireContexts(cnt=1,app=008d878c,strategy=0044e3ec)
+ afxClass<Context>::ConstructObject(008d88f0)
+ afxContext.c:166
+	_AfxCtxCtor(ctx=008d88f0)
+ afxArena.c:767
+	AfxAcquireArena(aren=008d87e8)
+ afxArena.c:768
+	AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+ afxSystem.c:751
+	AfxMountStoragePoints(6,0044e544)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+	AfxAcquireModules(cnt=1,mdle=008d87b8,uri=0044e47c)
+ afxClass<Module>::ConstructObject(008dd560)
+ afxModule.c:125
+	_AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+	AfxAcquireKeyboards(cnt=1,kbd=008d87bc,port=0044e3c4)
+ afxClass<Keyboard>::ConstructObject(008dd660)
+ afxKeyboard.c:281
+	_AfxKbdCtor(kbd=008dd660)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw System>::ConstructObject(008de060)
+ afxDrawSystem.c:635
+	_AfxDsysCtor(dsys=008de060)
+ Installing Draw Thread at 008de48c by 008de0b8 over 00000000 with 0044eea0)
+ Installing Installable Client (Draw) Driver at 008de0cc by 008de0b8 over 00000000 with 0044ee70)
+ Installing Draw Device at 008de18c by 008de0b8 over 00000000 with 0044ee40)
+ Installing Draw Context at 008de24c by 008de0b8 over 00000000 with 0044ee10)
+ Installing Draw Output at 008de30c by 008de0b8 over 00000000 with 0044ede0)
+ Installing Draw Input at 008de3cc by 008de0b8 over 00000000 with 0044edb0)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:169
+	AfxAcquireModules(cnt=1,mdle=008de560,uri=0044ed38)
+ afxClass<Module>::ConstructObject(008de6e0)
+ afxModule.c:125
+	_AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(008e0190)
+ afxDrawSystem.c:261
+	_AfxDdrvCtor(ddrv=008e0190)
+ Installing Draw Device at 008e01a4 by 008e0190 over 008de18c with 0044ec14)
+New installable client driver registered.
+Name: OpenGL/Vulkan Continuous Integration
+Author: SIGMA Technology Group
+Version: 0.7.2
+Note: 
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<Draw Device, Draw Device>ConstructingObject(008e0c40)
+ afxClass<Draw Device>::ConstructObject(008e0c40)
+ afxClass<Draw Device>::ConstructObject(008e0c40)
+ sglDrawDriver.c:1896
+	_SglDdevCtor(ddev=008e0c40)
+ Installing Draw Context at 008e0c58 by 008e0c44 over 008de24c with 500880cc)
+ Installing Draw Output at 008e0d18 by 008e0c44 over 008de30c with 500881c8)
+ Installing Draw Input at 008e0dd8 by 008e0c44 over 008de3cc with 50088180)

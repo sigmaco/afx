@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>15.0</VCProjectVersion>
+    <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{696EBD89-FCDA-44B6-B1A6-28BC64671216}</ProjectGuid>
     <RootNamespace>e2bink</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.22000.0</WindowsTargetPlatformVersion>

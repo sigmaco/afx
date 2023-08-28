@@ -71,12 +71,13 @@ AFX_DEFINE_STRUCT(afxTextureRegion)
 
 AFX_DECLARE_STRUCT(_afxTexVmt);
 
-AFX_OBJECT(afxTexture)
-{
-    afxInstance               obj;
-    _afxTexVmt const*       vmt;
-    void*                   idd; // implementation-defined data
 #ifdef _AFX_TEXTURE_C
+AFX_OBJECT(afxTexture)
+#else
+struct afxBaseTexture
+#endif
+{
+    _afxTexVmt const*       vmt;
     afxTextureFlags         flags;
 
     afxPixelFormat          fmt;
@@ -88,14 +89,14 @@ AFX_OBJECT(afxTexture)
     afxColorSwizzling const*swizzling;
 
     afxByte*                maps;
-#endif
 };
 
-AFX afxError                    AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
-AFX afxResult                   AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
-AFX afxError                    AfxLoadTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[]);
+AFX afxNat                      AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[]);
 
-AFX afxDrawContext              AfxGetTextureContext(afxTexture tex);
+AFX afxResult                   AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const name[]);
+AFX afxError                    AfxLoadTextures(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const uri[]);
+
+AFX afxError                    AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const uri[]);
 
 AFX void                        AfxGetTextureExtent(afxTexture tex, afxNat lodIdx, afxWhd extent);
 #if 0
@@ -127,6 +128,29 @@ AFX void                        AfxCloseTextureRegion(afxTexture tex, afxTexture
 // TRANSFERENCE AND COPY                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
+AFX_DEFINE_STRUCT(afxUpdateTexture)
+{
+    afxTexture      tex;
+    afxNat          lodIdx;
+    afxNat          baseImg;
+    afxNat          imgCnt;
+    void const*     src;
+    afxNat          siz;
+    afxPixelFormat  fmt;
+};
+
+AFX_DEFINE_STRUCT(afxUpdateTextureRegion)
+{
+    afxTexture              tex;
+    afxNat                  cnt;
+    afxTextureRegion const* rgn;
+    void const**            src;
+    afxNat const*           siz;
+    afxPixelFormat const*   fmt;
+};
+
+AFX afxError                    AfxCmdUpdateTextureRegion(afxDrawInput din, afxUpdateTextureRegion const* instruction);
+
 // Update texture image data from arbitrary raw allocation. A safe way of copying.
 AFX afxError                    AfxUpdateTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, void const *src, afxNat siz, afxPixelFormat fmt);
 AFX afxError                    AfxUpdateTextureRegion(afxTexture tex, afxTextureRegion const *rgn, void const *src, afxNat siz, afxPixelFormat fmt);
@@ -141,6 +165,15 @@ AFX afxError                    AfxCopyTextureRegions(afxTexture tex, afxTexture
 // SERIALIZATION AND STORAGE                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
+AFX_DEFINE_STRUCT(afxInputTexture)
+{
+    afxTexture      tex;
+    afxNat          lodIdx;
+    afxNat          baseImg;
+    afxNat          imgCnt;
+    afxStream*      in;
+};
+
 // Stream in texture image data from a stream.
 AFX afxError                    AfxInputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxStream *in);
 AFX afxError                    AfxInputTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxStream *in);
@@ -151,10 +184,37 @@ AFX afxError                    AfxFetchTexture(afxTexture tex, afxNat lodIdx, a
 AFX afxError                    AfxFetchTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxUri const *uri);
 AFX afxError                    AfxFetchTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
 
+AFX_DEFINE_STRUCT(afxOutputTexture)
+{
+    afxTexture      tex;
+    afxNat          lodIdx;
+    afxNat          baseImg;
+    afxNat          imgCnt;
+    afxStream*      out;
+};
+
 // Stream out texture image data to a stream.
 AFX afxError                    AfxOutputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxStream *out);
 AFX afxError                    AfxOutputTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxStream *out);
 AFX afxError                    AfxOutputTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxStream *out);
+
+AFX_DEFINE_STRUCT(afxPrintTexture)
+{
+    afxTexture      tex;
+    afxNat          lodIdx;
+    afxNat          baseImg;
+    afxNat          imgCnt;
+    afxUri const*   uri;
+};
+
+AFX_DEFINE_STRUCT(afxPrintTextureRegions)
+{
+    afxTexture      tex;
+    afxNat          lodIdx;
+    afxNat          baseImg;
+    afxNat          imgCnt;
+    afxUri const*   uri;
+};
 
 // Stream out texture image data to a file.
 AFX afxError                    AfxPrintTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri);

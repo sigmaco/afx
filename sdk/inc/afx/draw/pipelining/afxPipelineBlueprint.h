@@ -23,31 +23,7 @@
 
 #include "afx/draw/pipelining/afxPipeline.h"
 
-AFX_DEFINE_STRUCT(afxPipelineBlueprint)
-{
-    afxFcc                          fcc; // PIPB
-    afxDrawContext                  dctx;
-
-    afxUri128                       uri;
-
-    afxArray                        shaders;
-    afxArray                        viewports;
-    afxArray                        scissors;
-
-    afxBool                         hasAssembling;
-    afxBool                         hasRasterization;
-    afxBool                         hasDepthHandling;
-    afxBool                         hasMultisampling;
-    afxBool                         hasColorBlending;
-
-    afxPipelineInputAssemblyState   inAssembling;
-    afxPipelineRasterizerState      rasterization;
-    afxPipelineDepthState           depthHandling;
-    afxPipelineMultisampleState     multisampling;
-    afxPipelineColorBlendState      colorBlending;
-};
-
-AFX void                AfxFormulatePipelineBlueprint(afxPipelineBlueprint* blueprint, afxDrawContext dctx);
+AFX void                AfxFormulatePipelineBlueprint(afxPipelineBlueprint* blueprint);
 AFX void                AfxPipelineBlueprintDiscard(afxPipelineBlueprint *blueprint);
 AFX void                AfxPipelineBlueprintErase(afxPipelineBlueprint *blueprint);
 

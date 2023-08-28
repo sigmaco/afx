@@ -19,23 +19,6 @@
 
 #include "afx/draw/res/afxVertexBuffer.h"
 
-AFX_DEFINE_STRUCT(afxVertexRowBlueprint)
-{
-    afxString8              semantic; // 8
-    afxVertexFormat         fmt;
-    afxVertexUsage          usage;
-    void const              *src;
-    afxVertexFormat         srcFmt;
-};
-
-AFX_DEFINE_STRUCT(afxVertexBufferBlueprint)
-{
-    afxFcc                  fcc; // VBUB
-    afxNat                  cap;
-    afxNat                  rowCnt;
-    afxVertexRowBlueprint   row[8];
-};
-
 AFXINL void                 AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, afxNat cap);
 AFXINL void                 AfxVertexBufferBlueprintDiscard(afxVertexBufferBlueprint *blueprint);
 AFXINL void                 AfxVertexBufferBlueprintErase(afxVertexBufferBlueprint *blueprint);

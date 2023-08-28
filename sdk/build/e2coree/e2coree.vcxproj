@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\afx\afxApplication.h" />
     <ClInclude Include="..\..\inc\afx\afxQwadro.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxApplication.h" />
     <ClInclude Include="..\..\inc\afx\core\afxClass.h" />
     <ClInclude Include="..\..\inc\afx\core\afxCoreDefs.h" />
     <ClInclude Include="..\..\inc\afx\core\afxEvent.h" />
@@ -56,7 +56,6 @@
     <ClInclude Include="..\..\inc\afx\core\mem\afxArena.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxArray.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxBitmap.h" />
-    <ClInclude Include="..\..\inc\afx\core\mem\afxResidency.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxPool.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxDatabase.h" />
     <ClInclude Include="..\..\inc\afx\core\mem\afxMap.h" />
@@ -69,7 +68,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxColor.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawContext.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawDefs.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxDrawDriver.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawInput.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawOutput.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawQueue.h" />
@@ -135,7 +133,7 @@
     <ClInclude Include="..\..\inc\afx\sound\afxSoundInput.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundOutput.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundSystem.h" />
-    <ClInclude Include="..\..\src\e2coree\core\afxCoreParadigms.h" />
+    <ClInclude Include="..\..\src\e2coree\core\afxCoreHideout.h" />
     <ClInclude Include="..\..\src\e2coree\draw\afxDrawParadigms.h" />
     <ClInclude Include="..\..\src\e2coree\draw\_classified\afxDrawClassified.h" />
     <ClInclude Include="..\..\src\e2coree\mmux\afxMmuxParadigms.h" />
@@ -148,7 +146,6 @@
     <Text Include="..\..\inc\afx\go-horse.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2coree\afxApplication.c" />
     <ClCompile Include="..\..\src\e2coree\afxQwadro.c" />
     <ClCompile Include="..\..\src\e2coree\afxQwadroCpp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -156,6 +153,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxApplication.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxClass.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxCoreDefs.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxChain.c" />
@@ -198,7 +196,6 @@
     <ClCompile Include="..\..\src\e2coree\core\mem\afxArena.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxArray.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxBitmap.c" />
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxResidency.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxPool.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxDatabase.c" />
     <ClCompile Include="..\..\src\e2coree\core\mem\afxMap.c">
@@ -221,7 +218,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxColor.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawDefs.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxDrawDriver.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawInput.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawOutput.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawQueue.c" />
@@ -232,7 +228,12 @@
     <ClCompile Include="..\..\src\e2coree\draw\io\afxTarga.c" />
     <ClCompile Include="..\..\src\e2coree\draw\io\afxXmlBackedDrawableResources.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxCanvas.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxDrawOperation.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxDrawOperation.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxLego.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c" />
@@ -371,13 +372,36 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
     </ClCompile>
-    <Link />
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+    </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>
@@ -394,19 +418,6 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
-    <Link>
-      <LargeAddressAware>true</LargeAddressAware>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link />
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
     </Link>

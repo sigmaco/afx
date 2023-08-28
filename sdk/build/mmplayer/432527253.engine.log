@@ -1,0 +1,95 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<Basic I/O System>::Mount(5052e7cc, 00000000, 00000000, 5052c1c0)
+ afxClass<Basic I/O System>::ConstructObject(0048f110)
+ afxSystem.c:1006?_AfxSysCtor(sys=0048f110)
+ afxClass<Context>::Mount(0048f12c, 0048f118, 00000000, 5052c7a0)
+ afxClass<Module>::Mount(0048f1ec, 0048f118, 00000000, 5052c080)
+ afxClass<Thread>::Mount(0048f42c, 0048f118, 00000000, 5052c1f0)
+ afxClass<File>::Mount(0048f5ac, 0048f118, 00000000, 5052c310)
+ afxClass<Archive>::Mount(0048f66c, 0048f118, 00000000, 5052c2e0)
+ afxClass<Application>::Mount(0048f4ec, 0048f118, 00000000, 5052c000)
+ afxClass<Keyboard>::Mount(0048f2ac, 0048f118, 00000000, 5052c340)
+ afxClass<Mouse>::Mount(0048f36c, 0048f118, 00000000, 5052c370)
+ afxClass<Draw System>::Mount(0048f72c, 0048f118, 00000000, 5052d070)
+ ADV afxSystem.c:1090?_AfxSysCtor
+    Memory page size: 4096
+ ADV afxSystem.c:1091?_AfxSysCtor
+    Logical processor count: 2
+ afxContext.c:202?AfxAcquireContexts(cnt=1,app=0048f7ec,strategy=003be528)
+ afxClass<Context>::ConstructObject(0048f950)
+ afxContext.c:166?_AfxCtxCtor(ctx=0048f950)
+ afxArena.c:767?AfxAcquireArena(aren=0048f848)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+ afxSystem.c:750?AfxMountStoragePoints(6,003be680)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=0048f818,uri=003be5b8)
+ afxClass<Module>::ConstructObject(0047b460)
+ afxModule.c:126?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxKeyboard.c:317?AfxAcquireKeyboards(cnt=1,kbd=0048f81c,port=003be500)
+ afxClass<Keyboard>::ConstructObject(00492d10)
+ afxKeyboard.c:281?_AfxKbdCtor(kbd=00492d10)
+ afxClass<Draw System>::ConstructObject(00495040)
+ afxDrawSystem.c:635?_AfxDsysCtor(dsys=00495040)
+ afxClass<Draw Thread>::Mount(0049546c, 00495098, 00000000, 003bf040)
+ afxClass<Installable Client (Draw) Driver>::Mount(004950ac, 00495098, 00000000, 003bf010)
+ afxClass<Draw Device>::Mount(0049516c, 00495098, 00000000, 003befe0)
+ afxClass<Draw Context>::Mount(0049522c, 00495098, 00000000, 003befb0)
+ afxClass<Draw Output>::Mount(004952ec, 00495098, 00000000, 003bef80)
+ afxClass<Draw Input>::Mount(004953ac, 00495098, 00000000, 003bef50)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=00495540,uri=003beed8)
+ afxClass<Module>::ConstructObject(0047b560)
+ afxModule.c:126?_AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00498540)
+ afxDrawSystem.c:261?_AfxDdrvCtor(ddrv=00498540)
+ ERR afxClass.c:777?_AfxAssertObjects
+    
+ ERR afxClass.c:777?_AfxAssertObjects
+    (inst)
+    Invalid
+ ERR afxClass.c:779?_AfxAssertObjects
+    
+ ERR afxClass.c:779?_AfxAssertObjects
+    (var_)
+    Invalid
+ ERR afxDrawSystem.c:273?_AfxDdrvCtor
+    
+ ERR afxDrawSystem.c:273?_AfxDdrvCtor
+    (((afxResult)(1)) == _AfxAssertObjects((1), (afxHandle const*)(&ddrv->icd),(AFX_FCC_MDLE)))
+    Invalid
+ ERR afxClass.c:734?AfxReacquireObjects
+    
+ ERR afxClass.c:734?AfxReacquireObjects
+    (inst)
+    Invalid
+ ERR afxString.c:631?AfxExcerptString
+    (parent)
+    Nil
+ ERR afxString.c:74?AfxGetStringSize
+    (str)
+    Nil

@@ -50,7 +50,6 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
 };
 
 #ifdef _AFX_THREAD_C
-
 AFX_DEFINE_STRUCT(afxProcessor)
 {
     afxNat              unitIdx;
@@ -68,14 +67,11 @@ AFX_DEFINE_STRUCT(afxProcessor)
     afxNat          lastIterCnt;
     afxClock  iterCntSwapClock;
 };
-
 #endif
 
-struct _afxThrD
 #ifdef _AFX_THREAD_C
+AFX_OBJECT(afxThread)
 {
-    _AFX_DBG_FCC
-    afxObject       thrObj;
     //afxLinkage      procUnit;
     afxSlock        procSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
@@ -98,15 +94,13 @@ struct _afxThrD
     afxBool         interruptionRequested;
     afxInt          exitCode;
     void            *udd;
-}
+};
 #endif
-;
 
 AFX afxNat      AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[]);
 AFX afxNat      AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
 
 AFX afxError    AfxAcquireThreads(afxNat cnt, afxThread thr[], afxThreadConfig const config[], afxHint const hint);
-AFX void        AfxReleaseThreads(afxNat cnt, afxThread thr[]);
 
 AFX void*       AfxGetThreadUdd(afxThread thr);
 
@@ -180,6 +174,6 @@ AFX void        AfxEndProcessor(afxResult exitCode);
 AFX afxResult   AfxSleepProcessor(afxTimeSpec const* dur, afxTimeSpec *remaining);
 
 
-AFX afxBool     _AfxGetThrD(afxThread thr, struct _afxThrD **thrD, struct _afxSysD* sysD);
+//AFX afxBool     _AfxGetThrD(afxThread thr, struct _afxThrD **thrD, struct _afxSysD* sysD);
 
 #endif//AFX_THREAD_H

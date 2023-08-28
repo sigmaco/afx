@@ -104,8 +104,8 @@ AFX void                AfxString32(afxString32 *str);
 AFX void                AfxString128(afxString128 *str);
 
 AFX void                AfxDeallocateString(afxString *str);
-AFX afxString*          AfxAllocateString(afxNat cap, void const *start, afxNat range);
-AFX afxString*          AfxReallocateString(afxString *str, afxNat cap, void const *start, afxNat range);
+AFX afxError            AfxAllocateString(afxString* str, afxNat cap, void const *start, afxNat range);
+AFX afxError            AfxReallocateString(afxString *str, afxNat cap, void const *start, afxNat range);
 
 AFX void                AfxWrapStringLiteral(afxString *str, void const *start, afxNat range); // wraps constant (read-only) data as a Qwadro string.
 AFX void                AfxWrapStringLiteralRW(afxString *str, void *start, afxNat range); // wraps dynamic (writeable) data as a Qwadro string.
@@ -115,8 +115,8 @@ AFX void                AfxWrapStringBuffer(afxString *str, void *start, afxNat 
 AFX void                AfxExcerptString(afxString *str, afxString const *parent); // wraps the same content mapped or buffered by other string as read-only data.
 AFX afxNat              AfxExcerptStringRange(afxString *str, afxString const *parent, afxNat offset, afxNat range); // wraps the same content mapped or buffered by other string as read-only data. Return clamped off range if any.
 
-AFX afxString*          AfxCloneString(afxString const *str); // wraps the same content mapped or buffered by other string as writeable data.
-AFX afxString*          AfxCloneStringRange(afxString const *str, afxNat base, afxNat range); // wraps the same content mapped or buffered by other string as writeable data.
+AFX afxError            AfxCloneString(afxString* str, afxString const *in); // wraps the same content mapped or buffered by other string as writeable data.
+AFX afxError            AfxCloneStringRange(afxString* str, afxString const *in, afxNat base, afxNat range); // wraps the same content mapped or buffered by other string as writeable data.
 
 AFX void*               AfxGetStringData(afxString *str, afxNat base);
 AFX void const*         AfxGetStringDataConst(afxString const *str, afxNat base);

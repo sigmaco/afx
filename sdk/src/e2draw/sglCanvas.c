@@ -14,11 +14,6 @@
  *                                    www.sigmaco.org
  */
 
-#define _AFX_CANVAS_C
-#define _AFX_SURFACE_C
-#define _AFX_TEXTURE_C
-#define _AFX_DRAW_CONTEXT_C
-#define _AFX_DRAW_QUEUE_C
 #include "sgl.h"
 #include "afx/draw/pipelining/afxCanvas.h"
 #include "afx/draw/afxDrawOutput.h"
@@ -28,84 +23,40 @@
 // FRAME BUFFER                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglCanvDtor(afxCanvas canv, afxDrawQueue dque, glVmt const* gl)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxEntry("canv=%p", canv);
-    AfxAssertObject(canv, AFX_FCC_CANV);
-    afxDrawContext dctx;
-    AfxGetCanvasContext(canv, &dctx);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    sglDqueIdd*dqueIdd = dque->idd;
-
-    sglCanvIdd*idd = canv->idd;
-
-    if (idd)
-    {
-        if (idd->glHandle)
-        {
-            gl->DeleteFramebuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
-            idd->glHandle = NIL;
-        }
-    }
-    return err;
-}
-
-_SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum target, glVmt const* gl)
+_SGL afxError _SglCanvReinstantiateIdd(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl)
 {
     AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
-    afxDrawContext dctx;
-    AfxGetCanvasContext(canv, &dctx);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
 
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-    sglCanvIdd *idd;
-
-    if (!(idd = canv->idd))
+    if (canv->glHandle)
     {
-        if (!(canv->idd = (idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint())))) AfxThrowError();
-        else
-        {
-            *idd = (sglCanvIdd) { 0 };
-
-            idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
-        }
+        gl->DeleteFramebuffers(1, &(canv->glHandle)); _SglThrowErrorOccuried();
+        canv->glHandle = NIL;
     }
+    canv->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     
-    if (idd)
-    {
-        if (idd->glHandle)
-        {
-            gl->DeleteFramebuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
-            idd->glHandle = NIL;
-        }
-        *idd = (sglCanvIdd) { 0 };
-        idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
-    }
 
-    if (!err && idd && !idd->glHandle)
+    if (!err && !canv->glHandle)
     {
-        gl->GenFramebuffers(1, &(idd->glHandle)); _SglThrowErrorOccuried();
-        gl->BindFramebuffer(target, idd->glHandle); _SglThrowErrorOccuried();
-        AfxAssert(gl->IsFramebuffer(idd->glHandle));
+        gl->GenFramebuffers(1, &(canv->glHandle)); _SglThrowErrorOccuried();
+        gl->BindFramebuffer(target, canv->glHandle); _SglThrowErrorOccuried();
+        AfxAssert(gl->IsFramebuffer(canv->glHandle));
         afxNat const surfCnt = AfxGetAnnexedSurfaceCount(canv);
         afxNat rasterIdx = 0;
 
         for (afxNat i = 0; i < surfCnt; i++)
         {
-            afxSurface surf;
+            afxTexture surf;
             AfxGetAnnexedSurface(canv, i, &surf);
-            AfxAssertObject(surf, AFX_FCC_SURF);
+            AfxAssertObjects(1, &surf, AFX_FCC_TEX);
 
             if (!surf) AfxThrowError();
             else
             {
-                afxPixelFormat pf = AfxGetTextureFormat(&surf->tex);
-                GLenum glAttachment;
+                afxPixelFormat pf = AfxGetTextureFormat(surf);
+                GLenum glAttachment = 0;
 
-                if (!AfxTestTexture(&surf->tex, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                if (!AfxTestTexture(surf, AFX_TEX_USAGE_DRAW)) AfxThrowError();
                 else
                 {
                     if (AfxPixelFormatIsCombinedDepthStencil(pf))
@@ -127,19 +78,14 @@ _SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum
                     }
                 }
                 
-                _SglDqueBindAndSyncTex(dque, 0, &surf->tex, gl);
-                _SglDqueBindAndSyncTex(dque, 0, 0, gl);
-                sglTexIdd *texIdd = surf->tex.idd;
-
-                if (!texIdd) AfxThrowError();
-                else
+                _SglDpuBindAndSyncTex(dpu, 0, surf, gl);
+                _SglDpuBindAndSyncTex(dpu, 0, 0, gl);
+                
                 {
-                    AfxAssert(texIdd->glHandle);
-                    AfxAssert(gl->IsTexture(texIdd->glHandle));
+                    AfxAssert(surf->glHandle);
+                    AfxAssert(gl->IsTexture(surf->glHandle));
 
-                    _SglDqueSurfSync(dque, surf, gl);
-                    sglSurfIdd *surfIdd = surf->idd;
-
+#if 0
                     if (!surfIdd) AfxThrowError();
                     else
                     {
@@ -147,8 +93,9 @@ _SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum
                         AfxAssert(gl->IsRenderBuffer(surfIdd->glHandle));
                         gl->FramebufferRenderbuffer(target, glAttachment, GL_RENDERBUFFER, surfIdd->glHandle); _SglThrowErrorOccuried();
                     }
+#endif
 
-                    switch (texIdd->glTarget)
+                    switch (surf->glTarget)
                     {
 #if 0
                     case GL_TEXTURE_CUBE_MAP:
@@ -187,7 +134,7 @@ _SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum
                     }
 #endif
                     default:
-                        gl->FramebufferTexture(target, glAttachment, texIdd->glHandle, 0); _SglThrowErrorOccuried();
+                        gl->FramebufferTexture(target, glAttachment, surf->glHandle, 0); _SglThrowErrorOccuried();
                         break;
                     };
                 }
@@ -197,7 +144,7 @@ _SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum
         switch (gl->CheckFramebufferStatus(target))
         {
         case GL_FRAMEBUFFER_COMPLETE:
-            idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+            canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
             AfxEcho("afxCanvas %p hardware-side data instanced.", canv);
             break;
         case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -238,53 +185,45 @@ _SGL afxError _SglCanvReinstantiateIdd(afxDrawQueue dque, afxCanvas canv, GLenum
     return err;
 }
 
-_SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum target, glVmt const* gl)
+_SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
-    sglDqueIdd*dqueIdd = dque->idd;
+    (void)dpu;
 
     if (canv)
     {
-        AfxAssertObject(canv, AFX_FCC_CANV);
+        AfxAssertObjects(1, &canv, AFX_FCC_CANV);
 
-        sglCanvIdd*idd = canv->idd;
-
-        if (!canv->idd || idd->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_FLAG(AFX_CANV_FLAG_REVALIDATE)))
+        if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_FLAG(AFX_CANV_FLAG_REVALIDATE)))
         {
-            if (_SglCanvReinstantiateIdd(dque, canv, target, gl))
+            if (_SglCanvReinstantiateIdd(dpu, canv, target, gl))
                 AfxThrowError();
-
-            idd = canv->idd;
 
             if (!err)
                 AfxUnflagCanvas(canv, AFX_FLAG(AFX_CANV_FLAG_REVALIDATE));
         }
 
-        if (!canv->idd) AfxThrowError();
-        else
         {
-            idd = canv->idd;
-
             {
-                AfxAssert(idd->glHandle);
-                gl->BindFramebuffer(target, idd->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(canv->glHandle);
+                gl->BindFramebuffer(target, canv->glHandle); _SglThrowErrorOccuried();
             }
 
             afxNat rasterIdx = 0;
 
             for (afxNat i = 0; i < AfxGetAnnexedSurfaceCount(canv); i++)
             {
-                afxSurface surf;
+                afxTexture surf;
                 AfxGetAnnexedSurface(canv, i, &surf);
-                AfxAssertObject(surf, AFX_FCC_SURF);
+                AfxAssertObjects(1, &surf, AFX_FCC_TEX);
 
                 if (!surf) AfxThrowError();
                 else
                 {
-                    _SglDqueBindAndSyncTex(dque, 0, &surf->tex, gl);
-                    _SglDqueBindAndSyncTex(dque, 0, 0, gl);
-                    _SglDqueSurfSync(dque, surf, gl);
+                    _SglDpuBindAndSyncTex(dpu, 0, surf, gl);
+                    _SglDpuBindAndSyncTex(dpu, 0, 0, gl);
+                    //_SglDquSurfSync(dpu, surf, gl);
                 }
             }
         }
@@ -302,18 +241,17 @@ _SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum 
 _SGL afxError _AfxReadjustCanvas(afxCanvas canv, afxWhd const from, afxWhd const extent)
 {
 	afxError err = AFX_ERR_NONE;
-	AfxAssertObject(canv, AFX_FCC_CANV);
-    sglCanvIdd *idd = canv->idd;
+	AfxAssertObjects(1, &canv, AFX_FCC_CANV);
 	AfxAssert(extent);
 	AfxAssert(extent[0]);
 	AfxAssert(extent[1]);
 	AfxAssert(extent[2]);
-    AfxAssert(extent[0] != canv->whd[0] || extent[1] != canv->whd[1] || extent[2] != canv->whd[2]);
+    AfxAssert(extent[0] != canv->base.whd[0] || extent[1] != canv->base.whd[1] || extent[2] != canv->base.whd[2]);
 
-	if (canv->whd[0] != extent[0] || canv->whd[1] != extent[1] || canv->whd[2] != extent[2])
+	if (canv->base.whd[0] != extent[0] || canv->base.whd[1] != extent[1] || canv->base.whd[2] != extent[2])
 	{
-        if (idd)
-            idd->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
+        if (canv)
+            canv->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
 	}
 	return err;
 }
@@ -322,83 +260,305 @@ _SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
 {
 	AfxEntry("canv=%p", canv);
 	afxError err = AFX_ERR_NONE;
-	AfxAssertObject(canv, AFX_FCC_CANV);
+	AfxAssertObjects(1, &canv, AFX_FCC_CANV);
 
-	for (afxNat i = 0; i < canv->annexCnt; i++)
+	for (afxNat i = 0; i < canv->base.annexCnt; i++)
 	{
-		afxSurface surf = canv->annexes[i].surf;
+		afxTexture tex = canv->base.annexes[i].tex;
 
-        if (surf)
+        if (tex)
         {
-            AfxTryAssertObject(surf, AFX_FCC_SURF);
-            AfxReleaseObject(&surf->tex.obj);
-            canv->annexes[i].surf = NIL;
+            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+            AfxReleaseObjects(1, (void*[]) { tex });
+            canv->base.annexes[i].tex = NIL;
         }
 	}
 
-	//canv->rasterCnt = 0;
-    //canv->surfCnt = 0;
+	//canv->base.rasterCnt = 0;
+    //canv->base.surfCnt = 0;
 	return err;
 }
 
-_SGL afxError _AfxCanvDtor(afxCanvas canv)
+_SGL afxError _SglCanvDtor(afxCanvas canv)
 {
-	AfxEntry("canv=%p", canv);
-	afxError err = AFX_ERR_NONE;
-	AfxAssertObject(canv, AFX_FCC_CANV);
+    AfxEntry("canv=%p", canv);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+
+    afxDrawContext dctx = AfxGetObjectProvider(canv);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
     _AfxCanvDropAllSurfaces(canv);
 
-    sglCanvIdd *idd = canv->idd;
-
-    if (idd)
+    if (canv->glHandle)
     {
-        afxDrawContext dctx;
-        AfxGetCanvasContext(canv, &dctx);
+        _SglDeleteGlRes(dctx, 3, canv->glHandle);
+        canv->glHandle = 0;
+    }
+    //AfxAssert(!canv->idd);
 
-        afxDrawSystem dsys;
-        AfxGetDrawSystem(&dsys);
-        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-        struct _afxDsysD* dsysD;
-        _AfxGetDsysD(dsys, &dsysD);
-        AfxAssertType(dsysD, AFX_FCC_DSYS);
-        struct _afxDctxD *dctxD;
-        _AfxGetDctxD(dctx, &dctxD, dsysD);
-        AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxDeallocate(mem, canv->base.annexes);
 
-        afxContext mem = AfxGetDrawContextMemory(dctx);
-        AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    return err;
+}
 
-        if (idd->glHandle)
+_SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
+{
+    AfxEntry("canv=%p", canv);
+    afxError err = AFX_ERR_NONE;
+
+    afxCanvasBlueprint const *blueprint = ((afxCanvasBlueprint const *)cookie->udd[0]) + cookie->no;
+    AfxAssert(blueprint);
+
+    afxDrawContext dctx = AfxGetObjectProvider(canv);
+    afxContext ctx = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+
+    canv->base.udd[0] = blueprint->udd[0];
+    canv->base.udd[1] = blueprint->udd[1];
+
+    canv->base.whd[0] = blueprint->extent[0];
+    canv->base.whd[1] = blueprint->extent[1];
+    canv->base.whd[2] = blueprint->extent[2];
+
+    afxWhd whd;
+    afxTexture tex;
+    afxPixelFormat fmt;
+
+    if (0 == (canv->base.whd[0] * canv->base.whd[1] * canv->base.whd[2]))
+    {
+        for (afxNat i = 0; i < blueprint->rasterCnt; i++)
         {
-            _SglDeleteGlRes(dctx, 3, idd->glHandle);
-            idd->glHandle = 0;
+            if ((tex = blueprint->rasters[i].tex))
+            {
+                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+
+                AfxGetTextureExtent(tex, 0, whd);
+
+                canv->base.whd[0] = AfxMini(canv->base.whd[0], whd[0]);
+                canv->base.whd[1] = AfxMini(canv->base.whd[1], whd[1]);
+                canv->base.whd[2] = AfxMini(canv->base.whd[2], whd[2]);
+            }
         }
-        AfxDeallocate(mem, idd);
-        canv->idd = NIL;
+
+        for (afxNat i = 0; i < sizeof(blueprint->ds) / sizeof(blueprint->ds[0]); i++)
+        {
+            if ((tex = blueprint->ds[i].tex))
+            {
+                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+
+                AfxGetTextureExtent(tex, 0, whd);
+
+                canv->base.whd[0] = AfxMini(canv->base.whd[0], whd[0]);
+                canv->base.whd[1] = AfxMini(canv->base.whd[1], whd[1]);
+                canv->base.whd[2] = AfxMini(canv->base.whd[2], whd[2]);
+            }
+        }
     }
 
-	return err;
+    if (0 == (canv->base.whd[0] * canv->base.whd[1] * canv->base.whd[2])) AfxThrowError();
+    else
+    {
+        canv->base.dsIdx[0] = AFX_INVALID_INDEX;
+        canv->base.dsIdx[1] = AFX_INVALID_INDEX;
+
+        afxPixelFormat depthFmt = blueprint->ds[0].fmt;
+        afxPixelFormat stencilFmt = blueprint->ds[1].fmt;
+        afxBool combinedDs;
+
+#ifndef _AFX_OPTIMIZATION_CANV_DS_FMT_ROBUSTNESS
+
+        if (depthFmt == AFX_PFD_D24S8 && (!stencilFmt))
+            depthFmt = AFX_PFD_D24;
+
+        if ((!depthFmt) && stencilFmt == AFX_PFD_D24S8)
+            depthFmt = AFX_PFD_S8;
+
+#ifndef _AFX_OPTIMIZATION_CANV_DS_FMT_COMBO
+
+        if ((depthFmt == AFX_PFD_D24 && stencilFmt == AFX_PFD_S8))
+            depthFmt = (stencilFmt = AFX_PFD_D24S8);
+#endif
+#endif
+        combinedDs = (depthFmt && stencilFmt && depthFmt == stencilFmt);
+
+        canv->base.annexCnt = blueprint->rasterCnt;
+
+        if (depthFmt || stencilFmt)
+        {
+            if (combinedDs) ++canv->base.annexCnt;
+            else
+            {
+                if (depthFmt)
+                    ++canv->base.annexCnt;
+
+                if (stencilFmt)
+                    ++canv->base.annexCnt;
+            }
+        }
+
+        canv->base.rasterCnt = 0;
+        canv->base.ownershipMask = NIL;
+
+        if (!(canv->base.annexes = AfxAllocate(ctx, canv->base.annexCnt * sizeof(canv->base.annexes[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        else
+        {
+            afxTexture tex;
+
+            for (afxNat i = 0; i < canv->base.annexCnt; i++)
+                AfxZero(&canv->base.annexes[i], sizeof(canv->base.annexes[0]));
+
+            for (afxNat i = 0; i < blueprint->rasterCnt; i++)
+            {
+                if ((tex = blueprint->rasters[i].tex))
+                {
+                    if (!AfxTestTexture(tex, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                    else
+                    {
+                        AfxGetTextureExtent(tex, 0, whd);
+
+                        if (canv->base.whd[0] > whd[0] || canv->base.whd[1] > whd[1] || canv->base.whd[2] > whd[2]) AfxThrowError();
+                        else
+                        {
+                            if (AfxReacquireObjects(1, (void*[]) { tex })) AfxThrowError();
+                            else
+                            {
+                                canv->base.annexes[i].tex = tex;
+                                canv->base.annexes[i].usage = AfxTestTexture(tex, AFX_N32_MAX);
+                                canv->base.annexes[i].fmt = AfxGetTextureFormat(tex);
+                                ++canv->base.rasterCnt;
+                                //canv->base.ownershipMask |= AFX_FLAG(i);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    fmt = blueprint->rasters[i].fmt;
+
+                    if (!fmt) AfxThrowError();
+                    else
+                    {
+                        //AfxAssert(!(blueprint->rasters[i].usage & AFX_TEX_USAGE_DRAW));
+                        afxTextureFlags usage = blueprint->rasters[i].usage;
+                        usage |= AFX_TEX_USAGE_DRAW;
+                        afxTextureBlueprint texb;
+                        AfxAcquireTextureBlueprint(&texb, canv->base.whd, fmt, usage);
+                        AfxTextureBlueprintAddImage(&texb, NIL, NIL, NIL, 0);
+
+                        if (AfxBuildTextures(dctx, 1, &tex, &texb)) AfxThrowError();
+                        else
+                        {
+                            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                            AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
+                            canv->base.annexes[i].tex = tex;
+                            canv->base.annexes[i].usage = usage;
+                            canv->base.annexes[i].fmt = fmt;
+                            canv->base.ownershipMask |= AFX_FLAG(i);
+                            ++canv->base.rasterCnt;
+                        }
+                        AfxTextureBlueprintEnd(&texb, 0, NIL);
+                    }
+                }
+            }
+
+            if (!err)
+            {
+                for (afxNat i = 0; i < sizeof(blueprint->ds) / sizeof(blueprint->ds[0]); i++)
+                {
+                    if ((tex = blueprint->ds[i].tex))
+                    {
+                        if (!AfxTestTexture(tex, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                        else
+                        {
+                            AfxGetTextureExtent(tex, 0, whd);
+
+                            if (canv->base.whd[0] > whd[0] || canv->base.whd[1] > whd[1] || canv->base.whd[2] > whd[2]) AfxThrowError();
+                            else
+                            {
+                                if (!(AfxReacquireObjects(1, (void*[]) { tex }))) AfxThrowError();
+                                else
+                                {
+                                    canv->base.dsIdx[i] = canv->base.rasterCnt + i;
+                                    canv->base.annexes[canv->base.dsIdx[i]].tex = tex;
+                                    canv->base.annexes[canv->base.dsIdx[i]].usage = AfxTestTexture(tex, AFX_N32_MAX);
+                                    canv->base.annexes[canv->base.dsIdx[i]].fmt = AfxGetTextureFormat(tex);
+
+                                    //canv->base.ownershipMask |= AFX_FLAG(canv->base.rasterCnt + i);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        fmt = blueprint->ds[i].fmt;
+
+                        if (fmt)
+                        {
+                            //AfxAssert(!(blueprint->ds[i].usage & AFX_TEX_USAGE_DRAW));
+                            afxTextureFlags usage = blueprint->ds[i].usage;
+                            usage |= AFX_TEX_USAGE_DRAW;
+                            afxTextureBlueprint texb;
+                            AfxAcquireTextureBlueprint(&texb, canv->base.whd, fmt, usage);
+                            AfxTextureBlueprintAddImage(&texb, NIL, NIL, NIL, 0);
+
+                            if (AfxBuildTextures(dctx, 1, &tex, &texb)) AfxThrowError();
+                            else
+                            {
+                                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                                AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
+
+                                canv->base.dsIdx[i] = canv->base.rasterCnt + i;
+                                canv->base.annexes[canv->base.dsIdx[i]].tex = tex;
+                                canv->base.annexes[canv->base.dsIdx[i]].usage = usage;
+                                canv->base.annexes[canv->base.dsIdx[i]].fmt = fmt;
+
+                                canv->base.ownershipMask |= AFX_FLAG(canv->base.dsIdx[i]);
+                            }
+                            AfxTextureBlueprintEnd(&texb, 0, NIL);
+                        }
+                    }
+                }
+
+                if (!err)
+                {
+                    //canv->base.vmt = NIL;
+                    //canv->base.idd = NIL;
+
+                    //if (dctxD->vmt->canv && dctxD->vmt->canv(canv)) AfxThrowError();
+                    //else
+                    {
+                        //AfxAssert(canv->base.vmt);
+                        canv->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+                        canv->glHandle = 0;
+
+                        for (afxNat i = 0; i < canv->base.annexCnt; i++)
+                        {
+                            //AfxObjectInstallEventFilter(&canv->base.annexes[i].surf->tex.obj, &canv->base.obj);
+                        }
+                    }
+                }
+            }
+
+            if (err)
+            {
+                _AfxCanvDropAllSurfaces(canv);
+
+                AfxDeallocate(ctx, canv->base.annexes);
+            }
+        }
+    }
+    return err;
 }
 
-_SGL _afxCanvVmt _SglCanvVmt=
+_SGL afxClassConfig _SglCanvClsConfig =
 {
-    _AfxCanvDtor,
-    _AfxReadjustCanvas
+    .fcc = AFX_FCC_CANV,
+    .name = "Canvas",
+    .unitsPerPage = 1,
+    .size = sizeof(AFX_OBJECT(afxCanvas)),
+    .ctx = NIL,
+    .ctor = (void*)_SglCanvCtor,
+    .dtor = (void*)_SglCanvDtor
 };
-
-_SGL afxError _AfxCanvCtor(afxCanvas canv)
-{
-	AfxEntry("canv=%p", canv);
-	afxError err = AFX_ERR_NONE;
-	AfxAssertObject(canv, AFX_FCC_CANV);
-    afxDrawContext dctx;
-    AfxGetCanvasContext(canv, &dctx);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-
-    canv->vmt = &_SglCanvVmt;
-    canv->idd = NIL;
-    
-	return err;
-}

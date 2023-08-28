@@ -18,7 +18,7 @@
 #define AFX_MEMORY_H
 
 #ifdef _DEBUG
-#   define VLD_FORCE_ENABLE
+//#   define VLD_FORCE_ENABLE
 #endif
 
 #include <stdlib.h>
@@ -179,11 +179,9 @@ AFX afxError    AfxCopyMemoryRange(afxMem *mem, afxMem const* in, afxNat offset,
 AFX void        AfxZeroMemory(afxMem *mem);
 AFX afxError    AfxZeroMemoryRange(afxMem *mem, afxNat offset, afxNat range); // returns non-zeroed range in error occurence.
 
-struct _afxCtxD
 #ifdef _AFX_CONTEXT_C
+AFX_OBJECT(afxContext)
 {
-    _AFX_DBG_FCC
-    afxContext                  ctxObj;
     afxAllocCallback            allocCb;
     afxReallocCallback          reallocCb;
     afxDeallocCallback          deallocCb;
@@ -197,14 +195,12 @@ struct _afxCtxD
     afxChar const*              func;
     afxChar const*              fname;
     afxSize                     fline;
-}
+};
 #endif
-;
 
 AFX afxNat                  AfxEnumerateContexts(afxNat first, afxNat cnt, afxContext mem[]);
 
 AFX afxError                AfxAcquireContexts(afxNat cnt, afxContext ctx[], afxAllocationStrategy const strategy[], afxHint const hint);
-AFX void                    AfxReleaseContexts(afxNat cnt, afxContext ctx[]);
 
 AFX afxError                AfxMemoryEnableDebugging(afxContext mem, afxNat level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxContext mem);
@@ -226,6 +222,6 @@ AFX afxResult               AfxWriteSegmented(void *p, afxNat cnt, afxSegment co
 #define AFX_FILL(chnk_, val_) AfxFill((chnk_), sizeof(*(chnk_)), (val_))
 #define AFX_COPY(chnkDst_, chnkSrc_) AfxCopy((chnkDst_), (chnkSrc_), sizeof(*(chnkDst_)))
 
-AFX afxBool             _AfxGetMemD(afxContext mem, struct _afxCtxD **memD, struct _afxSysD* sysD);
+//AFX afxBool             _AfxGetMemD(afxContext mem, struct _afxCtxD **memD, struct _afxSysD* sysD);
 
 #endif//AFX_MEMORY_H

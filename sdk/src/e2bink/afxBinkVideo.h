@@ -10,14 +10,14 @@
 AFX_DEFINE_STRUCT(BINKFRAMETEXTURES)
 {
     afxNat      sizes[4]; // Y, cR, cB, A.
-    afxSurface  surfaces[4]; // Y, cR, cB, A.
+    afxTexture  surfaces[4]; // Y, cR, cB, A.
 };
 
 AFX_DEFINE_STRUCT(BINKTEXTURESET)
 {
     // this is the Bink info on the textures
     BINKFRAMEBUFFERS        bink_buffers;
-    afxCanvas               canv[BINKMAXFRAMEBUFFERS];
+    //afxCanvas               canv[BINKMAXFRAMEBUFFERS];
     // this is the GPU info for the textures
     BINKFRAMETEXTURES       rsrc[BINKMAXFRAMEBUFFERS];
 };
@@ -52,7 +52,7 @@ AFXBINK afxError AfxBinkDrop(afxBinkVideo *bnk);
 AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
-AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip, afxNat outBufIdx, afxDrawScript dscr, afxCanvas canv, afxSurface surf);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr, afxCanvas canv, afxSurface surf);
+AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip, afxNat outBufIdx, afxDrawScript dscr, afxTexture surf);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr, afxTexture surf);
 
 #endif//AFX_BINK_VIDEO_H

@@ -192,26 +192,22 @@ typedef enum // layout de HID
     AFX_KEY_TOTAL = 0x100
 } afxKey;
 
-struct _afxKbdD
 #ifdef _AFX_KEYBOARD_C
+AFX_OBJECT(afxKeyboard)
 {
-    _AFX_DBG_FCC
-    afxKeyboard         kbdObj;
     afxNat              port;
     afxFlags            flags;
     afxNat              fnKeyCnt;
     afxNat              keyCnt;
     afxBool             currState[AFX_KEY_TOTAL];
     afxBool             prevState[AFX_KEY_TOTAL];
-}
+};
 #endif
-;
 
 AFX afxNat      AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[]);
 AFX afxKeyboard AfxFindKeyboard(afxNat port);
 
 AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxKeyboard kbd[], afxNat port[]);
-AFX void        AfxReleaseKeyboards(afxNat cnt, afxKeyboard kbd[]);
 
 AFX afxError    AfxEmulateKeysAction(afxNat cnt, afxKey const key[], afxBool const pressed[], afxNat port);
 AFX afxBool     AfxKeyIsPressed(afxKey code, afxNat port);

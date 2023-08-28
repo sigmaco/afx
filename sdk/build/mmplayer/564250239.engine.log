@@ -1,0 +1,673 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 77fe17dc by 00000000 over 00000000 with 77fdf1c0)
+ afxClass<Basic I/O System>::ConstructObject(00798090)
+ afxSystem.c:1007
+  _AfxSysCtor(sys=00798090)
+ Installing Context at 007980cc by 007980b8 over 00000000 with 77fdf7a4)
+ Installing Module at 0079818c by 007980b8 over 00000000 with 77fdf080)
+ Installing Thread at 007983cc by 007980b8 over 00000000 with 77fdf1f0)
+ Installing File at 0079854c by 007980b8 over 00000000 with 77fdf314)
+ Installing Archive at 0079860c by 007980b8 over 00000000 with 77fdf2e4)
+ Installing Application at 0079848c by 007980b8 over 00000000 with 77fdf000)
+ Installing Keyboard at 0079824c by 007980b8 over 00000000 with 77fdf344)
+ Installing Mouse at 0079830c by 007980b8 over 00000000 with 77fdf374)
+ Installing Draw System at 007986cc by 007980b8 over 00000000 with 77fe0074)
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1092?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:202
+  AfxAcquireContexts(cnt=1,app=0079878c,strategy=004ee5f4)
+ afxClass<Context>::ConstructObject(007988f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=007988f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=007987e8)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1144!_AfxSysCtor")
+ afxSystem.c:752
+  AfxMountStoragePoints(6,004ee74c)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=007987b8,uri=004ee684)
+ afxClass<Module>::ConstructObject(0079d560)
+ afxModule.c:125
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+  AfxAcquireKeyboards(cnt=1,kbd=007987bc,port=004ee5cc)
+ afxClass<Keyboard>::ConstructObject(0079d660)
+ afxKeyboard.c:281
+  _AfxKbdCtor(kbd=0079d660)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw System>::ConstructObject(0079e060)
+ afxDrawSystem.c:763
+  _AfxDsysCtor(dsys=0079e060)
+ Installing Draw Thread at 0079e48c by 0079e0b8 over 00000000 with 004ef0c0)
+ Installing Installable Client (Draw) Driver at 0079e0cc by 0079e0b8 over 00000000 with 004ef090)
+ Installing Draw Device at 0079e18c by 0079e0b8 over 00000000 with 004ef060)
+ Installing Draw Context at 0079e24c by 0079e0b8 over 00000000 with 004ef030)
+ Installing Draw Output at 0079e30c by 0079e0b8 over 00000000 with 004ef000)
+ Installing Draw Input at 0079e3cc by 0079e0b8 over 00000000 with 004eefd0)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=004eedfc,uri=004eee04)
+ afxClass<Module>::ConstructObject(0079e6e0)
+ afxModule.c:125
+  _AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(007a0ae0)
+ afxDrawSystem.c:323
+  _AfxDdrvCtor(ddrv=007a0ae0)
+Installing 'e2draw.icd' ICD on draw system 0079e060...
+	OpenGL/Vulkan Continuous Integration 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 007a0af4 by 007a0ae0 over 0079e18c with 004ee604)
+ afxClass<Draw Device, Draw Device>ConstructingObject(007a0c70)
+ afxClass<Draw Device>::ConstructObject(007a0c70)
+ afxDrawSystem.c:263
+  _AfxDdevCtor(ddev=007a0c70)
+ Installing Draw Context at 007a0c88 by 007a0c74 over 0079e24c with 518a90c0)
+ Installing Draw Output at 007a0d48 by 007a0c74 over 0079e30c with 518a91a8)
+ Installing Draw Input at 007a0e08 by 007a0c74 over 0079e3cc with 518a9160)
+ afxClass<Draw Device>::ConstructObject(007a0c70)
+ sglDrawDriver.c:1974
+  _SglDdevCtor(ddev=007a0c70)
+ Listing mem available display devices...
+
+ Entering the Threading Execution Environment  1
+ afxSystem.c:988
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Creating temp OpenGL context
+ Listing #145 "compatible" GL supported extensions.
+ 0: GL_EXT_blend_minmax
+ 1: GL_EXT_blend_subtract
+ 2: GL_EXT_blend_color
+ 3: GL_EXT_abgr
+ 4: GL_EXT_texture3D
+ 5: GL_EXT_clip_volume_hint
+ 6: GL_EXT_compiled_vertex_array
+ 7: GL_SGIS_texture_edge_clamp
+ 8: GL_SGIS_generate_mipmap
+ 9: GL_EXT_draw_range_elements
+ 10: GL_SGIS_texture_lod
+ 11: GL_EXT_rescale_normal
+ 12: GL_EXT_packed_pixels
+ 13: GL_EXT_texture_edge_clamp
+ 14: GL_EXT_separate_specular_color
+ 15: GL_ARB_multitexture
+ 16: GL_EXT_texture_env_combine
+ 17: GL_EXT_bgra
+ 18: GL_EXT_blend_func_separate
+ 19: GL_EXT_secondary_color
+ 20: GL_EXT_fog_coord
+ 21: GL_EXT_texture_env_add
+ 22: GL_ARB_texture_cube_map
+ 23: GL_ARB_transpose_matrix
+ 24: GL_ARB_texture_env_add
+ 25: GL_IBM_texture_mirrored_repeat
+ 26: GL_EXT_multi_draw_arrays
+ 27: GL_SUN_multi_draw_arrays
+ 28: GL_NV_blend_square
+ 29: GL_ARB_texture_compression
+ 30: GL_3DFX_texture_compression_FXT1
+ 31: GL_EXT_texture_filter_anisotropic
+ 32: GL_ARB_texture_border_clamp
+ 33: GL_ARB_point_parameters
+ 34: GL_ARB_texture_env_combine
+ 35: GL_ARB_texture_env_dot3
+ 36: GL_ARB_texture_env_crossbar
+ 37: GL_EXT_texture_compression_s3tc
+ 38: GL_ARB_shadow
+ 39: GL_ARB_window_pos
+ 40: GL_EXT_shadow_funcs
+ 41: GL_EXT_stencil_wrap
+ 42: GL_ARB_vertex_program
+ 43: GL_EXT_texture_rectangle
+ 44: GL_ARB_fragment_program
+ 45: GL_EXT_stencil_two_side
+ 46: GL_ATI_separate_stencil
+ 47: GL_ARB_vertex_buffer_object
+ 48: GL_EXT_texture_lod_bias
+ 49: GL_ARB_occlusion_query
+ 50: GL_ARB_fragment_shader
+ 51: GL_ARB_shader_objects
+ 52: GL_ARB_shading_language_100
+ 53: GL_ARB_texture_non_power_of_two
+ 54: GL_ARB_vertex_shader
+ 55: GL_NV_texgen_reflection
+ 56: GL_ARB_point_sprite
+ 57: GL_ARB_fragment_program_shadow
+ 58: GL_EXT_blend_equation_separate
+ 59: GL_ARB_depth_texture
+ 60: GL_ARB_texture_rectangle
+ 61: GL_ARB_draw_buffers
+ 62: GL_ARB_color_buffer_float
+ 63: GL_ARB_half_float_pixel
+ 64: GL_ARB_texture_float
+ 65: GL_ARB_pixel_buffer_object
+ 66: GL_EXT_framebuffer_object
+ 67: GL_ARB_draw_instanced
+ 68: GL_ARB_half_float_vertex
+ 69: GL_ARB_occlusion_query2
+ 70: GL_EXT_draw_buffers2
+ 71: GL_WIN_swap_hint
+ 72: GL_EXT_texture_sRGB
+ 73: GL_ARB_multisample
+ 74: GL_EXT_packed_float
+ 75: GL_EXT_texture_shared_exponent
+ 76: GL_ARB_texture_rg
+ 77: GL_ARB_texture_compression_rgtc
+ 78: GL_NV_conditional_render
+ 79: GL_EXT_texture_swizzle
+ 80: GL_ARB_texture_gather
+ 81: GL_ARB_sync
+ 82: GL_ARB_framebuffer_sRGB
+ 83: GL_EXT_packed_depth_stencil
+ 84: GL_ARB_depth_buffer_float
+ 85: GL_EXT_transform_feedback
+ 86: GL_ARB_transform_feedback2
+ 87: GL_ARB_draw_indirect
+ 88: GL_EXT_framebuffer_blit
+ 89: GL_EXT_framebuffer_multisample
+ 90: GL_ARB_framebuffer_object
+ 91: GL_EXT_texture_array
+ 92: GL_EXT_texture_integer
+ 93: GL_ARB_map_buffer_range
+ 94: GL_EXT_texture_snorm
+ 95: GL_ARB_blend_func_extended
+ 96: GL_INTEL_performance_queries
+ 97: GL_ARB_copy_buffer
+ 98: GL_ARB_sampler_objects
+ 99: GL_NV_primitive_restart
+ 100: GL_ARB_seamless_cube_map
+ 101: GL_ARB_uniform_buffer_object
+ 102: GL_ARB_depth_clamp
+ 103: GL_ARB_vertex_array_bgra
+ 104: GL_ARB_shader_bit_encoding
+ 105: GL_ARB_draw_buffers_blend
+ 106: GL_ARB_geometry_shader4
+ 107: GL_ARB_texture_query_lod
+ 108: GL_ARB_explicit_attrib_location
+ 109: GL_ARB_draw_elements_base_vertex
+ 110: GL_ARB_instanced_arrays
+ 111: GL_ARB_fragment_coord_conventions
+ 112: GL_EXT_gpu_program_parameters
+ 113: GL_ARB_texture_buffer_object_rgb32
+ 114: GL_ARB_compatibility
+ 115: GL_ARB_texture_rgb10_a2ui
+ 116: GL_ARB_texture_multisample
+ 117: GL_ARB_vertex_type_2_10_10_10_rev
+ 118: GL_ARB_timer_query
+ 119: GL_INTEL_map_texture
+ 120: GL_ARB_tessellation_shader
+ 121: GL_ARB_vertex_array_object
+ 122: GL_ARB_provoking_vertex
+ 123: GL_ARB_sample_shading
+ 124: GL_ARB_texture_cube_map_array
+ 125: GL_ARB_gpu_shader5
+ 126: GL_ARB_gpu_shader_fp64
+ 127: GL_ARB_shader_subroutine
+ 128: GL_ARB_transform_feedback3
+ 129: WGL_EXT_depth_float
+ 130: WGL_ARB_buffer_region
+ 131: WGL_ARB_extensions_string
+ 132: WGL_ARB_make_current_read
+ 133: WGL_ARB_pixel_format
+ 134: WGL_ARB_pbuffer
+ 135: WGL_EXT_extensions_string
+ 136: WGL_EXT_swap_control
+ 137: WGL_EXT_swap_control_tear
+ 138: WGL_ARB_multisample
+ 139: WGL_ARB_pixel_format_float
+ 140: WGL_ARB_framebuffer_sRGB
+ 141: WGL_ARB_create_context
+ 142: WGL_ARB_create_context_profile
+ 143: WGL_EXT_pixel_format_packed_float
+ 144: WGL_EXT_create_context_es2_profile
+ Creating definitive OpenGL context
+ 000  core found.
+ 001  core found.
+ 002  core found.
+ 003  core found.
+ 004  core found.
+ 005  core found.
+ 006  core found.
+ 007  core found.
+ 008  core found.
+ 009  core found.
+ 010  core found.
+ 011  core found.
+ 012  core found.
+ 013  core found.
+ 014  core found.
+ 015  core found.
+ 016  core found.
+ 017  core found.
+ 018  core found.
+ 019  core found.
+ 020  core found.
+ 021  core found.
+ 022  core found.
+ 023  core found.
+ 024  core found.
+ 025  core found.
+ 026  core found.
+ 027  core found.
+ 028  core found.
+ 029  core found.
+ 030  core found.
+ 031  core found.
+ 032  core found.
+ 033  core found.
+ 034  core found.
+ 035  core found.
+ 036  core found.
+ 037  core found.
+ 038  core found.
+ 039  core found.
+ 040  core found.
+ 041  core found.
+ 042  core found.
+ 043  core found.
+ 044  core found.
+ 045  core found.
+ 046  core found.
+ 047  core found.
+ 048  core found.
+ 049  core found.
+ 050  core found.
+ 051  core found.
+ 052  core found.
+ 053  core found.
+ 054  core found.
+ 055  core found.
+ 056  core found.
+ 057  core found.
+ 058  core found.
+ 059  core found.
+ 060  core found.
+ 061  core found.
+ 062  core found.
+ 063  core found.
+ 064  core found.
+ 065  core found.
+ 066  core found.
+ 067  core found.
+ 068  core found.
+ 069  core found.
+ 070  core found.
+ 071  core found.
+ 072  core found.
+ 073  core found.
+ 074  core found.
+ 075  core found.
+ 076  core found.
+ 077  core found.
+ 078  core found.
+ 079  core found.
+ 080  core found.
+ 081  core found.
+ 082  core found.
+ 083  core found.
+ 084  core found.
+ 085  core found.
+ 086  core found.
+ 087  core found.
+ 088  core found.
+ 089  core found.
+ 090  core found.
+ 091  core found.
+ 092  core found.
+ 093  core found.
+ 094  core found.
+ 095  core found.
+ 096  core found.
+ 097  core found.
+ 098  core found.
+ 099  core found.
+ 100  core found.
+ 101  core found.
+ 102  core found.
+ 103  core found.
+ 104  core found.
+ 105  core found.
+ 106  core found.
+ 107  core found.
+ 108  core found.
+ 109  core found.
+ 110  core found.
+ 111  core found.
+ 112  core found.
+ 113  core found.
+ 114  core found.
+ 115  core found.
+ 116  core found.
+ 117  core found.
+ 118  core found.
+ 119  core found.
+ 120  core found.
+ 121  core found.
+ 122  core found.
+ 123  core found.
+ 124  core found.
+ 125  core found.
+ 126  core found.
+ 127  core found.
+ 128  core found.
+ 129  core found.
+ 130  core found.
+ 131  core found.
+ 132  core found.
+ 133  core found.
+ 134  core found.
+ 135  core found.
+ 136  core found.
+ 137  core found.
+ 138  core found.
+ 139  core found.
+ 140  core found.
+ 141  core found.
+ 142  core found.
+ 143  core found.
+ 144  core found.
+ 145  core found.
+ 146  core found.
+ 147  core found.
+ 148  core found.
+ 149  core found.
+ 150  core found.
+ 151  core found.
+ 152  core found.
+ 153  core found.
+ 154  core found.
+ 155  core found.
+ 156  core found.
+ 157  core found.
+ 158  core found.
+ 159  core found.
+ 160  core found.
+ 161  core found.
+ 162  core found.
+ 163  core found.
+ 164  core found.
+ 165  core found.
+ 166  core found.
+ 167  core found.
+ 168  core found.
+ 169  core found.
+ 170  core found.
+ 171  core found.
+ 172  core found.
+ 173  core found.
+ 174  core found.
+ 175  core found.
+ 176  core found.
+ 177  core found.
+ 178  core found.
+ 179  core found.
+ 180  core found.
+ 181  core found.
+ 182  core found.
+ 183  core found.
+ 184  core found.
+ 185  core found.
+ 186  core found.
+ 187  core found.
+ 188  core found.
+ 189  core found.
+ 190  core found.
+ 191  core found.
+ 192  core found.
+ 193  core found.
+ 194  core found.
+ 195  core found.
+ 196  core found.
+ 197  core found.
+ 198  core found.
+ 199  core found.
+ 200  core found.
+ 201  core found.
+ 202  core found.
+ 203  core found.
+ 204  core found.
+ 205  core found.
+ 206  core found.
+ 207  core found.
+ 208  core found.
+ 209  core found.
+ 210  core found.
+ 211  core found.
+ 212  core found.
+ 213  core found.
+ 214  core found.
+ 215  core found.
+ 216  core found.
+ 217  core found.
+ 218  core found.
+ 219  core found.
+ 220  core found.
+ 221  core found.
+ 222  core found.
+ 223  core found.
+ 224  core found.
+ 225  core found.
+ 226  core found.
+ 227  core found.
+ 228  core found.
+ 229  core found.
+ 230  core found.
+ 231  core found.
+ 232  core found.
+ 233  core found.
+ 234  core found.
+ 235  core found.
+ 236  core found.
+ 237  core found.
+ 238  core found.
+ 239  core found.
+ 240  core found.
+ 241  core found.
+ 242  core found.
+ 243  core found.
+ 244  core found.
+ 245  core found.
+ 246  core found.
+ 247  core found.
+ 248  core found.
+ 249  core found.
+ 250  core found.
+ 251  core found.
+ 252  core found.
+ 253  core found.
+ 254  core found.
+ 255  core found.
+ 256  core found.
+ 257  core found.
+ 258  core found.
+ 259  core found.
+ 260  core found.
+ 261  core found.
+ 262  core found.
+ 263  core found.
+ 264  core found.
+ 265  core found.
+ 266  core found.
+ 267  core found.
+ 268  core found.
+ 269  core found.
+ 270  core found.
+ 271  core found.
+ 272  core found.
+ 273  core found.
+ 274  core found.
+ 275  core found.
+ 276  core found.
+ 277  core found.
+ 278  core found.
+ 279  core found.
+ 280  core found.
+ 281  core found.
+ 282  core found.
+ 283  core found.
+ 284  core found.
+ 285  core found.
+ 286  core found.
+ 287  core found.
+ 288  core found.
+ 289  core found.
+ 290  core found.
+ 291  core found.
+ 292  core found.
+ 293  core found.
+ 294  core found.
+ 295  core found.
+ 296  core found.
+ 297  core found.
+ 298  core found.
+ 299  core found.
+ 300  core found.
+ 301  core found.
+ 302  core found.
+ 303  core found.
+ 304  core found.
+ 305  core found.
+ 306  core found.
+ 307  core found.
+ 308  core found.
+ 309  core found.
+ 310  core found.
+ 311  core found.
+ 312  core found.
+ 313  core found.
+ 314  core found.
+ 315  core found.
+ 316  core found.
+ 317  core found.
+ 318  core found.
+ 319  core found.
+ 320  core found.
+ 321  core found.
+ 322  core found.
+ 323  core found.
+ 324  core found.
+ 325  core found.
+ 326  core found.
+ 327  core found.
+ 328  core found.
+ 329  core found.
+ 330  core found.
+ 331  core found.
+ 332  core found.
+ 333  core found.
+ 334  core found.
+ 335  core found.
+ 336  core found.
+ 337  core found.
+ 338  core found.
+ 339  core found.
+ 340  core found.
+ 341  core found.
+ 342  core found.
+ 343  core found.
+ 344  core found.
+ 345  core found.
+ 346  core found.
+ 347  core found.
+ 348  core found.
+ 349  core found.
+ 350  core found.
+ 351  core found.
+ 352  core found.
+ 353  core found.
+ 354  core found.
+ 355  core found.
+ 356  core found.
+ 357  core found.
+ 358  core found.
+ 359  core found.
+ 360  core found.
+ 361  core found.
+ 362  core found.
+ 363  core found.
+ 364  core found.
+ 365  core found.
+ 366  core found.
+ 367  core found.
+ 368  core found.
+ 369  core found.
+ 370  core found.
+ 371  core found.
+ 372  core found.
+ 373  core found.
+ 374  core found.
+ 375  core found.
+ 376  core found.
+ 377  core found.
+ 378  core found.
+ 379  core found.
+ 380  core found.
+ 381  core found.
+ 382  core found.
+ 383  core found.
+ 384  core found.
+ 385  core found.
+ 386  core found.
+ 387  core found.
+ 388  core found.
+ 389  core found.
+ 390  core found.
+ 391  core found.
+ 392  core found.
+ 393  core found.
+ 394  core found.
+ 395  core found.
+ 396  core found.
+ 397  core found.
+ 398  core found.

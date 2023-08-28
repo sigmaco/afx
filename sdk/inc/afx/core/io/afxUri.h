@@ -60,12 +60,12 @@ AFX void                AfxUri128(afxUri128 *uri);
 AFX void                AfxUri2048(afxUri2048 *uri);
 
 AFX void                AfxUriDeallocate(afxUri *uri);
-AFX afxUri*             AfxUriAllocate(afxNat cap, void const *start, afxNat range);
-AFX afxUri*             AfxUriReallocate(afxUri *uri, afxNat cap, void const *start, afxNat range);
+AFX afxError            AfxUriAllocate(afxUri* uri, afxNat cap, void const *start, afxNat range);
+AFX afxError            AfxUriReallocate(afxUri *uri, afxNat cap, void const *start, afxNat range);
 
-AFX afxUri*             AfxCloneUri(afxUri const *uri);
-AFX afxUri*             AfxCloneUriPath(afxUri const *uri);
-AFX afxUri*             AfxCloneUriName(afxUri const *uri);
+AFX afxError            AfxCloneUri(afxUri* uri, afxUri const *in);
+AFX afxError            AfxCloneUriPath(afxUri* uri, afxUri const *in);
+AFX afxError            AfxCloneUriName(afxUri* uri, afxUri const *in);
 
 // Make a new URI excerpting another URI.
 AFX afxNat              AfxExcerptUriHost(afxUri *uri, afxUri const *parent);

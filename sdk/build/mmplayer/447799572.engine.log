@@ -1,0 +1,1092 @@
+
+00 afxDebug.c:396
+	AfxAttachDebugTerminal()
+00 
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+00 
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+00 
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+00 
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+00 
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+00 
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+00 
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+00 
+                                                                               
+00 
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+00 
+                                                                               
+00 
+                               Public Test Build                               
+00 
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+00 
+                                www.sigmaco.org                                
+00 
+                                                                               
+00 
+ Installing Basic I/O System at 5040e7cc by 00000000 over 00000000 with 5040c1c0)
+00 
+ afxClass<Basic I/O System>::ConstructObject(0046f110)
+00 afxSystem.c:1006
+	_AfxSysCtor(sys=0046f110)
+4294967295 
+ Installing Context at 0046f12c by 0046f118 over 00000000 with 5040c7a0)
+4294967295 
+ Installing Module at 0046f1ec by 0046f118 over 00000000 with 5040c080)
+4294967295 
+ Installing Thread at 0046f42c by 0046f118 over 00000000 with 5040c1f0)
+4294967295 
+ Installing File at 0046f5ac by 0046f118 over 00000000 with 5040c310)
+4294967295 
+ Installing Archive at 0046f66c by 0046f118 over 00000000 with 5040c2e0)
+4294967295 
+ Installing Application at 0046f4ec by 0046f118 over 00000000 with 5040c000)
+4294967295 
+ Installing Keyboard at 0046f2ac by 0046f118 over 00000000 with 5040c340)
+4294967295 
+ Installing Mouse at 0046f36c by 0046f118 over 00000000 with 5040c370)
+4294967295 
+ Installing Draw System at 0046f72c by 0046f118 over 00000000 with 5040d070)
+4294967295 
+ ADV afxSystem.c:1090?_AfxSysCtor
+    Memory page size: 4096
+4294967295 
+ ADV afxSystem.c:1091?_AfxSysCtor
+    Logical processor count: 2
+4294967295 afxContext.c:202
+	AfxAcquireContexts(cnt=1,app=0046f7ec,strategy=0014e724)
+4294967295 
+ afxClass<Context>::ConstructObject(0046f950)
+4294967295 afxContext.c:166
+	_AfxCtxCtor(ctx=0046f950)
+4294967295 afxArena.c:767
+	AfxAcquireArena(aren=0046f848)
+4294967295 afxArena.c:768
+	AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+4294967295 afxSystem.c:750
+	AfxMountStoragePoints(6,0014e87c)
+4294967295 
+ Point "." 5 mounted -> "E:/qwadro/afx".
+4294967295 
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+4294967295 
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+4294967295 
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+4294967295 
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+4294967295 
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+4294967295 afxModule.c:170
+	AfxAcquireModules(cnt=1,mdle=0046f818,uri=0014e7b4)
+4294967295 
+ afxClass<Module>::ConstructObject(0045b460)
+4294967295 afxModule.c:126
+	_AfxMdleCtor(uri:system/e2coree.dll)
+4294967295 afxKeyboard.c:317
+	AfxAcquireKeyboards(cnt=1,kbd=0046f81c,port=0014e6fc)
+4294967295 
+ afxClass<Keyboard>::ConstructObject(00472d10)
+4294967295 afxKeyboard.c:281
+	_AfxKbdCtor(kbd=00472d10)
+00 
+ afxClass<Draw System>::ConstructObject(00475040)
+00 afxDrawSystem.c:635
+	_AfxDsysCtor(dsys=00475040)
+00 
+ Installing Draw Thread at 0047546c by 00475098 over 00000000 with 0014f1d8)
+00 
+ Installing Installable Client (Draw) Driver at 004750ac by 00475098 over 00000000 with 0014f1a8)
+00 
+ Installing Draw Device at 0047516c by 00475098 over 00000000 with 0014f178)
+00 
+ Installing Draw Context at 0047522c by 00475098 over 00000000 with 0014f148)
+00 
+ Installing Draw Output at 004752ec by 00475098 over 00000000 with 0014f118)
+00 
+ Installing Draw Input at 004753ac by 00475098 over 00000000 with 0014f0e8)
+00 
+New texture codec registered.
+00 
+Name: SIGGL
+00 
+Author: SIGMA Technology Group
+00 
+Version: 0.5.1
+00 
+Note: 
+00 
+ Truecolor Targa texture serializer installed!
+00 afxModule.c:170
+	AfxAcquireModules(cnt=1,mdle=00475540,uri=0014f070)
+00 
+ afxClass<Module>::ConstructObject(0045b560)
+00 afxModule.c:126
+	_AfxMdleCtor(uri:e2draw.icd)
+00 
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00478540)
+00 afxDrawSystem.c:261
+	_AfxDdrvCtor(ddrv=00478540)
+00 
+ Installing Draw Device at 00478554 by 00478540 over 0047516c with 0014ef58)
+00 
+New installable client driver registered.
+00 
+Name: OpenGL/Vulkan Continuous Integration
+00 
+Author: SIGMA Technology Group
+00 
+Version: 0.7.2
+00 
+Note: 
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+00 
+ afxClass<Draw Device, Draw Device>ConstructingObject(004786e0)
+00 
+ afxClass<Draw Device>::ConstructObject(004786e0)
+00 
+ afxClass<Draw Device>::ConstructObject(004786e0)
+00 sglDrawDriver.c:1746
+	_SglDdevCtor(ddev=004786e0)
+00 
+ Installing Draw Context at 004786f8 by 004786e4 over 0047522c with 50ee40cc)
+00 
+ Installing Draw Output at 004787b8 by 004786e4 over 004752ec with 50ee41c8)
+00 
+ Installing Draw Input at 00478878 by 004786e4 over 004753ac with 50ee4180)
+00 
+ Listing mem available display devices...
+
+00 
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+00 
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+00 
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+00 
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+00 sglDrawDriver.c:1252
+	_SglCreateCombinedDeviceContext(oglWndClss=00478a24,shareCtx=00000000,phwnd=0047d470,phdc=0047d474,phrc=0047d47c)
+00 
+ wglCreateContext fallback @ 0 found.
+00 
+ wglDeleteContext fallback @ 1 found.
+00 
+ wglGetCurrentContext fallback @ 2 found.
+00 
+ wglGetCurrentDC fallback @ 3 found.
+00 
+ wglGetProcAddress fallback @ 4 found.
+00 
+ wglMakeCurrent fallback @ 5 found.
+00 
+ wglChoosePixelFormatARB @ 6 found.
+00 
+ wglDescribePixelFormat fallback @ 7 found.
+00 
+ wglSetPixelFormat fallback @ 8 found.
+00 
+ wglGetPixelFormat fallback @ 9 found.
+00 
+ wglSwapBuffers fallback @ 10 found.
+00 
+ wglChoosePixelFormatARB @ 11 found.
+00 
+ wglMakeContextCurrentARB @ 12 found.
+00 
+ wglGetCurrentReadDCARB @ 13 found.
+00 
+ wglCreateContextAttribsARB @ 14 found.
+00 
+ wglGetExtensionsStringARB @ 15 found.
+00 
+ wglSwapIntervalEXT @ 16 found.
+00 
+ ADV sglDrawDriver.c:1576?_SglBuildDpu
+    677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+00 
+ ERR sglDrawDriver.c:1033?SglGetPixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1033?SglGetPixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1021?SglDescribePixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1021?SglDescribePixelFormat
+    
+00 
+ glCullFace @ 0 found.
+00 
+ glFrontFace @ 1 found.
+00 
+ glHint @ 2 found.
+00 
+ glLineWidth @ 3 found.
+00 
+ glPointSize @ 4 found.
+00 
+ glPolygonMode @ 5 found.
+00 
+ glScissor @ 6 found.
+00 
+ glTexParameterf @ 7 found.
+00 
+ glTexParameterfv @ 8 found.
+00 
+ glTexParameteri @ 9 found.
+00 
+ glTexParameteriv @ 10 found.
+00 
+ glTexImage1D @ 11 found.
+00 
+ glTexImage2D @ 12 found.
+00 
+ glDrawBuffer @ 13 found.
+00 
+ glClear @ 14 found.
+00 
+ glClearColor @ 15 found.
+00 
+ glClearStencil @ 16 found.
+00 
+ glClearDepth @ 17 found.
+00 
+ glStencilMask @ 18 found.
+00 
+ glColorMask @ 19 found.
+00 
+ glDepthMask @ 20 found.
+00 
+ glDisable @ 21 found.
+00 
+ glEnable @ 22 found.
+00 
+ glFinish @ 23 found.
+00 
+ glFlush @ 24 found.
+00 
+ glBlendFunc @ 25 found.
+00 
+ glLogicOp @ 26 found.
+00 
+ glStencilFunc @ 27 found.
+00 
+ glStencilOp @ 28 found.
+00 
+ glDepthFunc @ 29 found.
+00 
+ glPixelStoref @ 30 found.
+00 
+ glPixelStorei @ 31 found.
+00 
+ glReadBuffer @ 32 found.
+00 
+ glReadPixels @ 33 found.
+00 
+ glGetBooleanv @ 34 found.
+00 
+ glGetDoublev @ 35 found.
+00 
+ glGetError @ 36 found.
+00 
+ glGetFloatv @ 37 found.
+00 
+ glGetIntegerv @ 38 found.
+00 
+ glGetString @ 39 found.
+00 
+ glGetTexImage @ 40 found.
+00 
+ glGetTexParameterfv @ 41 found.
+00 
+ glGetTexParameteriv @ 42 found.
+00 
+ glGetTexLevelParameterfv @ 43 found.
+00 
+ glGetTexLevelParameteriv @ 44 found.
+00 
+ glIsEnabled @ 45 found.
+00 
+ glDepthRange @ 46 found.
+00 
+ glViewport @ 47 found.
+00 
+ glDrawArrays @ 48 found.
+00 
+ glDrawElements @ 49 found.
+00 
+ glGetPointerv @ 50 found.
+00 
+ glPolygonOffset @ 51 found.
+00 
+ glCopyTexImage1D @ 52 found.
+00 
+ glCopyTexImage2D @ 53 found.
+00 
+ glCopyTexSubImage1D @ 54 found.
+00 
+ glCopyTexSubImage2D @ 55 found.
+00 
+ glTexSubImage1D @ 56 found.
+00 
+ glTexSubImage2D @ 57 found.
+00 
+ glBindTexture @ 58 found.
+00 
+ glDeleteTextures @ 59 found.
+00 
+ glGenTextures @ 60 found.
+00 
+ glIsTexture @ 61 found.
+00 
+ glDrawRangeElements @ 62 found.
+00 
+ glTexImage3D @ 63 found.
+00 
+ glTexSubImage3D @ 64 found.
+00 
+ glCopyTexSubImage3D @ 65 found.
+00 
+ glActiveTexture @ 66 found.
+00 
+ glSampleCoverage @ 67 found.
+00 
+ glCompressedTexImage3D @ 68 found.
+00 
+ glCompressedTexImage2D @ 69 found.
+00 
+ glCompressedTexImage1D @ 70 found.
+00 
+ glCompressedTexSubImage3D @ 71 found.
+00 
+ glCompressedTexSubImage2D @ 72 found.
+00 
+ glCompressedTexSubImage1D @ 73 found.
+00 
+ glGetCompressedTexImage @ 74 found.
+00 
+ glBlendFuncSeparate @ 75 found.
+00 
+ glMultiDrawArrays @ 76 found.
+00 
+ glMultiDrawElements @ 77 found.
+00 
+ glPointParameterf @ 78 found.
+00 
+ glPointParameterfv @ 79 found.
+00 
+ glPointParameteri @ 80 found.
+00 
+ glPointParameteriv @ 81 found.
+00 
+ glBlendColor @ 82 found.
+00 
+ glBlendEquation @ 83 found.
+00 
+ glGenQueries @ 84 found.
+00 
+ glDeleteQueries @ 85 found.
+00 
+ glIsQuery @ 86 found.
+00 
+ glBeginQuery @ 87 found.
+00 
+ glEndQuery @ 88 found.
+00 
+ glGetQueryiv @ 89 found.
+00 
+ glGetQueryObjectiv @ 90 found.
+00 
+ glGetQueryObjectuiv @ 91 found.
+00 
+ glBindBuffer @ 92 found.
+00 
+ glDeleteBuffers @ 93 found.
+00 
+ glGenBuffers @ 94 found.
+00 
+ glIsBuffer @ 95 found.
+00 
+ glBufferData @ 96 found.
+00 
+ glBufferSubData @ 97 found.
+00 
+ glGetBufferSubData @ 98 found.
+00 
+ glMapBuffer @ 99 found.
+00 
+ glUnmapBuffer @ 100 found.
+00 
+ glGetBufferParameteriv @ 101 found.
+00 
+ glGetBufferPointerv @ 102 found.
+00 
+ glBlendEquationSeparate @ 103 found.
+00 
+ glDrawBuffers @ 104 found.
+00 
+ glStencilOpSeparate @ 105 found.
+00 
+ glStencilFuncSeparate @ 106 found.
+00 
+ glStencilMaskSeparate @ 107 found.
+00 
+ glAttachShader @ 108 found.
+00 
+ glBindAttribLocation @ 109 found.
+00 
+ glCompileShader @ 110 found.
+00 
+ glCreateProgram @ 111 found.
+00 
+ glCreateShader @ 112 found.
+00 
+ glDeleteProgram @ 113 found.
+00 
+ glDeleteShader @ 114 found.
+00 
+ glDetachShader @ 115 found.
+00 
+ glDisableVertexAttribArray @ 116 found.
+00 
+ glEnableVertexAttribArray @ 117 found.
+00 
+ glGetActiveAttrib @ 118 found.
+00 
+ glGetActiveUniform @ 119 found.
+00 
+ glGetAttachedShaders @ 120 found.
+00 
+ glGetAttribLocation @ 121 found.
+00 
+ glGetProgramiv @ 122 found.
+00 
+ glGetProgramInfoLog @ 123 found.
+00 
+ glGetShaderiv @ 124 found.
+00 
+ glGetShaderInfoLog @ 125 found.
+00 
+ glGetShaderSource @ 126 found.
+00 
+ glGetUniformLocation @ 127 found.
+00 
+ glGetUniformfv @ 128 found.
+00 
+ glGetUniformiv @ 129 found.
+00 
+ glGetVertexAttribdv @ 130 found.
+00 
+ glGetVertexAttribfv @ 131 found.
+00 
+ glGetVertexAttribiv @ 132 found.
+00 
+ glGetVertexAttribPointerv @ 133 found.
+00 
+ glIsProgram @ 134 found.
+00 
+ glIsShader @ 135 found.
+00 
+ glLinkProgram @ 136 found.
+00 
+ glShaderSource @ 137 found.
+00 
+ glUseProgram @ 138 found.
+00 
+ glUniform1f @ 139 found.
+00 
+ glUniform2f @ 140 found.
+00 
+ glUniform3f @ 141 found.
+00 
+ glUniform4f @ 142 found.
+00 
+ glUniform1i @ 143 found.
+00 
+ glUniform2i @ 144 found.
+00 
+ glUniform3i @ 145 found.
+00 
+ glUniform4i @ 146 found.
+00 
+ glUniform1fv @ 147 found.
+00 
+ glUniform2fv @ 148 found.
+00 
+ glUniform3fv @ 149 found.
+00 
+ glUniform4fv @ 150 found.
+00 
+ glUniform1iv @ 151 found.
+00 
+ glUniform2iv @ 152 found.
+00 
+ glUniform3iv @ 153 found.
+00 
+ glUniform4iv @ 154 found.
+00 
+ glUniformMatrix2fv @ 155 found.
+00 
+ glUniformMatrix3fv @ 156 found.
+00 
+ glUniformMatrix4fv @ 157 found.
+00 
+ glValidateProgram @ 158 found.
+00 
+ glVertexAttrib1d @ 159 found.
+00 
+ glVertexAttrib1dv @ 160 found.
+00 
+ glVertexAttrib1f @ 161 found.
+00 
+ glVertexAttrib1fv @ 162 found.
+00 
+ glVertexAttrib1s @ 163 found.
+00 
+ glVertexAttrib1sv @ 164 found.
+00 
+ glVertexAttrib2d @ 165 found.
+00 
+ glVertexAttrib2dv @ 166 found.
+00 
+ glVertexAttrib2f @ 167 found.
+00 
+ glVertexAttrib2fv @ 168 found.
+00 
+ glVertexAttrib2s @ 169 found.
+00 
+ glVertexAttrib2sv @ 170 found.
+00 
+ glVertexAttrib3d @ 171 found.
+00 
+ glVertexAttrib3dv @ 172 found.
+00 
+ glVertexAttrib3f @ 173 found.
+00 
+ glVertexAttrib3fv @ 174 found.
+00 
+ glVertexAttrib3s @ 175 found.
+00 
+ glVertexAttrib3sv @ 176 found.
+00 
+ glVertexAttrib4Nbv @ 177 found.
+00 
+ glVertexAttrib4Niv @ 178 found.
+00 
+ glVertexAttrib4Nsv @ 179 found.
+00 
+ glVertexAttrib4Nub @ 180 found.
+00 
+ glVertexAttrib4Nubv @ 181 found.
+00 
+ glVertexAttrib4Nuiv @ 182 found.
+00 
+ glVertexAttrib4Nusv @ 183 found.
+00 
+ glVertexAttrib4bv @ 184 found.
+00 
+ glVertexAttrib4d @ 185 found.
+00 
+ glVertexAttrib4dv @ 186 found.
+00 
+ glVertexAttrib4f @ 187 found.
+00 
+ glVertexAttrib4fv @ 188 found.
+00 
+ glVertexAttrib4iv @ 189 found.
+00 
+ glVertexAttrib4s @ 190 found.
+00 
+ glVertexAttrib4sv @ 191 found.
+00 
+ glVertexAttrib4ubv @ 192 found.
+00 
+ glVertexAttrib4uiv @ 193 found.
+00 
+ glVertexAttrib4usv @ 194 found.
+00 
+ glVertexAttribPointer @ 195 found.
+00 
+ glUniformMatrix2x3fv @ 196 found.
+00 
+ glUniformMatrix3x2fv @ 197 found.
+00 
+ glUniformMatrix2x4fv @ 198 found.
+00 
+ glUniformMatrix4x2fv @ 199 found.
+00 
+ glUniformMatrix3x4fv @ 200 found.
+00 
+ glUniformMatrix4x3fv @ 201 found.
+00 
+ glColorMaski @ 202 found.
+00 
+ glGetBooleani_v @ 203 found.
+00 
+ glGetIntegeri_v @ 204 found.
+00 
+ glEnablei @ 205 found.
+00 
+ glDisablei @ 206 found.
+00 
+ glIsEnabledi @ 207 found.
+00 
+ glBeginTransformFeedback @ 208 found.
+00 
+ glEndTransformFeedback @ 209 found.
+00 
+ glBindBufferRange @ 210 found.
+00 
+ glBindBufferBase @ 211 found.
+00 
+ glTransformFeedbackVaryings @ 212 found.
+00 
+ glGetTransformFeedbackVarying @ 213 found.
+00 
+ glClampColor @ 214 found.
+00 
+ glBeginConditionalRender @ 215 found.
+00 
+ glEndConditionalRender @ 216 found.
+00 
+ glVertexAttribIPointer @ 217 found.
+00 
+ glGetVertexAttribIiv @ 218 found.
+00 
+ glGetVertexAttribIuiv @ 219 found.
+00 
+ glVertexAttribI1i @ 220 found.
+00 
+ glVertexAttribI2i @ 221 found.
+00 
+ glVertexAttribI3i @ 222 found.
+00 
+ glVertexAttribI4i @ 223 found.
+00 
+ glVertexAttribI1ui @ 224 found.
+00 
+ glVertexAttribI2ui @ 225 found.
+00 
+ glVertexAttribI3ui @ 226 found.
+00 
+ glVertexAttribI4ui @ 227 found.
+00 
+ glVertexAttribI1iv @ 228 found.
+00 
+ glVertexAttribI2iv @ 229 found.
+00 
+ glVertexAttribI3iv @ 230 found.
+00 
+ glVertexAttribI4iv @ 231 found.
+00 
+ glVertexAttribI1uiv @ 232 found.
+00 
+ glVertexAttribI2uiv @ 233 found.
+00 
+ glVertexAttribI3uiv @ 234 found.
+00 
+ glVertexAttribI4uiv @ 235 found.
+00 
+ glVertexAttribI4bv @ 236 found.
+00 
+ glVertexAttribI4sv @ 237 found.
+00 
+ glVertexAttribI4ubv @ 238 found.
+00 
+ glVertexAttribI4usv @ 239 found.
+00 
+ glGetUniformuiv @ 240 found.
+00 
+ glBindFragDataLocation @ 241 found.
+00 
+ glGetFragDataLocation @ 242 found.
+00 
+ glUniform1ui @ 243 found.
+00 
+ glUniform2ui @ 244 found.
+00 
+ glUniform3ui @ 245 found.
+00 
+ glUniform4ui @ 246 found.
+00 
+ glUniform1uiv @ 247 found.
+00 
+ glUniform2uiv @ 248 found.
+00 
+ glUniform3uiv @ 249 found.
+00 
+ glUniform4uiv @ 250 found.
+00 
+ glTexParameterIiv @ 251 found.
+00 
+ glTexParameterIuiv @ 252 found.
+00 
+ glGetTexParameterIiv @ 253 found.
+00 
+ glGetTexParameterIuiv @ 254 found.
+00 
+ glClearBufferiv @ 255 found.
+00 
+ glClearBufferuiv @ 256 found.
+00 
+ glClearBufferfv @ 257 found.
+00 
+ glClearBufferfi @ 258 found.
+00 
+ glGetStringi @ 259 found.
+00 
+ glIsRenderbuffer @ 260 found.
+00 
+ glBindRenderbuffer @ 261 found.
+00 
+ glDeleteRenderbuffers @ 262 found.
+00 
+ glGenRenderbuffers @ 263 found.
+00 
+ glRenderbufferStorage @ 264 found.
+00 
+ glGetRenderbufferParameteriv @ 265 found.
+00 
+ glIsFramebuffer @ 266 found.
+00 
+ glBindFramebuffer @ 267 found.
+00 
+ glDeleteFramebuffers @ 268 found.
+00 
+ glGenFramebuffers @ 269 found.
+00 
+ glCheckFramebufferStatus @ 270 found.
+00 
+ glFramebufferTexture1D @ 271 found.
+00 
+ glFramebufferTexture2D @ 272 found.
+00 
+ glFramebufferTexture3D @ 273 found.
+00 
+ glFramebufferRenderbuffer @ 274 found.
+00 
+ glGetFramebufferAttachmentParameteriv @ 275 found.
+00 
+ glGenerateMipmap @ 276 found.
+00 
+ glBlitFramebuffer @ 277 found.
+00 
+ glRenderbufferStorageMultisample @ 278 found.
+00 
+ glFramebufferTextureLayer @ 279 found.
+00 
+ glMapBufferRange @ 280 found.
+00 
+ glFlushMappedBufferRange @ 281 found.
+00 
+ glBindVertexArray @ 282 found.
+00 
+ glDeleteVertexArrays @ 283 found.
+00 
+ glGenVertexArrays @ 284 found.
+00 
+ glIsVertexArray @ 285 found.
+00 
+ glDrawArraysInstanced @ 286 found.
+00 
+ glDrawElementsInstanced @ 287 found.
+00 
+ glTexBuffer @ 288 found.
+00 
+ glPrimitiveRestartIndex @ 289 found.
+00 
+ glCopyBufferSubData @ 290 found.
+00 
+ glGetUniformIndices @ 291 found.
+00 
+ glGetActiveUniformsiv @ 292 found.
+00 
+ glGetActiveUniformName @ 293 found.
+00 
+ glGetUniformBlockIndex @ 294 found.
+00 
+ glGetActiveUniformBlockiv @ 295 found.
+00 
+ glGetActiveUniformBlockName @ 296 found.
+00 
+ glUniformBlockBinding @ 297 found.
+00 
+ glDrawElementsBaseVertex @ 298 found.
+00 
+ glDrawRangeElementsBaseVertex @ 299 found.
+00 
+ glDrawElementsInstancedBaseVertex @ 300 found.
+00 
+ glMultiDrawElementsBaseVertex @ 301 found.
+00 
+ glProvokingVertex @ 302 found.
+00 
+ glFenceSync @ 303 found.
+00 
+ glIsSync @ 304 found.
+00 
+ glDeleteSync @ 305 found.
+00 
+ glClientWaitSync @ 306 found.
+00 
+ glWaitSync @ 307 found.
+00 
+ glGetInteger64v @ 308 found.
+00 
+ glGetSynciv @ 309 found.
+00 
+ glGetInteger64i_v @ 310 found.
+00 
+ glGetBufferParameteri64v @ 311 found.
+00 
+ glFramebufferTexture @ 312 found.
+00 
+ glTexImage2DMultisample @ 313 found.
+00 
+ glTexImage3DMultisample @ 314 found.
+00 
+ glGetMultisamplefv @ 315 found.
+00 
+ glSampleMaski @ 316 found.
+00 
+ glBindFragDataLocationIndexed @ 317 found.
+00 
+ glGetFragDataIndex @ 318 found.
+00 
+ glGenSamplers @ 319 found.
+00 
+ glDeleteSamplers @ 320 found.
+00 
+ glIsSampler @ 321 found.
+00 
+ glBindSampler @ 322 found.
+00 
+ glSamplerParameteri @ 323 found.
+00 
+ glSamplerParameteriv @ 324 found.
+00 
+ glSamplerParameterf @ 325 found.
+00 
+ glSamplerParameterfv @ 326 found.
+00 
+ glSamplerParameterIiv @ 327 found.
+00 
+ glSamplerParameterIuiv @ 328 found.
+00 
+ glGetSamplerParameteriv @ 329 found.
+00 
+ glGetSamplerParameterIiv @ 330 found.
+00 
+ glGetSamplerParameterfv @ 331 found.
+00 
+ glGetSamplerParameterIuiv @ 332 found.
+00 
+ glQueryCounter @ 333 found.
+00 
+ glGetQueryObjecti64v @ 334 found.
+00 
+ glGetQueryObjectui64v @ 335 found.
+00 
+ glVertexAttribDivisor @ 336 found.
+00 
+ glVertexAttribP1ui @ 337 found.
+00 
+ glVertexAttribP1uiv @ 338 found.
+00 
+ glVertexAttribP2ui @ 339 found.
+00 
+ glVertexAttribP2uiv @ 340 found.
+00 
+ glVertexAttribP3ui @ 341 found.
+00 
+ glVertexAttribP3uiv @ 342 found.
+00 
+ glVertexAttribP4ui @ 343 found.
+00 
+ glVertexAttribP4uiv @ 344 found.
+00 
+ glMinSampleShading @ 345 found.
+00 
+ glBlendEquationi @ 346 found.
+00 
+ glBlendEquationSeparatei @ 347 found.
+00 
+ glBlendFunci @ 348 found.
+00 
+ glBlendFuncSeparatei @ 349 found.
+00 
+ glDrawArraysIndirect @ 350 found.
+00 
+ glDrawElementsIndirect @ 351 found.
+00 
+ glUniform1d @ 352 found.
+00 
+ glUniform2d @ 353 found.
+00 
+ glUniform3d @ 354 found.
+00 
+ glUniform4d @ 355 found.
+00 
+ glUniform1dv @ 356 found.
+00 
+ glUniform2dv @ 357 found.
+00 
+ glUniform3dv @ 358 found.
+00 
+ glUniform4dv @ 359 found.
+00 
+ glUniformMatrix2dv @ 360 found.
+00 
+ glUniformMatrix3dv @ 361 found.
+00 
+ glUniformMatrix4dv @ 362 found.
+00 
+ glUniformMatrix2x3dv @ 363 found.
+00 
+ glUniformMatrix2x4dv @ 364 found.
+00 
+ glUniformMatrix3x2dv @ 365 found.
+00 
+ glUniformMatrix3x4dv @ 366 found.
+00 
+ glUniformMatrix4x2dv @ 367 found.
+00 
+ glUniformMatrix4x3dv @ 368 found.
+00 
+ glGetUniformdv @ 369 found.
+00 
+ glGetSubroutineUniformLocation @ 370 found.
+00 
+ glGetSubroutineIndex @ 371 found.
+00 
+ glGetActiveSubroutineUniformiv @ 372 found.
+00 
+ glGetActiveSubroutineUniformName @ 373 found.
+00 
+ glGetActiveSubroutineName @ 374 found.
+00 
+ glUniformSubroutinesuiv @ 375 found.
+00 
+ glGetUniformSubroutineuiv @ 376 found.
+00 
+ glGetProgramStageiv @ 377 found.
+00 
+ glPatchParameteri @ 378 found.
+00 
+ glPatchParameterfv @ 379 found.
+00 
+ glBindTransformFeedback @ 380 found.
+00 
+ glDeleteTransformFeedbacks @ 381 found.
+00 
+ glGenTransformFeedbacks @ 382 found.
+00 
+ glIsTransformFeedback @ 383 found.
+00 
+ glPauseTransformFeedback @ 384 found.
+00 
+ glResumeTransformFeedback @ 385 found.
+00 
+ glDrawTransformFeedback @ 386 found.
+00 
+ glDrawTransformFeedbackStream @ 387 found.
+00 
+ glBeginQueryIndexed @ 388 found.
+00 
+ glEndQueryIndexed @ 389 found.
+00 
+ glGetQueryIndexediv @ 390 found.
+00 
+ glReleaseShaderCompiler @ 391 found.
+00 
+ glShaderBinary @ 392 found.
+00 
+ glGetShaderPrecisionFormat @ 393 found.
+00 
+ glDepthRangef @ 394 found.
+00 
+ glClearDepthf @ 395 found.
+00 
+ glGetProgramBinary @ 396 found.
+00 
+ glProgramBinary @ 397 found.
+00 
+ glProgramParameteri @ 398 found.
+00 
+ FIX sglDrawDriver.c:1605?_SglBuildDpu
+    DPU#0 Intel(R) HD Graphics
+00 
+ FIX sglDrawDriver.c:1606?_SglBuildDpu
+    DPU#0 3.3.0 - Build 9.17.10.4229
+00 
+ FIX sglDrawDriver.c:1608?_SglBuildDpu
+    WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es2_profile 
+00 sglDrawDriver.c:1252
+	_SglCreateCombinedDeviceContext(oglWndClss=00478a24,shareCtx=00010001,phwnd=0047e8d0,phdc=0047e8d4,phrc=0047e8dc)
+00 
+ ADV sglDrawDriver.c:1576?_SglBuildDpu
+    677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+00 
+ ERR sglDrawDriver.c:1033?SglGetPixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1033?SglGetPixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1021?SglDescribePixelFormat
+    
+00 
+ ERR sglDrawDriver.c:1021?SglDescribePixelFormat
+    
+00 
+ FIX sglDrawDriver.c:1605?_SglBuildDpu
+    DPU#1 Intel(R) HD Graphics
+00 
+ FIX sglDrawDriver.c:1606?_SglBuildDpu
+    DPU#1 3.3.0 - Build 9.17.10.4229
+00 
+ FIX sglDrawDriver.c:1608?_SglBuildDpu
+    WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es2_profile 
+00 
+ Loading draw ICDs...
+00 afxModule.c:170
+	AfxAcquireModules(cnt=1,mdle=0014ee18,uri=0014ee1c)
+00 afxModule.c:170
+	AfxAcquireModules(cnt=1,mdle=0014ee18,uri=0014ee1c)
+00 
+ afxClass<Module>::ConstructObject(048522b0)
+00 afxModule.c:126
+	_AfxMdleCtor(uri:e2newton.icd)
+00 afxDrawThread.c:163
+	AfxAcquireDrawThreads(cnt=2,dthr=0014f238,config=00000000)
+00 
+ afxClass<Draw Thread>::ConstructObject(04938740)
+00 afxDrawThread.c:139
+	_AfxDthrCtor(dthr=04938740)
+00 afxThread.c:1228
+	AfxAcquireThreads(cnt=1,thr=04938740,config=0014ed50,hint="afxDrawThread.c:155!_AfxDthrCtor")
+00 
+ afxClass<Thread>::ConstructObject(03ce5750)
+00 afxThread.c:1173
+	_AfxThrCtor(03ce5750)

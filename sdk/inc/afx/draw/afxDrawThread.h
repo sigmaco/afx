@@ -22,35 +22,34 @@
 
 AFX_DEFINE_STRUCT(afxDrawThreadConfig)
 {
-    afxThreadConfig  base;
+    afxThreadConfig base;
+    afxDrawDevice   ddev;
+    void*           udd;
 };
 
-#if (defined(_AFX_DRAW_THREAD_C) && !(defined(_AFX_THREAD_C)))
-#   error "afxThread not exposed.";
-#endif
+//#if (defined(_AFX_DRAW_THREAD_C) && !(defined(_AFX_THREAD_C)))
+//#   error "afxThread not exposed.";
+//#endif
 
-struct _afxDthrD
-#ifdef _AFX_DRAW_THREAD_C    
+#ifdef _AFX_DRAW_THREAD_C
+AFX_OBJECT(afxDrawThread)
 {
-    _AFX_DBG_FCC
-    afxDrawThread           dthrObj;
     afxThread               thr; // AFX_FCC_DTHR
-    afxDrawDriver           ddrv;
+    afxDrawDevice           ddev;
     afxDrawContext          dctx;
     afxNat                  portIdx;
     afxDrawQueue            dque;
     afxNat                  queueIdx;
 
-    afxContext               mem;
-}
+    void*                   udd;
+};
 #endif
-;
 
-AFX afxError                AfxAcquireDrawThreads(afxNat cnt, afxDrawThread dthr[], afxDrawThreadConfig const config[]);
-AFX void                    AfxReleaseDrawThreads(afxNat cnt, afxDrawThread dthr[]);
+AFX afxDrawDevice       AfxGetDrawThreadDriver(afxDrawThread dthr);
+AFX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);
+AFX void*               AfxGetDrawThreadUdd(afxDrawThread dthr);
 
-AFX afxDrawDriver           AfxGetDrawThreadActiveDriver(afxDrawThread dthr);
-AFX afxDrawContext          AfxGetDrawThreadActiveContext(afxDrawThread dthr);
-AFX afxDrawQueue            AfxGetDrawThreadActiveQueue(afxDrawThread dthr);
+AFX afxBool             AfxGetDrawThreadActiveContext(afxDrawThread dthr, afxDrawContext* dctx);
+AFX afxBool             AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque);
 
 #endif//AFX_DRAW_THREAD_H

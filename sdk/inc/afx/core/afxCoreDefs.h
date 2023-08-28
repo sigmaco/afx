@@ -289,32 +289,35 @@ typedef enum afxProfileFlag
 
 // Object handles defined by Core Execution System
 
-typedef afxSize afxObject;
+typedef void* afxHandle;
+//typedef afxHandle afxObject;
 
-//AFX_DEFINE_HANDLE(afxSystem);
-typedef afxObject afxSystem;
-//AFX_DEFINE_HANDLE(afxIoSystem);
-//AFX_DEFINE_HANDLE(afxThread);
-typedef afxObject afxThread;
-//AFX_DEFINE_HANDLE(afxContext);
-typedef afxObject afxContext;
+AFX_DEFINE_HANDLE(afxSystem);
+//typedef afxHandle afxSystem;
+AFX_DEFINE_HANDLE(afxIoSystem);
+AFX_DEFINE_HANDLE(afxThread);
+//typedef afxHandle afxThread;
+AFX_DEFINE_HANDLE(afxContext);
+//typedef afxHandle afxContext;
 AFX_DEFINE_HANDLE(afxDatabase);
-//AFX_DEFINE_HANDLE(afxModule);
-typedef afxObject afxModule;
+AFX_DEFINE_HANDLE(afxModule);
+//typedef afxHandle afxModule;
 AFX_DEFINE_HANDLE(afxUrd);
-//AFX_DEFINE_HANDLE(afxArchive);
-typedef afxObject afxArchive;
-//AFX_DEFINE_HANDLE(afxFile);
-typedef afxObject afxFile;
-//AFX_DEFINE_HANDLE(afxApplication);
-typedef afxObject afxApplication;
-//AFX_DEFINE_HANDLE(afxIoSystem);
+AFX_DEFINE_HANDLE(afxArchive);
+//typedef afxHandle afxArchive;
+AFX_DEFINE_HANDLE(afxFile);
+//typedef afxHandle afxFile;
+AFX_DEFINE_HANDLE(afxApplication);
+//typedef afxHandle afxApplication;
+AFX_DEFINE_HANDLE(afxIoSystem);
 //AFX_DEFINE_HANDLE(afxHid);
-//AFX_DEFINE_HANDLE(afxKeyboard);
-typedef afxObject afxKeyboard;
-//AFX_DEFINE_HANDLE(afxMouse);
-typedef afxObject afxMouse;
+AFX_DEFINE_HANDLE(afxKeyboard);
+//typedef afxHandle afxKeyboard;
+AFX_DEFINE_HANDLE(afxMouse);
+//typedef afxHandle afxMouse;
 AFX_DEFINE_HANDLE(afxResource);
+AFX_DEFINE_HANDLE(afxWidget);
+
 
 struct _afxSysD;
 

@@ -583,6 +583,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
                 {
                     afxUri tempUri;
                     AfxUriReflectString(&tempUri, content);
+                    AfxEcho("%.*s", AfxPushString(AfxUriGetStringConst(&tempUri)));
 
                     if (AfxPipelineBlueprintAddShaders(blueprint, 1, &tempUri))
                         AfxThrowError();
@@ -626,6 +627,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
     return err;
 }
 
+#if 0
 _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, afxDrawOperationBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
@@ -812,7 +814,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
     }
     return err;
 }
-
+#endif
 #if 0
 _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], afxDrawContext dctx, afxDrawOperation dop[])
 {
@@ -825,7 +827,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
     afxResult rslt = 0;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertType(dsys, AFX_FCC_DSYS);
     afxIoSystem fsys = AfxGetDrawFileSystem(dsys);
@@ -866,7 +868,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                 {
                                     afxShader shd;
                                     AfxAcquireShaders(dctx, 1, &blueprint.reqShaders[k], &shd);
-                                    AfxAssertObject(shd, AFX_FCC_SHD);
+                                    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
                                 }
                                 else
                                 {
@@ -912,7 +914,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 
                                                     afxShader shd;
                                                     AfxBuildShaders(dctx, 1, &shdb, &shd);
-                                                    AfxAssertObject(shd, AFX_FCC_SHD);
+                                                    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
                                                 }
                                             }
                                         }

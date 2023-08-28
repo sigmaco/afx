@@ -88,7 +88,7 @@ AFX_DEFINE_STRUCT(afxArtAssetInfo)
 
 
 
-AFX_DEFINE_STRUCT(afxSimulationSpecification)
+AFX_DEFINE_STRUCT(afxSimulationConfig)
 {
     afxUri const            *driver;
     afxAabb const           *bounding;
@@ -106,26 +106,24 @@ AFX_DEFINE_STRUCT(afxSimulationSpecification)
     afxNat                  maxNodCnt;
 };
 
-#ifndef _AFX_API_ONLY
-
+#ifdef _AFX_SIMULATION_C
 AFX_OBJECT(afxSimulation)
 {
-    afxInstance       obj;
-    afxChain        provisions;
+    afxChain        classes;
 
-    afxClass        bodObjt;
-    afxClass        bodcObjt;
-    afxClass        entObjt;
-    afxClass        camObjt;
-    afxClass        litObjt;
+    afxClass        bodies;
+    afxClass        bcontrols;
+    afxClass        entities;
+    afxClass        cameras;
+    afxClass        lights;
 
-    afxClass        mtlObjt;
-    afxClass        mshObjt;
-    afxClass        mdlObjt;
-    afxClass        sklObjt;
-    afxClass        nodObjt;
+    afxClass        materials;
+    afxClass        meshes;
+    afxClass        models;
+    afxClass        skeletons;
+    afxClass        nodes;
 
-    afxClass        rndObjt;
+    afxClass        renderers;
 
     afxContext    genrlMem;
     afxArray        roots;
@@ -141,44 +139,42 @@ AFX_OBJECT(afxSimulation)
 
     afxDrawContext  dctx;
 };
-
 #endif
 
-AFX afxError        AfxSimulationAcquireRenderers(afxSimulation sim, afxNat cnt, void *spec, afxRenderer rnd[]);
+AFX afxError        AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], void *spec);
 
-AFX afxError        AfxSimulationAcquireSkeletons(afxSimulation sim, afxNat cnt, afxUri const uri[], afxSkeleton skl[]);
-AFX afxError        AfxSimulationBuildSkeletons(afxSimulation sim, afxNat cnt, afxSkeletonBlueprint blueprint[], afxSkeleton skl[]);
-AFX afxResult       AfxSimulationFindSkeletons(afxSimulation sim, afxNat cnt, afxUri const uri[], afxSkeleton skl[]);
-AFX afxError        AfxSimulationUploadSkeletons(afxSimulation sim, afxNat cnt, afxUri const uri[], afxSkeleton skl[]);
+AFX afxError        AfxAcquireSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxUri const uri[]);
+AFX afxError        AfxBuildSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxSkeletonBlueprint blueprint[]);
+AFX afxResult       AfxFindSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxUri const uri[]);
+AFX afxError        AfxUploadSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxUri const uri[]);
 
-AFX afxError        AfxSimulationAcquireMaterials(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMaterial mtl[]);
-AFX afxError        AfxSimulationBuildMaterials(afxSimulation sim, afxNat cnt, afxMaterialBlueprint const blueprint[], afxMaterial mtl[]);
-AFX afxResult       AfxSimulationFindMaterials(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMaterial mtl[]);
-AFX afxError        AfxSimulationUploadMaterials(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMaterial mtl[]);
+AFX afxError        AfxAcquireMaterials(afxSimulation sim, afxNat cnt, afxMaterial mtl[], afxUri const uri[]);
+AFX afxError        AfxBuildMaterials(afxSimulation sim, afxNat cnt, afxMaterial mtl[], afxMaterialBlueprint const blueprint[]);
+AFX afxResult       AfxFindMaterials(afxSimulation sim, afxNat cnt, afxMaterial mtl[], afxUri const uri[]);
+AFX afxError        AfxUploadMaterials(afxSimulation sim, afxNat cnt, afxMaterial mtl[], afxUri const uri[]);
 
-AFX afxError        AfxSimulationAcquireMeshes(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMesh msh[]);
-AFX afxError        AfxSimulationBuildMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint blueprint[], afxMesh msh[]);
-AFX afxResult       AfxSimulationFindMeshes(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMesh msh[]);
-AFX afxError        AfxSimulationUploadMeshes(afxSimulation sim, afxNat cnt, afxUri const uri[], afxMesh msh[]);
+AFX afxError        AfxAcquireMeshes(afxSimulation sim, afxNat cnt, afxMesh msh[], afxUri const uri[]);
+AFX afxError        AfxBuildMeshes(afxSimulation sim, afxNat cnt, afxMesh msh[], afxMeshBlueprint blueprint[]);
+AFX afxResult       AfxFindMeshes(afxSimulation sim, afxNat cnt, afxMesh msh[], afxUri const uri[]);
+AFX afxError        AfxUploadMeshes(afxSimulation sim, afxNat cnt, afxMesh msh[], afxUri const uri[]);
 
-AFX afxError        AfxSimulationAcquireModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
-AFX afxError        AfxSimulationBuildModels(afxSimulation sim, afxNat cnt, afxModelBlueprint blueprint[], afxModel mdl[]);
-AFX afxResult       AfxSimulationFindModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
-AFX afxError        AfxSimulationUploadModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
+AFX afxError        AfxAcquireModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
+AFX afxError        AfxBuildModels(afxSimulation sim, afxNat cnt, afxModel mdl[], afxModelBlueprint blueprint[]);
+AFX afxResult       AfxFindModels(afxSimulation sim, afxNat cnt, afxModel mdl[], afxUri const uri[]);
+AFX afxError        AfxUploadModels(afxSimulation sim, afxNat cnt, afxModel mdl[], afxUri const uri[]);
 
-AFX afxError        AfxSimulationAcquireBodies(afxSimulation sim, afxNat cnt, afxModel mdl[], afxBody bod[]);
+AFX afxError        AfxAcquireBodies(afxSimulation sim, afxNat cnt, afxBody bod[], afxModel mdl[]);
+AFX afxError        AfxAcquireBodyControls(afxSimulation sim, afxNat cnt, afxBodyControl bodc[], afxReal currClock, afxReal localDur);
 
-AFX afxCamera       AfxSimulationAcquireCamera(afxSimulation sim, afxString const *name, afxNode parent, afxBool perspective);
-AFX afxEntity       AfxSimulationAcquireEntity(afxSimulation sim, afxString const *name, afxNode parent, afxBody bod);
+AFX afxError        AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[]);
+AFX afxError        AfxAcquireEntities(afxSimulation sim, afxNat cnt, afxEntity ent[], afxBody bod[]);
 
 AFX afxLight        AfxSimulationAcquireDirectionalLight(afxSimulation sim, afxColor color);
 AFX afxLight        AfxSimulationAcquirePointLight(afxSimulation sim, afxColor color, afxReal range);
 AFX afxLight        AfxSimulationAcquireSpotLight(afxSimulation sim, afxColor color, afxReal range, afxReal radians);
 AFX afxLight        AfxSimulationAcquireAreaLight(afxSimulation sim, afxColor color);
 
-AFX afxNode         AfxSimulationAcquireNode(afxSimulation sim, afxNodeSpecification const *spec);
-
-AFX void*           AfxSimulationGetApplication(afxSimulation sim);
+AFX afxError        AfxAcquireNodes(afxSimulation sim, afxNat cnt, afxNode nod[], afxNodeSpecification const config[]);
 
 AFX afxContext       AfxSimulationGetMemory(afxSimulation sim);
 
@@ -201,7 +197,6 @@ AFX afxNat          AfxSimulationEnumerateMaterials(afxSimulation sim, afxNat ba
 AFX afxNat          AfxSimulationEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);
 AFX afxNat          AfxSimulationEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[]);
 AFX afxNat          AfxSimulationEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[]);
-AFX afxNat          AfxSimulationForEachNode(afxSimulation sim, void (*f)(afxIterator *iter), void *data);
 
 AFX afxError        _AfxSimulationProcess(afxSimulation sim);
 AFX afxError        AfxSimulationRender(afxSimulation sim, afxCamera cam, afxV4d point, afxDrawInput din);

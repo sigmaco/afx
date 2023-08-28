@@ -38,7 +38,7 @@ AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_STRUCT(afxSkeletonBone)
 {
-    afxString*          name; // 32
+    afxString           name; // 32
     afxNat              parentIdx;
     afxTransform        local;
     afxM4d              iw;
@@ -46,14 +46,15 @@ AFX_DEFINE_STRUCT(afxSkeletonBone)
     void*               extendedData;
 };
 
+#ifdef _AFX_SKELETON_C
 AFX_OBJECT(afxSkeleton)
 {
-    afxInstance           obj;
-    afxUri*             uri; // 128
+    afxUri              uri; // 128
     afxNat              boneCnt;
     afxSkeletonBone     *bones; // afxNode
     afxNat              lodType;
 };
+#endif
 
 AFX void*               AfxSkeletonGetSimulation(afxSkeleton skl);
 

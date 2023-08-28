@@ -78,7 +78,7 @@ typedef enum afxPresentMode
 
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
-    afxNat              drvIdx; // registered on draw system.
+    afxNat              devId; // registered on draw system.
     afxUri const*       endpoint; // window, desktop, etc
     afxWhd              whd;
     afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
@@ -98,16 +98,15 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 
 AFX_DECLARE_STRUCT(_afxDoutVmt);
 
-//typedef afxObject afxDrawOutput;
+//typedef afxHandle afxDrawOutput;
 
-struct _afxDoutD
-{
-    _AFX_DBG_FCC
-    afxObject               doutObj;
-    _afxDoutVmt const*      vmt;
-    void*                   idd; // implementation-defined data
 #ifdef _AFX_DRAW_OUTPUT_C
-    afxDrawDriver           ddrv;
+AFX_OBJECT(afxDrawOutput)
+#else
+struct afxBaseDrawOutput
+#endif
+{
+    _afxDoutVmt const*      vmt;
     afxDrawContext          dctx; // bound context
     afxNat                  suspendCnt;
     afxSlock                suspendSlock;
@@ -132,8 +131,9 @@ struct _afxDoutD
     afxNat                  bufCnt; // usually 2 or 3; double or triple buffered.
     struct
     {
-        afxSurface          surf; // afxCanvas // should have 1 fb for each swapchain raster.
-        afxCanvas           canv;
+        afxTexture          tex; // afxCanvas // should have 1 fb for each swapchain raster.
+        //afxCanvas           canv;
+        afxBool             booked;
     }*                      buffers;
     afxPixelFormat          auxDsFmt[2];
     afxSlock                buffersLock;
@@ -152,16 +152,20 @@ struct _afxDoutD
                             ndcCursorPos,
                             ndcCursorMove;
 
-    afxString*              caption;
+    afxString               caption;
 
     void*                   udd; // user-defined data
-#endif
 };
 
-AFX afxError            AfxAcquireDrawOutputs(afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]);
-AFX void                AfxReleaseDrawOutputs(afxNat cnt, afxDrawOutput dout[]);
+AFX afxClass*           AfxGetDrawOutputClass(afxDrawDevice ddev);
+AFX afxNat              AfxCountDrawOutputs(afxDrawDevice ddev);
 
-AFX afxDrawDriver       AfxGetDrawOutputDriver(afxDrawOutput dout);
+AFX afxNat              AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
+AFX afxNat              AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+
+AFX afxError            AfxAcquireDrawOutputs(afxDrawSystem dsys, afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]);
+
+AFX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
 
@@ -180,10 +184,10 @@ AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxR
 
 // Buffer
 
-AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxSurface *surf);
+AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxTexture *tex);
 AFX afxBool             AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *canv);
 AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
-AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxSurface surf[]);
+AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxTexture tex[]);
 AFX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 

@@ -18,6 +18,6 @@
 #define AFX_DRAW_PARADIGMS_H
 
 #include "afx/draw/afxDrawSystem.h"
-#include "../src/e2coree/core/afxCoreParadigms.h"
+#include "../src/e2coree/core/afxCoreHideout.h"
 
 #endif

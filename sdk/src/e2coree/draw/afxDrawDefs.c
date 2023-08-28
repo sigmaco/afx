@@ -476,7 +476,7 @@ _AFX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint 
 
     for (afxNat i = 0; i < 3; i++)
     {
-        if (err |= (!(total_[i] > base_[i] + range_[i])))
+        if ((err |= (!(total_[i] > base_[i] + range_[i]))))
         {
             AfxLogError(hint, "[%i] %s(%f) + %s(%f) is out of range [0, %f]", AfxStr((base_)), (base_), AfxStr((range_)), (range_), AfxStr((total_)), (total_));
         }

@@ -19,23 +19,6 @@
 
 #include "afxShader.h"
 
-AFX_DEFINE_STRUCT(afxShaderBlueprint)
-{
-    afxFcc                  fcc;
-    afxDrawContext          dctx;
-    afxUri128               uri; // 128
-    afxShaderStage          stage;
-
-    afxString8              entry; // 8
-    afxArray                codes; // afxByte    
-    afxArray                inOuts; // afxShaderBlueprintInOut
-    afxArray                resources; // afxShaderBlueprintResource
-    afxPrimTopology         topology;
-    
-    // push constants?
-    // specialization?
-};
-
 AFX void                AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt);
 AFX afxError            AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[]);
 AFX void                AfxShaderBlueprintErase(afxShaderBlueprint *blueprint);

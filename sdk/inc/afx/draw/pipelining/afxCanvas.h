@@ -83,18 +83,18 @@ typedef enum afxCanvasFlags
 
 AFX_DECLARE_STRUCT(_afxCanvVmt);
 
-AFX_OBJECT(afxCanvas) // our concept of a framebuffer
-{
-    afxInstance           obj;
-    _afxCanvVmt const*  vmt;
-    void*               idd; // implementation-defined data
 #ifdef _AFX_CANVAS_C
+AFX_OBJECT(afxCanvas)
+#else
+struct afxBaseCanvas
+#endif
+{
     afxNat              whd[3]; // d= layers; just for 3D images, else case its 1.
 
     afxNat              annexCnt;
     struct
     {
-        afxSurface      surf; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
+        afxTexture      tex; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
         afxPixelFormat  fmt;
         afxTextureFlags usage;
     }*                  annexes;
@@ -105,30 +105,28 @@ AFX_OBJECT(afxCanvas) // our concept of a framebuffer
     afxNat              dsIdx[2];
     afxCanvasFlags      flags;
     void*               udd[2];
-#endif
 };
 
 // An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 
-AFX void            AfxGetCanvasContext(afxCanvas canv, afxDrawContext *dctx);
+AFX afxNat          AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canv[]);
 
 AFX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd extent);
-AFX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const extent);
 
 AFX afxResult       AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 AFX void            AfxFlagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 AFX void            AfxUnflagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 
 AFX afxNat          AfxGetAnnexedSurfaceCount(afxCanvas canv);
-AFX afxBool         AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxSurface *surf);
+AFX afxBool         AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxTexture *tex);
 AFX afxNat          AfxGetAnnexedRasterSurfaceCount(afxCanvas canv);
-AFX afxBool         AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxSurface *raster);
-AFX afxBool         AfxGetAnnexedDepthSurface(afxCanvas canv, afxSurface *depth);
-AFX afxBool         AfxGetAnnexedStencilSurface(afxCanvas canv, afxSurface *stencil);
+AFX afxBool         AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxTexture *raster);
+AFX afxBool         AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth);
+AFX afxBool         AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil);
 
-AFX afxError        AfxAnnexRasterSurface(afxCanvas canv, afxSurface ras);
-AFX afxError        AfxAnnexDepthSurface(afxCanvas canv, afxSurface d);
-AFX afxError        AfxAnnexStencilSurface(afxCanvas canv, afxSurface s);
-AFX afxError        AfxAnnexCombinedDepthStencil(afxCanvas canv, afxSurface ds);
+AFX afxError        AfxAnnexRasterSurface(afxCanvas canv, afxTexture ras);
+AFX afxError        AfxAnnexDepthSurface(afxCanvas canv, afxTexture d);
+AFX afxError        AfxAnnexStencilSurface(afxCanvas canv, afxTexture s);
+AFX afxError        AfxAnnexCombinedDepthStencil(afxCanvas canv, afxTexture ds);
 
 #endif//AFX_CANVAS_H

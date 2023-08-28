@@ -26,13 +26,13 @@ AFX_DEFINE_STRUCT(afxCanvasBlueprint)
     afxNat              rasterCnt;
     struct
     {
-        afxSurface      surf; // one for each rasCnt. pass NIL to it be created using rasFmt and rasUsage. If exists must has been created with AFX_TEX_FLAG_SURFACE_RASTER flag.
+        afxTexture      tex; // one for each rasCnt. pass NIL to it be created using rasFmt and rasUsage. If exists must has been created with AFX_TEX_FLAG_SURFACE_RASTER flag.
         afxPixelFormat  fmt; // one for each rasCnt
         afxTextureFlags usage; // one for each rasCnt
     }                   rasters[8];
     struct
     {
-        afxSurface      surf; // actually unsupported
+        afxTexture      tex; // actually unsupported
         afxPixelFormat  fmt;
         afxTextureFlags usage;
     }                   ds[2];
@@ -41,14 +41,14 @@ AFX_DEFINE_STRUCT(afxCanvasBlueprint)
 
 //afxDrawContext dctx, afxNat cnt,
 
-AFXINL void         AfxBeginCanvasBlueprint(afxCanvasBlueprint *blueprint, afxDrawContext dctx, afxWhd const extent);
+AFXINL void         AfxBeginCanvasBlueprint(afxCanvasBlueprint *blueprint, afxWhd const extent);
 
 AFXINL void         AfxCanvasBlueprintSetExtent(afxCanvasBlueprint *blueprint, afxWhd const extent);
 AFXINL void         AfxCanvasBlueprintSetDepth(afxCanvasBlueprint *blueprint, afxPixelFormat depth, afxPixelFormat stencil);
 
 AFXINL void         AfxCanvasBlueprintAddRaster(afxCanvasBlueprint *blueprint, afxPixelFormat fmt, afxTextureFlags usage);
-AFXINL void         AfxCanvasBlueprintAddExistingRaster(afxCanvasBlueprint *blueprint, afxSurface existing);
+AFXINL void         AfxCanvasBlueprintAddExistingRaster(afxCanvasBlueprint *blueprint, afxTexture existing);
 
-AFX afxError        AfxBuildCanvases(afxCanvasBlueprint const *blueprint, afxNat cnt, afxCanvas canv[]);
+AFX afxError        AfxBuildCanvases(afxDrawContext dctx, afxNat cnt, afxCanvas canv[], afxCanvasBlueprint const *blueprint);
 
 #endif//AFX_CANVAS_BLUEPRINT_H

@@ -22,23 +22,19 @@
 /// Um afxModule é uma API do QWADRO para Applicable Service Interface (.asi) e Installable Client Driver (.icd), 
 /// estes que são os dois formatos executáveis e vinculáveis que expandem o ecossistema de execução QWADRO.
 
-struct _afxMdleD
 #ifdef _AFX_MODULE_C
+AFX_OBJECT(afxModule)
 {
-    _AFX_DBG_FCC
-    afxModule           mdleObj;
-    afxUri*             path; // 128
+    afxUri              path; // 128
     void                *osHandle;
     afxBool             hasBeenLoaded;
-}
+};
 #endif
-;
 
 AFX afxModule           AfxFindModule(afxUri const *uri);
 AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule mdle[]);
 
 AFX afxError            AfxAcquireModules(afxNat cnt, afxModule mdle[], afxUri const uri[]);
-AFX void                AfxReleaseModules(afxNat cnt, afxModule mdle[]);
 
 AFX afxUri const*       AfxGetModulePath(afxModule mdle);
 
@@ -48,6 +44,6 @@ AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar
 AFX void                AfxGetModuleVendor(afxModule mdle, afxString const* name);
 AFX void                AfxGetModuleVersion(afxModule mdle, afxNat *major, afxNat *minor, afxNat *patch);
 
-AFX afxBool             _AfxGetMdleD(afxModule mdle, struct _afxMdleD **mdleD, struct _afxSysD* sysD);
+//AFX afxBool             _AfxGetMdleD(afxModule mdle, struct _afxMdleD **mdleD, struct _afxSysD* sysD);
 
 #endif//AFX_MODULE_H

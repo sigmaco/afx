@@ -14,8 +14,6 @@
  *                                    www.sigmaco.org
  */
 
-#define _AFX_SHADER_C
-#define _AFX_DRAW_QUEUE_C
 #include "sgl.h"
 
 #include "../e2coree/draw/afxDrawParadigms.h"
@@ -29,28 +27,26 @@
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage, glVmt const* gl)
+_SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl)
 {
     //AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(shd, AFX_FCC_SHD);
+    (void)dpu;
+    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
 
-    sglShdIdd *idd = shd->idd;
-    sglDqueIdd *dqueIdd = dque->idd;
-
-    if ((idd->updFlags & SGL_UPD_FLAG_DEVICE))
+    if ((shd->updFlags & SGL_UPD_FLAG_DEVICE))
     {
-        if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+        if ((shd->updFlags & SGL_UPD_FLAG_DEVICE_INST))
         {
-            if (idd->glHandle)
+            if (shd->glHandle)
             {
-                gl->DeleteShader(idd->glHandle); _SglThrowErrorOccuried();
-                idd->glHandle = NIL;
+                gl->DeleteShader(shd->glHandle); _SglThrowErrorOccuried();
+                shd->glHandle = NIL;
             }
 
-            AfxAssert(NIL == idd->glHandle);
+            AfxAssert(NIL == shd->glHandle);
 
-            if (!(idd->glHandle = gl->CreateShader(AfxToGlShaderStage(stage))))
+            if (!(shd->glHandle = gl->CreateShader(AfxToGlShaderStage(stage))))
             {
                 AfxThrowError();
                 _SglThrowErrorOccuried();
@@ -58,35 +54,35 @@ _SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage s
             else
             {
                 AfxAssert(shd);
-                AfxAssert(gl->IsShader(idd->glHandle));
-                const GLint codeLens[] = { shd->codeLen };
-                GLchar const* const codes[] = { (GLchar const*)shd->code };
-                gl->ShaderSource(idd->glHandle, 1, codes, codeLens); _SglThrowErrorOccuried();
-                gl->CompileShader(idd->glHandle); _SglThrowErrorOccuried();
+                AfxAssert(gl->IsShader(shd->glHandle));
+                const GLint codeLens[] = { shd->base.codeLen };
+                GLchar const* const codes[] = { (GLchar const*)shd->base.code };
+                gl->ShaderSource(shd->glHandle, 1, codes, codeLens); _SglThrowErrorOccuried();
+                gl->CompileShader(shd->glHandle); _SglThrowErrorOccuried();
                 GLint status = 0;
-                gl->GetShaderiv(idd->glHandle, GL_COMPILE_STATUS, &status); _SglThrowErrorOccuried();
+                gl->GetShaderiv(shd->glHandle, GL_COMPILE_STATUS, &status); _SglThrowErrorOccuried();
 
                 if (status == GL_FALSE)
                 {
                     AfxThrowError();
                     afxChar str[1024];
-                    gl->GetShaderInfoLog(idd->glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
+                    gl->GetShaderInfoLog(shd->glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
                     AfxError(str);
-                    gl->DeleteShader(idd->glHandle); _SglThrowErrorOccuried();
-                    idd->glHandle = NIL;
+                    gl->DeleteShader(shd->glHandle); _SglThrowErrorOccuried();
+                    shd->glHandle = NIL;
                 }
                 else
                 {
-                    idd->glProgHandle = 0;
-                    idd->compiled = TRUE;
-                    idd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                    shd->glProgHandle = 0;
+                    shd->compiled = TRUE;
+                    shd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
                     AfxEcho("afxShader %p hardware-side data instanced.", shd);
                 }
             }
         }
-        else if ((idd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+        else if ((shd->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
         {
-            AfxAssert(idd->glHandle);
+            AfxAssert(shd->glHandle);
             
             AfxThrowError(); // can't be modified
         }
@@ -94,69 +90,166 @@ _SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage s
     return err;
 }
 
-_SGL afxError _AfxShdDtor(afxShader shd)
+_SGL afxError _SglShdDtor(afxShader shd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(shd, AFX_FCC_SHD);
 
-    afxDrawContext dctx = AfxGetShaderContext(shd);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    sglShdIdd *idd = shd->idd;
-
-    if (idd)
+    afxDrawContext dctx = AfxGetObjectProvider(shd);
+    afxContext ctx = AfxGetDrawContextMemory(dctx);
+    
+    if (shd->glHandle)
     {
-        if (idd->glHandle)
-        {
-            _SglDeleteGlRes(dctx, 6, idd->glHandle);
-            idd->glHandle = 0;
-        }
-
-        if (idd->glProgHandle)
-        {
-            _SglDeleteGlRes(dctx, 7, idd->glProgHandle);
-            idd->glProgHandle = 0;
-        }
-
-        AfxDeallocate(mem, idd);
-        shd->idd = NIL;
+        _SglDeleteGlRes(dctx, 6, shd->glHandle);
+        shd->glHandle = 0;
     }
+
+    if (shd->glProgHandle)
+    {
+        _SglDeleteGlRes(dctx, 7, shd->glProgHandle);
+        shd->glProgHandle = 0;
+    }
+
+    //if (shd->vmt->dtor && shd->vmt->dtor(shd))
+        //AfxThrowError();
+
+    //AfxAssert(!shd->idd);
+
+    if (shd->base.resDecls)
+    {
+        for (afxNat j = 0; j < shd->base.resDeclCnt; j++)
+        {
+            AfxDeallocateString(&shd->base.resDecls[j].name);
+        }
+
+        AfxDeallocate(ctx, shd->base.resDecls);
+    }
+
+    if (shd->base.ioDecls)
+    {
+        for (afxNat j = 0; j < shd->base.ioDeclCnt; j++)
+        {
+            AfxDeallocateString(&shd->base.ioDecls[j].semantic);
+        }
+
+        AfxDeallocate(ctx, shd->base.ioDecls);
+    }
+
+    if (shd->base.code)
+    {
+        AfxDeallocate(ctx, shd->base.code);
+    }
+
+    AfxUriDeallocate(&shd->base.uri);
 
     return err;
 }
 
-_SGL _afxShdVmt _SglShdVmt =
-{
-    _AfxShdDtor
-};
-
-_SGL afxError _AfxShdCtor(afxShader shd)
+_SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 {
     AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
-    afxDrawContext dctx = AfxObjectGetProvider(&shd->obj);
+    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
 
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxShaderBlueprint const *blueprint = ((afxShaderBlueprint const *)cookie->udd[0]) + cookie->no;
 
+    afxDrawContext dctx = AfxGetObjectProvider(shd);
+    afxContext ctx = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
 
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+     AfxCloneUri(&shd->base.uri, &blueprint->uri.uri);
 
-    shd->vmt = &_SglShdVmt;
-    sglShdIdd *idd = AfxAllocate(mem, sizeof(*idd), 0, AfxSpawnHint());
-    shd->idd = idd;
-    idd->glHandle = NIL;
-    idd->glProgHandle = NIL;
-    idd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
-    idd->compiled = FALSE;
+    shd->base.stage = blueprint->stage;
 
+    AfxCloneString(&shd->base.entry, &blueprint->entry.str);
+
+    shd->base.code = NIL;
+    afxNat codeLen = AfxGetArrayPop(&blueprint->codes);
+
+    if (codeLen && !(shd->base.code = AfxAllocate(ctx, codeLen, 0, AfxSpawnHint()))) AfxThrowError();
+    else
+    {
+        AfxAssertType(&blueprint->codes, AFX_FCC_ARR);
+        AfxSerializeArray(&blueprint->codes, shd->base.code);
+    }
+
+    shd->base.codeLen = codeLen;
+    //shd->code[shd->codeLen] = '\0';
+
+    AfxComment("%.*s", shd->base.codeLen, shd->base.code);
+
+    if (!err)
+    {
+        shd->base.resDeclCnt = 0;
+        shd->base.resDecls = NIL;
+
+        afxNat resDeclCnt = AfxGetArrayPop(&blueprint->resources);
+
+        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(ctx, resDeclCnt * sizeof(shd->base.resDecls[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        else
+        {
+            for (afxNat j = 0; j < resDeclCnt; j++)
+            {
+                afxShaderBlueprintResource const *decl = AfxGetArrayUnit(&blueprint->resources, j);
+                shd->base.resDecls[j].set = decl->set;
+                AfxAssert(4/*_SGL_MAX_LEGO_PER_BIND*/ > shd->base.resDecls[j].set);
+                shd->base.resDecls[j].binding = decl->binding;
+                AfxAssert(8/*_SGL_MAX_ENTRY_PER_LEGO*/ > shd->base.resDecls[j].binding);
+                //shd->resDecls[j].visibility = decl->visibility;
+                shd->base.resDecls[j].type = decl->type;
+                AfxAssert(shd->base.resDecls[j].type != AFX_SHD_RES_TYPE_OUTPUT);
+                shd->base.resDecls[j].cnt = decl->cnt;
+                 AfxCloneString(&shd->base.resDecls[j].name, &decl->name);
+                ++shd->base.resDeclCnt;
+            }
+        }
+
+        if (!err)
+        {
+            afxNat ioCnt = AfxGetArrayPop(&blueprint->inOuts);
+            shd->base.ioDeclCnt = 0;
+            shd->base.ioDecls = NIL;
+
+            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ctx, ioCnt * sizeof(shd->base.ioDecls[0]), 0, AfxSpawnHint()))) AfxThrowError();
+            else
+            {
+                for (afxNat i = 0; i < ioCnt; i++)
+                {
+                    afxShaderBlueprintInOut* ioBp = AfxGetArrayUnit(&blueprint->inOuts, i);
+                    shd->base.ioDecls[i] = *ioBp;
+                    AfxCloneString(&shd->base.ioDecls[i].semantic, &ioBp->semantic);
+                    ++shd->base.ioDeclCnt;
+                }
+            }
+
+            shd->base.topology = blueprint->topology;
+
+            shd->glHandle = NIL;
+            shd->glProgHandle = NIL;
+            shd->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+            shd->compiled = FALSE;
+
+            if (err && shd->base.ioDecls)
+                AfxDeallocate(ctx, shd->base.ioDecls);
+        }
+
+        if (err && shd->base.resDecls)
+            AfxDeallocate(ctx, shd->base.resDecls);
+    }
+
+    if (err && shd->base.code)
+        AfxDeallocate(ctx, shd->base.code);
+
+    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
     return err;
 }
 
+_SGL afxClassConfig _SglShdClsConfig =
+{
+    .fcc = AFX_FCC_SHD,
+    .name = "Shader",
+    .unitsPerPage = 10,
+    .size = sizeof(AFX_OBJECT(afxShader)),
+    .ctx = NIL,
+    .ctor = (void*)_SglShdCtor,
+    .dtor = (void*)_SglShdDtor
+};

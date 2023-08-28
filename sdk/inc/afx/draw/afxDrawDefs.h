@@ -25,33 +25,45 @@
 
 // Object handles defined by SIGMA Future Draw Systems
 
-//AFX_DEFINE_HANDLE(afxDrawSystem);
-typedef afxObject afxDrawSystem;
-AFX_DEFINE_HANDLE(afxDrawDriver);
-//AFX_DEFINE_HANDLE(afxDrawThread);
-typedef afxObject afxDrawThread;
-//AFX_DEFINE_HANDLE(afxDrawContext);
-typedef afxObject afxDrawContext;
+AFX_DEFINE_HANDLE(afxDrawSystem);
+//typedef afxHandle afxDrawSystem;
+AFX_DEFINE_HANDLE(afxDrawDevice);
+AFX_DEFINE_HANDLE(afxDrawThread);
+//typedef afxHandle afxDrawThread;
+AFX_DEFINE_HANDLE(afxDrawContext);
+//typedef afxHandle afxDrawContext;
 AFX_DEFINE_HANDLE(afxDrawQueue);
-//AFX_DEFINE_HANDLE(afxDrawInput);
-typedef afxObject afxDrawInput;
+//typedef afxHandle afxDrawQueue;
+AFX_DEFINE_HANDLE(afxDrawInput);
+//typedef afxHandle afxDrawInput;
 AFX_DEFINE_HANDLE(afxDrawScript);
-//AFX_DEFINE_HANDLE(afxDrawOutput);
-typedef afxObject afxDrawOutput;
+//typedef afxHandle afxDrawScript;
+AFX_DEFINE_HANDLE(afxDrawOutput);
+//typedef afxHandle afxDrawOutput;
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxPipeline);
+//typedef afxHandle afxPipeline;
 AFX_DEFINE_HANDLE(afxShader);
+//typedef afxHandle afxShader;
 AFX_DEFINE_HANDLE(afxLego);
+//typedef afxHandle afxLego;
 AFX_DEFINE_HANDLE(afxSampler);
+//typedef afxHandle afxSampler;
 
 AFX_DEFINE_HANDLE(afxBuffer);
+//typedef afxHandle afxBuffer;
 AFX_DEFINE_HANDLE(afxIndexBuffer);
+//typedef afxHandle afxIndexBuffer;
 AFX_DEFINE_HANDLE(afxVertexBuffer);
+//typedef afxHandle afxVertexBuffer;
 
 AFX_DEFINE_HANDLE(afxTexture);
+//typedef afxHandle afxTexture;
 AFX_DEFINE_HANDLE(afxSurface);
+//typedef afxHandle afxSurface;
 AFX_DEFINE_HANDLE(afxCanvas);
+//typedef afxHandle afxCanvas;
 
 typedef afxNat afxSimd(afxWhd[3]);
 typedef afxReal afxSimd(afxNdc[3]);

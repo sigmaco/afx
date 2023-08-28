@@ -64,6 +64,23 @@ AFX_DEFINE_STRUCT(afxVertexBufferRegion)
     afxNat elemCnt;
 };
 
+AFX_DEFINE_STRUCT(afxVertexRowBlueprint)
+{
+    afxString8              semantic; // 8
+    afxVertexFormat         fmt;
+    afxVertexUsage          usage;
+    void const              *src;
+    afxVertexFormat         srcFmt;
+};
+
+AFX_DEFINE_STRUCT(afxVertexBufferBlueprint)
+{
+    afxFcc                  fcc; // VBUB
+    afxNat                  cap;
+    afxNat                  rowCnt;
+    afxVertexRowBlueprint   row[8];
+};
+
 /*
 { // mem
     { // lod0
@@ -116,14 +133,22 @@ struct // lod
 
 AFX_DECLARE_STRUCT(afxVertexDataRow);
 
-#if (defined(_AFX_VERTEX_BUFFER_C) && !defined(_AFX_BUFFER_C))
-#   error "afxBuffer not exposed"
-#endif
-
-AFX_OBJECT(afxVertexBuffer)
+AFX_DEFINE_STRUCT(afxVertexDataRow)
 {
-    AFX_OBJECT(afxBuffer)   buf;
+    afxString           semantic;
+    afxNat              offset;
+    afxNat              stride;
+    afxVertexUsage      usage;
+    afxVertexFormat     fmt;
+};
+
 #ifdef _AFX_VERTEX_BUFFER_C
+AFX_OBJECT(afxVertexBuffer)
+#else
+struct afxBaseVertexBuffer
+#endif
+{
+    afxBuffer               buf;
     afxNat                  cap;
     afxNat                  rowCnt;
     afxVertexDataRow        *row;
@@ -146,11 +171,14 @@ AFX_OBJECT(afxVertexBuffer)
         afxNat              cachedElemCnt; // aside fmt because it could be a arbitrary array.
         afxVertexUsage      usage;
         afxVertexFormat     fmt;
-        afxString*          semantic;
+        afxString           semantic;
     }*                      attrs;
 #endif
-#endif
 };
+
+AFX afxNat                  AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[]);
+
+AFX afxError                AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBuffer vbuf[], afxVertexBufferBlueprint const blueprint[]);
 
 AFX afxError                AfxVertexBufferDescribeRow(afxVertexBuffer vbuf, afxNat rowIdx, afxVertexRowSpecification *spec);
 AFX afxError                AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstVtxStride); // copy out

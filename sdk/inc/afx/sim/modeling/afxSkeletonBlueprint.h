@@ -27,7 +27,7 @@ AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_STRUCT(afxSkeletonBlueprintBone)
 {
-    afxString*                  name; // 32
+    afxString                   name; // 32
     afxNat                      parentIdx;
     afxTransform                local;
     afxM4d                      iw;

@@ -21,6 +21,9 @@
 //#define ENABLE_DIN3 // rgb
 //#define ENABLE_DOUT3
 
+afxSystem sys;
+afxDrawSystem dsys;
+
 afxSimulation sim = NIL;
 afxTexture dumpImg = NIL;
 
@@ -59,15 +62,17 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called
         {
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
-            afxCanvas canv;
-            AfxGetDrawOutputCanvas(dout[0], outBufIdx, &canv);
+            //afxCanvas canv;
+            //AfxGetDrawOutputCanvas(dout[0], outBufIdx, &canv);
+            afxTexture surf;
+            AfxGetDrawOutputBuffer(dout[0], outBufIdx, &surf);
 
             //if (bnk.set.bink_buffers.FrameNum == outBufIdx)
             {
                 //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, dscr, canv, NIL);
                 //AfxBinkDoFrame(bnk, TRUE, TRUE);
                 //AfxBinkBlitFrame(bnk2, dscr, canv[0][outBufIdx], NIL);
-                AfxBinkBlitFrame(&bnk, dscr, canv, NIL);
+                AfxBinkBlitFrame(&bnk, dscr, surf);
                 //glCopyImage2D
             }
             
@@ -93,7 +98,7 @@ _AFXEXPORT afxResult AfxUpdateApplication(afxThread thr, afxApplication app)
     afxError err = AFX_ERR_NONE;
     //AfxFormatUri(&uri, "?text=timer %u, timer^2 %u", AfxGetTimer(), AfxGetTimer() * AfxGetTimer());
     
-    AfxBinkDoFrame(&bnk, TRUE, TRUE, 0, 0, 0, NIL);
+    AfxBinkDoFrame(&bnk, TRUE, TRUE, 0, 0, NIL);
     //AfxBinkDoFrame(&bnk, TRUE, TRUE);
     //AfxBinkBlitFrame(&bnk);
     //AfxBinkDoFrame(&bnk, TRUE, TRUE);
@@ -109,13 +114,13 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxFormatUri(&uri.uri, "art/world.tga");
     
-    if (AfxAcquireTextures(dctx, 1, &uri.uri, &dumpImg))
+    if (AfxAcquireTextures(dctx, 1, &dumpImg, &uri.uri))
         AfxThrowError();
 
     AfxAssert(dumpImg);
     AfxFormatUri(&uri.uri, "tmp/world2.tga");
-    AfxPrintTexture(dumpImg, 0, 0, AfxGetTextureImageCount(dumpImg), &uri.uri);
-    AfxReleaseObject(&dumpImg->obj);
+    AfxPrintTexture(dumpImg, 0, 0, 1, &uri.uri);
+    AfxReleaseObjects(1, (void*[]) { dumpImg });
 
     AfxFormatUri(&uri.uri, "desktop");
     afxDrawOutputConfig doutConfig = { 0 };
@@ -133,10 +138,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     doutConfig.presentTransform = NIL;
     doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 #endif
-    doutConfig.pixelFmt = AFX_PFD_RGBA4;
+    doutConfig.pixelFmt = AFX_PFD_RGB8;
     
 #ifdef ENABLE_DOUT1
-    AfxAcquireDrawOutputs(1, dout, &doutConfig);
+    AfxAcquireDrawOutputs(dsys, 1, dout, &doutConfig);
     AfxAssert(dout[0]);
     AfxReconnectDrawOutput(dout[0], dctx, NIL);
 
@@ -181,7 +186,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 #ifdef ENABLE_DIN1
     AfxEraseUri(&uri.uri);
-    AfxAcquireDrawInputs(1, din, &dinConfig);
+    AfxAcquireDrawInputs(dsys, 1, din, &dinConfig);
     AfxAssert(din[0]);
     AfxReconnectDrawInput(din[0], dctx, NIL);
 
@@ -230,7 +235,7 @@ _AFXEXPORT afxResult AfxLeaveApplication(afxThread thr, afxApplication app)
     AfxEcho("aaaaaaaaaaaa");
     
 #ifdef ENABLE_DIN1
-    AfxReleaseDrawInputs(1, din);
+    AfxReleaseObjects(1, (void*[]) { din[0] });
 #endif
 #ifdef ENABLE_DIN2
     din[1]->process = NIL;
@@ -271,20 +276,21 @@ int main(int argc, char const* argv[])
     afxBool reboot = 1;
     while (reboot)
     {
-        afxSystem sys;
         afxSystemConfigWin32 sysConfig;
         AfxChooseBasicIoSystemConfiguration(&sysConfig.base, sizeof(sysConfig));
         AfxBootUpBasicIoSystem(&sysConfig.base, &sys);
         AfxAssertObjects(1, &sys, AFX_FCC_SYS);
 
-        afxDrawSystem dsys;
         afxDrawSystemConfig dsysConfig;
         AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
-        AfxEstablishDrawSystem(&dsysConfig, &dsys);
+        AfxAcquireDrawSystems(1, &dsys, &dsysConfig);
         AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
 
+        afxDrawDevice ddev;
+        AfxGetDrawDevice(dsys, 0, &ddev);
+
         afxDrawContextConfig dctxConfig = { 0 };        
-        AfxAcquireDrawContexts(1, &dctx, &dctxConfig);
+        AfxAcquireDrawContexts(dsys, 1, &dctx, &dctxConfig);
         //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
         afxApplication TheApp;
@@ -300,11 +306,11 @@ int main(int argc, char const* argv[])
         while (AfxSystemIsOperating())
             AfxDoSystemThreading(0);
 
-        AfxReleaseApplications(1, &TheApp);
+        AfxReleaseObjects(1, (void*[]) { TheApp });
         
-        AfxReleaseDrawContexts(1, &dctx);
+        AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxAbolishDrawSystem();
+        AfxReleaseObjects(1, (void*[]) { dsys });
         AfxShutdownBasicIoSystem(0);
     }
     Sleep(3000);

@@ -17,6 +17,17 @@
 #ifndef AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H
 #define AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H
 
+#define _CRT_SECURE_NO_WARNINGS 1
+#define WIN32_LEAN_AND_MEAN 1
+
+#include "../src/e2coree/deps/gl/glcorearb.h"
+#include "../src/e2coree/deps/gl/wglext.h"
+
+#include "afx/draw/afxDrawSystem.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/draw/afxDrawContext.h"
+#include "afx/draw/res/afxSampler.h"
+#include "afx/draw/afxDrawScript.h"
 #include "../src/e2coree/draw/_classified/afxDrawClassified.h"
 #include "sglDrawDriver.h"
 #include "afx/core/mem/afxArena.h"
@@ -53,6 +64,7 @@ typedef union wglVmt
 {
     struct
     {
+#if 0
         HGLRC(WINAPI*CreateContext)(HDC);
         BOOL(WINAPI*DeleteContext)(HGLRC);
         HGLRC(WINAPI*GetCurrentContext)(VOID);
@@ -64,7 +76,7 @@ typedef union wglVmt
         BOOL(WINAPI*SetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
         int(WINAPI*GetPixelFormat)(HDC hdc);
         BOOL(WINAPI*SwapBuffers)(HDC);
-
+#endif
         // ARB/EXT
         PFNWGLCHOOSEPIXELFORMATARBPROC ChoosePixelFormatARB;
         PFNWGLMAKECONTEXTCURRENTARBPROC MakeContextCurrentARB;
@@ -73,49 +85,8 @@ typedef union wglVmt
         PFNWGLGETEXTENSIONSSTRINGARBPROC GetExtensionsStringARB;
         PFNWGLSWAPINTERVALEXTPROC SwapIntervalEXT;
     };
-    void *ptr[1];
+    void *ptr;
 } wglVmt;
-
-typedef struct
-{
-    HWND            wnd;
-    HDC             dc;
-    int             dcPxlFmt;
-    HGLRC           glrc;
-    wglVmt const   wgl;
-    glVmt const    gl;
-    afxNat          verMajor, verMinor, verPatch;
-    afxString       subsysName;
-    afxString       subsysVer;
-
-    afxNat          portIdx;
-    afxSlock        deletionLock;
-    afxQueue        deletionQueue;
-} sglDpuIdd;
-
-AFX_DEFINE_STRUCT(_sglDdrvIdd)
-{
-    HMODULE         opengl32;
-    WNDCLASSEXA     wndClss;
-    afxNat          dpuCnt;
-    sglDpuIdd*      dpus;
-};
-
-typedef struct
-{
-    // presentation stuff, only on unit 0.
-    afxBool presentationSuspended;
-    GLuint presentFboGpuHandle;
-    afxPipeline presentPip;
-    afxSampler presentSmp;
-    afxVertexBuffer presentVbuf;
-} sglDctxIdd;
-
-AFX_DEFINE_STRUCT(_sglDeleteGlRes)
-{
-    GLuint  gpuHandle;
-    GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 shd, 7 shd (separate) program
-};
 
 AFX_DEFINE_UNION(sglLegoData) // A GPUBindGroupEntry describes a single resource to be bound in a GPUBindGroup, and has the following members:
 {
@@ -134,25 +105,43 @@ AFX_DEFINE_UNION(sglLegoData) // A GPUBindGroupEntry describes a single resource
 
 typedef struct
 {
-    afxSize             numOfFedVertices, numOfFedIndices, numOfFedInstances;
+    glVmt const             gl;
+    HGLRC                   (WINAPI*CreateContext)(HDC);
+    BOOL                    (WINAPI*DeleteContext)(HGLRC);
+    HGLRC                   (WINAPI*GetCurrentContext)(VOID);
+    HDC                     (WINAPI*GetCurrentDC)(VOID);
+    PROC                    (WINAPI*GetProcAddress)(LPCSTR);
+    BOOL                    (WINAPI*MakeCurrent)(HDC, HGLRC);
+    int                     (WINAPI*ChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);  // "wglChoosePixelFormat" funciona com Intel mas não com AMD.
+    int                     (WINAPI*DescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
+    BOOL                    (WINAPI*SetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
+    int                     (WINAPI*GetPixelFormat)(HDC hdc);
+    BOOL                    (WINAPI*SwapBuffers)(HDC);
+    //wglVmt const            wgl;
+    HWND                    wnd;
+    HDC                     dc;
+    int                     dcPxlFmt;
+    PIXELFORMATDESCRIPTOR   dcPfd;
+    HGLRC                   glrc;
+    HMODULE                 opengl32;
+    afxNat                  verMajor, verMinor, verPatch;
+    afxString               subsysName;
+    afxString               subsysVer;
 
-    afxTime             lastStreamBeginTime;
-    afxTime             lastStreamEndTime;
-    afxTime             lastSubmisBeginTime;
-    afxTime             lastSubmisEndTime;
-    afxTime             lastPresentBeginTime;
-    afxTime             lastPresntEndTime;
+    afxNat                  portIdx;
+    afxSlock                deletionLock;
+    afxQueue                deletionQueue;
 
-    afxOffset           frameNum, fps;
-    afxSize             frameTime, swapTime;
-    afxReal             deltaTime;
+    afxDrawContext          activeDctx;
+
+    afxSize                 numOfFedVertices, numOfFedIndices, numOfFedInstances;
 
     struct
     {
         struct
         {
-            afxCanvas                   canv;
-            afxRect                     area;            
+            //afxCanvas                   canv;
+            afxRect                     area;
             afxNat                      layerCnt; // dyn
             afxNat                      rasterCnt;
             afxDrawTarget               rasters[_SGL_MAX_SURF_PER_CANV];
@@ -203,29 +192,15 @@ typedef struct
         afxPipelineColorBlendState      colorBlend;
 
     }                       state;
-    /*
-    struct
-    {
-        afxBool             pipBound;
-        afxBool             vbufBound;
-        afxNat              vbufBase;
-        afxNat              vbufCnt;
-        afxBool             ibufBound;
-        afxBool             iaSet;
-        afxBool             scisSet;
-        afxNat              scisBase;
-        afxNat              scisCnt;
-        afxBool             vpSet;
-        afxNat              vpBase;
-        afxNat              vpCnt;
-    }                       stateChanges;
-    */
+    afxBool                 flushRs, flushDs, flushMs, flushCbs, flushIa, flushIns, flushPip, flushPass, flushSs, flushVbb, flushIbb, flushRb;
+    afxNat                  flushVbBase, flushVbCnt;
+    afxNat                  flushVsBase, flushVsCnt;
+    afxNat                  flushSsBase, flushSsCnt;
+    afxNat                  flushRbBase[_SGL_MAX_LEGO_PER_BIND], flushRbCnt[_SGL_MAX_LEGO_PER_BIND];
+
     afxBool                 running;
 
-    // idd
     afxBool         instanced;
-
-    //_gfxRendererContextState state;
 
     // submission stuff
     afxBool         submissionSuspended;
@@ -233,10 +208,41 @@ typedef struct
     afxNat          activeTmpFboIdx;
     GLuint          vao[_SGL_MAX_VAO_PER_TIME];
     afxNat          activeVaoIdx;
-} sglDqueIdd;
+} sglDpuIdd;
 
-typedef struct
+AFX_OBJECT(afxDrawDevice)
 {
+    struct afxBaseDrawDevice base;
+    WNDCLASSEX     wndClss;
+    afxNat          dpuCnt;
+    sglDpuIdd*      dpus;
+};
+
+AFX_OBJECT(afxDrawContext)
+{
+    struct afxBaseDrawContext base;
+    // presentation stuff, only on unit 0.
+    afxBool presentationSuspended;
+    GLuint presentFboGpuHandle;
+    afxPipeline presentPip;
+    afxSampler presentSmp;
+    afxVertexBuffer presentVbuf;
+};
+
+AFX_OBJECT(afxDrawQueue)
+{
+    struct afxBaseDrawQueue base;
+};
+
+AFX_DEFINE_STRUCT(_sglDeleteGlRes)
+{
+    GLuint  gpuHandle;
+    GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 shd, 7 shd (separate) program
+};
+
+AFX_OBJECT(afxDrawOutput)
+{
+    struct afxBaseDrawOutput base;
     afxFcc      fcc;
     afxBool     instanced;
 
@@ -246,7 +252,13 @@ typedef struct
     
     HDC         dcDeskBkp;
     int         dcPxlFmtDeskBkp;
-} sglDoutIdd;
+};
+
+AFX_OBJECT(afxDrawInput)
+{
+    struct afxBaseDrawInput base;
+    int a;
+};
 
 AFX_DEFINE_STRUCT(_afxDscrCmd)
 {
@@ -255,32 +267,39 @@ AFX_DEFINE_STRUCT(_afxDscrCmd)
     afxLinkage          script;
 };
 
-typedef struct
+AFX_OBJECT(afxPipeline)
 {
-    afxPipeline     pip;
+    struct afxBasePipeline base;
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
     afxBool         assembled;
-} sglPipIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxLego)
 {
-    afxShader           shd;
+    struct afxBaseLego base;
+    int a;
+};
+
+AFX_OBJECT(afxShader)
+{
+    struct afxBaseShader base;
     sglUpdateFlags      updFlags;
     afxNat              glHandle;
     afxNat              glProgHandle;
     afxBool             compiled;
-} sglShdIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxSampler)
 {
-    afxSampler      smp;
+    struct afxBaseSampler base;
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
-} sglSampIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxBuffer)
 {
+    struct afxBaseBuffer    base;
     // idd
 
     sglUpdateFlags  updFlags;
@@ -291,15 +310,26 @@ typedef struct
     afxSize         lastUpdOffset;
     afxNat          lastUpdRange;
     afxBool         locked;
-} sglBufIdd;
+};
 
-static_assert(AFX_BUF_IDD >= sizeof(sglBufIdd), "");
-
-typedef struct 
+AFX_OBJECT(afxVertexBuffer)
 {
-    afxTexture      tex;
+    struct afxBaseVertexBuffer    base;
+    int a;
+};
+
+AFX_OBJECT(afxIndexBuffer)
+{
+    struct afxBaseIndexBuffer    base;
+    int a;
+};
+
+AFX_OBJECT(afxTexture)
+{
+    struct afxBaseTexture base;
     sglUpdateFlags  updFlags;
     GLuint          glHandle;
+    GLuint          glHandleAux; // for draw buffers
     GLint           glIntFmt;
     GLenum          glTarget, glFmt, glType;
     
@@ -308,26 +338,58 @@ typedef struct
     afxNat          lastUpdOffset[3];
     afxNat          lastUpdRange[3];
     afxBool         locked;
-}sglTexIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxSurface)
 {
-    afxSurface      surf;
+    struct afxBaseSurface base;
     sglUpdateFlags  updFlags;
     GLuint          glHandle; // if depth/stencil, should have a sidecar GL render buffer.
-} sglSurfIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxCanvas)
 {
-    afxCanvas       canv;
+    struct afxBaseCanvas base;
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
-} sglCanvIdd;
+};
 
-typedef struct
+AFX_OBJECT(afxDrawScript)
 {
+    struct afxBaseDrawScript base;
     afxChain    commands;
-} sglDscrIdd;
+
+    // move to instance data, together with command chain
+    afxChain            drawCalls;
+    afxChain            stateChanges;
+    afxChain            pipBinds;
+    afxChain            vbufBinds;
+    afxChain            ibufBinds;
+    afxChain            bufBinds;
+    afxChain            texBinds;
+
+    afxNat              totalCmdCnt;
+    afxNat              lastDrawCmdIdx;
+    afxNat              drawCmdCnt;
+    afxNat              lastPipBindCmdIdx;
+    afxNat              pipBindCmdCnt;
+    afxNat              lastVbufBindCmdIdx;
+    afxNat              vbufBindCmdCnt;
+    afxNat              lastIbufBindCmdIdx;
+    afxNat              ibufBindCmdCnt;
+    afxNat              lastBufBindCmdIdx;
+    afxNat              bufBindCmdCnt;
+    afxNat              lastTexBindCmdIdx;
+    afxNat              texBindCmdCnt;
+    afxNat              lastRasUpdCmdIdx;
+    afxNat              rasUpdCmdCnt;
+    afxNat              lastDepthUpdCmdIdx;
+    afxNat              depthUpdCmdCnt;
+    afxNat              lastVpCmdIdx; // viewport and/or scissor changes
+    afxNat              vpUpdCmdCnt;
+    afxNat              lastScisCmdIdx; // viewport and/or scissor changes
+    afxNat              scisUpdCmdCnt;
+};
 
 typedef struct _DrawPipelineResource
 {
@@ -350,7 +412,7 @@ typedef struct _DrawPipelineResource
 typedef enum afxDrawCmdId
 {
     AFX_DCMD_END,
-
+    AFX_DCMD_EXECUTE_COMMANDS,
     AFX_DCMD_BEGIN_DRAW_PASS,
     AFX_DCMD_NEXT_PASS,
     AFX_DCMD_END_DRAW_PASS,
@@ -405,16 +467,18 @@ AFX_DEFINE_STRUCT(_afxDscrCmdSetInputAssemblyState)
     afxPipelineInputAssemblyState   state;
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdBeginDrawPass)
+AFX_DEFINE_STRUCT(_afxDscrCmdBeginCanvas)
 {
     _afxDscrCmd             cmd;
-    afxCanvas               canv;
+    //afxCanvas               canv;
     afxRect                 area;
     afxNat32                layerCnt;
     afxNat32                rasterCnt;
     afxDrawTarget           rasters[_SGL_MAX_SURF_PER_CANV];
     afxDrawTarget           depth;
     afxDrawTarget           stencil;
+    
+    GLuint                  fboHandle;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBindTextures)
@@ -481,6 +545,13 @@ AFX_DEFINE_STRUCT(_afxDscrCmdNextPass)
     afxBool32                       useAuxScripts;
 };
 
+AFX_DEFINE_STRUCT(_afxDscrCmdExecCmds)
+{
+    _afxDscrCmd                     cmd;
+    afxNat                          cnt;
+    afxDrawScript                   subsets[8];
+};
+
 AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 {
     _afxDscrCmd                     cmd;
@@ -491,49 +562,44 @@ AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 };
 // vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
 
-SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc, wglVmt const* wgl, HMODULE opengl32);
+//SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc, wglVmt const* wgl, HMODULE opengl32);
 
 SGL void _SglDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle);
 
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
-SGL afxError _SglDqueBindAndSyncSmp(afxDrawQueue dque, afxNat unit, afxSampler smp, glVmt const* gl);
-SGL afxError _SglDqueSyncShd(afxDrawQueue dque, afxShader shd, afxShaderStage stage, glVmt const* gl);
-SGL afxError _SglDqueSurfSync(afxDrawQueue dque, afxSurface surf, glVmt const* gl); // must be used before texUpdate
-SGL afxError _SglDqueBindAndSyncTex(afxDrawQueue dque, afxNat unit, afxTexture tex, glVmt const* gl);
-SGL afxError _SglDqueBindAndSyncPip(afxDrawQueue dque, afxPipeline pip, glVmt const* gl);
-SGL afxError _SglDqueBindAndResolveLego(afxDrawQueue dque, afxNat unit, afxLego legt, glVmt const* gl);
-SGL afxError _SglDqueBindAndSyncCanv(afxDrawQueue dque, afxCanvas canv, GLenum target, glVmt const* gl);
-SGL afxError _SglDqueBindAndSyncBuf(afxDrawQueue dque, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, afxNat unit, afxSampler smp, glVmt const* gl);
+SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
+SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
+SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const* gl);
+SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxLego legt, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl);
 
 //SGL afxSize _AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn);
 
-SGL BOOL SglMakeCurrent(HDC hdc, HGLRC hrc, wglVmt const *wgl);
-SGL afxError SglSwapBuffers(HDC hdc, wglVmt const *wgl);
-SGL int SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd, wglVmt const *wgl);
-SGL BOOL SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd, wglVmt const *wgl);
-SGL int SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd, wglVmt const *wgl);
-SGL int SglGetPixelFormat(HDC hdc, wglVmt const *wgl);
+SGL BOOL SglMakeCurrent(HDC hdc, HGLRC hrc, sglDpuIdd const *dpu);
+SGL afxError SglSwapBuffers(HDC hdc, sglDpuIdd const *dpu);
+SGL int SglChoosePixelFormat(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd, sglDpuIdd const *dpu);
+SGL BOOL SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd, sglDpuIdd const *dpu);
+SGL int SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd, sglDpuIdd const *dpu);
+SGL int SglGetPixelFormat(HDC hdc, sglDpuIdd const *dpu);
 
 SGL afxLego _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxLegoBindingDecl const bindings[]);
 
-SGL afxError _SglRegisterDoutEndpoints(afxDrawDriver ddrv);
+SGL afxError _SglDinVmtProcCb(afxDrawThread dthr, afxDrawInput din);
+SGL afxError _SglDoutVmtProcCb(afxDrawThread dthr, afxDrawOutput dout);
+SGL afxError _SglDctxVmtProcCb(afxDrawThread dthr, afxDrawContext dctx);
+SGL afxError _SglDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect, afxNat *slotIdx);
+SGL afxError _SglDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect, afxNat *slotIdx);
 
-SGL afxError _SglDdrvVmtDctxCb(afxDrawContext dctx, afxDrawContextConfig const *spec);
-SGL afxError _SglDdrvVmtDoutCb(afxDrawOutput dout, afxUri const* endpoint, afxDrawOutputConfig const *spec);
-SGL afxError _SglDdrvVmtDinCb(afxDrawInput din, afxUri const* endpoint, afxDrawInputConfig const *spec);
+SGL afxError _SglDqueVmtProcCb(afxDrawThread dthr, afxDrawContext dctx, afxDrawQueue dque);
+SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
 
-SGL afxError _SglDctxVmtDscrCb(afxDrawScript dscr);
-SGL afxError _SglDdrvVmtDqueCb(afxDrawQueue dque, afxDrawQueueSpecification const *spec);
-
-SGL afxError _SglBufCtor(afxBuffer buf);
-SGL afxError _AfxCanvCtor(afxCanvas canv);
-SGL afxError _AfxPipCtor(afxPipeline pip);
-SGL afxError _SglTexCtor(afxTexture tex);
-SGL afxError _AfxSurfCtor(afxSurface surf);
-SGL afxError _AfxShdCtor(afxShader shd);
-SGL afxError _AfxSmpCtor(afxSampler smp);
-
+SGL afxClassConfig _SglDctxClsConfig;
+SGL afxClassConfig _SglDoutClsConfig;
+SGL afxClassConfig _SglDinClsConfig;
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

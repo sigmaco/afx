@@ -87,14 +87,12 @@ AFX_DEFINE_STRUCT(afxSamplerConfig)
     afxBool         unnormalizedCoords;
 };
 
-AFX_DECLARE_STRUCT(_afxSampVmt);
-
-AFX_OBJECT(afxSampler)
-{
-    afxInstance           obj;
-    _afxSampVmt const*  vmt;
-    void*               idd; // implementation-defined data
 #ifdef _AFX_SAMPLER_C
+AFX_OBJECT(afxSampler)
+#else
+struct afxBaseSampler
+#endif
+{
     afxNat32        crc32;
     afxTexelFilter  magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified.
     afxTexelFilter  minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions.
@@ -109,12 +107,12 @@ AFX_OBJECT(afxSampler)
     afxReal         maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
     afxColor        borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
     afxBool         unnormalizedCoords;
-
-#endif
 };
 
-AFX afxDrawContext  AfxGetSamplerContext(afxSampler samp);
+AFX afxNat          AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samp[]);
 
-AFX void            AfxSamplerDescribe(afxSampler samp, afxSamplerConfig *spec);
+AFX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSampler samp[], afxSamplerConfig const config[]);
+
+AFX void            AfxSamplerDescribe(afxSampler samp, afxSamplerConfig* config);
 
 #endif//AFX_SAMPLER_H

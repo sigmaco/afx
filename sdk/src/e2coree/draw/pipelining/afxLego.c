@@ -14,8 +14,9 @@
  *                                    www.sigmaco.org
  */
 
-
+#define _AFX_DRAW_CONTEXT_C
 #define _AFX_LEGO_C
+#include "afx/draw/afxDrawSystem.h"
 #include "../_classified/afxDrawClassified.h"
 #include "afx/draw/pipelining/afxLego.h"
 
@@ -23,15 +24,15 @@
 // BLUEPRINT                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxDrawContext dctx, afxNat estBindCnt)
+_AFXINL void AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxNat estBindCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
     blueprint->fcc = AFX_FCC_SHDB;
 
-    blueprint->dctx = dctx;
-    afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    blueprint->dctx = NIL;
+    //afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
+    //AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
     AfxAcquireArray(&blueprint->bindings, sizeof(afxLegoBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
 }
@@ -45,32 +46,32 @@ _AFXINL void AfxLegoBlueprintErase(afxLegoBlueprint *blueprint)
     {
         afxLegoBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
 
-        if (binding->name)
+        //if (binding->name)
         {
-            AfxDeallocateString(binding->name);
-            binding->name = NIL;
+            AfxDeallocateString(&binding->name);
+            //binding->name = NIL;
         }
     }
     AfxEmptyArray(&blueprint->bindings);
 }
 
-_AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *legt)
+_AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *lego)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
 
-    if (legt)
+    if (lego)
     {
         if (AfxGetArrayPop(&blueprint->bindings))
         {
-            if (AfxBuildLegos(blueprint->dctx, 1, blueprint, legt))
+            if (AfxBuildLegos(blueprint->dctx, 1, lego, blueprint))
             {
                 AfxThrowError();
             }
         }
         else
         {
-            *legt = NIL;
+            *lego = NIL;
         }
     }
 
@@ -78,10 +79,10 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *legt)
     {
         afxLegoBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
 
-        if (binding->name)
+        //if (binding->name)
         {
-            AfxDeallocateString(binding->name);
-            binding->name = NIL;
+            AfxDeallocateString(&binding->name);
+            //binding->name = NIL;
         }
     }
     AfxReleaseArray(&blueprint->bindings);
@@ -108,13 +109,9 @@ _AFXINL afxError AfxLegoBlueprintAddBinding(afxLegoBlueprint *blueprint, afxNat 
         decl->type = type;
         AfxAssert(decl->type != AFX_SHD_RES_TYPE_OUTPUT);
 
-        if (err)
-        {
-            int a = 0;
-        }
         AfxAssert(cnt);
         decl->cnt = AfxMaxi(cnt, 1);
-        decl->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
+         AfxCloneString(&decl->name, name);
     }
     return err;
 }
@@ -129,8 +126,8 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertObject(shd[i], AFX_FCC_SHD);
-        afxNat resCnt = AfxGetShaderInterfaceCount(shd[i]);
+        AfxAssertObjects(1, &shd[i], AFX_FCC_SHD);
+        afxNat resCnt = AfxCountShaderInterfaces(shd[i]);
         afxBool incompatible = FALSE;
 
         for (afxNat k = 0; k < resCnt; k++)
@@ -153,7 +150,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
                         if ((incompatible |= ((rsrc.type != binding->type) || (rsrc.cnt != binding->cnt)))) AfxThrowError();
                         else
                         {
-                            binding->visibility |= /*entry->visibility |*/ AFX_FLAG(AfxShaderGetStage(shd[i]));
+                            binding->visibility |= /*entry->visibility |*/ AFX_FLAG(AfxGetShaderStage(shd[i]));
                         }
                         break;
                     }
@@ -161,7 +158,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
 
                 if (!err && !entryExisting)
                 {
-                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_FLAG(AfxShaderGetStage(shd[i])), rsrc.type, rsrc.cnt, rsrc.name))
+                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_FLAG(AfxGetShaderStage(shd[i])), rsrc.type, rsrc.cnt, &rsrc.name))
                     {
                         AfxThrowError();
                     }
@@ -175,203 +172,57 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
     return err;
 }
 
-
-
 ////////////////////////////////////////////////////////////////////////////////
 // LEGO                                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxResult AfxLegoDescribeBinding(afxLego legt, afxNat first, afxNat cnt, afxLegoBindingDecl decl[])
+_AFX afxResult AfxLegoDescribeBinding(afxLego lego, afxNat first, afxNat cnt, afxLegoBindingDecl decl[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
     AfxAssert(cnt);
-    AfxAssertRange(legt->entryCnt, first, cnt);
+    AfxAssertRange(lego->entryCnt, first, cnt);
     AfxAssert(decl);
     afxResult rslt = 0;
 
-    for (afxNat i = 0; i < AfxMini(legt->entryCnt, cnt); i++)
+    for (afxNat i = 0; i < AfxMini(lego->entryCnt, cnt); i++)
     {
         if (i >= cnt) break;
         else
         {
-            decl[i].binding = legt->entries[i].binding;
-            decl[i].visibility = legt->entries[i].visibility;
-            decl[i].type = legt->entries[i].type;
-            decl[i].cnt = legt->entries[i].cnt;
-            decl[i].name = legt->entries[i].name;
+            decl[i].binding = lego->entries[i].binding;
+            decl[i].visibility = lego->entries[i].visibility;
+            decl[i].type = lego->entries[i].type;
+            decl[i].cnt = lego->entries[i].cnt;
+            decl[i].name = &lego->entries[i].name;
             ++rslt;
         }
     }
     return rslt;
 }
 
-_AFX afxNat32 AfxLegoGetCrc32(afxLego legt)
+_AFX afxNat32 AfxLegoGetCrc32(afxLego lego)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
-    return legt->crc32;
+    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    return lego->crc32;
 }
 
-_AFX afxError AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLegoBlueprint const blueprint[], afxLego legt[])
+_AFX afxError AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLego lego[], afxLegoBlueprint const blueprint[])
 {
-    AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    AfxAssert(blueprint);
 
-    if (AfxClassAcquireObjects(AfxGetLegoClass(dctx), NIL, cnt, blueprint, (afxInstance**)legt, AfxSpawnHint()))
+    if (AfxAcquireObjects(&dctx->legos, cnt, (afxHandle*)lego, (void*[]) { (void*)blueprint }))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxBool _AfxLegtEventHandler(afxInstance *obj, afxEvent *ev)
+_AFX afxNat AfxEnumerateLegos(afxDrawContext dctx, afxNat first, afxNat cnt, afxLego lego[])
 {
     afxError err = AFX_ERR_NONE;
-    afxLego legt = (void*)obj;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
-    (void)ev;
-    return FALSE;
+    AfxAssert(cnt);
+    AfxAssert(lego);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->legos, first, cnt, (afxHandle*)lego);
 }
-
-_AFX afxBool _AfxLegtEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxLego legt = (void*)obj;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxError _AfxLegtDtor(afxLego legt)
-{
-    AfxEntry("legt=%p", legt);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
-
-    afxDrawContext dctx = AfxObjectGetProvider(&legt->obj);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    if (legt->entries)
-    {
-        for (afxNat i = 0; i < legt->entryCnt; i++)
-        {
-            if (legt->entries[i].name)
-                AfxDeallocateString(legt->entries[i].name);
-        }
-
-        AfxDeallocate(mem, legt->entries);
-    }
-
-    return err;
-}
-
-_AFX afxError _AfxLegtCtor(void *cache, afxNat idx, afxLego legt, afxLegoBlueprint const blueprints[])
-{
-    AfxEntry("legt=%p", legt);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(legt, AFX_FCC_LEGO);
-    (void)cache;
-
-    afxDrawContext dctx = AfxObjectGetProvider(&legt->obj);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    AfxAssert(blueprints);
-    afxLegoBlueprint const *blueprint = &blueprints[idx];
-
-    afxNat bindCnt = AfxGetArrayPop(&blueprint->bindings);
-    AfxAssert(bindCnt);
-
-    afxBool incompatible = FALSE;
-    legt->entryCnt = 0;
-    legt->entries = NIL;
-
-    if (bindCnt && !(legt->entries = AfxAllocate(mem, bindCnt * sizeof(legt->entries[0]), 0, AfxSpawnHint()))) AfxThrowError();
-    else
-    {
-        for (afxNat i = 0; i < bindCnt; i++)
-        {
-            afxLegoBlueprintBinding *bindBp = AfxGetArrayUnit(&blueprint->bindings, i);
-
-            legt->entries[legt->entryCnt].binding = bindBp->binding;
-            legt->entries[legt->entryCnt].cnt = bindBp->cnt;
-            legt->entries[legt->entryCnt].type = bindBp->type;
-            AfxAssert(legt->entries[legt->entryCnt].type != AFX_SHD_RES_TYPE_OUTPUT);
-            legt->entries[legt->entryCnt].visibility = bindBp->visibility;
-            legt->entries[legt->entryCnt].name = bindBp->name ? AfxCloneString(bindBp->name) : NIL;
-            ++legt->entryCnt;
-        }
-    }
-
-    if (!err)
-    {
-        struct tmpCrc
-        {
-            afxNat binding;
-            afxFlags visibility;
-            afxShaderResourceType type;
-            afxNat cnt;
-        } tmpCrc[/*_SGL_MAX_ENTRY_PER_LEGO*/10] = { 0 };
-        AfxAssert(sizeof(tmpCrc) / sizeof(tmpCrc[0]) >= legt->entryCnt);
-
-        for (afxNat i = 0; i < legt->entryCnt; i++)
-        {
-            tmpCrc[i].binding = legt->entries[i].binding;
-            tmpCrc[i].type = legt->entries[i].type;
-            tmpCrc[i].visibility = legt->entries[i].visibility;
-            tmpCrc[i].cnt = legt->entries[i].cnt;
-        }
-
-        afxNat32 crc = 0;
-        AfxCrc32(&crc, tmpCrc, sizeof(tmpCrc[0]) * legt->entryCnt);
-        legt->crc32 = crc;
-    }
-    return err;
-}
-
-_AFX afxClassSpecification const _AfxLegtClassSpec;
-
-afxClassSpecification const _AfxLegtClassSpec =
-{
-    AFX_FCC_LEGO,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxLego)),
-    NIL,
-    (void*)_AfxLegtCtor,
-    (void*)_AfxLegtDtor,
-    .event = _AfxLegtEventHandler,
-    .eventFilter = _AfxLegtEventFilter,
-    "afxLego",
-    NIL
-};

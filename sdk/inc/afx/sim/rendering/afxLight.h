@@ -22,8 +22,6 @@
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGN
 
-AFX_DEFINE_HANDLE(afxLight);
-
 typedef enum
 {
     /// A light placed infinitely far away. It affects everything in the scene.
