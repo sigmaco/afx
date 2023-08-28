@@ -42,15 +42,23 @@ AFX_DEFINE_STRUCT(afxPool)
 AFX void        AfxAcquirePool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage);
 AFX void        AfxReleasePool(afxPool* pool);
 
-AFX afxError    AfxRequestPoolUnit(afxPool* pool, afxNat* idx);
-AFX void        AfxRecyclePoolUnit(afxPool* pool, afxNat idx);
-AFX afxError    AfxOccupyPoolUnit(afxPool* pool, afxNat idx, void *val);
-AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxNat idx, void **ptr);
+AFX afxError    AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
+AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxSize idx[]);
 
-AFX afxNat      AfxEnumeratePoolItems(afxPool* pool, afxNat first, afxNat cnt, void *items[]);
-AFX afxNat      AfxEnumeratePoolUnits(afxPool* pool, afxNat first, afxNat cnt, afxBool freeOnly, void *items[]);
+AFX void        AfxDeallocatePoolUnit(afxPool* pool, afxSize idx);
+AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxSize const idx[]);
 
-AFX afxNat      AfxCuratePoolItems(afxPool* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd);
-AFX afxNat      AfxCuratePoolUnits(afxPool* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
+AFX afxBool     AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr);
+AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);
+AFX afxBool     AfxGetPoolUnits(afxPool const* pool, afxNat cnt, afxSize const idx[], void *ptr[]);
+AFX afxBool     AfxGetLinearPoolUnits(afxPool const* pool, afxNat first, afxNat cnt, void *ptr[]);
+
+AFX afxError    AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val);
+
+AFX afxNat      AfxEnumeratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, void *items[]);
+AFX afxNat      AfxEnumeratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, void *items[]);
+
+AFX afxNat      AfxCuratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd);
+AFX afxNat      AfxCuratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
 
 #endif//AFX_POOL_H

@@ -32,8 +32,8 @@ AFX_DEFINE_HANDLE(afxSoundContext);
 AFX afxError AfxSetListeners
 (
     afxSoundContext     sctx,
-    afxObject           emitterObj, // Emitter object.  Must have been previously registered via RegisterGameObj.
-    afxObject const*    listenerObjs, // Array of listener object IDs that will be activated for emitterObj. 
+    afxHandle           emitterObj, // Emitter object.  Must have been previously registered via RegisterGameObj.
+    afxHandle const*    listenerObjs, // Array of listener object IDs that will be activated for emitterObj. 
     afxNat32            listenerCnt // Length of array
 );
 
@@ -44,8 +44,8 @@ AFX afxError AfxSetListeners
 AFX afxResult AfxAddListener
 (
     afxSoundContext     sctx,
-    afxObject           emitterObj, // Emitter object. Must have been previously registered via RegisterGameObj.
-    afxObject           listenerObj // Listener object IDs that will be activated for emitterObj. 
+    afxHandle           emitterObj, // Emitter object. Must have been previously registered via RegisterGameObj.
+    afxHandle           listenerObj // Listener object IDs that will be activated for emitterObj. 
 );
 
 /// Remove a single listener from a object's set of active listeners.
@@ -54,8 +54,8 @@ AFX afxResult AfxAddListener
 AFX afxResult AfxRemoveListener
 (
     afxSoundContext     sctx,
-    afxObject           emitterObj, // Emitter object.
-    afxObject           listenerObj // Listener object IDs that will be deactivated for emitterObj. Objects must have been previously registered.
+    afxHandle           emitterObj, // Emitter object.
+    afxHandle           listenerObj // Listener object IDs that will be deactivated for emitterObj. Objects must have been previously registered.
 );
 
 /// Sets the default set of associated listeners for game objects that have not explicitly overridden their listener sets. 
@@ -65,7 +65,7 @@ AFX afxResult AfxRemoveListener
 AFX afxResult AfxSetDefaultListeners
 (
     afxSoundContext     sctx,
-    afxObject const*    listenerObjs, // Array of listener object IDs that will be activated for subsequent registrations. Objects must have been previously registered.
+    afxHandle const*    listenerObjs, // Array of listener object IDs that will be activated for subsequent registrations. Objects must have been previously registered.
     afxNat32            istenerCnt // Length of array
 );
 
@@ -75,7 +75,7 @@ AFX afxResult AfxSetDefaultListeners
 AFX afxResult AfxAddDefaultListener
 (
     afxSoundContext     sctx,
-    afxObject           listenerObj // Listener object IDs that will be added to the default set of listeners.
+    afxHandle           listenerObj // Listener object IDs that will be added to the default set of listeners.
 );
 
 /// Remove a single listener from the default set of listeners. Upon registration, all objects reference the default listener set, 
@@ -84,7 +84,7 @@ AFX afxResult AfxAddDefaultListener
 AFX afxResult AfxRemoveDefaultListener
 (
     afxSoundContext     sctx,
-    afxObject           listenerObj // Listener object IDs that will be removed from the default set of listeners.
+    afxHandle           listenerObj // Listener object IDs that will be removed from the default set of listeners.
 );
 
 /// Resets the listener associations to the default listener(s), as set by SetDefaultListeners. 
@@ -93,7 +93,7 @@ AFX afxResult AfxRemoveDefaultListener
 AFX afxResult AfxResetListenersToDefault
 (
     afxSoundContext     sctx,
-    afxObject           emitterObj // Emitter object.
+    afxHandle           emitterObj // Emitter object.
 );
 
 /// Sets a listener's spatialization parameters. This lets you define listener-specific volume offsets for each audio channel.
@@ -103,7 +103,7 @@ AFX afxResult AfxResetListenersToDefault
 AFX afxResult AfxSetListenerSpatialization
 (
     afxSoundContext     sctx,
-    afxObject           listenerID, // Listener game object ID
+    afxHandle           listenerID, // Listener game object ID
     afxBool             spatialized, // Spatialization toggle
     afxChannelConfig    chanConfig, // Channel configuration associated with volumes volOffsets. Ignored if volOffsets is NULL.
     afxReal32*          volOffsets // Per-speaker volume offset, in dB.

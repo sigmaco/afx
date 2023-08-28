@@ -20,10 +20,10 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 
-#include "../src/e2coree/draw/_classified/afxDrawClassified.h"
 #include "../src/e2coree/deps/gl/glcorearb.h"
 #include "../src/e2coree/deps/gl/wglext.h"
 #include <windows.h>
+#include "../src/e2coree/draw/_classified/afxDrawClassified.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawScript.h"
 
@@ -431,7 +431,7 @@ typedef union glVmt
             PFNGLCLEARBUFFERUIVPROC ClearBufferuiv;
             PFNGLCLEARBUFFERFVPROC ClearBufferfv;
             PFNGLCLEARBUFFERFIPROC ClearBufferfi;
-            PFNGLGETSTRINGIPROC GetStringI;
+            PFNGLGETSTRINGIPROC GetStringi;
             PFNGLISRENDERBUFFERPROC IsRenderBuffer;
             PFNGLBINDRENDERBUFFERPROC BindRenderbuffer;
             PFNGLDELETERENDERBUFFERSPROC DeleteRenderbuffers;
@@ -871,7 +871,7 @@ typedef union glVmt
             PFNGLPOLYGONOFFSETCLAMPPROC PolygonOffsetClamp;
         };
     };
-    void* ptr[1];
+    void* ptr;
 } glVmt;
 
 SGL GLenum AfxToGlFrontFace(afxFrontFace ff);

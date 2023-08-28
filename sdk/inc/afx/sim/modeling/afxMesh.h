@@ -50,12 +50,10 @@
 /// Uma vez que você tem vértices e índices, você basicamente tem todos os dados da afxMesh que você necessita para quais porções de índice vão com quais afxMaterial's.
 /// A estrutura afxMeshSection provém esta informação.
 
-AFX_DEFINE_HANDLE(afxMesh);
-
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
     afxFcc                  fcc;
-    afxString*              scalarName; // 16
+    afxString               scalarName; // 16
     afxVertexBuffer         vbuf; // afxVertexBuffer --- aka vertex data
     afxNat                  baseVtx;
     afxNat                  vtxCnt;
@@ -69,7 +67,7 @@ AFX_DEFINE_STRUCT(afxMeshSection) // aka tri material group
     afxNat                  firstTriIdx;
     afxNat                  triCnt;
     afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
-    afxString*              name; // 32 // SIGMA added this field to handle Wavefront OBJect group names.
+    afxString               name; // 32 // SIGMA added this field to handle Wavefront OBJect group names.
 };
 
 AFX_DEFINE_STRUCT(afxMeshTopology)
@@ -100,7 +98,7 @@ AFX_DEFINE_STRUCT(afxMeshTopology)
 AFX_DEFINE_STRUCT(afxMeshArticulation)
 {
     afxFcc                  fcc;
-    afxString*              boneName; // 16
+    afxString               boneName; // 16
     afxAabb                 aabb; // originally oobb;
     afxNat                  triCnt;
     afxNat                  *triIdx;
@@ -123,7 +121,7 @@ AFX_DEFINE_STRUCT(afxMaterialSlot)
 
 AFX_DEFINE_STRUCT(afxFileBackedMesh)
 {
-    afxUri                  *name;
+    afxUri                  name;
     afxUrd                  *urd;
     afxUrdReference         primaryVtxData;
     afxUrdReference         *morphVtxData;
@@ -147,10 +145,10 @@ AFX_DEFINE_STRUCT(afxMeshVertexData)
     afxString const         **vtxCompNames;
 };
 
+#ifdef _AFX_MESH_C
 AFX_OBJECT(afxMesh)
 {
-    afxInstance               obj;
-    afxUri*                 uri; // 128
+    afxUri                  uri; // 128
 
     afxVertexBuffer         vbuf; // afxVertexBuffer --- aka vertex data
     afxNat                  baseVtx; // when vbuf is shared with other meshes it's not 0. Maybe that index buffer already does this?
@@ -164,6 +162,7 @@ AFX_OBJECT(afxMesh)
     afxMeshArticulation     *articulations;
     void                    *extData;
 };
+#endif
 
 AFX afxUri const*           AfxMeshGetUri(afxMesh msh);
 AFX afxVertexBuffer         AfxMeshGetVertexBuffer(afxMesh msh);

@@ -19,8 +19,6 @@
 
 #include "afx/sim/anim/afxBody.h"
 
-AFX_DEFINE_HANDLE(afxRenderer)
-
 typedef enum afxSkyType
 {
     AFX_SKY_BOX = 1,
@@ -95,6 +93,8 @@ AFX_OBJECT(afxRenderer)
         afxBuffer           shdConstantsBuffer;
         afxBuffer           mtlConstantsBuffer;
         afxBuffer           objConstantsBuffer; // m
+
+        afxTexture          depthSurf;
     }                       framesets[3];
 
     afxM4d              p;

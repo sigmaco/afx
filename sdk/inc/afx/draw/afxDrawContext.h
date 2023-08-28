@@ -28,18 +28,20 @@
 #include "afx/draw/res/afxIndexBuffer.h"
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/draw/afxDrawScript.h"
-#include "afx/core/mem/afxResidency.h"
+
+AFX_DEFINE_STRUCT(afxDrawQueueingConfig)
+{
+    afxNat                  portIdx;
+    afxNat                  minQueueCnt;
+};
 
 AFX_DEFINE_STRUCT(afxDrawContextConfig)
 {
-    afxNat                      drvIdx; // registered on draw system.
-    void const*                 enabledFeatures; // afxDrawDriverFeatures
+    afxNat                      devId; // registered on draw system.
+    void const*    enabledFeatures;
 
-    //afxNat                      portCnt;
-    //afxDrawQueueCapFlags const* portCaps;
-    //afxNat const*               queuesPerPort;
-
-    afxContext                   genrlMem;
+    afxNat                      queueingCnt;
+    afxDrawQueueingConfig const*queueings;
 
     afxNat                      maxBufCnt;
     afxNat                      maxSmpCnt;
@@ -57,37 +59,22 @@ AFX_DEFINE_STRUCT(afxDrawContextConfig)
 
 AFX_DECLARE_STRUCT(_afxDctxVmt);
 
-struct _afxDctxD
-{
-    _AFX_DBG_FCC
-    afxObject               dctxObj;
-    _afxDctxVmt const*      vmt;
-    void*                   idd;
 #ifdef _AFX_DRAW_CONTEXT_C
-    afxDrawDriver           ddrv;
+AFX_OBJECT(afxDrawContext)
+#else
+struct afxBaseDrawContext
+#endif
+{
+    _afxDctxVmt const*      vmt;
     afxBool                 running;
 
-    afxChain                provisions;
+    afxChain                classes;
 
-    afxClass                canvClass; // uses surf
-    afxClass                pipClass; // uses shd, pipa, canv
-    afxClass                legtClass;
-    afxClass                dopClass;
-
-    afxClass            bufClass;
-    afxClass            vbufClass;
-    afxClass            ibufClass;
-    afxClass            smpClass;
-    afxResidency         samplers;
-    afxClass            texClass;
-    afxClass            surfClass;
-    afxClass            shdClass;
-
-    afxContext               mem;
+    afxContext              ctx;
     afxArena                aren;
     
     afxNat                  lastReqPortIdx;
-    afxNat                  cachedPortCnt;
+    afxNat                  openPortCnt;
     struct
     {
         
@@ -95,9 +82,9 @@ struct _afxDctxD
         //afxChain            recyclSubmChain;
         //afxNat              minRecyclSubmCnt;
         afxNat              lastReqQueIdx;
-        afxNat              queueCnt;
-        afxDrawQueue*       queues;
-    }*                      ports;
+        afxClass            queues;
+        afxClass            scripts;
+    }*                      openPorts;
 
     afxNat                  inputCap;
     afxNat                  inputCnt;
@@ -106,13 +93,27 @@ struct _afxDctxD
     afxNat                  outputCap;
     afxNat                  outputCnt;
     afxDrawOutput*          outputs;
-#endif
+
+    afxClass           textures;
+    afxClass           buffers;
+    afxClass           vertices;
+    afxClass           indices;
+    afxClass           surfaces;
+    afxClass           shaders;
+    afxClass           pipelines;
+    afxClass           legos;
+    afxClass           canvases;
+    afxClass           samplers;
 };
 
-AFX afxError            AfxAcquireDrawContexts(afxNat cnt, afxDrawContext dctx[], afxDrawContextConfig const config[]);
-AFX void                AfxReleaseDrawContexts(afxNat cnt, afxDrawContext dctx[]);
+AFX afxClass*           AfxGetDrawContextClass(afxDrawDevice ddev);
+AFX afxNat              AfxCountDrawContexts(afxDrawDevice ddev);
 
-AFX afxDrawDriver       AfxGetDrawContextDriver(afxDrawContext dctx);
+AFX afxNat              AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawContext dctx[]);
+AFX afxNat              AfxCurateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
+
+AFX afxError            AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat cnt, afxDrawContext dctx[], afxDrawContextConfig const config[]);
+
 AFX afxContext           AfxGetDrawContextMemory(afxDrawContext dctx);
 
 AFX afxNat              AfxGetDrawQueueCount(afxDrawContext dctx, afxNat portIdx);
@@ -122,8 +123,8 @@ AFX afxError            AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat port
 AFX afxDrawInput        AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat slotIdx);
 AFX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat slotIdx);
 
-AFX afxNat              AfxGetConnectedDrawInputCount(afxDrawContext dctx);
-AFX afxNat              AfxGetConnectedDrawOutputCount(afxDrawContext dctx);
+AFX afxNat              AfxCountConnectedDrawInputs(afxDrawContext dctx);
+AFX afxNat              AfxCountConnectedDrawOutputs(afxDrawContext dctx);
 
 AFX afxError            AfxDisconnectAllDrawInputs(afxDrawContext dctx);
 AFX afxError            AfxDisconnectAllDrawOutputs(afxDrawContext dctx);
@@ -134,56 +135,9 @@ AFX afxNat              AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, af
 AFX afxNat              AfxCurateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 AFX afxNat              AfxCurateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
 
-AFX afxClass*           AfxGetBufferClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetCanvasClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetDrawOperationClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetIndexBufferClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetLegoClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetPipelineClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetShaderClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetSamplerClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetSurfaceClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetTextureClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetVertexBufferClass(afxDrawContext dctx);
-
-AFX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buf[]);
-AFX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canv[]);
-AFX afxNat              AfxEnumerateDrawOperations(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawOperation dop[]);
-AFX afxNat              AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[]);
-AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[]);
-AFX afxNat              AfxEnumerateLegos(afxDrawContext dctx, afxNat first, afxNat cnt, afxLego lego[]);
-AFX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler smp[]);
-AFX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[]);
-AFX afxNat              AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[]);
-AFX afxNat              AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[]);
-AFX afxNat              AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[]);
-
-
-
-
-
-
-
-AFX afxError            AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPipelineBlueprint const blueprint[], afxPipeline pip[]);
-AFX afxError            AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxPipeline pip[]);
-AFX afxError            AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLegoBlueprint const blueprint[], afxLego legt[]);
-
-AFX afxError            AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[]);
-AFX afxError            AfxBuildDrawOperations(afxDrawContext dctx, afxNat cnt, afxDrawOperationBlueprint const blueprint[], afxDrawOperation dop[]);
-AFX afxResult           AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxDrawOperation dop[]);
-AFX afxError            AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxDrawOperation dop[]);
-
-AFX afxError            AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buf[]);
-AFX afxError            AfxBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferBlueprint const blueprint[], afxIndexBuffer ibuf[]);
-AFX afxError            AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBufferBlueprint const blueprint[], afxVertexBuffer vbuf[]);
-
-AFX afxSurface          AfxAcquireSurface(afxDrawContext dctx, afxPixelFormat fmt, afxWhd const extent, afxFlags usage);
-
-AFX afxError            AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const spec[], afxSampler smp[]);
-
-AFX afxError            AfxAcquireShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
-AFX afxError            AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);
-AFX afxResult           AfxFindShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
-AFX afxError            AfxUploadShaders(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
+AFX afxError            AfxAcquireDrawOperations(afxNat cnt, afxDrawOperation dop[], afxUri const uri[]);
+AFX afxError            AfxBuildDrawOperations(afxNat cnt, afxDrawOperation dop[], afxDrawOperationBlueprint const blueprint[]);
+AFX afxResult           AfxFindDrawOperations(afxNat cnt, afxDrawOperation dop[], afxUri const name[]);
+AFX afxError            AfxUploadDrawOperations(afxNat cnt, afxDrawOperation dop[], afxUri const uri[]);
 
 #endif//AFX_DRAW_CONTEXT_H

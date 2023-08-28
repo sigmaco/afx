@@ -49,7 +49,7 @@
 
 #include "afx/core/time/afxTime.h"
 
-#include "afx/afxApplication.h"
+#include "afx/core/afxApplication.h"
 #include "afx/core/afxTerminal.h"
 
 #include "afx/draw/afxDrawContext.h"

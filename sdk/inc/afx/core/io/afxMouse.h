@@ -31,11 +31,9 @@ typedef enum
     AFX_MB_TOTAL
 } afxMouseButton;
 
-struct _afxMseD
 #ifdef _AFX_MOUSE_C
+AFX_OBJECT(afxMouse)
 {
-    _AFX_DBG_FCC
-    afxMouse            mseObj;
     afxNat              port;
     afxFlags            flags;
     afxNat              buttonCnt;
@@ -46,15 +44,13 @@ struct _afxMseD
     afxReal             prevWheelDelta;
     afxV2d              lastMotion;
     afxV2d              prevMotion;
-}
+};
 #endif
-;
 
 AFX afxNat      AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[]);
 AFX afxMouse    AfxFindMouse(afxNat port);
 
 AFX afxError    AfxAcquireMouses(afxNat cnt, afxMouse mse[], afxNat port[]);
-AFX void        AfxReleaseMouses(afxNat cnt, afxMouse mse[]);
 
 AFX afxError    AfxEmulateMouseButtonActions(afxNat cnt, afxMouseButton const butt[], afxBool const pressed[], afxNat port);
 AFX afxError    AfxEmulateMouseWheelAction(afxReal delta, afxNat port);

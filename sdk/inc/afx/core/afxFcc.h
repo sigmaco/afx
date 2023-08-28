@@ -55,6 +55,7 @@ typedef enum afxFcc
     AFX_FCC_SLOT    = AfxPackFcc('s', 'l', 'o', 't'), // afxSlot
     AFX_FCC_HNDL    = AfxPackFcc('h', 'n', 'd', 'l'), // 
     AFX_FCC_CLS    = AfxPackFcc('o', 'b', 'j', 't'), // afxClass
+    AFX_FCC_OBJK    = AfxPackFcc('o', 'b', 'j', 'k'), // afxObjack
 
     AFX_FCC_DBG     = AfxPackFcc('d', 'b', 'g', '\0'), // afxDebugger
     AFX_FCC_APP     = AfxPackFcc('a', 'p', 'p', '\0'), // afxApplication
@@ -84,7 +85,8 @@ typedef enum afxFcc
     AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', '\0'), // afxSignal
     AFX_FCC_SIGH    = AfxPackFcc('s', 'i', 'g', 'h'), // afxSignalHandler
     AFX_FCC_SIGC    = AfxPackFcc('s', 'i', 'g', 'c'), // afxSignalConnection
-    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', '\0'), // afxContext
+    AFX_FCC_MEM     = AfxPackFcc('m', 'e', 'm', '\0'), // afxMemory
+    AFX_FCC_CTX     = AfxPackFcc('c', 't', 'x', '\0'), // afxContext
     AFX_FCC_MPAG    = AfxPackFcc('m', 'p', 'a', 'g'), // afxMemPage
     //AFX_FCC_CHNK     = AfxPackFcc('m', 'e', 'm', '\0'), // afxContext
     AFX_FCC_ALLS    = AfxPackFcc('a', 'l', 'l', 's'), // afxSlabMemory
@@ -148,7 +150,7 @@ typedef enum afxFcc
 
     AFX_FCC_DSYS    = AfxPackFcc('d', 's', 'y', 's'), // afxDrawSystem
     AFX_FCC_DDEV    = AfxPackFcc('d', 'd', 'e', 'v'), // afxDrawDevice
-    AFX_FCC_DDRV    = AfxPackFcc('d', 'd', 'r', 'v'), // afxDrawDriver
+    AFX_FCC_DDRV    = AfxPackFcc('d', 'd', 'r', 'v'), // afxDrawDevice
     AFX_FCC_DIN     = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
     AFX_FCC_DOUT    = AfxPackFcc('d', 'o', 'u', 't'), // afxDrawOutput
     AFX_FCC_DQUE    = AfxPackFcc('d', 'q', 'u', 'e'), // afxDrawQueue

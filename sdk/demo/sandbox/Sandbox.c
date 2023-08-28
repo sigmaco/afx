@@ -2,7 +2,7 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 #include "afx/afxQwadro.h"
-#include "afx/afxApplication.h"
+#include "afx/core/afxApplication.h"
 #include "afx/core/diag/afxDebug.h"
 #include "afx/math/afxMathDefs.h"
 #include "afx/core/io/afxMouse.h"
@@ -84,13 +84,13 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     afxUri uriMap;
     AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
-    afxSimulationSpecification simSpec = { 0 };
+    afxSimulationConfig simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    sim = AfxApplicationAcquireSimulation(app, &simSpec);
-    AfxAssertObject(sim, AFX_FCC_SIM);
+    sim = AfxAcquireSimulations(app, &simSpec);
+    AfxAssertObjects(1, &sim, AFX_FCC_SIM);
     
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
@@ -98,7 +98,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
-    AfxSimulationAcquireRenderers(sim, 1, NIL, &rnd);
+    AfxAcquireRenderers(sim, 1, NIL, &rnd);
 
     AfxRendererBindOutput(rnd, dout);
 
@@ -116,7 +116,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
     AfxExcerptUriObject(&uriMap2, &uriMap);
-    AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
+    AfxAcquireModels(sim, 1, &uriMap2, &mdl);
 
     //AfxUriWrapLiteral(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
@@ -136,10 +136,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 
     AfxExcerptUriObject(&uriMap2, &uriMap);
-    AfxSimulationAcquireModels(sim, 1, &uriMap2, &mdl);
+    AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
-    AfxSimulationAcquireBodies(sim, 1, &mdl, &bod);
+    AfxAcquireBodies(sim, 1, &mdl, &bod);
     AfxAssert(bod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
@@ -152,7 +152,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxAssert(body2);
 
     AfxWrapStringLiteral(&str, "viewer", 0);
-    cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
+    cam = AfxAcquireCameras(sim, &str, NIL, TRUE);
     AfxAssert(cam);
     //cam->farClip = -100000.0;
     //AfxCameraAddOffset(cam, AfxSpawnV3d(0, 1.1, 0));
@@ -215,8 +215,8 @@ int main(int argc, char const* argv[])
         AfxBootUpBasicIoSystem(NIL, &sys);
 
         afxDrawSystem dsys;
-        afxDrawSystemSpecification dsysSpec = { 0 };
-        AfxEstablishDrawSystem(&dsysSpec, &dsys);
+        afxDrawSystemConfig dsysSpec = { 0 };
+        AfxAcquireDrawSystems(&dsysSpec, &dsys);
         AfxAssertType(dsys, AFX_FCC_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };

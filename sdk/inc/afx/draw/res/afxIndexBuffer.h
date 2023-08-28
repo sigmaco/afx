@@ -21,14 +21,13 @@
 
 // Index buffer não armazena informação de tipo de primitivo porque, como o nome sugere, é um buffer de índice, não de primitivos.
 
-#if (defined(_AFX_INDEX_BUFFER_C) && !defined(_AFX_BUFFER_C))
-#   error "afxBuffer not exposed"
-#endif
-
-AFX_OBJECT(afxIndexBuffer)
-{
-    AFX_OBJECT(afxBuffer)   buf; // IBUF
 #ifdef _AFX_INDEX_BUFFER_C
+AFX_OBJECT(afxIndexBuffer)
+#else
+struct afxBaseIndexBuffer
+#endif
+{
+    afxBuffer               buf; // IBUF
     afxNat                  regionCnt;
     struct
     {
@@ -36,7 +35,6 @@ AFX_OBJECT(afxIndexBuffer)
         afxNat32            idxCnt;
         afxNat8             idxSiz;
     }                       *regions;
-#endif
 };
 
 AFX_DEFINE_STRUCT(afxIndexBufferBlueprintRegion)
@@ -51,6 +49,10 @@ AFX_DEFINE_STRUCT(afxIndexBufferBlueprint)
     afxDrawContext          dctx;
     afxArray                regions;
 };
+
+AFX afxNat                  AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[]);
+
+AFX afxError                AfxBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBuffer ibuf[], afxIndexBufferBlueprint const blueprint[]);
 
 //AFX void const*             AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx);
 AFX afxNat                  AfxIndexBufferGetCap(afxIndexBuffer ibuf, afxNat rgnIdx);

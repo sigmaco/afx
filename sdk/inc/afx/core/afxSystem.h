@@ -144,37 +144,32 @@ AFX_DEFINE_STRUCT(afxSystemConfigWin32)
 #endif
 };
 
-struct _afxSysD
 #ifdef _AFX_SYSTEM_C
+AFX_OBJECT(afxSystem)
 {
-    //afxInstance         obj;
     _AFX_DBG_FCC
-    afxChain            provisions;
 
-    afxUri*             rootDir;
+    afxUri                     rootDir;
 
-    afxResidency        memories;
-    afxResidency        modules;
+    afxChain           classes;
+    afxClass           memories;
+    afxClass           modules;
+    afxClass           keyboards;
+    afxClass           mouses;
+    afxClass           threads;
+    afxClass           applications;
+    afxClass           files;
+    afxClass           archives;
+    afxClass           dsystems;
 
-    afxResidency        keyboards;
-    afxResidency        mouses;
-    
-    afxResidency        threads;
-    afxResidency        applications;
+    afxContext                  ctx;
+    afxNat                      memPageSize; // The page size and the granularity of page protection and commitment.
+    afxNat                      allocGranularity;
+    afxNat                      hwConcurrencyCap; // # of logical proc units (hardware threads)
+    afxPool                     processors;
 
-    afxResidency        files;
-    afxResidency        archives;
-
-    afxContext           genrlMem;
-    afxNat              memPageSize; // The page size and the granularity of page protection and commitment.
-    afxNat              allocGranularity;
-    afxNat              hwConcurrencyCap; // # of logical proc units (hardware threads)
-    afxPool             processors;
-    //afxProcessor        procUnits[2];
-    //afxNat              procUnitCnt;
-    afxThread           deusExMachina;
-    afxModule           e2coree;
-    afxKeyboard         stdKbd;
+    afxModule                   e2coree;
+    afxKeyboard                 stdKbd;
 
     afxSize                     maxMemUsage;
     
@@ -185,32 +180,26 @@ struct _afxSysD
     afxProfilerPopTimerFunc     profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
     afxProfilerPostMarkerFunc   profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
 
-    afxPool             handlePool;
-    afxSlock            handlePoolMtx;  // one per bitmap page?
-    afxObject           nilObj;
-    afxObject           sysObj;
+    afxBool                     isInBootUp;
+    afxBool                     isInShutdown;
+    afxBool                     operating;
+    afxBool                     interruptionRequested;
 
-    afxBool             isInBootUp;
-    afxBool             isInShutdown;
-    afxBool             operating;
-    afxBool             interruptionRequested;
-
-    afxArena            ioArena;
-    afxNat              ioBufSiz;
-    afxChain            mountPoints;
-    afxChain            aliveRsrcs;
+    afxArena                    ioArena;
+    afxNat                      ioBufSiz;
+    afxChain                    mountPoints;
+    afxChain                    aliveRsrcs;
     struct
     {
         struct
         {
-            afxFcc      type;
-            afxChain    resources;
-        }               supplyChain[1];
-    }                   resourcing;
-    afxInt exitCode;
-}
+            afxFcc              type;
+            afxChain            resources;
+        }                       supplyChain[1];
+    }                           resourcing;
+    afxInt                      exitCode;
+};
 #endif
-;
 
 AFX void                AfxChooseBasicIoSystemConfiguration(afxSystemConfig *config, afxNat extendedSiz);
 AFX afxError            AfxBootUpBasicIoSystem(afxSystemConfig const *config, afxSystem *sys);
@@ -221,7 +210,7 @@ AFX afxBool             AfxSystemIsOperating(void);
 AFX afxResult           AfxDoSystemThreading(afxTime timeout);
 AFX void                AfxRequestSystemShutdown(afxInt exitCode);
 
-AFX afxContext           AfxGetIoMemory(void);
+AFX afxContext          AfxGetIoContext(void);
 AFX afxArena*           AfxGetIoArena(void);
 AFX afxNat              AfxGetIoBufferSize(void);
 
@@ -233,16 +222,14 @@ AFX afxNat              AfxGetMemoryPageSize(void);
 /// This function returns 1 if neither value could be determined.
 AFX afxNat              AfxGetThreadingCapacity(void);
 
-AFX afxContext           AfxGetMainMemory(void);
+AFX afxContext          AfxGetSystemContext(void);
 AFX afxUri const*       AfxGetSystemRootPath(afxUri *copy);
 AFX afxString const*    AfxGetSystemRootPathString(afxString *copy);
-
 
 // Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
 AFX afxBool             AfxEmitEvent(afxInstance *receiver, afxEvent *ev);
 AFX afxBool             AfxEmitEvents(afxNat cnt, afxInstance *receiver[], afxEvent ev[]);
 AFX afxBool             AfxReemitEvent(afxNat cnt, afxInstance *receiver[], afxEvent *ev);
-
 
 AFX afxError            AfxPostEvent(afxInstance *receiver, afxEvent *ev);
 AFX afxError            AfxPostEvents(afxNat cnt, afxInstance *receiver[], afxEvent ev[]);
@@ -257,7 +244,7 @@ AFX afxError            AfxEnableResourceMonitoring(afxResource res, afxBool ena
 AFX afxError            AfxResolveUri(afxUri const *in, afxFileFlags permissions, afxUri *out);
 AFX afxError            AfxResolveUris(afxNat cnt, afxUri const in[], afxFileFlags const permissions[], afxUri out[]);
 
-AFX afxBool             _AfxGetSysD(afxSystem sys, struct _afxSysD**sysD);
+//AFX afxBool             _AfxGetSysD(afxSystem sys, struct _afxSysD**sysD);
 
 #if 0
 ////////////////////////////////////////////////////////////////////////////////

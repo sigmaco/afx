@@ -1,0 +1,130 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0f1827dc by 00000000 over 00000000 with 0f1801c0)
+ afxClass<Basic I/O System>::ConstructObject(002f8090)
+ afxSystem.c:1007
+  _AfxSysCtor(sys=002f8090)
+ Installing Context at 002f80cc by 002f80b8 over 00000000 with 0f1807a4)
+ Installing Module at 002f818c by 002f80b8 over 00000000 with 0f180080)
+ Installing Thread at 002f83cc by 002f80b8 over 00000000 with 0f1801f0)
+ Installing File at 002f854c by 002f80b8 over 00000000 with 0f180314)
+ Installing Archive at 002f860c by 002f80b8 over 00000000 with 0f1802e4)
+ Installing Application at 002f848c by 002f80b8 over 00000000 with 0f180000)
+ Installing Keyboard at 002f824c by 002f80b8 over 00000000 with 0f180344)
+ Installing Mouse at 002f830c by 002f80b8 over 00000000 with 0f180374)
+ Installing Draw System at 002f86cc by 002f80b8 over 00000000 with 0f181074)
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1092?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:202
+  AfxAcquireContexts(cnt=1,app=002f878c,strategy=001ce38c)
+ afxClass<Context>::ConstructObject(002f88f0)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=002f88f0)
+ afxArena.c:767
+  AfxAcquireArena(aren=002f87e8)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1144!_AfxSysCtor")
+ afxSystem.c:752
+  AfxMountStoragePoints(6,001ce4e4)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=002f87b8,uri=001ce41c)
+ afxClass<Module>::ConstructObject(002fd560)
+ afxModule.c:125
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+  AfxAcquireKeyboards(cnt=1,kbd=002f87bc,port=001ce364)
+ afxClass<Keyboard>::ConstructObject(002fd9a0)
+ afxKeyboard.c:281
+  _AfxKbdCtor(kbd=002fd9a0)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw System>::ConstructObject(002fe3a0)
+ afxDrawSystem.c:771
+  _AfxDsysCtor(dsys=002fe3a0)
+ Entering the Threading Execution Environment  1
+ afxSystem.c:988
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ Installing Draw Thread at 002fe7cc by 002fe3f8 over 00000000 with 001cee58)
+ Installing Installable Client (Draw) Driver at 002fe40c by 002fe3f8 over 00000000 with 001cee28)
+ Installing Draw Device at 002fe4cc by 002fe3f8 over 00000000 with 001cedf8)
+ Installing Draw Context at 002fe58c by 002fe3f8 over 00000000 with 001cedc8)
+ Installing Draw Output at 002fe64c by 002fe3f8 over 00000000 with 001ced98)
+ Installing Draw Input at 002fe70c by 002fe3f8 over 00000000 with 001ced68)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=001ceb94,uri=001ceb9c)
+ afxClass<Module>::ConstructObject(002fd5bc)
+ afxModule.c:125
+  _AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00300ce0)
+ afxDrawSystem.c:331
+  _AfxDdrvCtor(ddrv=00300ce0)
+Installing 'e2draw.icd' ICD on draw system 002fe3a0...
+	OpenGL/Vulkan Continuous Integration 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 00300cf4 by 00300ce0 over 002fe4cc with 001ce31c)
+ afxClass<Draw Device, Draw Device>ConstructingObject(00300e70)
+ afxClass<Draw Device>::ConstructObject(00300e70)
+ afxDrawSystem.c:271
+  _AfxDdevCtor(ddev=00300e70)
+ Installing Draw Context at 00300e88 by 00300e74 over 002fe58c with 51b030c0)
+ Installing Draw Output at 00300f48 by 00300e74 over 002fe64c with 51b031ac)
+ Installing Draw Input at 00301008 by 00300e74 over 002fe70c with 51b03164)
+ afxClass<Draw Device>::ConstructObject(00300e70)
+ sglDrawDriver.c:2102
+  _SglDdevCtor(ddev=00300e70)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ ERR sglDrawDriver.c:1639?_SglBuildDpu
+  
+ ERR sglDrawDriver.c:1639?_SglBuildDpu
+  

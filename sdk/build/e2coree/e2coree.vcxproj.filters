@@ -138,9 +138,6 @@
     <ClInclude Include="..\..\inc\afx\sound\afxSoundContext.h">
       <Filter>e2coree\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\afxApplication.h">
-      <Filter>e2coree</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\afxQwadro.h">
       <Filter>e2coree</Filter>
     </ClInclude>
@@ -210,9 +207,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawContext.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxDrawDriver.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxDrawInput.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -239,9 +233,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\mem\afxArena.h">
       <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\e2coree\core\afxCoreParadigms.h">
-      <Filter>e2coree\core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxColor.h">
       <Filter>e2coree\draw</Filter>
@@ -423,8 +414,11 @@
     <ClInclude Include="..\..\inc\afx\core\mem\afxContext.h">
       <Filter>e2coree\core\mem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxResidency.h">
-      <Filter>e2coree\core\mem</Filter>
+    <ClInclude Include="..\..\src\e2coree\core\afxCoreHideout.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxApplication.h">
+      <Filter>e2coree\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -438,9 +432,6 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2coree\afxApplication.c">
-      <Filter>e2coree</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\afxQwadro.c">
       <Filter>e2coree</Filter>
     </ClCompile>
@@ -467,9 +458,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\volume\afxFrustum.c">
       <Filter>e2coree\math\volume</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxDrawDriver.c">
-      <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawInput.c">
       <Filter>e2coree\draw</Filter>
@@ -744,8 +732,8 @@
     <ClCompile Include="..\..\src\e2coree\core\mem\afxContext.c">
       <Filter>e2coree\core\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxResidency.c">
-      <Filter>e2coree\core\mem</Filter>
+    <ClCompile Include="..\..\src\e2coree\core\afxApplication.c">
+      <Filter>e2coree\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

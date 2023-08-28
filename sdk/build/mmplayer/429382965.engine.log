@@ -1,0 +1,67 @@
+
+ afxDebug.c:386?AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ afxClass<Basic I/O System>::Mount(50e6e7cc, 00000000, 00000000, 50e6c1c0)
+ afxClass<Basic I/O System>::ConstructObject(0051f110)
+ afxSystem.c:1006?_AfxSysCtor(sys=0051f110)
+ afxClass<Context>::Mount(0051f12c, 0051f118, 00000000, 50e6c7a0)
+ afxClass<Module>::Mount(0051f1ec, 0051f118, 00000000, 50e6c080)
+ afxClass<Thread>::Mount(0051f42c, 0051f118, 00000000, 50e6c1f0)
+ afxClass<File>::Mount(0051f5ac, 0051f118, 00000000, 50e6c310)
+ afxClass<Archive>::Mount(0051f66c, 0051f118, 00000000, 50e6c2e0)
+ afxClass<Application>::Mount(0051f4ec, 0051f118, 00000000, 50e6c000)
+ afxClass<Keyboard>::Mount(0051f2ac, 0051f118, 00000000, 50e6c340)
+ afxClass<Mouse>::Mount(0051f36c, 0051f118, 00000000, 50e6c370)
+ afxClass<Draw System>::Mount(0051f72c, 0051f118, 00000000, 50e6d070)
+ ADV afxSystem.c:1090?_AfxSysCtor
+    Memory page size: 4096
+ ADV afxSystem.c:1091?_AfxSysCtor
+    Logical processor count: 2
+ afxContext.c:202?AfxAcquireContexts(cnt=1,app=0051f7ec,strategy=002ce3f0)
+ afxClass<Context>::ConstructObject(0051f950)
+ afxContext.c:166?_AfxCtxCtor(ctx=0051f950)
+ afxArena.c:767?AfxAcquireArena(aren=0051f848)
+ afxArena.c:768?AfxAcquireArena(spec=00000000,hint="afxSystem.c:1143!_AfxSysCtor")
+ afxSystem.c:750?AfxMountStoragePoints(6,002ce548)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=0051f818,uri=002ce480)
+ afxClass<Module>::ConstructObject(0050b460)
+ afxModule.c:126?_AfxMdleCtor(uri:system/e2coree.dll)
+ afxKeyboard.c:317?AfxAcquireKeyboards(cnt=1,kbd=0051f81c,port=002ce3c8)
+ afxClass<Keyboard>::ConstructObject(00522d10)
+ afxKeyboard.c:281?_AfxKbdCtor(kbd=00522d10)
+ afxClass<Draw System>::ConstructObject(00525040)
+ afxDrawSystem.c:635?_AfxDsysCtor(dsys=00525040)
+ afxClass<Draw Thread>::Mount(0052546c, 00525098, 00000000, 002cef08)
+ afxClass<Installable Client (Draw) Driver>::Mount(005250ac, 00525098, 00000000, 002ceed8)
+ afxClass<Draw Device>::Mount(0052516c, 00525098, 00000000, 002ceea8)
+ afxClass<Draw Context>::Mount(0052522c, 00525098, 00000000, 002cee78)
+ afxClass<Draw Output>::Mount(005252ec, 00525098, 00000000, 002cee48)
+ afxClass<Draw Input>::Mount(005253ac, 00525098, 00000000, 002cee18)
+New texture codec registered.
+Name: SIGGL
+Author: SIGMA Technology Group
+Version: 0.5.1
+Note: 
+ Truecolor Targa texture serializer installed!
+ afxModule.c:170?AfxAcquireModules(cnt=1,mdle=00525540,uri=002ceda0)
+ afxClass<Module>::ConstructObject(0050b61c)
+ afxModule.c:126?_AfxMdleCtor(uri:e2draw.icd)

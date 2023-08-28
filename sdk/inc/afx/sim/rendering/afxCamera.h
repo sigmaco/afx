@@ -42,8 +42,6 @@
 
 */
 
-AFX_DEFINE_HANDLE(afxCamera);
-
 typedef enum
 {
     /// cam will render objects uniformly, with no sense of perspective.
@@ -59,10 +57,9 @@ typedef enum afxCameraDepthRange
     AFX_CAM_OUT_DEPTH_RANGE_NEGONE2ZERO = 0x2,
 } afxCameraDepthRange;
 
+#ifdef _AFX_CAMERA_C
 AFX_OBJECT(afxCamera)
 {
-    AFX_OBJECT(afxNode) nod;
-#ifdef _AFX_CAMERA_C
     afxReal             wpOverHp; // physical w/h
     afxReal             wrOverHr; // resolution w/h
     afxReal             wwOverHw; // window w/h
@@ -84,12 +81,11 @@ AFX_OBJECT(afxCamera)
 
     afxBool     perspective; // is projection perspective or orthographic.
     afxFrustum  frustum;
-#endif
 };
+#endif
 
 //static_assert(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
-AFX afxNode     AfxCameraGetNode(afxCamera cam);
 AFX afxFrustum* AfxCameraCopyFrustum(afxCamera cam, afxFrustum *frustum);
 AFX afxResult   AfxCameraCaptureNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedNods);
 AFX afxResult   AfxCameraCaptureSpecificNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedObjs, afxNat typeCnt, afxFcc types[]);

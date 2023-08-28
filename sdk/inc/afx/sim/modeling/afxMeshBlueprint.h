@@ -32,14 +32,14 @@
 
 AFX_DEFINE_STRUCT(afxMeshBlueprintArticulation)
 {
-    afxString*              boneName; // 32
+    afxString               boneName; // 32
     afxNat                  triCnt;
     void const              *tris;
 };
 
 AFX_DEFINE_STRUCT(afxMeshBlueprintSection) // aka tri material group
 {
-    afxString*              name; // 32
+    afxString               name; // 32
     afxNat                  mtlIdx;
     afxNat                  firstTriIdx;
     afxNat                  triCnt;
@@ -50,7 +50,7 @@ AFX_DEFINE_STRUCT(afxMeshBlueprintSection) // aka tri material group
 
 AFX_DEFINE_STRUCT(afxMeshBlueprintVertexArrange)
 {
-    afxString*              semantic; // 8
+    afxString               semantic; // 8
     afxVertexFormat         fmt;
     afxVertexUsage          usage;
 
@@ -156,7 +156,7 @@ AFX_DEFINE_STRUCT(afxMeshBlueprint2)
     } verMd5;
 
     void *sim;
-    void *cachedMem;
+    afxContext cachedMem;
     _AFX_DBG_FCC;
 };
 

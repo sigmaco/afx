@@ -25,9 +25,11 @@
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/core/io/afxUri.h"
 
+typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxNat msg, afxSize argv[][1][1]);
+
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
-    afxNat              drvIdx;
+    afxNat              devId;
     afxUri const*       endpoint;
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
@@ -37,14 +39,13 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
 
 AFX_DECLARE_STRUCT(_afxDinVmt);
 
-struct _afxDinD
-{
-    _AFX_DBG_FCC
-    afxObject           dinObj;
-    _afxDinVmt const*   vmt;
-    void*               idd;
 #ifdef _AFX_DRAW_INPUT_C
-    afxDrawDriver       ddrv; 
+AFX_OBJECT(afxDrawInput)
+#else
+struct afxBaseDrawInput
+#endif
+{
+    _afxDinVmt const*   vmt;
     afxDrawContext      dctx; // bound context
     afxContext           mem;
 
@@ -56,13 +57,10 @@ struct _afxDinD
     afxBool             prefetching;
     afxBool             prefetchEnabled;
     void*               udd;
-#endif
 };
 
-AFX afxError            AfxAcquireDrawInputs(afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[]);
-AFX void                AfxReleaseDrawInputs(afxNat cnt, afxDrawInput din[]);
 
-AFX afxDrawDriver       AfxGetDrawInputDriver(afxDrawInput din);
+AFX afxError            AfxAcquireDrawInputs(afxDrawSystem dsys, afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[]);
 
 AFX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[]);
 
@@ -72,8 +70,13 @@ AFX afxBool             AfxGetConnectedDrawInputContext(afxDrawInput din, afxDra
 AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat *slotIdx);
 AFX afxError            AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx);
 
-AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
+//AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
 AFX afxError            AfxRecycleDrawInputScripts(afxDrawInput din, afxNat firstScrIdx, afxNat scrCnt);
+AFX void                AfxDiscardDrawInputScripts(afxDrawInput din, afxNat cnt, afxNat scrIdx[]);
+
+AFX afxError            AfxRequestDrawInputBuffer(afxDrawInput din, afxNat portIdx, afxNat *scrIdx);
+AFX afxBool             AfxGetDrawInputBuffer(afxDrawInput din, afxNat idx, afxDrawScript *dscr);
+AFX afxError            AfxSubmitDrawInputBuffers(afxDrawInput din, afxNat cnt, afxNat inBufIdx[]);
 
 AFX afxError            AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
 AFX afxError            AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);

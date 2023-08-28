@@ -29,7 +29,7 @@ AFX_DEFINE_STRUCT(afxLegoBlueprintBinding)
     afxFlags                visibility;
     afxShaderResourceType   type;
     afxNat                  cnt;
-    afxString*              name; // 16
+    afxString               name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxLegoBlueprint)
@@ -55,7 +55,7 @@ AFX_DEFINE_STRUCT(afxLegoEntry) // A GPUBindGroupLayoutEntry describes a single 
     afxFlags                visibility; // A bitset of the members of afxShaderStage. Each set bit indicates that a afxLegoDataScheme's resource will be accessible from the associated shader stage.
     afxShaderResourceType   type;
     afxNat                  cnt;
-    afxString*              name; // by QWADRO
+    afxString               name; // by QWADRO
 
     union
     {
@@ -72,26 +72,31 @@ AFX_DEFINE_STRUCT(afxLegoEntry) // A GPUBindGroupLayoutEntry describes a single 
     };
 };
 
-AFX_OBJECT(afxLego)
-{
-    afxInstance       obj;
 #ifdef _AFX_LEGO_C
+AFX_OBJECT(afxLego)
+#else
+struct afxBaseLego
+#endif
+{
     afxNat32        crc32;
     afxNat          entryCnt;
     afxLegoEntry    *entries; // The map of binding indices pointing to the GPUBindGroupLayoutEntrys, which this GPUBindGroupLayout describes.
-#endif
 };
 
 // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 
-AFX afxResult AfxLegoDescribeBinding(afxLego legt, afxNat first, afxNat cnt, afxLegoBindingDecl decl[]);
-AFX afxNat32 AfxLegoGetCrc32(afxLego legt);
+AFX afxNat      AfxEnumerateLegos(afxDrawContext dctx, afxNat first, afxNat cnt, afxLego lego[]);
+
+AFX afxError    AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLego lego[], afxLegoBlueprint const blueprint[]);
+
+AFX afxResult   AfxLegoDescribeBinding(afxLego legt, afxNat first, afxNat cnt, afxLegoBindingDecl decl[]);
+AFX afxNat32    AfxLegoGetCrc32(afxLego legt);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL void     AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxDrawContext dctx, afxNat estBindCnt);
+AFXINL void     AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxNat estBindCnt);
 AFXINL void     AfxLegoBlueprintErase(afxLegoBlueprint *blueprint);
 AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *legt);
 

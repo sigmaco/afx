@@ -74,7 +74,7 @@ typedef enum afxDrawQueueFlags
 {
     AFX_DQUE_DRAW           = AFX_FLAG(0), // supports draw ops
     //AFX_DQUE_DRAW_AUX       = AFX_FLAG(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
-    AFX_DQUE_COMPUTE        = AFX_FLAG(2), // supports compute opes
+    AFX_DQUE_COMPUTE        = AFX_FLAG(2), // supports compute ops
     AFX_DQUE_TRANSFER       = AFX_FLAG(3), // supports transfer ops
     AFX_DQUE_VHS            = AFX_FLAG(4), // supports VHS enc/dec
 } afxDrawQueueFlags;
@@ -82,21 +82,19 @@ typedef enum afxDrawQueueFlags
 AFX_DEFINE_STRUCT(afxDrawQueueSpecification)
 {
     afxNat                  portIdx;
-    afxDrawContext          owner;
     afxDrawQueueFlags       caps;
-    afxBool                 immedate;
 };
 
 AFX_DECLARE_STRUCT(_afxDqueVmt);
 
-AFX_OBJECT(afxDrawQueue)
-{
-    afxInstance               obj; // AFX_FCC_DQUE
-    _afxDqueVmt const*      vmt;
-    void*                   idd;
 #ifdef _AFX_DRAW_QUEUE_C
+AFX_OBJECT(afxDrawQueue)
+#else
+struct afxBaseDrawQueue
+#endif
+{
+    _afxDqueVmt const*      vmt;
     afxNat                  portIdx;
-    afxDrawContext          owner;
 
     afxSlock                pendingChainSlock;
     afxChain                pendingChain;
@@ -106,10 +104,9 @@ AFX_OBJECT(afxDrawQueue)
     afxBool                 immediate; // 0 = deferred, 1 = immediate
     afxSlock                arenaSlock;
     afxArena                cmdArena; // used by submission commands, not script commands.
-#endif
 };
 
-AFX afxDrawDriver           AfxGetDrawQueueDriver(afxDrawQueue dque);
+AFX afxDrawDevice           AfxGetDrawQueueDriver(afxDrawQueue dque);
 
 AFX afxError                AfxWaitForDrawQueueIdle(afxDrawQueue dque); // Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
 

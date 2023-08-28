@@ -46,8 +46,15 @@ AFX_DEFINE_STRUCT( afxWidgetVertex)
 AFX_DECLARE_STRUCT(afxWidgetImplementation);
 AFX_DECLARE_STRUCT(afxWidgetImplementationData);
 
-AFX_DEFINE_HANDLE(afxWidget);
+AFX_DEFINE_STRUCT(afxWidgetConfig)
+{
+    afxString const *name;
+    afxWidget parent;
+    afxUri const *uri;
+    afxResult(*f)(afxWidget, afxUri const*, void *data);
+};
 
+#ifdef _AFX_WIDGET_C
 AFX_OBJECT(afxWidget)
 {
     afxInstance                       obj;
@@ -95,6 +102,7 @@ AFX_OBJECT(afxWidget)
 
     };
 };
+#endif
 
 struct afxWidgetImplementation
 {

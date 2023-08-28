@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 #include "afx/afxQwadro.h"
-#include "afx/afxApplication.h"
+#include "afx/core/afxApplication.h"
 #include "afx/core/diag/afxDebug.h"
 #include "afx/math/afxMathDefs.h"
 
@@ -13,6 +13,9 @@
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/sim/rendering/afxRenderer.h"
 #endif
+
+afxSystem sys;
+afxDrawSystem dsys;
 
 const afxReal CameraSpeed = 30.0f;
 afxKeyboard kbd = NIL;
@@ -39,8 +42,8 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
     // camera up and down, but it should be clear how to add one.
-    const afxReal ForwardSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_S) ? 1 : 0.0f);
-    const afxReal RightSpeed = (AfxKeyIsPressed(kbd, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(kbd, AFX_KEY_D) ? 1 : 0.0f);
+    const afxReal ForwardSpeed = (AfxKeyIsPressed(AFX_KEY_W, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_S, 0) ? 1 : 0.0f);
+    const afxReal RightSpeed = (AfxKeyIsPressed(AFX_KEY_A, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_D, 0) ? 1 : 0.0f);
 
     AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
@@ -90,50 +93,51 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     afxResult rslt = AfxMountStoragePoints(1, &mpSpec);
     AfxAssert(rslt == 1);
 
-    afxArchive arc = AfxAcquireArchive(AFX_FILE_FLAG_R, &uri128.uri);
-    AfxAssertObject(arc, AFX_FCC_ARC);
+    afxArchive arc;
+    AfxAcquireArchives(1, &arc, &uri128.uri, (afxFileFlags[]) { AFX_FILE_FLAG_R });
+    AfxAssertObjects(1, &arc, AFX_FCC_ARC);
     afxUri itemNam;
     AfxUriWrapLiteral(&itemNam, "art/worldtest.tga", 0);
     afxNat itemIdx;
     AfxFindArchiveItem(arc, &itemNam, &itemIdx);
     afxStream item;
     AfxOpenArchiveItem(arc, itemIdx, &item);
-
-
+    AfxReleaseStream(&item);
     AfxUriWrapLiteral(&itemNam, "tmp/worldtest.tga", 0);
-    AfxDownloadArchiveItem(arc, itemIdx, &itemNam);
+    //AfxDownloadArchiveItem(arc, itemIdx, &itemNam);
+    AfxReleaseObjects(1, (void*[]) { arc });
 
     AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
-    afxSimulationSpecification simSpec = { 0 };
+    afxSimulationConfig simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    sim = AfxApplicationAcquireSimulation(app, &simSpec);
-    AfxAssertObject(sim, AFX_FCC_SIM);
+    AfxAcquireSimulations(app, 1, &sim, &simSpec);
+    AfxAssertObjects(1, &sim, AFX_FCC_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutConfig.endpoint = &uriMap;
-    AfxAcquireDrawOutputs(&doutConfig, 1, &dout);
+    AfxAcquireDrawOutputs(dsys, 1, &dout, &doutConfig);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
-    AfxSimulationAcquireRenderers(sim, 1, NIL, &rnd);
+    AfxAcquireRenderers(sim, 1, &rnd, NIL);
     
     AfxRendererBindOutput(rnd, dout);
 
     
     AfxWrapStringLiteral(&str, "viewer", 0);
-    cam = AfxSimulationAcquireCamera(sim, &str, NIL, TRUE);
+    AfxAcquireCameras(sim, 1, &cam);
     AfxAssert(cam);
 
     rnd->activeCamera = cam;
 
     kbd = AfxFindKeyboard(0);
     mse = AfxFindMouse(0);
-    AfxObjectInstallEventFilter(&mseD->hid.obj, &cam->nod.obj);
+    AfxObjectInstallEventFilter(mse, cam);
     
     AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
     
@@ -174,13 +178,13 @@ int main(int argc, char const* argv[])
         afxSystem sys = NIL;
         AfxBootUpBasicIoSystem(NIL, &sys);
 
-        afxDrawSystem dsys;
-        afxDrawSystemSpecification dsysSpec = { 0 };
-        AfxEstablishDrawSystem(&dsysSpec, &dsys);
-        AfxAssertType(dsys, AFX_FCC_DSYS);
+        afxDrawSystemConfig dsysSpec = { 0 };
+        AfxChooseDrawSystemConfiguration(&dsysSpec, 0);
+        AfxAcquireDrawSystems(1, &dsys, &dsysSpec);
+        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };
-        AfxAcquireDrawContexts(&dctxConfig, 1, &dctx);
+        AfxAcquireDrawContexts(dsys, 1, &dctx, &dctxConfig);
         AfxAssert(dctx);
 
         afxApplication TheApp;
@@ -192,18 +196,19 @@ int main(int argc, char const* argv[])
         //appConfig.enter = AfxEnterApplication;
         //appConfig.exit = AfxLeaveApplication;
         //appConfig.update = AfxUpdateApplication;
-        AfxAcquireApplications(&appConfig, 1, &TheApp);
-        AfxAssertObject(TheApp, AFX_FCC_APP);
+        AfxAcquireApplications(1, &TheApp, &appConfig);
+        AfxAssertObjects(1, &TheApp, AFX_FCC_APP);
         AfxRunApplication(TheApp);
 
-        while (AFX_OPCODE_CONTINUE == AfxDoSystemThreading(0));
+        while (AfxSystemIsOperating())
+            AfxDoSystemThreading(0);
 
-        AfxReleaseApplications(1, &TheApp);
+        AfxReleaseObjects(1, (void*[]) { TheApp });
 
-        AfxReleaseObject(&dctxD->obj);
+        AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxAbolishDrawSystem();
-        AfxShutdownBasicIoSystem();
+        AfxReleaseObjects(1, (void*[]) { dsys });
+        AfxShutdownBasicIoSystem(0);
     }
     Sleep(3000);
     return 0;

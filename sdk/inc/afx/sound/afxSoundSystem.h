@@ -294,11 +294,11 @@ AFX_EXTERN_API_FUNC(afxPlayingID, PostEvent_)
 
 typedef enum afxActionOnEventType
 {
-    AkActionOnEventType_Stop = 0,            ///< Stop
-    AkActionOnEventType_Pause = 1,            ///< Pause
-    AkActionOnEventType_Resume = 2,            ///< Resume
-    AkActionOnEventType_Break = 3,            ///< Break
-    AkActionOnEventType_ReleaseEnvelope = 4     ///< Release envelope
+    AfxActionOnEventType_Stop = 0,            ///< Stop
+    AfxActionOnEventType_Pause = 1,            ///< Pause
+    AfxActionOnEventType_Resume = 2,            ///< Resume
+    AfxActionOnEventType_Break = 3,            ///< Break
+    AfxActionOnEventType_ReleaseEnvelope = 4     ///< Release envelope
 }afxActionOnEventType;
 
 /// Executes an action on all nodes that are referenced in the specified event in an action of type play.

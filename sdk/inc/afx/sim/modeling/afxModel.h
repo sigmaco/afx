@@ -25,23 +25,22 @@
 /// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
 /// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
-AFX_DEFINE_HANDLE(afxModel);
-
 AFX_DEFINE_STRUCT(afxMeshSlot)
 {
     afxMesh             msh;
 };
 
+#ifdef _AFX_MODEL_C
 AFX_OBJECT(afxModel)
 {
-    afxInstance           obj;
-    afxUri*             uri; // 128
+    afxUri              uri; // 128
     afxSkeleton         skl;
     afxTransform        init;
     afxAabb             aabb;
     afxNat              meshSlotCnt;
     afxMeshSlot         *meshSlots;
 };
+#endif
 
 //AFX afxError            AfxEmbodyModel(afxModel mdl, afxBody *bod);
 

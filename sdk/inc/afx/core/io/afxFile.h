@@ -52,25 +52,20 @@ typedef enum afxFileFlags
 }
 afxFileFlags;
 
-struct _afxFileD
 #ifdef _AFX_FILE_C
+AFX_OBJECT(afxFile)
 {
-    _AFX_DBG_FCC
-    afxFile                 fileObj;
     afxStream               ios;
     void                    *fd;
-    afxUri*                 path;
+    afxUri                  path;
     afxBool                 shouldBeFlushed;
     afxFileFlags            flags;
-}
+};
 #endif
-;
 
 AFX afxNat                  AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile file[]);
 
-AFX void                    AfxCloseFiles(afxNat cnt, afxFile file[]);
-
-AFX afxError                AfxOpenFiles(afxNat cnt, afxFile file[], afxUri const uri[], afxFileFlags flags[]);
+AFX afxError                AfxOpenFiles(afxNat cnt, afxFile file[], afxUri const uri[], afxFileFlags const flags[]);
 AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
 AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
 AFX afxStream               AfxLoadFile(afxIoFlags flags, afxUri const *uri); // will fully load the opened file then close it.
@@ -99,6 +94,6 @@ AFX afxBool                 AfxFileIsArchive(afxFile file);
 AFX afxBool                 AfxFileIsHidden(afxFile file);
 AFX afxBool                 AfxFileIsReserved(afxFile file);
 
-AFX afxBool                 _AfxGetFileD(afxFile file, struct _afxFileD **fileD, struct _afxSysD* sysD);
+//AFX afxBool                 _AfxGetFileD(afxFile file, struct _afxFileD **fileD, struct _afxSysD* sysD);
 
 #endif//AFX_FILE_H

@@ -18,7 +18,11 @@
 #define _AFX_SURFACE_C
 #define _AFX_TEXTURE_C
 #define _AFX_DRAW_SCRIPT_C
+#define _AFX_DRAW_SYSTEM_C
+#define _AFX_DRAW_CONTEXT_C
 #include "_classified/afxDrawClassified.h"
+
+extern struct _afxDsysD TheDrawSystem;
 
 #if 0
 
@@ -293,155 +297,65 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
 #endif
 
+#if 0
 _AFX afxError AfxWaitForDrawQueueIdle(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+
+    struct _afxDqueD *dque;
+    AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
+    AfxAssertType(&TheDrawSystem, AFX_FCC_DSYS);
+    AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
+    AfxAssertType(dque, AFX_FCC_DQUE);
+
     return dque->vmt->wait(dque);
-};
+}
 
-_AFX afxDrawDriver AfxGetDrawQueueDriver(afxDrawQueue dque)
+
+_AFX afxDrawDevice AfxGetDrawQueueDriver(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, AFX_FCC_DQUE);
-    afxDrawDriver ddrv = AfxObjectGetProvider(&dque->obj);
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-    return ddrv;
+    //afxDrawDevice ddev = AfxGetObjectProvider(&dque->obj);
+    //AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    return 0;// ddev;
 }
+#endif
 
-_AFX afxError AfxAcquireDrawQueues(afxDrawDriver ddrv, afxDrawQueueSpecification const *spec, afxNat cnt, afxDrawQueue dque[])
-{
-    AfxEntry("ddrv=%p,spec=%p,cnt=%u", ddrv, spec, cnt);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        if (AfxClassAcquireObjects(AfxGetDrawQueueClass(ddrv), NIL, 1, spec, (afxInstance**)&dque[i], AfxSpawnHint()))
-        {
-            AfxThrowError();
-
-            for (afxNat j = 0; j < i; j++)
-            {
-                AfxAssertObject(dque[j], AFX_FCC_DQUE);
-                AfxReleaseObject(&dque[j]->obj);
-                dque[j] = NIL;
-            }
-            break;
-        }
-        else
-        {
-            AfxAssertObject(dque[i], AFX_FCC_DQUE);
-        }
-    }
-
-    if (err)
-        for (afxNat i = 0; i < cnt; i++)
-            dque[i] = NIL;
-
-    return err;
-};
-
-_AFX afxBool _AfxDqueEventHandler(afxInstance *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawQueue dque = (void*)obj;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxBool _AfxDqueEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawQueue dque = (void*)obj;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxError _AfxDqueDtor(afxDrawQueue dque)
+#if 0
+_AFX void _AfxObjDeallocDque(afxDrawQueue dque)
 {
     AfxEntry("dque=%p", dque);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
 
-    if (dque->vmt->dtor && dque->vmt->dtor(dque))
+    struct _afxDqueD *dque;
+    AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
+    AfxAssertType(&TheDrawSystem, AFX_FCC_DSYS);
+    AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
+    AfxAssertType(dque, AFX_FCC_DQUE);
+
+    _AfxDqueDtor(dque, dque);
+    AfxDeallocateResidentObjects(&TheDrawSystem.queues, 1, &dque);
+}
+
+_AFX void AfxReleaseDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue dque[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(cnt, dque, AFX_FCC_DQUE);
+    AfxReleaseObjects(cnt, dque, _AfxObjDeallocDque);
+}
+#endif
+
+#if 0
+_AFX afxError AfxAcquireDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue dque[], afxDrawQueueSpecification const *spec[])
+{
+    AfxEntry("cnt=%u,dque=%p,spec=%p,", cnt, dque, spec);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    if (AfxAcquireObjects(&dctx->queues, cnt, (afxHandle*)dque, (void*[]) { (void*)spec }))
         AfxThrowError();
 
-    AfxAssert(!dque->idd);
-
-    AfxReleaseSlock(&dque->pendingChainSlock);
-    AfxReleaseSlock(&dque->reqLock);
-    AfxReleaseArena(&dque->cmdArena);
-    AfxReleaseSlock(&dque->arenaSlock);
-    
     return err;
 }
-
-_AFX afxError _AfxDqueCtor(void *cache, afxNat idx, afxDrawQueue dque, afxDrawQueueSpecification const *specs)
-{
-    AfxEntry("dque=%p", dque);
-    afxError err = AFX_ERR_NONE;
-    (void)cache;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
-    
-    afxDrawQueueSpecification const *spec = &specs[idx];
-    AfxAssert(spec);
-
-    afxDrawDriver ddrv = AfxGetDrawQueueDriver(dque);
-    AfxAssertObject(ddrv, AFX_FCC_DDRV);
-
-    dque->portIdx = spec->portIdx;
-    dque->owner = spec->owner;
-    AfxAssertObjects(1, &dque->owner, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dque->owner);
-    
-    dque->immediate = !!spec->immedate;
-
-    AfxAcquireSlock(&dque->arenaSlock);
-    AfxAcquireArena(mem, &dque->cmdArena, NIL, AfxSpawnHint());
-
-    dque->locked = FALSE;
-
-    AfxAcquireChain(&dque->pendingChain, dque);
-    AfxAcquireSlock(&dque->pendingChainSlock);
-    AfxAcquireSlock(&dque->reqLock);
-
-    dque->vmt = NIL;
-    dque->idd = NIL;
-
-    if (ddrv->vmt->dque && ddrv->vmt->dque(dque, spec)) AfxThrowError();
-    else
-    {
-        AfxAssert(dque->vmt);
-    }
-
-    if (err)
-    {
-        AfxReleaseSlock(&dque->pendingChainSlock);
-        AfxReleaseSlock(&dque->reqLock);
-
-        AfxReleaseArena(&dque->cmdArena);
-    }
-
-    return err;
-}
-
-_AFX afxClassSpecification const _AfxDqueClassSpec;
-
-afxClassSpecification const _AfxDqueClassSpec =
-{
-    AFX_FCC_DQUE,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxDrawQueue)),
-    NIL,
-    (void*)_AfxDqueCtor,
-    (void*)_AfxDqueDtor,
-    .event = _AfxDqueEventHandler,
-    .eventFilter = _AfxDqueEventFilter,
-    "afxDrawQueue",
-    NIL
-};
+#endif

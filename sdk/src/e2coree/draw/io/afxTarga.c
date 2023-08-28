@@ -165,7 +165,7 @@ _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
 _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
     AfxAssertType(stream, AFX_FCC_IOS);
     AfxAssert(tga);
 
@@ -417,20 +417,11 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
 _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
 
-    afxDrawContext dctx = AfxGetTextureContext(tex);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -440,27 +431,127 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
         if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) {AFX_FILE_FLAG_W})) AfxThrowError();
         else
         {
+            void *src;
+            afxNat rgnSiz;
+            
+            if (!(src = AfxOpenTextureRegion(tex, &rgn[i], AFX_TEX_OPEN_R, &rgnSiz))) AfxThrowError();
+            else
+            {
+                _afxTga im;
+                AFX_ZERO(&im);
+
+                //afxWhd extent;
+                //AfxGetTextureExtent(tex, 0, extent);
+                afxPixelLayout pfd;
+                afxPixelFormat fmt = AfxGetTextureFormat(tex);
+                AfxDescribePixelFormat(fmt, &pfd);
+                afxInt format = (fmt == AFX_PFD_R8 ? _TARGA_RED : (fmt == AFX_PFD_RGB8 ? _TARGA_RGB : (fmt == AFX_PFD_RGBA8 ? _TARGA_RGBA : NIL)));
+
+                if (FALSE == _AfxTgaGen(mem, &im, rgn->extent[0], rgn->extent[1], rgn->extent[2], format)) AfxThrowError();
+                else
+                {
+                    // TODO use rgn
+                    AfxCopy(im.data, src, AFX_ALIGN((im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE, AFX_SIMD_ALIGN));
+                    
+                    if (_AfxTgaSave(mem, AfxGetFileStream(file), &im)) AfxThrowError();
+                    else
+                    {
+
+                    }
+
+                    _AfxTgaDestroy(mem, &im);
+                }
+
+                AfxCloseTextureRegion(tex, &rgn[i]);
+            }
+            AfxReleaseObjects(1, (void*[]) { file });
+        }
+    }
+    return err;
+}
+
+_AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertType(uri, AFX_FCC_URI);
+
+    afxWhd extent;
+    AfxGetTextureExtent(tex, lodIdx, extent);
+    afxTextureRegion rgn;
+    rgn.lodIdx = lodIdx;
+    rgn.baseImg = baseImg;
+    rgn.imgCnt = imgCnt;
+    rgn.offset[0] = 0;
+    rgn.offset[1] = 0;
+    rgn.offset[2] = 0;
+    rgn.extent[0] = extent[0];
+    rgn.extent[1] = extent[1];
+    rgn.extent[2] = extent[2];
+    
+    if (AfxPrintTextureRegionsToTarga(tex, 1, &rgn, uri))
+        AfxThrowError();
+
+    return err;
+}
+
+_AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    
+    afxDrawContext dctx = AfxGetObjectProvider(tex);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAssertType(&uri[i], AFX_FCC_URI);
+        afxFile file;
+
+        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        else
+        {
             _afxTga im;
             AFX_ZERO(&im);
 
-            afxWhd extent;
-            AfxGetTextureExtent(tex, 0, extent);
-            afxPixelFormat fmt = AfxGetTextureFormat(tex);
-            afxPixelLayout pfd;
-            AfxDescribePixelFormat(fmt, &pfd);
-
-            afxInt format = (fmt == AFX_PFD_R8 ? _TARGA_RED : (fmt == AFX_PFD_RGB8 ? _TARGA_RGB : (fmt == AFX_PFD_RGBA8 ? _TARGA_RGBA : NIL)));
-
-            if (FALSE == _AfxTgaGen(mem, &im, extent[0], extent[1], extent[2], format)) AfxThrowError();
+            if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im)) AfxThrowError();
             else
             {
-                // TODO use rgn
-                afxNat rgnSiz;
-                void *src = AfxOpenTextureRegion(tex, &rgn[i], AFX_TEX_OPEN_R, &rgnSiz);
-                AfxCopy(im.data, src, AFX_ALIGN((im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE, AFX_SIMD_ALIGN));
-                AfxCloseTextureRegion(tex, &rgn[i]);
+                afxPixelFormat fmt;
+                //afxNat whd[] = ;
+                int bitsPerPixel;
 
-                if (_AfxTgaSave(mem, AfxGetFileStream(file), &im)) AfxThrowError();
+                switch (im.format)
+                {
+                case _TARGA_ALPHA:
+                case _TARGA_RED:
+                case _TARGA_LUMINANCE:
+                    fmt = AFX_PFD_R8;
+                    bitsPerPixel = 8;
+                    break;
+                case _TARGA_RGB:
+                    fmt = AFX_PFD_RGB8;
+                    bitsPerPixel = 24;
+                    break;
+                case _TARGA_RGBA:
+                    fmt = AFX_PFD_RGBA8;
+                    bitsPerPixel = 32;
+                    break;
+                default:
+                    fmt = NIL;
+                    bitsPerPixel = 0;
+                    AfxThrowError();
+                }
+
+                afxTextureRegion rgn2;
+                rgn2 = rgn[i];
+                rgn2.imgCnt = 1;
+                rgn2.extent[0] = AfxMini(rgn2.extent[0], im.width);
+                rgn2.extent[1] = AfxMini(rgn2.extent[1], im.height);
+                afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
+
+                if (AfxUpdateTextureRegion(tex, &rgn2, (const void**)im.data, siz, fmt)) AfxThrowError();
                 else
                 {
 
@@ -468,80 +559,43 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
 
                 _AfxTgaDestroy(mem, &im);
             }
-            AfxCloseFiles(1, &file);
+            AfxReleaseObjects(1, (void*[]) { file });
         }
     }
     return err;
 }
 
-_AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxUri const *uri)
+_AFX afxError AfxFetchTextureFromTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
     AfxAssertType(uri, AFX_FCC_URI);
 
-    afxDrawContext dctx = AfxGetTextureContext(tex);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    afxWhd extent;
+    AfxGetTextureExtent(tex, lodIdx, extent);
+    afxTextureRegion rgn;
+    rgn.lodIdx = lodIdx;
+    rgn.baseImg = baseImg;
+    rgn.imgCnt = imgCnt;
+    rgn.offset[0] = 0;
+    rgn.offset[1] = 0;
+    rgn.offset[2] = 0;
+    rgn.extent[0] = extent[0];
+    rgn.extent[1] = extent[1];
+    rgn.extent[2] = extent[2];
 
-    afxFile file;
+    if (AfxFetchTextureRegionsFromTarga(tex, 1, &rgn, uri))
+        AfxThrowError();
 
-    if (AfxOpenFiles(1, &file, uri, (afxFileFlags[]) { AFX_FILE_FLAG_W })) AfxThrowError();
-    else
-    {
-        _afxTga im;
-        AFX_ZERO(&im);
-
-        afxWhd extent;
-        AfxGetTextureExtent(tex, 0, extent);
-        afxPixelFormat fmt = AfxGetTextureFormat(tex);
-        afxPixelLayout pfd;
-        AfxDescribePixelFormat(fmt, &pfd);
-
-        afxInt format = (fmt == AFX_PFD_R8 ? _TARGA_RED : (fmt == AFX_PFD_RGB8 ? _TARGA_RGB : (fmt == AFX_PFD_RGBA8 ? _TARGA_RGBA : NIL)));
-
-        if (FALSE == _AfxTgaGen(mem, &im, extent[0], extent[1], extent[2], format)) AfxThrowError();
-        else
-        {
-            afxTextureRegion rgn;
-            rgn.lodIdx = 0;
-            rgn.baseImg = 0;
-            rgn.imgCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = extent[0];
-            rgn.extent[1] = extent[1];
-            rgn.extent[2] = 1;
-
-            AfxCopy(im.data, AfxOpenTextureRegion(tex, &rgn, AFX_TEX_OPEN_R, NIL), AFX_ALIGN((im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE, AFX_SIMD_ALIGN));
-            AfxCloseTextureRegion(tex, &rgn);
-
-            if (_AfxTgaSave(mem, AfxGetFileStream(file), &im))
-                AfxThrowError();
-
-            _AfxTgaDestroy(mem, &im);
-        }
-        AfxCloseFiles(1, &file);
-    }
     return err;
 }
 
-_AFX afxError AfxLoadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[])
+_AFX afxError AfxLoadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
 
-    afxContext mem = AfxGetDrawMemory();
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -588,181 +642,21 @@ _AFX afxError AfxLoadTexturesTarga(afxDrawContext dctx, afxNat cnt, afxUri const
                 }
 
                 afxWhd extent = { im.width, im.height, 1 };
-                
-                afxTextureBlueprint blueprint;
-                AfxAcquireTextureBlueprint(&blueprint, dctx, extent, fmt, NIL);
-                AfxTextureBlueprintAddImage(&blueprint, fmt, extent, im.data, 0);
+                afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
 
-                if (AfxBuildTextures(&blueprint, 1, &tex[i])) AfxThrowError();
-                else
-                {
-                    
-                }
+                afxTextureBlueprint blueprint;
+                AfxAcquireTextureBlueprint(&blueprint, extent, fmt, AFX_TEX_USAGE_SAMPLING);
+                AfxTextureBlueprintAddImage(&blueprint, fmt, extent, im.data, siz);
+
+                if (AfxBuildTextures(dctx, 1, &tex[i], &blueprint))
+                    AfxThrowError();
+
                 AfxTextureBlueprintEnd(&blueprint, 0, NIL);
 
                 _AfxTgaDestroy(mem, &im);
-
             }
-            AfxCloseFiles(1, &file);
+            AfxReleaseObjects(1, (void*[]) { file });
         }
-    }
-    return err;
-}
-
-_AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(tex, AFX_FCC_TEX);
-    
-    afxDrawContext dctx = AfxGetTextureContext(tex);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
-        afxFile file;
-
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        else
-        {
-            _afxTga im;
-            AFX_ZERO(&im);
-
-            if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im)) AfxThrowError();
-            else
-            {
-                afxPixelFormat fmt;
-                //afxNat whd[] = ;
-                int bitsPerPixel;
-
-                switch (im.format)
-                {
-                case _TARGA_ALPHA:
-                case _TARGA_RED:
-                case _TARGA_LUMINANCE:
-                    fmt = AFX_PFD_R8;
-                    bitsPerPixel = 8;
-                    break;
-                case _TARGA_RGB:
-                    fmt = AFX_PFD_RGB8;
-                    bitsPerPixel = 24;
-                    break;
-                case _TARGA_RGBA:
-                    fmt = AFX_PFD_RGBA8;
-                    bitsPerPixel = 32;
-                    break;
-                default:
-                    fmt = NIL;
-                    bitsPerPixel = 0;
-                    AfxThrowError();
-                }
-
-                afxTextureRegion rgn2;
-                rgn2 = rgn[i];
-                rgn2.imgCnt = 1;
-                rgn2.extent[0] = rgn2.extent[0] > im.width ? rgn2.extent[0] : im.width;
-                rgn2.extent[1] = rgn2.extent[1] > im.height ? rgn2.extent[1] : im.height;
-                afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
-
-                if (AfxUpdateTextureRegion(tex, &rgn2, (const void**)im.data, siz, fmt)) AfxThrowError();
-                else
-                {
-
-                }
-
-                _AfxTgaDestroy(mem, &im);
-            }
-            AfxCloseFiles(1, &file);
-        }
-    }
-    return err;
-}
-
-_AFX afxError AfxFetchTextureFromTarga(afxTexture tex, afxUri const *uri)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(tex, AFX_FCC_TEX);
-    AfxAssertType(uri, AFX_FCC_URI);
-    
-    afxDrawContext dctx = AfxGetTextureContext(tex);
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    afxFile file;
-
-    if (AfxOpenFiles(1, &file, uri, (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-    else
-    {
-        _afxTga im;
-        AFX_ZERO(&im);
-
-        if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im)) AfxThrowError();
-        else
-        {
-            afxPixelFormat fmt;
-            //afxNat whd[] = ;
-            int bitsPerPixel;
-
-            switch (im.format)
-            {
-            case _TARGA_ALPHA:
-            case _TARGA_RED:
-            case _TARGA_LUMINANCE:
-                fmt = AFX_PFD_R8;
-                bitsPerPixel = 8;
-                break;
-            case _TARGA_RGB:
-                fmt = AFX_PFD_RGB8;
-                bitsPerPixel = 24;
-                break;
-            case _TARGA_RGBA:
-                fmt = AFX_PFD_RGBA8;
-                bitsPerPixel = 32;
-                break;
-            default:
-                fmt = NIL;
-                bitsPerPixel = 0;
-                AfxThrowError();
-            }
-
-            afxTextureRegion rgn;
-            rgn.lodIdx = 0;
-            rgn.baseImg = 0;
-            rgn.imgCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = im.width;
-            rgn.extent[1] = im.height;
-            rgn.extent[2] = 1;
-
-            afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
-
-            if (AfxUpdateTextureRegion(tex, &rgn, (const void**)im.data, siz, fmt))
-                AfxThrowError();
-
-            _AfxTgaDestroy(mem, &im);
-        }
-        AfxCloseFiles(1, &file);
     }
     return err;
 }

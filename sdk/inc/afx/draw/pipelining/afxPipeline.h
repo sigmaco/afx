@@ -140,14 +140,38 @@ AFX_DEFINE_STRUCT(afxPipelineColorBlendState)
     afxReal             blendConstants[4];
 };
 
+AFX_DEFINE_STRUCT(afxPipelineBlueprint)
+{
+    afxFcc                          fcc; // PIPB
+    afxDrawContext                  dctx;
+
+    afxUri128                       uri;
+
+    afxArray                        shaders;
+    afxArray                        viewports;
+    afxArray                        scissors;
+
+    afxBool                         hasAssembling;
+    afxBool                         hasRasterization;
+    afxBool                         hasDepthHandling;
+    afxBool                         hasMultisampling;
+    afxBool                         hasColorBlending;
+
+    afxPipelineInputAssemblyState   inAssembling;
+    afxPipelineRasterizerState      rasterization;
+    afxPipelineDepthState           depthHandling;
+    afxPipelineMultisampleState     multisampling;
+    afxPipelineColorBlendState      colorBlending;
+};
+
 AFX_DECLARE_STRUCT(_afxPipVmt);
 
-AFX_OBJECT(afxPipeline)
-{
-    afxInstance                       obj;
-    _afxPipVmt const*               vmt;
-    void*                           idd;
 #ifdef _AFX_PIPELINE_C
+AFX_OBJECT(afxPipeline)
+#else
+struct afxBasePipeline
+#endif
+{
     afxNat                          shaderCnt;
     afxShader*                      shaders;
 
@@ -179,30 +203,38 @@ AFX_OBJECT(afxPipeline)
     afxPipelineDepthState           depthHandling;
     afxBool                         hasColorBlending;
     afxPipelineColorBlendState      colorBlending;
-#endif
 };
 
-AFX afxDrawContext      AfxGetPipelineContext(afxPipeline pip);
+AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[]);
 
-AFX afxNat              AfxPipelineGetWiringCount(afxPipeline pip);
-AFX afxError            AfxPipelineGetWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt);
+AFX afxError            AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPipeline pip[], afxPipelineBlueprint const blueprint[]);
+AFX afxError            AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxPipeline pip[], afxUri const uri[]);
 
-AFX afxNat              AfxPipelineGetScissorCount(afxPipeline pip);
-AFX afxResult           AfxPipelineGetScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[]);
+AFX afxNat              AfxCountPipelineWirings(afxPipeline pip);
+AFX afxError            AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt);
 
-AFX afxNat              AfxPipelineGetInputStreamCount(afxPipeline pip);
-AFX afxResult           AfxPipelineGetInputStreams(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputStream streams[]);
+AFX afxNat              AfxCountPipelineScissors(afxPipeline pip);
+AFX afxNat              AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[]);
 
-AFX afxResult           AfxPipelineGetShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
-AFX afxNat              AfxPipelineGetShaderCount(afxPipeline pip);
+AFX afxNat              AfxCountPipelineInputStreams(afxPipeline pip);
+AFX afxNat              AfxGetPipelineInputStreams(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputStream streams[]);
 
-AFX afxNat              AfxPipelineGetViewportCount(afxPipeline pip);
-AFX afxResult           AfxPipelineGetViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[]);
+AFX afxNat              AfxCountPipelineShaders(afxPipeline pip);
+AFX afxNat              AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
+
+AFX afxNat              AfxCountPipelineViewports(afxPipeline pip);
+AFX afxNat              AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[]);
 
 AFX afxBool             AfxPipelineHasColorBlending(afxPipeline pip);
 AFX afxBool             AfxPipelineHasDepthHandling(afxPipeline pip);
 AFX afxBool             AfxPipelineHasMultisampling(afxPipeline pip);
 AFX afxBool             AfxPipelineHasRasterization(afxPipeline pip);
 AFX afxBool             AfxPipelineHasInputAssembling(afxPipeline pip);
+
+AFX afxBool             AfxGetPipelineColorBlending(afxPipeline pip, afxPipelineColorBlendState* state);
+AFX afxBool             AfxGetPipelineDepthHandling(afxPipeline pip, afxPipelineDepthState* state);
+AFX afxBool             AfxGetPipelineMultisampling(afxPipeline pip, afxPipelineMultisampleState* state);
+AFX afxBool             AfxGetPipelineRasterization(afxPipeline pip, afxPipelineRasterizerState* state);
+AFX afxBool             AfxGetPipelineInputAssembling(afxPipeline pip, afxPipelineInputAssemblyState* state);
 
 #endif//AFX_PIPELINE_H

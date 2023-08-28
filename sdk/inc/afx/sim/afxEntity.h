@@ -94,8 +94,6 @@ AFX_DEFINE_STRUCT(afxDagNode)
     };
 };
 
-AFX_DEFINE_HANDLE(afxEntity);
-
 AFX_OBJECT(afxEntity)
 {
     AFX_OBJECT(afxNode) nod;

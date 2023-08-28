@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_CONTEXT_C
 #define _AFX_BUFFER_C
 #define _AFX_INDEX_BUFFER_C
 #define _AFX_VERTEX_BUFFER_C
@@ -21,15 +22,6 @@
 #include "afx/draw/res/afxVertexBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "../afxDrawParadigms.h"
-
-AFX_DEFINE_STRUCT(afxVertexDataRow)
-{
-    afxString*          semantic;
-    afxNat              offset;
-    afxNat              stride;
-    afxVertexUsage      usage;
-    afxVertexFormat     fmt;
-};
 
 typedef struct
 {
@@ -95,14 +87,14 @@ _AFXINL afxError AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blue
 _AFX afxNat AfxGetVertexStreamCount(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     return vbuf->streamCnt;
 }
 
 _AFX afxNat AfxGetVertexAttrCount(afxVertexBuffer vbuf, afxNat streamIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssertRange(vbuf->streamCnt, streamIdx, 1);
     return vbuf->streams[streamIdx].attrCnt;
 }
@@ -110,7 +102,7 @@ _AFX afxNat AfxGetVertexAttrCount(afxVertexBuffer vbuf, afxNat streamIdx)
 _AFX afxNat AfxGetVertexFormat(afxVertexBuffer vbuf, afxNat streamIdx, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssertRange(vbuf->streamCnt, streamIdx, 1);
     AfxAssertRange(vbuf->streams[streamIdx].attrCnt, attrIdx, 1);
     return vbuf->streams[streamIdx].attrs[attrIdx].fmt;
@@ -119,7 +111,7 @@ _AFX afxNat AfxGetVertexFormat(afxVertexBuffer vbuf, afxNat streamIdx, afxNat at
 _AFX afxNat AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, afxNat attrIdx, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssertRange(vbuf->streamCnt, streamIdx, 1);
     AfxAssertRange(vbuf->streams[streamIdx].attrCnt, attrIdx, 1);
     AfxAssertRange(vbuf->streams[streamIdx].attrs[attrIdx].cachedElemCnt, elemIdx, 1);
@@ -156,7 +148,7 @@ _AFX afxNat AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, 
 _AFX afxNat AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn) // can't be multiple because regions couldn't be continous.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(rgn);
     AfxAssertRange(vbuf->streamCnt, rgn->streamIdx, 1);
     AfxAssertRange(vbuf->streams[rgn->streamIdx].attrCnt, rgn->baseAttr, rgn->attrCnt);
@@ -172,19 +164,19 @@ _AFX afxNat AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRe
 _AFX afxError AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void(*f)(void const *vtx, void*data), void *data)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(vbuf->cap > baseVtx);
     AfxAssert(vbuf->cap >= baseVtx + vtxCnt);
     AfxAssert(vtxCnt);
 
     afxNat stride = vbuf->row[rowIdx].stride;
-    afxByte const *bytemap = AfxMapBufferRange(&vbuf->buf, vbuf->row[rowIdx].offset + (baseVtx * stride), stride * vbuf->cap, AFX_BUF_MAP_R);
+    afxByte const *bytemap = AfxMapBufferRange(vbuf->buf, vbuf->row[rowIdx].offset + (baseVtx * stride), stride * vbuf->cap, AFX_BUF_MAP_R);
 
     for (afxNat i = 0; i < vtxCnt; i++)
         f(&(bytemap[i * stride]), data);
 
-    AfxUnmapBufferRange(&vbuf->buf);
+    AfxUnmapBufferRange(vbuf->buf);
 
     return err;
 }
@@ -192,14 +184,14 @@ _AFX afxError AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat rowIdx, 
 _AFX afxError AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstVtxStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(baseVtx + vtxCnt <= vbuf->cap);
     AfxAssert(vtxCnt);
     AfxAssert(dst);
     AfxAssert(!dstVtxStride || dstVtxStride >= vbuf->row[rowIdx].stride);
 
-    if (AfxDumpBuffer2(&vbuf->buf, vbuf->row[rowIdx].offset + (vbuf->row[rowIdx].stride * baseVtx), vbuf->row[rowIdx].stride, vtxCnt, dst, dstVtxStride))
+    if (AfxDumpBuffer2(vbuf->buf, vbuf->row[rowIdx].offset + (vbuf->row[rowIdx].stride * baseVtx), vbuf->row[rowIdx].stride, vtxCnt, dst, dstVtxStride))
         AfxThrowError();
 
     return err;
@@ -208,14 +200,14 @@ _AFX afxError AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat rowIdx, afxNat ba
 _AFX afxError AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, afxNat vtxCnt, void const *src, afxVertexFormat srcFmt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(baseVtx + vtxCnt <= vbuf->cap);
     AfxAssert(vtxCnt);
     AfxAssert(src);
     AfxAssert(srcFmt);
 
-    if (AfxUpdateBuffer2(&vbuf->buf, vbuf->row[rowIdx].offset + (vbuf->row[rowIdx].stride * baseVtx), vbuf->row[rowIdx].stride, vtxCnt, src, AfxVertexFormatGetSize(srcFmt)))
+    if (AfxUpdateBuffer2(vbuf->buf, vbuf->row[rowIdx].offset + (vbuf->row[rowIdx].stride * baseVtx), vbuf->row[rowIdx].stride, vtxCnt, src, AfxVertexFormatGetSize(srcFmt)))
         AfxThrowError();
 
     return err;
@@ -224,7 +216,7 @@ _AFX afxError AfxVertexBufferUpdate(afxVertexBuffer vbuf, afxNat rowIdx, afxNat 
 _AFX afxNat AfxVertexBufferGetStride(afxVertexBuffer vbuf, afxNat rowIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     return vbuf->row[rowIdx].stride;
 }
@@ -232,7 +224,7 @@ _AFX afxNat AfxVertexBufferGetStride(afxVertexBuffer vbuf, afxNat rowIdx)
 _AFX afxNat AfxVertexBufferGetRange(afxVertexBuffer vbuf, afxNat baseRow, afxNat rowCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > baseRow);
     AfxAssert(vbuf->rowCnt >= rowCnt);
     afxNat range = 0;
@@ -246,7 +238,7 @@ _AFX afxNat AfxVertexBufferGetRange(afxVertexBuffer vbuf, afxNat baseRow, afxNat
 _AFX afxNat AfxVertexBufferGetOffset(afxVertexBuffer vbuf, afxNat vtxIdx, afxNat rowIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(vbuf->cap > vtxIdx);
     return vbuf->row[rowIdx].offset + (vbuf->row[rowIdx].stride * vtxIdx);
@@ -256,7 +248,7 @@ _AFX afxNat AfxVertexBufferGetOffset(afxVertexBuffer vbuf, afxNat vtxIdx, afxNat
 _AFX void const* AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afxNat vtxIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(vbuf->cap > vtxIdx);
     return AfxBufferGetData(&vbuf->buf, vbuf->row[rowIdx].offset + (vtxIdx * vbuf->row[rowIdx].stride));
@@ -266,7 +258,7 @@ _AFX void const* AfxVertexBufferGetData(afxVertexBuffer vbuf, afxNat rowIdx, afx
 _AFX afxVertexFormat AfxVertexBufferGetFormat(afxVertexBuffer vbuf, afxNat rowIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     return vbuf->row[rowIdx].fmt;
 }
@@ -274,19 +266,19 @@ _AFX afxVertexFormat AfxVertexBufferGetFormat(afxVertexBuffer vbuf, afxNat rowId
 _AFX afxString const* AfxVertexBufferGetSemantic(afxVertexBuffer vbuf, afxNat rowIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
-    return vbuf->row[rowIdx].semantic;
+    return &vbuf->row[rowIdx].semantic;
 }
 
 _AFX afxError AfxVertexBufferDescribeRow(afxVertexBuffer vbuf, afxNat rowIdx, afxVertexRowSpecification *spec)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssert(vbuf->rowCnt > rowIdx);
     AfxAssert(spec);
     spec->fmt = vbuf->row[rowIdx].fmt;
-    spec->semantic = vbuf->row[rowIdx].semantic;
+    spec->semantic = &vbuf->row[rowIdx].semantic;
     spec->src = NIL; //AfxBufferGetData(&vbuf->buf, vbuf->row[rowIdx].offset);
     spec->usage = vbuf->row[rowIdx].usage;
     return err;
@@ -295,19 +287,19 @@ _AFX afxError AfxVertexBufferDescribeRow(afxVertexBuffer vbuf, afxNat rowIdx, af
 _AFX afxNat AfxVertexBufferGetRowCount(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     return vbuf->rowCnt;
 }
 
 _AFX afxNat AfxVertexBufferFindArrange(afxVertexBuffer vbuf, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     AfxAssertString(name);
 
     for (afxNat i = 0; i < vbuf->rowCnt; i++)
     {
-        if (0 == AfxCompareStringCi(name, vbuf->row[i].semantic))
+        if (0 == AfxCompareStringCi(name, &vbuf->row[i].semantic))
             return i;
     }
 
@@ -317,15 +309,14 @@ _AFX afxNat AfxVertexBufferFindArrange(afxVertexBuffer vbuf, afxString const *na
 _AFX afxNat AfxVertexBufferGetCap(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     return vbuf->cap;
 }
 
 _AFX afxNat AfxVertexBufferGetPerVertexSize(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
-
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     afxNat siz = 0;
 
     for (afxNat i = 0; i < vbuf->rowCnt; i++)
@@ -337,196 +328,32 @@ _AFX afxNat AfxVertexBufferGetPerVertexSize(afxVertexBuffer vbuf)
 _AFX afxError AfxVertexBufferOptimize(afxVertexBuffer vbuf, afxNat rowIdx, afxBool favorSpeedOverSize)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
     (void)rowIdx;
     (void)favorSpeedOverSize;
     AfxError("Not implemented yet");
     return err;
 }
 
-_AFX afxError AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBufferBlueprint const blueprint[], afxVertexBuffer vbuf[])
+_AFX afxError AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBuffer vbuf[], afxVertexBufferBlueprint const blueprint[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(blueprint);
     AfxAssert(vbuf);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
 
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxNat totalBytemapSiz = 0;
-
-        for (afxNat j = 0; j < blueprint[i].rowCnt; j++)
-        {
-            afxVertexFormat fmt = blueprint[i].row[j].fmt ? blueprint[i].row[j].fmt : blueprint[i].row[j].srcFmt;
-            AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
-
-            if (err)
-                break;
-
-            totalBytemapSiz += AFX_ALIGN(AfxVertexFormatGetSize(fmt) * blueprint[i].cap, AFX_SIMD_ALIGN);
-        }
-
-        AfxAssert(totalBytemapSiz);
-
-        _afxVbufCtorArgs args =
-        {
-            .buf =
-            {
-                totalBytemapSiz,
-                AFX_BUF_USAGE_VERTEX,
-                NIL
-            },
-            &blueprint[i]
-        };
-
-        if (AfxClassAcquireObjects(AfxGetVertexBufferClass(dctx), NIL, 1, &args, (afxInstance**)&vbuf[i], AfxSpawnHint()))
-        {
-            AfxThrowError();
-
-            for (afxNat j = 0; j < i; j++)
-            {
-                AfxReleaseObject(&vbuf[j]->buf.obj);
-                vbuf[j] = NIL;
-            }
-            break;
-        }
-        else
-        {
-            AfxTryAssertObject(vbuf[i], AFX_FCC_VBUF);
-        }
-    }
-    return err;
-}
-
-_AFX afxBool _AfxVbufEventHandler(afxInstance *obj, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxVertexBuffer vbuf = (void*)obj;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxBool _AfxVbufEventFilter(afxInstance *obj, afxInstance *watched, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    afxVertexBuffer vbuf = (void*)obj;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
-    (void)watched;
-    (void)ev;
-    return FALSE;
-}
-
-_AFX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
-    AfxEntry("vbuf=%p", vbuf);
-
-    AfxAssert(vbuf->row);
-
-    afxContext mem = AfxGetDrawMemory();
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    for (afxNat i = 0; i < vbuf->rowCnt; i++)
-    {
-        if (vbuf->row[i].semantic)
-            AfxDeallocateString(vbuf->row[i].semantic);
-    }
-
-    AfxDeallocate(mem, vbuf->row);
+    if (AfxAcquireObjects(&dctx->vertices, cnt, (afxHandle*)vbuf, (void*[]) { (void*)blueprint }))
+        AfxThrowError();
 
     return err;
 }
 
-_AFX afxError _AfxVbufCtor(void *cache, afxNat idx, afxVertexBuffer vbuf, _afxVbufCtorArgs *args)
+_AFX afxNat AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(vbuf, AFX_FCC_VBUF);
-    AfxEntry("vbuf=%p", vbuf);
-    (void)cache;
-    AfxAssert(args);
-    afxVertexBufferBlueprint const *blueprint = args[idx].spec;
-    AfxAssert(blueprint);
-
-    AfxAssert(blueprint->cap);
-    vbuf->cap = blueprint->cap;
-
-    AfxAssert(blueprint->rowCnt);
-    //vbuf->rowCnt = spec->rowCnt;
-
-    afxDrawContext dctx = AfxObjectGetProvider(&vbuf->buf.obj);
-
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    struct _afxDsysD* dsysD;
-    _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
-    struct _afxDctxD *dctxD;
-    _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
-
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_MEM);
-
-    if (!(vbuf->row = AfxAllocate(mem, blueprint->rowCnt * sizeof(vbuf->row[0]), 0, AfxSpawnHint()))) AfxThrowError();
-    else
-    {
-        afxVertexFormat fmt;
-        afxNat nextArrOffset = 0;
-        vbuf->rowCnt = 0;
-
-        for (afxNat i = 0; i < blueprint->rowCnt; i++)
-        {
-            afxVertexDataRow *row = &vbuf->row[i];
-            
-            row->semantic = !AfxStringIsEmpty(&blueprint->row[i].semantic.str) ? AfxCloneString(&blueprint->row[i].semantic.str) : NIL;
-
-            row->usage = blueprint->row[i].usage;
-
-            fmt = blueprint->row[i].fmt ? blueprint->row[i].fmt : blueprint->row[i].srcFmt;
-            AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
-
-            row->stride = AfxVertexFormatGetSize((row->fmt = fmt));
-            AfxAssert(row->stride);
-            row->offset = nextArrOffset;
-            nextArrOffset += AFX_ALIGN(row->stride * vbuf->cap, AFX_SIMD_ALIGN);
-
-            vbuf->rowCnt++;
-
-            if (blueprint->row[i].src)
-            {
-                AfxAssert(AFX_VTX_FMT_TOTAL > blueprint->row[i].srcFmt);
-
-                if (AfxVertexBufferUpdate(vbuf, i, 0, vbuf->cap, blueprint->row[i].src, blueprint->row[i].srcFmt))
-                    AfxThrowError();
-            }
-        }
-
-        if (err)
-        {
-            AfxAssert(vbuf->row);
-            AfxDeallocate(mem, vbuf->row);
-        }
-    }
-
-    return err;
+    AfxAssert(cnt);
+    AfxAssert(vbuf);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->vertices, first, cnt, (afxHandle*)vbuf);
 }
-
-_AFX afxClassSpecification const _AfxVbufClassSpec;
-
-afxClassSpecification const _AfxVbufClassSpec =
-{
-    AFX_FCC_VBUF,
-    NIL,
-    0,
-    sizeof(AFX_OBJECT(afxVertexBuffer)),
-    NIL,
-    (void*)_AfxVbufCtor,
-    (void*)_AfxVbufDtor,
-    .event = _AfxVbufEventHandler,
-    .eventFilter = _AfxVbufEventFilter,
-    "afxVertexBuffer",
-    NIL
-};

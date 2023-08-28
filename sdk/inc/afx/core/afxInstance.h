@@ -23,6 +23,7 @@
 #include "afx/core/afxChain.h"
 #include "afx/core/afxString.h"
 #include "afx/core/afxEvent.h"
+//#include "afx/core/mem/afxObjack.h"
 
 // HANDLES AND OBJECTS
 //
@@ -51,8 +52,9 @@ typedef afxBool (*afxEventFilterFn)(afxInstance *obj, afxInstance *watched, afxE
 
 AFX_DEFINE_STRUCT(afxInstance)
 {
-    afxFcc              fcc;
-    afxLinkage          cls;
+    afxFcc              fcc; // OBJ
+    afxClass*           cls;
+    afxNat              instIdx;
     afxInt32            refCnt;
     afxList             signaling; // slot holders
     afxList             handling; // slot helds
@@ -70,21 +72,21 @@ AFX_DEFINE_STRUCT(afxEventFilter)
     //afxEventFilterFn    fn;
 };
 
-AFX afxError AfxObjectInstallEventFilter(afxInstance *obj, afxInstance *filter); // if filter is already filtering this object, callback will be replaced.
-AFX afxError AfxObjectRemoveEventFilter(afxInstance *obj, afxInstance *filter);
-AFX afxBool AfxObjectEmitEvent(afxInstance *obj, afxEvent *ev);
+AFX afxError AfxObjectInstallEventFilter(afxHandle obj, afxHandle filter); // if filter is already filtering this object, callback will be replaced.
+AFX afxError AfxObjectRemoveEventFilter(afxHandle obj, afxHandle filter);
+AFX afxBool AfxObjectEmitEvent(afxHandle obj, afxEvent *ev);
 
 AFX_DEFINE_STRUCT(afxConnection)
 {
     afxFcc              fcc; // objc
     afxLink             holderLink;
-    afxInstance           *holder; // observing
-    void                (*handler)(afxInstance*, afxEvent*);
+    afxHandle           holder; // observing
+    void                (*handler)(afxHandle, afxEvent*);
     afxNat32            filter;
     afxLink             objLink;
     union
     {
-        afxInstance       *obj; // signaling
+        afxHandle       obj; // signaling
         void            *voidObj;
     };
     afxBool             reacquired;
@@ -92,31 +94,27 @@ AFX_DEFINE_STRUCT(afxConnection)
     afxInt32            tenacity; // reference counter
 };
 
-AFX afxResult           AfxObjectReacquire(afxInstance *obj, afxInstance *holder, void(*handler)(afxInstance*, afxEvent*), afxNat32 filter, afxConnection *objc);
-AFX afxResult           AfxReleaseObject(afxInstance *obj);
+AFX afxResult           AfxObjectTestFcc(afxHandle obj, afxFcc fcc);
+AFX afxFcc              AfxObjectGetFcc(afxHandle obj);
+AFX afxChar const*      AfxObjectGetFccAsString(afxHandle obj);
 
-AFX afxResult           AfxObjectTestFcc(afxInstance const *obj, afxFcc fcc);
-AFX afxFcc              AfxObjectGetFcc(afxInstance const *obj);
-AFX afxChar const*      AfxObjectGetFccAsString(afxInstance const *obj);
+AFX afxClass*           AfxObjectGetClass(afxHandle obj);
+AFX void*               AfxGetObjectProvider(afxHandle obj);
+AFX afxNat              AfxObjectGetIndex(afxHandle obj, afxBool b2f);
+AFX void const*         AfxObjectGetVmt(afxHandle obj);
+AFXINL afxBool          AfxObjectInherits(afxHandle obj, afxClass const* cls);
 
-AFX afxError            AfxObjectAssert(afxInstance const *obj, afxFcc fcc, afxHint const hint, afxChar const *exp);
-AFX afxClass*           AfxObjectGetClass(afxInstance const *obj);
-AFX void*               AfxObjectGetProvider(afxInstance const *obj);
-AFX afxNat              AfxObjectGetIndex(afxInstance const *obj, afxBool b2f);
-AFX void const*         AfxObjectGetVmt(afxInstance const *obj);
-AFXINL afxBool          AfxObjectInherits(afxInstance const *obj, afxClass const* cls);
+AFX afxInt32            AfxObjectGetRefCount(afxHandle obj);
 
-AFX afxInt32            AfxObjectGetRefCount(afxInstance const *obj);
+AFX afxNat32            AfxObjectGetTid(afxHandle obj);
 
-AFX afxNat32            AfxObjectGetTid(afxInstance const *obj);
+AFX afxResult           AfxObjectSignalConnections(afxHandle obj, afxEventType evtype, void *data);
+AFX afxConnection*      AfxObjectConnect(afxHandle obj, afxHandle holder, void(*handler)(afxHandle,afxEvent*), afxNat32 filter, afxConnection *objc);
+AFX afxResult           AfxObjectDisconnect(afxHandle obj, afxHandle holder, void(*handler)(afxHandle,afxEvent*));
 
-AFX afxResult           AfxObjectSignalConnections(afxInstance *obj, afxEventType evtype, void *data);
-AFX afxConnection*      AfxObjectConnect(afxInstance *obj, afxInstance *holder, void(*handler)(afxInstance*,afxEvent*), afxNat32 filter, afxConnection *objc);
-AFX afxResult           AfxObjectDisconnect(afxInstance *obj, afxInstance *holder, void(*handler)(afxInstance*,afxEvent*));
-
-AFX afxInstanceFlag       AfxObjectSetFlags(afxInstance *obj, afxInstanceFlag flags);
-AFX afxInstanceFlag       AfxObjectClearFlags(afxInstance *obj, afxInstanceFlag flags);
-AFX afxBool             AfxObjectTestFlags(afxInstance const *obj, afxInstanceFlag flags);
+AFX afxInstanceFlag       AfxObjectSetFlags(afxHandle obj, afxInstanceFlag flags);
+AFX afxInstanceFlag       AfxObjectClearFlags(afxHandle obj, afxInstanceFlag flags);
+AFX afxBool             AfxObjectTestFlags(afxHandle obj, afxInstanceFlag flags);
 
 // SLOT UTILS
 
@@ -129,20 +127,20 @@ AFXINL afxInt32         AfxConnectionDecTenacity(afxConnection *objc);
 AFXINL void*            AfxConnectionGetObject(afxConnection const *objc);
 AFXINL void*            AfxConnectionGetHolder(afxConnection const *objc);
 
-AFXINL afxError         AfxConnectionSetHandler(afxConnection *objc, void(*handler)(afxInstance*, afxEvent*));
+AFXINL afxError         AfxConnectionSetHandler(afxConnection *objc, void(*handler)(afxHandle, afxEvent*));
 AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 filter);
 
 
 // %p?%.4s#%i
-#define AfxPushObject(obj_) (obj_), (obj_) ? AfxObjectGetFccAsString((afxInstance*)obj_) : NIL, (obj_) ? ((afxInstance*)obj_)->refCnt : 0
+#define AfxPushObject(obj_) 0,0,0//(obj_), (obj_) ? AfxObjectGetFccAsString((afxInstance*)obj_) : NIL, (obj_) ? ((afxInstance*)obj_)->refCnt : 0
 
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
 #   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
-#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxInstance const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))));
-#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxInstance const*)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))))));
+#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))));
+#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))))));
 
 #else
 
@@ -158,13 +156,14 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 typedef struct
 {
     _AFX_DBG_FCC
+    afxSize     data[2];
+    afxNat      refCnt;
     afxFlags    flags;
     char const* name;
-    afxNat      refCnt;
 }
 afxObjectData;
 
-//AFX_DEFINE_HANDLE(afxObject);
+//AFX_DEFINE_HANDLE(afxHandle);
 
 AFX_DEFINE_STRUCT(afxObjectBus)
 {
@@ -173,7 +172,7 @@ AFX_DEFINE_STRUCT(afxObjectBus)
     afxNat      objCnt;
 };
 
-AFX_OBJECT(afxObject)
+AFX_OBJECT(afxHandlse)
 {
     afxObjectBus*   bus;
     afxChain        aggregations;
@@ -200,43 +199,46 @@ AFX_DEFINE_STRUCT(afxAggregator)
 //    afxSlock    chainLock;
     afxNat      maxInstCnt; // limits existence of certain amount of items.
     afxNat      minInstCnt; // limits existence of unused
-    afxError    (*deploy)(afxNat, afxObject[], afxAggregator*, void*);
-    afxError    (*drop)(afxNat, afxObject[], afxAggregator*, void*);
+    afxError    (*deploy)(afxNat, afxHandle[], afxAggregator*, void*);
+    afxError    (*drop)(afxNat, afxHandle[], afxAggregator*, void*);
 };
 
-AFX afxError    AfxAcquireObjects(afxNat cnt, afxObject obj[], afxFcc fcc);
-AFX afxError    AfxAcquireNamedObjects(afxNat cnt, afxObject obj[], afxFcc fcc, char const* name);
-AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject obj[]);
-AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject obj[], void(*f)(afxObject));
-AFX afxResult   _AfxAssertObjects(afxNat cnt, afxObject const obj[], afxFcc fcc);
-#define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (objs_),(fcc_)));
+AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxHandle obj[], void** udd);
+AFX afxError    AfxReacquireObjects(afxNat cnt, afxHandle obj[]);
+AFX afxBool     AfxReleaseObjects(afxNat cnt, void* obj[]);
+
+AFX afxResult   _AfxAssertObjects(afxNat cnt, afxHandle const obj[], afxFcc fcc);
+#define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_)));
+#define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!((objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_))));
+
+AFX afxNat      AfxIdentifyObject(afxHandle obj);
 
 #if 0
-AFX afxError    AfxAggregateObjects(afxNat cnt, afxObject obj[], afxAggregator* aggr, void *udd);
-AFX afxError    AfxDisaggregateObjects(afxNat cnt, afxObject obj[], afxAggregator* aggr, void *udd);
+AFX afxError    AfxAggregateObjects(afxNat cnt, afxHandle obj[], afxAggregator* aggr, void *udd);
+AFX afxError    AfxDisaggregateObjects(afxNat cnt, afxHandle obj[], afxAggregator* aggr, void *udd);
 
 AFX afxError    AfxAcquireAggregator(afxAggregator* aggr, afxChain* provider);
 
 AFX afxError AfxAcquireObjectBus(afxObjectBus* bus);
 AFX afxBool AfxLockObjectBus(afxObjectBus* bus, afxBool modify, afxBool attemp);
 
-AFX afxError AfxRegroupObjects(afxNat cnt, afxObject obj[], afxObjectBus* bus);
-AFX afxError AfxUngroupObjects(afxNat cnt, afxObject obj[]);
+AFX afxError AfxRegroupObjects(afxNat cnt, afxHandle obj[], afxObjectBus* bus);
+AFX afxError AfxUngroupObjects(afxNat cnt, afxHandle obj[]);
 
 AFX afxError AfxAcquireAggregator(afxAggregator* aggr, afxChain* provider);
 
-AFX afxObject AfxGetObject(afxAggregation* aggn);
+AFX afxHandle AfxGetObject(afxAggregation* aggn);
 
 AFX afxAggregator* AfxGetAggregator(afxAggregation* aggn);
 
-AFX afxNat AfxCurateAggregations(afxNat cnt, afxObject obj[], afxBool(*f)(afxAggregation*,void*), void *udd);
-AFX afxNat AfxCurateSpecificAggregations(afxNat cnt, afxObject obj[], afxFcc fcc, afxBool(*f)(afxAggregation*,void*), void *udd);
+AFX afxNat AfxCurateAggregations(afxNat cnt, afxHandle obj[], afxBool(*f)(afxAggregation*,void*), void *udd);
+AFX afxNat AfxCurateSpecificAggregations(afxNat cnt, afxHandle obj[], afxFcc fcc, afxBool(*f)(afxAggregation*,void*), void *udd);
 
 AFX afxNat AfxCurateInactiveAggregations(afxAggregator* aggr, afxBool(*f)(afxAggregation*, void*), void *udd);
 AFX afxNat AfxCurateActiveAggregations(afxAggregator* aggr, afxBool(*f)(afxAggregation*, void*), void *udd);
 
 
-AFX afxNat AfxCurateAggregations(afxNat cnt, afxObject obj[], afxBool(*f)(afxAggregation*, void*), void *udd)
+AFX afxNat AfxCurateAggregations(afxNat cnt, afxHandle obj[], afxBool(*f)(afxAggregation*, void*), void *udd)
 {
     afxError err = NIL;
     AfxAssert(cnt);
@@ -257,7 +259,7 @@ AFX afxNat AfxCurateAggregations(afxNat cnt, afxObject obj[], afxBool(*f)(afxAgg
     return rslt;
 }
 
-AFX afxNat AfxCurateSpecificAggregations(afxNat cnt, afxObject obj[], afxFcc fcc, afxBool(*f)(afxAggregation*, void*), void *udd)
+AFX afxNat AfxCurateSpecificAggregations(afxNat cnt, afxHandle obj[], afxFcc fcc, afxBool(*f)(afxAggregation*, void*), void *udd)
 {
     afxError err = NIL;
     AfxAssert(cnt);
