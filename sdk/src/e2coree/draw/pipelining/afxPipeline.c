@@ -412,7 +412,7 @@ AFX afxNat AfxCountPipelineWirings(afxPipeline pip)
     return pip->wiringCnt;
 }
 
-AFX afxError AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt)
+AFX afxError AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxPipelineRig *legt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, AFX_FCC_PIP);
@@ -499,7 +499,7 @@ _AFX afxError AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxPipeline pi
                             }
 
                             afxUri tmpUri;
-                            AfxUriReflectString(&tmpUri, &tmp.str);
+                            AfxReflectUriString(&tmpUri, &tmp.str);
                             AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 
                             if (AfxBuildPipelines(dctx, 1, &pip[i], &blueprint)) AfxThrowError();

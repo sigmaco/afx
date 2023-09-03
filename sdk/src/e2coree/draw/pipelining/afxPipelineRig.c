@@ -15,16 +15,16 @@
  */
 
 #define _AFX_DRAW_CONTEXT_C
-#define _AFX_LEGO_C
+#define _AFX_PIPELINE_RIG_C
 #include "afx/draw/afxDrawSystem.h"
 #include "../_classified/afxDrawClassified.h"
-#include "afx/draw/pipelining/afxLego.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxNat estBindCnt)
+_AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat estBindCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -34,17 +34,17 @@ _AFXINL void AfxLegoBlueprintBegin(afxLegoBlueprint *blueprint, afxNat estBindCn
     //afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
     //AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
-    AfxAcquireArray(&blueprint->bindings, sizeof(afxLegoBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
+    AfxAcquireArray(&blueprint->bindings, sizeof(afxPipelineRigBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
 }
 
-_AFXINL void AfxLegoBlueprintErase(afxLegoBlueprint *blueprint)
+_AFXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
 
     for (afxNat i = 0; i < AfxGetArrayPop(&blueprint->bindings); i++)
     {
-        afxLegoBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
+        afxPipelineRigBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
 
         //if (binding->name)
         {
@@ -55,7 +55,7 @@ _AFXINL void AfxLegoBlueprintErase(afxLegoBlueprint *blueprint)
     AfxEmptyArray(&blueprint->bindings);
 }
 
-_AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *lego)
+_AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxPipelineRig *lego)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -64,7 +64,7 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *lego)
     {
         if (AfxGetArrayPop(&blueprint->bindings))
         {
-            if (AfxBuildLegos(blueprint->dctx, 1, lego, blueprint))
+            if (AfxBuildPipelineRigs(blueprint->dctx, 1, lego, blueprint))
             {
                 AfxThrowError();
             }
@@ -77,7 +77,7 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *lego)
 
     for (afxNat i = 0; i < AfxGetArrayPop(&blueprint->bindings); i++)
     {
-        afxLegoBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
+        afxPipelineRigBlueprintBinding* binding = AfxGetArrayUnit(&blueprint->bindings, i);
 
         //if (binding->name)
         {
@@ -91,12 +91,12 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxLegoBlueprint *blueprint, afxLego *lego)
     return err;
 }
 
-_AFXINL afxError AfxLegoBlueprintAddBinding(afxLegoBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name)
+_AFXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
     afxNat idx;
-    afxLegoBlueprintBinding *decl;
+    afxPipelineRigBlueprintBinding *decl;
 
     if (!(decl = AfxInsertArrayUnit(&blueprint->bindings, &idx))) AfxThrowError();
     else
@@ -116,7 +116,7 @@ _AFXINL afxError AfxLegoBlueprintAddBinding(afxLegoBlueprint *blueprint, afxNat 
     return err;
 }
 
-_AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *blueprint, afxNat set, afxNat cnt, afxShader shd[])
+_AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint *blueprint, afxNat set, afxNat cnt, afxShader shd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -143,7 +143,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
 
                 for (afxNat j = 0; j < AfxGetArrayPop(bindings); j++)
                 {
-                    afxLegoBlueprintBinding *binding = AfxGetArrayUnit(bindings, j);
+                    afxPipelineRigBlueprintBinding *binding = AfxGetArrayUnit(bindings, j);
 
                     if ((entryExisting |= (rsrc.binding == binding->binding)))
                     {
@@ -176,7 +176,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxLegoBlueprint *bluepr
 // LEGO                                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxResult AfxLegoDescribeBinding(afxLego lego, afxNat first, afxNat cnt, afxLegoBindingDecl decl[])
+_AFX afxResult AfxGetPipelineRigEntry(afxPipelineRig lego, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
@@ -201,14 +201,14 @@ _AFX afxResult AfxLegoDescribeBinding(afxLego lego, afxNat first, afxNat cnt, af
     return rslt;
 }
 
-_AFX afxNat32 AfxLegoGetCrc32(afxLego lego)
+_AFX afxNat32 AfxGetPipelineRigHash(afxPipelineRig lego)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
     return lego->crc32;
 }
 
-_AFX afxError AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLego lego[], afxLegoBlueprint const blueprint[])
+_AFX afxError AfxBuildPipelineRigs(afxDrawContext dctx, afxNat cnt, afxPipelineRig lego[], afxPipelineRigBlueprint const blueprint[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -218,7 +218,7 @@ _AFX afxError AfxBuildLegos(afxDrawContext dctx, afxNat cnt, afxLego lego[], afx
     return err;
 }
 
-_AFX afxNat AfxEnumerateLegos(afxDrawContext dctx, afxNat first, afxNat cnt, afxLego lego[])
+_AFX afxNat AfxEnumeratePipelineRigs(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipelineRig lego[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);

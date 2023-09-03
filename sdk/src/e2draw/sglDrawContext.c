@@ -522,7 +522,15 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
                         afxVertexBufferBlueprint vbub;
                         AfxVertexBufferBlueprintReset(&vbub, 4);
-                        AfxVertexBufferBlueprintAddRow(&vbub, &tmpStr, AFX_VTX_FMT_V2D, AFX_VTX_USAGE_POS, vtxPos, AFX_VTX_FMT_V2D);
+                        afxVertexSpec vtxAttrSpec = { 0 };
+                        vtxAttrSpec.secIdx = 0;
+                        vtxAttrSpec.semantic = &tmpStr;
+                        vtxAttrSpec.fmt = AFX_VTX_FMT_V2D;
+                        vtxAttrSpec.usage = AFX_VTX_USAGE_POS;
+                        vtxAttrSpec.src = vtxPos;
+                        vtxAttrSpec.srcFmt = AFX_VTX_FMT_V2D;
+                        vtxAttrSpec.srcStride = 0;
+                        AfxVertexBufferBlueprintAddAttributes(&vbub, 1, &vtxAttrSpec);
                         AfxBuildVertexBuffers(dctx, 1, &dctx->presentVbuf, &vbub);
                         AfxAssertObjects(1, &dctx->presentVbuf, AFX_FCC_VBUF);
 

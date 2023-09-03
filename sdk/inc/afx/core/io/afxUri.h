@@ -87,9 +87,9 @@ AFX afxNat              AfxExcerptUriObjectRW(afxUri *uri, afxUri *parent); // f
 AFX afxNat              AfxExcerptUriNameRW(afxUri *uri, afxUri *parent); // just file name, without extension
 AFX afxNat              AfxExcerptUriExtensionRW(afxUri *uri, afxUri *parent);
 
-AFX void                AfxUriReflect(afxUri *uri, afxUri const *in); // pointers and handle same data handled by 'in' without doing any copy or change.
+AFX void                AfxReflectUri(afxUri *uri, afxUri const *in); // pointers and handle same data handled by 'in' without doing any copy or change.
 
-AFX void                AfxUriReflectString(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
+AFX void                AfxReflectUriString(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
 
 AFX void                AfxUriWrapLiteral(afxUri *uri, void const *start, afxNat range); // will not set capacity (will be read only)
 AFX void                AfxUriWrapLiteralRW(afxUri *uri, void *start, afxNat range);

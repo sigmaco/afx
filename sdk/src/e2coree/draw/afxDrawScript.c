@@ -127,7 +127,7 @@ _AFX void AfxCmdBindPipeline(afxDrawScript dscr, afxPipeline pip)
     dscr->cmd->bindPipeline(dscr, pip);
 }
 
-_AFX void AfxCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz)
+_AFX void AfxCmdBindIndexStream(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
@@ -136,12 +136,12 @@ _AFX void AfxCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset
     dscr->cmd->bindIndexBuffer(dscr, buf, offset, idxSiz);
 }
 
-_AFX void AfxCmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
+_AFX void AfxCmdBindManagedIndexStream(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
-    AfxAssertObjects(1, &ibuf, AFX_FCC_BUF);
-    dscr->cmd->bindManagedIndexBuffer(dscr, ibuf, rgnIdx);
+    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    dscr->cmd->bindManagedIndexStream(dscr, ibuf, rgnIdx);
 }
 
 _AFX void AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
@@ -162,25 +162,25 @@ _AFX void AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afxNa
     dscr->cmd->bindTextures(dscr, set, first, cnt, smp, tex);
 }
 
-_AFX void AfxCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[])
+_AFX void AfxCmdBindVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexInputStream const spec[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
     AfxAssert(8 > first);
     AfxAssert(8 >= cnt);
-    dscr->cmd->bindVertexBuffers(dscr, first, cnt, buf, offset);
+    dscr->cmd->bindVertexStreams(dscr, first, cnt, spec);
 }
 
-_AFX void AfxCmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const stride[])
+_AFX void AfxCmdSetVertexInputLayout(afxDrawScript dscr, afxNat cnt, afxVertexInputPoint const spec[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
-    AfxAssert(8 > first);
+    //AfxAssert(8 > first);
     AfxAssert(8 >= cnt);
-    dscr->cmd->bindVertexBuffers2(dscr, first, cnt, buf, offset, stride);
+    dscr->cmd->setVertexInputLayout(dscr, cnt, spec);
 }
 
-_AFX void AfxCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[])
+_AFX void AfxCmdBindManagedVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
@@ -195,15 +195,15 @@ _AFX void AfxCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNa
 
 		if (baseVtx)
 		{
-			AfxAssert(baseVtx[i] < AfxVertexBufferGetCap(vbo));
+			AfxAssert(baseVtx[i] < AfxGetVertexCapacity(vbo));
 		}
 
 		if (vtxArr)
 		{
-			AfxAssert(vtxArr[i] < AfxVertexBufferGetRowCount(vbo));
+			AfxAssert(vtxArr[i] < AfxCountVertexAttributes(vbo));
 		}
 	}
-    dscr->cmd->bindManagedVertexBuffers(dscr, first, cnt, vbuf, baseVtx, vtxArr);
+    dscr->cmd->bindManagedVertexStreams(dscr, first, cnt, vbuf, baseVtx, vtxArr, inst, divisor);
 }
 
 _AFX void AfxCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst)

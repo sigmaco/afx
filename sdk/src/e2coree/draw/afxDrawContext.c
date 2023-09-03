@@ -30,7 +30,7 @@
 #define _AFX_TEXTURE_C
 #define _AFX_SURFACE_C
 #define _AFX_PIPELINE_C
-#define _AFX_LEGO_C
+#define _AFX_PIPELINE_RIG_C
 #define _AFX_SHADER_C
 #include "_classified/afxDrawClassified.h"
 

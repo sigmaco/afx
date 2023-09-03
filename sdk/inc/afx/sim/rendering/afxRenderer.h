@@ -67,13 +67,18 @@ AFX_DEFINE_STRUCT(afxInstanceConstants)
     afxM4d  w[32];
 };
 
+AFX_DEFINE_STRUCT(afxRendererConfig)
+{
+    afxError (*dinProc)(afxDrawInput din, afxDrawThread dthr);
+};
+
 AFX_OBJECT(afxRenderer)
 {
     afxInstance           obj;
     void*               cachedSim;
     afxDrawContext      cachedDctx;
     afxDrawInput        din;
-    afxDrawOutput       dout;
+    //afxDrawOutput       dout;
 
     afxNat              activeOutputBufIdx;
     afxDrawInput        activeInput;
@@ -142,7 +147,7 @@ for each view{
 
 AFX afxError AfxRendererBindOutput(afxRenderer rnd, afxDrawOutput dout);
 
-AFX afxError AfxRendererBeginScene(afxRenderer rnd, afxCamera cam);
+AFX afxError AfxRendererBeginScene(afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
 AFX afxError AfxRendererEndScene(afxRenderer rnd);
 
 AFX afxError AfxRendererSetStar(afxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);

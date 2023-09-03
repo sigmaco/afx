@@ -56,6 +56,7 @@ AFX_DEFINE_STRUCT(afxMeshBlueprintVertexArrange)
 
     void const              *src;
     afxVertexFormat         srcFmt;
+    afxNat                  srcStride;
 };
 
 /// Um blueprint foi idealizado para ser um meta-objeto quase-completo para geração de uma malha. Dependendo apenas das referências das fontes de vértices e índices, para evitar alocações desnecessárias.

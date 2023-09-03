@@ -1,0 +1,193 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 68ae37dc by 00000000 over 00000000 with 68ae11c0)
+ afxClass<Basic I/O System>::ConstructObject(00668090)
+ afxSystem.c:1007
+  _AfxSysCtor(sys=00668090)
+ Installing Context at 006680cc by 006680b8 over 00000000 with 68ae17a4)
+ Installing Module at 00668194 by 006680b8 over 00000000 with 68ae1080)
+ Installing Thread at 006683ec by 006680b8 over 00000000 with 68ae11f0)
+ Installing File at 0066857c by 006680b8 over 00000000 with 68ae1314)
+ Installing Archive at 00668644 by 006680b8 over 00000000 with 68ae12e4)
+ Installing Application at 006684b4 by 006680b8 over 00000000 with 68ae1000)
+ Installing Keyboard at 0066825c by 006680b8 over 00000000 with 68ae1344)
+ Installing Mouse at 00668324 by 006680b8 over 00000000 with 68ae1374)
+ Installing Draw System at 0066870c by 006680b8 over 00000000 with 68ae2074)
+ [!] afxSystem.c:1091?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1092?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:202
+  AfxAcquireContexts(cnt=1,app=006687d4,strategy=0052e118)
+ afxClass<Context>::ConstructObject(00668940)
+ afxContext.c:166
+  _AfxCtxCtor(ctx=00668940)
+ afxArena.c:767
+  AfxAcquireArena(aren=00668838)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1144!_AfxSysCtor")
+ afxSystem.c:752
+  AfxMountStoragePoints(6,0052e270)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:169
+  AfxAcquireModules(cnt=1,mdle=00668808,uri=0052e1a8)
+ afxClass<Module>::ConstructObject(0066d5b0)
+ afxModule.c:125
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:317
+  AfxAcquireKeyboards(cnt=1,kbd=0066880c,port=0052e0f0)
+ afxClass<Keyboard>::ConstructObject(0066d9f0)
+ afxKeyboard.c:281
+  _AfxKbdCtor(kbd=0066d9f0)
+ Entering the Threading Execution Environment  0
+ afxThread.c:1227
+  AfxAcquireThreads(cnt=10,thr=0052f118,config=00000000,hint="mmplayer.c:285!main")
+ afxClass<Thread>::ConstructObject(0066ff60)
+ afxThread.c:1173
+  _AfxThrCtor(0066ff60)
+ afxClass<Thread>::ConstructObject(00670070)
+ afxThread.c:1173
+  _AfxThrCtor(00670070)
+ Entering the Threading Execution Environment  1
+ afxSystem.c:988
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ afxClass<Thread>::ConstructObject(006701d0)
+ afxThread.c:1173
+  _AfxThrCtor(006701d0)
+ afxClass<Thread>::ConstructObject(00670340)
+ afxThread.c:1173
+  _AfxThrCtor(00670340)
+ afxClass<Thread>::ConstructObject(006704c0)
+ afxThread.c:1173
+  _AfxThrCtor(006704c0)
+ afxClass<Thread>::ConstructObject(00670640)
+ afxThread.c:1173
+  _AfxThrCtor(00670640)
+ afxClass<Thread>::ConstructObject(00670740)
+ afxThread.c:1173
+  _AfxThrCtor(00670740)
+ afxClass<Thread>::ConstructObject(006708d0)
+ afxThread.c:1173
+  _AfxThrCtor(006708d0)
+ afxClass<Thread>::ConstructObject(00670a70)
+ afxThread.c:1173
+  _AfxThrCtor(00670a70)
+ afxClass<Thread>::ConstructObject(00670c10)
+ afxThread.c:1173
+  _AfxThrCtor(00670c10)
+ Dismantling Thread object (#0) 00670c10...
+ Destructing instance 00670c10 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670c10)
+ Dismantling Thread object (#0) 00670a70...
+ Destructing instance 00670a70 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670a70)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 006708d0...
+ Destructing instance 006708d0 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=006708d0)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 00670740...
+ Destructing instance 00670740 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670740)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 00670640...
+ Destructing instance 00670640 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670640)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 006704c0...
+ Destructing instance 006704c0 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=006704c0)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 00670340...
+ Destructing instance 00670340 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670340)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 006701d0...
+ Destructing instance 006701d0 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=006701d0)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ Dismantling Thread object (#0) 00670070...
+ Destructing instance 00670070 of Thread class.
+ afxThread.c:1142
+  _AfxThrDtor(thr=00670070)
+ ERR afxContext.c:313?AfxDeallocate
+  
+ ERR afxContext.c:313?AfxDeallocate
+  (p)
+    Invalid
+ ERR afxClass.c:787?AfxReleaseObjects
+  
+ ERR afxClass.c:787?AfxReleaseObjects
+  (inst)
+    Invalid
+ Entering the Threading Execution Environment  1
+ [!] afxPool.c:64?AfxEnumeratePoolItems
+  pool 00668454, upp 1, pageIdx = 1, usedCnt 1, 0, alloced 1
+ ERR afxClass.c:817?_AfxAssertObjects
+  
+ ERR afxClass.c:817?_AfxAssertObjects
+  (inst)
+    Invalid
+ ERR afxClass.c:819?_AfxAssertObjects
+  
+ ERR afxClass.c:819?_AfxAssertObjects
+  (cls)
+    Invalid

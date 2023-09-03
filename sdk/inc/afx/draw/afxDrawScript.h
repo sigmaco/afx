@@ -27,7 +27,7 @@
 
 #include "afx/draw/pipelining/afxPipeline.h"
 #include "afx/draw/pipelining/afxDrawOperation.h"
-#include "afx/draw/pipelining/afxLego.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
 #include "afx/draw/res/afxSampler.h"
 #include "afx/draw/pipelining/afxCanvas.h"
 #include "afx/draw/res/afxIndexBuffer.h"
@@ -68,6 +68,25 @@ typedef enum afxSurfaceLoadOp // An enumerated value indicating the store operat
     AFX_DTS_LOAD_OP_LOAD, // Loads the existing value for this attachment into the render pass.
     AFX_DTS_LOAD_OP_DONT_CARE
 } afxSurfaceLoadOp;
+
+AFX_DEFINE_STRUCT(afxVertexInputStream)
+{
+    afxBuffer           buf;
+    afxNat32            offset; // the start of buffer.
+    afxNat32            range; // the size in bytes of vertex data bound from buffer.
+    afxNat32            stride; // the byte stride between consecutive elements within the buffer.
+    afxBool8            instance; // addressing is a function of the instance index, else case, it is of the vertex index.
+    afxNat32            instDivisor; // the number of successive instances that will use the same value of the vertex attribute when instanced rendering is enabled.
+};
+
+AFX_DEFINE_STRUCT(afxVertexInputPoint) // vertex attribute input stream
+{
+    afxNat8             location; // is the shader input location number for this attribute.
+    afxNat8             stream; // is the binding number which this attribute takes its data from.
+    afxVertexFormat     fmt; // is the size and type of the vertex attribute data.
+    afxNat32            offset; // is a byte offset of this attribute relative to the start of an element in the vertex input binding.
+    afxVertexUsage      usage; // special flags used to optimization
+};
 
 AFX_DEFINE_UNION(afxClearValue)
 {
@@ -151,11 +170,11 @@ AFX void                AfxCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afx
 AFX void                AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
 AFX void                AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxTexture tex[]);
 
-AFX void                AfxCmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[]);
-AFX void                AfxCmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const stride[]);
-AFX void                AfxCmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
-AFX void                AfxCmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
-AFX void                AfxCmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+AFX void                AfxCmdSetVertexInputLayout(afxDrawScript dscr, afxNat cnt, afxVertexInputPoint const spec[]);
+AFX void                AfxCmdBindVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexInputStream const spec[]);
+AFX void                AfxCmdBindManagedVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor);
+AFX void                AfxCmdBindIndexStream(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat idxSiz); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
+AFX void                AfxCmdBindManagedIndexStream(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx); // offset is the starting offset in bytes within buffer used in index buffer address calculations.
 
 AFX void                AfxCmdBindPipeline(afxDrawScript dscr, afxPipeline pip);
 

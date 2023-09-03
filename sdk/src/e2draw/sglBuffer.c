@@ -154,7 +154,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
             buf->lastUpdOffset = 0;
             buf->lastUpdRange = 0;
         }
-        
+#if 0
         {
             AfxAssert(buf->glHandle);
             AfxAssert(buf->glTarget);
@@ -204,7 +204,9 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
             }
             }
         }
+#endif
     }
+#if 0
     else
     {
         switch (target)
@@ -250,6 +252,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
         }
         }
     }
+#endif
     return err;
 }
 
@@ -355,22 +358,29 @@ _SGL afxError _SglVbufDtor(afxVertexBuffer vbuf)
     afxError err = AFX_ERR_NONE;
     AfxEntry("vbuf=%p", vbuf);
 
-    AfxAssert(vbuf->base.row);
+    //AfxAssert(vbuf->base.row);
 
     afxDrawContext dctx = AfxGetObjectProvider(vbuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
-    for (afxNat i = 0; i < vbuf->base.rowCnt; i++)
+    for (afxNat i = 0; i < vbuf->base.attrCnt; i++)
     {
-        AfxDeallocateString(&vbuf->base.row[i].semantic);
+        AfxDeallocateString(&vbuf->base.attrs[i].semantic);
     }
 
-    AfxDeallocate(mem, vbuf->base.row);
+    AfxAssert(vbuf->base.attrs);
+    AfxDeallocate(mem, vbuf->base.attrs);
+
+    AfxReleaseObjects(1, (void*[]) { vbuf->base.buf });
+
+    AfxAssert(vbuf->base.sections);
+    AfxDeallocate(mem, vbuf->base.sections);
 
     return err;
 }
 
+#if 0
 _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
@@ -420,7 +430,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
         else
         {
             afxVertexFormat fmt;
-            afxNat nextArrOffset = 0;
+            afxNat nextStreamOffset = 0;
             vbuf->base.rowCnt = 0;
 
             for (afxNat i = 0; i < blueprint->rowCnt; i++)
@@ -433,14 +443,19 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
                     AfxResetString(&row->semantic);
 
                 row->usage = blueprint->row[i].usage;
+                row->relOffset = 0;
 
                 fmt = blueprint->row[i].fmt ? blueprint->row[i].fmt : blueprint->row[i].srcFmt;
                 AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
+                row->fmt = fmt;
+                row->cnt = 1;
 
-                row->stride = AfxVertexFormatGetSize((row->fmt = fmt));
-                AfxAssert(row->stride);
-                row->offset = nextArrOffset;
-                nextArrOffset += AFX_ALIGN(row->stride * vbuf->base.cap, AFX_SIMD_ALIGN);
+                afxNat stride = AfxVertexFormatGetSize(fmt) * row->cnt;
+                AfxAssert(stride);
+                row->streamIdx = 0;
+                row->streamOffset = nextStreamOffset;
+                afxNat streamRange = AFX_ALIGN(stride * vbuf->base.cap, AFX_SIMD_ALIGN);
+                nextStreamOffset += streamRange;
 
                 vbuf->base.rowCnt++;
 
@@ -448,7 +463,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
                 {
                     AfxAssert(AFX_VTX_FMT_TOTAL > blueprint->row[i].srcFmt);
 
-                    if (AfxVertexBufferUpdate(vbuf, i, 0, vbuf->base.cap, blueprint->row[i].src, blueprint->row[i].srcFmt))
+                    if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, blueprint->row[i].src, blueprint->row[i].srcFmt))
                         AfxThrowError();
                 }
             }
@@ -458,6 +473,158 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
                 AfxAssert(vbuf->base.row);
                 AfxDeallocate(mem, vbuf->base.row);
             }
+        }
+    }
+    return err;
+}
+#endif
+
+_SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxEntry("vbuf=%p", vbuf);
+
+    afxVertexBufferBlueprint const *blueprint = ((afxVertexBufferBlueprint const *)cookie->udd[0]) + cookie->no;
+
+    AfxAssert(blueprint);
+
+    AfxAssert(blueprint->cap);
+    vbuf->base.cap = blueprint->cap;
+
+    AfxAssert(blueprint->attrCnt);
+    //vbuf->base.rowCnt = spec->rowCnt;
+
+    afxDrawContext dctx = AfxGetObjectProvider(vbuf);
+    afxContext mem = AfxGetDrawContextMemory(dctx);
+    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+
+    afxNat secCnt = 0;
+    afxNat secIdxRemap[16] = { 0 };
+    afxNat secRange[16] = { 0 };
+    afxNat secStride[16] = { 0 };
+    afxNat attrCnt = blueprint->attrCnt;
+    afxNat totalBufSiz = 0;
+
+    for (afxNat i = 0; i < attrCnt; i++)
+    {
+        afxVertexRowBlueprint const* spec = &blueprint->spec[i];
+        afxBool found = FALSE;
+        afxNat secIdx;
+
+        for (afxNat j = 0; j < secCnt; j++)
+        {
+            if ((found = (spec->secIdx == secIdxRemap[j])))
+            {
+                secIdx = j;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            secIdx = secCnt;
+            secIdxRemap[secIdx] = blueprint->spec[i].secIdx;
+            secCnt++;
+        }
+
+        afxVertexFormat fmt = spec->fmt ? spec->fmt : spec->srcFmt;
+        AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
+        afxNat attrSiz = AfxVertexFormatGetSize(fmt);
+        afxNat attrArraySiz = AFX_ALIGN(attrSiz * blueprint->cap, AFX_SIMD_ALIGN);
+        totalBufSiz += attrArraySiz;
+        secRange[secIdx] += attrArraySiz;
+        secStride[secIdx] += attrSiz;
+    }
+
+    if (!(vbuf->base.sections = AfxAllocate(mem, secCnt * sizeof(vbuf->base.sections[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    else
+    {
+        AfxAssert(totalBufSiz);
+
+        afxBufferSpecification bufSpec =
+        {
+            totalBufSiz,
+            AFX_BUF_USAGE_VERTEX,
+            NIL
+        };
+
+        if (AfxAcquireBuffers(dctx, 1, &vbuf->base.buf, &bufSpec)) AfxThrowError();
+        else
+        {
+            afxNat nextSecBase = 0;
+            vbuf->base.secCnt = 0;
+
+            for (afxNat i = 0; i < secCnt; i++)
+            {
+                vbuf->base.sections[i].base = nextSecBase;
+                vbuf->base.sections[i].range = secRange[i];
+                vbuf->base.sections[i].stride = secStride[i];
+
+                nextSecBase += vbuf->base.sections[i].range;
+                ++vbuf->base.secCnt;
+            }
+
+            if (!(vbuf->base.attrs = AfxAllocate(mem, attrCnt * sizeof(vbuf->base.attrs[0]), 0, AfxSpawnHint()))) AfxThrowError();
+            else
+            {
+                afxNat nextAttrOffset[16] = { 0 };
+                vbuf->base.attrCnt = 0;
+
+                for (afxNat i = 0; i < attrCnt; i++)
+                {
+                    afxVertexRowBlueprint const* spec = &blueprint->spec[i];
+                    AfxCloneString(&vbuf->base.attrs[i].semantic, &spec->semantic.str);
+                    
+                    afxVertexFormat fmt = spec->fmt ? spec->fmt : spec->srcFmt;
+                    AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
+                    vbuf->base.attrs[i].fmt = fmt;
+                    afxNat attrSiz = AfxVertexFormatGetSize(fmt);
+                    
+                    afxNat secIdx = 0;
+                    afxBool found = FALSE;
+
+                    for (afxNat j = 0; j < secCnt; j++)
+                    {
+                        if ((found = (spec->secIdx == secIdxRemap[j])))
+                        {
+                            secIdx = j;
+                            break;
+                        }
+                    }
+
+                    vbuf->base.attrs[i].secIdx = secIdx;
+                    vbuf->base.attrs[i].usage = spec->usage;
+                    vbuf->base.attrs[i].offset = nextAttrOffset[secIdx];
+                    nextAttrOffset[secIdx] += attrSiz;
+
+                    vbuf->base.attrCnt++;
+
+                    if (spec->src)
+                    {
+                        AfxAssertRange(AFX_VTX_FMT_TOTAL, spec->srcFmt, 1);
+
+                        if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, spec->src, spec->srcFmt, spec->srcStride))
+                            AfxThrowError();
+                    }
+                }
+
+                if (err)
+                {
+                    AfxAssert(vbuf->base.attrs);
+                    AfxDeallocate(mem, vbuf->base.attrs);
+                }
+            }
+
+            if (err)
+                AfxReleaseObjects(1, (void*[]) { vbuf->base.buf });
+        }
+
+
+        if (err)
+        {
+            AfxAssert(vbuf->base.sections);
+            AfxDeallocate(mem, vbuf->base.sections);
         }
     }
     return err;
@@ -474,6 +641,8 @@ _SGL afxError _SglIbufDtor(afxIndexBuffer ibuf)
     AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
     AfxDeallocate(mem, ibuf->base.regions);
+
+    AfxReleaseObjects(1, (void*[]) { ibuf->base.buf });
 
     return err;
 }
@@ -570,7 +739,7 @@ _SGL afxClassConfig _SglVbufClsConfig =
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxVertexBuffer)),
     .ctx = NIL,
-    .ctor = (void*)_SglVbufCtor,
+    .ctor = (void*)_SglVbufCtorNEW,
     .dtor = (void*)_SglVbufDtor
 };
 

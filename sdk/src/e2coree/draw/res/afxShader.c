@@ -500,7 +500,7 @@ _AFX afxError AfxUploadShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[],
                             }
 
                             afxUri tmpUri;
-                            AfxUriReflectString(&tmpUri, &tmp.str);
+                            AfxReflectUriString(&tmpUri, &tmp.str);
                             AfxShaderBlueprintRename(&blueprint, &tmpUri);
 
                             if (AfxBuildShaders(dctx, 1, &shd[i], &blueprint)) AfxThrowError();

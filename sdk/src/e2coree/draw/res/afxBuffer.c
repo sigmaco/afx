@@ -35,11 +35,9 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxS
     if (!map) AfxThrowError();
     else
     {
-        afxByte const *bytemap = &(map[offset]);
-
         if (!dstStride || dstStride == stride)
         {
-            AfxCopy(dst, bytemap, (cnt * stride));
+            AfxCopy(dst, map, (cnt * stride));
         }
         else
         {
@@ -47,7 +45,7 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxS
 
             for (afxNat i = 0; i < cnt; i++)
             {
-                AfxCopy(&(dst2[i * dstStride]), &(bytemap[i * stride]), stride);
+                AfxCopy(&(dst2[i * dstStride]), &(map[i * stride]), stride);
             }
         }
 
@@ -72,7 +70,7 @@ _AFX afxError AfxDumpBuffer(afxBuffer buf, afxSize base, afxSize range, void *ds
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(dst, &map[base], range);
+        AfxCopy(dst, map, range);
 
         AfxUnmapBufferRange(buf);
     }
@@ -94,11 +92,9 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, af
     if (!map) AfxThrowError();
     else
     {
-        afxByte *bytemap = &(map[offset]);
-
         if (srcStride == stride)
         {
-            AfxCopy(bytemap, src, (cnt * stride));
+            AfxCopy(map, src, (cnt * stride));
         }
         else
         {
@@ -110,7 +106,7 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, af
                 AfxAssert(stride != 2 || (stride == 2 && AFX_N16_MAX >= (afxNat16)(src2[i * srcStride])));
                 AfxAssert(stride != 4 || (stride == 4 && AFX_N32_MAX >= (afxNat32)(src2[i * srcStride])));
 
-                AfxCopy(&(bytemap[i * stride]), &(src2[i * srcStride]), stride);
+                AfxCopy(&(map[i * stride]), &(src2[i * srcStride]), stride);
             }
         }
 
@@ -133,7 +129,7 @@ _AFX afxError AfxUpdateBuffer(afxBuffer buf, afxSize base, afxSize range, void c
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(&map[base], src, range);
+        AfxCopy(map, src, range);
 
         AfxUnmapBufferRange(buf);
     }

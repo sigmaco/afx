@@ -340,7 +340,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
         if (!err)
         {
             AfxAssert(pip->base.shaderCnt == shaderCnt);
-            afxLegoBlueprint legb[/*_SGL_MAX_LEGO_PER_BIND*/4];
+            afxPipelineRigBlueprint legb[/*_SGL_MAX_LEGO_PER_BIND*/4];
 
             for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
             {
@@ -376,7 +376,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 {
                     if (AfxGetArrayPop(&legb[i].bindings))
                     {
-                        if (AfxBuildLegos(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
+                        if (AfxBuildPipelineRigs(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
                         {
                             AfxThrowError();
                         }
@@ -414,9 +414,9 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                         for (afxNat j = 0; j < shd->base.ioDeclCnt; j++)
                         {
                             pip->base.ins[pip->base.inCnt].location = shd->base.ioDecls[j].location;
-                            pip->base.ins[pip->base.inCnt].binding = pip->base.ins[pip->base.inCnt].location;
+                            //pip->base.ins[pip->base.inCnt].binding = pip->base.ins[pip->base.inCnt].location;
                             pip->base.ins[pip->base.inCnt].format = shd->base.ioDecls[j].fmt;
-                            pip->base.ins[pip->base.inCnt].offset = 0;
+                            //pip->base.ins[pip->base.inCnt].offset = 0;
                             pip->base.inCnt++;
                         }
                         break;

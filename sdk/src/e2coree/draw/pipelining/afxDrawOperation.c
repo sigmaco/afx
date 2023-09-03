@@ -530,7 +530,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                             }
 
                             afxUri tmpUri;
-                            AfxUriReflectString(&tmpUri, &tmp.str);
+                            AfxReflectUriString(&tmpUri, &tmp.str);
                             AfxDrawOperationBlueprintRename(&blueprint, &tmpUri);
 
                             if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();

@@ -20,6 +20,7 @@
 #include "afxSoundContext.h"
 #include "afx/core/afxClass.h"
 #include "afx/core/afxSystem.h"
+#include "afx/core/afxSource.h"
 
 AFX_DEFINE_HANDLE(afxSoundSystem);
 
@@ -269,7 +270,7 @@ AFX_EXTERN_API_FUNC(afxPlayingID, PostEvent)
     afxCallbackFunc in_pfnCallback,           ///< Callback function
     void * in_pCookie,                       ///< Callback cookie that will be sent to the callback function along with additional information
     afxNat32 in_cExternals,                     ///< Optional count of external source structures
-    afxExternalSourceInfo *in_pExternalSources,///< Optional array of external source resolution information
+    afxSource *in_pExternalSources,///< Optional array of external source resolution information
     afxPlayingID in_PlayingID ///< Optional (advanced users only) Specify the playing ID to target with the event. Will Cause active actions in this event to target an existing Playing ID. Let it be AK_INVALID_PLAYING_ID or do not specify any for normal playback.
     );
 
@@ -288,7 +289,7 @@ AFX_EXTERN_API_FUNC(afxPlayingID, PostEvent_)
     afxCallbackFunc in_pfnCallback,           ///< Callback function
     void * in_pCookie,                       ///< Callback cookie that will be sent to the callback function along with additional information.
     afxNat32 in_cExternals,                     ///< Optional count of external source structures
-    afxExternalSourceInfo *in_pExternalSources, ///< Optional array of external source resolution information
+    afxSource *in_pExternalSources, ///< Optional array of external source resolution information
     afxPlayingID in_PlayingID ///< Optional (advanced users only) Specify the playing ID to target with the event. Will Cause active actions in this event to target an existing Playing ID. Let it be AK_INVALID_PLAYING_ID or do not specify any for normal playback.
     );
 

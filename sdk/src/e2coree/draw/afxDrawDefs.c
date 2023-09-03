@@ -232,12 +232,15 @@ afxChar const * const vtxFmtNames[] =
 _AFX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
+    AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
     return vtxFmtSizes[fmt];
 }
 
 _AFX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz)
 {
+    afxError err = AFX_ERR_NONE;
+    AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
+
     static struct { afxFormat subfmt; afxSize vecSiz; afxSize siz; afxSize subsiz; } list[] =
     {
         { AFX_FMT_REAL, 1, sizeof(afxReal), sizeof(afxReal) }, // AFX_FMT_REAL,

@@ -183,9 +183,6 @@
     <ClInclude Include="..\..\inc\afx\draw\io\afxTarga.h">
       <Filter>e2coree\draw\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxLego.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipeline.h">
       <Filter>e2coree\draw\pipelining</Filter>
     </ClInclude>
@@ -420,6 +417,12 @@
     <ClInclude Include="..\..\inc\afx\core\afxApplication.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxSource.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h">
+      <Filter>e2coree\draw\pipelining</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\afx\README.md">
@@ -485,9 +488,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c">
       <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxLego.c">
-      <Filter>e2coree\draw\pipelining</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c">
       <Filter>e2coree\draw\pipelining</Filter>
@@ -734,6 +734,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxApplication.c">
       <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c">
+      <Filter>e2coree\draw\pipelining</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

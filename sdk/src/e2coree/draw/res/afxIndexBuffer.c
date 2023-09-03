@@ -93,43 +93,48 @@ _AFXINL afxError AfxIndexBufferBlueprintPushRegion(afxIndexBufferBlueprint *blue
     return err;
 }
 
-_AFX void AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat32 *baseOffset, afxNat *idxCnt, afxNat *idxSiz)
+_AFX void AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat32* baseOffset, afxNat32* idxCnt, afxNat32* idxSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
     AfxAssert(rgnIdx < ibuf->regionCnt);
     
-    AfxAssert(baseOffset);
-    *baseOffset = ibuf->regions[rgnIdx].baseOffset;
+    if (baseOffset)
+        *baseOffset = ibuf->regions[rgnIdx].baseOffset;
 
-    AfxAssert(idxCnt);
-    *idxCnt = ibuf->regions[rgnIdx].idxCnt;
+    if (idxCnt)
+        *idxCnt = ibuf->regions[rgnIdx].idxCnt;
 
-    AfxAssert(idxSiz);
-    *idxSiz = ibuf->regions[rgnIdx].idxSiz;
+    if (idxSiz)
+        *idxSiz = ibuf->regions[rgnIdx].idxSiz;
 }
 
-_AFX afxError AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, void(*f)(void const *vtx, void*data), void *data)
+_AFX afxError AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, void(*f)(void const *vtx, void*data), void *data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
-    AfxAssert(ibuf->regionCnt > rgnIdx);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= idxCnt);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= baseIdx + idxCnt);
-    AfxAssert(idxCnt);
+    AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
+    AfxAssertRange(ibuf->regions[rgnIdx].idxCnt, baseIdx, idxCnt);
     
     AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
 
-    AfxAssert(vbuf->rowCnt > rowIdx);
-    AfxAssert(vbuf->cap > baseVtx);
+    AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
+    AfxAssertRange(vbuf->cap, baseVtx, 1);
+
+    afxNat secBase = vbuf->sections[vbuf->attrs[attrIdx].secIdx].base;
+    afxNat secRange = vbuf->sections[vbuf->attrs[attrIdx].secIdx].range;
+    afxNat secStride = vbuf->sections[vbuf->attrs[attrIdx].secIdx].stride;
+    afxNat attrOffset = vbuf->attrs[attrIdx].offset;
+    afxNat attrSiz = AfxVertexFormatGetSize(vbuf->attrs[attrIdx].fmt);
+
+    AfxAssertRange(secRange, secStride * baseVtx, secStride * 1);
+    afxByte* vertices = AfxMapBufferRange(vbuf->buf, secBase + (secStride * baseVtx), secRange - (secBase + (secStride * baseVtx)), AFX_BUF_MAP_R);
 
     afxNat stride = AfxIndexBufferGetStride(ibuf, rgnIdx);
-    afxNat vtxStride = AfxVertexBufferGetStride(vbuf, rowIdx);
-    afxByte const *vertices = AfxMapBufferRange(vbuf->buf, AfxVertexBufferGetOffset(vbuf, baseVtx, rowIdx), vtxStride * vbuf->cap, AFX_BUF_MAP_R);
     afxByte const *indices = AfxMapBufferRange(ibuf->buf, AfxIndexBufferGetOffset(ibuf, rgnIdx, baseIdx), stride * idxCnt, AFX_BUF_MAP_R);
     
     for (afxNat i = 0; i < idxCnt; i++)
-        f(&(vertices[indices[i * stride] * vtxStride]), data);
+        f(&(vertices[indices[i * stride] * secStride]) + attrOffset, data);
 
     AfxUnmapBufferRange(vbuf->buf);
     AfxUnmapBufferRange(ibuf->buf);

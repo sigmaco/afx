@@ -69,11 +69,11 @@ AFX_DEFINE_STRUCT(_afxDcmdVmt)
     void(*setScissor)(afxDrawScript, afxNat first, afxNat cnt, afxRect const rect[]);
 
     void(*bindBuffers)(afxDrawScript, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-    void(*bindVertexBuffers)(afxDrawScript, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[]);
-    void(*bindVertexBuffers2)(afxDrawScript, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const stride[]);
-    void(*bindManagedVertexBuffers)(afxDrawScript, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[]);
+    void(*bindVertexStreams)(afxDrawScript, afxNat first, afxNat cnt, afxVertexInputStream const spec[]);
+    void(*setVertexInputLayout)(afxDrawScript, afxNat cnt, afxVertexInputPoint const spec[]);
+    void(*bindManagedVertexStreams)(afxDrawScript, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor);
     void(*bindIndexBuffer)(afxDrawScript, afxBuffer buf, afxNat offset, afxNat idxSiz);
-    void(*bindManagedIndexBuffer)(afxDrawScript, afxIndexBuffer ibuf, afxNat rgnIdx);
+    void(*bindManagedIndexStream)(afxDrawScript, afxIndexBuffer ibuf, afxNat rgnIdx);
     void(*bindTextures)(afxDrawScript, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxTexture tex[]);
 
     void(*draw)(afxDrawScript, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);

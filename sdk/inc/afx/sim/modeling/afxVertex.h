@@ -63,7 +63,7 @@ AFX_DEFINE_STRUCT(afxVertexLayout)
 AFX afxBool AfxSimulationDescribeVertexLayout(afxSimulation sim, afxNat idx, afxVertexLayout *layout);
 AFX afxBool AfxSimulationChooseVertexLayout(afxSimulation sim, afxVertexLayout const *layout, afxNat *idx);
 
-AFX afxNat AfxGetVertexSize(afxVertexLayout const *layout);
+//AFX afxNat AfxGetVertexSize(afxVertexLayout const *layout);
 AFX afxNat AfxGetVertexPositionalSize(afxVertexLayout const *layout);
 AFX afxNat AfxGetVertexSpatialSize(afxVertexLayout const *layout);
 AFX afxNat AfxGetVertexAggregatedSize(afxVertexLayout const *layout);

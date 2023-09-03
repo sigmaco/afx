@@ -141,7 +141,7 @@ AFX_OBJECT(afxSimulation)
 };
 #endif
 
-AFX afxError        AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], void *spec);
+AFX afxError        AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
 
 AFX afxError        AfxAcquireSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxUri const uri[]);
 AFX afxError        AfxBuildSkeletons(afxSimulation sim, afxNat cnt, afxSkeleton skl[], afxSkeletonBlueprint blueprint[]);

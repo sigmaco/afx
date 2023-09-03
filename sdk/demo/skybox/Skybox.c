@@ -33,6 +33,34 @@ afxUri2048 uri;
  afxReal64 dt = 0;
  afxNat fps = 0;
 
+afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw thread
+{
+    afxError err = AFX_ERR_NONE;
+    afxRenderer rnd = AfxGetDrawInputUdd(din);
+    afxDrawContext dctx;
+    AfxGetConnectedDrawInputContext(din, &dctx);
+    afxDrawScript dscr;
+    afxNat unitIdx;
+    AfxGetThreadingUnit(&unitIdx);
+
+    afxNat outBufIdx = 0;
+    AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
+    rnd->activeOutputBufIdx = outBufIdx;
+    afxTexture surf;
+    AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
+    AfxAssertObjects(1, &surf, AFX_FCC_TEX);
+
+    AfxRendererBeginScene(rnd, rnd->activeCamera, NIL, surf);
+    AfxRendererDrawSky(rnd, TRUE);
+
+    AfxRendererEndScene(rnd);
+
+    if (AfxSubmitPresentations(rnd->din, 1, &dout, &rnd->activeOutputBufIdx)) // draw output count hardcoded to 1.
+        AfxThrowError();
+
+    return err;
+}
+
 void UpdateFrameMovement(const afxReal DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
@@ -121,22 +149,22 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutConfig.endpoint = &uriMap;
     AfxAcquireDrawOutputs(dsys, 1, &dout, &doutConfig);
-    AfxAssert(dout);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
-    AfxAcquireRenderers(sim, 1, &rnd, NIL);
+    afxRendererConfig rndConf = { 0 };
+    rndConf.dinProc = DinFetcherFn;
+    AfxAcquireRenderers(sim, 1, &rnd, &rndConf);
     
     AfxRendererBindOutput(rnd, dout);
 
-    
-    AfxWrapStringLiteral(&str, "viewer", 0);
     AfxAcquireCameras(sim, 1, &cam);
     AfxAssert(cam);
 
     rnd->activeCamera = cam;
 
-    kbd = AfxFindKeyboard(0);
-    mse = AfxFindMouse(0);
+    AfxGetKeyboard(0, &kbd);
+    AfxGetMouse(0, &mse);
     AfxObjectInstallEventFilter(mse, cam);
     
     AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
