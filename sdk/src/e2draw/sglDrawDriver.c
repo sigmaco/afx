@@ -1802,13 +1802,13 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                                 if (0 == unitIdx)
                                                 {
                                                     GLint n = 0;
-                                                    gl->GetIntegerv(GL_NUM_EXTENSIONS, &n);
-                                                    AfxLogMessageFormatted(0xFF00FF00, "\n Listing #%03u \"core\" GL supported extensions.", n);
+                                                    gl->GetIntegerv(GL_NUM_EXTENSIONS, &n); _SglThrowErrorOccuried();
+                                                    AfxEcho("Listing #%03u \"core\" GL supported extensions.", n);
 
                                                     for (GLint i = 0; i < n; i++)
                                                     {
-                                                        const char* extension = (const char*)gl->GetStringi(GL_EXTENSIONS, i);
-                                                        AfxLogMessageFormatted(0xFF00FF00, "\n %.3i: %s", i, extension);
+                                                        const char* extension = (const char*)gl->GetStringi(GL_EXTENSIONS, i); _SglThrowErrorOccuried();
+                                                        AfxEcho("%.3u %s ext found.", i, extension);
                                                     }
                                                 }
 
@@ -1874,10 +1874,10 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             afxString ver;
             AfxWrapStringLiteral(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
             AfxScanString(&ver, "%u.%u.%u", &dpu->verMajor, &dpu->verMinor, &dpu->verPatch);
-            gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(dpu->verMajor));
-            gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(dpu->verMinor));
-            AfxWrapStringLiteral(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0);
-            AfxWrapStringLiteral(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0);
+            gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(dpu->verMajor)); _SglThrowErrorOccuried();
+            gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(dpu->verMinor)); _SglThrowErrorOccuried();
+            AfxWrapStringLiteral(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
+            AfxWrapStringLiteral(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
 
             AfxLogMessageFormatted(0xFFFF0000, "\n Opening the Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
 
@@ -1887,116 +1887,116 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             AfxAssist("%s", _wglGetExtensionsStringARB(dpu->dc));
 
             //gl->Enable(GL_FRAMEBUFFER_SRGB);
-            gl->Enable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+            gl->Enable(GL_TEXTURE_CUBE_MAP_SEAMLESS); _SglThrowErrorOccuried();
 
             GLfloat dataf;
             GLfloat dataf2[3];
             GLint datai;
             GLint datai2[3];
             afxDrawDeviceLimits limits = { 0 };
-            gl->GetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &datai);
+            gl->GetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &datai); _SglThrowErrorOccuried();
             limits.maxSampleMaskWords = datai;
-            gl->GetIntegerv(GL_MAX_CLIP_DISTANCES, &datai);
+            gl->GetIntegerv(GL_MAX_CLIP_DISTANCES, &datai); _SglThrowErrorOccuried();
             limits.maxClipDistances = datai; // at least 8
 
-            gl->GetIntegerv(GL_MAX_VIEWPORTS, &datai);
+            gl->GetIntegerv(GL_MAX_VIEWPORTS, &datai); _SglThrowErrorOccuried();
             limits.maxViewports = datai; // at least 16
-            gl->GetIntegerv(GL_MAX_VIEWPORT_DIMS, datai2);
+            gl->GetIntegerv(GL_MAX_VIEWPORT_DIMS, datai2); _SglThrowErrorOccuried();
             limits.maxViewportDimensions[0] = datai2[0];
             limits.maxViewportDimensions[1] = datai2[1];
-            gl->GetFloatv(GL_VIEWPORT_BOUNDS_RANGE, dataf2);
+            gl->GetFloatv(GL_VIEWPORT_BOUNDS_RANGE, dataf2); _SglThrowErrorOccuried();
             limits.viewportBoundsRange[0] = dataf2[0];  // at least [-32768, 32767]
             limits.viewportBoundsRange[1] = dataf2[1];  // at least [-32768, 32767]
-            gl->GetIntegerv(GL_VIEWPORT_SUBPIXEL_BITS, &datai);
+            gl->GetIntegerv(GL_VIEWPORT_SUBPIXEL_BITS, &datai); _SglThrowErrorOccuried();
             limits.viewportSubPixelBits = datai; // at least 0
 
-            gl->GetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &datai);
+            gl->GetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &datai); _SglThrowErrorOccuried();
             limits.maxColorAttachments = datai; // at least 16384
-            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, &datai);
+            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, &datai); _SglThrowErrorOccuried();
             limits.maxFramebufferWidth = datai; // at least 16384
-            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_HEIGHT, &datai);
+            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_HEIGHT, &datai); _SglThrowErrorOccuried();
             limits.maxFramebufferHeight = datai; // at least 16384
-            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS, &datai);
+            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS, &datai); _SglThrowErrorOccuried();
             limits.maxFramebufferLayers = datai; // at least 2048
-            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_SAMPLES, &datai);
+            gl->GetIntegerv(GL_MAX_FRAMEBUFFER_SAMPLES, &datai); _SglThrowErrorOccuried();
             limits.framebufferNoAttachmentsSampleCounts = datai; // at least 4
 
-            gl->GetIntegerv(GL_MAX_TEXTURE_SIZE, &datai);
+            gl->GetIntegerv(GL_MAX_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
             limits.maxImageDimension1D = datai; // at least 1024
             limits.maxImageDimension2D = datai; // at least 1024
-            gl->GetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &datai);
+            gl->GetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
             limits.maxImageDimension3D = datai; // at least 64
-            gl->GetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &datai);
+            gl->GetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &datai); _SglThrowErrorOccuried();
             limits.maxImageArrayLayers = datai; // at least 256
-            gl->GetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &datai);
+            gl->GetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
             limits.maxImageDimensionCube = datai; // at least 1024
-            gl->GetFloatv(GL_MAX_TEXTURE_LOD_BIAS, &dataf);
+            gl->GetFloatv(GL_MAX_TEXTURE_LOD_BIAS, &dataf); _SglThrowErrorOccuried();
             limits.maxSamplerLodBias = dataf; // at least 2.0
 
-            gl->GetIntegerv(GL_MAX_INTEGER_SAMPLES, &datai);
+            gl->GetIntegerv(GL_MAX_INTEGER_SAMPLES, &datai); _SglThrowErrorOccuried();
             limits.sampledImageIntegerSampleCounts = datai;
-            gl->GetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &datai);
+            gl->GetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
             limits.sampledImageColorSampleCounts = datai;
             limits.framebufferColorSampleCounts = datai;
-            gl->GetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &datai);
+            gl->GetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
             limits.sampledImageDepthSampleCounts = datai;
             limits.sampledImageStencilSampleCounts = datai;
             limits.framebufferDepthSampleCounts = datai;
             limits.framebufferStencilSampleCounts = datai;
 
-            gl->GetIntegerv(GL_MIN_MAP_BUFFER_ALIGNMENT, &datai);
+            gl->GetIntegerv(GL_MIN_MAP_BUFFER_ALIGNMENT, &datai); _SglThrowErrorOccuried();
             limits.minMemoryMapAlignment = datai; // at least 64
-            gl->GetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &datai);
+            gl->GetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
             limits.minStorageBufferOffsetAlignment = datai; // at least 64
-            gl->GetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &datai);
+            gl->GetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
             limits.minTexelBufferOffsetAlignment = datai; // at least 64
-            gl->GetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &datai);
+            gl->GetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
             limits.minUniformBufferOffsetAlignment = datai; // at least 64
 
-            gl->GetFloatv(GL_POINT_SIZE_RANGE, dataf2);
+            gl->GetFloatv(GL_POINT_SIZE_RANGE, dataf2); _SglThrowErrorOccuried();
             limits.pointSizeRange[0] = dataf2[0]; // at least 1
             limits.pointSizeRange[1] = dataf2[1]; // at least 1
-            gl->GetFloatv(GL_POINT_SIZE_GRANULARITY, &dataf);
+            gl->GetFloatv(GL_POINT_SIZE_GRANULARITY, &dataf); _SglThrowErrorOccuried();
             limits.pointSizeGranularity = dataf;
-            gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, dataf2);
+            gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, dataf2); _SglThrowErrorOccuried();
             limits.lineWidthRange[0] = dataf2[0];
             limits.lineWidthRange[1] = dataf2[1];
-            gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_GRANULARITY, &dataf);
+            gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_GRANULARITY, &dataf); _SglThrowErrorOccuried();
             limits.lineWidthGranularity = dataf;
 
-            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIBS, &datai);
+            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIBS, &datai); _SglThrowErrorOccuried();
             limits.maxVertexInputAttributes = datai; // at least 16
-            gl->GetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &datai);
+            gl->GetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
             limits.maxVertexOutputComponents = datai; // at least 64
-            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &datai);
+            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &datai); _SglThrowErrorOccuried();
             limits.maxVertexInputBindings = datai;
-            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &datai);
+            gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &datai); _SglThrowErrorOccuried();
             limits.maxVertexInputAttributeOffset = datai;
-            gl->GetIntegerv(GL_VERTEX_BINDING_STRIDE, &datai);
+            gl->GetIntegerv(GL_VERTEX_BINDING_STRIDE, &datai); _SglThrowErrorOccuried();
             limits.maxVertexInputBindingStride = datai;
 
-            gl->GetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &datai);
+            gl->GetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
             limits.maxFragmentInputComponents = datai; // at least 128
-            gl->GetIntegerv(GL_MAX_DRAW_BUFFERS, &datai);
+            gl->GetIntegerv(GL_MAX_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
             limits.maxFragmentOutputAttachments = datai; // at least 8
-            gl->GetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, &datai);
+            gl->GetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
             limits.maxFragmentDualSrcAttachments = datai; // at least 1
             
-            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &datai);
+            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &datai); _SglThrowErrorOccuried();
             limits.maxComputeWorkGroupInvocations = datai;
-            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_COUNT, datai2);
+            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_COUNT, datai2); _SglThrowErrorOccuried();
             limits.maxComputeWorkGroupCount[0] = datai2[0];
             limits.maxComputeWorkGroupCount[1] = datai2[1];
             limits.maxComputeWorkGroupCount[2] = datai2[2];
-            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_SIZE, datai2);
+            gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_SIZE, datai2); _SglThrowErrorOccuried();
             limits.maxComputeWorkGroupSize[0] = datai2[0];
             limits.maxComputeWorkGroupSize[1] = datai2[1];
             limits.maxComputeWorkGroupSize[2] = datai2[2];
 
 
-            gl->GetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &datai);
+            gl->GetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
             limits.maxGeometryInputComponents = datai; // at least 64
-            gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &datai);
+            gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
             limits.maxGeometryOutputComponents = datai; // at least 128
 
             limits.maxBoundDescriptorSets = 4;

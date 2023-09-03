@@ -1047,7 +1047,7 @@ _AFX void AfxChooseDrawSystemConfiguration(afxDrawSystemConfig *config, afxNat e
 _AFX afxClassConfig _AfxDsysClsConfig =
 {
     .fcc = AFX_FCC_DSYS,
-    .name = "Draw System",
+    .name = "Draw I/O System",
     .maxCnt = 1,
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawSystem)),

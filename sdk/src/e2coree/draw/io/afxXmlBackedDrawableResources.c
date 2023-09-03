@@ -49,7 +49,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             else if (0 == AfxCompareString(name, &g_str_name))
             {
                 afxUri tmpUri;
-                AfxUriReflectString(&tmpUri, content);
+                AfxReflectUriString(&tmpUri, content);
 
                 AfxShaderBlueprintRename(blueprint, &tmpUri);
             }
@@ -82,7 +82,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     if (0 == AfxCompareString(name, &g_str_uri))
                     {
                         afxUri uri;
-                        AfxUriReflectString(&uri, content);
+                        AfxReflectUriString(&uri, content);
 
                         if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                             AfxThrowError();
@@ -98,7 +98,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                 if (content && !AfxStringIsEmpty(content))
                 {
                     afxUri uri;
-                    AfxUriReflectString(&uri, content);
+                    AfxReflectUriString(&uri, content);
 
                     if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                         AfxThrowError();
@@ -530,7 +530,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
             if (0 == AfxCompareString(name, &g_str_name))
             {
                 afxUri tmpUri;
-                AfxUriReflectString(&tmpUri, content);
+                AfxReflectUriString(&tmpUri, content);
                 AfxCopyUri(&blueprint->uri.uri , &tmpUri);
             }
             else
@@ -565,7 +565,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
                     else if (0 == AfxCompareString(name, &g_str_uri))
                     {
                         afxUri tempUri;
-                        AfxUriReflectString(&tempUri, content);
+                        AfxReflectUriString(&tempUri, content);
 
                         if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                             AfxThrowError();
@@ -582,7 +582,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
                 if (content && !AfxStringIsEmpty(content))
                 {
                     afxUri tempUri;
-                    AfxUriReflectString(&tempUri, content);
+                    AfxReflectUriString(&tempUri, content);
                     AfxEcho("%.*s", AfxPushString(AfxUriGetStringConst(&tempUri)));
 
                     if (AfxPipelineBlueprintAddShaders(blueprint, 1, &tempUri))
@@ -653,7 +653,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             if (0 == AfxCompareString(name, &g_str_name))
             {
                 afxUri tmpUri;
-                AfxUriReflectString(&tmpUri, content);
+                AfxReflectUriString(&tmpUri, content);
                 AfxDrawOperationBlueprintRename(blueprint, &tmpUri);
             }
             else
@@ -748,7 +748,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                             else if (0 == AfxCompareString(name, &g_str_uri))
                                             {
                                                 afxUri tempUri;
-                                                AfxUriReflectString(&tempUri, content);
+                                                AfxReflectUriString(&tempUri, content);
 
                                                 if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                     AfxThrowError();
@@ -765,7 +765,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                         if (content && !AfxStringIsEmpty(content))
                                         {
                                             afxUri tempUri;
-                                            AfxUriReflectString(&tempUri, content);
+                                            AfxReflectUriString(&tempUri, content);
 
                                             if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                 AfxThrowError();

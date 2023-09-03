@@ -205,7 +205,7 @@ AFX_OBJECT(afxKeyboard)
 #endif
 
 AFX afxNat      AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[]);
-AFX afxKeyboard AfxFindKeyboard(afxNat port);
+AFX afxBool     AfxGetKeyboard(afxNat port, afxKeyboard* kbd);
 
 AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxKeyboard kbd[], afxNat port[]);
 

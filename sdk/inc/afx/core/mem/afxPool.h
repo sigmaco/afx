@@ -23,9 +23,9 @@
 
 AFX_DEFINE_STRUCT(afxPoolPage)
 {
-    afxNat32        usage;
     afxNat          usedCnt;
-    afxByte*        bytes;
+    afxNat32        usage;
+    afxByte*        data;
 };
 
 AFX_DEFINE_STRUCT(afxPool)
@@ -36,17 +36,17 @@ AFX_DEFINE_STRUCT(afxPool)
     afxNat          totalUsedCnt;
     afxNat          pageCnt;
     afxPoolPage*    pages;
-    afxContext       mem;
+    afxContext      mem;
 };
 
 AFX void        AfxAcquirePool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage);
 AFX void        AfxReleasePool(afxPool* pool);
 
-AFX afxError    AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
-AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxSize idx[]);
+AFX afxByte*    AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
+AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[]);
 
-AFX void        AfxDeallocatePoolUnit(afxPool* pool, afxSize idx);
-AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxSize const idx[]);
+AFX void        AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit);
+AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[]);
 
 AFX afxBool     AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);

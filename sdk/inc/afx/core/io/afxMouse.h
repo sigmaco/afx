@@ -48,7 +48,7 @@ AFX_OBJECT(afxMouse)
 #endif
 
 AFX afxNat      AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[]);
-AFX afxMouse    AfxFindMouse(afxNat port);
+AFX afxBool     AfxGetMouse(afxNat port, afxMouse* mse);
 
 AFX afxError    AfxAcquireMouses(afxNat cnt, afxMouse mse[], afxNat port[]);
 

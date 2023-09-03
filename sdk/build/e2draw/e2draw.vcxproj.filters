@@ -32,9 +32,6 @@
     <ClCompile Include="..\..\src\e2draw\sglDrawScript.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglLego.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglPipeline.c">
       <Filter>e2draw</Filter>
     </ClCompile>
@@ -54,6 +51,9 @@
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglDrawDriver.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglPipelineRig.c">
       <Filter>e2draw</Filter>
     </ClCompile>
   </ItemGroup>

@@ -82,6 +82,7 @@ typedef enum afxFcc
     AFX_FCC_STRF    = AfxPackFcc('s', 't', 'r', 'f'), // afxString
 #endif
     AFX_FCC_URI     = AfxPackFcc('u', 'r', 'i', '\0'), // afxUri
+    AFX_FCC_SRC     = AfxPackFcc('s', 'r', 'c', '\0'), // afxSource
     AFX_FCC_SIG     = AfxPackFcc('s', 'i', 'g', '\0'), // afxSignal
     AFX_FCC_SIGH    = AfxPackFcc('s', 'i', 'g', 'h'), // afxSignalHandler
     AFX_FCC_SIGC    = AfxPackFcc('s', 'i', 'g', 'c'), // afxSignalConnection
@@ -159,8 +160,8 @@ typedef enum afxFcc
     AFX_FCC_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     AFX_FCC_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     AFX_FCC_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
-    AFX_FCC_LEGT2    = AfxPackFcc('l', 'e', 'g', 't'), // afxLego
-    AFX_FCC_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxLego
+    AFX_FCC_LEGT2    = AfxPackFcc('l', 'e', 'g', 't'), // afxPipelineRig
+    AFX_FCC_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxPipelineRig
     AFX_FCC_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
     AFX_FCC_SHDB    = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint
     AFX_FCC_PIPB    = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint

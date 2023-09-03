@@ -22,7 +22,7 @@
 #define AFX_PIPELINE_H
 
 #include "afx/draw/res/afxShader.h"
-#include "afx/draw/pipelining/afxLego.h"
+#include "afx/draw/pipelining/afxPipelineRig.h"
 #include "afx/draw/res/afxSampler.h"
 #include "afx/core/io/afxResource.h"
 #include "afx/draw/res/afxVertexBuffer.h"
@@ -59,9 +59,9 @@ typedef enum
 AFX_DEFINE_STRUCT(afxPipelineInputStream) // vertex attribute input stream
 {
     afxNat8             location; // is the shader input location number for this attribute.
-    afxNat8             binding; // is the binding number which this attribute takes its data from.
+    //afxNat8             binding; // is the binding number which this attribute takes its data from.
     afxVertexFormat     format; // is the size and type of the vertex attribute data.
-    afxNat32            offset; // is a byte offset of this attribute relative to the start of an element in the vertex input binding.
+    //afxNat32            offset; // is a byte offset of this attribute relative to the start of an element in the vertex input binding.
 };
 
 AFX_DEFINE_STRUCT(afxPipelineInputAssemblyState)
@@ -178,7 +178,7 @@ struct afxBasePipeline
     struct
     {
         afxNat                      set;
-        afxLego                     legt;
+        afxPipelineRig                     legt;
         afxBool                     resolved;
     }                               *wiring;
     afxNat                          wiringCnt;
@@ -211,7 +211,7 @@ AFX afxError            AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPi
 AFX afxError            AfxUploadPipelines(afxDrawContext dctx, afxNat cnt, afxPipeline pip[], afxUri const uri[]);
 
 AFX afxNat              AfxCountPipelineWirings(afxPipeline pip);
-AFX afxError            AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxLego *legt);
+AFX afxError            AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxPipelineRig *legt);
 
 AFX afxNat              AfxCountPipelineScissors(afxPipeline pip);
 AFX afxNat              AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[]);

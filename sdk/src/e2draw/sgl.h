@@ -164,13 +164,16 @@ typedef struct
         {
             afxBuffer                   buf;
             afxNat                      offset;
-            //afxNat                      siz;
+            afxNat                      range;
             afxNat                      stride;
+            afxBool                     inst;
+            afxNat                      instDivisor;
         }                               vertexBindings[_SGL_MAX_VBO_PER_BIND];
         afxNat                          vertexBindingCnt;
 
-        afxNat                          inStreamCnt;
-        afxPipelineInputStream          inStreams[_SGL_MAX_INSTREAM_PER_SET];
+        afxNat                          inCnt;
+        afxVertexInputPoint             ins[_SGL_MAX_INSTREAM_PER_SET];
+        
         struct
         {
             afxBuffer                   buf;
@@ -275,9 +278,9 @@ AFX_OBJECT(afxPipeline)
     afxBool         assembled;
 };
 
-AFX_OBJECT(afxLego)
+AFX_OBJECT(afxPipelineRig)
 {
-    struct afxBaseLego base;
+    struct afxBasePipelineRig base;
     int a;
 };
 
@@ -427,6 +430,7 @@ typedef enum afxDrawCmdId
 
     AFX_DCMD_BIND_BUFFERS,
     AFX_DCMD_BIND_VERTEX_BUFFERS,
+    AFX_DCMD_SET_VERTEX_INPUT_LAYOUT,
     AFX_DCMD_BIND_INDEX_BUFFER,
     AFX_DCMD_BIND_TEXTURES,
 
@@ -504,11 +508,14 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBindVbuf)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
+    afxVertexInputStream            spec[_SGL_MAX_VBO_PER_BIND];
+};
 
-    afxBuffer                       buf[_SGL_MAX_VBO_PER_BIND];
-    afxSize                         offset[_SGL_MAX_VBO_PER_BIND];
-    //afxSize                         vtxArrSiz[_SGL_MAX_VBO_PER_BIND];
-    afxSize                         vtxStride[_SGL_MAX_VBO_PER_BIND];
+AFX_DEFINE_STRUCT(_afxDscrCmdSetVtxInLayout)
+{
+    _afxDscrCmd                     cmd;
+    afxNat32                        cnt;
+    afxVertexInputPoint             spec[_SGL_MAX_VBO_PER_BIND];
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBindIbuf)
@@ -574,7 +581,7 @@ SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage,
 SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
 SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const* gl);
-SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxLego legt, glVmt const* gl);
+SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxPipelineRig legt, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl);
 
@@ -587,7 +594,7 @@ SGL BOOL SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * pp
 SGL int SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd, sglDpuIdd const *dpu);
 SGL int SglGetPixelFormat(HDC hdc, sglDpuIdd const *dpu);
 
-SGL afxLego _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxLegoBindingDecl const bindings[]);
+SGL afxPipelineRig _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
 
 SGL afxError _SglDinVmtProcCb(afxDrawThread dthr, afxDrawInput din);
 SGL afxError _SglDoutVmtProcCb(afxDrawThread dthr, afxDrawOutput dout);

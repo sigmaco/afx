@@ -31,6 +31,7 @@
     <ClInclude Include="..\..\inc\afx\core\afxInstance.h" />
     <ClInclude Include="..\..\inc\afx\core\afxRawString.h" />
     <ClInclude Include="..\..\inc\afx\core\afxSimd.h" />
+    <ClInclude Include="..\..\inc\afx\core\afxSource.h" />
     <ClInclude Include="..\..\inc\afx\core\afxString.h" />
     <ClInclude Include="..\..\inc\afx\core\afxSystem.h" />
     <ClInclude Include="..\..\inc\afx\core\afxTerminal.h" />
@@ -80,7 +81,7 @@
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxCanvas.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxCanvasBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxDrawOperation.h" />
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxLego.h" />
+    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipeline.h" />
     <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\res\afxBuffer.h" />
@@ -234,7 +235,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxLego.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c" />
     <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\res\afxIndexBuffer.c" />

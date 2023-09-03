@@ -65,7 +65,7 @@ AFX afxError                AfxIndexBufferUpdate(afxIndexBuffer ibuf, afxNat rgn
 
 AFX afxError                AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, afxVertexBuffer vbuf, afxNat rowIdx, afxNat baseVtx, void(*f)(void const *vtx, void*data), void *data);
 
-AFX void                    AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat32 *baseOffset, afxNat *idxCnt, afxNat *idxSiz);
+AFX void                    AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat32* baseOffset, afxNat32* idxCnt, afxNat32* idxSiz);
 
 ////////////////////////////////////////////////////////////////////////////////
 // INDEX BUFFER BLUEPRINT                                                     //

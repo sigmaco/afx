@@ -281,6 +281,16 @@ int main(int argc, char const* argv[])
         AfxBootUpBasicIoSystem(&sysConfig.base, &sys);
         AfxAssertObjects(1, &sys, AFX_FCC_SYS);
 
+        afxContext thrs[10];
+        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxReleaseObjects(10, thrs);
+        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxReleaseObjects(10, thrs);
+        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxReleaseObjects(10, thrs);
+        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxReleaseObjects(10, thrs);
+
         afxDrawSystemConfig dsysConfig;
         AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
         AfxAcquireDrawSystems(1, &dsys, &dsysConfig);

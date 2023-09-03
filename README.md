@@ -1,7 +1,7 @@
 # The Qwadro Execution Ecosystem
 Uma plataforma virtual de execução de aplicação.
 
-O nome QWADRO é um acrônimo surgido duma sigla para Quadridimensional World Approximation, que foi um projeto anterior experimentando como seria uma simulação onde tempo-espaço fossem manipulados de forma singular.
+Qwadro é uma iniciativa da Federação SIGMA para fomentar o desenvolvimento genuíno de aplicações de desenho 2D, 3D e 4D acelerado por hardware para o público latino. O nome QWADRO é um acrônimo surgido duma sigla para Quadridimensional World Approximation, que foi um projeto anterior experimentando como seria uma simulação onde tempo-espaço fossem manipulados de forma singular.
 Apesar do nome, o prefixo de domínio de código (em C, equivale ao namespace em C++) é "AFX". Existem outros prefixos para outros frameworks internos (GFX, SFX, XFX, MFX, ZFX, EFX, VFX, AVX, AEX, AAX, AUX, etc), que conforme items são "promovidos ao núcleo" da implementação, têm seu prefixo substituído por AFX.
 
 O Qwadro não é um "game engine", como é erroneamente tratado. Qwadro é um ecossistema de execução de aplicação, uma plataforma virtual, que oferece um conjunto de blocos comuns de construção para edificar sistemas análogos a game engines.
@@ -22,7 +22,7 @@ Esta é uma abordagem complicada porque mescla tanto conceitos, funções e oper
 
 # The Qwadro Draw I/O System
 
-Draw I/O System foi implementado inspirado fortemente nos paradigmas do que seria o OpenGL 5. Atualmente parece muito um "Vulkan over OpenGL" wrapper.
+Draw I/O System foi implementado inspirado fortemente nos paradigmas do que seria o OpenGL 5 (atualmente parece muito um "Vulkan over OpenGL" wrapper) como uma quarta opção à tríade OpenGL/Vulkan, Direct3D e Metal.
 
 Draw I/O System é um esforço da SIGMA para oferecer uma API de desenho 3D de alto desempenho em tempo real. A SIGMA escolheu uma abordagem diferente: introduzir suas próprias abstrações e não espelha diretamente quaisquer das APIs nativas da atualidade. Uma das razões é pelo fato de nenhuma única API estar disponível em todos os sistemas, e também porque muitos conceitos (tais como manuseio de memória em nível extremamente baixo) não são idiomático para usuários não acustomado com o calor do metal.
 Apesar de certas características herdadas de APIs da 3dfx (Voodoo) haverem sido retrabalhadas para parecerem mais com Vulkan. E também a maioria do dialeto é herdado do lado OpenGL/Vulkan da força.
@@ -35,5 +35,7 @@ SIGMA GL (SGL), distribuído pelo arquivo "e2draw.icd", é um modelo de referên
 Diferente das APIs de baixo nível, o Qwadro todo segue uma filosofia de rapid application development (RAD), onde entrega várias utilidades para acelerar e automatizar operações, ainda permitindo que o usuário faça a sua própria maneira se assim quiser.
 
 Grande parte do Qwadro ainda está em código fechado devido a tecnologia proprietária. Mas a SIGMA trabalha e confia, e não descansa nem de dia nem de noite, para substituí-las e liberar o restante do código.
+
+Agradecimentos especiais a Nicol Bolas, Markus Tavenrath, Christoph Kubisch, Evgeny Makarov e NVIDIA, por contribuírem com suas técnicas e conhecimentos em desenho 3D acelerado por hardware.
 
 Junte-se a nós no Discord. https://sigmaco.org/discord

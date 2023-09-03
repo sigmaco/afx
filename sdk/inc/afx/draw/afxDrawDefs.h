@@ -46,8 +46,8 @@ AFX_DEFINE_HANDLE(afxPipeline);
 //typedef afxHandle afxPipeline;
 AFX_DEFINE_HANDLE(afxShader);
 //typedef afxHandle afxShader;
-AFX_DEFINE_HANDLE(afxLego);
-//typedef afxHandle afxLego;
+AFX_DEFINE_HANDLE(afxPipelineRig);
+//typedef afxHandle afxPipelineRig;
 AFX_DEFINE_HANDLE(afxSampler);
 //typedef afxHandle afxSampler;
 

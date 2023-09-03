@@ -23,7 +23,9 @@ AFXINL void                 AfxVertexBufferBlueprintReset(afxVertexBufferBluepri
 AFXINL void                 AfxVertexBufferBlueprintDiscard(afxVertexBufferBlueprint *blueprint);
 AFXINL void                 AfxVertexBufferBlueprintErase(afxVertexBufferBlueprint *blueprint);
 
-AFXINL afxError             AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *blueprint, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
-AFXINL afxError             AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blueprint, afxNat idx, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt);
+//AFXINL afxError             AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *blueprint, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt, afxNat srcStride);
+//AFXINL afxError             AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blueprint, afxNat idx, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt, afxNat srcStride);
+
+AFXINL afxError             AfxVertexBufferBlueprintAddAttributes(afxVertexBufferBlueprint *blueprint, afxNat cnt, afxVertexSpec const spec[]);
 
 #endif//AFX_VERTEX_BUFFER_BLUEPRINT_H

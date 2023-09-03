@@ -174,34 +174,33 @@ _SGL void _SglDcmdBindPipeline(afxDrawScript dscr, afxPipeline pip)
     _SglDcmdCommand(dscr, AFX_DCMD_BIND_PIPELINE, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdBindIndexBuffer(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz)
+_SGL void _SglDcmdBindIndexStream(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
 
     _afxDscrCmdBindIbuf *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    cmd->buf = buf;
+
+    if ((cmd->buf = buf))
+    {
+        AfxAssertObjects(1, &cmd->buf, AFX_FCC_BUF);
+    }
+
     cmd->offset = offset;
     cmd->idxSiz = idxSiz;
 
     _SglDcmdCommand(dscr, AFX_DCMD_BIND_INDEX_BUFFER, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdBindManagedIndexBuffer(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
+_SGL void _SglDcmdBindManagedIndexStream(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindIbuf *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->buf = ibuf->base.buf;
-
-    afxNat idxCnt, idxSiz;
-    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &cmd->offset, &idxCnt, &idxSiz);
-    cmd->idxSiz = idxSiz;
-
-    _SglDcmdCommand(dscr, AFX_DCMD_BIND_INDEX_BUFFER, sizeof(cmd), &cmd->cmd);
+    afxNat32 offset, idxSiz;
+    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &offset, NIL, &idxSiz);
+    _SglDcmdBindIndexStream(dscr, ibuf->base.buf, offset, idxSiz);
 }
 
 _SGL void _SglDcmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
@@ -243,7 +242,23 @@ _SGL void _SglDcmdBindTextures(afxDrawScript dscr, afxNat set, afxNat first, afx
     _SglDcmdCommand(dscr, AFX_DCMD_BIND_TEXTURES, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[])
+_SGL void _SglDcmdSetVertexInputLayout(afxDrawScript dscr, afxNat cnt, afxVertexInputPoint const spec[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
+
+    _afxDscrCmdSetVtxInLayout *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->cnt = cnt;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        cmd->spec[i] = spec[i];
+    }
+    _SglDcmdCommand(dscr, AFX_DCMD_SET_VERTEX_INPUT_LAYOUT, sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _SglDcmdBindVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexInputStream const spec[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
@@ -255,63 +270,83 @@ _SGL void _SglDcmdBindVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        cmd->buf[i] = buf ? buf[i] : 0;
-        cmd->offset[i] = offset ? offset[i] : 0;
-        //cmd->vtxArrSiz[i] = 0;
-        cmd->vtxStride[i] = 0;
+        afxVertexInputStream const* spec2 = &spec[i];
+
+        cmd->spec[i].offset = spec2->offset;
+        cmd->spec[i].range = spec2->range;
+
+        if ((cmd->spec[i].buf = spec2->buf))
+        {
+            AfxAssertObjects(1, &cmd->spec[i].buf, AFX_FCC_BUF);
+            AfxAssertRange(AfxGetBufferSize(cmd->spec[i].buf), cmd->spec[i].offset, cmd->spec[i].range);
+        }
+        
+        cmd->spec[i].stride = spec2->stride;
+        cmd->spec[i].instance = !!spec2->instance;
+        cmd->spec[i].instDivisor = spec2->instDivisor;
     }
     _SglDcmdCommand(dscr, AFX_DCMD_BIND_VERTEX_BUFFERS, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDcmdBindVertexBuffers2(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxSize const offset[], afxSize const stride[])
+_SGL void _SglDcmdBindManagedVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
 
-    _afxDscrCmdBindVbuf *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        cmd->buf[i] = buf ? buf[i] : 0;
-        cmd->offset[i] = offset ? offset[i] : 0;
-        //cmd->vtxArrSiz[i] = size ? size[i] : 0;
-        cmd->vtxStride[i] = stride ? stride[i] : 0;
-    }
-    _SglDcmdCommand(dscr, AFX_DCMD_BIND_VERTEX_BUFFERS, sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _SglDcmdBindManagedVertexBuffers(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == AFX_DSCR_STATE_RECORDING);
-
-    _afxDscrCmdBindVbuf *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
+    afxNat visCnt = 0;
+    afxNat secIndices[_SGL_MAX_VBO_PER_BIND];
+    afxVertexInputStream vis[_SGL_MAX_VBO_PER_BIND];
+    afxNat vipCnt = 0;
+    afxVertexInputPoint vip[_SGL_MAX_INSTREAM_PER_SET];
 
     for (afxNat i = 0; i < cnt; i++)
     {
         if (vbuf[i])
         {
             afxNat arr = vtxArr ? vtxArr[i] : 0;
-            cmd->buf[i] = vbuf[i]->base.buf;
-            cmd->offset[i] = AfxVertexBufferGetOffset(vbuf[i], baseVtx ? baseVtx[i] : 0, arr);
-            cmd->vtxStride[i] = AfxVertexBufferGetStride(vbuf[i], arr);
-            //cmd->vtxArrSiz[i] = 0;
-        }
-        else
-        {
-            cmd->buf[i] = 0;
-            cmd->offset[i] = 0;
-            cmd->vtxStride[i] = 0;
-            //cmd->vtxArrSiz[i] = 0;
+
+            afxNat secIdx;
+            vip[i].location = arr;
+            AfxDescribeVertexAttribute(vbuf[i], arr, &secIdx, &vip[i].fmt, &vip[i].offset, &vip[i].usage);
+            ++vipCnt;
+            
+            afxBool found = FALSE;
+
+            for (afxNat j = 0; j < visCnt; j++)
+            {
+                if (secIndices[j] == secIdx)
+                {
+                    found = TRUE;
+                    vip[i].stream = j;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                vip[i].stream = visCnt;
+                secIndices[visCnt] = secIdx;
+
+                afxNat32 secBase, secRange, secStride;
+                AfxDescribeVertexSection(vbuf[i], secIdx, &secBase, &secRange, &secStride);
+
+                afxNat subOff = baseVtx ? (secStride * baseVtx[i]) : 0;
+
+                vis[visCnt].buf = vbuf[i]->base.buf;
+                vis[visCnt].offset = secBase + subOff;
+                vis[visCnt].range = secRange - vis[visCnt].offset;
+                vis[visCnt].stride = secStride;
+
+                vis[visCnt].instance = !!inst;
+                vis[visCnt].instDivisor = divisor;
+
+                ++visCnt;
+            }
         }
     }
-    _SglDcmdCommand(dscr, AFX_DCMD_BIND_VERTEX_BUFFERS, sizeof(cmd), &cmd->cmd);
+
+    _SglDcmdBindVertexStreams(dscr, first, visCnt, vis);
+    _SglDcmdSetVertexInputLayout(dscr, vipCnt, vip);
 }
 
 _SGL void _SglDcmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
@@ -427,11 +462,11 @@ _SGL _afxDcmdVmt _SglDcmdVmt[] =
     _SglDcmdSetScissors,
 
     _SglDcmdBindBuffers,
-    _SglDcmdBindVertexBuffers,
-    _SglDcmdBindVertexBuffers2,
-    _SglDcmdBindManagedVertexBuffers,
-    _SglDcmdBindIndexBuffer,
-    _SglDcmdBindManagedIndexBuffer,
+    _SglDcmdBindVertexStreams,
+    _SglDcmdSetVertexInputLayout,
+    _SglDcmdBindManagedVertexStreams,
+    _SglDcmdBindIndexStream,
+    _SglDcmdBindManagedIndexStream,
     _SglDcmdBindTextures,
 
     _SglDcmdDraw,
