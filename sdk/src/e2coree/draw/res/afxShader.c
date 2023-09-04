@@ -179,7 +179,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, a
     {
         AfxAssert(location < 16); // hardcoded limitation
         decl->location = location;
-        AfxAssert(fmt < AFX_VTX_FMT_TOTAL);
+        AfxAssert(fmt < afxVertexFormat_TOTAL);
         decl->fmt = fmt;
          AfxCloneString(&decl->semantic, semantic);
     }

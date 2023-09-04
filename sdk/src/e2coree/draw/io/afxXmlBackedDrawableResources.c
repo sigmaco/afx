@@ -591,7 +591,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
             }
             else if (0 == AfxCompareString(name, &g_str_Input))
             {
-                afxPipelineInputAssemblyState ias = { AFX_PRIM_TOPOLOGY_TRI_LIST, FALSE };
+                afxPipelineInputAssemblyState ias = { afxPrimTopology_TRI_LIST, FALSE };
                 afxNat foundMask = NIL;
 
                 if (AfxParseXmlBackedPipelineInputAssemblyState(node3, &ias, &foundMask))
@@ -603,7 +603,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
         }
 
         {
-            afxPipelineRasterizerState rs = { FALSE, FALSE, AFX_FILL_MODE_SOLID, AFX_CULL_MODE_BACK, AFX_FRONT_FACE_CCW, FALSE, 0, 0, 0, 1 };
+            afxPipelineRasterizerState rs = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
             afxNat foundMask = NIL;
 
             if (AfxParseXmlBackedPipelineRasterizerState(node0, &rs, &foundMask))
@@ -614,7 +614,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
         }
 
         {
-            afxPipelineDepthState ds = { FALSE, FALSE, AFX_COMPARE_OP_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
+            afxPipelineDepthState ds = { FALSE, FALSE, afxCompareOp_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
             afxNat foundMask = NIL;
 
             if (AfxParseXmlBackedPipelineDepthState(node0, &ds, &foundMask))
@@ -773,7 +773,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                     }
                                     else if (0 == AfxCompareString(name, &g_str_Input))
                                     {
-                                        afxPipelineInputAssemblyState ias = { AFX_PRIM_TOPOLOGY_TRI_LIST, FALSE };
+                                        afxPipelineInputAssemblyState ias = { afxPrimTopology_TRI_LIST, FALSE };
                                         afxNat foundMask = NIL;
 
                                         if (AfxParseXmlBackedPipelineInputAssemblyState(node3, &ias, &foundMask))
@@ -785,7 +785,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                 }
 
                                 {
-                                    afxPipelineRasterizerState rs = { FALSE, FALSE, AFX_FILL_MODE_SOLID, AFX_CULL_MODE_BACK, AFX_FRONT_FACE_CCW, FALSE, 0, 0, 0, 1 };
+                                    afxPipelineRasterizerState rs = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
                                     afxNat foundMask = NIL;
 
                                     if (AfxParseXmlBackedPipelineRasterizerState(node2, &rs, &foundMask))
@@ -796,7 +796,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                 }
 
                                 {
-                                    afxPipelineDepthState ds = { FALSE, FALSE, AFX_COMPARE_OP_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
+                                    afxPipelineDepthState ds = { FALSE, FALSE, afxCompareOp_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
                                     afxNat foundMask = NIL;
 
                                     if (AfxParseXmlBackedPipelineDepthState(node2, &ds, &foundMask))

@@ -52,7 +52,7 @@ afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw th
     AfxAssertObjects(1, &surf, AFX_FCC_TEX);
 
     AfxRendererBeginScene(rnd, rnd->activeCamera, NIL, surf);
-    AfxRendererDrawSky(rnd, TRUE);
+    //AfxRendererDrawSky(rnd, TRUE);
 
     if (bod)
         AfxRendererDrawBody(rnd, bod);

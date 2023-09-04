@@ -409,7 +409,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                     AfxGetPipelineShaders(pip, i, 1, &shd);
                     AfxAssertObjects(1, &shd, AFX_FCC_SHD);
 
-                    if (AFX_SHADER_STAGE_VERTEX == AfxGetShaderStage(shd))
+                    if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))
                     {
                         for (afxNat j = 0; j < shd->base.ioDeclCnt; j++)
                         {

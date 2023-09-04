@@ -47,26 +47,26 @@ Invalid - Some operations, such as modifying or deleting a resource that was use
 
 typedef enum afxDrawScriptState
 {
-    AFX_DSCR_STATE_INITIAL = 1, // new
-    AFX_DSCR_STATE_RECORDING, // open
-    AFX_DSCR_STATE_EXECUTABLE, // closed
-    AFX_DSCR_STATE_PENDING, // submitted
-    AFX_DSCR_STATE_INVALID,
-    AFX_DSCR_STATE_INTERNAL_EXECUTING,
+    afxDrawScriptState_INITIAL = 1, // new
+    afxDrawScriptState_RECORDING, // open
+    afxDrawScriptState_EXECUTABLE, // closed
+    afxDrawScriptState_PENDING, // submitted
+    afxDrawScriptState_INVALID,
+    afxDrawScriptState_INTERNAL_EXECUTING,
 } afxDrawScriptState;
 
 typedef enum afxSurfaceStoreOp // An enumerated value indicating the load operation to perform on target surface prior to executing the render pass
 {
-    AFX_DTS_STORE_OP_STORE, // Stores the resulting value of the render pass for this attachment.
-    AFX_DTS_STORE_OP_DISCARD, // Discards the resulting value of the render pass for this attachment.
-    AFX_DTS_STORE_OP_DONT_CARE,
+    afxSurfaceStoreOp_STORE, // Stores the resulting value of the render pass for this attachment.
+    afxSurfaceStoreOp_DISCARD, // Discards the resulting value of the render pass for this attachment.
+    afxSurfaceStoreOp_DONT_CARE,
 } afxSurfaceStoreOp;
 
 typedef enum afxSurfaceLoadOp // An enumerated value indicating the store operation to perform on target surface after executing the render pass
 {
-    AFX_DTS_LOAD_OP_CLEAR, // Loads the clearValue for this attachment into the render pass.
-    AFX_DTS_LOAD_OP_LOAD, // Loads the existing value for this attachment into the render pass.
-    AFX_DTS_LOAD_OP_DONT_CARE
+    afxSurfaceLoadOp_CLEAR, // Loads the clearValue for this attachment into the render pass.
+    afxSurfaceLoadOp_LOAD, // Loads the existing value for this attachment into the render pass.
+    afxSurfaceLoadOp_DONT_CARE
 } afxSurfaceLoadOp;
 
 AFX_DEFINE_STRUCT(afxVertexInputStream)

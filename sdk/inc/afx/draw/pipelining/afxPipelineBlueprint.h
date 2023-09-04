@@ -38,6 +38,6 @@ AFX void                AfxPipelineBlueprintConfigMultisampleState(afxPipelineBl
 AFX void                AfxPipelineBlueprintConfigColorBlendState(afxPipelineBlueprint *blueprint, afxPipelineColorBlendState const *state);
 
 AFX afxChar const *shdResTypeNames[AFX_SHD_RES_TYPE_TOTAL];
-AFX afxChar const *fmtNames[AFX_FMT_TOTAL];
+AFX afxChar const *fmtNames[afxFormat_TOTAL];
 
 #endif//AFX_PIPELINE_BLUEPRINT_H

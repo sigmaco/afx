@@ -66,7 +66,7 @@ AFX_DEFINE_STRUCT(afxPipelineInputStream) // vertex attribute input stream
 
 AFX_DEFINE_STRUCT(afxPipelineInputAssemblyState)
 {
-    afxPrimTopology     topology; // AFX_PRIM_TOPOLOGY_TRIANGLE --- 0 // defines the primitive topology, as described below.
+    afxPrimTopology     topology; // afxPrimTopology_TRIANGLE --- 0 // defines the primitive topology, as described below.
     afxBool             primRestartEnable; // FALSE --- 1 // controls whether a special vertex index value is treated as restarting the assembly of primitives.
 };
 
@@ -99,9 +99,9 @@ AFX_DEFINE_STRUCT(afxPipelineRasterizerState)
 {
     afxBool             depthClampEnable; // FALSE --- 0
     afxBool             rasterizerDiscardEnable; // FALSE --- 1
-    afxFillMode         fillMode; // AFX_FILL_MODE_SOLID --- 2
-    afxCullMode         cullMode; // AFX_CULL_MODE_BACK --- 3
-    afxFrontFace        frontFace; // AFX_FRONT_FACE_CCW --- 4
+    afxFillMode         fillMode; // afxFillMode_SOLID --- 2
+    afxCullMode         cullMode; // afxCullMode_BACK --- 3
+    afxFrontFace        frontFace; // afxFrontFace_CCW --- 4
     afxBool             depthBiasEnable; // FALSE --- 5
     afxReal             depthBiasConstantFactor; // 0.f --- 6
     afxReal             depthBiasClamp; // 0.f --- 7

@@ -76,175 +76,175 @@ AFX_DEFINE_STRUCT(afxFileDrop)
 
 typedef enum
 {
-    AFX_PRIM_TOPOLOGY_POINT_LIST, // Mesh is made from points.
+    afxPrimTopology_POINT_LIST, // Mesh is made from points.
 
-    AFX_PRIM_TOPOLOGY_LINE_LIST, // Mesh is made from lines.
-    AFX_PRIM_TOPOLOGY_LINE_STRIP, // Mesh is a line strip.
+    afxPrimTopology_LINE_LIST, // Mesh is made from lines.
+    afxPrimTopology_LINE_STRIP, // Mesh is a line strip.
 
-    AFX_PRIM_TOPOLOGY_TRI_LIST, // Mesh is made from triangles.
-    AFX_PRIM_TOPOLOGY_TRI_STRIP,
-    AFX_PRIM_TOPOLOGY_TRI_FAN,
+    afxPrimTopology_TRI_LIST, // Mesh is made from triangles.
+    afxPrimTopology_TRI_STRIP,
+    afxPrimTopology_TRI_FAN,
 
-    AFX_PRIM_TOPOLOGY_LINE_LIST_ADJACENT,
-    AFX_PRIM_TOPOLOGY_LINE_STRIP_ADJACENT,
+    afxPrimTopology_LINE_LIST_ADJACENT,
+    afxPrimTopology_LINE_STRIP_ADJACENT,
 
-    AFX_PRIM_TOPOLOGY_TRI_LIST_ADJACENT,
-    AFX_PRIM_TOPOLOGY_TRI_STRIP_ADJACENT,
+    afxPrimTopology_TRI_LIST_ADJACENT,
+    afxPrimTopology_TRI_STRIP_ADJACENT,
 
-    AFX_PRIM_TOPOLOGY_PATCH_LIST,
+    afxPrimTopology_PATCH_LIST,
 
-    AFX_PRIM_TOPOLOGY_TOTAL
+    afxPrimTopology_TOTAL
 } afxPrimTopology;
 
 typedef enum
 {
-    AFX_FMT_REAL,
-    AFX_FMT_NAT,
-    AFX_FMT_INT,
-    AFX_FMT_V2D,
-    AFX_FMT_V2DN,
-    AFX_FMT_V2DI,
-    AFX_FMT_V3D,
-    AFX_FMT_V3DN,
-    AFX_FMT_V3DI,
-    AFX_FMT_V4D,
-    AFX_FMT_V4DN,
-    AFX_FMT_V4DI,
+    afxFormat_REAL,
+    afxFormat_NAT,
+    afxFormat_INT,
+    afxFormat_V2D,
+    afxFormat_V2DN,
+    afxFormat_V2DI,
+    afxFormat_V3D,
+    afxFormat_V3DN,
+    afxFormat_V3DI,
+    afxFormat_V4D,
+    afxFormat_V4DN,
+    afxFormat_V4DI,
 
-    AFX_FMT_TOTAL
+    afxFormat_TOTAL
 } afxFormat;
 
 
 typedef enum afxStencilOp
 {
-    AFX_STENCIL_OP_KEEP = 0,
-    AFX_STENCIL_OP_ZERO = 1,
-    AFX_STENCIL_OP_REPLACE = 2,
-    AFX_STENCIL_OP_INC_AND_CLAMP = 3,
-    AFX_STENCIL_OP_DEC_AND_CLAMP = 4,
-    AFX_STENCIL_OP_INVERT = 5,
-    AFX_STENCIL_OP_INC_AND_WRAP = 6,
-    AFX_STENCIL_OP_DEC_AND_WRAP = 7,
+    afxStencilOp_KEEP = 0,
+    afxStencilOp_ZERO = 1,
+    afxStencilOp_REPLACE = 2,
+    afxStencilOp_INC_AND_CLAMP = 3,
+    afxStencilOp_DEC_AND_CLAMP = 4,
+    afxStencilOp_INVERT = 5,
+    afxStencilOp_INC_AND_WRAP = 6,
+    afxStencilOp_DEC_AND_WRAP = 7,
 
-    AFX_STENCIL_OP_TOTAL
+    afxStencilOp_TOTAL
 } afxStencilOp;
 
 typedef enum afxLogicOp
 {
-    AFX_LOGIC_OP_CLEAR = 0,
-    AFX_LOGIC_OP_AND = 1,
-    AFX_LOGIC_OP_AND_REVERSE = 2,
-    AFX_LOGIC_OP_COPY = 3,
-    AFX_LOGIC_OP_AND_INVERTED = 4,
-    AFX_LOGIC_OP_NO_OP = 5,
-    AFX_LOGIC_OP_XOR = 6,
-    AFX_LOGIC_OP_OR = 7,
-    AFX_LOGIC_OP_NOR = 8,
-    AFX_LOGIC_OP_EQUIVALENT = 9,
-    AFX_LOGIC_OP_INVERT = 10,
-    AFX_LOGIC_OP_OR_REVERSE = 11,
-    AFX_LOGIC_OP_COPY_INVERTED = 12,
-    AFX_LOGIC_OP_OR_INVERTED = 13,
-    AFX_LOGIC_OP_NAND = 14,
-    AFX_LOGIC_OP_SET = 15,
+    afxLogicOp_CLEAR = 0,
+    afxLogicOp_AND = 1,
+    afxLogicOp_AND_REVERSE = 2,
+    afxLogicOp_COPY = 3,
+    afxLogicOp_AND_INVERTED = 4,
+    afxLogicOp_NO_OP = 5,
+    afxLogicOp_XOR = 6,
+    afxLogicOp_OR = 7,
+    afxLogicOp_NOR = 8,
+    afxLogicOp_EQUIVALENT = 9,
+    afxLogicOp_INVERT = 10,
+    afxLogicOp_OR_REVERSE = 11,
+    afxLogicOp_COPY_INVERTED = 12,
+    afxLogicOp_OR_INVERTED = 13,
+    afxLogicOp_NAND = 14,
+    afxLogicOp_SET = 15,
 
-    AFX_LOGIC_OP_TOTAL
+    afxLogicOp_TOTAL
 } afxLogicOp;
 
 typedef enum afxCullMode
 {
     // NIL = DISABLED
-    AFX_CULL_MODE_FRONT = AFX_FLAG(0),
-    AFX_CULL_MODE_BACK  = AFX_FLAG(1),
-    AFX_CULL_MODE_BOTH  = (AFX_CULL_MODE_FRONT | AFX_CULL_MODE_BACK), // porque usar isto?
+    afxCullMode_FRONT = AFX_FLAG(0),
+    afxCullMode_BACK  = AFX_FLAG(1),
+    afxCullMode_BOTH  = (afxCullMode_FRONT | afxCullMode_BACK), // porque usar isto?
     // sum to cull both faces
 
-    AFX_CULL_MODE_TOTAL
+    afxCullMode_TOTAL
 } afxCullMode;
 
 typedef enum
 {
-    AFX_FRONT_FACE_CCW,
-    AFX_FRONT_FACE_CW,
+    afxFrontFace_CCW,
+    afxFrontFace_CW,
 
-    AFX_FRONT_FACE_TOTAL
+    afxFrontFace_TOTAL
 } afxFrontFace;
 
 typedef enum
 {
-    AFX_FILL_MODE_SOLID,
-    AFX_FILL_MODE_EDGE,
-    AFX_FILL_MODE_POINT,
+    afxFillMode_SOLID,
+    afxFillMode_EDGE,
+    afxFillMode_POINT,
 
-    AFX_FILL_MODE_TOTAL
+    afxFillMode_TOTAL
 } afxFillMode;
 
 typedef enum
 {
     // NIL = DISABLED
-    AFX_BLEND_FACTOR_ZERO = 1,
-    AFX_BLEND_FACTOR_ONE,
-    AFX_BLEND_FACTOR_SRC_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_SRC_RGB,
-    AFX_BLEND_FACTOR_DST_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_DST_RGB,
-    AFX_BLEND_FACTOR_SRC_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_SRC_A,
-    AFX_BLEND_FACTOR_DST_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_DST_A,
-    AFX_BLEND_FACTOR_CONSTANT_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_CONST_RGB,
-    AFX_BLEND_FACTOR_CONST_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_CONST_A
+    afxBlendFactor_ZERO = 1,
+    afxBlendFactor_ONE,
+    afxBlendFactor_SRC_RGB,
+    afxBlendFactor_ONE_MINUS_SRC_RGB,
+    afxBlendFactor_DST_RGB,
+    afxBlendFactor_ONE_MINUS_DST_RGB,
+    afxBlendFactor_SRC_A,
+    afxBlendFactor_ONE_MINUS_SRC_A,
+    afxBlendFactor_DST_A,
+    afxBlendFactor_ONE_MINUS_DST_A,
+    afxBlendFactor_CONSTANT_RGB,
+    afxBlendFactor_ONE_MINUS_CONST_RGB,
+    afxBlendFactor_CONST_A,
+    afxBlendFactor_ONE_MINUS_CONST_A
 } afxBlendFactor;
 
 typedef enum
 {
-    AFX_BLEND_OP_ADD,
-    AFX_BLEND_OP_SUBTRACT,
-    AFX_BLEND_OP_REVERSE_SUBTRACT,
-    AFX_BLEND_OP_MIN,
-    AFX_BLEND_OP_MAX
+    afxBlendOp_ADD,
+    afxBlendOp_SUBTRACT,
+    afxBlendOp_REVERSE_SUBTRACT,
+    afxBlendOp_MIN,
+    afxBlendOp_MAX
 } afxBlendOp;
 
 typedef enum
 {
-    AFX_COMPARE_OP_NEVER, // NIL = Never passes
-    AFX_COMPARE_OP_LESS, // Passes if the incoming depth value is less than the stored depth value.
-    AFX_COMPARE_OP_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
-    AFX_COMPARE_OP_EQUAL, // Passes if the incoming depth value is equal to the stored depth value.
-    AFX_COMPARE_OP_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
-    AFX_COMPARE_OP_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
-    AFX_COMPARE_OP_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
-    AFX_COMPARE_OP_ALWAYS, // Always passes.
+    afxCompareOp_NEVER, // NIL = Never passes
+    afxCompareOp_LESS, // Passes if the incoming depth value is less than the stored depth value.
+    afxCompareOp_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
+    afxCompareOp_EQUAL, // Passes if the incoming depth value is equal to the stored depth value.
+    afxCompareOp_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
+    afxCompareOp_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
+    afxCompareOp_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
+    afxCompareOp_ALWAYS, // Always passes.
 
-    AFX_COMPARE_OP_TOTAL
+    afxCompareOp_TOTAL
 } afxCompareOp;
 
 typedef enum afxVertexFormat
 {
-    AFX_VTX_FMT_REAL,
-    AFX_VTX_FMT_V2D,
-    AFX_VTX_FMT_V3D,
-    AFX_VTX_FMT_V4D,
+    afxVertexFormat_REAL,
+    afxVertexFormat_V2D,
+    afxVertexFormat_V3D,
+    afxVertexFormat_V4D,
 
-    AFX_VTX_FMT_V4B, // afxInt8[4]
-    AFX_VTX_FMT_V8B, // afxInt8[8]
+    afxVertexFormat_V4B, // afxInt8[4]
+    afxVertexFormat_V8B, // afxInt8[8]
 
-    AFX_VTX_FMT_TOTAL
+    afxVertexFormat_TOTAL
 } afxVertexFormat;
 
 typedef enum afxShaderStage
 {
     // NIL = reserved for composing purposes.
-    AFX_SHADER_STAGE_VERTEX = 1,
-    AFX_SHADER_STAGE_PIXEL,
-    AFX_SHADER_STAGE_GEOMETRY,
-    AFX_SHADER_STAGE_TESS_CTRL,
-    AFX_SHADER_STAGE_TESS_EVAL,
-    AFX_SHADER_STAGE_COMPUTE,
+    afxShaderStage_VERTEX = 1,
+    afxShaderStage_PIXEL,
+    afxShaderStage_GEOMETRY,
+    afxShaderStage_TESS_CTRL,
+    afxShaderStage_TESS_EVAL,
+    afxShaderStage_COMPUTE,
 
-    AFX_SHADER_STAGE_TOTAL
+    afxShaderStage_TOTAL
 } afxShaderStage;
 
 AFX afxString const g_str_Qwadro;

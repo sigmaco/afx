@@ -190,14 +190,16 @@ _AFX afxError AfxIndexBufferDump(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat base
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
-    AfxAssert(ibuf->regionCnt > rgnIdx);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= idxCnt);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= baseIdx + idxCnt);
+    AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
     AfxAssert(dst);
-    afxNat idxSiz = ibuf->regions[rgnIdx].idxSiz;
-    AfxAssert(!dstIdxStride || dstIdxStride >= idxSiz);
 
-    if (AfxDumpBuffer2(ibuf->buf, ibuf->regions[rgnIdx].baseOffset + (baseIdx * idxSiz), idxSiz, idxCnt, dst, dstIdxStride))
+    afxNat32 baseOffset = 0;
+    afxNat32 idxCntMax = 0, idxSiz = 0;
+    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &baseOffset, &idxCntMax, &idxSiz);
+    AfxAssert(!dstIdxStride || dstIdxStride >= idxSiz);
+    AfxAssertRange(idxCntMax, baseIdx, idxCnt);
+
+    if (AfxDumpBuffer2(ibuf->buf, baseOffset + (baseIdx * idxSiz), idxSiz, idxCnt, dst, dstIdxStride))
         AfxThrowError();
 
     return err;
@@ -207,18 +209,14 @@ _AFX afxError AfxIndexBufferUpdate(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat ba
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
-    AfxAssert(ibuf->regionCnt > rgnIdx);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= idxCnt);
-    AfxAssert(ibuf->regions[rgnIdx].idxCnt >= baseIdx + idxCnt);
+    AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
     AfxAssert(src);
-    afxNat idxSiz = ibuf->regions[rgnIdx].idxSiz;
-    AfxAssert(!srcIdxStride || srcIdxStride >= idxSiz);
 
     afxNat32 baseOffset = 0;
-    afxNat idxCntGot = 0, idxSizGot = 0;
-    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &baseOffset, &idxCntGot, &idxSizGot);
-    AfxAssert(idxSizGot == idxSiz);
-    AfxAssert(idxCntGot >= idxCnt);
+    afxNat32 idxCntMax = 0, idxSiz = 0;
+    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &baseOffset, &idxCntMax, &idxSiz);
+    AfxAssert(!srcIdxStride || srcIdxStride >= idxSiz);
+    AfxAssertRange(idxCntMax, baseIdx, idxCnt);
 
     if (AfxUpdateBuffer2(ibuf->buf, baseOffset + (baseIdx * idxSiz), idxSiz, idxCnt, src, srcIdxStride))
         AfxThrowError();

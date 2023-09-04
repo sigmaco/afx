@@ -59,7 +59,7 @@ _SGL void _SglDpuEndCanvas(sglDpuIdd* dpu, _afxDscrCmd const *cmd, glVmt const* 
             AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
             tex->updFlags |= SGL_UPD_FLAG_HOST_FLUSH;
 
-            // AFX_DTS_STORE_OP_STORE
+            // afxSurfaceStoreOp_STORE
 #if 0
             gl->BindTexture(tex->glTarget, tex->glHandle);
             gl->GetTexImage(tex->glTarget, 0, tex->glFmt, tex->glType, tex->base.maps);
@@ -138,7 +138,7 @@ _SGL void _SglDpuBeginDrawPassRasterTargets(sglDpuIdd* dpu, glVmt const* gl)
             AfxThrowError();
         }
 
-        if (target->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+        if (target->loadOp == afxSurfaceLoadOp_CLEAR)
         {
             afxReal const *color = target->clearValue.color;
             //gl->DrawBuffer(GL_COLOR_ATTACHMENT0 + i); _SglThrowErrorOccuried();
@@ -155,7 +155,7 @@ _SGL void _SglDpuBeginDrawPassRasterTargets(sglDpuIdd* dpu, glVmt const* gl)
             }
         }
 
-        if (target->storeOp == AFX_DTS_STORE_OP_STORE)
+        if (target->storeOp == afxSurfaceStoreOp_STORE)
         {
             drawBuffersIndices[colorAttchEnabledCnt] = GL_COLOR_ATTACHMENT0 + i;
             colorAttchEnabledCnt++;
@@ -233,7 +233,7 @@ _SGL void _SglDpuBeginDrawPassDepthTargets(sglDpuIdd* dpu, glVmt const* gl)
 
     if (combinedDs)
     {
-        if (targetD->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+        if (targetD->loadOp == afxSurfaceLoadOp_CLEAR)
         {
             //gl->DrawBuffer(GL_COLOR_ATTACHMENT0 + i); _SglThrowErrorOccuried();
             //gl->Clear(GL_COLOR_BUFFER_BIT); _SglThrowErrorOccuried();
@@ -252,7 +252,7 @@ _SGL void _SglDpuBeginDrawPassDepthTargets(sglDpuIdd* dpu, glVmt const* gl)
     }
     else
     {
-        if (targetD->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+        if (targetD->loadOp == afxSurfaceLoadOp_CLEAR)
         {
             if (!canv && !dpu->state.renderPass.depthRt.tex) // will draw directly to default fb?
             {
@@ -265,7 +265,7 @@ _SGL void _SglDpuBeginDrawPassDepthTargets(sglDpuIdd* dpu, glVmt const* gl)
             }
         }
 
-        if (targetS->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+        if (targetS->loadOp == afxSurfaceLoadOp_CLEAR)
         {
             if (!canv && !dpu->state.renderPass.stencilRt.tex) // will draw directly to default fb?
             {
@@ -401,7 +401,7 @@ _SGL void _SglDpuBeginCanvas(sglDpuIdd* dpu, _afxDscrCmdBeginCanvas /*const*/ *c
                 _SglBindFboAttachment(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, tex->glTarget, tex->glHandle, 0, gl);
             }
 
-            if (rdt->storeOp == AFX_DTS_STORE_OP_STORE)
+            if (rdt->storeOp == afxSurfaceStoreOp_STORE)
             {
                 drawBuffersIndices[colorAttchEnabledCnt] = GL_COLOR_ATTACHMENT0 + i;
                 colorAttchEnabledCnt++;
@@ -533,7 +533,7 @@ _SGL void _SglDpuBeginCanvas(sglDpuIdd* dpu, _afxDscrCmdBeginCanvas /*const*/ *c
             rdt = &dpu->state.renderPass.rasters[i];
             tex = rdt->tex;
 
-            if (rdt->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+            if (rdt->loadOp == afxSurfaceLoadOp_CLEAR)
             {
                 afxReal const *color = rdt->clearValue.color;
                 //gl->DrawBuffer(GL_COLOR_ATTACHMENT0 + i); _SglThrowErrorOccuried();
@@ -557,7 +557,7 @@ _SGL void _SglDpuBeginCanvas(sglDpuIdd* dpu, _afxDscrCmdBeginCanvas /*const*/ *c
             
         if (combinedDs)
         {
-            if (ddt->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+            if (ddt->loadOp == afxSurfaceLoadOp_CLEAR)
             {
                 if (!tex)
                 {
@@ -573,7 +573,7 @@ _SGL void _SglDpuBeginCanvas(sglDpuIdd* dpu, _afxDscrCmdBeginCanvas /*const*/ *c
         }
         else
         {
-            if (ddt->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+            if (ddt->loadOp == afxSurfaceLoadOp_CLEAR)
             {
                 if (!tex)
                 {
@@ -586,7 +586,7 @@ _SGL void _SglDpuBeginCanvas(sglDpuIdd* dpu, _afxDscrCmdBeginCanvas /*const*/ *c
                 }
             }
 
-            if (sdt->loadOp == AFX_DTS_LOAD_OP_CLEAR)
+            if (sdt->loadOp == afxSurfaceLoadOp_CLEAR)
             {
                 if (!tex2)
                 {
@@ -743,26 +743,26 @@ _SGL void _SglDpuPushNextVao(sglDpuIdd* dpu)
 
                 switch (layout->format)
                 {
-                case AFX_VTX_FMT_REAL:
+                case afxVertexFormat_REAL:
                     glsiz = 1;
                     gltype = GL_FLOAT;
                     glStride = sizeof(afxReal) * glsiz;
                     AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                     break;
-                case AFX_VTX_FMT_V2D:
+                case afxVertexFormat_V2D:
                     glsiz = 2;
                     gltype = GL_FLOAT;
                     glStride = sizeof(afxReal) * glsiz;
                     AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                     break;
-                case AFX_VTX_FMT_V3D:
+                case afxVertexFormat_V3D:
                     glsiz = 3;
                     gltype = GL_FLOAT;
                     glStride = sizeof(afxReal) * glsiz;
                     AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                     break;
-                case AFX_VTX_FMT_V4D:
-                case AFX_VTX_FMT_QUAT:
+                case afxVertexFormat_V4D:
+                case afxVertexFormat_QUAT:
                     glsiz = 4;
                     gltype = GL_FLOAT;
                     glStride = sizeof(afxReal) * glsiz;
@@ -861,7 +861,7 @@ _SGL void _SglDpuBindPipeline(sglDpuIdd* dpu, _afxDscrCmdBindPip const *cmd, glV
         afxShader shd;
         AfxGetPipelineShaders(dpu->state.pip, i, 1, &shd);
 
-        if (AFX_SHADER_STAGE_VERTEX == AfxGetShaderStage(shd))
+        if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))
         {
             for (afxNat j = 0; j < shd->ioDeclCnt; j++)
             {
@@ -1563,25 +1563,25 @@ _SGL void _SglFlushStateChanges(sglDpuIdd* dpu)
 
             switch (fmt)
             {
-            case AFX_VTX_FMT_REAL:
+            case afxVertexFormat_REAL:
                 glsiz = 1;
                 gltype = GL_FLOAT;
                 glStride = sizeof(afxReal) * glsiz;
                 AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                 break;
-            case AFX_VTX_FMT_V2D:
+            case afxVertexFormat_V2D:
                 glsiz = 2;
                 gltype = GL_FLOAT;
                 glStride = sizeof(afxReal) * glsiz;
                 AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                 break;
-            case AFX_VTX_FMT_V3D:
+            case afxVertexFormat_V3D:
                 glsiz = 3;
                 gltype = GL_FLOAT;
                 glStride = sizeof(afxReal) * glsiz;
                 AfxAssert(sizeof(afxReal) == sizeof(GLfloat));
                 break;
-            case AFX_VTX_FMT_V4D:
+            case afxVertexFormat_V4D:
                 glsiz = 4;
                 gltype = GL_FLOAT;
                 glStride = sizeof(afxReal) * glsiz;
@@ -1799,9 +1799,9 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _afxDscrCmdExecCmds const* cmd,
     {
         afxDrawScript dscr = cmd->subsets[i];
         AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
-        AfxAssert(dscr->base.state == AFX_DSCR_STATE_PENDING);
+        AfxAssert(dscr->base.state == afxDrawScriptState_PENDING);
 
-        if (dscr->base.state == AFX_DSCR_STATE_PENDING)
+        if (dscr->base.state == afxDrawScriptState_PENDING)
         {
             _afxDscrCmd *cmdHdr;
             AfxChainForEveryLinkageB2F(&dscr->commands, _afxDscrCmd, script, cmdHdr)
@@ -1809,7 +1809,7 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _afxDscrCmdExecCmds const* cmd,
                 if (cmdHdr->id == AFX_DCMD_END)
                     break;
 
-                if (dscr->base.state != AFX_DSCR_STATE_PENDING)
+                if (dscr->base.state != afxDrawScriptState_PENDING)
                 {
                     AfxThrowError();
                     break;
@@ -1820,13 +1820,13 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _afxDscrCmdExecCmds const* cmd,
 
             if (!err)
             {
-                dscr->base.state = AFX_DSCR_STATE_EXECUTABLE;
+                dscr->base.state = afxDrawScriptState_EXECUTABLE;
             }
 
             if (err || dscr->base.disposable)
             {
                 AfxAssert(dscr->base.portIdx == dpu->portIdx);
-                dscr->base.state = AFX_DSCR_STATE_INVALID;
+                dscr->base.state = afxDrawScriptState_INVALID;
             }
         }
     }
@@ -1843,9 +1843,9 @@ _SGL afxError _SglDpuExecuteDscr(sglDpuIdd* dpu, afxDrawScript dscr, glVmt const
     AfxAssertObjects(1, &dpu->activeDctx, AFX_FCC_DCTX);
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
     
-    AfxAssert(dscr->base.state == AFX_DSCR_STATE_PENDING);
+    AfxAssert(dscr->base.state == afxDrawScriptState_PENDING);
 
-    if (dscr->base.state == AFX_DSCR_STATE_PENDING)
+    if (dscr->base.state == afxDrawScriptState_PENDING)
     {
         _afxDscrCmd *cmdHdr;
         AfxChainForEveryLinkageB2F(&dscr->commands, _afxDscrCmd, script, cmdHdr)
@@ -1853,7 +1853,7 @@ _SGL afxError _SglDpuExecuteDscr(sglDpuIdd* dpu, afxDrawScript dscr, glVmt const
             if (cmdHdr->id == AFX_DCMD_END)
                 break;
 
-            if (dscr->base.state != AFX_DSCR_STATE_PENDING)
+            if (dscr->base.state != afxDrawScriptState_PENDING)
             {
                 AfxThrowError();
                 break;
@@ -1864,13 +1864,13 @@ _SGL afxError _SglDpuExecuteDscr(sglDpuIdd* dpu, afxDrawScript dscr, glVmt const
 
         if (!err)
         {
-            dscr->base.state = AFX_DSCR_STATE_EXECUTABLE;
+            dscr->base.state = afxDrawScriptState_EXECUTABLE;
         }
 
         if (err || dscr->base.disposable)
         {
             AfxAssert(dscr->base.portIdx == dpu->portIdx);
-            dscr->base.state = AFX_DSCR_STATE_INVALID;
+            dscr->base.state = afxDrawScriptState_INVALID;
         }
     }
     return err;
@@ -1944,7 +1944,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         //cmdBeginOp.canv = NIL;
         cmdBeginOp.area = (afxRect const){ { { 0, 0 } }, { { extent[0], extent[1] } } };
         cmdBeginOp.rasterCnt = 1;
-        cmdBeginOp.rasters[0] = (afxDrawTarget const){ NIL, NIL, AFX_DTS_LOAD_OP_DONT_CARE, AFX_DTS_STORE_OP_STORE, { .color = { 0.3, 0.0, 0.3, 1 } } };
+        cmdBeginOp.rasters[0] = (afxDrawTarget const){ NIL, NIL, afxSurfaceLoadOp_DONT_CARE, afxSurfaceStoreOp_STORE, { .color = { 0.3, 0.0, 0.3, 1 } } };
 
         _SglDpuBeginCanvas(dpu, &cmdBeginOp, gl);
 
@@ -1953,7 +1953,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         _SglDpuBindPipeline(dpu, &cmdBindPip, gl);
 
 #else
-        afxDrawTarget const rasterRt = { NIL, AFX_DTS_LOAD_OP_CLEAR, NIL, { 0.3, 0.1, 0.3, 1.0 } };
+        afxDrawTarget const rasterRt = { NIL, afxSurfaceLoadOp_CLEAR, NIL, { 0.3, 0.1, 0.3, 1.0 } };
         _SglDpuBeginCombination(dpu, NIL, 1, 0, &rasterRt, NIL, NIL);
 
         afxPipeline pip = AfxDrawOperationGetPipeline(idd->presentDop, 0, 0);
@@ -1971,7 +1971,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         _SglDpuSetViewports(dpu, &cmdSetVp, gl);
 
 #if 0 // already set by pipeline
-        afxPipelineRasterizerState const ras = { FALSE, FALSE, AFX_FILL_MODE_SOLID, AFX_CULL_MODE_BACK, AFX_FRONT_FACE_CCW, FALSE, 0, 0, 0, 1 };
+        afxPipelineRasterizerState const ras = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
         _SglDpuSetRasterizerState(dque, &ras);
 
         afxPipelineDepthState const depth = { 0 };
@@ -1980,7 +1980,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
 
 #if 0 // already set by pipeline
         afxPipelineInputAssemblyState ia;
-        ia.topology = AFX_PRIM_TOPOLOGY_TRI_STRIP;
+        ia.topology = afxPrimTopology_TRI_STRIP;
         ia.primRestartEnable = FALSE;
         _SglDpuSetInputAssemblyState(dque, &ia);
 #endif
@@ -2202,7 +2202,7 @@ _SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawQueue dque, afxDraw
     for (afxNat i = 0; i < subm->scriptCnt; i++)
     {
         subm->scripts[i] = spec->scripts[i];
-        subm->scripts[i]->base.state = AFX_DSCR_STATE_PENDING;
+        subm->scripts[i]->base.state = afxDrawScriptState_PENDING;
     }
 
     subm->outputCnt = AfxMini(spec->outputCnt, 4);

@@ -234,7 +234,7 @@ The vertex shader needs to produce clip coordinates (which as previously explain
 // afxQuat: A 4-dimensional vector representing a rotation.
 // The vector represents a 4 dimensional complex number where multiplication of the basis elements is not commutative(multiplying i with j gives a different result than multiplying j with i).
 // Multiplying quaternions reproduces rotation sequences.However quaternions need dst be often renormalized, or else they suffer from precision issues.
-// It canv be used dst perform SLERP(spherical - linear interpolation) between two rotations.
+// It can be used dst perform SLERP(spherical - linear interpolation) between two rotations.
 
 
 // Qwadro performs all bone animation on decomposed transforms, where "decomposed" means that the position, orientation, and scale/shear components have been pulled out into separately animating quantities. 
@@ -245,10 +245,10 @@ The vertex shader needs to produce clip coordinates (which as previously explain
 
 typedef enum afxTransformFlags
 {
-    AFX_TRANSFORM_FLAG_ORIGIN       = AFX_FLAG(0), // has non-identity position
-    AFX_TRANSFORM_FLAG_ORIENTATION  = AFX_FLAG(1), // has non-identity orientation
-    AFX_TRANSFORM_FLAG_SCALESHEAR   = AFX_FLAG(2), // has non-identity scale/shear
-    AFX_TRANSFORM_FLAG_ALL          = (AFX_TRANSFORM_FLAG_ORIGIN | AFX_TRANSFORM_FLAG_ORIENTATION | AFX_TRANSFORM_FLAG_SCALESHEAR)
+    afxTransformFlags_ORIGIN       = AFX_FLAG(0), // has non-identity position
+    afxTransformFlags_ORIENTATION  = AFX_FLAG(1), // has non-identity orientation
+    afxTransformFlags_SCALESHEAR   = AFX_FLAG(2), // has non-identity scale/shear
+    afxTransformFlags_ALL          = (afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION | afxTransformFlags_SCALESHEAR)
 } afxTransformFlags;
 
 AFX_DEFINE_STRUCT(afxTransform)

@@ -39,9 +39,9 @@ _AFX void AfxCmdSetRasterizerState(afxDrawScript dscr, afxPipelineRasterizerStat
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 	AfxAssert(state);
-	AfxAssert(state->fillMode < AFX_FILL_MODE_TOTAL);
-	AfxAssert(state->cullMode < AFX_CULL_MODE_TOTAL);
-	AfxAssert(state->frontFace < AFX_FRONT_FACE_TOTAL);
+	AfxAssert(state->fillMode < afxFillMode_TOTAL);
+	AfxAssert(state->cullMode < afxCullMode_TOTAL);
+	AfxAssert(state->frontFace < afxFrontFace_TOTAL);
 	AfxAssert(state->lineWidth);
     dscr->cmd->setRasterizerState(dscr, state);
 }
@@ -51,7 +51,7 @@ _AFX void AfxCmdSetDepthState(afxDrawScript dscr, afxPipelineDepthState const *s
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 	AfxAssert(state);
-	AfxAssert(state->depthCompareOp < AFX_COMPARE_OP_TOTAL);
+	AfxAssert(state->depthCompareOp < afxCompareOp_TOTAL);
     dscr->cmd->setDepthState(dscr, state);
 }
 
@@ -60,7 +60,7 @@ _AFX void AfxCmdSetInputAssemblyState(afxDrawScript dscr, afxPipelineInputAssemb
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 	AfxAssert(state);
-	AfxAssert(state->topology < AFX_PRIM_TOPOLOGY_TOTAL);
+	AfxAssert(state->topology < afxPrimTopology_TOTAL);
     dscr->cmd->setInputAssemblyState(dscr, state);
 }
 
@@ -229,13 +229,13 @@ _AFX afxError AfxResetDrawScript(afxDrawScript dscr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 
-    if (dscr->state == AFX_DSCR_STATE_PENDING) AfxThrowError();
+    if (dscr->state == afxDrawScriptState_PENDING) AfxThrowError();
     else
     {
         if (dscr->vmt->reset(dscr)) AfxThrowError();
         else
         {
-            dscr->state = AFX_DSCR_STATE_INITIAL;
+            dscr->state = afxDrawScriptState_INITIAL;
         }
     }
     return err;
@@ -246,13 +246,13 @@ _AFX afxError AfxEndDrawScript(afxDrawScript dscr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 
-    if (dscr->state != AFX_DSCR_STATE_RECORDING) AfxThrowError();
+    if (dscr->state != afxDrawScriptState_RECORDING) AfxThrowError();
     else
     {
         if (dscr->vmt->end(dscr)) AfxThrowError();
         else
         {
-            dscr->state = AFX_DSCR_STATE_EXECUTABLE;
+            dscr->state = afxDrawScriptState_EXECUTABLE;
         }
     }
     return err;
@@ -263,13 +263,13 @@ _AFX afxError AfxBeginDrawScript(afxDrawScript dscr, afxBool permanent)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
 
-    if (!(dscr->state == AFX_DSCR_STATE_INITIAL || dscr->state == AFX_DSCR_STATE_EXECUTABLE)) AfxThrowError();
+    if (!(dscr->state == afxDrawScriptState_INITIAL || dscr->state == afxDrawScriptState_EXECUTABLE)) AfxThrowError();
     else
     {
         if (dscr->vmt->begin(dscr, permanent)) AfxThrowError();
         else
         {
-            dscr->state = AFX_DSCR_STATE_RECORDING;
+            dscr->state = afxDrawScriptState_RECORDING;
         }
     }
     return err;
@@ -315,7 +315,7 @@ _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt
             afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&din->scripts, i);
             AfxAssertObjects(1, &dscr2, AFX_FCC_DSCR);
 
-            if (AFX_DSCR_STATE_INVALID == AfxGetDrawScriptState(dscr2))
+            if (afxDrawScriptState_INVALID == AfxGetDrawScriptState(dscr2))
             {
                 if (AfxResetDrawScript(dscr2)) AfxThrowError();
                 else

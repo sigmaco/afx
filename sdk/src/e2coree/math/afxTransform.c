@@ -37,7 +37,7 @@ _AFXINL void AfxTransformZero(afxTransform *t)
     AfxV4dZero(t->origin);
     AfxQuatZero(t->orientation);
     AfxM3dZero(t->scaleShear);
-    t->flags = AFX_TRANSFORM_FLAG_ALL;
+    t->flags = afxTransformFlags_ALL;
 }
 
 _AFXINL void AfxTransformSet(afxTransform *t, afxV4d const origin, afxQuat const orientation, afxM3d const scaleShear)
@@ -49,7 +49,7 @@ _AFXINL void AfxTransformSet(afxTransform *t, afxV4d const origin, afxQuat const
     AfxV4dCopy(t->origin, origin);
     AfxQuatCopy(t->orientation, orientation);
     AfxM3dCopy(t->scaleShear, scaleShear);
-    t->flags = AFX_TRANSFORM_FLAG_ALL;
+    t->flags = afxTransformFlags_ALL;
 }
 
 _AFXINL void AfxTransformSetWithIdentityCheck(afxTransform *t, afxV4d const origin, afxQuat const orientation, afxM3d const scaleShear)
@@ -59,7 +59,7 @@ _AFXINL void AfxTransformSetWithIdentityCheck(afxTransform *t, afxV4d const orig
     AfxAssert(orientation);
     AfxAssert(scaleShear);
     AfxTransformSet(t, origin, orientation, scaleShear);
-    t->flags = NIL | (AfxV4dIsIdentity(origin) ? NIL : AFX_TRANSFORM_FLAG_ORIGIN) | (AfxQuatIsIdentity(orientation) ? NIL : AFX_TRANSFORM_FLAG_ORIENTATION) | (AfxM3dIsIdentity(scaleShear) ? NIL : AFX_TRANSFORM_FLAG_SCALESHEAR);
+    t->flags = NIL | (AfxV4dIsIdentity(origin) ? NIL : afxTransformFlags_ORIGIN) | (AfxQuatIsIdentity(orientation) ? NIL : afxTransformFlags_ORIENTATION) | (AfxM3dIsIdentity(scaleShear) ? NIL : afxTransformFlags_SCALESHEAR);
 }
 
 _AFXINL void AfxTransformMultiply(afxTransform const *t, afxTransform const *other, afxTransform *out)
@@ -142,7 +142,7 @@ _AFXINL void AfxTransformBlendLinearly(afxTransform *t, afxTransform const* a, a
 
     t->flags = b->flags | a->flags;
 
-    if (t->flags & AFX_TRANSFORM_FLAG_ORIGIN)
+    if (t->flags & afxTransformFlags_ORIGIN)
     {
         afxReal v5 = 1.0 - time;
         t->origin[0] = v5 * a->origin[0] + time * b->origin[0];
@@ -154,7 +154,7 @@ _AFXINL void AfxTransformBlendLinearly(afxTransform *t, afxTransform const* a, a
         AfxV4dMakeIdentity(t->origin);
     }
 
-    if (t->flags & AFX_TRANSFORM_FLAG_ORIENTATION)
+    if (t->flags & afxTransformFlags_ORIENTATION)
     {
         afxReal C0 = 1.0 - time;
         ScaleVectorPlusScaleVector4(t->orientation, C0, a->orientation, time, b->orientation);
@@ -165,7 +165,7 @@ _AFXINL void AfxTransformBlendLinearly(afxTransform *t, afxTransform const* a, a
         AfxQuatMakeIdentity(t->orientation);
     }
 
-    if (t->flags & AFX_TRANSFORM_FLAG_SCALESHEAR)
+    if (t->flags & afxTransformFlags_SCALESHEAR)
     {
         afxReal v7 = 1.0 - time;
         ScaleMatrixPlusScaleMatrix3x3(t->scaleShear, v7, a->scaleShear, time, b->scaleShear);
@@ -328,7 +328,7 @@ _AFXINL void AfxTransformComposeAffineM4d(afxTransform const *t, afxM4d m)
 
     AfxQuatMakeRotationM3d(t->orientation, Orientation);
 
-    if (t->flags & AFX_TRANSFORM_FLAG_SCALESHEAR)
+    if (t->flags & afxTransformFlags_SCALESHEAR)
     {
         AfxM3dMultiply(Orientation, t->scaleShear, MultBuffer);
         v2 = MultBuffer;
