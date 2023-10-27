@@ -17,11 +17,11 @@
 #include "sgl.h"
 
 #include "../e2coree/draw/afxDrawParadigms.h"
-#include "afx/draw/res/afxShader.h"
+#include "afx/draw/afxShader.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"
-#include "afx/core/io/afxUri.h"
-#include "afx/draw/res/afxShaderBlueprint.h"
+#include "afx/core/afxUri.h"
+#include "afx/draw/afxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER                                                                     //
@@ -99,13 +99,13 @@ _SGL afxError _SglShdDtor(afxShader shd)
     
     if (shd->glHandle)
     {
-        _SglDeleteGlRes(dctx, 6, shd->glHandle);
+        _SglDctxDeleteGlRes(dctx, 6, shd->glHandle);
         shd->glHandle = 0;
     }
 
     if (shd->glProgHandle)
     {
-        _SglDeleteGlRes(dctx, 7, shd->glProgHandle);
+        _SglDctxDeleteGlRes(dctx, 7, shd->glProgHandle);
         shd->glProgHandle = 0;
     }
 
@@ -163,13 +163,13 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     AfxCloneString(&shd->base.entry, &blueprint->entry.str);
 
     shd->base.code = NIL;
-    afxNat codeLen = AfxGetArrayPop(&blueprint->codes);
+    afxNat codeLen = AfxCountArrayElements(&blueprint->codes);
 
     if (codeLen && !(shd->base.code = AfxAllocate(ctx, codeLen, 0, AfxSpawnHint()))) AfxThrowError();
     else
     {
         AfxAssertType(&blueprint->codes, AFX_FCC_ARR);
-        AfxSerializeArray(&blueprint->codes, shd->base.code);
+        AfxDumpArray(&blueprint->codes, shd->base.code);
     }
 
     shd->base.codeLen = codeLen;
@@ -182,7 +182,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
         shd->base.resDeclCnt = 0;
         shd->base.resDecls = NIL;
 
-        afxNat resDeclCnt = AfxGetArrayPop(&blueprint->resources);
+        afxNat resDeclCnt = AfxCountArrayElements(&blueprint->resources);
 
         if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(ctx, resDeclCnt * sizeof(shd->base.resDecls[0]), 0, AfxSpawnHint()))) AfxThrowError();
         else
@@ -205,7 +205,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
         if (!err)
         {
-            afxNat ioCnt = AfxGetArrayPop(&blueprint->inOuts);
+            afxNat ioCnt = AfxCountArrayElements(&blueprint->inOuts);
             shd->base.ioDeclCnt = 0;
             shd->base.ioDecls = NIL;
 

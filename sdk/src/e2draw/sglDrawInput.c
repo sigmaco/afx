@@ -18,7 +18,7 @@
 #include "afx/afxQwadro.h"
 #include "afx/draw/afxDrawInput.h"
 
-_SGL afxError _AfxDinFreeAllBuffers(afxDrawInput din)
+_SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
@@ -89,7 +89,7 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
     AfxAssert(scripts);
 
     afxDrawContext dctx;
-    AfxGetConnectedDrawInputContext(din, &dctx);
+    AfxGetDrawInputConnection(din, &dctx);
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -125,7 +125,7 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
     AfxAssert(outputBufIdx);
 
     afxDrawContext dctx;
-    AfxGetConnectedDrawInputContext(din, &dctx);
+    AfxGetDrawInputConnection(din, &dctx);
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -153,45 +153,11 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
     return err;
 }
 
-_SGL afxError _SglDinVmtDctxCb(afxDrawInput din, afxDrawContext from, afxDrawContext to, afxNat *slotIdx)
+_SGL afxError _SglDinProcCb(afxDrawInput din, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
-
-    // TODO discard pull request submissions too.
-
-    //AfxDiscardAllDrawInputSubmissions(din);
-
-    if (from)
-    {
-        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
-
-        if (_SglDctxVmtDinCb(from, din, FALSE, slotIdx))
-            AfxThrowError(); // ask dctx to unlink this dout
-
-        din->base.dctx = NIL;
-        _AfxDinFreeAllBuffers(din);
-    }
-    
-    if (to)
-    {
-        AfxAssertObjects(1, &to, AFX_FCC_DCTX);
-
-        if (_SglDctxVmtDinCb(to, din, TRUE, slotIdx))
-            AfxThrowError(); // ask dctx to unlink this dout
-
-        din->base.dctx = to;
-    }
-
-    //AfxDiscardAllDrawInputSubmissions(din);
-
-    return err;
-}
-
-_SGL afxError _SglDinVmtProcCb(afxDrawThread dthr, afxDrawInput din)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
 
     if (din->base.prefetchEnabled)
     {
@@ -208,7 +174,6 @@ _SGL afxError _SglDinVmtProcCb(afxDrawThread dthr, afxDrawInput din)
 
 _SGL _afxDinVmt const _SglDinVmt =
 {
-    _SglDinVmtDctxCb,
     NIL,
     _SglDinSubmit,
     _SglDinPresent
@@ -221,7 +186,7 @@ _SGL afxError _SglDinDtor(afxDrawInput din)
 
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
 
-    AfxDisconnectDrawInput(din, NIL);
+    AfxDisconnectDrawInput(din);
 
     // avoid draw thread entrance
 
@@ -241,14 +206,16 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
 
-    afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[0]) + cookie->no;
+    afxNat devId = *(afxNat const *)(cookie->udd[0]);
+    afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[1]) + cookie->no;
 
     afxDrawDevice ddev = AfxGetObjectProvider(din);
     afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
+    
+    AfxPushLinkage(&din->base.dctx, NIL);
 
-    din->base.dctx = NIL;
-    afxContext mem = AfxGetDrawSystemContext(dsys);
+    afxContext mem = AfxGetDrawSystemMemory(dsys);
     din->base.mem = mem;
 
     din->base.prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
@@ -259,6 +226,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     din->base.minScriptReserve = 2;
 
     din->base.vmt = NIL;
+    din->base.procCb = NIL;
 
     if (config && config->udd)
     {
@@ -266,6 +234,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     }
 
     din->base.vmt = &_SglDinVmt;
+    din->base.procCb = _SglDinProcCb;
 
     return err;
 }

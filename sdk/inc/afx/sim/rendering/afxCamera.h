@@ -17,8 +17,8 @@
 #ifndef AFX_CAMERA_H
 #define AFX_CAMERA_H
 
-#include "afx/core/mem/afxArray.h"
-#include "afx/math/volume/afxFrustum.h"
+#include "afx/core/afxArray.h"
+#include "afx/math/afxFrustum.h"
 #include "../afxNode.h"
 
 #define AFX_CAM_ALIGN AFX_SIMD_ALIGN
@@ -38,23 +38,21 @@
     The offset vector has horizontal and vertical offsets as its first two components (respectively), and the distance from camera as its third component.
 
     Note that elevation is measured as rotation about the X (right axis (hence, it is negative if it is above the horizontal, positive if it is below), azimuth is measured as rotation about the Y (up axis, and, and roll is measured as rotation about the Z (back axis.
-
-
 */
 
 typedef enum
 {
     /// cam will render objects uniformly, with no sense of perspective.
-    AFX_CAM_ORTHOGRAPHIC,
+    afxCameraType_ORTHOGRAPHIC,
     /// cam will render objects with perspective intact.
-    AFX_CAM_PERSPECTIVE
+    afxCameraType_PERSPECTIVE
 } afxCameraType;
 
 typedef enum afxCameraDepthRange
 {
-    AFX_CAM_OUT_DEPTH_RANGE_ZERO2ONE = 0x0, // Direct3D
-    AFX_CAM_OUT_DEPTH_RANGE_NEGONE2ONE = 0x1, // OpenGL (default in Qwadro)
-    AFX_CAM_OUT_DEPTH_RANGE_NEGONE2ZERO = 0x2,
+    afxCameraDepthRange_ZERO2ONE = 0x0, // Direct3D
+    afxCameraDepthRange_NEGONE2ONE = 0x1, // OpenGL (default in Qwadro)
+    afxCameraDepthRange_NEGONE2ZERO = 0x2,
 } afxCameraDepthRange;
 
 #ifdef _AFX_CAMERA_C
@@ -86,26 +84,25 @@ AFX_OBJECT(afxCamera)
 
 //static_assert(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
-AFX afxFrustum* AfxCameraCopyFrustum(afxCamera cam, afxFrustum *frustum);
-AFX afxResult   AfxCameraCaptureNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedNods);
-AFX afxResult   AfxCameraCaptureSpecificNodes(afxCamera cam, afxM4d p, afxNode root, afxArray *capturedObjs, afxNat typeCnt, afxFcc types[]);
+AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[]);
+
+AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum *frustum);
 
 
-
-AFX void    AfxCameraReset(afxCamera cam);
+AFX void AfxResetCamera(afxCamera cam);
 
 // From there, you can directly set many values to customize the camera:
 
-AFX afxReal AfxCameraGetFov(afxCamera cam);
-AFX void    AfxCameraSetFov(afxCamera cam, afxReal fov);
+AFX afxReal AfxGetCameraFov(afxCamera cam);
+AFX void AfxSetCameraFov(afxCamera cam, afxReal fov);
 
-AFX void    AfxCameraSetClipPlanes(afxCamera cam, afxReal near, afxReal far);
-AFX void    AfxCameraGetClipPlanes(afxCamera cam, afxReal *near, afxReal *far);
+AFX void AfxSetCameraClipPlanes(afxCamera cam, afxReal near, afxReal far);
+AFX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far);
 
 // After initialization, you need to set the camera's aspect ratios. This must be done any time the display device, resolution, 
 // or window size changes (or, to make things simple,  you can simply set it every frame, since it is not terribly expensive):
 
-AFX void    AfxCameraSetAspectRatios(afxCamera cam, afxReal physicalAspectRatio, afxV2d const screenExtent, afxV2d const windowExtent);
+AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physicalAspectRatio, afxReal const screenExtent[2], afxReal const windowExtent[2]);
 
 // Note that the choice of physical aspect ratio is important in making sure your game looks proper on all display devices.
 // For consoles especially, it is important to give the user a choice of aspect ratios, since their home theatre setup may not always be NTSC.
@@ -121,40 +118,40 @@ AFX afxReal AfxCameraGetMostLikelyPhysicalAspectRatio(afxInt screenWidth, afxInt
 // The EAR vector has the elevation as its first component, azimuth as its second, and roll as its third (all three are in radians). 
 // The offset vector has horizontal and vertical offsets as its first two components (respectively), and the distance from camera as its third component:
 
-AFX void    AfxCameraGetOffset(afxCamera cam, afxV3d offset);
-AFX void    AfxCameraSetOffset(afxCamera cam, afxV3d const offset);
-AFX void    AfxCameraAddOffset(afxCamera cam, afxV3d const offset);
+AFX void    AfxGetCameraOffset(afxCamera cam, afxReal offset[3]);
+AFX void    AfxSetCameraOffset(afxCamera cam, afxReal const offset[3]);
+AFX void    AfxAddCameraOffset(afxCamera cam, afxReal const offset[3]);
 
-AFX afxReal AfxCameraGetDistance(afxCamera cam);
-AFX void    AfxCameraSetDistance(afxCamera cam, afxReal distance);
-AFX void    AfxCameraAddDistance(afxCamera cam, afxReal distance);
+AFX afxReal AfxGetCameraDistance(afxCamera cam);
+AFX void    AfxSetCameraDistance(afxCamera cam, afxReal distance);
+AFX void    AfxAddCameraDistance(afxCamera cam, afxReal distance);
 
-AFX void    AfxCameraGetElevAzimRoll(afxCamera cam, afxV3d elevAzimRoll);
-AFX void    AfxCameraSetElevAzimRoll(afxCamera cam, afxV3d const elevAzimRoll);
-AFX void    AfxCameraAddElevAzimRoll(afxCamera cam, afxV3d const elevAzimRoll);
+AFX void    AfxGetCameraElevAzimRoll(afxCamera cam, afxReal elevAzimRoll[3]);
+AFX void    AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3]);
+AFX void    AfxAddCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3]);
 
-AFX afxReal AfxCameraGetElevation(afxCamera cam);
-AFX void    AfxCameraSetElevation(afxCamera cam, afxReal elev);
-AFX void    AfxCameraAddElevation(afxCamera cam, afxReal elev);
+AFX afxReal AfxGetCameraElevation(afxCamera cam);
+AFX void    AfxSetCameraElevation(afxCamera cam, afxReal elev);
+AFX void    AfxAddCameraElevation(afxCamera cam, afxReal elev);
 
-AFX afxReal AfxCameraGetAzimuth(afxCamera cam);
-AFX void    AfxCameraSetAzimuth(afxCamera cam, afxReal azim);
+AFX afxReal AfxGetCameraAzimuth(afxCamera cam);
+AFX void    AfxSetCameraAzimuth(afxCamera cam, afxReal azim);
 AFX void    AfxCameraAddAzimuth(afxCamera cam, afxReal azim);
 
-AFX afxReal AfxCameraGetRoll(afxCamera cam);
-AFX void    AfxCameraSetRoll(afxCamera cam, afxReal roll);
-AFX void    AfxCameraAddRoll(afxCamera cam, afxReal roll);
+AFX afxReal AfxGetCameraRoll(afxCamera cam);
+AFX void    AfxSetCameraRoll(afxCamera cam, afxReal roll);
+AFX void    AfxAddCameraRoll(afxCamera cam, afxReal roll);
 
 // Note that elevation is measured as rotation about the X(right) axis(hence, it is negative if it is above the horizontal, positive if it is below), 
 // azimuth is measured as rotation about the Y(up) axis, and, and roll is measured as rotation about the Z(back) axis.
 
 // For picking 3D objects with the mouse, it's necessary to be able to take a point on the screen and figure out where it would be in world-space. Qwadro can do this for you automatically like this:
 
-AFX void    AfxCameraResolveScreenToWorldCoord(afxCamera cam, afxV2d const wh, afxV3d const screenPoint, afxV4d worldPoint);
+AFX void AfxCameraResolveScreenToWorldCoord(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4]);
 
 // Since ray-based object picking is the most standard use of this function, Qwadro also provides a more hands-free version of the call that gives you all the picking ray information in one step:
 
-AFX void    AfxCameraGetPickingRay(afxCamera cam, afxV2d const wh, afxV2d const cursor, afxV4d origin, afxV3d normal);
+AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal const cursor[2], afxReal origin[4], afxReal normal[3]);
 
 // Note that the MouseY must be "pre-flipped" to align with the standard 3D alignment of the Y-axis as going up.
 // Most window systems have Y increasing downwards, whereas 3D graphics traditionally has Y increasing upwards, so you will often have to do a conversion like this before calling GetPickingRay:
@@ -168,7 +165,7 @@ AFX void    AfxCameraGetPickingRay(afxCamera cam, afxV2d const wh, afxV2d const 
 // In addition to going from window space to world space, the camera routines also allow you to go in the other direction.
 // For example, if you want to project a single point from world space to window space, you can use WorldToWindowSpace like this:
 
-AFX void    AfxCameraResolveWorldToScreenCoord(afxCamera cam, afxV2d const wh, afxV4d const worldPoint, afxV3d screenPoint);
+AFX void AfxCameraResolveWorldToScreenCoord(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3]);
 
 // Obviously, this routine is not optimized for large workloads, so it should only be used for occasional projections.
 
@@ -177,7 +174,7 @@ AFX void    AfxCameraResolveWorldToScreenCoord(afxCamera cam, afxV2d const wh, a
 // which requires transforming the 2D vector of the movement into the appropriate 3D vector in world space. 
 // You can have Qwadro generate the necessary transform for you by using GetRelativePlanarBases:
 
-AFX void    AfxCameraGetRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxV3d const planeNormal, afxV4d const pointOnPlane, afxV3d xBasis, afxV3d yBasis);
+AFX void AfxGetCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3]);
 
 // The result from GetRelativePlanarBases is two vectors, one which is the world-space vector along which X motion should be interpreted(ie., horizontal movement via the keyboard or analog stick), 
 // and the other is for Y. These vectors are unit length, but they are only orthogonal in world space if you pass false for the second parameter. 
@@ -187,29 +184,29 @@ AFX void    AfxCameraGetRelativePlanarBases(afxCamera cam, afxBool screenOrthogo
 // When using a afxCamera with certain graphics APIs and/or certain algorithms, you may find that you need explicit control over what the Z projection range is, 
 // and whether or not there is a far clipping plane. To accomodate these needs, the afxCamera has some expert settings that you can adjust:
 
-AFX afxCameraDepthRange AfxCameraGetDepthRange(afxCamera cam);
-AFX void                AfxCameraSetDepthRange(afxCamera cam, afxCameraDepthRange range);
+AFX afxCameraDepthRange AfxGetCameraDepthRange(afxCamera cam);
+AFX void                AfxSetCameraDepthRange(afxCamera cam, afxCameraDepthRange range);
 
-AFX afxReal             AfxCameraGetDepthRangeEpsilon(afxCamera cam);
-AFX void                AfxCameraSetDepthRangeEpsilon(afxCamera cam, afxReal epsilon);
+AFX afxReal             AfxGetCameraDepthRangeEpsilon(afxCamera cam);
+AFX void                AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal epsilon);
 
 
 
-AFX void    AfxCameraMoveRelative(afxCamera cam, afxV3d const motion);
+AFX void    AfxMoveCameraRelative(afxCamera cam, afxReal const motion[3]);
 
-AFX void    AfxCameraRecomputeMatrices(afxCamera cam);
+AFX void    AfxRecomputeCameraMatrices(afxCamera cam);
 
-AFX void    AfxCameraGetViewMatrices(afxCamera cam, afxM4d v, afxM4d iv);
-AFX void    AfxCameraGetProjectionMatrices(afxCamera cam, afxM4d p, afxM4d ip);
+AFX void    AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4]);
+AFX void    AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4]);
 
-AFX void    AfxCameraGetViewpoint(afxCamera cam, afxV4d origin);
-AFX void    AfxCameraGetLeft(afxCamera cam, afxV3d left);
-AFX void    AfxCameraGetRight(afxCamera cam, afxV3d right);
-AFX void    AfxCameraGetUp(afxCamera cam, afxV3d up);
-AFX void    AfxCameraGetDown(afxCamera cam, afxV3d down);
-AFX void    AfxCameraGetForward(afxCamera cam, afxV3d fwd);
-AFX void    AfxCameraGetBack(afxCamera cam, afxV3d back);
+AFX void    AfxGetCameraViewpoint(afxCamera cam, afxReal origin[4]);
+AFX void    AfxGetCameraLeft(afxCamera cam, afxReal left[3]);
+AFX void    AfxGetCameraRight(afxCamera cam, afxReal right[3]);
+AFX void    AfxGetCameraUp(afxCamera cam, afxReal up[3]);
+AFX void    AfxGetCameraDown(afxCamera cam, afxReal down[3]);
+AFX void    AfxGetCameraForward(afxCamera cam, afxReal fwd[3]);
+AFX void    AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 
-AFX afxReal AfxCameraFindAllowedLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
 
 #endif//AFX_CAMERA_H

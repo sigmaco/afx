@@ -99,6 +99,8 @@ AFX_OBJECT(afxEntity)
     AFX_OBJECT(afxNode) nod;
 };
 
+AFX afxError        AfxAcquireEntities(afxSimulation sim, afxNat cnt, afxEntity ent[], afxBody bod[]);
+
 AFX afxNode     AfxEntityGetNode(afxEntity ent);
 
 #endif//AFX_ENTITY_H

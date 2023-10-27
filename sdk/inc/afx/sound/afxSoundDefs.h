@@ -17,9 +17,9 @@
 #ifndef AFX_SOUND_DEFS_H
 #define AFX_SOUND_DEFS_H
 
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 #include "afx/core/afxSimd.h"
-#include "afx/math/afxMathDefs.h"
+#include "afx/math/afxTransform.h"
 
 typedef enum afxCurveInterpolation // curve interpolation types
 {

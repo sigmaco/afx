@@ -15,6 +15,7 @@
  */
 
 // The Autonomous Draw System, responsible to manage resources and provide drawing capabilities.
+// This section is part of SIGMA GL.
 
 #ifndef AFX_DRAW_SYSTEM_H
 #define AFX_DRAW_SYSTEM_H
@@ -28,46 +29,18 @@
 #include "afx/draw/afxColor.h"
 #include "afx/draw/afxVertex1.h"
 
-#include "afx/draw/pipelining/afxDrawOperation.h"
+#include "afx/draw/afxDrawOperation.h"
 #include "afx/core/afxModule.h"
 #include "afx/core/afxApplication.h"
 
-AFX_DECLARE_STRUCT(afxTextureStorageRegistry);
-
-AFX_DEFINE_STRUCT(afxTextureStorageSpecification)
-{
-    afxString const*    name;
-    afxString const*    author;
-    afxString const*    website;
-    afxString const*    note;
-    afxNat              verMajor;
-    afxNat              verMinor;
-    afxNat              verPatch;
-    afxNat              extCnt;
-    afxString const*    exts;
-
-    afxNat              minScale;
-    afxNat              maxScale;
-    afxNat              minDepth;
-    afxNat              maxDepth;
-    afxNat              minBpp;
-    afxNat              maxBpp;
-    afxBool             hasAlpha;
-
-    afxError            (*acq)(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const uri[]);
-    // coacquire for batch layered textures such as DDS?
-    afxError            (*upload)(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri);
-    afxError            (*download)(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri);
-    afxError            (*uploadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
-    afxError            (*downloadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
-};
-
 typedef enum afxDrawDeviceType
 {
-    AFX_DDEV_TYPE_CPU, // CPU with no graphic support --- ex.: Ryzen 7
-    AFX_DDEV_TYPE_IGPU, // integrated GPU --- ex.: Intel HD Graphics
-    AFX_DDEV_TYPE_DGPU, // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
-    AFX_DDEV_TYPE_VGPU, // virtual GPU --- ex.: VM/sandboxed instantiation.
+    afxDrawDeviceType_CPU, // CPU with no graphic support --- ex.: Ryzen 7
+    afxDrawDeviceType_IGPU, // integrated GPU --- ex.: Intel HD Graphics
+    afxDrawDeviceType_DGPU, // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
+    afxDrawDeviceType_VGPU, // virtual GPU --- ex.: VM/sandboxed instantiation.
+
+    afxDrawDeviceType_TOTAL
 } afxDrawDeviceType;
 
 AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
@@ -259,8 +232,6 @@ AFX_DEFINE_STRUCT(afxDrawPortCaps)
     afxNat                  queCnt;
 };
 
-AFX_DECLARE_STRUCT(_afxDdevVmt);
-
 AFX_DEFINE_STRUCT(afxDrawDeviceInfo)
 {
     afxString const*        domain;
@@ -274,13 +245,13 @@ AFX_DEFINE_STRUCT(afxDrawDeviceInfo)
     afxClassConfig const*   dinClsConfig;
 };
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_DEVICE_C
 AFX_OBJECT(afxDrawDevice)
 #else
 struct afxBaseDrawDevice
 #endif
-{
-    _afxDdevVmt const*      vmt;
+{    
     afxChain                classes;
     afxClass                contexts;
     afxClass                outputs;
@@ -294,7 +265,12 @@ struct afxBaseDrawDevice
 
     afxString               domain;
     afxString               name;
+
+    afxError                (*procCb)(afxDrawDevice,afxDrawThread); // call their draw threads.
+    afxError                (*relinkDin)(afxDrawDevice,afxDrawInput,afxDrawContext);
+    afxError                (*relinkDout)(afxDrawDevice,afxDrawOutput,afxDrawContext);
 };
+#endif
 
 AFX_DEFINE_STRUCT(afxDrawIcdInfo)
 {
@@ -312,6 +288,7 @@ AFX_DEFINE_STRUCT(afxDrawIcdInfo)
 
 AFX_DEFINE_HANDLE(afxDrawIcd);
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_DRIVER_C
 AFX_OBJECT(afxDrawIcd)
 {
@@ -328,6 +305,7 @@ AFX_OBJECT(afxDrawIcd)
     afxNat              verPatch; // 0
 };
 #endif
+#endif
 
 AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 {
@@ -335,6 +313,7 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
     afxSize const*      attrs[2];
 };
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_SYSTEM_C
 AFX_OBJECT(afxDrawSystem)
 {
@@ -347,49 +326,62 @@ AFX_OBJECT(afxDrawSystem)
     afxClass            outputs;
     afxClass            inputs;
     afxClass            threads;
-    afxChain            texIoCodecs;
     afxDrawIcd          e2draw; // SIGMA GL is required for minimal operability since core has no more embedded fallback.
 };
 #endif
+#endif
 
-AFX void                AfxChooseDrawSystemConfiguration(afxDrawSystemConfig *config, afxNat extendedSiz);
-AFX afxError            AfxAcquireDrawSystems(afxNat cnt, afxDrawSystem dsys[], afxDrawSystemConfig const config[]);
+AFX void            AfxChooseDrawSystemConfiguration(afxDrawSystemConfig *config, afxNat extendedSiz);
 
-AFX afxContext          AfxGetDrawSystemContext(afxDrawSystem dsys);
+AFX afxError        AfxAcquireDrawSystems(afxNat cnt, afxDrawSystemConfig const config[], afxDrawSystem dsys[]);
 
-AFX afxBool             AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *ddev);
-AFX afxError            AfxRegisterDrawDevices(afxDrawSystem dsys, afxNat cnt, afxDrawDevice ddev[], afxDrawDeviceInfo const *spec);
-AFX afxError            AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThread dthr[], afxDrawThreadConfig const config[]);
+AFX afxContext      AfxGetDrawSystemMemory(afxDrawSystem dsys);
 
-AFX afxNat              AfxEnumerateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawThread dthr[]);
-AFX afxNat              AfxEnumerateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawDevice ddev[]);
+AFX afxClass*       AfxGetDrawThreadClass(afxDrawSystem dsys);
+AFX afxClass*       AfxGetDrawDeviceClass(afxDrawSystem dsys);
 
-AFX afxNat              AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
-AFX afxNat              AfxCurateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
+AFX afxNat          AfxCountDrawThreads(afxDrawSystem dsys);
+AFX afxNat          AfxCountDrawDevices(afxDrawSystem dsys);
 
-AFX afxNat              AfxCountDrawThreads(afxDrawSystem dsys);
-AFX afxNat              AfxCountDrawDevices(afxDrawSystem dsys);
+AFX afxNat          AfxEnumerateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawThread dthr[]);
+AFX afxNat          AfxEnumerateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawDevice ddev[]);
+AFX afxNat          AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawInput din[]);
+AFX afxNat          AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
+AFX afxNat          AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawContext dctx[]);
 
-AFX afxClass*           AfxGetDrawThreadClass(afxDrawSystem dsys);
-AFX afxClass*           AfxGetDrawDeviceClass(afxDrawSystem dsys);
+AFX afxNat          AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
+AFX afxNat          AfxCurateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
+AFX afxNat          AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AFX afxNat          AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+AFX afxNat          AfxCurateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
 
-AFX afxNat              AfxChooseTextureStorage(afxDrawSystem dsys, afxTexture tex, afxTextureRegion const *rgn);
-AFX afxResult           AfxDescribeTextureStorages(afxDrawSystem dsys, afxNat first, afxNat cnt, afxTextureStorageSpecification spec[]);
-AFX afxResult           AfxEnumerateTextureStorages(afxDrawSystem dsys, afxNat first, afxNat cnt, afxTextureStorageRegistry *storage[]);
-AFX afxResult           AfxRegisterTextureStorages(afxDrawSystem dsys, afxNat cnt, afxTextureStorageSpecification const spec[]);
+AFX afxBool         AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *ddev);
 
-//AFX afxNat              AfxPostDrawEvent(afxUniqueID eventId, );
+////////////////////////////////////////////////////////////////////////////////
+// DRAW DEVICE                                                                //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX void                AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps);
-AFX void                AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits);
-AFX void                AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps* caps);
-AFX afxNat              AfxCountDrawPorts(afxDrawDevice ddev);
+AFX afxBool         AfxDrawDeviceIsRunning(afxDrawDevice ddev);
 
-AFX afxBool             AfxDrawDeviceIsRunning(afxDrawDevice ddev);
-AFX afxClass*           AfxGetDrawInputClass(afxDrawDevice ddev);
-AFX afxNat              AfxCountDrawInputs(afxDrawDevice ddev);
+AFX void            AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps);
+AFX void            AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits);
 
-AFX afxNat              AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawInput din[]);
-AFX afxNat              AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AFX afxNat          AfxCountDrawPorts(afxDrawDevice ddev);
+AFX void            AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps* caps);
+
+AFX afxClass*       AfxGetDrawInputClass(afxDrawDevice ddev);
+AFX afxClass*       AfxGetDrawOutputClass(afxDrawDevice ddev);
+AFX afxClass*       AfxGetDrawContextClass(afxDrawDevice ddev);
+
+AFX afxNat          AfxCountDrawInputs(afxDrawDevice ddev);
+AFX afxNat          AfxCountDrawOutputs(afxDrawDevice ddev);
+AFX afxNat          AfxCountDrawContexts(afxDrawDevice ddev);
+
+
+AFX afxError        AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[]);
+
+AFX afxError        AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]);
+
+AFX afxError        AfxOpenDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[]);
 
 #endif//AFX_DRAW_SYSTEM_H

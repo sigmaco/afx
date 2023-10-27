@@ -16,8 +16,8 @@
 
 #include "sgl.h"
 
-#include "afx/draw/pipelining/afxPipelineRig.h"
-#include "afx/draw/pipelining/afxPipelineRig.h"
+#include "afx/draw/afxPipelineRig.h"
+#include "afx/draw/afxPipelineRig.h"
 #include "afx/draw/afxDrawSystem.h"
 
 #if 0
@@ -288,7 +288,7 @@ _SGL afxError _SglLegoCtor(afxPipelineRig lego, afxCookie const* cookie)
 
     AfxAssert(blueprint);
 
-    afxNat bindCnt = AfxGetArrayPop(&blueprint->bindings);
+    afxNat bindCnt = AfxCountArrayElements(&blueprint->bindings);
     AfxAssert(bindCnt);
 
     lego->base.entryCnt = 0;

@@ -16,7 +16,7 @@ _AFXEXPORT afxResult AfxUpdateApplication(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
 
-    return AFX_SUCCESS;
+    return err;
 }
 
 _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
@@ -49,7 +49,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutConfig.presentTransform = NIL;
     doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 
-    dout = AfxAcquireDrawOutputs(dctx, &doutConfig);
+    dout = AfxOpenDrawOutputs(dctx, &doutConfig);
     AfxAssert(dout);
 
     afxDrawInputConfig dinConfig = { 0 };
@@ -60,12 +60,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     dinConfig.enabledPresentationThreads = (afxNat[]) { 1, 0, 0, 0 };
     dinConfig.enabledStreamingThreads = (afxNat[]) { 1, 1, 1, 1 };
     dinConfig.enabledSubmissionThreads = (afxNat[]) { 1, 1, 1, 1 };
-    din = AfxAcquireDrawInputs(dctx, &dinConfig);
+    din = AfxOpenDrawInputs(dctx, &dinConfig);
     AfxAssert(din);
     //AfxEnableDrawInputPrefetching(din, 0, 1, (afxNat[]) { 1 });
 
     afxResult rslt;
-    return AFX_SUCCESS;
+    return err;
 }
 
 _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
@@ -74,7 +74,7 @@ _AFXEXPORT afxResult AfxLeaveApplication(afxApplication app)
     AfxReleaseObject(&dinD->obj);
     AfxEcho("aaaaaaaaaaaa");
 
-    return AFX_SUCCESS;
+    return err;
 }
 
 int AfxMain(afxApplication app, int argc, char const* argv[])

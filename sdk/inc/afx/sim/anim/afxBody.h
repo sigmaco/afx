@@ -36,8 +36,6 @@ AFX_DEFINE_HANDLE(afxBody);
 
 AFX_OBJECT(afxBody)
 {
-    afxInstance           obj;
-
     afxModel            mdl; // afxModel
     afxSkeleton         cachedSkl;
     void*               cachedBones;
@@ -57,26 +55,26 @@ AFX_OBJECT(afxBody)
                         angularDamping;
 };
 
-AFX afxModel            AfxBodyGetModel(afxBody bod);
-AFX afxSkeleton         AfxBodyGetSkeleton(afxBody bod);
+AFX afxError            AfxEmbodyModel(afxModel mdl, afxNat cnt, afxBody bod[]);
+
+AFX afxModel            AfxGetBodyModel(afxBody bod);
+AFX afxSkeleton         AfxGetBodySkeleton(afxBody bod);
     
-AFX void                AfxBodyResetClock(afxBody bod);
-AFX void                AfxBodyUpdateModelMatrix(afxBody bod, afxReal secondsElapsed, afxM4d const mm, afxM4d dest, afxBool inverse);
+AFX void                AfxResetBodyClock(afxBody bod);
+AFX void                AfxUpdateBodyModelMatrix(afxBody bod, afxReal secsElapsed, afxM4d const mm, afxM4d dest, afxBool inverse);
 
-AFX void                AfxBodyRecenterAllClocks(afxBody bod, afxReal dCurrentClock);
+AFX void                AfxRecenterBodyAllClocks(afxBody bod, afxReal currClock);
 
-AFX void                AfxBodySetClock(afxBody bod, afxReal newClock);
-AFX void                AfxBodyFreeCompletedControls(afxBody bod);
-AFX void **             AfxBodyGetUserDataArray(afxBody bod);
+AFX void                AfxSetBodyClock(afxBody bod, afxReal newClock);
+AFX void                AfxFreeCompletedBodyControls(afxBody bod);
+AFX void **             AfxGetBodyUserDataArray(afxBody bod);
+
+AFX void                AfxGetBodyRootMotionVectors(afxBody bod, afxReal secsElapsed, afxReal translation[3], afxReal rotation[3], afxBool inverse);
+
+AFX void                AfxApplyRootMotionVectorsToMatrix(afxReal const mm[4][4], afxReal const translation[3], afxReal const rotation[3], afxReal m[4][4]);
 
 #if 0
-GRANNY_DYNLINK(granny_model_instance *) GrannyInstantiateModel(granny_model const * Model);
-GRANNY_DYNLINK(void) GrannyFreeModelInstance(granny_model_instance * ModelInstance);
-GRANNY_DYNLINK(granny_model *) GrannyGetSourceModel(granny_model_instance const * Model);
-GRANNY_DYNLINK(granny_skeleton *) GrannyGetSourceSkeleton(granny_model_instance const * Model);
-GRANNY_DYNLINK(void) GrannySetModelClock(granny_model_instance const * ModelInstance,
-    granny_real32 NewClock);
-GRANNY_DYNLINK(void) GrannyFreeCompletedModelControls(granny_model_instance const * ModelInstance);
+
 GRANNY_DYNLINK(void) GrannyAccumulateModelAnimationsLODSparse(granny_model_instance const * ModelInstance,
     granny_int32x FirstBone,
     granny_int32x BoneCount,
@@ -136,11 +134,7 @@ GRANNY_DYNLINK(bool) GrannySampleSingleModelAnimationLOD(granny_model_instance c
     granny_int32x BoneCount,
     granny_local_pose * Result,
     granny_real32 AllowedError);
-GRANNY_DYNLINK(void) GrannyGetRootMotionVectors(granny_model_instance const * ModelInstance,
-    granny_real32 SecondsElapsed,
-    granny_real32 * ResultTranslation3,
-    granny_real32 * ResultRotation3,
-    bool Inverse);
+
 GRANNY_DYNLINK(void) GrannyClipRootMotionVectors(granny_real32 const * Translation3,
     granny_real32 const * Rotation3,
     granny_uint32 AllowableDOFs,
@@ -148,19 +142,11 @@ GRANNY_DYNLINK(void) GrannyClipRootMotionVectors(granny_real32 const * Translati
     granny_real32 * AllowedRotation3,
     granny_real32 * DisallowedTranslation3,
     granny_real32 * DisallowedRotation3);
-GRANNY_DYNLINK(void) GrannyApplyRootMotionVectorsToMatrix(granny_real32 const * ModelMatrix4x4,
-    granny_real32 const * Translation3,
-    granny_real32 const * Rotation3,
-    granny_real32 * DestMatrix4x4);
+
 GRANNY_DYNLINK(void) GrannyApplyRootMotionVectorsToLocalPose(granny_local_pose * Pose,
     granny_real32 const * Translation3,
     granny_real32 const * Rotation3);
-GRANNY_DYNLINK(void) GrannyUpdateModelMatrix(granny_model_instance const * ModelInstance,
-    granny_real32 SecondsElapsed,
-    granny_real32 const * ModelMatrix4x4,
-    granny_real32 * DestMatrix4x4,
-    bool Inverse);
-GRANNY_DYNLINK(void **) GrannyGetModelUserDataArray(granny_model_instance const * ModelInstance);
+
 #endif
 
 #endif//AFX_BODY_H

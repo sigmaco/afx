@@ -18,24 +18,25 @@
 #define AFX_LIGHT_H
 
 #include "afx/sim/afxNode.h"
-#include "afx/core/mem/afxArray.h"
+#include "afx/core/afxArray.h"
+#include "afx/draw/afxColor.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGN
 
 typedef enum
 {
     /// A light placed infinitely far away. It affects everything in the scene.
-    AFX_LIGHT_DIRECTIONAL,
+    afxLightType_DIRECTIONAL,
 
     /// A light that shines equally in all directions from its location, affecting all objects within its Range.
-    AFX_LIGHT_POINT,
+    afxLightType_POINT,
 
     /// A light that shines everywhere within a cone defined by Spot Angle and Range. Only objects within this region are affected by the light.
-    AFX_LIGHT_SPOT,
+    afxLightType_SPOT,
 
     /// A light that shines in all directions to one side of a rectangular area of a plane. The rectangle is defined by the Width and Height properties.
     /// Area lights are only available during lightmap baking and have no effect on objects at runtime.
-    AFX_LIGHT_AREA
+    afxLightType_AREA
 } afxLightType;
 
 AFX_OBJECT(afxLight)
@@ -55,6 +56,11 @@ AFX_OBJECT(afxLight)
     void                    *flareTex;
 };
 
+
+AFX afxLight        AfxSimulationAcquireDirectionalLight(afxSimulation sim, afxColor color);
+AFX afxLight        AfxSimulationAcquirePointLight(afxSimulation sim, afxColor color, afxReal range);
+AFX afxLight        AfxSimulationAcquireSpotLight(afxSimulation sim, afxColor color, afxReal range, afxReal radians);
+AFX afxLight        AfxSimulationAcquireAreaLight(afxSimulation sim, afxColor color);
 
 AFX afxNode     AfxLightGetNode(afxLight lit);
 AFX afxResult   AfxLightCaptureAffectedNodes(afxLight lit, afxNode root, afxArray *capturedNods);

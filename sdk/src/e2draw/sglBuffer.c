@@ -16,7 +16,7 @@
 
 
 #include "sgl.h"
-#include "afx/draw/res/afxBuffer.h"
+#include "afx/draw/afxBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "../e2coree/draw/afxDrawParadigms.h"
 #include "afx/draw/afxDrawSystem.h"
@@ -114,6 +114,9 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
     //AfxEntry("buf=%p", buf);
     afxError err = AFX_ERR_NONE;
     (void)dpu;
+    (void)unit;
+    (void)offset;
+    (void)rangeOrVtxStride;
 
     if (buf)
     {
@@ -304,7 +307,7 @@ _SGL afxError _SglBufDtor(afxBuffer buf)
 
     if (buf->glHandle)
     {
-        _SglDeleteGlRes(dctx, 0, buf->glHandle);
+        _SglDctxDeleteGlRes(dctx, 0, buf->glHandle);
         buf->glHandle = 0;
     }
 
@@ -374,8 +377,8 @@ _SGL afxError _SglVbufDtor(afxVertexBuffer vbuf)
 
     AfxReleaseObjects(1, (void*[]) { vbuf->base.buf });
 
-    AfxAssert(vbuf->base.sections);
-    AfxDeallocate(mem, vbuf->base.sections);
+    AfxAssert(vbuf->base.storages);
+    AfxDeallocate(mem, vbuf->base.storages);
 
     return err;
 }
@@ -406,7 +409,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     for (afxNat j = 0; j < blueprint->rowCnt; j++)
     {
         afxVertexFormat fmt = blueprint->row[j].fmt ? blueprint->row[j].fmt : blueprint->row[j].srcFmt;
-        AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
+        AfxAssert(afxVertexFormat_TOTAL > fmt);
 
         if (err)
             break;
@@ -446,7 +449,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
                 row->relOffset = 0;
 
                 fmt = blueprint->row[i].fmt ? blueprint->row[i].fmt : blueprint->row[i].srcFmt;
-                AfxAssert(AFX_VTX_FMT_TOTAL > fmt);
+                AfxAssert(afxVertexFormat_TOTAL > fmt);
                 row->fmt = fmt;
                 row->cnt = 1;
 
@@ -461,7 +464,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 
                 if (blueprint->row[i].src)
                 {
-                    AfxAssert(AFX_VTX_FMT_TOTAL > blueprint->row[i].srcFmt);
+                    AfxAssert(afxVertexFormat_TOTAL > blueprint->row[i].srcFmt);
 
                     if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, blueprint->row[i].src, blueprint->row[i].srcFmt))
                         AfxThrowError();
@@ -529,7 +532,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
         }
 
         afxVertexFormat fmt = spec->fmt ? spec->fmt : spec->srcFmt;
-        AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
+        AfxAssertRange(afxVertexFormat_TOTAL, fmt, 1);
         afxNat attrSiz = AfxVertexFormatGetSize(fmt);
         afxNat attrArraySiz = AFX_ALIGN(attrSiz * blueprint->cap, AFX_SIMD_ALIGN);
         totalBufSiz += attrArraySiz;
@@ -537,7 +540,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
         secStride[secIdx] += attrSiz;
     }
 
-    if (!(vbuf->base.sections = AfxAllocate(mem, secCnt * sizeof(vbuf->base.sections[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(vbuf->base.storages = AfxAllocate(mem, secCnt * sizeof(vbuf->base.storages[0]), 0, AfxSpawnHint()))) AfxThrowError();
     else
     {
         AfxAssert(totalBufSiz);
@@ -557,11 +560,11 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
 
             for (afxNat i = 0; i < secCnt; i++)
             {
-                vbuf->base.sections[i].base = nextSecBase;
-                vbuf->base.sections[i].range = secRange[i];
-                vbuf->base.sections[i].stride = secStride[i];
+                vbuf->base.storages[i].base = nextSecBase;
+                vbuf->base.storages[i].range = secRange[i];
+                vbuf->base.storages[i].stride = secStride[i];
 
-                nextSecBase += vbuf->base.sections[i].range;
+                nextSecBase += vbuf->base.storages[i].range;
                 ++vbuf->base.secCnt;
             }
 
@@ -577,7 +580,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
                     AfxCloneString(&vbuf->base.attrs[i].semantic, &spec->semantic.str);
                     
                     afxVertexFormat fmt = spec->fmt ? spec->fmt : spec->srcFmt;
-                    AfxAssertRange(AFX_VTX_FMT_TOTAL, fmt, 1);
+                    AfxAssertRange(afxVertexFormat_TOTAL, fmt, 1);
                     vbuf->base.attrs[i].fmt = fmt;
                     afxNat attrSiz = AfxVertexFormatGetSize(fmt);
                     
@@ -593,7 +596,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
                         }
                     }
 
-                    vbuf->base.attrs[i].secIdx = secIdx;
+                    vbuf->base.attrs[i].srcIdx = secIdx;
                     vbuf->base.attrs[i].usage = spec->usage;
                     vbuf->base.attrs[i].offset = nextAttrOffset[secIdx];
                     nextAttrOffset[secIdx] += attrSiz;
@@ -602,7 +605,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
 
                     if (spec->src)
                     {
-                        AfxAssertRange(AFX_VTX_FMT_TOTAL, spec->srcFmt, 1);
+                        AfxAssertRange(afxVertexFormat_TOTAL, spec->srcFmt, 1);
 
                         if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, spec->src, spec->srcFmt, spec->srcStride))
                             AfxThrowError();
@@ -623,8 +626,8 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
 
         if (err)
         {
-            AfxAssert(vbuf->base.sections);
-            AfxDeallocate(mem, vbuf->base.sections);
+            AfxAssert(vbuf->base.storages);
+            AfxDeallocate(mem, vbuf->base.storages);
         }
     }
     return err;
@@ -663,7 +666,7 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 
     afxNat totalSiz = 0;
 
-    for (afxNat j = 0; j < AfxGetArrayPop(&blueprint->regions); j++)
+    for (afxNat j = 0; j < AfxCountArrayElements(&blueprint->regions); j++)
     {
         afxIndexBufferBlueprintRegion* rgn = AfxGetArrayUnit(&blueprint->regions, j);
         AfxAssert(rgn->idxCnt);
@@ -684,12 +687,12 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     {
         ibuf->base.regionCnt = 0;
 
-        if (!(ibuf->base.regions = AfxAllocate(mem, sizeof(ibuf->base.regions[0]) * AfxGetArrayPop(&blueprint->regions), 0, AfxSpawnHint()))) AfxThrowError();
+        if (!(ibuf->base.regions = AfxAllocate(mem, sizeof(ibuf->base.regions[0]) * AfxCountArrayElements(&blueprint->regions), 0, AfxSpawnHint()))) AfxThrowError();
         else
         {
             afxNat32 baseOffset = 0;
 
-            for (afxNat j = 0; j < AfxGetArrayPop(&blueprint->regions); j++)
+            for (afxNat j = 0; j < AfxCountArrayElements(&blueprint->regions); j++)
             {
                 afxIndexBufferBlueprintRegion* rgn = AfxGetArrayUnit(&blueprint->regions, j);
                 AfxAssert(rgn->idxCnt);
@@ -707,9 +710,9 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 
                 if (rgn->src)
                 {
-                    AfxAssert(rgn->srcStride);
+                    AfxAssert(rgn->srcIdxSiz);
 
-                    if (AfxIndexBufferUpdate(ibuf, j, 0, rgn->idxCnt, rgn->src, rgn->srcStride))
+                    if (AfxIndexBufferUpdate(ibuf, j, 0, rgn->idxCnt, rgn->src, rgn->srcIdxSiz))
                         AfxThrowError();
                 }
             }

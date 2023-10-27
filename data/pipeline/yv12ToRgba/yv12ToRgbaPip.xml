@@ -6,7 +6,7 @@
         <DepthTestEnable>false</DepthTestEnable>
         <DepthWriteEnable>false</DepthWriteEnable>
         <DepthCompareOp>ALWAYS</DepthCompareOp>
-        <Input topology='TRI_STRIP'/>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader stage='VERTEX'>data/pipeline/yv12ToRgba/yv12ToRgbaShdVtx.xml?vs</Shader>
         <Shader stage='FRAGMENT'>data/pipeline/yv12ToRgba/yv12ToRgbaShdFrg.xml?fsSigma</Shader>
     </Pipeline>

@@ -19,7 +19,7 @@
 
 #include "afxSoundInput.h"
 #include "afxSoundOutput.h"
-#include "afx/core/async/afxThread.h"
+#include "afx/core/afxThread.h"
 
 AFX_DEFINE_HANDLE(afxSoundContext);
 

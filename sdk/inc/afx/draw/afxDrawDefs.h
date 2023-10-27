@@ -14,14 +14,16 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 #ifndef AFX_DRAW_DEFS_H
 #define AFX_DRAW_DEFS_H
 
-#include "afx/core/mem/afxArray.h"
-#include "afx/math/volume/afxFrustum.h"
-#include "afx/core/async/afxThread.h"
-#include "afx/core/async/afxCondition.h"
-#include "afx/core/io/afxStream.h"
+#include "afx/core/afxArray.h"
+#include "afx/math/afxFrustum.h"
+#include "afx/core/afxThread.h"
+#include "afx/core/afxCondition.h"
+#include "afx/core/afxStream.h"
 
 // Object handles defined by SIGMA Future Draw Systems
 
@@ -76,175 +78,271 @@ AFX_DEFINE_STRUCT(afxFileDrop)
 
 typedef enum
 {
-    AFX_PRIM_TOPOLOGY_POINT_LIST, // Mesh is made from points.
+    afxPrimTopology_POINT_LIST, // Mesh is made from points.
 
-    AFX_PRIM_TOPOLOGY_LINE_LIST, // Mesh is made from lines.
-    AFX_PRIM_TOPOLOGY_LINE_STRIP, // Mesh is a line strip.
+    afxPrimTopology_LINE_LIST, // Mesh is made from lines.
+    afxPrimTopology_LINE_STRIP, // Mesh is a line strip.
 
-    AFX_PRIM_TOPOLOGY_TRI_LIST, // Mesh is made from triangles.
-    AFX_PRIM_TOPOLOGY_TRI_STRIP,
-    AFX_PRIM_TOPOLOGY_TRI_FAN,
+    afxPrimTopology_TRI_LIST, // Mesh is made from triangles.
+    afxPrimTopology_TRI_STRIP,
+    afxPrimTopology_TRI_FAN,
 
-    AFX_PRIM_TOPOLOGY_LINE_LIST_ADJACENT,
-    AFX_PRIM_TOPOLOGY_LINE_STRIP_ADJACENT,
+    afxPrimTopology_LINE_LIST_ADJACENT,
+    afxPrimTopology_LINE_STRIP_ADJACENT,
 
-    AFX_PRIM_TOPOLOGY_TRI_LIST_ADJACENT,
-    AFX_PRIM_TOPOLOGY_TRI_STRIP_ADJACENT,
+    afxPrimTopology_TRI_LIST_ADJACENT,
+    afxPrimTopology_TRI_STRIP_ADJACENT,
 
-    AFX_PRIM_TOPOLOGY_PATCH_LIST,
+    afxPrimTopology_PATCH_LIST,
 
-    AFX_PRIM_TOPOLOGY_TOTAL
+    afxPrimTopology_TOTAL
 } afxPrimTopology;
 
 typedef enum
 {
-    AFX_FMT_REAL,
-    AFX_FMT_NAT,
-    AFX_FMT_INT,
-    AFX_FMT_V2D,
-    AFX_FMT_V2DN,
-    AFX_FMT_V2DI,
-    AFX_FMT_V3D,
-    AFX_FMT_V3DN,
-    AFX_FMT_V3DI,
-    AFX_FMT_V4D,
-    AFX_FMT_V4DN,
-    AFX_FMT_V4DI,
+    afxFormat_REAL,
+    afxFormat_NAT,
+    afxFormat_INT,
+    afxFormat_V2D,
+    afxFormat_V2DN,
+    afxFormat_V2DI,
+    afxFormat_V3D,
+    afxFormat_V3DN,
+    afxFormat_V3DI,
+    afxFormat_V4D,
+    afxFormat_V4DN,
+    afxFormat_V4DI,
 
-    AFX_FMT_TOTAL
+    afxFormat_TOTAL
 } afxFormat;
 
 
 typedef enum afxStencilOp
 {
-    AFX_STENCIL_OP_KEEP = 0,
-    AFX_STENCIL_OP_ZERO = 1,
-    AFX_STENCIL_OP_REPLACE = 2,
-    AFX_STENCIL_OP_INC_AND_CLAMP = 3,
-    AFX_STENCIL_OP_DEC_AND_CLAMP = 4,
-    AFX_STENCIL_OP_INVERT = 5,
-    AFX_STENCIL_OP_INC_AND_WRAP = 6,
-    AFX_STENCIL_OP_DEC_AND_WRAP = 7,
+    afxStencilOp_KEEP = 0,
+    afxStencilOp_ZERO = 1,
+    afxStencilOp_REPLACE = 2,
+    afxStencilOp_INC_AND_CLAMP = 3,
+    afxStencilOp_DEC_AND_CLAMP = 4,
+    afxStencilOp_INVERT = 5,
+    afxStencilOp_INC_AND_WRAP = 6,
+    afxStencilOp_DEC_AND_WRAP = 7,
 
-    AFX_STENCIL_OP_TOTAL
+    afxStencilOp_TOTAL
 } afxStencilOp;
 
 typedef enum afxLogicOp
+/// In the explanation of the logical operations, s represents the incoming color and d represents the color in the frame buffer.
+/// Standard C-language operators are used.
+/// As these bitwise operators suggest, the logical operation is applied independently to each bit pair of the source and destination colors.
 {
-    AFX_LOGIC_OP_CLEAR = 0,
-    AFX_LOGIC_OP_AND = 1,
-    AFX_LOGIC_OP_AND_REVERSE = 2,
-    AFX_LOGIC_OP_COPY = 3,
-    AFX_LOGIC_OP_AND_INVERTED = 4,
-    AFX_LOGIC_OP_NO_OP = 5,
-    AFX_LOGIC_OP_XOR = 6,
-    AFX_LOGIC_OP_OR = 7,
-    AFX_LOGIC_OP_NOR = 8,
-    AFX_LOGIC_OP_EQUIVALENT = 9,
-    AFX_LOGIC_OP_INVERT = 10,
-    AFX_LOGIC_OP_OR_REVERSE = 11,
-    AFX_LOGIC_OP_COPY_INVERTED = 12,
-    AFX_LOGIC_OP_OR_INVERTED = 13,
-    AFX_LOGIC_OP_NAND = 14,
-    AFX_LOGIC_OP_SET = 15,
+    afxLogicOp_NOP,         // d
+    afxLogicOp_CLEAR,       // 0
+    afxLogicOp_SET,         // 1
+    afxLogicOp_COPY,        // s
+    afxLogicOp_COPY_INV,    // ~s
+    afxLogicOp_INV,         // ~d
+    afxLogicOp_AND,         // s & d
+    afxLogicOp_NAND,        // ~(s & d)
+    afxLogicOp_OR,          // s | d
+    afxLogicOp_NOR,         // ~(s | d)
+    afxLogicOp_XOR,         // s ^ d
+    afxLogicOp_EQUIV,       // ~(s ^ d)
 
-    AFX_LOGIC_OP_TOTAL
+    afxLogicOp_AND_REV,     // s & ~d
+    afxLogicOp_AND_INV,     // ~s & d
+    afxLogicOp_OR_REV,      // s | ~d
+    afxLogicOp_OR_INV,      // ~s | d
+    
+    afxLogicOp_TOTAL
 } afxLogicOp;
 
 typedef enum afxCullMode
 {
     // NIL = DISABLED
-    AFX_CULL_MODE_FRONT = AFX_FLAG(0),
-    AFX_CULL_MODE_BACK  = AFX_FLAG(1),
-    AFX_CULL_MODE_BOTH  = (AFX_CULL_MODE_FRONT | AFX_CULL_MODE_BACK), // porque usar isto?
-    // sum to cull both faces
-
-    AFX_CULL_MODE_TOTAL
+    afxCullMode_FRONT = AFX_BIT_OFFSET(0),
+    afxCullMode_BACK  = AFX_BIT_OFFSET(1),
+    afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, // sum to cull both faces --- who would use it?
+    
+    afxCullMode_TOTAL
 } afxCullMode;
 
 typedef enum
 {
-    AFX_FRONT_FACE_CCW,
-    AFX_FRONT_FACE_CW,
+    afxFrontFace_CCW,
+    afxFrontFace_CW,
 
-    AFX_FRONT_FACE_TOTAL
+    afxFrontFace_TOTAL
 } afxFrontFace;
 
 typedef enum
 {
-    AFX_FILL_MODE_SOLID,
-    AFX_FILL_MODE_EDGE,
-    AFX_FILL_MODE_POINT,
+    afxFillMode_SOLID,
+    afxFillMode_EDGE,
+    afxFillMode_POINT,
 
-    AFX_FILL_MODE_TOTAL
+    afxFillMode_TOTAL
 } afxFillMode;
 
 typedef enum
+/// Fragment output blending factors.
+/// Rs0,Gs0,Bs0 and As0 represent the first source color R, G, B, and A components, respectively, for the fragment output location corresponding to the color attachment being blended.
+/// Rs1,Gs1,Bs1 and As1 represent the second source color R, G, B, and A components, respectively, used in dual source blending modes, for the fragment output location corresponding to the color attachment being blended.
+/// Rd,Gd,Bd and Ad represent the R, G, B, and A components of the destination color. That is, the color currently in the corresponding color attachment for this fragment/sample.
+/// Rc,Gc,Bc and Ac represent the blend constant R, G, B, and A components, respectively.
 {
     // NIL = DISABLED
-    AFX_BLEND_FACTOR_ZERO = 1,
-    AFX_BLEND_FACTOR_ONE,
-    AFX_BLEND_FACTOR_SRC_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_SRC_RGB,
-    AFX_BLEND_FACTOR_DST_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_DST_RGB,
-    AFX_BLEND_FACTOR_SRC_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_SRC_A,
-    AFX_BLEND_FACTOR_DST_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_DST_A,
-    AFX_BLEND_FACTOR_CONSTANT_RGB,
-    AFX_BLEND_FACTOR_ONE_MINUS_CONST_RGB,
-    AFX_BLEND_FACTOR_CONST_A,
-    AFX_BLEND_FACTOR_ONE_MINUS_CONST_A
+    afxBlendFactor_ZERO = 1,
+    /// (0,0,0)
+    /// 0
+
+    afxBlendFactor_ONE,
+    /// (1,1,1)
+    /// 1
+
+    afxBlendFactor_SRC_RGB,
+    /// (Rs0,Gs0,Bs0)
+    /// As0
+
+    afxBlendFactor_ONE_MINUS_SRC_RGB,
+    /// (1-Rs0,1-Gs0,1-Bs0)
+    /// 1-As0
+
+    afxBlendFactor_DST_RGB,
+    /// (Rd,Gd,Bd)
+    /// Ad
+
+    afxBlendFactor_ONE_MINUS_DST_RGB,
+    /// (1-Rd,1-Gd,1-Bd)
+    /// 1-Ad
+
+    afxBlendFactor_SRC_A,
+    /// (As0,As0,As0)
+    /// As0
+
+    afxBlendFactor_ONE_MINUS_SRC_A,
+    /// (1-As0,1-As0,1-As0)
+    /// 1-As0
+
+    afxBlendFactor_DST_A,
+    /// (Ad,Ad,Ad)
+    /// Ad
+
+    afxBlendFactor_ONE_MINUS_DST_A,
+    /// (1-Ad,1-Ad,1-Ad)
+    /// 1-Ad
+
+    afxBlendFactor_CONSTANT_RGB,
+    /// (Rc,Gc,Bc)
+    /// Ac
+
+    afxBlendFactor_ONE_MINUS_CONST_RGB,
+    /// (1-Rc,1-Gc,1-Bc)
+    /// 1-Ac
+
+    afxBlendFactor_CONST_A,
+    /// (Ac,Ac,Ac)
+    /// Ac
+
+    afxBlendFactor_ONE_MINUS_CONST_A,
+    /// (1-Ac,1-Ac,1-Ac)
+    /// 1-Ac
+
+    afxBlendFactor_SRC_A_SATURATE,
+    /// (f,f,f); f = min(As0,1-Ad)
+    /// 1
+
+    afxBlendFactor_SRC1_RGB,
+    /// (Rs1,Gs1,Bs1)
+    /// As1
+
+    afxBlendFactor_ONE_MINUS_SRC1_RGB,
+    /// (1-Rs1,1-Gs1,1-Bs1)
+    /// 1-As1
+
+    afxBlendFactor_SRC1_A,
+    /// (As1,As1,As1)
+    /// As1
+
+    afxBlendFactor_ONE_MINUS_SRC1_A,
+    /// (1-As1,1-As1,1-As1)
+    /// 1-As1
 } afxBlendFactor;
 
 typedef enum
+/// Fragment output blending operations.
+/// Once the source and destination blend factors have been selected, they along with the source and destination components are passed to the blending operations.
+/// RGB and alpha components can use different operations.
 {
-    AFX_BLEND_OP_ADD,
-    AFX_BLEND_OP_SUBTRACT,
-    AFX_BLEND_OP_REVERSE_SUBTRACT,
-    AFX_BLEND_OP_MIN,
-    AFX_BLEND_OP_MAX
+    afxBlendOp_ADD,
+    /// R = Rs0 × Sr + Rd × Dr
+    /// G = Gs0 × Sg + Gd × Dg
+    /// B = Bs0 × Sb + Bd × Db
+    /// A = As0 × Sa + Ad × Da
+
+    afxBlendOp_SUBTRACT,
+    /// R = Rs0 × Sr - Rd × Dr
+    /// G = Gs0 × Sg - Gd × Dg
+    /// B = Bs0 × Sb - Bd × Db
+    /// A = As0 × Sa - Ad × Da
+
+    afxBlendOp_REVERSE_SUBTRACT,
+    /// R = Rd × Dr - Rs0 × Sr
+    /// G = Gd × Dg - Gs0 × Sg
+    /// B = Bd × Db - Bs0 × Sb
+    /// A = Ad × Da - As0 × Sa
+
+    afxBlendOp_MIN,
+    /// R = min(Rs0, Rd)
+    /// G = min(Gs0, Gd)
+    /// B = min(Bs0, Bd)
+    /// A = min(As0, Ad)
+
+    afxBlendOp_MAX
+    /// R = max(Rs0, Rd)
+    /// G = max(Gs0, Gd)
+    /// B = max(Bs0, Bd)
+    /// A = max(As0, Ad)
 } afxBlendOp;
 
 typedef enum
 {
-    AFX_COMPARE_OP_NEVER, // NIL = Never passes
-    AFX_COMPARE_OP_LESS, // Passes if the incoming depth value is less than the stored depth value.
-    AFX_COMPARE_OP_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
-    AFX_COMPARE_OP_EQUAL, // Passes if the incoming depth value is equal to the stored depth value.
-    AFX_COMPARE_OP_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
-    AFX_COMPARE_OP_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
-    AFX_COMPARE_OP_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
-    AFX_COMPARE_OP_ALWAYS, // Always passes.
+    afxCompareOp_NEVER, // NIL = Never passes
+    afxCompareOp_LESS, // Passes if the incoming depth value is less than the stored depth value.
+    afxCompareOp_LEQUAL, // Passes if the incoming depth value is less than or equal to the stored depth value.
+    afxCompareOp_EQUAL, // Passes if the incoming depth value is equal to the stored depth value.
+    afxCompareOp_NOTEQUAL, // Passes if the incoming depth value is not equal to the stored depth value.
+    afxCompareOp_GEQUAL, // Passes if the incoming depth value is greater than or equal to the stored depth value.
+    afxCompareOp_GREATER, // Passes if the incoming depth value is greater than the stored depth value.
+    afxCompareOp_ALWAYS, // Always passes.
 
-    AFX_COMPARE_OP_TOTAL
+    afxCompareOp_TOTAL
 } afxCompareOp;
 
 typedef enum afxVertexFormat
 {
-    AFX_VTX_FMT_REAL,
-    AFX_VTX_FMT_V2D,
-    AFX_VTX_FMT_V3D,
-    AFX_VTX_FMT_V4D,
+    afxVertexFormat_REAL = 1,
+    afxVertexFormat_V2D,
+    afxVertexFormat_V3D,
+    afxVertexFormat_V4D,
 
-    AFX_VTX_FMT_V4B, // afxInt8[4]
-    AFX_VTX_FMT_V8B, // afxInt8[8]
+    //afxVertexFormat_V4B, // afxInt8[4]
+    //afxVertexFormat_V8B, // afxInt8[8]
 
-    AFX_VTX_FMT_TOTAL
+    afxVertexFormat_TOTAL
 } afxVertexFormat;
 
 typedef enum afxShaderStage
 {
     // NIL = reserved for composing purposes.
-    AFX_SHADER_STAGE_VERTEX = 1,
-    AFX_SHADER_STAGE_PIXEL,
-    AFX_SHADER_STAGE_GEOMETRY,
-    AFX_SHADER_STAGE_TESS_CTRL,
-    AFX_SHADER_STAGE_TESS_EVAL,
-    AFX_SHADER_STAGE_COMPUTE,
+    afxShaderStage_VERTEX = 1,
+    afxShaderStage_PIXEL,
+    afxShaderStage_GEOMETRY,
+    afxShaderStage_TESS_CTRL,
+    afxShaderStage_TESS_EVAL,
+    afxShaderStage_COMPUTE,
 
-    AFX_SHADER_STAGE_TOTAL
+    afxShaderStage_TOTAL
 } afxShaderStage;
 
 AFX afxString const g_str_Qwadro;
@@ -275,6 +373,7 @@ AFX afxString const g_str_Pass;
 AFX afxString const g_str_Rasterization;
 AFX afxString const g_str_DepthHandling;
 AFX afxString const g_str_Input;
+AFX afxString const g_str_PrimitiveTopology;
 
 AFX afxString const g_str_DepthClampEnable;
 AFX afxString const g_str_RasterizerDiscardEnable;
@@ -318,9 +417,9 @@ AFX afxShaderStage          AfxFindShaderStage(afxString const *str);
 AFX afxVertexFormat         AfxFindVertexFormat(afxString const *str);
 
 AFX afxString const*        AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxString *out);
-AFX afxString const*        AfxStringifyLogicOp(afxLogicOp lo, afxString *out);
-AFX afxString const*        AfxStringifyStencilOp(afxStencilOp so, afxString *out);
-AFX afxString const*        AfxStringifyCompareOp(afxCompareOp co, afxString *out);
+AFX afxString const*        AfxStringifyLogicOp(afxLogicOp f, afxString *out);
+AFX afxString const*        AfxStringifyStencilOp(afxStencilOp f, afxString *out);
+AFX afxString const*        AfxStringifyCompareOp(afxCompareOp f, afxString *out);
 AFX afxString const*        AfxStringifyCullMode(afxCullMode cm, afxString *out);
 AFX afxString const*        AfxStringifyFrontFace(afxFrontFace ff, afxString *out);
 AFX afxString const*        AfxStringifyFillMode(afxFillMode fm, afxString *out);

@@ -3,8 +3,8 @@
 
 #include "../src/e2coree/deps/bink/bink.h"
 #include "afx/mmux/afxMmuiDefs.h"
-#include "afx/draw/res/afxTexture.h"
-#include "afx/draw/res/afxBuffer.h"
+#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
 
 AFX_DEFINE_STRUCT(BINKFRAMETEXTURES)
@@ -32,7 +32,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     BINKTEXTURESET      set; // Bink Buffer
     afxPipeline         yv12ToRgbaPip;
     afxSampler          smp;
-    afxVertexBuffer     vbuf;
+    afxBuffer           vbuf;
 
     afxNat64            Last_timer;
     afxNat32            Frame_count;

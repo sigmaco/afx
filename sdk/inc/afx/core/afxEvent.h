@@ -17,7 +17,7 @@
 #ifndef AFX_EVENT_H
 #define AFX_EVENT_H
 
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 
 typedef enum afxEventType
 {

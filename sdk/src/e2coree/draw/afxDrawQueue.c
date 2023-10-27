@@ -20,9 +20,7 @@
 #define _AFX_DRAW_SCRIPT_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_CONTEXT_C
-#include "_classified/afxDrawClassified.h"
-
-extern struct _afxDsysD TheDrawSystem;
+#include "afxDrawClassified.h"
 
 #if 0
 
@@ -35,8 +33,8 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
     {
         AfxAssertObject(subm->scripts[i], AFX_FCC_DSCR);
 
-        if (subm->scripts[i]->state == AFX_DSCR_STATE_PENDING) // preserve state if modified by draw queue.
-            subm->scripts[i]->state = AFX_DSCR_STATE_EXECUTABLE;
+        if (subm->scripts[i]->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
+            subm->scripts[i]->state = afxDrawScriptState_EXECUTABLE;
 
         AfxReleaseObject(&subm->scripts[i]->obj);
     }
@@ -47,7 +45,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
         AfxAssertRange(AfxGetDrawOutputCapacity(subm->outputs[i]), subm->outputBufIdx[i], 1);
         afxSurface surf = AfxGetDrawOutputBuffer(subm->outputs[i], subm->outputBufIdx[i]);
 
-        if (surf->state == AFX_DSCR_STATE_PENDING) // preserve state if modified by draw queue.
+        if (surf->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
             surf->state = AFX_SURF_STATE_PRESENTABLE;
 
         AfxReleaseObject(&surf->tex.obj);
@@ -229,18 +227,18 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
         {
             AfxAssertObject(spec->scripts[i], AFX_FCC_DSCR);
 
-            if (AfxGetDrawScriptState(spec->scripts[i]) != AFX_DSCR_STATE_EXECUTABLE)
+            if (AfxGetDrawScriptState(spec->scripts[i]) != afxDrawScriptState_EXECUTABLE)
             {
                 AfxThrowError();
 
                 for (afxNat j = 0; j < i; ++j)
                 {
-                    spec->scripts[j]->state = AFX_DSCR_STATE_EXECUTABLE;
+                    spec->scripts[j]->state = afxDrawScriptState_EXECUTABLE;
                 }
                 break;
             }
 
-            spec->scripts[i]->state = AFX_DSCR_STATE_PENDQUEG;
+            spec->scripts[i]->state = afxDrawScriptState_PENDQUEG;
             AfxObjectReacquire(&spec->scripts[i]->obj, &dque->obj, NIL, 0, NIL);
             dwrkScript->scripts[i] = spec->scripts[i];
             ++dwrkScript->scriptCnt;

@@ -14,11 +14,13 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 #ifndef AFX_DRAW_QUEUE_H
 #define AFX_DRAW_QUEUE_H
 
 #include "afx/draw/afxDrawDefs.h"
-#include "afx/core/mem/afxArena.h"
+#include "afx/core/afxArena.h"
 
 // No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
 // Ao criar um afxDrawContext, necessariamente ao menos uma afxDrawQueue foi criada consequentemente e associado ao mesmo.
@@ -72,11 +74,11 @@ AFX_DEFINE_STRUCT(afxDrawSubmissionSpecification)
 
 typedef enum afxDrawQueueFlags
 {
-    AFX_DQUE_DRAW           = AFX_FLAG(0), // supports draw ops
-    //AFX_DQUE_DRAW_AUX       = AFX_FLAG(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
-    AFX_DQUE_COMPUTE        = AFX_FLAG(2), // supports compute ops
-    AFX_DQUE_TRANSFER       = AFX_FLAG(3), // supports transfer ops
-    AFX_DQUE_VHS            = AFX_FLAG(4), // supports VHS enc/dec
+    AFX_DQUE_DRAW           = AFX_BIT_OFFSET(0), // supports draw ops
+    //AFX_DQUE_DRAW_AUX       = AFX_BIT_OFFSET(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
+    AFX_DQUE_COMPUTE        = AFX_BIT_OFFSET(2), // supports compute ops
+    AFX_DQUE_TRANSFER       = AFX_BIT_OFFSET(3), // supports transfer ops
+    AFX_DQUE_VHS            = AFX_BIT_OFFSET(4), // supports VHS enc/dec
 } afxDrawQueueFlags;
 
 AFX_DEFINE_STRUCT(afxDrawQueueSpecification)
@@ -87,6 +89,7 @@ AFX_DEFINE_STRUCT(afxDrawQueueSpecification)
 
 AFX_DECLARE_STRUCT(_afxDqueVmt);
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_QUEUE_C
 AFX_OBJECT(afxDrawQueue)
 #else
@@ -94,6 +97,7 @@ struct afxBaseDrawQueue
 #endif
 {
     _afxDqueVmt const*      vmt;
+    afxError                (*procCb)(afxDrawQueue dque, afxDrawContext dctx, afxDrawThread dthr);
     afxNat                  portIdx;
 
     afxSlock                pendingChainSlock;
@@ -105,6 +109,7 @@ struct afxBaseDrawQueue
     afxSlock                arenaSlock;
     afxArena                cmdArena; // used by submission commands, not script commands.
 };
+#endif
 
 AFX afxDrawDevice           AfxGetDrawQueueDriver(afxDrawQueue dque);
 

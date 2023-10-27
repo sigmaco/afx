@@ -227,18 +227,21 @@ typedef enum afxFcc
     AFX_FCC_SKL     = AfxPackFcc('s', 'k', 'l', '\0'), // afxSkeleton
     AFX_FCC_SKLB    = AfxPackFcc('s', 'k', 'l', 'b'), // afxSkeletonBlueprint
     AFX_FCC_BONB    = AfxPackFcc('b', 'o', 'n', 'b'), // afxBoneBlueprint
-    AFX_FCC_MSHA    = AfxPackFcc('m', 's', 'h', 'a'), // afxMeshArticulation
+    AFX_FCC_MSHV    = AfxPackFcc('m', 's', 'h', 'v'), // afxMeshVertebra
     AFX_FCC_MSHC    = AfxPackFcc('m', 's', 'h', 'c'), // afxMeshConnection
     AFX_FCC_MSH     = AfxPackFcc('m', 's', 'h', '\0'), // afxMesh
     AFX_FCC_MSHB    = AfxPackFcc('m', 's', 'h', 'b'), // afxMeshBlueprint
+    AFX_FCC_MSHD    = AfxPackFcc('m', 's', 'h', 'd'), // afxMeshData
     AFX_FCC_MSHT    = AfxPackFcc('m', 's', 'h', 't'), // afxMeshTopology
-    AFX_FCC_MSHS    = AfxPackFcc('m', 's', 'h', 's'), // afxMeshSection
+    AFX_FCC_MSHS    = AfxPackFcc('m', 's', 'h', 's'), // afxMeshSurface
     AFX_FCC_MSHM    = AfxPackFcc('m', 's', 'h', 'm'), // afxMeshMorph
-    AFX_FCC_MVER    = AfxPackFcc('m', 'v', 'e', 'r'), // afxMeshVertebra
+    AFX_FCC_MSHR    = AfxPackFcc('m', 's', 'h', 'r'), // afxMeshRig
     AFX_FCC_MDLM    = AfxPackFcc('m', 'd', 'l', 'm'), // AfxModelingMechanism
     AFX_FCC_MDIO    = AfxPackFcc('m', 'd', 'i', 'o'), // afxModelIoAssistent
     AFX_FCC_MTL     = AfxPackFcc('m', 't', 'l', '\0'), // afxMaterial
     AFX_FCC_MTLB    = AfxPackFcc('m', 't', 'l', 'b'), // afxMaterialBlueprint
+
+    AFX_FCC_CAD     = AfxPackFcc('c', 'a', 'd', '\0'), // afxAsset
 
     AFX_FCC_UNI     = AfxPackFcc('u', 'n', 'i', '\0'), // afxUniverse
     AFX_FCC_CLST    = AfxPackFcc('c', 'l', 's', 't'), // afxCluster
@@ -250,7 +253,7 @@ typedef enum afxFcc
     AFX_FCC_TERR    = AfxPackFcc('t', 'e', 'r', 'r'), // afxTerrain
     AFX_FCC_BRN     = AfxPackFcc('b', 'r', 'n', '\0'), // afxBrain
     AFX_FCC_BOD     = AfxPackFcc('b', 'o', 'd', '\0'), // afxBody
-    AFX_FCC_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // afxBodyControl
+    AFX_FCC_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // afxAnimator
     AFX_FCC_BODP    = AfxPackFcc('b', 'o', 'd', 'p'), // afxBodyPart
 
     AFX_FCC_RND     = AfxPackFcc('r', 'n', 'd', '\0'), // afxRenderer

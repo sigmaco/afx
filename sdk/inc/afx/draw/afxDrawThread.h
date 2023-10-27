@@ -14,11 +14,13 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 #ifndef AFX_DRAW_THREAD_H
 #define AFX_DRAW_THREAD_H
 
 #include "afx/draw/afxDrawContext.h"
-#include "afx/core/async/afxThread.h"
+#include "afx/core/afxThread.h"
 
 AFX_DEFINE_STRUCT(afxDrawThreadConfig)
 {
@@ -44,6 +46,8 @@ AFX_OBJECT(afxDrawThread)
     void*                   udd;
 };
 #endif
+
+AFX afxError            AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[]);
 
 AFX afxDrawDevice       AfxGetDrawThreadDriver(afxDrawThread dthr);
 AFX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);

@@ -30,7 +30,7 @@
 #include "afx/core/afxString.h"
 #include "afx/math/afxVector.h"
 
-_SGL afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
+_SGL afxNat _SglDoutBuffersAreLocked(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -40,7 +40,7 @@ _SGL afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
     return bufferLockCnt;
 }
 
-_SGL afxNat _AfxDoutLockBuffers(afxDrawOutput dout)
+_SGL afxNat _SglDoutLockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -50,7 +50,7 @@ _SGL afxNat _AfxDoutLockBuffers(afxDrawOutput dout)
     return bufferLockCnt;
 }
 
-_SGL afxNat _AfxDoutUnlockBuffers(afxDrawOutput dout)
+_SGL afxNat _SglDoutUnlockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -60,7 +60,7 @@ _SGL afxNat _AfxDoutUnlockBuffers(afxDrawOutput dout)
     return bufferLockCnt;
 }
 
-_SGL afxNat _AfxDoutIsSuspended(afxDrawOutput dout)
+_SGL afxNat _SglDoutIsSuspended(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -70,7 +70,7 @@ _SGL afxNat _AfxDoutIsSuspended(afxDrawOutput dout)
     return suspendCnt;
 }
 
-_SGL afxNat _AfxDoutSuspendFunction(afxDrawOutput dout)
+_SGL afxNat _SglDoutSuspendFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -80,7 +80,7 @@ _SGL afxNat _AfxDoutSuspendFunction(afxDrawOutput dout)
     return suspendCnt;
 }
 
-_SGL afxNat _AfxDoutResumeFunction(afxDrawOutput dout)
+_SGL afxNat _SglDoutResumeFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -90,7 +90,7 @@ _SGL afxNat _AfxDoutResumeFunction(afxDrawOutput dout)
     return suspendCnt;
 }
 
-_SGL afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
+_SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
@@ -103,7 +103,7 @@ _SGL afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
 
         if (!tex)
         {
-            AfxAssert(_AfxDoutIsSuspended(dout)); // dout sem surfaces é inoperante
+            AfxAssert(_SglDoutIsSuspended(dout)); // dout sem surfaces é inoperante
         }
         else
         {
@@ -151,7 +151,7 @@ _SGL void Calc_window_values(HWND window, afxInt* out_extra_width, afxInt32* out
 }
 
 
-_SGL afxError _AfxDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
+_SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -195,40 +195,6 @@ _SGL afxError _AfxDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
     return err;
 }
 
-_SGL afxError _AfxDoutVmtDctxCb(afxDrawOutput dout, afxDrawContext from, afxDrawContext to, afxNat *slotIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-
-    // TODO discard pull request submissions too.
-
-    if (from)
-    {
-        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
-
-        if (_SglDctxVmtDoutCb(from, dout, FALSE, slotIdx))
-            AfxThrowError(); // ask dctx to unlink this dout
-
-        dout->base.dctx = NIL;
-        AfxRegenerateDrawOutputBuffers(dout);
-    }
-
-    if (to)
-    {
-        AfxAssertObjects(1, &to, AFX_FCC_DCTX);
-
-        if (_SglDctxVmtDoutCb(to, dout, TRUE, slotIdx))
-            AfxThrowError(); // ask dctx to unlink this dout
-
-        dout->base.dctx = to;
-        AfxRegenerateDrawOutputBuffers(dout);
-    }
-
-    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build", dout, to && !err ? "On line" : "Off line");
-
-    return err;
-}
-
 _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
@@ -245,7 +211,7 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
     return err;
 }
 
-_SGL afxError _SglDoutVmtProcCb(afxDrawThread dthr, afxDrawOutput dout)
+_SGL afxError _SglDoutProcCb(afxDrawOutput dout, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
@@ -258,12 +224,12 @@ _SGL afxError _SglDoutDtor(afxDrawOutput dout)
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
 
-    AfxDisconnectDrawOutput(dout, NIL);
+    AfxDisconnectDrawOutput(dout);
 
-    _AfxDoutSuspendFunction(dout);
-    _AfxDoutLockBuffers(dout);
+    _SglDoutSuspendFunction(dout);
+    _SglDoutLockBuffers(dout);
 
-    _AfxDoutFreeAllBuffers(dout);
+    _SglDoutFreeAllBuffers(dout);
 
     DragAcceptFiles(dout->wnd, FALSE);
     ReleaseDC(dout->wnd, dout->dc);
@@ -282,19 +248,17 @@ _SGL afxError _SglDoutDtor(afxDrawOutput dout)
 
 _SGL _afxDoutVmt SglDoutVmtWnd =
 {
-    _AfxDoutVmtDctxCb,
     _SglDoutVmtFlushCb,
-    _AfxDoutVmtReqCb,
+    _SglDoutVmtReqCb,
 };
 
 _SGL _afxDoutVmt SglDoutVmtDsktp =
 {
-    _AfxDoutVmtDctxCb,
     _SglDoutVmtFlushCb,
-    _AfxDoutVmtReqCb,
+    _SglDoutVmtReqCb,
 };
 
-_SGL BOOL CALLBACK _AfxFindShellWorkerWindowW32(HWND hwnd, LPARAM lParam)
+_SGL BOOL CALLBACK _SglFindShellWorkerWindowW32(HWND hwnd, LPARAM lParam)
 {
     HWND* found = (HWND*)lParam;
 
@@ -304,7 +268,7 @@ _SGL BOOL CALLBACK _AfxFindShellWorkerWindowW32(HWND hwnd, LPARAM lParam)
     return TRUE;
 }
 
-_SGL HWND _AfxFindShellBackgroundWindowW32(void)
+_SGL HWND _SglFindShellBackgroundWindowW32(void)
 {
     // Windows 7 Method
     HWND p = FindWindow("ProgMan", NULL);
@@ -316,7 +280,7 @@ _SGL HWND _AfxFindShellBackgroundWindowW32(void)
 
     SendMessageTimeoutA(FindWindowA("ProgMan", NULL), 0x052C, 0, 0, SMTO_NORMAL, 1000, NULL);
     HWND hwnd = 0;
-    EnumWindows(_AfxFindShellWorkerWindowW32, (LPARAM)&(hwnd));
+    EnumWindows(_SglFindShellWorkerWindowW32, (LPARAM)&(hwnd));
     return hwnd;
 }
 
@@ -328,7 +292,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
 
-    afxDrawOutputConfig const *config = ((afxDrawOutputConfig const *)cookie->udd[0]) + cookie->no;
+    afxNat devId = *(afxNat const *)(cookie->udd[0]);
+    afxDrawOutputConfig const *config = ((afxDrawOutputConfig const *)cookie->udd[1]) + cookie->no;
 
     //afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
     //AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
@@ -338,8 +303,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
 
-    afxContext ctx = AfxGetDrawSystemContext(dsys);
-    dout->base.dctx = NIL;
+    afxContext ctx = AfxGetDrawSystemMemory(dsys);
+    AfxPushLinkage(&dout->base.dctx, NIL);
 
     AfxAssignFcc(dout, AFX_FCC_DOUT);
 
@@ -373,10 +338,10 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
     dout->base.swapping = FALSE;
 
-    AfxV2dZero(dout->base.absCursorPos);
-    AfxV2dZero(dout->base.absCursorMove);
-    AfxV2dZero(dout->base.ndcCursorPos);
-    AfxV2dZero(dout->base.ndcCursorMove);
+    AfxZeroV2d(dout->base.absCursorPos);
+    AfxZeroV2d(dout->base.absCursorMove);
+    AfxZeroV2d(dout->base.ndcCursorPos);
+    AfxZeroV2d(dout->base.ndcCursorMove);
 
     if (config)
     {
@@ -400,6 +365,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.auxDsFmt[1] = NIL;
 
     dout->base.vmt = NIL;
+    dout->base.procCb = NIL;
 
     AfxAllocateString(&dout->base.caption, 512, NIL, 0);
     dout->base.buffers = NIL;
@@ -439,6 +405,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
         AfxResetUri(&name);
 
     dout->base.vmt = &SglDoutVmtWnd;
+    dout->base.procCb = _SglDoutProcCb;
 
     afxString const *surface = AfxUriGetStringConst(&name);
 
@@ -449,7 +416,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     }
     else if (0 == AfxCompareString(surface, &g_str_desktop))
     {
-        dout->wnd = _AfxFindShellBackgroundWindowW32();// GetDesktopWindow();
+        dout->wnd = _SglFindShellBackgroundWindowW32();// GetDesktopWindow();
         isDesk = TRUE;
     }
 
@@ -591,7 +558,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
                         if (err && dout->base.buffers)
                         {
-                            _AfxDoutFreeAllBuffers(dout);
+                            _SglDoutFreeAllBuffers(dout);
                             AfxDeallocate(ctx, dout->base.buffers);
                         }
                     }

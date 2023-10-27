@@ -14,14 +14,14 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/core/io/afxXml.h"
+#include "afx/core/afxXml.h"
 #include "sgl.h"
 
-#include "afx/draw/pipelining/afxPipeline.h"
-#include "afx/draw/pipelining/afxPipelineBlueprint.h"
+#include "afx/draw/afxPipeline.h"
+#include "afx/draw/afxPipeline.h"
 
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/core/io/afxUri.h"
+#include "afx/core/afxUri.h"
 #include "afx/core/afxSystem.h"
 #include "../e2coree/draw/afxDrawParadigms.h"
 // OpenGL/Vulkan Continuous Integration
@@ -279,6 +279,9 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
     if (pip->base.scissors)
         AfxDeallocate(mem, pip->base.scissors);
 
+    if (pip->base.sampleBitmasks)
+        AfxDeallocate(mem, pip->base.sampleBitmasks);
+
     if (pip->base.wiring)
     {
         for (afxNat i = 0; i < pip->base.wiringCnt; i++)
@@ -289,7 +292,7 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
 
     if (pip->glHandle)
     {
-        _SglDeleteGlRes(dctx, 5, pip->glHandle);
+        _SglDctxDeleteGlRes(dctx, 5, pip->glHandle);
         pip->glHandle = 0;
     }
     return err;
@@ -301,10 +304,10 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, AFX_FCC_PIP);
 
-    afxPipelineBlueprint const *pipb = ((afxPipelineBlueprint const*)cookie->udd[0]) + cookie->no;
-    AfxAssertType(pipb, AFX_FCC_PIPB);
+    afxDrawContext dctx = cookie->udd[0];
+    afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
+    //AfxAssertType(pipb, AFX_FCC_PIPB);
 
-    afxDrawContext dctx = AfxGetObjectProvider(pip);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
@@ -312,29 +315,20 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     pip->base.vps = NIL;
     pip->base.scissors = NIL;
 
-    afxArray const* shaders = &pipb->shaders;
-    afxNat shaderCnt = AfxGetArrayPop(shaders);
+    afxNat shaderCnt = pipb->shdCnt;
     AfxAssert(shaderCnt);
     pip->base.shaderCnt = 0;
 
-    if (!(pip->base.shaders = AfxAllocate(mem, sizeof(pip->base.shaders[0]) * shaderCnt, 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(pip->base.shaders = AfxAllocate(mem, shaderCnt * sizeof(pip->base.shaders[0]), 0, AfxSpawnHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < shaderCnt; i++)
         {
-            afxUri const *uri = AfxGetArrayUnit(shaders, i);
-            afxShader shd;
-
-            if (AfxAcquireShaders(dctx, 1, &shd, uri)) AfxThrowError();
-            else
-            {
-                AfxAssertObjects(1, &shd, AFX_FCC_SHD);
-                pip->base.shaders[pip->base.shaderCnt] = shd;
-                pip->base.shaderCnt++;
-            }
-
-            if (err)
-                break;
+            afxShader shd = pipb->sh[i];
+            AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+            AfxReacquireObjects(1, (void*[]) { shd });
+            pip->base.shaders[pip->base.shaderCnt] = shd;
+            pip->base.shaderCnt++;            
         }
 
         if (!err)
@@ -365,7 +359,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
             afxNat setCnt = 0;
 
             for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
-                setCnt += AfxGetArrayPop(&legb[i].bindings) ? 1 : 0;
+                setCnt += AfxCountArrayElements(&legb[i].bindings) ? 1 : 0;
 
             pip->base.wiringCnt = 0;
 
@@ -374,7 +368,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
                 {
-                    if (AfxGetArrayPop(&legb[i].bindings))
+                    if (AfxCountArrayElements(&legb[i].bindings))
                     {
                         if (AfxBuildPipelineRigs(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
                         {
@@ -409,7 +403,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                     AfxGetPipelineShaders(pip, i, 1, &shd);
                     AfxAssertObjects(1, &shd, AFX_FCC_SHD);
 
-                    if (AFX_SHADER_STAGE_VERTEX == AfxGetShaderStage(shd))
+                    if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))
                     {
                         for (afxNat j = 0; j < shd->base.ioDeclCnt; j++)
                         {
@@ -423,48 +417,89 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                     }
                 }
 
-                pip->base.vtxInAssembling = (pip->base.hasVtxInAssembling = pipb->hasAssembling) ? pipb->inAssembling : (afxPipelineInputAssemblyState) { 0 };
-                pip->base.rasterization = (pip->base.hasRasterization = pipb->hasRasterization) ? pipb->rasterization : (afxPipelineRasterizerState) { 0 };
-                pip->base.depthHandling = (pip->base.hasDepthHandling = pipb->hasDepthHandling) ? pipb->depthHandling : (afxPipelineDepthState) { 0 };
-                pip->base.multisampling = (pip->base.hasMultisampling = pipb->hasMultisampling) ? pipb->multisampling : (afxPipelineMultisampleState) { 0 };
-                pip->base.colorBlending = (pip->base.hasColorBlending = pipb->hasColorBlending) ? pipb->colorBlending : (afxPipelineColorBlendState) { 0 };
+                pip->base.primTop = pipb->primTop;
+                pip->base.primRestartEnabled = pipb->primRestartEnabled;
 
-                afxArray const* viewports = &pipb->viewports;
-                afxNat vpCnt = AfxGetArrayPop(viewports);
-                pip->base.vpCnt = 0;
+                pip->base.patchControlPoints = pipb->patchControlPoints;
+
+                pip->base.depthClampEnabled = pipb->depthClampEnabled;
+
+                pip->base.vpCnt = pipb->vpCnt;
                 pip->base.vps = NIL;
 
-                if (vpCnt && !(pip->base.vps = AfxAllocate(mem, sizeof(pip->base.vps[0]) * vpCnt, 0, AfxSpawnHint()))) AfxThrowError();
+                if (pip->base.vpCnt && !(pip->base.vps = AfxAllocate(mem, pip->base.vpCnt * sizeof(pip->base.vps[0]), 0, AfxSpawnHint()))) AfxThrowError();
                 else
                 {
-                    for (afxNat i = 0; i < vpCnt; i++)
-                    {
-                        pip->base.vps[pip->base.vpCnt] = *(afxViewport const*)AfxGetArrayUnit(viewports, i);
-                        pip->base.vpCnt++;
-                    }
+                    for (afxNat i = 0; i < pip->base.vpCnt; i++)
+                        pip->base.vps[i] = pipb->vps[i];
                 }
 
-                if (!err)
+                pip->base.rasterizationDisabled = pipb->rasterizationDisabled;
+
+                pip->base.cullMode = pipb->cullMode;
+                pip->base.cwFrontFacing = pipb->cwFrontFacing;
+
+                pip->base.fillMode = pipb->fillMode;
+                pip->base.lineWidth = pipb->lineWidth;
+
+                pip->base.depthBiasEnabled = pipb->depthBiasEnabled;
+                pip->base.depthBiasSlopeScale = pipb->depthBiasSlopeScale;
+                pip->base.depthBiasConstFactor = pipb->depthBiasConstFactor;
+                pip->base.depthBiasClamp = pipb->depthBiasClamp;
+
+                pip->base.msEnabled = pipb->msEnabled;
+                pip->base.sampleCnt = pipb->sampleCnt;
+                pip->base.sampleBitmasks = NIL;
+                
+                if (pip->base.sampleCnt && !(pip->base.sampleBitmasks = AfxAllocate(mem, pip->base.sampleCnt * sizeof(pip->base.sampleBitmasks[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                else
                 {
-                    afxArray const* scissors = &pipb->scissors;
-                    afxNat scissorCnt = AfxGetArrayPop(scissors);
-                    pip->base.scissorCnt = 0;
-                    pip->base.scissors = NIL;
-
-                    if (scissorCnt && !(pip->base.scissors = AfxAllocate(mem, sizeof(pip->base.scissors[0]) * scissorCnt, 0, AfxSpawnHint()))) AfxThrowError();
-                    else
-                    {
-                        for (afxNat i = 0; i < scissorCnt; i++)
-                        {
-                            pip->base.scissors[pip->base.scissorCnt] = *(afxRect const*)AfxGetArrayUnit(scissors, i);
-                            pip->base.scissorCnt++;
-                        }
-                    }
-
-                    pip->glHandle = 0;
-                    pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
-
+                    for (afxNat i = 0; i < pip->base.sampleCnt; i++)
+                        pip->base.sampleBitmasks[i] = pipb->sampleBitmasks[i];
                 }
+
+                pip->base.scissorCnt = pipb->scisCnt;
+                pip->base.scissors = NIL;
+
+                if (pip->base.scissorCnt && !(pip->base.scissors = AfxAllocate(mem, pip->base.scissorCnt * sizeof(pip->base.scissors[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                else
+                {
+                    for (afxNat i = 0; i < pip->base.scissorCnt; i++)
+                        pip->base.scissors[i] = pipb->scisRects[i];
+                }
+
+                pip->base.alphaToOneEnabled = pipb->alphaToOneEnabled;
+                pip->base.alphaToCoverageEnabled = pipb->alphaToCoverageEnabled;
+                pip->base.sampleShadingEnabled = pipb->sampleShadingEnabled;
+                pip->base.minSampleShadingValue = pipb->minSampleShadingValue;
+
+                pip->base.stencilTestEnabled = pipb->stencilTestEnabled;
+                pip->base.stencilFront = pipb->stencilFront;
+                pip->base.stencilBack = pipb->stencilBack;
+
+                pip->base.depthTestEnabled = pipb->depthTestEnabled;
+                pip->base.depthCompareOp = pipb->depthCompareOp;
+                pip->base.depthWriteEnabled = pipb->depthWriteEnabled;
+                pip->base.dsFmt = pipb->dsFmt;
+                pip->base.depthBoundsTestEnabled = pipb->depthBoundsTestEnabled;
+                AfxCopyV2d(pip->base.depthBounds, pipb->depthBounds);
+
+                pip->base.outCnt = pipb->colorOutCnt;
+                pip->base.outs = NIL;
+
+                if (pip->base.outCnt && !(pip->base.outs = AfxAllocate(mem, pip->base.outCnt * sizeof(pip->base.outs[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                else
+                {
+                    for (afxNat i = 0; i < pip->base.outCnt; i++)
+                        pip->base.outs[i] = pipb->colorOuts[i];
+                }
+
+                AfxCopyV4d(pip->base.blendConstants, pipb->blendConstants);
+                pip->base.logicOpEnabled = pipb->pixelLogicOpEnabled;
+                pip->base.logicOp = pipb->pixelLogicOp;
+
+                pip->glHandle = 0;
+                pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
             }
 
             if (err && pip->base.wiring)
@@ -491,6 +526,9 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             if (pip->base.scissors)
                 AfxDeallocate(mem, pip->base.scissors);
+
+            if (pip->base.sampleBitmasks)
+                AfxDeallocate(mem, pip->base.sampleBitmasks);
         }
     }
     AfxAssertObjects(1, &pip, AFX_FCC_PIP);

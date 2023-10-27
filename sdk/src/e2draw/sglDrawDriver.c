@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_C
 #define _AFX_DRAW_THREAD_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_DRIVER_C
@@ -27,6 +28,7 @@
 #include <dwmapi.h>
 #include <shlwapi.h>
 #include <shellapi.h>
+#include <assert.h>
 
 static const char*AdonayTsebaot = "Adonay Tsebaot";
 
@@ -834,6 +836,8 @@ _SGL GLenum AfxToGlFrontFace(afxFrontFace ff)
 
 _SGL GLenum AfxToGlCullMode(afxCullMode cm)
 {
+    afxError err;
+
     static GLenum const v[] =
     {
         NIL,
@@ -841,11 +845,11 @@ _SGL GLenum AfxToGlCullMode(afxCullMode cm)
         GL_BACK,
         GL_FRONT_AND_BACK
     };
-
+    AfxAssert(v[afxCullMode_BACK] == GL_BACK);
     return v[cm];
 };
 
-_SGL GLenum AfxToGlPolygonMode(afxFillMode pm)
+_SGL GLenum AfxToGlFillMode(afxFillMode pm)
 {
     static GLenum const v[] =
     {
@@ -918,7 +922,7 @@ _SGL GLenum AfxToGlTopology(afxPrimTopology pm)
 
 _SGL GLenum AfxToGlBufferUsage(afxBufferUsage usage)
 {
-    static GLuint const v[] =
+    static GLenum const v[] =
     {
         GL_COPY_READ_BUFFER,
         GL_COPY_WRITE_BUFFER,
@@ -936,7 +940,7 @@ _SGL GLenum AfxToGlBufferUsage(afxBufferUsage usage)
 
 _SGL GLenum AfxToGlStencilOp(afxStencilOp so)
 {
-    static GLuint const v[] =
+    static GLenum const v[] =
     {
         GL_KEEP,
         GL_ZERO,
@@ -949,6 +953,109 @@ _SGL GLenum AfxToGlStencilOp(afxStencilOp so)
     };
 
     return v[so];
+}
+
+_SGL GLenum AfxToGlBlendOp(afxBlendOp f)
+{
+    static GLenum const v[] =
+    {
+        GL_FUNC_ADD,
+        GL_FUNC_SUBTRACT,
+        GL_FUNC_REVERSE_SUBTRACT,
+        GL_MIN,
+        GL_MAX
+    };
+
+    return v[f];
+}
+
+_SGL GLenum AfxToGlLogicOp(afxLogicOp f)
+{
+    afxError err;
+    static GLenum const v[] =
+    {
+        GL_NOOP,
+        GL_CLEAR,
+        GL_SET,
+        GL_COPY,
+        GL_COPY_INVERTED,
+        GL_INVERT,
+        GL_AND,
+        GL_NAND,
+        GL_OR,
+        GL_NOR,
+        GL_XOR,
+        GL_EQUIV,
+        GL_AND_REVERSE,
+        GL_AND_INVERTED,
+        GL_OR_REVERSE,
+        GL_OR_INVERTED
+    };
+    AfxAssert(v[afxLogicOp_NOP] == GL_NOOP);
+    return v[f];
+}
+
+_SGL GLenum AfxToGlBlendFactor(afxBlendFactor f)
+{
+    static GLenum const v[] =
+    {
+        GL_ZERO,
+        GL_ONE,
+        GL_SRC_COLOR,
+        GL_ONE_MINUS_SRC_COLOR,
+        GL_DST_COLOR,
+        GL_ONE_MINUS_DST_COLOR,
+        GL_SRC_ALPHA,
+        GL_ONE_MINUS_SRC_ALPHA,
+        GL_DST_ALPHA,
+        GL_ONE_MINUS_DST_ALPHA,
+        GL_CONSTANT_COLOR,
+        GL_ONE_MINUS_CONSTANT_COLOR,
+        GL_CONSTANT_ALPHA,
+        GL_ONE_MINUS_CONSTANT_ALPHA,
+        GL_SRC_ALPHA_SATURATE,
+        GL_SRC1_COLOR,
+        GL_ONE_MINUS_SRC1_COLOR,
+        GL_SRC1_ALPHA,
+        GL_ONE_MINUS_SRC1_ALPHA
+    };
+
+    return v[f];
+}
+
+_SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxNat32* stride)
+{
+    GLint const sizv[] =
+    {
+        1,
+        2,
+        3,
+        4,
+    };
+
+    //static_assert(afxVertexFormat_V4D == 4, "");
+
+    GLenum const typv[] =
+    {
+        GL_INVALID_ENUM,
+        GL_FLOAT,
+        GL_FLOAT,
+        GL_FLOAT,
+        GL_FLOAT,
+        GL_FLOAT,
+    };
+
+    if (siz)
+        *siz = sizv[fmt];
+
+    if (typ)
+        *typ = typv[fmt];
+
+    if (stride)
+        *stride = (sizv[fmt] * (typv[fmt] == GL_FLOAT ? sizeof(afxReal) : 0));
+
+    //static_assert(afxVertexFormat_TOTAL == 5, "");
+
 }
 
 _SGL afxChar const sigmaSignature[] =
@@ -1089,7 +1196,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             //while (0 < AfxReleaseObject(&doutD->obj));
 #if 0
-            afxDrawContext dctx = AfxGetConnectedDrawOutputContext(dout);
+            afxDrawContext dctx = AfxGetDrawOutputConnection(dout);
 
             if (!dctx) AfxReleaseDrawOutput(dout);
             else
@@ -1167,8 +1274,8 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxV2d curr = { AfxScalar(points.x), AfxScalar(points.y) };
 
-            AfxV2dSub(dout->base.absCursorPos, curr, dout->base.absCursorMove);
-            AfxV2dCopy(dout->base.absCursorPos, curr);
+            AfxSubV2d(dout->base.absCursorMove, dout->base.absCursorPos, curr);
+            AfxCopyV2d(dout->base.absCursorPos, curr);
 
             afxV2d screen = { AfxScalar(dout->base.extent[0]), AfxScalar(dout->base.extent[1]) };
 
@@ -1201,7 +1308,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             afxNat i;
 
             afxDrawContext dctx;
-            AfxGetConnectedDrawOutputContext(dout, &dctx);
+            AfxGetDrawOutputConnection(dout, &dctx);
             AfxAssertType(dctxD, AFX_FCC_DCTX);
             afxContext mem = AfxGetDrawContextMemory(dctx);
             AfxAssertObjects(1, &mem, AFX_FCC_CTX);
@@ -1224,12 +1331,12 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             //AfxEventDeploy(&ev, AFX_EVENT_DOUT_DRAGNDROP, &doutD->obj, &fdrop);
             //AfxObjectEmitEvent(&doutD->obj, &ev);
 
-            for (i = 0; i < AfxGetArrayPop(&fdrop.files); i++)
+            for (i = 0; i < AfxCountArrayElements(&fdrop.files); i++)
             {
                 AfxEcho("%s", *(afxChar const**)AfxGetArrayUnit(&fdrop.files, i));
             }
 
-            for (i = 0; i < AfxGetArrayPop(&fdrop.files); i++)
+            for (i = 0; i < AfxCountArrayElements(&fdrop.files); i++)
             {
                 AfxDeallocate(mem, *(afxChar**)AfxGetArrayUnit(&fdrop.files, i));
             }
@@ -1468,7 +1575,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
 }
 #endif
 
-_SGL afxError _SglDthrProcessDpuDeletionQueue(afxDrawDevice ddev, afxNat unitIdx)
+_SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
@@ -1549,7 +1656,7 @@ _SGL afxError _SglDthrProcessDpuDeletionQueue(afxDrawDevice ddev, afxNat unitIdx
     return err;
 }
 
-_SGL void _SglDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle)
+_SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle)
 {
     //AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
@@ -2023,7 +2130,7 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
     AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
     sglDpuIdd *dpu = &ddev->dpus[unitIdx];
 
-    _SglDthrProcessDpuDeletionQueue(ddev, unitIdx);
+    _SglDdevProcessResDel(ddev, unitIdx);
     AfxReleaseSlock(&dpu->deletionLock);
     AfxReleaseQueue(&dpu->deletionQueue);
 
@@ -2043,7 +2150,66 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
     return err;
 }
 
-_SGL afxBool _SglProcessContextCb(afxDrawContext dctx, void *udd)
+_SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxTryAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    // TODO discard pull request submissions too.
+
+    //AfxDiscardAllDrawInputSubmissions(din);
+    afxDrawContext from = AfxGetLinker(&din->base.dctx);
+    
+    if (from)
+    {
+        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
+        AfxPopLinkage(&din->base.dctx);
+        _SglDinFreeAllBuffers(din);
+    }
+
+    if (dctx)
+    {
+        AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+        AfxPushLinkage(&din->base.dctx, &dctx->base.inlinks);
+    }
+
+    //AfxDiscardAllDrawInputSubmissions(din);
+
+    return err;
+}
+
+_SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxTryAssertObjects(1, &dctx, AFX_FCC_DCTX);
+
+    // TODO discard pull request submissions too.
+    afxDrawContext from = AfxGetLinker(&dout->base.dctx);
+
+    if (from)
+    {
+        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
+        AfxPopLinkage(&dout->base.dctx);
+        AfxRegenerateDrawOutputBuffers(dout);
+    }
+
+    if (dctx)
+    {
+        AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+        AfxPushLinkage(&dout->base.dctx, &dctx->base.outlinks);
+        AfxRegenerateDrawOutputBuffers(dout);
+    }
+
+    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
+
+    return err;
+}
+
+_SGL afxBool _SglProcessDctxCb(afxDrawContext dctx, void *udd)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -2056,13 +2222,13 @@ _SGL afxBool _SglProcessContextCb(afxDrawContext dctx, void *udd)
     {
         dthr->dctx = dctx;
         
-        if (_SglDctxVmtProcCb(dthr, dctx))
+        if (dctx->base.procCb(dctx, dthr))
             AfxThrowError();
     }
     return FALSE; // don't interrupt curation;
 }
 
-_SGL afxError _SglDdevVmtProcCb(afxDrawThread dthr, afxDrawDevice ddev)
+_SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
@@ -2078,17 +2244,12 @@ _SGL afxError _SglDdevVmtProcCb(afxDrawThread dthr, afxDrawDevice ddev)
 
     dthr->portIdx = unitIdx;
 
-    AfxCurateDrawContexts(dsys, AfxIdentifyObject(ddev), 0, AFX_N32_MAX, _SglProcessContextCb, (void*)dthr);
+    AfxCurateDrawContexts(dsys, AfxIdentifyObject(ddev), 0, AFX_N32_MAX, _SglProcessDctxCb, (void*)dthr);
 
-    _SglDthrProcessDpuDeletionQueue(ddev, unitIdx); // delete after is safer?
+    _SglDdevProcessResDel(ddev, unitIdx); // delete after is safer?
 
     return err;
 }
-
-_SGL _afxDdevVmt SglDdevVmt =
-{
-    _SglDdevVmtProcCb
-};
 
 _SGL afxError _SglDdevDtor(afxDrawDevice ddev)
 {
@@ -2099,7 +2260,7 @@ _SGL afxError _SglDdevDtor(afxDrawDevice ddev)
     AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    afxContext ctx = AfxGetDrawSystemContext(dsys);
+    afxContext ctx = AfxGetDrawSystemMemory(dsys);
     AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
 
     for (afxNat i = 0; i < ddev->dpuCnt; i++)
@@ -2125,9 +2286,11 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    afxContext ctx = AfxGetDrawSystemContext(dsys);
+    afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
-    ddev->base.vmt = &SglDdevVmt;
+    ddev->base.procCb = _SglDdevProcCb;
+    ddev->base.relinkDin = _SglDdevRelinkDinCb;
+    ddev->base.relinkDout = _SglDdevRelinkDoutCb;
 
     //SglLoadOpenGlVmt(ddev->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, ddev->p);
 
@@ -2168,7 +2331,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
         for (afxNat i = 0; i < AfxGetThreadingCapacity(); i++)
         {
             afxDrawThreadConfig dthrConfig = { 0 };
-            //dthrConfig.base.affinityMask = AFX_FLAG(0);
+            //dthrConfig.base.affinityMask = AFX_BIT_OFFSET(0);
 
             afxDrawThread dthr;
 
@@ -2214,7 +2377,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
 
         //ddev->dpuCnt = 1;
 
-        AfxAssert(ddev->base.vmt);
+        AfxAssert(ddev->base.procCb);
         ddev->base.serving = TRUE;
 
         if (err)

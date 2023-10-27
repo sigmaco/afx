@@ -23,7 +23,7 @@
 #include "../src/e2coree/deps/gl/glcorearb.h"
 #include "../src/e2coree/deps/gl/wglext.h"
 #include <windows.h>
-#include "../src/e2coree/draw/_classified/afxDrawClassified.h"
+#include "../src/e2coree/draw/afxDrawClassified.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawScript.h"
 
@@ -876,12 +876,16 @@ typedef union glVmt
 
 SGL GLenum AfxToGlFrontFace(afxFrontFace ff);
 SGL GLenum AfxToGlCullMode(afxCullMode cm);
-SGL GLenum AfxToGlPolygonMode(afxFillMode pm);
+SGL GLenum AfxToGlFillMode(afxFillMode pm);
 SGL GLenum SglToGlCompareOp(afxCompareOp co);
 SGL GLuint AfxToGlShaderStage(afxShaderStage s);
 SGL GLenum AfxToGlTopology(afxPrimTopology pm);
 SGL GLenum AfxToGlBufferUsage(afxInt bt);
 SGL GLenum AfxToGlStencilOp(afxStencilOp so);
+SGL GLenum AfxToGlBlendOp(afxBlendOp f);
+SGL GLenum AfxToGlBlendFactor(afxBlendFactor f);
+SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxNat32* stride);
+SGL GLenum AfxToGlLogicOp(afxLogicOp f);
 SGL void SglToGlFormat(afxPixelFormat pf, GLint *fmt, GLenum *layout, GLenum *type);
 SGL GLenum SglToGlImageDimensions(afxNat d);
 SGL GLenum SglToGlTexelFilterMode(afxTexelFilter tfm);

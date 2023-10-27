@@ -47,15 +47,15 @@ AFX void            AfxReleasePoses(afxNat cnt, afxPose *lp[]);
 
 /// Você pode encontrar o número de articulações representadas pelo afxPose assim: 
 
-AFX afxNat          AfxPoseGetCapacity(afxPose const *lp);
+AFX afxNat          AfxGetPoseCapacity(afxPose const *lp);
 
 /// Em qualquer tempo, você pode inspecionar ou modificar o estado alojado de uma articulação na afxPose. Você acessa o estado da articulação como um afxTransform assim: 
 
-AFX afxTransform*   AfxPoseGetTransform(afxPose const *pose, afxNat artIdx);
+AFX afxTransform*   AfxGetPoseTransform(afxPose const *pose, afxNat artIdx);
 
 /// Note que você recebe um ponteiro para o afxTransform alojado para a articulação, assim sendo, modificá-lo modificará a versão permanente alojada na afxPose. 
-/// Portanto, não há uma função "Set" para AfxPoseGetTransform() devido ao fato de que você pode ler de ou escrever para o ponteiro que você recebe.
+/// Portanto, não há uma função "Set" para AfxGetPoseTransform() devido ao fato de que você pode ler de ou escrever para o ponteiro que você recebe.
 
-AFX void            AfxPoseCopy(afxPose *pose, afxPose const *from);
+AFX void            AfxCopyPose(afxPose *pose, afxPose const *from);
 
 #endif//AFX_POSE_H

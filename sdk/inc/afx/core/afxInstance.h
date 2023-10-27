@@ -18,12 +18,12 @@
 #define AFX_OBJECT_H
 
 #include <stdarg.h>
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 #include "afx/core/afxFcc.h"
 #include "afx/core/afxChain.h"
 #include "afx/core/afxString.h"
 #include "afx/core/afxEvent.h"
-//#include "afx/core/mem/afxObjack.h"
+//#include "afx/core/afxObjack.h"
 
 // HANDLES AND OBJECTS
 //
@@ -209,7 +209,7 @@ AFX afxBool     AfxReleaseObjects(afxNat cnt, void* obj[]);
 
 AFX afxResult   _AfxAssertObjects(afxNat cnt, afxHandle const obj[], afxFcc fcc);
 #define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_)));
-#define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!((objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_))));
+#define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxHandle const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_))));
 
 AFX afxNat      AfxIdentifyObject(afxHandle obj);
 
