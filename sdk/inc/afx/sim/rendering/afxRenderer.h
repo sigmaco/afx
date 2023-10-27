@@ -99,7 +99,7 @@ AFX_OBJECT(afxRenderer)
         afxBuffer           mtlConstantsBuffer;
         afxBuffer           objConstantsBuffer; // m
 
-        afxTexture          depthSurf;
+        //afxTexture          depthSurf;
     }                       framesets[3];
 
     afxM4d              p;
@@ -116,9 +116,14 @@ AFX_OBJECT(afxRenderer)
         afxPipeline    skyPip;
         afxSampler          smp;
     }                       sky;
+    afxBool                 skyEnabled;
 
     afxPipeline         wirePip;
     afxBool             drawVolumes;
+
+    afxIndexBuffer  testIbo;
+    afxVertexBuffer testVbo;
+    afxPipeline testPip;
 
     afxPipeline    rigidBodyPip;
     afxPipeline    skinnedBodyPip;
@@ -129,7 +134,7 @@ AFX_OBJECT(afxRenderer)
 // https://developer.nvidia.com/vulkan-shader-resource-binding
 
 // example for typical loops in rendering
-for each view{
+for each view {
   bind view resources          // camera, environment...
   for each shader {
     bind shader pipeline
@@ -145,6 +150,8 @@ for each view{
 }
 #endif
 
+AFX afxError        AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
+
 AFX afxError AfxRendererBindOutput(afxRenderer rnd, afxDrawOutput dout);
 
 AFX afxError AfxRendererBeginScene(afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
@@ -154,5 +161,7 @@ AFX afxError AfxRendererSetStar(afxRenderer rnd, afxV4d const pos, afxV3d const 
 
 AFX afxError AfxRendererDrawSky(afxRenderer rnd, afxBool clear);
 AFX afxError AfxRendererDrawBody(afxRenderer rnd, afxBody bod);
+
+AFX afxError AfxRendererDrawTestIndexed(afxRenderer rnd, afxBool unk);
 
 #endif///RENDERER_H

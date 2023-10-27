@@ -18,7 +18,7 @@
 #define AFX_MODEL_H
 
 #include "afxMesh.h"
-#include "afxSkeleton.h"
+#include "afx/sim/afxSkeleton.h"
 
 /// O objeto afxModel descreve uma coleção de afxMesh'es que são todas ligadas ao mesmo afxSkeleton.
 /// Isso é essencialmente qualquer grupo conectado de malhas que são animadas em conjuntura.
@@ -42,15 +42,24 @@ AFX_OBJECT(afxModel)
 };
 #endif
 
-//AFX afxError            AfxEmbodyModel(afxModel mdl, afxBody *bod);
 
-AFX afxUri const*       AfxModelGetUri(afxModel mdl);
-AFX afxSkeleton         AfxModelGetSkeleton(afxModel mdl);
+AFX afxError            AfxFetchModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
 
-AFX void                AfxModelGetInitialPlacement(afxModel mdl, afxM4d m);
-AFX void                AfxModelTransform(afxModel mdl, afxV3d const affine, afxM3d const linear, afxM3d const invLinear, afxReal affineTol, afxReal linearTol, afxFlags flags);
+AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* name, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
 
-AFX afxMesh             AfxModelGetBoundMesh(afxModel mdl, afxNat mshIdx);
-AFX afxNat              AfxModelGetMeshBindingCount(afxModel mdl);
+AFX afxUri const*       AfxGetModelUri(afxModel mdl);
+
+AFX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
+AFX void                AfxSetModelSkeleton(afxModel mdl, afxSkeleton skl);
+
+AFX void                AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4]);
+AFX void                AfxSetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
+
+AFX void                AfxTransformModel(afxModel mdl, afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags);
+
+AFX afxMesh             AfxGetModelMesh(afxModel mdl, afxNat slotIdx);
+AFX void                AfxSetModelMesh(afxModel mdl, afxNat slotIdx, afxMesh msh);
+
+AFX afxNat              AfxCountModelMeshes(afxModel mdl);
 
 #endif//AFX_MODEL_H

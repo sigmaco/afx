@@ -19,9 +19,9 @@
 
 #include "afx/core/afxFcc.h"
 #include "afx/core/afxChain.h"
-#include "afx/core/async/afxSlock.h"
+#include "afx/core/afxSlock.h"
 #include "afx/core/afxInstance.h"
-#include "afx/core/mem/afxPool.h"
+#include "afx/core/afxPool.h"
 
 // RTTI of Qwadro
 
@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AFX_FLAG(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT_OFFSET(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)
@@ -68,6 +68,8 @@ AFX_DEFINE_STRUCT(afxCookie)
     afxNat no;
     void** udd;
 };
+
+#define AfxGetCookieData(cookie_,_idx_) 
 
 AFX_DEFINE_STRUCT(afxClassConfig)
 {

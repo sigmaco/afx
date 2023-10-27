@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/draw/res/afxSurface.h"
+#include "afx/draw/afxSurface.h"
 #include "../src/e2coree/draw/afxDrawParadigms.h"
 
 _SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl)
@@ -102,7 +102,7 @@ _SGL afxError _SglSurfDtor(afxSurface surf)
 
     if (surf->glHandle)
     {
-        _SglDeleteGlRes(dctx, 2, surf->glHandle);
+        _SglDctxDeleteGlRes(dctx, 2, surf->glHandle);
         surf->glHandle = 0;
     }
 
@@ -119,9 +119,9 @@ _SGL afxError _SglSurfCtor(afxSurface surf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(surf);
 
-    afxTextureBlueprint const *texb = ((afxTextureBlueprint const *)cookie->udd[0]) + cookie->no;
+    afxTextureInfo const *texi = ((afxTextureInfo const *)cookie->udd[0]) + cookie->no;
 
-    if (AfxBuildTextures(dctx, 1, &surf->base.tex, texb)) AfxThrowError();
+    if (AfxAcquireTextures(dctx, 1, texi, &surf->base.tex)) AfxThrowError();
     else
     {
         surf->base.state = AFX_SURF_STATE_IDLE;

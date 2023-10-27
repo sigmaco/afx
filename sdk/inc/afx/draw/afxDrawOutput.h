@@ -14,6 +14,8 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 /// afxDrawOutput é um objeto que abstrai a ideia de swapchain junto a surface da plataforma.
 
 /// Swapchains are a list of images, accessible by the operating system for display to the screen.
@@ -24,8 +26,8 @@
 #ifndef AFX_DRAW_OUTPUT_H
 #define AFX_DRAW_OUTPUT_H
 
-#include "afx/draw/res/afxSurface.h"
-#include "afx/core/async/afxSlock.h"
+#include "afx/draw/afxSurface.h"
+#include "afx/core/afxSlock.h"
 
 typedef enum afxEventDout
 {
@@ -44,8 +46,8 @@ typedef enum afxColorSpace
 typedef enum afxPresentTransform
 {
     //NIL // Identity
-    AFX_PRESENT_TRANSFORM_FLIP_V = AFX_FLAG(0), // invert pixel grid vertically.
-    AFX_PRESENT_TRANSFORM_FLIP_H = AFX_FLAG(1) // invert pixel grid horizontally.
+    AFX_PRESENT_TRANSFORM_FLIP_V = AFX_BIT_OFFSET(0), // invert pixel grid vertically.
+    AFX_PRESENT_TRANSFORM_FLIP_H = AFX_BIT_OFFSET(1) // invert pixel grid horizontally.
 } afxPresentTransform;
 
 typedef enum afxPresentAlpha
@@ -78,7 +80,6 @@ typedef enum afxPresentMode
 
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
-    afxNat              devId; // registered on draw system.
     afxUri const*       endpoint; // window, desktop, etc
     afxWhd              whd;
     afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
@@ -100,6 +101,7 @@ AFX_DECLARE_STRUCT(_afxDoutVmt);
 
 //typedef afxHandle afxDrawOutput;
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_OUTPUT_C
 AFX_OBJECT(afxDrawOutput)
 #else
@@ -107,10 +109,11 @@ struct afxBaseDrawOutput
 #endif
 {
     _afxDoutVmt const*      vmt;
-    afxDrawContext          dctx; // bound context
+    afxError                (*procCb)(afxDrawOutput,afxDrawThread);
+    afxLinkage              dctx; // bound context
     afxNat                  suspendCnt;
     afxSlock                suspendSlock;
-
+    
     afxWhd                  extent;
     afxWhd                  resolution; // Screen resolution. Absolute extent available.
     afxReal                 wpOverHp; // physical w/h
@@ -156,23 +159,16 @@ struct afxBaseDrawOutput
 
     void*                   udd; // user-defined data
 };
-
-AFX afxClass*           AfxGetDrawOutputClass(afxDrawDevice ddev);
-AFX afxNat              AfxCountDrawOutputs(afxDrawDevice ddev);
-
-AFX afxNat              AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
-AFX afxNat              AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-
-AFX afxError            AfxAcquireDrawOutputs(afxDrawSystem dsys, afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]);
+#endif
 
 AFX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
 
-AFX afxBool             AfxGetConnectedDrawOutputContext(afxDrawOutput dout, afxDrawContext *dctx);
 AFX afxBool             AfxDrawOutputIsConnected(afxDrawOutput dout);
-AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afxNat *slotIdx);
-AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout, afxNat *slotIdx);
+AFX afxBool             AfxGetDrawOutputConnection(afxDrawOutput dout, afxDrawContext *dctx);
+AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
+AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
 
 // Extent
 

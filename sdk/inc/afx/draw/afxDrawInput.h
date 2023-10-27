@@ -14,6 +14,8 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 // afxDrawInput devices operates like device submission queues grouping sets of draw streams and present their result to the connected draw output devices.
 
 // No QWADRO, há um conceito de uma fila de submissão de trabalho para a GPU. Porém, diferentemente do Vulkan, no QWADRO esta "fila" é separada em dois.
@@ -23,13 +25,12 @@
 #define AFX_DRAW_INPUT_H
 
 #include "afx/draw/afxDrawQueue.h"
-#include "afx/core/io/afxUri.h"
+#include "afx/core/afxUri.h"
 
 typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxNat msg, afxSize argv[][1][1]);
 
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
-    afxNat              devId;
     afxUri const*       endpoint;
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
@@ -39,6 +40,7 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
 
 AFX_DECLARE_STRUCT(_afxDinVmt);
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_INPUT_C
 AFX_OBJECT(afxDrawInput)
 #else
@@ -46,8 +48,9 @@ struct afxBaseDrawInput
 #endif
 {
     _afxDinVmt const*   vmt;
-    afxDrawContext      dctx; // bound context
-    afxContext           mem;
+    afxError            (*procCb)(afxDrawInput din, afxDrawThread dthr);
+    afxLinkage          dctx; // bound context
+    afxContext          mem;
 
     afxArray            scripts;
     afxNat              minScriptReserve;
@@ -58,17 +61,15 @@ struct afxBaseDrawInput
     afxBool             prefetchEnabled;
     void*               udd;
 };
+#endif
 
-
-AFX afxError            AfxAcquireDrawInputs(afxDrawSystem dsys, afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[]);
-
-AFX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[]);
+AFX afxDrawDevice       AfxGetDrawInputDevice(afxDrawInput din);
 
 // Connection
 AFX afxBool             AfxDrawInputIsConnected(afxDrawInput din);
-AFX afxBool             AfxGetConnectedDrawInputContext(afxDrawInput din, afxDrawContext *dctx);
-AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat *slotIdx);
-AFX afxError            AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx);
+AFX afxBool             AfxGetDrawInputConnection(afxDrawInput din, afxDrawContext *dctx);
+AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AFX afxError            AfxDisconnectDrawInput(afxDrawInput din);
 
 //AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
 AFX afxError            AfxRecycleDrawInputScripts(afxDrawInput din, afxNat firstScrIdx, afxNat scrCnt);

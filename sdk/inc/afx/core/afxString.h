@@ -18,7 +18,7 @@
 #define AFX_STRING_H
 
 #include "afx/core/afxRawString.h"
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 #include "afx/core/afxFcc.h"
 
 #define AFX_STR_MAX_LEN AFX_N16_MAX
@@ -29,10 +29,10 @@
 
 enum
 {
-    _AFX_STR_FLAG_ALLOCED = AFX_FLAG(0),
-    _AFX_STR_FLAG_BUFFERED = AFX_FLAG(1),
-    _AFX_STR_FLAG_EXCERPT = AFX_FLAG(2),
-    _AFX_STR_FLAG_WRAP = AFX_FLAG(3),
+    _AFX_STR_FLAG_ALLOCED = AFX_BIT_OFFSET(0),
+    _AFX_STR_FLAG_BUFFERED = AFX_BIT_OFFSET(1),
+    _AFX_STR_FLAG_EXCERPT = AFX_BIT_OFFSET(2),
+    _AFX_STR_FLAG_WRAP = AFX_BIT_OFFSET(3),
 };
 
 AFX_DEFINE_STRUCT(afxString)

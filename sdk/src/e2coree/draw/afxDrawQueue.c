@@ -20,9 +20,7 @@
 #define _AFX_DRAW_SCRIPT_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_CONTEXT_C
-#include "_classified/afxDrawClassified.h"
-
-extern struct _afxDsysD TheDrawSystem;
+#include "afxDrawClassified.h"
 
 #if 0
 

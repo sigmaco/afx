@@ -122,6 +122,7 @@ typedef uint16_t    afxNat16;
 typedef uint32_t    afxNat32;
 typedef uint64_t    afxNat64;
 
+typedef afxNat16    afxReal16;
 typedef float       afxReal32;
 typedef double      afxReal64;
 
@@ -136,7 +137,7 @@ typedef afxChar8    afxChar;
 typedef afxNat8     afxByte;
 typedef afxInt32    afxInt; // signed
 typedef afxNat32    afxNat; // unsigned
-typedef afxReal32   afxReal;
+typedef afxReal32   afxSimd(afxReal);
 typedef afxBool32   afxBool;
 typedef afxInt32    afxResult;
 
@@ -144,6 +145,7 @@ typedef intptr_t    afxOffset;
 typedef uintptr_t   afxAddress;
 typedef size_t      afxSize;
 typedef afxNat32    afxFlags;
+typedef afxNat32    afxBitmask;
 
 #define AFX_I8_MIN  ((afxInt8)INT8_MIN)
 #define AFX_I8_MAX  ((afxInt8)INT8_MAX)
@@ -174,8 +176,8 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 
 #define AFX_FLAG_MIN ((afxNat32)1 << (afxNat32)0)
 #define AFX_FLAG_MAX ((afxNat32)1 << (afxNat32)31)
-#define AFX_FLAG(bit_) ((afxNat32)1 << (afxNat32)(bit_))
-#define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
+#define AFX_BIT_OFFSET(bit_) ((afxNat32)1 << (afxNat32)(bit_))
+//#define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
 
 
 #define AfxTestBitPosition(var_,bit_) ((var_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
@@ -187,6 +189,15 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
 
 #define AFX_INVALID_INDEX (afxNat)(~((afxNat)0))
+#define AFX_INVALID_INDEX8 (afxNat8)(~((afxNat8)0))
+#define AFX_INVALID_INDEX16 (afxNat16)(~((afxNat16)0))
+#define AFX_INVALID_INDEX32 (afxNat32)(~((afxNat32)0))
+#define AFX_INVALID_INDEX64 (afxNat64)(~((afxNat64)0))
+
+static_assert(AFX_INVALID_INDEX == AFX_N32_MAX, "");
+static_assert(AFX_INVALID_INDEX8 == AFX_N8_MAX, "");
+static_assert(AFX_INVALID_INDEX16 == AFX_N16_MAX, "");
+static_assert(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 #define AFX_REBASE(link_, type_, entry_) ((type_ *)(((afxByte *)(link_)) - offsetof(type_, entry_)))
 
@@ -282,9 +293,9 @@ afxCriterion;
 
 typedef enum afxProfileFlag
 {
-    afxProfileFlag_ROBUSTNESS   = AFX_FLAG(0),
-    afxProfileFlag_PERFORMANCE  = AFX_FLAG(1),
-    afxProfileFlag_QUALITY      = AFX_FLAG(2),
+    afxProfileFlag_ROBUSTNESS   = AFX_BIT_OFFSET(0),
+    afxProfileFlag_PERFORMANCE  = AFX_BIT_OFFSET(1),
+    afxProfileFlag_QUALITY      = AFX_BIT_OFFSET(2),
 } afxProfileFlag;
 
 // Object handles defined by Core Execution System

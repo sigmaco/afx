@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 
-#include "afx/draw/res/afxSampler.h"
+#include "afx/draw/afxSampler.h"
 #include "afx/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +116,7 @@ _SGL afxError _SglSampDtor(afxSampler samp)
     if (samp->glHandle)
     {
         afxDrawContext dctx = AfxGetObjectProvider(samp);
-        _SglDeleteGlRes(dctx, 4, samp->glHandle);
+        _SglDctxDeleteGlRes(dctx, 4, samp->glHandle);
         samp->glHandle = 0;
     }
 

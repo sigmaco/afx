@@ -14,11 +14,13 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
 #ifndef AFX_COLOR_H
 #define AFX_COLOR_H
 
 #include "afx/draw/afxDrawDefs.h"
-#include "afx/math/afxMathDefs.h"
+#include "afx/math/afxVector.h"
 
 typedef afxV4d      afxColor;
 typedef afxNat32    afxRgb8, afxBgr8;
@@ -83,13 +85,13 @@ typedef enum afxPixelFormat
 
 typedef enum afxPixelFlag
 {
-    AFX_PIXEL_FLAG_REAL         = AFX_FLAG(0),
-    AFX_PIXEL_FLAG_DEPTH        = AFX_FLAG(1),
-    AFX_PIXEL_FLAG_SIGNED       = AFX_FLAG(2),
-    AFX_PIXEL_FLAG_NORMALIZED   = AFX_FLAG(3),
-    AFX_PIXEL_FLAG_COMPRESSED   = AFX_FLAG(4),
-    AFX_PIXEL_FLAG_INDEXED      = AFX_FLAG(5),
-    AFX_PIXEL_FLAG_LUMINANCE    = AFX_FLAG(6),
+    AFX_PIXEL_FLAG_REAL         = AFX_BIT_OFFSET(0),
+    AFX_PIXEL_FLAG_DEPTH        = AFX_BIT_OFFSET(1),
+    AFX_PIXEL_FLAG_SIGNED       = AFX_BIT_OFFSET(2),
+    AFX_PIXEL_FLAG_NORMALIZED   = AFX_BIT_OFFSET(3),
+    AFX_PIXEL_FLAG_COMPRESSED   = AFX_BIT_OFFSET(4),
+    AFX_PIXEL_FLAG_INDEXED      = AFX_BIT_OFFSET(5),
+    AFX_PIXEL_FLAG_LUMINANCE    = AFX_BIT_OFFSET(6),
 } afxPixelFlag;
 
 AFX_DEFINE_STRUCT(afxPixelFormatSpecification)
@@ -140,7 +142,7 @@ AFXINL void AfxSetColor(afxColor color, afxReal r, afxReal g, afxReal b, afxReal
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
-    AfxV4dSet(color, r, g, b, a);
+    AfxSetV4d(color, r, g, b, a);
 }
 
 AFXINL void AfxCopyColor(afxColor color, afxColor const in)
@@ -148,14 +150,14 @@ AFXINL void AfxCopyColor(afxColor color, afxColor const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
     AfxAssert(in);
-    AfxV4dCopy(color, in);
+    AfxCopyV4d(color, in);
 }
 
 AFXINL void AfxResetColor(afxColor color)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
-    AfxV4dMakeIdentity(color);
+    AfxResetV4d(color);
 }
 
 // ((RwUInt32) (((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))

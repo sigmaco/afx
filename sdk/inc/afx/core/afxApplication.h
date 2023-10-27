@@ -20,8 +20,8 @@
 #include "afx/draw/afxDrawInput.h"
 #include "afx/sim/afxSimulation.h"
 #include "afx/mmux/afxWidget.h"
-#include "afx/core/io/afxMouse.h"
-#include "afx/core/async/afxThread.h"
+#include "afx/core/afxMouse.h"
+#include "afx/core/afxThread.h"
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 

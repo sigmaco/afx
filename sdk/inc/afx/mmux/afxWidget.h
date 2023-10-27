@@ -9,7 +9,8 @@
 #include "afx/draw/afxColor.h"
 #include "afx/core/afxChain.h"
 #include "afx/core/afxInstance.h"
-#include "afx/core/io/afxUri.h"
+#include "afx/core/afxUri.h"
+#include "afx/math/afxTransform.h"
 //#include "afxViewport.h"
 //#include "afx/draw/afxDrawInput.h"
 
@@ -57,14 +58,11 @@ AFX_DEFINE_STRUCT(afxWidgetConfig)
 #ifdef _AFX_WIDGET_C
 AFX_OBJECT(afxWidget)
 {
-    afxInstance                       obj;
-
     afxLinkage                      parent;
     afxChain                        children;
 
-    afxV4d                          translation;
-    afxQuat                         rotation;
-    afxV3d                          scale;
+    afxTransform                    local;
+    afxM4d                          iw;
 
     afxResult                       (*update)(afxWidget wid, afxReal dt);
 

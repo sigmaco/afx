@@ -18,14 +18,14 @@
 #ifndef AFX_ANIMATION_H
 #define AFX_ANIMATION_H
 
- // Terminology: BodyControl is a movable model of a person or animal that is used in entertainment and is typically moved either by strings controlled from above or by a hand inside it.
+ // Terminology: Animator is a movable model of a person or animal that is used in entertainment and is typically moved either by strings controlled from above or by a hand inside it.
 
- // There are two primary objects involved in the run-time animation layer : the afxBody and the afxBodyControl.
+ // There are two primary objects involved in the run-time animation layer : the afxBody and the afxAnimator.
  // Together, they represent the two ends of the animation process.
  // The afxBody represents the state of a single model that may have some number of animations affecting it, 
- // whereas the afxBodyControl represents the state of an animation that may be affecting some number of models.
+ // whereas the afxAnimator represents the state of an animation that may be affecting some number of models.
  // When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
- // When you want to play an animation on such an instance, you create a afxBodyControl.
+ // When you want to play an animation on such an instance, you create a afxAnimator.
 
 #include "afxCurve2.h"
 

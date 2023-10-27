@@ -4,7 +4,7 @@
 
 #include "afx/afxQwadro.h"
 #include "afx/core/afxApplication.h"
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 #include "afx/math/afxMathDefs.h"
 
 #define ENABLE_DRAW 1
@@ -29,16 +29,16 @@ afxCamera cam = NIL;
 
 afxUri2048 uri;
 
- afxSize frameTime = 0, swapTime = 0, frameNum = 0;
- afxReal64 dt = 0;
- afxNat fps = 0;
+afxSize frameTime = 0, swapTime = 0, frameNum = 0;
+afxReal64 dt = 0;
+afxNat fps = 0;
 
 afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     afxRenderer rnd = AfxGetDrawInputUdd(din);
     afxDrawContext dctx;
-    AfxGetConnectedDrawInputContext(din, &dctx);
+    AfxGetDrawInputConnection(din, &dctx);
     afxDrawScript dscr;
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -73,7 +73,7 @@ void UpdateFrameMovement(const afxReal DeltaTime)
     const afxReal ForwardSpeed = (AfxKeyIsPressed(AFX_KEY_W, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_S, 0) ? 1 : 0.0f);
     const afxReal RightSpeed = (AfxKeyIsPressed(AFX_KEY_A, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_D, 0) ? 1 : 0.0f);
 
-    AfxCameraMoveRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
+    AfxMoveCameraRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
 
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
@@ -148,7 +148,7 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutConfig.endpoint = &uriMap;
-    AfxAcquireDrawOutputs(dsys, 1, &dout, &doutConfig);
+    AfxOpenDrawOutputs(dsys, 1, &doutConfig, &dout);
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
     AfxReconnectDrawOutput(dout, dctx, NIL);
 
@@ -208,11 +208,11 @@ int main(int argc, char const* argv[])
 
         afxDrawSystemConfig dsysSpec = { 0 };
         AfxChooseDrawSystemConfiguration(&dsysSpec, 0);
-        AfxAcquireDrawSystems(1, &dsys, &dsysSpec);
+        AfxAcquireDrawSystems(1, &dsysSpec, &dsys);
         AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };
-        AfxAcquireDrawContexts(dsys, 1, &dctx, &dctxConfig);
+        AfxAcquireDrawContexts(dsys, 1, &dctxConfig, &dctx);
         AfxAssert(dctx);
 
         afxApplication TheApp;

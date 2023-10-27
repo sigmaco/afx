@@ -14,11 +14,12 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_C
 #define _AFX_DRAW_THREAD_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_THREAD_C
-#include "_classified/afxDrawClassified.h"
+#include "afxDrawClassified.h"
 #include "afx/draw/afxDrawThread.h"
 
 _AFX afxBool AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque)
@@ -107,7 +108,7 @@ _AFX afxBool _AfxProcessDdevCb(afxDrawDevice ddev, void *udd)
         dthr->dctx = NIL;
         dthr->dque = NIL;
 
-        if (ddev->vmt->proc(dthr, ddev))
+        if (ddev->procCb(ddev, dthr))
             AfxThrowError();
 
         dthr->ddev = NIL;
@@ -157,7 +158,7 @@ _AFX afxError _AfxDthrCtor(afxDrawThread dthr, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxError AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThread dthr[], afxDrawThreadConfig const config[])
+_AFX afxError AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cnt=%u,dthr=%p,config=%p", cnt, dthr, config);

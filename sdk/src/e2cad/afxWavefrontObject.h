@@ -2,6 +2,7 @@
 #define AFX_WAVEFRONT_OBJECT_H
 
 #include "afx/sim/afxSimulation.h"
+#include "afx/sim/afxAsset.h"
 
 #ifndef __e2cad__
 #   ifdef _DEBUG
@@ -25,8 +26,7 @@
 #   endif
 #endif//__e2cad__
 
-CAD afxResult AfxLoadAssetsFromWavefrontObject(afxSimulation sim, afxUri const *uri, afxArray *assets);
+CAD afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], afxAsset cad[]);
 
-CAD afxResult AfxSimulationLoadObjAssets(afxSimulation sim, afxUri const *uri, afxArray *assets);
 
 #endif//AFX_WAVEFRONT_OBJECT_H

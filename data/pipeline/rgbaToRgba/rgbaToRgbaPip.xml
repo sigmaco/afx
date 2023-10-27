@@ -6,7 +6,7 @@
         <DepthTestEnable>false</DepthTestEnable>
         <DepthWriteEnable>false</DepthWriteEnable>
         <DepthCompareOp>ALWAYS</DepthCompareOp>
-        <Input topology='TRI_STRIP'/>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader stage='VERTEX'>data/pipeline/rgbaToRgba/rgbaToRgbaShdVtx.xml?vs</Shader>
         <Shader stage='FRAGMENT'>data/pipeline/rgbaToRgba/rgbaToRgbaShdFrg.xml?fs</Shader>
     </Pipeline>
@@ -17,7 +17,7 @@
         <DepthTestEnable>false</DepthTestEnable>
         <DepthWriteEnable>false</DepthWriteEnable>
         <DepthCompareOp>ALWAYS</DepthCompareOp>
-        <Input topology='TRI_STRIP'/>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader stage='VERTEX'>data/pipeline/rgbaToRgba/rgbaToRgbaShdVtx.xml?vsFlippedY</Shader>
         <Shader stage='FRAGMENT'>data/pipeline/rgbaToRgba/rgbaToRgbaShdFrg.xml?fs</Shader>
     </Pipeline>

@@ -2,7 +2,7 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 #include "afx/core/afxSystem.h"
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 
 #include "afx/sim/afxNode.h"
 
@@ -10,7 +10,7 @@
 #include "afx/afxQwadro.h"
 #include "../src/e2bink/afxBinkVideo.h"
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/core/mem/afxBitmap.h"
+#include "afx/core/afxBitmap.h"
 
 #define ENABLE_DIN1 // 
 #define ENABLE_DOUT1
@@ -47,7 +47,7 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called
     afxError err = AFX_ERR_NONE;
     afxBinkVideo *bnk2 = &bnk;
     afxDrawContext dctx;
-    AfxGetConnectedDrawInputContext(din, &dctx);
+    AfxGetDrawInputConnection(din, &dctx);
     afxDrawScript dscr;
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -57,7 +57,7 @@ _AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called
     if (!dscr) AfxThrowError();
     else
     {
-        if (AfxBeginDrawScript(dscr, NIL)) AfxThrowError();
+        if (AfxBeginDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
         else
         {
             afxNat outBufIdx = 0;
@@ -114,7 +114,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxFormatUri(&uri.uri, "art/world.tga");
     
-    if (AfxAcquireTextures(dctx, 1, &dumpImg, &uri.uri))
+    if (AfxLoadTextures(dctx, NIL, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
@@ -141,9 +141,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     doutConfig.pixelFmt = AFX_PFD_RGB8;
     
 #ifdef ENABLE_DOUT1
-    AfxAcquireDrawOutputs(dsys, 1, dout, &doutConfig);
+    AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, dout);
     AfxAssert(dout[0]);
-    AfxReconnectDrawOutput(dout[0], dctx, NIL);
+    AfxReconnectDrawOutput(dout[0], dctx);
 
     //afxResult rslt = AfxBuildDrawOutputCanvases(dout[0], 0, AfxGetDrawOutputCapacity(dout[0]), NIL, NIL, canv[0]);
     //AfxAssert(!rslt);
@@ -151,7 +151,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 #endif
 #ifdef ENABLE_DOUT2
     doutConfig.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
-    dout[1] = AfxAcquireDrawOutputs(dctx, &doutConfig, &uri);
+    dout[1] = AfxOpenDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[1]);
 
     surfSpec.fmt = doutConfig.pixelFmt;
@@ -165,7 +165,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 #endif
 #ifdef ENABLE_DOUT3
     doutConfig.presentMode = AFX_PRESENT_MODE_FIFO;
-    dout[2] = AfxAcquireDrawOutputs(dctx, &doutConfig, &uri);
+    dout[2] = AfxOpenDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[2]);
 
     surfSpec.fmt = doutConfig.pixelFmt;
@@ -186,17 +186,17 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 #ifdef ENABLE_DIN1
     AfxEraseUri(&uri.uri);
-    AfxAcquireDrawInputs(dsys, 1, din, &dinConfig);
+    AfxOpenDrawInputs(dsys, 0, 1, &dinConfig, din);
     AfxAssert(din[0]);
-    AfxReconnectDrawInput(din[0], dctx, NIL);
+    AfxReconnectDrawInput(din[0], dctx);
 
 #endif
 #ifdef ENABLE_DIN2
-    din[1] = AfxAcquireDrawInputs(&dinConfig);
+    din[1] = AfxOpenDrawInputs(&dinConfig);
     AfxAssert(din[1]);
 #endif
 #ifdef ENABLE_DIN3
-    din[2] = AfxAcquireDrawInputs(&dinConfig);
+    din[2] = AfxOpenDrawInputs(&dinConfig);
     AfxAssert(din[2]);
 #endif
 
@@ -293,14 +293,14 @@ int main(int argc, char const* argv[])
 
         afxDrawSystemConfig dsysConfig;
         AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
-        AfxAcquireDrawSystems(1, &dsys, &dsysConfig);
+        AfxAcquireDrawSystems(1, &dsysConfig, &dsys);
         AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
 
         afxDrawDevice ddev;
         AfxGetDrawDevice(dsys, 0, &ddev);
 
         afxDrawContextConfig dctxConfig = { 0 };        
-        AfxAcquireDrawContexts(dsys, 1, &dctx, &dctxConfig);
+        AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
         //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
         afxApplication TheApp;

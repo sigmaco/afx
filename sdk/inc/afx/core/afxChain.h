@@ -17,7 +17,7 @@
 #ifndef AFX_LINKED_LIST_H
 #define AFX_LINKED_LIST_H
 
-#include "afx/core/diag/afxDebug.h"
+#include "afx/core/afxDebug.h"
 
 // std::list is a container that supports constant time insertion and removal of elements from anywhere in the container.
 // Fast random access is not supported. It is usually implemented as a doubly-linked list.

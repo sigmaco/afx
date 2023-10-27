@@ -1,0 +1,18 @@
+<Qwadro>
+    <Shader stage='VERTEX' name='vs'>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <In format='V3D'>a_xyz</In>
+        <![CDATA[
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        void main()
+        {
+            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            gl_Position = pos;
+        }
+        ]]>
+    </Shader>
+</Qwadro>

@@ -19,7 +19,6 @@
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"
 #include "../src/e2coree/draw/afxDrawParadigms.h"
-#include "afx/draw/io/afxTarga.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // IMAGE                                                                      //
@@ -360,12 +359,12 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
                 rgn.lodIdx = i;
                 rgn.baseImg = j;
                 rgn.imgCnt = 1;
-                rgn.offset[0] = tex->lastUpdOffset[0];
-                rgn.offset[1] = tex->lastUpdOffset[1];
-                rgn.offset[2] = tex->lastUpdOffset[2];
-                rgn.extent[0] = tex->lastUpdRange[0];
-                rgn.extent[1] = tex->lastUpdRange[1];
-                rgn.extent[2] = tex->lastUpdRange[2];
+                rgn.offset[0] = 0;
+                rgn.offset[1] = 0;
+                rgn.offset[2] = 0;
+                rgn.extent[0] = tex->base.whd[0];
+                rgn.extent[1] = tex->base.whd[1];
+                rgn.extent[2] = tex->base.whd[2];
 
                 data = NIL;
 
@@ -388,12 +387,12 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
             rgn.lodIdx = i;
             rgn.baseImg = 0;
             rgn.imgCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
+            rgn.offset[0] = 0;
+            rgn.offset[1] = 0;
+            rgn.offset[2] = 0;
+            rgn.extent[0] = tex->base.whd[0];
+            rgn.extent[1] = tex->base.whd[1];
+            rgn.extent[2] = tex->base.whd[2];
 
             data = NIL;
 
@@ -416,14 +415,14 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
         for (afxNat i = 0; i < lvlCnt; i++)
         {
             rgn.lodIdx = i;
-            rgn.baseImg = i;
-            rgn.imgCnt = tex->base.imgCnt;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
+            rgn.baseImg = 0;
+            rgn.imgCnt = 1;
+            rgn.offset[0] = 0;
+            rgn.offset[1] = 0;
+            rgn.offset[2] = 0;
+            rgn.extent[0] = tex->base.whd[0];
+            rgn.extent[1] = tex->base.whd[1];
+            rgn.extent[2] = tex->base.whd[2];
 
             data = NIL;
 
@@ -445,12 +444,12 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
             rgn.lodIdx = i;
             rgn.baseImg = 0;
             rgn.imgCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
+            rgn.offset[0] = 0;
+            rgn.offset[1] = 0;
+            rgn.offset[2] = 0;
+            rgn.extent[0] = tex->base.whd[0];
+            rgn.extent[1] = tex->base.whd[1];
+            rgn.extent[2] = tex->base.whd[2];
 
             data = NIL;
 
@@ -473,13 +472,13 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
         {
             rgn.lodIdx = i;
             rgn.baseImg = 0;
-            rgn.imgCnt = tex->base.imgCnt;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
+            rgn.imgCnt = 1;
+            rgn.offset[0] = 0;
+            rgn.offset[1] = 0;
+            rgn.offset[2] = 0;
+            rgn.extent[0] = tex->base.whd[0];
+            rgn.extent[1] = tex->base.whd[1];
+            rgn.extent[2] = tex->base.whd[2];
 
             data = NIL;
 
@@ -501,12 +500,12 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
             rgn.lodIdx = i;
             rgn.baseImg = 0;
             rgn.imgCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
+            rgn.offset[0] = 0;
+            rgn.offset[1] = 0;
+            rgn.offset[2] = 0;
+            rgn.extent[0] = tex->base.whd[0];
+            rgn.extent[1] = tex->base.whd[1];
+            rgn.extent[2] = tex->base.whd[2];
 
             data = NIL;
 
@@ -909,7 +908,7 @@ _SGL afxError _SglTexDtor(afxTexture tex)
 
     if (tex->glHandle)
     {
-        _SglDeleteGlRes(dctx, 1, tex->glHandle);
+        _SglDctxDeleteGlRes(dctx, 1, tex->glHandle);
         tex->glHandle = 0;
     }
 
@@ -927,28 +926,26 @@ _SGL afxError _SglTexCtor(afxTexture tex, afxCookie const* cookie)
 
     afxError err = AFX_ERR_NONE;
 
-    afxTextureBlueprint const *texb = ((afxTextureBlueprint const *)cookie->udd[0]) + cookie->no;
+    afxTextureInfo const *texi = ((afxTextureInfo const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, AFX_FCC_CTX);
 
-    tex->base.swizzling = &AFX_STD_COLOR_SWIZZLING;
-    tex->base.sampleCnt = 1;
-    tex->base.linearlyTiled = FALSE;
+    tex->base.swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
+    tex->base.sampleCnt = AfxMaxi(texi->sampleCnt, 1);
+    //tex->base.linearlyTiled = FALSE;
 
-    AfxAssert(texb->imgCnt);
-    tex->base.imgCnt = texb->imgCnt;
-    AfxAssert(texb->lodCnt == 1);
-    tex->base.lodCnt = texb->lodCnt;
+    tex->base.imgCnt = AfxMaxi(texi->imgCnt, 1);
+    tex->base.lodCnt = AfxMaxi(texi->lodCnt, 1);
 
-    tex->base.flags = texb->usage;
+    tex->base.flags = texi->usage;
 
-    tex->base.fmt = texb->fmt;
+    tex->base.fmt = texi->fmt;
 
-    tex->base.whd[0] = texb->extent[0];
-    tex->base.whd[1] = texb->extent[1];
-    tex->base.whd[2] = texb->extent[2];
+    tex->base.whd[0] = AfxMaxi(texi->whd[0], 1);
+    tex->base.whd[1] = AfxMaxi(texi->whd[1], 1);
+    tex->base.whd[2] = AfxMaxi(texi->whd[2], 1);
 
     tex->base.maps = NIL;
 
@@ -959,78 +956,9 @@ _SGL afxError _SglTexCtor(afxTexture tex, afxCookie const* cookie)
         tex->base.vmt = &_SglTexVmt;
         tex->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
-        tex->lastUpdImgRange = AfxGetTextureImageCount(tex);
-        tex->lastUpdLodRange = AfxGetTextureLodCount(tex);
-        AfxGetTextureExtent(tex, 0, tex->lastUpdRange);
-    }
-
-    afxTextureRegion rgn;
-    rgn.lodIdx = 0;
-    rgn.baseImg = 0;
-    rgn.imgCnt = 1;
-    rgn.offset[0] = 0;
-    rgn.offset[1] = 0;
-    rgn.offset[2] = 0;
-    rgn.extent[0] = tex->base.whd[0];
-    rgn.extent[1] = tex->base.whd[1];
-    rgn.extent[2] = tex->base.whd[2];
-
-    for (afxNat j = 0; j < tex->base.imgCnt; j++)
-    {
-        afxTextureSource const *layer = &(texb->images[j]);
-        AfxAssert(layer);
-        //AfxAssert(layer->src);
-
-        switch (layer->type)
-        {
-        case AFX_FCC_NIL:
-        {
-            //afxNat siz = layer->data.range;
-
-            if (layer->data.start)
-            {
-                rgn.baseImg = j;
-                AfxUpdateTextureRegion(tex, &rgn, layer->data.start, layer->data.range, layer->data.fmt);
-            }
-            break;
-        }
-        case AFX_FCC_URI:
-        {
-            rgn.baseImg = j;
-            AfxFetchTextureRegion(tex, &rgn, &layer->uri);
-            break;
-        }
-        case AFX_FCC_IOS:
-        {
-            afxNat range = layer->stream.range;
-            AfxAssert(range);
-            void *buf;
-
-            if (!(buf = AfxAllocate(mem, range, 0, AfxSpawnHint()))) AfxThrowError();
-            else
-            {
-                afxStream *ios = layer->stream.ios;
-                AfxAssertType(ios, AFX_FCC_IOS);
-                afxSize offset = layer->stream.offset;
-                afxNat posn = AfxAskStreamPosn(ios);
-
-                if (AfxGoToStreamBegin(ios, offset)) AfxThrowError();
-                else
-                {
-                    if (AfxReadStream(ios, buf, range, 0)) AfxThrowError();
-                    else
-                    {
-                        rgn.baseImg = j;
-                        AfxUpdateTextureRegion(tex, &rgn, buf, range, layer->stream.fmt);
-                    }
-                }
-                AfxGoToStreamBegin(ios, (afxInt)posn);
-                AfxDeallocate(mem, buf);
-            }
-            break;
-        }
-        default: AfxThrowError(); break;
-        }
+        //tex->lastUpdImgRange = AfxGetTextureImageCount(tex);
+        //tex->lastUpdLodRange = AfxGetTextureLodCount(tex);
+        //AfxGetTextureExtent(tex, 0, tex->lastUpdRange);
     }
 
     if (err && tex->base.maps)

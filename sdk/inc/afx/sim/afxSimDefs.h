@@ -39,6 +39,9 @@ AFX_DEFINE_HANDLE(afxSimulation);
 AFX_DEFINE_HANDLE(afxMaterial);
 
 AFX_DEFINE_HANDLE(afxMesh);
+AFX_DEFINE_HANDLE(afxMeshData);
+AFX_DEFINE_HANDLE(afxMeshTopology);
+AFX_DEFINE_HANDLE(afxMeshRig);
 
 AFX_DEFINE_HANDLE(afxModel);
 
@@ -51,5 +54,6 @@ AFX_DEFINE_HANDLE(afxRenderer)
 AFX_DEFINE_HANDLE(afxEntity);
 
 AFX_DEFINE_HANDLE(afxNode);
+
 
 #endif//AFX_CAD_DEFS_H

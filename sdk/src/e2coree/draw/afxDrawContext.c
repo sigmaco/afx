@@ -14,6 +14,9 @@
  *                                    www.sigmaco.org
  */
 
+// This section is part of SIGMA GL.
+
+#define _AFX_DRAW_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_DRAW_SYSTEM_C
 //#define _AFX_DRAW_DRIVER_C
@@ -32,112 +35,135 @@
 #define _AFX_PIPELINE_C
 #define _AFX_PIPELINE_RIG_C
 #define _AFX_SHADER_C
-#include "_classified/afxDrawClassified.h"
+#include "afxDrawClassified.h"
 
-extern struct _afxDsysD dsys;
-
-_AFX void _AfxDctxFreeAllInputSlots(afxDrawContext dctx)
+_AFX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buf[])
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(buf);
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-
-    if (dctx->inputs)
-    {
-        for (afxNat i = 0; i < dctx->inputCap; i++)
-        {
-            afxDrawInput din = dctx->inputs[i];
-
-            if (din)
-            {
-                AfxDisconnectDrawInput(din, NIL);
-                dctx->inputs[i] = NIL;
-                --dctx->inputCnt;
-            }
-        }
-        dctx->inputCap = 0;
-        AfxDeallocate(dctx->ctx, dctx->inputs);
-        dctx->inputs = NIL;
-    }
+    return AfxEnumerateInstances(&dctx->buffers, first, cnt, (afxHandle*)buf);
 }
 
-_AFX void _AfxDctxFreeAllOutputSlots(afxDrawContext dctx)
+_AFX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canv[])
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(canv);
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-
-    if (dctx->outputs)
-    {
-        for (afxNat i = 0; i < dctx->outputCap; i++)
-        {
-            afxDrawOutput dout = dctx->outputs[i];
-
-            if (dout)
-            {
-                AfxDisconnectDrawOutput(dout, NIL);
-                dctx->outputs[i] = NIL;
-                --dctx->outputCnt;
-            }
-        }
-        dctx->outputCap = 0;
-        AfxDeallocate(dctx->ctx, dctx->outputs);
-        dctx->outputs = NIL;
-    }
+    return AfxEnumerateInstances(&dctx->canvases, first, cnt, (afxHandle*)canv);
 }
 
-_AFX afxNat AfxCurateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
+_AFX afxNat AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(ibuf);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->indices, first, cnt, (afxHandle*)ibuf);
+}
+
+_AFX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(pip);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->pipelines, first, cnt, (afxHandle*)pip);
+}
+
+_AFX afxNat AfxEnumeratePipelineRigs(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipelineRig lego[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(lego);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->legos, first, cnt, (afxHandle*)lego);
+}
+
+_AFX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samp[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(samp);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->samplers, first, cnt, (afxHandle*)samp);
+}
+
+_AFX afxNat AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(shd);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->shaders, first, cnt, (afxHandle*)shd);
+}
+
+_AFX afxNat AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(vbuf);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->vertices, first, cnt, (afxHandle*)vbuf);
+}
+
+_AFX afxNat AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(surf);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->surfaces, first, cnt, (afxHandle*)surf);
+}
+
+_AFX afxNat AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(tex);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return AfxEnumerateInstances(&dctx->textures, first, cnt, (afxHandle*)tex);
+}
+
+_AFX afxNat AfxCountConnectedDrawInputs(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->outputCnt, first, cnt);
-    AfxAssert(f);
+    return dctx->inlinks.cnt;
+}
+
+_AFX afxNat AfxCountConnectedDrawOutputs(afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    return dctx->outlinks.cnt;
+}
+
+_AFX afxNat AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawInput din[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertRange(AfxCountConnectedDrawInputs(dctx), first, cnt);
+    AfxAssert(din);
     afxNat cnt2 = 0;
-
-    for (afxNat i = 0; i < dctx->inputCap; i++)
+    afxNat total = 0;
+    afxLinkage* lnk = AfxGetLastLinkage(&dctx->inlinks);
+    while (lnk)
     {
-        afxDrawInput din = dctx->inputs[i];
-
-        if (din)
+        afxDrawInput din2 = AfxRebase(lnk, afxDrawInput, dctx);
+        AfxAssertObjects(1, &din2, AFX_FCC_DIN);
+        
+        if (total >= first)
         {
-            //AfxAssertType(dinD, AFX_FCC_DIN);
-
+            din[cnt2] = din2;
             ++cnt2;
 
-            if (f(din, udd))
-                break;
-
-            if (cnt2 == cnt)
-                break;
         }
+        ++total;
 
-    }
-    return cnt2;
-}
-
-_AFX afxNat AfxCurateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->outputCnt, first, cnt);
-    AfxAssert(f);
-    afxNat cnt2 = 0;
-
-    for (afxNat i = 0; i < dctx->outputCap; i++)
-    {
-        afxDrawOutput dout = dctx->outputs[i];
-
-        if (dout)
-        {
-            AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-
-            ++cnt2;
-
-            if (f(dout, udd))
-                break;
-
-            if (cnt2 == cnt)
-                break;
-        }
-
+        lnk = AfxGetNextLinkage(lnk);
     }
     return cnt2;
 }
@@ -146,104 +172,139 @@ _AFX afxNat AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->outputCnt, first, cnt);
+    AfxAssertRange(AfxCountConnectedDrawOutputs(dctx), first, cnt);
     AfxAssert(dout);
     afxNat cnt2 = 0;
     afxNat total = 0;
-
-    for (afxNat i = 0; i < dctx->outputCap; i++)
+    afxLinkage* lnk = AfxGetLastLinkage(&dctx->outlinks);
+    while (lnk)
     {
-        afxDrawOutput dout2 = dctx->outputs[i];
+        afxDrawOutput dout2 = AfxRebase(lnk, afxDrawOutput, dctx);
+        AfxAssertObjects(1, &dout2, AFX_FCC_DOUT);
 
-        if (dout2)
+        if (total >= first)
         {
-            if (total >= first)
-            {
-                AfxAssertObjects(1, &dout2, AFX_FCC_DOUT);
-                dout[i] = dout2;
-                ++cnt2;
+            dout[cnt2] = dout2;
+            ++cnt2;
 
-            }
-            ++total;
         }
+        ++total;
 
+        lnk = AfxGetNextLinkage(lnk);
     }
     return cnt2;
 }
 
-_AFX afxNat AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawInput din[])
+_AFX afxNat AfxCurateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->inputCnt, first, cnt);
-    AfxAssert(din);
+    AfxAssertRange(AfxCountConnectedDrawInputs(dctx), first, cnt);
+    AfxAssert(f);
     afxNat cnt2 = 0;
     afxNat total = 0;
-
-    for (afxNat i = 0; i < dctx->inputCap; i++)
+    afxLinkage* lnk = AfxGetLastLinkage(&dctx->inlinks);
+    while (lnk)
     {
-        afxDrawInput din2 = dctx->inputs[i];
+        afxDrawInput din = AfxRebase(lnk, afxDrawInput, dctx);
+        AfxAssertObjects(1, &din, AFX_FCC_DIN);
+        lnk = AfxGetNextLinkage(lnk); // prevent possible unlink
 
-        if (din2)
+        if (total >= first)
         {
-            if (total >= first)
-            {
-                AfxAssertObjects(1, &din2, AFX_FCC_DIN);
-                din[i] = din2;
-                ++cnt2;
+            ++cnt2;
 
-            }
-            ++total;
+            if (f(din, udd))
+                break;
+
+            if (cnt2 == cnt)
+                break;
         }
-
+        ++total;
     }
     return cnt2;
 }
 
-_AFX afxError AfxDisconnectAllDrawInputs(afxDrawContext dctx)
+_AFX afxNat AfxCurateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    _AfxDctxFreeAllInputSlots(dctx);
+    AfxAssertRange(AfxCountConnectedDrawOutputs(dctx), first, cnt);
+    AfxAssert(f);
+    afxNat cnt2 = 0;
+    afxNat total = 0;
+    afxLinkage* lnk = AfxGetLastLinkage(&dctx->outlinks);
+    while (lnk)
+    {
+        afxDrawOutput dout = AfxRebase(lnk, afxDrawOutput, dctx);
+        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+        lnk = AfxGetNextLinkage(lnk); // prevent possible unlink
+
+        if (total >= first)
+        {
+            ++cnt2;
+
+            if (f(dout, udd))
+                break;
+
+            if (cnt2 == cnt)
+                break;
+        }
+        ++total;
+    }
+    return cnt2;
+}
+
+_AFX afxDrawInput AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat no)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertRange(AfxCountConnectedDrawInputs(dctx), no, 1);    
+    afxDrawInput din;
+    if (AfxEnumerateConnectedDrawInputs(dctx, no, 1, &din))
+    {
+        AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    }
+    return din;
+}
+
+_AFX afxDrawOutput AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat no)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertRange(AfxCountConnectedDrawOutputs(dctx), no, 1);
+    afxDrawOutput dout;
+    if (AfxEnumerateConnectedDrawOutputs(dctx, no, 1, &dout))
+    {
+        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    }
+    return dout;
+}
+
+_AFX afxError AfxDisconnectDrawInputs(afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    afxDrawInput din;
+    while ((din = AfxGetConnectedDrawInput(dctx, 0)))
+    {
+        AfxAssertObjects(1, &din, AFX_FCC_DIN);
+        AfxDisconnectDrawInput(din);
+    }
     return err;
 }
 
-_AFX afxError AfxDisconnectAllDrawOutputs(afxDrawContext dctx)
+_AFX afxError AfxDisconnectDrawOutputs(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    _AfxDctxFreeAllOutputSlots(dctx);
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);   
+    afxDrawOutput dout;
+    while ((dout = AfxGetConnectedDrawOutput(dctx, 0)))
+    {
+        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+        AfxDisconnectDrawOutput(dout);
+    }
     return err;
-}
-
-_AFX afxDrawOutput AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat slotIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->outputCap, slotIdx, 1);
-    return dctx->outputs[slotIdx];
-}
-
-_AFX afxDrawInput AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat slotIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    AfxAssertRange(dctx->inputCap, slotIdx, 1);
-    return dctx->inputs[slotIdx];
-}
-
-_AFX afxNat AfxCountConnectedDrawOutputs(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    return dctx->outputCnt;
-}
-
-_AFX afxNat AfxCountConnectedDrawInputs(afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
-    return dctx->inputCnt;
 }
 
 _AFX afxDrawQueue AfxGetDrawQueue(afxDrawContext dctx, afxNat portIdx, afxNat queIdx)
@@ -277,19 +338,28 @@ _AFX afxContext AfxGetDrawContextMemory(afxDrawContext dctx)
     return ctx;
 }
 
-_AFX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat cnt, afxDrawContext dctx[], afxDrawContextConfig const config[])
+_AFX afxDrawDevice AfxGetDrawContextDevice(afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    afxDrawDevice ddev = AfxGetObjectProvider(dctx);
+    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    return ddev;
+}
+
+_AFX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[])
 {
     AfxEntry("cnt=%u,config=%p", cnt, config);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
     afxDrawDevice ddev;
     
-    if (!(AfxGetInstance(&dsys->devices, config ? config->devId : 0, (afxHandle*)&ddev))) AfxThrowError();
+    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawContextClass(ddev), cnt, (afxHandle*)dctx, (void*[]) { (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawContextClass(ddev), cnt, (afxHandle*)dctx, (void*[]) { &devId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, dctx, AFX_FCC_DCTX);

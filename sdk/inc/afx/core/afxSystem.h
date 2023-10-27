@@ -17,21 +17,21 @@
 #ifndef AFX_SYSTEM_H
 #define AFX_SYSTEM_H
 
-#include "afx/core/io/afxKeyboard.h"
-#include "afx/core/io/afxMouse.h"
-#include "afx/core/io/afxStream.h"
-#include "afx/core/io/afxUri.h"
-#include "afx/core/mem/afxArena.h"
-#include "afx/core/time/afxTime.h"
+#include "afx/core/afxKeyboard.h"
+#include "afx/core/afxMouse.h"
+#include "afx/core/afxStream.h"
+#include "afx/core/afxUri.h"
+#include "afx/core/afxArena.h"
+#include "afx/core/afxTime.h"
 #include "afx/core/afxModule.h"
 #include "afx/draw/afxDrawSystem.h"
-#include "afx/core/io/afxFile.h"
-#include "afx/core/io/afxResource.h"
-#include "afx/core/io/afxArchive.h"
-#include "afx/core/time/afxClock.h"
-#include "afx/core/async/afxThread.h"
-#include "afx/core/mem/afxPool.h"
-#include "afx/core/mem/afxMap.h"
+#include "afx/core/afxFile.h"
+#include "afx/core/afxResource.h"
+#include "afx/core/afxArchive.h"
+#include "afx/core/afxClock.h"
+#include "afx/core/afxThread.h"
+#include "afx/core/afxPool.h"
+#include "afx/core/afxMap.h"
 
 enum // opcodes used for primitive communication bethween engine and modules.
 {

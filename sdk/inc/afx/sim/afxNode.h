@@ -19,9 +19,9 @@
 
 #include "afx/core/afxInstance.h"
 #include "afx/core/afxString.h"
-#include "../math/afxMathDefs.h"
-#include "../math/volume/afxAabb.h"
-#include "../math/volume/afxSphere.h"
+#include "afx/math/afxMathDefs.h"
+#include "afx/math/afxAabb.h"
+#include "afx/math/afxSphere.h"
 #include "afxSimDefs.h"
 
 // Frames define the spatial relationships between the objects to which they are attached.
@@ -90,6 +90,8 @@ AFX_OBJECT(afxNode)
     afxAabb const*      (*measure)(afxNode nod);
     afxError            (*update)(afxNode nod, afxReal dt);
 };
+
+AFX afxError        AfxAcquireNodes(afxSimulation sim, afxNat cnt, afxNode nod[], afxNodeSpecification const config[]);
 
 // From 3ds Max
 // To retrieve the local transformation matrix of a node (the transformation of a node relative to its parent) you must perform some matrix arithmetic on the node's world space transformation matrix.

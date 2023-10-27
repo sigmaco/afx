@@ -15,7 +15,7 @@
  */
 
 #include "afx/draw/afxDrawDefs.h"
-#include "afx/draw/res/afxVertexBuffer.h"
+#include "afx/draw/afxVertexBuffer.h"
 
 
 _AFX afxString const g_str_Qwadro = AFX_STRING_LITERAL("Qwadro");
@@ -75,6 +75,7 @@ _AFX afxString const g_str_Pass = AFX_STRING_LITERAL("Pass");
 _AFX afxString const g_str_Rasterization = AFX_STRING_LITERAL("Rasterization");
 _AFX afxString const g_str_DepthHandling = AFX_STRING_LITERAL("DepthHandling");
 _AFX afxString const g_str_Input = AFX_STRING_LITERAL("Input");
+_AFX afxString const g_str_PrimitiveTopology = AFX_STRING_LITERAL("PrimitiveTopology");
 
 afxChar const *shdResTypeNames[] =
 {

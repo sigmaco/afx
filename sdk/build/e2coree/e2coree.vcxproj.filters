@@ -7,21 +7,6 @@
     <Filter Include="e2coree\core">
       <UniqueIdentifier>{629751d2-24e3-44d0-a657-fa62690906f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="e2coree\core\mem">
-      <UniqueIdentifier>{32deccfd-9a2a-4bc7-af8d-07a99936c7df}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\core\io">
-      <UniqueIdentifier>{01d600dc-71cd-48e7-bd39-00cfc0b9d863}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\core\async">
-      <UniqueIdentifier>{f368962b-4bfd-4383-8d41-c2014e442870}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\core\time">
-      <UniqueIdentifier>{9845319f-9116-4ac7-acfa-4627d59ac92f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\core\diag">
-      <UniqueIdentifier>{96a961b5-4f6f-4660-b820-3341aee32dea}</UniqueIdentifier>
-    </Filter>
     <Filter Include="e2coree\draw">
       <UniqueIdentifier>{ada7227f-fd81-4edf-adb5-0e5505d193f8}</UniqueIdentifier>
     </Filter>
@@ -33,21 +18,6 @@
     </Filter>
     <Filter Include="e2coree\sound">
       <UniqueIdentifier>{562d2408-05eb-44f6-91e7-b1b368eb1ba5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\math\volume">
-      <UniqueIdentifier>{a563a854-4156-49d7-9675-f2dfe11196dc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\draw\io">
-      <UniqueIdentifier>{07e635f1-6996-4474-ab42-05e149706d1c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\draw\res">
-      <UniqueIdentifier>{23c624ce-8256-4fee-8c89-05f2fe30bde9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\draw\pipelining">
-      <UniqueIdentifier>{f4057efe-3f5d-42ba-961a-aafefbad36ef}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="e2coree\draw\_classified">
-      <UniqueIdentifier>{8e32139c-9f87-4d98-87f2-53e986d81f40}</UniqueIdentifier>
     </Filter>
     <Filter Include="e2coree\sim">
       <UniqueIdentifier>{2b023525-7813-49f1-a6cf-cdc55cb72c58}</UniqueIdentifier>
@@ -63,57 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\afx\core\async\afxMutex.h">
-      <Filter>e2coree\core\async</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\async\afxThread.h">
-      <Filter>e2coree\core\async</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\async\afxCondition.h">
-      <Filter>e2coree\core\async</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\diag\afxDebug.h">
-      <Filter>e2coree\core\diag</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxResource.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxStream.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxUri.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxArchive.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxDatajack.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxKeyboard.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxMouse.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxQueue.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxSlabAllocator.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxStack.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxArray.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxDatabase.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\time\afxTime.h">
-      <Filter>e2coree\core\time</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\afxModule.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
@@ -144,62 +63,17 @@
     <ClInclude Include="..\..\inc\afx\mmux\afxWidget.h">
       <Filter>e2coree\mmux</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\mmux\afxViewport.h">
-      <Filter>e2coree\mmux</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\mmux\afxMmuiDefs.h">
       <Filter>e2coree\mmux</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\mmux\afxBrush.h">
       <Filter>e2coree\mmux</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxFrustum.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxAabb.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxMathDefs.h">
-      <Filter>e2coree\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\afxScalar.h">
       <Filter>e2coree\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxVector.h">
       <Filter>e2coree\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxPlane.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxSphere.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxTriangle.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\volume\afxVolume.h">
-      <Filter>e2coree\math\volume</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\io\afxTarga.h">
-      <Filter>e2coree\draw\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipeline.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxBuffer.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxTexture.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxSurface.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxVertexBuffer.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxIndexBuffer.h">
-      <Filter>e2coree\draw\res</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxDrawContext.h">
       <Filter>e2coree\draw</Filter>
@@ -218,18 +92,6 @@
     </ClInclude>
     <ClInclude Include="..\..\src\e2coree\draw\afxDrawParadigms.h">
       <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\e2coree\draw\_classified\afxDrawClassified.h">
-      <Filter>e2coree\draw\_classified</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxScript.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxFile.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxArena.h">
-      <Filter>e2coree\core\mem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxColor.h">
       <Filter>e2coree\draw</Filter>
@@ -261,17 +123,8 @@
     <ClInclude Include="..\..\inc\afx\core\afxString.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxXml.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxUrd.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxTransform.h">
       <Filter>e2coree\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\io\afxXmlBackedDrawableResources.h">
-      <Filter>e2coree\draw\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\e2coree\sim\afxSimulParadigms.h">
       <Filter>e2coree\sim</Filter>
@@ -286,12 +139,6 @@
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMaterial.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxModelBlueprint.h">
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\afxSimDefs.h">
@@ -309,9 +156,6 @@
     <ClInclude Include="..\..\inc\afx\sim\anim\afxBody.h">
       <Filter>e2coree\sim\anim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\anim\afxBodyControl.h">
-      <Filter>e2coree\sim\anim</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\anim\afxCurve2.h">
       <Filter>e2coree\sim\anim</Filter>
     </ClInclude>
@@ -324,59 +168,14 @@
     <ClInclude Include="..\..\inc\afx\sim\afxWorldPose.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeletonBlueprint.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxSkeleton.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\afxNode.h">
       <Filter>e2coree\sim</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshBlueprint.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxData.h">
-      <Filter>e2coree\core\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertex.h">
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h">
       <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\time\afxClock.h">
-      <Filter>e2coree\core\time</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\diag\afxVersion.h">
-      <Filter>e2coree\core\diag</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxTextureBlueprint.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineBlueprint.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxVertexBufferBlueprint.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxCanvas.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxShaderBlueprint.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxSampler.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\res\afxShader.h">
-      <Filter>e2coree\draw\res</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxCanvasBlueprint.h">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxDrawOperation.h">
-      <Filter>e2coree\draw\pipelining</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxDrawQueue.h">
       <Filter>e2coree\draw</Filter>
@@ -387,29 +186,11 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawThread.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\async\afxSlock.h">
-      <Filter>e2coree\core\async</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\afxInstance.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxBitmap.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxMap.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxPool.h">
-      <Filter>e2coree\core\mem</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\core\afxChain.h">
       <Filter>e2coree\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\io\afxHid.h">
-      <Filter>e2coree\core\io</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\core\mem\afxContext.h">
-      <Filter>e2coree\core\mem</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\e2coree\core\afxCoreHideout.h">
       <Filter>e2coree\core</Filter>
@@ -420,14 +201,213 @@
     <ClInclude Include="..\..\inc\afx\core\afxSource.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\pipelining\afxPipelineRig.h">
-      <Filter>e2coree\draw\pipelining</Filter>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshRig.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshTopology.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshData.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimator.h">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxClock.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxTime.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxArena.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxArray.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxBitmap.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxContext.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxDatabase.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxMap.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxPool.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxQueue.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxResidency.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxSlabAllocator.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxStack.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxArchive.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxData.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxDatajack.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxFile.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxHid.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxKeyboard.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxMouse.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxResource.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxScript.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxStream.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxUrd.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxUri.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxXml.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxDebug.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxVersion.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxCondition.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxMutex.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxSlock.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\core\afxThread.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxBuffer.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxIndexBuffer.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxSampler.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxShader.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxShaderBlueprint.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxSurface.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxTexture.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxVertexBuffer.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxVertexBufferBlueprint.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxCanvas.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxCanvasBlueprint.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawOperation.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawTechnique.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxPipeline.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxPipelineRig.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxXmlBackedDrawableResources.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\e2coree\draw\afxDrawClassified.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxAabb.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxFrustum.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxPlane.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxSphere.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxTriangle.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxVolume.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxMaterial.h">
+      <Filter>e2coree\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxSkeleton.h">
+      <Filter>e2coree\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxQuaternion.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxMatrix.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxReal.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\afxAsset.h">
+      <Filter>e2coree\sim</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxViewport.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxDrawCommands.h">
+      <Filter>e2coree\draw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\afx\README.md">
       <Filter>e2coree</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\inc\afx\go-horse.txt">
@@ -456,12 +436,6 @@
     <ClCompile Include="..\..\src\e2coree\mmux\afxWidget.c">
       <Filter>e2coree\mmux</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\volume\afxAabb.c">
-      <Filter>e2coree\math\volume</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\volume\afxFrustum.c">
-      <Filter>e2coree\math\volume</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawInput.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -474,27 +448,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawContext.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxIndexBuffer.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxSurface.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxTexture.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxVertexBuffer.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxBuffer.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipeline.c">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\io\afxTarga.c">
-      <Filter>e2coree\draw\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxModule.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
@@ -504,65 +457,8 @@
     <ClCompile Include="..\..\src\e2coree\core\afxTerminal.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\time\afxTime.c">
-      <Filter>e2coree\core\time</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxArray.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxDatabase.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxQueue.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxSlabAllocator.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxArchive.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxDatajack.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxKeyboard.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxMouse.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxResource.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxStream.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxUri.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\diag\afxDebug.c">
-      <Filter>e2coree\core\diag</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\async\afxCondition.c">
-      <Filter>e2coree\core\async</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\async\afxMutex.c">
-      <Filter>e2coree\core\async</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\async\afxThread.c">
-      <Filter>e2coree\core\async</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\afxQwadroCpp.cpp">
       <Filter>e2coree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxScript.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxFile.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxArena.c">
-      <Filter>e2coree\core\mem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxClass.c">
       <Filter>e2coree\core</Filter>
@@ -585,25 +481,10 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawDefs.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxXml.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxUrd.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\afxTransform.c">
       <Filter>e2coree\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\io\afxXmlBackedDrawableResources.c">
-      <Filter>e2coree\draw\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\afxMathOps.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxSimilarityOps.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxRotationOps.c">
       <Filter>e2coree\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\afxEntity.c">
@@ -612,29 +493,11 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxSimulation.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMaterial.c">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMesh.c">
       <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c">
       <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxMathTransference.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxMathTransformation.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxMathFoundation.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxMathMeasurement.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxMathProjection.c">
-      <Filter>e2coree\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c">
       <Filter>e2coree\sim\rendering</Filter>
@@ -646,9 +509,6 @@
       <Filter>e2coree\sim\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c">
-      <Filter>e2coree\sim\anim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\anim\afxBodyControl.c">
       <Filter>e2coree\sim\anim</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">
@@ -663,41 +523,14 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxWorldPose.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxSkeleton.c">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\afxNode.c">
       <Filter>e2coree\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxData.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxStack.c">
-      <Filter>e2coree\core\mem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertex.c">
       <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c">
       <Filter>e2coree\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\time\afxClock.c">
-      <Filter>e2coree\core\time</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\diag\afxVersion.c">
-      <Filter>e2coree\core\diag</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxSampler.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\res\afxShader.c">
-      <Filter>e2coree\draw\res</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxCanvas.c">
-      <Filter>e2coree\draw\pipelining</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxDrawOperation.c">
-      <Filter>e2coree\draw\pipelining</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawQueue.c">
       <Filter>e2coree\draw</Filter>
@@ -708,35 +541,197 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawThread.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\async\afxSlock.c">
-      <Filter>e2coree\core\async</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxInstance.c">
       <Filter>e2coree\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxBitmap.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxMap.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxPool.c">
-      <Filter>e2coree\core\mem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxChain.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\io\afxHid.c">
-      <Filter>e2coree\core\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\mem\afxContext.c">
-      <Filter>e2coree\core\mem</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxApplication.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\pipelining\afxPipelineRig.c">
-      <Filter>e2coree\draw\pipelining</Filter>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshRig.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshTopology.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshData.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimator.c">
+      <Filter>e2coree\sim\anim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxClock.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxTime.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxArena.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxArray.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxBitmap.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxContext.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxDatabase.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxMap.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxPool.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxQueue.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxSlabAllocator.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxStack.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxArchive.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxData.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxDatajack.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxFile.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxHid.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxKeyboard.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxMouse.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxResource.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxScript.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxStream.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxUrd.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxUri.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxXml.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxDebug.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxVersion.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxCondition.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxMutex.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxSlock.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxThread.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxBuffer.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxIndexBuffer.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxShader.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxSurface.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxVertexBuffer.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxCanvas.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawOperation.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawTechnique.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxPipeline.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxPipelineRig.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxTarga.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxXmlBackedDrawableResources.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxAabb.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxFrustum.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxMaterial.c">
+      <Filter>e2coree\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxSkeleton.c">
+      <Filter>e2coree\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxQuaternion.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxMatrix.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxVector.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxReal.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxPlane.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\afxAsset.c">
+      <Filter>e2coree\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxTriangle.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawCommands.c">
+      <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@
  */
 
 #include "sgl.h"
-#include "afx/draw/pipelining/afxCanvas.h"
+#include "afx/draw/afxCanvas.h"
 #include "afx/draw/afxDrawOutput.h"
 #include "afx/draw/afxDrawSystem.h"
 
@@ -195,13 +195,13 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum targ
     {
         AfxAssertObjects(1, &canv, AFX_FCC_CANV);
 
-        if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_FLAG(AFX_CANV_FLAG_REVALIDATE)))
+        if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_BIT_OFFSET(AFX_CANV_FLAG_REVALIDATE)))
         {
             if (_SglCanvReinstantiateIdd(dpu, canv, target, gl))
                 AfxThrowError();
 
             if (!err)
-                AfxUnflagCanvas(canv, AFX_FLAG(AFX_CANV_FLAG_REVALIDATE));
+                AfxUnflagCanvas(canv, AFX_BIT_OFFSET(AFX_CANV_FLAG_REVALIDATE));
         }
 
         {
@@ -293,7 +293,7 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
 
     if (canv->glHandle)
     {
-        _SglDeleteGlRes(dctx, 3, canv->glHandle);
+        _SglDctxDeleteGlRes(dctx, 3, canv->glHandle);
         canv->glHandle = 0;
     }
     //AfxAssert(!canv->idd);
@@ -428,7 +428,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                 canv->base.annexes[i].usage = AfxTestTexture(tex, AFX_N32_MAX);
                                 canv->base.annexes[i].fmt = AfxGetTextureFormat(tex);
                                 ++canv->base.rasterCnt;
-                                //canv->base.ownershipMask |= AFX_FLAG(i);
+                                //canv->base.ownershipMask |= AFX_BIT_OFFSET(i);
                             }
                         }
                     }
@@ -443,11 +443,15 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                         //AfxAssert(!(blueprint->rasters[i].usage & AFX_TEX_USAGE_DRAW));
                         afxTextureFlags usage = blueprint->rasters[i].usage;
                         usage |= AFX_TEX_USAGE_DRAW;
-                        afxTextureBlueprint texb;
-                        AfxAcquireTextureBlueprint(&texb, canv->base.whd, fmt, usage);
-                        AfxTextureBlueprintAddImage(&texb, NIL, NIL, NIL, 0);
+                        afxTextureInfo texi = { 0 };
+                        texi.whd[0] = canv->base.whd[0];
+                        texi.whd[1] = canv->base.whd[1];
+                        texi.whd[2] = canv->base.whd[2];
+                        texi.imgCnt = 1;
+                        texi.fmt = fmt;
+                        texi.usage = usage;
 
-                        if (AfxBuildTextures(dctx, 1, &tex, &texb)) AfxThrowError();
+                        if (AfxAcquireTextures(dctx, 1, &texi, &tex)) AfxThrowError();
                         else
                         {
                             AfxAssertObjects(1, &tex, AFX_FCC_TEX);
@@ -455,10 +459,9 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                             canv->base.annexes[i].tex = tex;
                             canv->base.annexes[i].usage = usage;
                             canv->base.annexes[i].fmt = fmt;
-                            canv->base.ownershipMask |= AFX_FLAG(i);
+                            canv->base.ownershipMask |= AFX_BIT_OFFSET(i);
                             ++canv->base.rasterCnt;
                         }
-                        AfxTextureBlueprintEnd(&texb, 0, NIL);
                     }
                 }
             }
@@ -485,7 +488,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                     canv->base.annexes[canv->base.dsIdx[i]].usage = AfxTestTexture(tex, AFX_N32_MAX);
                                     canv->base.annexes[canv->base.dsIdx[i]].fmt = AfxGetTextureFormat(tex);
 
-                                    //canv->base.ownershipMask |= AFX_FLAG(canv->base.rasterCnt + i);
+                                    //canv->base.ownershipMask |= AFX_BIT_OFFSET(canv->base.rasterCnt + i);
                                 }
                             }
                         }
@@ -499,11 +502,15 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                             //AfxAssert(!(blueprint->ds[i].usage & AFX_TEX_USAGE_DRAW));
                             afxTextureFlags usage = blueprint->ds[i].usage;
                             usage |= AFX_TEX_USAGE_DRAW;
-                            afxTextureBlueprint texb;
-                            AfxAcquireTextureBlueprint(&texb, canv->base.whd, fmt, usage);
-                            AfxTextureBlueprintAddImage(&texb, NIL, NIL, NIL, 0);
+                            afxTextureInfo texi = { 0 };
+                            texi.whd[0] = canv->base.whd[0];
+                            texi.whd[1] = canv->base.whd[1];
+                            texi.whd[2] = canv->base.whd[2];
+                            texi.imgCnt = 1;
+                            texi.fmt = fmt;
+                            texi.usage = usage;
 
-                            if (AfxBuildTextures(dctx, 1, &tex, &texb)) AfxThrowError();
+                            if (AfxAcquireTextures(dctx, 1, &texi, &tex)) AfxThrowError();
                             else
                             {
                                 AfxAssertObjects(1, &tex, AFX_FCC_TEX);
@@ -514,9 +521,8 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                 canv->base.annexes[canv->base.dsIdx[i]].usage = usage;
                                 canv->base.annexes[canv->base.dsIdx[i]].fmt = fmt;
 
-                                canv->base.ownershipMask |= AFX_FLAG(canv->base.dsIdx[i]);
+                                canv->base.ownershipMask |= AFX_BIT_OFFSET(canv->base.dsIdx[i]);
                             }
-                            AfxTextureBlueprintEnd(&texb, 0, NIL);
                         }
                     }
                 }

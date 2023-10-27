@@ -33,10 +33,6 @@ typedef afxVertexIndex8 afxIndexedTriangle8[3];
 typedef afxVertexIndex16 afxIndexedTriangle16[3];
 typedef afxVertexIndex32 afxIndexedTriangle32[3];
 
-#define AFX_INVALID_INDEX8 (afxVertexIndex8)AFX_N8_MAX
-#define AFX_INVALID_INDEX16 (afxVertexIndex16)AFX_N16_MAX
-#define AFX_INVALID_INDEX32 (afxVertexIndex32)AFX_N32_MAX
-
 typedef enum afxVertexUsage2
 {
     AFX_VTX_USAGE2_POS,

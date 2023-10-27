@@ -23,14 +23,16 @@
 #include "../src/e2coree/deps/gl/glcorearb.h"
 #include "../src/e2coree/deps/gl/wglext.h"
 
+#define _AFX_DRAW_C
+
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawContext.h"
-#include "afx/draw/res/afxSampler.h"
+#include "afx/draw/afxSampler.h"
 #include "afx/draw/afxDrawScript.h"
-#include "../src/e2coree/draw/_classified/afxDrawClassified.h"
+#include "../src/e2coree/draw/afxDrawClassified.h"
 #include "sglDrawDriver.h"
-#include "afx/core/mem/afxArena.h"
+#include "afx/core/afxArena.h"
 
 #define _SGL_MAX_DOUT_PER_PRESENTATION 4
 #define _SGL_MAX_DSCR_PER_SUBMISSION 4
@@ -51,10 +53,10 @@
 
 typedef enum sglUpdateFlags
 {
-    SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_FLAG(0), // flush from host to device
-    SGL_UPD_FLAG_HOST_FLUSH     = AFX_FLAG(1), // flush from device to host
-    SGL_UPD_FLAG_DEVICE_INST    = AFX_FLAG(2), // (re)instantiate on device
-    SGL_UPD_FLAG_HOST_INST      = AFX_FLAG(3), // (re)instantiate on host
+    SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_BIT_OFFSET(0), // flush from host to device
+    SGL_UPD_FLAG_HOST_FLUSH     = AFX_BIT_OFFSET(1), // flush from device to host
+    SGL_UPD_FLAG_DEVICE_INST    = AFX_BIT_OFFSET(2), // (re)instantiate on device
+    SGL_UPD_FLAG_HOST_INST      = AFX_BIT_OFFSET(3), // (re)instantiate on host
     
     SGL_UPD_FLAG_HOST           = (SGL_UPD_FLAG_HOST_INST | SGL_UPD_FLAG_HOST_FLUSH),
     SGL_UPD_FLAG_DEVICE         = (SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH),
@@ -150,15 +152,33 @@ typedef struct
             afxNat                      activeSubpass;
         }                               renderPass;
 
-        struct
-        {
-            afxPipeline                 pip;
-            afxNat                      shdCnt;
-            afxShader                   shd[6];
-            afxShaderStage              stages[6];
-        };
         //afxNat                          legoCnt;
         sglLegoData                     boundRes[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
+
+        struct
+        {
+            struct
+            {
+                afxBuffer       buf;
+                afxNat32        offset;
+                afxNat32        range;
+            }                   sources[_SGL_MAX_VBO_PER_BIND];
+            struct
+            {
+                afxNat          srcIdx;
+                afxNat32        stride;
+                afxBool         instance;
+            }                   streams[_SGL_MAX_VBO_PER_BIND];
+            afxNat              streamCnt;
+            struct
+            {
+                afxNat          location;
+                afxVertexFormat fmt;
+                afxNat          streamIdx;
+                afxNat32        offset;
+            }                   attrs[_SGL_MAX_VBO_PER_BIND];
+            afxNat              attrCnt;
+        }                       vertexInput;
 
         struct
         {
@@ -168,11 +188,11 @@ typedef struct
             afxNat                      stride;
             afxBool                     inst;
             afxNat                      instDivisor;
-        }                               vertexBindings[_SGL_MAX_VBO_PER_BIND];
-        afxNat                          vertexBindingCnt;
+        }                               vertexBindings_[_SGL_MAX_VBO_PER_BIND];
+        //afxNat                          vertexBindingCnt;
 
-        afxNat                          inCnt;
-        afxVertexInputPoint             ins[_SGL_MAX_INSTREAM_PER_SET];
+        //afxNat                          inCnt;
+        //afxVertexInputPoint             ins[_SGL_MAX_INSTREAM_PER_SET];
         
         struct
         {
@@ -181,24 +201,79 @@ typedef struct
             afxNat32                    idxSiz;
         }                               indexBinding;
 
-        // vertex pos-processing
-        afxPipelineInputAssemblyState   ia;
-        afxNat                          vpCnt;
-        afxViewport                     vp[_SGL_MAX_VP_PER_SET];
+        afxPipeline             pip;
+        afxNat                  shdCnt;
+        afxShader               shd[6];
+        afxShaderStage          stages[6];
+
+        // primitive
+        afxPrimTopology         primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+        afxBool                 primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
+        // tesselation
+        afxNat                  patchControlPoints; /// is the number of control points per patch.
+
+        // transformation config
+        afxNat                  vpCnt; /// 0
+        afxViewport             vps[_SGL_MAX_VP_PER_SET];
+        afxNat                  scisCnt; /// 0
+        afxRect                 scisRects[_SGL_MAX_SCISSOR_PER_SET];
+
+        // depth test
+        afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
+        afxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
+        afxBool                 depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
+        afxBool                 depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
+
+        // stencil test
+        afxBool                 stencilTestEnabled; /// FALSE
+        afxStencilConfig        stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
+        afxStencilConfig        stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
+
+        // depth bounds test
+        afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
+        afxV2d                  depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
+
+        // depth bias computation
+        afxBool                 depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
+        afxReal                 depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
+        afxReal                 depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
+        afxReal                 depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
+
+        // depth/stencil
+        afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
+
+        // rasterization
+        afxBool                 rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
+        afxFillMode             fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
+        afxCullMode             cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+        afxBool                 cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
+        afxReal                 lineWidth; /// is the width of rasterized line segments. /// 1.f    
 
 
-        afxPipelineRasterizerState      raster;
-        afxPipelineDepthState           depth;
-        afxPipelineMultisampleState     multisample;
-        afxNat                          scissorCnt;
-        afxRect                         scissorArea[_SGL_MAX_SCISSOR_PER_SET];
-        afxPipelineColorBlendState      colorBlend;
+        afxBool                 msEnabled; /// If enabld, multisample rasterization will be used. FALSE
+        afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+        afxBitmask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+        afxBool                 sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
+        afxReal                 minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
+        afxBool                 alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
+        afxBool                 alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
 
+        afxNat                  outCnt;
+        afxColorOutputChannel   outs[8];
+        afxReal                 blendConstants[4]; /// [ 0, 0, 0, 1 ]
+        afxBool                 logicOpEnabled; /// FALSE
+        afxLogicOp              logicOp; /// afxLogicOp_NOP
     }                       state;
-    afxBool                 flushRs, flushDs, flushMs, flushCbs, flushIa, flushIns, flushPip, flushPass, flushSs, flushVbb, flushIbb, flushRb;
+    afxBool                 flushIns, flushPip, flushPass, flushSr, flushVbb, flushIbb, flushRb;
+    
+    afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
+    afxBool                 flushRasterizer, flushPrimCulling, flushPrimAssembler;
+    afxBool                 flushMultisample, flushSampleShading, flushAlphaToCover, flushAlphaToOne;
+    afxBool                 flushColorBlend, flushLogicOp, flushColorWriteMask;
+
     afxNat                  flushVbBase, flushVbCnt;
-    afxNat                  flushVsBase, flushVsCnt;
-    afxNat                  flushSsBase, flushSsCnt;
+    afxNat                  flushVpBase, flushVpCnt;
+    afxNat                  flushSrBase, flushSrCnt;
     afxNat                  flushRbBase[_SGL_MAX_LEGO_PER_BIND], flushRbCnt[_SGL_MAX_LEGO_PER_BIND];
 
     afxBool                 running;
@@ -229,7 +304,7 @@ AFX_OBJECT(afxDrawContext)
     GLuint presentFboGpuHandle;
     afxPipeline presentPip;
     afxSampler presentSmp;
-    afxVertexBuffer presentVbuf;
+    afxBuffer presentVbuf;
 };
 
 AFX_OBJECT(afxDrawQueue)
@@ -414,28 +489,51 @@ typedef struct _DrawPipelineResource
 
 typedef enum afxDrawCmdId
 {
-    AFX_DCMD_END,
-    AFX_DCMD_EXECUTE_COMMANDS,
-    AFX_DCMD_BEGIN_DRAW_PASS,
-    AFX_DCMD_NEXT_PASS,
-    AFX_DCMD_END_DRAW_PASS,
+    AFX_DCMD_END = offsetof(afxCmd, EndOfScript) / 4,
+    AFX_DCMD_EXECUTE_COMMANDS = offsetof(afxCmd, ExecuteCommands) / 4,
+    AFX_DCMD_BEGIN_CANVAS = offsetof(afxCmd, BeginCanvas) / 4,
+    AFX_DCMD_NEXT_PASS = offsetof(afxCmd, NextPass) / 4,
+    AFX_DCMD_END_CANVAS = offsetof(afxCmd, EndCanvas) / 4,
+    
+    AFX_DCMD_BIND_BUFFERS = offsetof(afxCmd, BindBuffers) / 4,
+    AFX_DCMD_BIND_TEXTURES = offsetof(afxCmd, BindTextures) / 4,
+    
+    AFX_DCMD_BIND_PIPELINE = offsetof(afxCmd, BindPipeline) / 4,
 
-    AFX_DCMD_BIND_PIPELINE,
+    AFX_DCMD_UPDATE_VIEWPORTS = offsetof(afxCmd, UpdateViewports) / 4,
+    AFX_DCMD_RESET_VIEWPORTS = offsetof(afxCmd, ResetViewports) / 4,    
+    AFX_DCMD_UPDATE_SCISSORS = offsetof(afxCmd, UpdateScissors) / 4,
+    AFX_DCMD_RESET_SCISSORS = offsetof(afxCmd, ResetScissors) / 4,
 
-    AFX_DCMD_SET_INPUT_ASSEMBLY_STATE,
-    AFX_DCMD_SET_VIEWPORTS,
-    AFX_DCMD_SET_RASTERIZATION_STATE,
-    AFX_DCMD_SET_DEPTH_STATE,
-    AFX_DCMD_SET_SCISSORS,
+    AFX_DCMD_BIND_VERTEX_SOURCES = offsetof(afxCmd, BindVertexSources) / 4,
+    AFX_DCMD_RESET_VERTEX_STREAMS = offsetof(afxCmd, ResetVertexStreams) / 4,
+    AFX_DCMD_UPDATE_VERTEX_STREAMS = offsetof(afxCmd, UpdateVertexStreams) / 4,
+    AFX_DCMD_RESET_VERTEX_ATTRIBUTES = offsetof(afxCmd, ResetVertexAttributes) / 4,
+    AFX_DCMD_UPDATE_VERTEX_ATTRIBUTES = offsetof(afxCmd, UpdateVertexAttributes) / 4,
+    AFX_DCMD_BIND_INDEX_SOURCE = offsetof(afxCmd, BindIndexSource) / 4,
+    AFX_DCMD_SET_PRIMITIVE_TOPOLOGY = offsetof(afxCmd, SetPrimitiveTopology) / 4,
+    
+    AFX_DCMD_DRAW = offsetof(afxCmd, Draw) / 4,
+    AFX_DCMD_DRAW_INDEXED = offsetof(afxCmd, DrawIndexed) / 4,
 
-    AFX_DCMD_BIND_BUFFERS,
-    AFX_DCMD_BIND_VERTEX_BUFFERS,
-    AFX_DCMD_SET_VERTEX_INPUT_LAYOUT,
-    AFX_DCMD_BIND_INDEX_BUFFER,
-    AFX_DCMD_BIND_TEXTURES,
+    AFX_DCMD_DISABLE_RASTERIZATION = offsetof(afxCmd, DisableRasterization) / 4,
+    AFX_DCMD_SWITCH_FRONT_FACE = offsetof(afxCmd, SwitchFrontFace) / 4,
+    AFX_DCMD_SET_CULL_MODE = offsetof(afxCmd, SetCullMode) / 4,
+    AFX_DCMD_ENABLE_DEPTH_BIAS = offsetof(afxCmd, EnableDepthBias) / 4,
+    AFX_DCMD_SET_DEPTH_BIAS = offsetof(afxCmd, SetDepthBias) / 4,
+    AFX_DCMD_SET_LINE_WIDTH = offsetof(afxCmd, SetLineWidth) / 4,
 
-    AFX_DCMD_DRAW,
-    AFX_DCMD_DRAW_INDEXED,
+    AFX_DCMD_ENABLE_DEPTH_BOUNDS_TEST = offsetof(afxCmd, EnableDepthBoundsTest) / 4,
+    AFX_DCMD_SET_DEPTH_BOUNDS = offsetof(afxCmd, SetDepthBounds) / 4,
+    AFX_DCMD_ENABLE_STENCIL_TEST = offsetof(afxCmd, EnableStencilTest) / 4,
+    AFX_DCMD_SET_STENCIL_COMPARE_MASK = offsetof(afxCmd, SetStencilCompareMask) / 4,
+    AFX_DCMD_SET_STENCIL_WRITE_MASK = offsetof(afxCmd, SetStencilWriteMask) / 4,
+    AFX_DCMD_SET_STENCIL_REFERENCE = offsetof(afxCmd, SetStencilReference) / 4,
+    AFX_DCMD_ENABLE_DEPTH_TEST = offsetof(afxCmd, EnableDepthTest) / 4,
+    AFX_DCMD_SET_DEPTH_COMPARE_OP = offsetof(afxCmd, SetDepthCompareOp) / 4,
+    AFX_DCMD_ENABLE_DEPTH_WRITE = offsetof(afxCmd, EnableDepthWrite) / 4,
+    
+    AFX_DCMD_SET_BLEND_CONSTANTS = offsetof(afxCmd, SetBlendConstants) / 4,
 
     AFX_DCMD_TOTAL
 } afxDrawCmdId;
@@ -451,24 +549,6 @@ AFX_DEFINE_STRUCT(_afxDscrCmdDrawIndexed)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        idxCnt, instCnt, firstIdx, vtxOff, firstInst;
-};
-
-AFX_DEFINE_STRUCT(_afxDscrCmdSetRasterizerState)
-{
-    _afxDscrCmd                     cmd;
-    afxPipelineRasterizerState   state;
-};
-
-AFX_DEFINE_STRUCT(_afxDscrCmdSetDepthState)
-{
-    _afxDscrCmd                     cmd;
-    afxPipelineDepthState           state;
-};
-
-AFX_DEFINE_STRUCT(_afxDscrCmdSetInputAssemblyState)
-{
-    _afxDscrCmd                     cmd;
-    afxPipelineInputAssemblyState   state;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBeginCanvas)
@@ -504,21 +584,41 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBindBuffers)
     afxNat32                        range[_SGL_MAX_ENTRY_PER_LEGO];
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdBindVbuf)
+AFX_DEFINE_STRUCT(_afxDscrCmdVertexSources)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
-    afxVertexInputStream            spec[_SGL_MAX_VBO_PER_BIND];
+    //afxVertexInputSource            spec[_SGL_MAX_VBO_PER_BIND];
+    afxBuffer           buf[_SGL_MAX_VBO_PER_BIND];
+    afxNat32            offset[_SGL_MAX_VBO_PER_BIND]; /// the start of buffer.
+    afxNat32            range[_SGL_MAX_VBO_PER_BIND]; /// the size in bytes of vertex data bound from buffer.
+    //afxNat32            stride[_SGL_MAX_VBO_PER_BIND]; /// the byte stride between consecutive elements within the buffer.
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdSetVtxInLayout)
+AFX_DEFINE_STRUCT(_afxDscrCmdVertexStreams)
 {
     _afxDscrCmd                     cmd;
-    afxNat32                        cnt;
-    afxVertexInputPoint             spec[_SGL_MAX_VBO_PER_BIND];
+    afxNat first;
+    afxNat cnt;
+    afxNat srcIdx[_SGL_MAX_VBO_PER_BIND];
+    afxNat stride[_SGL_MAX_VBO_PER_BIND];
+    afxBool instance[_SGL_MAX_VBO_PER_BIND];
+    afxBool reset;
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdBindIbuf)
+AFX_DEFINE_STRUCT(_afxDscrCmdVertexAttributes)
+{
+    _afxDscrCmd                     cmd;
+    afxNat first;
+    afxNat cnt;
+    afxNat location[_SGL_MAX_VBO_PER_BIND];
+    afxVertexFormat fmt[_SGL_MAX_VBO_PER_BIND];
+    afxNat streamIdx[_SGL_MAX_VBO_PER_BIND];
+    afxNat32 offset[_SGL_MAX_VBO_PER_BIND];
+    afxBool reset;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdBufferRange)
 {
     _afxDscrCmd                     cmd;
     afxBuffer                       buf;
@@ -526,24 +626,70 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBindIbuf)
     afxNat32                        idxSiz;
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdBindPip)
+AFX_DEFINE_STRUCT(_afxDscrCmdPipeline)
 {
     _afxDscrCmd                     cmd;
+    afxNat                          level;
     afxPipeline                     pip;
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdSetScissor)
+AFX_DEFINE_STRUCT(_afxDscrCmdBool)
+{
+    _afxDscrCmd                     cmd;
+    afxBool                         value;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdReal)
+{
+    _afxDscrCmd                     cmd;
+    afxReal                         value;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdReal2)
+{
+    _afxDscrCmd                     cmd;
+    afxReal                         value[2];
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdReal3)
+{
+    _afxDscrCmd                     cmd;
+    afxReal                         value[3];
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdReal4)
+{
+    _afxDscrCmd                     cmd;
+    afxReal                         value[4];
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdNat)
+{
+    _afxDscrCmd                     cmd;
+    afxNat                          value;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdBitmaskNat32)
+{
+    _afxDscrCmd                     cmd;
+    afxBitmask                      mask;
+    afxNat32                        value;
+};
+
+AFX_DEFINE_STRUCT(_afxDscrCmdScissor)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
     afxRect                         rect[_SGL_MAX_SCISSOR_PER_SET];
+    afxBool                         reset;
 };
 
-AFX_DEFINE_STRUCT(_afxDscrCmdSetVp)
+AFX_DEFINE_STRUCT(_afxDscrCmdViewport)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
     afxViewport                     vp[_SGL_MAX_VP_PER_SET];
+    afxBool                         reset;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdNextPass)
@@ -571,7 +717,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 
 //SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc, wglVmt const* wgl, HMODULE opengl32);
 
-SGL void _SglDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle);
+SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle);
 
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
@@ -596,17 +742,14 @@ SGL int SglGetPixelFormat(HDC hdc, sglDpuIdd const *dpu);
 
 SGL afxPipelineRig _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
 
-SGL afxError _SglDinVmtProcCb(afxDrawThread dthr, afxDrawInput din);
-SGL afxError _SglDoutVmtProcCb(afxDrawThread dthr, afxDrawOutput dout);
-SGL afxError _SglDctxVmtProcCb(afxDrawThread dthr, afxDrawContext dctx);
-SGL afxError _SglDctxVmtDinCb(afxDrawContext dctx, afxDrawInput din, afxBool connect, afxNat *slotIdx);
-SGL afxError _SglDctxVmtDoutCb(afxDrawContext dctx, afxDrawOutput dout, afxBool connect, afxNat *slotIdx);
-
-SGL afxError _SglDqueVmtProcCb(afxDrawThread dthr, afxDrawContext dctx, afxDrawQueue dque);
 SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
 
 SGL afxClassConfig _SglDctxClsConfig;
 SGL afxClassConfig _SglDoutClsConfig;
 SGL afxClassConfig _SglDinClsConfig;
+
+SGL afxError _SglDinFreeAllBuffers(afxDrawInput din);
+
+SGL afxCmd _SglEncodeCmdVmt;
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

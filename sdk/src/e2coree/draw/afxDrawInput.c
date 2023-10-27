@@ -14,26 +14,28 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_C
 #define _AFX_DRAW_SYSTEM_C
+#define _AFX_DRAW_DEVICE_C
 #define _AFX_DRAW_INPUT_C
 //#define _AFX_SURFACE_C
 #define _AFX_DRAW_SCRIPT_C
 #define _AFX_DRAW_CONTEXT_C
 #include "afx/core/afxSystem.h"
-#include "_classified/afxDrawClassified.h"
+#include "afxDrawClassified.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // CONNECTION                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxBool AfxGetConnectedDrawInputContext(afxDrawInput din, afxDrawContext *dctx)
+_AFX afxBool AfxGetDrawInputConnection(afxDrawInput din, afxDrawContext *dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
 
     afxBool rslt;
-    afxDrawContext dctx2;
-    if ((rslt = !!(dctx2 = din->dctx)))
+    afxDrawContext dctx2 = AfxGetLinker(&din->dctx);
+    if ((rslt = !!(dctx2)))
     {
         AfxAssertObjects(1, &dctx2, AFX_FCC_DCTX);
 
@@ -47,45 +49,62 @@ _AFX afxBool AfxDrawInputIsConnected(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
-    return !!(AfxGetConnectedDrawInputContext(din, NIL));
+    return !!(AfxGetDrawInputConnection(din, NIL));
 }
 
-_AFX afxError AfxDisconnectDrawInput(afxDrawInput din, afxNat *slotIdx)
+_AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    afxDrawContext curr = NIL;
+    AfxGetDrawInputConnection(din, &curr);
+
+    if (dctx != curr)
+    {
+        afxDrawDevice ddev = AfxGetDrawInputDevice(din);
+        AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+
+        if (dctx)
+        {
+            AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+            afxDrawDevice ddrv2 = AfxGetDrawContextDevice(dctx);
+            AfxAssertObjects(1, &ddrv2, AFX_FCC_DDEV);
+
+            if (ddev != ddrv2) // can not connect to context acquired of another device
+                AfxThrowError();
+        }
+
+        if (!err)
+        {
+            if (dctx)
+                AfxReacquireObjects(1, (void*[]) { dctx });
+
+            if (ddev->relinkDin(ddev, din, dctx))
+                AfxThrowError();
+
+            if (err)
+                AfxReleaseObjects(1, (void*[]) { dctx });
+            else if (curr)
+            {
+                AfxAssertObjects(1, &curr, AFX_FCC_DCTX);
+                AfxReleaseObjects(1, (void*[]) { curr });
+            }
+        }
+    }
+    AfxAssert(AfxGetLinker(&din->dctx) == dctx);
+    return !err;
+}
+
+_AFX afxError AfxDisconnectDrawInput(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, AFX_FCC_DIN);
 
-    if (din->vmt->link(din, din->dctx, NIL, slotIdx))
+    if (!AfxReconnectDrawInput(din, NIL))
         AfxThrowError();
 
-    AfxAssert(!din->dctx);
+    AfxAssert(!AfxDrawInputIsConnected(din));
     return err;
-}
-
-_AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx, afxNat *slotIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
-
-    afxDrawDevice ddev = AfxGetObjectProvider(din);
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
-
-    if (dctx)
-    {
-        afxDrawDevice ddrv2 = AfxGetObjectProvider(dctx);
-        AfxAssertObjects(1, &ddrv2, AFX_FCC_DDEV);
-
-        if (ddev != ddrv2)
-            AfxThrowError();
-    }
-
-    if (!err)
-    {
-        if (din->vmt->link(din, din->dctx, dctx, slotIdx))
-            AfxThrowError();
-    }
-    AfxAssert(din->dctx == dctx);
-    return !err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +141,7 @@ _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript s
 
     afxDrawContext dctx;
 
-    if (!(AfxGetConnectedDrawInputContext(din, &dctx))) AfxThrowError();
+    if (!(AfxGetDrawInputConnection(din, &dctx))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
@@ -152,7 +171,7 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
     
     afxDrawContext dctx;
 
-    if (!(AfxGetConnectedDrawInputContext(din, &dctx))) AfxThrowError();
+    if (!(AfxGetDrawInputConnection(din, &dctx))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
@@ -167,19 +186,28 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
 // SYSTEM                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireDrawInputs(afxDrawSystem dsys, afxNat cnt, afxDrawInput din[], afxDrawInputConfig const config[])
+_AFX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    afxDrawDevice ddev = AfxGetObjectProvider(din);
+    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    return ddev;
+}
+
+_AFX afxError AfxOpenDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[])
 {
     AfxEntry("cnt=%u,config=%p,", cnt, config);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
     afxDrawDevice ddev;
-
-    if (!(AfxGetInstance(&dsys->devices, config ? config->devId : 0, (afxHandle*)&ddev))) AfxThrowError();
+    
+    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawInputClass(ddev), cnt, (afxHandle*)din, (void*[]) { (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawInputClass(ddev), cnt, (afxHandle*)din, (void*[]) { &devId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, din, AFX_FCC_DIN);

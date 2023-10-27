@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#define _AFX_DRAW_C
 #define _AFX_DRAW_DRIVER_C
 #define _AFX_DRAW_THREAD_C
 #define _AFX_THREAD_C
@@ -30,44 +31,12 @@
 #define _AFX_DRAW_INPUT_C
 #define _AFX_DRAW_OUTPUT_C
 
-#include "_classified/afxDrawClassified.h"
+#include "afxDrawClassified.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"
-#include "afx/core/mem/afxContext.h"
-#include "afx/draw/io/afxTarga.h"
+#include "afx/core/afxContext.h"
 #include "afxDrawParadigms.h"
 #include "../src/e2coree/core/afxCoreHideout.h"
-
-AFX_DEFINE_STRUCT(afxTextureStorageRegistry)
-{
-    afxFcc                  fcc;
-    afxLinkage              dsys;
-
-    afxString const*    name; // driver name: SIGGL
-    afxString const*    author; // author: SIGMA Technology Group
-    afxString const*    website; // website: sigmaco.org
-    afxString const*    note; // The standard QWADRO draw system implementation.
-    afxNat                  verMajor; // 1
-    afxNat                  verMinor; // 0
-    afxNat                  verPatch; // 0
-
-    afxNat                  minScale;
-    afxNat                  maxScale;
-    afxNat                  minDepth;
-    afxNat                  maxDepth;
-    afxNat                  minBpp;
-    afxNat                  maxBpp;
-    afxBool                 hasAlpha;
-
-    afxNat                  supportedFmtCnt;
-    afxString const*    exts;
-    afxError                (*acq)(afxDrawContext dctx, afxNat cnt, afxTexture tex[], afxUri const uri[]);
-    // coacquire for batch layered textures such as DDS?
-    afxError                (*upload)(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri);
-    afxError                (*download)(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri);
-    afxError                (*uploadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
-    afxError                (*downloadRgn)(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[]);
-};
 
 extern afxClassConfig const _AfxDthrClsConfig;
 
@@ -351,7 +320,7 @@ _AFX afxError _AfxDdevDtor(afxDrawDevice ddev)
     AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    afxContext ctx = AfxGetDrawSystemContext(dsys);
+    afxContext ctx = AfxGetDrawSystemMemory(dsys);
     AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
 
     _AfxUninstallChainedClasses(&ddev->classes);
@@ -371,7 +340,7 @@ _AFX afxError _AfxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    afxContext ctx = AfxGetDrawSystemContext(dsys);
+    afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
     AfxExcerptString(&ddev->domain, info->domain);
     AfxExcerptString(&ddev->name, info->name);
@@ -395,7 +364,7 @@ _AFX afxError _AfxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     for (afxNat i = 0; i < ddev->portCnt; i++)
         ddev->portCaps[i] = info->portCaps[i];
 
-    ddev->vmt = NIL;
+    ddev->procCb = NIL;
     ddev->serving = FALSE;
 
     if (err)
@@ -410,7 +379,7 @@ _AFX afxError _AfxDdrvDtor(afxDrawIcd ddrv)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
 
-    //afxContext mem = AfxGetDrawSystemContext();
+    //afxContext mem = AfxGetDrawSystemMemory();
 
     _AfxUninstallChainedClasses(&ddrv->classes);
 
@@ -430,7 +399,7 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
     
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    //afxContext ctx = AfxGetDrawSystemContext(dsys);
+    //afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
     AfxExcerptString(&ddrv->name, info->name);
     AfxExcerptString(&ddrv->vendor, info->vendor);
@@ -580,144 +549,7 @@ _AFX afxBool AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *
     return rslt;
 }
 
-_AFX afxNat AfxChooseTextureStorage(afxDrawSystem dsys, afxTexture tex, afxTextureRegion const *rgn)
-{
-    afxError err = AFX_ERR_NONE;
-    (void)dsys;
-    (void)tex;
-    (void)rgn;
-    AfxThrowError();
-    return 0;
-}
-
-_AFX afxResult AfxDescribeTextureStorages(afxDrawSystem dsys, afxNat first, afxNat cnt, afxTextureStorageSpecification spec[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(spec);
-
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);;
-    AfxAssertRange(dsys->texIoCodecs.cnt, first, cnt);
-    
-    afxResult rslt = 0;
-
-    afxNat posn = 0;
-    afxTextureStorageRegistry *codec;
-    AfxChainForEveryLinkage(&dsys->texIoCodecs, afxTextureStorageRegistry, dsys, codec)
-    {
-        AfxAssert(codec->fcc == AFX_FCC_IMIO);
-
-        if (posn >= first)
-        {
-            spec[rslt].name = codec->name;
-            spec[rslt].author = codec->author;
-            spec[rslt].website = codec->website;
-            spec[rslt].note = codec->note;
-            spec[rslt].verMajor = codec->verMajor;
-            spec[rslt].verMinor = codec->verMinor;
-            spec[rslt].verPatch = codec->verPatch;
-            spec[rslt].extCnt = codec->supportedFmtCnt;
-            spec[rslt].exts = codec->exts;
-            spec[rslt].minScale = codec->minScale;
-            spec[rslt].maxScale = codec->maxScale;
-            spec[rslt].minDepth = codec->minDepth;
-            spec[rslt].maxDepth = codec->maxDepth;
-            spec[rslt].minBpp = codec->minBpp;
-            spec[rslt].maxBpp = codec->maxBpp;
-            spec[rslt].hasAlpha = codec->hasAlpha;
-            spec[rslt].acq = codec->acq;
-            spec[rslt].upload = codec->upload;
-            spec[rslt].uploadRgn = codec->uploadRgn;
-            spec[rslt].download = codec->download;
-            spec[rslt].downloadRgn = codec->downloadRgn;
-            ++rslt;
-        }
-
-        ++posn;
-
-        if (posn >= first + cnt)
-            break;
-    }
-    return rslt;
-}
-
-_AFX afxResult AfxEnumerateTextureStorages(afxDrawSystem dsys, afxNat first, afxNat cnt, afxTextureStorageRegistry *storage[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssert(cnt);
-    AfxAssertRange(dsys->texIoCodecs.cnt, first, cnt);
-    AfxAssert(storage);
-    afxResult rslt = 0;
-
-    afxNat posn = 0;
-    afxTextureStorageRegistry *codec;
-    AfxChainForEveryLinkage(&dsys->texIoCodecs, afxTextureStorageRegistry, dsys, codec)
-    {
-        AfxAssert(codec->fcc == AFX_FCC_IMIO);
-
-        if (posn >= first)
-        {
-            storage[rslt] = codec;
-            ++rslt;
-        }
-
-        ++posn;
-
-        if (posn >= first + cnt)
-            break;
-    }
-    return rslt;
-}
-
-_AFX afxResult AfxRegisterTextureStorages(afxDrawSystem dsys, afxNat cnt, afxTextureStorageSpecification const specs[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssert(cnt);
-    AfxAssert(specs);
-    afxResult hitCnt = 0;
-    afxTextureStorageRegistry* codec;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        if (!(codec = AfxAllocate(dsys->ctx, sizeof(*codec), 0, AfxSpawnHint()))) AfxThrowError();
-        else
-        {
-            codec->fcc = AFX_FCC_IMIO;
-            AfxPushLinkage(&codec->dsys, &dsys->texIoCodecs);
-            codec->supportedFmtCnt = 0;
-
-            codec->name = specs[i].name;
-            codec->author = specs[i].author;
-            codec->website = specs[i].website;
-            codec->note = specs[i].note;
-
-            codec->verMajor = specs[i].verMajor;
-            codec->verMinor = specs[i].verMinor;
-            codec->verPatch = specs[i].verPatch;
-
-            codec->acq = specs[i].acq;
-            codec->upload = specs[i].upload;
-            codec->uploadRgn = specs[i].uploadRgn;
-            codec->download = specs[i].download;
-            codec->downloadRgn = specs[i].downloadRgn;
-            
-            codec->exts = specs[i].exts;
-            codec->supportedFmtCnt = specs[i].extCnt;
-
-            AfxLogMessageFormatted(0xFFFF0000, "\nNew texture codec registered.");
-            AfxLogMessageFormatted(0xFFFF0000, "\nName: %.*s", AfxPushString(codec->name));
-            AfxLogMessageFormatted(0xFFFF0000, "\nAuthor: %.*s", AfxPushString(codec->author));
-            AfxLogMessageFormatted(0xFFFF0000, "\nVersion: %u.%u.%u", codec->verMajor, codec->verMinor, codec->verPatch);
-            AfxLogMessageFormatted(0xFFFF0000, "\nNote: %.*s", AfxPushString(codec->note));
-
-            hitCnt++;
-        }
-    }
-    return hitCnt;
-}
-
-_AFX afxContext AfxGetDrawSystemContext(afxDrawSystem dsys)
+_AFX afxContext AfxGetDrawSystemMemory(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
@@ -735,21 +567,6 @@ _AFX afxError _AfxDsysDtor(afxDrawSystem dsys)
     //AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
 
     _AfxUninstallChainedClasses(&dsys->classes);
-
-    while (1)
-    {
-        afxChain *codecs = &dsys->texIoCodecs;
-        afxLinkage *first = AfxGetLastLinkage(codecs);
-
-        if (!first) break;
-        else
-        {
-            afxTextureStorageRegistry *codec = AFX_REBASE(first, afxTextureStorageRegistry, dsys);
-            AfxAssertType(codec, AFX_FCC_IMIO);
-            AfxPopLinkage(&codec->dsys);
-            AfxDeallocate(dsys->ctx, codec);
-        }
-    }
 
     AfxReleaseObjects(1, (void*[]) { dsys->ctx });
 
@@ -949,65 +766,34 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
             };
             AfxMountClass(&dsys->inputs, classes, &dinClsConfig);
 
-            AfxAcquireChain(&dsys->texIoCodecs, (void*)dsys);
+            afxUri uri;
+            AfxUriWrapLiteral(&uri, "system/e2draw.icd", 0);
 
-            static afxString codecName, codecAuthor, codecWebsite, codecNote, ext;
-            afxTextureStorageSpecification stdTexCodec = { 0 };
-            AfxWrapStringLiteral(&codecName, "SIGGL", 0);
-            AfxWrapStringLiteral(&codecAuthor, "SIGMA Technology Group", 0);
-            AfxWrapStringLiteral(&codecWebsite, "www.sigmaco.org", 0);
-            AfxWrapStringLiteral(&codecNote, "", 0);
-            AfxWrapStringLiteral(&ext, ".tga", 0);
-
-            stdTexCodec.name = &codecName;
-            stdTexCodec.author = &codecAuthor;
-            stdTexCodec.website = &codecWebsite;
-            stdTexCodec.note = &codecNote;
-            stdTexCodec.verMajor = 0;
-            stdTexCodec.verMinor = 5;
-            stdTexCodec.verPatch = 1;
-            stdTexCodec.extCnt = 1;
-            stdTexCodec.exts = &ext;
-            stdTexCodec.acq = AfxLoadTexturesTarga;
-            stdTexCodec.download = AfxPrintTextureToTarga;
-            stdTexCodec.downloadRgn = AfxPrintTextureRegionsToTarga;
-            stdTexCodec.upload = AfxFetchTextureFromTarga;
-            stdTexCodec.uploadRgn = AfxFetchTextureRegionsFromTarga;
-
-            if (1 != AfxRegisterTextureStorages(dsys, 1, &stdTexCodec)) AfxThrowError();
+            if (_AfxDsysLoadIcd(dsys, &uri, &dsys->e2draw)) AfxThrowError();
             else
             {
-                AfxEcho("Truecolor Targa texture serializer installed!");
+                AfxUriWrapLiteral(&uri, "system/*.icd", 0);
+                _AfxDsysScanForIcds(dsys, &uri);
 
-                afxUri uri;
-                AfxUriWrapLiteral(&uri, "system/e2draw.icd", 0);
+                afxDrawThread dthr[16];
+                afxNat threadCnt = AfxMini(AfxGetThreadingCapacity(), 1);
+                afxDrawThreadConfig dthrConfig = { 0 };
+                //dthrConfig.udd = ddev->dpus[]
 
-                if (_AfxDsysLoadIcd(dsys, &uri, &dsys->e2draw)) AfxThrowError();
+                if (AfxAcquireDrawThreads(dsys, threadCnt, NIL, dthr)) AfxThrowError();
                 else
                 {
-                    AfxUriWrapLiteral(&uri, "system/*.icd", 0);
-                    _AfxDsysScanForIcds(dsys, &uri);
-
-                    afxDrawThread dthr[16];
-                    afxNat threadCnt = AfxMini(AfxGetThreadingCapacity(), 1);
-                    afxDrawThreadConfig dthrConfig = { 0 };
-                    //dthrConfig.udd = ddev->dpus[]
-
-                    if (AfxAcquireDrawThreads(dsys, threadCnt, dthr, NIL)) AfxThrowError();
-                    else
+                    for (afxNat i = 0; i < threadCnt; i++)
                     {
-                        for (afxNat i = 0; i < threadCnt; i++)
-                        {
-                            AfxAssertObjects(1, &dthr[i], AFX_FCC_DTHR);
-                            afxThread thr = AfxGetDrawThreadBase(dthr[i]);
-                            AfxSetThreadAffinity(thr, i);
-                            AfxRunThread(thr);
-                        }
+                        AfxAssertObjects(1, &dthr[i], AFX_FCC_DTHR);
+                        afxThread thr = AfxGetDrawThreadBase(dthr[i]);
+                        AfxSetThreadAffinity(thr, i);
+                        AfxRunThread(thr);
                     }
-
-                    if (err)
-                        AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
                 }
+
+                if (err)
+                    AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
             }
 
             if (err)
@@ -1021,7 +807,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxError AfxAcquireDrawSystems(afxNat cnt, afxDrawSystem dsys[], afxDrawSystemConfig const config[])
+_AFX afxError AfxAcquireDrawSystems(afxNat cnt, afxDrawSystemConfig const config[], afxDrawSystem dsys[])
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;

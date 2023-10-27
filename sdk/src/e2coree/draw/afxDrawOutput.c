@@ -14,11 +14,13 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_DRAW_C
 #define _AFX_DRAW_OUTPUT_C
 #define _AFX_DRAW_SYSTEM_C
+#define _AFX_DRAW_DEVICE_C
 //#define _AFX_SURFACE_C
 
-#include "_classified/afxDrawClassified.h"
+#include "afxDrawClassified.h"
 
 _AFX afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
 {
@@ -145,7 +147,7 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 
     afxDrawContext dctx;
 
-    if (!(AfxGetConnectedDrawOutputContext(dout, &dctx))) AfxThrowError();
+    if (!(AfxGetDrawOutputConnection(dout, &dctx))) AfxThrowError();
     else
     {
         //AfxAssertType(dctxD, AFX_FCC_DCTX);
@@ -199,13 +201,14 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 // CONNECTION                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxBool AfxGetConnectedDrawOutputContext(afxDrawOutput dout, afxDrawContext *dctx)
+_AFX afxBool AfxGetDrawOutputConnection(afxDrawOutput dout, afxDrawContext *dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    afxDrawContext dctx2 = dout->dctx;
+    
     afxBool rslt;
-
+    afxDrawContext dctx2 = AfxGetLinker(&dout->dctx);
+    
     if ((rslt = !!dctx2))
     {
         AfxAssertObjects(1, &dctx2, AFX_FCC_DCTX);
@@ -220,46 +223,62 @@ _AFX afxBool AfxDrawOutputIsConnected(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    return !!(AfxGetConnectedDrawOutputContext(dout, NIL));
+    return !!(AfxGetDrawOutputConnection(dout, NIL));
 }
 
-_AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout, afxNat *slotIdx)
+_AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    afxDrawContext curr = NIL;
+    AfxGetDrawOutputConnection(dout, &curr);
+
+    if (dctx != curr)
+    {
+        afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
+        AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+
+        if (dctx)
+        {
+            AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+            afxDrawDevice ddrv2 = AfxGetDrawContextDevice(dctx);
+            AfxAssertObjects(1, &ddrv2, AFX_FCC_DDEV);
+
+            if (ddev != ddrv2) // can not connect to context acquired of another device
+                AfxThrowError();
+        }
+
+        if (!err)
+        {
+            if (dctx)
+                AfxReacquireObjects(1, (void*[]) { dctx });
+
+            if (ddev->relinkDout(ddev, dout, dctx))
+                AfxThrowError();
+
+            if (err)
+                AfxReleaseObjects(1, (void*[]) { dctx });
+            else if (curr)
+            {
+                AfxAssertObjects(1, &curr, AFX_FCC_DCTX);
+                AfxReleaseObjects(1, (void*[]) { curr });
+            }
+        }
+    }
+    AfxAssert(AfxGetLinker(&dout->dctx) == dctx);
+    return !err;
+}
+
+_AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
 
-    if (dout->vmt->link(dout, dout->dctx, NIL, slotIdx))
+    if (!AfxReconnectDrawOutput(dout, NIL))
         AfxThrowError();
 
-    AfxAssert(!dout->dctx);
+    AfxAssert(!AfxDrawOutputIsConnected(dout));
     return err;
-}
-
-_AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx, afxNat *slotIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    //AfxAssertType(dctxD, AFX_FCC_DCTX);
-
-    afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
-
-    if (dctx)
-    {
-        afxDrawDevice ddrv2 = AfxGetObjectProvider(dctx);
-        AfxAssertObjects(1, &ddrv2, AFX_FCC_DDEV);
-
-        if (ddev != ddrv2)
-            AfxThrowError();
-    }
-    
-    if (!err)
-    {
-        if (dout->vmt->link(dout, dout->dctx, dctx, slotIdx))
-            AfxThrowError();
-    }
-    AfxAssert(dout->dctx == dctx);
-    return !err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -370,15 +389,20 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
 
             afxDrawContext dctx;
             
-            if (AfxGetConnectedDrawOutputContext(dout, &dctx))
+            if (AfxGetDrawOutputConnection(dout, &dctx))
             {
                 //AfxAssertType(dctxD, AFX_FCC_DCTX);
                 afxTexture tex2;
-                afxTextureBlueprint texb;
-                AfxAcquireTextureBlueprint(&texb, dout->extent, dout->pixelFmt, dout->bufUsage);
-                AfxTextureBlueprintAddImage(&texb, dout->pixelFmt, dout->extent, NIL, NIL);
+                afxTextureInfo texi = { 0 };
+                texi.fmt = dout->pixelFmt;
+                texi.whd[0] = dout->extent[0];
+                texi.whd[1] = dout->extent[1];
+                texi.whd[2] = dout->extent[2];
+                texi.imgCnt = 1;
+                texi.lodCnt = 1;
+                texi.usage = dout->bufUsage;
 
-                if (AfxBuildTextures(dctx, 1, &tex2, &texb)) AfxThrowError();
+                if (AfxAcquireTextures(dctx, 1, &texi, &tex2)) AfxThrowError();
                 else
                 {
                     AfxAssertObjects(1, &tex2, AFX_FCC_TEX);
@@ -389,7 +413,6 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
                     //ev.udd[0] = (void*)i; // from
                     //AfxObjectEmitEvent(&dout->obj, &ev);
                 }
-                AfxTextureBlueprintEnd(&texb, 0, NIL);
             }
         }
 #if 0
@@ -406,7 +429,7 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
 
             afxDrawContext dctx;
             
-            if (AfxGetConnectedDrawOutputContext(dout, &dctx))
+            if (AfxGetDrawOutputConnection(dout, &dctx))
             {
                 //AfxAssertType(dctxD, AFX_FCC_DCTX);
 
@@ -454,7 +477,7 @@ _AFX void AfxGetDrawOutputExtentNdc(afxDrawOutput dout, afxV3d extent) // normal
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
     AfxAssert(extent);
-    AfxV3dSet(extent, AfxToNdc(dout->extent[0], dout->resolution[0]), AfxToNdc(dout->extent[1], dout->resolution[1]), (afxReal)1);
+    AfxSetV3d(extent, AfxToNdc(dout->extent[0], dout->resolution[0]), AfxToNdc(dout->extent[1], dout->resolution[1]), (afxReal)1);
 }
 
 _AFX void AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd extent)
@@ -558,19 +581,19 @@ _AFX afxDrawDevice AfxGetDrawOutputDevice(afxDrawOutput dout)
     return ddev;
 }
 
-_AFX afxError AfxAcquireDrawOutputs(afxDrawSystem dsys, afxNat cnt, afxDrawOutput dout[], afxDrawOutputConfig const config[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
+_AFX afxError AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
 {
     AfxEntry("cnt=%u,config=%p,dout=%p", cnt, config, dout);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
     afxDrawDevice ddev;
 
-    if (!(AfxGetInstance(&dsys->devices, config ? config->devId : 0, (afxHandle*)&ddev))) AfxThrowError();
+    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawOutputClass(ddev), cnt, (afxHandle*)dout, (void*[]) { (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawOutputClass(ddev), cnt, (afxHandle*)dout, (void*[]) { &devId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, dout, AFX_FCC_DOUT);
