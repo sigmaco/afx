@@ -161,7 +161,7 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const
 
     if (pip)
     {
-        AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+        AfxAssertObjects(1, &pip, afxFcc_PIP);
 
         GLuint glHandle = pip->glHandle;
 
@@ -189,7 +189,7 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const
                     for (afxNat i = 0; i < pip->base.shaderCnt; i++)
                     {
                         afxShader shd = pip->base.shaders[i];
-                        AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+                        AfxAssertObjects(1, &shd, afxFcc_SHD);
                         afxShaderStage stage = AfxGetShaderStage(shd);
 
                         _SglDpuSyncShd(dpu, shd, stage, gl);
@@ -256,11 +256,11 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
 {
     AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     afxDrawContext dctx = AfxGetObjectProvider(pip);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     if (err)
     {
@@ -302,14 +302,14 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 {
     AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     afxDrawContext dctx = cookie->udd[0];
     afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
-    //AfxAssertType(pipb, AFX_FCC_PIPB);
+    //AfxAssertType(pipb, afxFcc_PIPB);
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     pip->base.shaders = NIL;
     pip->base.vps = NIL;
@@ -325,7 +325,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
         for (afxNat i = 0; i < shaderCnt; i++)
         {
             afxShader shd = pipb->sh[i];
-            AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+            AfxAssertObjects(1, &shd, afxFcc_SHD);
             AfxReacquireObjects(1, (void*[]) { shd });
             pip->base.shaders[pip->base.shaderCnt] = shd;
             pip->base.shaderCnt++;            
@@ -376,7 +376,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                         }
                         else
                         {
-                            AfxAssertObjects(1, &(pip->base.wiring[pip->base.wiringCnt].legt), AFX_FCC_LEGO);
+                            AfxAssertObjects(1, &(pip->base.wiring[pip->base.wiringCnt].legt), afxFcc_LEGO);
                             pip->base.wiring[pip->base.wiringCnt].resolved = FALSE;
                             pip->base.wiring[pip->base.wiringCnt].set = i;
                             ++pip->base.wiringCnt;
@@ -401,7 +401,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 {
                     afxShader shd;
                     AfxGetPipelineShaders(pip, i, 1, &shd);
-                    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+                    AfxAssertObjects(1, &shd, afxFcc_SHD);
 
                     if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))
                     {
@@ -531,13 +531,13 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 AfxDeallocate(mem, pip->base.sampleBitmasks);
         }
     }
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return err;
 }
 
 _SGL afxClassConfig _SglPipClsConfig =
 {
-    .fcc = AFX_FCC_PIP,
+    .fcc = afxFcc_PIP,
     .name = "Pipeline",
     .unitsPerPage = 4,
     .size = sizeof(AFX_OBJECT(afxPipeline)),

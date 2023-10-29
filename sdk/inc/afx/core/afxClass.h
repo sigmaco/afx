@@ -89,7 +89,7 @@ AFX_DEFINE_STRUCT(afxClassConfig)
 
 AFX_DEFINE_STRUCT(afxClass)
 {
-    afxFcc          fcc; // AFX_FCC_CLS
+    afxFcc          fcc; // afxFcc_CLS
     afxFcc          objFcc;
     afxLinkage      base; // inherit this object.
     afxChain        deriveds;
@@ -156,7 +156,7 @@ AFX afxBool AfxClassTryLockInclusive(afxClass *cls);
 AFX afxBool AfxClassTryLockExclusive(afxClass *cls);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == AFX_FCC_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxSpawnHint(), "%s\n    %s", AfxStr((var_)), errorMsg[AFXERR_INVALID]), 0))
+#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxSpawnHint(), "%s\n    %s", AfxStr((var_)), errorMsg[AFXERR_INVALID]), 0))
 #else
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif

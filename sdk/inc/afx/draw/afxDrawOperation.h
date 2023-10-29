@@ -55,14 +55,14 @@ AFX_DEFINE_STRUCT(afxDrawOperationBlueprint)
 
 AFX_DEFINE_STRUCT(afxDrawPass)
 {
-    afxFcc                          fcc; // AFX_FCC_DPAS
+    afxFcc                          fcc; // afxFcc_DPAS
     afxString*                      name; // 32
     afxPipeline                     pip;
 };
 
 AFX_DEFINE_STRUCT(afxDrawTechnique)
 {
-    afxFcc                          fcc; // AFX_FCC_DTEC
+    afxFcc                          fcc; // afxFcc_DTEC
     afxString*                      name; // 32
     afxNat                          passCnt;
     afxDrawPass*                    passes;
@@ -70,7 +70,7 @@ AFX_DEFINE_STRUCT(afxDrawTechnique)
 
 AFX_OBJECT(afxDrawOperation)
 {
-    afxInstance                       obj; // AFX_FCC_DOP
+    afxInstance                       obj; // afxFcc_DOP
     afxUri*                         uri; // 128
     afxNat                          techCnt;
     afxDrawTechnique*               techniques;

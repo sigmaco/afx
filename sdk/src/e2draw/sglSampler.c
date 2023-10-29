@@ -31,7 +31,7 @@ _SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, afxNat unit, afxSampler sam
 
     if (samp)
     {
-        AfxAssertObjects(1, &samp, AFX_FCC_SAMP);
+        AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
         if ((samp->updFlags & SGL_UPD_FLAG_DEVICE))
         {
@@ -111,7 +111,7 @@ _SGL afxError _SglSampDtor(afxSampler samp)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("samp=%p", samp);
-    AfxAssertObjects(1, &samp, AFX_FCC_SAMP);
+    AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
     if (samp->glHandle)
     {
@@ -127,17 +127,17 @@ _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("samp=%p", samp);
-    AfxAssertObjects(1, &samp, AFX_FCC_SAMP);
+    AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
     afxSamplerConfig const *config = ((afxSamplerConfig const *)cookie->udd[0]) + cookie->no;
 
     AfxAssert(config);
-    AfxAssert(config[0].magFilter < AFX_TEXEL_FLT_TOTAL);
-    AfxAssert(config[0].minFilter < AFX_TEXEL_FLT_TOTAL);
-    AfxAssert(config[0].mipmapFilter < AFX_TEXEL_FLT_TOTAL);
-    AfxAssert(config[0].uvw[0] < AFX_TEXEL_ADDR_TOTAL);
-    AfxAssert(config[0].uvw[1] < AFX_TEXEL_ADDR_TOTAL);
-    AfxAssert(config[0].uvw[2] < AFX_TEXEL_ADDR_TOTAL);
+    AfxAssert(config[0].magFilter < afxTexelFilter_TOTAL);
+    AfxAssert(config[0].minFilter < afxTexelFilter_TOTAL);
+    AfxAssert(config[0].mipmapFilter < afxTexelFilter_TOTAL);
+    AfxAssert(config[0].uvw[0] < afxTexelAddress_TOTAL);
+    AfxAssert(config[0].uvw[1] < afxTexelAddress_TOTAL);
+    AfxAssert(config[0].uvw[2] < afxTexelAddress_TOTAL);
 
     samp->base.crc32 = 0;
     AfxCrc32(&samp->base.crc32, config, sizeof(*config));
@@ -166,7 +166,7 @@ _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglSampClsConfig =
 {
-    .fcc = AFX_FCC_SAMP,
+    .fcc = afxFcc_SAMP,
     .name = "Sampler",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxSampler)),

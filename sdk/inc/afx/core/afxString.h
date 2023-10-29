@@ -25,7 +25,7 @@
 
 // UTF-8 everywhere
 
-#define AFX_STRING(text_) { AFX_FCC_STR, (sizeof((text_)) / sizeof((text_)[0])) - sizeof((text_)[0]), 0, ._dataConst = (void const*const)(text_) }
+#define AFX_STRING(text_) { afxFcc_STR, (sizeof((text_)) / sizeof((text_)[0])) - sizeof((text_)[0]), 0, ._dataConst = (void const*const)(text_) }
 
 enum
 {
@@ -83,7 +83,7 @@ AFX_DEFINE_STRUCT(afxString128)
 };
 
 #if _AFX_DEBUG
-#define AFX_STRING_LITERAL(text_) { .fcc = AFX_FCC_STR, .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
+#define AFX_STRING_LITERAL(text_) { .fcc = afxFcc_STR, .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
 #else
 #define AFX_STRING_LITERAL(text_) { .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
 #endif
@@ -159,8 +159,8 @@ AFX afxError            AfxGetStringAsReal(afxString const *str, afxReal *value)
 
 AFX afxString const     AFX_STR_EMPTY;
 
-//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == AFX_FCC_STRC || (var_)->h.fcc == AFX_FCC_STRE || ((var_)->h.fcc >= AFX_FCC_STR0 && (var_)->h.fcc <= AFX_FCC_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
-//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == AFX_FCC_STRC || (var_)->h.fcc == AFX_FCC_STRE || ((var_)->h.fcc >= AFX_FCC_STR0 && (var_)->h.fcc <= AFX_FCC_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
+//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
+//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
 
 #define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxSpawnHint(), AfxStr((str_))));
 #define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxSpawnHint(), AfxStr((str_)))));
@@ -172,7 +172,7 @@ AFXINL afxError _AfxStringAssert(afxString const *str_, afxHint const hint_, afx
     if (!(str_)) msg = errorMsg[AFXERR_NIL];
 #if _AFX_DEBUG
     else if (!((str_)->fcc)) msg = errorMsg[AFXERR_UNINITIALIZED];
-    else if (!((str_)->fcc == AFX_FCC_STR)) msg = errorMsg[AFXERR_INVALID];
+    else if (!((str_)->fcc == afxFcc_STR)) msg = errorMsg[AFXERR_INVALID];
 #endif
     else msg = NIL;
 

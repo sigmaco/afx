@@ -264,10 +264,13 @@ typedef struct
         afxBool                 logicOpEnabled; /// FALSE
         afxLogicOp              logicOp; /// afxLogicOp_NOP
     }                       state;
-    afxBool                 flushIns, flushPip, flushPass, flushSr, flushVbb, flushIbb, flushRb;
+    afxBool                 flushPip, flushPass, flushSr, flushIbb, flushRb;
     
+    afxBitmask              vtxInStreamUpdMask;
+    afxBitmask              vtxInAttribUpdMask;
+
     afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
-    afxBool                 flushRasterizer, flushPrimCulling, flushPrimAssembler;
+    afxBool                 flushRasterizer, flushPrimCulling;
     afxBool                 flushMultisample, flushSampleShading, flushAlphaToCover, flushAlphaToOne;
     afxBool                 flushColorBlend, flushLogicOp, flushColorWriteMask;
 

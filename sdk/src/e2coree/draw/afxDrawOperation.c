@@ -26,7 +26,7 @@
 _AFXINL void AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
 
     AfxEraseUri(&blueprint->uri.uri);
 
@@ -67,7 +67,7 @@ _AFXINL void AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint
 _AFXINL afxError AfxDrawOperationBlueprintEnd(afxDrawOperationBlueprint *blueprint, afxNat cnt, afxDrawOperation dop[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
 
     if (cnt)
     {
@@ -90,7 +90,7 @@ _AFXINL afxError AfxDrawOperationBlueprintEnd(afxDrawOperationBlueprint *bluepri
     }
 
     afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < AfxCountArrayElements(&blueprint->techniques); i++)
     {
@@ -133,7 +133,7 @@ _AFX void AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, a
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
     blueprint->dctx = dctx;
-    blueprint->fcc = AFX_FCC_DOPB;
+    blueprint->fcc = afxFcc_DOPB;
     AfxUri128(&blueprint->uri);
     
     if (uri)
@@ -145,15 +145,15 @@ _AFX void AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, a
 _AFXINL void AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
-    AfxTryAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(blueprint, afxFcc_DOPB);
+    AfxTryAssertType(uri, afxFcc_URI);
     AfxCopyUri(&blueprint->uri.uri, uri);
 }
 
 _AFXINL afxError AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxNat cnt, afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(AfxCountArrayElements(&blueprint->techniques) > tecIdx);
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
     AfxAssert(passIdx < AfxCountArrayElements(&tec->passes));
@@ -189,7 +189,7 @@ _AFXINL afxError AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *
 _AFXINL afxError AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint *blueprint, afxNat *tecIdx, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(tecIdx);
     afxDrawOperationBlueprintTechnique *tec;
 
@@ -205,8 +205,8 @@ _AFXINL afxError AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint
 _AFXINL void AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
-    AfxTryAssertType(name, AFX_FCC_STR);
+    AfxAssertType(blueprint, afxFcc_DOPB);
+    AfxTryAssertType(name, afxFcc_STR);
     AfxAssert(AfxCountArrayElements(&blueprint->techniques) > tecIdx);
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
 
@@ -219,7 +219,7 @@ _AFXINL void AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint 
 _AFXINL afxError AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat *passIdx, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(passIdx);
     AfxAssert(AfxCountArrayElements(&blueprint->techniques) > tecIdx);
 
@@ -246,7 +246,7 @@ _AFXINL afxError AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blu
 _AFXINL void AfxDrawOperationBlueprintRenamePass(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(tecIdx < AfxCountArrayElements(&blueprint->techniques));
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
     AfxAssert(passIdx < AfxCountArrayElements(&tec->passes));
@@ -261,7 +261,7 @@ _AFXINL void AfxDrawOperationBlueprintRenamePass(afxDrawOperationBlueprint *blue
 _AFXINL void AfxDrawOperationBlueprintConfigRasterizerState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineRasterizerState const *state)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(tecIdx < AfxCountArrayElements(&blueprint->techniques));
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
     AfxAssert(passIdx < AfxCountArrayElements(&tec->passes));
@@ -273,7 +273,7 @@ _AFXINL void AfxDrawOperationBlueprintConfigRasterizerState(afxDrawOperationBlue
 _AFXINL void AfxDrawOperationBlueprintConfigDepthState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelineDepthState const *state)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(tecIdx < AfxCountArrayElements(&blueprint->techniques));
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
     AfxAssert(passIdx < AfxCountArrayElements(&tec->passes));
@@ -285,7 +285,7 @@ _AFXINL void AfxDrawOperationBlueprintConfigDepthState(afxDrawOperationBlueprint
 _AFXINL void AfxDrawOperationBlueprintConfigInputAssemblyState(afxDrawOperationBlueprint *blueprint, afxNat tecIdx, afxNat passIdx, afxPipelinePrimitiveState const *state)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     AfxAssert(tecIdx < AfxCountArrayElements(&blueprint->techniques));
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
     AfxAssert(passIdx < AfxCountArrayElements(&tec->passes));
@@ -301,18 +301,18 @@ _AFXINL void AfxDrawOperationBlueprintConfigInputAssemblyState(afxDrawOperationB
 _AFX afxPipeline AfxDrawOperationGetPipeline(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxAssert(dop->techCnt > tecIdx);
     AfxAssert(dop->techniques[tecIdx].passCnt > passIdx);
     afxPipeline pip = dop->techniques[tecIdx].passes[passIdx].pip;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip;
 }
 
 _AFX afxString const* AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxAssert(dop->techCnt > tecIdx);
     AfxAssert(dop->techniques[tecIdx].passCnt > passIdx);
     return dop->techniques[tecIdx].passes[passIdx].name;
@@ -321,7 +321,7 @@ _AFX afxString const* AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat t
 _AFX afxNat AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxAssert(dop->techCnt > tecIdx);
     return dop->techniques[tecIdx].passCnt;
 }
@@ -329,7 +329,7 @@ _AFX afxNat AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx)
 _AFX afxBool AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxString const *name, afxNat *idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxAssert(dop->techCnt > tecIdx);
 
     for (afxNat i = 0; i < dop->techCnt; i++)
@@ -354,7 +354,7 @@ _AFX afxBool AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxSt
 _AFX afxString const* AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afxNat tecIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxAssert(dop->techCnt > tecIdx);
     return dop->techniques[tecIdx].name;
 }
@@ -362,14 +362,14 @@ _AFX afxString const* AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afx
 _AFX afxNat AfxDrawOperationGetTechniqueCount(afxDrawOperation dop)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     return dop->techCnt;
 }
 
 _AFX afxBool AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const *name, afxNat *idx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
 
     for (afxNat i = 0; i < dop->techCnt; i++)
     {
@@ -389,17 +389,17 @@ _AFX afxBool AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const
 _AFX void* AfxDrawOperationGetContext(afxDrawOperation dop)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     afxDrawContext dctx = AfxGetObjectProvider(&dop->obj);
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     return dctx;
 }
 
@@ -408,13 +408,13 @@ _AFX afxError AfxBuildDrawOperations(afxDrawContext dctx, afxNat cnt, afxDrawOpe
     afxError err = AFX_ERR_NONE;
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(blueprint);
     AfxAssert(dop);
@@ -430,13 +430,13 @@ _AFX afxResult AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri con
     afxError err = AFX_ERR_NONE;
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(name);
     AfxAssert(dop);
@@ -444,7 +444,7 @@ _AFX afxResult AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri con
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&name[i], AFX_FCC_URI);
+        AfxAssertType(&name[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(name));
     }
 
@@ -453,7 +453,7 @@ _AFX afxResult AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri con
     for (afxNat i = 0; i < cnt; i++)
     {
         dop[i] = NIL;
-        AfxTryAssertObject(dop[i], AFX_FCC_DOP);
+        AfxTryAssertObject(dop[i], afxFcc_DOP);
     }
     return rslt;
 }
@@ -463,24 +463,24 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
     afxError err = AFX_ERR_NONE;
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(dop);
     afxResult rslt = 0;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(&uri[i]));
         
         AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
@@ -502,7 +502,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                 if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
                 else
                 {
-                    AfxAssertType(&xml, AFX_FCC_XML);
+                    AfxAssertType(&xml, afxFcc_XML);
 
                     afxXmlNode const *node = AfxGetXmlRoot(&xml);
                     afxString const *name = AfxGetXmlNodeName(node);
@@ -536,7 +536,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                             if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();
                             else
                             {
-                                AfxAssertObject(dop[i], AFX_FCC_DOP);
+                                AfxAssertObject(dop[i], afxFcc_DOP);
                                 ++rslt;
                             }
                         }
@@ -571,13 +571,13 @@ _AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
     afxError err = AFX_ERR_NONE;
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(dop);
@@ -586,14 +586,14 @@ _AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
     for (afxNat i = 0; i < cnt; i++)
     {
         afxUri name;
-        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!(AfxUriIsBlank(&uri[i])));
         AfxExcerptUriName(&name, &uri[i]);
         AfxAssert(!(AfxUriIsBlank(&name)));
 
         if (1 == AfxFindDrawOperations(dctx, 1, &name, &dop[i]))
         {
-            AfxAssertObject(dop[i], AFX_FCC_DOP);
+            AfxAssertObject(dop[i], afxFcc_DOP);
             AfxObjectReacquire(&(dop[i]->obj), NIL, NIL, NIL, NIL);
             rslt++;
         }
@@ -602,7 +602,7 @@ _AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
             if (AfxUploadDrawOperations(dctx, 1, &uri[i], &dop[i])) AfxThrowError();
             else
             {
-                AfxAssertObject(dop[i], AFX_FCC_DOP);
+                AfxAssertObject(dop[i], afxFcc_DOP);
                 ++rslt;
             }
         }
@@ -625,7 +625,7 @@ _AFX afxBool _AfxDopEventHandler(afxInstance *obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawOperation dop = (void*)obj;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     (void)ev;
     return FALSE;
 }
@@ -634,7 +634,7 @@ _AFX afxBool _AfxDopEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
 {
     afxError err = AFX_ERR_NONE;
     afxDrawOperation dop = (void*)obj;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     (void)watched;
     (void)ev;
     return FALSE;
@@ -643,21 +643,21 @@ _AFX afxBool _AfxDopEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
 _AFX afxError _AfxDopDtor(afxDrawOperation dop)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     AfxEntry("dop=%p", dop);
 
     afxDrawContext dctx = AfxGetObjectProvider(&dop->obj);
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < dop->techCnt; i++)
     {
@@ -688,7 +688,7 @@ _AFX afxError _AfxDopDtor(afxDrawOperation dop)
 _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDrawOperationBlueprint const *blueprints)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dop, AFX_FCC_DOP);
+    AfxAssertObject(dop, afxFcc_DOP);
     (void)cache;
     AfxEntry("dop=%p", dop);
     //AfxAssert(args);
@@ -699,15 +699,15 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
     afxDrawContext dctx = AfxGetObjectProvider(&dop->obj);
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     struct _afxDsysD* dsysD;
     _AfxGetDsysD(dsys, &dsysD);
-    AfxAssertType(dsysD, AFX_FCC_DSYS);
+    AfxAssertType(dsysD, afxFcc_DSYS);
     struct _afxDctxD *dctxD;
     _AfxGetDctxD(dctx, &dctxD, dsysD);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     dop->uri = AfxUriIsBlank(&blueprint->uri.uri) ? NIL : AfxCloneUri(&blueprint->uri.uri);
     
@@ -724,7 +724,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
         {
             afxDrawOperationBlueprintTechnique const *dopbt = AfxGetArrayUnit(techniques, i);
 
-            dop->techniques[dop->techCnt].fcc = AFX_FCC_DTEC;
+            dop->techniques[dop->techCnt].fcc = afxFcc_DTEC;
             dop->techniques[dop->techCnt].name = dopbt->name && !AfxStringIsEmpty(dopbt->name) ? AfxCloneString(dopbt->name) : NIL;
             dop->techniques[dop->techCnt].passCnt = 0;
 
@@ -739,7 +739,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
                 {
                     afxDrawOperationBlueprintTechniquePass const *dopbtp = AfxGetArrayUnit(passes, j);
 
-                    dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].fcc = AFX_FCC_DPAS;
+                    dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].fcc = afxFcc_DPAS;
                     dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].name = dopbtp->name && !AfxStringIsEmpty(dopbtp->name) ? AfxCloneString(dopbtp->name) : NIL;
 
                     afxPipelineBlueprint pipb;
@@ -765,7 +765,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
                     if (AfxBuildPipelines(dctx, 1, &pipb, &(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip))) AfxThrowError();
                     else
                     {
-                        AfxAssertObject(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip, AFX_FCC_PIP);
+                        AfxAssertObject(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip, afxFcc_PIP);
                         dop->techniques[dop->techCnt].passCnt++;
                     }
 
@@ -789,7 +789,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
 
 _AFX afxClassConfig const _AfxDopClassSpec =
 {
-    AFX_FCC_DOP,
+    afxFcc_DOP,
     NIL,
     0,
     sizeof(AFX_OBJECT(afxDrawOperation)),

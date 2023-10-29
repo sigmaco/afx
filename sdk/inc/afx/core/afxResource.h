@@ -68,7 +68,7 @@ AFX_OBJECT(afxResource)
     afxTime             lastReqTime; // will be used to liberate space if needed.
     afxError            (*load)(afxResource res);
     afxError            (*unload)(afxResource res);
-    afxFcc              superset; // AFX_FCC_MSH, por exemplo
+    afxFcc              superset; // afxFcc_MSH, por exemplo
 
 
     //afxUri              *name;

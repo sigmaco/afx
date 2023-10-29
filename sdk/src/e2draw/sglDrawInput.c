@@ -21,14 +21,14 @@
 _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     //AfxEnterSlockExclusive(&din->scriptChainMutex);
 
     for (afxNat i = 0; i < din->base.scripts.cnt; i++)
     {
         afxDrawScript dscr = *(afxDrawScript*)AfxGetArrayUnit(&din->base.scripts, i);
-        AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+        AfxAssertObjects(1, &dscr, afxFcc_DSCR);
         while (!AfxReleaseObjects(1, (void*[]) { dscr }));
     }
 
@@ -40,7 +40,7 @@ _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTime timeout, afxNat *queIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssertRange(dctx->base.openPortCnt, portIdx, 1);
     AfxAssert(queIdx);
     //AfxAssertRange(dctx->ports[portIdx].queueCnt, queIdx, 1);
@@ -59,7 +59,7 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
 
         if (dque)
         {
-            AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
+            AfxAssertObjects(1, &dque, afxFcc_DQUE);
 
             //AfxAssert(!surf->swapchain.chain);
             *queIdx = idx;
@@ -84,18 +84,18 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
 _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
     AfxAssert(cnt);
     AfxAssert(scripts);
 
     afxDrawContext dctx;
     AfxGetDrawInputConnection(din, &dctx);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         afxDrawScript dscr = scripts[i];
-        AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+        AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
         afxNat j = 0;
         afxDrawQueue dque;
@@ -119,19 +119,19 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
 _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
     AfxAssert(cnt);
     AfxAssert(outputs);
     AfxAssert(outputBufIdx);
 
     afxDrawContext dctx;
     AfxGetDrawInputConnection(din, &dctx);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         afxDrawOutput dout = outputs[i];
-        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+        AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
         afxNat j = 0;
         afxDrawQueue dque;
@@ -156,8 +156,8 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
 _SGL afxError _SglDinProcCb(afxDrawInput din, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
 
     if (din->base.prefetchEnabled)
     {
@@ -184,7 +184,7 @@ _SGL afxError _SglDinDtor(afxDrawInput din)
     AfxEntry("din=%p", din);
     afxError err = AFX_ERR_NONE;
 
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     AfxDisconnectDrawInput(din);
 
@@ -204,7 +204,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
 {
     //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxUriGetStringConst(endpoint)) : &AFX_STR_EMPTY);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     afxNat devId = *(afxNat const *)(cookie->udd[0]);
     afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[1]) + cookie->no;
@@ -241,7 +241,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
 
 _SGL afxClassConfig _SglDinClsConfig =
 {
-    .fcc = AFX_FCC_DIN,
+    .fcc = afxFcc_DIN,
     .name = "Draw Input",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawInput)),

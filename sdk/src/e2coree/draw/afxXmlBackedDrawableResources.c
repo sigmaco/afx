@@ -23,7 +23,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(node);
-    AfxAssertType(blueprint, AFX_FCC_SHDB);
+    AfxAssertType(blueprint, afxFcc_SHDB);
     afxXmlNode const *node0 = node;
     afxString const *name = AfxGetXmlNodeName(node0);
     afxString const *content;
@@ -39,25 +39,12 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             name = AfxXmlNodeGetAttributeName(node0, j);
             content = AfxXmlNodeGetAttributeContent(node0, j);
 
-            if (0 == AfxCompareString(name, &g_str_stage))
-            {
-                afxShaderStage stage = NIL;
-
-                if (!(stage = AfxFindShaderStage(content)))
-                    AfxThrowError();
-
-                AfxShaderBlueprintSetStage(blueprint, stage);
-            }
-            else if (0 == AfxCompareString(name, &g_str_name))
+            if (0 == AfxCompareString(name, &g_str_name))
             {
                 afxUri tmpUri;
                 AfxReflectUriString(&tmpUri, content);
 
                 AfxShaderBlueprintRename(blueprint, &tmpUri);
-            }
-            else if (0 == AfxCompareString(name, &g_str_entry))
-            {
-                AfxShaderBlueprintChooseEntryPoint(blueprint, content);
             }
             else
             {
@@ -72,8 +59,22 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             afxXmlNode const *node1 = AfxGetXmlChildNode(node0, j);
             name = AfxGetXmlNodeName(node1);
             afxNat attrCnt1 = AfxCountXmlAttributes(node1);
+            content = AfxGetXmlNodeContent(node1);
 
-            if (0 == AfxCompareString(name, &g_str_Include))
+            if (0 == AfxCompareString(name, &g_str_Stage))
+            {
+                afxShaderStage stage = NIL;
+
+                if (!(stage = AfxFindShaderStage(content)))
+                    AfxThrowError();
+
+                AfxShaderBlueprintSetStage(blueprint, stage);
+            }
+            else if (0 == AfxCompareString(name, &g_str_Entry))
+            {
+                AfxShaderBlueprintChooseEntryPoint(blueprint, content);
+            }
+            else if (0 == AfxCompareString(name, &g_str_Include))
             {
 #if 0
                 for (afxNat k = 0; k < attrCnt1; k++)
@@ -95,8 +96,6 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     }
                 }
 #endif
-                content = AfxGetXmlNodeContent(node1);
-
                 if (content && !AfxStringIsEmpty(content))
                 {
                     afxUri uri;
@@ -183,6 +182,10 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
 
                 if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, AfxGetXmlNodeContent(node1)))
                     AfxThrowError();
+            }
+            else if (0 == AfxCompareString(name, &g_str_Flag))
+            {
+                AfxAdvertise("%.*s : flag = %.*s", AfxPushString(name), AfxPushString(content));
             }
         }
 
@@ -519,7 +522,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(node);
-    //AfxAssertType(blueprint, AFX_FCC_PIPB);
+    //AfxAssertType(blueprint, afxFcc_PIPB);
     afxXmlNode const *node0 = node;
     afxString const *name = AfxGetXmlNodeName(node0);
     afxString const *content;
@@ -668,7 +671,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(node);
-    AfxAssertType(blueprint, AFX_FCC_DOPB);
+    AfxAssertType(blueprint, afxFcc_DOPB);
     afxXmlNode const *node0 = node;
     afxString const *name = AfxGetXmlNodeName(node0);
     afxString const *content;
@@ -856,28 +859,28 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("dctx=%p", dctx);
-    AfxAssertType(dctxD, AFX_FCC_DCTX);
+    AfxAssertType(dctxD, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(dop);
     afxResult rslt = 0;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertType(dsys, AFX_FCC_DSYS);
+    AfxAssertType(dsys, afxFcc_DSYS);
     afxIoSystem fsys = AfxGetDrawFileSystem(dsys);
-    AfxAssertObject(fsys, AFX_FCC_FSYS);
+    AfxAssertObject(fsys, afxFcc_FSYS);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssertType(&uri[i], afxFcc_URI);
         afxXml xml;
 
         if (!(xml = AfxFileSystemLoadXml(fsys, &uri[i]))) AfxThrowError();
         else
         {
-            AfxAssertObject(xml, AFX_FCC_XML);
+            AfxAssertObject(xml, afxFcc_XML);
 
             afxXmlNode const *node0 = AfxGetXmlRoot(xml);
             afxString const *name = AfxGetXmlNodeName(node0);
@@ -904,7 +907,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                 {
                                     afxShader shd;
                                     AfxAcquireShaders(dctx, 1, &blueprint.reqShaders[k], &shd);
-                                    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+                                    AfxAssertObjects(1, &shd, afxFcc_SHD);
                                 }
                                 else
                                 {
@@ -950,7 +953,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 
                                                     afxShader shd;
                                                     AfxBuildShaders(dctx, 1, &shdb, &shd);
-                                                    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+                                                    AfxAssertObjects(1, &shd, afxFcc_SHD);
                                                 }
                                             }
                                         }
@@ -961,7 +964,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                             if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();
                             else
                             {
-                                AfxAssertObject(dop[i], AFX_FCC_DOP);
+                                AfxAssertObject(dop[i], afxFcc_DOP);
                                 ++rslt;
                             }
                         }

@@ -26,7 +26,7 @@ extern struct _afxDsysD TheDrawSystem;
 _AFX afxSurfaceState AfxGetSurfaceState(afxSurface surf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, AFX_FCC_SURF);
+    AfxAssertObjects(1, &surf, afxFcc_SURF);
 
     return surf->state;
 }
@@ -34,14 +34,14 @@ _AFX afxSurfaceState AfxGetSurfaceState(afxSurface surf)
 _AFX afxTexture AfxGetSurfaceTexture(afxSurface surf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, AFX_FCC_SURF);
+    AfxAssertObjects(1, &surf, afxFcc_SURF);
     return surf->tex;
 }
 
 _AFX afxBool AfxSurfaceIsPresentable(afxSurface surf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, AFX_FCC_SURF);
+    AfxAssertObjects(1, &surf, afxFcc_SURF);
     return surf->state == AFX_SURF_STATE_PRESENTABLE;
 }
 
@@ -70,7 +70,7 @@ _AFX afxError AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface sur
     texi.usage = usage | AFX_TEX_USAGE_DRAW;
     texi.imgCnt = 1;
 
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (AfxAcquireObjects(&dctx->surfaces, cnt, (afxHandle*)surf, (void*[]) { (void*)&texi }))
         AfxThrowError();

@@ -1178,7 +1178,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
     if (dout)
     {
-        AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+        AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
         AfxAssert(dout->wnd == hWnd);
 
@@ -1309,9 +1309,9 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             afxDrawContext dctx;
             AfxGetDrawOutputConnection(dout, &dctx);
-            AfxAssertType(dctxD, AFX_FCC_DCTX);
+            AfxAssertType(dctxD, afxFcc_DCTX);
             afxContext mem = AfxGetDrawContextMemory(dctx);
-            AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+            AfxAssertObjects(1, &mem, afxFcc_CTX);
 
             for (i = 0; i < cnt; i++)
             {
@@ -1578,7 +1578,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
 _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     sglDpuIdd *dpu = &ddev->dpus[unitIdx];
     //wglVmt const* wgl = &dpu->wgl;
@@ -1661,10 +1661,10 @@ _SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle
     //AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
 
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     afxDrawDevice ddev = AfxGetObjectProvider(dctx);
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);    
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);    
     
     afxNat32 unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -1733,7 +1733,7 @@ _SGL void _SglDpuLoadBaseSymbols(afxDrawDevice ddev, afxNat unitIdx)
 _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     //afxNat procUnitIdx = AfxGetThreadingUnit();
     sglDpuIdd *dpu = &ddev->dpus[unitIdx];
     //wglVmt const* wgl = &dpu->wgl;
@@ -2127,7 +2127,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     sglDpuIdd *dpu = &ddev->dpus[unitIdx];
 
     _SglDdevProcessResDel(ddev, unitIdx);
@@ -2153,9 +2153,9 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
 _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
-    AfxTryAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
 
     // TODO discard pull request submissions too.
 
@@ -2164,14 +2164,14 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawC
     
     if (from)
     {
-        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
+        AfxAssertObjects(1, &from, afxFcc_DCTX);
         AfxPopLinkage(&din->base.dctx);
         _SglDinFreeAllBuffers(din);
     }
 
     if (dctx)
     {
-        AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+        AfxAssertObjects(1, &dctx, afxFcc_DCTX);
         AfxPushLinkage(&din->base.dctx, &dctx->base.inlinks);
     }
 
@@ -2183,23 +2183,23 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawC
 _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    AfxTryAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
 
     // TODO discard pull request submissions too.
     afxDrawContext from = AfxGetLinker(&dout->base.dctx);
 
     if (from)
     {
-        AfxAssertObjects(1, &from, AFX_FCC_DCTX);
+        AfxAssertObjects(1, &from, afxFcc_DCTX);
         AfxPopLinkage(&dout->base.dctx);
         AfxRegenerateDrawOutputBuffers(dout);
     }
 
     if (dctx)
     {
-        AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+        AfxAssertObjects(1, &dctx, afxFcc_DCTX);
         AfxPushLinkage(&dout->base.dctx, &dctx->base.outlinks);
         AfxRegenerateDrawOutputBuffers(dout);
     }
@@ -2213,9 +2213,9 @@ _SGL afxBool _SglProcessDctxCb(afxDrawContext dctx, void *udd)
 {
     afxError err = AFX_ERR_NONE;
 
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxDrawThread dthr = (afxDrawThread)udd;
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
 
     if (dthr->ddev != AfxGetObjectProvider(dctx)) AfxThrowError();
     else
@@ -2231,10 +2231,10 @@ _SGL afxBool _SglProcessDctxCb(afxDrawContext dctx, void *udd)
 _SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
     afxDrawSystem dsys = AfxGetObjectProvider(dthr);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -2254,14 +2254,14 @@ _SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxDrawThread dthr)
 _SGL afxError _SglDdevDtor(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     afxDrawDevice ddrv = AfxGetObjectProvider(ddev);
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
-    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &ctx, afxFcc_CTX);
 
     for (afxNat i = 0; i < ddev->dpuCnt; i++)
         if (_SglDestroyDpu(ddev, i))
@@ -2283,9 +2283,9 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     AfxAssert(info);
 
     afxDrawDevice ddrv = AfxGetObjectProvider(ddev);
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
     ddev->base.procCb = _SglDdevProcCb;
@@ -2338,7 +2338,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
             if (!(dthr = _AfxAcquireDrawThread(ddev, &dthrConfig))) AfxThrowError();
             else
             {
-                AfxAssertObject(dthr, AFX_FCC_DTHR);
+                AfxAssertObject(dthr, afxFcc_DTHR);
                 AfxSetThreadAffinity(&dthrD->thr, i);
                 AfxRunThread(&dthrD->thr);
             }
@@ -2443,7 +2443,7 @@ _SGL afxError AfxGetDrawIcdInformation(afxDrawIcdInfo *info)
 
     afxClassConfig const devClsExt =
     {
-        .fcc = AFX_FCC_DDEV,
+        .fcc = afxFcc_DDEV,
         .name = "Draw Device",
         .unitsPerPage = 2,
         .size = sizeof(AFX_OBJECT(afxDrawDevice)),

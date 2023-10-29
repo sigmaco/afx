@@ -28,6 +28,7 @@
  // When you want to play an animation on such an instance, you create a afxAnimator.
 
 #include "afxCurve2.h"
+#include "afx/math/afxTransform.h"
 
 AFX_DEFINE_HANDLE(afxAnimation);
 
@@ -92,7 +93,6 @@ AFX_DEFINE_STRUCT(afxAnimTrackGroup)
 
 AFX_OBJECT(afxAnimation)
 {
-    afxInstance           obj;
     afxString32         name;
     afxReal             dur;
     afxReal             timeStep;

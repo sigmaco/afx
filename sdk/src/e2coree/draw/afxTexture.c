@@ -31,7 +31,7 @@
 _AFXINL afxResult AfxTestTexture(afxTexture tex, afxTextureFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex->flags & bitmask;
 }
@@ -39,7 +39,7 @@ _AFXINL afxResult AfxTestTexture(afxTexture tex, afxTextureFlags bitmask)
 _AFXINL void AfxUnflagTexture(afxTexture tex, afxTextureFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     tex->flags &= ~bitmask;
 }
@@ -47,7 +47,7 @@ _AFXINL void AfxUnflagTexture(afxTexture tex, afxTextureFlags bitmask)
 _AFXINL void AfxFlagTexture(afxTexture tex, afxTextureFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     tex->flags |= bitmask;
 }
@@ -55,7 +55,7 @@ _AFXINL void AfxFlagTexture(afxTexture tex, afxTextureFlags bitmask)
 _AFX afxNat AfxGetTextureLodCount(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex->lodCnt;
 }
@@ -63,7 +63,7 @@ _AFX afxNat AfxGetTextureLodCount(afxTexture tex)
 _AFX afxNat AfxGetTextureImageCount(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex->imgCnt;
 }
@@ -71,7 +71,7 @@ _AFX afxNat AfxGetTextureImageCount(afxTexture tex)
 _AFX afxBool AfxTextureGetColorSwizzling(afxTexture tex, afxColorSwizzling const** csw)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     if (csw)
         *csw = tex->swizzling;
@@ -82,7 +82,7 @@ _AFX afxBool AfxTextureGetColorSwizzling(afxTexture tex, afxColorSwizzling const
 _AFX afxNat AfxGetTextureSampleCount(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex->sampleCnt;
 }
@@ -90,7 +90,7 @@ _AFX afxNat AfxGetTextureSampleCount(afxTexture tex)
 _AFX afxPixelFormat AfxGetTextureFormat(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex->fmt;
 }
@@ -98,7 +98,7 @@ _AFX afxPixelFormat AfxGetTextureFormat(afxTexture tex)
 _AFX void AfxGetTextureExtent(afxTexture tex, afxNat lodIdx, afxWhd extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(tex->lodCnt > lodIdx);
     AfxAssert(extent);
@@ -119,7 +119,7 @@ _AFX void AfxGetTextureExtent(afxTexture tex, afxNat lodIdx, afxWhd extent)
 _AFX afxNat AfxLocateTextureRegion(afxTexture tex, afxNat lodIdx, afxNat imgIdx, afxWhd const offset)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssertRange(tex->lodCnt, lodIdx, 1);
     AfxAssertRange(tex->imgCnt, imgIdx, 1);
@@ -158,7 +158,7 @@ _AFX afxNat AfxLocateTextureRegion(afxTexture tex, afxNat lodIdx, afxNat imgIdx,
 _AFX afxNat AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn) // can't be multiple because regions couldn't be continous.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -216,10 +216,10 @@ _AFX afxNat AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
 _AFX afxError AfxInputTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxStream *in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(cnt);
     AfxAssert(rgn);
-    AfxAssertType(in, AFX_FCC_IOS);
+    AfxAssertType(in, afxFcc_IOS);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -241,9 +241,9 @@ _AFX afxError AfxInputTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegio
 _AFX afxError AfxInputTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxStream *in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(rgn);
-    AfxAssertType(in, AFX_FCC_IOS);
+    AfxAssertType(in, afxFcc_IOS);
 
     if (AfxInputTextureRegions(tex, 1, rgn, in))
         AfxThrowError();
@@ -254,9 +254,9 @@ _AFX afxError AfxInputTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
 _AFX afxError AfxInputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxStream *in)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
-    AfxAssertType(in, AFX_FCC_IOS);
+    AfxAssertType(in, afxFcc_IOS);
     AfxAssertRange(tex->lodCnt, lodIdx, 1);
     AfxAssertRange(tex->imgCnt, baseImg, imgCnt);
 
@@ -280,7 +280,7 @@ _AFX afxError AfxInputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afx
 _AFX afxError AfxFetchTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(cnt);
     AfxAssert(rgn);
     AfxAssert(uri);
@@ -294,7 +294,7 @@ _AFX afxError AfxFetchTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegio
 _AFX afxError AfxFetchTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -302,7 +302,7 @@ _AFX afxError AfxFetchTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
     AfxAssertRange(tex->whd[0], rgn->offset[0], rgn->extent[0]);
     AfxAssertRange(tex->whd[1], rgn->offset[1], rgn->extent[1]);
     AfxAssertRange(tex->whd[2], rgn->offset[2], rgn->extent[2]);
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(!AfxUriIsBlank(uri));
 
     if (AfxFetchTextureRegions(tex, 1, rgn, uri))
@@ -314,9 +314,9 @@ _AFX afxError AfxFetchTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
 _AFX afxError AfxFetchTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(!AfxUriIsBlank(uri));
 
     afxTextureRegion rgn;
@@ -339,7 +339,7 @@ _AFX afxError AfxFetchTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afx
 _AFX afxError AfxOutputTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxStream *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -361,9 +361,9 @@ _AFX afxError AfxOutputTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegi
 _AFX afxError AfxOutputTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxStream *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(rgn);
-    AfxAssertType(out, AFX_FCC_IOS);
+    AfxAssertType(out, afxFcc_IOS);
 
     if (AfxOutputTextureRegions(tex, 1, rgn, out))
         AfxThrowError();
@@ -374,9 +374,9 @@ _AFX afxError AfxOutputTextureRegion(afxTexture tex, afxTextureRegion const *rgn
 _AFX afxError AfxOutputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxStream *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
-    AfxAssertType(out, AFX_FCC_IOS);
+    AfxAssertType(out, afxFcc_IOS);
     AfxAssertRange(tex->lodCnt, lodIdx, 1);
     AfxAssertRange(tex->imgCnt, baseImg, imgCnt);
 
@@ -400,7 +400,7 @@ _AFX afxError AfxOutputTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, af
 _AFX afxError AfxPrintTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(cnt);
     AfxAssert(rgn);
     AfxAssert(uri);
@@ -414,7 +414,7 @@ _AFX afxError AfxPrintTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegio
 _AFX afxError AfxPrintTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -423,7 +423,7 @@ _AFX afxError AfxPrintTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
     AfxAssertRange(tex->whd[1], rgn->offset[1], rgn->extent[1]);
     AfxAssertRange(tex->whd[2], rgn->offset[2], rgn->extent[2]);
 
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(!AfxUriIsBlank(uri));
 
     if (AfxPrintTextureRegions(tex, 1, rgn, uri))
@@ -435,9 +435,9 @@ _AFX afxError AfxPrintTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
 _AFX afxError AfxPrintTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(!AfxUriIsBlank(uri));
 
     afxTextureRegion rgn;
@@ -464,7 +464,7 @@ _AFX afxError AfxPrintTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afx
 _AFX afxError AfxUpdateTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], void const *src[], afxNat const siz[], afxPixelFormat const fmt[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(cnt);
     AfxAssert(rgn);
@@ -498,7 +498,7 @@ _AFX afxError AfxUpdateTextureRegions(afxTexture tex, afxNat cnt, afxTextureRegi
 _AFX afxError AfxUpdateTextureRegion(afxTexture tex, afxTextureRegion const *rgn, void const *src, afxNat siz, afxPixelFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -518,7 +518,7 @@ _AFX afxError AfxUpdateTextureRegion(afxTexture tex, afxTextureRegion const *rgn
 _AFX afxError AfxUpdateTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, void const *src, afxNat siz, afxPixelFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(tex->lodCnt > lodIdx);
     AfxAssertRange(tex->imgCnt, baseImg, imgCnt);
@@ -545,7 +545,7 @@ _AFX afxError AfxUpdateTexture(afxTexture tex, afxNat lodIdx, afxNat baseImg, af
 _AFX void AfxCloseTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -561,7 +561,7 @@ _AFX void AfxCloseTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
 _AFX void* AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxTextureOpenFlags flags, afxNat *size)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -581,11 +581,11 @@ _AFX void* AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afx
 _AFX afxError AfxBufferizeTexture(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     afxTextureRegion rgn;
     rgn.baseImg = 0;
@@ -618,7 +618,7 @@ _AFX afxError AfxBufferizeTexture(afxTexture tex)
 _AFX afxError AfxReadjustTexture(afxTexture tex, afxWhd const extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(extent);
     AfxAssert(extent[0]);
     AfxAssert(extent[1]);
@@ -672,12 +672,12 @@ _AFX afxError AfxReadjustTexture(afxTexture tex, afxWhd const extent)
 _AFX void const* AfxTextureGetData(afxTexture tex, afxNat lod, afxNat layer, afxWhd const offset)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     static afxWhd const whdZeroed = { 0, 0, 0 };
     afxNat const *xyz = offset ? offset : whdZeroed;
 
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(tex->lodCnt > lod);
     AfxAssert(tex->imgCnt > layer);
     AfxAssert(tex->whd[0] > xyz[0]);
@@ -693,7 +693,7 @@ _AFX void const* AfxTextureGetData(afxTexture tex, afxNat lod, afxNat layer, afx
 _AFX afxError AfxGenerateTextureLods(afxTexture tex, afxNat firstLod, afxNat lodCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     (void)firstLod;
     AfxAssert(lodCnt);
     AfxThrowError();
@@ -703,7 +703,7 @@ _AFX afxError AfxGenerateTextureLods(afxTexture tex, afxNat firstLod, afxNat lod
 _AFX afxError AfxTextureSwapChannels(afxTexture tex, afxColorSwizzle a, afxColorSwizzle b, afxTextureRegion const *rgn)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     AfxAssert(rgn);
     AfxAssert(tex->lodCnt > rgn->lodIdx);
@@ -739,7 +739,7 @@ _AFX afxError AfxTextureSwapChannels(afxTexture tex, afxColorSwizzle a, afxColor
 _AFX afxError AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTextureInfo const info[], afxTexture tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(info);
     AfxAssert(tex);
@@ -747,7 +747,7 @@ _AFX afxError AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTextureInfo
     if (AfxAcquireObjects(&dctx->textures, cnt, (afxHandle*)tex, (void*[]) { (void*)info }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, tex, AFX_FCC_TEX);
+    AfxAssertObjects(cnt, tex, afxFcc_TEX);
 
     return err;
 }
@@ -755,7 +755,7 @@ _AFX afxError AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTextureInfo
 _AFX afxError AfxBuildTextures(afxDrawContext dctx, afxTextureBuilder const* texb, afxNat cnt, void* data[], afxTexture tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(texb);
     AfxAssert(cnt);
     AfxAssert(data);
@@ -804,9 +804,9 @@ _AFX afxError AfxBuildTextures(afxDrawContext dctx, afxTextureBuilder const* tex
 _AFX afxResult AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(cnt);
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(tex);
     afxResult rslt = 0;
 
@@ -814,7 +814,7 @@ _AFX afxResult AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri
     afxTexture tmp;
     while (AfxEnumerateTextures(dctx, j, 1, &tmp))
     {
-        AfxAssertObjects(1, &tmp, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tmp, afxFcc_TEX);
 
         for (afxNat i = 0; i < cnt; i++)
         {
@@ -842,14 +842,14 @@ _AFX afxError AfxLoadTextures(afxDrawContext dctx, afxTextureFlags flags, afxNat
     AfxAssert(cnt);
     AfxAssert(uri);
     AfxAssert(tex);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(&uri[i]));
 
         AfxEcho("Uploading texture '%.*s'", AfxPushString(&uri[i].str));
@@ -869,7 +869,7 @@ _AFX afxError AfxLoadTextures(afxDrawContext dctx, afxTextureFlags flags, afxNat
                 if (AfxLoadTexturesFromTarga(dctx, flags, 1, &uri[i], &tex[i])) AfxThrowError();
                 else
                 {
-                    AfxAssertObjects(1, &tex[i], AFX_FCC_TEX);
+                    AfxAssertObjects(1, &tex[i], afxFcc_TEX);
                 }
             }
             else if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
@@ -900,7 +900,7 @@ _AFX afxError AfxLoadTextures(afxDrawContext dctx, afxTextureFlags flags, afxNat
 _AFX afxTexture AfxAssembleTexture(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(uri);
     afxTexture tex;
@@ -908,7 +908,7 @@ _AFX afxTexture AfxAssembleTexture(afxDrawContext dctx, afxTextureFlags flags, a
     if (AfxAssembleTexturesFromTarga(dctx, flags, cnt, uri, &tex))
         AfxThrowError();
 
-    AfxTryAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxTryAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex;
 }
@@ -916,14 +916,14 @@ _AFX afxTexture AfxAssembleTexture(afxDrawContext dctx, afxTextureFlags flags, a
 _AFX afxTexture AfxAssembleCubemapTexture(afxDrawContext dctx, afxTextureFlags flags, afxUri const uri[6])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(uri);
     afxTexture tex;
 
     if (!(tex = AfxAssembleTexture(dctx, flags | AFX_TEX_FLAG_CUBEMAP, 6, uri)))
         AfxThrowError();
 
-    AfxTryAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxTryAssertObjects(1, &tex, afxFcc_TEX);
 
     return tex;
 }

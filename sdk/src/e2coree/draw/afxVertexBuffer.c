@@ -49,7 +49,7 @@ _AFXINL void AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
-    blueprint->fcc = AFX_FCC_VBUB;
+    blueprint->fcc = afxFcc_VBUB;
     blueprint->cap = cap;
     blueprint->attrCnt = 0;
 }
@@ -57,7 +57,7 @@ _AFXINL void AfxVertexBufferBlueprintReset(afxVertexBufferBlueprint *blueprint, 
 _AFXINL afxError AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *blueprint, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt, afxNat srcStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_VBUB);
+    AfxAssertType(blueprint, afxFcc_VBUB);
     AfxString8(&blueprint->spec[blueprint->attrCnt].semantic);
     AfxCopyString(&blueprint->spec[blueprint->attrCnt].semantic.str, semantic);
     blueprint->spec[blueprint->attrCnt].fmt = fmt;
@@ -72,7 +72,7 @@ _AFXINL afxError AfxVertexBufferBlueprintAddRow(afxVertexBufferBlueprint *bluepr
 _AFXINL afxError AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blueprint, afxNat idx, afxString const *semantic, afxVertexFormat fmt, afxVertexUsage usage, void const *src, afxVertexFormat srcFmt, afxNat srcStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_VBUB);
+    AfxAssertType(blueprint, afxFcc_VBUB);
     AfxAssert(blueprint->attrCnt > idx);
     AfxString8(&blueprint->spec[idx].semantic);
     AfxCopyString(&blueprint->spec[idx].semantic.str, semantic);
@@ -87,7 +87,7 @@ _AFXINL afxError AfxVertexBufferBlueprintResetRow(afxVertexBufferBlueprint *blue
 _AFXINL afxError AfxVertexBufferBlueprintAddAttributes(afxVertexBufferBlueprint *blueprint, afxNat cnt, afxVertexSpec const spec[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(blueprint, AFX_FCC_VBUB);
+    AfxAssertType(blueprint, afxFcc_VBUB);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -110,21 +110,21 @@ _AFXINL afxError AfxVertexBufferBlueprintAddAttributes(afxVertexBufferBlueprint 
 _AFX afxNat AfxCountVertexSections(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->streamCnt;
 }
 
 _AFX afxNat AfxCountVertexAttributes(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->attrCnt;
 }
 
 _AFX afxNat AfxGetVertexFormat(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].fmt;
 }
@@ -132,7 +132,7 @@ _AFX afxNat AfxGetVertexFormat(afxVertexBuffer vbuf, afxNat attrIdx)
 _AFX afxNat AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, afxNat attrIdx, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->streamCnt, streamIdx, 1);
     AfxAssertRange(vbuf->streams[streamIdx].attrCnt, attrIdx, 1);
     AfxAssertRange(vbuf->streams[streamIdx].attrs[attrIdx].cachedElemCnt, elemIdx, 1);
@@ -171,7 +171,7 @@ _AFX afxNat AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, 
 _AFX afxNat AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn) // can't be multiple because regions couldn't be continous.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssert(rgn);
     AfxAssertRange(vbuf->streamCnt, rgn->streamIdx, 1);
     AfxAssertRange(vbuf->streams[rgn->streamIdx].attrCnt, rgn->baseAttr, rgn->attrCnt);
@@ -199,7 +199,7 @@ _AFX afxNat AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRe
 _AFX afxError AfxUpdateVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn, void const *src, afxVertexFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssert(rgn);
     AfxAssert(src);
     AfxAssert(fmt);
@@ -214,7 +214,7 @@ _AFX afxError AfxUpdateVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferR
 _AFX afxError AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void(*f)(void const *vtx, void*data), void *data)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->cap, baseVtx, vtxCnt);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
 
@@ -240,7 +240,7 @@ _AFX afxError AfxVertexBufferForEachVertex(afxVertexBuffer vbuf, afxNat attrIdx,
 _AFX afxError AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->cap, baseVtx, vtxCnt);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     AfxAssert(dst);
@@ -274,7 +274,7 @@ _AFX afxError AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat attrIdx, afxNat b
 _AFX afxError AfxUpdateVertexBuffer(afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const *src, afxVertexFormat srcFmt, afxNat srcStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->cap, baseVtx, vtxCnt);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     AfxAssert(src);
@@ -308,7 +308,7 @@ _AFX afxError AfxUpdateVertexBuffer(afxVertexBuffer vbuf, afxNat attrIdx, afxNat
 _AFX afxNat AfxDescribeVertexStorage(afxVertexBuffer vbuf, afxNat secIdx, afxNat32* base, afxNat32* range, afxNat32* stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->secCnt, secIdx, 1);
     
     if (base)
@@ -324,7 +324,7 @@ _AFX afxNat AfxDescribeVertexStorage(afxVertexBuffer vbuf, afxNat secIdx, afxNat
 _AFX afxNat AfxGetVertexAttributeStorage(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].srcIdx;
 }
@@ -332,7 +332,7 @@ _AFX afxNat AfxGetVertexAttributeStorage(afxVertexBuffer vbuf, afxNat attrIdx)
 _AFX afxVertexFormat AfxGetVertexAttributeFormat(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].fmt;
 }
@@ -340,7 +340,7 @@ _AFX afxVertexFormat AfxGetVertexAttributeFormat(afxVertexBuffer vbuf, afxNat at
 _AFX afxNat AfxGetVertexAttributeSize(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return AfxVertexFormatGetSize(vbuf->attrs[attrIdx].fmt);
 }
@@ -348,7 +348,7 @@ _AFX afxNat AfxGetVertexAttributeSize(afxVertexBuffer vbuf, afxNat attrIdx)
 _AFX afxNat AfxGetVertexAttributeOffset(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].offset;
 }
@@ -356,7 +356,7 @@ _AFX afxNat AfxGetVertexAttributeOffset(afxVertexBuffer vbuf, afxNat attrIdx)
 _AFX afxVertexUsage AfxGetVertexAttributeUsage(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].usage;
 }
@@ -364,7 +364,7 @@ _AFX afxVertexUsage AfxGetVertexAttributeUsage(afxVertexBuffer vbuf, afxNat attr
 _AFX afxString const* AfxGetVertexAttributeName(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return &vbuf->attrs[attrIdx].semantic;
 }
@@ -372,7 +372,7 @@ _AFX afxString const* AfxGetVertexAttributeName(afxVertexBuffer vbuf, afxNat att
 _AFX afxError AfxDescribeVertexAttribute(afxVertexBuffer vbuf, afxNat attrIdx, afxNat* secIdx, afxVertexFormat* fmt, afxNat32* offset, afxVertexUsage* usage)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
 
     if (secIdx)
@@ -393,14 +393,14 @@ _AFX afxError AfxDescribeVertexAttribute(afxVertexBuffer vbuf, afxNat attrIdx, a
 _AFX afxNat AfxCountVertexAttributes(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->attrCnt;
 }
 
 _AFX afxBool AfxFindVertexAttribute(afxVertexBuffer vbuf, afxString const *name, afxNat* attrIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxAssertString(name);
 
     for (afxNat i = 0; i < vbuf->attrCnt; i++)
@@ -420,14 +420,14 @@ _AFX afxBool AfxFindVertexAttribute(afxVertexBuffer vbuf, afxString const *name,
 _AFX afxNat AfxGetVertexCapacity(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->cap;
 }
 
 _AFX afxNat AfxGetVertexSize(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     afxNat siz = 0;
 
     for (afxNat i = 0; i < vbuf->attrCnt; i++)
@@ -439,7 +439,7 @@ _AFX afxNat AfxGetVertexSize(afxVertexBuffer vbuf)
 _AFX afxError AfxOptimizeVertexBuffer(afxVertexBuffer vbuf, afxNat attrIdx, afxBool favorSpeedOverSize)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     (void)attrIdx;
     (void)favorSpeedOverSize;
     AfxError("Not implemented yet");
@@ -452,7 +452,7 @@ _AFX afxError AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBu
     AfxAssert(cnt);
     AfxAssert(blueprint);
     AfxAssert(vbuf);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (AfxAcquireObjects(&dctx->vertices, cnt, (afxHandle*)vbuf, (void*[]) { (void*)blueprint }))
         AfxThrowError();

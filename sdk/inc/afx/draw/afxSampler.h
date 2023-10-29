@@ -24,22 +24,22 @@
 
 typedef enum afxTexelAddress
 {
-    AFX_TEXEL_ADDR_REPEAT, // Tile the texture at every (u,v) integer junction. For example, for u values between 0 and 3, the texture is repeated three times.
-    AFX_TEXEL_ADDR_MIRROR, // Flip the texture at every (u,v) integer junction. For u values between 0 and 1, for example, the texture is addressed normally; between 1 and 2, the texture is flipped (mirrored); between 2 and 3, the texture is normal again; and so on.
-    AFX_TEXEL_ADDR_CLAMP, // Texture coordinates outside the range [0.0, 1.0] are set to the texture color at 0.0 or 1.0, respectively.
-    AFX_TEXEL_ADDR_BORDER, // Texture coordinates outside the range [0.0, 1.0] are set to the border color specified in sampler or shader code.
-    AFX_TEXEL_ADDR_REFLECT, // MIRROR and CLAMP. Takes the absolute value of the texture coordinate (thus, mirroring around 0), and then clamps to the maximum value.
+    afxTexelAddress_REPEAT, // Tile the texture at every (u,v) integer junction. For example, for u values between 0 and 3, the texture is repeated three times.
+    afxTexelAddress_MIRROR, // Flip the texture at every (u,v) integer junction. For u values between 0 and 1, for example, the texture is addressed normally; between 1 and 2, the texture is flipped (mirrored); between 2 and 3, the texture is normal again; and so on.
+    afxTexelAddress_CLAMP, // Texture coordinates outside the range [0.0, 1.0] are set to the texture color at 0.0 or 1.0, respectively.
+    afxTexelAddress_BORDER, // Texture coordinates outside the range [0.0, 1.0] are set to the border color specified in sampler or shader code.
+    afxTexelAddress_REFLECT, // MIRROR and CLAMP. Takes the absolute value of the texture coordinate (thus, mirroring around 0), and then clamps to the maximum value.
 
-    AFX_TEXEL_ADDR_TOTAL
+    afxTexelAddress_TOTAL
 } afxTexelAddress;
 
 typedef enum afxTexelFilter
 {
-    AFX_TEXEL_FLT_POINT, // Use point sampling (aka NEAREST). Supported for Lods.
-    AFX_TEXEL_FLT_LINEAR, // Use linear interpolation. Supported for Lods.
-    AFX_TEXEL_FLT_ANISOTROPIC, // Use anisotropic interpolation.
+    afxTexelFilter_POINT, // Use point sampling (aka NEAREST). Supported for Lods.
+    afxTexelFilter_LINEAR, // Use linear interpolation. Supported for Lods.
+    afxTexelFilter_ANISOTROPIC, // Use anisotropic interpolation.
 
-    AFX_TEXEL_FLT_TOTAL
+    afxTexelFilter_TOTAL
 } afxTexelFilter;
 
 typedef enum afxYuvModelConversion

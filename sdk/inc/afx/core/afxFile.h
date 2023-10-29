@@ -68,12 +68,12 @@ AFX afxNat                  AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile 
 AFX afxError                AfxOpenFiles(afxNat cnt, afxFile file[], afxUri const uri[], afxFileFlags const flags[]);
 AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
 AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
-AFX afxStream               AfxLoadFile(afxIoFlags flags, afxUri const *uri); // will fully load the opened file then close it.
+AFX afxError                AfxReloadFile(afxStream* ios, afxUri const *uri, afxFileFlags flags); // will fully load the opened file then close it.
 
 AFX void*                   AfxGetFileHostDescriptor(afxFile file);
 
-AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);
-AFX afxError                AfxReloadFile(afxFile file, afxRwx const rwx, afxUri const *uri);
+//AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);
+//AFX afxError                AfxReloadFile(afxFile file, afxRwx const rwx, afxUri const *uri);
 
 AFX afxResult               AfxExtractFilePath(afxFile file, afxString *str);
 AFX afxString const*        AfxGetFilePathString(afxFile file);

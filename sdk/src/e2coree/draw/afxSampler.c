@@ -25,7 +25,7 @@ _AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(spec);
-    AfxAssertObjects(1, &samp, AFX_FCC_SAMP)
+    AfxAssertObjects(1, &samp, afxFcc_SAMP)
 
     spec->magFilter = samp->magFilter;
     spec->minFilter = samp->minFilter;
@@ -47,7 +47,7 @@ _AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConf
     AfxEntry("cnt=%u,samp=%p,config=%p", cnt, samp, config);
     AfxAssert(cnt);
     AfxAssert(samp);
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (AfxAcquireObjects(&dctx->samplers, cnt, (afxHandle*)samp, (void*[]) { (void*)config }))
         AfxThrowError();

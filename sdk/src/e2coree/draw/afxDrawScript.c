@@ -23,7 +23,7 @@
 _AFX afxError AfxResetDrawScript(afxDrawScript dscr, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     (void)freeRes;
 
     if (dscr->state == afxDrawScriptState_PENDING) AfxThrowError();
@@ -41,7 +41,7 @@ _AFX afxError AfxResetDrawScript(afxDrawScript dscr, afxBool freeRes)
 _AFX afxError AfxEndDrawScript(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
     if (dscr->state != afxDrawScriptState_RECORDING) AfxThrowError();
     else
@@ -58,7 +58,7 @@ _AFX afxError AfxEndDrawScript(afxDrawScript dscr)
 _AFX afxError AfxBeginDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
     if (!(dscr->state == afxDrawScriptState_INITIAL || dscr->state == afxDrawScriptState_EXECUTABLE)) AfxThrowError();
     else
@@ -75,42 +75,42 @@ _AFX afxError AfxBeginDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
 AFX afxDrawScriptState AfxGetDrawScriptState(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     return dscr->state;
 }
 
 AFX afxNat AfxGetDrawScriptPort(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     return dscr->portIdx;
 }
 
 _AFX afxDrawInput AfxGetDrawScriptInput(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     afxDrawInput din = dscr->din;
-    //AfxAssertType(din, AFX_FCC_DIN);
+    //AfxAssertType(din, afxFcc_DIN);
     return din;
 }
 
 _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
     afxDrawContext dctx;
 
     if (!(AfxGetDrawInputConnection(din, &dctx))) AfxThrowError();
     else
     {
-        //AfxAssertType(dctxD, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, afxFcc_DCTX);
         afxNat cnt2 = 0;
 
         for (afxNat i = 0; i < din->scripts.cnt; i++)
         {
             afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&din->scripts, i);
-            AfxAssertObjects(1, &dscr2, AFX_FCC_DSCR);
+            AfxAssertObjects(1, &dscr2, afxFcc_DSCR);
 
             if (afxDrawScriptState_INVALID == AfxGetDrawScriptState(dscr2))
             {

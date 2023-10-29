@@ -78,10 +78,10 @@ _SGL afxError _SglSurfDtor(afxSurface surf)
 {
     AfxEntry("surf=%p", surf);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, AFX_FCC_SURF);
+    AfxAssertObjects(1, &surf, afxFcc_SURF);
     afxDrawContext dctx = AfxGetObjectProvider(surf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     while (1)
     {
@@ -93,7 +93,7 @@ _SGL afxError _SglSurfDtor(afxSurface surf)
             // AfxPopLinkage(&canv->queue); // we can't do it here. We need wait for draw context to liberate it.
 
             afxDrawOutput dout = (afxDrawOutput)AfxGetLinker(&surf->base.swapchain);
-            AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+            AfxAssertObjects(1, &dout, afxFcc_DOUT);
             //_SglDoutProcess(dout); // process until draw output ends its works and unlock this canvas.
             //AfxYieldThreading();
         }
@@ -115,7 +115,7 @@ _SGL afxError _SglSurfCtor(afxSurface surf, afxCookie const* cookie)
 {
     AfxEntry("surf=%p", surf);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, AFX_FCC_SURF);
+    AfxAssertObjects(1, &surf, afxFcc_SURF);
 
     afxDrawContext dctx = AfxGetObjectProvider(surf);
 
@@ -136,7 +136,7 @@ _SGL afxError _SglSurfCtor(afxSurface surf, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglSurfClsConfig =
 {
-    .fcc = AFX_FCC_SURF,
+    .fcc = afxFcc_SURF,
     .name = "Surface",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxSurface)),

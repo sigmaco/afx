@@ -137,7 +137,7 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == AFX_FCC_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == afxFcc_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[AFXERR_INVALID]),0))
 
 #   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))));
 #   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AfxStr((obj_))))));

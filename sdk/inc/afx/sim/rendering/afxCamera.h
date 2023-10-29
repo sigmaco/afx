@@ -102,7 +102,7 @@ AFX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far);
 // After initialization, you need to set the camera's aspect ratios. This must be done any time the display device, resolution, 
 // or window size changes (or, to make things simple,  you can simply set it every frame, since it is not terribly expensive):
 
-AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physicalAspectRatio, afxReal const screenExtent[2], afxReal const windowExtent[2]);
+AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxReal const screenExtent[2], afxReal const windowExtent[2]);
 
 // Note that the choice of physical aspect ratio is important in making sure your game looks proper on all display devices.
 // For consoles especially, it is important to give the user a choice of aspect ratios, since their home theatre setup may not always be NTSC.
@@ -147,7 +147,7 @@ AFX void    AfxAddCameraRoll(afxCamera cam, afxReal roll);
 
 // For picking 3D objects with the mouse, it's necessary to be able to take a point on the screen and figure out where it would be in world-space. Qwadro can do this for you automatically like this:
 
-AFX void AfxCameraResolveScreenToWorldCoord(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4]);
+AFX void AfxCameraFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4]);
 
 // Since ray-based object picking is the most standard use of this function, Qwadro also provides a more hands-free version of the call that gives you all the picking ray information in one step:
 
@@ -165,7 +165,7 @@ AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal cons
 // In addition to going from window space to world space, the camera routines also allow you to go in the other direction.
 // For example, if you want to project a single point from world space to window space, you can use WorldToWindowSpace like this:
 
-AFX void AfxCameraResolveWorldToScreenCoord(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3]);
+AFX void AfxCameraFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3]);
 
 // Obviously, this routine is not optimized for large workloads, so it should only be used for occasional projections.
 
@@ -199,7 +199,7 @@ AFX void    AfxRecomputeCameraMatrices(afxCamera cam);
 AFX void    AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4]);
 AFX void    AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4]);
 
-AFX void    AfxGetCameraViewpoint(afxCamera cam, afxReal origin[4]);
+AFX void    AfxGetCameraPosition(afxCamera cam, afxReal origin[4]);
 AFX void    AfxGetCameraLeft(afxCamera cam, afxReal left[3]);
 AFX void    AfxGetCameraRight(afxCamera cam, afxReal right[3]);
 AFX void    AfxGetCameraUp(afxCamera cam, afxReal up[3]);

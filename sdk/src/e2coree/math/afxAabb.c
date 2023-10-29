@@ -24,7 +24,6 @@ _AFXINL void AfxResetAabb(afxAabb *aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
-    aabb->vol.type = AFX_VOL_AABB;
     AfxResetV4d(aabb->sup);
     AfxResetV4d(aabb->inf);
 }
@@ -153,13 +152,18 @@ _AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
     AfxAssert(m);
     AfxAssert(to);
     AfxResetAabb(to);
-    AfxTransformV4d(to->sup, aabb->sup, m);
-    AfxTransformV4d(to->inf, aabb->inf, m);
+    AfxTransformV4d(to->sup, m, aabb->sup);
+    AfxTransformV4d(to->inf, m, aabb->inf);
 }
 
 _AFXINL void AfxTransformBoundingBox(afxAabb* aabb, afxAabb const* in, afxReal const affine[3], afxReal linear[3][3])
 {
     // Should be compatible with void TransformBoundingBox(const float *Affine3, const float *Linear3x3, float *OBBMin, float *OBBMax)
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(aabb);
+    AfxAssert(in);
+    AfxAssert(affine);
+    AfxAssert(linear);
 
     afxV3d max, min, pos;
     AfxFillV3d(max, -3.4028235e38);
@@ -174,7 +178,7 @@ _AFXINL void AfxTransformBoundingBox(afxAabb* aabb, afxAabb const* in, afxReal c
                 afxV3d tmp;
                 AfxSetV3d(tmp, x ? aabb->sup[0] : aabb->inf[0], y ? aabb->sup[1] : aabb->inf[1], z ? aabb->sup[2] : aabb->inf[2]);
 
-                AfxTransformV3d(pos, tmp, linear);
+                AfxTransformV3d(pos, linear, tmp);
 
                 AfxMiniV3d(min, min, pos);
                 AfxMaxiV3d(max, max, pos);

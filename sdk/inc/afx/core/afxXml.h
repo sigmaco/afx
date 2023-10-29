@@ -37,7 +37,7 @@ AFX_DEFINE_STRUCT(afxXmlNode)
 
 AFX_DEFINE_STRUCT(afxXml)
 {
-    _AFX_DBG_FCC; // AFX_FCC_XML
+    _AFX_DBG_FCC; // afxFcc_XML
     struct
     {
         afxByte*    buffer;

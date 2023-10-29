@@ -19,14 +19,12 @@
 
 #include "afx/math/afxMathDefs.h"
 #include "afxSphere.h"
-#include "afxVolume.h"
 
 /// An axis-aligned bounding box, or AABB for short, is a box aligned with coordinate axes and fully enclosing some object.
 /// Because the box is never rotated with respect to the axes, it canv be defined by supremum and infemum points.
 
 AFX_DEFINE_STRUCT(afxAabb)
 {
-    afxVolume   vol;
     afxV4d      sup, inf;
 };
 

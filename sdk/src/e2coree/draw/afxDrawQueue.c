@@ -27,11 +27,11 @@
 _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
 
     for (afxNat i = 0; i < subm->scriptCnt; ++i)
     {
-        AfxAssertObject(subm->scripts[i], AFX_FCC_DSCR);
+        AfxAssertObject(subm->scripts[i], afxFcc_DSCR);
 
         if (subm->scripts[i]->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
             subm->scripts[i]->state = afxDrawScriptState_EXECUTABLE;
@@ -41,7 +41,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
 
     for (afxNat i = 0; i < subm->outputCnt; ++i)
     {
-        AfxAssertObject(subm->outputs[i], AFX_FCC_DOUT);
+        AfxAssertObject(subm->outputs[i], afxFcc_DOUT);
         AfxAssertRange(AfxGetDrawOutputCapacity(subm->outputs[i]), subm->outputBufIdx[i], 1);
         afxSurface surf = AfxGetDrawOutputBuffer(subm->outputs[i], subm->outputBufIdx[i]);
 
@@ -58,7 +58,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
 _AFX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat submNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     AfxAssertRange(AfxGetDrawQueueSubmissionCount(dque), submNo, 1);
     afxLinkage *lnk = AfxFindFirstLinkage(&dque->ordinalSubmChn, submNo);
     AfxAssert(lnk);
@@ -68,14 +68,14 @@ _AFX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat subm
 _AFX afxNat AfxGetDrawQueueSubmissionCount(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     return AfxGetChainLength(&dque->ordinalSubmChn);
 }
 
 _AFX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first, afxNat cnt, afxDrawSubmission *subm[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     AfxAssertRange(AfxGetDrawQueueSubmissionCount(dque), first, cnt);
     AfxAssert(subm);
     afxResult hitcnt = 0;
@@ -98,8 +98,8 @@ _AFX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first,
 _AFX afxError AfxRequestDrawQueueSubmission(afxDrawQueue dque, afxDrawQueue dque, afxDrawSubmissionType type, afxTime timeout, afxNat *submNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     AfxAssertRange(AFX_DRAW_SUBMISSION_TOTAL, type, 1);
     AfxAssert(submNo);
     (void)timeout;
@@ -178,7 +178,7 @@ _AFX afxError AfxDiscardDrawQueueSubmissions(afxDrawQueue dque, afxNat first, af
 _AFX afxError AfxDiscardAllDrawQueueSubmissions(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
 
     //AfxEnterSlockExclusive(&dque->submSlock);
 
@@ -193,7 +193,7 @@ _AFX afxError AfxDiscardAllDrawQueueSubmissions(afxDrawQueue dque)
 _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     AfxAssert(spec);
 
     //AfxEnterSlockExclusive(&dque->submSlock);
@@ -225,7 +225,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
         for (afxNat i = 0; i < spec->scriptCnt; ++i)
         {
-            AfxAssertObject(spec->scripts[i], AFX_FCC_DSCR);
+            AfxAssertObject(spec->scripts[i], afxFcc_DSCR);
 
             if (AfxGetDrawScriptState(spec->scripts[i]) != afxDrawScriptState_EXECUTABLE)
             {
@@ -264,7 +264,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
         for (afxNat i = 0; i < spec->outputCnt; ++i)
         {
-            AfxAssertObject(spec->outputs[i], AFX_FCC_DOUT);
+            AfxAssertObject(spec->outputs[i], afxFcc_DOUT);
             AfxAssertRange(AfxGetDrawOutputCapacity(spec->outputs[i]), spec->outputBufIdx[i], 1);
             afxSurface surf = AfxGetDrawOutputBuffer(spec->outputs[i], spec->outputBufIdx[i]);
 
@@ -301,10 +301,10 @@ _AFX afxError AfxWaitForDrawQueueIdle(afxDrawQueue dque)
     afxError err = AFX_ERR_NONE;
 
     struct _afxDqueD *dque;
-    AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
-    AfxAssertType(&TheDrawSystem, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dque, afxFcc_DQUE);
+    AfxAssertType(&TheDrawSystem, afxFcc_DSYS);
     AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
-    AfxAssertType(dque, AFX_FCC_DQUE);
+    AfxAssertType(dque, afxFcc_DQUE);
 
     return dque->vmt->wait(dque);
 }
@@ -313,9 +313,9 @@ _AFX afxError AfxWaitForDrawQueueIdle(afxDrawQueue dque)
 _AFX afxDrawDevice AfxGetDrawQueueDriver(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, AFX_FCC_DQUE);
+    AfxAssertObject(dque, afxFcc_DQUE);
     //afxDrawDevice ddev = AfxGetObjectProvider(&dque->obj);
-    //AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    //AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return 0;// ddev;
 }
 #endif
@@ -327,10 +327,10 @@ _AFX void _AfxObjDeallocDque(afxDrawQueue dque)
     afxError err = AFX_ERR_NONE;
 
     struct _afxDqueD *dque;
-    AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
-    AfxAssertType(&TheDrawSystem, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dque, afxFcc_DQUE);
+    AfxAssertType(&TheDrawSystem, afxFcc_DSYS);
     AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
-    AfxAssertType(dque, AFX_FCC_DQUE);
+    AfxAssertType(dque, afxFcc_DQUE);
 
     _AfxDqueDtor(dque, dque);
     AfxDeallocateResidentObjects(&TheDrawSystem.queues, 1, &dque);
@@ -339,7 +339,7 @@ _AFX void _AfxObjDeallocDque(afxDrawQueue dque)
 _AFX void AfxReleaseDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue dque[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(cnt, dque, AFX_FCC_DQUE);
+    AfxAssertObjects(cnt, dque, afxFcc_DQUE);
     AfxReleaseObjects(cnt, dque, _AfxObjDeallocDque);
 }
 #endif
@@ -349,7 +349,7 @@ _AFX afxError AfxAcquireDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue
 {
     AfxEntry("cnt=%u,dque=%p,spec=%p,", cnt, dque, spec);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (AfxAcquireObjects(&dctx->queues, cnt, (afxHandle*)dque, (void*[]) { (void*)spec }))
         AfxThrowError();

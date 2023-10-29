@@ -98,7 +98,7 @@ _AFXINL afxError AfxIndexBufferBlueprintPushRegion(afxIndexBufferBlueprint *blue
 _AFX void AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat32* baseOffset, afxNat32* idxCnt, afxNat32* idxSiz)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssert(rgnIdx < ibuf->regionCnt);
     
     if (baseOffset)
@@ -114,11 +114,11 @@ _AFX void AfxIndexBufferDescribeRegion(afxIndexBuffer ibuf, afxNat rgnIdx, afxNa
 _AFX afxError AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, void(*f)(void const *vtx, void*data), void *data)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
     AfxAssertRange(ibuf->regions[rgnIdx].idxCnt, baseIdx, idxCnt);
     
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
 
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     AfxAssertRange(vbuf->cap, baseVtx, 1);
@@ -147,7 +147,7 @@ _AFX afxError AfxIndexBufferForEachVertex(afxIndexBuffer ibuf, afxNat rgnIdx, af
 _AFX afxError AfxIndexBufferOptimize(afxIndexBuffer ibuf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxError("Not implemented");
     return err;
 }
@@ -155,7 +155,7 @@ _AFX afxError AfxIndexBufferOptimize(afxIndexBuffer ibuf)
 _AFX afxNat AfxIndexBufferGetStride(afxIndexBuffer ibuf, afxNat rgnIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssert(ibuf->regionCnt > rgnIdx);
     return ibuf->regions[rgnIdx].idxSiz;
 }
@@ -163,7 +163,7 @@ _AFX afxNat AfxIndexBufferGetStride(afxIndexBuffer ibuf, afxNat rgnIdx)
 _AFX afxNat AfxIndexBufferGetCap(afxIndexBuffer ibuf, afxNat rgnIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssert(ibuf->regionCnt > rgnIdx);
     return ibuf->regions[rgnIdx].idxCnt;
 }
@@ -171,7 +171,7 @@ _AFX afxNat AfxIndexBufferGetCap(afxIndexBuffer ibuf, afxNat rgnIdx)
 _AFX afxNat AfxIndexBufferGetOffset(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssert(ibuf->regionCnt > rgnIdx);
     AfxAssert(ibuf->regions[rgnIdx].idxCnt > baseIdx);
     return ibuf->regions[rgnIdx].baseOffset + (baseIdx * ibuf->regions[rgnIdx].idxSiz);
@@ -181,7 +181,7 @@ _AFX afxNat AfxIndexBufferGetOffset(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat b
 _AFX void const* AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssert(ibuf->regionCnt > rgnIdx);
     AfxAssert(ibuf->regions[rgnIdx].idxCnt > baseIdx);
     return AfxBufferGetData(&ibuf->buf, ibuf->regions[rgnIdx].baseOffset + (baseIdx * ibuf->regions[rgnIdx].idxSiz));
@@ -191,7 +191,7 @@ _AFX void const* AfxIndexBufferGetData(afxIndexBuffer ibuf, afxNat rgnIdx, afxNa
 _AFX afxError AfxIndexBufferDump(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, void *dst, afxNat dstIdxStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
     AfxAssert(dst);
 
@@ -210,7 +210,7 @@ _AFX afxError AfxIndexBufferDump(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat base
 _AFX afxError AfxIndexBufferUpdate(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat baseIdx, afxNat idxCnt, void const *src, afxNat srcIdxStride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxAssertRange(ibuf->regionCnt, rgnIdx, 1);
     AfxAssert(src);
 
@@ -235,7 +235,7 @@ _AFX afxError AfxBuildIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBuff
     AfxAssert(blueprint);
     AfxEntry("cnt=%u,stride=%p", cnt, blueprint);
 
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (AfxAcquireObjects(&dctx->indices, cnt, (afxHandle*)ibuf, (void*[]) { (void*)blueprint }))
         AfxThrowError();

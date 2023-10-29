@@ -52,7 +52,6 @@ typedef enum afxCubeCorner
 
 AFX_DEFINE_STRUCT(afxFrustum)
 {
-    afxVolume   vol;
     afxV4d      origin;
     afxPlane    planes[afxCubeFace_TOTAL];
     afxV4d      corners[afxCubeCorner_TOTAL];  // 0~3 near, 4~7 far
@@ -66,7 +65,9 @@ AFXINL afxBool  AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb)
 
 AFXINL afxBool  AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const* other);
 
-AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4]);
+// frustrum and matrix must be in same space
+AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxReal const pv[4][4]);
+AFXINL void     AfxRecomputeFrustum2(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4]);
 
 AFXINL void     AfxAabbEncapsulateFrustum(afxAabb* aabb, afxFrustum const* f);
 
