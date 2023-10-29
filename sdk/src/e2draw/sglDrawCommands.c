@@ -21,7 +21,7 @@
 _SGL void _SglEncodeCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _afxDscrCmd *cmd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     cmd->id = id;
     cmd->siz = siz;
     AfxPushLinkage(&cmd->script, &dscr->commands);
@@ -96,7 +96,7 @@ _SGL void _SglEncodeCmdBindVertexSources(afxDrawScript dscr, afxNat first, afxNa
     {
         if ((cmd->buf[i] = buf ? buf[i] : NIL))
         {
-            AfxAssertObjects(1, &cmd->buf[i], AFX_FCC_BUF);
+            AfxAssertObjects(1, &cmd->buf[i], afxFcc_BUF);
         }
 
         cmd->offset[i] = offset ? offset[i] : 0;
@@ -215,7 +215,7 @@ _SGL void _SglEncodeCmdBindIndexSource(afxDrawScript dscr, afxBuffer buf, afxNat
 
     if ((cmd->buf = buf))
     {
-        AfxAssertObjects(1, &cmd->buf, AFX_FCC_BUF);
+        AfxAssertObjects(1, &cmd->buf, afxFcc_BUF);
         AfxAssertRange(AfxGetBufferSize(cmd->buf), cmd->offset, 1);
     }
 

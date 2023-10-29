@@ -524,8 +524,8 @@ _AFXINL void AfxGetAssimilatedOrientation(afxQuat q, afxQuat const in, afxReal c
 
     afxM3d rm, tmp;
     AfxM3dFromQuat(rm, q);
-    AfxMultiplyM3d(tmp, linear, rm);
-    AfxMultiplyM3d(rm, tmp, invLinear);
+    AfxMultiplyM3dTransposed(tmp, linear, rm);
+    AfxMultiplyM3dTransposed(rm, tmp, invLinear);
     AfxQuatFromM3d(q, rm);
 
     AfxScaleQuat(q, q, len);

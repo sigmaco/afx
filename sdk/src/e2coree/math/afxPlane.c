@@ -26,7 +26,7 @@ _AFXINL void AfxCopyPlane(afxPlane *p, afxPlane const *in)
     p->offset = in->offset;
 }
 
-_AFXINL void AfxSetPlane(afxPlane* p, afxReal const normal[3], afxReal dist)
+_AFXINL void AfxResetPlane(afxPlane* p, afxReal const normal[3], afxReal dist)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -52,7 +52,7 @@ _AFXINL void AfxPlaneFromTriangle(afxPlane* p, afxReal const a[3], afxReal const
     p->offset = -AfxDotV3d(p->normal, a);
 }
 
-_AFXINL afxReal* AfxGetPlaneOrigin(afxPlane* p)
+_AFXINL afxReal* AfxGetPlaneNormal(afxPlane* p)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -83,4 +83,70 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxReal 
     afxV3d t;
     AfxSubV3d(t, a, b);
     return (AfxFindPlaneDistanceToPoint(p, a)) / AfxDotV3d(p->normal, t);
+}
+
+_AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const* p, afxAabb const* aabb)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(p);
+    AfxAssert(aabb);
+
+    afxReal minD;
+    afxReal maxD;
+
+    if (p->normal[0] > 0.0f)
+    {
+        minD = p->normal[0] * aabb->inf[0];
+        maxD = p->normal[0] * aabb->sup[0];
+    }
+    else
+    {
+        minD = p->normal[0] * aabb->sup[0];
+        maxD = p->normal[0] * aabb->inf[0];
+    }
+
+    if (p->normal[1] > 0.0f)
+    {
+        minD += p->normal[1] * aabb->inf[1];
+        maxD += p->normal[1] * aabb->sup[1];
+    }
+    else
+    {
+        minD += p->normal[1] * aabb->sup[1];;
+        maxD += p->normal[1] * aabb->inf[1];
+    }
+
+    if (p->normal[2] > 0.0f)
+    {
+        minD += p->normal[2] * aabb->inf[2];
+        maxD += p->normal[2] * aabb->sup[2];
+    }
+    else
+    {
+        minD += p->normal[2] * aabb->sup[2];
+        maxD += p->normal[2] * aabb->inf[2];
+    }
+
+    // What side of the plane
+
+    if (minD >= -p->offset)
+        return +1;
+
+    if (maxD <= -p->offset)
+        return -1;
+
+    //Intersection
+    return 0;
+}
+
+_AFXINL afxBool AfxTestPlaneAgainstSphere(afxPlane const* p, afxSphere const* s)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(p);
+    AfxAssert(s);
+
+    if (AfxDotV3d(s->origin, p->normal) + p->offset <= -s->radius)
+        return FALSE;
+
+    return TRUE;
 }

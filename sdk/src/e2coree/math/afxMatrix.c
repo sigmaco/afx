@@ -500,11 +500,12 @@ _AFXINL void AfxM4dFromM2d(afxReal m[4][4], afxReal const in[2][2])
     m[3][3] = AfxScalar(1);
 }
 
-_AFXINL void AfxM4dFromM3d(afxReal m[4][4], afxReal const in[3][3])
+_AFXINL void AfxM4dFromM3d(afxReal m[4][4], afxReal const in[3][3], afxReal const translation[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(in);
+    AfxAssert(translation);
     AfxAssertDiff(m, in);
 
     m[0][0] = in[0][0];
@@ -522,10 +523,10 @@ _AFXINL void AfxM4dFromM3d(afxReal m[4][4], afxReal const in[3][3])
     m[2][2] = in[2][2];
     m[2][3] = AfxScalar(0);
 
-    m[3][0] = AfxScalar(0);
-    m[3][1] = AfxScalar(0);
-    m[3][2] = AfxScalar(0);
-    m[3][3] = AfxScalar(1);
+    m[3][0] = translation[0];
+    m[3][1] = translation[1];
+    m[3][2] = translation[2];
+    m[3][3] = translation[3];
 }
 
 // Swap
@@ -684,11 +685,12 @@ _AFXINL void AfxM4dFromAffineTransposed(afxReal m[4][4], afxReal const in[4][4])
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxM4dFromM3dTransposed(afxReal m[4][4], afxReal const in[3][3])
+_AFXINL void AfxM4dFromM3dTransposed(afxReal m[4][4], afxReal const in[3][3], afxReal const translation[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
+    AfxAssert(translation);
 
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
@@ -705,10 +707,10 @@ _AFXINL void AfxM4dFromM3dTransposed(afxReal m[4][4], afxReal const in[3][3])
     m[2][2] = in[2][2];
     m[2][3] = 0.f;
 
-    m[3][0] = 0.f;
-    m[3][1] = 0.f;
-    m[3][2] = 0.f;
-    m[3][3] = 1.f;
+    m[3][0] = translation[0];
+    m[3][1] = translation[1];
+    m[3][2] = translation[2];
+    m[3][3] = translation[3];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -800,11 +802,11 @@ _AFXINL void AfxMultiplyM2d(afxReal m[2][2], afxReal const a[2][2], afxReal cons
     // Aninhamento das columnas de B
     afxV2d const x = { b[0][0], b[1][0] };
     afxV2d const y = { b[0][1], b[1][1] };
-    // Row aX contra cada columna da B
+    // Cada row de A contra a columna bX
     m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]);
-    // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]);
+    m[0][1] = (a[1][0] * x[0]) + (a[1][1] * x[1]);
+    // Cada row de A contra a columna bY
+    m[1][0] = (a[0][0] * y[0]) + (a[0][1] * y[1]);
     m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]);
 }
 
@@ -814,52 +816,24 @@ _AFXINL void AfxMultiplyM2dTransposed(afxReal m[2][2], afxReal const a[2][2], af
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
-    AfxAssert(a);
     AfxAssert(b);
-    AfxAssert(a != b);
-    AfxAssert(b != m);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
     // Aninhamento das columnas de B
-    afxV2d const x = { b[0][0], b[1][0] };
-    afxV2d const y = { b[0][1], b[1][1] };
-    // Cada row de A contra a columna bX
-    m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]);
-    m[0][1] = (a[1][0] * x[0]) + (a[1][1] * x[1]);
-    // Cada row de A contra a columna bY
-    m[1][0] = (a[0][0] * y[0]) + (a[0][1] * y[1]);
-    m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]);
+    afxV2d const x = { a[0][0], a[1][0] };
+    afxV2d const y = { a[0][1], a[1][1] };
+    // Row aX contra cada columna da B
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]);
+    // Row aY contra cada columna da B
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]);
 }
 
 _AFXINL void AfxMultiplyM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3])
 {
     // Multiplica todo row de A por cada columna de B
-
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(a != b);
-    AfxAssert(b != m);
-    // Aninhamento das columnas de B
-    afxV3d const x = { b[0][0], b[1][0], b[2][0] };
-    afxV3d const y = { b[0][1], b[1][1], b[2][1] };
-    afxV3d const z = { b[0][2], b[1][2], b[2][2] };
-    // Row aX contra cada columna da B
-    m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]) + (a[0][2] * x[2]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]);
-    m[0][2] = (a[0][0] * z[0]) + (a[0][1] * z[1]) + (a[0][2] * z[2]);
-    // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]);
-    m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]) + (a[1][2] * y[2]);
-    m[1][2] = (a[1][0] * z[0]) + (a[1][1] * z[1]) + (a[1][2] * z[2]);
-    // Row aZ contra cada columna da B
-    m[2][0] = (a[2][0] * x[0]) + (a[2][1] * x[1]) + (a[2][2] * x[2]);
-    m[2][1] = (a[2][0] * y[0]) + (a[2][1] * y[1]) + (a[2][2] * y[2]);
-    m[2][2] = (a[2][0] * z[0]) + (a[2][1] * z[1]) + (a[2][2] * z[2]);
-}
-
-_AFXINL void AfxMultiplyM3dTransposed(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3])
-{
-    // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -885,46 +859,37 @@ _AFXINL void AfxMultiplyM3dTransposed(afxReal m[3][3], afxReal const a[3][3], af
     m[2][2] = (a[2][0] * z[0]) + (a[2][1] * z[1]) + (a[2][2] * z[2]);
 }
 
-_AFXINL void AfxMultiplyM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyM3dTransposed(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3])
 {
-    // Multiplica todo row de A por cada columna de B
+    // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
-    AfxAssert(a);
     AfxAssert(b);
-    AfxAssert(a != b);
-    AfxAssert(b != m);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
     // Aninhamento das columnas de B
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], b[3][2] };
-    afxV4d const w = { b[0][3], b[1][3], b[2][3], b[3][3] };
+    afxV3d const x = { a[0][0], a[1][0], a[2][0] };
+    afxV3d const y = { a[0][1], a[1][1], a[2][1] };
+    afxV3d const z = { a[0][2], a[1][2], a[2][2] };
     // Row aX contra cada columna da B
-    m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]) + (a[0][2] * x[2]) + (a[0][3] * x[3]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]) + (a[0][3] * y[3]);
-    m[0][2] = (a[0][0] * z[0]) + (a[0][1] * z[1]) + (a[0][2] * z[2]) + (a[0][3] * z[3]);
-    m[0][3] = (a[0][0] * w[0]) + (a[0][1] * w[1]) + (a[0][2] * w[2]) + (a[0][3] * w[3]);
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]) + (b[0][2] * x[2]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]) + (b[0][2] * y[2]);
+    m[0][2] = (b[0][0] * z[0]) + (b[0][1] * z[1]) + (b[0][2] * z[2]);
     // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]) + (a[1][3] * x[3]);
-    m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]) + (a[1][2] * y[2]) + (a[1][3] * y[3]);
-    m[1][2] = (a[1][0] * z[0]) + (a[1][1] * z[1]) + (a[1][2] * z[2]) + (a[1][3] * z[3]);
-    m[1][3] = (a[1][0] * w[0]) + (a[1][1] * w[1]) + (a[1][2] * w[2]) + (a[1][3] * w[3]);
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]) + (b[1][2] * x[2]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]) + (b[1][2] * y[2]);
+    m[1][2] = (b[1][0] * z[0]) + (b[1][1] * z[1]) + (b[1][2] * z[2]);
     // Row aZ contra cada columna da B
-    m[2][0] = (a[2][0] * x[0]) + (a[2][1] * x[1]) + (a[2][2] * x[2]) + (a[2][3] * x[3]);
-    m[2][1] = (a[2][0] * y[0]) + (a[2][1] * y[1]) + (a[2][2] * y[2]) + (a[2][3] * y[3]);
-    m[2][2] = (a[2][0] * z[0]) + (a[2][1] * z[1]) + (a[2][2] * z[2]) + (a[2][3] * z[3]);
-    m[2][3] = (a[2][0] * w[0]) + (a[2][1] * w[1]) + (a[2][2] * w[2]) + (a[2][3] * w[3]);
-    // Row aW contra cada columna da B
-    m[3][0] = (a[3][0] * x[0]) + (a[3][1] * x[1]) + (a[3][2] * x[2]) + (a[3][3] * x[3]);
-    m[3][1] = (a[3][0] * y[0]) + (a[3][1] * y[1]) + (a[3][2] * y[2]) + (a[3][3] * y[3]);
-    m[3][2] = (a[3][0] * z[0]) + (a[3][1] * z[1]) + (a[3][2] * z[2]) + (a[3][3] * z[3]);
-    m[3][3] = (a[3][0] * w[0]) + (a[3][1] * w[1]) + (a[3][2] * w[2]) + (a[3][3] * w[3]);
+    m[2][0] = (b[2][0] * x[0]) + (b[2][1] * x[1]) + (b[2][2] * x[2]);
+    m[2][1] = (b[2][0] * y[0]) + (b[2][1] * y[1]) + (b[2][2] * y[2]);
+    m[2][2] = (b[2][0] * z[0]) + (b[2][1] * z[1]) + (b[2][2] * z[2]);
 }
 
-_AFXINL void AfxMultiplyM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
-    // Computes the transpose of the product of two matrices.
+    // Multiplica todo row de A por cada columna de B
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -959,6 +924,43 @@ _AFXINL void AfxMultiplyM4dTransposed(afxReal m[4][4], afxReal const a[4][4], af
     m[3][3] = (a[3][0] * w[0]) + (a[3][1] * w[1]) + (a[3][2] * w[2]) + (a[3][3] * w[3]);
 }
 
+_AFXINL void AfxMultiplyM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+{
+    // Computes the transpose of the product of two matrices.
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(b);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
+    // Aninhamento das columnas de B
+    afxV4d const x = { a[0][0], a[1][0], a[2][0], a[3][0] };
+    afxV4d const y = { a[0][1], a[1][1], a[2][1], a[3][1] };
+    afxV4d const z = { a[0][2], a[1][2], a[2][2], a[3][2] };
+    afxV4d const w = { a[0][3], a[1][3], a[2][3], a[3][3] };
+    // Row aX contra cada columna da B
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]) + (b[0][2] * x[2]) + (b[0][3] * x[3]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]) + (b[0][2] * y[2]) + (b[0][3] * y[3]);
+    m[0][2] = (b[0][0] * z[0]) + (b[0][1] * z[1]) + (b[0][2] * z[2]) + (b[0][3] * z[3]);
+    m[0][3] = (b[0][0] * w[0]) + (b[0][1] * w[1]) + (b[0][2] * w[2]) + (b[0][3] * w[3]);
+    // Row aY contra cada columna da B
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]) + (b[1][2] * x[2]) + (b[1][3] * x[3]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]) + (b[1][2] * y[2]) + (b[1][3] * y[3]);
+    m[1][2] = (b[1][0] * z[0]) + (b[1][1] * z[1]) + (b[1][2] * z[2]) + (b[1][3] * z[3]);
+    m[1][3] = (b[1][0] * w[0]) + (b[1][1] * w[1]) + (b[1][2] * w[2]) + (b[1][3] * w[3]);
+    // Row aZ contra cada columna da B
+    m[2][0] = (b[2][0] * x[0]) + (b[2][1] * x[1]) + (b[2][2] * x[2]) + (b[2][3] * x[3]);
+    m[2][1] = (b[2][0] * y[0]) + (b[2][1] * y[1]) + (b[2][2] * y[2]) + (b[2][3] * y[3]);
+    m[2][2] = (b[2][0] * z[0]) + (b[2][1] * z[1]) + (b[2][2] * z[2]) + (b[2][3] * z[3]);
+    m[2][3] = (b[2][0] * w[0]) + (b[2][1] * w[1]) + (b[2][2] * w[2]) + (b[2][3] * w[3]);
+    // Row aW contra cada columna da B
+    m[3][0] = (b[3][0] * x[0]) + (b[3][1] * x[1]) + (b[3][2] * x[2]) + (b[3][3] * x[3]);
+    m[3][1] = (b[3][0] * y[0]) + (b[3][1] * y[1]) + (b[3][2] * y[2]) + (b[3][3] * y[3]);
+    m[3][2] = (b[3][0] * z[0]) + (b[3][1] * z[1]) + (b[3][2] * z[2]) + (b[3][3] * z[3]);
+    m[3][3] = (b[3][0] * w[0]) + (b[3][1] * w[1]) + (b[3][2] * w[2]) + (b[3][3] * w[3]);
+}
+
 // MultiplyPlanar
 
 _AFXINL void AfxMultiplyPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3])
@@ -977,15 +979,43 @@ _AFXINL void AfxMultiplyPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxRea
     afxV3d const z = { b[0][2], b[1][2], 1.f };
     // Row aX contra cada columna da B
     m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]) + (a[0][2] * x[2]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]);
+    m[0][1] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]);
     m[0][2] = 0.f;
     // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]);
+    m[1][0] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]);
     m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]) + (a[1][2] * y[2]);
     m[1][2] = 0.f;
     // Row aZ contra cada columna da B
-    m[2][0] = (a[2][0] * x[0]) + (a[2][1] * x[1]) + (a[2][2] * x[2]);
-    m[2][1] = (a[2][0] * y[0]) + (a[2][1] * y[1]) + (a[2][2] * y[2]);
+    m[2][0] = (a[0][0] * z[0]) + (a[0][1] * z[1]) + (a[0][2] * z[2]);
+    m[2][1] = (a[1][0] * z[0]) + (a[1][1] * z[1]) + (a[1][2] * z[2]);
+    m[2][2] = 1.f;
+}
+
+_AFXINL void AfxMultiplyPlanarM3dTransposed(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3])
+{
+    // Multiplica todo row de A por cada columna de B
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(b);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
+    // Aninhamento das columnas de B
+    afxV3d const x = { a[0][0], a[1][0], 0.f };
+    afxV3d const y = { a[0][1], a[1][1], 0.f };
+    afxV3d const z = { a[0][2], a[1][2], 1.f };
+    // Row aX contra cada columna da B
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]) + (b[0][2] * x[2]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]) + (b[0][2] * y[2]);
+    m[0][2] = 0.f;
+    // Row aY contra cada columna da B
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]) + (b[1][2] * x[2]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]) + (b[1][2] * y[2]);
+    m[1][2] = 0.f;
+    // Row aZ contra cada columna da B
+    m[2][0] = (b[2][0] * x[0]) + (b[2][1] * x[1]) + (b[2][2] * x[2]);
+    m[2][1] = (b[2][0] * y[0]) + (b[2][1] * y[1]) + (b[2][2] * y[2]);
     m[2][2] = 1.f;
 }
 
@@ -994,42 +1024,6 @@ _AFXINL void AfxMultiplyPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxRea
 _AFXINL void AfxMultiplyLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     // Multiplica todo row de A por cada columna de B
-
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(a != b);
-    AfxAssert(b != m);
-    // Aninhamento das columnas de B
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], 0.f };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], 0.f };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], 0.f };
-    // Row aX contra cada columna da B
-    m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]) + (a[0][2] * x[2]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]);
-    m[0][2] = (a[0][0] * z[0]) + (a[0][1] * z[1]) + (a[0][2] * z[2]);
-    m[0][3] = 0.f;
-    // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]);
-    m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]) + (a[1][2] * y[2]);
-    m[1][2] = (a[1][0] * z[0]) + (a[1][1] * z[1]) + (a[1][2] * z[2]);
-    m[1][3] = 0.f;
-    // Row aZ contra cada columna da B
-    m[2][0] = (a[2][0] * x[0]) + (a[2][1] * x[1]) + (a[2][2] * x[2]);
-    m[2][1] = (a[2][0] * y[0]) + (a[2][1] * y[1]) + (a[2][2] * y[2]);
-    m[2][2] = (a[2][0] * z[0]) + (a[2][1] * z[1]) + (a[2][2] * z[2]);
-    m[2][3] = 0.f;
-    // Row aW contra cada columna da B
-    m[3][0] = 0.f;
-    m[3][1] = 0.f;
-    m[3][2] = 0.f;
-    m[3][3] = 1.f;
-}
-
-_AFXINL void AfxMultiplyLinearM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
-{
-    // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1063,48 +1057,47 @@ _AFXINL void AfxMultiplyLinearM4dTransposed(afxReal m[4][4], afxReal const a[4][
     m[3][3] = 1.f;
 }
 
+_AFXINL void AfxMultiplyLinearM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+{
+    // Computes the transpose of the product of two matrices.
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(b);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
+    // Aninhamento das columnas de B
+    afxV4d const x = { a[0][0], a[1][0], a[2][0], 0.f };
+    afxV4d const y = { a[0][1], a[1][1], a[2][1], 0.f };
+    afxV4d const z = { a[0][2], a[1][2], a[2][2], 0.f };
+    // Row aX contra cada columna da B
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]) + (b[0][2] * x[2]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]) + (b[0][2] * y[2]);
+    m[0][2] = (b[0][0] * z[0]) + (b[0][1] * z[1]) + (b[0][2] * z[2]);
+    m[0][3] = 0.f;
+    // Row aY contra cada columna da B
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]) + (b[1][2] * x[2]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]) + (b[1][2] * y[2]);
+    m[1][2] = (b[1][0] * z[0]) + (b[1][1] * z[1]) + (b[1][2] * z[2]);
+    m[1][3] = 0.f;
+    // Row aZ contra cada columna da B
+    m[2][0] = (b[2][0] * x[0]) + (b[2][1] * x[1]) + (b[2][2] * x[2]);
+    m[2][1] = (b[2][0] * y[0]) + (b[2][1] * y[1]) + (b[2][2] * y[2]);
+    m[2][2] = (b[2][0] * z[0]) + (b[2][1] * z[1]) + (b[2][2] * z[2]);
+    m[2][3] = 0.f;
+    // Row aW contra cada columna da B
+    m[3][0] = 0.f;
+    m[3][1] = 0.f;
+    m[3][2] = 0.f;
+    m[3][3] = 1.f;
+}
+
 // MultiplyAffine
 
 _AFXINL void AfxMultiplyAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     // Multiplica todo row de A por cada columna de B
-
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(a != b);
-    AfxAssert(b != m);
-    // Aninhamento das columnas de B
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], 0.f };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], 0.f };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], 0.f };
-    afxV4d const w = { b[0][3], b[1][3], b[2][3], 1.f };
-    // Row aW contra cada columna da B
-    m[0][0] = (a[0][0] * x[0]) + (a[0][1] * x[1]) + (a[0][2] * x[2]) + (a[0][3] * x[3]);
-    m[0][1] = (a[0][0] * y[0]) + (a[0][1] * y[1]) + (a[0][2] * y[2]) + (a[0][3] * y[3]);
-    m[0][2] = (a[0][0] * z[0]) + (a[0][1] * z[1]) + (a[0][2] * z[2]) + (a[0][3] * z[3]);
-    m[0][3] = 0.f;
-    // Row aY contra cada columna da B
-    m[1][0] = (a[1][0] * x[0]) + (a[1][1] * x[1]) + (a[1][2] * x[2]) + (a[1][3] * x[3]);
-    m[1][1] = (a[1][0] * y[0]) + (a[1][1] * y[1]) + (a[1][2] * y[2]) + (a[1][3] * y[3]);
-    m[1][2] = (a[1][0] * z[0]) + (a[1][1] * z[1]) + (a[1][2] * z[2]) + (a[1][3] * z[3]);
-    m[1][3] = 0.f;
-    // Row aZ contra cada columna da B
-    m[2][0] = (a[2][0] * x[0]) + (a[2][1] * x[1]) + (a[2][2] * x[2]) + (a[2][3] * x[3]);
-    m[2][1] = (a[2][0] * y[0]) + (a[2][1] * y[1]) + (a[2][2] * y[2]) + (a[2][3] * y[3]);
-    m[2][2] = (a[2][0] * z[0]) + (a[2][1] * z[1]) + (a[2][2] * z[2]) + (a[2][3] * z[3]);
-    m[2][3] = 0.f;
-    // Row aW contra cada columna da B
-    m[3][0] = (a[3][0] * x[0]) + (a[3][1] * x[1]) + (a[3][2] * x[2]) + (/*a[3][3] * */x[3]);
-    m[3][1] = (a[3][0] * y[0]) + (a[3][1] * y[1]) + (a[3][2] * y[2]) + (/*a[3][3] * */y[3]);
-    m[3][2] = (a[3][0] * z[0]) + (a[3][1] * z[1]) + (a[3][2] * z[2]) + (/*a[3][3] * */z[3]);
-    m[3][3] = 1.f;
-}
-
-_AFXINL void AfxMultiplyAffineM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
-{
-    // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1139,6 +1132,43 @@ _AFXINL void AfxMultiplyAffineM4dTransposed(afxReal m[4][4], afxReal const a[4][
     m[3][3] = 1.f;
 }
 
+_AFXINL void AfxMultiplyAffineM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+{
+    // Computes the transpose of the product of two matrices.
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(b);
+    AfxAssert(a);
+    AfxAssert(b != a);
+    AfxAssert(a != m);
+    // Aninhamento das columnas de B
+    afxV4d const x = { a[0][0], a[1][0], a[2][0], 0.f };
+    afxV4d const y = { a[0][1], a[1][1], a[2][1], 0.f };
+    afxV4d const z = { a[0][2], a[1][2], a[2][2], 0.f };
+    afxV4d const w = { a[0][3], a[1][3], a[2][3], 1.f };
+    // Row aW contra cada columna da B
+    m[0][0] = (b[0][0] * x[0]) + (b[0][1] * x[1]) + (b[0][2] * x[2]) + (b[0][3] * x[3]);
+    m[0][1] = (b[0][0] * y[0]) + (b[0][1] * y[1]) + (b[0][2] * y[2]) + (b[0][3] * y[3]);
+    m[0][2] = (b[0][0] * z[0]) + (b[0][1] * z[1]) + (b[0][2] * z[2]) + (b[0][3] * z[3]);
+    m[0][3] = 0.f;
+    // Row aY contra cada columna da B
+    m[1][0] = (b[1][0] * x[0]) + (b[1][1] * x[1]) + (b[1][2] * x[2]) + (b[1][3] * x[3]);
+    m[1][1] = (b[1][0] * y[0]) + (b[1][1] * y[1]) + (b[1][2] * y[2]) + (b[1][3] * y[3]);
+    m[1][2] = (b[1][0] * z[0]) + (b[1][1] * z[1]) + (b[1][2] * z[2]) + (b[1][3] * z[3]);
+    m[1][3] = 0.f;
+    // Row aZ contra cada columna da B
+    m[2][0] = (b[2][0] * x[0]) + (b[2][1] * x[1]) + (b[2][2] * x[2]) + (b[2][3] * x[3]);
+    m[2][1] = (b[2][0] * y[0]) + (b[2][1] * y[1]) + (b[2][2] * y[2]) + (b[2][3] * y[3]);
+    m[2][2] = (b[2][0] * z[0]) + (b[2][1] * z[1]) + (b[2][2] * z[2]) + (b[2][3] * z[3]);
+    m[2][3] = 0.f;
+    // Row aW contra cada columna da B
+    m[3][0] = (b[3][0] * x[0]) + (b[3][1] * x[1]) + (b[3][2] * x[2]) + (/*b[3][3] * */x[3]);
+    m[3][1] = (b[3][0] * y[0]) + (b[3][1] * y[1]) + (b[3][2] * y[2]) + (/*b[3][3] * */y[3]);
+    m[3][2] = (b[3][0] * z[0]) + (b[3][1] * z[1]) + (b[3][2] * z[2]) + (/*b[3][3] * */z[3]);
+    m[3][3] = 1.f;
+}
+
 // MultiplyArrayV2d
 
 _AFXINL void AfxTransformV2dStream(afxReal const m[2][2], afxNat cnt, afxNat inStride, afxReal const in[][2], afxNat outStride, afxReal out[][2])
@@ -1156,7 +1186,7 @@ _AFXINL void AfxTransformV2dStream(afxReal const m[2][2], afxNat cnt, afxNat inS
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxTransformV2d((void*)outPtr, (void*)inPtr, m);
+        AfxTransformV2d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -1178,7 +1208,7 @@ _AFXINL void AfxTransformV3dStream(afxReal const m[3][3], afxNat cnt, afxNat inS
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxTransformV3d((void*)outPtr, (void*)inPtr, m);
+        AfxTransformV3d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -1200,7 +1230,7 @@ _AFXINL void AfxTransformAffineV3dStream(afxReal const m[4][4], afxNat cnt, afxN
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxTransformAffineV3d((void*)outPtr, (void*)inPtr, m);
+        AfxTransformAffineV3d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -1222,7 +1252,7 @@ _AFXINL void AfxTransformV4dStream(afxReal const m[4][4], afxNat cnt, afxNat inS
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxTransformV4d((void*)outPtr, (void*)inPtr, m);
+        AfxTransformV4d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -1909,8 +1939,7 @@ _AFXINL void AfxGetAssimilatedAffineMatrix(afxReal m[4][4], afxReal const in[4][
     afxM3d ss;
     AfxM3dFromM4d(ss, in);
     AfxGetAssimilatedScalingM3d(ss, ss, linear, invLinear);
-    AfxM4dFromM3d(m, ss);
-    AfxCopyV3d(m[3], pos);
+    AfxM4dFromM3d(m, ss, pos);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -44,7 +44,7 @@ extern afxClassConfig _SglDqueClsConfig;
 _SGL void _AfxDctxFreeAllQueueSlots(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     if (dctx->base.openPorts)
     {
@@ -60,10 +60,10 @@ _SGL void _AfxDctxFreeAllQueueSlots(afxDrawContext dctx)
 _SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     afxDrawThread dthr = (afxDrawThread)udd;
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
     
     if (din->base.procCb(din, dthr))
         AfxThrowError();
@@ -74,10 +74,10 @@ _SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 _SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     afxDrawThread dthr = (afxDrawThread)udd;
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
 
     if (dout->base.procCb(dout, dthr))
         AfxThrowError();
@@ -88,9 +88,9 @@ _SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 _SGL afxError _SglDctxProcCb(afxDrawContext dctx, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
 
     afxNat unitIdx = dthr->portIdx;
     AfxAssertRange(dctx->base.openPortCnt, unitIdx, 1);
@@ -101,7 +101,7 @@ _SGL afxError _SglDctxProcCb(afxDrawContext dctx, afxDrawThread dthr)
     afxDrawQueue dque;
     while (AfxEnumerateInstances(&dctx->base.openPorts[unitIdx].queues, i, 1, (afxHandle*)&dque))
     {
-        AfxAssertObjects(1, &dque, AFX_FCC_DQUE);
+        AfxAssertObjects(1, &dque, afxFcc_DQUE);
 
         dthr->dque = dque;
         dthr->queueIdx = i;
@@ -121,7 +121,7 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     AfxDisconnectDrawInputs(dctx);
     AfxDisconnectDrawOutputs(dctx);
@@ -140,14 +140,14 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 {
     AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     //AfxAssert(spec);
 
     afxNat devId = *(afxNat const *)(cookie->udd[0]);
     afxDrawContextConfig const *config = ((afxDrawContextConfig const *)cookie->udd[1]) + cookie->no;
 
     afxDrawDevice ddev = AfxGetObjectProvider(dctx);
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
 
@@ -156,7 +156,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
     dctx->base.ctx = AfxGetDrawSystemMemory(dsys);
     
 
-    AfxAssertObjects(1, &dctx->base.ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &dctx->base.ctx, afxFcc_CTX);
 
     afxContext ctx = dctx->base.ctx;
 
@@ -256,25 +256,25 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
             if (!err)
             {
                 afxUri uri;
-                AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba/rgbaToRgbaPip.xml?yFlipped", 0);
+                AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
                 //AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
                 //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
 
                 dctx->presentPip = AfxAssemblePipelineFromXsh(dctx, &uri);
 
-                AfxAssertObjects(1, &dctx->presentPip, AFX_FCC_PIP);
+                AfxAssertObjects(1, &dctx->presentPip, afxFcc_PIP);
 
                 afxSamplerConfig smpSpec = { 0 };
-                smpSpec.magFilter = AFX_TEXEL_FLT_POINT;
-                smpSpec.minFilter = AFX_TEXEL_FLT_POINT;
-                smpSpec.mipmapFilter = AFX_TEXEL_FLT_POINT;
-                smpSpec.uvw[0] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
-                smpSpec.uvw[1] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
-                smpSpec.uvw[2] = AFX_TEXEL_ADDR_REPEAT; // EDGE fucks this shit
+                smpSpec.magFilter = afxTexelFilter_POINT;
+                smpSpec.minFilter = afxTexelFilter_POINT;
+                smpSpec.mipmapFilter = afxTexelFilter_POINT;
+                smpSpec.uvw[0] = afxTexelAddress_REPEAT; // EDGE fucks this shit
+                smpSpec.uvw[1] = afxTexelAddress_REPEAT; // EDGE fucks this shit
+                smpSpec.uvw[2] = afxTexelAddress_REPEAT; // EDGE fucks this shit
 
                 AfxAcquireSamplers(dctx, 1, &smpSpec, &dctx->presentSmp);
-                AfxAssertObjects(1, &dctx->presentSmp, AFX_FCC_SAMP);
+                AfxAssertObjects(1, &dctx->presentSmp, afxFcc_SAMP);
 
                 afxString tmpStr;
                 AfxWrapStringLiteral(&tmpStr, "a_xy", 0);
@@ -299,15 +299,15 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 vtxAttrSpec.srcStride = sizeof(afxV2d);
                 AfxVertexBufferBlueprintAddAttributes(&vbub, 1, &vtxAttrSpec);
                 AfxBuildVertexBuffers(dctx, 1, &dctx->presentVbuf, &vbub);
-                AfxAssertObjects(1, &dctx->presentVbuf, AFX_FCC_VBUF);
+                AfxAssertObjects(1, &dctx->presentVbuf, afxFcc_VBUF);
 #endif
                 afxBufferSpecification vbufSpec;
                 vbufSpec.siz = sizeof(tristrippedQuad2dPos);
                 vbufSpec.src = tristrippedQuad2dPos;
-                vbufSpec.usage = AFX_BUF_USAGE_VERTEX;
+                vbufSpec.usage = afxBufferUsage_VERTEX;
 
                 AfxAcquireBuffers(dctx, 1, &dctx->presentVbuf, &vbufSpec);
-                AfxAssertObjects(1, &dctx->presentVbuf, AFX_FCC_BUF);
+                AfxAssertObjects(1, &dctx->presentVbuf, afxFcc_BUF);
 
                 dctx->presentFboGpuHandle = 0;
 
@@ -338,7 +338,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglDctxClsConfig =
 {
-    .fcc = AFX_FCC_DCTX,
+    .fcc = afxFcc_DCTX,
     .name = "Draw Context",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawContext)),

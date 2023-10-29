@@ -49,7 +49,7 @@ afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw th
     rnd->activeOutputBufIdx = outBufIdx;
     afxTexture surf;
     AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
-    AfxAssertObjects(1, &surf, AFX_FCC_TEX);
+    AfxAssertObjects(1, &surf, afxFcc_TEX);
 
     AfxRendererBeginScene(rnd, rnd->activeCamera, NIL, surf);
     AfxRendererDrawSky(rnd, TRUE);
@@ -126,13 +126,13 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
     AfxAcquireSimulations(app, 1, &sim, &simSpec);
-    AfxAssertObjects(1, &sim, AFX_FCC_SIM);
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
     
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
-    AfxOpenDrawOutputs(dsys, 1, &doutConfig, &dout);
+    AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, &dout);
     AfxAssert(dout);
-    AfxReconnectDrawOutput(dout, dctx, NIL);
+    AfxReconnectDrawOutput(dout, dctx);
 
     afxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DinFetcherFn;
@@ -154,10 +154,10 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
     afxAsset cad2;
-    AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad2);
+    //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad2);
 
     AfxExcerptUriObject(&uriMap2, &uriMap);
-    AfxFindResources(cad2, AFX_FCC_MDL, 1, &uriMap2, &mdl);
+    //AfxFindResources(cad2, afxFcc_MDL, 1, &uriMap2, &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
 
     //AfxUriWrapLiteral(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
@@ -170,7 +170,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
     afxAsset cad;
-    AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
+    //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
 
     //AfxWrapStringLiteral(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
@@ -181,11 +181,11 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 
     AfxExcerptUriObject(&uriMap2, &uriMap);
-    AfxFindResources(cad, AFX_FCC_MDL, 1, &uriMap2, &mdl);
+    //AfxFindResources(cad, afxFcc_MDL, 1, &uriMap2, &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
-    AfxEmbodyModel(mdl, 1, &bod);
+    //AfxEmbodyModel(mdl, 1, &bod);
     AfxAssert(bod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
@@ -263,10 +263,10 @@ int main(int argc, char const* argv[])
         afxDrawSystemConfig dsysSpec = { 0 };
         AfxChooseDrawSystemConfiguration(&dsysSpec, 0);
         AfxAcquireDrawSystems(1, &dsysSpec, &dsys);
-        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };
-        AfxAcquireDrawContexts(dsys, 1, &dctxConfig, &dctx);
+        AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
         AfxAssert(dctx);
 
         afxApplication TheApp;
@@ -276,7 +276,7 @@ int main(int argc, char const* argv[])
         appConfig.dctx = dctx;
         appConfig.proc = SandboxThrProc;
         AfxAcquireApplications(1, &TheApp, &appConfig);
-        AfxAssertObjects(1, &TheApp, AFX_FCC_APP);
+        AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
         while (AfxSystemIsOperating())

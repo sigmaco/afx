@@ -75,7 +75,7 @@ _AFXINL void AfxCanvasBlueprintAddExistingRaster(afxCanvasBlueprint *blueprint, 
 _AFX afxError _AfxCanvFreeAllSurfaces(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(canv, AFX_FCC_CANV);
+    AfxAssertType(canv, afxFcc_CANV);
 
     if (canv->annexes)
     {
@@ -85,7 +85,7 @@ _AFX afxError _AfxCanvFreeAllSurfaces(afxCanvas canv)
 
             if (tex)
             {
-                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                AfxAssertObjects(1, &tex, afxFcc_TEX);
                 AfxReleaseObjects(1, (void*[]) { tex });
                 canv->annexes[i].tex = NIL;
             }
@@ -97,33 +97,33 @@ _AFX afxError _AfxCanvFreeAllSurfaces(afxCanvas canv)
 _AFX void AfxFlagCanvas(afxCanvas canv, afxCanvasFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     canv->flags |= bitmask;
 }
 
 _AFX void AfxUnflagCanvas(afxCanvas canv, afxCanvasFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     canv->flags &= ~bitmask;
 }
 
 _AFX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->flags & bitmask;
 }
 
 _AFX afxBool AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     afxTexture tex = canv->dsIdx[1] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[1]].tex : NIL;
 
     if (tex)
     {
-        AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tex, afxFcc_TEX);
 
         if (stencil)
             *stencil = tex;
@@ -134,12 +134,12 @@ _AFX afxBool AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil)
 _AFX afxBool AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     afxTexture tex = canv->dsIdx[0] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[0]].tex : NIL;
 
     if (tex)
     {
-        AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tex, afxFcc_TEX);
 
         if (depth)
             *depth = tex;
@@ -150,14 +150,14 @@ _AFX afxBool AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth)
 _AFX afxBool AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxTexture *raster)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssert(rasIdx < canv->rasterCnt);
 
     afxBool rslt;
     afxTexture tex2;
     if ((rslt = !!(tex2 = canv->annexes[rasIdx].tex)))
     {
-        AfxAssertObjects(1, &tex2, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tex2, afxFcc_TEX);
 
         if (raster)
             *raster = tex2;
@@ -168,21 +168,21 @@ _AFX afxBool AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxTextur
 _AFX afxNat AfxGetAnnexedRasterSurfaceCount(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->rasterCnt;
 }
 
 _AFX afxBool AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxTexture *tex)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssert(surfIdx < canv->annexCnt);
     
     afxBool rslt;
     afxTexture tex2;
     if ((rslt = !!(tex2 = canv->annexes[surfIdx].tex)))
     {
-        AfxAssertObjects(1, &tex2, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tex2, afxFcc_TEX);
 
         if (tex)
             *tex = tex2;
@@ -193,14 +193,14 @@ _AFX afxBool AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxTexture *te
 _AFX afxNat AfxGetAnnexedSurfaceCount(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->annexCnt;
 }
 
 _AFX void AfxGetCanvasExtent(afxCanvas canv, afxWhd extent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssert(extent);
     extent[0] = canv->whd[0];
     extent[1] = canv->whd[1];
@@ -210,7 +210,7 @@ _AFX void AfxGetCanvasExtent(afxCanvas canv, afxWhd extent)
 _AFX afxError AfxBuildCanvases(afxDrawContext dctx, afxNat cnt, afxCanvas canv[], afxCanvasBlueprint const *blueprint)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(cnt);
     AfxAssert(blueprint);
     AfxAssert(canv);

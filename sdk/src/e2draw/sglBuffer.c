@@ -41,38 +41,38 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
             afxFlags usage = base->usage;
             GLenum target = NIL;
 
-            if (usage & AFX_BUF_USAGE_VERTEX)
+            if (usage & afxBufferUsage_VERTEX)
                 target = GL_ARRAY_BUFFER;
-            else if (usage & AFX_BUF_USAGE_INDEX)
+            else if (usage & afxBufferUsage_INDEX)
                 target = GL_ELEMENT_ARRAY_BUFFER;
-            else if (usage & AFX_BUF_USAGE_UNIFORM)
+            else if (usage & afxBufferUsage_UNIFORM)
                 target = GL_UNIFORM_BUFFER;
-            else if (usage & AFX_BUF_USAGE_STORAGE)
+            else if (usage & afxBufferUsage_STORAGE)
                 target = GL_SHADER_STORAGE_BUFFER;
-            else if (usage & AFX_BUF_USAGE_INDIRECT)
+            else if (usage & afxBufferUsage_INDIRECT)
                 target = GL_DRAW_INDIRECT_BUFFER;
-            else if (usage & AFX_BUF_USAGE_UNIFORM_TEXELS)
+            else if (usage & afxBufferUsage_UNIFORM_TEXELS)
                 target = GL_PIXEL_UNPACK_BUFFER;
-            else if (usage & AFX_BUF_USAGE_STORAGE_TEXELS)
+            else if (usage & afxBufferUsage_STORAGE_TEXELS)
                 target = GL_PIXEL_PACK_BUFFER;
-            else if (usage == AFX_BUF_USAGE_SRC)
+            else if (usage == afxBufferUsage_SRC)
                 target = GL_COPY_READ_BUFFER;
-            else if (usage == AFX_BUF_USAGE_DST)
+            else if (usage == afxBufferUsage_DST)
                 target = GL_COPY_WRITE_BUFFER;
             else AfxError("");
 
             GLint glaccess;
 
-            if (usage & (AFX_BUF_USAGE_SRC | AFX_BUF_USAGE_DST))
+            if (usage & (afxBufferUsage_SRC | afxBufferUsage_DST))
             {
                 // copy
                 glaccess = GL_READ_WRITE;
             }
-            else if (usage & AFX_BUF_USAGE_SRC)
+            else if (usage & afxBufferUsage_SRC)
             {
                 glaccess = GL_READ_ONLY;
             }
-            else if (usage & AFX_BUF_USAGE_DST)
+            else if (usage & afxBufferUsage_DST)
             {
                 glaccess = GL_WRITE_ONLY;
             }
@@ -166,7 +166,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
             {
             case GL_ARRAY_BUFFER:
             {
-                AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+                AfxAssertObjects(1, &buf, afxFcc_BUF);
                 //AfxAssert(gl->BindVertexBuffer);
 
                 if (gl->BindVertexBuffer)
@@ -186,14 +186,14 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
             }
             case GL_ELEMENT_ARRAY_BUFFER:
             {
-                AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+                AfxAssertObjects(1, &buf, afxFcc_BUF);
 
                 gl->BindBuffer(target, buf->glHandle); _SglThrowErrorOccuried();
                 break;
             }
             default:
             {
-                AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+                AfxAssertObjects(1, &buf, afxFcc_BUF);
 
                 if (rangeOrVtxStride)
                 {
@@ -262,7 +262,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
 _SGL void* _SglMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFlags flags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssertRange(buf->base.siz, offset, range);
     
     void *map = &(buf->base.bytemap[offset]);
@@ -285,7 +285,7 @@ _SGL void* _SglMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFl
 _SGL afxError _SglUnmapBufferRange(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
     --buf->locked;
     return err;
 }
@@ -303,7 +303,7 @@ _SGL afxError _SglBufDtor(afxBuffer buf)
 
     afxDrawContext dctx = AfxGetObjectProvider(buf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     if (buf->glHandle)
     {
@@ -322,7 +322,7 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
 {
     AfxEntry("buf=%p", buf);
     afxResult err = NIL;
-    AfxAssertObjects(1, &buf, AFX_FCC_BUF);
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
 
     afxBufferSpecification const *spec = ((afxBufferSpecification const *)cookie->udd[0]) + cookie->no;
 
@@ -333,7 +333,7 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(buf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     if (!(buf->base.bytemap = AfxAllocate(mem, buf->base.siz, 0, AfxSpawnHint()))) AfxThrowError();
     else
@@ -365,7 +365,7 @@ _SGL afxError _SglVbufDtor(afxVertexBuffer vbuf)
 
     afxDrawContext dctx = AfxGetObjectProvider(vbuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < vbuf->base.attrCnt; i++)
     {
@@ -387,7 +387,7 @@ _SGL afxError _SglVbufDtor(afxVertexBuffer vbuf)
 _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxEntry("vbuf=%p", vbuf);
 
     afxVertexBufferBlueprint const *blueprint = ((afxVertexBufferBlueprint const *)cookie->udd[0]) + cookie->no;
@@ -402,7 +402,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(vbuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     afxNat totalBytemapSiz = 0;
 
@@ -422,7 +422,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     afxBufferSpecification bufSpec =
     {
         totalBytemapSiz,
-        AFX_BUF_USAGE_VERTEX,
+        afxBufferUsage_VERTEX,
         NIL
     };
 
@@ -485,7 +485,7 @@ _SGL afxError _SglVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &vbuf, AFX_FCC_VBUF);
+    AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     AfxEntry("vbuf=%p", vbuf);
 
     afxVertexBufferBlueprint const *blueprint = ((afxVertexBufferBlueprint const *)cookie->udd[0]) + cookie->no;
@@ -500,7 +500,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(vbuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     afxNat secCnt = 0;
     afxNat secIdxRemap[16] = { 0 };
@@ -548,7 +548,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
         afxBufferSpecification bufSpec =
         {
             totalBufSiz,
-            AFX_BUF_USAGE_VERTEX,
+            afxBufferUsage_VERTEX,
             NIL
         };
 
@@ -637,11 +637,11 @@ _SGL afxError _SglIbufDtor(afxIndexBuffer ibuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("ibuf=%p", ibuf);
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
 
     afxDrawContext dctx = AfxGetObjectProvider(ibuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     AfxDeallocate(mem, ibuf->base.regions);
 
@@ -653,7 +653,7 @@ _SGL afxError _SglIbufDtor(afxIndexBuffer ibuf)
 _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ibuf, AFX_FCC_IBUF);
+    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     AfxEntry("ibuf=%p", ibuf);
     
     afxIndexBufferBlueprint const *blueprint = ((afxIndexBufferBlueprint const *)cookie->udd[0]) + cookie->no;
@@ -661,7 +661,7 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(ibuf);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
 
     afxNat totalSiz = 0;
@@ -678,7 +678,7 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     afxBufferSpecification bufSpec =
     {
         totalSiz,
-        AFX_BUF_USAGE_INDEX,
+        afxBufferUsage_INDEX,
         NIL
     };
 
@@ -726,7 +726,7 @@ _SGL afxError _SglIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglBufClsConfig =
 {
-    .fcc = AFX_FCC_BUF,
+    .fcc = afxFcc_BUF,
     .name = "Buffer",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxBuffer)),
@@ -737,7 +737,7 @@ _SGL afxClassConfig _SglBufClsConfig =
 
 _SGL afxClassConfig _SglVbufClsConfig =
 {
-    .fcc = AFX_FCC_VBUF,
+    .fcc = afxFcc_VBUF,
     .name = "Vertex Buffer",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxVertexBuffer)),
@@ -748,7 +748,7 @@ _SGL afxClassConfig _SglVbufClsConfig =
 
 _SGL afxClassConfig _SglIbufClsConfig =
 {
-    .fcc = AFX_FCC_IBUF,
+    .fcc = afxFcc_IBUF,
     .name = "Index Buffer",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxIndexBuffer)),

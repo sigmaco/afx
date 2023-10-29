@@ -30,7 +30,7 @@ _AFXINL void AfxComputeBasisConversion(afxCadToolInfo const* info, afxReal desir
     AfxCopyM3d(desiredAxisSys, desiredAxes);
     AfxCopyM3d(srcAxisSys, info->xyzAxes);
 
-    AfxMultiplyM3d(ltm, desiredAxisSys, srcAxisSys);
+    AfxMultiplyM3dTransposed(ltm, desiredAxisSys, srcAxisSys);
         
     afxReal s = desiredUnitsPerMeter / info->unitsPerMeter;        
     AfxScaleV3d(ltm[0], ltm[0], s);

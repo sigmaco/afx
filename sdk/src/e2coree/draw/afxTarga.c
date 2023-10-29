@@ -61,7 +61,7 @@ typedef struct _afxTga
 {
     afxNat width, height, depth;
     afxByte* data;
-    afxNat format; // Format of the TGA image. Can be: _TARGA_RGB, _TARGA_RGBA, _TARGA_LUMINANCE.
+    afxPixelFormat fmt; // Format of the TGA image. Can be: _TARGA_RGB, _TARGA_RGBA, _TARGA_LUMINANCE.
     afxTextureFlags flags;
     afxNat imgCnt;
 } _afxTga;
@@ -77,9 +77,14 @@ _AFX _AFXINLINE void _AfxTgaSwapColorChannel(afxInt width, afxInt height, afxNat
         return;
     }
 
-    if (format == _TARGA_RGBA)
+    if (format == AFX_PFD_BGRA8 || format == AFX_PFD_RGBA8)
     {
         bytesPerPixel = 4;
+    }
+    else
+    {
+        afxError err = NIL;
+        AfxAssert(format == AFX_PFD_BGR8 || format == AFX_PFD_RGB8);
     }
 
     // swap the R and B values to get RGB since the bitmap color format is in BGR
@@ -102,7 +107,7 @@ _AFX void _AfxTgaDestroy(afxContext mem, _afxTga* tga)
     tga->width = 0;
     tga->height = 0;
     tga->depth = 0;
-    tga->format = 0;
+    tga->fmt = 0;
 }
 
 _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
@@ -111,17 +116,17 @@ _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
     afxByte bitsPerPixel;
     afxByte* data;
 
-    switch (tga->format)
+    switch (tga->fmt)
     {
-    case _TARGA_ALPHA:
-    case _TARGA_RED:
-    case _TARGA_LUMINANCE:
+    case AFX_PFD_R8:
         bitsPerPixel = 8;
         break;
-    case _TARGA_RGB:
+    case AFX_PFD_RGB8:
+    case AFX_PFD_BGR8:
         bitsPerPixel = 24;
         break;
-    case _TARGA_RGBA:
+    case AFX_PFD_RGBA8:
+    case AFX_PFD_BGRA8:
         bitsPerPixel = 32;
         break;
     default:
@@ -152,8 +157,8 @@ _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
     {
         AfxCopy(data, tga->data, tga->width * tga->height * pixelSiz);
 
-        if (bitsPerPixel >= 24)
-            _AfxTgaSwapColorChannel(tga->width, tga->height, tga->format, data);
+        if (!((tga->fmt == AFX_PFD_GR8) || (tga->fmt == AFX_PFD_BGR8) || (tga->fmt == AFX_PFD_BGRA8)))
+            _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, data);
 
         if (AfxWriteStream(stream, data, tga->width * tga->height * pixelSiz, 0))
             AfxThrowError();
@@ -163,11 +168,11 @@ _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
     return err;
 }
 
-_AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
+_AFX afxError _AfxTgaLoad(afxContext mem, afxBool bgrToRgb, afxStream *stream, _afxTga* tga)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
-    AfxAssertType(stream, AFX_FCC_IOS);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    AfxAssertType(stream, afxFcc_IOS);
     AfxAssert(tga);
 
     _afxSerializedTargaHdr header = { 0 };
@@ -181,7 +186,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
         tga->height = header.imageSpec.height;
         tga->depth = 1;
         tga->data = 0;
-        tga->format = 0;
+        tga->fmt = 0;
 
         switch (header.imageType)
         {
@@ -190,7 +195,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
             hasColorMap = TRUE;
             break;
         }
-        case 2: // packed RGBA
+        case 2: // packed RGB(A)
         case 3:
         {
             break;
@@ -217,11 +222,11 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
             case 32:
             {
                 if (header.imageSpec.pixelDepth == 32)
-                    tga->format = _TARGA_RGBA;
+                    tga->fmt = AFX_PFD_BGRA8;
                 else if (header.imageSpec.pixelDepth == 24)
-                    tga->format = _TARGA_RGB;
+                    tga->fmt = AFX_PFD_BGR8;
                 else
-                    tga->format = _TARGA_SINGLE_CHANNEL;
+                    tga->fmt = AFX_PFD_R8;
 
                 break;
             }
@@ -244,7 +249,8 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
                         {
                             if (header.colorMapSpec.entrySiz == 24 || header.colorMapSpec.entrySiz == 32)
                             {
-                                _AfxTgaSwapColorChannel(header.colorMapSpec.nofEntries, 1, header.colorMapSpec.entrySiz == 24 ? _TARGA_RGB : _TARGA_RGBA, colorMap);
+                                if (bgrToRgb)
+                                    _AfxTgaSwapColorChannel(header.colorMapSpec.nofEntries, 1, header.colorMapSpec.entrySiz == 24 ? AFX_PFD_BGR8 : AFX_PFD_BGRA8, colorMap);
                             }
                         }
 
@@ -324,7 +330,8 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
                         // swap the color if necessary
                         if (header.imageSpec.pixelDepth == 24 || header.imageSpec.pixelDepth == 32)
                         {
-                            _AfxTgaSwapColorChannel(tga->width, tga->height, tga->format, tga->data);
+                            if (bgrToRgb)
+                                _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, tga->data);
                         }
 
                         if (hasColorMap)
@@ -338,11 +345,11 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
                             else
                             {
                                 if (header.colorMapSpec.entrySiz == 32)
-                                    tga->format = _TARGA_RGBA;
+                                    tga->fmt = AFX_PFD_BGRA8;
                                 else if (header.colorMapSpec.entrySiz == 24)
-                                    tga->format = _TARGA_RGB;
+                                    tga->fmt = AFX_PFD_BGR8;
                                 else
-                                    tga->format = _TARGA_SINGLE_CHANNEL;
+                                    tga->fmt = AFX_PFD_R8;
 
                                 // Copy color values from the color map into the image data.
 
@@ -377,7 +384,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxStream *stream, _afxTga* tga)
     return err;
 }
 
-_AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt height, afxInt depth, afxInt format)
+_AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt height, afxInt depth, afxPixelFormat format)
 {
     afxInt stride;
 
@@ -386,15 +393,15 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
         return FALSE;
     }
 
-    if (format == _TARGA_ALPHA || format == _TARGA_LUMINANCE || format == _TARGA_RED)
+    if (format == AFX_PFD_R8)
     {
         stride = 1;
     }
-    else if (format == _TARGA_RGB)
+    else if (format == AFX_PFD_BGR8 || format == AFX_PFD_RGB8)
     {
         stride = 3;
     }
-    else if (format == _TARGA_RGBA)
+    else if (format == AFX_PFD_BGRA8 || format == AFX_PFD_RGBA8)
     {
         stride = 4;
     }
@@ -410,7 +417,7 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
     tga->width = width;
     tga->height = height;
     tga->depth = depth;
-    tga->format = format;
+    tga->fmt = format;
 
     return TRUE;
 }
@@ -418,18 +425,19 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
 _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
+        AfxAssertType(&uri[i], afxFcc_URI);
+        
         afxFile file;
 
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) {AFX_FILE_FLAG_W})) AfxThrowError();
+        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) {AFX_FILE_FLAG_W})) AfxThrowError();        
         else
         {
             void *src;
@@ -446,9 +454,8 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
                 afxPixelLayout pfd;
                 afxPixelFormat fmt = AfxGetTextureFormat(tex);
                 AfxDescribePixelFormat(fmt, &pfd);
-                afxInt format = (fmt == AFX_PFD_R8 ? _TARGA_RED : (fmt == AFX_PFD_RGB8 ? _TARGA_RGB : (fmt == AFX_PFD_RGBA8 ? _TARGA_RGBA : NIL)));
-
-                if (FALSE == _AfxTgaGen(mem, &im, rgn->extent[0], rgn->extent[1], rgn->extent[2], format)) AfxThrowError();
+                
+                if (FALSE == _AfxTgaGen(mem, &im, rgn->extent[0], rgn->extent[1], rgn->extent[2], fmt)) AfxThrowError();
                 else
                 {
                     // TODO use rgn
@@ -473,8 +480,8 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
 _AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertType(uri, afxFcc_URI);
 
     afxWhd extent;
     AfxGetTextureExtent(tex, lodIdx, extent);
@@ -498,60 +505,41 @@ _AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxNat lodIdx, afxNat baseI
 _AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
+
+    afxStream ios;
+    AfxAcquireStream(&ios, AFX_IO_FLAG_RWX, 0, 0);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
-        afxFile file;
+        AfxAssertType(&uri[i], afxFcc_URI);
+        //afxFile file;
 
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        if (AfxReloadFile(&ios, &uri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
         else
         {
             _afxTga im;
             AFX_ZERO(&im);
 
-            if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im)) AfxThrowError();
+            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im)) AfxThrowError();
             else
             {
-                afxPixelFormat fmt;
-                //afxNat whd[] = ;
-                int bitsPerPixel;
-
-                switch (im.format)
-                {
-                case _TARGA_ALPHA:
-                case _TARGA_RED:
-                case _TARGA_LUMINANCE:
-                    fmt = AFX_PFD_R8;
-                    bitsPerPixel = 8;
-                    break;
-                case _TARGA_RGB:
-                    fmt = AFX_PFD_RGB8;
-                    bitsPerPixel = 24;
-                    break;
-                case _TARGA_RGBA:
-                    fmt = AFX_PFD_RGBA8;
-                    bitsPerPixel = 32;
-                    break;
-                default:
-                    fmt = NIL;
-                    bitsPerPixel = 0;
-                    AfxThrowError();
-                }
+                afxPixelLayout pfd;
+                AfxDescribePixelFormat(im.fmt, &pfd);
 
                 afxTextureRegion rgn2;
                 rgn2 = rgn[i];
                 rgn2.imgCnt = 1;
                 rgn2.extent[0] = AfxMini(rgn2.extent[0], im.width);
                 rgn2.extent[1] = AfxMini(rgn2.extent[1], im.height);
-                afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
+                afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
 
-                if (AfxUpdateTextureRegion(tex, &rgn2, (const void**)im.data, siz, fmt)) AfxThrowError();
+                if (AfxUpdateTextureRegion(tex, &rgn2, (const void**)im.data, siz, im.fmt)) AfxThrowError();
                 else
                 {
 
@@ -559,17 +547,18 @@ _AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTex
             }
 
             _AfxTgaDestroy(mem, &im);
-            AfxReleaseObjects(1, (void*[]) { file });
+            //AfxReleaseObjects(1, (void*[]) { file });
         }
     }
+    AfxReleaseStream(&ios);
     return err;
 }
 
 _AFX afxError AfxFetchTextureFromTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertType(uri, afxFcc_URI);
 
     afxWhd extent;
     AfxGetTextureExtent(tex, lodIdx, extent);
@@ -596,33 +585,8 @@ _AFX void _TexbGetInfoTargaCb(void* data, afxTextureInfo* info)
     _afxTga *im = data;
     AfxAssert(im);
 
-    int bitsPerPixel;
-    afxPixelFormat fmt;
-
-    switch (im->format)
-    {
-    case _TARGA_ALPHA:
-    case _TARGA_RED:
-    case _TARGA_LUMINANCE:
-        fmt = AFX_PFD_R8;
-        bitsPerPixel = 8;
-        break;
-    case _TARGA_RGB:
-        fmt = AFX_PFD_RGB8;
-        bitsPerPixel = 24;
-        break;
-    case _TARGA_RGBA:
-        fmt = AFX_PFD_RGBA8;
-        bitsPerPixel = 32;
-        break;
-    default:
-        fmt = NIL;
-        bitsPerPixel = 0;
-        AfxThrowError();
-    }
-
     AfxAssert(info);
-    info->fmt = fmt;
+    info->fmt = im->fmt;
     info->lodCnt = 1;
     info->sampleCnt = 1;
     info->usage = im->flags;
@@ -635,36 +599,14 @@ _AFX void _TexbGetInfoTargaCb(void* data, afxTextureInfo* info)
 _AFX void _TexbGetImageTargaCb(void* data, afxTexture tex, afxNat lodIdx, afxNat imgIdx, afxNat imgCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     _afxTga *im = data;
     AfxAssert(im);
 
-    int bitsPerPixel;
-    afxPixelFormat fmt;
-
-    switch (im->format)
-    {
-    case _TARGA_ALPHA:
-    case _TARGA_RED:
-    case _TARGA_LUMINANCE:
-        fmt = AFX_PFD_R8;
-        bitsPerPixel = 8;
-        break;
-    case _TARGA_RGB:
-        fmt = AFX_PFD_RGB8;
-        bitsPerPixel = 24;
-        break;
-    case _TARGA_RGBA:
-        fmt = AFX_PFD_RGBA8;
-        bitsPerPixel = 32;
-        break;
-    default:
-        fmt = NIL;
-        bitsPerPixel = 0;
-        AfxThrowError();
-    }
-
-    afxNat siz = (im->width * im->height * im->depth * bitsPerPixel) / AFX_BYTE_SIZE;
+    afxPixelLayout pfd;
+    AfxDescribePixelFormat(im->fmt, &pfd);
+    
+    afxNat siz = (im->width * im->height * im->depth * pfd.bpp) / AFX_BYTE_SIZE;
 
     afxTextureRegion rgn = { 0 };
     rgn.lodIdx = lodIdx;
@@ -673,7 +615,7 @@ _AFX void _TexbGetImageTargaCb(void* data, afxTexture tex, afxNat lodIdx, afxNat
     rgn.extent[0] = im->width;
     rgn.extent[1] = im->height;
     rgn.extent[2] = im->depth;
-    AfxUpdateTextureRegion(tex, &rgn, im->data, siz, fmt);
+    AfxUpdateTextureRegion(tex, &rgn, im->data, siz, im->fmt);
 }
 
 _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture tex[])
@@ -681,20 +623,24 @@ _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flag
     afxError err = AFX_ERR_NONE;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
+
+    afxStream ios;
+    AfxAcquireStream(&ios, AFX_IO_FLAG_RWX, 0, 0);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
-        afxFile file;
+        AfxAssertType(&uri[i], afxFcc_URI);
+        //afxFile file;
 
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        if (AfxReloadFile(&ios, &uri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
         else
         {
             _afxTga im;
             AFX_ZERO(&im);
 
-            if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im))
+            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
             {
                 AfxThrowError();
                 tex[i] = NIL;
@@ -712,9 +658,10 @@ _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flag
             }
 
             _AfxTgaDestroy(mem, &im);
-            AfxReleaseObjects(1, (void*[]) { file });
+            //AfxReleaseObjects(1, (void*[]) { file });
         }
     }
+    AfxReleaseStream(&ios);
     return err;
 }
 
@@ -723,20 +670,24 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
     afxError err = AFX_ERR_NONE;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
+    afxStream ios;
+    AfxAcquireStream(&ios, AFX_IO_FLAG_RWX, 0, 0);
+    
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], AFX_FCC_URI);
-        afxFile file;
+        AfxAssertType(&uri[i], afxFcc_URI);
+        //afxFile file;
 
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
+        if (AfxReloadFile(&ios, &uri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
         else
         {
             _afxTga im;
             AFX_ZERO(&im);
 
-            if (_AfxTgaLoad(mem, AfxGetFileStream(file), &im))
+            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
             {
                 AfxThrowError();
             }
@@ -755,30 +706,8 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
                 }
                 else
                 {
-                    afxPixelFormat fmt;
-                    int bitsPerPixel;
-
-                    switch (im.format)
-                    {
-                    case _TARGA_ALPHA:
-                    case _TARGA_RED:
-                    case _TARGA_LUMINANCE:
-                        fmt = AFX_PFD_R8;
-                        bitsPerPixel = 8;
-                        break;
-                    case _TARGA_RGB:
-                        fmt = AFX_PFD_RGB8;
-                        bitsPerPixel = 24;
-                        break;
-                    case _TARGA_RGBA:
-                        fmt = AFX_PFD_RGBA8;
-                        bitsPerPixel = 32;
-                        break;
-                    default:
-                        fmt = NIL;
-                        bitsPerPixel = 0;
-                        AfxThrowError();
-                    }
+                    afxPixelLayout pfd;
+                    AfxDescribePixelFormat(im.fmt, &pfd);
 
                     afxTextureRegion rgn = { 0 };
                     rgn.baseImg = i;
@@ -786,15 +715,17 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
                     rgn.extent[0] = im.width;
                     rgn.extent[1] = im.height;
                     rgn.extent[2] = im.depth;
-                    afxNat siz = (im.width * im.height * im.depth * bitsPerPixel) / AFX_BYTE_SIZE;
+                    afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
 
-                    if (AfxUpdateTextureRegion(*tex, &rgn, (const void**)im.data, siz, fmt))
+                    if (AfxUpdateTextureRegion(*tex, &rgn, (const void**)im.data, siz, im.fmt))
                         AfxThrowError();
                 }
             }
             _AfxTgaDestroy(mem, &im);
-            AfxReleaseObjects(1, (void*[]) { file });
+            //AfxReleaseObjects(1, (void*[]) { file });            
         }
     }
+
+    AfxReleaseStream(&ios);
     return err;
 }

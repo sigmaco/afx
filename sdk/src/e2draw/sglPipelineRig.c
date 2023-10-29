@@ -25,7 +25,7 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxPipe
 {
     afxError err = AFX_ERR_NONE;
     afxPipelineRig legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, AFX_FCC_LEGO);
+    AfxAssertObject(legt, afxFcc_LEGO);
     AfxAssert(lego->base.entryCnt >= legt2->entryCnt);
 
     for (afxNat j = 0; j < lego->base.entryCnt; j++)
@@ -45,22 +45,22 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxPipe
         {
         case AFX_SHD_RES_TYPE_SAMPLER:
         {
-            AfxAssertObject(data->smp, AFX_FCC_SAMP);
+            AfxAssertObject(data->smp, afxFcc_SAMP);
             _SglDqueBindAndSyncSmp(dque, binding, data->smp);
             break;
         }
         case AFX_SHD_RES_TYPE_SAMPLED_IMAGE:
         {
-            AfxAssertObject(data->tex, AFX_FCC_TEX);
+            AfxAssertObject(data->tex, afxFcc_TEX);
             _SglDqueBindAndSyncTex(dque, binding, data->tex);
             break;
         }
         case AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER:
         {
-            AfxAssertObject(data->tex, AFX_FCC_TEX);
+            AfxAssertObject(data->tex, afxFcc_TEX);
             _SglDqueBindAndSyncTex(dque, binding, data->tex);
 
-            AfxAssertObject(data->smp, AFX_FCC_SAMP);
+            AfxAssertObject(data->smp, afxFcc_SAMP);
             _SglDqueBindAndSyncSmp(dque, binding, data->smp);
 #if 0
             afxUri128 uri;
@@ -71,7 +71,7 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxPipe
         }
         case AFX_SHD_RES_TYPE_CONSTANT_BUFFER:
         {
-            AfxAssertObject(data->buf, AFX_FCC_BUF);
+            AfxAssertObject(data->buf, afxFcc_BUF);
 
             // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
 
@@ -95,9 +95,9 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxPipelin
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
     afxPipelineRig legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, AFX_FCC_LEGO);
+    AfxAssertObject(legt, afxFcc_LEGO);
     glVmt const* gl = &dque->wglVmt;
     
     if (dque->state.pip)
@@ -130,7 +130,7 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxPipelin
 _SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxPipelineRig lego, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
 
     AfxAssert(dpu->state.pip);
     afxPipeline pip = dpu->state.pip;
@@ -240,7 +240,7 @@ _SGL afxPipelineRig _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt,
     afxPipelineRig lego;
     while (AfxEnumeratePipelineRigs(dctx, i, 1, &lego))
     {
-        AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+        AfxAssertObjects(1, &lego, afxFcc_LEGO);
         
         if (lego->base.crc32 == crc)
         {
@@ -255,11 +255,11 @@ _SGL afxError _SglLegoDtor(afxPipelineRig lego)
 {
     AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
 
     afxDrawContext dctx = AfxGetObjectProvider(lego);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     if (lego->base.entries)
     {
@@ -278,13 +278,13 @@ _SGL afxError _SglLegoCtor(afxPipelineRig lego, afxCookie const* cookie)
 {
     AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
 
     afxPipelineRigBlueprint const *blueprint = ((afxPipelineRigBlueprint const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(lego);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     AfxAssert(blueprint);
 
@@ -334,13 +334,13 @@ _SGL afxError _SglLegoCtor(afxPipelineRig lego, afxCookie const* cookie)
         //AfxCrc32(&crc, tmpCrc, sizeof(tmpCrc[0]) * lego->base.entryCnt);
         lego->base.crc32 = crc;
     }
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
     return err;
 }
 
 _SGL afxClassConfig _SglLegoClsConfig =
 {
-    .fcc = AFX_FCC_LEGO,
+    .fcc = afxFcc_LEGO,
     .name = "Lego",
     .unitsPerPage = 7,
     .size = sizeof(AFX_OBJECT(afxPipelineRig)),

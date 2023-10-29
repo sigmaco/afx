@@ -31,7 +31,7 @@ AFX_DEFINE_HANDLE(afxDrawTechnique);
 
 AFX_DEFINE_STRUCT(afxDrawPass)
 {
-    _AFX_DBG_FCC                    // AFX_FCC_DPAS
+    _AFX_DBG_FCC                    // afxFcc_DPAS
     afxString*                      name; // 32
     afxPipeline                     pip;
 };

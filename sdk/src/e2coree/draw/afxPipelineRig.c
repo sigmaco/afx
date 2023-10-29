@@ -29,11 +29,11 @@ _AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat es
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
-    blueprint->fcc = AFX_FCC_SHDB;
+    blueprint->fcc = afxFcc_SHDB;
 
     blueprint->dctx = NIL;
     //afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
-    //AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    //AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     AfxAcquireArray(&blueprint->bindings, sizeof(afxPipelineRigBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
 }
@@ -127,7 +127,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertObjects(1, &shd[i], AFX_FCC_SHD);
+        AfxAssertObjects(1, &shd[i], afxFcc_SHD);
         afxNat resCnt = AfxCountShaderInterfaces(shd[i]);
         afxBool incompatible = FALSE;
 
@@ -180,7 +180,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 _AFX afxResult AfxGetPipelineRigEntry(afxPipelineRig lego, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
     AfxAssert(cnt);
     AfxAssertRange(lego->entryCnt, first, cnt);
     AfxAssert(decl);
@@ -205,7 +205,7 @@ _AFX afxResult AfxGetPipelineRigEntry(afxPipelineRig lego, afxNat first, afxNat 
 _AFX afxNat32 AfxGetPipelineRigHash(afxPipelineRig lego)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, AFX_FCC_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_LEGO);
     return lego->crc32;
 }
 

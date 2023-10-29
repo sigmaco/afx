@@ -109,7 +109,7 @@ AFX_OBJECT(afxRenderer)
     struct
     {
         afxSkyType          type;
-        afxVertexBuffer     cube;
+        afxBuffer           cube;
         afxTexture          cubemap;
         afxColor            emissiveColor;
         afxColor            ambientColor;
@@ -121,8 +121,8 @@ AFX_OBJECT(afxRenderer)
     afxPipeline         wirePip;
     afxBool             drawVolumes;
 
-    afxIndexBuffer  testIbo;
-    afxVertexBuffer testVbo;
+    afxBuffer  testIbo;
+    afxBuffer testVbo;
     afxPipeline testPip;
 
     afxPipeline    rigidBodyPip;

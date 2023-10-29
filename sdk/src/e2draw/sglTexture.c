@@ -185,7 +185,7 @@ _SGL GLenum SglToGlTexelFilterModeMipmapped(afxTexelFilter min, afxTexelFilter m
         GL_INVALID_ENUM
     };
 
-    return min == AFX_TEXEL_FLT_LINEAR ? linear[mip] : nearest[mip];
+    return min == afxTexelFilter_LINEAR ? linear[mip] : nearest[mip];
 }
 
 _SGL GLenum SglToGlTexWrapMode(afxTexelAddress twm)
@@ -304,21 +304,21 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
 
     if (tex->glTarget == GL_TEXTURE_CUBE_MAP)
     {
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_LINEAR)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_LINEAR)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(afxTexelFilter_LINEAR)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(afxTexelFilter_LINEAR)); _SglThrowErrorOccuried();
 
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(AFX_TEXEL_ADDR_CLAMP)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
     }
     else
     {
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_POINT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(AFX_TEXEL_FLT_POINT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(afxTexelFilter_POINT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(afxTexelFilter_POINT)); _SglThrowErrorOccuried();
 
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(AFX_TEXEL_ADDR_REPEAT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(AFX_TEXEL_ADDR_REPEAT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(AFX_TEXEL_ADDR_REPEAT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
+        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
     }
 #endif
 
@@ -747,7 +747,7 @@ _SGL afxError _SglTexReinstantiateIdd(afxTexture tex, afxNat unit, glVmt const* 
     afxError err = AFX_ERR_NONE;
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
     
     if (tex->glHandle)
     {
@@ -781,7 +781,7 @@ _SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex,
 
     if (tex)
     {
-        AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+        AfxAssertObjects(1, &tex, afxFcc_TEX);
 
         if (!tex->glHandle || tex->updFlags & SGL_UPD_FLAG_DEVICE_INST)
         {
@@ -831,7 +831,7 @@ _SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex,
 _SGL afxError _AfxCloseTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     (void)rgn;
     
     --tex->locked;
@@ -842,7 +842,7 @@ _SGL afxError _AfxCloseTextureRegion(afxTexture tex, afxTextureRegion const *rgn
 _SGL afxError _AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afxTextureOpenFlags flags, afxNat *size, void**ptr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
     AfxAssert(rgn);
     AfxAssert(tex->base.lodCnt > rgn->lodIdx);
     AfxAssertRange(tex->base.imgCnt, rgn->baseImg, rgn->imgCnt);
@@ -900,11 +900,11 @@ _SGL afxError _SglTexDtor(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("tex=%p", tex);
-    AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+    AfxAssertObjects(1, &tex, afxFcc_TEX);
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     if (tex->glHandle)
     {
@@ -930,7 +930,7 @@ _SGL afxError _SglTexCtor(afxTexture tex, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     tex->base.swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
     tex->base.sampleCnt = AfxMaxi(texi->sampleCnt, 1);
@@ -971,7 +971,7 @@ _SGL afxError _SglTexCtor(afxTexture tex, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglTexClsConfig =
 {
-    .fcc = AFX_FCC_TEX,
+    .fcc = afxFcc_TEX,
     .name = "Texture",
     .unitsPerPage = 32,
     .size = sizeof(AFX_OBJECT(afxTexture)),

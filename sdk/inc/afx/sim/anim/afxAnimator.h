@@ -252,8 +252,8 @@ AFX afxBool     AfxAnimatorIsComplete(afxAnimator anir);
 AFX afxBool     AfxFreeAnimatorIfComplete(afxAnimator anir);
 AFX afxReal     AfxAnimatorGetWeight(afxAnimator anir);
 AFX void        AfxAnimatorSetWeight(afxAnimator anir, afxReal weight);
-//AFX granny_track_mask const* AfxAnimatorGetTrackGroupModelMask(afxAnimator anir, granny_model_instance const*  ModelInstance);
-//AFX granny_track_mask const* AfxAnimatorGetTrackGroupTrackMask(afxAnimator anir, granny_animation const*  Animation, granny_int32x TrackGroupIndex);
+//AFX afxAnimTrackMask const* AfxAnimatorGetTrackGroupModelMask(afxAnimator anir, afxBody const* bod);
+//AFX afxAnimTrackMask const* AfxAnimatorGetTrackGroupTrackMask(afxAnimator anir, afxAnimation const* anim, afxNat trackGrpIdx);
 AFX afxBool     AfxAnimatorIsActive(afxAnimator anir);
 AFX void        AfxSetAnimatorActive(afxAnimator anir, afxBool active);
 AFX afxReal     AfxGetAnimatorEaseCurveMultiplier(afxAnimator anir);
@@ -263,27 +263,6 @@ AFX afxReal     AfxAnimatorEaseOut(afxAnimator anir, afxReal duration);
 
 AFX void        AfxRecenterAnimatorClocks(afxAnimator anir, afxReal currClock);
 AFX void        AfxForceAnimatorClampedLooping(afxAnimator anir, afxBool clamp);
-
-
-
-// To iterate over the controls that affect a model, you use a loop like this:
-
-//for (granny_model_control_binding *Binding = GrannyModelControlsBegin(ModelInstance); Binding != GrannyModelControlsEnd(ModelInstance); Binding = GrannyModelControlsNext(Binding))
-//{
-//    granny_control *Control = GrannyGetControlFromBinding(Binding);
-//}
-
-/*
-AFX granny_model_control_binding * GrannyModelControlsBegin(afxBody Model);
-AFX granny_model_control_binding * GrannyModelControlsNext(granny_model_control_binding * Binding);
-AFX granny_model_control_binding * GrannyModelControlsEnd(afxBody Model);
-AFX granny_model_control_binding * GrannyControlModelsBegin(afxAnimator anir);
-AFX granny_model_control_binding * GrannyControlModelsNext(granny_model_control_binding * Binding);
-AFX granny_model_control_binding * GrannyControlModelsEnd(afxAnimator anir);
-AFX afxBody GrannyGetModelInstanceFromBinding(granny_model_control_binding * Binding);
-AFX afxAnimator GrannyGetControlFromBinding(granny_model_control_binding * Binding);
-*/
-
 
 AFXINL afxBody _AfxAnimatorInterlinkGetBody(afxAnimatorInterlink *intk);
 AFXINL afxAnimator _AfxAnimatorInterlinkGetAnimator(afxAnimatorInterlink *intk);

@@ -41,7 +41,7 @@ AFX_DEFINE_STRUCT(afxSource)
 
 AFXINL void AfxMakeSource(afxSource *src)
 {
-    AfxAssignFcc(src, AFX_FCC_SRC);
+    AfxAssignFcc(src, afxFcc_SRC);
     src->iExternalSrcCookie = 0;
     src->idCodec = 0;
     AfxResetUri(&src->uri);
@@ -52,7 +52,7 @@ AFXINL void AfxMakeSource(afxSource *src)
 
 AFXINL void AfxMakeSourceFromMemory(afxSource *src, void* mem, afxNat32 siz, afxNat32 extlSrcCookie, afxNat32 idCodec)
 {
-    AfxAssignFcc(src, AFX_FCC_SRC);
+    AfxAssignFcc(src, afxFcc_SRC);
 
     // specify source by memory.
     src->iExternalSrcCookie = extlSrcCookie;
@@ -65,7 +65,7 @@ AFXINL void AfxMakeSourceFromMemory(afxSource *src, void* mem, afxNat32 siz, afx
 
 AFXINL void AfxMakeSourceFromUri(afxSource *src, afxUri const* uri, afxNat extlSrcCookie, afxNat32 idCodec)
 {
-    AfxAssignFcc(src, AFX_FCC_SRC);
+    AfxAssignFcc(src, afxFcc_SRC);
 
     // specify source by streaming file name.
     src->iExternalSrcCookie = extlSrcCookie;
@@ -78,7 +78,7 @@ AFXINL void AfxMakeSourceFromUri(afxSource *src, afxUri const* uri, afxNat extlS
 
 AFXINL void AfxMakeSourceFromFile(afxSource *src, afxFile file, afxNat32 extlSrcCookie, afxNat32 idCodec)
 {
-    AfxAssignFcc(src, AFX_FCC_SRC);
+    AfxAssignFcc(src, afxFcc_SRC);
 
     // specify source by streaming file ID.
     src->iExternalSrcCookie = extlSrcCookie;
@@ -91,7 +91,7 @@ AFXINL void AfxMakeSourceFromFile(afxSource *src, afxFile file, afxNat32 extlSrc
 
 AFXINL void AfxMakeSourceFromStream(afxSource *src, afxStream *iob, afxNat32 offset, afxNat32 range)
 {
-    AfxAssignFcc(src, AFX_FCC_SRC);
+    AfxAssignFcc(src, afxFcc_SRC);
 
     // specify source by streaming file ID.
     src->iExternalSrcCookie = 0;

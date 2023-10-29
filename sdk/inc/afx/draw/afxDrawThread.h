@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(afxDrawThreadConfig)
 #ifdef _AFX_DRAW_THREAD_C
 AFX_OBJECT(afxDrawThread)
 {
-    afxThread               thr; // AFX_FCC_DTHR
+    afxThread               thr; // afxFcc_DTHR
     afxDrawDevice           ddev;
     afxDrawContext          dctx;
     afxNat                  portIdx;

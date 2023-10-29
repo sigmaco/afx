@@ -23,18 +23,18 @@
 
 typedef enum afxBufferUsage
 {
-    AFX_BUF_USAGE_UPSTREAM          = AFX_BIT_OFFSET(0), // The buffer can be mapped for reading. May only be combined with DST.
-    AFX_BUF_USAGE_DOWNSTREAM        = AFX_BIT_OFFSET(1), // The buffer can be mapped for writing. May only be combined with SRC.
-    AFX_BUF_USAGE_MAP               = (AFX_BUF_USAGE_UPSTREAM | AFX_BUF_USAGE_DOWNSTREAM),
-    AFX_BUF_USAGE_SRC               = AFX_BIT_OFFSET(2), // The buffer can be used as the source of a copy operation.
-    AFX_BUF_USAGE_DST               = AFX_BIT_OFFSET(3), // The buffer can be used as the destination of a copy or write operation.
-    AFX_BUF_USAGE_COPY              = (AFX_BUF_USAGE_SRC | AFX_BUF_USAGE_DST),
-    AFX_BUF_USAGE_INDEX             = AFX_BIT_OFFSET(4), // The buffer can be used as an index buffer.
-    AFX_BUF_USAGE_VERTEX            = AFX_BIT_OFFSET(5), // The buffer can be used as a vertex buffer.
-    AFX_BUF_USAGE_UNIFORM           = AFX_BIT_OFFSET(6), // The buffer can be used as a uniform buffer.
-    AFX_BUF_USAGE_STORAGE           = AFX_BIT_OFFSET(7), // The buffer can be used as a storage buffer.
-    AFX_BUF_USAGE_INDIRECT          = AFX_BIT_OFFSET(8), // The buffer can be used as to store indirect command arguments.
-    AFX_BUF_USAGE_QUERY             = AFX_BIT_OFFSET(9), // The buffer can be used to capture query results.
+    afxBufferUsage_UPSTREAM          = AFX_BIT_OFFSET(0), // The buffer can be mapped for reading. May only be combined with DST.
+    afxBufferUsage_DOWNSTREAM        = AFX_BIT_OFFSET(1), // The buffer can be mapped for writing. May only be combined with SRC.
+    afxBufferUsage_MAP               = (afxBufferUsage_UPSTREAM | afxBufferUsage_DOWNSTREAM),
+    afxBufferUsage_SRC               = AFX_BIT_OFFSET(2), // The buffer can be used as the source of a copy operation.
+    afxBufferUsage_DST               = AFX_BIT_OFFSET(3), // The buffer can be used as the destination of a copy or write operation.
+    afxBufferUsage_COPY              = (afxBufferUsage_SRC | afxBufferUsage_DST),
+    afxBufferUsage_INDEX             = AFX_BIT_OFFSET(4), // The buffer can be used as an index buffer.
+    afxBufferUsage_VERTEX            = AFX_BIT_OFFSET(5), // The buffer can be used as a vertex buffer.
+    afxBufferUsage_UNIFORM           = AFX_BIT_OFFSET(6), // The buffer can be used as a uniform buffer.
+    afxBufferUsage_STORAGE           = AFX_BIT_OFFSET(7), // The buffer can be used as a storage buffer.
+    afxBufferUsage_INDIRECT          = AFX_BIT_OFFSET(8), // The buffer can be used as to store indirect command arguments.
+    afxBufferUsage_QUERY             = AFX_BIT_OFFSET(9), // The buffer can be used to capture query results.
 } afxBufferUsage;
 
 typedef enum afxBufferMap

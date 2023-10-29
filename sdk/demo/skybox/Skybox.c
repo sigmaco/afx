@@ -48,7 +48,7 @@ afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw th
     rnd->activeOutputBufIdx = outBufIdx;
     afxTexture surf;
     AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
-    AfxAssertObjects(1, &surf, AFX_FCC_TEX);
+    AfxAssertObjects(1, &surf, afxFcc_TEX);
 
     AfxRendererBeginScene(rnd, rnd->activeCamera, NIL, surf);
     AfxRendererDrawSky(rnd, TRUE);
@@ -79,7 +79,7 @@ void UpdateFrameMovement(const afxReal DeltaTime)
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &app, AFX_FCC_APP);
+    AfxAssertObjects(1, &app, afxFcc_APP);
 
     afxSize time = AfxGetTimer();
 
@@ -123,7 +123,7 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
 
     afxArchive arc;
     AfxAcquireArchives(1, &arc, &uri128.uri, (afxFileFlags[]) { AFX_FILE_FLAG_R });
-    AfxAssertObjects(1, &arc, AFX_FCC_ARC);
+    AfxAssertObjects(1, &arc, afxFcc_ARC);
     afxUri itemNam;
     AfxUriWrapLiteral(&itemNam, "art/worldtest.tga", 0);
     afxNat itemIdx;
@@ -142,15 +142,15 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
     AfxAcquireSimulations(app, 1, &sim, &simSpec);
-    AfxAssertObjects(1, &sim, AFX_FCC_SIM);
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutConfig.endpoint = &uriMap;
-    AfxOpenDrawOutputs(dsys, 1, &doutConfig, &dout);
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    AfxReconnectDrawOutput(dout, dctx, NIL);
+    AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, &dout);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    AfxReconnectDrawOutput(dout, dctx);
 
     afxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DinFetcherFn;
@@ -209,10 +209,10 @@ int main(int argc, char const* argv[])
         afxDrawSystemConfig dsysSpec = { 0 };
         AfxChooseDrawSystemConfiguration(&dsysSpec, 0);
         AfxAcquireDrawSystems(1, &dsysSpec, &dsys);
-        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };
-        AfxAcquireDrawContexts(dsys, 1, &dctxConfig, &dctx);
+        AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
         AfxAssert(dctx);
 
         afxApplication TheApp;
@@ -225,7 +225,7 @@ int main(int argc, char const* argv[])
         //appConfig.exit = AfxLeaveApplication;
         //appConfig.update = AfxUpdateApplication;
         AfxAcquireApplications(1, &TheApp, &appConfig);
-        AfxAssertObjects(1, &TheApp, AFX_FCC_APP);
+        AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
         while (AfxSystemIsOperating())

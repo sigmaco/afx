@@ -56,7 +56,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
             //if (cmd != &dscr->base.cmdEnd)
             {
                 //AfxDeallocate(all, cmd);
-                //AfxAssertType(idd->cmdArena, AFX_FCC_AREN);
+                //AfxAssertType(idd->cmdArena, afxFcc_AREN);
                 AfxRecycleArenaUnit(&idd->cmdArena, cmd, cmd->siz);
             }
         }
@@ -71,14 +71,14 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
 _SGL afxError _SglDscrEndCb(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     return err;
 }
 
 _SGL afxError _SglDscrBeginCb(afxDrawScript dscr, afxBool permanent)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     dscr->base.disposable = !permanent;
     return err;
 }
@@ -87,7 +87,7 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
 {
     AfxEntry("dscr=%p", dscr);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
     while (1)
     {
@@ -97,7 +97,7 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
             // AfxPopLinkage(&dscr->base.queue); // we can't do it here. We need wait for draw context to liberate it.
 
             //afxDrawContext dctx = AfxGetObjectProvider(&dscr->base.obj);
-            //AfxAssertType(dctxD, AFX_FCC_DCTX);
+            //AfxAssertType(dctxD, afxFcc_DCTX);
             //AfxDrawContextProcess(dctx); // process until draw context ends its works and unlock this script.
             //AfxYieldThreading();
         }
@@ -105,7 +105,7 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
     }
 
     afxDrawInput din = dscr->base.din;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     for (afxNat i = 0; i < din->base.scripts.cnt; i++)
     {
@@ -133,12 +133,12 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
 {
     AfxEntry("dscr=%p", dscr);
     afxError err = AFX_ERR_NONE;
-    //AfxAssertObjects(1, &dscr, AFX_FCC_DSCR);
+    //AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
     struct _dscrParadigm *paradigm = ((struct _dscrParadigm *)cookie->udd[0]) + cookie->no;
 
     afxDrawInput din = paradigm->owner;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     afxDrawContext dctx;
     AfxGetDrawInputConnection(din, &dctx);
@@ -180,7 +180,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglDscrClsConfig =
 {
-    .fcc = AFX_FCC_DSCR,
+    .fcc = afxFcc_DSCR,
     .name = "Draw Script",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawScript)),

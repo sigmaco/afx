@@ -43,49 +43,49 @@ extern afxClassConfig const _AfxDthrClsConfig;
 _AFX afxBool AfxDrawDeviceIsRunning(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return ddev->serving;
 }
 
 _AFX afxNat AfxCountDrawContexts(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return AfxCountInstances(&ddev->contexts);
 }
 
 _AFX afxNat AfxCountDrawOutputs(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return AfxCountInstances(&ddev->outputs);
 }
 
 _AFX afxNat AfxCountDrawInputs(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return AfxCountInstances(&ddev->inputs);
 }
 
 _AFX afxClass* AfxGetDrawContextClass(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return &ddev->contexts;
 }
 
 _AFX afxClass* AfxGetDrawInputClass(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return &ddev->inputs;
 }
 
 _AFX afxClass* AfxGetDrawOutputClass(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return &ddev->outputs;
 }
 
@@ -94,7 +94,7 @@ _AFX afxNat AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat firs
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(din);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -103,7 +103,7 @@ _AFX afxNat AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat firs
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxEnumerateInstances(&ddev->inputs, first, cnt, (afxHandle*)din);
         }
         else
@@ -119,7 +119,7 @@ _AFX afxNat AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat fir
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(dout);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -128,7 +128,7 @@ _AFX afxNat AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat fir
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxEnumerateInstances(&ddev->outputs, first, cnt, (afxHandle*)dout);
         }
         else
@@ -144,7 +144,7 @@ _AFX afxNat AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat fi
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(dctx);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -153,7 +153,7 @@ _AFX afxNat AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat fi
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxEnumerateInstances(&ddev->contexts, first, cnt, (afxHandle*)dctx);
         }
         else
@@ -181,7 +181,7 @@ _AFX afxBool _AfxDdrvCurateProxyDctxCb(afxHandle obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawContext dctx = (afxDrawContext)obj;
-    AfxAssertObjects(1, &dctx, AFX_FCC_DCTX);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     struct _DdrvCurateProxyCb const *proxy = udd;
     return AfxGetObjectProvider(dctx) != proxy->ddev || proxy->fdctx(dctx, proxy->udd); // don't interrupt curation;
 }
@@ -190,7 +190,7 @@ _AFX afxBool _AfxDdrvCurateProxyDoutCb(afxHandle obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawOutput dout = (afxDrawOutput)obj;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     struct _DdrvCurateProxyCb const *proxy = udd;
     return AfxGetDrawOutputDevice(dout) != proxy->ddev || proxy->fdout(dout, proxy->udd); // don't interrupt curation;
 }
@@ -199,7 +199,7 @@ _AFX afxBool _AfxDdrvCurateProxyDinCb(afxHandle obj, void *udd)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawInput din = (afxDrawInput)obj;
-    AfxAssertObjects(1, &din, AFX_FCC_DIN);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
     struct _DdrvCurateProxyCb const *proxy = udd;
     return AfxGetObjectProvider(din) != proxy->ddev || proxy->fdin(din, proxy->udd); // don't interrupt curation;
 }
@@ -209,7 +209,7 @@ _AFX afxNat AfxCurateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
     AfxAssert(cnt);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -218,7 +218,7 @@ _AFX afxNat AfxCurateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxCurateInstances(&ddev->contexts, first, cnt, (void*)f, udd);
         }
         else
@@ -234,7 +234,7 @@ _AFX afxNat AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first,
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
     AfxAssert(cnt);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -243,7 +243,7 @@ _AFX afxNat AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first,
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxCurateInstances(&ddev->outputs, first, cnt, (void*)f, udd);
         }
         else
@@ -259,7 +259,7 @@ _AFX afxNat AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
     AfxAssert(cnt);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     afxNat rslt = 0;
 
@@ -268,7 +268,7 @@ _AFX afxNat AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, 
     {
         if ((devId != AFX_N32_MAX))
         {
-            AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
             rslt = AfxCurateInstances(&ddev->inputs, first, cnt, (void*)f, udd);
         }
         else
@@ -282,14 +282,14 @@ _AFX afxNat AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, 
 _AFX afxNat AfxCountDrawPorts(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return ddev->portCnt;
 }
 
 _AFX void AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps* caps)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssertRange(ddev->portCnt, portIdx, 1);
     AfxAssert(caps);
     *caps = ddev->portCaps[portIdx];
@@ -298,7 +298,7 @@ _AFX void AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps
 _AFX void AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(caps);
     *caps = ddev->caps;
 }
@@ -306,7 +306,7 @@ _AFX void AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps)
 _AFX void AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(limits);
     *limits = ddev->limits;
 }
@@ -314,14 +314,14 @@ _AFX void AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits
 _AFX afxError _AfxDdevDtor(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     afxDrawDevice ddrv = AfxGetObjectProvider(ddev);
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
-    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &ctx, afxFcc_CTX);
 
     _AfxUninstallChainedClasses(&ddev->classes);
 
@@ -337,9 +337,9 @@ _AFX afxError _AfxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     AfxAssert(info);
 
     afxDrawDevice ddrv = AfxGetObjectProvider(ddev);
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
     AfxExcerptString(&ddev->domain, info->domain);
@@ -377,7 +377,7 @@ _AFX afxError _AfxDdrvDtor(afxDrawIcd ddrv)
 {
     AfxEntry("ddrv=%p", ddrv);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
 
     //afxContext mem = AfxGetDrawSystemMemory();
 
@@ -392,13 +392,13 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
 {
     AfxEntry("ddrv=%p", ddrv);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddrv, AFX_FCC_DDRV);
+    AfxAssertObjects(1, &ddrv, afxFcc_DDRV);
 
     afxDrawIcdInfo const* info = ((afxDrawIcdInfo const *)cookie->udd[0]) + cookie->no;
     AfxAssert(info);
     
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     //afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
     AfxExcerptString(&ddrv->name, info->name);
@@ -415,7 +415,7 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
     AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on draw system %p...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxUriGetStringConst(&file)), dsys, AfxPushString(&ddrv->name), ddrv->verMajor, ddrv->verMinor, ddrv->verPatch, AfxPushString(&ddrv->vendor), AfxPushString(&ddrv->website), AfxPushString(&ddrv->note));
 
     ddrv->mdle = info->mdle;
-    AfxAssertObjects(1, &ddrv->mdle, AFX_FCC_MDLE);
+    AfxAssertObjects(1, &ddrv->mdle, afxFcc_MDLE);
     AfxReacquireObjects(1, (void*[]) { ddrv->mdle });
 
     afxChain *classes = &ddrv->classes;
@@ -438,7 +438,7 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
             if (AfxAcquireObjects(&ddrv->devices, devCnt, (afxHandle*)ddev, (void*[]) { devInfos })) AfxThrowError();
             else
             {
-                AfxAssertObjects(devCnt, ddev, AFX_FCC_DDEV);
+                AfxAssertObjects(devCnt, ddev, afxFcc_DDEV);
 
                 for (afxNat i = 0; i < devCnt; i++)
                 {
@@ -464,34 +464,34 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
 _AFX afxClass* AfxGetDrawDeviceClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxClass* cls = &dsys->devices;
-    AfxAssertClass(cls, AFX_FCC_DDEV);
+    AfxAssertClass(cls, afxFcc_DDEV);
     return cls;
 }
 
 _AFX afxNat AfxCountDrawThreads(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->threads, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->threads, afxFcc_DTHR);
     return AfxCountInstances(&dsys->threads);
 }
 
 _AFX afxNat AfxCountDrawDevices(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->devices, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->devices, afxFcc_DDEV);
     return AfxCountInstances(&dsys->devices);
 }
 
 _AFX afxClass* AfxGetDrawThreadClass(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxClass* cls = &dsys->threads;
-    AfxAssertClass(cls, AFX_FCC_DTHR);
+    AfxAssertClass(cls, afxFcc_DTHR);
     return cls;
 }
 
@@ -500,8 +500,8 @@ _AFX afxNat AfxEnumerateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(dthr);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->threads, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->threads, afxFcc_DTHR);
     return AfxEnumerateInstances(&dsys->threads, first, cnt, (afxHandle*)dthr);
 }
 
@@ -510,8 +510,8 @@ _AFX afxNat AfxEnumerateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(ddev);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->devices, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->devices, afxFcc_DDEV);
     return AfxEnumerateInstances(&dsys->devices, first, cnt, (afxHandle*)ddev);
 }
 
@@ -520,8 +520,8 @@ _AFX afxNat AfxCurateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, a
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->devices, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->devices, afxFcc_DDEV);
     return AfxCurateInstances(&dsys->devices, first, cnt, (void*)f, udd);
 }
 
@@ -530,21 +530,21 @@ _AFX afxNat AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, a
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertClass(&dsys->threads, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertClass(&dsys->threads, afxFcc_DTHR);
     return AfxCurateInstances(&dsys->threads, first, cnt, (void*)f, udd);
 }
 
 _AFX afxBool AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     AfxAssert(ddev);
     afxBool rslt = FALSE;
 
     if ((rslt = !!(AfxEnumerateDrawDevices(dsys, devIdx, 1, ddev))))
     {
-        AfxAssertObjects(1, ddev, AFX_FCC_DDEV);
+        AfxAssertObjects(1, ddev, afxFcc_DDEV);
     }
     return rslt;
 }
@@ -552,9 +552,9 @@ _AFX afxBool AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *
 _AFX afxContext AfxGetDrawSystemMemory(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = dsys->ctx;
-    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &ctx, afxFcc_CTX);
     return ctx;
 }
 
@@ -562,7 +562,7 @@ _AFX afxError _AfxDsysDtor(afxDrawSystem dsys)
 {
     AfxEntry("dsys=%p", dsys);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
     //AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
 
@@ -576,19 +576,19 @@ _AFX afxError _AfxDsysDtor(afxDrawSystem dsys)
 _AFX afxDrawIcd _AfxDsysFindIcd(afxDrawSystem dsys, afxUri const *file)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     
     afxUri target;
-    AfxAssertType(file, AFX_FCC_URI);
+    AfxAssertType(file, afxFcc_URI);
     AfxExcerptUriObject(&target, file);
 
     afxNat i = 0;
     afxDrawIcd icd;
-    AfxAssertClass(&dsys->icds, AFX_FCC_DDRV);
+    AfxAssertClass(&dsys->icds, afxFcc_DDRV);
     while(AfxEnumerateInstances(&dsys->icds, i, 1, (afxHandle*)&icd))
     {
         afxUri tmp;
-        AfxAssertObjects(1, &icd, AFX_FCC_DDRV);
+        AfxAssertObjects(1, &icd, afxFcc_DDRV);
         AfxExcerptUriObject(&tmp, AfxGetModulePath(icd->mdle));
 
         if (AfxUriIsEquivalent(&target, &tmp))
@@ -602,8 +602,8 @@ _AFX afxDrawIcd _AfxDsysFindIcd(afxDrawSystem dsys, afxUri const *file)
 _AFX afxError _AfxDsysLoadIcd(afxDrawSystem dsys, afxUri const* file, afxDrawIcd *ddrv)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
-    AfxAssertType(file, AFX_FCC_URI);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    AfxAssertType(file, afxFcc_URI);
     AfxComment("Loading draw ICD %.*s", AfxPushString(AfxUriGetStringConst(file)));
 
     afxUri file2;
@@ -629,7 +629,7 @@ _AFX afxError _AfxDsysLoadIcd(afxDrawSystem dsys, afxUri const* file, afxDrawIcd
                     if (AfxAcquireObjects(&dsys->icds, 1, (afxHandle*)&ddrv2, (void*[]) { (void*)&icdInfo })) AfxThrowError();
                     else
                     {
-                        AfxAssertObjects(1, &ddrv2, AFX_FCC_DDRV);
+                        AfxAssertObjects(1, &ddrv2, afxFcc_DDRV);
 
                         if (err)
                             AfxReleaseObjects(1, (void*[]) { ddrv2 });
@@ -650,7 +650,7 @@ _AFX afxError _AfxDsysLoadIcd(afxDrawSystem dsys, afxUri const* file, afxDrawIcd
 _AFX afxError _AfxDsysScanForIcds(afxDrawSystem dsys, afxUri const* fileMask)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     HANDLE fh;    
     WIN32_FIND_DATAA wfd;    
     afxUri2048 pathBuf;
@@ -680,7 +680,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 {
     AfxEntry("dsys=%p", dsys);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
     afxDrawSystemConfig const *config = ((afxDrawSystemConfig const *)cookie->udd[0]) + cookie->no;
     AfxAssert(config);
@@ -692,7 +692,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
     afxContext ctx = dsys->ctx;
 
-    AfxAssertObjects(1, &dsys->ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &dsys->ctx, afxFcc_CTX);
 
     if (AfxReacquireObjects(1, (void*[]) { dsys->ctx })) AfxThrowError();
     else
@@ -708,7 +708,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
             afxClassConfig const ddrvClsConfig =
             {
-                .fcc = AFX_FCC_DDRV,
+                .fcc = afxFcc_DDRV,
                 .name = "Installable Client (Draw) Driver",
                 .unitsPerPage = 1,
                 .size = sizeof(AFX_OBJECT(afxDrawIcd)),
@@ -720,7 +720,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
             afxClassConfig const ddevClsConfig =
             {
-                .fcc = AFX_FCC_DDEV,
+                .fcc = afxFcc_DDEV,
                 .name = "Draw Device",
                 .unitsPerPage = 1,
                 .size = sizeof(AFX_OBJECT(afxDrawDevice)),
@@ -732,7 +732,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
             afxClassConfig const dctxClsConfig =
             {
-                .fcc = AFX_FCC_DCTX,
+                .fcc = afxFcc_DCTX,
                 .name = "Draw Context",
                 .unitsPerPage = 1,
                 .size = sizeof(AFX_OBJECT(afxDrawContext)),
@@ -744,7 +744,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
             afxClassConfig const doutClsConfig =
             {
-                .fcc = AFX_FCC_DOUT,
+                .fcc = afxFcc_DOUT,
                 .name = "Draw Output",
                 .unitsPerPage = 1,
                 .size = sizeof(AFX_OBJECT(afxDrawOutput)),
@@ -756,7 +756,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
             afxClassConfig const dinClsConfig =
             {
-                .fcc = AFX_FCC_DIN,
+                .fcc = afxFcc_DIN,
                 .name = "Draw Input",
                 .unitsPerPage = 1,
                 .size = sizeof(AFX_OBJECT(afxDrawInput)),
@@ -785,7 +785,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
                 {
                     for (afxNat i = 0; i < threadCnt; i++)
                     {
-                        AfxAssertObjects(1, &dthr[i], AFX_FCC_DTHR);
+                        AfxAssertObjects(1, &dthr[i], afxFcc_DTHR);
                         afxThread thr = AfxGetDrawThreadBase(dthr[i]);
                         AfxSetThreadAffinity(thr, i);
                         AfxRunThread(thr);
@@ -815,7 +815,7 @@ _AFX afxError AfxAcquireDrawSystems(afxNat cnt, afxDrawSystemConfig const config
     if (!AfxGetSystem(&sys)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &sys, AFX_FCC_SYS);
+        AfxAssertObjects(1, &sys, afxFcc_SYS);
 
         if (AfxAcquireObjects(&sys->dsystems, cnt, (afxHandle*)dsys, (void*[]) { (void*)config }))
             AfxThrowError();
@@ -832,7 +832,7 @@ _AFX void AfxChooseDrawSystemConfiguration(afxDrawSystemConfig *config, afxNat e
 
 _AFX afxClassConfig _AfxDsysClsConfig =
 {
-    .fcc = AFX_FCC_DSYS,
+    .fcc = afxFcc_DSYS,
     .name = "Draw I/O System",
     .maxCnt = 1,
     .unitsPerPage = 1,

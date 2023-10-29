@@ -33,7 +33,7 @@
 _SGL afxNat _SglDoutBuffersAreLocked(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockShared(&dout->base.buffersLock);
     afxNat bufferLockCnt = dout->base.bufferLockCnt;
     AfxExitSlockShared(&dout->base.buffersLock);
@@ -43,7 +43,7 @@ _SGL afxNat _SglDoutBuffersAreLocked(afxDrawOutput dout)
 _SGL afxNat _SglDoutLockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockExclusive(&dout->base.buffersLock);
     afxNat bufferLockCnt = ++dout->base.bufferLockCnt;
     AfxExitSlockExclusive(&dout->base.buffersLock);
@@ -53,7 +53,7 @@ _SGL afxNat _SglDoutLockBuffers(afxDrawOutput dout)
 _SGL afxNat _SglDoutUnlockBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockExclusive(&dout->base.buffersLock);
     afxNat bufferLockCnt = --dout->base.bufferLockCnt;
     AfxExitSlockExclusive(&dout->base.buffersLock);
@@ -63,7 +63,7 @@ _SGL afxNat _SglDoutUnlockBuffers(afxDrawOutput dout)
 _SGL afxNat _SglDoutIsSuspended(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockShared(&dout->base.suspendSlock);
     afxNat suspendCnt = dout->base.suspendCnt;
     AfxExitSlockShared(&dout->base.suspendSlock);
@@ -73,7 +73,7 @@ _SGL afxNat _SglDoutIsSuspended(afxDrawOutput dout)
 _SGL afxNat _SglDoutSuspendFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockExclusive(&dout->base.suspendSlock);
     afxNat suspendCnt = ++dout->base.suspendCnt;
     AfxExitSlockExclusive(&dout->base.suspendSlock);
@@ -83,7 +83,7 @@ _SGL afxNat _SglDoutSuspendFunction(afxDrawOutput dout)
 _SGL afxNat _SglDoutResumeFunction(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxEnterSlockExclusive(&dout->base.suspendSlock);
     afxNat suspendCnt = --dout->base.suspendCnt;
     AfxExitSlockExclusive(&dout->base.suspendSlock);
@@ -94,7 +94,7 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
 {
     AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     for (afxNat i = 0; i < dout->base.bufCnt; i++)
     {
@@ -107,8 +107,8 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
         }
         else
         {
-            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
-            //AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+            AfxAssertObjects(1, &tex, afxFcc_TEX);
+            //AfxAssertObjects(1, &canv, afxFcc_CANV);
             AfxReleaseObjects(1, (void*[]) { tex });
             //AfxReleaseObjects(1, (void*[]) { canv });
             dout->base.buffers[i].tex = NIL;
@@ -154,7 +154,7 @@ _SGL void Calc_window_values(HWND window, afxInt* out_extra_width, afxInt32* out
 _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     (void)timeout;
     *bufIdx = AFX_INVALID_INDEX;
 
@@ -170,7 +170,7 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
         if (!tex) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+            AfxAssertObjects(1, &tex, afxFcc_TEX);
 
             if (!dout->base.buffers[idx].booked)
             {
@@ -198,12 +198,12 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
 _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     (void)timeout;
     //_SglSwapBuffersNow(dout); // do black screen
 
-    //if (idd->fcc == AFX_FCC_WND || idd->fcc == AFX_FCC_WPP)
+    //if (idd->fcc == afxFcc_WND || idd->fcc == afxFcc_WPP)
     {
         SetWindowTextA(dout->wnd, AfxGetStringDataConst(&dout->base.caption, 0));
         //UpdateWindow(dout->base.wglWnd);
@@ -214,8 +214,8 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 _SGL afxError _SglDoutProcCb(afxDrawOutput dout, afxDrawThread dthr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, AFX_FCC_DOUT);
-    AfxAssertObjects(1, &dthr, AFX_FCC_DTHR);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
     return err;
 }
 
@@ -296,17 +296,17 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxDrawOutputConfig const *config = ((afxDrawOutputConfig const *)cookie->udd[1]) + cookie->no;
 
     //afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
-    //AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    //AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     afxDrawDevice ddev = AfxGetObjectProvider(dout);
-    AfxAssertObjects(1, &ddev, AFX_FCC_DDEV);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
     afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
 
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
     AfxPushLinkage(&dout->base.dctx, NIL);
 
-    AfxAssignFcc(dout, AFX_FCC_DOUT);
+    AfxAssignFcc(dout, afxFcc_DOUT);
 
     dout->base.suspendCnt = 1;
     AfxAcquireSlock(&dout->base.suspendSlock);
@@ -582,7 +582,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglDoutClsConfig =
 {
-    .fcc = AFX_FCC_DOUT,
+    .fcc = afxFcc_DOUT,
     .name = "Draw Output",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawOutput)),

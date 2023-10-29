@@ -48,7 +48,7 @@ _SGL afxError _SglCanvReinstantiateIdd(sglDpuIdd* dpu, afxCanvas canv, GLenum ta
         {
             afxTexture surf;
             AfxGetAnnexedSurface(canv, i, &surf);
-            AfxAssertObjects(1, &surf, AFX_FCC_TEX);
+            AfxAssertObjects(1, &surf, afxFcc_TEX);
 
             if (!surf) AfxThrowError();
             else
@@ -193,7 +193,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum targ
 
     if (canv)
     {
-        AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+        AfxAssertObjects(1, &canv, afxFcc_CANV);
 
         if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_BIT_OFFSET(AFX_CANV_FLAG_REVALIDATE)))
         {
@@ -216,7 +216,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum targ
             {
                 afxTexture surf;
                 AfxGetAnnexedSurface(canv, i, &surf);
-                AfxAssertObjects(1, &surf, AFX_FCC_TEX);
+                AfxAssertObjects(1, &surf, afxFcc_TEX);
 
                 if (!surf) AfxThrowError();
                 else
@@ -241,7 +241,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum targ
 _SGL afxError _AfxReadjustCanvas(afxCanvas canv, afxWhd const from, afxWhd const extent)
 {
 	afxError err = AFX_ERR_NONE;
-	AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+	AfxAssertObjects(1, &canv, afxFcc_CANV);
 	AfxAssert(extent);
 	AfxAssert(extent[0]);
 	AfxAssert(extent[1]);
@@ -260,7 +260,7 @@ _SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
 {
 	AfxEntry("canv=%p", canv);
 	afxError err = AFX_ERR_NONE;
-	AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+	AfxAssertObjects(1, &canv, afxFcc_CANV);
 
 	for (afxNat i = 0; i < canv->base.annexCnt; i++)
 	{
@@ -268,7 +268,7 @@ _SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
 
         if (tex)
         {
-            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+            AfxAssertObjects(1, &tex, afxFcc_TEX);
             AfxReleaseObjects(1, (void*[]) { tex });
             canv->base.annexes[i].tex = NIL;
         }
@@ -283,11 +283,11 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
 {
     AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &canv, AFX_FCC_CANV);
+    AfxAssertObjects(1, &canv, afxFcc_CANV);
 
     afxDrawContext dctx = AfxGetObjectProvider(canv);
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     _AfxCanvDropAllSurfaces(canv);
 
@@ -313,7 +313,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(canv);
     afxContext ctx = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &ctx, afxFcc_CTX);
 
     canv->base.udd[0] = blueprint->udd[0];
     canv->base.udd[1] = blueprint->udd[1];
@@ -332,7 +332,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
         {
             if ((tex = blueprint->rasters[i].tex))
             {
-                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                AfxAssertObjects(1, &tex, afxFcc_TEX);
 
                 AfxGetTextureExtent(tex, 0, whd);
 
@@ -346,7 +346,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
         {
             if ((tex = blueprint->ds[i].tex))
             {
-                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                AfxAssertObjects(1, &tex, afxFcc_TEX);
 
                 AfxGetTextureExtent(tex, 0, whd);
 
@@ -454,7 +454,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                         if (AfxAcquireTextures(dctx, 1, &texi, &tex)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                            AfxAssertObjects(1, &tex, afxFcc_TEX);
                             AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
                             canv->base.annexes[i].tex = tex;
                             canv->base.annexes[i].usage = usage;
@@ -513,7 +513,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                             if (AfxAcquireTextures(dctx, 1, &texi, &tex)) AfxThrowError();
                             else
                             {
-                                AfxAssertObjects(1, &tex, AFX_FCC_TEX);
+                                AfxAssertObjects(1, &tex, afxFcc_TEX);
                                 AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
 
                                 canv->base.dsIdx[i] = canv->base.rasterCnt + i;
@@ -560,7 +560,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
 
 _SGL afxClassConfig _SglCanvClsConfig =
 {
-    .fcc = AFX_FCC_CANV,
+    .fcc = afxFcc_CANV,
     .name = "Canvas",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxCanvas)),

@@ -32,7 +32,7 @@ _SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage
     //AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
     (void)dpu;
-    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+    AfxAssertObjects(1, &shd, afxFcc_SHD);
 
     if ((shd->updFlags & SGL_UPD_FLAG_DEVICE))
     {
@@ -148,13 +148,13 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 {
     AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+    AfxAssertObjects(1, &shd, afxFcc_SHD);
 
     afxShaderBlueprint const *blueprint = ((afxShaderBlueprint const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(shd);
     afxContext ctx = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &ctx, AFX_FCC_CTX);
+    AfxAssertObjects(1, &ctx, afxFcc_CTX);
 
      AfxCloneUri(&shd->base.uri, &blueprint->uri.uri);
 
@@ -168,7 +168,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     if (codeLen && !(shd->base.code = AfxAllocate(ctx, codeLen, 0, AfxSpawnHint()))) AfxThrowError();
     else
     {
-        AfxAssertType(&blueprint->codes, AFX_FCC_ARR);
+        AfxAssertType(&blueprint->codes, afxFcc_ARR);
         AfxDumpArray(&blueprint->codes, shd->base.code);
     }
 
@@ -239,13 +239,13 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     if (err && shd->base.code)
         AfxDeallocate(ctx, shd->base.code);
 
-    AfxAssertObjects(1, &shd, AFX_FCC_SHD);
+    AfxAssertObjects(1, &shd, afxFcc_SHD);
     return err;
 }
 
 _SGL afxClassConfig _SglShdClsConfig =
 {
-    .fcc = AFX_FCC_SHD,
+    .fcc = afxFcc_SHD,
     .name = "Shader",
     .unitsPerPage = 10,
     .size = sizeof(AFX_OBJECT(afxShader)),

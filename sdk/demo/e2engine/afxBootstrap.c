@@ -32,7 +32,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
     sim = AfxAcquireSimulations(TheApp, &simSpec);
-    AfxAssertObjects(1, &sim, AFX_FCC_SIM);
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     AfxUriWrapLiteral(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = { 0 };
@@ -98,7 +98,7 @@ int main(int argc, char const* argv[])
 
         afxDrawSystemConfig dsysSpec = { 0 };
         dsys = AfxAcquireDrawSystems(&dsysSpec);
-        AfxAssertType(dsys, AFX_FCC_DSYS);
+        AfxAssertType(dsys, afxFcc_DSYS);
 
         afxDrawContextConfig dctxConfig = { 0 };
         dctxConfig.queueCnt = 1;
@@ -114,7 +114,7 @@ int main(int argc, char const* argv[])
         appConfig.exit = AfxLeaveApplication;
         appConfig.update = AfxUpdateApplication;
         TheApp = AfxAcquireApplication(&appConfig);
-        AfxAssertObject(TheApp, AFX_FCC_APP);
+        AfxAssertObject(TheApp, afxFcc_APP);
 
         if (AFX_OPCODE_BREAK == AfxRunApplication(TheApp))
             reboot = 0;

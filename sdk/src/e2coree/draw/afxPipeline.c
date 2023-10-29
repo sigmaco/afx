@@ -34,7 +34,7 @@
 _AFX void AfxGetPrimitiveAssembling(afxPipeline pip, afxPrimTopology* top, afxBool* restartEnabled)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (top)
         *top = pip->primTop;
@@ -46,7 +46,7 @@ _AFX void AfxGetPrimitiveAssembling(afxPipeline pip, afxPrimTopology* top, afxBo
 _AFX afxBool AfxGetDepthTest(afxPipeline pip, afxCompareOp* op, afxBool* clampEnabled, afxBool* writeEnabled) // return TRUE if depth test is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (op)
         *op = pip->depthCompareOp;
@@ -63,7 +63,7 @@ _AFX afxBool AfxGetDepthTest(afxPipeline pip, afxCompareOp* op, afxBool* clampEn
 _AFX afxBool AfxGetDepthBias(afxPipeline pip, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (constFactor)
         *constFactor = pip->depthBiasConstFactor;
@@ -80,7 +80,7 @@ _AFX afxBool AfxGetDepthBias(afxPipeline pip, afxReal* slopeScale, afxReal* cons
 _AFX afxBool AfxGetDepthBounds(afxPipeline pip, afxReal bounds[2]) // return TRUE if depth bounds is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (bounds)
         AfxCopyV2d(bounds, pip->depthBounds);
@@ -91,7 +91,7 @@ _AFX afxBool AfxGetDepthBounds(afxPipeline pip, afxReal bounds[2]) // return TRU
 _AFX afxBool AfxGetStencilConfig(afxPipeline pip, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (front)
         *front = pip->stencilFront;
@@ -105,7 +105,7 @@ _AFX afxBool AfxGetStencilConfig(afxPipeline pip, afxStencilConfig* front, afxSt
 _AFX afxBool AfxGetLogicalPixelOp(afxPipeline pip, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (op)
         *op = pip->logicOp;
@@ -116,7 +116,7 @@ _AFX afxBool AfxGetLogicalPixelOp(afxPipeline pip, afxLogicOp* op) // return TRU
 _AFX void AfxGetColorBlendConstants(afxPipeline pip, afxReal rgba[4])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssert(rgba);
     AfxCopyV4d(rgba, pip->blendConstants);
 }
@@ -124,14 +124,14 @@ _AFX void AfxGetColorBlendConstants(afxPipeline pip, afxReal rgba[4])
 _AFX afxNat AfxCountColorOutputChannels(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->outCnt;
 }
 
 _AFX afxNat AfxGetColorOutputChannels(afxPipeline pip, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssertRange(pip->outCnt, first, cnt);
     AfxAssert(ch);
 
@@ -146,7 +146,7 @@ _AFX afxNat AfxGetColorOutputChannels(afxPipeline pip, afxNat first, afxNat cnt,
 _AFX afxBool AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxBitmask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     
     if (sampleCnt)
         *sampleCnt = pip->sampleCnt;
@@ -161,7 +161,7 @@ _AFX afxBool AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt
 _AFX afxBool AfxGetSampleShading(afxPipeline pip, afxReal* minSampleShadingValue) // return TRUE if multisampling rasterization is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (minSampleShadingValue)
         *minSampleShadingValue = pip->minSampleShadingValue;
@@ -172,7 +172,7 @@ _AFX afxBool AfxGetSampleShading(afxPipeline pip, afxReal* minSampleShadingValue
 _AFX afxCullMode AfxGetPrimitiveCulling(afxPipeline pip, afxBool* cwFrontFacing) // return the culling mode set.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (cwFrontFacing)
         *cwFrontFacing = pip->cwFrontFacing;
@@ -183,7 +183,7 @@ _AFX afxCullMode AfxGetPrimitiveCulling(afxPipeline pip, afxBool* cwFrontFacing)
 _AFX afxBool AfxGetRasterization(afxPipeline pip, afxFillMode* mode, afxReal* lineWidth) // return TRUE if rasterization enabled.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     if (mode)
         *mode = pip->fillMode;
@@ -197,7 +197,7 @@ _AFX afxBool AfxGetRasterization(afxPipeline pip, afxFillMode* mode, afxReal* li
 _AFX afxNat AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssert(cnt);
     AfxAssert(rect);
     AfxAssertRange(pip->scissorCnt, first, cnt);
@@ -215,14 +215,14 @@ _AFX afxNat AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, af
 _AFX afxNat AfxCountPipelineScissors(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->scissorCnt;
 }
 
 _AFX afxNat AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssert(cnt);
     AfxAssert(vp);
     AfxAssertRange(pip->vpCnt, first, cnt);
@@ -243,14 +243,14 @@ _AFX afxNat AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, a
 _AFX afxNat AfxCountPipelineViewports(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->vpCnt;
 }
 
 _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssert(cnt);
     AfxAssert(streams);
     AfxAssertRange(pip->inCnt, first, cnt);
@@ -267,14 +267,14 @@ _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
 _AFX afxNat AfxCountPipelineInputs(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->inCnt;
 }
 
 _AFX afxNat AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     AfxAssert(cnt);
     AfxAssert(shd);
     AfxAssertRange(pip->shaderCnt, first, cnt);
@@ -291,24 +291,24 @@ _AFX afxNat AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afx
 _AFX afxNat AfxCountPipelineShaders(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->shaderCnt;
 }
 
 AFX afxNat AfxCountPipelineWirings(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->wiringCnt;
 }
 
 AFX afxError AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxPipelineRig *legt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     //afxPipelineRig pipr = AfxGetLinker(&pip->pipr);
-    //AfxAssertObject(pipr, AFX_FCC_PIPR);
+    //AfxAssertObject(pipr, afxFcc_PIPR);
 
     *set = pip->wiring[idx].set;
     *legt = pip->wiring[idx].legt;
@@ -332,9 +332,9 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
     afxPipeline pip = NIL;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, AFX_FCC_CTX);
+    AfxAssertObjects(1, &mem, afxFcc_CTX);
 
-    AfxAssertType(uri, AFX_FCC_URI);
+    AfxAssertType(uri, afxFcc_URI);
     AfxAssert(!AfxUriIsBlank(uri));
 
     AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str));
@@ -356,7 +356,7 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
             if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
             else
             {
-                AfxAssertType(&xml, AFX_FCC_XML);
+                AfxAssertType(&xml, afxFcc_XML);
 
                 afxXmlNode const *node = AfxGetXmlRoot(&xml);
                 afxString const *name = AfxGetXmlNodeName(node);
@@ -390,7 +390,7 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
                         if (AfxBuildPipelines(dctx, 1, &pip, &blueprint)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &pip, AFX_FCC_PIP);
+                            AfxAssertObjects(1, &pip, afxFcc_PIP);
                         }
 
                         for (afxNat i = 0; i < blueprint.shdCnt; i++)

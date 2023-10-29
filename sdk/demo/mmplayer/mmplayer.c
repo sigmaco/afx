@@ -279,7 +279,7 @@ int main(int argc, char const* argv[])
         afxSystemConfigWin32 sysConfig;
         AfxChooseBasicIoSystemConfiguration(&sysConfig.base, sizeof(sysConfig));
         AfxBootUpBasicIoSystem(&sysConfig.base, &sys);
-        AfxAssertObjects(1, &sys, AFX_FCC_SYS);
+        AfxAssertObjects(1, &sys, afxFcc_SYS);
 
         afxContext thrs[10];
         AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
@@ -294,14 +294,14 @@ int main(int argc, char const* argv[])
         afxDrawSystemConfig dsysConfig;
         AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
         AfxAcquireDrawSystems(1, &dsysConfig, &dsys);
-        AfxAssertObjects(1, &dsys, AFX_FCC_DSYS);
+        AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
         afxDrawDevice ddev;
         AfxGetDrawDevice(dsys, 0, &ddev);
 
         afxDrawContextConfig dctxConfig = { 0 };        
         AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
-        //AfxAssertType(dctxD, AFX_FCC_DCTX);
+        //AfxAssertType(dctxD, afxFcc_DCTX);
 
         afxApplication TheApp;
         afxApplicationConfig appConfig = { 0 };
@@ -310,7 +310,7 @@ int main(int argc, char const* argv[])
         appConfig.dctx = dctx;
         appConfig.proc = MmplayerThrProc;
         AfxAcquireApplications(1, &TheApp, &appConfig);
-        AfxAssertObjects(1, &TheApp, AFX_FCC_APP);
+        AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
         while (AfxSystemIsOperating())
