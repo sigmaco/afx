@@ -79,8 +79,10 @@ AFX_OBJECT(afxMesh)
     afxMeshMorph*       morphs;
 
     afxMeshTopology     topology;
+    
     afxNat              mtlSlotCnt;
     afxMaterialSlot*    mtlSlots;
+
     afxNat              vertebraCnt;
     afxMeshVertebra*    vertebras;
     void*               extData;

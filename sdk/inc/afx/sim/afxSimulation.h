@@ -97,7 +97,6 @@ AFX afxClass*       AfxGetLightClass(afxSimulation sim);
 AFX afxClass*       AfxGetMaterialClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshDataClass(afxSimulation sim);
-AFX afxClass*       AfxGetMeshRigClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshTopologyClass(afxSimulation sim);
 AFX afxClass*       AfxGetModelClass(afxSimulation sim);
 AFX afxClass*       AfxGetNodeClass(afxSimulation sim);

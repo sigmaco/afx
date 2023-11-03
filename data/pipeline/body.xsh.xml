@@ -28,7 +28,7 @@
         {
             vec3 ObjNormal = vec3(v * inverse(m) * vec4(aNormal, 0));
 
-            gl_Position = p * v * w[0] * aPos;
+            gl_Position = p * v * m * aPos;
             sgl_v.Tex0     = aUv;
             sgl_v.Diffuse  = /*starKd * (dot(ObjNormal, starDir)) + */AmbientColour;
         }

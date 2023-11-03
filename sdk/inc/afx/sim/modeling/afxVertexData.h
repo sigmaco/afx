@@ -119,7 +119,8 @@ AFX_DEFINE_STRUCT(afxMeshBuilder)
     
     void(*GetBindingInfo)(void* data, afxNat* mtlCnt, afxNat* artCnt);
     afxMaterial(*GetMaterial)(void* data, afxNat mtlIdx);    
-    afxNat(*GetVertebra)(void* data, afxNat artIdx, afxString* name);
+    afxNat(*GetVertebraInfo)(void* data, afxNat artIdx, afxString* name);
+    void(*GetVertebraData)(void* data, afxString const* name, afxNat baseTriIdx, afxNat triCnt, void *dst);
 
     void(*Cleanup)(void* data);
     void*data[4];

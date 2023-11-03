@@ -125,11 +125,11 @@ _AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first,
 
                 afxNat artCnt = msh->vertebraCnt;
 
-                if (artCnt && !(dstBoneIndices = AfxAllocate(mem, artCnt * sizeof(slot->boneIndices[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                if (artCnt && !(dstBoneIndices = AfxAllocate(mem, artCnt * sizeof(dstBoneIndices[0]), 0, AfxSpawnHint()))) AfxThrowError();
                 else
                 {
                     if (!transfered) srcBoneIndices = dstBoneIndices;
-                    else if (artCnt && !(srcBoneIndices = AfxAllocate(mem, artCnt * sizeof(slot->srcBoneIndices[0]), 0, AfxSpawnHint())))
+                    else if (artCnt && !(srcBoneIndices = AfxAllocate(mem, artCnt * sizeof(srcBoneIndices[0]), 0, AfxSpawnHint())))
                         AfxThrowError();
 
                     if (!err)
@@ -138,16 +138,16 @@ _AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first,
                         {
                             afxString const* artName = &msh->vertebras[i].name;
 
-                            if (!AfxFindBone(dstSkl, artName, &slot->boneIndices[i]))
+                            if (!AfxFindBone(dstSkl, artName, &dstBoneIndices[i]))
                             {
                                 AfxError("Unable to find vertebra '%.*s' in the destination skeleton", AfxPushString(artName));
-                                AfxAssert(slot->boneIndices[i] == AFX_INVALID_INDEX);
+                                AfxAssert(dstBoneIndices[i] == AFX_INVALID_INDEX);
                             }
 
-                            if (transfered && !AfxFindBone(srcSkl, artName, &slot->srcBoneIndices[i]))
+                            if (transfered && !AfxFindBone(srcSkl, artName, &srcBoneIndices[i]))
                             {
                                 AfxError("Unable to find vertebra '%.*s' in the source skeleton", AfxPushString(artName));
-                                AfxAssert(slot->srcBoneIndices[i] == AFX_INVALID_INDEX);
+                                AfxAssert(srcBoneIndices[i] == AFX_INVALID_INDEX);
                             }
                         }
                         err = NIL; // skip any soft fail by bone indexing.

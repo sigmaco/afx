@@ -601,14 +601,16 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
                 AfxAssignTypeFcc(mshv, afxFcc_MSHV);
 
                 afxString str;
-                mshv->triCnt = mshb->GetVertebra(data, i, &str);
-                mshv->triIdx = NIL;
+                mshv->triCnt = mshb->GetVertebraInfo(data, i, &str);
+                mshv->triIdx = AfxAllocate(mem, mshv->triCnt * sizeof(mshv->triIdx[0]), NIL, AfxSpawnHint());
                 
                 AfxCloneString(&mshv->name, &str);
                 //mshv->vtxCnt = artb->vtxIdxCnt;
                 //mshv->vtxMap = (void*)artb->tris; // ???
 
                 //AfxAssert(artb->tris == NIL);
+
+                mshb->GetVertebraData(data, &mshv->name, 0, 3 * mshv->triCnt, mshv->triIdx);
 
                 AfxResetAabb(&mshv->aabb);
                 //AfxAssert(AfxGetVertexAttributeSize(vbuf, 0) == sizeof(afxV4d)); // actually, _AfxMshsRecomputeAabbCallback expects afxV4d-based vectors and position at vertex arrange 0. TODO: someone need to do refactoring here.
