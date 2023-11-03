@@ -64,10 +64,20 @@ _SGL afxBool _SglProcessInputCb(afxDrawInput din, void *udd)
 
     afxDrawThread dthr = (afxDrawThread)udd;
     AfxAssertObjects(1, &dthr, afxFcc_DTHR);
-    
-    if (din->base.procCb(din, dthr))
-        AfxThrowError();
 
+    if (din->base.prefetchEnabled)
+    {
+        //if (AfxTryEnterSlockExclusive(&dinD->prefetchSlock))
+        {
+            afxNat unitIdx = dthr->portIdx;
+
+            if (din->base.prefetchCb && din->base.prefetchCb(din, unitIdx))
+                AfxThrowError();
+
+            //AfxExitSlockExclusive(&dinD->prefetchSlock);
+        }
+    }
+    
     return FALSE; // don't interrupt curation;
 }
 
@@ -78,8 +88,10 @@ _SGL afxBool _SglProcessOutputCb(afxDrawOutput dout, void *udd)
 
     afxDrawThread dthr = (afxDrawThread)udd;
     AfxAssertObjects(1, &dthr, afxFcc_DTHR);
+    
+    afxNat unitIdx = dthr->portIdx;
 
-    if (dout->base.procCb(dout, dthr))
+    if (dout->base.procCb && dout->base.procCb(dout, unitIdx))
         AfxThrowError();
 
     return FALSE; // don't interrupt curation;
@@ -293,7 +305,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 vtxAttrSpec.secIdx = 0;
                 vtxAttrSpec.semantic = &tmpStr;
                 vtxAttrSpec.fmt = afxVertexFormat_V2D;
-                vtxAttrSpec.usage = AFX_VTX_USAGE_POS;
+                vtxAttrSpec.usage = afxVertexUsage_POS;
                 vtxAttrSpec.src = vtxPos;
                 vtxAttrSpec.srcFmt = afxVertexFormat_V2D;
                 vtxAttrSpec.srcStride = sizeof(afxV2d);
@@ -306,8 +318,8 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 vbufSpec.src = tristrippedQuad2dPos;
                 vbufSpec.usage = afxBufferUsage_VERTEX;
 
-                AfxAcquireBuffers(dctx, 1, &dctx->presentVbuf, &vbufSpec);
-                AfxAssertObjects(1, &dctx->presentVbuf, afxFcc_BUF);
+                AfxAcquireBuffers(dctx, 1, &dctx->tristrippedQuad2dPosBuf, &vbufSpec);
+                AfxAssertObjects(1, &dctx->tristrippedQuad2dPosBuf, afxFcc_BUF);
 
                 dctx->presentFboGpuHandle = 0;
 

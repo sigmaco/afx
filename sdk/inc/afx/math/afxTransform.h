@@ -53,7 +53,7 @@ AFXINL void     AfxSetTransformWithIdentityCheck(afxTransform *t, afxV3d const p
 
 AFXINL void     AfxClipTransformDofs(afxTransform *t, afxFlags allowedDOFs);
 
-AFXINL afxReal  AfxGetTransformDeterminant(afxTransform const *t);
+AFXINL afxReal  AfxDetTransform(afxTransform const *t);
 
 AFXINL void     AfxLerpTransform(afxTransform *t, afxTransform const* a, afxTransform const* b, afxReal time);
 
@@ -65,14 +65,14 @@ AFXINL void     AfxPremultiplyTransform(afxTransform* t, afxTransform const* pre
 AFXINL void     AfxPostmultiplyTransform(afxTransform* t, afxTransform const* post);
 AFXINL void     AfxMultiplyTransform(afxTransform* t, afxTransform const* a, afxTransform const* b);
 
-AFXINL void     AfxGetTransformMatrix(afxTransform const *t, afxReal m[4][4]); // build composite transform 4x4
+AFXINL void     AfxComposeTransformMatrix(afxTransform const *t, afxReal m[4][4]); // build composite transform 4x4
 AFXINL void     AfxGetTransformWorldMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4]); // compose transform world matrix 4x4 only
 AFXINL void     AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4]);
-AFXINL void     AfxGetTransformMatrixCompact(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
+AFXINL void     AfxComposeTransformMatrixCompact(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
 
-AFXINL void     AfxAssimilateTransform(afxTransform* t, afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3]);
+AFXINL void     AfxAssimilateTransforms(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxTransform const in[], afxTransform out[]);
 
-AFXINL void     AfxGetTransformedPointV3d(afxReal v[3], afxReal const in[3], afxTransform const* t);
-AFXINL void     AfxGetTransformedNormalV3d(afxReal v[3], afxReal const in[3], afxTransform const* t);
+AFXINL void     AfxGetTransformedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxGetTransformedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 
 #endif//AFX_TRANSFORM_H

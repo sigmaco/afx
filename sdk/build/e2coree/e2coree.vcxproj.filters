@@ -201,13 +201,7 @@
     <ClInclude Include="..\..\inc\afx\core\afxSource.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshRig.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshTopology.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshData.h">
       <Filter>e2coree\sim\modeling</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimator.h">
@@ -354,9 +348,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxPipelineRig.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxXmlBackedDrawableResources.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\e2coree\draw\afxDrawClassified.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -400,6 +391,15 @@
       <Filter>e2coree\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxDrawCommands.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\rendering\afxSky.h">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertexData.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxXsh.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
   </ItemGroup>
@@ -550,13 +550,7 @@
     <ClCompile Include="..\..\src\e2coree\core\afxApplication.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshRig.c">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshTopology.c">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshData.c">
       <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimator.c">
@@ -694,9 +688,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxTarga.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxXmlBackedDrawableResources.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\math\afxAabb.c">
       <Filter>e2coree\math</Filter>
     </ClCompile>
@@ -731,6 +722,15 @@
       <Filter>e2coree\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawCommands.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxSky.c">
+      <Filter>e2coree\sim\rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertexData.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>

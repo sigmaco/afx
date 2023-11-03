@@ -331,7 +331,7 @@ _SGL afxError _SglTexInstDevice(afxTexture tex, glVmt const* gl) // tex must be 
         gl->TexParameteriv(tex->glTarget, GL_TEXTURE_SWIZZLE_RGBA, (GLint*)arrayedSwizzle); _SglThrowErrorOccuried();
     }
 
-    //afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_USAGE_DRAW);
+    //afxBool const isSurface = AfxTestTexture(tex, afxTextureFlag_DRAW);
     afxBool const isCubemap = AfxTestTexture(tex, AFX_TEX_FLAG_CUBEMAP);
     AfxAssert(!(isCubemap && tex->base.whd[2] > 1)); // can't be both 3D and cubemap at same time
 
@@ -547,7 +547,7 @@ _SGL afxError _SglTexFlushDevice(afxTexture tex, glVmt const* gl) // tex must be
     //afxWhd extent;
     //AfxImage.GetExtent(&tex->img, whd);
 
-    //afxBool const isSurface = AfxTestTexture(tex, AFX_TEX_USAGE_DRAW);
+    //afxBool const isSurface = AfxTestTexture(tex, afxTextureFlag_DRAW);
     afxBool const isCubemap = AfxTestTexture(tex, AFX_TEX_FLAG_CUBEMAP);
     
     afxNat const lvlCnt = AfxGetTextureLodCount(tex);

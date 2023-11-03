@@ -23,26 +23,11 @@
 
 extern struct _afxDsysD TheDrawSystem;
 
-_AFX afxSurfaceState AfxGetSurfaceState(afxSurface surf)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, afxFcc_SURF);
-
-    return surf->state;
-}
-
 _AFX afxTexture AfxGetSurfaceTexture(afxSurface surf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &surf, afxFcc_SURF);
     return surf->tex;
-}
-
-_AFX afxBool AfxSurfaceIsPresentable(afxSurface surf)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &surf, afxFcc_SURF);
-    return surf->state == AFX_SURF_STATE_PRESENTABLE;
 }
 
 _AFX afxError AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage)
@@ -52,22 +37,22 @@ _AFX afxError AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface sur
     AfxAssert(extent[0]);
     AfxAssert(extent[1]);
     AfxAssert(extent[2]);
-    AfxAssert(usage & AFX_TEX_USAGE_DRAW);
+    AfxAssert(usage & afxTextureFlag_DRAW);
     AfxEntry("fmt=%u,whd=[%u,%u,%u],usage=%u", fmt, extent[0], extent[1], extent[2], usage);
     
-    usage &= AFX_TEX_USAGE_DRAW;
+    usage &= afxTextureFlag_DRAW;
 
     if (fmt >= AFX_PFD_S8 && fmt <= AFX_PFD_D32FS8)
-        usage |= AFX_TEX_USAGE_DRAW;
+        usage |= afxTextureFlag_DRAW;
     else
-        usage |= AFX_TEX_USAGE_DRAW;
+        usage |= afxTextureFlag_DRAW;
 
     afxTextureInfo texi = { 0 };
     texi.whd[0] = extent[0];
     texi.whd[1] = extent[1];
     texi.whd[2] = extent[2];
     texi.fmt = fmt;
-    texi.usage = usage | AFX_TEX_USAGE_DRAW;
+    texi.usage = usage | afxTextureFlag_DRAW;
     texi.imgCnt = 1;
 
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

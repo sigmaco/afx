@@ -509,44 +509,54 @@ _AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
 // Affine transformation                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxGetAssimilatedOrientation(afxQuat q, afxQuat const in, afxReal const linear[3][3], afxReal const invLinear[3][3])
+_AFXINL void AfxAssimilateQuat(afxReal const lt[3][3], afxReal const ilt[3][3], afxNat cnt, afxQuat const in[], afxQuat out[])
 {
     // Should be compatible with void InPlaceSimilarityTransformOrientation(const float *Linear3x3, const float *InverseLinear3x3, float *Orientation4)
 
     afxError err = NIL;
-    AfxAssert(q);
+    AfxAssert(lt);
+    AfxAssert(ilt);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(linear);
-    AfxAssert(invLinear);
+    AfxAssert(out);
 
-    afxReal len = AfxMagQuat(in);
-    AfxScaleQuat(q, in, 1.f / len);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxReal len = AfxMagQuat(in[i]);
+        AfxScaleQuat(out[i], in[i], 1.f / len);
 
-    afxM3d rm, tmp;
-    AfxM3dFromQuat(rm, q);
-    AfxMultiplyM3dTransposed(tmp, linear, rm);
-    AfxMultiplyM3dTransposed(rm, tmp, invLinear);
-    AfxQuatFromM3d(q, rm);
+        afxM3d rm, tmp;
+        AfxM3dFromQuat(rm, out[i]);
+        AfxMultiplyM3d(tmp, lt, rm);
+        AfxMultiplyM3d(rm, tmp, ilt);
+        AfxQuatFromM3d(out[i], rm);
 
-    AfxScaleQuat(q, q, len);
+        AfxScaleQuat(out[i], out[i], len);
+    }
 }
 
-_AFXINL void AfxGetRotatedV3d(afxV3d v, afxV3d const in, afxQuat const rot)
+_AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     /// Should be compatible with XMVECTOR XM_CALLCONV XMVector3Rotate(FXMVECTOR V, FXMVECTOR RotationQuaternion)
 
     // Transform a vector using a rotation expressed as a unit quaternion
 
     afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
+    AfxAssert(q);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(rot);
-    AfxAssert(rot != v);
+    AfxAssert(out);
+    AfxAssert(q != in[0]);
+    AfxAssert(q != out[0]);
+    
 
-    afxQuat a = { in[0], in[1], in[2], 0 }, b, c;
-    AfxConjugateQuat(b, rot);
-    AfxMultiplyQuat(c, b, a);
-    AfxMultiplyQuat(v, c, rot);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxQuat a = { in[i][0], in[i][1], in[i][2], 0 }, b, c;
+        AfxConjugateQuat(b, q);
+        AfxMultiplyQuat(c, b, a);
+        AfxMultiplyQuat(out[i], c, q);
+    }
 }
 
 _AFXINL void AfxExtractAxialRotation(afxQuat const q, afxReal axis[3], afxReal *radians)

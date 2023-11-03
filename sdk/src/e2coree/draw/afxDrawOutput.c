@@ -336,7 +336,7 @@ _AFX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, af
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     *bufIdx = AFX_INVALID_INDEX;
 
-    if (dout->vmt->req(dout, timeout, bufIdx)) AfxThrowError();
+    if (dout->reqCb(dout, timeout, bufIdx)) AfxThrowError();
     else
     {
         AfxAssertRange(dout->bufCnt, *bufIdx, 1);
@@ -581,19 +581,19 @@ _AFX afxDrawDevice AfxGetDrawOutputDevice(afxDrawOutput dout)
     return ddev;
 }
 
-_AFX afxError AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
+_AFX afxError AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]) // file, window, desktop, widget, etc; physical or virtual VDUs.
 {
     AfxEntry("cnt=%u,config=%p,dout=%p", cnt, config, dout);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
 
-    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
+    if (!(AfxGetDrawDevice(dsys, ddevId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawOutputClass(ddev), cnt, (afxHandle*)dout, (void*[]) { &devId, (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawOutputClass(ddev), cnt, (afxHandle*)dout, (void*[]) { &ddevId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, dout, afxFcc_DOUT);

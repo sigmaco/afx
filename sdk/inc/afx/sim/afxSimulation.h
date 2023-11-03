@@ -66,7 +66,6 @@ AFX_OBJECT(afxSimulation)
     afxClass                meshes;
     afxClass                meshDatas;
     afxClass                topologies;
-    afxClass                meshRigs;
     afxClass                models;
     afxClass                skeletons;
     afxClass                nodes;
@@ -125,5 +124,6 @@ AFX afxError        AfxRenderSimulation(afxSimulation sim, afxArray const* pvs);
 AFX void            AfxRecenterAllAnimatorClocks(afxSimulation sim, afxReal dCurrentClock);
 
 AFX void            AfxFindAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
+
 
 #endif//AFX_SIMULATION_H

@@ -166,21 +166,21 @@ _AFX void AfxCmdEnableStencilTest(afxDrawScript dscr, afxBool enable)
     dscr->stdCmds->EnableStencilTest(dscr, enable);
 }
 
-_AFX void AfxCmdSetStencilCompareMask(afxDrawScript dscr, afxBitmask faceMask, afxNat32 compareMask)
+_AFX void AfxCmdSetStencilCompareMask(afxDrawScript dscr, afxMask faceMask, afxNat32 compareMask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     dscr->stdCmds->SetStencilCompareMask(dscr, faceMask, compareMask);
 }
 
-_AFX void AfxCmdSetStencilWriteMask(afxDrawScript dscr, afxBitmask faceMask, afxNat32 writeMask)
+_AFX void AfxCmdSetStencilWriteMask(afxDrawScript dscr, afxMask faceMask, afxNat32 writeMask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     dscr->stdCmds->SetStencilWriteMask(dscr, faceMask, writeMask);
 }
 
-_AFX void AfxCmdSetStencilReference(afxDrawScript dscr, afxBitmask faceMask, afxNat32 reference)
+_AFX void AfxCmdSetStencilReference(afxDrawScript dscr, afxMask faceMask, afxNat32 reference)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -264,28 +264,12 @@ _AFX void AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const 
     dscr->stdCmds->ResetVertexStreams(dscr, cnt, srcIdx, stride, instance);
 }
 
-_AFX void AfxCmdUpdateVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertRange(8, first, cnt);
-    dscr->stdCmds->UpdateVertexStreams(dscr, first, cnt, srcIdx, stride, instance);
-}
-
 _AFX void AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertRange(8, 0, cnt);
     dscr->stdCmds->ResetVertexAttributes(dscr, cnt, location, fmt, streamIdx, offset);
-}
-
-_AFX void AfxCmdUpdateVertexAttributes(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertRange(8, first, cnt);
-    dscr->stdCmds->UpdateVertexAttributes(dscr, first, cnt, location, fmt, streamIdx, offset);
 }
 
 _AFX void AfxCmdBindIndexSource(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz)
@@ -398,6 +382,14 @@ _AFX void AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, afxN
     dscr->stdCmds->DrawIndexedIndirectCount(dscr, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
+_AFX void AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertRange(afxDrawPrefab_TOTAL, prefab, 1);
+    AfxAssert(instCnt);
+    dscr->stdCmds->DrawPrefab(dscr, prefab, instCnt);
+}
 
 
 
@@ -407,7 +399,7 @@ _AFX void AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, afxN
 
 
 
-
+#if 0
 _AFX void AfxCmdBindManagedIndexSource(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
 {
     afxError err = AFX_ERR_NONE;
@@ -483,3 +475,4 @@ _AFX void AfxCmdBindManagedVertexSources(afxDrawScript dscr, afxNat first, afxNa
     //AfxCmdBindVertexSources(dscr, first, visCnt, vis);
     AfxThrowError();
 }
+#endif

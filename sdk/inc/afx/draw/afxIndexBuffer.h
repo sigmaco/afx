@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_INDEX_BUFFER_H
 #define AFX_INDEX_BUFFER_H
@@ -22,6 +22,12 @@
 #include "afx/draw/afxVertexBuffer.h"
 
 // Index buffer não armazena informação de tipo de primitivo porque, como o nome sugere, é um buffer de índice, não de primitivos.
+
+AFX_DEFINE_STRUCT(afxIndexStreamingNode)
+{
+    afxLinkage  link;
+    afxBool     req;
+};
 
 #ifdef _AFX_INDEX_BUFFER_C
 AFX_OBJECT(afxIndexBuffer)

@@ -145,7 +145,7 @@ typedef intptr_t    afxOffset;
 typedef uintptr_t   afxAddress;
 typedef size_t      afxSize;
 typedef afxNat32    afxFlags;
-typedef afxNat32    afxBitmask;
+typedef afxNat32    afxMask;
 
 #define AFX_I8_MIN  ((afxInt8)INT8_MIN)
 #define AFX_I8_MAX  ((afxInt8)INT8_MAX)
@@ -205,6 +205,7 @@ static_assert(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 #define AfxMini(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AfxMaxi(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
+#define AfxMinor(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)); // minor non-zero
 
 #define AfxElse(a_,b_) (((a_) ? (a_) : (b_))
 

@@ -153,32 +153,6 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
     return err;
 }
 
-_SGL afxError _SglDinProcCb(afxDrawInput din, afxDrawThread dthr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
-
-    if (din->base.prefetchEnabled)
-    {
-        //if (AfxTryEnterSlockExclusive(&dinD->prefetchSlock))
-        {
-            if (din->base.userPrefetchProc)
-                din->base.userPrefetchProc(din, dthr);
-
-            //AfxExitSlockExclusive(&dinD->prefetchSlock);
-        }
-    }
-    return err;
-}
-
-_SGL _afxDinVmt const _SglDinVmt =
-{
-    NIL,
-    _SglDinSubmit,
-    _SglDinPresent
-};
-
 _SGL afxError _SglDinDtor(afxDrawInput din)
 {
     AfxEntry("din=%p", din);
@@ -218,23 +192,17 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxContext mem = AfxGetDrawSystemMemory(dsys);
     din->base.mem = mem;
 
-    din->base.prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
-
-    din->base.userPrefetchProc = config ? config->prefetch : NIL;
-
     AfxAcquireArray(&din->base.scripts, sizeof(afxDrawScript), 32, AfxSpawnHint());
     din->base.minScriptReserve = 2;
 
-    din->base.vmt = NIL;
-    din->base.procCb = NIL;
+    din->base.submitCb = _SglDinSubmit;
+    din->base.presentCb = _SglDinPresent;
 
     if (config && config->udd)
-    {
         din->base.udd = config->udd;
-    }
 
-    din->base.vmt = &_SglDinVmt;
-    din->base.procCb = _SglDinProcCb;
+    din->base.prefetchCb = config ? config->prefetch : NIL;
+    din->base.prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
 
     return err;
 }

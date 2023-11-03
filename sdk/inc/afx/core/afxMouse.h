@@ -47,35 +47,38 @@ AFX_OBJECT(afxMouse)
 };
 #endif
 
-AFX afxNat      AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[]);
+AFX afxError    AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mse[]);
+
 AFX afxBool     AfxGetMouse(afxNat port, afxMouse* mse);
 
-AFX afxError    AfxAcquireMouses(afxNat cnt, afxMouse mse[], afxNat port[]);
-
-AFX afxError    AfxEmulateMouseButtonActions(afxNat cnt, afxMouseButton const butt[], afxBool const pressed[], afxNat port);
-AFX afxError    AfxEmulateMouseWheelAction(afxReal delta, afxNat port);
-AFX afxError    AfxEmulateMouseMotion(afxReal const motion[2], afxNat port);
-
-AFX void        AfxGetLastMouseMotion(afxReal motion[2], afxNat port);
-AFX afxReal     AfxGetLastMouseWheelData(afxNat port);
-
-AFX afxBool     AfxMouseHasHorizontalChanged(afxInt tolerance, afxNat port);
-AFX afxBool     AfxMouseHasVerticalChanged(afxInt tolerance, afxNat port);
-
 AFX afxBool     AfxLmbIsPressed(afxNat port);
-AFX afxBool     AfxMmbIsPressed(afxNat port);
-AFX afxBool     AfxRmbIsPressed(afxNat port);
-AFX afxBool     AfxXmbIs1Pressed(afxNat port);
-AFX afxBool     AfxXmbIs2Pressed(afxNat port);
 AFX afxBool     AfxLmbWasPressed(afxNat port);
 AFX afxBool     AfxLmbWasReleased(afxNat port);
-AFX afxBool     AfxMmbWasPressed(afxNat port);
-AFX afxBool     AfxMmbWasReleased(afxNat port);
+
+AFX afxBool     AfxRmbIsPressed(afxNat port);
 AFX afxBool     AfxRmbWasPressed(afxNat port);
 AFX afxBool     AfxRmbWasReleased(afxNat port);
+
+AFX afxBool     AfxMmbIsPressed(afxNat port);
+AFX afxBool     AfxMmbWasPressed(afxNat port);
+AFX afxBool     AfxMmbWasReleased(afxNat port);
+
+AFX afxBool     AfxXmbIs1Pressed(afxNat port);
 AFX afxBool     AfxXmbWas1Pressed(afxNat port);
 AFX afxBool     AfxXmbWas1Released(afxNat port);
+
+AFX afxBool     AfxXmbIs2Pressed(afxNat port);
 AFX afxBool     AfxXmbWas2Pressed(afxNat port);
 AFX afxBool     AfxXmbWas2Released(afxNat port);
+
+AFX void        AfxGetLastMouseMotion(afxNat port, afxReal motion[2]);
+AFX afxReal     AfxGetLastMouseWheelData(afxNat port);
+
+AFX afxBool     AfxMouseHasHorizontalChanged(afxNat port, afxInt tolerance);
+AFX afxBool     AfxMouseHasVerticalChanged(afxNat port, afxInt tolerance);
+
+AFX afxError    AfxEmulateMouseMotion(afxNat port, afxReal const motion[2]);
+AFX afxError    AfxEmulateMouseWheelAction(afxNat port, afxReal delta);
+AFX afxError    AfxEmulateMouseButtonActions(afxNat port, afxNat cnt, afxMouseButton const butt[], afxBool const pressed[]);
 
 #endif//AFX_MOUSE_H

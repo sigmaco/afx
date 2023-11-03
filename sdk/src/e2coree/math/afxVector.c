@@ -1124,6 +1124,38 @@ _AFXINL void AfxScaleV4d(afxReal v[4], afxReal const a[4], afxReal lambda)
     v[3] = a[3] * lambda;
 }
 
+// Half
+
+_AFXINL void AfxHalfV2d(afxReal v[2], afxReal const in[2])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(in);
+    v[0] = in[0] * 0.5f;
+    v[1] = in[1] * 0.5f;
+}
+
+_AFXINL void AfxHalfV3d(afxReal v[3], afxReal const in[3])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(in);
+    v[0] = in[0] * 0.5f;
+    v[1] = in[1] * 0.5f;
+    v[2] = in[2] * 0.5f;
+}
+
+_AFXINL void AfxHalfV4d(afxReal v[4], afxReal const in[4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(in);
+    v[0] = in[0] * 0.5f;
+    v[1] = in[1] * 0.5f;
+    v[2] = in[2] * 0.5f;
+    v[3] = in[3] * 0.5f;
+}
+
 // Mad
 
 _AFXINL void AfxMadV2d(afxReal v[2], afxReal const in[2], afxReal const mul[2], afxReal const plus[2])
@@ -1244,240 +1276,282 @@ _AFXINL void AfxMultiplyV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]
     v[3] = a[3] * b[3];
 }
 
-_AFXINL void AfxTransformV2d(afxReal v[2], afxReal const a[2][2], afxReal const b[2])
+// Transform
+
+_AFXINL void AfxTransformV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(m);
+    AfxAssert(in);
     AfxAssert(v);
-    AfxAssert(v != b);
+    AfxAssert(v != in);
 
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]);
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]);
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]);
 }
 
-_AFXINL void AfxTransformV2dTransposed(afxReal v[2], afxReal const a[2], afxReal const b[2][2])
+_AFXINL void AfxTransformV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[2][2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV2d const x = { b[0][0], b[1][0] };
-    afxV2d const y = { b[0][1], b[1][1] };
+    afxV2d const x = { m[0][0], m[1][0] };
+    afxV2d const y = { m[0][1], m[1][1] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]);
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]);
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]);
 }
 
-_AFXINL void AfxTransformV2d_M4d(afxReal v[2], afxReal const a[4][4], afxReal const b[2])
+_AFXINL void AfxTransformPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(m);
+    AfxAssert(in);
     AfxAssert(v);
-    AfxAssert(v != b);
+    AfxAssert(v != in);
     
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + a[0][2] + a[0][3];
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + a[1][2] + a[1][3];
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + m[0][2] + m[0][3];
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + m[1][2] + m[1][3];
 }
 
-_AFXINL void AfxTransformV2dTransposed_M4d(afxReal v[2], afxReal const a[2], afxReal const b[4][4])
+_AFXINL void AfxTransformPointV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[4][4])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], m[3][0] };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], m[3][1] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + x[2] + x[3];
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + y[2] + y[3];
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + x[2] + x[3];
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + y[2] + y[3];
 }
 
-_AFXINL void AfxTransformV3d(afxReal v[3], afxReal const a[3][3], afxReal const b[3])
+_AFXINL void AfxTransformV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v != b);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
 
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + (a[0][2] * b[2]);
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + (a[1][2] * b[2]);
-    v[2] = (a[2][0] * b[0]) + (a[2][1] * b[1]) + (a[2][2] * b[2]);
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]);
 }
 
-_AFXINL void AfxTransformV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[3][3])
+_AFXINL void AfxTransformV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[3][3])
 {
     // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV3d const x = { b[0][0], b[1][0], b[2][0] };
-    afxV3d const y = { b[0][1], b[1][1], b[2][1] };
-    afxV3d const z = { b[0][2], b[1][2], b[2][2] };
+    afxV3d const x = { m[0][0], m[1][0], m[2][0] };
+    afxV3d const y = { m[0][1], m[1][1], m[2][1] };
+    afxV3d const z = { m[0][2], m[1][2], m[2][2] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + (a[2] * x[2]);
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + (a[2] * y[2]);
-    v[2] = (a[0] * z[0]) + (a[1] * z[1]) + (a[2] * z[2]);
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]);
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]);
 }
 
-// TransformLinear
+// TransformNormal
 
-_AFXINL void AfxTransformLinearV3d(afxReal v[3], afxReal const a[4][4], afxReal const b[3])
+_AFXINL void AfxTransformNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v != b);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
 
     // cache data
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + (a[0][2] * b[2]);
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + (a[1][2] * b[2]);
-    v[2] = (a[2][0] * b[0]) + (a[2][1] * b[1]) + (a[2][2] * b[2]);
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]);
 }
 
-_AFXINL void AfxTransformLinearV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[4][4])
-{
-    // Computes the transpose of the product of two matrices.
-
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v);
-    AfxAssert(v != a);
-
-    // cache data
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], b[3][2] };
-
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + (a[2] * x[2]);
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + (a[2] * y[2]);
-    v[2] = (a[0] * z[0]) + (a[1] * z[1]) + (a[2] * z[2]);
-}
-
-// TransformAffine
-
-_AFXINL void AfxTransformAffineV3d(afxReal v[3], afxReal const a[4][4], afxReal const b[3])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v != b);
-
-    // cache data
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + (a[0][2] * b[2]) + a[2][3];
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + (a[1][2] * b[2]) + a[2][3];
-    v[2] = (a[2][0] * b[0]) + (a[2][1] * b[1]) + (a[2][2] * b[2]) + a[2][3];
-}
-
-_AFXINL void AfxTransformAffineV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[4][4])
+_AFXINL void AfxTransformNormalV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], b[3][2] };
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], m[3][0] };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], m[3][1] };
+    afxV4d const z = { m[0][2], m[1][2], m[2][2], m[3][2] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + (a[2] * x[2]) + x[3];
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + (a[2] * y[2]) + y[3];
-    v[2] = (a[0] * z[0]) + (a[1] * z[1]) + (a[2] * z[2]) + z[3];
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]);
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]);
 }
 
-_AFXINL void AfxTransformAffineV4d(afxReal v[4], afxReal const a[4][4], afxReal const b[4])
+// TransformPointV3d
+
+_AFXINL void AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v != b);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
 
     // cache data
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + (a[0][2] * b[2]) + a[0][3];
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + (a[1][2] * b[2]) + a[1][3];
-    v[2] = (a[2][0] * b[0]) + (a[2][1] * b[1]) + (a[2][2] * b[2]) + a[2][3];
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + m[2][3];
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + m[2][3];
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + m[2][3];
+}
+
+_AFXINL void AfxTransformPointV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
+{
+    // Computes the transpose of the product of two matrices.
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(in);
+    AfxAssert(m);
+    AfxAssert(v);
+    AfxAssert(v != in);
+
+    // cache data
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], m[3][0] };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], m[3][1] };
+    afxV4d const z = { m[0][2], m[1][2], m[2][2], m[3][2] };
+
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]) + x[3];
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]) + y[3];
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]) + z[3];
+}
+
+// TransformNormal
+
+_AFXINL void AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
+
+    // cache data
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]);
+    v[3] = 0.f;
+}
+
+_AFXINL void AfxTransformNormalV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[3][3])
+{
+    // Computes the transpose of the product of two matrices.
+
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(in);
+    AfxAssert(m);
+    AfxAssert(v);
+    AfxAssert(v != in);
+
+    // cache data
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], 0.f };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], 0.f };
+    afxV4d const z = { m[0][2], m[1][2], m[2][2], 0.f };
+
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]);
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]);
+    v[3] = 0.f;
+}
+
+// TranformAffine
+
+_AFXINL void AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
+
+    // cache data
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + m[0][3];
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + m[1][3];
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + m[2][3];
     v[3] = 1.f;
 }
 
-_AFXINL void AfxTransformAffineV4dTransposed(afxReal v[4], afxReal const a[4], afxReal const b[4][4])
+_AFXINL void AfxTransformAffineV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], b[3][2] };
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], m[3][0] };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], m[3][1] };
+    afxV4d const z = { m[0][2], m[1][2], m[2][2], m[3][2] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + (a[2] * x[2]) + (/*a[3] * */x[3]);
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + (a[2] * y[2]) + (/*a[3] * */y[3]);
-    v[2] = (a[0] * z[0]) + (a[1] * z[1]) + (a[2] * z[2]) + (/*a[3] * */z[3]);
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]) + (/*in[3] * */x[3]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]) + (/*in[3] * */y[3]);
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]) + (/*in[3] * */z[3]);
     v[3] = 1.f;
 }
 
 // Transform
 
-_AFXINL void AfxTransformV4d(afxReal v[4], afxReal const a[4][4], afxReal const b[4])
+_AFXINL void AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(a);
-    AfxAssert(b);
-    AfxAssert(v != b);
+    AfxAssert(m);
+    AfxAssert(in);
+    AfxAssert(v != in);
 
     // cache data
-    v[0] = (a[0][0] * b[0]) + (a[0][1] * b[1]) + (a[0][2] * b[2]) + (a[0][3] * b[3]);
-    v[1] = (a[1][0] * b[0]) + (a[1][1] * b[1]) + (a[1][2] * b[2]) + (a[1][3] * b[3]);
-    v[2] = (a[2][0] * b[0]) + (a[2][1] * b[1]) + (a[2][2] * b[2]) + (a[2][3] * b[3]);
-    v[3] = (a[3][0] * b[0]) + (a[3][1] * b[1]) + (a[3][2] * b[2]) + (a[3][3] * b[3]);
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + (m[0][3] * in[3]);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + (m[1][3] * in[3]);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + (m[2][3] * in[3]);
+    v[3] = (m[3][0] * in[0]) + (m[3][1] * in[1]) + (m[3][2] * in[2]) + (m[3][3] * in[3]);
 }
 
-_AFXINL void AfxTransformV4dTransposed(afxReal v[4], afxReal const a[4], afxReal const b[4][4])
+_AFXINL void AfxTransformV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
     afxError err = AFX_ERR_NONE;
-    AfxAssert(a);
-    AfxAssert(b);
+    AfxAssert(in);
+    AfxAssert(m);
     AfxAssert(v);
-    AfxAssert(v != a);
+    AfxAssert(v != in);
 
     // cache data
-    afxV4d const x = { b[0][0], b[1][0], b[2][0], b[3][0] };
-    afxV4d const y = { b[0][1], b[1][1], b[2][1], b[3][1] };
-    afxV4d const z = { b[0][2], b[1][2], b[2][2], b[3][2] };
-    afxV4d const w = { b[0][3], b[1][3], b[2][3], b[3][3] };
+    afxV4d const x = { m[0][0], m[1][0], m[2][0], m[3][0] };
+    afxV4d const y = { m[0][1], m[1][1], m[2][1], m[3][1] };
+    afxV4d const z = { m[0][2], m[1][2], m[2][2], m[3][2] };
+    afxV4d const w = { m[0][3], m[1][3], m[2][3], m[3][3] };
 
-    v[0] = (a[0] * x[0]) + (a[1] * x[1]) + (a[2] * x[2]) + (a[3] * x[3]);
-    v[1] = (a[0] * y[0]) + (a[1] * y[1]) + (a[2] * y[2]) + (a[3] * y[3]);
-    v[2] = (a[0] * z[0]) + (a[1] * z[1]) + (a[2] * z[2]) + (a[3] * z[3]);
-    v[3] = (a[0] * w[0]) + (a[1] * w[1]) + (a[2] * w[2]) + (a[3] * w[3]);
+    v[0] = (in[0] * x[0]) + (in[1] * x[1]) + (in[2] * x[2]) + (in[3] * x[3]);
+    v[1] = (in[0] * y[0]) + (in[1] * y[1]) + (in[2] * y[2]) + (in[3] * y[3]);
+    v[2] = (in[0] * z[0]) + (in[1] * z[1]) + (in[2] * z[2]) + (in[3] * z[3]);
+    v[3] = (in[0] * w[0]) + (in[1] * w[1]) + (in[2] * w[2]) + (in[3] * w[3]);
 }
 
 // Lerp
@@ -2534,29 +2608,41 @@ _AFXINL afxReal AfxMagV4dRecip(afxReal const v[4])
 // Assimilate
 // 
 
-_AFXINL void AfxGetAssimilatedPositionV3d(afxReal v[3], afxReal const in[3], afxReal const affine[3], afxReal const linear[3][3])
+_AFXINL void AfxAssimilatePointV3d(afxReal const lt[3][3], afxReal const at[3], afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     // Should be compatible with void InPlaceSimilarityTransformPosition(const float *Affine3, const float *Linear3x3, float *Position3)
     afxError err = NIL;
-    AfxAssert(v);
+    AfxAssert(at);
+    AfxAssert(lt);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(affine);
-    AfxAssert(linear);
-    AfxTransformV3d(v, linear, in);
-    AfxAddV3d(v, affine, v);
+    AfxAssert(out);
+
+    AfxTransformV3dArray(lt, cnt, in, out);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAddV3d(out[i], at, out[i]);
+    }
 }
 
-_AFXINL void AfxGetAssimilatedPositionV4d(afxReal v[4], afxReal const in[3], afxReal const affine[3], afxReal const linear[3][3])
+_AFXINL void AfxAssimilatePointV4d(afxReal const lt[3][3], afxReal const at[3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
-    // inspired on AfxGetAssimilatedPositionV3d
+    // inspired on AfxAssimilatePointV3d
     afxError err = NIL;
-    AfxAssert(v);
+    AfxAssert(at);
+    AfxAssert(lt);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(affine);
-    AfxAssert(linear);
-    AfxTransformV3d(v, linear, in);
-    AfxAddV3d(v, affine, v);
-    v[3] = 1.f;
+    AfxAssert(out);
+
+    AfxTransformNormalV4dArray(lt, cnt, in, out);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAddV3d(out[i], at, out[i]);
+        out[i][3] = 1.f;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

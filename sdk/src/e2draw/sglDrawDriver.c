@@ -1027,6 +1027,7 @@ _SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxN
 {
     GLint const sizv[] =
     {
+        0,
         1,
         2,
         3,
@@ -1867,7 +1868,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                     {
                                         AfxAssert(dpu->dcPxlFmt);
                                         AfxAssert(formatCount);
-                                        AFX_ZERO(&dpu->dcPfd);
+                                        AfxZero(&dpu->dcPfd, sizeof(dpu->dcPfd));
 
                                         if (!(dpu->DescribePixelFormat(dpu->dc, dpu->dcPxlFmt, sizeof(dpu->dcPfd), &dpu->dcPfd)))
                                             if (!(DescribePixelFormat(dpu->dc, dpu->dcPxlFmt, sizeof(dpu->dcPfd), &dpu->dcPfd)))

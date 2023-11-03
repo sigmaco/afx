@@ -231,7 +231,8 @@ typedef enum afxFcc
     afxFcc_MSHC    = AfxPackFcc('m', 's', 'h', 'c'), // afxMeshConnection
     afxFcc_MSH     = AfxPackFcc('m', 's', 'h', '\0'), // afxMesh
     afxFcc_MSHB    = AfxPackFcc('m', 's', 'h', 'b'), // afxMeshBlueprint
-    afxFcc_MSHD    = AfxPackFcc('m', 's', 'h', 'd'), // afxMeshData
+    afxFcc_VTD      = AfxPackFcc('v', 't', 'd', '\0'), // afxVertexData
+    afxFcc_VTDS     = AfxPackFcc('v', 't', 'd', 's'), // afxVertexDataStream
     afxFcc_MSHT    = AfxPackFcc('m', 's', 'h', 't'), // afxMeshTopology
     afxFcc_MSHS    = AfxPackFcc('m', 's', 'h', 's'), // afxMeshSurface
     afxFcc_MSHM    = AfxPackFcc('m', 's', 'h', 'm'), // afxMeshMorph

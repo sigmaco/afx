@@ -217,6 +217,10 @@ AFXINL void     AfxScaleV2d(afxReal v[2], afxReal const a[2], afxReal lambda); /
 AFXINL void     AfxScaleV3d(afxReal v[3], afxReal const a[3], afxReal lambda); // v = a * lambda
 AFXINL void     AfxScaleV4d(afxReal v[4], afxReal const a[4], afxReal lambda); // v = a * lambda
 
+AFXINL void     AfxHalfV2d(afxReal v[2], afxReal const in[2]); // scale by 0.5
+AFXINL void     AfxHalfV3d(afxReal v[3], afxReal const in[3]); // scale by 0.5
+AFXINL void     AfxHalfV4d(afxReal v[4], afxReal const in[4]); // scale by 0.5
+
 AFXINL void     AfxMultiplyV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = a * b
 AFXINL void     AfxMultiplyV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = a * b
 AFXINL void     AfxMultiplyV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = a * b
@@ -247,25 +251,29 @@ AFXINL void     AfxNemusV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]
 ///     [ aXZ aYZ aZZ aWZ ] [ bZ ]
 ///     [ aXW aYW aZW aWW ] [ bW ] => v
 
-AFXINL void     AfxTransformV2d(afxReal v[2], afxReal const a[2][2], afxReal const b[2]); // v = a row * b row
-AFXINL void     AfxTransformV2dTransposed(afxReal v[2], afxReal const a[2], afxReal const b[2][2]); // v = a row * b row
-AFXINL void     AfxTransformV2d_M4d(afxReal v[2], afxReal const a[4][4], afxReal const b[2]); // v = a row * b row
-AFXINL void     AfxTransformV2dTransposed_M4d(afxReal v[2], afxReal const a[2], afxReal const b[4][4]); // v = a row * b row
+AFXINL void     AfxTransformV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]); // v = a row * b row
+AFXINL void     AfxTransformV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[2][2]); // v = a row * b row
 
-AFXINL void     AfxTransformV3d(afxReal v[3], afxReal const a[3][3], afxReal const b[3]); // v = a column * b column
-AFXINL void     AfxTransformV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[3][3]); // v = a row * b row
+AFXINL void     AfxTransformPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]); // v = a row * b row
+AFXINL void     AfxTransformPointV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[4][4]); // v = a row * b row
 
-AFXINL void     AfxTransformV4d(afxReal v[4], afxReal const a[4][4], afxReal const b[4]); // v = a column * b column
-AFXINL void     AfxTransformV4dTransposed(afxReal v[4], afxReal const a[4], afxReal const b[4][4]); // v = a row * b row
+AFXINL void     AfxTransformV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]); // v = a column * b column
+AFXINL void     AfxTransformV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[3][3]); // v = a row * b row
 
-AFXINL void     AfxTransformLinearV3d(afxReal v[3], afxReal const a[4][4], afxReal const b[3]); // v = a column * b column
-AFXINL void     AfxTransformLinearV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[4][4]); // v = a row * b row
+AFXINL void     AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]); // v = a column * b column
+AFXINL void     AfxTransformV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4]); // v = a row * b row
 
-AFXINL void     AfxTransformAffineV3d(afxReal v[3], afxReal const a[4][4], afxReal const b[3]); // v = a column * b column
-AFXINL void     AfxTransformAffineV3dTransposed(afxReal v[3], afxReal const a[3], afxReal const b[4][4]); // v = a row * b row
+AFXINL void     AfxTransformNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]); // v = a column * b column
+AFXINL void     AfxTransformNormalV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4]); // v = a row * b row
 
-AFXINL void     AfxTransformAffineV4d(afxReal v[4], afxReal const a[4][4], afxReal const b[4]); // v = a column * b column
-AFXINL void     AfxTransformAffineV4dTransposed(afxReal v[4], afxReal const a[4], afxReal const b[4][4]);  // v = a row * b row
+AFXINL void     AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]); // v = a column * b column
+AFXINL void     AfxTransformPointV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4]); // v = a row * b row
+
+AFXINL void     AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]); // v = a column * b column
+AFXINL void     AfxTransformNormalV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);  // v = a row * b row
+
+AFXINL void     AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]); // v = a column * b column
+AFXINL void     AfxTransformAffineV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);  // v = a row * b row
 
 /// Linear interpolation
 /// v = a + t * (b - a)
@@ -413,8 +421,8 @@ AFXINL afxReal  AfxMagV4dRecip(afxReal const in[4]);
 
 // Similarity transform
 
-AFXINL void     AfxGetAssimilatedPositionV3d(afxReal v[3], afxReal const in[3], afxReal const affine[3], afxReal const linear[3][3]); // make similarity transformation on afxV3d-based position.
-AFXINL void     AfxGetAssimilatedPositionV4d(afxReal v[4], afxReal const in[3], afxReal const affine[3], afxReal const linear[3][3]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilatePointV3d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilatePointV4d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
 
 ////////////////////////////////////////////////////////////////////////////////
 // Trigonometry                                                               //

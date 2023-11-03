@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_DRAW_COMMANDS_H
 #define AFX_DRAW_COMMANDS_H
@@ -29,6 +29,13 @@
 #include "afx/draw/afxBuffer.h"
 #include "afx/core/afxArena.h"
 #include "afx/draw/afxPipeline.h"
+
+typedef enum afxDrawPrefab
+{
+    afxDrawPrefab_QUAD,
+
+    afxDrawPrefab_TOTAL
+} afxDrawPrefab;
 
 typedef enum afxSurfaceStoreOp
 /// An enumerated value indicating the load operation to perform on target surface prior to executing the render pass
@@ -98,10 +105,10 @@ AFX_DEFINE_STRUCT(afxClearRect)
 AFX_DEFINE_STRUCT(afxDrawTarget)
 {
     afxTexture          tex; /// the texture subresource that will be output to for this color attachment.
-    afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
     afxSurfaceLoadOp    loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
     afxSurfaceStoreOp   storeOp; /// The store operation to perform on view after executing the render pass.
     afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
+    afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 };
 
 AFX_DEFINE_STRUCT(afxCanvasConfig)
@@ -145,9 +152,7 @@ AFX_DEFINE_STRUCT(afxCmd)
 
     void(*BindVertexSources)(afxDrawScript dscr, afxNat first, afxNat cnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[]);
     void(*ResetVertexStreams)(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-    void(*UpdateVertexStreams)(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
     void(*ResetVertexAttributes)(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[]);
-    void(*UpdateVertexAttributes)(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[]);
     void(*BindIndexSource)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz);
     void(*SetPrimitiveTopology)(afxDrawScript dscr, afxPrimTopology topology);
 
@@ -177,9 +182,9 @@ AFX_DEFINE_STRUCT(afxCmd)
     void(*SetDepthBounds)(afxDrawScript dscr, afxReal const bounds[2]);
 
     void(*EnableStencilTest)(afxDrawScript dscr, afxBool enable);
-    void(*SetStencilCompareMask)(afxDrawScript dscr, afxBitmask faceMask, afxNat32 compareMask);
-    void(*SetStencilWriteMask)(afxDrawScript dscr, afxBitmask faceMask, afxNat32 writeMask);
-    void(*SetStencilReference)(afxDrawScript dscr, afxBitmask faceMask, afxNat32 reference);
+    void(*SetStencilCompareMask)(afxDrawScript dscr, afxMask faceMask, afxNat32 compareMask);
+    void(*SetStencilWriteMask)(afxDrawScript dscr, afxMask faceMask, afxNat32 writeMask);
+    void(*SetStencilReference)(afxDrawScript dscr, afxMask faceMask, afxNat32 reference);
 
     void(*EnableDepthTest)(afxDrawScript dscr, afxBool enable);
     void(*SetDepthCompareOp)(afxDrawScript dscr, afxCompareOp op);
@@ -205,6 +210,9 @@ AFX_DEFINE_STRUCT(afxCmd)
     void(*DrawIndexed)(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
     void(*DrawIndexedIndirect)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
     void(*DrawIndexedIndirectCount)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
+    void(*DrawPrefab)(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt);
+
+    void* Total;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -514,21 +522,21 @@ AFX void                AfxCmdEnableStencilTest
 AFX void                AfxCmdSetStencilCompareMask
 (
     afxDrawScript       dscr, /// is the command buffer into which the command will be recorded.
-    afxBitmask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
+    afxMask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
     afxNat32            compareMask /// is the new value to use as the stencil compare mask.
 );
 
 AFX void                AfxCmdSetStencilWriteMask
 (
     afxDrawScript       dscr, /// is the command buffer into which the command will be recorded.
-    afxBitmask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
+    afxMask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
     afxNat32            writeMask /// is the new value to use as the stencil write mask.
 );
 
 AFX void                AfxCmdSetStencilReference
 (
     afxDrawScript       dscr, /// is the command buffer into which the command will be recorded.
-    afxBitmask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
+    afxMask          faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
     afxNat32            reference /// is the new value to use as the stencil reference value.
 );
 
@@ -564,13 +572,12 @@ AFX void                AfxCmdSetBlendConstants
 
 
 AFX void                AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-AFX void                AfxCmdUpdateVertexStreams(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
 AFX void                AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[]);
-AFX void                AfxCmdUpdateVertexAttributes(afxDrawScript dscr, afxNat first, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[]);
 
 AFX void                AfxCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
 
 AFX void                AfxCmdBindManagedVertexSources(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor);
 AFX void                AfxCmdBindManagedIndexSource(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx);
+AFX void                AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt);
 
 #endif//AFX_DRAW_COMMANDS_H

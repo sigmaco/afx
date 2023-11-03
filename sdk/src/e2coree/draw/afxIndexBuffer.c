@@ -221,7 +221,7 @@ _AFX afxError AfxIndexBufferUpdate(afxIndexBuffer ibuf, afxNat rgnIdx, afxNat ba
     AfxAssertRange(idxCntMax, baseIdx, idxCnt);
     AfxAssert(srcIdxStride);
 
-    if (AfxUpdateBuffer2(ibuf->buf, baseOffset + (baseIdx * idxSiz), idxSiz, idxCnt, src, srcIdxStride))
+    if (AfxUpdateBuffer2(ibuf->buf, baseOffset + (baseIdx * idxSiz), idxCnt * idxSiz, idxSiz, src, srcIdxStride))
         AfxThrowError();
 
     return err;

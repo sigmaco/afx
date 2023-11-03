@@ -70,7 +70,7 @@ AFX_OBJECT(afxAsset)
     afxNat              mtlCnt;
     afxMaterial*        mtls;
     afxNat              mshdCnt;
-    afxMeshData*        mshds;
+    afxVertexData*        mshds;
     afxNat              mshtCnt;
     afxMeshTopology*    mshts;
     afxNat              mshCnt;

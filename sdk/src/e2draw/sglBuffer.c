@@ -607,7 +607,7 @@ _SGL afxError _SglVbufCtorNEW(afxVertexBuffer vbuf, afxCookie const* cookie)
                     {
                         AfxAssertRange(afxVertexFormat_TOTAL, spec->srcFmt, 1);
 
-                        if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, spec->src, spec->srcFmt, spec->srcStride))
+                        //if (AfxUpdateVertexBuffer(vbuf, i, 0, vbuf->base.cap, spec->src, spec->srcFmt, spec->srcStride))
                             AfxThrowError();
                     }
                 }

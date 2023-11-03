@@ -24,12 +24,12 @@
 
 typedef enum afxCubeFace
 {
-    afxCubeFace_L,
-    afxCubeFace_R,
-    afxCubeFace_B,
-    afxCubeFace_T,
-    afxCubeFace_N,
-    afxCubeFace_F,
+    afxCubeFace_L, // -0
+    afxCubeFace_R, // +0
+    afxCubeFace_B, // -0
+    afxCubeFace_T, // +0
+    afxCubeFace_N, // -0
+    afxCubeFace_F, // +0
 
     afxCubeFace_TOTAL
 } afxCubeFace;
@@ -50,24 +50,32 @@ typedef enum afxCubeCorner
     afxCubeCorner_TOTAL,
 } afxCubeCorner;
 
+AFX afxV4d const AFX_V4D_LBN;
+AFX afxV4d const AFX_V4D_RBN;
+AFX afxV4d const AFX_V4D_RTN;
+AFX afxV4d const AFX_V4D_LTN;
+
+AFX afxV4d const AFX_V4D_LBF;
+AFX afxV4d const AFX_V4D_RBF;
+AFX afxV4d const AFX_V4D_RTF;
+AFX afxV4d const AFX_V4D_LTF;
+
 AFX_DEFINE_STRUCT(afxFrustum)
 {
     afxV4d      origin;
     afxPlane    planes[afxCubeFace_TOTAL];
-    afxV4d      corners[afxCubeCorner_TOTAL];  // 0~3 near, 4~7 far
+    afxV4d      corners[afxCubeCorner_TOTAL];
 };
 
 AFXINL void     AfxCopyFrustum(afxFrustum* f, afxFrustum const* in);
 
 AFXINL afxBool  AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* sph);
-
 AFXINL afxBool  AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb);
-
 AFXINL afxBool  AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const* other);
 
 // frustrum and matrix must be in same space
-AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxReal const pv[4][4]);
-AFXINL void     AfxRecomputeFrustum2(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4]);
+AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxReal const pv[4][4]);
+AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4]);
 
 AFXINL void     AfxAabbEncapsulateFrustum(afxAabb* aabb, afxFrustum const* f);
 

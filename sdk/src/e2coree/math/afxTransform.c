@@ -83,8 +83,8 @@ _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTra
 
     afxM3d OrientationB, Temp, tmp;
     AfxM3dFromQuat(OrientationB, b->orientation);
-    AfxMultiplyM3dTransposed(tmp, OrientationB, b->scaleShear);
-    AfxMultiplyM3dTransposed(Temp, a->scaleShear, tmp);
+    AfxMultiplyM3d(tmp, OrientationB, b->scaleShear);
+    AfxMultiplyM3d(Temp, a->scaleShear, tmp);
     AfxMultiplyM3dTransposed(t->scaleShear, OrientationB, Temp);
 
     AfxTransformV3d(t->position, a->scaleShear, b->position);
@@ -196,11 +196,11 @@ _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
     afxM3d iqm, ss, tmp;
     AfxM3dFromQuat(iqm, q);
     AfxInvertM3d(ss, in->scaleShear);
-    AfxMultiplyM3dTransposed(tmp, ss, iqm);
+    AfxMultiplyM3d(tmp, ss, iqm);
     AfxMultiplyM3dTransposed(ss, iqm, tmp);
 
-    afxV3d ip, ip2, ip3;
-    AfxNegateV4d(ip, in->position);
+    afxV4d ip, ip2, ip3;
+    AfxNegateV3d(ip, in->position);
     AfxTransformV3d(ip2, ss, ip);
     AfxTransformV3d(ip3, iqm, ip2);
 
@@ -279,7 +279,7 @@ _AFXINL void AfxClipTransformDofs(afxTransform *t, afxFlags allowedDOFs)
     }
 }
 
-_AFXINL afxReal AfxGetTransformDeterminant(afxTransform const* t)
+_AFXINL afxReal AfxDetTransform(afxTransform const* t)
 {
     // Should be compatible with double GetTransformDeterminant(const transform *Transform)
     return AfxDetM3d(t->scaleShear);
@@ -316,7 +316,7 @@ _AFXINL void AfxComposeTransform(afxTransform const* t, afxReal m[9], afxNat str
 }
 #endif
 
-_AFX void AfxGetTransformMatrix(afxTransform const* t, afxReal m[4][4])
+_AFX void AfxComposeTransformMatrix(afxTransform const* t, afxReal m[4][4])
 {
     // Should be compatible with void BuildCompositeTransform4x4(const transform *Transform, float *Composite4x4)     
 
@@ -329,7 +329,7 @@ _AFX void AfxGetTransformMatrix(afxTransform const* t, afxReal m[4][4])
     {
         afxM3d tmp, tmp2;
         AfxM3dFromQuat(tmp, t->orientation);        
-        AfxMultiplyM3dTransposed(tmp2, t->scaleShear, tmp);
+        AfxMultiplyM3dTransposed(tmp2, t->scaleShear, tmp); // está certo isso?
         AfxM4dFromM3d(m, tmp2, AFX_V4D_0001);
     }
     
@@ -347,8 +347,8 @@ _AFXINL void AfxGetTransformWorldMatrix(afxTransform const *t, afxReal const par
     AfxAssert(w);
 
     afxM4d m;
-    AfxGetTransformMatrix(t, m);
-    AfxMultiplyAffineM4dTransposed(w, m, parent);
+    AfxComposeTransformMatrix(t, m);
+    AfxMultiplyAffineM4dTransposed(w, parent, m);
 }
 
 _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4])
@@ -362,10 +362,10 @@ _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxRe
     AfxAssert(w);
 
     AfxGetTransformWorldMatrix(t, parent, w);
-    AfxMultiplyAffineM4dTransposed(composite, iw, w);
+    AfxMultiplyAffineM4dTransposed(composite, w, iw);
 }
 
-_AFX void AfxGetTransformMatrixCompact(afxTransform const* t, afxReal m[4][3])
+_AFX void AfxComposeTransformMatrixCompact(afxTransform const* t, afxReal m[4][3])
 {
     // Should be compatible with void BuildCompositeTransform4x3(const transform *Transform, float *Composite4x3)
 
@@ -378,49 +378,62 @@ _AFX void AfxGetTransformMatrixCompact(afxTransform const* t, afxReal m[4][3])
     {
         afxM3d tmp;
         AfxM3dFromQuat(tmp, t->orientation);
-        AfxMultiplyM3dTransposed(m, tmp, t->scaleShear);
+        AfxMultiplyM3dTransposed(m, tmp, t->scaleShear); // está certo isso?
     }
     AfxCopyV3d(m[3], t->position);
 }
 
-_AFXINL void AfxAssimilateTransform(afxTransform* t, afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3])
+_AFXINL void AfxAssimilateTransforms(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxNat cnt, afxTransform const in[], afxTransform out[])
 {
     // Should be compatible with InPlaceSimilarityTransform(const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float *Position3, float *Orientation4, float *ScaleShear3x3)
 
     afxError err = NIL;
-    AfxAssert(t);
-    AfxAssert(affine);
-    AfxAssert(linear);
-    AfxAssert(invLinear);
+    AfxAssert(lt);
+    AfxAssert(ilt);
+    AfxAssert(at);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
 
-    AfxGetAssimilatedPositionV3d(t->position, t->position, affine, linear);
-    AfxGetAssimilatedOrientation(t->orientation, t->orientation, linear, invLinear);
-    AfxGetAssimilatedScalingM3d(t->scaleShear, t->scaleShear, linear, invLinear);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAssimilatePointV3d(lt, at, 1, &in[i].position, &out[i].position);
+        AfxAssimilateQuat(lt, ilt, 1, &in[i].orientation, &out[i].orientation);
+        AfxAssimilateM3d(lt, ilt, 1, &in[i].scaleShear, &out[i].scaleShear);
+    }
 }
 
-_AFXINL void AfxGetTransformedPointV3d(afxReal v[3], afxReal const in[3], afxTransform const* t)
+_AFXINL void AfxGetTransformedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     // Should be compatible with void TransformPoint(float *Dest, const transform *Transform, const float *Source)
     
     afxError err = NIL;
-    AfxAssert(v);
-    AfxAssert(in);
     AfxAssert(t);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
 
-    AfxTransformV3d(v, t->scaleShear, in);
-    AfxGetRotatedV3d(v, v, t->orientation);
-    AfxAddV3d(v, t->position, v);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxTransformV3d(out[i], t->scaleShear, in[i]);
+        AfxRotateV3d(t->orientation, 1, &out[i], &out[i]);
+        AfxAddV3d(out[i], t->position, out[i]);
+    }
 }
 
-_AFXINL void AfxGetTransformedNormalV3d(afxReal v[3], afxReal const in[3], afxTransform const* t)
+_AFXINL void AfxGetTransformedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     // Should be compatible with void TransformVector(float *Dest, const transform *Transform, const float *Source)
 
     afxError err = NIL;
-    AfxAssert(v);
-    AfxAssert(in);
     AfxAssert(t);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
 
-    AfxTransformV3d(v, t->scaleShear, in);
-    AfxGetRotatedV3d(v, v, t->orientation);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxTransformV3d(out[i], t->scaleShear, in[i]);
+        AfxRotateV3d(t->orientation, 1, &out[i], &out[i]);
+    }
 }

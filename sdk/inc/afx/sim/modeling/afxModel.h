@@ -28,6 +28,9 @@
 AFX_DEFINE_STRUCT(afxMeshSlot)
 {
     afxMesh             msh;
+    afxNat*             boneIndices;
+    afxNat*             srcBoneIndices;
+    afxSkeleton         srcSkl;
 };
 
 #ifdef _AFX_MODEL_C
@@ -42,11 +45,6 @@ AFX_OBJECT(afxModel)
 };
 #endif
 
-
-AFX afxError            AfxFetchModels(afxSimulation sim, afxNat cnt, afxUri const uri[], afxModel mdl[]);
-
-AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* name, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
-
 AFX afxUri const*       AfxGetModelUri(afxModel mdl);
 
 AFX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
@@ -55,11 +53,20 @@ AFX void                AfxSetModelSkeleton(afxModel mdl, afxSkeleton skl);
 AFX void                AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4]);
 AFX void                AfxSetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
 
-AFX void                AfxTransformModel(afxModel mdl, afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags);
-
-AFX afxMesh             AfxGetModelMesh(afxModel mdl, afxNat slotIdx);
-AFX void                AfxSetModelMesh(afxModel mdl, afxNat slotIdx, afxMesh msh);
-
 AFX afxNat              AfxCountModelMeshes(afxModel mdl);
+AFX afxNat              AfxGetBoundMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, afxMesh msh[]);
+AFX afxError            AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, afxNat cnt, afxMesh meshes[]);
+
+AFX afxBool             AfxBoundMeshIsTransferred(afxModel mdl, afxNat slotIdx);
+AFX afxSkeleton         AfxGetBoundMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
+AFX afxNat const*       AfxGetBoundMeshOriginalBoneIndices(afxModel mdl, afxNat slotIdx);
+
+AFX afxNat const*       AfxGetBoundMeshBoneIndices(afxModel mdl, afxNat slotIdx);
+
+AFX void                AfxBuildBoundMeshRigMatrixArray(afxModel mdl, afxNat slotIdx, afxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4]);
+
+AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* name, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
+
+AFX void                AfxTransformModels(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[]);
 
 #endif//AFX_MODEL_H

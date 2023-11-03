@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 #define AFX_XML_BACKED_DRAWABLE_RESOURCES_H

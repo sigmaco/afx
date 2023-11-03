@@ -211,11 +211,10 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
     return err;
 }
 
-_SGL afxError _SglDoutProcCb(afxDrawOutput dout, afxDrawThread dthr)
+_SGL afxError _SglDoutProcCb(afxDrawOutput dout, afxNat thrUnitIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    AfxAssertObjects(1, &dthr, afxFcc_DTHR);
     return err;
 }
 
@@ -245,18 +244,6 @@ _SGL afxError _SglDoutDtor(afxDrawOutput dout)
 
     return err;
 }
-
-_SGL _afxDoutVmt SglDoutVmtWnd =
-{
-    _SglDoutVmtFlushCb,
-    _SglDoutVmtReqCb,
-};
-
-_SGL _afxDoutVmt SglDoutVmtDsktp =
-{
-    _SglDoutVmtFlushCb,
-    _SglDoutVmtReqCb,
-};
 
 _SGL BOOL CALLBACK _SglFindShellWorkerWindowW32(HWND hwnd, LPARAM lParam)
 {
@@ -324,8 +311,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     // swapchain-related data
     dout->base.flags = NIL;
     dout->base.pixelFmt = AFX_PFD_RGBA8; // or AFX_PFD_RGBA8R ?
-    dout->base.colorSpc = AFX_COLOR_SPACE_SRGB; // sRGB is the default
-    dout->base.bufUsage = AFX_TEX_USAGE_DRAW;
+    dout->base.colorSpc = afxColorSpace_SRGB; // sRGB is the default
+    dout->base.bufUsage = afxTextureFlag_DRAW;
     dout->base.bufferLockCnt = 1;
     dout->base.bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
     dout->base.lastReqBufIdx = dout->base.bufCnt - 1; // to start at 0 instead of 1 we set to last one.
@@ -333,8 +320,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     AfxAcquireSlock(&dout->base.buffersLock);
 
     dout->base.presentAlpha = TRUE; // consider transparency for window composing.
-    dout->base.presentTransform = AFX_PRESENT_TRANSFORM_FLIP_V; // NIL leaves it as it is.
-    dout->base.presentMode = AFX_PRESENT_MODE_FIFO;
+    dout->base.presentTransform = afxPresentTransform_FLIP_V; // NIL leaves it as it is.
+    dout->base.presentMode = afxPresentMode_FIFO;
     dout->base.clipped = TRUE; // usually true to don't spend resources doing off-screen draw.
     dout->base.swapping = FALSE;
 
@@ -364,7 +351,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.auxDsFmt[0] = NIL;
     dout->base.auxDsFmt[1] = NIL;
 
-    dout->base.vmt = NIL;
+    dout->base.flushCb = NIL;
+    dout->base.reqCb = NIL;
     dout->base.procCb = NIL;
 
     AfxAllocateString(&dout->base.caption, 512, NIL, 0);
@@ -404,7 +392,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     else
         AfxResetUri(&name);
 
-    dout->base.vmt = &SglDoutVmtWnd;
+    dout->base.reqCb = _SglDoutVmtReqCb;
+    dout->base.flushCb = _SglDoutVmtFlushCb;
     dout->base.procCb = _SglDoutProcCb;
 
     afxString const *surface = AfxUriGetStringConst(&name);
@@ -437,7 +426,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
             AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
 
             if (isWnd)
-                AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.5, 0.5, 1));
+                AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
             else
                 AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(1, 1, 1));
 
@@ -467,7 +456,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                 dout->base.bufCnt = 1;
 
             if (!dout->base.bufUsage)
-                dout->base.bufUsage = AFX_TEX_USAGE_DRAW;
+                dout->base.bufUsage = afxTextureFlag_DRAW;
 
             int pxlAttrPairs[][2] =
             {
@@ -480,12 +469,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                 { WGL_ALPHA_BITS_ARB, alphaBpp },
                 //{ WGL_DEPTH_BITS_ARB, 24 }, // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
                 //{ WGL_STENCIL_BITS_ARB, 8 },  // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
-                { WGL_TRANSPARENT_ARB, (dout->base.presentAlpha != AFX_PRESENT_ALPHA_OPAQUE) },
-                { WGL_SWAP_METHOD_ARB, (dout->base.presentMode == AFX_PRESENT_MODE_IMMEDIATE) ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB },
+                { WGL_TRANSPARENT_ARB, (dout->base.presentAlpha && dout->base.presentAlpha != afxPresentAlpha_OPAQUE) },
+                { WGL_SWAP_METHOD_ARB, (dout->base.presentMode && dout->base.presentMode == afxPresentMode_IMMEDIATE) ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB },
                 //{ WGL_SAMPLE_BUFFERS_ARB,  GL_TRUE },  // works on Intel, didn't work on Mesa
                 //{ WGL_SAMPLES_ARB, 8 }, // works on Intel, didn't work on Mesa
-                //{ WGL_COLORSPACE_EXT, dout->base.colorSpc == AFX_COLOR_SPACE_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->base.colorSpc == AFX_COLOR_SPACE_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL) }, // works on Mesa, didn't work on Intel
-                //{ WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, (dout->base.colorSpc == AFX_COLOR_SPACE_SRGB) }, // works on Mesa, didn't work on Intel
+                //{ WGL_COLORSPACE_EXT, dout->base.colorSpc == afxColorSpace_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->base.colorSpc == afxColorSpace_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL) }, // works on Mesa, didn't work on Intel
+                //{ WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, (dout->base.colorSpc == afxColorSpace_SRGB) }, // works on Mesa, didn't work on Intel
                 { NIL, NIL },
             };
 
@@ -501,7 +490,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                 AfxAssert(formatCount);
 
                 PIXELFORMATDESCRIPTOR pfd;
-                AFX_ZERO(&pfd);
+                AfxZero(&pfd, sizeof(pfd));
                 SglDescribePixelFormat(dout->dc, dout->dcPxlFmt, sizeof(pfd), &pfd, dpu);
 #if 0
                 pfd.nSize = sizeof(pfd);
@@ -531,13 +520,11 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
                     if (isWnd)
                     {
-                        SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.resolution[0] / 2, dout->base.resolution[1] / 2, SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_NOZORDER);
+                        SetWindowPos(dout->wnd, NULL, AfxFromNdc(0.166666666666666, dout->base.resolution[0]), AfxFromNdc(0.166666666666666, dout->base.resolution[1]), dout->base.extent[0], dout->base.extent[1], SWP_NOZORDER | SWP_NOOWNERZORDER);
+                        AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
                     }
 
                     {
-
-                        AfxAssert(dout->base.vmt);
-
                         AfxAssert(dout->base.resolution[0]);
                         AfxAssert(dout->base.resolution[1]);
                         AfxAssert(dout->base.resolution[2]);
@@ -546,7 +533,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                         AfxAssertExtent(dout->base.resolution[2], dout->base.extent[2]);
 
                         AfxAssert(dout->base.bufCnt);
-                        AfxAssert(dout->base.bufUsage & AFX_TEX_USAGE_DRAW);
+                        AfxAssert(dout->base.bufUsage & afxTextureFlag_DRAW);
                         AfxAssert(dout->base.refreshRate);
                         AfxAssert(dout->base.wpOverHp);
                         AfxAssert(dout->base.wrOverHr);

@@ -204,17 +204,18 @@ AFX_OBJECT(afxKeyboard)
 };
 #endif
 
-AFX afxNat      AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[]);
 AFX afxBool     AfxGetKeyboard(afxNat port, afxKeyboard* kbd);
 
-AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxKeyboard kbd[], afxNat port[]);
+AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard kbd[]);
 
-AFX afxError    AfxEmulateKeysAction(afxNat cnt, afxKey const key[], afxBool const pressed[], afxNat port);
-AFX afxBool     AfxKeyIsPressed(afxKey code, afxNat port);
-AFX afxBool     AfxKeysArePressed(afxNat cnt, afxKey codes[], afxNat port);
-AFX afxBool     AfxKeysWasPressed(afxKey code, afxNat port);
-AFX afxBool     AfxKeyWasReleased(afxKey code, afxNat port);
-AFX afxBool     AfxKeysWerePressed(afxNat cnt, afxKey codes[], afxNat port);
-AFX afxBool     AfxKeysWereReleased(afxNat cnt, afxKey codes[], afxNat port);
+AFX afxBool     AfxKeyIsPressed(afxNat port, afxKey code);
+AFX afxBool     AfxKeyWasPressed(afxNat port, afxKey code);
+AFX afxBool     AfxKeyWasReleased(afxNat port, afxKey code);
+
+AFX afxBool     AfxKeysArePressed(afxNat port, afxNat cnt, afxKey const codes[]);
+AFX afxBool     AfxKeysWerePressed(afxNat port, afxNat cnt, afxKey const codes[]);
+AFX afxBool     AfxKeysWereReleased(afxNat port, afxNat cnt, afxKey const codes[]);
+
+AFX afxError    AfxEmulateKeysAction(afxNat port, afxNat cnt, afxKey const key[], afxBool const pressed[]);
 
 #endif//AFX_KEYBOARD_H

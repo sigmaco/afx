@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_BUFFER_H
 #define AFX_BUFFER_H
@@ -93,10 +93,21 @@ AFX afxSize         AfxGetBufferSize(afxBuffer buf);
 AFX void*           AfxMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFlags flags);
 AFX void            AfxUnmapBufferRange(afxBuffer buf);
 
-AFX afxError        AfxDumpBuffer(afxBuffer buf, afxSize base, afxSize range, void *dst);
+AFX afxError        AfxDumpBuffer(afxBuffer buf, afxSize offset, afxSize range, void *dst);
 AFX afxError        AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride);
 
-AFX afxError        AfxUpdateBuffer(afxBuffer buf, afxSize base, afxSize range, void const *src);
-AFX afxError        AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxNat cnt, void const *src, afxSize srcStride);
+AFX afxError        AfxUpdateBuffer(afxBuffer buf, afxSize offset, afxSize range, void const *src);
+AFX afxError        AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afxSize stride, void const *src, afxSize srcStride);
+
+AFX_DEFINE_STRUCT(afxBufferRegion)
+{
+    afxNat32 base;
+    afxNat32 range;
+    afxNat32 stride;
+    afxNat32 offset;
+    afxNat32 unitSiz;
+};
+
+AFX afxError        AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxSize srcStride);
 
 #endif//AFX_BUFFER_H

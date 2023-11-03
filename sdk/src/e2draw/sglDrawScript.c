@@ -41,6 +41,8 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
         }
     }
 
+    AfxZero(dscr->levelCaches, sizeof(dscr->levelCaches[0]));
+
 #if 0
     while (1)
     {
@@ -65,15 +67,12 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     AfxExhaustArena(&dscr->base.cmdArena);
 #endif
 
+    AfxAcquireChain(&dscr->commands, dscr);
+
     return err;
 }
 
-_SGL afxError _SglDscrEndCb(afxDrawScript dscr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    return err;
-}
+SGL afxError _SglDscrEndCb(afxDrawScript dscr); // no sglDrawCommands.c
 
 _SGL afxError _SglDscrBeginCb(afxDrawScript dscr, afxBool permanent)
 {
@@ -117,7 +116,7 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
         }
     }
 
-    AfxResetDrawScript(dscr, TRUE);
+    AfxRecycleDrawScript(dscr, TRUE);
 
     //if (dscr->base.vmt->dtor && dscr->base.vmt->dtor(dscr))
         //AfxThrowError();

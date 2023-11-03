@@ -26,7 +26,7 @@
 #include "afx/core/afxSystem.h"
 #include "afxDrawParadigms.h"
 #include "afx/draw/afxPipeline.h"
-#include "afx/draw/afxXmlBackedDrawableResources.h"
+#include "afx/draw/afxXsh.h"
 
 // OpenGL/Vulkan Continuous Integration
 
@@ -143,7 +143,7 @@ _AFX afxNat AfxGetColorOutputChannels(afxPipeline pip, afxNat first, afxNat cnt,
     return i;
 }
 
-_AFX afxBool AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxBitmask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
+_AFX afxBool AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);

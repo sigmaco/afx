@@ -39,7 +39,7 @@ AFX_DEFINE_HANDLE(afxSimulation);
 AFX_DEFINE_HANDLE(afxMaterial);
 
 AFX_DEFINE_HANDLE(afxMesh);
-AFX_DEFINE_HANDLE(afxMeshData);
+AFX_DEFINE_HANDLE(afxVertexData);
 AFX_DEFINE_HANDLE(afxMeshTopology);
 AFX_DEFINE_HANDLE(afxMeshRig);
 

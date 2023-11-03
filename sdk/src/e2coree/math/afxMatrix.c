@@ -1171,7 +1171,19 @@ _AFXINL void AfxMultiplyAffineM4dTransposed(afxReal m[4][4], afxReal const a[4][
 
 // MultiplyArrayV2d
 
-_AFXINL void AfxTransformV2dStream(afxReal const m[2][2], afxNat cnt, afxNat inStride, afxReal const in[][2], afxNat outStride, afxReal out[][2])
+_AFXINL void AfxTransformV2dArray(afxReal const m[2][2], afxNat cnt, afxReal const in[][2], afxReal out[][2])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformV2d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformV2dStream(afxReal const m[2][2], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][2], afxReal out[][2])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1193,7 +1205,19 @@ _AFXINL void AfxTransformV2dStream(afxReal const m[2][2], afxNat cnt, afxNat inS
     }
 }
 
-_AFXINL void AfxTransformV3dStream(afxReal const m[3][3], afxNat cnt, afxNat inStride, afxReal const in[][3], afxNat outStride, afxReal out[][3])
+_AFXINL void AfxTransformV3dArray(afxReal const m[3][3], afxNat cnt, afxReal const in[][3], afxReal out[][3])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformV3d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformV3dStream(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1215,7 +1239,19 @@ _AFXINL void AfxTransformV3dStream(afxReal const m[3][3], afxNat cnt, afxNat inS
     }
 }
 
-_AFXINL void AfxTransformAffineV3dStream(afxReal const m[4][4], afxNat cnt, afxNat inStride, afxReal const in[][3], afxNat outStride, afxReal out[][3])
+_AFXINL void AfxTransformPointV3dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformPointV3d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformPointV3dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1230,14 +1266,26 @@ _AFXINL void AfxTransformAffineV3dStream(afxReal const m[4][4], afxNat cnt, afxN
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxTransformAffineV3d((void*)outPtr, m, (void*)inPtr);
+        AfxTransformPointV3d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
     }
 }
 
-_AFXINL void AfxTransformV4dStream(afxReal const m[4][4], afxNat cnt, afxNat inStride, afxReal const in[][4], afxNat outStride, afxReal out[][4])
+_AFXINL void AfxTransformV4dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformV4d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformV4dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1253,6 +1301,74 @@ _AFXINL void AfxTransformV4dStream(afxReal const m[4][4], afxNat cnt, afxNat inS
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxTransformV4d((void*)outPtr, m, (void*)inPtr);
+
+        inPtr += inStride;
+        outPtr += outStride;
+    }
+}
+
+_AFXINL void AfxTransformNormalV4dArray(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformNormalV4d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformNormalV4dStream(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(inStride);
+    AfxAssert(out);
+    AfxAssert(outStride);
+
+    afxByte* inPtr = (afxByte*)in;
+    afxByte* outPtr = (afxByte*)out;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxTransformNormalV4d((void*)outPtr, m, (void*)inPtr);
+
+        inPtr += inStride;
+        outPtr += outStride;
+    }
+}
+
+_AFXINL void AfxTransformAffineV4dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+        AfxTransformAffineV4d(out[i], m, in[i]);
+}
+
+_AFXINL void AfxTransformAffineV4dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(inStride);
+    AfxAssert(out);
+    AfxAssert(outStride);
+
+    afxByte* inPtr = (afxByte*)in;
+    afxByte* outPtr = (afxByte*)out;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxTransformAffineV4d((void*)outPtr, m, (void*)inPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -1909,37 +2025,44 @@ _AFXINL void AfxComposeAffineM4d(afxReal m[4][4], afxReal const scale[3], afxRea
 // Assimilate
 // 
 
-_AFXINL void AfxGetAssimilatedScalingM3d(afxReal m[3][3], afxReal const in[3][3], afxReal const linear[3][3], afxReal const invLinear[3][3])
+_AFXINL void AfxAssimilateM3d(afxReal const lt[3][3], afxReal const ilt[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3])
 {
     // Should be compatible with void InPlaceSimilarityTransformScaleShear(const float *Linear3x3, const float *InverseLinear3x3, float *ScaleShear3x3)
     afxError err = NIL;
-    AfxAssert(m);
+    AfxAssert(lt);
+    AfxAssert(ilt);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(linear);
-    AfxAssert(invLinear);
-    // Reversed from Granny
-    afxM3d tmp;
-    AfxMultiplyM3d(tmp, linear, in);  // as ordens de multiplicação deveria mudar devido a Granny3D ser colum-major?
-    AfxMultiplyM3d(m, tmp, invLinear);
+    AfxAssert(out);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxM3d tmp;
+        AfxMultiplyM3d(tmp, lt, in[i]);
+        AfxMultiplyM3d(out[i], tmp, ilt);
+    }
 }
 
-_AFXINL void AfxGetAssimilatedAffineMatrix(afxReal m[4][4], afxReal const in[4][4], afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3])
+_AFXINL void AfxAssimilateAffineM4d(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4])
 {
     // Should be compatible with void InPlaceSimilarityTransform4x3(const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float *ResultInit)
     afxError err = NIL;
-    AfxAssert(m);
+    AfxAssert(at);
+    AfxAssert(lt);
+    AfxAssert(ilt);
+    AfxAssert(cnt);
     AfxAssert(in);
-    AfxAssert(affine);
-    AfxAssert(linear);
-    AfxAssert(invLinear);
+    AfxAssert(out);
 
-    afxV4d pos;
-    AfxGetAssimilatedPositionV4d(pos, in[3], affine, linear);
-
-    afxM3d ss;
-    AfxM3dFromM4d(ss, in);
-    AfxGetAssimilatedScalingM3d(ss, ss, linear, invLinear);
-    AfxM4dFromM3d(m, ss, pos);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxM3d ss;
+        AfxM3dFromM4d(ss, in[i]);
+        AfxAssimilateM3d(lt, ilt, 1, &ss, &ss);
+        afxV4d pos;
+        AfxAssimilatePointV4d(lt, at, 1, &in[i][3], &pos);
+        AfxM4dFromM3d(out[i], ss, pos);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

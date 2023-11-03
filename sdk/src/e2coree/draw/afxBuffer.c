@@ -55,18 +55,18 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxS
     return err;
 }
 
-_AFX afxError AfxDumpBuffer(afxBuffer buf, afxSize base, afxSize range, void *dst)
+_AFX afxError AfxDumpBuffer(afxBuffer buf, afxSize offset, afxSize range, void *dst)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
 
     afxSize siz = AfxGetBufferSize(buf);
-    AfxAssert(siz > base);
+    AfxAssert(siz > offset);
     AfxAssert(range);
-    AfxAssert(siz >= base + range);
+    AfxAssert(siz >= offset + range);
     AfxAssert(dst);
 
-    afxByte *map = AfxMapBufferRange(buf, base, range, AFX_BUF_MAP_R);
+    afxByte *map = AfxMapBufferRange(buf, offset, range, AFX_BUF_MAP_R);
 
     if (!map) AfxThrowError();
     else
@@ -78,28 +78,68 @@ _AFX afxError AfxDumpBuffer(afxBuffer buf, afxSize base, afxSize range, void *ds
     return err;
 }
 
-_AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxNat cnt, void const *src, afxSize srcStride)
+_AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxSize srcStride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(rgn);
 
-    afxSize siz = AfxGetBufferSize(buf);
-    AfxAssertRange(siz, offset, cnt * stride);
+    afxSize bufSiz = AfxGetBufferSize(buf);
+    AfxAssertRange(bufSiz, rgn->base, rgn->range);
     AfxAssert(src);
     AfxAssert(srcStride);
 
-    afxByte *map = AfxMapBufferRange(buf, offset, (cnt * stride), AFX_BUF_MAP_W);
+    afxByte *map = AfxMapBufferRange(buf, rgn->base, rgn->range, AFX_BUF_MAP_W);
 
     if (!map) AfxThrowError();
     else
     {
-        if (srcStride == stride)
+        if ((srcStride == rgn->stride) && rgn->stride)
         {
-            AfxCopy(map, src, (cnt * stride));
+            AfxCopy(map, src, rgn->range);
         }
         else
         {
             afxByte const *src2 = src;
+            //afxNat unitSiz = AfxMinor(rgn->stride, srcStride); // minor non-zero
+            afxNat cnt = rgn->range / rgn->stride;
+
+            for (afxNat i = 0; i < cnt; i++)
+            {
+                AfxCopy(&(map[(i * rgn->stride) + rgn->offset]), &(src2[i * srcStride]), rgn->unitSiz);
+            }
+        }
+
+        AfxUnmapBufferRange(buf);
+    }
+
+    return err;
+}
+
+_AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afxSize stride, void const *src, afxSize srcStride)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
+
+    afxSize bufSiz = AfxGetBufferSize(buf);
+    AfxAssertRange(bufSiz, offset, range);
+    AfxAssert(src);
+    AfxAssert(srcStride);
+
+    afxByte *map = AfxMapBufferRange(buf, offset, range, AFX_BUF_MAP_W);
+
+    if (!map) AfxThrowError();
+    else
+    {
+        if ((srcStride == stride) && stride)
+        {
+            AfxCopy(map, src, range);
+        }
+        else
+        {
+            afxByte const *src2 = src;
+            afxNat unitSiz = AfxMinor(stride, srcStride); // minor non-zero
+            afxNat cnt = range / unitSiz;
 
             for (afxNat i = 0; i < cnt; i++)
             {
@@ -107,7 +147,7 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, af
                 AfxAssert(stride != 2 || (stride == 2 && AFX_N16_MAX >= (afxNat16)(src2[i * srcStride])));
                 AfxAssert(stride != 4 || (stride == 4 && AFX_N32_MAX >= (afxNat32)(src2[i * srcStride])));
 
-                AfxCopy(&(map[i * stride]), &(src2[i * srcStride]), stride);
+                AfxCopy(&(map[i * stride]), &(src2[i * srcStride]), unitSiz);
             }
         }
 
@@ -116,16 +156,16 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize stride, af
     return err;
 }
 
-_AFX afxError AfxUpdateBuffer(afxBuffer buf, afxSize base, afxSize range, void const *src)
+_AFX afxError AfxUpdateBuffer(afxBuffer buf, afxSize offset, afxSize range, void const *src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
 
     afxSize siz = AfxGetBufferSize(buf);
-    AfxAssertRange(siz, base, range);
+    AfxAssertRange(siz, offset, range);
     AfxAssert(src);
 
-    afxByte *map = AfxMapBufferRange(buf, base, range, AFX_BUF_MAP_W);
+    afxByte *map = AfxMapBufferRange(buf, offset, range, AFX_BUF_MAP_W);
 
     if (!map) AfxThrowError();
     else

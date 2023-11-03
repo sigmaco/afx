@@ -247,14 +247,14 @@ AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal t)
 
 AFXINL void AfxExtractAxialRotation(afxQuat const q, afxReal axis[3], afxReal *radians); // extracts an axis/angle representation to this quaternion rotation.
 
-AFXINL void AfxGetAssimilatedOrientation(afxQuat q, afxQuat const in, afxReal const linear[3][3], afxReal const invLinear[3][3]); // make similarity transformation on afxQuat-based orientation.
+AFXINL void AfxAssimilateQuat(afxReal const linear[3][3], afxReal const invLinear[3][3], afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
 
 /// Rotates a 3D vector using a quaternion.
 /// v = Returns the rotated 3D vector.
 /// in = 3D vector to rotate.
 /// rot = Quaternion that describes the rotation to apply to the vector.
 
-AFXINL void AfxGetRotatedV3d(afxV3d v, afxV3d const in, afxQuat const rot);
+AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Trigonometry                                                               //
