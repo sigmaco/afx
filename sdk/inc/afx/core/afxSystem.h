@@ -244,7 +244,8 @@ AFX afxError            AfxEnableResourceMonitoring(afxResource res, afxBool ena
 AFX afxError            AfxResolveUri(afxUri const *in, afxFileFlags permissions, afxUri *out);
 AFX afxError            AfxResolveUris(afxNat cnt, afxUri const in[], afxFileFlags const permissions[], afxUri out[]);
 
-//AFX afxBool             _AfxGetSysD(afxSystem sys, struct _afxSysD**sysD);
+AFX afxNat              AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[]);
+AFX afxNat              AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[]);
 
 #if 0
 ////////////////////////////////////////////////////////////////////////////////

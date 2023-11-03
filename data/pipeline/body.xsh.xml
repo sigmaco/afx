@@ -6,14 +6,14 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V3D'>aPos</In>
-        <In location='1' format='V3D'>aNormal</In>
-        <In location='2' format='V2D'>aUv</In>
+        <In location='0' format='V4D'>aPos</In>
+        <In location='3' format='V3D'>aNormal</In>
+        <In location='6' format='V2D'>aUv</In>
         <![CDATA[
         
-        layout (location = 0) in vec3 aPos;
-        layout (location = 1) in vec3 aNormal;
-        layout (location = 2) in vec2 aUv;
+        layout (location = 0) in vec4 aPos;
+        layout (location = 3) in vec3 aNormal;
+        layout (location = 6) in vec2 aUv;
 
         const vec4 AmbientColour = vec4(0.2, 0.2, 0.2, 1.0);
         
@@ -28,8 +28,8 @@
         {
             vec3 ObjNormal = vec3(v * inverse(m) * vec4(aNormal, 0));
 
-            gl_Position = p * v * m * vec4(aPos, 1);
-            sgl_v.Tex0     = /*aUv*/vec2(1, 1);
+            gl_Position = p * v * w[0] * aPos;
+            sgl_v.Tex0     = aUv;
             sgl_v.Diffuse  = /*starKd * (dot(ObjNormal, starDir)) + */AmbientColour;
         }
         ]]>
@@ -41,18 +41,18 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V3D'>aPos</In>
-        <In location='1' format='V3D'>aNormal</In>
-        <In location='2' format='V2D'>aUv</In>
-        <In location='3' format='V4D'>aBlendIndices</In>
-        <In location='4' format='V4D'>aBlendWeights</In>
+        <In location='0' format='V4D'>aPos</In>
+        <In location='3' format='V3D'>aNormal</In>
+        <In location='6' format='V2D'>aUv</In>
+        <In location='1' format='V4D'>aBlendIndices</In>
+        <In location='2' format='V4D'>aBlendWeights</In>
         <![CDATA[
         
-        layout (location = 0) in vec3 aPos;
-        layout (location = 1) in vec3 aNormal;
-        layout (location = 2) in vec2 aUv;
-        layout (location = 3) in vec4 aBlendIndices;
-        layout (location = 4) in vec4 aBlendWeights;
+        layout (location = 0) in vec4 aPos;
+        layout (location = 3) in vec3 aNormal;
+        layout (location = 5) in vec2 aUv;
+        layout (location = 1) in vec4 aBlendIndices;
+        layout (location = 2) in vec4 aBlendWeights;
 
         out block
         {
@@ -65,7 +65,7 @@
         
         void main()
         {
-            vec4 InPos     = vec4( aPos, 1 );
+            vec4 InPos     = aPos;
             vec4 WorldPos    = 0;
             vec3 WorldNormal = 0;
             

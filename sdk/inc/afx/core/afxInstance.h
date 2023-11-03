@@ -104,7 +104,7 @@ AFX afxNat              AfxObjectGetIndex(afxHandle obj, afxBool b2f);
 AFX void const*         AfxObjectGetVmt(afxHandle obj);
 AFXINL afxBool          AfxObjectInherits(afxHandle obj, afxClass const* cls);
 
-AFX afxInt32            AfxObjectGetRefCount(afxHandle obj);
+AFX afxInt32            AfxGetRefCount(afxHandle obj);
 
 AFX afxNat32            AfxObjectGetTid(afxHandle obj);
 

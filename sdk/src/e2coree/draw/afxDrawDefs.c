@@ -217,16 +217,20 @@ _AFX afxString const primTopologyString[] =
 
 afxNat const vtxFmtSizes[] =
 {
+    0,
     sizeof(afxReal),
     sizeof(afxV2d),
     sizeof(afxV3d),
     sizeof(afxV4d),
+
     sizeof(afxInt8[4]),
     sizeof(afxInt8[8]),
+
 };
 
 afxChar const * const vtxFmtNames[] =
 {
+    0,
     "X32R",
     "XY32R",
     "XYZ32R",

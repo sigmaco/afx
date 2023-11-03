@@ -21,7 +21,7 @@
 #include "afxDrawClassified.h"
 #include "afx/core/afxSystem.h"
 #include "afx/core/afxUri.h"
-#include "afx/draw/afxXmlBackedDrawableResources.h"
+#include "afx/draw/afxXsh.h"
 #include "afx/draw/afxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////

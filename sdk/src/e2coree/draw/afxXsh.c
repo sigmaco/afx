@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/draw/afxXmlBackedDrawableResources.h"
+#include "afx/draw/afxXsh.h"
 #include "afx/draw/afxDrawSystem.h"
 
 AFX afxChar const *shdResTypeNames[];

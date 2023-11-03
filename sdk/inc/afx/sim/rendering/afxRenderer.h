@@ -18,12 +18,7 @@
 #define RENDERER_H
 
 #include "afx/sim/anim/afxBody.h"
-
-typedef enum afxSkyType
-{
-    AFX_SKY_BOX = 1,
-    AFX_SKY_DOME,
-} afxSkyType;
+#include "afx/sim/rendering/afxSky.h"
 
 AFX_DEFINE_STRUCT(afxViewConstants) // frame
 {
@@ -69,7 +64,7 @@ AFX_DEFINE_STRUCT(afxInstanceConstants)
 
 AFX_DEFINE_STRUCT(afxRendererConfig)
 {
-    afxError (*dinProc)(afxDrawInput din, afxDrawThread dthr);
+    afxError (*dinProc)(afxDrawInput din, afxNat thrUnitIdx);
 };
 
 AFX_OBJECT(afxRenderer)
@@ -78,12 +73,8 @@ AFX_OBJECT(afxRenderer)
     void*               cachedSim;
     afxDrawContext      cachedDctx;
     afxDrawInput        din;
-    //afxDrawOutput       dout;
-
-    afxNat              activeOutputBufIdx;
-    afxDrawInput        activeInput;
-    afxDrawScript       activeScript;
-    afxCamera           activeCamera;
+    
+    afxCamera           activeCam;
     afxRect             drawArea;
     afxCanvas           canv;
     afxNat              frameCnt;
@@ -106,16 +97,7 @@ AFX_OBJECT(afxRenderer)
     afxFrustum          viewVolume;
     afxArray            capturedNodes; // afxNode
 
-    struct
-    {
-        afxSkyType          type;
-        afxBuffer           cube;
-        afxTexture          cubemap;
-        afxColor            emissiveColor;
-        afxColor            ambientColor;
-        afxPipeline    skyPip;
-        afxSampler          smp;
-    }                       sky;
+    afxSky                  sky;
     afxBool                 skyEnabled;
 
     afxPipeline         wirePip;
@@ -127,7 +109,9 @@ AFX_OBJECT(afxRenderer)
 
     afxPipeline    rigidBodyPip;
     afxPipeline    skinnedBodyPip;
-
+    
+    afxPose*      lp;
+    afxWorldPose* wp;
 };
 
 #if 0
@@ -150,18 +134,15 @@ for each view {
 }
 #endif
 
-AFX afxError        AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
+AFX afxError AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
 
-AFX afxError AfxRendererBindOutput(afxRenderer rnd, afxDrawOutput dout);
-
-AFX afxError AfxRendererBeginScene(afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
-AFX afxError AfxRendererEndScene(afxRenderer rnd);
+AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
+AFX afxError AfxEndSceneRendering(afxDrawScript dscr, afxRenderer rnd);
 
 AFX afxError AfxRendererSetStar(afxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AFX afxError AfxRendererDrawSky(afxRenderer rnd, afxBool clear);
-AFX afxError AfxRendererDrawBody(afxRenderer rnd, afxBody bod);
+AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afxBody bodies[]);
 
-AFX afxError AfxRendererDrawTestIndexed(afxRenderer rnd, afxBool unk);
+AFX afxError AfxDrawTestIndexed(afxDrawScript dscr, afxRenderer rnd);
 
 #endif///RENDERER_H

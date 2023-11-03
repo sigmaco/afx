@@ -18,7 +18,7 @@
 #define AFX_MESH_H
 
 #include "afxMeshTopology.h"
-#include "afxMeshData.h"
+#include "afxVertexData.h"
 
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
 /// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshVertebra's.
@@ -45,52 +45,52 @@
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
     _AFX_DBG_FCC
-    afxString               scalarName; // 16
-    afxVertexBuffer         vbuf; // afxVertexBuffer --- aka vertex data
-    afxNat                  baseVtx;
-    afxNat                  vtxCnt;
-    afxBool                 dataIsDeltas;
+    afxString           scalarName; // 16
+    afxVertexData       vtd;
+    afxNat              baseVtxIdx;
+    afxNat              vtxCnt;
+    afxBool             delta;
 };
 
 AFX_DEFINE_STRUCT(afxMeshVertebra)
 {
     _AFX_DBG_FCC
-    afxString               name; // 16
-    afxAabb                 aabb; // originally oobb;
-    afxNat                  triCnt;
-    afxNat*                 triIdx; // indices to vertices
+    afxString           name; // 16
+    afxAabb             aabb; // originally oobb;
+    afxNat              triCnt;
+    afxNat*             triIdx; // indices to vertices
 };
 
 AFX_DEFINE_STRUCT(afxMaterialSlot)
 {
-    afxMaterial             mtl;
+    afxMaterial         mtl;
 };
 
 AFX_OBJECT(afxMesh)
 #ifdef _AFX_MESH_C
 {
-    afxUri                  uri; // 128
+    afxUri              uri; // 128
 
-    afxMeshData             vtxData;
-    //afxVertexBuffer         vbuf; // afxVertexBuffer --- aka vertex data
-    //afxNat                  baseVtx; // when vbuf is shared with other meshes it's not 0. Maybe that index buffer already does this?
-    //afxNat                  vtxCnt;
-    afxNat                  morphCnt;
-    afxMeshMorph*           morphs;
-    afxMeshTopology         topology;
-    afxNat                  mtlSlotCnt;
-    afxMaterialSlot*        mtlSlots;
-    afxNat                  vertebraCnt;
-    afxMeshVertebra*        vertebras;
-    void*                   extData;
+    afxVertexData       vtd;
+    afxNat              baseVtxIdx; // when vtd is shared with other meshes or morphes it may not be 0. Maybe that index buffer already does this?
+    afxNat              vtxCnt;
+
+    afxNat              morphCnt;
+    afxMeshMorph*       morphs;
+
+    afxMeshTopology     topology;
+    afxNat              mtlSlotCnt;
+    afxMaterialSlot*    mtlSlots;
+    afxNat              vertebraCnt;
+    afxMeshVertebra*    vertebras;
+    void*               extData;
 }
 #endif
 ;
 
-AFX afxError            AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[]);
-
 AFX afxUri const*       AfxMeshGetUri(afxMesh msh);
-AFX afxVertexBuffer     AfxGetMeshVertices(afxMesh msh);
+AFX afxVertexData       AfxGetMeshVertices(afxMesh msh, afxNat* baseVtxIdx, afxNat* vtxCnt);
+AFX afxNat              AfxCountMeshVertices(afxMesh msh);
 
 AFX afxNat              AfxCountMeshMorphes(afxMesh msh);
 AFX afxMeshMorph*       AfxGetMeshMorph(afxMesh msh, afxNat morphIdx);
@@ -107,6 +107,8 @@ AFX afxBool             AfxMeshIsRigid(afxMesh msh);
 AFX afxNat              AfxCountMeshVertebras(afxMesh msh);
 AFX afxMeshVertebra*    AfxGetMeshVertebra(afxMesh msh, afxNat artIdx);
 
-AFX void                AfxTransformMesh(afxMesh msh, afxV3d const at, afxM3d const lt, afxM3d const ilt, afxReal atTol, afxReal ltTol, afxFlags flags);
+AFX afxError            AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[]);
+
+AFX void                AfxTransformMeshes(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
 
 #endif//AFX_MESH_H

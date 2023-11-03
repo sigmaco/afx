@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_VERTEX_BUFFER_H
 #define AFX_VERTEX_BUFFER_H
@@ -23,23 +23,45 @@
 
 #include "afx/draw/afxBuffer.h"
 
+typedef enum afxVertexFlag
+{
+    afxVertexFlag_DYNAMIC = AFX_BIT_OFFSET(0), // The data store contents will be modified repeatedly and used many times.
+    afxVertexFlag_STREAM = AFX_BIT_OFFSET(1), // The data store contents will be modified once and used at most a few times.
+    
+    afxVertexFlag_POSITIONAL = AFX_BIT_OFFSET(2),
+    afxVertexFlag_SPATIAL = AFX_BIT_OFFSET(3),
+
+    afxVertexFlag_NORMALIZED = AFX_BIT_OFFSET(4),
+    afxVertexFlag_RASTERIZATION = AFX_BIT_OFFSET(5),
+
+    afxVertexFlag_AFFINE = AFX_BIT_OFFSET(10),
+    /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
+
+    afxVertexFlag_LINEAR = AFX_BIT_OFFSET(11),
+    /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
+
+    afxVertexFlag_LINEAR_INV = AFX_BIT_OFFSET(12),
+    /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
+
+    afxVertexFlag_DELTA = AFX_BIT_OFFSET(13), // treat as delta
+} afxVertexFlags;
+
 typedef enum afxVertexUsage
 {
-    AFX_VTX_USAGE_DYNAMIC       = AFX_BIT_OFFSET(0), // The data store contents will be modified repeatedly and used many times.
-    AFX_VTX_USAGE_STREAM        = AFX_BIT_OFFSET(1), // The data store contents will be modified once and used at most a few times.
-    //AFX_VTX_USAGE_STATIC = AFX_BIT_OFFSET(2), // The data store contents will be modified once and used many times.
+    afxVertexUsage_POS          = AFX_BIT_OFFSET(0),
+    afxVertexUsage_JNT          = AFX_BIT_OFFSET(1),
+    afxVertexUsage_WGT          = AFX_BIT_OFFSET(2),
+    afxVertexUsage_BLENDING     = afxVertexUsage_JNT | afxVertexUsage_WGT,
+    afxVertexUsage_POSITIONAL   = afxVertexUsage_POS | afxVertexUsage_BLENDING,
 
-    AFX_VTX_USAGE_POS           = AFX_BIT_OFFSET( 9),
-    AFX_VTX_USAGE_NRM           = AFX_BIT_OFFSET(10),
-    AFX_VTX_USAGE_TAN           = AFX_BIT_OFFSET(11),
-    AFX_VTX_USAGE_BTN           = AFX_BIT_OFFSET(12),
-    AFX_VTX_USAGE_UV            = AFX_BIT_OFFSET(13),
+    afxVertexUsage_NRM          = AFX_BIT_OFFSET(3),
+    afxVertexUsage_TAN          = AFX_BIT_OFFSET(4),
+    afxVertexUsage_BTN          = AFX_BIT_OFFSET(5),
+    afxVertexUsage_LIGHTING     = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BTN,
+    afxVertexUsage_SPATIAL      = afxVertexUsage_POSITIONAL | afxVertexUsage_LIGHTING,
 
-    AFX_VTX_HINT_POSITIONAL     = AFX_BIT_OFFSET(14),
-    AFX_VTX_HINT_SPATIAL        = AFX_BIT_OFFSET(15),
-
-    AFX_VTX_USAGE_NORMALIZED    = AFX_BIT_OFFSET(17),
-    AFX_VTX_USAGE_RASTERIZATION = AFX_BIT_OFFSET(18),
+    afxVertexUsage_UV           = AFX_BIT_OFFSET(6),
+    afxVertexUsage_VISUAL       = afxVertexUsage_UV,
 } afxVertexUsage;
 
 AFX_DEFINE_STRUCT(afxVertexRowSpecification)
@@ -226,6 +248,7 @@ struct afxBaseVertexBuffer
 #endif
 };
 
+#if 0
 AFX afxError                AfxBuildVertexBuffers(afxDrawContext dctx, afxNat cnt, afxVertexBuffer vbuf[], afxVertexBufferBlueprint const blueprint[]);
 
 AFX afxError                AfxVertexBufferDump(afxVertexBuffer vbuf, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void *dst, afxNat dstStride); // copy out
@@ -257,6 +280,6 @@ AFX afxNat                  AfxMeasureVertexBufferRegion(afxVertexBuffer vbuf, a
 AFX afxNat                  AfxLocateVertexBufferRegion(afxVertexBuffer vbuf, afxNat streamIdx, afxNat attrIdx, afxNat elemIdx);
 
 AFX afxError                AfxUpdateVertexBufferRegion(afxVertexBuffer vbuf, afxVertexBufferRegion const *rgn, void const *src, afxVertexFormat const fmt[]);
-
+#endif
 
 #endif//AFX_VERTEX_BUFFER_H

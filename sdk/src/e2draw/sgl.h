@@ -183,20 +183,6 @@ typedef struct
         struct
         {
             afxBuffer                   buf;
-            afxNat                      offset;
-            afxNat                      range;
-            afxNat                      stride;
-            afxBool                     inst;
-            afxNat                      instDivisor;
-        }                               vertexBindings_[_SGL_MAX_VBO_PER_BIND];
-        //afxNat                          vertexBindingCnt;
-
-        //afxNat                          inCnt;
-        //afxVertexInputPoint             ins[_SGL_MAX_INSTREAM_PER_SET];
-        
-        struct
-        {
-            afxBuffer                   buf;
             afxNat32                    offset;
             afxNat32                    idxSiz;
         }                               indexBinding;
@@ -252,7 +238,7 @@ typedef struct
 
         afxBool                 msEnabled; /// If enabld, multisample rasterization will be used. FALSE
         afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-        afxBitmask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+        afxMask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
         afxBool                 sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
         afxReal                 minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
         afxBool                 alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
@@ -266,8 +252,8 @@ typedef struct
     }                       state;
     afxBool                 flushPip, flushPass, flushSr, flushIbb, flushRb;
     
-    afxBitmask              vtxInStreamUpdMask;
-    afxBitmask              vtxInAttribUpdMask;
+    afxMask              vtxInStreamUpdMask;
+    afxMask              vtxInAttribUpdMask;
 
     afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
     afxBool                 flushRasterizer, flushPrimCulling;
@@ -307,7 +293,7 @@ AFX_OBJECT(afxDrawContext)
     GLuint presentFboGpuHandle;
     afxPipeline presentPip;
     afxSampler presentSmp;
-    afxBuffer presentVbuf;
+    afxBuffer tristrippedQuad2dPosBuf;
 };
 
 AFX_OBJECT(afxDrawQueue)
@@ -437,10 +423,9 @@ AFX_OBJECT(afxCanvas)
 
 AFX_OBJECT(afxDrawScript)
 {
-    struct afxBaseDrawScript base;
-    afxChain    commands;
-
-    // move to instance data, together with command chain
+    struct afxBaseDrawScript    base;
+    afxChain                    commands;
+    afxChain                    canvOps;
     afxChain            drawCalls;
     afxChain            stateChanges;
     afxChain            pipBinds;
@@ -470,6 +455,14 @@ AFX_OBJECT(afxDrawScript)
     afxNat              vpUpdCmdCnt;
     afxNat              lastScisCmdIdx; // viewport and/or scissor changes
     afxNat              scisUpdCmdCnt;
+    struct
+    {
+        struct
+        {
+            afxPipeline     next;
+            afxPipeline     curr;
+        } pip;
+    } levelCaches[1];
 };
 
 typedef struct _DrawPipelineResource
@@ -510,9 +503,7 @@ typedef enum afxDrawCmdId
 
     AFX_DCMD_BIND_VERTEX_SOURCES = offsetof(afxCmd, BindVertexSources) / 4,
     AFX_DCMD_RESET_VERTEX_STREAMS = offsetof(afxCmd, ResetVertexStreams) / 4,
-    AFX_DCMD_UPDATE_VERTEX_STREAMS = offsetof(afxCmd, UpdateVertexStreams) / 4,
     AFX_DCMD_RESET_VERTEX_ATTRIBUTES = offsetof(afxCmd, ResetVertexAttributes) / 4,
-    AFX_DCMD_UPDATE_VERTEX_ATTRIBUTES = offsetof(afxCmd, UpdateVertexAttributes) / 4,
     AFX_DCMD_BIND_INDEX_SOURCE = offsetof(afxCmd, BindIndexSource) / 4,
     AFX_DCMD_SET_PRIMITIVE_TOPOLOGY = offsetof(afxCmd, SetPrimitiveTopology) / 4,
     
@@ -538,7 +529,7 @@ typedef enum afxDrawCmdId
     
     AFX_DCMD_SET_BLEND_CONSTANTS = offsetof(afxCmd, SetBlendConstants) / 4,
 
-    AFX_DCMD_TOTAL
+    AFX_DCMD_TOTAL = offsetof(afxCmd, Total) / 4,
 } afxDrawCmdId;
 
 
@@ -554,9 +545,17 @@ AFX_DEFINE_STRUCT(_afxDscrCmdDrawIndexed)
     afxNat32                        idxCnt, instCnt, firstIdx, vtxOff, firstInst;
 };
 
+AFX_DEFINE_STRUCT(_afxDscrCmdDrawPrefab)
+{
+    _afxDscrCmd                     cmd;
+    afxDrawPrefab                   prefab;
+    afxNat32                        instCnt;
+};
+
 AFX_DEFINE_STRUCT(_afxDscrCmdBeginCanvas)
 {
     _afxDscrCmd             cmd;
+    afxLinkage              canvOpsLnk;
     //afxCanvas               canv;
     afxRect                 area;
     afxNat32                layerCnt;
@@ -601,24 +600,20 @@ AFX_DEFINE_STRUCT(_afxDscrCmdVertexSources)
 AFX_DEFINE_STRUCT(_afxDscrCmdVertexStreams)
 {
     _afxDscrCmd                     cmd;
-    afxNat first;
     afxNat cnt;
     afxNat srcIdx[_SGL_MAX_VBO_PER_BIND];
     afxNat stride[_SGL_MAX_VBO_PER_BIND];
     afxBool instance[_SGL_MAX_VBO_PER_BIND];
-    afxBool reset;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdVertexAttributes)
 {
-    _afxDscrCmd                     cmd;
-    afxNat first;
+    _afxDscrCmd                     cmd;    
     afxNat cnt;
     afxNat location[_SGL_MAX_VBO_PER_BIND];
     afxVertexFormat fmt[_SGL_MAX_VBO_PER_BIND];
     afxNat streamIdx[_SGL_MAX_VBO_PER_BIND];
-    afxNat32 offset[_SGL_MAX_VBO_PER_BIND];
-    afxBool reset;
+    afxNat32 offset[_SGL_MAX_VBO_PER_BIND];    
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBufferRange)
@@ -675,7 +670,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdNat)
 AFX_DEFINE_STRUCT(_afxDscrCmdBitmaskNat32)
 {
     _afxDscrCmd                     cmd;
-    afxBitmask                      mask;
+    afxMask                      mask;
     afxNat32                        value;
 };
 

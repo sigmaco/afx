@@ -30,87 +30,76 @@ afxRenderer rnd = NIL;
 afxCamera cam = NIL;
 afxBody bod = NIL;
 
-afxSize frameTime = 0, swapTime = 0, frameNum = 0;
-afxReal dt = 0;
-afxNat fps = 0;
-
-afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw thread
+afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
     afxRenderer rnd = AfxGetDrawInputUdd(din);
     afxDrawContext dctx;
     AfxGetDrawInputConnection(din, &dctx);
-    afxDrawScript dscr;
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
 
-    afxNat outBufIdx = 0;
-    AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
-    rnd->activeOutputBufIdx = outBufIdx;
-    afxTexture surf;
-    AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
-    AfxAssertObjects(1, &surf, afxFcc_TEX);
+    afxDrawScript dscr;
 
-    AfxRendererBeginScene(rnd, rnd->activeCamera, NIL, surf);
-    AfxRendererDrawSky(rnd, TRUE);
+    if (AfxAcquireDrawScripts(din, 0, 1, &dscr)) AfxThrowError();
+    else
+    {
+        if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+        else
+        {
+            afxTexture surf;
+            afxNat outBufIdx = 0;
+            AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
+            AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
+            AfxAssertObjects(1, &surf, afxFcc_TEX);
 
-    if (bod)
-        AfxRendererDrawBody(rnd, bod);
+            AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
 
-    AfxRendererDrawTestIndexed(rnd, 0);
+            AfxDrawSky(dscr, &rnd->sky);
 
-    AfxRendererEndScene(rnd);
+            if (bod)
+                AfxDrawBodies(dscr, rnd, 1, &bod);
 
-    if (AfxSubmitPresentations(rnd->din, 1, &dout, &rnd->activeOutputBufIdx)) // draw output count hardcoded to 1.
-        AfxThrowError();
+            AfxDrawTestIndexed(dscr, rnd);
+
+            AfxEndSceneRendering(dscr, rnd);
+
+            if (AfxFinishDrawScript(dscr)) AfxThrowError();
+            else if (AfxSubmitDrawScripts(din, 1, &dscr))
+                AfxThrowError();
+
+            if (AfxPresentDrawOutputBuffers(din, 1, &dout, &outBufIdx))
+                AfxThrowError();
+        }
+    }
 
     return err;
 }
 
-void UpdateFrameMovement(const afxReal DeltaTime)
+void UpdateFrameMovement(afxReal64 DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
 
-    const afxReal MovementThisFrame = DeltaTime * CameraSpeed;
+    afxReal64 MovementThisFrame = DeltaTime * CameraSpeed;
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
     // camera up and down, but it should be clear how to add one.
-    const afxReal ForwardSpeed = (AfxKeyIsPressed(AFX_KEY_W, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_S, 0) ? 1 : 0.0f);
-    const afxReal RightSpeed = (AfxKeyIsPressed(AFX_KEY_A, 0) ? -1 : 0.0f) + (AfxKeyIsPressed(AFX_KEY_D, 0) ? 1 : 0.0f);
+    afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
+    afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
 
     AfxMoveCameraRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
 
-_AFXEXPORT afxResult AfxUpdateApplication(afxThread thr, afxApplication app)
+_AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     afxSize time = AfxGetTimer();
 
-    dt = ((afxReal)time - (afxReal)frameTime) * 0.001;
-
-    if (1000 <= (time - swapTime))
-    {
-        swapTime = time;
-        fps = frameNum;
-        frameNum = 0;
-    }
-
-    // deveriam ser movidos para afxDrawInput para separação e exibição correta para cada saída?
-
-    ++frameNum;
-    frameTime = time;
-
+    afxReal64 dt;
+    AfxGetExecutionTime(NIL, &dt);
     UpdateFrameMovement(dt);
-
-    //AfxRendererBeginScene(rnd, cam);
-    //AfxRendererDrawSky(rnd, TRUE);
-
-    //AfxRendererDrawBody(rnd, bod);
-
-    //AfxRendererEndScene(rnd);
-
-    return AFX_SUCCESS;
 }
 
 _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
@@ -135,10 +124,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxReconnectDrawOutput(dout, dctx);
 
     afxRendererConfig rndConf = { 0 };
-    rndConf.dinProc = DinFetcherFn;
+    rndConf.dinProc = DrawInputProc;
     AfxAcquireRenderers(sim, 1, &rnd, &rndConf);
-
-    AfxRendererBindOutput(rnd, dout);
 
     afxUri uriMap2;
     afxString str;
@@ -170,22 +157,22 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
     afxAsset cad;
-    //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
+    AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
 
     //AfxWrapStringLiteral(&str, "bibliotheca", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
     //AfxWrapStringLiteral(&str, "zero", 0);
-    //AfxWrapStringLiteral(&str, "container", 0);
+    AfxWrapStringLiteral(&str, "container", 0);
 
 
     AfxExcerptUriObject(&uriMap2, &uriMap);
-    //AfxFindResources(cad, afxFcc_MDL, 1, &uriMap2, &mdl);
+    AfxFindResources(cad, afxFcc_MDL, 1, &uriMap2, &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
-    //AfxEmbodyModel(mdl, 1, &bod);
+    AfxEmbodyModel(mdl, 1, &bod);
     AfxAssert(bod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
@@ -205,7 +192,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     //AfxAttachViewpoint(vpnt, cam);
 
-    rnd->activeCamera = cam;
+    rnd->activeCam = cam;
 
     AfxGetKeyboard(0, &kbd);
     AfxGetMouse(0, &mse);

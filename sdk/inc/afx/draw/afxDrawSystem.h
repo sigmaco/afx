@@ -15,7 +15,7 @@
  */
 
 // The Autonomous Draw System, responsible to manage resources and provide drawing capabilities.
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_DRAW_SYSTEM_H
 #define AFX_DRAW_SYSTEM_H
@@ -212,18 +212,21 @@ AFX_DEFINE_STRUCT(afxDrawDeviceCaps)
     afxBool inheritedQueries;
 };
 
-AFX_DEFINE_STRUCT(afxSurfaceCaps)
+AFX_DEFINE_STRUCT(afxDrawOutputEndpointCaps)
 {
     afxNat              minBufCnt;
     afxNat              maxBufCnt;
-    afxNat              currentExtent[2];
-    afxNat              minExtent[2];
-    afxNat              maxExtent[2];
+    afxNat              currExtent[2];
+    afxWhd              minWhd;
+    afxWhd              maxWhd;
     afxNat              maxLayerCnt;
     afxPresentTransform supportedTransforms;
-    afxPresentTransform currentTransform;
+    afxPresentTransform currTransform;
     afxPresentAlpha     supportedCompositeAlpha;
     afxTextureFlags     supportedUsageFlags;
+    afxPresentScaling   supportedScaling;
+    afxNat              supportedModeCnt;
+    afxPresentMode      supportedModes;
 };
 
 AFX_DEFINE_STRUCT(afxDrawPortCaps)
@@ -275,7 +278,7 @@ struct afxBaseDrawDevice
 AFX_DEFINE_STRUCT(afxDrawIcdInfo)
 {
     afxModule               mdle;
-    afxString const*        name; // driver name: SIGMA GL
+    afxString const*        name; // driver name: SIGMA GL/2
     afxString const*        vendor; // author: SIGMA Technology Group (The technology arm of Federação SIGMA)
     afxString const*        website; // website: sigmaco.org
     afxString const*        note; // The standard QWADRO draw system implementation.
@@ -326,7 +329,7 @@ AFX_OBJECT(afxDrawSystem)
     afxClass            outputs;
     afxClass            inputs;
     afxClass            threads;
-    afxDrawIcd          e2draw; // SIGMA GL is required for minimal operability since core has no more embedded fallback.
+    afxDrawIcd          e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
 };
 #endif
 #endif
@@ -345,17 +348,18 @@ AFX afxNat          AfxCountDrawDevices(afxDrawSystem dsys);
 
 AFX afxNat          AfxEnumerateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawThread dthr[]);
 AFX afxNat          AfxEnumerateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawDevice ddev[]);
-AFX afxNat          AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawInput din[]);
-AFX afxNat          AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
-AFX afxNat          AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxDrawContext dctx[]);
+AFX afxNat          AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawInput din[]);
+AFX afxNat          AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
+AFX afxNat          AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawContext dctx[]);
 
 AFX afxNat          AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
 AFX afxNat          AfxCurateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
-AFX afxNat          AfxCurateDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
-AFX afxNat          AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AFX afxNat          AfxCurateDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
+AFX afxNat          AfxCurateDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AFX afxNat          AfxCurateDrawOutputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+AFX afxNat          AfxCurateDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
 
-AFX afxBool         AfxGetDrawDevice(afxDrawSystem dsys, afxNat devIdx, afxDrawDevice *ddev);
+AFX afxBool         AfxGetDrawDevice(afxDrawSystem dsys, afxNat ddevIdx, afxDrawDevice *ddev);
+AFX afxNat          AfxChooseDrawDevice(afxDrawSystem dsys, afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxDrawDevice ddevIdx[]); // return count of found devices
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW DEVICE                                                                //
@@ -377,11 +381,26 @@ AFX afxNat          AfxCountDrawInputs(afxDrawDevice ddev);
 AFX afxNat          AfxCountDrawOutputs(afxDrawDevice ddev);
 AFX afxNat          AfxCountDrawContexts(afxDrawDevice ddev);
 
+////////////////////////////////////////////////////////////////////////////////
+// DRAW DEVICE                                                                //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[]);
+AFX afxError        AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[]);
 
-AFX afxError        AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]);
+////////////////////////////////////////////////////////////////////////////////
+// DRAW OUTPUT                                                                //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxOpenDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[]);
+AFX afxNat          AfxChooseDrawOutputEndpoint(afxDrawSystem dsys, afxNat ddevId, afxDrawOutputEndpointCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
+
+AFX afxError        AfxOpenDrawOutputs(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawOutputConfig const config[], afxDrawOutput dout[]);
+
+////////////////////////////////////////////////////////////////////////////////
+// DRAW INPUT                                                                 //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxNat          AfxChooseDrawInputEndpoint(afxDrawSystem dsys, afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);
+
+AFX afxError        AfxOpenDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[]);
 
 #endif//AFX_DRAW_SYSTEM_H

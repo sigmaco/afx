@@ -94,4 +94,8 @@ AFX void                AfxLocalPoseFromWorldPoseNoScale(afxSkeleton skl, afxPos
 AFX void                AfxGetWorldMatrixFromLocalPose(afxSkeleton skl, afxNat artIdx, afxPose const* lp, afxReal const offset[4][4], afxReal m[4][4], afxNat const* sparseBoneArray, afxNat const* sparseBoneArrayReverse);
 AFX void                AfxGetAttachmentOffset(afxSkeleton skl, afxNat artIdx, afxPose const* lp, afxReal const offset[4][4], afxReal m[4][4], afxNat const* sparseArtArray, afxNat const* sparseArtArrayReverse);
 
+AFX void AfxBuildIndexedCompositeBuffer(afxSkeleton skl, afxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][4][4]);
+AFX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, afxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][3][4]);
+
+
 #endif//AFX_SKELETON_H

@@ -56,7 +56,7 @@ _SGL afxError _SglCanvReinstantiateIdd(sglDpuIdd* dpu, afxCanvas canv, GLenum ta
                 afxPixelFormat pf = AfxGetTextureFormat(surf);
                 GLenum glAttachment = 0;
 
-                if (!AfxTestTexture(surf, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                if (!AfxTestTexture(surf, afxTextureFlag_DRAW)) AfxThrowError();
                 else
                 {
                     if (AfxPixelFormatIsCombinedDepthStencil(pf))
@@ -413,7 +413,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
             {
                 if ((tex = blueprint->rasters[i].tex))
                 {
-                    if (!AfxTestTexture(tex, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                    if (!AfxTestTexture(tex, afxTextureFlag_DRAW)) AfxThrowError();
                     else
                     {
                         AfxGetTextureExtent(tex, 0, whd);
@@ -440,9 +440,9 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                     if (!fmt) AfxThrowError();
                     else
                     {
-                        //AfxAssert(!(blueprint->rasters[i].usage & AFX_TEX_USAGE_DRAW));
+                        //AfxAssert(!(blueprint->rasters[i].usage & afxTextureFlag_DRAW));
                         afxTextureFlags usage = blueprint->rasters[i].usage;
-                        usage |= AFX_TEX_USAGE_DRAW;
+                        usage |= afxTextureFlag_DRAW;
                         afxTextureInfo texi = { 0 };
                         texi.whd[0] = canv->base.whd[0];
                         texi.whd[1] = canv->base.whd[1];
@@ -455,7 +455,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                         else
                         {
                             AfxAssertObjects(1, &tex, afxFcc_TEX);
-                            AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
+                            AfxAssert(AfxTestTexture(tex, afxTextureFlag_DRAW));
                             canv->base.annexes[i].tex = tex;
                             canv->base.annexes[i].usage = usage;
                             canv->base.annexes[i].fmt = fmt;
@@ -472,7 +472,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                 {
                     if ((tex = blueprint->ds[i].tex))
                     {
-                        if (!AfxTestTexture(tex, AFX_TEX_USAGE_DRAW)) AfxThrowError();
+                        if (!AfxTestTexture(tex, afxTextureFlag_DRAW)) AfxThrowError();
                         else
                         {
                             AfxGetTextureExtent(tex, 0, whd);
@@ -499,9 +499,9 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
 
                         if (fmt)
                         {
-                            //AfxAssert(!(blueprint->ds[i].usage & AFX_TEX_USAGE_DRAW));
+                            //AfxAssert(!(blueprint->ds[i].usage & afxTextureFlag_DRAW));
                             afxTextureFlags usage = blueprint->ds[i].usage;
-                            usage |= AFX_TEX_USAGE_DRAW;
+                            usage |= afxTextureFlag_DRAW;
                             afxTextureInfo texi = { 0 };
                             texi.whd[0] = canv->base.whd[0];
                             texi.whd[1] = canv->base.whd[1];
@@ -514,7 +514,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                             else
                             {
                                 AfxAssertObjects(1, &tex, afxFcc_TEX);
-                                AfxAssert(AfxTestTexture(tex, AFX_TEX_USAGE_DRAW));
+                                AfxAssert(AfxTestTexture(tex, afxTextureFlag_DRAW));
 
                                 canv->base.dsIdx[i] = canv->base.rasterCnt + i;
                                 canv->base.annexes[canv->base.dsIdx[i]].tex = tex;

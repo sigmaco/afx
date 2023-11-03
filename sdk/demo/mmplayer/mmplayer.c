@@ -42,51 +42,45 @@ afxTexture tex[4] = { NIL, NIL, NIL, NIL };
 
 afxBinkVideo bnk = { 0 };
 
-_AFXEXPORT afxError DinFetcherFn(afxDrawInput din, afxDrawThread dthr) // called by draw thread
+_AFXEXPORT afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
-    afxBinkVideo *bnk2 = &bnk;
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
-    afxDrawScript dscr;
-    afxNat unitIdx;
-    AfxGetThreadingUnit(&unitIdx);
-    AfxAcquireDrawScripts(din, unitIdx, 1, &dscr);
-    //return 0;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    afxBinkVideo *bnk = AfxGetDrawInputUdd(din);
 
-    if (!dscr) AfxThrowError();
-    else
+    if (bnk->running)
     {
-        if (AfxBeginDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+        afxDrawContext dctx;
+        AfxGetDrawInputConnection(din, &dctx);
+        afxNat unitIdx;
+        AfxGetThreadingUnit(&unitIdx);
+
+        afxDrawScript dscr;
+
+        if (AfxAcquireDrawScripts(din, 0, 1, &dscr)) AfxThrowError();
         else
         {
-            afxNat outBufIdx = 0;
-            AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
-            //afxCanvas canv;
-            //AfxGetDrawOutputCanvas(dout[0], outBufIdx, &canv);
-            afxTexture surf;
-            AfxGetDrawOutputBuffer(dout[0], outBufIdx, &surf);
-
-            //if (bnk.set.bink_buffers.FrameNum == outBufIdx)
+            if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+            else
             {
+                afxTexture surf;
+                afxNat outBufIdx = 0;
+                AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
+                AfxGetDrawOutputBuffer(dout[0], outBufIdx, &surf);
+                AfxAssertObjects(1, &surf, afxFcc_TEX);
+                
                 //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, dscr, canv, NIL);
                 //AfxBinkDoFrame(bnk, TRUE, TRUE);
                 //AfxBinkBlitFrame(bnk2, dscr, canv[0][outBufIdx], NIL);
-                AfxBinkBlitFrame(&bnk, dscr, surf);
-                //glCopyImage2D
-            }
-            
-            //AfxDoSystemThreading(0);
+                //AfxBinkDoFrame(bnk, TRUE, TRUE, 0, 0, NIL);
+                AfxBinkBlitFrame(bnk, surf, TRUE, FALSE, dscr);
 
-            if (AfxEndDrawScript(dscr)) AfxThrowError();
-            else
-            {
-                if (AfxSubmitDrawScripts(din, 1, &dscr)) // draw output count hardcoded to 1.
+                if (AfxFinishDrawScript(dscr)) AfxThrowError();
+                else if (AfxSubmitDrawScripts(din, 1, &dscr))
                     AfxThrowError();
 
-                //if (qid == 0)
-                    if (AfxSubmitPresentations(din, 1, dout, &outBufIdx)) // draw output count hardcoded to 1.
-                        AfxThrowError();
+                if (AfxPresentDrawOutputBuffers(din, 1, &dout[0], &outBufIdx))
+                    AfxThrowError();
             }
         }
     }
@@ -98,7 +92,7 @@ _AFXEXPORT afxResult AfxUpdateApplication(afxThread thr, afxApplication app)
     afxError err = AFX_ERR_NONE;
     //AfxFormatUri(&uri, "?text=timer %u, timer^2 %u", AfxGetTimer(), AfxGetTimer() * AfxGetTimer());
     
-    AfxBinkDoFrame(&bnk, TRUE, TRUE, 0, 0, NIL);
+    AfxBinkDoFrame(&bnk, TRUE, TRUE);
     //AfxBinkDoFrame(&bnk, TRUE, TRUE);
     //AfxBinkBlitFrame(&bnk);
     //AfxBinkDoFrame(&bnk, TRUE, TRUE);
@@ -134,11 +128,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     doutConfig.colorSpc = NIL;
     doutConfig.presentAlpha = FALSE;
     doutConfig.pixelFmt = AFX_PFD_RGBA8;
-    doutConfig.presentMode = AFX_PRESENT_MODE_LIFO;
+    doutConfig.presentMode = afxPresentMode_LIFO;
     doutConfig.presentTransform = NIL;
     doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 #endif
     doutConfig.pixelFmt = AFX_PFD_RGB8;
+    //doutConfig.colorSpc = afxColorSpace_SRGB;
     
 #ifdef ENABLE_DOUT1
     AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, dout);
@@ -150,7 +145,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
 #endif
 #ifdef ENABLE_DOUT2
-    doutConfig.presentMode = AFX_PRESENT_MODE_IMMEDIATE;
+    doutConfig.presentMode = afxPresentMode_IMMEDIATE;
     dout[1] = AfxOpenDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[1]);
 
@@ -164,7 +159,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     }
 #endif
 #ifdef ENABLE_DOUT3
-    doutConfig.presentMode = AFX_PRESENT_MODE_FIFO;
+    doutConfig.presentMode = afxPresentMode_FIFO;
     dout[2] = AfxOpenDrawOutputs(dctx, &doutConfig, &uri);
     AfxAssert(dout[2]);
 
@@ -179,7 +174,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 #endif
 
     afxDrawInputConfig dinConfig = { 0 };
-    dinConfig.prefetch = (void*)DinFetcherFn;
+    dinConfig.prefetch = (void*)DrawInputProc;
     dinConfig.udd = &bnk;
     dinConfig.cmdPoolMemStock = 4096;
     dinConfig.estimatedSubmissionCnt = 2;
@@ -224,7 +219,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 #endif
 
     AfxEnableDrawInputPrefetching(din[0], TRUE);
-    
+
+    bnk.running |= TRUE;
     return AFX_SUCCESS;
 }
 
@@ -298,10 +294,11 @@ int main(int argc, char const* argv[])
 
         afxDrawDevice ddev;
         AfxGetDrawDevice(dsys, 0, &ddev);
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
         afxDrawContextConfig dctxConfig = { 0 };        
         AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
-        //AfxAssertType(dctxD, afxFcc_DCTX);
+        AfxAssertObjects(1, &dsys, afxFcc_DCTX);
 
         afxApplication TheApp;
         afxApplicationConfig appConfig = { 0 };

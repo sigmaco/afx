@@ -96,35 +96,35 @@ _AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const* p, afxAabb const* aabb
 
     if (p->normal[0] > 0.0f)
     {
-        minD = p->normal[0] * aabb->inf[0];
-        maxD = p->normal[0] * aabb->sup[0];
+        minD = p->normal[0] * aabb->extremes[AFX_AABB_INF][0];
+        maxD = p->normal[0] * aabb->extremes[AFX_AABB_SUP][0];
     }
     else
     {
-        minD = p->normal[0] * aabb->sup[0];
-        maxD = p->normal[0] * aabb->inf[0];
+        minD = p->normal[0] * aabb->extremes[AFX_AABB_SUP][0];
+        maxD = p->normal[0] * aabb->extremes[AFX_AABB_INF][0];
     }
 
     if (p->normal[1] > 0.0f)
     {
-        minD += p->normal[1] * aabb->inf[1];
-        maxD += p->normal[1] * aabb->sup[1];
+        minD += p->normal[1] * aabb->extremes[AFX_AABB_INF][1];
+        maxD += p->normal[1] * aabb->extremes[AFX_AABB_SUP][1];
     }
     else
     {
-        minD += p->normal[1] * aabb->sup[1];;
-        maxD += p->normal[1] * aabb->inf[1];
+        minD += p->normal[1] * aabb->extremes[AFX_AABB_SUP][1];;
+        maxD += p->normal[1] * aabb->extremes[AFX_AABB_INF][1];
     }
 
     if (p->normal[2] > 0.0f)
     {
-        minD += p->normal[2] * aabb->inf[2];
-        maxD += p->normal[2] * aabb->sup[2];
+        minD += p->normal[2] * aabb->extremes[AFX_AABB_INF][2];
+        maxD += p->normal[2] * aabb->extremes[AFX_AABB_SUP][2];
     }
     else
     {
-        minD += p->normal[2] * aabb->sup[2];
-        maxD += p->normal[2] * aabb->inf[2];
+        minD += p->normal[2] * aabb->extremes[AFX_AABB_SUP][2];
+        maxD += p->normal[2] * aabb->extremes[AFX_AABB_INF][2];
     }
 
     // What side of the plane

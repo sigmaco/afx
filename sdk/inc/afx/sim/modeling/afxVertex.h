@@ -20,6 +20,7 @@
 #include "afx/sim/afxSimDefs.h"
 #include "afx/draw/afxDrawDefs.h"
 
+#if 0
 typedef afxNat8 afxVertexIndex8;
 typedef afxNat16 afxVertexIndex16;
 typedef afxNat32 afxVertexIndex32;
@@ -76,5 +77,5 @@ AFX void AfxAccumulateVertexComponents2(afxVertexUsage2 first, afxVertexUsage2 c
 
 AFX void AfxCopyVertices(afxNat vtxCnt, afxVertexLayout const *layout, void *dst, afxVertexLayout const *srcLayout, void const *src);
 AFX void AfxMergeVertices(afxNat vtxCnt, afxVertexLayout const *layout, void *dst, afxVertexLayout const *srcLayout, void const *src);
-
+#endif
 #endif//AFX_VERTEX_H

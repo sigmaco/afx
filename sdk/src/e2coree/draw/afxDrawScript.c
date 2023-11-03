@@ -20,7 +20,7 @@
 #define _AFX_DRAW_SCRIPT_C
 #include "afxDrawClassified.h"
 
-_AFX afxError AfxResetDrawScript(afxDrawScript dscr, afxBool freeRes)
+_AFX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -38,7 +38,7 @@ _AFX afxError AfxResetDrawScript(afxDrawScript dscr, afxBool freeRes)
     return err;
 }
 
-_AFX afxError AfxEndDrawScript(afxDrawScript dscr)
+_AFX afxError AfxFinishDrawScript(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -55,7 +55,7 @@ _AFX afxError AfxEndDrawScript(afxDrawScript dscr)
     return err;
 }
 
-_AFX afxError AfxBeginDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
+_AFX afxError AfxRecordDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -114,7 +114,7 @@ _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt
 
             if (afxDrawScriptState_INVALID == AfxGetDrawScriptState(dscr2))
             {
-                if (AfxResetDrawScript(dscr2, TRUE)) AfxThrowError();
+                if (AfxRecycleDrawScript(dscr2, TRUE)) AfxThrowError();
                 else
                 {
                     dscr[cnt2] = dscr2;

@@ -305,6 +305,7 @@ _AFX afxError AfxUpdateVertexBuffer(afxVertexBuffer vbuf, afxNat attrIdx, afxNat
     return err;
 }
 
+#if 0
 _AFX afxNat AfxDescribeVertexStorage(afxVertexBuffer vbuf, afxNat secIdx, afxNat32* base, afxNat32* range, afxNat32* stride)
 {
     afxError err = AFX_ERR_NONE;
@@ -320,6 +321,7 @@ _AFX afxNat AfxDescribeVertexStorage(afxVertexBuffer vbuf, afxNat secIdx, afxNat
     if (stride)
         *stride = vbuf->storages[secIdx].stride;
 }
+#endif 
 
 _AFX afxNat AfxGetVertexAttributeStorage(afxVertexBuffer vbuf, afxNat attrIdx)
 {
@@ -328,7 +330,7 @@ _AFX afxNat AfxGetVertexAttributeStorage(afxVertexBuffer vbuf, afxNat attrIdx)
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].srcIdx;
 }
-
+#if 0
 _AFX afxVertexFormat AfxGetVertexAttributeFormat(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
@@ -336,7 +338,7 @@ _AFX afxVertexFormat AfxGetVertexAttributeFormat(afxVertexBuffer vbuf, afxNat at
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].fmt;
 }
-
+#endif
 _AFX afxNat AfxGetVertexAttributeSize(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
@@ -352,7 +354,7 @@ _AFX afxNat AfxGetVertexAttributeOffset(afxVertexBuffer vbuf, afxNat attrIdx)
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].offset;
 }
-
+#if 0
 _AFX afxVertexUsage AfxGetVertexAttributeUsage(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;
@@ -360,7 +362,7 @@ _AFX afxVertexUsage AfxGetVertexAttributeUsage(afxVertexBuffer vbuf, afxNat attr
     AfxAssertRange(vbuf->attrCnt, attrIdx, 1);
     return vbuf->attrs[attrIdx].usage;
 }
-
+#endif
 _AFX afxString const* AfxGetVertexAttributeName(afxVertexBuffer vbuf, afxNat attrIdx)
 {
     afxError err = AFX_ERR_NONE;

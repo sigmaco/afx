@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_TEXTURE_H
 #define AFX_TEXTURE_H
@@ -32,15 +32,15 @@ typedef enum afxEventTexture
     AFX_EVENT_TEX_RESIZ
 } afxEventTexture;
 
-typedef enum afxTextureFlags
+typedef enum afxTextureFlag
 {
-    AFX_TEX_USAGE_SRC       = AFX_BIT_OFFSET(0), /// The texture can be used as the source of a copy operation.
-    AFX_TEX_USAGE_DST       = AFX_BIT_OFFSET(1), /// The texture can be used as the destination of a copy or write operation.
-    AFX_TEX_USAGE_TRANSFER  = (AFX_TEX_USAGE_SRC | AFX_TEX_USAGE_DST),
-    AFX_TEX_USAGE_SAMPLING  = AFX_BIT_OFFSET(2), /// The texture can be bound for use as a sampled texture in a shader.
-    AFX_TEX_USAGE_STORAGE   = AFX_BIT_OFFSET(3), /// The texture can be bound for use as a storage texture in a shader.
-    AFX_TEX_USAGE_DRAW      = AFX_BIT_OFFSET(4), /// The texture can be used as a color or depth/stencil attachment in a render pass.
-    AFX_TEX_USAGE           = AFX_TEX_USAGE_TRANSFER | AFX_TEX_USAGE_SAMPLING | AFX_TEX_USAGE_STORAGE | AFX_TEX_USAGE_DRAW,
+    afxTextureFlag_SRC       = AFX_BIT_OFFSET(0), /// The texture can be used as the source of a copy operation.
+    afxTextureFlag_DST       = AFX_BIT_OFFSET(1), /// The texture can be used as the destination of a copy or write operation.
+    afxTextureFlag_TRANSFER  = (afxTextureFlag_SRC | afxTextureFlag_DST),
+    afxTextureFlag_SAMPLING  = AFX_BIT_OFFSET(2), /// The texture can be bound for use as a sampled texture in a shader.
+    afxTextureFlag_STORAGE   = AFX_BIT_OFFSET(3), /// The texture can be bound for use as a storage texture in a shader.
+    afxTextureFlag_DRAW      = AFX_BIT_OFFSET(4), /// The texture can be used as a color or depth/stencil attachment in a render pass.
+    afxTextureFlag_USAGE    = afxTextureFlag_TRANSFER | afxTextureFlag_SAMPLING | afxTextureFlag_STORAGE | afxTextureFlag_DRAW,
 
     AFX_TEX_TILING_LINEAR   = AFX_BIT_OFFSET(9), /// specifies linear tiling (texels are laid out in memory in row-major order, possibly with some padding on each row).
     AFX_TEX_TILING_OPTIMAL  = AFX_BIT_OFFSET(10), /// specifies optimal tiling (texels are laid out in an implementation-dependent arrangement, for more efficient memory access).

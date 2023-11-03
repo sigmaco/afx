@@ -447,7 +447,7 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
             else
             {
                 _afxTga im;
-                AFX_ZERO(&im);
+                AfxZero(&im, sizeof(im));
 
                 //afxWhd extent;
                 //AfxGetTextureExtent(tex, 0, extent);
@@ -524,7 +524,7 @@ _AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTex
         else
         {
             _afxTga im;
-            AFX_ZERO(&im);
+            AfxZero(&im, sizeof(im));
 
             if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im)) AfxThrowError();
             else
@@ -638,7 +638,7 @@ _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flag
         else
         {
             _afxTga im;
-            AFX_ZERO(&im);
+            AfxZero(&im, sizeof(im));
 
             if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
             {
@@ -685,7 +685,7 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
         else
         {
             _afxTga im;
-            AFX_ZERO(&im);
+            AfxZero(&im, sizeof(im));
 
             if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
             {

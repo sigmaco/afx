@@ -27,7 +27,7 @@
 #include "afx/sim/afxSkeleton.h"
 #include "afx/core/afxUrd.h"
 #include "afx/sim/modeling/afxVertex.h"
-#include "afx/sim/modeling/afxMeshData.h"
+#include "afx/sim/modeling/afxVertexData.h"
 
 /// Mesh triangle topology is described by the afxMeshTopology structure, which is pointed to by the afxMesh. 
 /// The afxMeshTopology structure provides a number of useful arrays of data, including the mesh triangulation, edge connectivity, and vertex relationships. 
@@ -43,14 +43,27 @@ typedef afxVertexIndex afxIndexedTriangle[3];
 AFX_DEFINE_STRUCT(afxMeshSurface) // aka tri material group
 {
     _AFX_DBG_FCC
-    afxNat          mtlIdx;
-    afxNat          firstTriIdx;
-    afxNat          triCnt; // range from first vertex index
-    //afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
+    afxNat                  mtlIdx;
+    afxNat                  firstTriIdx;
+    afxNat                  triCnt; // range from first vertex index
+  //afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
+};
+
+AFX_DEFINE_STRUCT(afxMeshTopologyCache)
+{
+    afxLinkage              stream;
+
+    afxBuffer               buf;
+    afxNat32                base;
+    afxNat32                range;
+    afxNat32                stride;
+
+    afxMeshTopology         msht;
+    afxNat                  idxSiz;
 };
 
 /// The afxMeshTopology structure also contains extra information about the mesh triangulation that can be useful in mesh processing. 
-/// The vertex-to-tertex map has, for each vertex in the corresponding afxMeshData, an index of the next vertex which was originally the same vertex. 
+/// The vertex-to-tertex map has, for each vertex in the corresponding afxVertexData, an index of the next vertex which was originally the same vertex. 
 /// This is used to track vertices that are split during exporting, for example because of material boundaries. 
 /// It is a circular list, so that each vertex points to the next coincident vertex, and then the final vertex points back to the first. 
 /// If a vertex has no coincident vertices, then it simply points to itself. 
@@ -68,27 +81,28 @@ AFX_DEFINE_STRUCT(afxMeshSurface) // aka tri material group
 AFX_OBJECT(afxMeshTopology)
 #ifdef _AFX_MESH_TOPOLOGY_C
 {
-    _AFX_DBG_FCC
-    afxNat          surfaceCnt;
-    afxMeshSurface* surfaces;
-    //afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
-    //afxIndexBuffer          ibuf; // afxIndexBuffer --- aka triangles
-    //afxNat                  idxRgn; // if ibuf is shared among other meshes, it should be a base for sections.    
-    //afxPrimTopology         primType; // added by SIGMA
+    afxNat                  surfaceCnt;
+    afxMeshSurface*         surfaces;
+  //afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
+  //afxIndexBuffer          ibuf; // afxIndexBuffer --- aka triangles
+  //afxNat                  idxRgn; // if ibuf is shared among other meshes, it should be a base for sections.    
+  //afxPrimTopology         primType; // added by SIGMA
 
-    afxNat          vtxIdxCnt; // count of mapped vertices.
-    afxNat*         vtxIdx; // indices of mapped vertices.
+    afxNat                  vtxIdxCnt; // count of mapped vertices.
+    afxNat*                 vtxIdx; // indices of mapped vertices.
 
-    afxNat          vtxToVtxCnt;
-    afxNat*         vtxToVtxMap;
-    afxNat          vtxToTriCnt;
-    afxNat*         vtxToTriMap;
-    afxNat          sideToNeighborCnt;
-    afxNat*         sideToNeighborMap;
-    afxNat          jointsForTriCnt;
-    afxNat*         jointsForTriMap;
-    afxNat          triToJointCnt;
-    afxNat*         triToJointMap;
+    afxMeshTopologyCache    cache;
+
+    afxNat                  vtxToVtxCnt;
+    afxNat*                 vtxToVtxMap;
+    afxNat                  vtxToTriCnt;
+    afxNat*                 vtxToTriMap;
+    afxNat                  sideToNeighborCnt;
+    afxNat*                 sideToNeighborMap;
+    afxNat                  jointsForTriCnt;
+    afxNat*                 jointsForTriMap;
+    afxNat                  triToJointCnt;
+    afxNat*                 triToJointMap;
 }
 #endif
 ;
@@ -127,5 +141,8 @@ AFX void            AfxInvertMeshWinding(afxMeshTopology msht);
 AFX void            AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[]);
 
 /// For each material index in the afxMeshTopology, it will lookup that index in the remapTable array and replace material index with the value. 
+
+
+AFX afxError        AfxBufferizeMeshTopology(afxMeshTopology msht);
 
 #endif//AFX_MESH_TOPOLOGY_H

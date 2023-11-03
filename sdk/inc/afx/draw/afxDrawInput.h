@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 // afxDrawInput devices operates like device submission queues grouping sets of draw streams and present their result to the connected draw output devices.
 
@@ -34,11 +34,9 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
     afxUri const*       endpoint;
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
-    afxError            (*prefetch)(afxDrawInput,afxDrawThread);
+    afxError            (*prefetch)(afxDrawInput din, afxNat thrUnitIdx);
     void*               udd;
 };
-
-AFX_DECLARE_STRUCT(_afxDinVmt);
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_INPUT_C
@@ -47,18 +45,19 @@ AFX_OBJECT(afxDrawInput)
 struct afxBaseDrawInput
 #endif
 {
-    _afxDinVmt const*   vmt;
-    afxError            (*procCb)(afxDrawInput din, afxDrawThread dthr);
     afxLinkage          dctx; // bound context
     afxContext          mem;
+
+    afxError            (*submitCb)(afxDrawInput, afxNat, afxDrawScript[]);
+    afxError            (*presentCb)(afxDrawInput, afxNat, afxDrawOutput[], afxNat[]);
 
     afxArray            scripts;
     afxNat              minScriptReserve;
 
-    afxError            (*userPrefetchProc)(afxDrawInput din, afxDrawThread dthr);
     //afxSlock              prefetchSlock;
     afxBool             prefetching;
     afxBool             prefetchEnabled;
+    afxError            (*prefetchCb)(afxDrawInput din, afxNat thrUnitIdx);
     void*               udd;
 };
 #endif
@@ -80,7 +79,7 @@ AFX afxBool             AfxGetDrawInputBuffer(afxDrawInput din, afxNat idx, afxD
 AFX afxError            AfxSubmitDrawInputBuffers(afxDrawInput din, afxNat cnt, afxNat inBufIdx[]);
 
 AFX afxError            AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
-AFX afxError            AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
+AFX afxError            AfxPresentDrawOutputBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
 
 AFX afxError            AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled);
 

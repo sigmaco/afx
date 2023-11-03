@@ -74,10 +74,9 @@ AFXINL afxResult            AfxChainEnumerateLinkages(afxChain *ch, afxBool reve
 
 AFXINL afxNat               AfxCurateLinkages(afxChain *ch, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd);
 
-
+AFXINL void AfxResetLinkage(afxLinkage *lnk);
 AFXINL void AfxPushLinkage(afxLinkage *lnk, afxChain *ch);
 AFXINL void AfxPushLinkageAtEnd(afxLinkage *lnk, afxChain *ch);
-
 AFXINL void AfxPopLinkage(afxLinkage *lnk);
 
 AFXINL void* AfxGetLinker(afxLinkage const *lnk); // linker is the chain owner

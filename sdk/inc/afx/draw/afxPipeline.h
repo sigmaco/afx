@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 // Graphics pipelines consist of multiple shader stages, multiple fixed-function
 // pipeline stages, and a pipeline layout.
@@ -143,7 +143,7 @@ AFX_DEFINE_STRUCT(afxPipelineConfig)
     // multisampling rasterization
     afxBool                 msEnabled;
     afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-    afxBitmask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+    afxMask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
 
     // fragment & pixel output operations
 
@@ -231,7 +231,7 @@ struct afxBasePipeline
 
     afxBool                 msEnabled; /// If enabld, multisample rasterization will be used. FALSE
     afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-    afxBitmask*             sampleBitmasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+    afxMask*             sampleBitmasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
         
     // scissor test
     afxNat                  scissorCnt; /// 0
@@ -291,7 +291,7 @@ AFX afxNat              AfxCountColorOutputChannels(afxPipeline pip);
 AFX afxBool             AfxGetSampleShading(afxPipeline pip, afxReal* minSampleShadingValue); // return TRUE if multisampling rasterization is enabled
 AFX afxCullMode         AfxGetPrimitiveCulling(afxPipeline pip, afxBool* cwFrontFacing); // return the culling mode set if any.
 AFX afxBool             AfxGetRasterization(afxPipeline pip, afxFillMode* mode, afxReal* lineWidth); // return TRUE if rasterization enabled.
-AFX afxBool             AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxBitmask sampleMask[32]); // return TRUE if multisampling rasterization is enabled
+AFX afxBool             AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxMask sampleMask[32]); // return TRUE if multisampling rasterization is enabled
 
 AFX afxNat              AfxCountPipelineWirings(afxPipeline pip);
 AFX afxError            AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxPipelineRig *legt);

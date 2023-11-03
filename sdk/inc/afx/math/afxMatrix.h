@@ -202,10 +202,22 @@ AFXINL void     AfxMultiplyLinearM4dTransposed(afxReal m[4][4], afxReal const a[
 AFXINL void     AfxMultiplyAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]);
 AFXINL void     AfxMultiplyAffineM4dTransposed(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]);
 
-AFXINL void     AfxTransformV2dStream(afxReal const m[2][2], afxNat cnt, afxNat inStride, afxReal const in[][2], afxNat outStride, afxReal out[][2]);
-AFXINL void     AfxTransformV3dStream(afxReal const m[3][3], afxNat cnt, afxNat inStride, afxReal const in[][3], afxNat outStride, afxReal out[][3]);
-AFXINL void     AfxTransformAffineV3dStream(afxReal const m[4][4], afxNat cnt, afxNat inStride, afxReal const in[][3], afxNat outStride, afxReal out[][3]);
-AFXINL void     AfxTransformV4dStream(afxReal const m[4][4], afxNat cnt, afxNat inStride, afxReal const in[][4], afxNat outStride, afxReal out[][4]);
+AFXINL void     AfxTransformV2dArray(afxReal const m[2][2], afxNat cnt, afxReal const in[][2], afxReal out[][2]);
+AFXINL void     AfxTransformV3dArray(afxReal const m[3][3], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxTransformV4dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+
+AFXINL void     AfxTransformV2dStream(afxReal const m[2][2], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][2], afxReal out[][2]);
+AFXINL void     AfxTransformV3dStream(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxTransformV4dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+
+AFXINL void     AfxTransformNormalV4dArray(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxTransformNormalV4dStream(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+
+AFXINL void     AfxTransformPointV3dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxTransformPointV3dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+
+AFXINL void     AfxTransformAffineV4dArray(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxTransformAffineV4dStream(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
@@ -277,8 +289,8 @@ AFXINL void     AfxComposeAffineM4d(afxReal m[4][4], afxReal const scale[3], afx
 
 // Assimilate
 
-AFXINL void     AfxGetAssimilatedScalingM3d(afxReal m[3][3], afxReal const in[3][3], afxReal const ltm[3][3], afxReal const iltm[3][3]); // make similarity transformation on afxM3d-based scale/shear.
-AFXINL void     AfxGetAssimilatedAffineMatrix(afxReal m[4][4], afxReal const in[4][4], afxReal const affine[3], afxReal const ltm[3][3], afxReal const iltm[3][3]);
+AFXINL void     AfxAssimilateM3d(afxReal const linear[3][3], afxReal const invLinear[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3]); // make similarity transformation on afxM3d-based scale/shear.
+AFXINL void     AfxAssimilateAffineM4d(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Projective transformation matrix operations                                //

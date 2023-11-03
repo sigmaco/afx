@@ -30,7 +30,7 @@ Apesar de certas características herdadas de APIs da 3dfx (Voodoo) haverem sido
 Um exemplo da abstração pela SIGMA é a inexistência de um objeto conhecido como "framebuffer". O tal do framebuffer é um nome problemático para seu conceito de operação onde não há nenhum buffer de fato e foi um nome herdado do hardware. Devido a isto, no Qwadro, seu pseudo-equivalente é um "canvas", que é um objeto que manuseia um arranjo de texturas, de tipo raster ou depth/stencil, onde um desenho é realizado.
 
 Draw I/O System funciona no modelo "bring your own driver". Ao ver Vulkan, sucessor do OpenGL, sofrer dos mesmos problemas que o OpenGL sofreu no passado em plataformas que não queriam dispor de tal API, a SIGMA optou por replicar um modelo dos tempos ancestrais da computação gráfica acelerada por hardware, onde as pessoas procuravam drivers lógicos e implementações de drivers melhores, feitas sobre APIs comuns já existentes ou APIs específicas da VGA instalada; o installable client driver (ICD) ou, sua versão mais minimalista, o mini client driver (MCD).
-SIGMA GL (SGL), distribuído pelo arquivo "e2draw.icd", é um modelo de referência de ICD implementado sobre OpenGL 3.3 core e aproveitando extensões do 4.x, desenvolvido pela SIGMA.
+SIGMA GL/2 (SGL), distribuído pelo arquivo "e2draw.icd", é um modelo de referência de ICD implementado sobre OpenGL 3.3 core e aproveitando extensões do 4.x, desenvolvido pela SIGMA.
 
 Diferente das APIs de baixo nível, o Qwadro todo segue uma filosofia de rapid application development (RAD), onde entrega várias utilidades para acelerar e automatizar operações, ainda permitindo que o usuário faça a sua própria maneira se assim quiser.
 

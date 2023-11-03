@@ -146,13 +146,13 @@ _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript s
     {
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-        if (din->vmt->subm(din,1,scripts))
+        if (din->submitCb(din,1,scripts))
             AfxThrowError();
     }
     return err;
 }
 
-_AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
+_AFX afxError AfxPresentDrawOutputBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -176,7 +176,7 @@ _AFX afxError AfxSubmitPresentations(afxDrawInput din, afxNat cnt, afxDrawOutput
     {
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-        if (din->vmt->pres(din, 1, outputs, outputBufIdx))
+        if (din->presentCb(din, 1, outputs, outputBufIdx))
             AfxThrowError();
     }
     return err;
@@ -195,19 +195,19 @@ _AFX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
     return ddev;
 }
 
-_AFX afxError AfxOpenDrawInputs(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[])
+_AFX afxError AfxOpenDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawInputConfig const config[], afxDrawInput din[])
 {
     AfxEntry("cnt=%u,config=%p,", cnt, config);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     
-    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
+    if (!(AfxGetDrawDevice(dsys, ddevId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawInputClass(ddev), cnt, (afxHandle*)din, (void*[]) { &devId, (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawInputClass(ddev), cnt, (afxHandle*)din, (void*[]) { &ddevId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, din, afxFcc_DIN);

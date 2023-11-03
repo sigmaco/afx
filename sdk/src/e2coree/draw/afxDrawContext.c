@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #define _AFX_DRAW_C
 #define _AFX_DRAW_CONTEXT_C
@@ -347,19 +347,19 @@ _AFX afxDrawDevice AfxGetDrawContextDevice(afxDrawContext dctx)
     return ddev;
 }
 
-_AFX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat devId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[])
+_AFX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, afxDrawContextConfig const config[], afxDrawContext dctx[])
 {
     AfxEntry("cnt=%u,config=%p", cnt, config);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxDrawDevice ddev;
     
-    if (!(AfxGetDrawDevice(dsys, devId, &ddev))) AfxThrowError();
+    if (!(AfxGetDrawDevice(dsys, ddevId, &ddev))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
-        if (AfxAcquireObjects(AfxGetDrawContextClass(ddev), cnt, (afxHandle*)dctx, (void*[]) { &devId, (void*)config }))
+        if (AfxAcquireObjects(AfxGetDrawContextClass(ddev), cnt, (afxHandle*)dctx, (void*[]) { &ddevId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, dctx, afxFcc_DCTX);

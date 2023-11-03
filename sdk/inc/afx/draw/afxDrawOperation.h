@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 // A draw operation manages a set of state objects, resources, and shaders for implementing a rendering effect.
 // An draw operation contains one or more techniques; each technique contains one or more passes; each pass contains state assignments.

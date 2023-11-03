@@ -26,19 +26,6 @@
 
 // DRAW IMPLEMETATION HIDEOUT
 
-AFX_DEFINE_STRUCT(_afxDoutVmt)
-{
-    afxError(*flush)(afxDrawOutput, afxTime timeout);
-    afxError(*req)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
-};
-
-AFX_DEFINE_STRUCT(_afxDinVmt)
-{
-    afxError(*req)(afxDrawInput, afxNat portIdx, afxNat *scrIdx);
-    afxError(*subm)(afxDrawInput, afxNat, afxDrawScript[]);
-    afxError(*pres)(afxDrawInput, afxNat, afxDrawOutput[], afxNat[]);
-};
-
 AFX_DEFINE_STRUCT(_afxCanvVmt)
 {
     afxError(*ext)(afxCanvas, afxWhd const from, afxWhd const to);

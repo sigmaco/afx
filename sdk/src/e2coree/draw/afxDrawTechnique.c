@@ -16,7 +16,7 @@
 
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawOperation.h"
-#include "afx/draw/afxXmlBackedDrawableResources.h"
+#include "afx/draw/afxXsh.h"
 #include "../_classified/afxDrawClassified.h"
 
 ////////////////////////////////////////////////////////////////////////////////

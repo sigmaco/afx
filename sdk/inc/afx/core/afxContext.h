@@ -210,17 +210,16 @@ AFX void*                   AfxCoallocate(afxContext mem, afxSize cnt, afxSize s
 AFX void*                   AfxReallocate(afxContext mem, void *p, afxSize siz, afxNat align, afxHint const hint);
 AFX void                    AfxDeallocate(afxContext mem, void *p);
 
+AFX void                    AfxStream(afxNat cnt, afxSize srcStride, afxNat dstStride, void const* src, void* dst);
 AFX void                    AfxCopy(void *dst, void const *src, afxSize range);
 AFX void                    AfxFill(void *p, afxNat cnt, afxNat unitSiz, void const* value);
 AFX void                    AfxZero(void *p, afxSize range);
 
-AFX afxResult               AfxWriteSegmented(void *p, afxNat cnt, afxSegment const *seg, void const *from);
-
 #define AFX_ALIGN(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 
-#define AFX_ZERO(chnk_) AfxZero((chnk_), sizeof(*(chnk_)))
-#define AFX_FILL(chnk_, val_) AfxFill((chnk_), sizeof(*(chnk_)), (val_))
-#define AFX_COPY(chnkDst_, chnkSrc_) AfxCopy((chnkDst_), (chnkSrc_), sizeof(*(chnkDst_)))
+//#define AFX_ZERO(chnk_) AfxZero((chnk_), sizeof(*(chnk_)))
+//#define AFX_FILL(chnk_, val_) AfxFill((chnk_), sizeof(*(chnk_)), (val_))
+//#define AFX_COPY(chnkDst_, chnkSrc_) AfxCopy((chnkDst_), (chnkSrc_), sizeof(*(chnkDst_)))
 
 //AFX afxBool             _AfxGetMemD(afxContext mem, struct _afxCtxD **memD, struct _afxSysD* sysD);
 

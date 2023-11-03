@@ -14,12 +14,13 @@
  *                                    www.sigmaco.org
  */
 
-// This section is part of SIGMA GL.
+// This section is part of SIGMA GL/2.
 
 #ifndef AFX_SURFACE_H
 #define AFX_SURFACE_H
 
 #include "afx/draw/afxTexture.h"
+#include "afxDrawCommands.h"
 
 typedef enum afxSurfaceState
 {
@@ -37,15 +38,17 @@ AFX_OBJECT(afxSurface)
 struct afxBaseSurface
 #endif
 {
-    afxTexture              tex;
-    afxSurfaceState         state;
-    afxLinkage              swapchain; // if state == PENDING, must have a swapchain linked to this canvas. Used by draw context on canvas presentation to surface.
+    afxTexture          tex; /// the texture subresource that will be output to for this color attachment.
+    afxSurfaceLoadOp    loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
+    afxSurfaceStoreOp   storeOp; /// The store operation to perform on view after executing the render pass.
+    afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
+    afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 };
 
-AFX afxError                AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
+AFX afxError                AfxAcquireRasterSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
+AFX afxError                AfxAcquireDepthSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
 
-AFX afxSurfaceState         AfxGetSurfaceState(afxSurface surf);
-AFX afxBool                 AfxSurfaceIsPresentable(afxSurface surf);
+AFX afxError                AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
 
 AFX afxTexture              AfxGetSurfaceTexture(afxSurface surf);
 
