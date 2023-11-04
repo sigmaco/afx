@@ -22,6 +22,7 @@
 !/sdk/src/e2coree/math/**
 /sdk/src/e2coree/sim/**/*.c
 !/sdk/src/e2coree/sim/modeling/**/*.c
+!/sdk/src/e2coree/sim/rendering/**/*.c
 /sdk/src/e2coree/sound/**/*.c
 /sdk/src/e2bang/**/*.c
 /sdk/src/e2bink/**/*.c

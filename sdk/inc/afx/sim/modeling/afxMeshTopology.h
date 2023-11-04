@@ -26,7 +26,7 @@
 #include "afx/sim/afxMaterial.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/core/afxUrd.h"
-#include "afx/sim/modeling/afxVertex.h"
+#include "afx/math/afxVertex.h"
 #include "afx/sim/modeling/afxVertexData.h"
 
 /// Mesh triangle topology is described by the afxMeshTopology structure, which is pointed to by the afxMesh. 

@@ -84,7 +84,7 @@ _AFXINL afxBool AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const*
     {
         for (afxNat j = 0; j < afxCubeCorner_TOTAL; ++j)
         {
-            if (AfxFindPlaneDistanceToPoint(&(f->planes[i]), other->corners[j]) < 0)
+            if (AfxFindPlaneDistance(&(f->planes[i]), other->corners[j]) < 0)
             {
                 allOut = FALSE;
                 break;

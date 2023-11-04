@@ -171,9 +171,6 @@
     <ClInclude Include="..\..\inc\afx\sim\afxNode.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertex.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -363,9 +360,6 @@
     <ClInclude Include="..\..\inc\afx\math\afxSphere.h">
       <Filter>e2coree\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\afxTriangle.h">
-      <Filter>e2coree\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxVolume.h">
       <Filter>e2coree\math</Filter>
     </ClInclude>
@@ -401,6 +395,15 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxXsh.h">
       <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxProjectiveMatrix.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxTrigonometry.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxVertex.h">
+      <Filter>e2coree\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -525,9 +528,6 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\afxNode.c">
       <Filter>e2coree\sim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertex.c">
-      <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c">
       <Filter>e2coree\draw</Filter>
@@ -718,9 +718,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxAsset.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxTriangle.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawCommands.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -732,6 +729,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c">
       <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxProjectiveMatrix.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxTrigonometry.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxVertex.c">
+      <Filter>e2coree\math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

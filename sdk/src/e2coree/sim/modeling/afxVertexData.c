@@ -533,10 +533,10 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                     case afxVertexFormat_V3D:
                     {
                         if (linearFlag)
-                            AfxTransformV3dArray(lt, vtxCnt, data, data);
+                            AfxTransformArrayedV3d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxTransformV3dArray(ilt, vtxCnt, data, data);
+                            AfxTransformArrayedV3d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
@@ -551,10 +551,10 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                     case afxVertexFormat_V4D:
                     {
                         if (linearFlag)
-                            AfxTransformNormalV4dArray(lt, vtxCnt, data, data);
+                            AfxTransformArrayedNormalV4d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxTransformNormalV4dArray(ilt, vtxCnt, data, data);
+                            AfxTransformArrayedNormalV4d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)

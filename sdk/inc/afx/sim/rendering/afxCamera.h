@@ -111,7 +111,7 @@ AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxRea
 // If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 // you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AFX afxReal AfxCameraGetMostLikelyPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight);
+AFX afxReal AfxTryFindPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight);
 
 // It is often useful to have a camera that orbits and zooms in and out on a specific target. 
 // You can turn a afxCamera into this type of camera by setting the Elevation/Azimuth/Roll (EAR) vector and the Offset vector in the afxCamera structure. 

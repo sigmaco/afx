@@ -157,7 +157,7 @@ afxMesh AfxAddParallelepipedToModel(afxModel mdl, afxReal width, afxReal height)
 
     for (afxNat32 i = 0; i < numberVertices; i++)
     {
-        AfxTransformV4dTransposed(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
+        AfxTransformTransposedV4d(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
     }
     return msh;
 }
