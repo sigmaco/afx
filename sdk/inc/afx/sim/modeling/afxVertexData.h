@@ -30,7 +30,7 @@
 #include "afx/sim/afxMaterial.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/core/afxUrd.h"
-#include "afx/sim/modeling/afxVertex.h"
+#include "afx/math/afxVertex.h"
 
 AFX_DEFINE_STRUCT(afxVertexBias)
 {
@@ -143,6 +143,10 @@ AFX afxError            AfxBufferizeVertexData(afxVertexData vtd);
 AFX afxError            AfxBindVertexData(afxVertexData vtd, afxDrawScript dscr);
 
 AFX void*               AfxExposeVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 AFX afxError            AfxBuildVertexDatas(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxVertexData vtxd[]);
 

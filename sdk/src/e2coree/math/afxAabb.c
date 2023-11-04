@@ -174,7 +174,7 @@ _AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
     AfxAssert(m);
     AfxAssert(to);
     AfxResetAabb(to);
-    AfxTransformV4dArray(m, 2, aabb->extremes, to->extremes);
+    AfxTransformArrayedV4d(m, 2, aabb->extremes, to->extremes);
 }
 
 _AFXINL void AfxTransformAabbs(afxReal const affine[3], afxReal const linear[3][3], afxNat cnt, afxAabb const in[], afxAabb out[])

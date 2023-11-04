@@ -66,7 +66,7 @@ _AFXINL afxReal AfxGetPlaneOffset(afxPlane const* p)
     return p->offset;
 }
 
-_AFXINL afxReal AfxFindPlaneDistanceToPoint(afxPlane const* p, afxReal const point[3])
+_AFXINL afxReal AfxFindPlaneDistance(afxPlane const* p, afxReal const point[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -82,7 +82,7 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const* p, afxReal 
     AfxAssert(b);
     afxV3d t;
     AfxSubV3d(t, a, b);
-    return (AfxFindPlaneDistanceToPoint(p, a)) / AfxDotV3d(p->normal, t);
+    return (AfxFindPlaneDistance(p, a)) / AfxDotV3d(p->normal, t);
 }
 
 _AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const* p, afxAabb const* aabb)
