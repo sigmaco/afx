@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -174,7 +174,7 @@ _AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
     AfxAssert(m);
     AfxAssert(to);
     AfxResetAabb(to);
-    AfxTransformArrayedV4d(m, 2, aabb->extremes, to->extremes);
+    AfxPostMultiplyArrayedV4d(m, 2, aabb->extremes, to->extremes);
 }
 
 _AFXINL void AfxTransformAabbs(afxReal const affine[3], afxReal const linear[3][3], afxNat cnt, afxAabb const in[], afxAabb out[])
@@ -202,7 +202,7 @@ _AFXINL void AfxTransformAabbs(afxReal const affine[3], afxReal const linear[3][
                     afxV3d tmp;
                     AfxSetV3d(tmp, x ? in[i].extremes[AFX_AABB_SUP][0] : in[i].extremes[AFX_AABB_INF][0], y ? in[i].extremes[AFX_AABB_SUP][1] : in[i].extremes[AFX_AABB_INF][1], z ? in[i].extremes[AFX_AABB_SUP][2] : in[i].extremes[AFX_AABB_INF][2]);
 
-                    AfxTransformV3d(pos, linear, tmp);
+                    AfxPostMultiplyV3d(pos, linear, tmp);
 
                     AfxMiniV3d(min, min, pos);
                     AfxMaxiV3d(max, max, pos);

@@ -82,7 +82,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawSystem.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawTechnique.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawThread.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxIndexBuffer.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipeline.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipelineRig.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxSampler.h" />
@@ -91,8 +90,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxSurface.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxTexture.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBuffer.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBufferBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxXsh.h" />
     <ClInclude Include="..\..\inc\afx\math\afxAabb.h" />
     <ClInclude Include="..\..\inc\afx\math\afxFrustum.h" />
@@ -240,7 +237,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawThread.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxIndexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipelineRig.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c" />
@@ -249,7 +245,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxTarga.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxVertexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxAabb.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxFrustum.c" />
@@ -273,12 +268,7 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxSimulation.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxSkeleton.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxWorldPose.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimator.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -41,7 +41,6 @@ AFX_DEFINE_HANDLE(afxMaterial);
 AFX_DEFINE_HANDLE(afxMesh);
 AFX_DEFINE_HANDLE(afxVertexData);
 AFX_DEFINE_HANDLE(afxMeshTopology);
-AFX_DEFINE_HANDLE(afxMeshRig);
 
 AFX_DEFINE_HANDLE(afxModel);
 
@@ -55,5 +54,7 @@ AFX_DEFINE_HANDLE(afxEntity);
 
 AFX_DEFINE_HANDLE(afxNode);
 
+AFX_DEFINE_HANDLE(afxMotion);
+AFX_DEFINE_HANDLE(afxAnimation);
 
 #endif//AFX_CAD_DEFS_H

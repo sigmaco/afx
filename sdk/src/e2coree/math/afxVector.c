@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -2009,38 +2009,44 @@ _AFXINL afxReal AfxMagV4dRecip(afxReal const v[4])
 
 // Transform
 
-_AFXINL void AfxTransformV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2])
+_AFXINL void AfxPostMultiplyV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]);
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]);
 }
 
-_AFXINL void AfxTransformV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3])
+_AFXINL void AfxPostMultiplyV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
     v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]);
 }
 
-_AFXINL void AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
+_AFXINL void AfxPostMultiplyV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + (m[0][3] * in[3]);
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + (m[1][3] * in[3]);
@@ -2050,19 +2056,21 @@ _AFXINL void AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const 
 
 // TransformPoint/Normal/Affine
 
-_AFXINL void AfxTransformPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2])
+_AFXINL void AfxPostMultiplyPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + m[0][2] + m[0][3];
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + m[1][2] + m[1][3];
 }
 
-_AFXINL void AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
+_AFXINL void AfxPostMultiplyPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2070,31 +2078,37 @@ _AFXINL void AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal c
     AfxAssert(in);
     AfxAssert(v != in);
 
-    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + m[2][3];
-    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + m[2][3];
-    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + m[2][3];
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
+
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + (m[2][3]/* * 1.f */);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + (m[2][3]/* * 1.f */);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + (m[2][3]/* * 1.f */);
 }
 
-_AFXINL void AfxTransformNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
+_AFXINL void AfxPostMultiplyNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
     v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]);
 }
 
-_AFXINL void AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4])
+_AFXINL void AfxPostMultiplyNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(m);
     AfxAssert(in);
     AfxAssert(v != in);
+
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
     v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]);
     v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]);
@@ -2102,7 +2116,7 @@ _AFXINL void AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal 
     v[3] = 0.f;
 }
 
-_AFXINL void AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
+_AFXINL void AfxPostMultiplyAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -2110,27 +2124,32 @@ _AFXINL void AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal 
     AfxAssert(in);
     AfxAssert(v != in);
 
-    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + m[0][3];
-    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + m[1][3];
-    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + m[2][3];
+    // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
+
+    v[0] = (m[0][0] * in[0]) + (m[0][1] * in[1]) + (m[0][2] * in[2]) + (m[0][3]/* * in[3] */);
+    v[1] = (m[1][0] * in[0]) + (m[1][1] * in[1]) + (m[1][2] * in[2]) + (m[1][3]/* * in[3] */);
+    v[2] = (m[2][0] * in[0]) + (m[2][1] * in[1]) + (m[2][2] * in[2]) + (m[2][3]/* * in[3] */);
     v[3] = 1.f;
 }
+
 // TransformTransposed
 
-_AFXINL void AfxTransformTransposedV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2])
+_AFXINL void AfxPreMultiplyV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 2D by matrix 2x2
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]);
     v[1] = (in[0] * m[0][1]) + (in[1] * m[1][1]);
 }
 
-_AFXINL void AfxTransformTransposedV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3])
+_AFXINL void AfxPreMultiplyV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2139,6 +2158,8 @@ _AFXINL void AfxTransformTransposedV3d(afxReal v[3], afxReal const in[3], afxRea
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 3D by matrix 3x3
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]);
@@ -2146,7 +2167,7 @@ _AFXINL void AfxTransformTransposedV3d(afxReal v[3], afxReal const in[3], afxRea
     v[2] = (in[0] * m[0][2]) + (in[1] * m[1][2]) + (in[2] * m[2][2]);
 }
 
-_AFXINL void AfxTransformTransposedV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
+_AFXINL void AfxPreMultiplyV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2155,6 +2176,10 @@ _AFXINL void AfxTransformTransposedV4d(afxReal v[4], afxReal const in[4], afxRea
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
+
+    // Compatible with TransposeVectorTransform4x4(v/in, m)
 
     // multiply column vector 4D by matrix 4x4
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]) + (in[3] * m[3][0]);
@@ -2165,20 +2190,22 @@ _AFXINL void AfxTransformTransposedV4d(afxReal v[4], afxReal const in[4], afxRea
 
 // TransformTransposedPoint/Normal/Affine
 
-_AFXINL void AfxTransformTransposedPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4])
+_AFXINL void AfxPreMultiplyPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 2D by matrix 4x4
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + m[2][0] + m[3][0];
     v[1] = (in[0] * m[0][1]) + (in[1] * m[1][1]) + m[2][1] + m[3][1];
 }
 
-_AFXINL void AfxTransformTransposedPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
+_AFXINL void AfxPreMultiplyPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2187,14 +2214,16 @@ _AFXINL void AfxTransformTransposedPointV3d(afxReal v[3], afxReal const in[3], a
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 3D by matrix 4x4
-    v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]) + m[3][0];
-    v[1] = (in[0] * m[0][1]) + (in[1] * m[1][1]) + (in[2] * m[2][1]) + m[3][1];
-    v[2] = (in[0] * m[0][2]) + (in[1] * m[1][2]) + (in[2] * m[2][2]) + m[3][2];
+    v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]) + (/* 1.f * */m[3][0]);
+    v[1] = (in[0] * m[0][1]) + (in[1] * m[1][1]) + (in[2] * m[2][1]) + (/* 1.f * */m[3][1]);
+    v[2] = (in[0] * m[0][2]) + (in[1] * m[1][2]) + (in[2] * m[2][2]) + (/* 1.f * */m[3][2]);
 }
 
-_AFXINL void AfxTransformTransposedNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
+_AFXINL void AfxPreMultiplyNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2203,6 +2232,8 @@ _AFXINL void AfxTransformTransposedNormalV3d(afxReal v[3], afxReal const in[3], 
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 3D by matrix 4x4
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]);
@@ -2210,7 +2241,7 @@ _AFXINL void AfxTransformTransposedNormalV3d(afxReal v[3], afxReal const in[3], 
     v[2] = (in[0] * m[0][2]) + (in[1] * m[1][2]) + (in[2] * m[2][2]);
 }
 
-_AFXINL void AfxTransformTransposedNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3])
+_AFXINL void AfxPreMultiplyNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2219,6 +2250,8 @@ _AFXINL void AfxTransformTransposedNormalV4d(afxReal v[4], afxReal const in[4], 
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 4D by matrix 3x3
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]);
@@ -2227,7 +2260,7 @@ _AFXINL void AfxTransformTransposedNormalV4d(afxReal v[4], afxReal const in[4], 
     v[3] = 0.f;
 }
 
-_AFXINL void AfxTransformTransposedAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
+_AFXINL void AfxPreMultiplyAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4])
 {
     // Computes the transpose of the product of two matrices.
 
@@ -2236,6 +2269,8 @@ _AFXINL void AfxTransformTransposedAffineV4d(afxReal v[4], afxReal const in[4], 
     AfxAssert(m);
     AfxAssert(v);
     AfxAssert(v != in);
+
+    // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
     // multiply column vector 4D by matrix 4x3
     v[0] = (in[0] * m[0][0]) + (in[1] * m[1][0]) + (in[2] * m[2][0]) + (/*in[3] * */m[3][0]);
@@ -2256,7 +2291,7 @@ _AFXINL void AfxAssimilatePointV3d(afxReal const lt[3][3], afxReal const at[3], 
     AfxAssert(in);
     AfxAssert(out);
 
-    AfxTransformArrayedV3d(lt, cnt, in, out);
+    AfxPostMultiplyArrayedV3d(lt, cnt, in, out);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -2274,7 +2309,7 @@ _AFXINL void AfxAssimilatePointV4d(afxReal const lt[3][3], afxReal const at[3], 
     AfxAssert(in);
     AfxAssert(out);
 
-    AfxTransformArrayedNormalV4d(lt, cnt, in, out);
+    AfxPostMultiplyArrayedNormalV4d(lt, cnt, in, out);
 
     for (afxNat i = 0; i < cnt; i++)
     {

@@ -1,0 +1,157 @@
+<Qwadro>
+    <Shader id='rigid'>
+        <Stage>VERTEX</Stage>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>
+        <Include>data/pipeline/stdObject.inc</Include>
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
+        <In location='0' format='V3D'>in_pos</In>
+        <In location='3' format='V3D'>in_nrm</In>
+        <In location='6' format='V2D'>in_uv0</In>
+        <![CDATA[
+        
+        layout (location = 0) in vec3 in_pos;
+        layout (location = 3) in vec3 in_nrm;
+        layout (location = 6) in vec2 in_uv0;
+        
+        out block
+        {
+            vec2 uv0;
+            vec3 rgba0;
+        } sgl_out;
+
+        float3 DirFromLight = vec3(100, 100, 0);
+        float4 LightColour = vec4(0.9, 0.9, 0.9, 1);
+        float4 AmbientColour = vec4(0.1, 0.1, 0.1, 0.1);
+        
+        #define in_posn vec4(in_pos, 1)
+        
+        void main()
+        {
+            float4 WorldPos = m * in_posn;
+            float4 ViewPos  = v * WorldPos;
+            float4 ClipPos  = p * ViewPos;
+
+            float4 InNormal  = float4( in_nrm, 0);
+            float3 ObjNormal = vec4(m * InNormal).xyz;
+
+            sgl_out.uv0     = in_uv0;
+            sgl_out.rgba0  = vec3(LightColour * dot(vec4(ObjNormal,0), vec4(DirFromLight,0)) + AmbientColour);
+
+            gl_Position = ClipPos;
+        }
+        ]]>
+    </Shader>
+    <Shader id='skinned'>
+        <Stage>VERTEX</Stage>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>
+        <Include>data/pipeline/stdObject.inc</Include>
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
+        <In location='0' format='V4D'>in_posn</In>
+        <In location='1' format='V4D'>in_wgt</In>
+        <In location='2' format='V4D'>in_jnt</In>
+        <In location='3' format='V3D'>in_nrm</In>
+        <In location='6' format='V2D'>in_uv0</In>
+        <![CDATA[
+        
+        layout (location = 0) in vec4 in_posn;
+        layout (location = 1) in vec4 in_wgt;
+        layout (location = 2) in vec4 in_jnt;
+        layout (location = 3) in vec3 in_nrm;
+        layout (location = 6) in vec2 in_uv0;
+        
+        out block
+        {
+            vec4 posn;
+            vec2 uv0;
+            vec3 rgba0;
+        } sgl_out;
+
+        float3 DirFromLight = vec3(100, 100, 0);
+        float4 LightColour = vec4(0.9, 0.9, 0.9, 1);
+        float4 AmbientColour = vec4(0.1, 0.1, 0.1, 0.1);
+        
+        void main()
+        {
+            float BoneWeights[4] = (float[4])in_wgt;
+            int BoneIndices[4]   = (int[4])in_jnt;
+
+            float4 InPos     = float4( in_posn, 1 );
+            float4 InNormal  = float4( in_nrm, 0 );
+            float3 WorldPos    = 0;
+            float3 WorldNormal = 0;
+
+            for( int i = 0; i < 4; ++i )
+            {
+                float4x3 BoneMatrix = BoneMatrices[BoneIndices[i]];
+                WorldPos    += BoneWeights[i] * (BoneMatrix * InPos);
+                WorldNormal += BoneWeights[i] * (BoneMatrix * InNormal);
+            }
+
+            float3 ViewPos = vec3(WorldToView * float4(WorldPos, 1));
+            float4 ClipPos = ViewToClip * float4(ViewPos, 1);
+            sgl_out.posn   = ClipPos;
+
+            sgl_out.uv0    = in_uv0;
+            sgl_out.rgba0 = LightColour * dot(float4(normalize(WorldNormal),0), DirFromLight) + AmbientColour;
+
+            gl_Position = ClipPos;
+        }
+        ]]>
+    </Shader>
+    <Shader id='fsh'>
+        <Stage>FRAGMENT</Stage>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>
+        <Include>data/pipeline/stdMaterial.inc</Include>
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <Resource set='2' type='CONSTANT_BUFFER'>sgl_mtl</Resource>
+        <Resource set='2' binding='1' type='COMBINED_IMAGE_SAMPLER'>diffuse_sampler</Resource>
+        <Out location='0' format='V4D'>out_rgba0</Out>
+        <![CDATA[
+        
+        in block
+        {
+            vec2 uv0;
+            vec3 rgba0;
+        } sgl_in;
+        
+        out vec4 out_rgba0;
+        
+        uniform sampler2D diffuse_texture;
+        
+        void main (void)
+        { 
+            float3 DiffuseSamp = vec3(1, 1, 1); //texture( diffuse_texture, sgl_in.uv0 );
+            DiffuseSamp *= sgl_in.rgba0;
+
+            out_rgba0 = float4(DiffuseSamp, 1);
+        }
+        ]]>
+    </Shader>
+    <Pipeline id='tutCamUtil'>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>true</DepthTestEnable>
+        <DepthWriteEnable>true</DepthWriteEnable>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <Shader>data/pipeline/tutCamUtil.xsh.xml?rigid</Shader>
+        <Shader>data/pipeline/tutCamUtil.xsh.xml?fsh</Shader>
+    </Pipeline>
+    <Pipeline id='tutCamUtilSkinned'>
+        <FillMode>SOLID</FillMode>
+        <CullMode>BACK</CullMode>
+        <FrontFace>CCW</FrontFace>
+        <DepthTestEnable>true</DepthTestEnable>
+        <DepthWriteEnable>true</DepthWriteEnable>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <Shader>data/pipeline/tutCamUtil.xsh.xml?skinned</Shader>
+        <Shader>data/pipeline/tutCamUtil.xsh.xml?fsh</Shader>
+    </Pipeline>
+</Qwadro>

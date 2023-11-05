@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -21,8 +21,6 @@
 #include "afx/core/afxArray.h"
 #include "afx/math/afxAabb.h"
 #include "afx/core/afxInstance.h"
-#include "afx/draw/afxIndexBuffer.h"
-#include "afx/draw/afxVertexBuffer.h"
 #include "afx/sim/afxMaterial.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/core/afxUrd.h"
@@ -107,8 +105,6 @@ AFX_OBJECT(afxMeshTopology)
 #endif
 ;
 
-AFX afxError        AfxBuildMeshTopologies(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMeshTopology msht[]);
-
 /// The index data for a mesh, given by a afxMeshTopology referenced by the mesh, contains all the indices for the triangles in the mesh. 
 /// These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way. 
 /// You can put these indices into an index buffer like this:
@@ -144,5 +140,11 @@ AFX void            AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, 
 
 
 AFX afxError        AfxBufferizeMeshTopology(afxMeshTopology msht);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError        AfxBuildMeshTopologies(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMeshTopology msht[]);
 
 #endif//AFX_MESH_TOPOLOGY_H

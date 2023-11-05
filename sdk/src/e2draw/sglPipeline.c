@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -243,6 +243,30 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const
                     pip->base.wiring[i].resolved = !(_SglDpuBindAndResolveLego(dpu, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl));
                 }
             }
+
+            afxShader vsh;
+            AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh);
+            afxNat inCnt = AfxCountPipelineInputs(pip);
+            //vtxShd->base.ioDecls.
+            for (afxNat i = 0; i < inCnt; i++)
+            {
+                afxPipelineInputLocation in;
+                AfxGetPipelineInputs(pip, i, 1, &in);
+                pip->base.ins[i].location = in.location;
+                pip->base.ins[i].format = in.format;
+                gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+            }
+
+            afxShader fsh;
+            AfxFindLinkedShader(pip, afxShaderStage_PIXEL, &fsh);
+            afxNat outCnt = AfxCountColorOutputChannels(pip);
+            //vtxShd->base.ioDecls.
+            for (afxNat i = 0; i < outCnt; i++)
+            {
+                afxColorOutputChannel out;
+                AfxGetColorOutputChannels(pip, i, 1, &out);
+                gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+            }
         }
     }
     else
@@ -400,7 +424,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 for (afxNat i = 0; i < shaderCnt; i++)
                 {
                     afxShader shd;
-                    AfxGetPipelineShaders(pip, i, 1, &shd);
+                    AfxGetLinkedShaders(pip, i, 1, &shd);
                     AfxAssertObjects(1, &shd, afxFcc_SHD);
 
                     if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))

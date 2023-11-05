@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -113,6 +113,10 @@ AFX_OBJECT(afxLight)
     };
 };
 #endif//_AFX_LIGHT_C
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 AFX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
 AFX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);

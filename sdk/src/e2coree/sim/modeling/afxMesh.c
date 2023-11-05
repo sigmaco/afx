@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -20,26 +20,6 @@
 #include "afx/sim/modeling/afxMesh.h"
 #include "afx/sim/afxSimulation.h"
 #include "afx/math/afxMatrix.h"
-
-typedef struct
-{
-    afxSimulation       sim;
-    afxContext           mem;
-    afxNat              vtxDataCnt;
-    struct
-    {
-        afxNat          vtxCnt;
-        afxNat          arrCnt;
-        afxString const *arrSemantic[8];
-        afxVertexFormat arrFmt[8];
-        afxVertexUsage  arrUsage[8];
-        afxNat          nextBaseVtx;
-    } vtxData[16];
-    afxVertexBuffer     vbuf[16]; // separado para usar multiacquire
-
-    afxIndexBuffer      ibuf; // used by model builder to share ibuf. If nil, should create one.
-    
-} _afxMshCtorCachedData;
 
 ////////////////////////////////////////////////////////////////////////////////
 // MESH                                                                       //
@@ -157,7 +137,7 @@ afxMesh AfxAddParallelepipedToModel(afxModel mdl, afxReal width, afxReal height)
 
     for (afxNat32 i = 0; i < numberVertices; i++)
     {
-        AfxTransformTransposedV4d(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
+        AfxPreMultiplyV4d(((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], ((afxV4d*)msh->vbuf.attrs[AFX_VERTEX_ATTR_XYZW].pool)[i], m4d);
     }
     return msh;
 }
@@ -362,11 +342,11 @@ _AFX void AfxSetMeshMaterial(afxMesh msh, afxNat mtlIdx, afxMaterial mtl)
     }
 }
 
-_AFX afxBool AfxFindMeshMaterial(afxMesh msh, afxUri const* name, afxMaterial* mtl)
+_AFX afxBool AfxFindMeshMaterial(afxMesh msh, afxUri const* id, afxMaterial* mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxAssertType(name, afxFcc_URI);
+    AfxAssertType(id, afxFcc_URI);
 
     for (afxNat i = 0; i < msh->mtlSlotCnt; i++)
     {
@@ -376,7 +356,7 @@ _AFX afxBool AfxFindMeshMaterial(afxMesh msh, afxUri const* name, afxMaterial* m
         {
             AfxAssertObjects(1, &mtl2, afxFcc_MTL);
 
-            if (AfxUriIsEquivalent(AfxGetMaterialUri(mtl2), name))
+            if (AfxUriIsEquivalent(AfxGetMaterialUri(mtl2), id))
             {
                 if (mtl)
                     *mtl = mtl2;
@@ -426,7 +406,7 @@ _AFX afxBool AfxGetMeshTopology(afxMesh msh, afxMeshTopology* msht)
     return !!msht2;
 }
 
-_AFX void AfxSetMeshTopology(afxMesh msh, afxMeshTopology msht)
+_AFX void AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -487,11 +467,11 @@ _AFX afxVertexData AfxGetMeshVertices(afxMesh msh, afxNat* baseVtxIdx, afxNat* v
     return vtd;
 }
 
-_AFX afxUri const* AfxMeshGetUri(afxMesh msh)
+_AFX afxUri const* AfxGetMeshId(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    return &msh->uri;
+    return &msh->id;
 }
 
 _AFX afxError _AfxMshDtor(afxMesh msh)
@@ -509,7 +489,7 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
         afxMeshVertebra *msha = &msh->vertebras[i];
 
         //if (msha->boneName)
-            AfxDeallocateString(&msha->name);
+            AfxDeallocateString(&msha->id);
     }
 
     if (msh->vertebras)
@@ -524,7 +504,7 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
     if (msh->topology)
     {
         AfxAssertObjects(1, &msh->topology, afxFcc_MSHT);
-        AfxSetMeshTopology(msh, NIL);
+        AfxRelinkMeshTopology(msh, NIL);
     }
 
     if (msh->morphs)
@@ -534,7 +514,7 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
         AfxReleaseObjects(1, (void*[]) { msh->vtd });
 
     //if (msh->uri)
-    AfxUriDeallocate(&msh->uri);
+    AfxUriDeallocate(&msh->id);
 
     return err;
 }
@@ -604,13 +584,13 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
                 mshv->triCnt = mshb->GetVertebraInfo(data, i, &str);
                 mshv->triIdx = AfxAllocate(mem, mshv->triCnt * sizeof(mshv->triIdx[0]), NIL, AfxSpawnHint());
                 
-                AfxCloneString(&mshv->name, &str);
+                AfxCloneString(&mshv->id, &str);
                 //mshv->vtxCnt = artb->vtxIdxCnt;
                 //mshv->vtxMap = (void*)artb->tris; // ???
 
                 //AfxAssert(artb->tris == NIL);
 
-                mshb->GetVertebraData(data, &mshv->name, 0, 3 * mshv->triCnt, mshv->triIdx);
+                mshb->GetVertebraData(data, &mshv->id, 0, 3 * mshv->triCnt, mshv->triIdx);
 
                 AfxResetAabb(&mshv->aabb);
                 //AfxAssert(AfxGetVertexAttributeSize(vbuf, 0) == sizeof(afxV4d)); // actually, _AfxMshsRecomputeAabbCallback expects afxV4d-based vectors and position at vertex arrange 0. TODO: someone need to do refactoring here.
@@ -659,6 +639,10 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
     return err;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
 _AFX afxError AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
@@ -681,7 +665,6 @@ _AFX void AfxTransformMeshes(afxReal const at[3], afxReal const lt[3][3], afxRea
     AfxAssert(ilt);
     AfxAssert(cnt);
     AfxAssert(msh);
-    // Should be compatible with void TransformMesh(mesh *Mesh, const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float AffineTolerance, float LinearTolerance, unsigned int Flags)
     AfxThrowError();
     (void)affineTol;
     (void)linearTol;

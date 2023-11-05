@@ -303,9 +303,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxBuffer.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxIndexBuffer.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxSampler.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -319,12 +316,6 @@
       <Filter>e2coree\draw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxTexture.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBuffer.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBufferBlueprint.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxCanvas.h">
@@ -652,9 +643,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxBuffer.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxIndexBuffer.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -665,9 +653,6 @@
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxVertexBuffer.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxCanvas.c">

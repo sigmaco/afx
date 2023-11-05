@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -189,7 +189,7 @@ _AFXINL void AfxComputeLookToM4d_LH(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxNegateV3d(negEye, eye);
 
     afxV4d const w = { AfxDotV3d(x, negEye), AfxDotV3d(y, negEye), AfxDotV3d(z, negEye), (afxReal)1 };
-    AfxSetM4dTransposed(m, x, y, z, w);    
+    AfxSetTransposedM4d(m, x, y, z, w);    
 }
 
 _AFXINL void AfxComputeLookToM4d_RH(afxReal m[4][4], afxReal const eye[3], afxReal const dir[3], afxReal const up[3])
@@ -229,7 +229,7 @@ _AFXINL void AfxComputeLookAtM4d_LH(afxReal m[4][4], afxReal const eye[3], afxRe
     y[3] = 0;
 
     afxV4d const w = { -AfxDotV3d(x, eye), -AfxDotV3d(y, eye), -AfxDotV3d(z, eye), (afxReal)1 };
-    AfxSetM4dTransposed(m, x, y, z, w);
+    AfxSetTransposedM4d(m, x, y, z, w);
 #else
     afxV4d dir;
     AfxSubV3d(dir, target, eye);
@@ -259,7 +259,7 @@ _AFXINL void AfxComputeLookAtM4d_RH(afxReal m[4][4], afxReal const eye[3], afxRe
     y[3] = 0;
     
     afxV4d const w = { -AfxDotV3d(x, eye), -AfxDotV3d(y, eye), -AfxDotV3d(z, eye), (afxReal)1 };
-    AfxSetM4dTransposed(m, x, y, z, w);
+    AfxSetTransposedM4d(m, x, y, z, w);
 #else
     afxV4d negDir;
     AfxSubV3d(negDir, eye, target);

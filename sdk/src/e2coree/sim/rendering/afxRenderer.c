@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -45,7 +45,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
         afxSkeleton skl = AfxGetModelSkeleton(mdl);
         AfxTryAssertObjects(1, &skl, afxFcc_SKL);
 
-        for (afxNat mshIdx = 0; mshIdx < mdl->meshSlotCnt; mshIdx++)
+        for (afxNat mshIdx = 0; mshIdx < mdl->cap; mshIdx++)
         {
             afxMesh msh = mdl->meshSlots[mshIdx].msh;
 
@@ -64,12 +64,15 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
 
                 AfxBufferizeMeshTopology(msht);
                 AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.idxSiz);
-
-                AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);
+                
+                //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
+                AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
+                //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
+                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
                 //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
                 //AfxCmdSetCullMode(dscr, afxCullMode_BACK);
-                //AfxCmdSwitchFrontFace(dscr, FALSE);
+                //AfxCmdSwitchFrontFace(dscr, TRUE);
 
                 afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
@@ -84,7 +87,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                     {
                         AfxSetColor(mat.Kd, 0.3, 0.3, 0.3, 1.0);
                         mat.hasDiffTex = FALSE;
-                        AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
+                        //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
                     }
                     else
                     {
@@ -108,14 +111,14 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                                 mat.hasDiffTex = FALSE;
                             }
 
-                            AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
+                            //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
                         }
                     }
 
 
                     afxM4d CompositeMatrix;
-                    afxNat const *ToBoneIndices = AfxGetBoundMeshBoneIndices(mdl, mshIdx);
-                    AfxBuildIndexedCompositeBuffer(skl, rnd->wp, ToBoneIndices, 1, &CompositeMatrix);
+                    afxNat const *ToBoneIndices = AfxGetAttachedMeshBoneIndices(mdl, mshIdx);
+                    //AfxBuildIndexedCompositeBuffer(skl, rnd->wp, ToBoneIndices, 1, &CompositeMatrix);
                     
                     afxM4d m, m2;
                     //AfxUpdateBodyModelMatrix(bod, 1, AFX_M4D_IDENTITY, m, FALSE);
@@ -127,7 +130,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                     AfxInvertM4d(m2, m);
 
                     AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, w), sizeof(CompositeMatrix), CompositeMatrix);
-                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, m), sizeof(m), m2);
+                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, m), sizeof(m), m);
                     afxNat zeros[] = { 0, 0, 0 };
                     AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
 
@@ -474,8 +477,18 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
     AfxAcquirePoses(sim, 1, (afxNat[]) { 255 }, &rnd->lp);
     AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {FALSE}, &rnd->wp);
 
+    AfxUriWrapLiteral(&uri, "data/pipeline/testLighting.xsh.xml?blinn", 0);
+    rnd->blinnTestPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+
+    AfxUriWrapLiteral(&uri, "data/pipeline/tutCamUtil.xsh.xml?tutCamUtil", 0);
+    rnd->tutCamUtil = AfxAssemblePipelineFromXsh(dctx, &uri);
+
     return err;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 _AFX afxError AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[])
 {

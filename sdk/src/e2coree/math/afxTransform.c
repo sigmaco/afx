@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -24,8 +24,6 @@ AFX afxTransform const AFX_TRANSFORM_IDENTITY;
 
 _AFXINL void AfxResetTransform(afxTransform* t)
 {
-    // Should be compatible with void MakeIdentity(transform *Result)
-
     afxError err = NIL;
     AfxAssert(t);
     t->flags = NIL;
@@ -36,8 +34,6 @@ _AFXINL void AfxResetTransform(afxTransform* t)
 
 _AFXINL void AfxZeroTransform(afxTransform* t)
 {
-    // Should be compatible with void ZeroTransform(transform *Result)
-
     afxError err = NIL;
     AfxAssert(t);
     t->flags = NIL;
@@ -48,8 +44,6 @@ _AFXINL void AfxZeroTransform(afxTransform* t)
 
 _AFXINL void AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat const orientation, afxM3d const scaleShear)
 {
-    // Should be compatible with void SetTransform(transform *Result, const float *Position3, const float *Orientation4, const float *ScaleShear3x3)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(orientation);
@@ -62,8 +56,6 @@ _AFXINL void AfxSetTransform(afxTransform* t, afxV3d const position, afxQuat con
 
 _AFXINL void AfxSetTransformWithIdentityCheck(afxTransform* t, afxV3d const position, afxQuat const orientation, afxM3d const scaleShear)
 {
-    // Should be compatible with void SetTransformWithIdentityCheck(transform *Result, const float *Position3, const float *Orientation4, const float *ScaleShear3x3)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(orientation);
@@ -74,8 +66,6 @@ _AFXINL void AfxSetTransformWithIdentityCheck(afxTransform* t, afxV3d const posi
 
 _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTransform const *b)
 {
-    // Should be compatible with void Multiply(transform *Result, const transform *A, const transform *B)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(a);
@@ -86,31 +76,27 @@ _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTra
     AfxMultiplyM3d(tmp, OrientationB, b->scaleShear);
     AfxMultiplyM3d(Temp, a->scaleShear, tmp);
     AfxMultiplyTransposedM3d(t->scaleShear, OrientationB, Temp);
-
-    AfxTransformV3d(t->position, a->scaleShear, b->position);
+    
+    AfxPostMultiplyV3d(t->position, a->scaleShear, b->position);
 
     afxM3d OrientationA;
     AfxM3dFromQuat(OrientationA, a->orientation);
-    AfxTransformV3d(t->position, OrientationA, t->position);
+    AfxPostMultiplyV3d(t->position, OrientationA, t->position);
     AfxAddV3d(t->position, a->position, t->position);
     
     AfxMultiplyQuat(t->orientation, a->orientation, b->orientation);
     t->flags = b->flags | a->flags;
 }
 
-_AFXINL void AfxPremultiplyTransform(afxTransform* t, afxTransform const* pre)
+_AFXINL void AfxPreMultiplyTransform(afxTransform* t, afxTransform const* pre)
 {
-    // void PreMultiplyBy(transform *Transform, const transform *PreMult)
-
     afxTransform tmp;
     AfxMultiplyTransform(&tmp, pre, t);
     AfxCopy(t, &tmp, sizeof(t));
 }
 
-_AFXINL void AfxPostmultiplyTransform(afxTransform* t, afxTransform const* post)
+_AFXINL void AfxPostMultiplyTransform(afxTransform* t, afxTransform const* post)
 {
-    // Should be compatible with void PostMultiplyBy(transform *Transform, const transform *PostMult)
-    
     afxTransform tmp;
     AfxMultiplyTransform(&tmp, t, post);
     AfxCopy(t, &tmp, sizeof(t));
@@ -139,8 +125,6 @@ _AFXINL void ScaleMatrixPlusScaleMatrix3x3(afxM3d Dest, float C0, afxM3d const M
 
 _AFXINL void AfxLerpTransform(afxTransform *t, afxTransform const* a, afxTransform const* b, afxReal time)
 {
-    // Should be compatible with void LinearBlendTransform(transform *Result, const transform *A, float t, const transform *B)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(a);
@@ -184,8 +168,6 @@ _AFXINL void AfxCopyTransform(afxTransform *t, afxTransform const* in)
 
 _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
 {
-    // Should be compatible with void BuildInverse(transform *Result, consttransform *Source)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(in);
@@ -201,8 +183,8 @@ _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
 
     afxV4d ip, ip2, ip3;
     AfxNegateV3d(ip, in->position);
-    AfxTransformV3d(ip2, ss, ip);
-    AfxTransformV3d(ip3, iqm, ip2);
+    AfxPostMultiplyV3d(ip2, ss, ip);
+    AfxPostMultiplyV3d(ip3, iqm, ip2);
 
     AfxSetTransformWithIdentityCheck(t, ip3, q, ss);
 }
@@ -281,7 +263,6 @@ _AFXINL void AfxClipTransformDofs(afxTransform *t, afxFlags allowedDOFs)
 
 _AFXINL afxReal AfxDetTransform(afxTransform const* t)
 {
-    // Should be compatible with double GetTransformDeterminant(const transform *Transform)
     return AfxDetM3d(t->scaleShear);
 }
 
@@ -316,28 +297,47 @@ _AFXINL void AfxComposeTransform(afxTransform const* t, afxReal m[9], afxNat str
 }
 #endif
 
-_AFX void AfxComposeTransformMatrix(afxTransform const* t, afxReal m[4][4])
+_AFX void AfxComposeTransformM4d(afxTransform const* t, afxReal m[4][4])
 {
     // Should be compatible with void BuildCompositeTransform4x4(const transform *Transform, float *Composite4x4)     
 
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(m);
+    afxM4d tmp;
 
-    if (!(t->flags & afxTransformFlags_SCALESHEAR)) AfxM4dFromQuat(m, t->orientation);
+    if (!(t->flags & afxTransformFlags_SCALESHEAR)) AfxM4dFromQuat(tmp, t->orientation);
     else
     {
-        afxM3d tmp, tmp2;
-        AfxM3dFromQuat(tmp, t->orientation);        
-        AfxMultiplyTransposedM3d(tmp2, t->scaleShear, tmp); // está certo isso?
-        AfxM4dFromM3d(m, tmp2, AFX_V4D_0001);
+        afxM3d tmp3, tmp2;
+        AfxM3dFromQuat(tmp3, t->orientation);        
+        AfxMultiplyM3d(tmp2, tmp3, t->scaleShear); // está certo isso?
+        AfxM4dFromM3d(tmp, tmp2, AFX_V4D_0001);
     }
-    
+    AfxTransposeM4d(m, tmp);
     AfxCopyV3d(m[3], t->position);
     m[3][3] = 1.0;
 }
 
-_AFXINL void AfxGetTransformWorldMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4])
+_AFX void AfxComposeTransformCompactMatrix(afxTransform const* t, afxReal m[4][3])
+{
+    afxError err = NIL;
+    AfxAssert(t);
+    AfxAssert(m);
+    afxM3d tmp;
+
+    if (!(t->flags & afxTransformFlags_SCALESHEAR)) AfxM3dFromQuat(tmp, t->orientation);
+    else
+    {
+        afxM3d tmp2;
+        AfxM3dFromQuat(tmp2, t->orientation);
+        AfxMultiplyTransposedM3d(tmp, tmp2, t->scaleShear); // está certo isso?
+    }
+    AfxTransposeM3d(m, tmp);
+    AfxCopyV3d(m[3], t->position);
+}
+
+_AFXINL void AfxComposeTransformWorldM4d(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4])
 {
     // Should be compatible with void BuildFullWorldPoseOnly_Generic(const transform *Transform, const float *ParentMatrix, float *ResultWorldMatrix)
 
@@ -347,8 +347,8 @@ _AFXINL void AfxGetTransformWorldMatrix(afxTransform const *t, afxReal const par
     AfxAssert(w);
 
     afxM4d m;
-    AfxComposeTransformMatrix(t, m);
-    AfxMultiplyTransposedAffineM4d(w, parent, m);
+    AfxComposeTransformM4d(t, m);
+    AfxMultiplyTransposedAffineM4d(w, m, parent);
 }
 
 _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4])
@@ -361,32 +361,14 @@ _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxRe
     AfxAssert(composite);
     AfxAssert(w);
 
-    AfxGetTransformWorldMatrix(t, parent, w);
-    AfxMultiplyTransposedAffineM4d(composite, w, iw);
+    AfxComposeTransformWorldM4d(t, parent, w);
+    AfxMultiplyTransposedAffineM4d(composite, iw, w);
 }
 
-_AFX void AfxComposeTransformMatrixCompact(afxTransform const* t, afxReal m[4][3])
-{
-    // Should be compatible with void BuildCompositeTransform4x3(const transform *Transform, float *Composite4x3)
-
-    afxError err = NIL;
-    AfxAssert(t);
-    AfxAssert(m);
-
-    if (!(t->flags & afxTransformFlags_SCALESHEAR)) AfxM3dFromQuat(m, t->orientation);
-    else
-    {
-        afxM3d tmp;
-        AfxM3dFromQuat(tmp, t->orientation);
-        AfxMultiplyTransposedM3d(m, tmp, t->scaleShear); // está certo isso?
-    }
-    AfxCopyV3d(m[3], t->position);
-}
+////////////////////////////////////////////////////////////////////////////////
 
 _AFXINL void AfxAssimilateTransforms(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxNat cnt, afxTransform const in[], afxTransform out[])
 {
-    // Should be compatible with InPlaceSimilarityTransform(const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float *Position3, float *Orientation4, float *ScaleShear3x3)
-
     afxError err = NIL;
     AfxAssert(lt);
     AfxAssert(ilt);
@@ -403,37 +385,43 @@ _AFXINL void AfxAssimilateTransforms(afxReal const lt[3][3], afxReal const ilt[3
     }
 }
 
-_AFXINL void AfxGetTransformedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
+_AFXINL void AfxTransformArrayedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
-    // Should be compatible with void TransformPoint(float *Dest, const transform *Transform, const float *Source)
-    
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(cnt);
     AfxAssert(in);
     AfxAssert(out);
+    
+    AfxPostMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
+    AfxRotateV3d(t->orientation, cnt, out, out);
 
     for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxTransformV3d(out[i], t->scaleShear, in[i]);
-        AfxRotateV3d(t->orientation, 1, &out[i], &out[i]);
         AfxAddV3d(out[i], t->position, out[i]);
-    }
 }
 
-_AFXINL void AfxGetTransformedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
+_AFXINL void AfxTransformArrayedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
-    // Should be compatible with void TransformVector(float *Dest, const transform *Transform, const float *Source)
-
     afxError err = NIL;
     AfxAssert(t);
     AfxAssert(cnt);
     AfxAssert(in);
     AfxAssert(out);
 
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxTransformV3d(out[i], t->scaleShear, in[i]);
-        AfxRotateV3d(t->orientation, 1, &out[i], &out[i]);
-    }
+    AfxPostMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
+    AfxRotateV3d(t->orientation, cnt, out, out);
+}
+
+_AFXINL void AfxTransformArrayedTransposedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3])
+{
+    afxError err = NIL;
+    AfxAssert(t);
+    AfxAssert(cnt);
+    AfxAssert(in);
+    AfxAssert(out);
+
+    afxQuat iq;
+    AfxConjugateQuat(iq, t->orientation);
+    AfxRotateV3d(iq, cnt, in, out);
+    AfxPreMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
 }

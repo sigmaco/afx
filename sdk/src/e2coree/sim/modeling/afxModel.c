@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -24,43 +24,43 @@
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/math/afxMatrix.h"
 
-_AFX afxBool AfxBoundMeshIsTransferred(afxModel mdl, afxNat slotIdx)
+_AFX afxBool AfxAttachedMeshIsTransferred(afxModel mdl, afxNat slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+    AfxAssertRange(mdl->cap, slotIdx, 1);
     return mdl->meshSlots[slotIdx].srcSkl != mdl->skl;
 }
 
-_AFX afxSkeleton AfxGetBoundMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx)
+_AFX afxSkeleton AfxGetAttachedMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+    AfxAssertRange(mdl->cap, slotIdx, 1);
     return mdl->meshSlots[slotIdx].srcSkl;
 }
 
-_AFX afxNat const* AfxGetBoundMeshBoneIndices(afxModel mdl, afxNat slotIdx)
+_AFX afxNat const* AfxGetAttachedMeshBoneIndices(afxModel mdl, afxNat slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+    AfxAssertRange(mdl->cap, slotIdx, 1);
     return mdl->meshSlots[slotIdx].boneIndices;
 }
 
-_AFX afxNat const* AfxGetBoundMeshOriginalBoneIndices(afxModel mdl, afxNat slotIdx)
+_AFX afxNat const* AfxGetAttachedMeshOriginalBoneIndices(afxModel mdl, afxNat slotIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+    AfxAssertRange(mdl->cap, slotIdx, 1);
     return mdl->meshSlots[slotIdx].srcBoneIndices;
 }
 
-_AFX void AfxBuildBoundMeshRigMatrixArray(afxModel mdl, afxNat slotIdx, afxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4])
+_AFX void AfxBuildAttachedMeshMatrixArray(afxModel mdl, afxNat slotIdx, afxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+    AfxAssertRange(mdl->cap, slotIdx, 1);
 
     afxMesh msh = mdl->meshSlots[slotIdx].msh;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -92,11 +92,11 @@ _AFX void AfxBuildBoundMeshRigMatrixArray(afxModel mdl, afxNat slotIdx, afxWorld
     }
 }
 
-_AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, afxNat cnt, afxMesh meshes[])
+_AFX afxError AfxAttachMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, afxNat cnt, afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, first, cnt);
+    AfxAssertRange(mdl->cap, first, cnt);
 
     afxSkeleton dstSkl = mdl->skl;
     AfxTryAssertObjects(1, &dstSkl, afxFcc_SKL);
@@ -109,7 +109,7 @@ _AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first,
     for (afxNat i = 0; i < cnt; i++)
     {
         afxNat slotIdx = first + i;
-        AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+        AfxAssertRange(mdl->cap, slotIdx, 1);
         afxMeshSlot* slot = &mdl->meshSlots[slotIdx];
         afxMesh mshCurr = slot->msh;
         afxMesh msh = meshes[i];
@@ -136,17 +136,17 @@ _AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first,
                     {
                         for (afxNat i = 0; i < artCnt; i++)
                         {
-                            afxString const* artName = &msh->vertebras[i].name;
+                            afxString const* artId = &msh->vertebras[i].id;
 
-                            if (!AfxFindBone(dstSkl, artName, &dstBoneIndices[i]))
+                            if (!AfxFindBone(dstSkl, artId, &dstBoneIndices[i]))
                             {
-                                AfxError("Unable to find vertebra '%.*s' in the destination skeleton", AfxPushString(artName));
+                                AfxError("Unable to find vertebra '%.*s' in the destination skeleton", AfxPushString(artId));
                                 AfxAssert(dstBoneIndices[i] == AFX_INVALID_INDEX);
                             }
 
-                            if (transfered && !AfxFindBone(srcSkl, artName, &srcBoneIndices[i]))
+                            if (transfered && !AfxFindBone(srcSkl, artId, &srcBoneIndices[i]))
                             {
-                                AfxError("Unable to find vertebra '%.*s' in the source skeleton", AfxPushString(artName));
+                                AfxError("Unable to find vertebra '%.*s' in the source skeleton", AfxPushString(artId));
                                 AfxAssert(srcBoneIndices[i] == AFX_INVALID_INDEX);
                             }
                         }
@@ -203,17 +203,17 @@ _AFX afxError AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first,
     return err;
 }
 
-_AFX afxNat AfxGetBoundMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, afxMesh msh[])
+_AFX afxNat AfxGetAttachedMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->meshSlotCnt, baseSlotIdx, slotCnt);
+    AfxAssertRange(mdl->cap, baseSlotIdx, slotCnt);
     afxNat rslt = 0;
 
     for (afxNat i = 0; i < slotCnt; i++)
     {
         afxNat slotIdx = baseSlotIdx + i;
-        AfxAssertRange(mdl->meshSlotCnt, slotIdx, 1);
+        AfxAssertRange(mdl->cap, slotIdx, 1);
         afxMesh msh2 = mdl->meshSlots[slotIdx].msh;
         AfxTryAssertObjects(1, &msh2, afxFcc_MSH);
         msh[i] = msh2;
@@ -221,11 +221,31 @@ _AFX afxNat AfxGetBoundMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, 
     return rslt;
 }
 
-_AFX afxNat AfxCountModelMeshes(afxModel mdl)
+_AFX afxNat AfxGetModelCapacity(afxModel mdl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    return mdl->meshSlotCnt;
+    return mdl->cap;
+}
+
+_AFX afxNat AfxCountAttachedMeshes(afxModel mdl)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &mdl, afxFcc_MDL);
+    afxNat cap = mdl->cap;
+    afxNat rslt = 0;
+
+    for (afxNat i = 0; i < cap; i++)
+    {
+        afxMesh msh = mdl->meshSlots[i].msh;
+        
+        if (msh)
+        {
+            AfxTryAssertObjects(1, &msh, afxFcc_MSH);
+            ++rslt;
+        }        
+    }
+    return rslt;
 }
 
 _AFX void AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4])
@@ -234,10 +254,10 @@ _AFX void AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4])
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxComposeTransformMatrix(&mdl->init, m);
+    AfxComposeTransformM4d(&mdl->init, m);
 }
 
-_AFX void AfxSetModelInitialPlacement(afxModel mdl, afxTransform const* xform)
+_AFX void AfxResetModelInitialPlacement(afxModel mdl, afxTransform const* xform)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
@@ -255,7 +275,7 @@ _AFX afxSkeleton AfxGetModelSkeleton(afxModel mdl)
     return skl;
 }
 
-_AFX void AfxSetModelSkeleton(afxModel mdl, afxSkeleton skl)
+_AFX void AfxRelinkModelSkeleton(afxModel mdl, afxSkeleton skl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
@@ -277,11 +297,11 @@ _AFX void AfxSetModelSkeleton(afxModel mdl, afxSkeleton skl)
     }
 }
 
-_AFX afxUri const* AfxGetModelUri(afxModel mdl)
+_AFX afxUri const* AfxGetModelId(afxModel mdl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    return &mdl->uri;
+    return &mdl->id;
 }
 
 _AFX afxError _AfxMdlDtor(afxModel mdl)
@@ -294,17 +314,17 @@ _AFX afxError _AfxMdlDtor(afxModel mdl)
     afxSimulation sim = AfxGetObjectProvider(mdl);
     afxContext mem = AfxSimulationGetMemory(sim);
 
-    for (afxNat i = 0; i < mdl->meshSlotCnt; i++)
-        AfxBindModelMeshes(mdl, NIL, i, 1, NIL);
+    for (afxNat i = 0; i < mdl->cap; i++)
+        AfxAttachMeshes(mdl, NIL, i, 1, NIL);
 
     if (mdl->meshSlots)
         AfxDeallocate(mem, mdl->meshSlots);
 
     if (mdl->skl)
-        AfxSetModelSkeleton(mdl, NIL);
+        AfxRelinkModelSkeleton(mdl, NIL);
 
     //if (mdl->uri)
-    AfxUriDeallocate(&mdl->uri);
+    AfxUriDeallocate(&mdl->id);
 
     return err;
 }
@@ -316,13 +336,13 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
-    afxUri const* name = cookie->udd[0];
+    afxUri const* id = cookie->udd[0];
     afxSkeleton skl = cookie->udd[1];
     afxTransform const* init = cookie->udd[2];
     afxNat meshCnt = *((afxNat*)cookie->udd[3]);
     afxMesh* meshes = cookie->udd[4];
 
-    AfxCloneUri(&mdl->uri, name);
+    AfxCloneUri(&mdl->id, id);
 
     if ((mdl->skl = skl))
     {
@@ -337,22 +357,22 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
 
     AfxResetAabb(&mdl->aabb);
 
-    mdl->meshSlotCnt = 0;
+    mdl->cap = 0;
 
     if (meshCnt && !(mdl->meshSlots = AfxAllocate(NIL, meshCnt * sizeof(mdl->meshSlots[0]), 0, AfxSpawnHint()))) AfxThrowError();
     else
     {
         if (meshCnt)
         {
-            mdl->meshSlotCnt = meshCnt;
+            mdl->cap = meshCnt;
 
             AfxZero(mdl->meshSlots, meshCnt * sizeof(mdl->meshSlots[0]));
 
-            if (AfxBindModelMeshes(mdl, NIL, 0, meshCnt, meshes))
+            if (AfxAttachMeshes(mdl, NIL, 0, meshCnt, meshes))
                 AfxThrowError();
         }
 
-        AfxAssert(mdl->meshSlotCnt == meshCnt);
+        AfxAssert(mdl->cap == meshCnt);
     }
 
     if (err)
@@ -362,17 +382,21 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxModel AfxAssembleModel(afxSimulation sim, afxUri const* name, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[])
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxModel AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    AfxAssert(name);
+    AfxAssert(id);
     AfxAssert(skl);
     //AfxAssert(init);
     AfxAssert(mshCnt);
     afxModel mdl;
 
-    if (AfxAcquireObjects(AfxGetModelClass(sim), 1, (afxHandle*)&mdl, (void*[]) { (void*)name, skl, (void*)init, &mshCnt, msh }))
+    if (AfxAcquireObjects(AfxGetModelClass(sim), 1, (afxHandle*)&mdl, (void*[]) { (void*)id, skl, (void*)init, &mshCnt, msh }))
         AfxThrowError();
 
     return mdl;
@@ -399,11 +423,14 @@ _AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxRea
             afxSkeleton skl;
 
             if ((skl = AfxGetModelSkeleton(mdl2)))
-                AfxTransformSkeleton(skl, at, lt, ilt);
+            {
+                AfxAssertObjects(1, &skl, afxFcc_SKL);
+                AfxTransformSkeletons(lt, ilt, at, 1, &skl);
+            }
 
             afxMesh meshes[64];
             afxNat batchSiz = 64;
-            afxNat totalMshCnt = AfxCountModelMeshes(mdl2);
+            afxNat totalMshCnt = AfxGetModelCapacity(mdl2);
             afxNat batches = totalMshCnt / batchSiz;
             afxNat remaining = totalMshCnt % batchSiz;
             afxNat baseSlotIdx = 0;
@@ -411,7 +438,7 @@ _AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxRea
 
             for (afxNat j = 0; j < batches; j++)
             {
-                mshCnt = AfxGetBoundMeshes(mdl2, baseSlotIdx, batchSiz, meshes);
+                mshCnt = AfxGetAttachedMeshes(mdl2, baseSlotIdx, batchSiz, meshes);
                 baseSlotIdx += mshCnt;
 
                 // WARNING: What to do if mesh is shared among other models of strange asset?
@@ -420,7 +447,7 @@ _AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxRea
 
             if (remaining)
             {
-                mshCnt = AfxGetBoundMeshes(mdl2, baseSlotIdx, remaining, meshes);
+                mshCnt = AfxGetAttachedMeshes(mdl2, baseSlotIdx, remaining, meshes);
                 // WARNING: What to do if mesh is shared among other models of strange asset?
                 AfxTransformMeshes(at, lt, ilt, affineTol, linearTol, flags, mshCnt, meshes);
             }

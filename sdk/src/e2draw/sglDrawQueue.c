@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -1468,6 +1468,16 @@ _SGL void _SglDpuBindPipeline(sglDpuIdd* dpu, _afxDscrCmdPipeline *cmd)
         if (pip)
         {
             AfxAssertObjects(1, &pip, afxFcc_PIP);
+
+            afxNat inCnt = AfxCountPipelineInputs(pip);
+
+            for (afxNat i = 0; i < inCnt; i++)
+            {
+                afxPipelineInputLocation in;
+                AfxGetPipelineInputs(pip, i, 1, &in);
+                pip->base.ins[i].location = in.location;
+                pip->base.ins[i].format = in.format;
+            }
 
             afxBool primRestartEnabled;
             AfxGetPrimitiveAssembling(pip, &dpu->state.primTop, &primRestartEnabled);
@@ -3289,7 +3299,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
 
         //if (0 == AfxGetProcessorIterationCount())
         {
-            AfxFormatString(&dout->base.caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq, currIter);
+            AfxFormatString(&dout->base.caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq, currIter);
             SetWindowTextA(dout->wnd, AfxGetStringDataConst(&dout->base.caption, 0));
         }
         dout->base.swapping = FALSE;

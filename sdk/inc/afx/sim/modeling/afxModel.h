@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -36,36 +36,41 @@ AFX_DEFINE_STRUCT(afxMeshSlot)
 #ifdef _AFX_MODEL_C
 AFX_OBJECT(afxModel)
 {
-    afxUri              uri; // 128
+    afxUri              id; // 128
     afxSkeleton         skl;
     afxTransform        init;
     afxAabb             aabb;
-    afxNat              meshSlotCnt;
-    afxMeshSlot         *meshSlots;
+    afxNat              cap;
+    afxMeshSlot        *meshSlots;
 };
 #endif
 
-AFX afxUri const*       AfxGetModelUri(afxModel mdl);
+AFX afxUri const*       AfxGetModelId(afxModel mdl);
 
 AFX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
-AFX void                AfxSetModelSkeleton(afxModel mdl, afxSkeleton skl);
+AFX void                AfxRelinkModelSkeleton(afxModel mdl, afxSkeleton skl);
 
 AFX void                AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4]);
-AFX void                AfxSetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
+AFX void                AfxResetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
 
-AFX afxNat              AfxCountModelMeshes(afxModel mdl);
-AFX afxNat              AfxGetBoundMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, afxMesh msh[]);
-AFX afxError            AfxBindModelMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, afxNat cnt, afxMesh meshes[]);
+AFX afxNat              AfxGetModelCapacity(afxModel mdl);
+AFX afxNat              AfxCountAttachedMeshes(afxModel mdl);
+AFX afxNat              AfxGetAttachedMeshes(afxModel mdl, afxNat baseSlotIdx, afxNat slotCnt, afxMesh msh[]);
+AFX afxError            AfxAttachMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, afxNat cnt, afxMesh meshes[]);
 
-AFX afxBool             AfxBoundMeshIsTransferred(afxModel mdl, afxNat slotIdx);
-AFX afxSkeleton         AfxGetBoundMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
-AFX afxNat const*       AfxGetBoundMeshOriginalBoneIndices(afxModel mdl, afxNat slotIdx);
+AFX afxBool             AfxAttachedMeshIsTransferred(afxModel mdl, afxNat slotIdx);
+AFX afxSkeleton         AfxGetAttachedMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
+AFX afxNat const*       AfxGetAttachedMeshOriginalBoneIndices(afxModel mdl, afxNat slotIdx);
 
-AFX afxNat const*       AfxGetBoundMeshBoneIndices(afxModel mdl, afxNat slotIdx);
+AFX afxNat const*       AfxGetAttachedMeshBoneIndices(afxModel mdl, afxNat slotIdx);
 
-AFX void                AfxBuildBoundMeshRigMatrixArray(afxModel mdl, afxNat slotIdx, afxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4]);
+AFX void                AfxBuildAttachedMeshMatrixArray(afxModel mdl, afxNat slotIdx, afxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4]);
 
-AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* name, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
 
 AFX void                AfxTransformModels(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[]);
 

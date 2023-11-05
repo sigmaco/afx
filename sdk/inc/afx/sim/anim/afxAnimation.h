@@ -8,7 +8,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
@@ -18,89 +18,93 @@
 #ifndef AFX_ANIMATION_H
 #define AFX_ANIMATION_H
 
- // Terminology: Animator is a movable model of a person or animal that is used in entertainment and is typically moved either by strings controlled from above or by a hand inside it.
-
- // There are two primary objects involved in the run-time animation layer : the afxBody and the afxAnimator.
- // Together, they represent the two ends of the animation process.
- // The afxBody represents the state of a single model that may have some number of animations affecting it, 
- // whereas the afxAnimator represents the state of an animation that may be affecting some number of models.
- // When your engine creates a new animating entity in the game world, you create a afxBody to accompany it.
- // When you want to play an animation on such an instance, you create a afxAnimator.
-
+#include "afx/sim/afxSimDefs.h"
 #include "afxCurve2.h"
 #include "afx/math/afxTransform.h"
 
-AFX_DEFINE_HANDLE(afxAnimation);
-
-AFX_DEFINE_STRUCT(afxVectorTrack)
+AFX_DEFINE_STRUCT(afxMotionData)
 {
-    afxString32 Name;
-    afxNat TrackKey;
-    afxInt Dimension;
-    afxCurve2 ValueCurve;
+    afxString32         id;
+    afxNat              seqKey;
+    afxInt              dimension;
+    afxCurve*           valueCurve;
 };
 
-AFX_DEFINE_STRUCT(afxTransformTrack)
+AFX_DEFINE_STRUCT(afxMotionNoteEntry)
 {
-    afxString32 Name;
-    afxInt Flags;
-    afxCurve2 OrientationCurve;
-    afxCurve2 PositionCurve;
-    afxCurve2 ScaleShearCurve;
+    afxReal             timeStamp;
+    afxString128        text;
 };
 
-AFX_DEFINE_STRUCT(afxTextTrackEntry)
+AFX_DEFINE_STRUCT(afxMotionNote)
 {
-    afxReal TimeStamp;
-    afxString128 Text;
-};
-
-AFX_DEFINE_STRUCT(afxTextTrack)
-{
-    char const * Name;
-    afxInt EntryCount;
-    afxTextTrackEntry * Entries;
+    afxString8          id;
+    afxNat              entryCnt;
+    afxMotionNoteEntry* entries;
 };
 
 AFX_DEFINE_STRUCT(afxPeriodicLoop)
 {
-    afxReal Radius;
-    afxReal dAngle;
-    afxReal dZ;
-    afxV3d BasisX;
-    afxV3d BasisY;
-    afxV3d Axis;
+    afxReal             radius;
+    afxReal             dAngle;
+    afxReal             dZ;
+    afxV3d              basisX;
+    afxV3d              basisY;
+    afxV3d              axis;
 };
 
-AFX_DEFINE_STRUCT(afxAnimTrackGroup)
+AFX_DEFINE_STRUCT(afxMotionTransform)
 {
-    char const * Name;
-    afxInt VectorTrackCount;
-    afxVectorTrack * VectorTracks;
-    afxInt TransformTrackCount;
-    afxTransformTrack * TransformTracks;
-    afxInt TransformLODErrorCount;
-    afxReal * TransformLODErrors;
-    afxInt TextTrackCount;
-    afxTextTrack * TextTracks;
-    afxTransform InitialPlacement;
-    afxInt Flags;
-    afxV3d LoopTranslation;
-    afxPeriodicLoop * PeriodicLoop;
-    afxTransformTrack * RootMotion;
-    struct ExtendedData { afxNat32 type; void*obj; };
+    afxString32         id;
+    afxMask             flags;
+    afxCurve*           orienCurve;
+    afxCurve*           posnCurve;
+    afxCurve*           scaleShearCurve;
 };
 
+#ifdef _AFX_MOTION_C
+AFX_OBJECT(afxMotion)
+{
+    afxString32         id;
+    afxMask             flags;
+    afxNat              xformSeqCnt;
+    afxMotionTransform* xformSeqs; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
+    afxNat              xformLodErrorCnt;
+    afxReal*            xformLodErrors;
+    afxNat              vecSeqCnt;
+    afxMotionData*      vecSeqs;
+    afxNat              noteSeqCnt;
+    afxMotionNote*      noteSeqs;
+    afxTransform        init;
+    afxMotionTransform* rootMotion;
+    afxV3d              loopTranslation;
+    afxPeriodicLoop*    periodicLoop;    
+};
+#endif
+
+/// Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
+/// Assim sendo, uma afxAnimation é a moção de um conjunto de afxModel's animando sobre tempo.
+/// A afxAnimation contém um ou mais afxMotion's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
+/// O afxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no afxSkeleton do correspondente afxModel.
+
+#ifdef _AFX_ANIMATION_C
 AFX_OBJECT(afxAnimation)
 {
-    afxString32         name;
-    afxReal             dur;
-    afxReal             timeStep;
-    afxReal             oversampling;
-    afxInt              trackGrpCount;
-    afxAnimTrackGroup** TrackGrps;
+    afxString32         id;
+
+    afxReal             dur; /// especifica quão demorado, em segundos, a animação leva para executar a completação.
+    afxReal             timeStep; /// especifica quão muitos segundos há entre cada frame.
+    afxReal             oversampling; /// 1.f
+
+    /// @timeStep é o intervalo após oversampling.
+    /// Quando @timeStep e @oversampling forem iguais a 0.00416667 e 4.0, respectivamente, uma animação foi produzida a 60 FPS (0.016667 segundos entre cada frame) com oversampling de 4x.
+    /// Multiplicando @timeStep por @oversampling, pode-se encontrar o intervalo original antes do oversampling.
+    /// Tanto @timeStep quanto @oversampling não são usadas pelo Qwadro.
+    /// Estão aqui de forma informativa preservando conhecimento sobre a intenção original do autor.
+
+    afxNat              motionCnt;
+    afxMotion*          motions;
 };
-
-
+#endif
 
 #endif//AFX_ANIMATION_H

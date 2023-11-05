@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -55,10 +55,6 @@ AFX_DEFINE_HANDLE(afxSampler);
 
 AFX_DEFINE_HANDLE(afxBuffer);
 //typedef afxHandle afxBuffer;
-AFX_DEFINE_HANDLE(afxIndexBuffer);
-//typedef afxHandle afxIndexBuffer;
-AFX_DEFINE_HANDLE(afxVertexBuffer);
-//typedef afxHandle afxVertexBuffer;
 
 AFX_DEFINE_HANDLE(afxTexture);
 //typedef afxHandle afxTexture;
@@ -321,6 +317,7 @@ typedef enum
 
 typedef enum afxVertexFormat
 {
+    //NIL,
     afxVertexFormat_REAL = 1,
     afxVertexFormat_V2D,
     afxVertexFormat_V3D,
@@ -354,6 +351,7 @@ AFX afxString const g_str_In;
 AFX afxString const g_str_Out;
 AFX afxString const g_str_Stage;
 AFX afxString const g_str_stage;
+AFX afxString const g_str_id;
 AFX afxString const g_str_name;
 AFX afxString const g_str_entry;
 AFX afxString const g_str_Entry;

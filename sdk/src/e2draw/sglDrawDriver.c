@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -1069,7 +1069,7 @@ _SGL afxChar const sigmaSignature[] =
     "\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
     "\n       ########    ###########    ########    ###       ###   ###     ###      "
     "\n                                                                               "
-    "\n          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          "
+    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
     "\n                                                                               "
     "\n                               Public Test Build                               "
     "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              "
@@ -1088,7 +1088,7 @@ afxChar const targaSigmaSignature[] =
     "\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
     "\n               ###     ###     ### ###    ###  ########  ###     ###           "
     "\n                                                                               "
-    "\n          T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M          "
+    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
     "\n                                                                               "
     "\n                               Public Test Build                               "
     "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              "
@@ -1987,7 +1987,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             AfxWrapStringLiteral(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
             AfxWrapStringLiteral(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
 
-            AfxLogMessageFormatted(0xFFFF0000, "\n Opening the Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
+            AfxLogMessageFormatted(0xFFFF0000, "\n Opening the GL/2 Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
 
             PFNWGLGETEXTENSIONSSTRINGARBPROC _wglGetExtensionsStringARB = (void*)dpu->GetProcAddress("wglGetExtensionsStringARB");
             AfxAssert(_wglGetExtensionsStringARB);
@@ -2205,7 +2205,7 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDr
         AfxRegenerateDrawOutputBuffers(dout);
     }
 
-    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
+    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
 
     return err;
 }
@@ -2305,7 +2305,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     ddev->wndClss.hCursor = NULL;
     ddev->wndClss.hbrBackground = NULL;
     ddev->wndClss.lpszMenuName = NULL;
-    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration (c) 2017 SIGMA Technology Group --- Public Test Build";
+    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build";
     ddev->wndClss.hIconSm = NULL;
 
     if (!(RegisterClassEx(&(ddev->wndClss)))) AfxThrowError();
@@ -2428,7 +2428,7 @@ _SGL afxError AfxGetDrawIcdInformation(afxDrawIcdInfo *info)
     afxUri file;
     AfxUriWrapLiteral(&file, "e2draw.icd", 0);
     static afxString name, vendor, website, note;
-    AfxWrapStringLiteral(&name, "OpenGL/Vulkan Continuous Integration", 0);
+    AfxWrapStringLiteral(&name, "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System", 0);
     AfxWrapStringLiteral(&vendor, "SIGMA Technology Group", 0);
     AfxWrapStringLiteral(&website, "www.sigmaco.org", 0);
     AfxWrapStringLiteral(&note, sigmaSignature, 0);

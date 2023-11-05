@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -27,7 +27,6 @@
 #include "afx/draw/afxPipelineRig.h"
 #include "afx/draw/afxSampler.h"
 #include "afx/core/afxResource.h"
-#include "afx/draw/afxVertexBuffer.h"
 #include "afx/math//afxViewport.h"
 
 /*
@@ -231,7 +230,7 @@ struct afxBasePipeline
 
     afxBool                 msEnabled; /// If enabld, multisample rasterization will be used. FALSE
     afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-    afxMask*             sampleBitmasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+    afxMask*                sampleBitmasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
         
     // scissor test
     afxNat                  scissorCnt; /// 0
@@ -302,8 +301,9 @@ AFX afxNat              AfxGetPipelineScissors(afxPipeline pip, afxNat first, af
 AFX afxNat              AfxCountPipelineInputs(afxPipeline pip);
 AFX afxNat              AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[]);
 
-AFX afxNat              AfxCountPipelineShaders(afxPipeline pip);
-AFX afxNat              AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
+AFX afxNat              AfxCountLinkedShaders(afxPipeline pip);
+AFX afxNat              AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[]);
+AFX afxBool             AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxShader* shd);
 
 AFX afxNat              AfxCountPipelineViewports(afxPipeline pip);
 AFX afxNat              AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[]);

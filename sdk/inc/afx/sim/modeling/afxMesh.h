@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -45,7 +45,7 @@
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
     _AFX_DBG_FCC
-    afxString           scalarName; // 16
+    afxString           id; // 16
     afxVertexData       vtd;
     afxNat              baseVtxIdx;
     afxNat              vtxCnt;
@@ -55,7 +55,7 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 AFX_DEFINE_STRUCT(afxMeshVertebra)
 {
     _AFX_DBG_FCC
-    afxString           name; // 16
+    afxString           id; // 16
     afxAabb             aabb; // originally oobb;
     afxNat              triCnt;
     afxNat*             triIdx; // indices to vertices
@@ -69,7 +69,7 @@ AFX_DEFINE_STRUCT(afxMaterialSlot)
 AFX_OBJECT(afxMesh)
 #ifdef _AFX_MESH_C
 {
-    afxUri              uri; // 128
+    afxUri              id; // 128
 
     afxVertexData       vtd;
     afxNat              baseVtxIdx; // when vtd is shared with other meshes or morphes it may not be 0. Maybe that index buffer already does this?
@@ -90,24 +90,28 @@ AFX_OBJECT(afxMesh)
 #endif
 ;
 
-AFX afxUri const*       AfxMeshGetUri(afxMesh msh);
+AFX afxUri const*       AfxGetMeshId(afxMesh msh);
 AFX afxVertexData       AfxGetMeshVertices(afxMesh msh, afxNat* baseVtxIdx, afxNat* vtxCnt);
 AFX afxNat              AfxCountMeshVertices(afxMesh msh);
 
 AFX afxNat              AfxCountMeshMorphes(afxMesh msh);
 AFX afxMeshMorph*       AfxGetMeshMorph(afxMesh msh, afxNat morphIdx);
 
-AFX void                AfxSetMeshTopology(afxMesh msh, afxMeshTopology msht);
+AFX void                AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht);
 AFX afxBool             AfxGetMeshTopology(afxMesh msh, afxMeshTopology* msht);
 
 AFX afxNat              AfxCountMeshMaterials(afxMesh msh);
 AFX void                AfxSetMeshMaterial(afxMesh msh, afxNat mtlIdx, afxMaterial mtl);
 AFX afxBool             AfxGetMeshMaterial(afxMesh msh, afxNat mtlIdx, afxMaterial* mtl);
-AFX afxBool             AfxFindMeshMaterial(afxMesh msh, afxUri const *name, afxMaterial* mtl);
+AFX afxBool             AfxFindMeshMaterial(afxMesh msh, afxUri const *id, afxMaterial* mtl);
 
 AFX afxBool             AfxMeshIsRigid(afxMesh msh);
 AFX afxNat              AfxCountMeshVertebras(afxMesh msh);
 AFX afxMeshVertebra*    AfxGetMeshVertebra(afxMesh msh, afxNat artIdx);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 AFX afxError            AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[]);
 

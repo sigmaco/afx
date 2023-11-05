@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -143,49 +143,49 @@ _AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxReal const pv[4][4])
     AfxAssert(pv);
 
     afxV4d v;
-    AfxTransformV4d(v, pv, AFX_V4D_LBN);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_LBN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_LBN], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_RBN);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_RBN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_RBN], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_RTN);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_RTN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_RTN], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_LTN);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_LTN);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_LTN], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_LBF);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_LBF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_LBF], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_RBF);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_RBF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_RBF], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_RTF);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_RTF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
     AfxCopyV4d(f->corners[afxCubeCorner_RTF], v);
 
-    AfxTransformV4d(v, pv, AFX_V4D_LTF);
+    AfxPostMultiplyV4d(v, pv, AFX_V4D_LTF);
     v[0] /= v[3];
     v[1] /= v[3];
     v[2] /= v[3];
@@ -210,6 +210,6 @@ _AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal c
 
     afxM4d pv;
     AfxMultiplyM4d(pv, v, p);
-    AfxTransformV4d(f->origin, pv, AfxSpawnPointConst(0, 0, 0));
+    AfxPostMultiplyV4d(f->origin, pv, AfxSpawnPointConst(0, 0, 0));
     AfxRecomputeFrustum3(f, pv);
 }

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -15,7 +15,6 @@
  */
 
 #include "afx/draw/afxDrawDefs.h"
-#include "afx/draw/afxVertexBuffer.h"
 
 
 _AFX afxString const g_str_Qwadro = AFX_STRING_LITERAL("Qwadro");
@@ -27,6 +26,7 @@ _AFX afxString const g_str_In = AFX_STRING_LITERAL("In");
 _AFX afxString const g_str_Out = AFX_STRING_LITERAL("Out");
 _AFX afxString const g_str_Stage = AFX_STRING_LITERAL("Stage");
 _AFX afxString const g_str_stage = AFX_STRING_LITERAL("stage");
+_AFX afxString const g_str_id = AFX_STRING_LITERAL("id");
 _AFX afxString const g_str_name = AFX_STRING_LITERAL("name");
 _AFX afxString const g_str_entry = AFX_STRING_LITERAL("entry");
 _AFX afxString const g_str_Entry = AFX_STRING_LITERAL("Entry");
@@ -115,13 +115,14 @@ afxChar const *fmtNames[] =
 
 _AFX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
 {
+    AFX_STRING_LITERAL(""),
     AFX_STRING_LITERAL("REAL"),
     AFX_STRING_LITERAL("V2D"),
     AFX_STRING_LITERAL("V3D"),
     AFX_STRING_LITERAL("V4D"),
 
-    AFX_STRING_LITERAL("V4B"),
-    AFX_STRING_LITERAL("v8B"),
+    //AFX_STRING_LITERAL("V4B"),
+    //AFX_STRING_LITERAL("v8B"),
 };
 
 _AFX afxString const shaderStageString[] =

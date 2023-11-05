@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -202,7 +202,7 @@ _AFX afxVertexDataCache* AfxGetVertexDataCache(afxVertexData vtd, afxNat cacheId
     return &vtd->caches[cacheIdx];
 }
 
-_AFX afxNat AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString const names[], afxNat attrIdx[])
+_AFX afxNat AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -214,7 +214,7 @@ _AFX afxNat AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString
 
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
-        if (0 == AfxCompareString(&names[rslt], &vtd->attrs[i].tag.str))
+        if (0 == AfxCompareString(&id[rslt], &vtd->attrs[i].id.str))
             attrIdx[rslt++] = i;
 
         if (cnt >= rslt)
@@ -401,10 +401,10 @@ _AFX afxError _AfxVtdCtor(afxVertexData vtd, afxCookie const* cookie)
                 afxVertexAttrSpec spec = { 0 };
                 mshb->GetVertexSpecs(data, i, 1, &spec, &hasData);
 
-                AfxString8(&vtd->attrs[i].tag);
+                AfxString8(&vtd->attrs[i].id);
                 afxString tmp;
-                AfxWrapStringLiteral(&tmp, spec.tag, 0);
-                AfxCopyString(&vtd->attrs[i].tag.str, &tmp);
+                AfxWrapStringLiteral(&tmp, spec.id, 0);
+                AfxCopyString(&vtd->attrs[i].id.str, &tmp);
 
                 vtd->attrs[i].usage = spec.usage;
                 vtd->attrs[i].flags = spec.flags;
@@ -519,7 +519,7 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                 afxBool linearFlag = flags & afxVertexFlag_LINEAR;
                 afxBool invLinearFlag = flags & afxVertexFlag_LINEAR_INV;
                 afxBool affineFlag = flags & afxVertexFlag_AFFINE;
-                //afxBool deltaFlag = flags & afxVertexFlag_DELTA;
+                afxBool deltaFlag = flags & afxVertexFlag_DELTA;
 
                 if (data && AfxGetVertexAttributeFlags(vtd2, j) & afxVertexUsage_SPATIAL)
                 {
@@ -532,11 +532,13 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                     }
                     case afxVertexFormat_V3D:
                     {
+                        AfxThrowError(); // inoperant
+
                         if (linearFlag)
-                            AfxTransformArrayedV3d(lt, vtxCnt, data, data);
+                            AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxTransformArrayedV3d(ilt, vtxCnt, data, data);
+                            AfxPostMultiplyArrayedV3d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)
@@ -550,11 +552,13 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                     }
                     case afxVertexFormat_V4D:
                     {
+                        AfxThrowError(); // inoperant
+
                         if (linearFlag)
-                            AfxTransformArrayedNormalV4d(lt, vtxCnt, data, data);
+                            AfxPostMultiplyArrayedNormalV4d(lt, vtxCnt, data, data);
 
                         if (invLinearFlag)
-                            AfxTransformArrayedNormalV4d(ilt, vtxCnt, data, data);
+                            AfxPostMultiplyArrayedNormalV4d(ilt, vtxCnt, data, data);
 
                         if (affineFlag)
                             for (afxNat k = 0; k < vtxCnt; k++)

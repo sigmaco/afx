@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -360,31 +360,35 @@ AFXINL afxReal  AfxMagV4dRecip(afxReal const in[4]);
 
 // Multiply (row) vector by matrix ([0][0], [0][1], [0][2], [0][3])
 
-AFXINL void     AfxTransformV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]);
-AFXINL void     AfxTransformV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]);
-AFXINL void     AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+// With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
-AFXINL void     AfxTransformPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]);
-AFXINL void     AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]);
+AFXINL void     AfxPostMultiplyV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
 
-AFXINL void     AfxTransformNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
-AFXINL void     AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]);
+AFXINL void     AfxPostMultiplyPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]);
+AFXINL void     AfxPostMultiplyPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
 
-AFXINL void     AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+AFXINL void     AfxPostMultiplyNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]);
+
+AFXINL void     AfxPostMultiplyAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+
+// With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
 // Multiply column vector by matrix ([0][0], [1][0], [2][0], [3][0])
 
-AFXINL void     AfxTransformTransposedV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2]);
-AFXINL void     AfxTransformTransposedV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3]);
-AFXINL void     AfxTransformTransposedV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2]);
+AFXINL void     AfxPreMultiplyV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3]);
+AFXINL void     AfxPreMultiplyV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
 
-AFXINL void     AfxTransformTransposedPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4]);
-AFXINL void     AfxTransformTransposedPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
 
-AFXINL void     AfxTransformTransposedNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
-AFXINL void     AfxTransformTransposedNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);
+AFXINL void     AfxPreMultiplyNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);
 
-AFXINL void     AfxTransformTransposedAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
 
 // Similarity transform
 

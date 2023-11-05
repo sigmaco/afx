@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -43,7 +43,7 @@ AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_STRUCT(afxSkeletonBone)
 {
-    afxString           tag; // 32
+    afxString           id; // 32
     afxNat              parentIdx;
     afxTransform        local;
     afxM4d              iw;
@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxSkeletonBone)
 #ifdef _AFX_SKELETON_C
 AFX_OBJECT(afxSkeleton)
 {
-    afxUri              uri; // 128
+    afxUri              id; // 128
     afxNat              boneCnt;
     afxSkeletonBone*    bones; // afxNode
     afxNat              lodType;
@@ -73,17 +73,12 @@ AFX_DEFINE_STRUCT(afxSkeletonBuilder)
     void                (*IndexRemapping)(void* data, afxNat boneIdx, afxNat outIdx);
 };
 
-AFX afxError            AfxBuildSkeletons(afxSimulation sim, afxSkeletonBuilder const* sklb, afxNat cnt, void* data[], afxSkeleton skl[]);
-
-AFX afxUri const*       AfxGetSkeletonUri(afxSkeleton skl);
-AFX afxSkeleton         AfxCloneSkeleton(afxSkeleton skl);
+AFX afxUri const*       AfxGetSkeletonId(afxSkeleton skl);
 
 AFX afxNat              AfxCountBones(afxSkeleton skl);
 AFX afxNat              AfxCountBonesForLod(afxSkeleton skl, afxReal allowedErr);
 AFX afxSkeletonBone*    AfxGetBone(afxSkeleton skl, afxNat boneIdx);
-AFX afxBool             AfxFindBone(afxSkeleton skl, afxString const* tag, afxNat *boneIdx);
-
-AFX void                AfxTransformSkeleton(afxSkeleton skl, afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3]);
+AFX afxBool             AfxFindBone(afxSkeleton skl, afxString const* id, afxNat *boneIdx);
 
 AFX void                AfxComputeSkeletonRestLocalPose(afxSkeleton skl, afxNat firstArt, afxNat artCnt, afxPose *lp);
 AFX void                AfxComputeSkeletonRestWorldPose(afxSkeleton skl, afxNat firstArt, afxNat artCnt, afxReal const offset[4][4], afxWorldPose *wp);
@@ -97,5 +92,12 @@ AFX void                AfxGetAttachmentOffset(afxSkeleton skl, afxNat artIdx, a
 AFX void AfxBuildIndexedCompositeBuffer(afxSkeleton skl, afxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][4][4]);
 AFX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, afxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][3][4]);
 
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError            AfxBuildSkeletons(afxSimulation sim, afxSkeletonBuilder const* sklb, afxNat cnt, void* data[], afxSkeleton skl[]);
+
+AFX void                AfxTransformSkeletons(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxSkeleton skl[]);
 
 #endif//AFX_SKELETON_H

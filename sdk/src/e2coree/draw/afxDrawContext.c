@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -55,15 +55,6 @@ _AFX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, 
     return AfxEnumerateInstances(&dctx->canvases, first, cnt, (afxHandle*)canv);
 }
 
-_AFX afxNat AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(ibuf);
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    return AfxEnumerateInstances(&dctx->indices, first, cnt, (afxHandle*)ibuf);
-}
-
 _AFX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[])
 {
     afxError err = AFX_ERR_NONE;
@@ -98,15 +89,6 @@ _AFX afxNat AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, a
     AfxAssert(shd);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     return AfxEnumerateInstances(&dctx->shaders, first, cnt, (afxHandle*)shd);
-}
-
-_AFX afxNat AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(vbuf);
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    return AfxEnumerateInstances(&dctx->vertices, first, cnt, (afxHandle*)vbuf);
 }
 
 _AFX afxNat AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[])

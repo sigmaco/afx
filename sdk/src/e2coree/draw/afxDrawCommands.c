@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -390,89 +390,3 @@ _AFX void AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat inst
     AfxAssert(instCnt);
     dscr->stdCmds->DrawPrefab(dscr, prefab, instCnt);
 }
-
-
-
-
-
-
-
-
-
-#if 0
-_AFX void AfxCmdBindManagedIndexSource(afxDrawScript dscr, afxIndexBuffer ibuf, afxNat rgnIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
-
-    afxNat32 offset, idxSiz;
-    AfxIndexBufferDescribeRegion(ibuf, rgnIdx, &offset, NIL, &idxSiz);
-    AfxCmdBindIndexSource(dscr, ibuf->buf, offset, idxSiz);
-}
-
-_AFX void AfxCmdBindManagedVertexSources(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-	AfxAssert(8 > first);
-	AfxAssert(8 >= cnt);
-
-    afxNat visCnt = 0;
-    afxNat secIndices[16];
-    afxVertexInputSource vis[16];
-    afxNat vipCnt = 0;
-    afxVertexInputPoint vip[16];
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        if (vbuf[i])
-        {
-            AfxAssertObjects(1, &vbuf[i], afxFcc_VBUF);
-            afxNat arr = vtxArr ? vtxArr[i] : 0;
-
-            afxNat secIdx;
-            vip[i].locationIdx = arr;
-            AfxDescribeVertexAttribute(vbuf[i], arr, &secIdx, &vip[i].fmt, &vip[i].offset, &vip[i].usage);
-            ++vipCnt;
-
-            afxBool found = FALSE;
-
-            for (afxNat j = 0; j < visCnt; j++)
-            {
-                if (secIndices[j] == secIdx)
-                {
-                    found = TRUE;
-                    vip[i].srcSlotIdx = j;
-                    break;
-                }
-            }
-
-            if (!found)
-            {
-                vip[i].srcSlotIdx = visCnt;
-                secIndices[visCnt] = secIdx;
-
-                afxNat32 secBase, secRange, secStride;
-                AfxDescribeVertexStorage(vbuf[i], secIdx, &secBase, &secRange, &secStride);
-
-                afxNat subOff = baseVtx ? (secStride * baseVtx[i]) : 0;
-
-                vis[visCnt].buf = vbuf[i]->buf;
-                vis[visCnt].offset = secBase + subOff;
-                vis[visCnt].range = secRange - vis[visCnt].offset;
-                vis[visCnt].stride = secStride;
-
-                vis[visCnt].instance = !!inst;
-                vis[visCnt].instDivisor = divisor;
-
-                ++visCnt;
-            }
-        }
-    }
-
-    //AfxCmdSetVertexInputLayout(dscr, vipCnt, vip);
-    //AfxCmdBindVertexSources(dscr, first, visCnt, vis);
-    AfxThrowError();
-}
-#endif

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -22,6 +22,7 @@
 #include "afx/math/afxQuaternion.h"
 #include "afx/math/afxMatrix.h"
 #include "afx/math/afxVector.h"
+#include "afx/math/afxFrustum.h"
 
 _AFX void AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
@@ -468,15 +469,15 @@ _AFXINL void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxRea
     AfxMultiplyM3d(c, a, b);
 
     afxV4d at;
-    AfxTransformTransposedV3d(at, cam->pos, c);
+    AfxPreMultiplyV3d(at, cam->pos, c);
     at[0] = -(at[0] + cam->offset[0]);
     at[1] = -(at[1] + cam->offset[1]);
     at[2] = -(at[2] + cam->offset[2]);
     at[3] = 1.f;
     AfxM4dFromM3d(v, c, at);
-    AfxM4dFromAffineTransposed(iv, v);
-    v[3][3] = 1.f;
-    AfxTransformV3d(at, c, cam->offset);
+    AfxCopyTransposedAffineM4d(iv, v);
+    AfxEnsureAffineM4d(iv);
+    AfxPostMultiplyV3d(at, c, cam->offset);
     AfxAddV3d(iv[3], at, cam->pos);
     iv[3][3] = 1.f;
 }
@@ -485,7 +486,7 @@ _AFX void AfxRecomputeCameraMatrices(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-
+    AfxRecomputeFrustum(&cam->frustum, cam->v, cam->p);
     AfxComputeCameraViewMatrices(cam, cam->v, cam->iv);
     AfxComputeCameraProjectionMatrices(cam, cam->p, cam->ip);
 }
@@ -501,14 +502,14 @@ _AFX void AfxCameraFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxR
     afxV4d v =
     {
         ((screenPoint[0] + screenPoint[0]) - wh[0]) / wh[0],
-        ((screenPoint[1] + screenPoint[1]) - wh[1]) / wh[1],
+        ( screenPoint[1] + screenPoint[1]  - wh[1]) / wh[1],
         ((screenPoint[2] + screenPoint[2] - 1.0 - -1.0) * 0.5),
         1.0
     };
 
     afxV4d v2;
-    AfxTransformTransposedV4d(v2, v, cam->ip);
-    AfxTransformTransposedV4d(v, v2, cam->iv);
+    AfxPreMultiplyV4d(v2, v, cam->ip);
+    AfxPreMultiplyV4d(v, v2, cam->iv);
     AfxScaleV3d(worldPoint, v, 1.0 / v[3]);
     worldPoint[3] = 1.0;
 }
@@ -523,8 +524,8 @@ _AFX void AfxCameraFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afx
     AfxAssert(screenPoint);
 
     afxV4d v, v2;
-    AfxTransformTransposedV4d(v, worldPoint, cam->v);
-    AfxTransformTransposedV4d(v2, v, cam->p);    
+    AfxPreMultiplyV4d(v, worldPoint, cam->v);
+    AfxPreMultiplyV4d(v2, v, cam->p);    
     AfxScaleV3d(v, v2, 1.0 / v2[3]);
 
     if (cam->depthRange == afxCameraDepthRange_NEGONE2ONE)
@@ -552,9 +553,9 @@ _AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal con
     };
 
     afxV4d v2;
-    AfxTransformTransposedV4d(v2, v, cam->ip);
+    AfxPreMultiplyV4d(v2, v, cam->ip);
     v2[3] = 0.0;
-    AfxTransformTransposedV4d(v, v2, cam->iv);
+    AfxPreMultiplyV4d(v, v2, cam->iv);
     
     // should normalize or zero
     afxReal len = AfxMagV3d(v);
@@ -608,7 +609,6 @@ _AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(frustum);
-
     AfxCopyFrustum(frustum, &cam->frustum);
 }
 
@@ -627,16 +627,20 @@ _AFX afxBool _AfxCamEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
         //afxMouse mse = (void*)watched;
         //AfxAssertObjects(1, &mse, afxFcc_MSE);
 
-        afxV2d delta;
-        afxV3d deltaEar;
-        AfxGetLastMouseMotion(0, delta);
-        deltaEar[1] = -((afxReal)(delta[0] * AFX_PI / 180.0));
-        deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.0));
-        deltaEar[2] = 0;
+        // TODO Leva isso para o usuário
 
-        AfxAddCameraElevAzimRoll(cam, deltaEar);
-        AfxRecomputeCameraMatrices(cam);
+        if (AfxLmbIsPressed(0))
+        {
+            afxV2d delta;
+            afxV3d deltaEar;
+            AfxGetLastMouseMotion(0, delta);
+            deltaEar[1] = -((afxReal)(delta[0] * AFX_PI / 180.0));
+            deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.0));
+            deltaEar[2] = 0;
 
+            AfxAddCameraElevAzimRoll(cam, deltaEar);
+            AfxRecomputeCameraMatrices(cam);
+        }
         break;
     }
     case AFX_EVENT_KBD_PRESSED:
@@ -676,6 +680,10 @@ _AFX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
 
     return err;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 _AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[])
 {
