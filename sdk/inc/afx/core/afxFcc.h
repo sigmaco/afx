@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -256,7 +256,8 @@ typedef enum afxFcc
     afxFcc_BOD     = AfxPackFcc('b', 'o', 'd', '\0'), // afxBody
     afxFcc_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // afxAnimator
     afxFcc_BODP    = AfxPackFcc('b', 'o', 'd', 'p'), // afxBodyPart
-
+    afxFcc_ANI     = AfxPackFcc('a', 'n', 'i', '\0'), // afxAnimation
+    afxFcc_MOT      = AfxPackFcc('m', 'o', 't', '\0'), // afxMotion
     afxFcc_RND     = AfxPackFcc('r', 'n', 'd', '\0'), // afxRenderer
 
     afxFcc_MAX_    = 0x7FFFFFFF

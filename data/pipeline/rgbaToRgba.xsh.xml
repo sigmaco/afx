@@ -1,5 +1,5 @@
 <Qwadro>
-    <Shader name='vs'>
+    <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <In format='V2D'>a_xy</In>
@@ -19,7 +19,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsNoIn'>
+    <Shader id='vsNoIn'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <![CDATA[
@@ -38,7 +38,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsNoInFlippedY'>
+    <Shader id='vsNoInFlippedY'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <![CDATA[
@@ -58,7 +58,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsFlippedY'>
+    <Shader id='vsFlippedY'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <In format='V2D'>a_xy</In>
@@ -80,7 +80,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fs'>
+    <Shader id='fs'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
@@ -102,7 +102,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsBrokenLens'>
+    <Shader id='fsBrokenLens'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
@@ -131,7 +131,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsStaticLow'>
+    <Shader id='fsStaticLow'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>tex</Resource>
@@ -215,7 +215,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsStaticHigh'>
+    <Shader id='fsStaticHigh'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>tex</Resource>
@@ -310,7 +310,7 @@
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?vs</Shader>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
     </Pipeline>
-    <Pipeline name='yFlipped'>
+    <Pipeline id='yFlipped'>
         <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
         <FrontFace>CCW</FrontFace>

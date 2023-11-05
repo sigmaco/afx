@@ -1,5 +1,5 @@
 <Qwadro>
-    <Shader name='vs'>
+    <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <In format='V2D'>a_xy</In>
@@ -19,7 +19,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsNoIn'>
+    <Shader id='vsNoIn'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <![CDATA[
@@ -38,7 +38,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsFlippedY'>
+    <Shader id='vsFlippedY'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <In format='V2D'>a_xy</In>
@@ -60,7 +60,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='vsNoInFlippedY'>
+    <Shader id='vsNoInFlippedY'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <![CDATA[
@@ -80,7 +80,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsSigma'>
+    <Shader id='fsSigma'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
@@ -112,7 +112,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsSigma2'>
+    <Shader id='fsSigma2'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
@@ -144,7 +144,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsRad'>
+    <Shader id='fsRad'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
@@ -201,7 +201,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsRbDoom'>
+    <Shader id='fsRbDoom'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>
@@ -244,7 +244,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fsRbDoomGui'>
+    <Shader id='fsRbDoomGui'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='0' type='COMBINED_IMAGE_SAMPLER'>samp0</Resource>

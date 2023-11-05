@@ -8,7 +8,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
@@ -89,10 +89,6 @@ AFX_OBJECT(afxAnimator)
     afxNat easeOutValues;
     void* userData[4];
 };
-
-
-AFX afxError        AfxAcquireAnimators(afxSimulation sim, afxNat cnt, afxAnimator bodc[], afxReal currClock, afxReal localDur);
-
 
 // The afxAnimator handle you get back when you play an animation is the handle you use to manipulate the animation during playback.
 // You can perform a number of timing and weighting operations through the afxAnimator, but before we get to that, 
@@ -269,5 +265,12 @@ AFXINL afxAnimator _AfxAnimatorInterlinkGetAnimator(afxAnimatorInterlink *intk);
 AFXINL void AfxAccumulateAnimatorInterlinkLoopTransform(afxAnimatorInterlink *intk, afxReal secsElapsed, afxReal *totalWeight, afxReal translation[3], afxReal rotation[3], afxBool inverse);
 AFXINL afxBool _AfxAnimatorHasEffect(afxAnimator anir);
 AFXINL void _FreeBodyRing(afxChain *ch);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError        AfxAcquireAnimators(afxSimulation sim, afxNat cnt, afxAnimator bodc[], afxReal currClock, afxReal localDur);
+
 
 #endif//AFX_BODY_CONTROL_H

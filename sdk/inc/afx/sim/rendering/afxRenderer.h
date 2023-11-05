@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -109,6 +109,9 @@ AFX_OBJECT(afxRenderer)
 
     afxPipeline    rigidBodyPip;
     afxPipeline    skinnedBodyPip;
+
+    afxPipeline    blinnTestPip;
+    afxPipeline    tutCamUtil;
     
     afxPose*      lp;
     afxWorldPose* wp;
@@ -134,8 +137,6 @@ for each view {
 }
 #endif
 
-AFX afxError AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
-
 AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
 AFX afxError AfxEndSceneRendering(afxDrawScript dscr, afxRenderer rnd);
 
@@ -144,5 +145,11 @@ AFX afxError AfxRendererSetStar(afxRenderer rnd, afxV4d const pos, afxV3d const 
 AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afxBody bodies[]);
 
 AFX afxError AfxDrawTestIndexed(afxDrawScript dscr, afxRenderer rnd);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
 
 #endif///RENDERER_H

@@ -108,7 +108,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxFormatUri(&uri.uri, "art/world.tga");
     
-    if (AfxLoadTextures(dctx, NIL, 1, &uri.uri, &dumpImg))
+    if (AfxLoadTexturesFromTarga(dctx, NIL, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -97,7 +97,6 @@ AFX afxClass*       AfxGetLightClass(afxSimulation sim);
 AFX afxClass*       AfxGetMaterialClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshDataClass(afxSimulation sim);
-AFX afxClass*       AfxGetMeshRigClass(afxSimulation sim);
 AFX afxClass*       AfxGetMeshTopologyClass(afxSimulation sim);
 AFX afxClass*       AfxGetModelClass(afxSimulation sim);
 AFX afxClass*       AfxGetNodeClass(afxSimulation sim);

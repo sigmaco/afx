@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -72,8 +72,6 @@ _AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
 
 _AFX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
 {
-    // int GetMeshBytesPerIndex(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->vtxIdxCnt > AFX_N8_MAX ? (msht->vtxIdxCnt > AFX_N16_MAX ? (msht->vtxIdxCnt > AFX_N32_MAX ? sizeof(afxNat64) : sizeof(afxNat32)) : sizeof(afxNat16)) : sizeof(afxNat8);
@@ -81,8 +79,6 @@ _AFX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
 
 _AFX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
 {
-    // void* GetMeshIndices(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->vtxIdxCnt, baseIdx, 1);
@@ -91,8 +87,6 @@ _AFX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
 
 _AFX afxNat AfxCountMeshIndices(afxMeshTopology msht)
 {
-    // int GetMeshIndexCount(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->vtxIdxCnt;
@@ -100,8 +94,6 @@ _AFX afxNat AfxCountMeshIndices(afxMeshTopology msht)
 
 _AFX afxNat AfxCountMeshTriangles(afxMeshTopology msht)
 {
-    // int GetMeshIndexCount(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return AfxCountMeshIndices(msht) / 3;
@@ -148,8 +140,6 @@ _AFX void AfxSetMeshCoverage(afxMeshTopology msht, afxNat surfaceIdx, afxNat mtl
 
 _AFX afxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surfaceIdx)
 {
-    // tri_material_group* GetMeshTriangleGroups(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->surfaceCnt, surfaceIdx, 1);
@@ -160,8 +150,6 @@ _AFX afxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surfaceIdx)
 
 _AFX afxNat AfxCountMeshSurfaces(afxMeshTopology msht)
 {
-    // int GetMeshTriangleGroupCount(const mesh *Mesh)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->surfaceCnt;
@@ -171,8 +159,6 @@ _AFX void AfxInvertMeshWinding(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
-
-    //AfxIndexBufferGetStride(msht->idxRgn)
 
     afxNat vtxIdxCnt = msht->vtxIdxCnt;
     afxNat* vtxIdx = msht->vtxIdx;
@@ -398,6 +384,10 @@ _AFX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     }
     return err;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 _AFX afxError AfxBuildMeshTopologies(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMeshTopology msht[])
 {

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -29,7 +29,7 @@ typedef enum
     afxLightType_DIRECTIONAL,
 
     /// A light that shines equally in all directions from its location, affecting all objects within its Range.
-    afxLightType_POINT,
+    afxLightType_OMNI,
 
     /// A light that shines everywhere within a cone defined by Spot Angle and Range. Only objects within this region are affected by the light.
     afxLightType_SPOT,
@@ -39,30 +39,87 @@ typedef enum
     afxLightType_AREA
 } afxLightType;
 
+typedef enum afxLightFlag
+{
+    afxLightFlag_FADE_ENABLED   = AFX_BIT_OFFSET(0), // false
+    afxLightFlag_NEGATIVE       = AFX_BIT_OFFSET(1), // false
+    afxLightFlag_SHADOW_ENABLED = AFX_BIT_OFFSET(2), // false
+    afxLightFlag_REV_CULL_FACE  = AFX_BIT_OFFSET(3), // false
+} afxLightFlags;
+
+#ifdef _AFX_LIGHT_C
 AFX_OBJECT(afxLight)
 {
-    AFX_OBJECT(afxNode) nod;
+    afxReal     distFadeBegin; // 40.f
+    /// A luz será suavemente esvanecida afora quando longe da câmera ativa iniciando de distFadeBegin.
+    /// Isto atua como uma forma de LOD. A luz será esmaecida afora sobre distFadeBegin + distFadeLen, após a qual será coligida e não enviada a shader.
+
+    afxReal     distFadeLen; // 10.f
+    /// Distância sobre a qual a luz e sua sombra esmaecem. A energia da luz e a opacidade da sombra são progressivamente reduzidas sobre esta distância e é completamente invisível ao fim.
+    
+    afxReal     distFadeShadow; // 50.f
+    /// A distância da câmera na qual a sombra da luz corta (em unidades 3D).
+
+    afxReal     angularDist; // 0.f
+    
+    afxNat32    bakeMode; // 2
+    afxColor    color; // [1, 1, 1, 1]
+    afxMask     cullMask; // 0xFFFFFFFF
+    afxReal     energy; // 1.f
+    afxReal     indirectEnergy; // 1.f
+    afxReal     intensLumens;
+    afxReal     intensLux;
+    afxTexture  projector;
+    afxReal     size; // 0.f
+    afxReal     specular; // 0.5f
+    afxReal     temperature;
+    afxReal     volFogEnergy; // 1.f
+    afxReal     shadowBias; // 0.1f
+    afxReal     shadowBlur; // 1.f
+    afxReal     shadowNormalBias; // 2.f
+    afxReal     shadowOpacity; // 1.f
+    afxReal     shadowTransBias; // 0.05f
+
     afxLightType            type;
-
-    afxV4d                  color;
-    afxReal                 intensity;
-    afxReal                 range,
-                            angle;
-
-    afxInt                  cullingMask;
-    afxBool                 drawHalo;
-
-    void                    *surfaceDecal;
-    void                    *flareTex;
+    union
+    {
+        struct
+        {
+            afxReal attenuation; // 1.f
+            afxReal range; // 5.f
+            // shadow mode
+            afxReal shadowNormalBias; // 1.0
+        } omni;
+        struct
+        {
+            afxReal shadowBias; // 0.03f
+            afxReal shadowNormalBias; // 1.f
+            afxReal angle; // 45.f
+            afxReal angleAttenuation; // 1.f
+            afxReal range; // 5.f
+        } spot;
+        struct
+        {
+            afxBool shadowBlendSplits; // false
+            afxReal shadowFadeStart; // 0.8
+            afxReal shadowMaxDist; // 100.f
+            // shadow mode
+            afxReal shadowPancakeSiz; // 20.f
+            afxReal shadowSplit1; // 0.1f
+            afxReal shadowSplit2; // 0.2f
+            afxReal shadowSplit3; // 0.5f
+            // sky mode
+        } dir;
+    };
 };
+#endif//_AFX_LIGHT_C
 
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
-AFX afxLight        AfxSimulationAcquireDirectionalLight(afxSimulation sim, afxColor color);
-AFX afxLight        AfxSimulationAcquirePointLight(afxSimulation sim, afxColor color, afxReal range);
-AFX afxLight        AfxSimulationAcquireSpotLight(afxSimulation sim, afxColor color, afxReal range, afxReal radians);
-AFX afxLight        AfxSimulationAcquireAreaLight(afxSimulation sim, afxColor color);
-
-AFX afxNode     AfxLightGetNode(afxLight lit);
-AFX afxResult   AfxLightCaptureAffectedNodes(afxLight lit, afxNode root, afxArray *capturedNods);
+AFX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AFX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AFX afxError    AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
 
 #endif//AFX_LIGHT_H

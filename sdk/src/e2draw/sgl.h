@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -151,9 +151,22 @@ typedef struct
             afxDrawTarget               stencilRt;
             afxNat                      activeSubpass;
         }                               renderPass;
-
-        //afxNat                          legoCnt;
-        sglLegoData                     boundRes[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
+        
+        union
+        {
+            struct
+            {
+                afxBuffer           buf; // The GPUBuffer to bind.
+                afxNat32            offset; // The offset, in bytes, from the beginning of buffer to the beginning of the range exposed to the shader by the buffer binding.
+                afxNat32            range; // The size, in bytes, of the buffer binding. If undefined, specifies the range starting at offset and ending at the end of buffer.
+            };
+            struct
+            {
+                afxSampler          smp;
+                afxTexture          tex;
+            };
+        }                       resBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
+        afxMask                 resBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
 
         struct
         {
@@ -179,7 +192,9 @@ typedef struct
             }                   attrs[_SGL_MAX_VBO_PER_BIND];
             afxNat              attrCnt;
         }                       vertexInput;
-
+        afxMask                 vtxInStreamUpdMask;
+        afxMask                 vtxInAttribUpdMask;
+        
         struct
         {
             afxBuffer                   buf;
@@ -250,20 +265,17 @@ typedef struct
         afxBool                 logicOpEnabled; /// FALSE
         afxLogicOp              logicOp; /// afxLogicOp_NOP
     }                       state;
-    afxBool                 flushPip, flushPass, flushSr, flushIbb, flushRb;
+    afxBool                 flushPip, flushPass, flushSr, flushIbb;
     
-    afxMask              vtxInStreamUpdMask;
-    afxMask              vtxInAttribUpdMask;
-
     afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
     afxBool                 flushRasterizer, flushPrimCulling;
     afxBool                 flushMultisample, flushSampleShading, flushAlphaToCover, flushAlphaToOne;
     afxBool                 flushColorBlend, flushLogicOp, flushColorWriteMask;
 
-    afxNat                  flushVbBase, flushVbCnt;
+    //afxNat                  flushVbBase, flushVbCnt;
     afxNat                  flushVpBase, flushVpCnt;
     afxNat                  flushSrBase, flushSrCnt;
-    afxNat                  flushRbBase[_SGL_MAX_LEGO_PER_BIND], flushRbCnt[_SGL_MAX_LEGO_PER_BIND];
+    //afxNat                  flushRbBase[_SGL_MAX_LEGO_PER_BIND], flushRbCnt[_SGL_MAX_LEGO_PER_BIND];
 
     afxBool                 running;
 
@@ -377,18 +389,6 @@ AFX_OBJECT(afxBuffer)
     afxSize         lastUpdOffset;
     afxNat          lastUpdRange;
     afxBool         locked;
-};
-
-AFX_OBJECT(afxVertexBuffer)
-{
-    struct afxBaseVertexBuffer    base;
-    int a;
-};
-
-AFX_OBJECT(afxIndexBuffer)
-{
-    struct afxBaseIndexBuffer    base;
-    int a;
 };
 
 AFX_OBJECT(afxTexture)

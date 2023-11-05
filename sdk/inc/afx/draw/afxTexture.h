@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -116,9 +116,9 @@ struct afxBaseTexture
 
 AFX afxError        AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTextureInfo const info[], afxTexture tex[]);
 AFX afxError        AfxBuildTextures(afxDrawContext dctx, afxTextureBuilder const* texb, afxNat cnt, void* data[], afxTexture tex[]);
-AFX afxResult       AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const name[], afxTexture tex[]);
-AFX afxError        AfxLoadTextures(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture tex[]);
+
 AFX afxError        AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture tex[]);
+
 AFX afxTexture      AfxAssembleTexture(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[]);
 AFX afxError        AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture* tex);
 AFX afxTexture      AfxAssembleCubemapTexture(afxDrawContext dctx, afxTextureFlags flags, afxUri const uri[6]);

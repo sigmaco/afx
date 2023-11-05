@@ -151,20 +151,21 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxUriWrapLiteral(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/f16/f16.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/scenario/zero/zero.obj", 0);
+    AfxUriWrapLiteral(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxUriWrapLiteral(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
-    AfxUriWrapLiteral(&uriMap, "art/object/container/container.obj", 0);
+    //AfxUriWrapLiteral(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
     afxAsset cad;
     AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
 
     //AfxWrapStringLiteral(&str, "bibliotheca", 0);
+    //AfxWrapStringLiteral(&str, "gtabr", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
-    //AfxWrapStringLiteral(&str, "zero", 0);
-    AfxWrapStringLiteral(&str, "container", 0);
+    AfxWrapStringLiteral(&str, "zero", 0);
+    //AfxWrapStringLiteral(&str, "container", 0);
 
 
     AfxExcerptUriObject(&uriMap2, &uriMap);

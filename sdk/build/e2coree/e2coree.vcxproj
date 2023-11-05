@@ -82,7 +82,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawSystem.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawTechnique.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxDrawThread.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxIndexBuffer.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipeline.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipelineRig.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxSampler.h" />
@@ -91,20 +90,20 @@
     <ClInclude Include="..\..\inc\afx\draw\afxSurface.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxTexture.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBuffer.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBufferBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxXsh.h" />
     <ClInclude Include="..\..\inc\afx\math\afxAabb.h" />
     <ClInclude Include="..\..\inc\afx\math\afxFrustum.h" />
     <ClInclude Include="..\..\inc\afx\math\afxMathDefs.h" />
     <ClInclude Include="..\..\inc\afx\math\afxMatrix.h" />
     <ClInclude Include="..\..\inc\afx\math\afxPlane.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxProjectiveMatrix.h" />
     <ClInclude Include="..\..\inc\afx\math\afxQuaternion.h" />
     <ClInclude Include="..\..\inc\afx\math\afxReal.h" />
     <ClInclude Include="..\..\inc\afx\math\afxSphere.h" />
     <ClInclude Include="..\..\inc\afx\math\afxTransform.h" />
-    <ClInclude Include="..\..\inc\afx\math\afxTriangle.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxTrigonometry.h" />
     <ClInclude Include="..\..\inc\afx\math\afxVector.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxVertex.h" />
     <ClInclude Include="..\..\inc\afx\math\afxViewport.h" />
     <ClInclude Include="..\..\inc\afx\math\afxVolume.h" />
     <ClInclude Include="..\..\inc\afx\mmux\afxBrush.h" />
@@ -127,7 +126,6 @@
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertexData.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshTopology.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h" />
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertex.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxCamera.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxLight.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxRenderer.h" />
@@ -239,7 +237,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawThread.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxIndexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipelineRig.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c" />
@@ -248,18 +245,19 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxTarga.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxVertexBuffer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxAabb.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxFrustum.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxMatrix.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxPlane.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxProjectiveMatrix.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxQuaternion.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxReal.c" />
-    <ClCompile Include="..\..\src\e2coree\math\afxTriangle.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxVector.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxMathOps.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxTransform.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxVertex.c" />
     <ClCompile Include="..\..\src\e2coree\mmux\afxBrush.c" />
     <ClCompile Include="..\..\src\e2coree\mmux\afxWidget.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxAsset.c" />
@@ -270,12 +268,7 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxSimulation.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxSkeleton.c" />
     <ClCompile Include="..\..\src\e2coree\sim\afxWorldPose.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimation.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxAnimator.c" />
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxCurve2.c">
@@ -288,7 +281,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertexData.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshTopology.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertex.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c" />

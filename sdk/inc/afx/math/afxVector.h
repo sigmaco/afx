@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -237,80 +237,12 @@ AFXINL void     AfxNemusV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]
 AFXINL void     AfxNemusV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3]);
 AFXINL void     AfxNemusV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4]);
 
-/// Vector transformation is performed by multiplying vector A rows by matrix B columns.
-///
-///     [ aX ] [ bXX bXY bXZ bXW ]
-///     [ aY ] [ bYX bYY bYZ bYW ]
-///     [ aZ ] [ bZX bZY bZZ bZW ]
-///     [ aW ] [ bWX bWY bWZ bWW ] => v
-///
-/// Vector transformation transposed is performed by multiplying matrix A columns by vector B rows.
-///
-///     [ aXX aYX aZX aWX ] [ bX ]
-///     [ aXY aYY aZY aWY ] [ bY ]
-///     [ aXZ aYZ aZZ aWZ ] [ bZ ]
-///     [ aXW aYW aZW aWW ] [ bW ] => v
-
-AFXINL void     AfxTransformV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]); // v = a row * b row
-AFXINL void     AfxTransformV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[2][2]); // v = a row * b row
-
-AFXINL void     AfxTransformPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]); // v = a row * b row
-AFXINL void     AfxTransformPointV2dTransposed(afxReal v[2], afxReal const in[2], afxReal const m[4][4]); // v = a row * b row
-
-AFXINL void     AfxTransformV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]); // v = a column * b column
-AFXINL void     AfxTransformV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[3][3]); // v = a row * b row
-
-AFXINL void     AfxTransformV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]); // v = a column * b column
-AFXINL void     AfxTransformV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4]); // v = a row * b row
-
-AFXINL void     AfxTransformNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]); // v = a column * b column
-AFXINL void     AfxTransformNormalV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4]); // v = a row * b row
-
-AFXINL void     AfxTransformPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]); // v = a column * b column
-AFXINL void     AfxTransformPointV3dTransposed(afxReal v[3], afxReal const in[3], afxReal const m[4][4]); // v = a row * b row
-
-AFXINL void     AfxTransformNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]); // v = a column * b column
-AFXINL void     AfxTransformNormalV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);  // v = a row * b row
-
-AFXINL void     AfxTransformAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]); // v = a column * b column
-AFXINL void     AfxTransformAffineV4dTransposed(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);  // v = a row * b row
-
 /// Linear interpolation
 /// v = a + t * (b - a)
 
 AFXINL void     AfxLerpV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal t);
 AFXINL void     AfxLerpV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal t);
 AFXINL void     AfxLerpV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal t);
-
-/// Hermite interpolation
-/// v = (2 * t^3 - 3 * t^2 + 1) * posA + (t^3 - 2 * t^2 + t) * tanA + (-2 * t^3 + 3 * t^2) * posB + (t^3 - t^2) * tanB
-
-AFXINL void     AfxHermiteV2d(afxReal v[2], afxReal const posA[2], afxReal const tanA[2], afxReal const posB[2], afxReal const tanB[2], afxReal t);
-AFXINL void     AfxHermiteV3d(afxReal v[3], afxReal const posA[3], afxReal const tanA[3], afxReal const posB[3], afxReal const tanB[3], afxReal t);
-AFXINL void     AfxHermiteV4d(afxReal v[4], afxReal const posA[4], afxReal const tanA[4], afxReal const posB[4], afxReal const tanB[4], afxReal t);
-
-/// Catmull-Rom splines are a family of cubic interpolating splines formulated such that the tangent at each point Pi is calculated using the previous and next point on the spline, T(Pi + 1 - Pi - 1).
-///
-///     [ aX, aY, aZ, aW ] [  0  2  0  0 ] [  1  ]
-///     [ bX, bY, bZ, bW ] [ -1  0  1  0 ] [  t  ]
-///     [ cX, cY, cZ, cW ] [  2 -5  4 -1 ] [ t^2 ]
-///     [ dX, dY, dZ, dW ] [ -1  3 -3  1 ] [ t^3 ] * 0.5 => v
-
-/// v = ((-t^3 + 2 * t^2 - t) * a + (3 * t^3 - 5 * t^2 + 2) * b + (-3 * t^3 + 4 * t^2 + t) * c + (t^3 - t^2) * d) * 0.5
-
-AFXINL void     AfxCatmullV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal const d[2], afxReal t);
-AFXINL void     AfxCatmullV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal const d[3], afxReal t);
-AFXINL void     AfxCatmullV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal const d[4], afxReal t);
-
-AFXINL void     AfxExtractNormalV3dComponents(afxReal const v[3], afxReal const normal[3], afxReal parallel[3], afxReal perpendicular[3]);
-
-AFXINL void     AfxReflectV2d(afxReal v[2], afxReal const incident[2], afxReal const normal[2]);
-AFXINL void     AfxReflectV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3]);
-AFXINL void     AfxReflectV4d(afxReal v[4], afxReal const incident[3], afxReal const normal[3]);
-
-AFXINL void     AfxRefractV2d(afxReal v[2], afxReal const incident[2], afxReal const normal[2], afxReal refracIdx);
-AFXINL void     AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3], afxReal refracIdx);
-AFXINL void     AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3], afxReal refracIdx);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
@@ -416,38 +348,51 @@ AFXINL afxReal  AfxMagV3dRecip(afxReal const in[3]);
 AFXINL afxReal  AfxMagV4dRecip(afxReal const in[4]);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Affine transformation                                                      //
+// VECTOR TRANSFORMATION METHODS                                              //
 ////////////////////////////////////////////////////////////////////////////////
+
+//  --- Normal layout
+//  m[0][0] * v[0], m[0][1] * v[1], m[0][2] * v[2], m[0][3] * v[3]
+
+//  --- Transposed layout
+//  v[0] * m[0][0], v[1] * m[1][0], v[2] * m[2][0], v[3] * m[3][0]
+
+
+// Multiply (row) vector by matrix ([0][0], [0][1], [0][2], [0][3])
+
+// With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
+
+AFXINL void     AfxPostMultiplyV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]);
+AFXINL void     AfxPostMultiplyV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+
+AFXINL void     AfxPostMultiplyPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]);
+AFXINL void     AfxPostMultiplyPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
+
+AFXINL void     AfxPostMultiplyNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]);
+
+AFXINL void     AfxPostMultiplyAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+
+// With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
+
+// Multiply column vector by matrix ([0][0], [1][0], [2][0], [3][0])
+
+AFXINL void     AfxPreMultiplyV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2]);
+AFXINL void     AfxPreMultiplyV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3]);
+AFXINL void     AfxPreMultiplyV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
+
+AFXINL void     AfxPreMultiplyPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
+
+AFXINL void     AfxPreMultiplyNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);
+
+AFXINL void     AfxPreMultiplyAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
 
 // Similarity transform
 
 AFXINL void     AfxAssimilatePointV3d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
 AFXINL void     AfxAssimilatePointV4d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
-
-////////////////////////////////////////////////////////////////////////////////
-// Trigonometry                                                               //
-////////////////////////////////////////////////////////////////////////////////
-
-AFXINL afxReal AfxGetDistanceBetweenV3d(afxReal const v[3], afxReal const other[3]);
-
-AFXINL afxReal  AfxGetAngleBetweenV3d(afxReal const v[3], afxReal const other[3]);
-
-/// Barycentric coordinates are very useful in 2D and 3D graphics. 
-/// Most graphic applications use them because they provide an easy way to interpolate the value of attributes (color, textures, normals…) between vertices. 
-/// This can be done because, by definition, barycentric coordinates express “how much of each vertex does a point have”.
-/// Another frequent use is to use the barycentric coordinates to check if a point is inside, on the edge, or outside the triangle. As we saw:
-///     If all barycentric coordinates of a point are positive and sum one, they point lies inside the triangle.
-///     If one barycentric coordinate is zero and the other ones are positive and less than one, the point lies on an edge.
-///     If any barycentric coordinate is negative, the point is outside the triangle.
-
-/// Returns a point in Barycentric coordinates, using the specified position vectors.
-
-AFXINL void     AfxBarycentricV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal f, afxReal g);
-AFXINL void     AfxBarycentricV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal f, afxReal g);
-AFXINL void     AfxBarycentricV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal f, afxReal g);
-
-AFXINL void     AfxBarycentricV2d2(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal const f[2], afxReal const g[2]);
-AFXINL void     AfxBarycentricV3d2(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal const f[3], afxReal const g[3]);
-AFXINL void     AfxBarycentricV4d2(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal const f[4], afxReal const g[4]);
 
 #endif//AFX_VECTOR_H

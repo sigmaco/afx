@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -25,12 +25,51 @@
 #include "afx/core/afxArray.h"
 #include "afx/math/afxAabb.h"
 #include "afx/core/afxInstance.h"
-#include "afx/draw/afxIndexBuffer.h"
-#include "afx/draw/afxVertexBuffer.h"
 #include "afx/sim/afxMaterial.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/core/afxUrd.h"
-#include "afx/sim/modeling/afxVertex.h"
+#include "afx/math/afxVertex.h"
+
+typedef enum afxVertexUsage
+{
+    afxVertexUsage_POS          = AFX_BIT_OFFSET(0),
+    afxVertexUsage_JNT          = AFX_BIT_OFFSET(1),
+    afxVertexUsage_WGT          = AFX_BIT_OFFSET(2),
+    afxVertexUsage_BLENDING     = afxVertexUsage_JNT | afxVertexUsage_WGT,
+    afxVertexUsage_POSITIONAL   = afxVertexUsage_POS | afxVertexUsage_BLENDING,
+
+    afxVertexUsage_NRM          = AFX_BIT_OFFSET(3),
+    afxVertexUsage_TAN          = AFX_BIT_OFFSET(4),
+    afxVertexUsage_BTN          = AFX_BIT_OFFSET(5),
+    afxVertexUsage_LIGHTING     = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BTN,
+    afxVertexUsage_SPATIAL      = afxVertexUsage_POSITIONAL | afxVertexUsage_LIGHTING,
+
+    afxVertexUsage_UV           = AFX_BIT_OFFSET(6),
+    afxVertexUsage_VISUAL       = afxVertexUsage_UV,
+} afxVertexUsage;
+
+typedef enum afxVertexFlag
+{
+    afxVertexFlag_DYNAMIC = AFX_BIT_OFFSET(0), // The data store contents will be modified repeatedly and used many times.
+    afxVertexFlag_STREAM = AFX_BIT_OFFSET(1), // The data store contents will be modified once and used at most a few times.
+    
+    afxVertexFlag_POSITIONAL = AFX_BIT_OFFSET(2),
+    afxVertexFlag_SPATIAL = AFX_BIT_OFFSET(3),
+
+    afxVertexFlag_NORMALIZED = AFX_BIT_OFFSET(4),
+    afxVertexFlag_RASTERIZATION = AFX_BIT_OFFSET(5),
+
+    afxVertexFlag_AFFINE = AFX_BIT_OFFSET(10),
+    /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
+
+    afxVertexFlag_LINEAR = AFX_BIT_OFFSET(11),
+    /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
+
+    afxVertexFlag_LINEAR_INV = AFX_BIT_OFFSET(12),
+    /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
+
+    afxVertexFlag_DELTA = AFX_BIT_OFFSET(13), // treat as delta
+} afxVertexFlags;
 
 AFX_DEFINE_STRUCT(afxVertexBias)
 {
@@ -85,7 +124,7 @@ AFX_OBJECT(afxVertexData)
         afxVertexFlags  flags;
         afxVertexFormat fmt;
         void*           data;
-        afxString8      tag;
+        afxString8      id;
     }                  *attrs;
     afxNat              attrCnt;
     afxNat              cacheCnt;
@@ -96,7 +135,7 @@ AFX_OBJECT(afxVertexData)
 
 AFX_DEFINE_STRUCT(afxVertexAttrSpec)
 {
-    afxChar const*  tag;
+    afxChar const*  id;
     afxVertexFormat fmt;
     afxVertexUsage  usage;
     afxVertexFlags  flags;
@@ -119,13 +158,14 @@ AFX_DEFINE_STRUCT(afxMeshBuilder)
     
     void(*GetBindingInfo)(void* data, afxNat* mtlCnt, afxNat* artCnt);
     afxMaterial(*GetMaterial)(void* data, afxNat mtlIdx);    
-    afxNat(*GetVertebra)(void* data, afxNat artIdx, afxString* name);
+    afxNat(*GetVertebraInfo)(void* data, afxNat artIdx, afxString* name);
+    void(*GetVertebraData)(void* data, afxString const* name, afxNat baseTriIdx, afxNat triCnt, void *dst);
 
     void(*Cleanup)(void* data);
     void*data[4];
 };
 
-AFX afxNat              AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString const names[], afxNat attrIdx[]);
+AFX afxNat              AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
 
 AFX afxError            AfxGetVertexAttributeInfo(afxVertexData vtd, afxNat attrIdx, afxVertexFormat* fmt, afxVertexUsage* usage, afxVertexFlags* flags, afxNat* cacheIdx);
 
@@ -142,6 +182,10 @@ AFX afxError            AfxBufferizeVertexData(afxVertexData vtd);
 AFX afxError            AfxBindVertexData(afxVertexData vtd, afxDrawScript dscr);
 
 AFX void*               AfxExposeVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
 
 AFX afxError            AfxBuildVertexDatas(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxVertexData vtxd[]);
 

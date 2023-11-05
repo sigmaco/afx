@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -198,9 +198,9 @@ _AFX afxNat AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, af
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssert(cnt);
-    AfxAssert(rect);
     AfxAssertRange(pip->scissorCnt, first, cnt);
+    AfxAssert(rect);
+    AfxAssert(cnt);
     afxNat hitCnt = 0;
 
     for (afxNat i = 0; i < AfxMini(pip->scissorCnt, cnt); i++)
@@ -223,9 +223,9 @@ _AFX afxNat AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, a
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
+    AfxAssertRange(pip->vpCnt, first, cnt);
     AfxAssert(cnt);
     AfxAssert(vp);
-    AfxAssertRange(pip->vpCnt, first, cnt);
     afxNat hitCnt = 0;
 
     for (afxNat i = 0; i < AfxMini(pip->vpCnt, cnt); i++)
@@ -251,9 +251,9 @@ _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssert(cnt);
-    AfxAssert(streams);
     AfxAssertRange(pip->inCnt, first, cnt);
+    AfxAssert(streams);
+    AfxAssert(cnt);
     afxNat hitCnt = 0;
 
     for (afxNat i = 0; i < AfxMini(pip->inCnt, cnt); i++)
@@ -271,7 +271,29 @@ _AFX afxNat AfxCountPipelineInputs(afxPipeline pip)
     return pip->inCnt;
 }
 
-_AFX afxNat AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[])
+_AFX afxBool AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxShader* shd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
+    AfxAssertRange(afxShaderStage_TOTAL, stage, 1);
+    AfxAssert(shd);    
+
+    for (afxNat i = 0; i < pip->shaderCnt; i++)
+    {
+        afxShader shd2 = pip->shaders[i];
+        
+        if (shd2->stage == stage)
+        {
+            if (shd)
+                *shd = shd2;
+
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+_AFX afxNat AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxShader shd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -288,7 +310,7 @@ _AFX afxNat AfxGetPipelineShaders(afxPipeline pip, afxNat first, afxNat cnt, afx
     return hitCnt;
 }
 
-_AFX afxNat AfxCountPipelineShaders(afxPipeline pip)
+_AFX afxNat AfxCountLinkedShaders(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -363,7 +385,7 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
                 AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
                 afxString const *queryStr = AfxUriGetStringConst(&query);
                 afxBool hasQuery = !AfxStringIsEmpty(queryStr);
-                node = AfxXmlNodeFindChild(node, &g_str_Pipeline, hasQuery ? &g_str_name : NIL, hasQuery ? queryStr : NIL);
+                node = AfxXmlNodeFindChild(node, &g_str_Pipeline, hasQuery ? &g_str_id : NIL, hasQuery ? queryStr : NIL);
 
                 if (node)
                 {

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -61,18 +61,18 @@ AFXINL void     AfxGetInverseTransform(afxTransform* t, afxTransform const* in);
 
 //AFXINL void     AfxLerpTransform(afxTransform const *t, afxTransform const *other, afxReal time, afxTransform *out); // aka linear blend
 
-AFXINL void     AfxPremultiplyTransform(afxTransform* t, afxTransform const* pre);
-AFXINL void     AfxPostmultiplyTransform(afxTransform* t, afxTransform const* post);
+AFXINL void     AfxPreMultiplyTransform(afxTransform* t, afxTransform const* pre);
+AFXINL void     AfxPostMultiplyTransform(afxTransform* t, afxTransform const* post);
 AFXINL void     AfxMultiplyTransform(afxTransform* t, afxTransform const* a, afxTransform const* b);
 
-AFXINL void     AfxComposeTransformMatrix(afxTransform const *t, afxReal m[4][4]); // build composite transform 4x4
-AFXINL void     AfxGetTransformWorldMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4]); // compose transform world matrix 4x4 only
+AFXINL void     AfxComposeTransformM4d(afxTransform const *t, afxReal m[4][4]); // build composite transform 4x4
+AFXINL void     AfxComposeTransformWorldM4d(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4]); // compose transform world matrix 4x4 only
 AFXINL void     AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4]);
-AFXINL void     AfxComposeTransformMatrixCompact(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
+AFXINL void     AfxComposeTransformCompactMatrix(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
 
 AFXINL void     AfxAssimilateTransforms(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxTransform const in[], afxTransform out[]);
 
-AFXINL void     AfxGetTransformedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-AFXINL void     AfxGetTransformedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxTransformArrayedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxTransformArrayedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 
 #endif//AFX_TRANSFORM_H

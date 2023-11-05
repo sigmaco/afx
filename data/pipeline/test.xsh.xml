@@ -1,5 +1,5 @@
 <Qwadro>
-    <Shader name='vs'>
+    <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Include>data/pipeline/stdView.inc</Include>
@@ -16,7 +16,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fs'>
+    <Shader id='fs'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Out format='V4D'></Out>

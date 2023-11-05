@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -183,5 +183,16 @@ The vertex shader needs to produce clip coordinates (which as previously explain
 
 // LINEAR TRANSFORMATIONS AFFECTS ONLY 3X3 SUBSET OF MATRICES.
 // AFFINE TRANSFORMATIONS AFFECTS ONLY 4X3 SUBSET OF MATRICES. 
+
+AFX_DEFINE_STRUCT(afxSpaceSpecification)
+{
+    afxReal         unitsPerMeter;
+    afxV3d          right;
+    afxV3d          up;
+    afxV3d          back;
+    afxV3d          origin;
+};
+
+AFXINL void AfxComputeBasisConversion(afxSpaceSpecification const* original, afxSpaceSpecification const* desired, afxReal at[3], afxReal lt[3][3], afxReal ilt[3][3]);
 
 #endif//AFX_MATH_DEFS_H

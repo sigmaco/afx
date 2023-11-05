@@ -7,6 +7,7 @@ layout(std140) uniform sgl_view
     mat4 ip;
     mat4 vp;
     mat4 ivp;
+    
     vec4 viewpoint; // view point
     vec2 viewExtent;
 

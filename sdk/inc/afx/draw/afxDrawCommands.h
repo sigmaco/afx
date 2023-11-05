@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -24,8 +24,6 @@
 #include "afx/draw/afxPipelineRig.h"
 #include "afx/draw/afxSampler.h"
 #include "afx/draw/afxCanvas.h"
-#include "afx/draw/afxIndexBuffer.h"
-#include "afx/draw/afxVertexBuffer.h"
 #include "afx/draw/afxBuffer.h"
 #include "afx/core/afxArena.h"
 #include "afx/draw/afxPipeline.h"
@@ -77,7 +75,7 @@ AFX_DEFINE_STRUCT(afxVertexInputPoint) /// vertex attribute input stream
     afxNat8             srcSlotIdx; /// is the binding number which this attribute takes its data from.
     afxVertexFormat     fmt; /// is the size and type of the vertex attribute data.
     afxNat32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
-    afxVertexUsage      usage; /// special flags used to opportunistic optimization
+    //afxVertexUsage      usage; /// special flags used to opportunistic optimization
 };
 
 AFX_DEFINE_UNION(afxClearValue)
@@ -576,8 +574,6 @@ AFX void                AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat c
 
 AFX void                AfxCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
 
-AFX void                AfxCmdBindManagedVertexSources(afxDrawScript dscr, afxNat first, afxNat cnt, afxVertexBuffer vbuf[], afxNat const baseVtx[], afxNat const vtxArr[], afxBool inst, afxNat divisor);
-AFX void                AfxCmdBindManagedIndexSource(afxDrawScript dscr, afxIndexBuffer buf, afxNat rgnIdx);
 AFX void                AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt);
 
 #endif//AFX_DRAW_COMMANDS_H

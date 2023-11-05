@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
@@ -84,10 +84,7 @@ AFX_OBJECT(afxCamera)
 
 //static_assert(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
-AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[]);
-
 AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum *frustum);
-
 
 AFX void AfxResetCamera(afxCamera cam);
 
@@ -107,11 +104,6 @@ AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxRea
 // Note that the choice of physical aspect ratio is important in making sure your game looks proper on all display devices.
 // For consoles especially, it is important to give the user a choice of aspect ratios, since their home theatre setup may not always be NTSC.
 // Qwadro allows you to use any physical aspect ratio (width over height) you like.
-
-// If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
-// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
-
-AFX afxReal AfxCameraGetMostLikelyPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight);
 
 // It is often useful to have a camera that orbits and zooms in and out on a specific target. 
 // You can turn a afxCamera into this type of camera by setting the Elevation/Azimuth/Roll (EAR) vector and the Offset vector in the afxCamera structure. 
@@ -207,6 +199,17 @@ AFX void    AfxGetCameraDown(afxCamera cam, afxReal down[3]);
 AFX void    AfxGetCameraForward(afxCamera cam, afxReal fwd[3]);
 AFX void    AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[]);
+
 AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+
+// If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
+// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
+
+AFX afxReal AfxTryFindPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight);
 
 #endif//AFX_CAMERA_H

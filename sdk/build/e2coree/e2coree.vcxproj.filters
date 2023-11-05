@@ -171,9 +171,6 @@
     <ClInclude Include="..\..\inc\afx\sim\afxNode.h">
       <Filter>e2coree\sim</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertex.h">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -306,9 +303,6 @@
     <ClInclude Include="..\..\inc\afx\draw\afxBuffer.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxIndexBuffer.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxSampler.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
@@ -322,12 +316,6 @@
       <Filter>e2coree\draw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxTexture.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBuffer.h">
-      <Filter>e2coree\draw</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxVertexBufferBlueprint.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxCanvas.h">
@@ -361,9 +349,6 @@
       <Filter>e2coree\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxSphere.h">
-      <Filter>e2coree\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\afx\math\afxTriangle.h">
       <Filter>e2coree\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\math\afxVolume.h">
@@ -401,6 +386,15 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\afx\draw\afxXsh.h">
       <Filter>e2coree\draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxProjectiveMatrix.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxTrigonometry.h">
+      <Filter>e2coree\math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\math\afxVertex.h">
+      <Filter>e2coree\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -526,9 +520,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxNode.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertex.c">
-      <Filter>e2coree\sim\modeling</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -652,9 +643,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxBuffer.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxIndexBuffer.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -665,9 +653,6 @@
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxVertexBuffer.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxCanvas.c">
@@ -718,9 +703,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\afxAsset.c">
       <Filter>e2coree\sim</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\math\afxTriangle.c">
-      <Filter>e2coree\math</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawCommands.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -732,6 +714,15 @@
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c">
       <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxProjectiveMatrix.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxTrigonometry.c">
+      <Filter>e2coree\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\math\afxVertex.c">
+      <Filter>e2coree\math</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

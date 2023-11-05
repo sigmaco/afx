@@ -1,5 +1,5 @@
 <Qwadro>
-    <Shader name='vs'>
+    <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Include>data/pipeline/stdView.inc</Include>
@@ -32,7 +32,7 @@
         }
         ]]>
     </Shader>
-    <Shader name='fs'>
+    <Shader id='fs'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp</Resource>

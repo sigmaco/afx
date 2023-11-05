@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -37,8 +37,6 @@ Instead, dynamic state canv be modified at any time and persists for the lifetim
 #include "afx/draw/afxPipelineRig.h"
 #include "afx/draw/afxSampler.h"
 #include "afx/draw/afxCanvas.h"
-#include "afx/draw/afxIndexBuffer.h"
-#include "afx/draw/afxVertexBuffer.h"
 #include "afx/draw/afxBuffer.h"
 #include "afx/core/afxArena.h"
 #include "afx/draw/afxDrawCommands.h"

@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -29,8 +29,6 @@
 #include "../e2coree/draw/afxDrawParadigms.h"
 
 extern afxClassConfig _SglBufClsConfig;
-extern afxClassConfig _SglVbufClsConfig;
-extern afxClassConfig _SglIbufClsConfig;
 extern afxClassConfig _SglSampClsConfig;
 extern afxClassConfig _SglPipClsConfig;
 extern afxClassConfig _SglShdClsConfig;
@@ -185,12 +183,6 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         tmpClsConf = _SglBufClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.buffers, classes, &tmpClsConf);
-        tmpClsConf = _SglVbufClsConfig;
-        tmpClsConf.ctx = ctx;
-        AfxMountClass(&dctx->base.vertices, classes, &tmpClsConf);
-        tmpClsConf = _SglIbufClsConfig;
-        tmpClsConf.ctx = ctx;
-        AfxMountClass(&dctx->base.indices, classes, &tmpClsConf);
         tmpClsConf = _SglTexClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.textures, classes, &tmpClsConf);

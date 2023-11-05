@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -796,102 +796,6 @@ _AFX afxError AfxBuildTextures(afxDrawContext dctx, afxTextureBuilder const* tex
                 AfxAssert(texb->GetImage);
                 texb->GetImage(data2, tex[i], i, 0, texi.imgCnt);
             }
-        }
-    }
-    return err;
-}
-
-_AFX afxResult AfxFindTextures(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxTexture tex[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(cnt);
-    AfxAssertType(uri, afxFcc_URI);
-    AfxAssert(tex);
-    afxResult rslt = 0;
-
-    afxNat j = 0;
-    afxTexture tmp;
-    while (AfxEnumerateTextures(dctx, j, 1, &tmp))
-    {
-        AfxAssertObjects(1, &tmp, afxFcc_TEX);
-
-        for (afxNat i = 0; i < cnt; i++)
-        {
-            afxUri const*texUri = NIL;
-
-            if (texUri && AfxUriIsEquivalent(texUri, &uri[i]))
-            {
-                tex[i] = tmp;
-                rslt++;
-                break;
-            }
-        }
-
-        if (rslt == (afxResult)cnt)
-            break;
-
-        ++j;
-    }
-    return rslt;
-}
-
-_AFX afxError AfxLoadTextures(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture tex[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(uri);
-    AfxAssert(tex);
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        AfxAssertType(&uri[i], afxFcc_URI);
-        AfxAssert(!AfxUriIsBlank(&uri[i]));
-
-        AfxEcho("Uploading texture '%.*s'", AfxPushString(&uri[i].str));
-
-        afxUri fext;
-        AfxExcerptUriExtension(&fext, &uri[i], FALSE);
-
-        if (AfxUriIsBlank(&fext)) AfxThrowError();
-        else
-        {
-            afxUri fpath, query;
-            AfxExcerptUriPath(&fpath, &uri[i]);
-            AfxExcerptUriQuery(&query, &uri[i], TRUE);
-
-            if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".tga", 4))
-            {
-                if (AfxLoadTexturesFromTarga(dctx, flags, 1, &uri[i], &tex[i])) AfxThrowError();
-                else
-                {
-                    AfxAssertObjects(1, &tex[i], afxFcc_TEX);
-                }
-            }
-            else if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
-            {
-                AfxError("Extension (%.*s) supported not implemented yet.", AfxPushString(AfxUriGetStringConst(&fext)));
-                AfxThrowError();
-            }
-            else
-            {
-                AfxError("Extension (%.*s) not supported.", AfxPushString(AfxUriGetStringConst(&fext)));
-                AfxThrowError();
-            }
-        }
-
-        if (err)
-        {
-            for (afxNat j = 0; j < i; j++)
-            {
-                AfxReleaseObjects(1, (void*[]) { tex[j] });
-                tex[j] = NIL;
-            }
-            break;
         }
     }
     return err;

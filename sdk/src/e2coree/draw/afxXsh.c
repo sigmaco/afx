@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -39,7 +39,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             name = AfxXmlNodeGetAttributeName(node0, j);
             content = AfxXmlNodeGetAttributeContent(node0, j);
 
-            if (0 == AfxCompareString(name, &g_str_name))
+            if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
                 AfxReflectUriString(&tmpUri, content);
@@ -538,7 +538,7 @@ _AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipe
             name = AfxXmlNodeGetAttributeName(node0, i);
             content = AfxXmlNodeGetAttributeContent(node0, i);
 
-            if (0 == AfxCompareString(name, &g_str_name))
+            if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
                 AfxReflectUriString(&tmpUri, content);
@@ -689,7 +689,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             name = AfxXmlNodeGetAttributeName(node0, i);
             content = AfxXmlNodeGetAttributeContent(node0, i);
 
-            if (0 == AfxCompareString(name, &g_str_name))
+            if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
                 AfxReflectUriString(&tmpUri, content);
@@ -721,7 +721,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                         name = AfxXmlNodeGetAttributeName(node1, j);
                         content = AfxXmlNodeGetAttributeContent(node1, j);
 
-                        if (0 == AfxCompareString(name, &g_str_name))
+                        if (0 == AfxCompareString(name, &g_str_id))
                         {
                             AfxDrawOperationBlueprintRenameTechnique(blueprint, tecIdx, content);
                         }
@@ -751,7 +751,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                     name = AfxXmlNodeGetAttributeName(node2, k);
                                     content = AfxXmlNodeGetAttributeContent(node2, k);
 
-                                    if (0 == AfxCompareString(name, &g_str_name))
+                                    if (0 == AfxCompareString(name, &g_str_id))
                                     {
                                         AfxDrawOperationBlueprintRenamePass(blueprint, tecIdx, passIdx, content);
                                     }
@@ -934,7 +934,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                                 {
                                                     shdStage = AfxFindShaderStage(content);
                                                 }
-                                                else if (0 == AfxCompareString(name, &g_str_name))
+                                                else if (0 == AfxCompareString(name, &g_str_id))
                                                 {
                                                     shdName = content;
                                                 }

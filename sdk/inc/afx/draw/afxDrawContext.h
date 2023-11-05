@@ -7,7 +7,7 @@
  *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
  *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
  *
- *              T H E   Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
  *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
@@ -25,8 +25,6 @@
 #include "afx/draw/afxPipeline.h"
 #include "afx/draw/afxPipeline.h"
 #include "afx/draw/afxShaderBlueprint.h"
-#include "afx/draw/afxVertexBufferBlueprint.h"
-#include "afx/draw/afxIndexBuffer.h"
 #include "afx/draw/afxDrawQueue.h"
 #include "afx/draw/afxDrawScript.h"
 #include "afx/draw/afxDrawCommands.h"
@@ -91,8 +89,6 @@ struct afxBaseDrawContext
 
     afxClass            textures;
     afxClass            buffers;
-    afxClass            vertices;
-    afxClass            indices;
     afxClass            surfaces;
     afxClass            shaders;
     afxClass            pipelines;
@@ -125,13 +121,11 @@ AFX afxError            AfxDisconnectDrawOutputs(afxDrawContext dctx);
 
 AFX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buf[]);
 AFX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canv[]);
-AFX afxNat              AfxEnumerateIndexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxIndexBuffer ibuf[]);
 AFX afxNat              AfxEnumeratePipelineRigs(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipelineRig lego[]);
 AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pip[]);
 AFX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samp[]);
 AFX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[]);
 AFX afxNat              AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[]);
 AFX afxNat              AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[]);
-AFX afxNat              AfxEnumerateVertexBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxVertexBuffer vbuf[]);
 
 #endif//AFX_DRAW_CONTEXT_H
