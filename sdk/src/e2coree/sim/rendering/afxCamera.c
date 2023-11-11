@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_CAMERA_C
 #define _AFX_SIMULATION_C
 #include "afx/sim/rendering/afxCamera.h"
@@ -130,7 +131,7 @@ _AFX void AfxSetCameraOffset(afxCamera cam, afxReal const offset[3])
     AfxCopyV3d(cam->offset, offset);
 }
 
-_AFX void AfxAddCameraOffset(afxCamera cam, afxReal const offset[3])
+_AFX void AfxApplyCameraOffset(afxCamera cam, afxReal const offset[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -154,7 +155,7 @@ _AFX void AfxSetCameraDistance(afxCamera cam, afxReal distance)
     cam->offset[2] = distance;
 }
 
-_AFX void AfxAddCameraDistance(afxCamera cam, afxReal distance)
+_AFX void AfxApplyCameraDistance(afxCamera cam, afxReal distance)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -178,7 +179,7 @@ _AFX void AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
     AfxCopyV3d(cam->elevAzimRoll, elevAzimRoll);
 }
 
-_AFX void AfxAddCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
+_AFX void AfxApplyCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -202,7 +203,7 @@ _AFX void AfxSetCameraElevation(afxCamera cam, afxReal elev)
     cam->elevAzimRoll[0] = elev;
 }
 
-_AFX void AfxAddCameraElevation(afxCamera cam, afxReal elev)
+_AFX void AfxApplyCameraElevation(afxCamera cam, afxReal elev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -226,7 +227,7 @@ _AFX void AfxSetCameraAzimuth(afxCamera cam, afxReal azim)
     cam->elevAzimRoll[1] = azim;
 }
 
-_AFX void AfxCameraAddAzimuth(afxCamera cam, afxReal azim)
+_AFX void AfxApplyCameraAzimuth(afxCamera cam, afxReal azim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -250,7 +251,7 @@ _AFX void AfxSetCameraRoll(afxCamera cam, afxReal roll)
     cam->elevAzimRoll[2] = roll;
 }
 
-_AFX void AfxAddCameraRoll(afxCamera cam, afxReal roll)
+_AFX void AfxApplyCameraRoll(afxCamera cam, afxReal roll)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -346,17 +347,20 @@ _AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxRe
     cam->wwOverHw = windowExtent[0] / windowExtent[1];
 }
 
-_AFX void AfxMoveCameraRelative(afxCamera cam, afxReal const motion[3])
+_AFX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(motion);
+
     cam->pos[0] = motion[0] * cam->iv[0][0] + cam->pos[0];
     cam->pos[1] = motion[0] * cam->iv[0][1] + cam->pos[1];
     cam->pos[2] = motion[0] * cam->iv[0][2] + cam->pos[2];
+
     cam->pos[0] = motion[1] * cam->iv[1][0] + cam->pos[0];
     cam->pos[1] = motion[1] * cam->iv[1][1] + cam->pos[1];
     cam->pos[2] = motion[1] * cam->iv[1][2] + cam->pos[2];
+
     cam->pos[0] = motion[2] * cam->iv[2][0] + cam->pos[0];
     cam->pos[1] = motion[2] * cam->iv[2][1] + cam->pos[1];
     cam->pos[2] = motion[2] * cam->iv[2][2] + cam->pos[2];
@@ -420,7 +424,7 @@ _AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afx
     ip[3][3] = -(p[2][2] / (p[3][2] * p[2][3]));    
 }
 
-_AFXINL void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
+_AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -491,7 +495,7 @@ _AFX void AfxRecomputeCameraMatrices(afxCamera cam)
     AfxComputeCameraProjectionMatrices(cam, cam->p, cam->ip);
 }
 
-_AFX void AfxCameraFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4])
+_AFX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -514,7 +518,7 @@ _AFX void AfxCameraFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxR
     worldPoint[3] = 1.0;
 }
 
-_AFX void AfxCameraFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3])
+_AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -566,7 +570,7 @@ _AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal con
         AfxScaleV3d(normal, v, 1.0 / len);
 }
 
-_AFX void AfxGetCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3])
+_AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -638,8 +642,7 @@ _AFX afxBool _AfxCamEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
             deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.0));
             deltaEar[2] = 0;
 
-            AfxAddCameraElevAzimRoll(cam, deltaEar);
-            AfxRecomputeCameraMatrices(cam);
+            AfxApplyCameraElevAzimRoll(cam, deltaEar);
         }
         break;
     }

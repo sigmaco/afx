@@ -86,10 +86,6 @@ AFX afxM2d  const AFX_M2D_IDENTITY;
 AFX afxM3d  const AFX_M3D_IDENTITY;
 AFX afxM4d  const AFX_M4D_IDENTITY;
 
-////////////////////////////////////////////////////////////////////////////////
-// Initialization methods                                                     //
-////////////////////////////////////////////////////////////////////////////////
-
 AFXINL void     AfxZeroM2d(afxReal m[2][2]);
 AFXINL void     AfxZeroM3d(afxReal m[3][3]);
 AFXINL void     AfxZeroM4d(afxReal m[4][4]);
@@ -97,8 +93,6 @@ AFXINL void     AfxZeroM4d(afxReal m[4][4]);
 AFXINL void     AfxResetM2d(afxReal m[2][2]);
 AFXINL void     AfxResetM3d(afxReal m[3][3]);
 AFXINL void     AfxResetM4d(afxReal m[4][4]);
-
-// Set
 
 AFXINL void     AfxSetM2d(afxReal m[2][2], afxReal const x[2], afxReal const y[2]);
 AFXINL void     AfxSetM3d(afxReal m[3][3], afxReal const x[3], afxReal const y[3], afxReal const z[3]);
@@ -108,24 +102,12 @@ AFXINL void     AfxSetTransposedM2d(afxReal m[2][2], afxReal const x[2], afxReal
 AFXINL void     AfxSetTransposedM3d(afxReal m[3][3], afxReal const x[3], afxReal const y[3], afxReal const z[3]);
 AFXINL void     AfxSetTransposedM4d(afxReal m[4][4], afxReal const x[4], afxReal const y[4], afxReal const z[4], afxReal const w[4]);
 
-// EnsureLinear/Affine
-
 AFXINL void     AfxEnsureLinearM4d(afxReal m[4][4]); // make affine and zero translation.
 AFXINL void     AfxEnsureAffineM4d(afxReal m[4][4]); // make affine; zero every W column.
-
-////////////////////////////////////////////////////////////////////////////////
-// Logic methods                                                              //
-////////////////////////////////////////////////////////////////////////////////
 
 AFXINL afxBool  AfxM2dIsIdentity(afxReal const m[2][2]);
 AFXINL afxBool  AfxM3dIsIdentity(afxReal const m[3][3]);
 AFXINL afxBool  AfxM4dIsIdentity(afxReal const m[4][4]);
-
-////////////////////////////////////////////////////////////////////////////////
-// Transferance methods                                                       //
-////////////////////////////////////////////////////////////////////////////////
-
-// Copy
 
 AFXINL void     AfxCopyM2d(afxReal m[2][2], afxReal const in[2][2]);
 AFXINL void     AfxCopyM3d(afxReal m[3][3], afxReal const in[3][3]);
@@ -136,8 +118,6 @@ AFXINL void     AfxCopyAffineM4d(afxReal m[4][4], afxReal const in[4][4]); // co
 
 AFXINL void     AfxCopyTransposedLinearM4d(afxReal m[4][4], afxReal const in[4][4]); // only consider 3x3; ignore W components and the W row.
 AFXINL void     AfxCopyTransposedAffineM4d(afxReal m[4][4], afxReal const in[4][4]); // only consider 4x3; ignore W components.
-
-//
 
 AFXINL void     AfxM2dFromM3d(afxReal m[2][2], afxReal const in[3][3]);
 AFXINL void     AfxM2dFromM4d(afxReal m[2][2], afxReal const in[4][4]);
@@ -160,16 +140,6 @@ AFXINL void     AfxTransposeM4d(afxReal m[4][4], afxReal const in[4][4]);
 
 AFXINL void     AfxM4dFromM3dTransposed(afxReal m[4][4], afxReal const in[3][3], afxReal const translation[4]);
 
-////////////////////////////////////////////////////////////////////////////////
-// Clamping methods                                                           //
-////////////////////////////////////////////////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Arithmetic methods                                                         //
-////////////////////////////////////////////////////////////////////////////////
-
 AFXINL void     AfxAddM2d(afxReal m[2][2], afxReal const a[2][2], afxReal const b[2][2]); // m = a + b
 AFXINL void     AfxAddM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3]); // m = a + b
 AFXINL void     AfxAddM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // m = a + b
@@ -178,9 +148,9 @@ AFXINL void     AfxSubM2d(afxReal m[2][2], afxReal const a[2][2], afxReal const 
 AFXINL void     AfxSubM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3]); // m = a - b
 AFXINL void     AfxSubM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // m = a - b
 
-////////////////////////////////////////////////////////////////////////////////
-// Algebra                                                                    //
-////////////////////////////////////////////////////////////////////////////////
+AFXINL void     AfxCombineM2d(afxReal v[2][2], afxReal lambda1, afxReal const a[2][2], afxReal lambda2, afxReal const b[2][2]);
+AFXINL void     AfxCombineM3d(afxReal v[3][3], afxReal lambda1, afxReal const a[3][3], afxReal lambda2, afxReal const b[3][3]);
+AFXINL void     AfxCombineLinearM4d(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4]);
 
 AFXINL afxReal  AfxInvertM3d(afxReal m[3][3], afxReal const in[3][3]); // m = inverse of in
 AFXINL afxReal  AfxInvertM4d(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
@@ -201,10 +171,10 @@ AFXINL void     AfxSetM3dScale(afxReal m[3][3], afxReal const v[3]);
 AFXINL void     AfxSetM4dScaleV2d(afxReal m[4][4], afxReal const v[2]);
 AFXINL void     AfxSetM4dScale(afxReal m[4][4], afxReal const v[3]);
 
-AFXINL void     AfxAddScalingM3d(afxReal m[3][3], afxReal const scale[3]);
-AFXINL void     AfxScalePlanarM3d(afxReal m[3][3], afxReal const scale[3]); // scales 2D affine transformation (represented by afxM3d)
-AFXINL void     AfxScaleM4d(afxReal m[4][4], afxReal const scale[4]);
-AFXINL void     AfxScaleAffineM4d(afxReal m[4][4], afxReal const scale[3]); // scales 3D affine transformation (represented by afxM4d)
+AFXINL void     AfxApplyM3dScale(afxReal m[3][3], afxReal const scale[3]);
+AFXINL void     AfxApplyPlanarM3dScale(afxReal m[3][3], afxReal const scale[3]); // scales 2D affine transformation (represented by afxM3d)
+AFXINL void     AfxApplyM4dScale(afxReal m[4][4], afxReal const scale[4]);
+AFXINL void     AfxApplyAffineM4dScale(afxReal m[4][4], afxReal const scale[3]); // scales 3D affine transformation (represented by afxM4d)
 
 // Rotate and Orientation
 
@@ -229,7 +199,7 @@ AFXINL void     AfxRotateM4d_Axial(afxReal m[4][4], afxReal const axis[3], afxRe
 
 // Translate and Position
 
-AFXINL void     AfxResetTranslationM4d(afxReal m[4][4], afxReal const translation[3]);
+AFXINL void     AfxMakeTranslationM4d(afxReal m[4][4], afxReal const translation[3]);
 
 AFXINL void     AfxTranslateM4d(afxReal m[4][4], afxReal const translation[4]);
 AFXINL void     AfxTranslateAffineM4d(afxReal m[4][4], afxReal const translation[3]);

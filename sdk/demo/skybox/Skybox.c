@@ -83,7 +83,7 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
     afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
     afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
 
-    AfxMoveCameraRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
+    AfxApplyCameraMotion(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
 }
 
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
@@ -109,7 +109,7 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     afxStoragePointSpecification mpSpec = { 0 };
     AfxFormatUri(&uri128.uri, "art/mnt.zip");
     mpSpec.hostPath = &uri128.uri;
-    AfxUriWrapLiteral(&uriMap, "art", 0);
+    AfxMakeUri(&uriMap, "art", 0);
     mpSpec.namespace = &uriMap;
     mpSpec.perm = AFX_IO_FLAG_R;
     afxResult rslt = AfxMountStoragePoints(1, &mpSpec);
@@ -119,26 +119,31 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     AfxAcquireArchives(1, &arc, &uri128.uri, (afxFileFlags[]) { AFX_FILE_FLAG_R });
     AfxAssertObjects(1, &arc, afxFcc_ARC);
     afxUri itemNam;
-    AfxUriWrapLiteral(&itemNam, "art/worldtest.tga", 0);
+    AfxMakeUri(&itemNam, "art/worldtest.tga", 0);
     afxNat itemIdx;
     AfxFindArchiveItem(arc, &itemNam, &itemIdx);
     afxStream item;
     AfxOpenArchiveItem(arc, itemIdx, &item);
     AfxReleaseStream(&item);
-    AfxUriWrapLiteral(&itemNam, "tmp/worldtest.tga", 0);
+    AfxMakeUri(&itemNam, "tmp/worldtest.tga", 0);
     //AfxDownloadArchiveItem(arc, itemIdx, &itemNam);
     AfxReleaseObjects(1, (void*[]) { arc });
 #endif
-    AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
+    AfxMakeUri(&uriMap, "e2newton.icd", 0);
     afxSimulationConfig simSpec = { 0 };
-    simSpec.bounding = NIL;
+    simSpec.extent = NIL;
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    AfxAcquireSimulations(app, 1, &sim, &simSpec);
+    simSpec.unitsPerMeter = 1.f;
+    AfxSetV3d(simSpec.right, 1, 0, 0);
+    AfxSetV3d(simSpec.up, 0, 1, 0);
+    AfxSetV3d(simSpec.back, 0, 0, 1);
+    AfxZeroV3d(simSpec.origin);
+    AfxAcquireSimulations(1, &sim, &simSpec);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    AfxUriWrapLiteral(&uriMap, "window", 0);
+    AfxMakeUri(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
     doutConfig.endpoint = &uriMap;
@@ -220,7 +225,7 @@ int main(int argc, char const* argv[])
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
-        while (AfxSystemIsOperating())
+        while (AfxSystemIsExecuting())
             AfxDoSystemThreading(0);
 
         AfxReleaseObjects(1, (void*[]) { TheApp });

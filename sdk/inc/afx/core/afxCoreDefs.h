@@ -70,7 +70,7 @@
 #endif
 
 #define _AfxStr(X) #X
-#define AfxStr(X) _AfxStr(X)
+#define AFX_STRINGIFY(X) _AfxStr(X)
 
 #define _AFXIMPORT __declspec(dllimport)
 #define _AFXEXPORT __declspec(dllexport)
@@ -174,14 +174,14 @@ typedef afxNat32    afxMask;
 AFX afxNat AfxFlagsFindLsb(afxFlags mask);
 AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 
-#define AFX_FLAG_MIN ((afxNat32)1 << (afxNat32)0)
-#define AFX_FLAG_MAX ((afxNat32)1 << (afxNat32)31)
-#define AFX_BIT_OFFSET(bit_) ((afxNat32)1 << (afxNat32)(bit_))
-//#define AFX_UNFLAG(_hex_) AfxFlagsFindLsb(_hex_)
+#define AFX_MASK_MIN ((afxNat32)1 << (afxNat32)0)
+#define AFX_MASK_MAX ((afxNat32)1 << (afxNat32)31)
+#define AFX_MASK_ALL 0xFFFFFFFF
+#define AFX_MASK_NONE 0xFFFFFFFF
 
-
-#define AfxTestBitPosition(var_,bit_) ((var_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
-#define AfxTestBitEnabled(var_,bit_) (((var_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
+#define AfxGetBitOffset(bit_) ((afxNat32)1 << (afxNat32)(bit_))
+#define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
+#define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
 
 #define AfxFlagsTest(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
 #define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
@@ -194,6 +194,8 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AFX_INVALID_INDEX32 (afxNat32)(~((afxNat32)0))
 #define AFX_INVALID_INDEX64 (afxNat64)(~((afxNat64)0))
 
+#define AfxIndexIsInvalid(_var_) ((_var_) == AFX_INVALID_INDEX)
+
 static_assert(AFX_INVALID_INDEX == AFX_N32_MAX, "");
 static_assert(AFX_INVALID_INDEX8 == AFX_N8_MAX, "");
 static_assert(AFX_INVALID_INDEX16 == AFX_N16_MAX, "");
@@ -205,7 +207,7 @@ static_assert(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 #define AfxMini(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AfxMaxi(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
-#define AfxMinor(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)); // minor non-zero
+#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)); // minor non-zero
 
 #define AfxElse(a_,b_) (((a_) ? (a_) : (b_))
 
@@ -294,9 +296,9 @@ afxCriterion;
 
 typedef enum afxProfileFlag
 {
-    afxProfileFlag_ROBUSTNESS   = AFX_BIT_OFFSET(0),
-    afxProfileFlag_PERFORMANCE  = AFX_BIT_OFFSET(1),
-    afxProfileFlag_QUALITY      = AFX_BIT_OFFSET(2),
+    afxProfileFlag_ROBUSTNESS   = AfxGetBitOffset(0),
+    afxProfileFlag_PERFORMANCE  = AfxGetBitOffset(1),
+    afxProfileFlag_QUALITY      = AfxGetBitOffset(2),
 } afxProfileFlag;
 
 // Object handles defined by Core Execution System

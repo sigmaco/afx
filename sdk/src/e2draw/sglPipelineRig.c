@@ -127,18 +127,17 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxPipelin
 }
 #endif 
 
-_SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxPipelineRig lego, glVmt const* gl)
+_SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxPipeline pip, afxNat unit, afxPipelineRig lego, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_LEGO);
 
-    AfxAssert(dpu->state.pip);
-    afxPipeline pip = dpu->state.pip;
+    AfxAssert(pip);
     GLuint glHandle = pip->glHandle;
     
     afxString32 tmp;
     AfxString32(&tmp);
-    afxChar const *rawName = (void const *)AfxGetStringDataConst(&tmp.str, 0);
+    afxChar const *rawName = (void const *)AfxGetStringData(&tmp.str, 0);
 
     for (afxNat j = 0; j < lego->base.entryCnt; j++)
     {

@@ -98,6 +98,6 @@ AFX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, afxWorldPose 
 
 AFX afxError            AfxBuildSkeletons(afxSimulation sim, afxSkeletonBuilder const* sklb, afxNat cnt, void* data[], afxSkeleton skl[]);
 
-AFX void                AfxTransformSkeletons(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxSkeleton skl[]);
+AFX void                AfxTransformSkeletons(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal affineTol, afxReal linearTol, afxNat cnt, afxSkeleton skl[]);
 
 #endif//AFX_SKELETON_H

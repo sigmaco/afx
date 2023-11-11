@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+#define _AFX_CORE_C
 #define _AFX_DRAW_C
 #define _AFX_DRAW_DRIVER_C
 #define _AFX_DRAW_THREAD_C
@@ -31,12 +32,8 @@
 #define _AFX_DRAW_INPUT_C
 #define _AFX_DRAW_OUTPUT_C
 
-#include "afxDrawClassified.h"
-#include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"
-#include "afx/core/afxContext.h"
-#include "afxDrawParadigms.h"
-#include "../src/e2coree/core/afxCoreHideout.h"
+#include "afx/draw/afxDrawSystem.h"
 
 extern afxClassConfig const _AfxDthrClsConfig;
 
@@ -342,8 +339,8 @@ _AFX afxError _AfxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
-    AfxExcerptString(&ddev->domain, info->domain);
-    AfxExcerptString(&ddev->name, info->name);
+    AfxReplicateString(&ddev->domain, info->domain);
+    AfxReplicateString(&ddev->name, info->name);
 
     afxChain *classes = &ddev->classes;
     AfxAcquireChain(classes, ddev);
@@ -401,18 +398,18 @@ _AFX afxError _AfxDdrvCtor(afxDrawIcd ddrv, afxCookie const* cookie)
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     //afxContext ctx = AfxGetDrawSystemMemory(dsys);
 
-    AfxExcerptString(&ddrv->name, info->name);
-    AfxExcerptString(&ddrv->vendor, info->vendor);
-    AfxExcerptString(&ddrv->website, info->website);
-    AfxExcerptString(&ddrv->note, info->note);
+    AfxReplicateString(&ddrv->name, info->name);
+    AfxReplicateString(&ddrv->vendor, info->vendor);
+    AfxReplicateString(&ddrv->website, info->website);
+    AfxReplicateString(&ddrv->note, info->note);
     ddrv->verMajor = info->verMajor;
     ddrv->verMinor = info->verMinor;
     ddrv->verPatch = info->verPatch;
 
     afxUri file;
-    AfxExcerptUriObject(&file, AfxGetModulePath(info->mdle));
+    AfxGetUriObject(&file, AfxGetModulePath(info->mdle));
 
-    AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on draw system %p...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxUriGetStringConst(&file)), dsys, AfxPushString(&ddrv->name), ddrv->verMajor, ddrv->verMinor, ddrv->verPatch, AfxPushString(&ddrv->vendor), AfxPushString(&ddrv->website), AfxPushString(&ddrv->note));
+    AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on draw system %p...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxGetUriString(&file)), dsys, AfxPushString(&ddrv->name), ddrv->verMajor, ddrv->verMinor, ddrv->verPatch, AfxPushString(&ddrv->vendor), AfxPushString(&ddrv->website), AfxPushString(&ddrv->note));
 
     ddrv->mdle = info->mdle;
     AfxAssertObjects(1, &ddrv->mdle, afxFcc_MDLE);
@@ -580,7 +577,7 @@ _AFX afxDrawIcd _AfxDsysFindIcd(afxDrawSystem dsys, afxUri const *file)
     
     afxUri target;
     AfxAssertType(file, afxFcc_URI);
-    AfxExcerptUriObject(&target, file);
+    AfxGetUriObject(&target, file);
 
     afxNat i = 0;
     afxDrawIcd icd;
@@ -589,9 +586,9 @@ _AFX afxDrawIcd _AfxDsysFindIcd(afxDrawSystem dsys, afxUri const *file)
     {
         afxUri tmp;
         AfxAssertObjects(1, &icd, afxFcc_DDRV);
-        AfxExcerptUriObject(&tmp, AfxGetModulePath(icd->mdle));
+        AfxGetUriObject(&tmp, AfxGetModulePath(icd->mdle));
 
-        if (AfxUriIsEquivalent(&target, &tmp))
+        if (0 == AfxCompareUri(&target, &tmp))
             return icd;
 
         ++i;
@@ -604,10 +601,10 @@ _AFX afxError _AfxDsysLoadIcd(afxDrawSystem dsys, afxUri const* file, afxDrawIcd
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     AfxAssertType(file, afxFcc_URI);
-    AfxComment("Loading draw ICD %.*s", AfxPushString(AfxUriGetStringConst(file)));
+    AfxComment("Loading draw ICD %.*s", AfxPushString(AfxGetUriString(file)));
 
     afxUri file2;
-    AfxExcerptUriObject(&file2, file);
+    AfxGetUriObject(&file2, file);
     afxDrawIcd ddrv2 = _AfxDsysFindIcd(dsys, &file2);
 
     if ((ddrv2 = _AfxDsysFindIcd(dsys, &file2))) AfxReacquireObjects(1, (void*[]) { ddrv2 });
@@ -656,13 +653,13 @@ _AFX afxError _AfxDsysScanForIcds(afxDrawSystem dsys, afxUri const* fileMask)
     afxUri2048 pathBuf;
     AfxUri2048(&pathBuf);
     AfxResolveUri(fileMask, AFX_FILE_FLAG_RX, &pathBuf.uri);
-    if ((fh = FindFirstFileA(AfxGetUriDataConst(&pathBuf.uri, 0), &(wfd))))
+    if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
     {
         do
         {
             afxUri uri, file;
-            AfxUriWrapLiteral(&uri, wfd.cFileName, 0);
-            AfxExcerptUriObject(&file, &uri);
+            AfxMakeUri(&uri, wfd.cFileName, 0);
+            AfxGetUriObject(&file, &uri);
             afxDrawIcd ddrv2 = _AfxDsysFindIcd(dsys, &file);
             
             if (!(ddrv2 = _AfxDsysFindIcd(dsys, &file)))
@@ -767,12 +764,12 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
             AfxMountClass(&dsys->inputs, classes, &dinClsConfig);
 
             afxUri uri;
-            AfxUriWrapLiteral(&uri, "system/e2draw.icd", 0);
+            AfxMakeUri(&uri, "system/e2draw.icd", 0);
 
             if (_AfxDsysLoadIcd(dsys, &uri, &dsys->e2draw)) AfxThrowError();
             else
             {
-                AfxUriWrapLiteral(&uri, "system/*.icd", 0);
+                AfxMakeUri(&uri, "system/*.icd", 0);
                 _AfxDsysScanForIcds(dsys, &uri);
 
                 afxDrawThread dthr[16];

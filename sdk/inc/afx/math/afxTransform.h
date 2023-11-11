@@ -27,10 +27,11 @@
 
 typedef enum afxTransformFlags
 {
-    afxTransformFlags_ORIGIN        = AFX_BIT_OFFSET(0), // has non-identity position
-    afxTransformFlags_ORIENTATION   = AFX_BIT_OFFSET(1), // has non-identity orientation
-    afxTransformFlags_SCALESHEAR    = AFX_BIT_OFFSET(2), // has non-identity scale/shear
-    afxTransformFlags_ALL =         (afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION | afxTransformFlags_SCALESHEAR)
+    afxTransformFlags_ORIGIN        = AfxGetBitOffset(0), // has non-identity position
+    afxTransformFlags_ORIENTATION   = AfxGetBitOffset(1), // has non-identity orientation
+    afxTrasnformFlags_RIGID         = afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION,
+    afxTransformFlags_DEFORM        = AfxGetBitOffset(2), // has non-identity scale/shear
+    afxTransformFlags_ALL =         (afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION | afxTransformFlags_DEFORM)
 } afxTransformFlags;
 
 AFX_DEFINE_STRUCT(afxTransform)

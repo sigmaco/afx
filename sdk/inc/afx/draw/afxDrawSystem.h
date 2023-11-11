@@ -330,6 +330,16 @@ AFX_OBJECT(afxDrawSystem)
     afxClass            inputs;
     afxClass            threads;
     afxDrawIcd          e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
+
+    struct
+    // the scale and units used to calculate depth values when load files missing any of this config.
+    {
+        afxReal factor;
+        // Specifies a scale factor that is used to create a variable depth offset for each polygon.The initial value is 0.
+
+        afxReal units;
+        // Is multiplied by an implementation - specific value to create a constant depth offset.The initial value is 0.
+    } polygonOffset;
 };
 #endif
 #endif

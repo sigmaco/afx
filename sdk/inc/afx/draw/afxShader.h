@@ -21,7 +21,7 @@
 
 #include "afx/draw/afxDrawDefs.h"
 #include "afx/core/afxStream.h"
-#include "afx/core/afxUri.h"
+#include "afx/core/afxXml.h"
 
 typedef enum afxShaderResourceType
 {
@@ -87,9 +87,11 @@ AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
 {
     afxNat8                 location;
     afxVertexFormat         fmt;
+    afxNat8                 stream;
     afxString               semantic; // 8
 };
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_SHADER_C
 AFX_OBJECT(afxShader)
 #else
@@ -110,6 +112,7 @@ struct afxBaseShader
     afxShaderBlueprintInOut*    ioDecls;
     afxPrimTopology             topology;
 };
+#endif
 
 AFX_DEFINE_STRUCT(afxShaderBuilder)
 {
@@ -122,6 +125,8 @@ AFX afxError                AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afx
 /// Builds a shader from a eXtensible Shader Language (.xsh) file, part of Qwadro.
 AFX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxXmlNode const* xmlNode);
 AFX afxShader               AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri);
+
+AFX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
 
 AFX afxNat                  AfxCountShaderInterfaces(afxShader shd);
 AFX afxResult               AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);

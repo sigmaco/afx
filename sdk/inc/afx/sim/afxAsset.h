@@ -81,54 +81,24 @@ AFX_OBJECT(afxAsset)
     struct
     {
         afxFcc          fcc;
-        afxNat          firstResIdx;
+        afxNat          baseResIdx;
         afxNat          resCnt;
     }                  *nests;
     afxNat              nestCnt;
-#if 0
-    afxNat              texCnt;
-    afxTexture*         texs;
-    afxNat              mtlCnt;
-    afxMaterial*        mtls;
-    afxNat              mshdCnt;
-    afxVertexData*      mshds;
-    afxNat              mshtCnt;
-    afxMeshTopology*    mshts;
-    afxNat              mshCnt;
-    afxMesh*            mshs;
-    afxNat              sklCnt;
-    afxSkeleton*        skls;
-    afxNat              mdlCnt;
-    afxModel*           mdls;
-    afxNat              anitCnt;
-    //track_group* anits;
-    afxNat              animCnt;
-    //afxAnimation*       anims;
-    void*               udd;
-#endif
-    struct
-    {
-        afxFcc          type;
-        afxNat          resCnt;
-        afxCadResource* res;
-    }                  *sets;
-    afxNat              setCnt;
 };
 
 AFX_DEFINE_STRUCT(afxAssetBuilder)
 {
-    void(*GetName)(void* data, afxUri* name);
-    afxNat(*CountSets)(void* data);
-    void(*GetSetInfo)(void* data, afxNat setIdx, afxFcc* resType, afxNat* resCnt);
+    void(*GetInfo)(void* data, afxNat *typeCnt, afxNat* resCnt, afxUri* name);
+    void(*GetTypeInfo)(void* data, afxNat setIdx, afxFcc* resType, afxNat* resCnt);
     void*(*GetResourceInfo)(void* data, afxFcc type, afxNat resIdx, afxUri* name);
-    afxBool(*GetToolInfo)(afxCadToolInfo* toolInfo);
-    afxBool(*GetExporterInfo)(afxCadExporterInfo* exporterInfo);
+    afxBool(*GetToolInfo)(void* data, afxCadToolInfo* toolInfo, afxCadExporterInfo* exporterInfo);
+    afxError(*AddResources)(void* data, afxFcc type, afxUri const* name);
 };
 
-AFX afxNat              AfxFindResources(afxAsset cad, afxFcc type, afxNat cnt, afxUri const name[], void* res[]);
-
 AFX afxNat              AfxFindResourceNests(afxAsset cad, afxNat cnt, afxFcc const fcc[], afxNat nestIdx[]);
-AFX afxNat              AfxFindResources2(afxAsset cad, afxFcc nest, afxNat cnt, afxString const id[], void* res[]);
+AFX afxNat              AfxFindResources(afxAsset cad, afxFcc fcc, afxNat cnt, afxString const id[], void* res[]);
+AFX afxNat              AfxCountResources(afxAsset cad, afxFcc fcc);
 
 AFX afxNat              AfxFindTextures(afxAsset cad, afxNat cnt, afxString const id[], afxTexture tex[]);
 AFX afxNat              AfxFindMaterials(afxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
@@ -148,5 +118,7 @@ AFX afxError            AfxBuildAssets(afxSimulation sim, afxAssetBuilder const*
 
 AFX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
 AFX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
+
+AFX void                AfxTransformAssets(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxAsset cad[]);
 
 #endif//AFX_ASSET_H

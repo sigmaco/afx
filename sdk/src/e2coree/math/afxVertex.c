@@ -223,7 +223,7 @@ _AFXINL void AfxReflectV2d(afxReal v[2], afxReal const incident[2], afxReal cons
 
     AfxFillV2d(v, AfxDotV2d(incident, normal));
     AfxAddV2d(v, v, v);
-    AfxNemusV2d(v, v, normal, incident);
+    AfxResubV2d(v, v, normal, incident);
 }
 
 _AFXINL void AfxReflectV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3])
@@ -237,7 +237,7 @@ _AFXINL void AfxReflectV3d(afxReal v[3], afxReal const incident[3], afxReal cons
 
     AfxFillV3d(v, AfxDotV3d(incident, normal));
     AfxAddV3d(v, v, v);
-    AfxNemusV3d(v, v, normal, incident);
+    AfxResubV3d(v, v, normal, incident);
 }
 
 _AFXINL void AfxReflectV4d(afxReal v[4], afxReal const incident[3], afxReal const normal[3])
@@ -251,7 +251,7 @@ _AFXINL void AfxReflectV4d(afxReal v[4], afxReal const incident[3], afxReal cons
 
     AfxFillV4d(v, AfxDotV3d(incident, normal));
     AfxAddV4d(v, v, v);
-    AfxNemusV4d(v, v, normal, incident);
+    AfxResubV4d(v, v, normal, incident);
 }
 
 // Refract
@@ -271,12 +271,12 @@ _AFXINL void AfxRefractV2d(afxReal v[2], afxReal const incident[2], afxReal cons
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV2d R;
-    AfxNemusV2d(R, dot, dot, AFX_V2D_11);
+    AfxResubV2d(R, dot, dot, AFX_V2D_ONE);
     afxV2d const riv = { refracIdx, refracIdx };
     AfxMultiplyV2d(R, R, riv);
-    AfxNemusV2d(R, R, riv, AFX_V2D_11);
+    AfxResubV2d(R, R, riv, AFX_V2D_ONE);
 
-    if (AfxV2dIsLessOrEqual(R, AFX_V2D_00))
+    if (AfxV2dIsLessOrEqual(R, AFX_V2D_ZERO))
     {
         // Total internal reflection
         AfxZeroV2d(v);
@@ -290,7 +290,7 @@ _AFXINL void AfxRefractV2d(afxReal v[2], afxReal const incident[2], afxReal cons
 
         // v = refracIdx * incident - normal * R
         AfxMultiplyV2d(v, riv, incident);
-        AfxNemusV2d(v, normal, R, v);
+        AfxResubV2d(v, normal, R, v);
     }
 }
 
@@ -309,12 +309,12 @@ _AFXINL void AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal cons
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV3d R;
-    AfxNemusV3d(R, dot, dot, AFX_V3D_111);
+    AfxResubV3d(R, dot, dot, AFX_V3D_ONE);
     afxV3d const riv = { refracIdx, refracIdx, refracIdx };
     AfxMultiplyV3d(R, R, riv);
-    AfxNemusV3d(R, R, riv, AFX_V3D_111);
+    AfxResubV3d(R, R, riv, AFX_V3D_ONE);
 
-    if (AfxV3dIsLessOrEqual(R, AFX_V3D_000))
+    if (AfxV3dIsLessOrEqual(R, AFX_V3D_ZERO))
     {
         // Total internal reflection
         AfxZeroV3d(v);
@@ -328,7 +328,7 @@ _AFXINL void AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal cons
 
         // v = refracIdx * incident - normal * R
         AfxMultiplyV3d(v, riv, incident);
-        AfxNemusV3d(v, normal, R, v);
+        AfxResubV3d(v, normal, R, v);
     }
 }
 
@@ -347,12 +347,12 @@ _AFXINL void AfxRefractV4d(afxReal v[4], afxReal const incident[3], afxReal cons
     // R = 1.0f - refracIdx * refracIdx * (1.0f - IDotN * IDotN)
 
     afxV4d R;
-    AfxNemusV4d(R, dot, dot, AFX_V4D_1111);
+    AfxResubV4d(R, dot, dot, AFX_V4D_ONE);
     afxV4d const riv = { refracIdx, refracIdx, refracIdx, refracIdx };
     AfxMultiplyV4d(R, R, riv);
-    AfxNemusV4d(R, R, riv, AFX_V4D_1111);
+    AfxResubV4d(R, R, riv, AFX_V4D_ONE);
 
-    if (AfxV4dIsLessOrEqual(R, AFX_V4D_0000))
+    if (AfxV4dIsLessOrEqual(R, AFX_V4D_ZERO))
     {
         // Total internal reflection
         AfxZeroV4d(v);
@@ -366,6 +366,6 @@ _AFXINL void AfxRefractV4d(afxReal v[4], afxReal const incident[3], afxReal cons
 
         // v = refracIdx * incident - normal * R
         AfxMultiplyV4d(v, riv, incident);
-        AfxNemusV4d(v, normal, R, v);
+        AfxResubV4d(v, normal, R, v);
     }
 }

@@ -112,34 +112,34 @@ AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxRea
 
 AFX void    AfxGetCameraOffset(afxCamera cam, afxReal offset[3]);
 AFX void    AfxSetCameraOffset(afxCamera cam, afxReal const offset[3]);
-AFX void    AfxAddCameraOffset(afxCamera cam, afxReal const offset[3]);
+AFX void    AfxApplyCameraOffset(afxCamera cam, afxReal const offset[3]);
 
 AFX afxReal AfxGetCameraDistance(afxCamera cam);
 AFX void    AfxSetCameraDistance(afxCamera cam, afxReal distance);
-AFX void    AfxAddCameraDistance(afxCamera cam, afxReal distance);
+AFX void    AfxApplyCameraDistance(afxCamera cam, afxReal distance);
 
 AFX void    AfxGetCameraElevAzimRoll(afxCamera cam, afxReal elevAzimRoll[3]);
 AFX void    AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3]);
-AFX void    AfxAddCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3]);
+AFX void    AfxApplyCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3]);
 
 AFX afxReal AfxGetCameraElevation(afxCamera cam);
 AFX void    AfxSetCameraElevation(afxCamera cam, afxReal elev);
-AFX void    AfxAddCameraElevation(afxCamera cam, afxReal elev);
+AFX void    AfxApplyCameraElevation(afxCamera cam, afxReal elev);
 
 AFX afxReal AfxGetCameraAzimuth(afxCamera cam);
 AFX void    AfxSetCameraAzimuth(afxCamera cam, afxReal azim);
-AFX void    AfxCameraAddAzimuth(afxCamera cam, afxReal azim);
+AFX void    AfxApplyCameraAzimuth(afxCamera cam, afxReal azim);
 
 AFX afxReal AfxGetCameraRoll(afxCamera cam);
 AFX void    AfxSetCameraRoll(afxCamera cam, afxReal roll);
-AFX void    AfxAddCameraRoll(afxCamera cam, afxReal roll);
+AFX void    AfxApplyCameraRoll(afxCamera cam, afxReal roll);
 
 // Note that elevation is measured as rotation about the X(right) axis(hence, it is negative if it is above the horizontal, positive if it is below), 
 // azimuth is measured as rotation about the Y(up) axis, and, and roll is measured as rotation about the Z(back) axis.
 
 // For picking 3D objects with the mouse, it's necessary to be able to take a point on the screen and figure out where it would be in world-space. Qwadro can do this for you automatically like this:
 
-AFX void AfxCameraFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4]);
+AFX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4]);
 
 // Since ray-based object picking is the most standard use of this function, Qwadro also provides a more hands-free version of the call that gives you all the picking ray information in one step:
 
@@ -157,7 +157,7 @@ AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal cons
 // In addition to going from window space to world space, the camera routines also allow you to go in the other direction.
 // For example, if you want to project a single point from world space to window space, you can use WorldToWindowSpace like this:
 
-AFX void AfxCameraFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3]);
+AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3]);
 
 // Obviously, this routine is not optimized for large workloads, so it should only be used for occasional projections.
 
@@ -166,7 +166,7 @@ AFX void AfxCameraFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxR
 // which requires transforming the 2D vector of the movement into the appropriate 3D vector in world space. 
 // You can have Qwadro generate the necessary transform for you by using GetRelativePlanarBases:
 
-AFX void AfxGetCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3]);
+AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3]);
 
 // The result from GetRelativePlanarBases is two vectors, one which is the world-space vector along which X motion should be interpreted(ie., horizontal movement via the keyboard or analog stick), 
 // and the other is for Y. These vectors are unit length, but they are only orthogonal in world space if you pass false for the second parameter. 
@@ -184,7 +184,7 @@ AFX void                AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal eps
 
 
 
-AFX void    AfxMoveCameraRelative(afxCamera cam, afxReal const motion[3]);
+AFX void    AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3]);
 
 AFX void    AfxRecomputeCameraMatrices(afxCamera cam);
 

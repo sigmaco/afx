@@ -59,5 +59,8 @@
     <ClCompile Include="..\..\src\e2draw\sglDrawCommands.c">
       <Filter>e2draw</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRasterizer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

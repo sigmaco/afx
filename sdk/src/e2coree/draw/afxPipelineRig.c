@@ -17,9 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_PIPELINE_RIG_C
-#include "afx/draw/afxDrawSystem.h"
-#include "afxDrawClassified.h"
-#include "afx/draw/afxPipelineRig.h"
+#include "afx/draw/afxDrawContext.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //
@@ -35,7 +33,7 @@ _AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat es
     //afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
     //AfxAssertObjects(1, &mem, afxFcc_CTX);
 
-    AfxAcquireArray(&blueprint->bindings, sizeof(afxPipelineRigBlueprintBinding), AfxMaxi(estBindCnt, 10), AfxSpawnHint());
+    blueprint->bindings = AfxAcquireArray(AfxMaxi(estBindCnt, 10), sizeof(afxPipelineRigBlueprintBinding), NIL);
 }
 
 _AFXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
@@ -151,7 +149,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
                         if ((incompatible |= ((rsrc.type != binding->type) || (rsrc.cnt != binding->cnt)))) AfxThrowError();
                         else
                         {
-                            binding->visibility |= /*entry->visibility |*/ AFX_BIT_OFFSET(AfxGetShaderStage(shd[i]));
+                            binding->visibility |= /*entry->visibility |*/ AfxGetBitOffset(AfxGetShaderStage(shd[i]));
                         }
                         break;
                     }
@@ -159,7 +157,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 
                 if (!err && !entryExisting)
                 {
-                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_BIT_OFFSET(AfxGetShaderStage(shd[i])), rsrc.type, rsrc.cnt, &rsrc.name))
+                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AfxGetBitOffset(AfxGetShaderStage(shd[i])), rsrc.type, rsrc.cnt, &rsrc.name))
                     {
                         AfxThrowError();
                     }

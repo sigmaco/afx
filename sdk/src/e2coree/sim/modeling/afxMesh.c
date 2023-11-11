@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_MESH_C
 #define _AFX_VERTEX_DATA_C
 #define _AFX_MESH_TOPOLOGY_C
@@ -356,7 +357,7 @@ _AFX afxBool AfxFindMeshMaterial(afxMesh msh, afxUri const* id, afxMaterial* mtl
         {
             AfxAssertObjects(1, &mtl2, afxFcc_MTL);
 
-            if (AfxUriIsEquivalent(AfxGetMaterialUri(mtl2), id))
+            if (0 == AfxCompareUri(AfxGetMaterialUri(mtl2), id))
             {
                 if (mtl)
                     *mtl = mtl2;
@@ -489,7 +490,7 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
         afxMeshVertebra *msha = &msh->vertebras[i];
 
         //if (msha->boneName)
-            AfxDeallocateString(&msha->id);
+            //AfxDeallocateString(&msha->id);
     }
 
     if (msh->vertebras)
@@ -584,13 +585,14 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
                 mshv->triCnt = mshb->GetVertebraInfo(data, i, &str);
                 mshv->triIdx = AfxAllocate(mem, mshv->triCnt * sizeof(mshv->triIdx[0]), NIL, AfxSpawnHint());
                 
-                AfxCloneString(&mshv->id, &str);
+                AfxString16(&mshv->id);
+                AfxCopyString(&mshv->id.str, &str);
                 //mshv->vtxCnt = artb->vtxIdxCnt;
                 //mshv->vtxMap = (void*)artb->tris; // ???
 
                 //AfxAssert(artb->tris == NIL);
 
-                mshb->GetVertebraData(data, &mshv->id, 0, 3 * mshv->triCnt, mshv->triIdx);
+                mshb->GetVertebraData(data, &mshv->id.str, 0, 3 * mshv->triCnt, mshv->triIdx);
 
                 AfxResetAabb(&mshv->aabb);
                 //AfxAssert(AfxGetVertexAttributeSize(vbuf, 0) == sizeof(afxV4d)); // actually, _AfxMshsRecomputeAabbCallback expects afxV4d-based vectors and position at vertex arrange 0. TODO: someone need to do refactoring here.
@@ -657,7 +659,7 @@ _AFX afxError AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxN
     return err;
 }
 
-_AFX void AfxTransformMeshes(afxReal const at[3], afxReal const lt[3][3], afxReal const ilt[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxMesh msh[])
+_AFX void AfxTransformMeshes(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(at);
@@ -681,7 +683,7 @@ _AFX void AfxTransformMeshes(afxReal const at[3], afxReal const lt[3][3], afxRea
             afxVertexData vtd = AfxGetMeshVertices(msh2, &baseVtxIdx, &vtxCnt);
             AfxTryAssertObjects(1, &vtd, afxFcc_VTD);
 
-            AfxTransformVertexDatas(at, lt, ilt, FALSE, 1, &vtd);
+            AfxTransformVertexDatas(lt, ilt, at, flags & 1, 1, &vtd); // sinalizado para renormalizar normals
 
             afxNat morphCnt = AfxCountMeshMorphes(msh2);
 
@@ -690,13 +692,21 @@ _AFX void AfxTransformMeshes(afxReal const at[3], afxReal const lt[3][3], afxRea
                 afxMeshMorph* mshm = AfxGetMeshMorph(msh2, j);
                 vtd = mshm->vtd;
                 AfxTryAssertObjects(1, &vtd, afxFcc_VTD);
-                AfxTransformVertexDatas(at, lt, ilt, FALSE, 1, &vtd);
                 AfxAssert(!mshm->delta || AfxGetVertexAttributeFlags(vtd, 0) & afxVertexFlag_DELTA);
+
+                if (mshm->delta)
+                {
+                    AfxTransformVertexDatas(lt, ilt, at, FALSE, 1, &vtd);
+                }
+                else
+                {
+                    AfxTransformVertexDatas(lt, ilt, at, flags & 1, 1, &vtd);
+                }
             }
 
             afxMeshTopology msht;
 
-            if ((flags & 2) && (AfxDetM3d(lt) < 0.0) && AfxGetMeshTopology(msh2, &msht))
+            if ((flags & 2) && (AfxDetM3d(lt) < 0.0) && AfxGetMeshTopology(msh2, &msht)) // se sinalizado para reordenar índices de faces
                 AfxInvertMeshWinding(msht);
 
             afxNat artCnt = AfxCountMeshVertebras(msh2);
@@ -704,7 +714,7 @@ _AFX void AfxTransformMeshes(afxReal const at[3], afxReal const lt[3][3], afxRea
             for (afxNat j = 0; j < artCnt; j++)
             {
                 afxMeshVertebra* mshv = AfxGetMeshVertebra(msh2, j);
-                AfxTransformAabbs(at, lt, 1, &mshv->aabb, &mshv->aabb);
+                AfxTransformAabbs(lt, at, 1, &mshv->aabb, &mshv->aabb);
             }
         }
     }

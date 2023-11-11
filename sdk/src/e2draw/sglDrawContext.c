@@ -26,11 +26,11 @@
 #include "afx/math/afxVector.h"
 #include "afx/core/afxSystem.h"
 #include "afx/core/afxString.h"
-#include "../e2coree/draw/afxDrawParadigms.h"
 
 extern afxClassConfig _SglBufClsConfig;
 extern afxClassConfig _SglSampClsConfig;
 extern afxClassConfig _SglPipClsConfig;
+extern afxClassConfig _SglRasClsConfig;
 extern afxClassConfig _SglShdClsConfig;
 extern afxClassConfig _SglLegoClsConfig;
 extern afxClassConfig _SglCanvClsConfig;
@@ -204,6 +204,9 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         tmpClsConf = _SglPipClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.pipelines, classes, &tmpClsConf);
+        tmpClsConf = _SglRasClsConfig;
+        tmpClsConf.ctx = ctx;
+        AfxMountClass(&dctx->base.rasterizers, classes, &tmpClsConf);
 
         dctx->base.openPortCnt = AfxCountDrawPorts(ddev); //spec && spec->portCnt ? spec->portCnt : 1;
 
@@ -260,12 +263,12 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
             if (!err)
             {
                 afxUri uri;
-                AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
-                //AfxUriWrapLiteral(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
+                AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
+                //AfxMakeUri(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
                 //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
 
-                dctx->presentPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+                dctx->presentPip = AfxLoadPipelineFromXsh(dctx, &uri);
 
                 AfxAssertObjects(1, &dctx->presentPip, afxFcc_PIP);
 
@@ -281,7 +284,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 AfxAssertObjects(1, &dctx->presentSmp, afxFcc_SAMP);
 
                 afxString tmpStr;
-                AfxWrapStringLiteral(&tmpStr, "a_xy", 0);
+                AfxMakeString(&tmpStr, "a_xy", 0);
                 const afxV2d tristrippedQuad2dPos[] =
                 {
                     { -1.0,  1.0 },

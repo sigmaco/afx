@@ -39,10 +39,10 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             name = AfxXmlNodeGetAttributeName(node0, j);
             content = AfxXmlNodeGetAttributeContent(node0, j);
 
-            if (0 == AfxCompareString(name, &g_str_id))
+            if (0 == AfxCompareString(name, &AfxStaticString("id")))
             {
                 afxUri tmpUri;
-                AfxReflectUriString(&tmpUri, content);
+                AfxUriFromString(&tmpUri, content);
 
                 AfxShaderBlueprintRename(blueprint, &tmpUri);
             }
@@ -61,7 +61,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             afxNat attrCnt1 = AfxCountXmlAttributes(node1);
             content = AfxGetXmlNodeContent(node1);
 
-            if (0 == AfxCompareString(name, &g_str_Stage))
+            if (0 == AfxCompareString(name, &AfxStaticString("Stage")))
             {
                 afxShaderStage stage = NIL;
 
@@ -70,11 +70,11 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
 
                 AfxShaderBlueprintSetStage(blueprint, stage);
             }
-            else if (0 == AfxCompareString(name, &g_str_Entry))
+            else if (0 == AfxCompareString(name, &AfxStaticString("Entry")))
             {
                 AfxShaderBlueprintChooseEntryPoint(blueprint, content);
             }
-            else if (0 == AfxCompareString(name, &g_str_Include))
+            else if (0 == AfxCompareString(name, &AfxStaticString("Include")))
             {
 #if 0
                 for (afxNat k = 0; k < attrCnt1; k++)
@@ -82,10 +82,10 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     name = AfxXmlNodeGetAttributeName(node1, k);
                     content = AfxXmlNodeGetAttributeContent(node1, k);
 
-                    if (0 == AfxCompareString(name, &g_str_uri))
+                    if (0 == AfxCompareString(name, &AfxStaticString("uri")))
                     {
                         afxUri uri;
-                        AfxReflectUriString(&uri, content);
+                        AfxUriFromString(&uri, content);
 
                         if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                             AfxThrowError();
@@ -99,13 +99,13 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                 if (content && !AfxStringIsEmpty(content))
                 {
                     afxUri uri;
-                    AfxReflectUriString(&uri, content);
+                    AfxUriFromString(&uri, content);
 
                     if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                         AfxThrowError();
                 }
             }
-            else if (0 == AfxCompareString(name, &g_str_Resource))
+            else if (0 == AfxCompareString(name, &AfxStaticString("Resource")))
             {
                 afxNat resSet = 0;
                 afxNat resBinding = 0;
@@ -118,19 +118,19 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     name = AfxXmlNodeGetAttributeName(node1, k);
                     content = AfxXmlNodeGetAttributeContent(node1, k);
 
-                    if (0 == AfxCompareString(name, &g_str_set))
+                    if (0 == AfxCompareString(name, &AfxStaticString("set")))
                     {
                         AfxScanString(content, "%u", &resSet);
                     }
-                    else if (0 == AfxCompareString(name, &g_str_binding))
+                    else if (0 == AfxCompareString(name, &AfxStaticString("binding")))
                     {
                         AfxScanString(content, "%u", &resBinding);
                     }
-                    else if (0 == AfxCompareString(name, &g_str_count))
+                    else if (0 == AfxCompareString(name, &AfxStaticString("count")))
                     {
                         AfxScanString(content, "%u", &resCnt);
                     }
-                    else if (0 == AfxCompareString(name, &g_str_type))
+                    else if (0 == AfxCompareString(name, &AfxStaticString("type")))
                     {
                         for (afxNat l = 0; l < AFX_SHD_RES_TYPE_TOTAL; l++)
                         {
@@ -142,7 +142,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                         }                        
                     }
 #if 0
-                    else if (0 == AfxCompareString(name, &g_str_name))
+                    else if (0 == AfxCompareString(name, &AfxStaticString("name")))
                     {
                         resName = content;
                     }
@@ -160,19 +160,24 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
             {
                 afxNat ioLocation = 0;
                 afxVertexFormat ioFormat = NIL;
+                afxNat inStream = 0;
 
                 for (afxNat k = 0; k < attrCnt1; k++)
                 {
                     name = AfxXmlNodeGetAttributeName(node1, k);
                     content = AfxXmlNodeGetAttributeContent(node1, k);
 
-                    if (0 == AfxCompareString(name, &g_str_location))
+                    if (0 == AfxCompareString(name, &AfxStaticString("location")))
                     {
                         AfxScanString(content, "%u", &ioLocation);
                     }
-                    else if (0 == AfxCompareString(name, &g_str_format))
+                    else if (0 == AfxCompareString(name, &AfxStaticString("format")))
                     {
                         ioFormat = AfxFindVertexFormat(content);
+                    }
+                    else if (0 == AfxCompareString(name, &AfxStaticString("stream")))
+                    {
+                        AfxScanString(content, "%u", &inStream);
                     }
                     else
                     {
@@ -180,10 +185,10 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     }
                 }
 
-                if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, AfxGetXmlNodeContent(node1)))
+                if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, inStream, AfxGetXmlNodeContent(node1)))
                     AfxThrowError();
             }
-            else if (0 == AfxCompareString(name, &g_str_Flag))
+            else if (0 == AfxCompareString(name, &AfxStaticString("Flag")))
             {
                 AfxAdvertise("%.*s : flag = %.*s", AfxPushString(name), AfxPushString(content));
             }
@@ -193,149 +198,257 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
 
         if (content && !AfxStringIsEmpty(content))
         {
-            if (AfxShaderBlueprintAddCode(blueprint, AfxGetStringDataConst(content, 0), AfxGetStringSize(content)))
+            if (AfxShaderBlueprintAddCode(blueprint, AfxGetStringData(content, 0), AfxGetStringLength(content)))
                 AfxThrowError();
         }
     }
     return err;
 }
 
-_AFX afxError AfxParseXmlBackedPipelinePrimitiveState(afxXmlNode const *node, afxPipelineConfig *state, afxNat *foundMask)
+_AFX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(state);
+    AfxAssert(config);
     AfxAssert(node);
-    //*state = (afxPipelinePrimitiveState) { 0 };
-    *foundMask = 0;
+    
+    afxBool hasUnhandledNodes = FALSE;
+    afxNat childCnt = AfxCountXmlChilds(xml, elemIdx);
+    afxString name, content;
 
-    afxNat nodeAttrCnt = AfxCountXmlAttributes(node);
-    afxString const *name = AfxGetXmlNodeName(node);
-
-    if (0 == AfxCompareString(name, &g_str_Input))
+    for (afxNat i = 0; i < childCnt; i++)
     {
-        for (afxNat j = 0; j < nodeAttrCnt; j++)
-        {
-            name = AfxXmlNodeGetAttributeName(node, j);
-            afxString const *content = AfxXmlNodeGetAttributeContent(node, j);
+        afxNat childIdx = AfxGetXmlChild(xml, elemIdx, i);
+        AfxQueryXmlElement(xml, childIdx, &name, &content);
+        afxNat childTagCnt = AfxCountXmlTags(xml, childIdx);
 
-            if (0 == AfxCompareString(name, &g_str_restart))
+        if (0 == AfxCompareString(&name, &AfxStaticString("RasterizerDiscardEnable")))
+        {
+            afxBool rasterizationDisabled;
+
+            if ((rasterizationDisabled = (0 == AfxCompareString(&content, &AfxStaticString("true")))))
             {
-                state->primRestartEnabled = (0 == AfxCompareString(content, &g_str_true));
-                *foundMask |= AFX_BIT_OFFSET(1);
+                AfxAssertBool(rasterizationDisabled);
+                config->rasFlags |= NIL;
+
+                // retornar sem a chance de buscar por mais entradas, uma vez que não faria sentido as ter se não para usar.
+                break;
             }
-            else
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("FillMode")))
+        {
+            afxFillMode fillMode;
+
+            if ((fillMode = AfxFindFillMode(&content)))
             {
-                //AfxError("Attribute '%.*s' not handled.", AfxPushString(name));
+                AfxAssertRange(afxFillMode_TOTAL, fillMode, 1);
+                config->fillMode = fillMode;
+                config->rasFlags |= afxRasterizationFlag_FILL_MODE;
             }
         }
-    }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthBias")))
+        {
+            afxBool enabledSet = FALSE, constantSet = FALSE, clampSet = FALSE, slopeSet = FALSE;
 
-    afxNat baseChildCnt = AfxCountXmlChildNodes(node);
-
-    for (afxNat i = 0; i < baseChildCnt; i++)
-    {
-        afxXmlNode const *node1 = AfxGetXmlChildNode(node, i);
-        //afxNat node1AttrCnt = AfxCountXmlAttributes(node1);
-        afxString const *name = AfxGetXmlNodeName(node1);
-        afxString const *content = AfxGetXmlNodeContent(node1);
-
-        if (0 == AfxCompareString(name, &g_str_PrimitiveTopology))
-        {
-            state->primTop = AfxFindPrimitiveTopology(content);
-            *foundMask |= AFX_BIT_OFFSET(0);
-        }
-        else if (0 == AfxCompareString(name, &g_str_CullMode))
-        {
-            state->cullMode = AfxFindCullMode(content);
-            *foundMask |= AFX_BIT_OFFSET(2);
-        }
-        else if (0 == AfxCompareString(name, &g_str_FrontFace))
-        {
-            state->cwFrontFacing = (0 == AfxCompareStringLiteralCi(content, 0, "CW", 2));
-            *foundMask |= AFX_BIT_OFFSET(3);
-        }
-    }
-    return err;
-}
-
-_AFX afxError AfxParseXmlBackedPipelineRasterizerState(afxXmlNode const *node, afxPipelineConfig *state, afxNat *foundMask)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(state);
-    AfxAssert(node);
-    //*state = (afxPipelineRasterizerState) { 0 };
-    *foundMask = NIL;
-    afxNat baseChildCnt = AfxCountXmlChildNodes(node);
-
-    for (afxNat i = 0; i < baseChildCnt; i++)
-    {
-        afxXmlNode const *node1 = AfxGetXmlChildNode(node, i);
-        afxNat node1AttrCnt = AfxCountXmlAttributes(node1);
-        afxString const *name = AfxGetXmlNodeName(node1);
-        afxString const *content = AfxGetXmlNodeContent(node1);
-
-        if (0 == AfxCompareString(name, &g_str_DepthClampEnable))
-        {
-            state->depthClampEnabled = (0 == AfxCompareString(content, &g_str_true));
-            *foundMask |= AFX_BIT_OFFSET(0);
-        }
-        else if (0 == AfxCompareString(name, &g_str_RasterizerDiscardEnable))
-        {
-            state->rasterizationDisabled = (0 == AfxCompareString(content, &g_str_true));
-            *foundMask |= AFX_BIT_OFFSET(1);
-        }
-        else if (0 == AfxCompareString(name, &g_str_FillMode))
-        {
-            state->fillMode = AfxFindFillMode(content);
-            *foundMask |= AFX_BIT_OFFSET(2);
-        }
-        else if (0 == AfxCompareString(name, &g_str_DepthBias))
-        {
-            for (afxNat j = 0; j < node1AttrCnt; j++)
+            for (afxNat j = 0; j < childTagCnt; j++)
             {
-                name = AfxXmlNodeGetAttributeName(node1, j);
-                content = AfxXmlNodeGetAttributeContent(node1, j);
+                AfxQueryXmlTag(xml, childIdx, j, &name, &content);
 
-                if (0 == AfxCompareString(name, &g_str_enable))
+                if (0 == AfxCompareString(&name, &AfxStaticString("constant")))
                 {
-                    state->depthBiasEnabled = (0 == AfxCompareString(content, &g_str_true));
-                    *foundMask |= AFX_BIT_OFFSET(5);
+                    afxBool depthBiasConstFactor;
+                    
+                    if (AfxScanString(&content, "%f", &depthBiasConstFactor))
+                    {
+                        config->depthBiasConstFactor = depthBiasConstFactor;
+                        constantSet = TRUE;
+                        enabledSet = TRUE;
+                    }
                 }
-                else if (0 == AfxCompareString(name, &g_str_constant))
+                else if (0 == AfxCompareString(&name, &AfxStaticString("clamp")))
                 {
-                    AfxScanString(content, "%f", &state->depthBiasConstFactor);
-                    *foundMask |= AFX_BIT_OFFSET(6);
+                    afxBool depthBiasClamp;
+
+                    if (AfxScanString(&content, "%f", &depthBiasClamp))
+                    {
+                        config->depthBiasClamp = depthBiasClamp;
+                        clampSet = TRUE;
+                        enabledSet = TRUE;
+                    }
                 }
-                else if (0 == AfxCompareString(name, &g_str_clamp))
+                else if (0 == AfxCompareString(&name, &AfxStaticString("slope")))
                 {
-                    AfxScanString(content, "%f", &state->depthBiasClamp);
-                    *foundMask |= AFX_BIT_OFFSET(7);
-                }
-                else if (0 == AfxCompareString(name, &g_str_slope))
-                {
-                    AfxScanString(content, "%f", &state->depthBiasSlopeScale);
-                    *foundMask |= AFX_BIT_OFFSET(8);
+                    afxBool depthBiasSlopeScale;
+                    
+                    if (AfxScanString(&content, "%f", &depthBiasSlopeScale))
+                    {
+                        config->depthBiasSlopeScale = depthBiasSlopeScale;
+                        slopeSet = TRUE;
+                        enabledSet = TRUE;
+                    }
                 }
                 else
                 {
-                    //AfxError("Attribute '%.*s' not handled.", AfxPushString(name));
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                }
+            }
+
+            if (enabledSet)
+            {
+                config->rasFlags |= afxRasterizationFlag_DEPTH_BIAS;
+
+                if (!clampSet)
+                {
+                    config->depthBiasClamp = identity->depthBiasClamp;
+                    AfxAdvertise("");
+                }
+
+                if (!constantSet)
+                {
+                    config->depthBiasConstFactor = identity->depthBiasConstFactor;
+                    AfxAdvertise("");
+                }
+
+                if (!slopeSet)
+                {
+                    config->depthBiasSlopeScale = identity->depthBiasSlopeScale;
+                    AfxAdvertise("");
                 }
             }
         }
-        else if (0 == AfxCompareString(name, &g_str_LineWidth))
+        else if (0 == AfxCompareString(&name, &AfxStaticString("LineWidth")))
         {
-            AfxScanString(content, "%f", &state->lineWidth);
-            *foundMask |= AFX_BIT_OFFSET(9);
+            afxReal lineWidth;
+
+            if (AfxScanString(&content, "%f", &lineWidth))
+            {
+                config->lineWidth = lineWidth;
+                config->rasFlags |= afxRasterizationFlag_LINE_WIDTH;
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthTestEnabled")))
+        {
+            config->depthTestEnabled = TRUE;
+            config->dsFlags |= afxDepthStencilFlag_TEST;
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthWriteEnabled")))
+        {
+            config->depthWriteEnabled = TRUE;
+            config->dsFlags |= afxDepthStencilFlag_WRITE;
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthCompareOp")))
+        {
+            if ((config->depthCompareOp = AfxFindCompareOp(&content)))
+            {
+                config->dsFlags |= afxDepthStencilFlag_COMPARE;
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthBoundsTest")))
+        {
+            afxBool boundsSet = FALSE, boundsMinSet = FALSE, boundsMaxSet = FALSE;
+
+            for (afxNat j = 0; j < childTagCnt; j++)
+            {
+                AfxQueryXmlTag(xml, childIdx, j, &name, &content);
+
+                if (0 == AfxCompareString(&name, &AfxStaticString("min")))
+                {
+                    afxReal mini;
+
+                    if (AfxScanString(&content, "%f", &mini))
+                    {
+                        config->depthBounds[0] = mini;
+                        boundsMinSet = TRUE;
+                        boundsSet = TRUE;
+                    }
+                }
+                else if (0 == AfxCompareString(&name, &AfxStaticString("max")))
+                {
+                    afxReal maxi;
+
+                    if (AfxScanString(&content, "%f", &maxi))
+                    {
+                        config->depthBounds[1] = maxi;
+                        boundsMinSet = TRUE;
+                        boundsSet = TRUE;
+                    }
+                }
+                else
+                {
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                }
+            }
+
+            if (boundsSet)
+            {
+                config->dsFlags = afxDepthStencilFlag_BOUNDS_TEST;
+
+                if (!boundsMinSet)
+                {
+                    config->depthBounds[0] = identity->depthBounds[0];
+                    AfxAdvertise("");
+                }
+
+                if (!boundsMaxSet)
+                {
+                    config->depthBounds[1] = identity->depthBounds[1];
+                    AfxAdvertise("");
+                }
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("StencilTest")))
+        {
+            for (afxNat j = 0; j < childTagCnt; j++)
+            {
+                AfxQueryXmlTag(xml, childIdx, j, &name, &content);
+
+                if (0 == AfxCompareString(&name, &AfxStaticString("enable")))
+                {
+                    if ((config->stencilTestEnabled = (0 == AfxCompareString(&content, &AfxStaticString("true")))))
+                    {
+                        config->dsFlags |= afxDepthStencilFlag_STENCIL_TEST;
+#if !0
+                        afxNat childCnt2 = AfxCountXmlChilds(xml, childIdx);
+
+                        for (afxNat k = 0; k < childCnt2; k++)
+                        {
+                            afxNat childIdx2 = AfxGetXmlChild(xml, childIdx, k);
+                            AfxQueryXmlElement(xml, childIdx2, &name, &content);
+
+                            if (0 == AfxCompareString(&name, &AfxStaticString("Front")))
+                            {
+                                //_AfxParseXmlBackedPipelineDepthStateStencilFace(childChild, elemIdx, specIdx, TRUE, state, state, foundMask); // 7 - 8 - 9 - 10
+
+                            }
+                            else if (0 == AfxCompareString(&name, &AfxStaticString("Back")))
+                            {
+                                //_AfxParseXmlBackedPipelineDepthStateStencilFace(childChild, elemIdx, specIdx, FALSE, state, state, foundMask); // 11 - 12 - 13 - 14
+                            }
+                            else
+                            {
+                                AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
+                            }
+                        }
+#endif
+                    }
+                }
+                else
+                {
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                }
+            }
         }
         else
         {
-            //AfxError("Node '%.*s' not handled.", AfxPushString(name));
+            AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
+            hasUnhandledNodes = TRUE;
         }
     }
+
     return err;
 }
 
-_AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxBool front, afxPipelineConfig *ds, afxNat *foundMask)
+#if 0
+_AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineConfig const* identity, afxPipelineConfig *ds, afxPipelineDepthFlags *foundMask)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -353,12 +466,12 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.failOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(7);
+                *foundMask |= AfxGetBitOffset(7);
             }
             else
             {
                 ds->stencilBack.failOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(11);
+                *foundMask |= AfxGetBitOffset(11);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_pass))
@@ -366,12 +479,12 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.passOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(8);
+                *foundMask |= AfxGetBitOffset(8);
             }
             else
             {
                 ds->stencilBack.passOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(12);
+                *foundMask |= AfxGetBitOffset(12);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_depthFail))
@@ -379,12 +492,12 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(9);
+                *foundMask |= AfxGetBitOffset(9);
             }
             else
             {
                 ds->stencilBack.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(13);
+                *foundMask |= AfxGetBitOffset(13);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_compare))
@@ -392,277 +505,124 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AFX_BIT_OFFSET(10);
+                *foundMask |= AfxGetBitOffset(10);
             }
             else
             {
                 ds->stencilBack.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AFX_BIT_OFFSET(14);
+                *foundMask |= AfxGetBitOffset(14);
             }
         }
         else
         {
-            //AfxError("Attribute '%.*s' not handled.", AfxPushString(name));
+            AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
         }
     }
     return err;
 }
+#endif
 
-_AFX afxError AfxParseXmlBackedPipelineDepthState(afxXmlNode const *node, afxPipelineConfig *state, afxNat *foundMask)
+_AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(state);
-    AfxAssert(node);
-
-    *foundMask = NIL;
-    //*state = (afxPipelineDepthState) { 0 };
-
-    afxNat baseChildCnt = AfxCountXmlChildNodes(node);
-
-    for (afxNat i = 0; i < baseChildCnt; i++)
-    {
-        afxXmlNode const *node1 = AfxGetXmlChildNode(node, i);
-        afxNat node1ChildCnt = AfxCountXmlChildNodes(node1);
-        afxNat node1AttrCnt = AfxCountXmlAttributes(node1);
-        afxString const *name = AfxGetXmlNodeName(node1);
-        afxString const *content = AfxGetXmlNodeContent(node1);
-
-        if (0 == AfxCompareString(name, &g_str_DepthTestEnable))
-        {
-            state->depthTestEnabled = (0 == AfxCompareString(content, &g_str_true));
-            *foundMask |= AFX_BIT_OFFSET(0);
-        }
-        else if (0 == AfxCompareString(name, &g_str_DepthWriteEnable))
-        {
-            state->depthWriteEnabled = (0 == AfxCompareString(content, &g_str_true));
-            *foundMask |= AFX_BIT_OFFSET(1);
-        }
-        else if (0 == AfxCompareString(name, &g_str_DepthCompareOp))
-        {
-            state->depthCompareOp = AfxFindCompareOp(content);
-            *foundMask |= AFX_BIT_OFFSET(2);
-        }
-        else if (0 == AfxCompareString(name, &g_str_DepthBoundsTest))
-        {
-            for (afxNat j = 0; j < node1AttrCnt; j++)
-            {
-                name = AfxXmlNodeGetAttributeName(node1, j);
-                content = AfxXmlNodeGetAttributeContent(node1, j);
-
-                if (0 == AfxCompareString(name, &g_str_enable))
-                {
-                    state->depthBoundsTestEnabled = (0 == AfxCompareString(content, &g_str_true));
-                    *foundMask |= AFX_BIT_OFFSET(3);
-                }
-                else if (0 == AfxCompareString(name, &g_str_min))
-                {
-                    AfxScanString(content, "%f", &state->depthBounds[0]);
-                    *foundMask |= AFX_BIT_OFFSET(4);
-                }
-                else if (0 == AfxCompareString(name, &g_str_max))
-                {
-                    AfxScanString(content, "%f", &state->depthBounds[1]);
-                    *foundMask |= AFX_BIT_OFFSET(5);
-                }
-                else
-                {
-                    //AfxError("Attribute '%.*s' not handled.", AfxPushString(name));
-                }
-            }
-        }
-        else if (0 == AfxCompareString(name, &g_str_StencilTest))
-        {
-            for (afxNat j = 0; j < node1AttrCnt; j++)
-            {
-                name = AfxXmlNodeGetAttributeName(node1, j);
-                content = AfxXmlNodeGetAttributeContent(node1, j);
-
-                if (0 == AfxCompareString(name, &g_str_enable))
-                {
-                    if ((state->stencilTestEnabled = (0 == AfxCompareString(content, &g_str_true))))
-                    {
-                        *foundMask |= AFX_BIT_OFFSET(6);
-
-                        for (afxNat k = 0; k < node1ChildCnt; k++)
-                        {
-                            afxXmlNode const *node2 = AfxGetXmlChildNode(node1, k);
-                            name = AfxGetXmlNodeName(node2);
-
-                            if (0 == AfxCompareString(name, &g_str_Front))
-                            {
-                                _AfxParseXmlBackedPipelineDepthStateStencilFace(node2, TRUE, state, foundMask); // 7 - 8 - 9 - 10
-
-                            }
-                            else if (0 == AfxCompareString(name, &g_str_Back))
-                            {
-                                _AfxParseXmlBackedPipelineDepthStateStencilFace(node2, FALSE, state, foundMask); // 11 - 12 - 13 - 14
-                            }
-                            else
-                            {
-                                //AfxError("Node '%.*s' not handled.", AfxPushString(name));
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //AfxError("Attribute '%.*s' not handled.", AfxPushString(name));
-                }
-            }
-        }
-        else
-        {
-            //AfxError("Node '%.*s' not handled.", AfxPushString(name));
-        }
-    }
-    return err;
-}
-
-_AFX afxError AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipelineConfig *blueprint, afxDrawContext dctx)
-{
-    afxError err = AFX_ERR_NONE;
+    AfxAssert(config);
+    AfxAssert(identity);
     AfxAssert(node);
     //AfxAssertType(blueprint, afxFcc_PIPB);
-    afxXmlNode const *node0 = node;
-    afxString const *name = AfxGetXmlNodeName(node0);
-    afxString const *content;
-    afxNat attrCnt = AfxCountXmlAttributes(node0);
+    
+    afxString name;
+    afxString content;
 
-    if (AfxCompareString(name, &g_str_Pipeline)) AfxThrowError();
-    else
+    afxNat foundShdCnt = 0;
+    afxNat childCnt = AfxCountXmlChilds(xml, elemIdx);
+
+    for (afxNat i = 0; i < childCnt; i++)
     {
-        //AfxPipelineBlueprintErase(blueprint);
-
-        for (afxNat i = 0; i < attrCnt; i++)
+        afxNat chilIdx = AfxGetXmlChild(xml, elemIdx, i);
+        AfxQueryXmlElement(xml, chilIdx, &name, &content);
+        
+        if (0 == AfxCompareString(&name, &AfxStaticString("PrimitiveTopology")))
         {
-            name = AfxXmlNodeGetAttributeName(node0, i);
-            content = AfxXmlNodeGetAttributeContent(node0, i);
+            afxPrimTopology primTop;
 
-            if (0 == AfxCompareString(name, &g_str_id))
+            if ((primTop = AfxFindPrimitiveTopology(&content)))
             {
-                afxUri tmpUri;
-                AfxReflectUriString(&tmpUri, content);
-                //AfxCopyUri(&blueprint->uri.uri , &tmpUri);
+                AfxAssertRange(afxPrimTopology_TOTAL, primTop, 1);
+                config->primTop = primTop;
+                config->primFlags |= afxPipelinePrimitiveFlag_TOPOLOGY;
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("CullMode")))
+        {
+            afxCullMode cullMode;
+
+            if ((cullMode = AfxFindCullMode(&content)))
+            {
+                AfxAssertRange(afxCullMode_TOTAL, cullMode, 1);
+                config->cullMode = cullMode;
+                config->primFlags |= afxPipelinePrimitiveFlag_CULL_MODE;
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("FrontFace")))
+        {
+            afxBool invertFrontFacing;
+
+            if ((invertFrontFacing = (0 == AfxCompareString(&content, &AfxStaticString("CW")))))
+            {
+                AfxAssert(!invertFrontFacing && (0 == AfxCompareString(&content, &AfxStaticString("CCW"))));
+                AfxAssertBool(invertFrontFacing);
+                config->invertFrontFacing = invertFrontFacing;
+                config->primFlags |= afxPipelinePrimitiveFlag_FRONT_FACE_INV;
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("DepthClampEnabled")))
+        {
+            config->depthClampEnabled = TRUE;
+            config->primFlags |= afxPipelinePrimitiveFlag_DEPTH_CLAMP;
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Shader")))
+        {
+            if (!AfxStringIsEmpty(&content))
+            {
+                afxUri tempUri;
+                AfxUriFromString(&tempUri, &content);
+                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+
+                config->shd[foundShdCnt] = NIL;
+                AfxResetUri(&config->shdUri[foundShdCnt]);
+                AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
+                ++foundShdCnt;
             }
             else
             {
-                //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                // ?
             }
         }
-
-        afxNat childCnt2 = AfxCountXmlChildNodes(node0);
-
-        for (afxNat k = 0; k < childCnt2; k++)
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Rasterizer")))
         {
-            afxXmlNode const *node3 = AfxGetXmlChildNode(node0, k);
-            name = AfxGetXmlNodeName(node3);
-            attrCnt = AfxCountXmlAttributes(node3);
-
-            if (0 == AfxCompareString(name, &g_str_Shader))
+            if (!AfxStringIsEmpty(&content))
             {
-                afxShaderStage stage = NIL;
-                //afxString const *shaderName = NIL;
+                afxUri tempUri;
+                AfxUriFromString(&tempUri, &content);
+                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                for (afxNat l = 0; l < attrCnt; l++)
-                {
-                    name = AfxXmlNodeGetAttributeName(node3, l);
-                    content = AfxXmlNodeGetAttributeContent(node3, l);
-
-                    if (0 == AfxCompareString(name, &g_str_stage))
-                    {
-                        stage = AfxFindShaderStage(content);
-                    }
-#if 0
-                    else if (0 == AfxCompareString(name, &g_str_uri))
-                    {
-                        afxUri tempUri;
-                        AfxReflectUriString(&tempUri, content);
-
-                        if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
-                            AfxThrowError();
-                    }
-#endif
-                    else
-                    {
-                        //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
-                    }
-                }
-
-                content = AfxGetXmlNodeContent(node3);
-
-                if (content && !AfxStringIsEmpty(content))
-                {
-                    afxUri tempUri;
-                    AfxReflectUriString(&tempUri, content);
-                    AfxEcho("%.*s", AfxPushString(AfxUriGetStringConst(&tempUri)));
-
-                    if (!(blueprint->sh[blueprint->shdCnt] = AfxCompileShaderFromXsh(dctx, &tempUri))) AfxThrowError();
-                    else
-                    {
-                        blueprint->shdCnt++;
-                    }
-                }
+                config->ras = NIL;
+                AfxResetUri(&config->rasUri);
+                AfxReplicateUri(&config->rasUri, &tempUri);
             }
-            else 
+            else
             {
-                if (0 == AfxCompareString(name, &g_str_Input))
-                {
-                    
-
-                }
-
+                config->ras = NIL;
+                AfxResetUri(&config->rasUri);
             }
         }
-
+        else
         {
-            blueprint->primTop = afxPrimTopology_TRI_LIST;
-            blueprint->primRestartEnabled = FALSE;
-            blueprint->cullMode = afxCullMode_BACK;
-            blueprint->cwFrontFacing = FALSE;
-            afxNat foundMask = NIL;
-
-            if (AfxParseXmlBackedPipelinePrimitiveState(node0, blueprint, &foundMask))
-            {
-                AfxThrowError();
-            }
-        }
-
-        {
-            blueprint->rasterizationDisabled = FALSE;
-            blueprint->depthBiasClamp = FALSE;
-            blueprint->fillMode = afxFillMode_SOLID;
-            blueprint->depthBiasEnabled = FALSE;
-            blueprint->depthBiasSlopeScale = 0;
-            blueprint->depthBiasConstFactor = 0;
-            blueprint->depthBiasClamp = 0;
-            blueprint->lineWidth = 1;
-            afxNat foundMask = NIL;
-
-            if (AfxParseXmlBackedPipelineRasterizerState(node0, blueprint, &foundMask))
-                AfxThrowError();
-        }
-
-        {
-            blueprint->depthTestEnabled = FALSE;
-            blueprint->depthWriteEnabled = FALSE;
-            blueprint->depthCompareOp = afxCompareOp_ALWAYS;
-            blueprint->stencilTestEnabled = FALSE;
-            blueprint->stencilFront.compareMask = (blueprint->stencilBack.compareMask = 1);
-            blueprint->stencilFront.compareOp = (blueprint->stencilBack.compareOp = afxCompareOp_ALWAYS);
-            blueprint->stencilFront.depthFailOp = (blueprint->stencilBack.depthFailOp = afxStencilOp_KEEP);
-            blueprint->stencilFront.failOp = (blueprint->stencilBack.failOp = afxStencilOp_KEEP);
-            blueprint->stencilFront.passOp = (blueprint->stencilBack.passOp = afxStencilOp_KEEP);
-            blueprint->stencilFront.reference = (blueprint->stencilBack.reference = 1);
-            blueprint->stencilFront.writeMask = (blueprint->stencilBack.writeMask = 1);
-            blueprint->depthBoundsTestEnabled = FALSE;
-            blueprint->depthBounds[0] = 0;
-            blueprint->depthBounds[1] = 1;
-            afxNat foundMask = NIL;
-
-            if (AfxParseXmlBackedPipelineDepthState(node0, blueprint, &foundMask))
-                AfxThrowError();
+            AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
         }
     }
+
+    config->shdCnt = foundShdCnt;
     return err;
 }
 
@@ -692,7 +652,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
-                AfxReflectUriString(&tmpUri, content);
+                AfxUriFromString(&tmpUri, content);
                 AfxDrawOperationBlueprintRename(blueprint, &tmpUri);
             }
             else
@@ -787,7 +747,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                             else if (0 == AfxCompareString(name, &g_str_uri))
                                             {
                                                 afxUri tempUri;
-                                                AfxReflectUriString(&tempUri, content);
+                                                AfxUriFromString(&tempUri, content);
 
                                                 if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                     AfxThrowError();
@@ -804,7 +764,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                         if (content && !AfxStringIsEmpty(content))
                                         {
                                             afxUri tempUri;
-                                            AfxReflectUriString(&tempUri, content);
+                                            AfxUriFromString(&tempUri, content);
 
                                             if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                 AfxThrowError();
@@ -946,7 +906,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
 
                                             if (shdName)
                                             {
-                                                if (0 == AfxCompareString(shdName, AfxUriGetString(&blueprint.reqShaders[k])))
+                                                if (0 == AfxCompareString(shdName, AfxGetMutableUriString(&blueprint.reqShaders[k])))
                                                 {
                                                     afxShaderBlueprint shdb;
                                                     AfxParseXmlBackedShaderBlueprint(&shdb, node11);

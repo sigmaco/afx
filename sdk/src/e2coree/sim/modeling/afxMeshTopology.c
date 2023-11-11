@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_MESH_TOPOLOGY_C
 #define _AFX_SIMULATION_C
 #include "afx/sim/modeling/afxMeshTopology.h"
@@ -30,8 +31,10 @@ _AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
         afxSimulation sim = AfxGetObjectProvider(msht);
         AfxAssertObjects(1, &sim, afxFcc_SIM);
 
+        afxNat idxSiz = AfxDetermineMeshIndexSize(msht);
+
         afxBufferSpecification spec;
-        spec.siz = msht->vtxIdxCnt * sizeof(msht->vtxIdx[0]);
+        spec.siz = msht->vtxIdxCnt * idxSiz;
         spec.src = msht->vtxIdx;
         spec.usage = afxBufferUsage_INDEX;
 
@@ -44,7 +47,7 @@ _AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
             cache->range = spec.siz;
             cache->stride = cache->range / msht->vtxIdxCnt;
 
-            cache->idxSiz = sizeof(msht->vtxIdx[0]);
+            cache->idxSiz = idxSiz;
         }
 
         afxBuffer buf;
@@ -61,7 +64,7 @@ _AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
             rgn.base = cache->base;
             rgn.range = cache->range;
             rgn.stride = cache->stride;
-
+            
             rgn.offset = 0;
             rgn.unitSiz = cache->idxSiz;
             AfxUpdateBufferRegion(cache->buf, &rgn, msht->vtxIdx, sizeof(msht->vtxIdx[0]));

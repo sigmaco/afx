@@ -29,7 +29,7 @@ AFX_DEFINE_STRUCT(afxViewConstants) // frame
     afxM4d  vp;
     afxM4d  ivp;
 
-    afxV4d  viewpoint; // view point
+    afxV4d  viewPos; // view point
     afxV2d  viewExtent;
 
     afxV3d starDir;
@@ -113,6 +113,8 @@ AFX_OBJECT(afxRenderer)
     afxPipeline    blinnTestPip;
     afxPipeline    tutCamUtil;
     
+    afxPipeline lighting;
+
     afxPose*      lp;
     afxWorldPose* wp;
 };

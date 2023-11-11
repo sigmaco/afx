@@ -1,0 +1,777 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0fd8b90c by 00000000 over 00000000 with 0fd88770)
+ afxClass<Basic I/O System>::ConstructObject(006180a0)
+ afxSystem.c:1019
+  _AfxSysCtor(sys=006180a0)
+ Installing Context at 006180dc by 006180c8 over 00000000 with 0fd88074)
+ Installing Module at 006181a0 by 006180c8 over 00000000 with 0fd88604)
+ Installing Thread at 006183ec by 006180c8 over 00000000 with 0fd887a0)
+ Installing File at 00618574 by 006180c8 over 00000000 with 0fd885a4)
+ Installing Archive at 00618638 by 006180c8 over 00000000 with 0fd88030)
+ Installing Application at 006184b0 by 006180c8 over 00000000 with 0fd88000)
+ Installing Keyboard at 00618264 by 006180c8 over 00000000 with 0fd885d4)
+ Installing Mouse at 00618328 by 006180c8 over 00000000 with 0fd88634)
+ Installing Draw I/O System at 006186fc by 006180c8 over 00000000 with 0fd890a0)
+ Installing Simulation at 006187c0 by 006180c8 over 00000000 with 0fd89218)
+ [!] afxSystem.c:1104?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1105?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:197
+  AfxAcquireContexts(cnt=1,app=00618884,strategy=001cdfe8)
+ afxClass<Context>::ConstructObject(00613b60)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=00613b60)
+ afxArena.c:767
+  AfxAcquireArena(aren=006188e0)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1157!_AfxSysCtor")
+ afxSystem.c:762
+  AfxMountStoragePoints(6,001ce140)
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>2 + <offset>0 is out of capacity <range>4.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>2 + <offset>0 is out of capacity <range>4.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>1 + <offset>0 is out of capacity <range>2.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>13 + <offset>0 is out of capacity <range>16.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>11 + <offset>0 is out of capacity <range>19.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>11 + <offset>0 is out of capacity <range>19.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>6 + <offset>0 is out of capacity <range>12.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>22 + <offset>0 is out of capacity <range>30.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>8 + <offset>0 is out of capacity <range>13.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>8 + <offset>0 is out of capacity <range>13.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>5 + <offset>0 is out of capacity <range>10.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>19 + <offset>0 is out of capacity <range>24.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>7 + <offset>0 is out of capacity <range>11.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>7 + <offset>0 is out of capacity <range>11.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>4 + <offset>0 is out of capacity <range>8.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>18 + <offset>0 is out of capacity <range>22.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>6 + <offset>0 is out of capacity <range>9.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>6 + <offset>0 is out of capacity <range>9.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>3 + <offset>0 is out of capacity <range>6.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>17 + <offset>0 is out of capacity <range>20.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>6 + <offset>0 is out of capacity <range>9.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>6 + <offset>0 is out of capacity <range>9.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>3 + <offset>0 is out of capacity <range>6.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>17 + <offset>0 is out of capacity <range>20.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=006188b0,uri=001ce078)
+ afxClass<Module>::ConstructObject(0061d5d0)
+ afxModule.c:95
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>18 + <offset>0 is out of capacity <range>21.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxUri.c:572?AfxGetUriDirectory
+  
+ ERR afxUri.c:572?AfxGetUriDirectory
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:573?AfxGetUriDirectory
+  
+ ERR afxUri.c:573?AfxGetUriDirectory
+  (len == uri->dir)
+    Invalid
+ ERR afxUri.c:574?AfxGetUriDirectory
+  
+ ERR afxUri.c:574?AfxGetUriDirectory
+  (len == dir)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>18 + <offset>7 is out of capacity <range>14.
+ ERR afxUri.c:618?AfxGetUriObject
+  
+ ERR afxUri.c:618?AfxGetUriObject
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:619?AfxGetUriObject
+  
+ ERR afxUri.c:619?AfxGetUriObject
+  (len == uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:620?AfxGetUriObject
+  
+ ERR afxUri.c:620?AfxGetUriObject
+  (len == fnameExt)
+    Invalid
+ E:/qwadro/afx/system32/e2coree.dll
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>34 + <offset>0 is out of capacity <range>37.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ afxKeyboard.c:287
+  AfxAcquireKeyboards(cnt=1,port=001cdfc0,kbd=006188b4)
+ afxClass<Keyboard>::ConstructObject(0061da00)
+ afxKeyboard.c:251
+  _AfxKbdCtor(kbd=0061da00)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw I/O System>::ConstructObject(0061e400)
+ Entering the Threading Execution Environment  1
+ afxSystem.c:1000
+  startCbOnSysProcUnit(Threading Execution Environment 1 started)
+ Entering the Threading Execution Environment  0
+ afxDrawSystem.c:678
+  _AfxDsysCtor(dsys=0061e400)
+ Installing Draw Thread at 0061e840 by 0061e458 over 00000000 with 001ceaf4)
+ Installing Installable Client (Draw) Driver at 0061e46c by 0061e458 over 00000000 with 001ceac4)
+ Installing Draw Device at 0061e530 by 0061e458 over 00000000 with 001cea94)
+ Installing Draw Context at 0061e5f4 by 0061e458 over 00000000 with 001cea64)
+ Installing Draw Output at 0061e6b8 by 0061e458 over 00000000 with 001cea34)
+ Installing Draw Input at 0061e77c by 0061e458 over 00000000 with 001cea04)
+ Loading draw ICD system/e2draw.icd
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>17 + <offset>7 is out of capacity <range>12.
+ ERR afxUri.c:618?AfxGetUriObject
+  
+ ERR afxUri.c:618?AfxGetUriObject
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:619?AfxGetUriObject
+  
+ ERR afxUri.c:619?AfxGetUriObject
+  (len == uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:620?AfxGetUriObject
+  
+ ERR afxUri.c:620?AfxGetUriObject
+  (len == fnameExt)
+    Invalid
+ ERR afxUri.c:618?AfxGetUriObject
+  
+ ERR afxUri.c:618?AfxGetUriObject
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:619?AfxGetUriObject
+  
+ ERR afxUri.c:619?AfxGetUriObject
+  (len == uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:620?AfxGetUriObject
+  
+ ERR afxUri.c:620?AfxGetUriObject
+  (len == fnameExt)
+    Invalid
+ ERR afxUri.c:618?AfxGetUriObject
+  
+ ERR afxUri.c:618?AfxGetUriObject
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:619?AfxGetUriObject
+  
+ ERR afxUri.c:619?AfxGetUriObject
+  (len == uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:620?AfxGetUriObject
+  
+ ERR afxUri.c:620?AfxGetUriObject
+  (len == fnameExt)
+    Invalid
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=001ce898,uri=001ce8a0)
+ afxClass<Module>::ConstructObject(0061d62c)
+ afxModule.c:95
+  _AfxMdleCtor(uri:e2draw.icd)
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxUri.c:618?AfxGetUriObject
+  
+ ERR afxUri.c:618?AfxGetUriObject
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:619?AfxGetUriObject
+  
+ ERR afxUri.c:619?AfxGetUriObject
+  (len == uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:620?AfxGetUriObject
+  
+ ERR afxUri.c:620?AfxGetUriObject
+  (len == fnameExt)
+    Invalid
+ ERR afxString.c:731?AfxExcerptStringRange
+  
+ ERR afxString.c:731?AfxExcerptStringRange
+  <parent->range>10 + <offset>0 is out of capacity <range>12.
+ ERR afxString.c:735?AfxExcerptStringRange
+  
+ ERR afxString.c:735?AfxExcerptStringRange
+  (effectiveRange == range)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00620d40)
+ afxDrawSystem.c:390
+  _AfxDdrvCtor(ddrv=00620d40)
+ ERR afxModule.c:68?AfxGetModulePath
+  
+ ERR afxModule.c:68?AfxGetModulePath
+  (((afxResult)(1)) == _AfxAssertObjects((1), (afxHandle const*)(&mdle),(afxFcc_MDLE)))
+    Invalid
+ ERR afxUri.c:612?AfxGetUriObject
+  
+ ERR afxUri.c:612?AfxGetUriObject
+  (parent)
+    Invalid

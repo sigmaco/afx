@@ -32,43 +32,44 @@
 
 typedef enum afxVertexUsage
 {
-    afxVertexUsage_POS          = AFX_BIT_OFFSET(0),
-    afxVertexUsage_JNT          = AFX_BIT_OFFSET(1),
-    afxVertexUsage_WGT          = AFX_BIT_OFFSET(2),
+    afxVertexUsage_POS          = AfxGetBitOffset(0),
+    afxVertexUsage_JNT          = AfxGetBitOffset(1),
+    afxVertexUsage_WGT          = AfxGetBitOffset(2),
     afxVertexUsage_BLENDING     = afxVertexUsage_JNT | afxVertexUsage_WGT,
     afxVertexUsage_POSITIONAL   = afxVertexUsage_POS | afxVertexUsage_BLENDING,
 
-    afxVertexUsage_NRM          = AFX_BIT_OFFSET(3),
-    afxVertexUsage_TAN          = AFX_BIT_OFFSET(4),
-    afxVertexUsage_BTN          = AFX_BIT_OFFSET(5),
-    afxVertexUsage_LIGHTING     = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BTN,
+    afxVertexUsage_NRM          = AfxGetBitOffset(3),
+    afxVertexUsage_TAN          = AfxGetBitOffset(4),
+    afxVertexUsage_BIT          = AfxGetBitOffset(5),
+    afxVertexUsage_TBC          = AfxGetBitOffset(10), // tangent-binormal cross
+    afxVertexUsage_LIGHTING     = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BIT,
     afxVertexUsage_SPATIAL      = afxVertexUsage_POSITIONAL | afxVertexUsage_LIGHTING,
 
-    afxVertexUsage_UV           = AFX_BIT_OFFSET(6),
+    afxVertexUsage_UV           = AfxGetBitOffset(6),
     afxVertexUsage_VISUAL       = afxVertexUsage_UV,
 } afxVertexUsage;
 
 typedef enum afxVertexFlag
 {
-    afxVertexFlag_DYNAMIC = AFX_BIT_OFFSET(0), // The data store contents will be modified repeatedly and used many times.
-    afxVertexFlag_STREAM = AFX_BIT_OFFSET(1), // The data store contents will be modified once and used at most a few times.
+    afxVertexFlag_DYNAMIC = AfxGetBitOffset(0), // The data store contents will be modified repeatedly and used many times.
+    afxVertexFlag_STREAM = AfxGetBitOffset(1), // The data store contents will be modified once and used at most a few times.
     
-    afxVertexFlag_POSITIONAL = AFX_BIT_OFFSET(2),
-    afxVertexFlag_SPATIAL = AFX_BIT_OFFSET(3),
+    afxVertexFlag_POSITIONAL = AfxGetBitOffset(2),
+    afxVertexFlag_SPATIAL = AfxGetBitOffset(3),
 
-    afxVertexFlag_NORMALIZED = AFX_BIT_OFFSET(4),
-    afxVertexFlag_RASTERIZATION = AFX_BIT_OFFSET(5),
+    afxVertexFlag_NORMALIZED = AfxGetBitOffset(4),
+    afxVertexFlag_RASTERIZATION = AfxGetBitOffset(5),
 
-    afxVertexFlag_AFFINE = AFX_BIT_OFFSET(10),
+    afxVertexFlag_AFFINE = AfxGetBitOffset(10),
     /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
 
-    afxVertexFlag_LINEAR = AFX_BIT_OFFSET(11),
+    afxVertexFlag_LINEAR = AfxGetBitOffset(11),
     /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
 
-    afxVertexFlag_LINEAR_INV = AFX_BIT_OFFSET(12),
+    afxVertexFlag_LINEAR_INV = AfxGetBitOffset(12),
     /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
 
-    afxVertexFlag_DELTA = AFX_BIT_OFFSET(13), // treat as delta
+    afxVertexFlag_DELTA = AfxGetBitOffset(13), // treat as delta
 } afxVertexFlags;
 
 AFX_DEFINE_STRUCT(afxVertexBias)
@@ -189,6 +190,6 @@ AFX void*               AfxExposeVertexData(afxVertexData vtd, afxNat attrIdx, a
 
 AFX afxError            AfxBuildVertexDatas(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxVertexData vtxd[]);
 
-AFX void                AfxTransformVertexDatas(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxBool renormalize, afxNat cnt, afxVertexData vtd[]);
+AFX void                AfxTransformVertexDatas(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxBool renormalize, afxNat cnt, afxVertexData vtd[]);
 
 #endif//AFX_VERTEX_DATA_H

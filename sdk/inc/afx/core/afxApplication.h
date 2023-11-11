@@ -40,12 +40,12 @@ AFX_DEFINE_STRUCT(afxApplicationConfig)
     afxNat                  maxSimCnt;
 };
 
+#ifdef _AFX_CORE_C
 #ifdef _AFX_APPLICATION_C
 AFX_OBJECT(afxApplication)
 {
     afxChain                classes;
     afxClass                widgets;
-    afxClass                simulations;
 
     afxThread               thr;
 
@@ -72,6 +72,7 @@ AFX_OBJECT(afxApplication)
     afxV2d                  grabPoint;
 };
 #endif//_AFX_APPLICATION_C
+#endif//_AFX_CORE_C
 
 AFX afxNat                  AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication app[]);
 
@@ -81,10 +82,9 @@ AFX void                    AfxEndApplication(afxApplication app, afxInt exitCod
 AFX void                    AfxQuitApplication(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
 AFX afxResult               AfxRunApplication(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
 
-AFX afxError                AfxAcquireSimulations(afxApplication app, afxNat cnt, afxSimulation sim[], afxSimulationConfig const config[]);
 AFX afxError                AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[]);
 
-AFX afxDrawContext            AfxApplicationGetDrawContext(afxApplication app);
+AFX afxDrawContext          AfxApplicationGetDrawContext(afxApplication app);
 AFX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
 
 AFX afxThread               AfxGetApplicationThread(afxApplication app);
@@ -93,7 +93,6 @@ AFX afxClass*               AfxGetWidgetClass(afxApplication app);
 AFX afxClass*               AfxGetSimulationClass(afxApplication app);
 
 AFX afxNat                  AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[]);
-AFX afxNat                  AfxEnumerateSimulations(afxApplication app, afxNat first, afxNat cnt, afxSimulation sim[]);
 
 AFX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
 AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);

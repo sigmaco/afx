@@ -27,10 +27,8 @@ AFX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[],
 
 AFX afxError    AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, afxDrawOperationBlueprint *blueprint);
 AFX afxError    AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShaderBlueprint *blueprint);
-AFX afxError    AfxParseXmlBackedPipelineBlueprint(afxXmlNode const *node, afxPipelineConfig *blueprint, afxDrawContext dctx);
 
-//AFX afxError    AfxParseXmlBackedPipelineDepthState(afxXmlNode const *node, afxPipelineDepthState *state, afxNat *foundMask);
-//AFX afxError    AfxParseXmlBackedPipelineRasterizerState(afxXmlNode const *node, afxPipelineRasterizerState *state, afxNat *foundMask);
-//AFX afxError    AfxParseXmlBackedPipelinePrimitiveState(afxXmlNode const *node, afxPipelinePrimitiveState *state, afxNat *foundMask);
+AFX afxError    AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx);
+AFX afxError    AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx);
 
 #endif//AFX_XML_BACKED_DRAWABLE_RESOURCES_H

@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_SIMULATION_C
 #include "afx/sim/afxSimulation.h"
 #include "afx/sim/rendering/afxSky.h"
@@ -55,12 +56,12 @@ _AFX afxError AfxBuildSkybox(afxSky* sky, afxSimulation sim)
 
     // sky
     afxUri cubeUri[6];
-    AfxUriWrapLiteral(&cubeUri[0], "art/skybox/day/right.tga", 0);
-    AfxUriWrapLiteral(&cubeUri[1], "art/skybox/day/left.tga", 0);
-    AfxUriWrapLiteral(&cubeUri[2], "art/skybox/day/bottom.tga", 0);
-    AfxUriWrapLiteral(&cubeUri[3], "art/skybox/day/top.tga", 0);
-    AfxUriWrapLiteral(&cubeUri[4], "art/skybox/day/front.tga", 0);
-    AfxUriWrapLiteral(&cubeUri[5], "art/skybox/day/back.tga", 0);
+    AfxMakeUri(&cubeUri[0], "art/skybox/day/right.tga", 0);
+    AfxMakeUri(&cubeUri[1], "art/skybox/day/left.tga", 0);
+    AfxMakeUri(&cubeUri[2], "art/skybox/day/bottom.tga", 0);
+    AfxMakeUri(&cubeUri[3], "art/skybox/day/top.tga", 0);
+    AfxMakeUri(&cubeUri[4], "art/skybox/day/front.tga", 0);
+    AfxMakeUri(&cubeUri[5], "art/skybox/day/back.tga", 0);
     sky->cubemap = AfxAssembleCubemapTexture(dctx, NIL, cubeUri);
 
     AfxSetColor(sky->ambientColor, 0.1, 0.1, 0.1, 1);
@@ -124,8 +125,8 @@ _AFX afxError AfxBuildSkybox(afxSky* sky, afxSimulation sim)
     AfxAssertObjects(1, &sky->cube, afxFcc_BUF);
 
     afxUri uri;
-    AfxUriWrapLiteral(&uri, "data/pipeline/skybox.xsh.xml", 0);
-    sky->skyPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+    AfxMakeUri(&uri, "data/pipeline/skybox.xsh.xml", 0);
+    sky->skyPip = AfxLoadPipelineFromXsh(dctx, &uri);
     sky->type = afxSkyType_BOX;
 
     afxSamplerConfig smpSpec = { 0 };

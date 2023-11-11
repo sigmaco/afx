@@ -2,7 +2,7 @@
     <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
-        <In format='V2D'>a_xy</In>
+        <In format='V2D' stream='7'>a_xy</In>
         <![CDATA[
         
         layout(location = 0) in vec2 a_xy;
@@ -61,7 +61,7 @@
     <Shader id='vsFlippedY'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
-        <In format='V2D'>a_xy</In>
+        <In format='V2D' stream='7'>a_xy</In>
         <![CDATA[
         
         const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
@@ -300,25 +300,20 @@
         ]]>
     </Shader>
     <Pipeline>
-        <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
-        <FrontFace>CCW</FrontFace>
-        <DepthTestEnable>false</DepthTestEnable>
-        <DepthWriteEnable>false</DepthWriteEnable>
-        <DepthCompareOp>ALWAYS</DepthCompareOp>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?vs</Shader>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
+        <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='yFlipped'>
-        <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
-        <FrontFace>CCW</FrontFace>
-        <DepthTestEnable>false</DepthTestEnable>
-        <DepthWriteEnable>false</DepthWriteEnable>
-        <DepthCompareOp>ALWAYS</DepthCompareOp>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?vsFlippedY</Shader>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
+        <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+    </Rasterizer>
 </Qwadro>

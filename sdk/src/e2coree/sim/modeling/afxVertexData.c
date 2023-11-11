@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_VERTEX_DATA_C
 #define _AFX_SIMULATION_C
 #include "afx/sim/modeling/afxVertexData.h"
@@ -89,7 +90,7 @@ _AFX afxError AfxBindVertexData(afxVertexData vtd, afxDrawScript dscr)
                 locations[attrCnt] = 3;
             else if (vtd->attrs[cache->comps[j].attrIdx].usage & afxVertexUsage_TAN)
                 locations[attrCnt] = 4;
-            else if (vtd->attrs[cache->comps[j].attrIdx].usage & afxVertexUsage_BTN)
+            else if (vtd->attrs[cache->comps[j].attrIdx].usage & afxVertexUsage_BIT)
                 locations[attrCnt] = 5;
             else if (vtd->attrs[cache->comps[j].attrIdx].usage & afxVertexUsage_UV)
                 locations[attrCnt] = 6;
@@ -102,7 +103,7 @@ _AFX afxError AfxBindVertexData(afxVertexData vtd, afxDrawScript dscr)
 
     AfxCmdResetVertexStreams(dscr, streamCnt, srcIndices, srcStrides, NIL);
 
-    AfxCmdResetVertexAttributes(dscr, attrCnt, locations, fmts, streamIndices, offsets);
+    //AfxCmdResetVertexAttributes(dscr, attrCnt, locations, fmts, streamIndices, offsets);
 
     return err;
 }
@@ -403,11 +404,19 @@ _AFX afxError _AfxVtdCtor(afxVertexData vtd, afxCookie const* cookie)
 
                 AfxString8(&vtd->attrs[i].id);
                 afxString tmp;
-                AfxWrapStringLiteral(&tmp, spec.id, 0);
+                AfxMakeString(&tmp, spec.id, 0);
                 AfxCopyString(&vtd->attrs[i].id.str, &tmp);
 
                 vtd->attrs[i].usage = spec.usage;
-                vtd->attrs[i].flags = spec.flags;
+                vtd->attrs[i].flags = NIL;
+
+                if (vtd->attrs[i].usage & afxVertexUsage_POS)
+                    vtd->attrs[i].flags |= afxVertexFlag_AFFINE | afxVertexFlag_LINEAR;
+
+                if (vtd->attrs[i].usage & afxVertexUsage_POS)
+                    vtd->attrs[i].flags |= afxVertexFlag_AFFINE | afxVertexFlag_LINEAR;
+
+                vtd->attrs[i].flags |= spec.flags;
                 AfxAssert(spec.fmt < afxVertexFormat_TOTAL);
                 vtd->attrs[i].fmt = spec.fmt;
                 vtd->attrs[i].data = NIL;
@@ -492,7 +501,7 @@ _AFX afxError AfxBuildVertexDatas(afxSimulation sim, afxMeshBuilder const* mshb,
     return err;
 }
 
-_AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], afxReal const ilt[3][3], afxBool renormalize, afxNat cnt, afxVertexData vtd[])
+_AFX void AfxTransformVertexDatas(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxBool renormalize, afxNat cnt, afxVertexData vtd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(at);
@@ -514,13 +523,70 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
 
             for (afxNat j = 0; j < vtd2->attrCnt; j++)
             {
-                void* data = AfxExposeVertexData(vtd2->attrs[j].data, j, baseVtxIdx);
+                void* data = AfxExposeVertexData(vtd2, j, baseVtxIdx);
                 afxVertexFlags flags = AfxGetVertexAttributeFlags(vtd2, j);
                 afxBool linearFlag = flags & afxVertexFlag_LINEAR;
                 afxBool invLinearFlag = flags & afxVertexFlag_LINEAR_INV;
                 afxBool affineFlag = flags & afxVertexFlag_AFFINE;
                 afxBool deltaFlag = flags & afxVertexFlag_DELTA;
+                afxVertexUsage usage = AfxGetVertexAttributeUsage(vtd2, j);
+                afxVertexFormat fmt = AfxGetVertexAttributeFormat(vtd2, j);
 
+                if (usage & afxVertexUsage_POS)
+                {
+                    AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+
+                    if (!deltaFlag)
+                    {
+                        if (fmt == afxVertexFormat_V4D)
+                            for (afxNat k = 0; k < vtxCnt; k++)
+                                AfxAddV4d(((afxV4d*)data)[k], ((afxV4d*)data)[k], at);
+                        else if (fmt == afxVertexFormat_V3D)
+                            for (afxNat k = 0; k < vtxCnt; k++)
+                                AfxAddV3d(((afxV3d*)data)[k], ((afxV3d*)data)[k], at);
+                    }
+                }
+                else if (usage & afxVertexUsage_TAN)
+                {
+                    AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+                }
+                else if (usage & afxVertexUsage_BIT)
+                {
+                    AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+                }
+                
+
+                if (usage & afxVertexUsage_TBC)
+                {
+                    if (deltaFlag)
+                    {
+                        AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+                    }
+                    else
+                    {
+                        AfxPostMultiplyArrayedV3d(ilt, vtxCnt, data, data);
+                    }
+                }
+                else if (usage & afxVertexUsage_NRM)
+                {
+                    if (deltaFlag)
+                    {
+                        AfxPostMultiplyArrayedV3d(lt, vtxCnt, data, data);
+                    }
+                    else
+                    {
+                        AfxPostMultiplyArrayedV3d(ilt, vtxCnt, data, data);
+                    }
+                }
+
+                if (renormalize)
+                {
+                    if (fmt == afxVertexFormat_V4D)
+                        AfxNormalizeOrZeroArrayedV4d(vtxCnt, data, data);
+                    else if (fmt == afxVertexFormat_V3D)
+                        AfxNormalizeOrZeroArrayedV3d(vtxCnt, data, data);
+                }
+#if 0
                 if (data && AfxGetVertexAttributeFlags(vtd2, j) & afxVertexUsage_SPATIAL)
                 {
                     switch (AfxGetVertexAttributeFormat(vtd2, j))
@@ -573,6 +639,7 @@ _AFX void AfxTransformVertexDatas(afxReal const at[3], afxReal const lt[3][3], a
                     default: AfxThrowError(); break;
                     }
                 }
+#endif
             }
         }
     }

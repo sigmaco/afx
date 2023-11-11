@@ -205,7 +205,7 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 
     //if (idd->fcc == afxFcc_WND || idd->fcc == afxFcc_WPP)
     {
-        SetWindowTextA(dout->wnd, AfxGetStringDataConst(&dout->base.caption, 0));
+        SetWindowTextA(dout->wnd, AfxGetStringData(&dout->base.caption, 0));
         //UpdateWindow(dout->base.wglWnd);
     }
     return err;
@@ -271,8 +271,8 @@ _SGL HWND _SglFindShellBackgroundWindowW32(void)
     return hwnd;
 }
 
-static const afxString g_str_desktop = AFX_STRING_LITERAL("desktop");
-static const afxString g_str_window = AFX_STRING_LITERAL("window");
+static const afxString g_str_desktop = AFX_STRING("desktop");
+static const afxString g_str_window = AFX_STRING("window");
 
 _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 {
@@ -380,7 +380,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
         }
     }
     afxString title;
-    AfxWrapStringLiteral(&title, ddev->wndClss.lpszClassName, 0);
+    AfxMakeString(&title, ddev->wndClss.lpszClassName, 0);
 
     afxBool isDesk = FALSE;
     afxBool isWnd = FALSE;
@@ -388,7 +388,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxUri name;
 
     if (config->endpoint)
-        AfxExcerptUriName(&name, config->endpoint);
+        AfxGetUriName(&name, config->endpoint);
     else
         AfxResetUri(&name);
 
@@ -396,7 +396,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.flushCb = _SglDoutVmtFlushCb;
     dout->base.procCb = _SglDoutProcCb;
 
-    afxString const *surface = AfxUriGetStringConst(&name);
+    afxString const *surface = AfxGetUriString(&name);
 
     if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &g_str_window)) // print to window surface
     {

@@ -74,11 +74,11 @@ AFX_DEFINE_STRUCT(afxDrawSubmissionSpecification)
 
 typedef enum afxDrawQueueFlags
 {
-    AFX_DQUE_DRAW           = AFX_BIT_OFFSET(0), // supports draw ops
-    //AFX_DQUE_DRAW_AUX       = AFX_BIT_OFFSET(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
-    AFX_DQUE_COMPUTE        = AFX_BIT_OFFSET(2), // supports compute ops
-    AFX_DQUE_TRANSFER       = AFX_BIT_OFFSET(3), // supports transfer ops
-    AFX_DQUE_VHS            = AFX_BIT_OFFSET(4), // supports VHS enc/dec
+    AFX_DQUE_DRAW           = AfxGetBitOffset(0), // supports draw ops
+    //AFX_DQUE_DRAW_AUX       = AfxGetBitOffset(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
+    AFX_DQUE_COMPUTE        = AfxGetBitOffset(2), // supports compute ops
+    AFX_DQUE_TRANSFER       = AfxGetBitOffset(3), // supports transfer ops
+    AFX_DQUE_VHS            = AfxGetBitOffset(4), // supports VHS enc/dec
 } afxDrawQueueFlags;
 
 AFX_DEFINE_STRUCT(afxDrawQueueSpecification)

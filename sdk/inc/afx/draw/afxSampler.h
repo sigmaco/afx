@@ -90,6 +90,7 @@ AFX_DEFINE_STRUCT(afxSamplerConfig)
     void*           ext;
 };
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_SAMPLER_C
 AFX_OBJECT(afxSampler)
 #else
@@ -111,6 +112,7 @@ struct afxBaseSampler
     afxColor        borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
     afxBool         unnormalizedCoords;
 };
+#endif
 
 AFX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samp[]);
 

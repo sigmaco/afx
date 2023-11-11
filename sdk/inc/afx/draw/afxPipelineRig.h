@@ -85,6 +85,7 @@ AFX_DEFINE_STRUCT(afxPipelineRigEntry) // A GPUBindGroupLayoutEntry describes a 
     };
 };
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_PIPELINE_RIG_C
 AFX_OBJECT(afxPipelineRig)
 #else
@@ -95,6 +96,7 @@ struct afxBasePipelineRig
     afxNat              entryCnt;
     afxPipelineRigEntry *entries; // The map of binding indices pointing to the GPUBindGroupLayoutEntrys, which this GPUBindGroupLayout describes.
 };
+#endif
 
 // A GPUBindGroup defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 

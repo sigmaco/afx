@@ -159,8 +159,9 @@ typedef enum afxFcc
     afxFcc_CANV    = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     afxFcc_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     afxFcc_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
+    afxFcc_RAS     = AfxPackFcc('r', 'a', 's', '\0'), // afxRasterizer
     afxFcc_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
-    afxFcc_LEGT2    = AfxPackFcc('l', 'e', 'g', 't'), // afxPipelineRig
+    afxFcc_LEGT2= AfxPackFcc('l', 'e', 'g', 't'), // afxPipelineRig
     afxFcc_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxPipelineRig
     afxFcc_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
     afxFcc_SHDB    = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint

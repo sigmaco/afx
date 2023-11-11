@@ -18,9 +18,8 @@
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_SHADER_C
-#include "afxDrawClassified.h"
-#include "afx/core/afxSystem.h"
-#include "afx/core/afxUri.h"
+#include "afx/draw/afxDrawContext.h"
+#include "afx/core/afxFile.h"
 #include "afx/draw/afxXsh.h"
 #include "afx/draw/afxShaderBlueprint.h"
 
@@ -165,7 +164,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint
     return err;
 }
 
-_AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxString const *semantic)
+_AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxNat stream, afxString const *semantic)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -179,6 +178,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, a
         decl->location = location;
         AfxAssert(fmt < afxVertexFormat_TOTAL);
         decl->fmt = fmt;
+        decl->stream = stream;
          AfxCloneString(&decl->semantic, semantic);
     }
     return err;
@@ -189,7 +189,7 @@ _AFXINL void AfxShaderBlueprintErase(afxShaderBlueprint *blueprint)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
 
-    AfxEraseUri(&blueprint->uri.uri);
+    AfxClearUri(&blueprint->uri.uri);
     blueprint->stage = NIL;
     AfxClearString(&blueprint->entry.str);
 
@@ -296,9 +296,9 @@ _AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderSta
     if (entry)
         AfxCopyString(&blueprint->entry.str, entry);
 
-    AfxAcquireArray(&blueprint->codes, sizeof(afxByte), AfxMaxi(estCodeLen, 2048), AfxSpawnHint());
-    AfxAcquireArray(&blueprint->resources, sizeof(afxShaderBlueprintResource), AfxMaxi(estResCnt, 16), AfxSpawnHint()); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
-    AfxAcquireArray(&blueprint->inOuts, sizeof(afxShaderBlueprintInOut), AfxMaxi(estIoCnt, 16), AfxSpawnHint());
+    blueprint->codes= AfxAcquireArray(AfxMaxi(estCodeLen, 2048), sizeof(afxByte), NIL);
+    blueprint->resources = AfxAcquireArray(AfxMaxi(estResCnt, 16), sizeof(afxShaderBlueprintResource), NIL); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
+    blueprint->inOuts = AfxAcquireArray(AfxMaxi(estIoCnt, 16), sizeof(afxShaderBlueprintInOut), NIL);
 
     blueprint->topology = NIL;
 }
@@ -422,16 +422,16 @@ _AFX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxXmlNode const* el
 #if 0
             afxString128 tmp;
             AfxString128(&tmp);
-            AfxCopyString(&tmp.str, AfxUriGetStringConst(&fpath));
+            AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
             if (!AfxUriIsBlank(&blueprint.uri.uri))
             {
                 AfxAppendStringLiteral(&tmp.str, "?", 1);
-                AfxAppendString(&tmp.str, AfxUriGetStringConst(&blueprint.uri.uri));
+                AfxAppendString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
             }
 
             afxUri tmpUri;
-            AfxReflectUriString(&tmpUri, &tmp.str);
+            AfxUriFromString(&tmpUri, &tmp.str);
             AfxShaderBlueprintRename(&blueprint, &tmpUri);
 #endif
             if (AfxBuildShaders(dctx, 1, &shd, &blueprint))
@@ -455,16 +455,16 @@ _AFX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
     AfxEcho("Uploading shader '%.*s'", AfxPushString(&uri->str));
 
     afxUri fext;
-    AfxExcerptUriExtension(&fext, uri, FALSE);
+    AfxGetUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath, query;
-        AfxExcerptUriPath(&fpath, uri);
-        AfxExcerptUriQuery(&query, uri, TRUE);
+        AfxGetUriPath(&fpath, uri);
+        AfxGetUriQuery(&query, uri, TRUE);
 
-        if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
+        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 
@@ -476,7 +476,7 @@ _AFX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
                 afxXmlNode const *node = AfxGetXmlRoot(&xml);
                 afxString const *name = AfxGetXmlNodeName(node);
                 AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
-                afxString const *queryStr = AfxUriGetStringConst(&query);
+                afxString const *queryStr = AfxGetUriString(&query);
                 afxBool hasQuery = !AfxStringIsEmpty(queryStr);
                 node = AfxXmlNodeFindChild(node, &g_str_Shader, hasQuery ? &g_str_id : NIL, hasQuery ? queryStr : NIL);
 
@@ -494,4 +494,26 @@ _AFX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
         }
     }
     return shd;
+}
+
+_AFX afxError AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(uri);
+    AfxAssert(shd);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        AfxAssertType(&uri[i], afxFcc_URI);
+        AfxAssert(!AfxUriIsBlank(&uri[i]));
+
+        if (!(shd[i] = AfxCompileShaderFromXsh(dctx, &uri[i])))
+        {
+            AfxThrowError();
+            AfxReleaseObjects(i, (void**)shd);
+            break;
+        }
+    }
+    return err;
 }

@@ -18,8 +18,7 @@
 #define _AFX_SAMPLER_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_CONTEXT_C
-#include "afx/draw/afxSampler.h"
-#include "afxDrawClassified.h"
+#include "afx/draw/afxDrawContext.h"
 
 _AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 {

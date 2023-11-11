@@ -23,7 +23,6 @@
 #include "../src/e2coree/deps/gl/glcorearb.h"
 #include "../src/e2coree/deps/gl/wglext.h"
 #include <windows.h>
-#include "../src/e2coree/draw/afxDrawClassified.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawScript.h"
 

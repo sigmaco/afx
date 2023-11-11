@@ -25,7 +25,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     AfxEntry("app=%p", app);
 
     afxUri uriMap;
-    AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
+    AfxMakeUri(&uriMap, "e2newton.icd", 0);
     afxSimulationConfig simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
@@ -34,7 +34,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     sim = AfxAcquireSimulations(TheApp, &simSpec);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    AfxUriWrapLiteral(&uriMap, "window", 0);
+    AfxMakeUri(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = { 0 };
     doutConfig.endpoint = &uriMap;
     doutConfig.whd[0] = 1280;

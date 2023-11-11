@@ -60,12 +60,12 @@ AFX_DEFINE_STRUCT(afxAnimatorInterlinkCallbacks)
 
 typedef enum afxAnimatorFlags
 {
-    afxAnimatorFlags_ACTIVE = AFX_BIT_OFFSET(0),
-    afxAnimatorFlags_KILL_ONCE_COMPLETE = AFX_BIT_OFFSET(1),
-    afxAnimatorFlags_KILL_ONCE_UNUSED = AFX_BIT_OFFSET(2),
-    afxAnimatorFlags_EASE_IN = AFX_BIT_OFFSET(3),
-    afxAnimatorFlags_EASE_OUT = AFX_BIT_OFFSET(4),
-    afxAnimatorFlags_FORCE_CLAMPLED_LOOPS = AFX_BIT_OFFSET(5)
+    afxAnimatorFlags_ACTIVE = AfxGetBitOffset(0),
+    afxAnimatorFlags_KILL_ONCE_COMPLETE = AfxGetBitOffset(1),
+    afxAnimatorFlags_KILL_ONCE_UNUSED = AfxGetBitOffset(2),
+    afxAnimatorFlags_EASE_IN = AfxGetBitOffset(3),
+    afxAnimatorFlags_EASE_OUT = AfxGetBitOffset(4),
+    afxAnimatorFlags_FORCE_CLAMPLED_LOOPS = AfxGetBitOffset(5)
 } afxAnimatorFlags;
 
 AFX_OBJECT(afxAnimator)

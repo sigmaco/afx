@@ -22,7 +22,6 @@
 #define _AFX_DRAW_SCRIPT_C
 #define _AFX_DRAW_CONTEXT_C
 #include "afx/core/afxSystem.h"
-#include "afxDrawClassified.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // CONNECTION                                                                 //

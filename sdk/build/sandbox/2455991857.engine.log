@@ -1,0 +1,76 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0f51b90c by 00000000 over 00000000 with 0f518770)
+ afxClass<Basic I/O System>::ConstructObject(004580a0)
+ afxSystem.c:1019
+  _AfxSysCtor(sys=004580a0)
+ Installing Context at 004580dc by 004580c8 over 00000000 with 0f518074)
+ Installing Module at 004581a0 by 004580c8 over 00000000 with 0f518604)
+ Installing Thread at 004583ec by 004580c8 over 00000000 with 0f5187a0)
+ Installing File at 00458574 by 004580c8 over 00000000 with 0f5185a4)
+ Installing Archive at 00458638 by 004580c8 over 00000000 with 0f518030)
+ Installing Application at 004584b0 by 004580c8 over 00000000 with 0f518000)
+ Installing Keyboard at 00458264 by 004580c8 over 00000000 with 0f5185d4)
+ Installing Mouse at 00458328 by 004580c8 over 00000000 with 0f518634)
+ Installing Draw I/O System at 004586fc by 004580c8 over 00000000 with 0f5190a0)
+ Installing Simulation at 004587c0 by 004580c8 over 00000000 with 0f519218)
+ [!] afxSystem.c:1104?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1105?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:197
+  AfxAcquireContexts(cnt=1,app=00458884,strategy=0038e1e8)
+ afxClass<Context>::ConstructObject(00453b60)
+ afxContext.c:154
+  _AfxCtxCtor(ctx=00453b60)
+ afxArena.c:767
+  AfxAcquireArena(aren=004588e0)
+ afxArena.c:768
+  AfxAcquireArena(spec=00000000,hint="afxSystem.c:1157!_AfxSysCtor")
+ afxSystem.c:762
+  AfxMountStoragePoints(6,0038e340)
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid
+ ERR afxUri.c:633?AfxGetUriPath
+  
+ ERR afxUri.c:633?AfxGetUriPath
+  (len == AfxGetStringSize(&(uri->str)))
+    Invalid
+ ERR afxUri.c:634?AfxGetUriPath
+  
+ ERR afxUri.c:634?AfxGetUriPath
+  (len == uri->dir + uri->fname + uri->fext)
+    Invalid
+ ERR afxUri.c:635?AfxGetUriPath
+  
+ ERR afxUri.c:635?AfxGetUriPath
+  (len == dirNameExt)
+    Invalid

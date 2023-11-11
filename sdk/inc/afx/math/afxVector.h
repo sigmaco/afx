@@ -19,42 +19,42 @@
 
 #include "afxReal.h"
 
-AFX afxV2d const AFX_V2D_10;
-AFX afxV3d const AFX_V3D_100;
-AFX afxV4d const AFX_V4D_1000;
+AFX afxV2d const AFX_V2D_X;
+AFX afxV3d const AFX_V3D_X;
+AFX afxV4d const AFX_V4D_X;
 
-AFX afxV2d const AFX_V2D_10_NEG;
-AFX afxV3d const AFX_V3D_100_NEG;
-AFX afxV4d const AFX_V4D_1000_NEG;
+AFX afxV2d const AFX_V2D_X_NEG;
+AFX afxV3d const AFX_V3D_X_NEG;
+AFX afxV4d const AFX_V4D_X_NEG;
 
-AFX afxV2d const AFX_V2D_01;
-AFX afxV3d const AFX_V3D_010;
-AFX afxV4d const AFX_V4D_0100;
+AFX afxV2d const AFX_V2D_Y;
+AFX afxV3d const AFX_V3D_Y;
+AFX afxV4d const AFX_V4D_Y;
 
-AFX afxV2d const AFX_V2D_01_NEG;
-AFX afxV3d const AFX_V3D_010_NEG;
-AFX afxV4d const AFX_V4D_0100_NEG;
+AFX afxV2d const AFX_V2D_Y_NEG;
+AFX afxV3d const AFX_V3D_Y_NEG;
+AFX afxV4d const AFX_V4D_Y_NEG;
 
-AFX afxV3d const AFX_V3D_001;
-AFX afxV4d const AFX_V4D_0010;
+AFX afxV3d const AFX_V3D_Z;
+AFX afxV4d const AFX_V4D_Z;
 
-AFX afxV3d const AFX_V3D_001_NEG;
-AFX afxV4d const AFX_V4D_0010_NEG;
+AFX afxV3d const AFX_V3D_Z_NEG;
+AFX afxV4d const AFX_V4D_Z_NEG;
 
-AFX afxV4d const AFX_V4D_0001; // W Axis
-AFX afxV4d const AFX_V4D_0001_NEG;
+AFX afxV4d const AFX_V4D_W; // W Axis
+AFX afxV4d const AFX_V4D_W_NEG;
 
-AFX afxV4d const AFX_V4D_1110;
+AFX afxV4d const AFX_V4D_YXZ;
 
-AFX afxV2d const AFX_V2D_00;
-AFX afxV3d const AFX_V3D_000;
-AFX afxV4d const AFX_V4D_0000;
+AFX afxV2d const AFX_V2D_ZERO;
+AFX afxV3d const AFX_V3D_ZERO;
+AFX afxV4d const AFX_V4D_ZERO;
 
-AFX afxV2d const AFX_V2D_11;
-AFX afxV3d const AFX_V3D_111;
-AFX afxV4d const AFX_V4D_1111;
+AFX afxV2d const AFX_V2D_ONE;
+AFX afxV3d const AFX_V3D_ONE;
+AFX afxV4d const AFX_V4D_ONE;
 
-AFX afxV4d const AFX_V4D_1111_NEG;
+AFX afxV4d const AFX_V4D_ONE_NEG;
 
 #define AfxSpawnV2d(x_, y_) (afxV2d){ (afxReal)(x_), (afxReal)(y_) }
 #define AfxSpawnV3d(x_, y_, z_) (afxV3d){ (afxReal)x_, (afxReal)y_, (afxReal)z_ }
@@ -154,9 +154,9 @@ AFXINL void     AfxTruncateV2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxTruncateV3d(afxReal v[3], afxReal const in[3]);
 AFXINL void     AfxTruncateV4d(afxReal v[4], afxReal const in[4]);
 
-AFXINL void     AfxGetSaturatedV2d(afxReal v[2], afxReal const in[2]);
-AFXINL void     AfxGetSaturatedV3d(afxReal v[3], afxReal const in[3]);
-AFXINL void     AfxGetSaturatedV4d(afxReal v[4], afxReal const in[4]);
+AFXINL void     AfxSaturateV2d(afxReal v[2], afxReal const in[2]);
+AFXINL void     AfxSaturateV3d(afxReal v[3], afxReal const in[3]);
+AFXINL void     AfxSaturateV4d(afxReal v[4], afxReal const in[4]);
 
 AFXINL void     AfxMiniV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = minor between A and B
 AFXINL void     AfxMiniV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = minor between A and B
@@ -193,37 +193,57 @@ AFXINL afxReal  AfxEstimateNormalizedV2d(afxReal v[2], afxReal const in[2]);
 AFXINL afxReal  AfxEstimateNormalizedV3d(afxReal v[3], afxReal const in[3]);
 AFXINL afxReal  AfxEstimateNormalizedV4d(afxReal v[4], afxReal const in[4]);
 
+AFXINL void     AfxNormalizeArrayedV2d(afxNat cnt, afxReal const in[][2], afxReal out[][2]);
+AFXINL void     AfxNormalizeArrayedV3d(afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxNormalizeArrayedV4d(afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+
+AFXINL void     AfxNormalizeOrZeroArrayedV2d(afxNat cnt, afxReal const in[][2], afxReal out[][2]);
+AFXINL void     AfxNormalizeOrZeroArrayedV3d(afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxNormalizeOrZeroArrayedV4d(afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetica                                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL void     AfxAddV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = a + b
-AFXINL void     AfxAddV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = a + b
-AFXINL void     AfxAddV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = a + b
+// v = a + b
 
-AFXINL void     AfxSubV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = a - b
-AFXINL void     AfxSubV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = a - b
-AFXINL void     AfxSubV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = a - b
+AFXINL void     AfxAddV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]);
+AFXINL void     AfxAddV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]);
+AFXINL void     AfxAddV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]);
 
-AFXINL void     AfxDivV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = a / b
-AFXINL void     AfxDivV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = a / b
-AFXINL void     AfxDivV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = a / b
+// v = a - b
+
+AFXINL void     AfxSubV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]);
+AFXINL void     AfxSubV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]);
+AFXINL void     AfxSubV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]);
+
+// v = a / b
+
+AFXINL void     AfxDivV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]);
+AFXINL void     AfxDivV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]);
+AFXINL void     AfxDivV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]);
 
 AFXINL void     AfxModV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]);
 AFXINL void     AfxModV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]);
 AFXINL void     AfxModV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]);
 
-AFXINL void     AfxScaleV2d(afxReal v[2], afxReal const a[2], afxReal lambda); // v = a * lambda
-AFXINL void     AfxScaleV3d(afxReal v[3], afxReal const a[3], afxReal lambda); // v = a * lambda
-AFXINL void     AfxScaleV4d(afxReal v[4], afxReal const a[4], afxReal lambda); // v = a * lambda
+// v = a * lambda
 
-AFXINL void     AfxHalfV2d(afxReal v[2], afxReal const in[2]); // scale by 0.5
-AFXINL void     AfxHalfV3d(afxReal v[3], afxReal const in[3]); // scale by 0.5
-AFXINL void     AfxHalfV4d(afxReal v[4], afxReal const in[4]); // scale by 0.5
+AFXINL void     AfxScaleV2d(afxReal v[2], afxReal const a[2], afxReal lambda);
+AFXINL void     AfxScaleV3d(afxReal v[3], afxReal const a[3], afxReal lambda);
+AFXINL void     AfxScaleV4d(afxReal v[4], afxReal const a[4], afxReal lambda);
 
-AFXINL void     AfxMultiplyV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = a * b
-AFXINL void     AfxMultiplyV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = a * b
-AFXINL void     AfxMultiplyV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = a * b
+// v = in * 0.5
+
+AFXINL void     AfxHalfV2d(afxReal v[2], afxReal const in[2]);
+AFXINL void     AfxHalfV3d(afxReal v[3], afxReal const in[3]);
+AFXINL void     AfxHalfV4d(afxReal v[4], afxReal const in[4]);
+
+// v = a * b
+
+AFXINL void     AfxMultiplyV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]);
+AFXINL void     AfxMultiplyV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]);
+AFXINL void     AfxMultiplyV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]);
 
 // v = in * mul + plus
 
@@ -231,11 +251,18 @@ AFXINL void     AfxMadV2d(afxReal v[2], afxReal const in[2], afxReal const mul[2
 AFXINL void     AfxMadV3d(afxReal v[3], afxReal const in[3], afxReal const mul[3], afxReal const plus[3]);
 AFXINL void     AfxMadV4d(afxReal v[4], afxReal const in[4], afxReal const mul[4], afxReal const plus[4]);
 
+// v = lambda1 * a + lambda2 * b
+
+AFXINL void     AfxCombineV2d(afxReal v[2], afxReal lambda1, afxReal const a[2], afxReal lambda2, afxReal const b[2]);
+AFXINL void     AfxCombineV3d(afxReal v[3], afxReal lambda1, afxReal const a[3], afxReal lambda2, afxReal const b[3]);
+AFXINL void     AfxCombineV4d(afxReal v[4], afxReal lambda1, afxReal const a[4], afxReal lambda2, afxReal const b[4]);
+
+// reverse subtract
 // v = c - (a * b)
 
-AFXINL void     AfxNemusV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2]);
-AFXINL void     AfxNemusV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3]);
-AFXINL void     AfxNemusV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4]);
+AFXINL void     AfxResubV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2]);
+AFXINL void     AfxResubV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3]);
+AFXINL void     AfxResubV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4]);
 
 /// Linear interpolation
 /// v = a + t * (b - a)

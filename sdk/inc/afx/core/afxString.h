@@ -25,14 +25,9 @@
 
 // UTF-8 everywhere
 
-#define AFX_STRING(text_) { afxFcc_STR, (sizeof((text_)) / sizeof((text_)[0])) - sizeof((text_)[0]), 0, ._dataConst = (void const*const)(text_) }
-
 enum
 {
-    _AFX_STR_FLAG_ALLOCED = AFX_BIT_OFFSET(0),
-    _AFX_STR_FLAG_BUFFERED = AFX_BIT_OFFSET(1),
-    _AFX_STR_FLAG_EXCERPT = AFX_BIT_OFFSET(2),
-    _AFX_STR_FLAG_WRAP = AFX_BIT_OFFSET(3),
+    _AFX_STR_FLAG_ALLOCED = AfxGetBitOffset(0)
 };
 
 AFX_DEFINE_STRUCT(afxString)
@@ -45,15 +40,11 @@ AFX_DEFINE_STRUCT(afxString)
         union
         {
             afxNat16        cap; // buffered
-            afxNat16        base; // excerpt
         };
         union
         {
-            afxString const*parent; // excerpt
-            afxString*      parentRW;
             afxChar const*  start; // wrapped or externally buffered.
             afxChar*        startRW;
-            //afxSimd(afxByte)byteseq[]; // internally buffered.
         };
     }                       src;
 };
@@ -83,11 +74,12 @@ AFX_DEFINE_STRUCT(afxString128)
 };
 
 #if _AFX_DEBUG
-#define AFX_STRING_LITERAL(text_) { .fcc = afxFcc_STR, .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
+#define AFX_STRING(text_) { .fcc = afxFcc_STR, .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
 #else
-#define AFX_STRING_LITERAL(text_) { .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
+#define AFX_STRING(text_) { .range = (afxNat16)((sizeof((text_)) / sizeof((text_)[0])) - sizeof(afxChar)), .flags = NIL, .src.cap = 0, .src.start = (afxChar const*)(text_) }
 #endif
-#define AfxSpawnString(text_) (afxString const[])AFX_STRING_LITERAL(text_)
+#define AfxString(text_) (afxString const)AFX_STRING((text_))
+#define AfxStaticString(text_) (afxString const)AFX_STRING((text_))
 
 // NOTE: When 'cap' is zero, a string can't be modified.
 
@@ -95,8 +87,7 @@ AFX_DEFINE_STRUCT(afxString128)
 
 // used for formatted string input with %.*s specifier.
 // %.*s
-#define AfxPushString(str_) (str_) ? AfxGetStringSize((str_)) : 1, (str_) ? AfxGetStringDataConst((str_), 0) : ""
-#define AfxSpawnStaticString(text_) (afxString const[])AFX_STRING(text_);
+#define AfxPushString(str_) (str_) ? AfxGetStringLength((str_)) : 1, (str_) ? AfxGetStringData((str_), 0) : ""
 
 AFX void                AfxString8(afxString8 *str);
 AFX void                AfxString16(afxString16 *str);
@@ -107,21 +98,21 @@ AFX void                AfxDeallocateString(afxString *str);
 AFX afxError            AfxAllocateString(afxString* str, afxNat cap, void const *start, afxNat range);
 AFX afxError            AfxReallocateString(afxString *str, afxNat cap, void const *start, afxNat range);
 
-AFX void                AfxWrapStringLiteral(afxString *str, void const *start, afxNat range); // wraps constant (read-only) data as a Qwadro string.
-AFX void                AfxWrapStringLiteralRW(afxString *str, void *start, afxNat range); // wraps dynamic (writeable) data as a Qwadro string.
-AFX void                AfxWrapStringBuffer(afxString *str, void *start, afxNat cap);
+AFX void                AfxMakeString(afxString *str, void const *start, afxNat range); // wraps constant (read-only) data as a Qwadro string.
+AFX void                AfxMakeMutableString(afxString *str, void *start, afxNat range); // wraps dynamic (writeable) data as a Qwadro string.
+AFX void                AfxMakeBufferedString(afxString *str, void *start, afxNat cap);
 
 // Makes a excerpt string from another string.
-AFX void                AfxExcerptString(afxString *str, afxString const *parent); // wraps the same content mapped or buffered by other string as read-only data.
-AFX afxNat              AfxExcerptStringRange(afxString *str, afxString const *parent, afxNat offset, afxNat range); // wraps the same content mapped or buffered by other string as read-only data. Return clamped off range if any.
+AFX void                AfxReplicateString(afxString *str, afxString const *parent); // wraps the same content mapped or buffered by other string as read-only data.
+AFX afxNat              AfxExpertString(afxString *str, afxString const *parent, afxNat offset, afxNat range); // wraps the same content mapped or buffered by other string as read-only data. Return clamped off range if any.
 
 AFX afxError            AfxCloneString(afxString* str, afxString const *in); // wraps the same content mapped or buffered by other string as writeable data.
 AFX afxError            AfxCloneStringRange(afxString* str, afxString const *in, afxNat base, afxNat range); // wraps the same content mapped or buffered by other string as writeable data.
 
-AFX void*               AfxGetStringData(afxString *str, afxNat base);
-AFX void const*         AfxGetStringDataConst(afxString const *str, afxNat base);
-AFX afxNat              AfxGetStringSize(afxString const *str);
-AFX afxNat              AfxGetStringBufferCap(afxString const *str);
+AFX void*               AfxGetMutableStringData(afxString *str, afxNat base);
+AFX void const*         AfxGetStringData(afxString const *str, afxNat base);
+AFX afxNat              AfxGetStringLength(afxString const *str);
+AFX afxNat              AfxGetStringCapacity(afxString const *str);
 
 AFX void                AfxResetString(afxString *str);
 AFX void                AfxClearString(afxString *str);
@@ -159,11 +150,11 @@ AFX afxError            AfxGetStringAsReal(afxString const *str, afxReal *value)
 
 AFX afxString const     AFX_STR_EMPTY;
 
-//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
-//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AfxStr((var_)),errorMsg[(code_)]),0))
+//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
+//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
 
-#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxSpawnHint(), AfxStr((str_))));
-#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxSpawnHint(), AfxStr((str_)))));
+#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxSpawnHint(), AFX_STRINGIFY((str_))));
+#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxSpawnHint(), AFX_STRINGIFY((str_)))));
 
 AFXINL afxError _AfxStringAssert(afxString const *str_, afxHint const hint_, afxChar const *exp_)
 {

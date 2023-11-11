@@ -31,8 +31,10 @@ _AFXINL void AfxResetPlane(afxPlane* p, afxReal const normal[3], afxReal dist)
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
     AfxAssert(normal);
-    afxReal invLen = AfxMagV3dRecip(normal);
-    AfxScaleV3d(p->normal, normal, invLen); // normaliza
+    afxReal invLen = AfxMagV3d(normal);
+    p->normal[0] = normal[0] / invLen; // normaliza
+    p->normal[1] = normal[1] / invLen; // normaliza
+    p->normal[2] = normal[2] / invLen; // normaliza
     p->offset = dist * invLen;
 }
 

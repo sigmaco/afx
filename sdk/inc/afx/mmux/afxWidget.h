@@ -102,26 +102,6 @@ AFX_OBJECT(afxWidget)
 };
 #endif
 
-struct afxWidgetImplementation
-{
-    afxWidgetType   fcc;
-    afxChar const   *name;
-    afxResult       (*dtor)(afxWidget);
-    void            (*click)(afxWidget, afxV2d);
-};
-
-AFX void        AfxWidgetReanchor(afxWidget wid, afxV2d const point);
-
-AFX void        AfxWidgetAddTranslation(afxWidget wid, afxV4d const translation);
-AFX void        AfxWidgetSetTranslation(afxWidget wid, afxV4d const translation);
-
-AFX void        AfxWidgetAddRotation(afxWidget wid, afxQuat const rotation);
-AFX void        AfxWidgetSetRotation(afxWidget wid, afxQuat const rotation);
-
-AFX void        AfxWidgetAddMakeScale(afxWidget wid, afxV3d const scale);
-AFX void        AfxWidgetSetScale(afxWidget wid, afxV3d const scale);
-
-AFX afxResult   AfxWidgetExecuteQuery(afxWidget wid, afxUri const *uri);
 
 #endif//AFX_WIDGET_H
 

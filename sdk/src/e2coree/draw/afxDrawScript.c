@@ -18,7 +18,8 @@
 #define _AFX_DRAW_INPUT_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_DRAW_SCRIPT_C
-#include "afxDrawClassified.h"
+#include "afx/draw/afxDrawInput.h"
+#include "afx/draw/afxDrawContext.h"
 
 _AFX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
 {
@@ -128,11 +129,7 @@ _AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt
 
         if (cnt2 < cnt)
         {
-            struct _dscrParadigm paradigm = { 0 };
-            paradigm.portIdx = portIdx;
-            paradigm.owner = din;
-
-            if (AfxAcquireObjects(&dctx->openPorts[portIdx].scripts, cnt - cnt2, (afxHandle*)&dscr[cnt2], (void*[]) { &paradigm }))
+            if (AfxAcquireObjects(&dctx->openPorts[portIdx].scripts, cnt - cnt2, (afxHandle*)&dscr[cnt2], (void*[]) { dctx, (void*)&portIdx, &din }))
                 AfxThrowError();
         }
     }

@@ -144,23 +144,23 @@ AFX_DEFINE_STRUCT(afxSystemConfigWin32)
 #endif
 };
 
-#ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
+#ifdef _AFX_CORE_C
+#ifdef _AFX_SYSTEM_C
 {
-    _AFX_DBG_FCC
+    afxUri                      rootDir;
 
-    afxUri                     rootDir;
-
-    afxChain           classes;
-    afxClass           memories;
-    afxClass           modules;
-    afxClass           keyboards;
-    afxClass           mouses;
-    afxClass           threads;
-    afxClass           applications;
-    afxClass           files;
-    afxClass           archives;
-    afxClass           dsystems;
+    afxChain                    classes;
+    afxClass                    memories;
+    afxClass                    modules;
+    afxClass                    keyboards;
+    afxClass                    mouses;
+    afxClass                    threads;
+    afxClass                    applications;
+    afxClass                    files;
+    afxClass                    archives;
+    afxClass                    dsystems;
+    afxClass                    simulations;
 
     afxContext                  ctx;
     afxNat                      memPageSize; // The page size and the granularity of page protection and commitment.
@@ -198,15 +198,17 @@ AFX_OBJECT(afxSystem)
         }                       supplyChain[1];
     }                           resourcing;
     afxInt                      exitCode;
-};
+}
 #endif
+#endif
+;
 
 AFX void                AfxChooseBasicIoSystemConfiguration(afxSystemConfig *config, afxNat extendedSiz);
 AFX afxError            AfxBootUpBasicIoSystem(afxSystemConfig const *config, afxSystem *sys);
 AFX void                AfxShutdownBasicIoSystem(afxInt exitCode);
 AFX afxBool             AfxGetSystem(afxSystem *sys);
 
-AFX afxBool             AfxSystemIsOperating(void);
+AFX afxBool             AfxSystemIsExecuting(void);
 AFX afxResult           AfxDoSystemThreading(afxTime timeout);
 AFX void                AfxRequestSystemShutdown(afxInt exitCode);
 

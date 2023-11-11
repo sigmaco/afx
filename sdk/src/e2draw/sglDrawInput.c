@@ -176,7 +176,7 @@ _SGL afxError _SglDinDtor(afxDrawInput din)
 
 _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
 {
-    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxUriGetStringConst(endpoint)) : &AFX_STR_EMPTY);
+    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxGetUriString(endpoint)) : &AFX_STR_EMPTY);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
 
@@ -192,7 +192,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxContext mem = AfxGetDrawSystemMemory(dsys);
     din->base.mem = mem;
 
-    AfxAcquireArray(&din->base.scripts, sizeof(afxDrawScript), 32, AfxSpawnHint());
+    din->base.scripts = AfxAcquireArray(32, sizeof(afxDrawScript), NIL);
     din->base.minScriptReserve = 2;
 
     din->base.submitCb = _SglDinSubmit;

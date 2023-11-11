@@ -33,6 +33,7 @@ AFX_DEFINE_STRUCT(afxDrawThreadConfig)
 //#   error "afxThread not exposed.";
 //#endif
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_THREAD_C
 AFX_OBJECT(afxDrawThread)
 {
@@ -45,6 +46,7 @@ AFX_OBJECT(afxDrawThread)
 
     void*                   udd;
 };
+#endif
 #endif
 
 AFX afxError            AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[]);
