@@ -109,8 +109,6 @@ AFX_OBJECT(afxMeshTopology)
 /// These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way. 
 /// You can put these indices into an index buffer like this:
 
-AFX afxNat          AfxDetermineMeshIndexSize(afxMeshTopology msht);
-
 AFX afxNat          AfxCountMeshIndices(afxMeshTopology msht);
 
 AFX afxNat*         AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx);
@@ -138,6 +136,8 @@ AFX void            AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, 
 
 /// For each material index in the afxMeshTopology, it will lookup that index in the remapTable array and replace material index with the value. 
 
+
+AFX afxNat          AfxDetermineMeshIndexSize(afxMeshTopology msht);
 
 AFX afxError        AfxBufferizeMeshTopology(afxMeshTopology msht);
 

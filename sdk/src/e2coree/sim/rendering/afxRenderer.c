@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_SIMULATION_C
 #define _AFX_MESH_C
 #define _AFX_MODEL_C
@@ -21,12 +22,12 @@
 #define _AFX_VERTEX_BUFFER_C
 #define _AFX_VERTEX_DATA_C
 #define _AFX_MESH_TOPOLOGY_C
-#include "../src/e2coree/draw/afxDrawClassified.h"
 #include "afx/afxQwadro.h"
 #include "afx/sim/rendering/afxRenderer.h"
 #include "afx/draw/afxDrawScript.h"
 #include "afx/math/afxQuaternion.h"
 #include "afx/math/afxMatrix.h"
+#include "afx/math/afxProjectiveMatrix.h"
 #include "afx/math/afxVector.h"
 
 _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afxBody bodies[])
@@ -65,14 +66,15 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                 AfxBufferizeMeshTopology(msht);
                 AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.idxSiz);
                 
+                //AfxCmdBindPipeline(dscr, 0, rnd->lighting);
                 //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
                 AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
                 //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
                 //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
                 //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
-                //AfxCmdSetCullMode(dscr, afxCullMode_BACK);
-                //AfxCmdSwitchFrontFace(dscr, TRUE);
+                AfxCmdSetCullMode(dscr, afxCullMode_BACK);
+                AfxCmdSwitchFrontFace(dscr, FALSE);
 
                 afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
@@ -128,6 +130,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                     //AfxM4dFromEuler(w, AfxSpawnV3d(0, AfxRandomReal2(0, 360), 0));
                     AfxGetModelInitialPlacement(mdl, m);
                     AfxInvertM4d(m2, m);
+                    //AfxComposeTransformWorldM4d(&mdl->init, m2, m);
 
                     AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, w), sizeof(CompositeMatrix), CompositeMatrix);
                     AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, m), sizeof(m), m);
@@ -136,9 +139,10 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
 
                     afxNat idxCnt = (sec->triCnt * 3);
                     afxNat firstIdx = (sec->firstTriIdx * 3);
-                    AfxCmdDrawIndexed(dscr, idxCnt, 1, firstIdx, 0, 0);
+                    //AfxCmdDrawIndexed(dscr, idxCnt, 1, firstIdx, 0, 0);
                     //AfxCmdDraw(dscr, msh->vtxCnt, 1, msh->baseVtx, 0);
                 }
+                AfxCmdDrawIndexed(dscr, msht->vtxIdxCnt, 1, 0, 0, 0);
             }
         }
     }
@@ -280,9 +284,10 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
         viewConstants->viewExtent[0] = rnd->drawArea.extent[0];
         viewConstants->viewExtent[1] = rnd->drawArea.extent[1];
 
-        afxV4d viewpoint;
-        AfxGetCameraPosition(cam, viewpoint);
-        AfxCopyV4d(viewConstants->viewpoint, viewpoint);
+        afxV4d viewPos;
+        AfxGetCameraPosition(cam, viewPos);
+        viewPos[3] = 1.f;
+        AfxCopyV4d(viewConstants->viewPos, viewPos);
 
         afxM4d v, iv, p, ip;
         AfxRecomputeCameraMatrices(cam);
@@ -300,11 +305,15 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
         //AfxTransposeM4d(m2, m);
         //AfxTransposeM4d(m2, m2);
 
-        //AfxComputeLookAtM4d_LH(v, AfxSpawnV3d(0, 10, 1000), AfxSpawnV3d(0, 10, 0), AFX_V3D_010);
-        AfxCopyM4d(viewConstants->v, v);
+        //AfxComputeRenderWareViewM4d(v, iv);
+        AfxCopyAffineM4d(viewConstants->v, v);
+        AfxEnsureAffineM4d(viewConstants->v);
         //AfxCopyM4d(viewConstants->iv, iv);
         //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);
+        //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);
+        //AfxTransposeM4d(viewConstants->p, p);
         AfxCopyM4d(viewConstants->p, p);
+        //AfxTransposeM4d(viewConstants->p, p);
         //AfxCopyM4d(viewConstants->ip, ip);
     }
 
@@ -420,8 +429,8 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
         iboSpec.usage = afxBufferUsage_INDEX;
         AfxAcquireBuffers(dctx, 1, &rnd->testIbo, &iboSpec);
         
-        AfxUriWrapLiteral(&uri, "data/pipeline/test.xsh.xml", 0);
-        rnd->testPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+        AfxMakeUri(&uri, "data/pipeline/test.xsh.xml", 0);
+        rnd->testPip = AfxLoadPipelineFromXsh(dctx, &uri);
     }
 
     // acquire needed resources and set up our sky.
@@ -465,10 +474,10 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
 
     {
         afxUri uri;
-        AfxUriWrapLiteral(&uri, "data/pipeline/body.xsh.xml?rigid", 0);
-        rnd->rigidBodyPip = AfxAssemblePipelineFromXsh(dctx, &uri);
-        AfxUriWrapLiteral(&uri, "data/pipeline/body.xsh.xml?skinned", 0);
-        rnd->skinnedBodyPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+        AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?rigid", 0);
+        rnd->rigidBodyPip = AfxLoadPipelineFromXsh(dctx, &uri);
+        AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?skinned", 0);
+        rnd->skinnedBodyPip = AfxLoadPipelineFromXsh(dctx, &uri);
     }
 
     AfxRendererSetStar(rnd, AfxSpawnV4d(0, 0, 0, 1), AfxSpawnV3d(-0.8660f, 0.5f, 0), AfxSpawnV4d(0.8, 0.8, 0.8, 0.8));
@@ -477,11 +486,14 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
     AfxAcquirePoses(sim, 1, (afxNat[]) { 255 }, &rnd->lp);
     AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {FALSE}, &rnd->wp);
 
-    AfxUriWrapLiteral(&uri, "data/pipeline/testLighting.xsh.xml?blinn", 0);
-    rnd->blinnTestPip = AfxAssemblePipelineFromXsh(dctx, &uri);
+    AfxMakeUri(&uri, "data/pipeline/testLighting.xsh.xml?blinn", 0);
+    rnd->blinnTestPip = AfxLoadPipelineFromXsh(dctx, &uri);
 
-    AfxUriWrapLiteral(&uri, "data/pipeline/tutCamUtil.xsh.xml?tutCamUtil", 0);
-    rnd->tutCamUtil = AfxAssemblePipelineFromXsh(dctx, &uri);
+    AfxMakeUri(&uri, "data/pipeline/tutCamUtil.xsh.xml?tutCamUtil", 0);
+    rnd->tutCamUtil = AfxLoadPipelineFromXsh(dctx, &uri);
+
+    AfxMakeUri(&uri, "data/pipeline/lighting.xsh.xml?lighting", 0);
+    rnd->lighting = AfxLoadPipelineFromXsh(dctx, &uri);
 
     return err;
 }

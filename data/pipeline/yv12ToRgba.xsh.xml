@@ -2,7 +2,7 @@
     <Shader id='vs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
-        <In format='V2D'>a_xy</In>
+        <In format='V2D' stream='7'>a_xy</In>
         <![CDATA[
         
         layout(location = 0) in vec2 a_xy;
@@ -290,14 +290,13 @@
         ]]>
     </Shader>
     <Pipeline>
-        <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
-        <FrontFace>CCW</FrontFace>
-        <DepthTestEnable>false</DepthTestEnable>
-        <DepthWriteEnable>false</DepthWriteEnable>
-        <DepthCompareOp>ALWAYS</DepthCompareOp>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <Shader>data/pipeline/yv12ToRgba.xsh.xml?vs</Shader>
         <Shader>data/pipeline/yv12ToRgba.xsh.xml?fsSigma</Shader>
+        <Rasterizer>data/pipeline/yv12ToRgba.xsh.xml</Rasterizer>
     </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+    </Rasterizer>
 </Qwadro>

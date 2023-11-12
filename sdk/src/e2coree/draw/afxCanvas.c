@@ -17,7 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_CANVAS_C
 #define _AFX_DRAW_CONTEXT_C
-#include "afxDrawClassified.h"
+#include "afx/draw/afxDrawContext.h"
 
 _AFXINL void AfxBeginCanvasBlueprint(afxCanvasBlueprint *blueprint, afxWhd const extent)
 {

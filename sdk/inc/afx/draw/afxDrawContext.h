@@ -91,6 +91,7 @@ struct afxBaseDrawContext
     afxClass            buffers;
     afxClass            surfaces;
     afxClass            shaders;
+    afxClass            rasterizers;
     afxClass            pipelines;
     afxClass            legos;
     afxClass            canvases;

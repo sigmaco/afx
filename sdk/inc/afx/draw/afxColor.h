@@ -85,13 +85,13 @@ typedef enum afxPixelFormat
 
 typedef enum afxPixelFlag
 {
-    AFX_PIXEL_FLAG_REAL         = AFX_BIT_OFFSET(0),
-    AFX_PIXEL_FLAG_DEPTH        = AFX_BIT_OFFSET(1),
-    AFX_PIXEL_FLAG_SIGNED       = AFX_BIT_OFFSET(2),
-    AFX_PIXEL_FLAG_NORMALIZED   = AFX_BIT_OFFSET(3),
-    AFX_PIXEL_FLAG_COMPRESSED   = AFX_BIT_OFFSET(4),
-    AFX_PIXEL_FLAG_INDEXED      = AFX_BIT_OFFSET(5),
-    AFX_PIXEL_FLAG_LUMINANCE    = AFX_BIT_OFFSET(6),
+    AFX_PIXEL_FLAG_REAL         = AfxGetBitOffset(0),
+    AFX_PIXEL_FLAG_DEPTH        = AfxGetBitOffset(1),
+    AFX_PIXEL_FLAG_SIGNED       = AfxGetBitOffset(2),
+    AFX_PIXEL_FLAG_NORMALIZED   = AfxGetBitOffset(3),
+    AFX_PIXEL_FLAG_COMPRESSED   = AfxGetBitOffset(4),
+    AFX_PIXEL_FLAG_INDEXED      = AfxGetBitOffset(5),
+    AFX_PIXEL_FLAG_LUMINANCE    = AfxGetBitOffset(6),
 } afxPixelFlag;
 
 AFX_DEFINE_STRUCT(afxPixelFormatSpecification)

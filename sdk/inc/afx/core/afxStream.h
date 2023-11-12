@@ -27,9 +27,9 @@
 typedef enum afxIoFlags
 {
     // permissions
-    AFX_IO_FLAG_R           = AFX_BIT_OFFSET(0), // Readable
-    AFX_IO_FLAG_W           = AFX_BIT_OFFSET(1), // Writeable
-    AFX_IO_FLAG_X           = AFX_BIT_OFFSET(2), // Executable (seekable)
+    AFX_IO_FLAG_R           = AfxGetBitOffset(0), // Readable
+    AFX_IO_FLAG_W           = AfxGetBitOffset(1), // Writeable
+    AFX_IO_FLAG_X           = AfxGetBitOffset(2), // Executable (seekable)
     AFX_IO_FLAG_RW          = (AFX_IO_FLAG_R | AFX_IO_FLAG_W),
     AFX_IO_FLAG_RX          = (AFX_IO_FLAG_R | AFX_IO_FLAG_X),
     AFX_IO_FLAG_WX          = (AFX_IO_FLAG_W | AFX_IO_FLAG_X),

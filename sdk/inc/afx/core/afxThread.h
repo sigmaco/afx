@@ -49,41 +49,54 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
     void            *udd;
 };
 
-#ifdef _AFX_THREAD_C
 AFX_DEFINE_STRUCT(afxProcessor)
+#ifdef _AFX_CORE_C
+#ifdef _AFX_PROCESSOR_C
 {
-    afxNat              unitIdx;
-    afxNat              tid;
-    void*               osHandle;
+    afxNat          unitIdx;
+    afxNat          tid;
+    void*           osHandle;
     //afxChain            threads;
-    afxThread           activeThr;
+    afxThread       activeThr;
 
-    afxClock  startClock;
-    afxClock  lastClock;
-    afxClock  currClock;
+    afxClock        startClock;
+    afxClock        lastClock;
+    afxClock        currClock;
     afxReal64       currTime;
     afxReal64       deltaTime;
     afxNat          iterCnt;
     afxNat          lastIterCnt;
-    afxClock  iterCntSwapClock;
-};
-#endif
+    afxClock        iterCntSwapClock;
 
-#ifdef _AFX_THREAD_C
+#ifdef _WIN32
+    // system clock
+    LARGE_INTEGER   QPC_InitialVal;
+    unsigned int    LastTickCount;
+    __int64         LastMicroseconds;
+    __int64         CurrentAdjustment;
+    LARGE_INTEGER   QPC_Frequency;
+#endif
+}
+#endif
+#endif
+;
+
 AFX_OBJECT(afxThread)
+#ifdef _AFX_CORE_C
+#ifdef _AFX_THREAD_C
 {
     //afxLinkage      procUnit;
     afxSlock        procSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     afxNat          affineProcUnitIdx; // if set bit set, only such processor will can run this thread.
-    afxClock  startClock;
-    afxClock  lastClock;
-    afxClock  currClock;
+    afxClock        startClock;
+    afxClock        lastClock;
+    afxClock        currClock;
     afxReal64       currTime;
     afxReal64       deltaTime;
     afxNat          iterCnt;
     afxNat          lastIterCnt;
-    afxClock  iterCntSwapClock;
+    afxClock        iterCntSwapClock;
     afxError        (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
     afxBool         started;
     afxBool         exited;
@@ -94,8 +107,10 @@ AFX_OBJECT(afxThread)
     afxBool         interruptionRequested;
     afxInt          exitCode;
     void            *udd;
-};
+}
 #endif
+#endif
+;
 
 AFX afxNat      AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[]);
 AFX afxNat      AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);

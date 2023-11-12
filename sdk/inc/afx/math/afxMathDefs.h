@@ -15,11 +15,11 @@
  */
 
 // IMPORTANT: O módulo de matemática do Qwadro é matemática para programadores, não para matemáticos. 
-// Isto significa que nossas matrices são arranjas primarialmente em row-major layout, e nossas fórmulas e contas refletem a maneira como computadores fazem isto acontecer.
-// Há fórmulas para produtos "transpostos" (aka. column-major) mas são utilitários apenas.
 // Nossos ângulos e suas contrapartes são representadas em "radians", não em "degrees". Funções para degrees são apenas utilitários de conveniência em conversão.
 // Nossas rotações e orientações são representadas primarialmente por "quaternion". Funções para axial rotation e Euler são apenas utilitários.
 // É totalmente vedado adulterar os princípios gigachads e heterotops do Qwadro com essas tcholices dessas game engines randômicas do mundo por responder a vontade das pessoas de querer serem eternos subcolocados..
+
+// No Qwadro, usamos, como estilo de programação, muitos parênteses irrelevantes. Eles existem para fins didáticos mesmo, facilitando a vida de pessoas que não conhecem o princípio de precedência de PEMDAS.
 
 #ifndef AFX_MATH_DEFS_H
 #define AFX_MATH_DEFS_H
@@ -50,12 +50,13 @@ typedef afxReal         afxSimd(afxV3d[3]);
 typedef afxReal         afxSimd(afxV4d[4]);
 static_assert(sizeof(__m128) == sizeof(afxV4d), "");
 
-typedef afxV4d          afxQuat; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
 
-typedef afxV2d         afxM2d[2];
-typedef afxV3d         afxM3d[3];
-typedef afxV4d         afxM4d[4];
-typedef afxV4d         afxM4d3[3];
+typedef afxV2d         afxSimd(afxM2d[2]);
+typedef afxV3d         afxSimd(afxM3d[3]);
+typedef afxV4d         afxSimd(afxM4d[4]);
+typedef afxV4d         afxSimd(afxM4d3[3]);
 
 #if 0
 static_assert(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");
@@ -183,16 +184,5 @@ The vertex shader needs to produce clip coordinates (which as previously explain
 
 // LINEAR TRANSFORMATIONS AFFECTS ONLY 3X3 SUBSET OF MATRICES.
 // AFFINE TRANSFORMATIONS AFFECTS ONLY 4X3 SUBSET OF MATRICES. 
-
-AFX_DEFINE_STRUCT(afxSpaceSpecification)
-{
-    afxReal         unitsPerMeter;
-    afxV3d          right;
-    afxV3d          up;
-    afxV3d          back;
-    afxV3d          origin;
-};
-
-AFXINL void AfxComputeBasisConversion(afxSpaceSpecification const* original, afxSpaceSpecification const* desired, afxReal at[3], afxReal lt[3][3], afxReal ilt[3][3]);
 
 #endif//AFX_MATH_DEFS_H

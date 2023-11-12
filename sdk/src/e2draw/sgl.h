@@ -25,12 +25,12 @@
 
 #define _AFX_DRAW_C
 
+#include "afx/draw/afxRasterizer.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawContext.h"
 #include "afx/draw/afxSampler.h"
 #include "afx/draw/afxDrawScript.h"
-#include "../src/e2coree/draw/afxDrawClassified.h"
 #include "sglDrawDriver.h"
 #include "afx/core/afxArena.h"
 
@@ -43,20 +43,36 @@
 #define _SGL_MAX_LEGO_PER_BIND 4
 #define _SGL_MAX_ENTRY_PER_LEGO 10 
 #define _SGL_MAX_STAGE_PER_PIP 8
-#define _SGL_MAX_VBO_PER_BIND 8
+//#define _SGL_MAX_VBO_PER_BIND 8
+
+#define SGL_MAX_VERTEX_ATTRIBS 8
+#define SGL_MAX_VERTEX_ATTRIB_BINDINGS 8
+#define SGL_MAX_VERTEX_ATTRIB_STRIDE 4096
+#define SGL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET 4096
+
+#define SGL_MAX_VIEWPORTS 8
+#define SGL_VIEWPORT_BOUNDS_RANGE 0
+#define SGL_MAX_VIEWPORT_DIMS 0
+#define SGL_DEPTH_RANGE
+
+
+#define SGL_MAX_COMBINED_TEXTURE_IMAGE_UNITS 80
+
+
 #define _SGL_MAX_VAO_PER_TIME 60
-#define _SGL_MAX_VP_PER_SET 8
-#define _SGL_MAX_SCISSOR_PER_SET 8
-#define _SGL_MAX_INSTREAM_PER_SET 8
-#define _SGL_MAX_RASTER_SURF_PER_CANV 8
-#define _SGL_MAX_SURF_PER_CANV _SGL_MAX_RASTER_SURF_PER_CANV + 2
+//#define _SGL_MAX_VP_PER_SET 8
+//#define _SGL_MAX_SCISSOR_PER_SET 8
+//#define _SGL_MAX_INSTREAM_PER_SET 8
+//#define _SGL_MAX_RASTER_SURF_PER_CANV 8
+#define SGL_MAX_COLOR_ATTACHMENTS 8
+#define _SGL_MAX_SURF_PER_CANV SGL_MAX_COLOR_ATTACHMENTS + 2
 
 typedef enum sglUpdateFlags
 {
-    SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_BIT_OFFSET(0), // flush from host to device
-    SGL_UPD_FLAG_HOST_FLUSH     = AFX_BIT_OFFSET(1), // flush from device to host
-    SGL_UPD_FLAG_DEVICE_INST    = AFX_BIT_OFFSET(2), // (re)instantiate on device
-    SGL_UPD_FLAG_HOST_INST      = AFX_BIT_OFFSET(3), // (re)instantiate on host
+    SGL_UPD_FLAG_DEVICE_FLUSH   = AfxGetBitOffset(0), // flush from host to device
+    SGL_UPD_FLAG_HOST_FLUSH     = AfxGetBitOffset(1), // flush from device to host
+    SGL_UPD_FLAG_DEVICE_INST    = AfxGetBitOffset(2), // (re)instantiate on device
+    SGL_UPD_FLAG_HOST_INST      = AfxGetBitOffset(3), // (re)instantiate on host
     
     SGL_UPD_FLAG_HOST           = (SGL_UPD_FLAG_HOST_INST | SGL_UPD_FLAG_HOST_FLUSH),
     SGL_UPD_FLAG_DEVICE         = (SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH),
@@ -105,6 +121,36 @@ AFX_DEFINE_UNION(sglLegoData) // A GPUBindGroupEntry describes a single resource
     };
 };
 
+AFX_DEFINE_STRUCT(sglVertexInput)
+{
+    struct
+    {
+        afxBuffer       buf;
+        afxNat32        offset;
+        afxNat32        range;
+    }                   sources[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    struct
+    {
+        afxNat          srcIdx;
+        afxNat32        stride;
+        afxBool         instance;
+    }                   streams[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    afxNat              streamCnt;
+    struct
+    {
+        afxNat          location;
+        afxVertexFormat fmt;
+        afxNat          srcIdx;
+        afxNat32        offset;
+    }                   attrs[SGL_MAX_VERTEX_ATTRIBS];
+    afxNat              attrCnt;
+
+    afxBuffer           idxSrcBuf;
+    afxNat32            idxSrcOff;
+    afxNat32            idxSrcSiz;
+    GLuint              vao;
+};
+
 typedef struct
 {
     glVmt const             gl;
@@ -151,120 +197,101 @@ typedef struct
             afxDrawTarget               stencilRt;
             afxNat                      activeSubpass;
         }                               renderPass;
+    }state;
+
+    struct
+    {
+        afxNat              vpCnt; /// 0
+        afxViewport         vps[SGL_MAX_VIEWPORTS];
+
+        afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+        afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
+        afxNat              patchControlPoints; /// is the number of control points per patch.
         
-        union
-        {
-            struct
-            {
-                afxBuffer           buf; // The GPUBuffer to bind.
-                afxNat32            offset; // The offset, in bytes, from the beginning of buffer to the beginning of the range exposed to the shader by the buffer binding.
-                afxNat32            range; // The size, in bytes, of the buffer binding. If undefined, specifies the range starting at offset and ending at the end of buffer.
-            };
-            struct
-            {
-                afxSampler          smp;
-                afxTexture          tex;
-            };
-        }                       resBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
-        afxMask                 resBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
+        afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
 
-        struct
-        {
-            struct
-            {
-                afxBuffer       buf;
-                afxNat32        offset;
-                afxNat32        range;
-            }                   sources[_SGL_MAX_VBO_PER_BIND];
-            struct
-            {
-                afxNat          srcIdx;
-                afxNat32        stride;
-                afxBool         instance;
-            }                   streams[_SGL_MAX_VBO_PER_BIND];
-            afxNat              streamCnt;
-            struct
-            {
-                afxNat          location;
-                afxVertexFormat fmt;
-                afxNat          streamIdx;
-                afxNat32        offset;
-            }                   attrs[_SGL_MAX_VBO_PER_BIND];
-            afxNat              attrCnt;
-        }                       vertexInput;
-        afxMask                 vtxInStreamUpdMask;
-        afxMask                 vtxInAttribUpdMask;
-        
-        struct
-        {
-            afxBuffer                   buf;
-            afxNat32                    offset;
-            afxNat32                    idxSiz;
-        }                               indexBinding;
+        afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+        afxBool             cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
 
-        afxPipeline             pip;
-        afxNat                  shdCnt;
-        afxShader               shd[6];
-        afxShaderStage          stages[6];
+    }                       activeXformState, nextXformState;
 
-        // primitive
-        afxPrimTopology         primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
-        afxBool                 primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
-        // tesselation
-        afxNat                  patchControlPoints; /// is the number of control points per patch.
+    struct
+    {
+        afxBool             rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
+        afxFillMode         fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
+        afxReal             lineWidth; /// is the width of rasterized line segments. /// 1.f    
 
-        // transformation config
-        afxNat                  vpCnt; /// 0
-        afxViewport             vps[_SGL_MAX_VP_PER_SET];
-        afxNat                  scisCnt; /// 0
-        afxRect                 scisRects[_SGL_MAX_SCISSOR_PER_SET];
+        afxBool             depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
+        afxReal             depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
+        afxReal             depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
+        afxReal             depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
 
-        // depth test
-        afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
-        afxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
-        afxBool                 depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
-        afxBool                 depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
+        afxBool             msEnabled; /// If enabld, multisample rasterization will be used. FALSE
+        afxNat              sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+        afxMask             sampleMasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+        afxBool             sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
+        afxReal             minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
+        afxBool             alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
+        afxBool             alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
 
-        // stencil test
-        afxBool                 stencilTestEnabled; /// FALSE
-        afxStencilConfig        stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
-        afxStencilConfig        stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
+        afxPixelFormat      dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
 
-        // depth bounds test
-        afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
-        afxV2d                  depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
-
-        // depth bias computation
-        afxBool                 depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
-        afxReal                 depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
-        afxReal                 depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
-        afxReal                 depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
-
-        // depth/stencil
-        afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
-
-        // rasterization
-        afxBool                 rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
-        afxFillMode             fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
-        afxCullMode             cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
-        afxBool                 cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
-        afxReal                 lineWidth; /// is the width of rasterized line segments. /// 1.f    
+        afxBool             depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
+        afxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
+        afxBool             depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
+        afxBool             depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
+        afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
+        afxBool             stencilTestEnabled; /// FALSE
+        afxStencilConfig    stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
+        afxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
 
 
-        afxBool                 msEnabled; /// If enabld, multisample rasterization will be used. FALSE
-        afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-        afxMask              sampleBitmasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
-        afxBool                 sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
-        afxReal                 minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
-        afxBool                 alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
-        afxBool                 alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
+        afxNat              scisCnt; /// 0
+        afxRect             scisRects[SGL_MAX_VIEWPORTS];
 
-        afxNat                  outCnt;
+        afxNat              outCnt;
         afxColorOutputChannel   outs[8];
-        afxReal                 blendConstants[4]; /// [ 0, 0, 0, 1 ]
-        afxBool                 logicOpEnabled; /// FALSE
-        afxLogicOp              logicOp; /// afxLogicOp_NOP
-    }                       state;
+        afxBool             anyBlendEnabled;
+        afxReal             blendConstants[4]; /// [ 0, 0, 0, 1 ]
+        afxBool             logicOpEnabled; /// FALSE
+        afxLogicOp          logicOp; /// afxLogicOp_NOP
+
+    }                       activeRasterState, nextRasterState;
+
+    afxPipeline             activePip, nextPip;
+
+    union
+    {
+        struct
+        {
+            afxBuffer       buf; // The GPUBuffer to bind.
+            afxNat32        offset; // The offset, in bytes, from the beginning of buffer to the beginning of the range exposed to the shader by the buffer binding.
+            afxNat32        range; // The size, in bytes, of the buffer binding. If undefined, specifies the range starting at offset and ending at the end of buffer.
+        };
+        struct
+        {
+            afxSampler      smp;
+            afxTexture      tex;
+        };
+    }                       activeResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO], nextResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
+    afxMask                 nextResBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
+
+
+    sglVertexInput          tmpVertexInput[30];    
+    sglVertexInput*         activeVertexInput;
+    sglVertexInput          nextVertexInput;
+    afxMask                 nextVtxInStreamUpdMask;
+    afxNat                  nextVtxInStreamUpdCnt;
+    afxMask                 nextVtxInAttribUpdMask;
+    afxNat                  nextVtxInAttribUpdCnt;
+
+    afxMask                 nextBlendConstUpd;
+    afxMask                 nextViewportUpdMask;
+    afxNat                  nextViewportUpdCnt;
+    afxMask                 nextScissorUpdMask;
+    afxNat                  nextScissorUpdCnt;
+    afxBool                 scissorTestEnabled;
+
     afxBool                 flushPip, flushPass, flushSr, flushIbb;
     
     afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
@@ -350,8 +377,15 @@ AFX_OBJECT(afxPipeline)
 {
     struct afxBasePipeline base;
     sglUpdateFlags  updFlags;
-    afxNat          glHandle;
+    GLuint          glHandle;
     afxBool         assembled;
+    sglVertexInput  vertexInput;
+};
+
+AFX_OBJECT(afxRasterizer)
+{
+    struct afxBaseRasterizer base;
+    sglUpdateFlags  updFlags;
 };
 
 AFX_OBJECT(afxPipelineRig)
@@ -590,30 +624,30 @@ AFX_DEFINE_STRUCT(_afxDscrCmdVertexSources)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
-    //afxVertexInputSource            spec[_SGL_MAX_VBO_PER_BIND];
-    afxBuffer           buf[_SGL_MAX_VBO_PER_BIND];
-    afxNat32            offset[_SGL_MAX_VBO_PER_BIND]; /// the start of buffer.
-    afxNat32            range[_SGL_MAX_VBO_PER_BIND]; /// the size in bytes of vertex data bound from buffer.
-    //afxNat32            stride[_SGL_MAX_VBO_PER_BIND]; /// the byte stride between consecutive elements within the buffer.
+    //afxVertexInputSource            spec[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    afxBuffer           buf[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    afxNat32            offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the start of buffer.
+    afxNat32            range[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the size in bytes of vertex data bound from buffer.
+    //afxNat32            stride[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the byte stride between consecutive elements within the buffer.
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdVertexStreams)
 {
     _afxDscrCmd                     cmd;
     afxNat cnt;
-    afxNat srcIdx[_SGL_MAX_VBO_PER_BIND];
-    afxNat stride[_SGL_MAX_VBO_PER_BIND];
-    afxBool instance[_SGL_MAX_VBO_PER_BIND];
+    afxNat srcIdx[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    afxNat stride[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    afxBool instance[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdVertexAttributes)
 {
     _afxDscrCmd                     cmd;    
     afxNat cnt;
-    afxNat location[_SGL_MAX_VBO_PER_BIND];
-    afxVertexFormat fmt[_SGL_MAX_VBO_PER_BIND];
-    afxNat streamIdx[_SGL_MAX_VBO_PER_BIND];
-    afxNat32 offset[_SGL_MAX_VBO_PER_BIND];    
+    afxNat location[SGL_MAX_VERTEX_ATTRIBS];
+    afxVertexFormat fmt[SGL_MAX_VERTEX_ATTRIBS];
+    afxNat srcIdx[SGL_MAX_VERTEX_ATTRIBS];
+    afxNat32 offset[SGL_MAX_VERTEX_ATTRIBS];
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBufferRange)
@@ -678,7 +712,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdScissor)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
-    afxRect                         rect[_SGL_MAX_SCISSOR_PER_SET];
+    afxRect                         rect[SGL_MAX_VIEWPORTS];
     afxBool                         reset;
 };
 
@@ -686,7 +720,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdViewport)
 {
     _afxDscrCmd                     cmd;
     afxNat32                        first, cnt;
-    afxViewport                     vp[_SGL_MAX_VP_PER_SET];
+    afxViewport                     vp[SGL_MAX_VIEWPORTS];
     afxBool                         reset;
 };
 
@@ -724,10 +758,11 @@ SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, afxNat unit, afxSampler smp,
 SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
 SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
 SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex, glVmt const* gl);
-SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, glVmt const* gl);
-SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxNat unit, afxPipelineRig legt, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bindPip, afxBool bindVao, afxBool bindRas);
+SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer ras);
+SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxPipeline pip, afxNat unit, afxPipelineRig legt, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl);
-SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum target, GLenum usage, glVmt const* gl);
 
 //SGL afxSize _AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn);
 

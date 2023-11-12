@@ -20,6 +20,7 @@
 #define AFX_XML_H
 
 #include "afx/core/afxUri.h"
+#include "afx/core/afxArray.h"
 
 // XML --- UNIFORM RESOURCE DICTIONARY
 
@@ -33,6 +34,30 @@ AFX_DEFINE_STRUCT(afxXmlNode)
     afxString           name, content;
     afxXmlAttr          **attributes;
     afxXmlNode          **children;
+
+    struct
+    {
+        // TODO 2023/11/06
+        afxNat  firstChildIdx; // index into a pool of XML documento to avoid mallocs
+        afxNat  childCnt;
+    } EXP;
+};
+
+AFX_DEFINE_STRUCT(afxXmlTag)
+{
+    afxString   name;
+    afxString   content;
+};
+
+AFX_DEFINE_STRUCT(afxXmlElement)
+{
+    afxString   name;
+    afxString   content;
+    afxNat      parentIdx;
+    afxNat      baseTagIdx;
+    afxNat      tagCnt;
+    afxNat      baseChildIdx;
+    afxNat      childCnt;
 };
 
 AFX_DEFINE_STRUCT(afxXml)
@@ -44,6 +69,22 @@ AFX_DEFINE_STRUCT(afxXml)
         afxSize     length;
     }               buffer;
     afxXmlNode      *root;
+
+    afxNat          elemCnt;
+    union
+    {
+        afxXmlElement*  elems;
+        afxXmlElement*  elems300[30];
+    };
+    afxNat          tagCnt;
+    union
+    {
+        afxXmlTag*      tags;
+        afxXmlTag*      tags30[30];
+    };
+
+    afxArray        tempElemArr;
+    afxArray        tempTagArr;
 };
 
 AFX afxError            AfxLoadXml(afxXml* xml, afxUri const *uri);
@@ -70,5 +111,27 @@ AFX afxBool             AfxExtractXmlAttributeR64(afxXmlNode const* node, afxStr
 
 
 AFX afxXmlNode const*   AfxXmlNodeFindChild(afxXmlNode const *base, afxString const *child, afxString const *attr, afxString const *value);
+
+AFX afxBool             AfxTestXmlRoot(afxXml const* xml, afxString const* name);
+
+AFX afxNat              AfxCountXmlChilds(afxXml const* xml, afxNat elemIdx);
+AFX afxNat              AfxCountXmlTags(afxXml const* xml, afxNat elemIdx);
+
+AFX afxNat              AfxGetXmlChild(afxXml const* xml, afxNat elemIdx, afxNat childIdx);
+
+AFX afxXmlElement*      AfxGetXmlElementData(afxXml* xml, afxNat parentIdx, afxNat childIdx);
+AFX afxXmlElement const*AfxGetXmlElementDataConst(afxXml const* xml, afxNat parentIdx, afxNat childIdx);
+
+AFX afxNat              AfxGetXmlTag(afxXml const* xml, afxNat elemIdx, afxNat tagIdx);
+
+AFX afxXmlTag*          AfxGetXmlTagData(afxXml* xml, afxNat parentIdx, afxNat childIdx, afxNat tagIdx);
+AFX afxXmlTag const*    AfxGetXmlTagDataConst(afxXml const* xml, afxNat parentIdx, afxNat childIdx, afxNat tagIdx);
+
+AFX void                AfxQueryXmlElement(afxXml const* xml, afxNat elemIdx, afxString* name, afxString* content);
+AFX void                AfxQueryXmlTag(afxXml const* xml, afxNat elemIdx, afxNat tagIdx, afxString* name, afxString* content);
+
+AFX afxNat              AfxEnumerateXmlElements(afxXml const* xml, afxNat parentIdx, afxNat first, afxNat cnt, afxNat childIdx[]);
+AFX afxNat              AfxFindXmlElements(afxXml const* xml, afxNat parentIdx, afxString const* name, afxNat first, afxNat cnt, afxNat childIdx[]);
+AFX afxNat              AfxFindXmlTaggedElements(afxXml const* xml, afxNat parentIdx, afxNat first, afxString const* elem, afxString const* tag, afxNat cnt, afxString const value[], afxNat childIdx[]);
 
 #endif//AFX_XML_H

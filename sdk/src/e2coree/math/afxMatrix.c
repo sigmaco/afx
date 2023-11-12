@@ -396,22 +396,22 @@ _AFXINL void AfxCopyTransposedLinearM4d(afxReal m[4][4], afxReal const in[4][4])
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
     m[0][2] = in[2][0];
-    //m[0][3] = 0.f;
+    m[0][3] = 0.f;
 
     m[1][0] = in[0][1];
     m[1][1] = in[1][1];
     m[1][2] = in[2][1];
-    //m[1][3] = 0.f;
+    m[1][3] = 0.f;
 
     m[2][0] = in[0][2];
     m[2][1] = in[1][2];
     m[2][2] = in[2][2];
-    //m[2][3] = 0.f;
+    m[2][3] = 0.f;
 
-    //m[3][0] = 0.f;
-    //m[3][1] = 0.f;
-    //m[3][2] = 0.f;
-    //m[3][3] = 1.f;
+    m[3][0] = 0.f;
+    m[3][1] = 0.f;
+    m[3][2] = 0.f;
+    m[3][3] = 1.f;
 }
 
 _AFXINL void AfxCopyTransposedAffineM4d(afxReal m[4][4], afxReal const in[4][4])
@@ -423,26 +423,25 @@ _AFXINL void AfxCopyTransposedAffineM4d(afxReal m[4][4], afxReal const in[4][4])
     m[0][0] = in[0][0];
     m[0][1] = in[1][0];
     m[0][2] = in[2][0];
-    //m[0][3] = 0.f;
+    m[0][3] = 0.f;
 
     m[1][0] = in[0][1];
     m[1][1] = in[1][1];
     m[1][2] = in[2][1];
-    //m[1][3] = 0.f;
+    m[1][3] = 0.f;
 
     m[2][0] = in[0][2];
     m[2][1] = in[1][2];
     m[2][2] = in[2][2];
-    //m[2][3] = 0.f;
+    m[2][3] = 0.f;
 
     m[3][0] = in[0][3];
     m[3][1] = in[1][3];
     m[3][2] = in[2][3];
-    //m[3][3] = 1.f;
+    m[3][3] = 1.f;
 }
 
 //
-
 
 _AFXINL void AfxM2dFromM3d(afxReal m[2][2], afxReal const in[3][3])
 {
@@ -792,6 +791,64 @@ _AFXINL void AfxSubM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4
     AfxSubV4d(m[3], a[3], b[3]);
 }
 
+// Combine
+
+_AFXINL void AfxCombineM2d(afxReal m[2][2], afxReal lambda1, afxReal const a[2][2], afxReal lambda2, afxReal const b[2][2])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(a);
+    AfxAssert(b);
+
+    m[0][0] = lambda1 * a[0][0] + lambda2 * b[0][0];
+    m[0][1] = lambda1 * a[0][1] + lambda2 * b[0][1];
+    m[1][0] = lambda1 * a[1][0] + lambda2 * b[1][0];
+    m[1][1] = lambda1 * a[1][1] + lambda2 * b[1][1];    
+}
+
+_AFXINL void AfxCombineM3d(afxReal m[3][3], afxReal lambda1, afxReal const a[3][3], afxReal lambda2, afxReal const b[3][3])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(a);
+    AfxAssert(b);
+
+    m[0][0] = lambda1 * a[0][0] + lambda2 * b[0][0];
+    m[0][1] = lambda1 * a[0][1] + lambda2 * b[0][1];
+    m[0][2] = lambda1 * a[0][2] + lambda2 * b[0][2];
+    m[1][0] = lambda1 * a[1][0] + lambda2 * b[1][0];
+    m[1][1] = lambda1 * a[1][1] + lambda2 * b[1][1];
+    m[1][2] = lambda1 * a[1][2] + lambda2 * b[1][2];
+    m[2][0] = lambda1 * a[2][0] + lambda2 * b[2][0];
+    m[2][1] = lambda1 * a[2][1] + lambda2 * b[2][1];
+    m[2][2] = lambda1 * a[2][2] + lambda2 * b[2][2];
+}
+
+_AFXINL void AfxCombineLinearM4d(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(m);
+    AfxAssert(a);
+    AfxAssert(b);
+
+    m[0][0] = lambda1 * a[0][0] + lambda2 * b[0][0];
+    m[0][1] = lambda1 * a[0][1] + lambda2 * b[0][1];
+    m[0][2] = lambda1 * a[0][2] + lambda2 * b[0][2];
+    m[0][3] = 0.f;
+    m[1][0] = lambda1 * a[1][0] + lambda2 * b[1][0];
+    m[1][1] = lambda1 * a[1][1] + lambda2 * b[1][1];
+    m[1][2] = lambda1 * a[1][2] + lambda2 * b[1][2];
+    m[1][3] = 0.f;
+    m[2][0] = lambda1 * a[2][0] + lambda2 * b[2][0];
+    m[2][1] = lambda1 * a[2][1] + lambda2 * b[2][1];
+    m[2][2] = lambda1 * a[2][2] + lambda2 * b[2][2];
+    m[2][3] = 0.f;
+    m[3][0] = 0.f;
+    m[3][1] = 0.f;
+    m[3][2] = 0.f;
+    m[3][3] = 1.f;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
@@ -1004,7 +1061,7 @@ _AFXINL void AfxSetM4dScale(afxReal m[4][4], afxReal const v[3])
 
 // Scale
 
-_AFXINL void AfxAddScalingM3d(afxReal m[3][3], afxReal const scale[3])
+_AFXINL void AfxApplyM3dScale(afxReal m[3][3], afxReal const scale[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1017,7 +1074,7 @@ _AFXINL void AfxAddScalingM3d(afxReal m[3][3], afxReal const scale[3])
     AfxMultiplyM3d(m, tmp2, tmp);
 }
 
-_AFXINL void AfxScalePlanarM3d(afxReal m[3][3], afxReal const scale[3])
+_AFXINL void AfxApplyPlanarM3dScale(afxReal m[3][3], afxReal const scale[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1030,7 +1087,7 @@ _AFXINL void AfxScalePlanarM3d(afxReal m[3][3], afxReal const scale[3])
     AfxMultiplyPlanarM3d(m, tmp2, tmp);
 }
 
-_AFXINL void AfxScaleAffineM4d(afxReal m[4][4], afxReal const scale[3])
+_AFXINL void AfxApplyAffineM4dScale(afxReal m[4][4], afxReal const scale[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1043,7 +1100,7 @@ _AFXINL void AfxScaleAffineM4d(afxReal m[4][4], afxReal const scale[3])
     AfxMultiplyAffineM4d(m, tmp2, tmp);
 }
 
-_AFXINL void AfxScaleM4d(afxReal m[4][4], afxReal const scale[4])
+_AFXINL void AfxApplyM4dScale(afxReal m[4][4], afxReal const scale[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1326,7 +1383,7 @@ _AFXINL void AfxTranslateAffineM4d(afxReal m[4][4], afxReal const translation[3]
     AfxMultiplyAffineM4d(m, tmp2, tmp);
 }
 
-_AFXINL void AfxResetTranslationM4d(afxReal m[4][4], afxReal const translation[3])
+_AFXINL void AfxMakeTranslationM4d(afxReal m[4][4], afxReal const translation[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -2094,7 +2151,7 @@ _AFX void AfxApplyRootMotionVectorsToMatrix(afxReal const translation[3], afxRea
     afxM4d upd;
     afxReal rl = AfxMagV3d(rotation);
 
-    if (rl <= 0.0) AfxResetTranslationM4d(upd, translation);
+    if (rl <= 0.0) AfxMakeTranslationM4d(upd, translation);
     else
     {
         afxV3d scaledRot;

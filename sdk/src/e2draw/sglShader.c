@@ -16,7 +16,6 @@
 
 #include "sgl.h"
 
-#include "../e2coree/draw/afxDrawParadigms.h"
 #include "afx/draw/afxShader.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"

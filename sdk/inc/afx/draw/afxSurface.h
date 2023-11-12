@@ -20,7 +20,7 @@
 #define AFX_SURFACE_H
 
 #include "afx/draw/afxTexture.h"
-#include "afxDrawCommands.h"
+#include "afx/draw/afxDrawCommands.h"
 
 typedef enum afxSurfaceState
 {
@@ -30,8 +30,7 @@ typedef enum afxSurfaceState
     AFX_SURF_STATE_PENDING // submitted    
 } afxSurfaceState;
 
-AFX_DECLARE_STRUCT(_afxSurfVmt);
-
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_SURFACE_C
 AFX_OBJECT(afxSurface)
 #else
@@ -44,6 +43,7 @@ struct afxBaseSurface
     afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
     afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 };
+#endif
 
 AFX afxError                AfxAcquireRasterSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
 AFX afxError                AfxAcquireDepthSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);

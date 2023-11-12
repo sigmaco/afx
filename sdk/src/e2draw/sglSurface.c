@@ -17,7 +17,6 @@
 #include "sgl.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxSurface.h"
-#include "../src/e2coree/draw/afxDrawParadigms.h"
 
 _SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl)
 {

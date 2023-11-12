@@ -6,9 +6,9 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D'>aPos</In>
-        <In location='3' format='V3D'>aNormal</In>
-        <In location='6' format='V2D'>aUv</In>
+        <In location='0' format='V4D' stream='0'>aPos</In>
+        <In location='3' format='V3D' stream='1'>aNormal</In>
+        <In location='6' format='V2D' stream='1'>aUv</In>
         <![CDATA[
         
         layout (location = 0) in vec4 aPos;
@@ -40,11 +40,11 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D'>aPos</In>
-        <In location='3' format='V3D'>aNormal</In>
-        <In location='6' format='V2D'>aUv</In>
-        <In location='1' format='V4D'>aBlendIndices</In>
-        <In location='2' format='V4D'>aBlendWeights</In>
+        <In location='0' format='V4D' stream='0'>aPos</In>
+        <In location='3' format='V3D' stream='1'>aNormal</In>
+        <In location='6' format='V2D' stream='1'>aUv</In>
+        <In location='1' format='V4D' stream='0'>aBlendIndices</In>
+        <In location='2' format='V4D' stream='0'>aBlendWeights</In>
         <![CDATA[
         
         layout (location = 0) in vec4 aPos;
@@ -137,25 +137,23 @@
         ]]>
     </Shader>
     <Pipeline id='rigid'>
-        <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
-        <FrontFace>CCW</FrontFace>
-        <DepthTestEnable>true</DepthTestEnable>
-        <DepthWriteEnable>true</DepthWriteEnable>
-        <DepthCompareOp>LESS</DepthCompareOp>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
         <Shader>data/pipeline/body.xsh.xml?vsRigid</Shader>
         <Shader>data/pipeline/body.xsh.xml?fs</Shader>
+        <Rasterizer>data/pipeline/body.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='skinned'>
-        <FillMode>SOLID</FillMode>
         <CullMode>BACK</CullMode>
-        <FrontFace>CCW</FrontFace>
-        <DepthTestEnable>true</DepthTestEnable>
-        <DepthWriteEnable>true</DepthWriteEnable>
-        <DepthCompareOp>LESS</DepthCompareOp>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
         <Shader specialization='1'>data/pipeline/body.xsh.xml?vsSkinned</Shader>
         <Shader>data/pipeline/body.xsh.xml?fs</Shader>
+        <Rasterizer>data/pipeline/body.xsh.xml</Rasterizer>
     </Pipeline>
+    <Rasterizer>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <FillMode>SOLID</FillMode>
+        <DepthCompareOp>LESS</DepthCompareOp>
+    </Rasterizer>
 </Qwadro>

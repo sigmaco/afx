@@ -17,69 +17,69 @@
 #include "afx/draw/afxDrawDefs.h"
 
 
-_AFX afxString const g_str_Qwadro = AFX_STRING_LITERAL("Qwadro");
-_AFX afxString const g_str_Draw = AFX_STRING_LITERAL("Draw");
-_AFX afxString const g_str_Shader = AFX_STRING_LITERAL("Shader");
-_AFX afxString const g_str_Include = AFX_STRING_LITERAL("Include");
-_AFX afxString const g_str_Resource = AFX_STRING_LITERAL("Resource");
-_AFX afxString const g_str_In = AFX_STRING_LITERAL("In");
-_AFX afxString const g_str_Out = AFX_STRING_LITERAL("Out");
-_AFX afxString const g_str_Stage = AFX_STRING_LITERAL("Stage");
-_AFX afxString const g_str_stage = AFX_STRING_LITERAL("stage");
-_AFX afxString const g_str_id = AFX_STRING_LITERAL("id");
-_AFX afxString const g_str_name = AFX_STRING_LITERAL("name");
-_AFX afxString const g_str_entry = AFX_STRING_LITERAL("entry");
-_AFX afxString const g_str_Entry = AFX_STRING_LITERAL("Entry");
-_AFX afxString const g_str_flag = AFX_STRING_LITERAL("flag");
-_AFX afxString const g_str_Flag = AFX_STRING_LITERAL("Flag");
-_AFX afxString const g_str_uri = AFX_STRING_LITERAL("uri");
-_AFX afxString const g_str_set = AFX_STRING_LITERAL("set");
-_AFX afxString const g_str_binding = AFX_STRING_LITERAL("binding");
-_AFX afxString const g_str_type = AFX_STRING_LITERAL("type");
-_AFX afxString const g_str_count = AFX_STRING_LITERAL("count");
-_AFX afxString const g_str_location = AFX_STRING_LITERAL("location");
-_AFX afxString const g_str_format = AFX_STRING_LITERAL("format");
-_AFX afxString const g_str_topology = AFX_STRING_LITERAL("topology");
-_AFX afxString const g_str_restart = AFX_STRING_LITERAL("restart");
+_AFX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
+_AFX afxString const g_str_Draw = AFX_STRING("Draw");
+_AFX afxString const g_str_Shader = AFX_STRING("Shader");
+_AFX afxString const g_str_Include = AFX_STRING("Include");
+_AFX afxString const g_str_Resource = AFX_STRING("Resource");
+_AFX afxString const g_str_In = AFX_STRING("In");
+_AFX afxString const g_str_Out = AFX_STRING("Out");
+_AFX afxString const g_str_Stage = AFX_STRING("Stage");
+_AFX afxString const g_str_stage = AFX_STRING("stage");
+_AFX afxString const g_str_id = AFX_STRING("id");
+_AFX afxString const g_str_name = AFX_STRING("name");
+_AFX afxString const g_str_entry = AFX_STRING("entry");
+_AFX afxString const g_str_Entry = AFX_STRING("Entry");
+_AFX afxString const g_str_flag = AFX_STRING("flag");
+_AFX afxString const g_str_Flag = AFX_STRING("Flag");
+_AFX afxString const g_str_uri = AFX_STRING("uri");
+_AFX afxString const g_str_set = AFX_STRING("set");
+_AFX afxString const g_str_binding = AFX_STRING("binding");
+_AFX afxString const g_str_type = AFX_STRING("type");
+_AFX afxString const g_str_count = AFX_STRING("count");
+_AFX afxString const g_str_location = AFX_STRING("location");
+_AFX afxString const g_str_format = AFX_STRING("format");
+_AFX afxString const g_str_topology = AFX_STRING("topology");
+_AFX afxString const g_str_restart = AFX_STRING("restart");
 
-_AFX afxString const g_str_DepthClampEnable = AFX_STRING_LITERAL("DepthClampEnable");
-_AFX afxString const g_str_RasterizerDiscardEnable = AFX_STRING_LITERAL("RasterizerDiscardEnable");
-_AFX afxString const g_str_FillMode = AFX_STRING_LITERAL("FillMode");
-_AFX afxString const g_str_CullMode = AFX_STRING_LITERAL("CullMode");
-_AFX afxString const g_str_FrontFace = AFX_STRING_LITERAL("FrontFace");
-_AFX afxString const g_str_DepthBias = AFX_STRING_LITERAL("DepthBias");
-_AFX afxString const g_str_enable = AFX_STRING_LITERAL("enable");
-_AFX afxString const g_str_constant = AFX_STRING_LITERAL("constant");
-_AFX afxString const g_str_slope = AFX_STRING_LITERAL("slope");
-_AFX afxString const g_str_clamp = AFX_STRING_LITERAL("clamp");
-_AFX afxString const g_str_LineWidth = AFX_STRING_LITERAL("LineWidth");
+_AFX afxString const g_str_DepthClampEnable = AFX_STRING("DepthClampEnable");
+_AFX afxString const g_str_RasterizerDiscardEnable = AFX_STRING("RasterizerDiscardEnable");
+_AFX afxString const g_str_FillMode = AFX_STRING("FillMode");
+_AFX afxString const g_str_CullMode = AFX_STRING("CullMode");
+_AFX afxString const g_str_FrontFace = AFX_STRING("FrontFace");
+_AFX afxString const g_str_DepthBias = AFX_STRING("DepthBias");
+_AFX afxString const g_str_enable = AFX_STRING("enable");
+_AFX afxString const g_str_constant = AFX_STRING("constant");
+_AFX afxString const g_str_slope = AFX_STRING("slope");
+_AFX afxString const g_str_clamp = AFX_STRING("clamp");
+_AFX afxString const g_str_LineWidth = AFX_STRING("LineWidth");
 
-_AFX afxString const g_str_DepthTestEnable = AFX_STRING_LITERAL("DepthTestEnable");
-_AFX afxString const g_str_DepthWriteEnable = AFX_STRING_LITERAL("DepthWriteEnable");
-_AFX afxString const g_str_DepthCompareOp = AFX_STRING_LITERAL("DepthCompareOp");
-_AFX afxString const g_str_DepthBoundsTest = AFX_STRING_LITERAL("DepthBoundsTest");
-_AFX afxString const g_str_StencilTest = AFX_STRING_LITERAL("StencilTest");
-_AFX afxString const g_str_Front = AFX_STRING_LITERAL("Front");
-_AFX afxString const g_str_Back = AFX_STRING_LITERAL("Back");
-_AFX afxString const g_str_fail = AFX_STRING_LITERAL("fail");
-_AFX afxString const g_str_pass = AFX_STRING_LITERAL("pass");
-_AFX afxString const g_str_depthFail = AFX_STRING_LITERAL("depthFail");
-_AFX afxString const g_str_compare = AFX_STRING_LITERAL("compare");
-_AFX afxString const g_str_min = AFX_STRING_LITERAL("min");
-_AFX afxString const g_str_max = AFX_STRING_LITERAL("max");
+_AFX afxString const g_str_DepthTestEnable = AFX_STRING("DepthTestEnable");
+_AFX afxString const g_str_DepthWriteEnable = AFX_STRING("DepthWriteEnable");
+_AFX afxString const g_str_DepthCompareOp = AFX_STRING("DepthCompareOp");
+_AFX afxString const g_str_DepthBoundsTest = AFX_STRING("DepthBoundsTest");
+_AFX afxString const g_str_StencilTest = AFX_STRING("StencilTest");
+_AFX afxString const g_str_Front = AFX_STRING("Front");
+_AFX afxString const g_str_Back = AFX_STRING("Back");
+_AFX afxString const g_str_fail = AFX_STRING("fail");
+_AFX afxString const g_str_pass = AFX_STRING("pass");
+_AFX afxString const g_str_depthFail = AFX_STRING("depthFail");
+_AFX afxString const g_str_compare = AFX_STRING("compare");
+_AFX afxString const g_str_min = AFX_STRING("min");
+_AFX afxString const g_str_max = AFX_STRING("max");
 
-_AFX afxString const g_str_true = AFX_STRING_LITERAL("true");
-_AFX afxString const g_str_false = AFX_STRING_LITERAL("false");
+_AFX afxString const g_str_true = AFX_STRING("true");
+_AFX afxString const g_str_false = AFX_STRING("false");
 
-_AFX afxString const g_str_DrawOperation = AFX_STRING_LITERAL("DrawOperation");
-_AFX afxString const g_str_Operation = AFX_STRING_LITERAL("Operation");
-_AFX afxString const g_str_Technique = AFX_STRING_LITERAL("Technique");
-_AFX afxString const g_str_Pipeline = AFX_STRING_LITERAL("Pipeline");
-_AFX afxString const g_str_Pass = AFX_STRING_LITERAL("Pass");
-_AFX afxString const g_str_Rasterization = AFX_STRING_LITERAL("Rasterization");
-_AFX afxString const g_str_DepthHandling = AFX_STRING_LITERAL("DepthHandling");
-_AFX afxString const g_str_Input = AFX_STRING_LITERAL("Input");
-_AFX afxString const g_str_PrimitiveTopology = AFX_STRING_LITERAL("PrimitiveTopology");
+_AFX afxString const g_str_DrawOperation = AFX_STRING("DrawOperation");
+_AFX afxString const g_str_Operation = AFX_STRING("Operation");
+_AFX afxString const g_str_Technique = AFX_STRING("Technique");
+_AFX afxString const g_str_Pipeline = AFX_STRING("Pipeline");
+_AFX afxString const g_str_Pass = AFX_STRING("Pass");
+_AFX afxString const g_str_Rasterization = AFX_STRING("Rasterization");
+_AFX afxString const g_str_DepthHandling = AFX_STRING("DepthHandling");
+_AFX afxString const g_str_Input = AFX_STRING("Input");
+_AFX afxString const g_str_PrimitiveTopology = AFX_STRING("PrimitiveTopology");
 
 afxChar const *shdResTypeNames[] =
 {
@@ -115,105 +115,105 @@ afxChar const *fmtNames[] =
 
 _AFX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
 {
-    AFX_STRING_LITERAL(""),
-    AFX_STRING_LITERAL("REAL"),
-    AFX_STRING_LITERAL("V2D"),
-    AFX_STRING_LITERAL("V3D"),
-    AFX_STRING_LITERAL("V4D"),
+    AFX_STRING(""),
+    AFX_STRING("REAL"),
+    AFX_STRING("V2D"),
+    AFX_STRING("V3D"),
+    AFX_STRING("V4D"),
 
-    //AFX_STRING_LITERAL("V4B"),
-    //AFX_STRING_LITERAL("v8B"),
+    //AFX_STRING("V4B"),
+    //AFX_STRING("v8B"),
 };
 
 _AFX afxString const shaderStageString[] =
 {
-    AFX_STRING_LITERAL(""),
-    AFX_STRING_LITERAL("VERTEX"),
-    AFX_STRING_LITERAL("FRAGMENT"),
-    AFX_STRING_LITERAL("GEOMETRY"),
-    AFX_STRING_LITERAL("TESS_CTRL"),
-    AFX_STRING_LITERAL("TESS_EVAL"),
-    AFX_STRING_LITERAL("COMPUTE"),
+    AFX_STRING(""),
+    AFX_STRING("VERTEX"),
+    AFX_STRING("FRAGMENT"),
+    AFX_STRING("GEOMETRY"),
+    AFX_STRING("TESS_CTRL"),
+    AFX_STRING("TESS_EVAL"),
+    AFX_STRING("COMPUTE"),
 };
 
 _AFX afxString const fillModeString[] =
 {
-    AFX_STRING_LITERAL("SOLID"),
-    AFX_STRING_LITERAL("EDGE"),
-    AFX_STRING_LITERAL("POINT")
+    AFX_STRING("SOLID"),
+    AFX_STRING("EDGE"),
+    AFX_STRING("POINT")
 };
 
 _AFX afxString const frontFaceString[] =
 {
-    AFX_STRING_LITERAL("CCW"),
-    AFX_STRING_LITERAL("CW")
+    AFX_STRING("CCW"),
+    AFX_STRING("CW")
 };
 
 _AFX afxString const cullModeString[] =
 {
-    AFX_STRING_LITERAL("NONE"),
-    AFX_STRING_LITERAL("FRONT"),
-    AFX_STRING_LITERAL("BACK"),
-    AFX_STRING_LITERAL("BOTH")
+    AFX_STRING("NONE"),
+    AFX_STRING("FRONT"),
+    AFX_STRING("BACK"),
+    AFX_STRING("BOTH")
 };
 
 _AFX afxString const compareOpString[] =
 {
-    AFX_STRING_LITERAL("NEVER"),
-    AFX_STRING_LITERAL("LESS"),
-    AFX_STRING_LITERAL("LEQUAL"),
-    AFX_STRING_LITERAL("EQUAL"),
-    AFX_STRING_LITERAL("NOTEQUAL"),
-    AFX_STRING_LITERAL("GEQUAL"),
-    AFX_STRING_LITERAL("GREATER"),
-    AFX_STRING_LITERAL("ALWAYS")
+    AFX_STRING("NEVER"),
+    AFX_STRING("LESS"),
+    AFX_STRING("LEQUAL"),
+    AFX_STRING("EQUAL"),
+    AFX_STRING("NOTEQUAL"),
+    AFX_STRING("GEQUAL"),
+    AFX_STRING("GREATER"),
+    AFX_STRING("ALWAYS")
 };
 
 _AFX afxString const stencilOpString[] =
 {
-    AFX_STRING_LITERAL("KEEP"),
-    AFX_STRING_LITERAL("ZERO"),
-    AFX_STRING_LITERAL("REPLACE"),
-    AFX_STRING_LITERAL("INC_AND_CLAMP"),
-    AFX_STRING_LITERAL("DEC_AND_CLAMP"),
-    AFX_STRING_LITERAL("INVERT"),
-    AFX_STRING_LITERAL("INC_AND_WRAP"),
-    AFX_STRING_LITERAL("DEC_AND_WRAP")
+    AFX_STRING("KEEP"),
+    AFX_STRING("ZERO"),
+    AFX_STRING("REPLACE"),
+    AFX_STRING("INC_AND_CLAMP"),
+    AFX_STRING("DEC_AND_CLAMP"),
+    AFX_STRING("INVERT"),
+    AFX_STRING("INC_AND_WRAP"),
+    AFX_STRING("DEC_AND_WRAP")
 };
 
 _AFX afxString const logicOpString[] =
 {
-    AFX_STRING_LITERAL("CLEAR"),
-    AFX_STRING_LITERAL("AND"),
-    AFX_STRING_LITERAL("AND_REVERSE"),
-    AFX_STRING_LITERAL("COPY"),
-    AFX_STRING_LITERAL("AND_INVERTED"),
-    AFX_STRING_LITERAL("NO_OP"),
-    AFX_STRING_LITERAL("XOR"),
-    AFX_STRING_LITERAL("OR"),
-    AFX_STRING_LITERAL("NOR"),
-    AFX_STRING_LITERAL("EQUIVALENT"),
-    AFX_STRING_LITERAL("INVERT"),
-    AFX_STRING_LITERAL("OR_REVERSE"),
-    AFX_STRING_LITERAL("COPY_INVERTED"),
-    AFX_STRING_LITERAL("OR_INVERTED"),
-    AFX_STRING_LITERAL("NAND"),
-    AFX_STRING_LITERAL("SET")
+    AFX_STRING("CLEAR"),
+    AFX_STRING("AND"),
+    AFX_STRING("AND_REVERSE"),
+    AFX_STRING("COPY"),
+    AFX_STRING("AND_INVERTED"),
+    AFX_STRING("NO_OP"),
+    AFX_STRING("XOR"),
+    AFX_STRING("OR"),
+    AFX_STRING("NOR"),
+    AFX_STRING("EQUIVALENT"),
+    AFX_STRING("INVERT"),
+    AFX_STRING("OR_REVERSE"),
+    AFX_STRING("COPY_INVERTED"),
+    AFX_STRING("OR_INVERTED"),
+    AFX_STRING("NAND"),
+    AFX_STRING("SET")
 };
 
 _AFX afxString const primTopologyString[] =
 {
-    AFX_STRING_LITERAL("POINT_LIST"),
-    AFX_STRING_LITERAL("LINE_LIST"),
-    AFX_STRING_LITERAL("LINE_STRIP"),
-    AFX_STRING_LITERAL("TRI_LIST"),
-    AFX_STRING_LITERAL("TRI_STRIP"),
-    AFX_STRING_LITERAL("TRI_FAN"),
-    AFX_STRING_LITERAL("LINE_LIST_ADJACENT"),
-    AFX_STRING_LITERAL("LINE_STRIP_ADJACENT"),
-    AFX_STRING_LITERAL("TRI_LIST_ADJACENT"),
-    AFX_STRING_LITERAL("TRI_STRIP_ADJACENT"),
-    AFX_STRING_LITERAL("PATCH_LIST")
+    AFX_STRING("POINT_LIST"),
+    AFX_STRING("LINE_LIST"),
+    AFX_STRING("LINE_STRIP"),
+    AFX_STRING("TRI_LIST"),
+    AFX_STRING("TRI_STRIP"),
+    AFX_STRING("TRI_FAN"),
+    AFX_STRING("LINE_LIST_ADJACENT"),
+    AFX_STRING("LINE_STRIP_ADJACENT"),
+    AFX_STRING("TRI_LIST_ADJACENT"),
+    AFX_STRING("TRI_STRIP_ADJACENT"),
+    AFX_STRING("PATCH_LIST")
 };
 
 afxNat const vtxFmtSizes[] =
@@ -491,7 +491,7 @@ _AFX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint 
     {
         if ((err |= (!(total_[i] > base_[i] + range_[i]))))
         {
-            AfxLogError(hint, "[%i] %s(%f) + %s(%f) is out of range [0, %f]", AfxStr((base_)), (base_), AfxStr((range_)), (range_), AfxStr((total_)), (total_));
+            AfxLogError(hint, "[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
         }
     }
     return err;

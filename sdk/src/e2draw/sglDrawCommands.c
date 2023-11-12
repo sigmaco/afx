@@ -183,7 +183,7 @@ _SGL void _SglEncodeCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat
     _SglEncodeCmdCommand(dscr, offsetof(afxCmd, ResetVertexStreams) / 4, sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglEncodeCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const streamIdx[], afxNat32 const offset[])
+_SGL void _SglEncodeCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
@@ -197,7 +197,7 @@ _SGL void _SglEncodeCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afx
         cmd->location[i] = location ? location[i] : 0;
         cmd->fmt[i] = fmt ? fmt[i] : NIL;
         AfxAssert(cmd->fmt[i]);
-        cmd->streamIdx[i] = streamIdx ? streamIdx[i] : 0;
+        cmd->srcIdx[i] = srcIdx ? srcIdx[i] : 0;
         cmd->offset[i] = offset ? offset[i] : 0;
     }
 
@@ -622,7 +622,7 @@ _SGL void _SglEncodeCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxN
 
     afxDrawContext dctx = AfxGetObjectProvider(dscr);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V2D }, NIL, NIL);
+    AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V2D }, (afxNat[]) { 7 }, NIL);
     AfxCmdResetVertexStreams(dscr, 1, (afxNat[]) { 7 }, (afxNat32[]) { sizeof(afxV2d) }, NIL);
     AfxCmdBindVertexSources(dscr, 7, 1, (afxBuffer[]) { dctx->tristrippedQuad2dPosBuf }, NIL, NIL);
 

@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_MODEL_C
 #define _AFX_MESH_C
 #define _AFX_SIMULATION_C
@@ -136,7 +137,7 @@ _AFX afxError AfxAttachMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, af
                     {
                         for (afxNat i = 0; i < artCnt; i++)
                         {
-                            afxString const* artId = &msh->vertebras[i].id;
+                            afxString const* artId = &msh->vertebras[i].id.str;
 
                             if (!AfxFindBone(dstSkl, artId, &dstBoneIndices[i]))
                             {
@@ -182,12 +183,9 @@ _AFX afxError AfxAttachMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, af
                         slot->srcSkl = NIL;
                     }
 
-                    if (mshCurr)
-                    {
-                        AfxAssertObjects(1, &mshCurr, afxFcc_MSH);
-                        AfxReleaseObjects(1, (void*[]) { mshCurr });
-                        slot->msh = NIL;
-                    }
+                    AfxAssertObjects(1, &mshCurr, afxFcc_MSH);
+                    AfxReleaseObjects(1, (void*[]) { mshCurr });
+                    slot->msh = NIL;
                 }
 
                 if (msh)
@@ -313,9 +311,9 @@ _AFX afxError _AfxMdlDtor(afxModel mdl)
 
     afxSimulation sim = AfxGetObjectProvider(mdl);
     afxContext mem = AfxSimulationGetMemory(sim);
-
+    
     for (afxNat i = 0; i < mdl->cap; i++)
-        AfxAttachMeshes(mdl, NIL, i, 1, NIL);
+        AfxAttachMeshes(mdl, NIL, i, 1, &mdl->meshSlots[i].msh);
 
     if (mdl->meshSlots)
         AfxDeallocate(mem, mdl->meshSlots);
@@ -353,7 +351,7 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     if (init)
         AfxCopyTransform(&mdl->init, init);
     else
-        AfxZeroTransform(&mdl->init);
+        AfxResetTransform(&mdl->init);
 
     AfxResetAabb(&mdl->aabb);
 
@@ -402,10 +400,8 @@ _AFX afxModel AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton 
     return mdl;
 }
 
-_AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxReal const ilt[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[])
+_AFX void AfxTransformModels(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxModel mdl[])
 {
-    // Should be compatible with voidTransformModel(model *Model, const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float AffineTolerance, float LinearTolerance, unsigned int Flags)
-
     afxError err = AFX_ERR_NONE;
     AfxAssert(at);
     AfxAssert(lt);
@@ -425,7 +421,7 @@ _AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxRea
             if ((skl = AfxGetModelSkeleton(mdl2)))
             {
                 AfxAssertObjects(1, &skl, afxFcc_SKL);
-                AfxTransformSkeletons(lt, ilt, at, 1, &skl);
+                AfxTransformSkeletons(lt, ilt, at, atTol, ltTol, 1, &skl);
             }
 
             afxMesh meshes[64];
@@ -442,14 +438,14 @@ _AFX void AfxTransformModels(afxReal const at[3], afxReal const lt[3][3], afxRea
                 baseSlotIdx += mshCnt;
 
                 // WARNING: What to do if mesh is shared among other models of strange asset?
-                AfxTransformMeshes(at, lt, ilt, affineTol, linearTol, flags, mshCnt, meshes);
+                AfxTransformMeshes(lt, ilt, at, atTol, ltTol, flags, mshCnt, meshes);
             }
 
             if (remaining)
             {
                 mshCnt = AfxGetAttachedMeshes(mdl2, baseSlotIdx, remaining, meshes);
                 // WARNING: What to do if mesh is shared among other models of strange asset?
-                AfxTransformMeshes(at, lt, ilt, affineTol, linearTol, flags, mshCnt, meshes);
+                AfxTransformMeshes(lt, ilt, at, atTol, ltTol, flags, mshCnt, meshes);
             }
 
             AfxAssimilateTransforms(lt, ilt, at, 1, &mdl2->init, &mdl2->init);

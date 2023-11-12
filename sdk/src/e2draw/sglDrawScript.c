@@ -134,17 +134,19 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
-    struct _dscrParadigm *paradigm = ((struct _dscrParadigm *)cookie->udd[0]) + cookie->no;
-
-    afxDrawInput din = paradigm->owner;
+    afxDrawContext dctx = cookie->udd[0];
+    afxNat portIdx = ((afxNat*)cookie->udd[1])[cookie->no];
+    afxDrawInput din = ((afxDrawInput*)cookie->udd[2])[cookie->no];
+    
     AfxAssertObjects(1, &din, afxFcc_DIN);
 
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
+    afxDrawContext dctx2;
+    AfxGetDrawInputConnection(din, &dctx2);
+    AfxAssert(dctx2 == dctx);
     afxContext ctx = AfxGetDrawContextMemory(dctx);
 
     dscr->base.submRefCnt = 0;
-    dscr->base.portIdx = paradigm->portIdx;
+    dscr->base.portIdx = portIdx;
     AfxAcquireArena(ctx, &dscr->base.cmdArena, NIL, AfxSpawnHint());
 
     dscr->base.din = din;

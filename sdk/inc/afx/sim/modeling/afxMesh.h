@@ -55,7 +55,7 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 AFX_DEFINE_STRUCT(afxMeshVertebra)
 {
     _AFX_DBG_FCC
-    afxString           id; // 16
+    afxString16         id; // 16
     afxAabb             aabb; // originally oobb;
     afxNat              triCnt;
     afxNat*             triIdx; // indices to vertices
@@ -115,6 +115,6 @@ AFX afxMeshVertebra*    AfxGetMeshVertebra(afxMesh msh, afxNat artIdx);
 
 AFX afxError            AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[]);
 
-AFX void                AfxTransformMeshes(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
+AFX void                AfxTransformMeshes(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
 
 #endif//AFX_MESH_H

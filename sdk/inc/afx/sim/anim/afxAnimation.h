@@ -107,4 +107,6 @@ AFX_OBJECT(afxAnimation)
 };
 #endif
 
+AFX void        AfxTransformAnimations(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxAnimation ani[]);
+
 #endif//AFX_ANIMATION_H

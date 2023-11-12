@@ -56,95 +56,100 @@ AFX_DEFINE_STRUCT(afxUri2048)
     afxByte             buf[2048];
 };
 
-AFX void                AfxUri128(afxUri128 *uri);
-AFX void                AfxUri2048(afxUri2048 *uri);
+AFXINL void             AfxUri128(afxUri128 *uri);
+AFXINL void             AfxUri2048(afxUri2048 *uri);
 
-AFX void                AfxUriDeallocate(afxUri *uri);
-AFX afxError            AfxUriAllocate(afxUri* uri, afxNat cap, void const *start, afxNat range);
-AFX afxError            AfxUriReallocate(afxUri *uri, afxNat cap, void const *start, afxNat range);
+AFXINL void             AfxUriDeallocate(afxUri *uri);
+AFXINL afxError         AfxUriAllocate(afxUri* uri, afxNat cap, void const *start, afxNat range);
+AFXINL afxError         AfxUriReallocate(afxUri *uri, afxNat cap, void const *start, afxNat range);
 
-AFX afxError            AfxCloneUri(afxUri* uri, afxUri const *in);
-AFX afxError            AfxCloneUriPath(afxUri* uri, afxUri const *in);
-AFX afxError            AfxCloneUriName(afxUri* uri, afxUri const *in);
+AFXINL afxError         AfxCloneUri(afxUri* uri, afxUri const *in);
+AFXINL afxError         AfxCloneUriPath(afxUri* uri, afxUri const *in);
+AFXINL afxError         AfxCloneUriName(afxUri* uri, afxUri const *in);
 
 // Make a new URI excerpting another URI.
-AFX afxNat              AfxExcerptUriHost(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriPort(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriUsername(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriPassword(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriPath(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriDirectory(afxUri *uri, afxUri const *parent);
-AFX afxNat              AfxExcerptUriObject(afxUri *uri, afxUri const *parent); // file name + extension (if any)
-AFX afxNat              AfxExcerptUriName(afxUri *uri, afxUri const *parent); // just file name, without extension
-AFX afxNat              AfxExcerptUriExtension(afxUri *uri, afxUri const *parent, afxBool skipDot);
-AFX afxNat              AfxExcerptUriQuery(afxUri *uri, afxUri const *parent, afxBool skipSep);
-AFX afxNat              AfxExcerptUriFragment(afxUri *uri, afxUri const *parent, afxBool skipSep);
-AFX afxNat              AfxExcerptUriScheme(afxUri *uri, afxUri const *parent); // "https"
+AFXINL afxNat           AfxGetUriHost(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriPort(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriUsername(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriPassword(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriPath(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriDirectory(afxUri *uri, afxUri const *parent);
+AFXINL afxNat           AfxGetUriObject(afxUri *uri, afxUri const *parent); // file name + extension (if any)
+AFXINL afxNat           AfxGetUriName(afxUri *uri, afxUri const *parent); // just file name, without extension
+AFXINL afxNat           AfxGetUriExtension(afxUri *uri, afxUri const *parent, afxBool skipDot);
+AFXINL afxNat           AfxGetUriQuery(afxUri *uri, afxUri const *parent, afxBool skipSep);
+AFXINL afxNat           AfxGetUriFragment(afxUri *uri, afxUri const *parent, afxBool skipSep);
+AFXINL afxNat           AfxGetUriScheme(afxUri *uri, afxUri const *parent); // "https"
 
-AFX afxNat              AfxExcerptUriPathRW(afxUri *uri, afxUri *parent);
-AFX afxNat              AfxExcerptUriDirectoryRW(afxUri *uri, afxUri *parent);
-AFX afxNat              AfxExcerptUriObjectRW(afxUri *uri, afxUri *parent); // file name + extension
-AFX afxNat              AfxExcerptUriNameRW(afxUri *uri, afxUri *parent); // just file name, without extension
-AFX afxNat              AfxExcerptUriExtensionRW(afxUri *uri, afxUri *parent);
+AFXINL afxNat           AfxGetUriPathRW(afxUri *uri, afxUri *parent);
+AFXINL afxNat           AfxGetUriDirectoryRW(afxUri *uri, afxUri *parent);
+AFXINL afxNat           AfxGetUriObjectRW(afxUri *uri, afxUri *parent); // file name + extension
+AFXINL afxNat           AfxGetUriNameRW(afxUri *uri, afxUri *parent); // just file name, without extension
+AFXINL afxNat           AfxGetUriExtensionRW(afxUri *uri, afxUri *parent);
 
-AFX void                AfxReflectUri(afxUri *uri, afxUri const *in); // pointers and handle same data handled by 'in' without doing any copy or change.
+AFXINL void             AfxReplicateUri(afxUri *uri, afxUri const *in); // pointers and handle same data handled by 'in' without doing any copy or change.
 
-AFX void                AfxReflectUriString(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
+AFXINL afxNat           AfxUriFromString(afxUri *uri, afxString const *src); // will not set capacity  (will be read only)
+AFXINL afxNat           AfxUriFromStringRange(afxUri *uri, afxString const *src, afxNat offset, afxNat range);
 
-AFX void                AfxUriWrapLiteral(afxUri *uri, void const *start, afxNat range); // will not set capacity (will be read only)
-AFX void                AfxUriWrapLiteralRW(afxUri *uri, void *start, afxNat range);
+AFXINL void             AfxMakeUri(afxUri *uri, void const *start, afxNat range); // will not set capacity (will be read only)
+AFXINL void             AfxMakeMutableUri(afxUri *uri, void *start, afxNat range);
 
-AFX void                AfxUriWrapBuffer(afxUri *uri, void const *start, afxNat cap);
+AFXINL void             AfxMakeBufferedUri(afxUri *uri, void const *start, afxNat cap);
 
-AFX void                AfxResetUri(afxUri *uri); // WARNING string storage is resetted too. Any storage assigned will be nulled.
+AFXINL void             AfxResetUri(afxUri *uri); // WARNING string storage is resetted too. Any storage assigned will be nulled.
 
 // require initalized URI.
 
-AFX afxBool             AfxUriIsEquivalent(afxUri const *uri, afxUri const *other);
-AFX afxBool             AfxUriIsEquivalentCi(afxUri const *uri, afxUri const *other);
-AFX afxBool             AfxUriIsEquivalentToString(afxUri const *uri, afxString const *str);
-AFX afxBool             AfxUriIsEquivalentToStringCi(afxUri const *uri, afxString const *str);
+AFXINL afxResult        AfxCompareUri(afxUri const *uri, afxUri const *other);
+AFXINL afxResult        AfxCompareUriCi(afxUri const *uri, afxUri const *other);
+AFXINL afxResult        AfxCompareUriToString(afxUri const *uri, afxString const *str);
+AFXINL afxResult        AfxCompareUriToStringCi(afxUri const *uri, afxString const *str);
 
-AFX void                AfxEraseUri(afxUri *uri); // just zero ranges preserving storage.
-AFX void                AfxFormatUri(afxUri *uri, afxChar const *fmt, ...);
+AFXINL void             AfxClearUri(afxUri *uri); // just zero ranges preserving storage.
+AFXINL void             AfxFormatUri(afxUri *uri, afxChar const *fmt, ...);
 
-AFX afxError            AfxCopyUri(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriHost(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriPort(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriUsername(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriPassword(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriPath(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriDirectory(afxUri *uri, afxUri const *src);
-AFX afxError            AfxCopyUriObject(afxUri *uri, afxUri const *src); // file name + extension
-AFX afxError            AfxCopyUriName(afxUri *uri, afxUri const *src); // just file name, without extension
-AFX afxError            AfxCopyUriExtension(afxUri *uri, afxUri const *src, afxBool skipDot);
-AFX afxError            AfxCopyUriFragment(afxUri *uri, afxUri const *src, afxBool skipSep);
-AFX afxError            AfxCopyUriQuery(afxUri *uri, afxUri const *src, afxBool skipSep);
-AFX afxError            AfxCopyUriScheme(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUri(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriHost(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriPort(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriUsername(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriPassword(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriPath(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriDirectory(afxUri *uri, afxUri const *src);
+AFXINL afxError         AfxCopyUriObject(afxUri *uri, afxUri const *src); // file name + extension
+AFXINL afxError         AfxCopyUriName(afxUri *uri, afxUri const *src); // just file name, without extension
+AFXINL afxError         AfxCopyUriExtension(afxUri *uri, afxUri const *src, afxBool skipDot);
+AFXINL afxError         AfxCopyUriFragment(afxUri *uri, afxUri const *src, afxBool skipSep);
+AFXINL afxError         AfxCopyUriQuery(afxUri *uri, afxUri const *src, afxBool skipSep);
+AFXINL afxError         AfxCopyUriScheme(afxUri *uri, afxUri const *src);
 
-AFX afxResult           AfxUriForEachQueryKey(afxUri const *uri, afxResult(*f)(afxString *key, afxString *value, void* data), void* data);
+AFXINL afxResult        AfxUriForEachQueryKey(afxUri const *uri, afxResult(*f)(afxString *key, afxString *value, void* data), void* data);
 
-AFX void*               AfxGetUriData(afxUri *uri, afxNat base);
-AFX void const*         AfxGetUriDataConst(afxUri const *uri, afxNat base);
-AFX afxString*          AfxUriGetString(afxUri *uri);
-AFX afxString const*    AfxUriGetStringConst(afxUri const *uri);
+AFXINL afxNat           AfxMeasureUri(afxUri const* uri);
+AFXINL afxNat           AfxMeasurePath(afxUri const* uri);
+AFXINL afxNat           AfxMeasureUriRequest(afxUri const* uri);
 
-AFX afxBool             AfxUriHasUsername(afxUri const *uri);
-AFX afxBool             AfxUriHasPassword(afxUri const *uri);
-AFX afxBool             AfxUriHasHost(afxUri const *uri);
-AFX afxBool             AfxUriHasPort(afxUri const *uri);
-AFX afxBool             AfxUriHasFragment(afxUri const *uri);
-AFX afxBool             AfxUriHasPath(afxUri const *uri);
-AFX afxBool             AfxUriHasDirectory(afxUri const *uri);
-AFX afxBool             AfxUriHasName(afxUri const *uri);
-AFX afxBool             AfxUriHasExtension(afxUri const *uri);
-AFX afxBool             AfxUriHasQuery(afxUri const *uri);
-AFX afxBool             AfxUriHasScheme(afxUri const *uri);
+AFXINL void*            AfxGetMutableUriData(afxUri *uri, afxNat base);
+AFXINL void const*      AfxGetUriData(afxUri const *uri, afxNat base);
+AFXINL afxString*       AfxGetMutableUriString(afxUri *uri);
+AFXINL afxString const* AfxGetUriString(afxUri const *uri);
 
-AFX afxBool             AfxUriIsBlank(afxUri const *uri);
-AFX afxBool             AfxUriIsWriteable(afxUri const *uri);
-AFX afxBool             AfxUriIsPathRelative(afxUri const *uri);
-AFX void                AfxNormalizeUriPath(afxUri *uri);
-AFX void                AfxReparseUri(afxUri *uri);
+AFXINL afxBool          AfxUriHasUsername(afxUri const *uri);
+AFXINL afxBool          AfxUriHasPassword(afxUri const *uri);
+AFXINL afxBool          AfxUriHasHost(afxUri const *uri);
+AFXINL afxBool          AfxUriHasPort(afxUri const *uri);
+AFXINL afxBool          AfxUriHasFragment(afxUri const *uri);
+AFXINL afxBool          AfxUriHasPath(afxUri const *uri);
+AFXINL afxBool          AfxUriHasDirectory(afxUri const *uri);
+AFXINL afxBool          AfxUriHasName(afxUri const *uri);
+AFXINL afxBool          AfxUriHasExtension(afxUri const *uri);
+AFXINL afxBool          AfxUriHasQuery(afxUri const *uri);
+AFXINL afxBool          AfxUriHasScheme(afxUri const *uri);
+
+AFXINL afxBool          AfxUriIsBlank(afxUri const *uri);
+AFXINL afxBool          AfxUriIsWriteable(afxUri const *uri);
+AFXINL afxBool          AfxPathIsRelative(afxUri const *uri);
+AFXINL void             AfxNormalizePath(afxUri *uri);
+AFXINL void             AfxReparseUri(afxUri *uri);
 
 #endif//AFX_URI_H

@@ -34,28 +34,28 @@ typedef enum afxEventTexture
 
 typedef enum afxTextureFlag
 {
-    afxTextureFlag_SRC       = AFX_BIT_OFFSET(0), /// The texture can be used as the source of a copy operation.
-    afxTextureFlag_DST       = AFX_BIT_OFFSET(1), /// The texture can be used as the destination of a copy or write operation.
+    afxTextureFlag_SRC       = AfxGetBitOffset(0), /// The texture can be used as the source of a copy operation.
+    afxTextureFlag_DST       = AfxGetBitOffset(1), /// The texture can be used as the destination of a copy or write operation.
     afxTextureFlag_TRANSFER  = (afxTextureFlag_SRC | afxTextureFlag_DST),
-    afxTextureFlag_SAMPLING  = AFX_BIT_OFFSET(2), /// The texture can be bound for use as a sampled texture in a shader.
-    afxTextureFlag_STORAGE   = AFX_BIT_OFFSET(3), /// The texture can be bound for use as a storage texture in a shader.
-    afxTextureFlag_DRAW      = AFX_BIT_OFFSET(4), /// The texture can be used as a color or depth/stencil attachment in a render pass.
+    afxTextureFlag_SAMPLING  = AfxGetBitOffset(2), /// The texture can be bound for use as a sampled texture in a shader.
+    afxTextureFlag_STORAGE   = AfxGetBitOffset(3), /// The texture can be bound for use as a storage texture in a shader.
+    afxTextureFlag_DRAW      = AfxGetBitOffset(4), /// The texture can be used as a color or depth/stencil attachment in a render pass.
     afxTextureFlag_USAGE    = afxTextureFlag_TRANSFER | afxTextureFlag_SAMPLING | afxTextureFlag_STORAGE | afxTextureFlag_DRAW,
 
-    AFX_TEX_TILING_LINEAR   = AFX_BIT_OFFSET(9), /// specifies linear tiling (texels are laid out in memory in row-major order, possibly with some padding on each row).
-    AFX_TEX_TILING_OPTIMAL  = AFX_BIT_OFFSET(10), /// specifies optimal tiling (texels are laid out in an implementation-dependent arrangement, for more efficient memory access).
+    AFX_TEX_TILING_LINEAR   = AfxGetBitOffset(9), /// specifies linear tiling (texels are laid out in memory in row-major order, possibly with some padding on each row).
+    AFX_TEX_TILING_OPTIMAL  = AfxGetBitOffset(10), /// specifies optimal tiling (texels are laid out in an implementation-dependent arrangement, for more efficient memory access).
     AFX_TEX_TILING          = AFX_TEX_TILING_LINEAR | AFX_TEX_TILING_OPTIMAL,
 
-    AFX_TEX_FLAG_CUBEMAP    = AFX_BIT_OFFSET(30),
-    AFX_TEX_FLAG_REVALIDATE = AFX_BIT_OFFSET(31)
+    AFX_TEX_FLAG_CUBEMAP    = AfxGetBitOffset(30),
+    AFX_TEX_FLAG_REVALIDATE = AfxGetBitOffset(31)
 } afxTextureFlags;
 
 typedef enum afxTextureOpenFlags
 {
-    AFX_TEX_OPEN_R  = AFX_BIT_OFFSET(0),
-    AFX_TEX_OPEN_W  = AFX_BIT_OFFSET(1),
+    AFX_TEX_OPEN_R  = AfxGetBitOffset(0),
+    AFX_TEX_OPEN_W  = AfxGetBitOffset(1),
     AFX_TEX_OPEN_RW = (AFX_TEX_OPEN_R | AFX_TEX_OPEN_W),
-    AFX_TEX_OPEN_X  = AFX_BIT_OFFSET(2) /// especial caso que força a reconstrução do recurso junto ao OpenGL
+    AFX_TEX_OPEN_X  = AfxGetBitOffset(2) /// especial caso que força a reconstrução do recurso junto ao OpenGL
 } afxTextureOpenFlags;
 
 AFX_DEFINE_STRUCT(afxTextureRegion)
@@ -93,26 +93,25 @@ AFX_DEFINE_STRUCT(afxTextureIo)
     afxWhd      extent; // the size in texels of the image to copy in width, height and depth.
 };
 
-AFX_DECLARE_STRUCT(_afxTexVmt);
-
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_TEXTURE_C
 AFX_OBJECT(afxTexture)
 #else
 struct afxBaseTexture
 #endif
 {
-    _afxTexVmt const*       vmt;
     afxTextureFlags         flags;
-
     afxPixelFormat          fmt;
     afxWhd                  whd; // extent of image
     afxNat                  lodCnt; // mip level cnt
     afxNat                  imgCnt;
     afxNat                  sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
     afxColorSwizzling const*swizzling;
-
     afxByte*                maps;
+    afxError(*map)(afxTexture, afxTextureRegion const *rgn, afxTextureOpenFlags flags, afxNat *siz, void**ptr);
+    afxError(*unmap)(afxTexture, afxTextureRegion const *rgn);
 };
+#endif
 
 AFX afxError        AfxAcquireTextures(afxDrawContext dctx, afxNat cnt, afxTextureInfo const info[], afxTexture tex[]);
 AFX afxError        AfxBuildTextures(afxDrawContext dctx, afxTextureBuilder const* texb, afxNat cnt, void* data[], afxTexture tex[]);

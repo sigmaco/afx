@@ -19,8 +19,7 @@
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_DEVICE_C
 //#define _AFX_SURFACE_C
-
-#include "afxDrawClassified.h"
+#include "afx/draw/afxDrawSystem.h"
 
 _AFX afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
 {

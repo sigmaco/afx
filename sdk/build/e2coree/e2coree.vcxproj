@@ -84,6 +84,7 @@
     <ClInclude Include="..\..\inc\afx\draw\afxDrawThread.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipeline.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxPipelineRig.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxRasterizer.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxSampler.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxShader.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxShaderBlueprint.h" />
@@ -99,6 +100,7 @@
     <ClInclude Include="..\..\inc\afx\math\afxProjectiveMatrix.h" />
     <ClInclude Include="..\..\inc\afx\math\afxQuaternion.h" />
     <ClInclude Include="..\..\inc\afx\math\afxReal.h" />
+    <ClInclude Include="..\..\inc\afx\math\afxRotor.h" />
     <ClInclude Include="..\..\inc\afx\math\afxSphere.h" />
     <ClInclude Include="..\..\inc\afx\math\afxTransform.h" />
     <ClInclude Include="..\..\inc\afx\math\afxTrigonometry.h" />
@@ -135,9 +137,6 @@
     <ClInclude Include="..\..\inc\afx\sound\afxSoundInput.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundOutput.h" />
     <ClInclude Include="..\..\inc\afx\sound\afxSoundSystem.h" />
-    <ClInclude Include="..\..\src\e2coree\core\afxCoreHideout.h" />
-    <ClInclude Include="..\..\src\e2coree\draw\afxDrawClassified.h" />
-    <ClInclude Include="..\..\src\e2coree\draw\afxDrawParadigms.h" />
     <ClInclude Include="..\..\src\e2coree\mmux\afxMmuxParadigms.h" />
     <ClInclude Include="..\..\src\e2coree\sim\afxSimulParadigms.h" />
   </ItemGroup>
@@ -239,6 +238,7 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawThread.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipelineRig.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxRasterizer.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxSampler.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxShader.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxSurface.c" />
@@ -253,6 +253,7 @@
     <ClCompile Include="..\..\src\e2coree\math\afxProjectiveMatrix.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxQuaternion.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxReal.c" />
+    <ClCompile Include="..\..\src\e2coree\math\afxRotor.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxVector.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxMathOps.c" />

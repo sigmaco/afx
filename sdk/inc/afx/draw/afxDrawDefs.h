@@ -45,6 +45,7 @@ AFX_DEFINE_HANDLE(afxDrawOutput);
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxPipeline);
+AFX_DEFINE_HANDLE(afxRasterizer);
 //typedef afxHandle afxPipeline;
 AFX_DEFINE_HANDLE(afxShader);
 //typedef afxHandle afxShader;
@@ -156,8 +157,8 @@ typedef enum afxLogicOp
 typedef enum afxCullMode
 {
     // NIL = DISABLED
-    afxCullMode_FRONT = AFX_BIT_OFFSET(0),
-    afxCullMode_BACK  = AFX_BIT_OFFSET(1),
+    afxCullMode_FRONT = AfxGetBitOffset(0),
+    afxCullMode_BACK  = AfxGetBitOffset(1),
     afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, // sum to cull both faces --- who would use it?
     
     afxCullMode_TOTAL
@@ -187,8 +188,7 @@ typedef enum
 /// Rd,Gd,Bd and Ad represent the R, G, B, and A components of the destination color. That is, the color currently in the corresponding color attachment for this fragment/sample.
 /// Rc,Gc,Bc and Ac represent the blend constant R, G, B, and A components, respectively.
 {
-    // NIL = DISABLED
-    afxBlendFactor_ZERO = 1,
+    afxBlendFactor_ZERO,
     /// (0,0,0)
     /// 0
 

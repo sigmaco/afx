@@ -35,11 +35,15 @@
 
 AFX_DEFINE_STRUCT(afxSimulationConfig)
 {
-    afxUri const*   driver;
-    afxAabb const*  bounding;
-    afxDrawContext  dctx;
-    afxDrawInput    din;
-
+    afxUri const*           driver;
+    afxAabb const*          extent;
+    afxDrawContext          dctx;
+    afxDrawInput            din;
+    afxV3d                  right;
+    afxV3d                  up;
+    afxV3d                  back;
+    afxV3d                  origin;
+    afxReal                 unitsPerMeter;
     afxNat          maxBodCnt;
     afxNat          maxEntCnt;
     afxNat          maxCamCnt;
@@ -71,9 +75,12 @@ AFX_OBJECT(afxSimulation)
     afxClass                nodes;
     afxClass                renderers;
 
-    afxAabb                 space;
-    afxV4d                  origin;
+    afxV4d                  right;
+    afxV4d                  up;
+    afxV4d                  back;
     afxM3d                  basis;
+    afxV4d                  origin;
+    afxAabb                 extent;
     afxReal                 unitsPerMeter;
     afxReal                 allowedLodErrFadingFactor;
 
@@ -122,7 +129,16 @@ AFX afxError        AfxRenderSimulation(afxSimulation sim, afxArray const* pvs);
 
 AFX void            AfxRecenterAllAnimatorClocks(afxSimulation sim, afxReal dCurrentClock);
 
-AFX void            AfxFindAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
+AFX void            AfxComputeAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 
+AFX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxReal const right[3], afxReal const up[3], afxReal const back[3], afxReal const origin[3], afxReal lt[3][3], afxReal ilt[3][3], afxReal at[3]);
+
+////////////////////////////////////////////////////////////////////////////////
+// MASSIVE OPERATIONS                                                         //
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxError        AfxAcquireSimulations(afxNat cnt, afxSimulation sim[], afxSimulationConfig const config[]);
+
+AFX afxNat          AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation sim[]);
 
 #endif//AFX_SIMULATION_H

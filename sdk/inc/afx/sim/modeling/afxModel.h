@@ -72,6 +72,6 @@ AFX void                AfxBuildAttachedMeshMatrixArray(afxModel mdl, afxNat slo
 
 AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
 
-AFX void                AfxTransformModels(afxReal const affine[3], afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[]);
+AFX void                AfxTransformModels(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[]);
 
 #endif//AFX_MODEL_H

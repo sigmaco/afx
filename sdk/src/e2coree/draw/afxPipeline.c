@@ -18,233 +18,42 @@
 #define _AFX_PIPELINE_C
 #define _AFX_SHADER_C
 #define _AFX_DRAW_CONTEXT_C
-#include "afx/core/afxXml.h"
-
-#include "afx/draw/afxPipeline.h"
-#include "afxDrawClassified.h"
-#include "afx/core/afxUri.h"
-#include "afx/core/afxSystem.h"
-#include "afxDrawParadigms.h"
-#include "afx/draw/afxPipeline.h"
+#include "afx/draw/afxDrawContext.h"
 #include "afx/draw/afxXsh.h"
 
-// OpenGL/Vulkan Continuous Integration
+ // OpenGL/Vulkan Continuous Integration
 
-
-_AFX void AfxGetPrimitiveAssembling(afxPipeline pip, afxPrimTopology* top, afxBool* restartEnabled)
+_AFX afxPrimTopology AfxGetPrimitiveTopology(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (top)
-        *top = pip->primTop;
-
-    if (restartEnabled)
-        *restartEnabled = pip->primRestartEnabled;
+    return pip->primTop;
 }
 
-_AFX afxBool AfxGetDepthTest(afxPipeline pip, afxCompareOp* op, afxBool* clampEnabled, afxBool* writeEnabled) // return TRUE if depth test is enabled
+_AFX afxBool AfxPrimitiveRestartIsEnabled(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (op)
-        *op = pip->depthCompareOp;
-
-    if (clampEnabled)
-        *clampEnabled = pip->depthClampEnabled;
-
-    if (writeEnabled)
-        *writeEnabled = pip->depthWriteEnabled;
-
-    return pip->depthTestEnabled;
+    return pip->primRestartEnabled;
 }
 
-_AFX afxBool AfxGetDepthBias(afxPipeline pip, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
+_AFX afxBool AfxDepthClampIsEnabled(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (constFactor)
-        *constFactor = pip->depthBiasConstFactor;
-
-    if (clamp)
-        *clamp = pip->depthBiasClamp;
-
-    if (slopeScale)
-        *slopeScale = pip->depthBiasSlopeScale;
-
-    return pip->depthBiasEnabled;
+    return pip->depthClampEnabled;
 }
 
-_AFX afxBool AfxGetDepthBounds(afxPipeline pip, afxReal bounds[2]) // return TRUE if depth bounds is enabled
+_AFX afxCullMode AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted) // return the culling mode set.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
+    afxCullMode cullMode = pip->cullMode;
 
-    if (bounds)
-        AfxCopyV2d(bounds, pip->depthBounds);
+    if (frontFacingInverted && cullMode)
+        *frontFacingInverted = pip->frontFacingInverted;
 
-    return pip->depthBoundsTestEnabled;
-}
-
-_AFX afxBool AfxGetStencilConfig(afxPipeline pip, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (front)
-        *front = pip->stencilFront;
-
-    if (back)
-        *back = pip->stencilBack;
-
-    return pip->stencilTestEnabled;
-}
-
-_AFX afxBool AfxGetLogicalPixelOp(afxPipeline pip, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (op)
-        *op = pip->logicOp;
-
-    return pip->logicOpEnabled;
-}
-
-_AFX void AfxGetColorBlendConstants(afxPipeline pip, afxReal rgba[4])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssert(rgba);
-    AfxCopyV4d(rgba, pip->blendConstants);
-}
-
-_AFX afxNat AfxCountColorOutputChannels(afxPipeline pip)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return pip->outCnt;
-}
-
-_AFX afxNat AfxGetColorOutputChannels(afxPipeline pip, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(pip->outCnt, first, cnt);
-    AfxAssert(ch);
-
-    afxNat i = 0;
-
-    for (; i < cnt; i++)
-        ch[i] = pip->outs[first + i];
-
-    return i;
-}
-
-_AFX afxBool AfxGetRasterizationMultisampling(afxPipeline pip, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    
-    if (sampleCnt)
-        *sampleCnt = pip->sampleCnt;
-
-    if (sampleMask)
-        for (afxNat i = 0; i < pip->sampleCnt; i++)
-            sampleMask[i] = pip->sampleBitmasks[i];
-
-    return pip->msEnabled;
-}
-
-_AFX afxBool AfxGetSampleShading(afxPipeline pip, afxReal* minSampleShadingValue) // return TRUE if multisampling rasterization is enabled
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (minSampleShadingValue)
-        *minSampleShadingValue = pip->minSampleShadingValue;
-
-    return pip->sampleShadingEnabled;
-}
-
-_AFX afxCullMode AfxGetPrimitiveCulling(afxPipeline pip, afxBool* cwFrontFacing) // return the culling mode set.
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (cwFrontFacing)
-        *cwFrontFacing = pip->cwFrontFacing;
-
-    return pip->cullMode;
-}
-
-_AFX afxBool AfxGetRasterization(afxPipeline pip, afxFillMode* mode, afxReal* lineWidth) // return TRUE if rasterization enabled.
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-    if (mode)
-        *mode = pip->fillMode;
-
-    if (lineWidth)
-        *lineWidth = pip->lineWidth;
-
-    return !pip->rasterizationDisabled;
-}
-
-_AFX afxNat AfxGetPipelineScissors(afxPipeline pip, afxNat first, afxNat cnt, afxRect rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(pip->scissorCnt, first, cnt);
-    AfxAssert(rect);
-    AfxAssert(cnt);
-    afxNat hitCnt = 0;
-
-    for (afxNat i = 0; i < AfxMini(pip->scissorCnt, cnt); i++)
-    {
-        afxRect const *rect2 = &pip->scissors[first + i];
-        AfxRectCopy(&rect[i], rect2);
-        hitCnt++;
-    }
-    return hitCnt;
-}
-
-_AFX afxNat AfxCountPipelineScissors(afxPipeline pip)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return pip->scissorCnt;
-}
-
-_AFX afxNat AfxGetPipelineViewports(afxPipeline pip, afxNat first, afxNat cnt, afxViewport vp[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(pip->vpCnt, first, cnt);
-    AfxAssert(cnt);
-    AfxAssert(vp);
-    afxNat hitCnt = 0;
-
-    for (afxNat i = 0; i < AfxMini(pip->vpCnt, cnt); i++)
-    {
-        afxViewport const *vp2 = &(pip->vps[first + i]);
-        AfxCopyV2d(vp[i].offset, vp2->offset);
-        AfxCopyV2d(vp[i].extent, vp2->extent);
-        AfxCopyV2d(vp[i].depth, vp2->depth);
-
-        hitCnt++;
-    }
-    return hitCnt;
-}
-
-_AFX afxNat AfxCountPipelineViewports(afxPipeline pip)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return pip->vpCnt;
+    return cullMode;
 }
 
 _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[])
@@ -256,9 +65,12 @@ _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
     AfxAssert(cnt);
     afxNat hitCnt = 0;
 
-    for (afxNat i = 0; i < AfxMini(pip->inCnt, cnt); i++)
+    afxPipelineInputLocation const* ins = pip->ins;
+    afxNat cnt2 = AfxMini(pip->inCnt, cnt);
+
+    for (afxNat i = 0; i < cnt2; i++)
     {
-        AfxCopy(&streams[i], &pip->ins[first + i], sizeof(streams[0]));
+        AfxCopy(&streams[i], &ins[first + i], sizeof(streams[0]));
         hitCnt++;
     }
     return hitCnt;
@@ -337,17 +149,17 @@ AFX afxError AfxGetPipelineWiring(afxPipeline pip, afxNat idx, afxNat *set, afxP
     return err;
 }
 
-_AFX afxError AfxBuildPipelines(afxDrawContext dctx, afxNat cnt, afxPipeline pip[], afxPipelineConfig const blueprint[])
+_AFX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pip[])
 {
     afxError err = AFX_ERR_NONE;
 
-    if (AfxAcquireObjects(&dctx->pipelines, cnt, (afxHandle*)pip, (void*[]) { dctx, (void*)blueprint }))
+    if (AfxAcquireObjects(&dctx->pipelines, cnt, (afxHandle*)pip, (void*[]) { dctx, (void*)config }))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -362,16 +174,16 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
     AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str));
 
     afxUri fext;
-    AfxExcerptUriExtension(&fext, uri, FALSE);
+    AfxGetUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath, query;
-        AfxExcerptUriPath(&fpath, uri);
-        AfxExcerptUriQuery(&query, uri, TRUE);
+        AfxGetUriPath(&fpath, uri);
+        AfxGetUriQuery(&query, uri, TRUE);
 
-        if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
+        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 
@@ -379,45 +191,68 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
             else
             {
                 AfxAssertType(&xml, afxFcc_XML);
+                afxBool isQwadroXml = AfxTestXmlRoot(&xml, &AfxStaticString("Qwadro"));
+                AfxAssert(isQwadroXml);
+
+                //afxNat indices[1];
+                //afxNat cnt = AfxEnumerateXmlElements(xml, parent, &AfxStaticString("Pipeline"), first, cnt, indices);
+                //afxNat cnt = AfxFindXmlElements(xml, parent, &AfxStaticString("Pipeline"), &AfxStaticString("id"), first, cnt, id, indices);
 
                 afxXmlNode const *node = AfxGetXmlRoot(&xml);
                 afxString const *name = AfxGetXmlNodeName(node);
-                AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
-                afxString const *queryStr = AfxUriGetStringConst(&query);
+                afxString const *queryStr = AfxGetUriString(&query);
                 afxBool hasQuery = !AfxStringIsEmpty(queryStr);
-                node = AfxXmlNodeFindChild(node, &g_str_Pipeline, hasQuery ? &g_str_id : NIL, hasQuery ? queryStr : NIL);
+                node = AfxXmlNodeFindChild(node, &AfxStaticString("Pipeline"), hasQuery ? &AfxStaticString("id") : NIL, hasQuery ? queryStr : NIL);
+
+                afxNat xmlElemIdx = 0;
+                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, queryStr, &xmlElemIdx);
+                afxXmlElement* elem = AfxGetXmlElementData(&xml, 0, xmlElemIdx);
 
                 if (node)
                 {
-                    afxPipelineConfig blueprint = { 0 };
+                    afxPipelineConfig defConfig = { 0 };
+                    defConfig.cullMode = afxCullMode_BACK;
+                    defConfig.primTop = afxPrimTopology_TRI_LIST;
+                    afxPipelineConfig config = defConfig;
 
-                    if (AfxParseXmlBackedPipelineBlueprint(node, &blueprint, dctx)) AfxThrowError();
+                    if (AfxLoadPipelineConfigFromXml(&config, &defConfig, 0, node, &xml, xmlElemIdx)) AfxThrowError();
                     else
                     {
 #if 0
                         afxString128 tmp;
                         AfxString128(&tmp);
-                        AfxCopyString(&tmp.str, AfxUriGetStringConst(&fpath));
+                        AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))
                         {
                             AfxAppendStringLiteral(&tmp.str, "?", 1);
-                            AfxAppendString(&tmp.str, AfxUriGetStringConst(&blueprint.uri.uri));
+                            AfxAppendString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                         }
 
                         afxUri tmpUri;
-                        AfxReflectUriString(&tmpUri, &tmp.str);
+                        AfxUriFromString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
-                        if (AfxBuildPipelines(dctx, 1, &pip, &blueprint)) AfxThrowError();
+                        
+                        if (AfxCompileShadersFromXsh(dctx, config.shdCnt, config.shdUri, config.shd)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &pip, afxFcc_PIP);
-                        }
+                            AfxAssertObjects(config.shdCnt, &config.shd, afxFcc_SHD);
 
-                        for (afxNat i = 0; i < blueprint.shdCnt; i++)
-                        {
-                            AfxReleaseObjects(1, (void*[]) { blueprint.sh[i] });
+                            if (!(config.ras = AfxLoadRasterizerFromXsh(dctx, &config.rasUri))) AfxThrowError();
+                            else
+                            {
+                                AfxAssertObjects(1, &config.ras, afxFcc_RAS);
+
+                                if (AfxAssemblePipelines(dctx, 1, &config, &pip)) AfxThrowError();
+                                else
+                                {
+                                    AfxAssertObjects(1, &pip, afxFcc_PIP);
+                                }
+
+                                AfxReleaseObjects(1, (void*[]) { config.ras });
+                            }
+                            AfxReleaseObjects(config.shdCnt, (void**)config.shd );
                         }
                     }
                 }
@@ -427,7 +262,7 @@ _AFX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxUri const* u
         }
         else
         {
-            AfxError("Extension (%.*s) not supported.", AfxPushString(AfxUriGetStringConst(&fext)));
+            AfxError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
             AfxThrowError();
         }
     }

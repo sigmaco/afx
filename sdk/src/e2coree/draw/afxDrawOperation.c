@@ -28,7 +28,7 @@ _AFXINL void AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_DOPB);
 
-    AfxEraseUri(&blueprint->uri.uri);
+    AfxClearUri(&blueprint->uri.uri);
 
     for (afxNat i = 0; i < AfxCountArrayElements(&blueprint->techniques); i++)
     {
@@ -486,16 +486,16 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
         AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
         
         afxUri fext;
-        AfxExcerptUriExtension(&fext, &uri[i], FALSE);
+        AfxGetUriExtension(&fext, &uri[i], FALSE);
         
         if (AfxUriIsBlank(&fext)) AfxThrowError();
         else
         {
             afxUri fpath, query;
-            AfxExcerptUriPath(&fpath, &uri[i]);
-            AfxExcerptUriQuery(&query, &uri[i], TRUE);
+            AfxGetUriPath(&fpath, &uri[i]);
+            AfxGetUriQuery(&query, &uri[i], TRUE);
 
-            if (0 == AfxCompareStringLiteralCi(AfxUriGetStringConst(&fext), 0, ".xml", 4))
+            if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
             {
                 afxXml xml;
 
@@ -507,7 +507,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                     afxXmlNode const *node = AfxGetXmlRoot(&xml);
                     afxString const *name = AfxGetXmlNodeName(node);
                     AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
-                    afxString const *queryStr = AfxUriGetStringConst(&query);
+                    afxString const *queryStr = AfxGetUriString(&query);
                     afxBool hasQuery = !AfxStringIsEmpty(queryStr);
                     node = AfxXmlNodeFindChild(node, &g_str_DrawOperation, hasQuery ? &g_str_name : NIL, hasQuery ? queryStr : NIL);
 
@@ -521,16 +521,16 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                         {
                             afxString128 tmp;
                             AfxString128(&tmp);
-                            AfxCopyString(&tmp.str, AfxUriGetStringConst(&fpath));
+                            AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
                             if (!AfxUriIsBlank(&blueprint.uri.uri))
                             {
                                 AfxAppendStringLiteral(&tmp.str, "?", 1);
-                                AfxAppendString(&tmp.str, AfxUriGetStringConst(&blueprint.uri.uri));
+                                AfxAppendString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                             }
 
                             afxUri tmpUri;
-                            AfxReflectUriString(&tmpUri, &tmp.str);
+                            AfxUriFromString(&tmpUri, &tmp.str);
                             AfxDrawOperationBlueprintRename(&blueprint, &tmpUri);
 
                             if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();
@@ -548,7 +548,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
             }
             else
             {
-                AfxError("Extension (%.*s) not supported.", AfxPushString(AfxUriGetStringConst(&fext)));
+                AfxError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
                 AfxThrowError();
             }
         }
@@ -588,7 +588,7 @@ _AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
         afxUri name;
         AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!(AfxUriIsBlank(&uri[i])));
-        AfxExcerptUriName(&name, &uri[i]);
+        AfxGetUriName(&name, &uri[i]);
         AfxAssert(!(AfxUriIsBlank(&name)));
 
         if (1 == AfxFindDrawOperations(dctx, 1, &name, &dop[i]))
@@ -762,7 +762,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
                     if (dopbtp->hasIa)
                         AfxPipelineBlueprintConfigInputAssemblyState(&pipb, &dopbtp->inputAssembly);
 
-                    if (AfxBuildPipelines(dctx, 1, &pipb, &(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip))) AfxThrowError();
+                    if (AfxAssemblePipelines(dctx, 1, &pipb, &(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip))) AfxThrowError();
                     else
                     {
                         AfxAssertObject(dop->techniques[dop->techCnt].passes[dop->techniques[dop->techCnt].passCnt].pip, afxFcc_PIP);

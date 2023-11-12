@@ -19,8 +19,7 @@
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_THREAD_C
-#include "afxDrawClassified.h"
-#include "afx/draw/afxDrawThread.h"
+#include "afx/draw/afxDrawSystem.h"
 
 _AFX afxBool AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque)
 {

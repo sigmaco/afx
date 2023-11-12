@@ -17,8 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_TEXTURE_C
-#include "afxDrawClassified.h"
-#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxDrawContext.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -554,7 +553,7 @@ _AFX void AfxCloseTextureRegion(afxTexture tex, afxTextureRegion const *rgn)
     AfxAssertRange(tex->whd[1], rgn->offset[1], rgn->extent[1]);
     AfxAssertRange(tex->whd[2], rgn->offset[2], rgn->extent[2]);
 
-    if (tex->vmt->unmap(tex, rgn))
+    if (tex->unmap(tex, rgn))
         AfxThrowError();
 };
 
@@ -572,7 +571,7 @@ _AFX void* AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn, afx
     
     void *ptr = NIL;
 
-    if (tex->vmt->map(tex, rgn, flags, size, &ptr))
+    if (tex->map(tex, rgn, flags, size, &ptr))
         AfxThrowError();
 
     return ptr;

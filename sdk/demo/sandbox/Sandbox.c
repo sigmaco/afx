@@ -19,6 +19,9 @@
 afxSystem sys;
 afxDrawSystem dsys;
 
+afxClock StartClock;
+afxClock LastClock;
+
 const afxReal CameraSpeed = 30.0f;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
@@ -56,12 +59,12 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
 
             AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
 
-            AfxDrawSky(dscr, &rnd->sky);
+            //AfxDrawSky(dscr, &rnd->sky);
 
             if (bod)
                 AfxDrawBodies(dscr, rnd, 1, &bod);
 
-            AfxDrawTestIndexed(dscr, rnd);
+            //AfxDrawTestIndexed(dscr, rnd);
 
             AfxEndSceneRendering(dscr, rnd);
 
@@ -88,8 +91,14 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
     // camera up and down, but it should be clear how to add one.
     afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
     afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
-
-    AfxMoveCameraRelative(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
+    afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxV3d v =
+    {
+        MovementThisFrame * RightSpeed,
+        MovementThisFrame * UpSpeed,
+        MovementThisFrame * ForwardSpeed
+    };
+    AfxApplyCameraMotion(cam, v);
 }
 
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
@@ -97,9 +106,18 @@ _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)
     afxError err = AFX_ERR_NONE;
     afxSize time = AfxGetTimer();
 
+    afxReal64 CurrentTime, DeltaTime;
+    afxClock CurrClock;
+    AfxGetClock(&CurrClock);
+    
+    // Ignore clock recentering issues for this example
+    CurrentTime = AfxGetSecondsElapsed(&StartClock, &CurrClock);
+    DeltaTime = AfxGetSecondsElapsed(&LastClock, &CurrClock);
+    LastClock = CurrClock;
+
     afxReal64 dt;
     AfxGetExecutionTime(NIL, &dt);
-    UpdateFrameMovement(dt);
+    UpdateFrameMovement(DeltaTime);
 }
 
 _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
@@ -108,16 +126,21 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxEntry("app=%p", app);
 
     afxUri uriMap;
-    AfxUriWrapLiteral(&uriMap, "e2newton.icd", 0);
+    AfxMakeUri(&uriMap, "e2newton.icd", 0);
     afxSimulationConfig simSpec = { 0 };
-    simSpec.bounding = NIL;
+    simSpec.extent = NIL;
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
-    AfxAcquireSimulations(app, 1, &sim, &simSpec);
+    simSpec.unitsPerMeter = 1.f;
+    AfxSetV3d(simSpec.right, 1, 0, 0);
+    AfxSetV3d(simSpec.up, 0, 1, 0);
+    AfxSetV3d(simSpec.back, 0, 0, 1);
+    AfxZeroV3d(simSpec.origin);
+    AfxAcquireSimulations(1, &sim, &simSpec);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     
-    AfxUriWrapLiteral(&uriMap, "window", 0);
+    AfxMakeUri(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
     AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, &dout);
     AfxAssert(dout);
@@ -137,39 +160,43 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxDeployArray(&assets, NIL, 0, sizeof(void*));
     //AfxLoadAssets(sim, &uri);
 
-    AfxUriWrapLiteral(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
+    AfxMakeUri(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
     //AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
     afxAsset cad2;
     //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad2);
 
-    AfxExcerptUriObject(&uriMap2, &uriMap);
     //AfxFindResources(cad2, afxFcc_MDL, 1, &uriMap2, &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
 
-    //AfxUriWrapLiteral(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/f16/f16.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    AfxUriWrapLiteral(&uriMap, "art/scenario/zero/zero.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
-    //AfxUriWrapLiteral(&uriMap, "art/object/container/container.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
+    //AfxMakeUri(&uriMap, "art/f16/f16.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/zero/zero.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
+    AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
     afxAsset cad;
     AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
 
-    //AfxWrapStringLiteral(&str, "bibliotheca", 0);
-    //AfxWrapStringLiteral(&str, "gtabr", 0);
+    afxV3d at;
+    afxM3d lt, ilt;
+    AfxComputeBasisConversion(sim, 0.001, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, lt, ilt, at);
+    AfxTransformAssets(lt, ilt, at, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
+
+    //AfxMakeString(&str, "bibliotheca", 0);
+    //AfxMakeString(&str, "gtabr", 0);
     //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
     //AfxString32DeployRaw(&str, "SpaceStation", 0);
     //AfxString32DeployRaw(&str, "f16", 0);
-    AfxWrapStringLiteral(&str, "zero", 0);
-    //AfxWrapStringLiteral(&str, "container", 0);
+    //AfxMakeString(&str, "zero", 0);
+    //AfxMakeString(&str, "container", 0);
 
 
-    AfxExcerptUriObject(&uriMap2, &uriMap);
-    AfxFindResources(cad, afxFcc_MDL, 1, &uriMap2, &mdl);
+    AfxGetUriName(&uriMap2, &uriMap);
+    AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
@@ -185,11 +212,11 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
-    AfxWrapStringLiteral(&str, "viewer", 0);
     AfxAcquireCameras(sim, 1, &cam);
     AfxAssert(cam);
+    AfxSetCameraFov(cam, AFX_PI / 4.0);
     //cam->farClip = -100000.0;
-    //AfxAddCameraOffset(cam, AfxSpawnV3d(0, 1.1, 0));
+    //AfxApplyCameraOffset(cam, AfxSpawnV3d(0, 1.1, 0));
 
     //AfxAttachViewpoint(vpnt, cam);
 
@@ -200,6 +227,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxObjectInstallEventFilter(mse, cam);
 
     AfxEnableDrawInputPrefetching(rnd->din, 1); // bug: sem isso não desenha
+    
+    AfxGetClock(&StartClock);
+    LastClock = StartClock;
 
     return AFX_SUCCESS; 
 }
@@ -267,7 +297,7 @@ int main(int argc, char const* argv[])
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
-        while (AfxSystemIsOperating())
+        while (AfxSystemIsExecuting())
             AfxDoSystemThreading(0);
 
         AfxReleaseObjects(1, (void*[]) { TheApp });

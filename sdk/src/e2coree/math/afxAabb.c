@@ -115,7 +115,7 @@ _AFXINL afxMask AfxAabbContainsPoints(afxAabb const *aabb, afxNat cnt, afxReal c
             (!(aabb->extremes[AFX_AABB_INF][0] > point[i][0])) && (!(aabb->extremes[AFX_AABB_INF][1] > point[i][1])) && (!(aabb->extremes[AFX_AABB_INF][2] > point[i][2]))
         )
         {
-            rslt |= AFX_BIT_OFFSET(i);
+            rslt |= AfxGetBitOffset(i);
         }
     }
     return rslt;
@@ -177,7 +177,7 @@ _AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
     AfxPostMultiplyArrayedV4d(m, 2, aabb->extremes, to->extremes);
 }
 
-_AFXINL void AfxTransformAabbs(afxReal const affine[3], afxReal const linear[3][3], afxNat cnt, afxAabb const in[], afxAabb out[])
+_AFXINL void AfxTransformAabbs(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxAabb const in[], afxAabb out[])
 {
     // Should be compatible with void TransformBoundingBox(const float *Affine3, const float *Linear3x3, float *OBBMin, float *OBBMax)
     afxError err = AFX_ERR_NONE;

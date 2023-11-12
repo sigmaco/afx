@@ -83,8 +83,7 @@ typedef enum afxCanvasFlags
     AFX_CANV_FLAG_REVALIDATE
 } afxCanvasFlags;
 
-AFX_DECLARE_STRUCT(_afxCanvVmt);
-
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_CANVAS_C
 AFX_OBJECT(afxCanvas)
 #else
@@ -108,6 +107,7 @@ struct afxBaseCanvas
     afxCanvasFlags      flags;
     void*               udd[2];
 };
+#endif
 
 // An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 

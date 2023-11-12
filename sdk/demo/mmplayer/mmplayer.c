@@ -35,7 +35,6 @@ afxDrawContext dctx = NIL;
 
 afxUri2048 uri, uri2;
 
-afxVertexBuffer vbo = NIL;
 afxBuffer ubo = NIL;
 afxPipeline dpip[2] = { NIL, NIL };
 afxTexture tex[4] = { NIL, NIL, NIL, NIL };
@@ -180,7 +179,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     dinConfig.estimatedSubmissionCnt = 2;
 
 #ifdef ENABLE_DIN1
-    AfxEraseUri(&uri.uri);
+    AfxClearUri(&uri.uri);
     AfxOpenDrawInputs(dsys, 0, 1, &dinConfig, din);
     AfxAssert(din[0]);
     AfxReconnectDrawInput(din[0], dctx);
@@ -310,7 +309,7 @@ int main(int argc, char const* argv[])
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
         AfxRunApplication(TheApp);
 
-        while (AfxSystemIsOperating())
+        while (AfxSystemIsExecuting())
             AfxDoSystemThreading(0);
 
         AfxReleaseObjects(1, (void*[]) { TheApp });

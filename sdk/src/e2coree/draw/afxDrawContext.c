@@ -35,7 +35,7 @@
 #define _AFX_PIPELINE_C
 #define _AFX_PIPELINE_RIG_C
 #define _AFX_SHADER_C
-#include "afxDrawClassified.h"
+#include "afx/draw/afxDrawSystem.h"
 
 _AFX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buf[])
 {

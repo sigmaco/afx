@@ -195,13 +195,13 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum targ
     {
         AfxAssertObjects(1, &canv, afxFcc_CANV);
 
-        if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AFX_BIT_OFFSET(AFX_CANV_FLAG_REVALIDATE)))
+        if (canv->updFlags & SGL_UPD_FLAG_DEVICE_INST || AfxTestCanvas(canv, AfxGetBitOffset(AFX_CANV_FLAG_REVALIDATE)))
         {
             if (_SglCanvReinstantiateIdd(dpu, canv, target, gl))
                 AfxThrowError();
 
             if (!err)
-                AfxUnflagCanvas(canv, AFX_BIT_OFFSET(AFX_CANV_FLAG_REVALIDATE));
+                AfxUnflagCanvas(canv, AfxGetBitOffset(AFX_CANV_FLAG_REVALIDATE));
         }
 
         {
@@ -428,7 +428,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                 canv->base.annexes[i].usage = AfxTestTexture(tex, AFX_N32_MAX);
                                 canv->base.annexes[i].fmt = AfxGetTextureFormat(tex);
                                 ++canv->base.rasterCnt;
-                                //canv->base.ownershipMask |= AFX_BIT_OFFSET(i);
+                                //canv->base.ownershipMask |= AfxGetBitOffset(i);
                             }
                         }
                     }
@@ -459,7 +459,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                             canv->base.annexes[i].tex = tex;
                             canv->base.annexes[i].usage = usage;
                             canv->base.annexes[i].fmt = fmt;
-                            canv->base.ownershipMask |= AFX_BIT_OFFSET(i);
+                            canv->base.ownershipMask |= AfxGetBitOffset(i);
                             ++canv->base.rasterCnt;
                         }
                     }
@@ -488,7 +488,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                     canv->base.annexes[canv->base.dsIdx[i]].usage = AfxTestTexture(tex, AFX_N32_MAX);
                                     canv->base.annexes[canv->base.dsIdx[i]].fmt = AfxGetTextureFormat(tex);
 
-                                    //canv->base.ownershipMask |= AFX_BIT_OFFSET(canv->base.rasterCnt + i);
+                                    //canv->base.ownershipMask |= AfxGetBitOffset(canv->base.rasterCnt + i);
                                 }
                             }
                         }
@@ -521,7 +521,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
                                 canv->base.annexes[canv->base.dsIdx[i]].usage = usage;
                                 canv->base.annexes[canv->base.dsIdx[i]].fmt = fmt;
 
-                                canv->base.ownershipMask |= AFX_BIT_OFFSET(canv->base.dsIdx[i]);
+                                canv->base.ownershipMask |= AfxGetBitOffset(canv->base.dsIdx[i]);
                             }
                         }
                     }

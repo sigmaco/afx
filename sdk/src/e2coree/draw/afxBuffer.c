@@ -17,8 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_BUFFER_C
-#include "afxDrawClassified.h"
-#include "afx/draw/afxDrawSystem.h"
+#include "afx/draw/afxDrawContext.h"
 
 
 _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride)
@@ -101,7 +100,7 @@ _AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
         else
         {
             afxByte const *src2 = src;
-            //afxNat unitSiz = AfxMinor(rgn->stride, srcStride); // minor non-zero
+            //afxNat unitSiz = AfxMinorNonZero(rgn->stride, srcStride); // minor non-zero
             afxNat cnt = rgn->range / rgn->stride;
 
             for (afxNat i = 0; i < cnt; i++)
@@ -138,7 +137,7 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afx
         else
         {
             afxByte const *src2 = src;
-            afxNat unitSiz = AfxMinor(stride, srcStride); // minor non-zero
+            afxNat unitSiz = AfxMinorNonZero(stride, srcStride); // minor non-zero
             afxNat cnt = range / unitSiz;
 
             for (afxNat i = 0; i < cnt; i++)
@@ -192,7 +191,7 @@ _AFX void* AfxMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFla
 
     AfxAssertRange(buf->siz, offset, range);
 
-    return buf->vmt->map(buf, offset, range, flags);
+    return buf->map(buf, offset, range, flags);
     return NIL;
 }
 
@@ -201,7 +200,7 @@ _AFX void AfxUnmapBufferRange(afxBuffer buf)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
 
-    buf->vmt->unmap(buf);
+    buf->unmap(buf);
 }
 
 _AFX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBuffer buf[], afxBufferSpecification const spec[])

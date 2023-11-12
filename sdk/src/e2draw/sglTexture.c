@@ -18,7 +18,6 @@
 
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxSystem.h"
-#include "../src/e2coree/draw/afxDrawParadigms.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // IMAGE                                                                      //
@@ -890,12 +889,6 @@ _SGL afxError _AfxOpenTextureRegion(afxTexture tex, afxTextureRegion const *rgn,
     return err;
 }
 
-_SGL _afxTexVmt _SglTexVmt =
-{
-    _AfxOpenTextureRegion,
-    _AfxCloseTextureRegion
-};
-
 _SGL afxError _SglTexDtor(afxTexture tex)
 {
     afxError err = AFX_ERR_NONE;
@@ -953,7 +946,9 @@ _SGL afxError _SglTexCtor(afxTexture tex, afxCookie const* cookie)
 
     if (!err)
     {
-        tex->base.vmt = &_SglTexVmt;
+        tex->base.map = _AfxOpenTextureRegion;
+        tex->base.unmap = _AfxCloseTextureRegion;
+        
         tex->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
         //tex->lastUpdImgRange = AfxGetTextureImageCount(tex);

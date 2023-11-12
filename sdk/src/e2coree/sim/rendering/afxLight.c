@@ -14,6 +14,7 @@
  *                                    www.sigmaco.org
  */
 
+#define _AFX_SIM_C
 #define _AFX_LIGHT_C
 #include "afx/sim/rendering/afxLight.h"
 #include "afx/sim/afxSimulation.h"

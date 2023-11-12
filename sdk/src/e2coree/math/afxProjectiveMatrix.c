@@ -516,6 +516,8 @@ _AFXINL void AfxComputeRenderWareViewM4d(afxReal view[4][4], afxReal const cam[4
     AfxAssert(view);
     AfxAssert(cam);
 
+    // WARNING wrongly left-handed
+
     afxM4d inv;
     AfxInvertM4d(inv, cam);
     view[0][0] = -inv[0][0];

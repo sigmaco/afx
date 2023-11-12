@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT_OFFSET(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AfxGetBitOffset(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)
@@ -110,6 +110,7 @@ AFX_DEFINE_STRUCT(afxClass)
     
     afxSlock        slock;
     afxPool         pool;
+    afxNat          nextPreallocCnt; // when pool gets empty, the class will try to resizes storage pages to this value.
 
     afxChar         name[32];
 
@@ -156,7 +157,7 @@ AFX afxBool AfxClassTryLockInclusive(afxClass *cls);
 AFX afxBool AfxClassTryLockExclusive(afxClass *cls);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxSpawnHint(), "%s\n    %s", AfxStr((var_)), errorMsg[AFXERR_INVALID]), 0))
+#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxSpawnHint(), "%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
 #else
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif

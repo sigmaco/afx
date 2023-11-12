@@ -761,8 +761,8 @@ afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, char const 
     AfxString128(&tmp);
     afxString name;
     afxString arbAndExt[2];
-    AfxWrapStringLiteral(&arbAndExt[0], "ARB", 3);
-    AfxWrapStringLiteral(&arbAndExt[1], "EXT", 3);
+    AfxMakeString(&arbAndExt[0], "ARB", 3);
+    AfxMakeString(&arbAndExt[1], "EXT", 3);
     
     AfxAssert(names);
     AfxAssert(vmt);
@@ -772,7 +772,7 @@ afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, char const 
     for (afxNat i = 0; i < cnt; i++)
     {
         AfxAssert(names[base + i]);
-        AfxWrapStringLiteral(&name, names[base + i], 0);
+        AfxMakeString(&name, names[base + i], 0);
         void *sym = NIL;
 
         if (f)
@@ -1642,6 +1642,11 @@ _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
                 gl->DeleteShader(delRes->gpuHandle); _SglThrowErrorOccuried();
                 AfxAssert(!gl->IsShader(delRes->gpuHandle));
                 break;
+            case 7: // vao
+                AfxAssert(gl->IsVertexArray(delRes->gpuHandle));
+                gl->GenVertexArrays(1, &delRes->gpuHandle); _SglThrowErrorOccuried();
+                AfxAssert(!gl->IsVertexArray(delRes->gpuHandle));
+                break;
             default:
                 AfxError("");
                 break;
@@ -1752,7 +1757,49 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     AfxZero(dpu->vao, sizeof(dpu->vao));
     AfxZero(dpu->tmpFbo, sizeof(dpu->tmpFbo));
 
+    // RESET DEFAULT STATE TO OPENGL DEFAULTS
+
     AfxZero(&dpu->state, sizeof(dpu->state));
+    AfxZero(&dpu->activeRasterState, sizeof(dpu->activeRasterState));
+    AfxZero(&dpu->nextRasterState, sizeof(dpu->nextRasterState));
+    AfxZero(&dpu->activeResBind, sizeof(dpu->activeResBind));
+    AfxZero(&dpu->nextResBind, sizeof(dpu->nextResBind));
+    AfxZero(&dpu->activeXformState, sizeof(dpu->activeXformState));
+    AfxZero(&dpu->nextXformState, sizeof(dpu->nextXformState));
+    dpu->nextScissorUpdCnt = 0;
+    dpu->nextViewportUpdCnt = 0;
+    dpu->nextVtxInAttribUpdCnt = 0;
+    dpu->nextVtxInStreamUpdCnt = 0;
+
+    dpu->activeRasterState.depthCompareOp = afxCompareOp_LESS;
+    dpu->activeRasterState.depthWriteEnabled = TRUE;
+    dpu->activeRasterState.depthBounds[0] = 0.f;
+    dpu->activeRasterState.depthBounds[1] = 1.f;
+    dpu->activeRasterState.stencilFront.compareOp = afxCompareOp_ALWAYS;
+    dpu->activeRasterState.stencilFront.reference = 0;
+    dpu->activeRasterState.stencilFront.compareMask = (dpu->activeRasterState.stencilFront.writeMask = 0xFFFFFFFF);
+    dpu->activeRasterState.stencilFront.failOp = (dpu->activeRasterState.stencilFront.passOp = (dpu->activeRasterState.stencilFront.depthFailOp = afxStencilOp_KEEP));
+    dpu->activeRasterState.stencilBack.compareOp = afxCompareOp_ALWAYS;
+    dpu->activeRasterState.stencilBack.reference = 0;
+    dpu->activeRasterState.stencilBack.compareMask = (dpu->activeRasterState.stencilBack.writeMask = 0xFFFFFFFF);
+    dpu->activeRasterState.stencilBack.failOp = (dpu->activeRasterState.stencilBack.passOp = (dpu->activeRasterState.stencilBack.depthFailOp = afxStencilOp_KEEP));
+    dpu->activeRasterState.depthBiasConstFactor = 0.f;
+    dpu->activeRasterState.depthBiasSlopeScale = 0.f;
+
+    for (afxNat i = 0; i < 8; i++)
+    {
+        dpu->activeRasterState.outs[i].blendConfig.aBlendOp = afxBlendOp_ADD;
+        dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp = afxBlendOp_ADD;
+        dpu->activeRasterState.outs[i].blendConfig.aSrcFactor = afxBlendFactor_ONE;
+        dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor = afxBlendFactor_ONE;
+        dpu->activeRasterState.outs[i].blendConfig.aDstFactor = afxBlendFactor_ZERO;
+        dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor = afxBlendFactor_ZERO;
+        dpu->activeRasterState.outs[i].discardMask = NIL;
+    }
+
+    
+
+    ///
 
     AfxAcquireSlock(&dpu->deletionLock);
     AfxAcquireQueue(&dpu->deletionQueue, sizeof(_sglDeleteGlRes), 32);
@@ -1814,7 +1861,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                             afxString ver;
                             afxNat verMajor, verMinor, verPatch;
                             PFNGLGETSTRINGPROC _glGetString = (void*)dpu->GetProcAddress("glGetString");
-                            AfxWrapStringLiteral(&ver, (afxChar const*)_glGetString(GL_VERSION), 0);
+                            AfxMakeString(&ver, (afxChar const*)_glGetString(GL_VERSION), 0);
                             AfxScanString(&ver, "%u.%u.%u", &verMajor, &verMinor, &verPatch);
                             
                             if (!(dpu->wnd = CreateWindowA(ddev->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, dpu))) AfxThrowError();
@@ -1980,12 +2027,12 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             //SglLoadOpenGlVmt(ddev->opengl32, 30, glVmtRanges[1][0] - 30, glVmtNames, &gl->ptr[0], 0); // only load get integer, string, etc.
 
             afxString ver;
-            AfxWrapStringLiteral(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
+            AfxMakeString(&ver, (afxChar const*)gl->GetString(GL_VERSION), 0);
             AfxScanString(&ver, "%u.%u.%u", &dpu->verMajor, &dpu->verMinor, &dpu->verPatch);
             gl->GetIntegerv(GL_MAJOR_VERSION, (void*)&(dpu->verMajor)); _SglThrowErrorOccuried();
             gl->GetIntegerv(GL_MINOR_VERSION, (void*)&(dpu->verMinor)); _SglThrowErrorOccuried();
-            AfxWrapStringLiteral(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
-            AfxWrapStringLiteral(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
+            AfxMakeString(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
+            AfxMakeString(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
 
             AfxLogMessageFormatted(0xFFFF0000, "\n Opening the GL/2 Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
 
@@ -2332,7 +2379,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
         for (afxNat i = 0; i < AfxGetThreadingCapacity(); i++)
         {
             afxDrawThreadConfig dthrConfig = { 0 };
-            //dthrConfig.base.affinityMask = AFX_BIT_OFFSET(0);
+            //dthrConfig.base.affinityMask = AfxGetBitOffset(0);
 
             afxDrawThread dthr;
 
@@ -2401,8 +2448,8 @@ _SGL afxError AfxGetDrawDeviceInformation(afxNat cnt, afxDrawDeviceInfo info[])
         {.queFlags = AFX_DQUE_COMPUTE | AFX_DQUE_TRANSFER,.queCnt = 2 },
     };
     static afxString devDomain, devName;
-    AfxWrapStringLiteral(&devDomain, "targa", 0);
-    AfxWrapStringLiteral(&devName, targaSigmaSignature, 0);
+    AfxMakeString(&devDomain, "targa", 0);
+    AfxMakeString(&devName, targaSigmaSignature, 0);
     afxDrawDeviceInfo const devInfo =
     {
         .domain = &devDomain,
@@ -2426,12 +2473,12 @@ _SGL afxError AfxGetDrawIcdInformation(afxDrawIcdInfo *info)
     afxError err = AFX_ERR_NONE;
 
     afxUri file;
-    AfxUriWrapLiteral(&file, "e2draw.icd", 0);
+    AfxMakeUri(&file, "e2draw.icd", 0);
     static afxString name, vendor, website, note;
-    AfxWrapStringLiteral(&name, "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System", 0);
-    AfxWrapStringLiteral(&vendor, "SIGMA Technology Group", 0);
-    AfxWrapStringLiteral(&website, "www.sigmaco.org", 0);
-    AfxWrapStringLiteral(&note, sigmaSignature, 0);
+    AfxMakeString(&name, "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System", 0);
+    AfxMakeString(&vendor, "SIGMA Technology Group", 0);
+    AfxMakeString(&website, "www.sigmaco.org", 0);
+    AfxMakeString(&note, sigmaSignature, 0);
 
     info->mdle = AfxFindModule(&file);
     info->name = &name;

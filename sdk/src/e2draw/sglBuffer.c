@@ -18,7 +18,6 @@
 #include "sgl.h"
 #include "afx/draw/afxBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
-#include "../e2coree/draw/afxDrawParadigms.h"
 #include "afx/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -109,14 +108,15 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 }
 #endif//0
 
-_SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat rangeOrVtxStride, GLenum target, GLenum usage, glVmt const* gl)
+_SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum target, GLenum usage, glVmt const* gl)
 {
     //AfxEntry("buf=%p", buf);
     afxError err = AFX_ERR_NONE;
     (void)dpu;
     (void)unit;
     (void)offset;
-    (void)rangeOrVtxStride;
+    (void)range;
+    (void)stride;
 
     if (buf)
     {
@@ -157,6 +157,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
             buf->lastUpdOffset = 0;
             buf->lastUpdRange = 0;
         }
+        
 #if 0
         {
             AfxAssert(buf->glHandle);
@@ -290,12 +291,6 @@ _SGL afxError _SglUnmapBufferRange(afxBuffer buf)
     return err;
 }
 
-_SGL _afxBufVmt const _SglBufVmt =
-{
-    _SglMapBufferRange,
-    _SglUnmapBufferRange
-};
-
 _SGL afxError _SglBufDtor(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
@@ -348,7 +343,8 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
         buf->glHandle = NIL;
         buf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
-        buf->base.vmt = &_SglBufVmt;
+        buf->base.map = _SglMapBufferRange;
+        buf->base.unmap = _SglUnmapBufferRange;
 
         if (err)
             AfxDeallocate(mem, buf->base.bytemap);
