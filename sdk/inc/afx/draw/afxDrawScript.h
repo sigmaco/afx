@@ -33,7 +33,6 @@ Instead, dynamic state canv be modified at any time and persists for the lifetim
 #define AFX_DRAW_SCRIPT_H
 
 #include "afx/draw/afxPipeline.h"
-#include "afx/draw/afxDrawOperation.h"
 #include "afx/draw/afxPipelineRig.h"
 #include "afx/draw/afxSampler.h"
 #include "afx/draw/afxCanvas.h"
@@ -68,7 +67,7 @@ typedef enum afxDrawScriptState
     /// Once a command buffer is in the recording state, AfxCmd* commands canv be used to record to the command buffer.
     afxDrawScriptState_RECORDING,
 
-    /// AfxFinishDrawScript() ends the recording of a command buffer, and moves it from the recording state to the executable state.
+    /// AfxCompileDrawScript() ends the recording of a command buffer, and moves it from the recording state to the executable state.
     /// Executable command buffers canv be submitted, reset, or recorded to another command buffer.
     afxDrawScriptState_EXECUTABLE,
 
@@ -128,7 +127,7 @@ AFX afxError            AfxRecordDrawScript
 
 /// If there was an error during recording, the application will be notified by an unsuccessful return code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
 
-AFX afxError            AfxFinishDrawScript
+AFX afxError            AfxCompileDrawScript
 (
     afxDrawScript       dscr  /// is the command buffer to complete recording.
 );

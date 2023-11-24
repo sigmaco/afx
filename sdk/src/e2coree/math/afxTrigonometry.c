@@ -22,7 +22,7 @@ _AFXINL void AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3], af
     AfxSubV3d(t, b, a);
     AfxSubV3d(t2, c, a);
     AfxCrossV3d(n, t, t2);
-    AfxGetNormalizedV3d(n, n);
+    AfxNormalV3d(n, n);
 }
 
 // BaryCentric

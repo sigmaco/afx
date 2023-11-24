@@ -31,7 +31,7 @@ AFX_DEFINE_STRUCT(afxSky)
 {
     afxSkyType      type;
     afxBuffer       cube;
-    afxTexture      cubemap;
+    afxRaster      cubemap;
     afxReal         cubemapColorIntensity;
     afxV3d          fogColor;
     afxReal         fogUpper;

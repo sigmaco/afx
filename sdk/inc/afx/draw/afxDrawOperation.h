@@ -53,27 +53,12 @@ AFX_DEFINE_STRUCT(afxDrawOperationBlueprint)
     afxArray                        techniques;
 };
 
-AFX_DEFINE_STRUCT(afxDrawPass)
-{
-    afxFcc                          fcc; // afxFcc_DPAS
-    afxString*                      name; // 32
-    afxPipeline                     pip;
-};
-
-AFX_DEFINE_STRUCT(afxDrawTechnique)
-{
-    afxFcc                          fcc; // afxFcc_DTEC
-    afxString*                      name; // 32
-    afxNat                          passCnt;
-    afxDrawPass*                    passes;
-};
-
 AFX_OBJECT(afxDrawOperation)
 {
     afxInstance                       obj; // afxFcc_DOP
     afxUri*                         uri; // 128
     afxNat                          techCnt;
-    afxDrawTechnique*               techniques;
+    afxDrawTechnique2*               techniques;
 };
 
 AFX void*                           AfxDrawOperationGetContext(afxDrawOperation dop);

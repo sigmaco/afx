@@ -33,7 +33,7 @@ _AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat es
     //afxContext mem = AfxGetDrawContextMemory(blueprint->dctx);
     //AfxAssertObjects(1, &mem, afxFcc_CTX);
 
-    blueprint->bindings = AfxAcquireArray(AfxMaxi(estBindCnt, 10), sizeof(afxPipelineRigBlueprintBinding), NIL);
+    AfxAllocateArray(&blueprint->bindings, AfxMaxi(estBindCnt, 10), sizeof(afxPipelineRigBlueprintBinding), NIL);
 }
 
 _AFXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
@@ -84,7 +84,7 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxPipe
             //binding->name = NIL;
         }
     }
-    AfxReleaseArray(&blueprint->bindings);
+    AfxDeallocateArray(&blueprint->bindings);
 
     blueprint->fcc = NIL;
     return err;

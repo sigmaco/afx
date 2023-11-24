@@ -934,7 +934,7 @@ _SGL GLenum AfxToGlBufferUsage(afxBufferUsage usage)
         GL_ELEMENT_ARRAY_BUFFER,
         GL_DRAW_INDIRECT_BUFFER
     };
-
+    //errado
     return v[usage];
 };
 
@@ -1202,7 +1202,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             if (!dctx) AfxReleaseDrawOutput(dout);
             else
             {
-                struct msgdecl { afxSize tid; afxSize hwnd; afxSize wParam; afxSize lParam; } *msgdecl = AfxAllocate(NIL, sizeof(struct msgdecl), AfxSpawnHint());
+                struct msgdecl { afxSize tid; afxSize hwnd; afxSize wParam; afxSize lParam; } *msgdecl = AfxAllocate(NIL, sizeof(struct msgdecl), 1, AfxHint());
                 msgdecl->tid = GetThreadId(dctxD->thread);
                 msgdecl->hwnd = hWnd;
                 msgdecl->wParam = wParam;
@@ -1302,7 +1302,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             fdrop.y = ppt.y;
             afxNat cnt = DragQueryFileA(hDrop, 0xFFFFFFFF, NIL, NIL);
 
-            AfxAcquireArray(&fdrop.files, sizeof(afxChar const*), 0, AfxSpawnHint());
+            AfxAllocateArray(&fdrop.files, sizeof(afxChar const*), 0, AfxHint());
 
             afxChar* name = NIL;
             afxNat len = 0;
@@ -1318,13 +1318,13 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             {
                 len = DragQueryFileA(hDrop, i, NIL, 0);
 
-                if (!(name = AfxAllocate(mem, len + 1, 0, AfxSpawnHint()))) AfxError("");
+                if (!(name = AfxAllocate(mem, len + 1, 1, 0, AfxHint()))) AfxError("");
                 else
                 {
                     DragQueryFileA(hDrop, i, name, len + 1);
                     afxNat arrIdx;
                     void *arrel = AfxInsertArrayUnit(&fdrop.files, &arrIdx);
-                    AfxCopy(arrel, name, sizeof(name));
+                    AfxCopy(1, sizeof(name), name, arrel);
                 }
             }
 
@@ -1342,7 +1342,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 AfxDeallocate(mem, *(afxChar**)AfxGetArrayUnit(&fdrop.files, i));
             }
 
-            AfxReleaseArray(&fdrop.files);
+            AfxDeallocateArray(&fdrop.files);
 
             DragFinish(hDrop);
             //data2->breake = TRUE;
@@ -1754,18 +1754,18 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     dpu->activeTmpFboIdx = 0;
     dpu->activeVaoIdx = 0;
 
-    AfxZero(dpu->vao, sizeof(dpu->vao));
-    AfxZero(dpu->tmpFbo, sizeof(dpu->tmpFbo));
+    AfxZero(1, sizeof(dpu->vao), dpu->vao);
+    AfxZero(1, sizeof(dpu->tmpFbo), dpu->tmpFbo);
 
     // RESET DEFAULT STATE TO OPENGL DEFAULTS
 
-    AfxZero(&dpu->state, sizeof(dpu->state));
-    AfxZero(&dpu->activeRasterState, sizeof(dpu->activeRasterState));
-    AfxZero(&dpu->nextRasterState, sizeof(dpu->nextRasterState));
-    AfxZero(&dpu->activeResBind, sizeof(dpu->activeResBind));
-    AfxZero(&dpu->nextResBind, sizeof(dpu->nextResBind));
-    AfxZero(&dpu->activeXformState, sizeof(dpu->activeXformState));
-    AfxZero(&dpu->nextXformState, sizeof(dpu->nextXformState));
+    AfxZero(1, sizeof(dpu->state), &dpu->state);
+    AfxZero(1, sizeof(dpu->activeRasterState), &dpu->activeRasterState);
+    AfxZero(1, sizeof(dpu->nextRasterState), &dpu->nextRasterState);
+    AfxZero(1, sizeof(dpu->activeResBind), &dpu->activeResBind);
+    AfxZero(1, sizeof(dpu->nextResBind), &dpu->nextResBind);
+    AfxZero(1, sizeof(dpu->activeXformState), &dpu->activeXformState);
+    AfxZero(1, sizeof(dpu->nextXformState), &dpu->nextXformState);
     dpu->nextScissorUpdCnt = 0;
     dpu->nextViewportUpdCnt = 0;
     dpu->nextVtxInAttribUpdCnt = 0;
@@ -1802,7 +1802,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     ///
 
     AfxAcquireSlock(&dpu->deletionLock);
-    AfxAcquireQueue(&dpu->deletionQueue, sizeof(_sglDeleteGlRes), 32);
+    AfxAllocateQueue(&dpu->deletionQueue, sizeof(_sglDeleteGlRes), 32);
     HMODULE opengl32;
 
     if (!(dpu->opengl32 = (opengl32 = LoadLibraryA("opengl32.dll")))) AfxError("");
@@ -1915,7 +1915,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                     {
                                         AfxAssert(dpu->dcPxlFmt);
                                         AfxAssert(formatCount);
-                                        AfxZero(&dpu->dcPfd, sizeof(dpu->dcPfd));
+                                        AfxZero(1, sizeof(dpu->dcPfd), &dpu->dcPfd);
 
                                         if (!(dpu->DescribePixelFormat(dpu->dc, dpu->dcPxlFmt, sizeof(dpu->dcPfd), &dpu->dcPfd)))
                                             if (!(DescribePixelFormat(dpu->dc, dpu->dcPxlFmt, sizeof(dpu->dcPfd), &dpu->dcPfd)))
@@ -1984,7 +1984,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                             if (err)
                                 dpu->MakeCurrent(bkpHdc, bkpGlrc);
                         }
-                        dpu->DeleteContext(tmpHrc);
+                        //dpu->DeleteContext(tmpHrc);
                     }
                     ReleaseDC(tmpHwnd, tmpHdc);
                 }
@@ -2043,7 +2043,8 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 
             //gl->Enable(GL_FRAMEBUFFER_SRGB);
             gl->Enable(GL_TEXTURE_CUBE_MAP_SEAMLESS); _SglThrowErrorOccuried();
-
+            //gl->ClipControl(GL_UPPER_LEFT, GL_ZERO_TO_ONE); _SglThrowErrorOccuried();// set screen origin to top to bottm, and set depth to [ 0, 1 ]
+            
             GLfloat dataf;
             GLfloat dataf2[3];
             GLint datai;
@@ -2180,7 +2181,7 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
 
     _SglDdevProcessResDel(ddev, unitIdx);
     AfxReleaseSlock(&dpu->deletionLock);
-    AfxReleaseQueue(&dpu->deletionQueue);
+    AfxDeallocateQueue(&dpu->deletionQueue);
 
     //wglVmt const* wgl = &dpu->wgl;
 
@@ -2252,7 +2253,7 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDr
         AfxRegenerateDrawOutputBuffers(dout);
     }
 
-    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
+    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
 
     return err;
 }
@@ -2352,7 +2353,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     ddev->wndClss.hCursor = NULL;
     ddev->wndClss.hbrBackground = NULL;
     ddev->wndClss.lpszMenuName = NULL;
-    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build";
+    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build";
     ddev->wndClss.hIconSm = NULL;
 
     if (!(RegisterClassEx(&(ddev->wndClss)))) AfxThrowError();
@@ -2395,9 +2396,9 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
 
         ddev->dpuCnt = AfxGetThreadingCapacity();
 
-        ddev->dpus = AfxAllocate(ctx, ddev->dpuCnt * sizeof(ddev->dpus[0]), 0, AfxSpawnHint());
+        ddev->dpus = AfxAllocate(ctx, sizeof(ddev->dpus[0]), ddev->dpuCnt, 0, AfxHint());
 
-        AfxZero(ddev->dpus, ddev->dpuCnt * sizeof(ddev->dpus[0]));
+        AfxZero(ddev->dpuCnt, sizeof(ddev->dpus[0]), ddev->dpus);
 
         for (afxNat i = 0; i < ddev->dpuCnt; i++)
         {

@@ -39,7 +39,7 @@ _AFX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
     return err;
 }
 
-_AFX afxError AfxFinishDrawScript(afxDrawScript dscr)
+_AFX afxError AfxCompileDrawScript(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

@@ -110,7 +110,7 @@ AFXINL void AfxCopyQuat(afxQuat q, afxQuat const in);
 
 /// Negativa todos os componentes de um quaternion.
 
-AFXINL void AfxNegateQuat(afxQuat q, afxQuat const in);
+AFXINL void AfxNegQuat(afxQuat q, afxQuat const in);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Clamping                                                                   //
@@ -247,7 +247,7 @@ AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal t)
 
 AFXINL void AfxExtractAxialRotation(afxQuat const q, afxReal axis[3], afxReal *radians); // extracts an axis/angle representation to this quaternion rotation.
 
-AFXINL void AfxAssimilateQuat(afxReal const linear[3][3], afxReal const invLinear[3][3], afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
+AFXINL void AfxAssimilateQuat(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
 
 /// Rotates a 3D vector using a quaternion.
 /// v = Returns the rotated 3D vector.

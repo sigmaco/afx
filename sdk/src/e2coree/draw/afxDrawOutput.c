@@ -90,7 +90,7 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
     for (afxNat i = 0; i < dout->bufCnt; i++)
     {
         //afxCanvas canv = dout->buffers[i].canv;
-        afxTexture tex = dout->buffers[i].tex;
+        afxRaster tex = dout->buffers[i].tex;
 
         if (!tex)
         {
@@ -98,7 +98,7 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
         }
         else
         {
-            AfxAssertObjects(1, &tex, afxFcc_TEX);
+            AfxAssertObjects(1, &tex, afxFcc_RAS);
             //AfxAssertObjects(1, &canv, afxFcc_CANV);
             AfxReleaseObjects(1, (void*[]) { tex });
             //AfxReleaseObjects(1, (void*[]) { canv });
@@ -154,23 +154,23 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 
         for (afxNat i = 0; i < AfxMini(cnt, dout->bufCnt); i++)
         {
-            afxTexture raster;
+            afxRaster raster;
             
             if (!(AfxGetDrawOutputBuffer(dout, first + i, &raster))) AfxThrowError();
             else
             {
-                AfxAssertObjects(1, &raster, afxFcc_TEX);
-                //afxTexture tex = AfxGetSurfaceTexture(raster);
+                AfxAssertObjects(1, &raster, afxFcc_RAS);
+                //afxRaster tex = AfxGetSurfaceTexture(raster);
 
                 afxWhd extent;
-                AfxGetTextureExtent(raster, 0, extent);
+                AfxGetRasterExtent(raster, 0, extent);
 
                 afxCanvasBlueprint blueprint;
                 AfxBeginCanvasBlueprint(&blueprint, extent);
                 AfxCanvasBlueprintSetDepth(&blueprint, depth, stencil);
                 AfxCanvasBlueprintAddExistingRaster(&blueprint, raster);
                 blueprint.udd[0] = (void*)dout;
-                blueprint.udd[1] = (void*)i;
+                blueprint.udd[1] = (void*)((afxSize)i);
 
                 if (AfxBuildCanvases(dctx, 1, &canv[i], &blueprint))
                 {
@@ -284,17 +284,17 @@ _AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
 // BUFFER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxTexture *tex)
+_AFX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxRaster *tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, idx, 1);
 
     afxBool rslt;
-    afxTexture tex2;
+    afxRaster tex2;
     if ((rslt = !!(tex2 = dout->buffers[idx].tex)))
     {
-        AfxAssertObjects(1, &tex2, afxFcc_TEX);
+        AfxAssertObjects(1, &tex2, afxFcc_RAS);
 
         if (tex)
             *tex = tex2;
@@ -344,7 +344,7 @@ _AFX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, af
     return err;
 }
 
-_AFX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxTexture tex[])
+_AFX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
@@ -354,11 +354,11 @@ _AFX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxN
 
     for (afxNat i = 0; i < AfxMini(dout->bufCnt, cnt); i++)
     {
-        afxTexture tex2 = dout->buffers[first + i].tex;
+        afxRaster tex2 = dout->buffers[first + i].tex;
 
         if (tex2)
         {
-            AfxAssertObjects(1, &tex2, afxFcc_TEX);
+            AfxAssertObjects(1, &tex2, afxFcc_RAS);
         }
         tex[i] = tex2;
         ++hitcnt;
@@ -377,11 +377,11 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
     {
         for (afxNat i = 0; i < dout->bufCnt; i++)
         {
-            afxTexture tex = dout->buffers[i].tex;
+            afxRaster tex = dout->buffers[i].tex;
 
             if (tex)
             {
-                AfxAssertObjects(1, &tex, afxFcc_TEX);
+                AfxAssertObjects(1, &tex, afxFcc_RAS);
                 AfxReleaseObjects(1, (void*[]) { tex });
                 dout->buffers[i].tex = NIL;
             }
@@ -391,20 +391,20 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
             if (AfxGetDrawOutputConnection(dout, &dctx))
             {
                 //AfxAssertType(dctxD, afxFcc_DCTX);
-                afxTexture tex2;
-                afxTextureInfo texi = { 0 };
+                afxRaster tex2;
+                afxRasterInfo texi = { 0 };
                 texi.fmt = dout->pixelFmt;
                 texi.whd[0] = dout->extent[0];
                 texi.whd[1] = dout->extent[1];
                 texi.whd[2] = dout->extent[2];
-                texi.imgCnt = 1;
+                texi.layerCnt = 1;
                 texi.lodCnt = 1;
                 texi.usage = dout->bufUsage;
 
-                if (AfxAcquireTextures(dctx, 1, &texi, &tex2)) AfxThrowError();
+                if (AfxAcquireRasters(dctx, 1, &texi, &tex2)) AfxThrowError();
                 else
                 {
-                    AfxAssertObjects(1, &tex2, afxFcc_TEX);
+                    AfxAssertObjects(1, &tex2, afxFcc_RAS);
                     dout->buffers[i].tex = tex2;
 
                     //afxEvent ev;
@@ -432,17 +432,17 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
             {
                 //AfxAssertType(dctxD, afxFcc_DCTX);
 
-                afxTexture raster = dout->buffers[i].tex;
+                afxRaster raster = dout->buffers[i].tex;
                 
                 if (!raster) AfxThrowError();
                 else
                 {
-                    AfxAssertObjects(1, &raster, afxFcc_TEX);
+                    AfxAssertObjects(1, &raster, afxFcc_RAS);
 
                     afxWhd extent;
                     afxCanvasBlueprint blueprint;
-                    afxTexture tex = raster;
-                    AfxGetTextureExtent(tex, 0, extent);
+                    afxRaster tex = raster;
+                    AfxGetRasterExtent(tex, 0, extent);
                     AfxBeginCanvasBlueprint(&blueprint, extent);
                     AfxCanvasBlueprintAddExistingRaster(&blueprint, raster);
                     AfxCanvasBlueprintSetDepth(&blueprint, dout->auxDsFmt[0], dout->auxDsFmt[1]);
@@ -516,9 +516,9 @@ _AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const extent)
         //AfxEventDeploy(&ev, AFX_EVENT_DOUT_EXTENT, &dout->obj, dout->extent);
         //AfxObjectEmitEvent(&dout->obj, &ev);
 
-        afxV3d extent;
-        AfxGetDrawOutputExtentNdc(dout, extent);
-        AfxEcho("Draw output (%p) extent readjusted to %ux%u; %.0f:%.0f%% of %ux%u.", dout, dout->extent[0], dout->extent[1], dout->extent[0] / dout->resolution[0], dout->extent[1] / dout->resolution[1], dout->resolution[0], dout->resolution[1]);
+        afxV3d extent2;
+        AfxGetDrawOutputExtentNdc(dout, extent2);
+        AfxEcho("Draw output (%p) extent readjusted to %ux%u; %.0f:%.0f%% of %ux%u.", dout, extent2[0], extent2[1], extent2[0] / dout->resolution[0], extent2[1] / dout->resolution[1], dout->resolution[0], dout->resolution[1]);
 
         --dout->resizing;
     }

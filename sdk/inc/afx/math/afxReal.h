@@ -77,7 +77,7 @@ AFXINL afxReal AfxCos(afxReal radians);
 
 // Combined cosine and sine
 
-AFXINL void AfxCosSin(afxReal radians, afxReal cosSin[2]);
+AFXINL void AfxCosSin(afxReal radians, afxReal* cos, afxReal* sin);
 
 // The standard trigonometric tangent function.
 

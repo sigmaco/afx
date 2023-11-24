@@ -51,13 +51,13 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxPipe
         }
         case AFX_SHD_RES_TYPE_SAMPLED_IMAGE:
         {
-            AfxAssertObject(data->tex, afxFcc_TEX);
+            AfxAssertObject(data->tex, afxFcc_RAS);
             _SglDqueBindAndSyncTex(dque, binding, data->tex);
             break;
         }
         case AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER:
         {
-            AfxAssertObject(data->tex, afxFcc_TEX);
+            AfxAssertObject(data->tex, afxFcc_RAS);
             _SglDqueBindAndSyncTex(dque, binding, data->tex);
 
             AfxAssertObject(data->smp, afxFcc_SAMP);
@@ -65,7 +65,7 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxPipe
 #if 0
             afxUri128 uri;
             AfxUri128(&uri, NIL);
-            AfxPrintTexture(point->resource.img.tex, AfxFormatUri(&uri.uri, "system/tex-%u-%u.tga", i, entry->binding));
+            AfxPrintRaster(point->resource.img.tex, AfxFormatUri(&uri.uri, "system/tex-%u-%u.tga", i, entry->binding));
 #endif
             break;
         }
@@ -293,7 +293,7 @@ _SGL afxError _SglLegoCtor(afxPipelineRig lego, afxCookie const* cookie)
     lego->base.entryCnt = 0;
     lego->base.entries = NIL;
 
-    if (bindCnt && !(lego->base.entries = AfxAllocate(mem, bindCnt * sizeof(lego->base.entries[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    if (bindCnt && !(lego->base.entries = AfxAllocate(mem, sizeof(lego->base.entries[0]), bindCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < bindCnt; i++)

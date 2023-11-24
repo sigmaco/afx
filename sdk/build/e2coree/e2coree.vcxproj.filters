@@ -390,7 +390,10 @@
     <ClInclude Include="..\..\inc\afx\draw\afxRasterizer.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\draw\afxTexture.h">
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshBuilder.h">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxRaster.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
   </ItemGroup>
@@ -649,9 +652,6 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxSurface.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c">
-      <Filter>e2coree\draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxCanvas.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
@@ -725,6 +725,12 @@
       <Filter>e2coree\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxRasterizer.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshBuilder.c">
+      <Filter>e2coree\sim\modeling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxRaster.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>

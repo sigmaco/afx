@@ -67,8 +67,8 @@ typedef enum // layout de HID
     AFX_KEY_SPACE = 0x2C, // Spacebar
     AFX_KEY_MINUS,
     AFX_KEY_EQUAL,
-    AFX_KEY_LBRACKET, // L Bracket
-    AFX_KEY_RBRACKET, // R Bracket
+    AFX_KEY_LBRACE, // L Brace
+    AFX_KEY_RBRACE, // R Brace
     AFX_KEY_BACKSLASH = 0x31, // backslash --- "\"
     AFX_KEY_TILDE = 0x32, // non-US # and ~
     AFX_KEY_SEMICOL = 0x33, // semicolon --- ; and :
@@ -202,7 +202,7 @@ AFX_OBJECT(afxKeyboard)
     afxBool             currState[AFX_KEY_TOTAL];
     afxBool             prevState[AFX_KEY_TOTAL];
 };
-#endif
+#endif//_AFX_KEYBOARD_C
 
 AFX afxBool     AfxGetKeyboard(afxNat port, afxKeyboard* kbd);
 

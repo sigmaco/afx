@@ -48,9 +48,11 @@ AFX_DEFINE_HANDLE(afxCamera);
 
 AFX_DEFINE_HANDLE(afxLight);
 
-AFX_DEFINE_HANDLE(afxRenderer)
+AFX_DEFINE_HANDLE(afxRenderer);
 
 AFX_DEFINE_HANDLE(afxEntity);
+
+AFX_DEFINE_HANDLE(afxSkeleton);
 
 AFX_DEFINE_HANDLE(afxNode);
 

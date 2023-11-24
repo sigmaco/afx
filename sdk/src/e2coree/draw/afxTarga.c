@@ -17,7 +17,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxRaster.h"
 #include "afx/afxQwadro.h"
 
 //afxModule e2targa = NIL;
@@ -61,7 +61,7 @@ typedef struct _afxTga
     afxNat width, height, depth;
     afxByte* data;
     afxPixelFormat fmt; // Format of the TGA image. Can be: _TARGA_RGB, _TARGA_RGBA, _TARGA_LUMINANCE.
-    afxTextureFlags flags;
+    afxRasterFlags flags;
     afxNat imgCnt;
 } _afxTga;
 
@@ -151,10 +151,10 @@ _AFX afxError _AfxTgaSave(afxContext mem, afxStream *stream, const _afxTga* tga)
 
     afxNat pixelSiz = bitsPerPixel / AFX_BYTE_SIZE;
 
-    if (!(data = AfxAllocate(mem, tga->width * tga->height * pixelSiz, 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(data = AfxAllocate(mem, pixelSiz, tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
     else
     {
-        AfxCopy(data, tga->data, tga->width * tga->height * pixelSiz);
+        AfxCopy(tga->width * tga->height, pixelSiz, tga->data, data);
 
         if (!((tga->fmt == AFX_PFD_GR8) || (tga->fmt == AFX_PFD_BGR8) || (tga->fmt == AFX_PFD_BGRA8)))
             _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, data);
@@ -240,7 +240,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxBool bgrToRgb, afxStream *stream, _
                 {
                     afxInt bytesPerPixel = header.colorMapSpec.entrySiz / AFX_BYTE_SIZE;
 
-                    if (!(colorMap = AfxAllocate(mem, header.colorMapSpec.entrySiz * bytesPerPixel, 0, AfxSpawnHint()))) AfxThrowError();
+                    if (!(colorMap = AfxAllocate(mem, bytesPerPixel, header.colorMapSpec.entrySiz, 0, AfxHint()))) AfxThrowError();
                     else
                     {
                         if (AfxReadStream(stream, colorMap, header.colorMapSpec.nofEntries * bytesPerPixel, 0)) AfxThrowError();
@@ -263,7 +263,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxBool bgrToRgb, afxStream *stream, _
 
                 afxNat pixelSiz = header.imageSpec.pixelDepth / AFX_BYTE_SIZE;
 
-                if (!(tga->data = AfxAllocate(mem, (size_t)tga->width * tga->height * pixelSiz, 0, AfxSpawnHint()))) AfxThrowError();
+                if (!(tga->data = AfxAllocate(mem, pixelSiz, (size_t)tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     afxNat i, k;
@@ -340,7 +340,7 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxBool bgrToRgb, afxStream *stream, _
 
                             // Allocating new memory, as current memory is a look up table index and not a color.
 
-                            if (!(tga->data = AfxAllocate(mem, tga->width * tga->height * bytesPerPixel, 0, AfxSpawnHint()))) AfxThrowError();
+                            if (!(tga->data = AfxAllocate(mem, bytesPerPixel, tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (header.colorMapSpec.entrySiz == 32)
@@ -409,7 +409,7 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
         return FALSE;
     }
 
-    if (!(tga->data = AfxAllocate(mem, width * height * depth * stride * sizeof(afxByte), 0, AfxSpawnHint())))
+    if (!(tga->data = AfxAllocate(mem, stride * sizeof(afxByte), width * height * depth, 0, AfxHint())))
     {
         return FALSE;
     }
@@ -421,12 +421,12 @@ _AFX afxResult _AfxTgaGen(afxContext mem, _afxTga* tga, afxInt width, afxInt hei
     return TRUE;
 }
 
-_AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
+_AFX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
 
-    afxDrawContext dctx = AfxGetObjectProvider(tex);
+    afxDrawContext dctx = AfxGetObjectProvider(ras);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, afxFcc_CTX);
 
@@ -442,23 +442,23 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
             void *src;
             afxNat rgnSiz;
             
-            if (!(src = AfxOpenTextureRegion(tex, &rgn[i], AFX_TEX_OPEN_R, &rgnSiz))) AfxThrowError();
+            if (!(src = AfxOpenRasterRegion(ras, &rgn[i], AFX_TEX_OPEN_R, &rgnSiz))) AfxThrowError();
             else
             {
                 _afxTga im;
-                AfxZero(&im, sizeof(im));
+                AfxZero(1, sizeof(im), &im);
 
                 //afxWhd extent;
-                //AfxGetTextureExtent(tex, 0, extent);
+                //AfxGetRasterExtent(tex, 0, extent);
                 afxPixelLayout pfd;
-                afxPixelFormat fmt = AfxGetTextureFormat(tex);
+                afxPixelFormat fmt = AfxGetRasterFormat(ras);
                 AfxDescribePixelFormat(fmt, &pfd);
                 
                 if (FALSE == _AfxTgaGen(mem, &im, rgn->extent[0], rgn->extent[1], rgn->extent[2], fmt)) AfxThrowError();
                 else
                 {
                     // TODO use rgn
-                    AfxCopy(im.data, src, AFX_ALIGN((im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE, AFX_SIMD_ALIGN));
+                    AfxCopy(1, AFX_ALIGN((im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE, AFX_SIMD_ALIGN), src, im.data);
                     
                     if (_AfxTgaSave(mem, AfxGetFileStream(file), &im)) AfxThrowError();
                     else
@@ -468,7 +468,7 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
                 }
 
                 _AfxTgaDestroy(mem, &im);
-                AfxCloseTextureRegion(tex, &rgn[i]);
+                AfxCloseRasterRegion(ras, &rgn[i]);
             }
             AfxReleaseObjects(1, (void*[]) { file });
         }
@@ -476,18 +476,18 @@ _AFX afxError AfxPrintTextureRegionsToTarga(afxTexture tex, afxNat cnt, afxTextu
     return err;
 }
 
-_AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AFX afxError AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertType(uri, afxFcc_URI);
 
     afxWhd extent;
-    AfxGetTextureExtent(tex, lodIdx, extent);
-    afxTextureRegion rgn = { 0 };
+    AfxGetRasterExtent(ras, lodIdx, extent);
+    afxRasterRegion rgn = { 0 };
     rgn.lodIdx = lodIdx;
-    rgn.baseImg = baseImg;
-    rgn.imgCnt = imgCnt;
+    rgn.baseLayer = baseImg;
+    rgn.layerCnt = imgCnt;
     rgn.offset[0] = 0;
     rgn.offset[1] = 0;
     rgn.offset[2] = 0;
@@ -495,18 +495,18 @@ _AFX afxError AfxPrintTextureToTarga(afxTexture tex, afxNat lodIdx, afxNat baseI
     rgn.extent[1] = extent[1];
     rgn.extent[2] = extent[2];
     
-    if (AfxPrintTextureRegionsToTarga(tex, 1, &rgn, uri))
+    if (AfxPrintRasterRegionsToTarga(ras, 1, &rgn, uri))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTextureRegion const rgn[], afxUri const uri[])
+_AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
     
-    afxDrawContext dctx = AfxGetObjectProvider(tex);
+    afxDrawContext dctx = AfxGetObjectProvider(ras);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, afxFcc_CTX);
 
@@ -523,22 +523,22 @@ _AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTex
         else
         {
             _afxTga im;
-            AfxZero(&im, sizeof(im));
+            AfxZero(1, sizeof(im), &im);
 
-            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im)) AfxThrowError();
+            if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/&ios, &im)) AfxThrowError();
             else
             {
                 afxPixelLayout pfd;
                 AfxDescribePixelFormat(im.fmt, &pfd);
 
-                afxTextureRegion rgn2;
+                afxRasterRegion rgn2;
                 rgn2 = rgn[i];
-                rgn2.imgCnt = 1;
+                rgn2.layerCnt = 1;
                 rgn2.extent[0] = AfxMini(rgn2.extent[0], im.width);
                 rgn2.extent[1] = AfxMini(rgn2.extent[1], im.height);
                 afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
 
-                if (AfxUpdateTextureRegion(tex, &rgn2, (const void**)im.data, siz, im.fmt)) AfxThrowError();
+                if (AfxUpdateRasterRegion(ras, &rgn2, im.data, siz, im.fmt)) AfxThrowError();
                 else
                 {
 
@@ -553,18 +553,18 @@ _AFX afxError AfxFetchTextureRegionsFromTarga(afxTexture tex, afxNat cnt, afxTex
     return err;
 }
 
-_AFX afxError AfxFetchTextureFromTarga(afxTexture tex, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AFX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, afxFcc_TEX);
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertType(uri, afxFcc_URI);
 
     afxWhd extent;
-    AfxGetTextureExtent(tex, lodIdx, extent);
-    afxTextureRegion rgn = { 0 };
+    AfxGetRasterExtent(ras, lodIdx, extent);
+    afxRasterRegion rgn = { 0 };
     rgn.lodIdx = lodIdx;
-    rgn.baseImg = baseImg;
-    rgn.imgCnt = imgCnt;
+    rgn.baseLayer = baseImg;
+    rgn.layerCnt = imgCnt;
     rgn.offset[0] = 0;
     rgn.offset[1] = 0;
     rgn.offset[2] = 0;
@@ -572,52 +572,13 @@ _AFX afxError AfxFetchTextureFromTarga(afxTexture tex, afxNat lodIdx, afxNat bas
     rgn.extent[1] = extent[1];
     rgn.extent[2] = extent[2];
 
-    if (AfxFetchTextureRegionsFromTarga(tex, 1, &rgn, uri))
+    if (AfxFetchRasterRegionsFromTarga(ras, 1, &rgn, uri))
         AfxThrowError();
 
     return err;
 }
 
-_AFX void _TexbGetInfoTargaCb(void* data, afxTextureInfo* info)
-{
-    afxError err = AFX_ERR_NONE;
-    _afxTga *im = data;
-    AfxAssert(im);
-
-    AfxAssert(info);
-    info->fmt = im->fmt;
-    info->lodCnt = 1;
-    info->sampleCnt = 1;
-    info->usage = im->flags;
-    info->imgCnt = im->imgCnt;
-    info->whd[0] = im->width;
-    info->whd[1] = im->height;
-    info->whd[2] = im->depth;
-}
-
-_AFX void _TexbGetImageTargaCb(void* data, afxTexture tex, afxNat lodIdx, afxNat imgIdx, afxNat imgCnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &tex, afxFcc_TEX);
-    _afxTga *im = data;
-    AfxAssert(im);
-
-    afxPixelLayout pfd;
-    AfxDescribePixelFormat(im->fmt, &pfd);
-    
-    afxNat siz = (im->width * im->height * im->depth * pfd.bpp) / AFX_BYTE_SIZE;
-
-    afxTextureRegion rgn = { 0 };
-    rgn.lodIdx = lodIdx;
-    rgn.baseImg = imgIdx;
-    rgn.imgCnt = 1;
-    rgn.extent[0] = im->width;
-    rgn.extent[1] = im->height;
-    rgn.extent[2] = im->depth;
-    AfxUpdateTextureRegion(tex, &rgn, im->data, siz, im->fmt);
-}
-
-_AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture tex[])
+_AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster ras[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -637,23 +598,46 @@ _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flag
         else
         {
             _afxTga im;
-            AfxZero(&im, sizeof(im));
+            AfxZero(1, sizeof(im), &im);
 
-            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
+            if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/&ios, &im))
             {
                 AfxThrowError();
-                tex[i] = NIL;
+                ras[i] = NIL;
             }
             else
             {
-                afxTextureBuilder texb = { 0 };
-                texb.GetInfo = _TexbGetInfoTargaCb;
-                texb.GetImage = _TexbGetImageTargaCb;
-                im.flags = flags;
-                im.imgCnt = 1;
+                afxRasterInfo texi = { 0 };
+                texi.fmt = im.fmt;
+                texi.lodCnt = 1;
+                texi.sampleCnt = 1;
+                texi.usage = im.flags;
+                texi.layerCnt = im.imgCnt;
+                texi.whd[0] = im.width;
+                texi.whd[1] = im.height;
+                texi.whd[2] = im.depth;
 
-                if (AfxBuildTextures(dctx, &texb, 1, (void*[]){ &im }, &tex[i]))
+                if (AfxAcquireRasters(dctx, 1, &texi, &ras[i]))
+                {
                     AfxThrowError();
+                    AfxReleaseObjects(i, (void**)ras);
+                }
+                else
+                {
+                    afxPixelLayout pfd;
+                    AfxDescribePixelFormat(im.fmt, &pfd);
+
+                    afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
+
+                    afxRasterRegion rgn = { 0 };
+                    rgn.lodIdx = 0;
+                    rgn.baseLayer = 0;
+                    rgn.layerCnt = 1;
+                    rgn.extent[0] = im.width;
+                    rgn.extent[1] = im.height;
+                    rgn.extent[2] = im.depth;
+                    AfxUpdateRasterRegion(ras[i], &rgn, im.data, siz, im.fmt);
+                }
             }
 
             _AfxTgaDestroy(mem, &im);
@@ -664,7 +648,7 @@ _AFX afxError AfxLoadTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flag
     return err;
 }
 
-_AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags flags, afxNat cnt, afxUri const uri[], afxTexture* tex)
+_AFX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -684,9 +668,9 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
         else
         {
             _afxTga im;
-            AfxZero(&im, sizeof(im));
+            AfxZero(1, sizeof(im), &im);
 
-            if (_AfxTgaLoad(mem, FALSE, /*AfxGetFileStream(file)*/&ios, &im))
+            if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/&ios, &im))
             {
                 AfxThrowError();
             }
@@ -694,29 +678,39 @@ _AFX afxError AfxAssembleTexturesFromTarga(afxDrawContext dctx, afxTextureFlags 
             {
                 if (i == 0)
                 {
-                    afxTextureBuilder texb = { 0 };
-                    texb.GetInfo = _TexbGetInfoTargaCb;
-                    texb.GetImage = _TexbGetImageTargaCb;
-                    im.imgCnt = cnt;
-                    im.flags = flags;
+                    afxRasterInfo texi = { 0 };
+                    texi.fmt = im.fmt;
+                    texi.lodCnt = 1;
+                    texi.sampleCnt = 1;
+                    texi.usage = flags;
+                    texi.layerCnt = cnt;
+                    texi.whd[0] = im.width;
+                    texi.whd[1] = im.height;
+                    texi.whd[2] = im.depth;
 
-                    if (AfxBuildTextures(dctx, &texb, 1, (void*[]) { &im }, &tex[i]))
+                    if (AfxAcquireRasters(dctx, 1, &texi, ras))
+                    {
                         AfxThrowError();
+                        //AfxReleaseObjects(i, (void**)ras);
+                    }                    
                 }
-                else
+                
+                if (!err)
                 {
                     afxPixelLayout pfd;
                     AfxDescribePixelFormat(im.fmt, &pfd);
 
-                    afxTextureRegion rgn = { 0 };
-                    rgn.baseImg = i;
-                    rgn.imgCnt = 1;
+                    afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
+
+                    afxRasterRegion rgn = { 0 };
+                    rgn.lodIdx = 0;
+                    rgn.baseLayer = i;
+                    rgn.layerCnt = 1;
                     rgn.extent[0] = im.width;
                     rgn.extent[1] = im.height;
                     rgn.extent[2] = im.depth;
-                    afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
 
-                    if (AfxUpdateTextureRegion(*tex, &rgn, (const void**)im.data, siz, im.fmt))
+                    if (AfxUpdateRasterRegion(*ras, &rgn, im.data, siz, im.fmt))
                         AfxThrowError();
                 }
             }

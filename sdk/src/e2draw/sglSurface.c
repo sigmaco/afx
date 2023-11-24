@@ -42,7 +42,7 @@ _SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl)
                 AfxAssert(1 < surf->base.tex->base.whd[0]);
                 AfxAssert(1 < surf->base.tex->base.whd[1]);
 
-                afxTexture texIdd = surf->base.tex;
+                afxRaster texIdd = surf->base.tex;
 
                 if (!texIdd->glIntFmt)
                     SglDetermineGlTargetInternalFormatType(surf->base.tex, &texIdd->glTarget, &texIdd->glIntFmt, &texIdd->glFmt, &texIdd->glType);
@@ -101,9 +101,9 @@ _SGL afxError _SglSurfCtor(afxSurface surf, afxCookie const* cookie)
 
     afxDrawContext dctx = AfxGetObjectProvider(surf);
 
-    afxTextureInfo const *texi = ((afxTextureInfo const *)cookie->udd[0]) + cookie->no;
+    afxRasterInfo const *texi = ((afxRasterInfo const *)cookie->udd[0]) + cookie->no;
 
-    if (AfxAcquireTextures(dctx, 1, texi, &surf->base.tex)) AfxThrowError();
+    if (AfxAcquireRasters(dctx, 1, texi, &surf->base.tex)) AfxThrowError();
     else
     {
         surf->glHandle = 0;

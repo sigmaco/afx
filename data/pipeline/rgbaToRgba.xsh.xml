@@ -1,11 +1,11 @@
 <Qwadro>
-    <Shader id='vs'>
+    <Shader id='tristrippedQuadVs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
-        <In format='V2D' stream='7'>a_xy</In>
         <![CDATA[
-        
-        layout(location = 0) in vec2 a_xy;
+
+        const vec3 tristrippedQuadPos[4] = vec3[](vec3(-1,  1, 0), vec3(-1, -1, 0), vec3(1,  1, 0), vec3(1, -1, 0));
+        const vec2 tristrippedQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
 
         out block
         {
@@ -14,17 +14,19 @@
 
         void main()
         {
-            gl_Position = vec4(a_xy, 0.0, 1.0);
-            sgl_v.uv0 = vec2(gl_Position.xy * 0.5 + 0.5).xy;
+            // draw tristrip with 4 tris.
+            gl_Position = vec4(tristrippedQuadPos[gl_VertexID], 1.0);
+            sgl_v.uv0 = tristrippedQuadUv[gl_VertexID];
         }
         ]]>
     </Shader>
-    <Shader id='vsNoIn'>
+    <Shader id='tristrippedQuadUvFlippedVs'>
         <Stage>VERTEX</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <![CDATA[
         
-        const vec2 v[4] = vec2[](vec2(-1.0,  1.0), vec2(-1.0, -1.0), vec2( 1.0,  1.0), vec2( 1.0, -1.0));
+        const vec3 tristrippedQuadPos[4] = vec3[](vec3(-1,  1, 0), vec3(-1, -1, 0), vec3(1,  1, 0), vec3(1, -1, 0));
+        const vec2 tristrippedQuadUv[4] = vec2[](vec2(0, 0), vec2(0, 1), vec2(1, 0), vec2(1, 1));
 
         out block
         {
@@ -33,50 +35,9 @@
 
         void main()
         {
-            gl_Position = vec4(v[gl_VertexID], 0.0, 1.0);
-            sgl_v.uv0 = gl_Position.xy * 0.5 + 0.5;
-        }
-        ]]>
-    </Shader>
-    <Shader id='vsNoInFlippedY'>
-        <Stage>VERTEX</Stage>
-        <Include>data/pipeline/stdEnv.inc</Include>
-        <![CDATA[
-        
-        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);                
-        const vec2 v[4] = vec2[](vec2(-1.0,  1.0), vec2(-1.0, -1.0), vec2( 1.0,  1.0), vec2( 1.0, -1.0));
-
-        out block
-        {
-            vec2 uv0;
-        } sgl_v;
-
-        void main()
-        {
-            gl_Position = vec4(v[gl_VertexID], 0.0, 1.0);
-            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
-        }
-        ]]>
-    </Shader>
-    <Shader id='vsFlippedY'>
-        <Stage>VERTEX</Stage>
-        <Include>data/pipeline/stdEnv.inc</Include>
-        <In format='V2D' stream='7'>a_xy</In>
-        <![CDATA[
-        
-        const mat4 m = mat4(1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
-        
-        layout(location = 0) in vec2 a_xy;
-        
-        out block
-        {
-            vec2 uv0;
-        } sgl_v;
-
-        void main()
-        {
-            gl_Position = vec4(a_xy, 0.0, 1.0);
-            sgl_v.uv0 = vec2(m * vec4(gl_Position.xy * 0.5 + 0.5, 0, 1)).xy;
+            // draw tristrip with 4 tris.
+            gl_Position = vec4(tristrippedQuadPos[gl_VertexID], 1.0);
+            sgl_v.uv0 = tristrippedQuadUv[gl_VertexID];
         }
         ]]>
     </Shader>
@@ -84,7 +45,7 @@
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
-        <Out format='V4D'>sgl_rgba</Out>
+        <Out>vec4 sgl_rgba</Out>
         <![CDATA[
         
         uniform sampler2D samp;
@@ -106,7 +67,7 @@
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
-        <Out format='V4D'>sgl_rgba</Out>
+        <Out>vec4 sgl_rgba</Out>
         <![CDATA[
         
         uniform sampler2D samp;
@@ -135,7 +96,7 @@
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>tex</Resource>
-        <Out format='V4D'>sgl_rgba</Out>
+        <Out>vec4 sgl_rgba</Out>
         <![CDATA[
         
         uniform sampler2D samp;
@@ -219,7 +180,7 @@
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource type='COMBINED_IMAGE_SAMPLER'>tex</Resource>
-        <Out format='V4D'>sgl_rgba</Out>
+        <Out>vec4 sgl_rgba</Out>
         <![CDATA[
         
         uniform sampler2D samp;
@@ -302,18 +263,19 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?vs</Shader>
+        <Shader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs</Shader>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
         <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='yFlipped'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?vsFlippedY</Shader>
+        <Shader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadUvFlippedVs</Shader>
         <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
         <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
+        <DepthWriteEnabled></DepthWriteEnabled>
     </Rasterizer>
 </Qwadro>

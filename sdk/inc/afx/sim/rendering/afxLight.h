@@ -69,7 +69,7 @@ AFX_OBJECT(afxLight)
     afxReal     indirectEnergy; // 1.f
     afxReal     intensLumens;
     afxReal     intensLux;
-    afxTexture  projector;
+    afxRaster  projector;
     afxReal     size; // 0.f
     afxReal     specular; // 0.5f
     afxReal     temperature;

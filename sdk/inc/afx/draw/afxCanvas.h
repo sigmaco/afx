@@ -95,9 +95,9 @@ struct afxBaseCanvas
     afxNat              annexCnt;
     struct
     {
-        afxTexture      tex; // 8 raster surfaces [afxTexture] are minimal amount garanteed.
+        afxRaster      tex; // 8 raster surfaces [afxRaster] are minimal amount garanteed.
         afxPixelFormat  fmt;
-        afxTextureFlags usage;
+        afxRasterFlags usage;
     }*                  annexes;
     afxFlags            ownershipMask; // one for each surface. Forcing it to be limited to max 32 surfaces.
 //afxCanvasSurfaceInterlink interlinkSentinel;
@@ -118,15 +118,15 @@ AFX void            AfxFlagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 AFX void            AfxUnflagCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 
 AFX afxNat          AfxGetAnnexedSurfaceCount(afxCanvas canv);
-AFX afxBool         AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxTexture *tex);
+AFX afxBool         AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxRaster *tex);
 AFX afxNat          AfxGetAnnexedRasterSurfaceCount(afxCanvas canv);
-AFX afxBool         AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxTexture *raster);
-AFX afxBool         AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth);
-AFX afxBool         AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil);
+AFX afxBool         AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxRaster *raster);
+AFX afxBool         AfxGetAnnexedDepthSurface(afxCanvas canv, afxRaster *depth);
+AFX afxBool         AfxGetAnnexedStencilSurface(afxCanvas canv, afxRaster *stencil);
 
-AFX afxError        AfxAnnexRasterSurface(afxCanvas canv, afxTexture ras);
-AFX afxError        AfxAnnexDepthSurface(afxCanvas canv, afxTexture d);
-AFX afxError        AfxAnnexStencilSurface(afxCanvas canv, afxTexture s);
-AFX afxError        AfxAnnexCombinedDepthStencil(afxCanvas canv, afxTexture ds);
+AFX afxError        AfxAnnexRasterSurface(afxCanvas canv, afxRaster ras);
+AFX afxError        AfxAnnexDepthSurface(afxCanvas canv, afxRaster d);
+AFX afxError        AfxAnnexStencilSurface(afxCanvas canv, afxRaster s);
+AFX afxError        AfxAnnexCombinedDepthStencil(afxCanvas canv, afxRaster ds);
 
 #endif//AFX_CANVAS_H

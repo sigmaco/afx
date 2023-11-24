@@ -70,7 +70,7 @@ _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
 
     for (afxNat i = 0; i < cnt2; i++)
     {
-        AfxCopy(&streams[i], &ins[first + i], sizeof(streams[0]));
+        AfxCopy(1, sizeof(streams[0]), &ins[first + i], &streams[i]);
         hitCnt++;
     }
     return hitCnt;
@@ -179,9 +179,8 @@ _AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
-        afxUri fpath, query;
+        afxUri fpath;
         AfxGetUriPath(&fpath, uri);
-        AfxGetUriQuery(&query, uri, TRUE);
 
         if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -194,28 +193,21 @@ _AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
                 afxBool isQwadroXml = AfxTestXmlRoot(&xml, &AfxStaticString("Qwadro"));
                 AfxAssert(isQwadroXml);
 
-                //afxNat indices[1];
-                //afxNat cnt = AfxEnumerateXmlElements(xml, parent, &AfxStaticString("Pipeline"), first, cnt, indices);
-                //afxNat cnt = AfxFindXmlElements(xml, parent, &AfxStaticString("Pipeline"), &AfxStaticString("id"), first, cnt, id, indices);
-
-                afxXmlNode const *node = AfxGetXmlRoot(&xml);
-                afxString const *name = AfxGetXmlNodeName(node);
-                afxString const *queryStr = AfxGetUriString(&query);
-                afxBool hasQuery = !AfxStringIsEmpty(queryStr);
-                node = AfxXmlNodeFindChild(node, &AfxStaticString("Pipeline"), hasQuery ? &AfxStaticString("id") : NIL, hasQuery ? queryStr : NIL);
+                afxString query;
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
-                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, queryStr, &xmlElemIdx);
-                afxXmlElement* elem = AfxGetXmlElementData(&xml, 0, xmlElemIdx);
+                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
+                AfxAssert(xmlElemIdx != AFX_INVALID_INDEX);
 
-                if (node)
+                if (foundCnt)
                 {
                     afxPipelineConfig defConfig = { 0 };
                     defConfig.cullMode = afxCullMode_BACK;
                     defConfig.primTop = afxPrimTopology_TRI_LIST;
                     afxPipelineConfig config = defConfig;
 
-                    if (AfxLoadPipelineConfigFromXml(&config, &defConfig, 0, node, &xml, xmlElemIdx)) AfxThrowError();
+                    if (AfxLoadPipelineConfigFromXml(&config, &defConfig, 0, &xml, xmlElemIdx)) AfxThrowError();
                     else
                     {
 #if 0
@@ -239,10 +231,10 @@ _AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
                         {
                             AfxAssertObjects(config.shdCnt, &config.shd, afxFcc_SHD);
 
-                            if (!(config.ras = AfxLoadRasterizerFromXsh(dctx, &config.rasUri))) AfxThrowError();
+                            if (!(config.rasterizer = AfxLoadRasterizerFromXsh(dctx, &config.rasUri))) AfxThrowError();
                             else
                             {
-                                AfxAssertObjects(1, &config.ras, afxFcc_RAS);
+                                AfxAssertObjects(1, &config.rasterizer, afxFcc_PIPR);
 
                                 if (AfxAssemblePipelines(dctx, 1, &config, &pip)) AfxThrowError();
                                 else
@@ -250,7 +242,7 @@ _AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
                                     AfxAssertObjects(1, &pip, afxFcc_PIP);
                                 }
 
-                                AfxReleaseObjects(1, (void*[]) { config.ras });
+                                AfxReleaseObjects(1, (void*[]) { config.rasterizer });
                             }
                             AfxReleaseObjects(config.shdCnt, (void**)config.shd );
                         }

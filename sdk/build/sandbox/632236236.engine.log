@@ -1,0 +1,295 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 1002b8e4 by 00000000 over 00000000 with 10028770)
+ afxClass<Basic I/O System>::ConstructObject(0036f0b0)
+ afxSystem.c:997
+  _AfxSysCtor(sys=0036f0b0)
+ Installing Context at 0036f0e8 by 0036f0d4 over 00000000 with 10028074)
+ Installing Module at 0036f1ac by 0036f0d4 over 00000000 with 10028604)
+ Installing Thread at 0036f3f8 by 0036f0d4 over 00000000 with 100287a0)
+ Installing File at 0036f580 by 0036f0d4 over 00000000 with 100285a4)
+ Installing Archive at 0036f644 by 0036f0d4 over 00000000 with 10028030)
+ Installing Application at 0036f4bc by 0036f0d4 over 00000000 with 10028000)
+ Installing Keyboard at 0036f270 by 0036f0d4 over 00000000 with 100285d4)
+ Installing Mouse at 0036f334 by 0036f0d4 over 00000000 with 10028634)
+ Installing Draw I/O System at 0036f708 by 0036f0d4 over 00000000 with 100290a0)
+ Installing Simulation at 0036f7cc by 0036f0d4 over 00000000 with 10029218)
+ [!] afxSystem.c:1082?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1083?_AfxSysCtor
+  Logical processor count: 2
+ afxContext.c:289
+  AfxAcquireContexts(cnt=1,app=0036f890,strategy=0030e0e0)
+ afxClass<Context>::ConstructObject(0036fa00)
+ afxContext.c:245
+  _AfxCtxCtor(ctx=0036fa00)
+ afxArena.c:767
+  AfxAllocateArena(aren=0036f8f0)
+ afxArena.c:768
+  AfxAllocateArena(spec=00000000,hint="afxSystem.c:1135!_AfxSysCtor")
+ afxSystem.c:764
+  AfxMountStoragePoints(6,0030e220)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=0036f8bc,uri=0030e158)
+ afxClass<Module>::ConstructObject(00372e30)
+ afxModule.c:95
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:287
+  AfxAcquireKeyboards(cnt=1,port=0030e0b8,kbd=0036f8c0)
+ afxClass<Keyboard>::ConstructObject(00373270)
+ afxKeyboard.c:251
+  _AfxKbdCtor(kbd=00373270)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw I/O System>::ConstructObject(00374040)
+ afxDrawSystem.c:678
+  _AfxDsysCtor(dsys=00374040)
+ Installing Draw Thread at 00374480 by 00374098 over 00000000 with 0030ebd4)
+ Installing Installable Client (Draw) Driver at 003740ac by 00374098 over 00000000 with 0030eba4)
+ Installing Draw Device at 00374170 by 00374098 over 00000000 with 0030eb74)
+ Installing Draw Context at 00374234 by 00374098 over 00000000 with 0030eb44)
+ Installing Draw Output at 003742f8 by 00374098 over 00000000 with 0030eb14)
+ Installing Draw Input at 003743bc by 00374098 over 00000000 with 0030eae4)
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:139
+  AfxAcquireModules(cnt=1,mdle=0030e98c,uri=0030e994)
+ afxClass<Module>::ConstructObject(00372e8c)
+ afxModule.c:95
+  _AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(00376bc0)
+ afxDrawSystem.c:390
+  _AfxDdrvCtor(ddrv=00376bc0)
+Installing 'e2draw.icd' ICD on draw system 00374040...
+	OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 00376bd4 by 00376bc0 over 00374170 with 0030e0b8)
+ afxClass<Draw Device, Draw Device>ConstructingObject(00376d60)
+ afxClass<Draw Device>::ConstructObject(00376d60)
+ afxDrawSystem.c:330
+  _AfxDdevCtor(ddev=00376d60)
+ Installing Draw Context at 00376d74 by 00376d60 over 00374234 with 0f4a5108)
+ Installing Draw Output at 00376e38 by 00376d60 over 003742f8 with 0f4a5240)
+ Installing Draw Input at 00376efc by 00376d60 over 003743bc with 0f4a5210)
+ afxClass<Draw Device>::ConstructObject(00376d60)
+ sglDrawDriver.c:2328
+  _SglDdevCtor(ddev=00376d60)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Creating temp OpenGL context
+ Creating definitive OpenGL context
+ 000 glCullFace core found.
+ 001 glFrontFace core found.
+ 002 glHint core found.
+ 003 glLineWidth core found.
+ 004 glPointSize core found.
+ 005 glPolygonMode core found.
+ 006 glScissor core found.
+ 007 glTexParameterf core found.
+ 008 glTexParameterfv core found.
+ 009 glTexParameteri core found.
+ 010 glTexParameteriv core found.
+ 011 glTexImage1D core found.
+ 012 glTexImage2D core found.
+ 013 glDrawBuffer core found.
+ 014 glClear core found.
+ 015 glClearColor core found.
+ 016 glClearStencil core found.
+ 017 glClearDepth core found.
+ 018 glStencilMask core found.
+ 019 glColorMask core found.
+ 020 glDepthMask core found.
+ 021 glDisable core found.
+ 022 glEnable core found.
+ 023 glFinish core found.
+ 024 glFlush core found.
+ 025 glBlendFunc core found.
+ 026 glLogicOp core found.
+ 027 glStencilFunc core found.
+ 028 glStencilOp core found.
+ 029 glDepthFunc core found.
+ 030 glPixelStoref core found.
+ 031 glPixelStorei core found.
+ 032 glReadBuffer core found.
+ 033 glReadPixels core found.
+ 034 glGetBooleanv core found.
+ 035 glGetDoublev core found.
+ 036 glGetError core found.
+ 037 glGetFloatv core found.
+ 038 glGetIntegerv core found.
+ 039 glGetString core found.
+ 040 glGetTexImage core found.
+ 041 glGetTexParameterfv core found.
+ 042 glGetTexParameteriv core found.
+ 043 glGetTexLevelParameterfv core found.
+ 044 glGetTexLevelParameteriv core found.
+ 045 glIsEnabled core found.
+ 046 glDepthRange core found.
+ 047 glViewport core found.
+ 048 glDrawArrays core found.
+ 049 glDrawElements core found.
+ 050 glGetPointerv core found.
+ 051 glPolygonOffset core found.
+ 052 glCopyTexImage1D core found.
+ 053 glCopyTexImage2D core found.
+ 054 glCopyTexSubImage1D core found.
+ 055 glCopyTexSubImage2D core found.
+ 056 glTexSubImage1D core found.
+ 057 glTexSubImage2D core found.
+ 058 glBindTexture core found.
+ 059 glDeleteTextures core found.
+ 060 glGenTextures core found.
+ 061 glIsTexture core found.
+ 062 glDrawRangeElements core found.
+ 063 glTexImage3D core found.
+ 064 glTexSubImage3D core found.
+ 065 glCopyTexSubImage3D core found.
+ 066 glActiveTexture core found.
+ 067 glSampleCoverage core found.
+ 068 glCompressedTexImage3D core found.
+ 069 glCompressedTexImage2D core found.
+ 070 glCompressedTexImage1D core found.
+ 071 glCompressedTexSubImage3D core found.
+ 072 glCompressedTexSubImage2D core found.
+ 073 glCompressedTexSubImage1D core found.
+ 074 glGetCompressedTexImage core found.
+ 075 glBlendFuncSeparate core found.
+ 076 glMultiDrawArrays core found.
+ 077 glMultiDrawElements core found.
+ 078 glPointParameterf core found.
+ 079 glPointParameterfv core found.
+ 080 glPointParameteri core found.
+ 081 glPointParameteriv core found.
+ 082 glBlendColor core found.
+ 083 glBlendEquation core found.
+ 084 glGenQueries core found.
+ 085 glDeleteQueries core found.
+ 086 glIsQuery core found.
+ 087 glBeginQuery core found.
+ 088 glEndQuery core found.
+ 089 glGetQueryiv core found.
+ 090 glGetQueryObjectiv core found.
+ 091 glGetQueryObjectuiv core found.
+ 092 glBindBuffer core found.
+ 093 glDeleteBuffers core found.
+ 094 glGenBuffers core found.
+ 095 glIsBuffer core found.
+ 096 glBufferData core found.
+ 097 glBufferSubData core found.
+ 098 glGetBufferSubData core found.
+ 099 glMapBuffer core found.
+ 100 glUnmapBuffer core found.
+ 101 glGetBufferParameteriv core found.
+ 102 glGetBufferPointerv core found.
+ 103 glBlendEquationSeparate core found.
+ 104 glDrawBuffers core found.
+ 105 glStencilOpSeparate core found.
+ 106 glStencilFuncSeparate core found.
+ 107 glStencilMaskSeparate core found.
+ 108 glAttachShader core found.
+ 109 glBindAttribLocation core found.
+ 110 glCompileShader core found.
+ 111 glCreateProgram core found.
+ 112 glCreateShader core found.
+ 113 glDeleteProgram core found.
+ 114 glDeleteShader core found.
+ 115 glDetachShader core found.
+ 116 glDisableVertexAttribArray core found.
+ 117 glEnableVertexAttribArray core found.
+ 118 glGetActiveAttrib core found.
+ 119 glGetActiveUniform core found.
+ 120 glGetAttachedShaders core found.
+ 121 glGetAttribLocation core found.
+ 122 glGetProgramiv core found.
+ 123 glGetProgramInfoLog core found.
+ 124 glGetShaderiv core found.
+ 125 glGetShaderInfoLog core found.
+ 126 glGetShaderSource core found.
+ 127 glGetUniformLocation core found.
+ 128 glGetUniformfv core found.
+ 129 glGetUniformiv core found.
+ 130 glGetVertexAttribdv core found.
+ 131 glGetVertexAttribfv core found.
+ 132 glGetVertexAttribiv core found.
+ 133 glGetVertexAttribPointerv core found.
+ 134 glIsProgram core found.
+ 135 glIsShader core found.
+ 136 glLinkProgram core found.
+ 137 glShaderSource core found.
+ 138 glUseProgram core found.
+ 139 glUniform1f core found.
+ 140 glUniform2f core found.
+ 141 glUniform3f core found.
+ 142 glUniform4f core found.
+ 143 glUniform1i core found.
+ 144 glUniform2i core found.
+ 145 glUniform3i core found.
+ 146 glUniform4i core found.
+ 147 glUniform1fv core found.
+ 148 glUniform2fv core found.
+ 149 glUniform3fv core found.
+ 150 glUniform4fv core found.
+ 151 glUniform1iv core found.
+ 152 glUniform2iv core found.
+ 153 glUniform3iv core found.
+ 154 glUniform4iv core found.
+ 155 glUniformMatrix2fv core found.
+ 156 glUniformMatrix3fv core found.
+ 157 glUniformMatrix4fv core found.
+ 158 glValidateProgram core found.
+ 159 glVertexAttrib1d core found.
+ 160 glVertexAttrib1dv core found.
+ 161 glVertexAttrib1f core found.
+ 162 glVertexAttrib1fv core found.
+ 163 glVertexAttrib1s core found.
+ 164 glVertexAttrib1sv core found.
+ 165 glVertexAttrib2d core found.
+ 166 glVertexAttrib2dv core found.
+ 167 glVertexAttrib2f core found.
+ 168 glVertexAttrib2fv core found.
+ 169 glVertexAttrib2s core found.
+ 170 glVertexAttrib2sv core found.
+ 171 glVertexAttrib3d core found.
+ 172 glVertexAttrib3dv core found.
+ 173 glVertexAttrib3f core found.
+ 174 glVertexAttrib3fv core found.
+ 175 glVertexAttrib3s core found.

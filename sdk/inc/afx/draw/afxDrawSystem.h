@@ -29,7 +29,6 @@
 #include "afx/draw/afxColor.h"
 #include "afx/draw/afxVertex1.h"
 
-#include "afx/draw/afxDrawOperation.h"
 #include "afx/core/afxModule.h"
 #include "afx/core/afxApplication.h"
 
@@ -223,7 +222,7 @@ AFX_DEFINE_STRUCT(afxDrawOutputEndpointCaps)
     afxPresentTransform supportedTransforms;
     afxPresentTransform currTransform;
     afxPresentAlpha     supportedCompositeAlpha;
-    afxTextureFlags     supportedUsageFlags;
+    afxRasterFlags     supportedUsageFlags;
     afxPresentScaling   supportedScaling;
     afxNat              supportedModeCnt;
     afxPresentMode      supportedModes;

@@ -100,7 +100,7 @@ AFX afxNat              AfxFindResourceNests(afxAsset cad, afxNat cnt, afxFcc co
 AFX afxNat              AfxFindResources(afxAsset cad, afxFcc fcc, afxNat cnt, afxString const id[], void* res[]);
 AFX afxNat              AfxCountResources(afxAsset cad, afxFcc fcc);
 
-AFX afxNat              AfxFindTextures(afxAsset cad, afxNat cnt, afxString const id[], afxTexture tex[]);
+AFX afxNat              AfxFindTextures(afxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
 AFX afxNat              AfxFindMaterials(afxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
 AFX afxNat              AfxFindVertexDatas(afxAsset cad, afxNat cnt, afxString const id[], afxVertexData vtd[]);
 AFX afxNat              AfxFindTopologies(afxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
@@ -119,6 +119,6 @@ AFX afxError            AfxBuildAssets(afxSimulation sim, afxAssetBuilder const*
 AFX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
 AFX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
 
-AFX void                AfxTransformAssets(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxAsset cad[]);
+AFX void                AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxAsset cad[]);
 
 #endif//AFX_ASSET_H

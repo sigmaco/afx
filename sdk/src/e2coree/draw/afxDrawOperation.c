@@ -57,9 +57,9 @@ _AFXINL void AfxDrawOperationBlueprintErase(afxDrawOperationBlueprint *blueprint
                 if (reqShdUri)
                     AfxUriDeallocate(reqShdUri);
             }
-            AfxReleaseArray(&pass->shaders);
+            AfxDeallocateArray(&pass->shaders);
         }
-        AfxReleaseArray(&tec->passes);
+        AfxDeallocateArray(&tec->passes);
     }
     AfxEmptyArray(&blueprint->techniques);
 }
@@ -119,11 +119,11 @@ _AFXINL afxError AfxDrawOperationBlueprintEnd(afxDrawOperationBlueprint *bluepri
                 if (reqShdUri)
                     AfxUriDeallocate(reqShdUri);
             }
-            AfxReleaseArray(&pass->shaders);
+            AfxDeallocateArray(&pass->shaders);
         }
-        AfxReleaseArray(&tec->passes);
+        AfxDeallocateArray(&tec->passes);
     }
-    AfxReleaseArray(&blueprint->techniques);
+    AfxDeallocateArray(&blueprint->techniques);
     blueprint->fcc = NIL;
     return err;
 }
@@ -139,7 +139,7 @@ _AFX void AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, a
     if (uri)
         AfxCopyUri(&blueprint->uri.uri, uri);
 
-    AfxAcquireArray(&blueprint->techniques, sizeof(afxDrawOperationBlueprintTechnique), estTechCnt, AfxSpawnHint());
+    AfxAllocateArray(&blueprint->techniques, sizeof(afxDrawOperationBlueprintTechnique), estTechCnt, AfxHint());
 }
 
 _AFXINL void AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxUri const *uri)
@@ -197,7 +197,7 @@ _AFXINL afxError AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint
     else
     {
         tec->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
-        AfxAcquireArray(&tec->passes, sizeof(afxDrawOperationBlueprintTechniquePass), 1, AfxSpawnHint()); // at least one passes
+        AfxAllocateArray(&tec->passes, sizeof(afxDrawOperationBlueprintTechniquePass), 1, AfxHint()); // at least one passes
     }
     return err;
 }
@@ -238,7 +238,7 @@ _AFXINL afxError AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blu
         pass->rasterization = (afxPipelineRasterizerState) { 0 };
         pass->depthHandling = (afxPipelineDepthState) { 0 };
         
-        AfxAcquireArray(&pass->shaders, sizeof(afxUri*), 2, AfxSpawnHint()); // at least vertex and fragment shaders
+        AfxAllocateArray(&pass->shaders, sizeof(afxUri*), 2, AfxHint()); // at least vertex and fragment shaders
     }
     return err;
 }
@@ -419,7 +419,7 @@ _AFX afxError AfxBuildDrawOperations(afxDrawContext dctx, afxNat cnt, afxDrawOpe
     AfxAssert(blueprint);
     AfxAssert(dop);
     
-    if (AfxClassAcquireObjects(AfxGetDrawOperationClass(dctx), NIL, cnt, blueprint, (afxInstance**)dop, AfxSpawnHint()))
+    if (AfxClassAcquireObjects(AfxGetDrawOperationClass(dctx), NIL, cnt, blueprint, (afxInstance**)dop, AfxHint()))
         AfxThrowError();
 
     return err;
@@ -717,7 +717,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
     afxNat techCnt = AfxCountArrayElements(techniques);
     AfxAssert(techCnt);
 
-    if (!(dop->techniques = AfxAllocate(mem, sizeof(dop->techniques[0]) * techCnt, 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(dop->techniques = AfxAllocate(mem, sizeof(dop->techniques[0]), techCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < techCnt; i++)
@@ -732,7 +732,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
             afxNat passCnt = AfxCountArrayElements(passes);
             AfxAssert(passCnt);
 
-            if (!(dop->techniques[dop->techCnt].passes = AfxAllocate(mem, sizeof(dop->techniques[dop->techCnt].passes[0]) * passCnt, 0, AfxSpawnHint()))) AfxThrowError();
+            if (!(dop->techniques[dop->techCnt].passes = AfxAllocate(mem, sizeof(dop->techniques[dop->techCnt].passes[0]) * passCnt, 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat j = 0; j < passCnt; j++)

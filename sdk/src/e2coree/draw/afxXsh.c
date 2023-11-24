@@ -19,84 +19,45 @@
 
 AFX afxChar const *shdResTypeNames[];
 
-_AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShaderBlueprint *blueprint)
+_AFX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(node);
+    AfxAssertType(xml, afxFcc_XML);
     AfxAssertType(blueprint, afxFcc_SHDB);
-    afxXmlNode const *node0 = node;
-    afxString const *name = AfxGetXmlNodeName(node0);
-    afxString const *content;
-    afxNat attrCnt0 = AfxCountXmlAttributes(node0);
+    AfxShaderBlueprintErase(blueprint);
 
-    if (AfxCompareString(name, &g_str_Shader)) AfxThrowError();
-    else
+    afxNat childTagCnt;
+    afxString name;
+    afxString content;
+    afxNat childCnt = AfxCountXmlChilds(xml, elemIdx);
+
+    for (afxNat i = 0; i < childCnt; i++)
     {
-        AfxShaderBlueprintErase(blueprint);
+        afxNat childIdx = AfxGetXmlChild(xml, elemIdx, i);
+        AfxQueryXmlElement(xml, childIdx, &name, &content);
 
-        for (afxNat j = 0; j < attrCnt0; j++)
+        if (0 == AfxCompareString(&name, &AfxStaticString("Stage")))
         {
-            name = AfxXmlNodeGetAttributeName(node0, j);
-            content = AfxXmlNodeGetAttributeContent(node0, j);
+            afxShaderStage stage = NIL;
 
-            if (0 == AfxCompareString(name, &AfxStaticString("id")))
-            {
-                afxUri tmpUri;
-                AfxUriFromString(&tmpUri, content);
+            if (!(stage = AfxFindShaderStage(&content)))
+                AfxThrowError();
 
-                AfxShaderBlueprintRename(blueprint, &tmpUri);
-            }
-            else
-            {
-                AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
-            }
+            AfxShaderBlueprintSetStage(blueprint, stage);
         }
-
-        afxNat childCnt0 = AfxCountXmlChildNodes(node0);
-
-        for (afxNat j = 0; j < childCnt0; j++)
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Entry")))
         {
-            afxXmlNode const *node1 = AfxGetXmlChildNode(node0, j);
-            name = AfxGetXmlNodeName(node1);
-            afxNat attrCnt1 = AfxCountXmlAttributes(node1);
-            content = AfxGetXmlNodeContent(node1);
-
-            if (0 == AfxCompareString(name, &AfxStaticString("Stage")))
-            {
-                afxShaderStage stage = NIL;
-
-                if (!(stage = AfxFindShaderStage(content)))
-                    AfxThrowError();
-
-                AfxShaderBlueprintSetStage(blueprint, stage);
-            }
-            else if (0 == AfxCompareString(name, &AfxStaticString("Entry")))
-            {
-                AfxShaderBlueprintChooseEntryPoint(blueprint, content);
-            }
-            else if (0 == AfxCompareString(name, &AfxStaticString("Include")))
-            {
+            AfxShaderBlueprintChooseEntryPoint(blueprint, &content);
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Include")))
+        {
 #if 0
-                for (afxNat k = 0; k < attrCnt1; k++)
-                {
-                    name = AfxXmlNodeGetAttributeName(node1, k);
-                    content = AfxXmlNodeGetAttributeContent(node1, k);
+            for (afxNat k = 0; k < attrCnt1; k++)
+            {
+                name = AfxXmlNodeGetAttributeName(node1, k);
+                content = AfxXmlNodeGetAttributeContent(node1, k);
 
-                    if (0 == AfxCompareString(name, &AfxStaticString("uri")))
-                    {
-                        afxUri uri;
-                        AfxUriFromString(&uri, content);
-
-                        if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
-                            AfxThrowError();
-                    }
-                    else
-                    {
-                        AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
-                    }
-                }
-#endif
-                if (content && !AfxStringIsEmpty(content))
+                if (0 == AfxCompareString(name, &AfxStaticString("uri")))
                 {
                     afxUri uri;
                     AfxUriFromString(&uri, content);
@@ -104,112 +65,131 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxXmlNode const *node, afxShader
                     if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                         AfxThrowError();
                 }
-            }
-            else if (0 == AfxCompareString(name, &AfxStaticString("Resource")))
-            {
-                afxNat resSet = 0;
-                afxNat resBinding = 0;
-                afxNat resCnt = 1;
-                afxShaderResourceType resType = 0;
-                //afxString const *resName = NIL;
-
-                for (afxNat k = 0; k < attrCnt1; k++)
+                else
                 {
-                    name = AfxXmlNodeGetAttributeName(node1, k);
-                    content = AfxXmlNodeGetAttributeContent(node1, k);
-
-                    if (0 == AfxCompareString(name, &AfxStaticString("set")))
-                    {
-                        AfxScanString(content, "%u", &resSet);
-                    }
-                    else if (0 == AfxCompareString(name, &AfxStaticString("binding")))
-                    {
-                        AfxScanString(content, "%u", &resBinding);
-                    }
-                    else if (0 == AfxCompareString(name, &AfxStaticString("count")))
-                    {
-                        AfxScanString(content, "%u", &resCnt);
-                    }
-                    else if (0 == AfxCompareString(name, &AfxStaticString("type")))
-                    {
-                        for (afxNat l = 0; l < AFX_SHD_RES_TYPE_TOTAL; l++)
-                        {
-                            if (0 == AfxCompareStringLiteral(content, 0, shdResTypeNames[l], 0))
-                            {
-                                resType = (afxShaderResourceType)l;
-                                break;
-                            }
-                        }                        
-                    }
-#if 0
-                    else if (0 == AfxCompareString(name, &AfxStaticString("name")))
-                    {
-                        resName = content;
-                    }
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
+                }
+            }
 #endif
-                    else
-                    {
-                        AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
-                    }
-                }
-
-                if (AfxShaderBlueprintDeclareResource(blueprint, resSet, resBinding, resType, resCnt, AfxGetXmlNodeContent(node1)))
-                    AfxThrowError();
-            }
-            else if ((0 == AfxCompareString(name, &g_str_In)) || (0 == AfxCompareString(name, &g_str_Out)))
+            if (!AfxStringIsEmpty(&content))
             {
-                afxNat ioLocation = 0;
-                afxVertexFormat ioFormat = NIL;
-                afxNat inStream = 0;
+                afxUri uri;
+                AfxUriFromString(&uri, &content);
 
-                for (afxNat k = 0; k < attrCnt1; k++)
-                {
-                    name = AfxXmlNodeGetAttributeName(node1, k);
-                    content = AfxXmlNodeGetAttributeContent(node1, k);
-
-                    if (0 == AfxCompareString(name, &AfxStaticString("location")))
-                    {
-                        AfxScanString(content, "%u", &ioLocation);
-                    }
-                    else if (0 == AfxCompareString(name, &AfxStaticString("format")))
-                    {
-                        ioFormat = AfxFindVertexFormat(content);
-                    }
-                    else if (0 == AfxCompareString(name, &AfxStaticString("stream")))
-                    {
-                        AfxScanString(content, "%u", &inStream);
-                    }
-                    else
-                    {
-                        AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
-                    }
-                }
-
-                if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, inStream, AfxGetXmlNodeContent(node1)))
+                if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                     AfxThrowError();
-            }
-            else if (0 == AfxCompareString(name, &AfxStaticString("Flag")))
-            {
-                AfxAdvertise("%.*s : flag = %.*s", AfxPushString(name), AfxPushString(content));
             }
         }
-
-        content = AfxGetXmlNodeContent(node0);
-
-        if (content && !AfxStringIsEmpty(content))
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Resource")))
         {
-            if (AfxShaderBlueprintAddCode(blueprint, AfxGetStringData(content, 0), AfxGetStringLength(content)))
+            afxNat resSet = 0;
+            afxNat resBinding = 0;
+            afxNat resCnt = 1;
+            afxShaderResourceType resType = 0;
+            afxString resName;
+            AfxReplicateString(&resName, &content);
+
+            childTagCnt = AfxCountXmlTags(xml, childIdx);
+
+            for (afxNat j = 0; j < childTagCnt; j++)
+            {
+                AfxQueryXmlTag(xml, childIdx, j, &name, &content);
+
+                if (0 == AfxCompareString(&name, &AfxStaticString("set")))
+                {
+                    AfxScanString(&content, "%u", &resSet);
+                }
+                else if (0 == AfxCompareString(&name, &AfxStaticString("binding")))
+                {
+                    AfxScanString(&content, "%u", &resBinding);
+                }
+                else if (0 == AfxCompareString(&name, &AfxStaticString("count")))
+                {
+                    AfxScanString(&content, "%u", &resCnt);
+                }
+                else if (0 == AfxCompareString(&name, &AfxStaticString("type")))
+                {
+                    for (afxNat l = 0; l < AFX_SHD_RES_TYPE_TOTAL; l++)
+                    {
+                        if (0 == AfxCompareStringLiteral(&content, 0, shdResTypeNames[l], 0))
+                        {
+                            resType = (afxShaderResourceType)l;
+                            break;
+                        }
+                    }                        
+                }
+#if 0
+                else if (0 == AfxCompareString(name, &AfxStaticString("name")))
+                {
+                    resName = content;
+                }
+#endif
+                else
+                {
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                }
+            }
+
+            if (AfxShaderBlueprintDeclareResource(blueprint, resSet, resBinding, resType, resCnt, &resName))
                 AfxThrowError();
         }
+        else if ((0 == AfxCompareString(&name, &g_str_In)) || (0 == AfxCompareString(&name, &g_str_Out)))
+        {
+            afxNat ioLocation = 0;
+            afxVertexFormat ioFormat = NIL;
+            afxNat inStream = 0;
+            afxString32 fmtName, ioName;
+            fmtName.buf[0] = '\0';
+            ioName.buf[0] = '\0';
+            AfxScanString(&content, "%8s %32[a-z,0-9,_]", fmtName.buf, ioName.buf);
+            AfxMakeString(&fmtName.str, fmtName.buf, 0);
+            AfxMakeString(&ioName.str, ioName.buf, 0);
+            ioFormat = AfxFindVertexFormat(&fmtName.str);
+            AfxAssertRange(afxVertexFormat_TOTAL, ioFormat, 1);
+            
+            childTagCnt = AfxCountXmlTags(xml, childIdx);
+
+            for (afxNat j = 0; j < childTagCnt; j++)
+            {
+                AfxQueryXmlTag(xml, childIdx, j, &name, &content);
+                
+                if (0 == AfxCompareString(&name, &AfxStaticString("location")))
+                {
+                    AfxScanString(&content, "%u", &ioLocation);
+                }
+                else
+                {
+                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                }
+            }
+
+            AfxCatchError(err);
+
+            if (AfxShaderBlueprintDeclareInOut(blueprint, ioLocation, ioFormat, inStream, &ioName.str))
+                AfxThrowError();
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Flag")))
+        {
+            AfxAdvertise("%.*s : flag = %.*s", AfxPushString(&name), AfxPushString(&content));
+        }
+    }
+
+    AfxQueryXmlElement(xml, elemIdx, &name, &content);
+
+    if (!AfxStringIsEmpty(&content))
+    {
+        if (AfxShaderBlueprintAddCode(blueprint, AfxGetStringData(&content, 0), AfxGetStringLength(&content)))
+            AfxThrowError();
     }
     return err;
 }
 
-_AFX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx)
+_AFX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
-    AfxAssert(node);
+    AfxAssert(identity);
+    AfxAssertType(xml, afxFcc_XML);
     
     afxBool hasUnhandledNodes = FALSE;
     afxNat childCnt = AfxCountXmlChilds(xml, elemIdx);
@@ -522,12 +502,12 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
 }
 #endif
 
-_AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXmlNode const *node, afxXml const* xml, afxNat elemIdx)
+_AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
     AfxAssert(identity);
-    AfxAssert(node);
+    AfxAssertType(xml, afxFcc_XML);
     //AfxAssertType(blueprint, afxFcc_PIPB);
     
     afxString name;
@@ -538,8 +518,8 @@ _AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
 
     for (afxNat i = 0; i < childCnt; i++)
     {
-        afxNat chilIdx = AfxGetXmlChild(xml, elemIdx, i);
-        AfxQueryXmlElement(xml, chilIdx, &name, &content);
+        afxNat childIdx = AfxGetXmlChild(xml, elemIdx, i);
+        AfxQueryXmlElement(xml, childIdx, &name, &content);
         
         if (0 == AfxCompareString(&name, &AfxStaticString("PrimitiveTopology")))
         {
@@ -606,13 +586,13 @@ _AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxUriFromString(&tempUri, &content);
                 AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                config->ras = NIL;
+                config->rasterizer = NIL;
                 AfxResetUri(&config->rasUri);
                 AfxReplicateUri(&config->rasUri, &tempUri);
             }
             else
             {
-                config->ras = NIL;
+                config->rasterizer = NIL;
                 AfxResetUri(&config->rasUri);
             }
         }

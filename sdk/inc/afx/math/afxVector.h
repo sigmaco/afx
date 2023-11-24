@@ -128,9 +128,9 @@ AFXINL void     AfxCopyV2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxCopyV3d(afxReal v[3], afxReal const in[3]);
 AFXINL void     AfxCopyV4d(afxReal v[4], afxReal const in[4]);
 
-AFXINL void     AfxCopyV2dArray(afxReal v[][2], afxReal const in[][2], afxNat cnt);
-AFXINL void     AfxCopyV3dArray(afxReal v[][3], afxReal const in[][3], afxNat cnt);
-AFXINL void     AfxCopyV4dArray(afxReal v[][4], afxReal const in[][4], afxNat cnt);
+AFXINL void     AfxCopyArrayedV2d(afxNat cnt, afxReal const in[][2], afxReal out[][2]);
+AFXINL void     AfxCopyArrayedV3d(afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxCopyArrayedV4d(afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
 AFXINL void     AfxV3dFromLinearV2d(afxReal v[3], afxReal const in[2]); // 2D linear transformation vector. Z is 0.
 AFXINL void     AfxV4dFromV2d(afxReal v[4], afxReal const in[2]);
@@ -146,9 +146,9 @@ AFXINL void     AfxSwapV4d(afxReal v[4], afxReal other[4]);
 // Clamping                                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL void     AfxClampV2d(afxReal v[2], afxReal const in[2], afxReal const mini[2], afxReal const maxi[2]); // v = IN between bounds
-AFXINL void     AfxClampV3d(afxReal v[3], afxReal const in[3], afxReal const mini[3], afxReal const maxi[3]);
-AFXINL void     AfxClampV4d(afxReal v[4], afxReal const in[4], afxReal const mini[4], afxReal const maxi[4]);
+AFXINL void     AfxClampV2d(afxReal v[2], afxReal const in[2], afxReal const min[2], afxReal const max[2]); // v = IN between bounds
+AFXINL void     AfxClampV3d(afxReal v[3], afxReal const in[3], afxReal const min[3], afxReal const max[3]);
+AFXINL void     AfxClampV4d(afxReal v[4], afxReal const in[4], afxReal const min[4], afxReal const max[4]);
 
 AFXINL void     AfxTruncateV2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxTruncateV3d(afxReal v[3], afxReal const in[3]);
@@ -158,13 +158,13 @@ AFXINL void     AfxSaturateV2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxSaturateV3d(afxReal v[3], afxReal const in[3]);
 AFXINL void     AfxSaturateV4d(afxReal v[4], afxReal const in[4]);
 
-AFXINL void     AfxMiniV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = minor between A and B
-AFXINL void     AfxMiniV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = minor between A and B
-AFXINL void     AfxMiniV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = minor between A and B
+AFXINL void     AfxMinV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = minor between A and B
+AFXINL void     AfxMinV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = minor between A and B
+AFXINL void     AfxMinV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = minor between A and B
 
-AFXINL void     AfxMaxiV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = major between A and B
-AFXINL void     AfxMaxiV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = major between A and B
-AFXINL void     AfxMaxiV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = major between A and B
+AFXINL void     AfxMaxV2d(afxReal v[2], afxReal const a[2], afxReal const b[2]); // v = major between A and B
+AFXINL void     AfxMaxV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]); // v = major between A and B
+AFXINL void     AfxMaxV4d(afxReal v[4], afxReal const a[4], afxReal const b[4]); // v = major between A and B
 
 AFXINL void     AfxAbsV2d(afxReal v[2], afxReal const in[2]); // v = abs(in)
 AFXINL void     AfxAbsV3d(afxReal v[3], afxReal const in[3]); // v = abs(in)
@@ -182,12 +182,12 @@ AFXINL void     AfxRecipV2d(afxReal v[2], afxReal const in[2]); // v = 1 / in
 AFXINL void     AfxRecipV3d(afxReal v[3], afxReal const in[3]); // v = 1 / in
 AFXINL void     AfxRecipV4d(afxReal v[4], afxReal const in[4]); // v = 1 / in
 
-AFXINL afxReal  AfxGetNormalizedV2d(afxReal v[2], afxReal const in[2]);
-AFXINL afxReal  AfxGetNormalizedV3d(afxReal v[3], afxReal const in[3]);
-AFXINL afxReal  AfxGetNormalizedV4d(afxReal v[4], afxReal const in[4]);
+AFXINL afxReal  AfxNormalV2d(afxReal v[2], afxReal const in[2]);
+AFXINL afxReal  AfxNormalV3d(afxReal v[3], afxReal const in[3]);
+AFXINL afxReal  AfxNormalV4d(afxReal v[4], afxReal const in[4]);
 
-AFXINL afxReal  AfxGetNormalizedV3dFromV4d(afxReal v[3], afxReal const in[4]);
-AFXINL afxReal  AfxGetNormalizedV4dFromV3d(afxReal v[4], afxReal const in[3]);
+AFXINL afxReal  AfxNormalV3dFromV4d(afxReal v[3], afxReal const in[4]);
+AFXINL afxReal  AfxNormalV4dFromV3d(afxReal v[4], afxReal const in[3]);
 
 AFXINL afxReal  AfxEstimateNormalizedV2d(afxReal v[2], afxReal const in[2]);
 AFXINL afxReal  AfxEstimateNormalizedV3d(afxReal v[3], afxReal const in[3]);
@@ -265,11 +265,15 @@ AFXINL void     AfxResubV3d(afxReal v[3], afxReal const a[3], afxReal const b[3]
 AFXINL void     AfxResubV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4]);
 
 /// Linear interpolation
-/// v = a + t * (b - a)
+/// v = x * (1 - t) + y * t
 
-AFXINL void     AfxLerpV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal t);
-AFXINL void     AfxLerpV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal t);
-AFXINL void     AfxLerpV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal t);
+AFXINL void     AfxLerpV2d(afxReal v[2], afxReal const x[2], afxReal const y[2], afxReal t);
+AFXINL void     AfxLerpV3d(afxReal v[3], afxReal const x[3], afxReal const y[3], afxReal t);
+AFXINL void     AfxLerpV4d(afxReal v[4], afxReal const x[4], afxReal const y[4], afxReal t);
+
+AFXINL void     AfxMixV2d(afxReal v[2], afxReal const x[2], afxReal const y[2], afxReal t);
+AFXINL void     AfxMixV3d(afxReal v[3], afxReal const x[3], afxReal const y[3], afxReal t);
+AFXINL void     AfxMixV4d(afxReal v[4], afxReal const x[4], afxReal const y[4], afxReal t);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Algebra                                                                    //
@@ -331,10 +335,10 @@ AFXINL void     AfxExp10V2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxExp10V3d(afxReal v[3], afxReal const in[3]);
 AFXINL void     AfxExp10V4d(afxReal v[4], afxReal const in[4]);
 
-AFXINL void     AfxNegateV2d(afxReal v[2], afxReal const in[2]);
-AFXINL void     AfxNegateV3d(afxReal v[3], afxReal const in[3]);
-AFXINL void     AfxNegateV4d(afxReal v[4], afxReal const in[4]);
-AFXINL void     AfxNegateAffineV4d(afxReal v[4], afxReal const in[4]); // v = inverse of in
+AFXINL void     AfxNegV2d(afxReal v[2], afxReal const in[2]);
+AFXINL void     AfxNegV3d(afxReal v[3], afxReal const in[3]);
+AFXINL void     AfxNegV4d(afxReal v[4], afxReal const in[4]);
+AFXINL void     AfxNegAffineV4d(afxReal v[4], afxReal const in[4]); // v = inverse of in
 
 AFXINL afxReal  AfxSumV2d(afxReal const v[2]);
 AFXINL afxReal  AfxSumV3d(afxReal const v[3]);
@@ -389,37 +393,37 @@ AFXINL afxReal  AfxMagV4dRecip(afxReal const in[4]);
 
 // With post-multiplication, a 4x4 matrix multiplied with a 4x1 column vector took the dot product of each row of the matrix with the vector.
 
-AFXINL void     AfxPostMultiplyV2d(afxReal v[2], afxReal const m[2][2], afxReal const in[2]);
-AFXINL void     AfxPostMultiplyV3d(afxReal v[3], afxReal const m[3][3], afxReal const in[3]);
-AFXINL void     AfxPostMultiplyV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+AFXINL void     AfxPostMultiplyV2d(afxReal const m[2][2], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPostMultiplyV3d(afxReal const m[3][3], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPostMultiplyV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPostMultiplyPointV2d(afxReal v[2], afxReal const m[4][4], afxReal const in[2]);
-AFXINL void     AfxPostMultiplyPointV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
+AFXINL void     AfxPostMultiplyAffineV2d(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPostMultiplyAffineV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
 
-AFXINL void     AfxPostMultiplyNormalV3d(afxReal v[3], afxReal const m[4][4], afxReal const in[3]);
-AFXINL void     AfxPostMultiplyNormalV4d(afxReal v[4], afxReal const m[3][3], afxReal const in[4]);
+AFXINL void     AfxPostMultiplyLinearV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPostMultiplyLinearV4d(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPostMultiplyAffineV4d(afxReal v[4], afxReal const m[4][4], afxReal const in[4]);
+AFXINL void     AfxPostMultiplyAffineV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
 // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
 // Multiply column vector by matrix ([0][0], [1][0], [2][0], [3][0])
 
-AFXINL void     AfxPreMultiplyV2d(afxReal v[2], afxReal const in[2], afxReal const m[2][2]);
-AFXINL void     AfxPreMultiplyV3d(afxReal v[3], afxReal const in[3], afxReal const m[3][3]);
-AFXINL void     AfxPreMultiplyV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyV2d(afxReal const m[2][2], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPreMultiplyV3d(afxReal const m[3][3], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPreMultiplyV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPreMultiplyPointV2d(afxReal v[2], afxReal const in[2], afxReal const m[4][4]);
-AFXINL void     AfxPreMultiplyPointV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyAffineV2d(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPreMultiplyAffineV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
 
-AFXINL void     AfxPreMultiplyNormalV3d(afxReal v[3], afxReal const in[3], afxReal const m[4][4]);
-AFXINL void     AfxPreMultiplyNormalV4d(afxReal v[4], afxReal const in[4], afxReal const m[3][3]);
+AFXINL void     AfxPreMultiplyLinearV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPreMultiplyLinearV4d(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPreMultiplyAffineV4d(afxReal v[4], afxReal const in[4], afxReal const m[4][4]);
+AFXINL void     AfxPreMultiplyAffineV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
 // Similarity transform
 
-AFXINL void     AfxAssimilatePointV3d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
-AFXINL void     AfxAssimilatePointV4d(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAffineV3d(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAffineV4d(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
 
 #endif//AFX_VECTOR_H

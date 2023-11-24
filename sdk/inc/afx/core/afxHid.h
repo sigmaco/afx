@@ -26,7 +26,7 @@ typedef enum afxHidFlag
 
 AFX_DEFINE_STRUCT(afxHid)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxHandle   hidObj;
     afxNat      port;
     afxHidFlag  flags;

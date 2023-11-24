@@ -21,7 +21,7 @@
 
 #include "afx/draw/afxDrawDefs.h"
 #include "afx/math/afxViewport.h"
-#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxRaster.h"
 
 typedef enum afxDrawPrefab
 {
@@ -97,11 +97,11 @@ AFX_DEFINE_STRUCT(afxClearRect)
 
 AFX_DEFINE_STRUCT(afxDrawTarget)
 {
-    afxTexture          tex; /// the texture subresource that will be output to for this color attachment.
+    afxRaster          tex; /// the texture subresource that will be output to for this color attachment.
     afxSurfaceLoadOp    loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
     afxSurfaceStoreOp   storeOp; /// The store operation to perform on view after executing the render pass.
     afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
-    afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
+    afxRaster          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 };
 
 AFX_DEFINE_STRUCT(afxCanvasConfig)
@@ -139,20 +139,20 @@ AFX_DEFINE_STRUCT(afxCmd)
 
     void(*BindPipeline)(afxDrawScript dscr, afxNat level, afxPipeline pip);
     void(*BindBuffers)(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-    void(*BindTextures)(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxTexture tex[]);
+    void(*BindTextures)(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
 
     // fixed-function vertex processing
 
     void(*BindVertexSources)(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[]);
     void(*ResetVertexStreams)(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
     void(*ResetVertexAttributes)(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
-    void(*BindIndexSource)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz);
+    void(*BindIndexSource)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz);
     void(*SetPrimitiveTopology)(afxDrawScript dscr, afxPrimTopology topology);
 
     // fixed-function vertex post-processing
 
     void(*ResetViewports)(afxDrawScript dscr, afxNat cnt, afxViewport const vp[]);
-    void(*UpdateViewports)(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxViewport const vp[]);
+    void(*ReadjustViewports)(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxViewport const vp[]);
 
     // rasterization
 
@@ -169,7 +169,10 @@ AFX_DEFINE_STRUCT(afxCmd)
     // fragment operations
 
     void(*ResetScissors)(afxDrawScript dscr, afxNat cnt, afxRect const rc[]);
-    void(*UpdateScissors)(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
+    void(*ReadjustScissors)(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
+
+    void(*ResetAreas)(afxDrawScript dscr, afxBool exclusive, afxNat cnt, afxRect const rc[]);
+    void(*ReadjustAreas)(afxDrawScript dscr, afxBool exclusive, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
 
     void(*EnableDepthBoundsTest)(afxDrawScript dscr, afxBool enable);
     void(*SetDepthBounds)(afxDrawScript dscr, afxReal const bounds[2]);
@@ -203,8 +206,7 @@ AFX_DEFINE_STRUCT(afxCmd)
     void(*DrawIndexed)(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat baseIdx, afxNat vtxOff, afxNat baseInstIdx);
     void(*DrawIndexedIndirect)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
     void(*DrawIndexedIndirectCount)(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
-    void(*DrawPrefab)(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt);
-
+    
     void* Total;
 };
 
@@ -225,7 +227,7 @@ AFX void                AfxCmdBindPipeline
 
 
 AFX void                AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-AFX void                AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxTexture tex[]);
+AFX void                AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
 
 /// Set the viewport count and viewports dynamically for a command buffer.
 /// This command sets the viewport count and viewports state for subsequent drawing commands when pipeline is created without viewport set.
@@ -242,7 +244,7 @@ AFX void                AfxCmdResetViewports
 
 /// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
 
-AFX void                AfxCmdUpdateViewports
+AFX void                AfxCmdReadjustViewports
 (
     afxDrawScript       dscr, /// is the command buffer into which the command will be recorded.
     afxNat              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
@@ -265,7 +267,7 @@ AFX void                AfxCmdResetScissors
 
 /// The scissor rectangles taken from element #i of @rect replace the current state for the scissor index @baseIdx + #i, for #i in [0, @cnt).
 
-AFX void                AfxCmdUpdateScissors
+AFX void                AfxCmdReadjustScissors
 (
     afxDrawScript       dscr, /// is the command buffer into which the command will be recorded.
     afxNat              baseIdx, /// is the index of the first scissor whose state is updated by the command.
@@ -302,6 +304,7 @@ AFX void                AfxCmdBindIndexSource
     afxDrawScript       dscr, /// is the command buffer into which the command is recorded.
     afxBuffer           buf, /// is the buffer being bound.
     afxNat32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
+    afxNat32            range, /// is the size in bytes of index data bound from buffer.
     afxNat32            idxSiz /// is a value specifying the size of the indices.
 );
 
@@ -567,8 +570,6 @@ AFX void                AfxCmdSetBlendConstants
 AFX void                AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
 AFX void                AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
 
-AFX void                AfxCmdCopyTexture(afxDrawScript dscr, afxTexture dst, afxTexture src, afxNat rgnCnt, afxTextureRegion const rgn[]);
-
-AFX void                AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt);
+AFX void                AfxCmdCopyTexture(afxDrawScript dscr, afxRaster dst, afxRaster src, afxNat rgnCnt, afxRasterRegion const rgn[]);
 
 #endif//AFX_DRAW_COMMANDS_H

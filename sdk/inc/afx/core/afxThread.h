@@ -49,9 +49,9 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
     void            *udd;
 };
 
-AFX_DEFINE_STRUCT(afxProcessor)
 #ifdef _AFX_CORE_C
 #ifdef _AFX_PROCESSOR_C
+AFX_DEFINE_STRUCT(afxProcessor)
 {
     afxNat          unitIdx;
     afxNat          tid;
@@ -76,14 +76,13 @@ AFX_DEFINE_STRUCT(afxProcessor)
     __int64         CurrentAdjustment;
     LARGE_INTEGER   QPC_Frequency;
 #endif
-}
-#endif
-#endif
-;
+};
+#endif//_AFX_PROCESSOR_C
+#endif//_CORE_C
 
-AFX_OBJECT(afxThread)
 #ifdef _AFX_CORE_C
 #ifdef _AFX_THREAD_C
+AFX_OBJECT(afxThread)
 {
     //afxLinkage      procUnit;
     afxSlock        procSlock;
@@ -107,10 +106,9 @@ AFX_OBJECT(afxThread)
     afxBool         interruptionRequested;
     afxInt          exitCode;
     void            *udd;
-}
-#endif
-#endif
-;
+};
+#endif//_AFX_THREAD_C
+#endif//_AFX_CORE_C
 
 AFX afxNat      AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[]);
 AFX afxNat      AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);

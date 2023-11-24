@@ -29,7 +29,7 @@ AFX_DEFINE_STRUCT(afxBitmapPage)
 
 AFX_DEFINE_STRUCT(afxBitmap)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxNat          setsPerPage;
     afxNat          totalMarkedBitCnt;
     afxNat          pageCnt;

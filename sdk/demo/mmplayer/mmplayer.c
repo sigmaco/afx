@@ -25,7 +25,7 @@ afxSystem sys;
 afxDrawSystem dsys;
 
 afxSimulation sim = NIL;
-afxTexture dumpImg = NIL;
+afxRaster dumpImg = NIL;
 
 afxDrawOutput dout[3] = { NIL, NIL, NIL };
 afxDrawInput din[3] = { NIL, NIL, NIL };
@@ -37,7 +37,7 @@ afxUri2048 uri, uri2;
 
 afxBuffer ubo = NIL;
 afxPipeline dpip[2] = { NIL, NIL };
-afxTexture tex[4] = { NIL, NIL, NIL, NIL };
+afxRaster tex[4] = { NIL, NIL, NIL, NIL };
 
 afxBinkVideo bnk = { 0 };
 
@@ -62,11 +62,11 @@ _AFXEXPORT afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called
             if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
             else
             {
-                afxTexture surf;
+                afxRaster surf;
                 afxNat outBufIdx = 0;
                 AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
                 AfxGetDrawOutputBuffer(dout[0], outBufIdx, &surf);
-                AfxAssertObjects(1, &surf, afxFcc_TEX);
+                AfxAssertObjects(1, &surf, afxFcc_RAS);
                 
                 //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, dscr, canv, NIL);
                 //AfxBinkDoFrame(bnk, TRUE, TRUE);
@@ -74,7 +74,7 @@ _AFXEXPORT afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called
                 //AfxBinkDoFrame(bnk, TRUE, TRUE, 0, 0, NIL);
                 AfxBinkBlitFrame(bnk, surf, TRUE, FALSE, dscr);
 
-                if (AfxFinishDrawScript(dscr)) AfxThrowError();
+                if (AfxCompileDrawScript(dscr)) AfxThrowError();
                 else if (AfxSubmitDrawScripts(din, 1, &dscr))
                     AfxThrowError();
 
@@ -107,12 +107,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxFormatUri(&uri.uri, "art/world.tga");
     
-    if (AfxLoadTexturesFromTarga(dctx, NIL, 1, &uri.uri, &dumpImg))
+    if (AfxLoadRastersFromTarga(dctx, NIL, 1, &uri.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
     AfxFormatUri(&uri.uri, "tmp/world2.tga");
-    AfxPrintTexture(dumpImg, 0, 0, 1, &uri.uri);
+    AfxPrintRaster(dumpImg, 0, 0, 1, &uri.uri);
     AfxReleaseObjects(1, (void*[]) { dumpImg });
 
     AfxFormatUri(&uri.uri, "desktop");
@@ -197,7 +197,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //BinkSoundUseDirectSound(0);
     err = AfxBinkDeploy(&bnk, dctx);
     AfxAssert(!err);
-#if 0
+#if !0
     AfxFormatUri(&uri.uri, "art/fmv/t2.bik");
 #else
     AfxFormatUri(&uri.uri, "art/fmv/ubi.bik");
@@ -276,15 +276,17 @@ int main(int argc, char const* argv[])
         AfxBootUpBasicIoSystem(&sysConfig.base, &sys);
         AfxAssertObjects(1, &sys, afxFcc_SYS);
 
+#if 0
         afxContext thrs[10];
-        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxAcquireContexts(10, thrs, NIL, AfxHint());
         AfxReleaseObjects(10, thrs);
-        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxAcquireContexts(10, thrs, NIL, AfxHint());
         AfxReleaseObjects(10, thrs);
-        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxAcquireContexts(10, thrs, NIL, AfxHint());
         AfxReleaseObjects(10, thrs);
-        AfxAcquireContexts(10, thrs, NIL, AfxSpawnHint());
+        AfxAcquireContexts(10, thrs, NIL, AfxHint());
         AfxReleaseObjects(10, thrs);
+#endif
 
         afxDrawSystemConfig dsysConfig;
         AfxChooseDrawSystemConfiguration(&dsysConfig, sizeof(dsysConfig));
@@ -297,7 +299,7 @@ int main(int argc, char const* argv[])
 
         afxDrawContextConfig dctxConfig = { 0 };        
         AfxAcquireDrawContexts(dsys, 0, 1, &dctxConfig, &dctx);
-        AfxAssertObjects(1, &dsys, afxFcc_DCTX);
+        AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
         afxApplication TheApp;
         afxApplicationConfig appConfig = { 0 };

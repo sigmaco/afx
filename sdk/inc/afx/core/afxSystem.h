@@ -109,7 +109,7 @@ AFX_DEFINE_STRUCT(afxFileInfo)
 };
 
 AFX_CALLBACK(void, afxProfilerPushTimerFunc)(afxPluginID in_uPluginID, const char* in_pszZoneName);
-AFX_CALLBACK(void, afxProfilerPopTimerFunc)();
+AFX_CALLBACK(void, afxProfilerPopTimerFunc)(void);
 AFX_CALLBACK(void, afxProfilerPostMarkerFunc)(afxPluginID in_uPluginID, const char* in_pszMarkerName );
 
 AFX_DEFINE_STRUCT(afxSystemConfig)
@@ -144,9 +144,9 @@ AFX_DEFINE_STRUCT(afxSystemConfigWin32)
 #endif
 };
 
-AFX_OBJECT(afxSystem)
 #ifdef _AFX_CORE_C
 #ifdef _AFX_SYSTEM_C
+AFX_OBJECT(afxSystem)
 {
     afxUri                      rootDir;
 
@@ -198,10 +198,9 @@ AFX_OBJECT(afxSystem)
         }                       supplyChain[1];
     }                           resourcing;
     afxInt                      exitCode;
-}
-#endif
-#endif
-;
+};
+#endif//_AFX_SYSTEM_C
+#endif//_AFX_CORE_C
 
 AFX void                AfxChooseBasicIoSystemConfiguration(afxSystemConfig *config, afxNat extendedSiz);
 AFX afxError            AfxBootUpBasicIoSystem(afxSystemConfig const *config, afxSystem *sys);

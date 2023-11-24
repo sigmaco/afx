@@ -41,9 +41,9 @@ AFX_DEFINE_STRUCT(afxStack)
     afxContext           ctx;
 };
 
-AFX void        AfxAcquireStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock);
-AFX void        AfxAcquirePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock, afxNat maxUnits);
-AFX void        AfxReleaseStack(afxStack *stck);
+AFX void        AfxAllocateStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock);
+AFX void        AfxAllocatePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerBlock, afxNat maxUnits);
+AFX void        AfxDeallocateStack(afxStack *stck);
 
 AFX void        AfxEmptyStack(afxStack *stck);
 

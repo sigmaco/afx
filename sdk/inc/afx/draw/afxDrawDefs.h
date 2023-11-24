@@ -44,6 +44,7 @@ AFX_DEFINE_HANDLE(afxDrawOutput);
 //typedef afxHandle afxDrawOutput;
 
 AFX_DEFINE_HANDLE(afxDrawOperation);
+AFX_DEFINE_HANDLE(afxDrawTechnique);
 AFX_DEFINE_HANDLE(afxPipeline);
 AFX_DEFINE_HANDLE(afxRasterizer);
 //typedef afxHandle afxPipeline;
@@ -57,8 +58,8 @@ AFX_DEFINE_HANDLE(afxSampler);
 AFX_DEFINE_HANDLE(afxBuffer);
 //typedef afxHandle afxBuffer;
 
-AFX_DEFINE_HANDLE(afxTexture);
-//typedef afxHandle afxTexture;
+AFX_DEFINE_HANDLE(afxRaster);
+//typedef afxHandle afxRaster;
 AFX_DEFINE_HANDLE(afxSurface);
 //typedef afxHandle afxSurface;
 AFX_DEFINE_HANDLE(afxCanvas);
@@ -322,6 +323,9 @@ typedef enum afxVertexFormat
     afxVertexFormat_V2D,
     afxVertexFormat_V3D,
     afxVertexFormat_V4D,
+    afxVertexFormat_M2D,
+    afxVertexFormat_M3D,
+    afxVertexFormat_M4D,
 
     //afxVertexFormat_V4B, // afxInt8[4]
     //afxVertexFormat_V8B, // afxInt8[8]

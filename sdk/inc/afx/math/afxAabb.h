@@ -56,6 +56,6 @@ AFXINL afxBool      AfxAabbContainsSpheres(afxAabb const* aabb, afxNat cnt, afxS
 /// Given an AABB in local space, transform to world space
 AFXINL void         AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to);
 
-AFXINL void         AfxTransformAabbs(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxAabb const in[], afxAabb out[]);
+AFXINL void         AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxAabb const in[], afxAabb out[]);
 
 #endif//AFX_AABB_H

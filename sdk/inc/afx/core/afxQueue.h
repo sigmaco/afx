@@ -20,8 +20,8 @@ AFX_DEFINE_STRUCT(afxQueue)
     afxByte     *bytemap;
 };
 
-AFXINL afxError AfxAcquireQueue(afxQueue *que, afxNat unitSiz, afxNat cap);
-AFXINL afxError AfxReleaseQueue(afxQueue *que);
+AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap);
+AFXINL afxError AfxDeallocateQueue(afxQueue *que);
 
 AFXINL afxError AfxPushQueueUnit(afxQueue *que, void const *data);
 AFXINL void*    AfxPullNextQueueUnit(afxQueue const *que);

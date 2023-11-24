@@ -255,22 +255,22 @@ struct afxBaseRasterizer
 };
 #endif
 
-AFX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer ras[]);
+AFX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer rast[]);
 AFX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxBool             AfxGetDepthTestInfo(afxRasterizer ras, afxCompareOp* op, afxBool* writeEnabled); // return TRUE if depth test is enabled
-AFX afxBool             AfxGetDepthBiasInfo(afxRasterizer ras, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
-AFX afxBool             AfxGetDepthBoundsInfo(afxRasterizer ras, afxReal bounds[2]); // return TRUE if depth bounds is enabled
-AFX afxBool             AfxGetStencilConfig(afxRasterizer ras, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
-AFX afxBool             AfxGetLogicalPixelOperation(afxRasterizer ras, afxLogicOp* op); // return TRUE if logical pixel operation is enabled
-AFX void                AfxGetColorBlendConstants(afxRasterizer ras, afxReal rgba[4]);
-AFX afxNat              AfxGetColorOutputChannels(afxRasterizer ras, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
-AFX afxNat              AfxCountColorOutputChannels(afxRasterizer ras);
-AFX afxBool             AfxGetSampleShadingInfo(afxRasterizer ras, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
-AFX afxFillMode         AfxGetRasterizationMode(afxRasterizer ras);
-AFX afxBool             AfxGetLineRasterizationInfo(afxRasterizer ras, afxReal* lineWidth);
-AFX afxBool             AfxGetMultisamplingInfo(afxRasterizer ras, afxNat* sampleCnt, afxMask sampleMask[32]);
+AFX afxBool             AfxGetDepthTestInfo(afxRasterizer rast, afxCompareOp* op, afxBool* writeEnabled); // return TRUE if depth test is enabled
+AFX afxBool             AfxGetDepthBiasInfo(afxRasterizer rast, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
+AFX afxBool             AfxGetDepthBoundsInfo(afxRasterizer rast, afxReal bounds[2]); // return TRUE if depth bounds is enabled
+AFX afxBool             AfxGetStencilConfig(afxRasterizer rast, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
+AFX afxBool             AfxGetLogicalPixelOperation(afxRasterizer rast, afxLogicOp* op); // return TRUE if logical pixel operation is enabled
+AFX void                AfxGetColorBlendConstants(afxRasterizer rast, afxReal rgba[4]);
+AFX afxNat              AfxGetColorOutputChannels(afxRasterizer rast, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
+AFX afxNat              AfxCountColorOutputChannels(afxRasterizer rast);
+AFX afxBool             AfxGetSampleShadingInfo(afxRasterizer rast, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
+AFX afxFillMode         AfxGetRasterizationMode(afxRasterizer rast);
+AFX afxBool             AfxGetLineRasterizationInfo(afxRasterizer rast, afxReal* lineWidth);
+AFX afxBool             AfxGetMultisamplingInfo(afxRasterizer rast, afxNat* sampleCnt, afxMask sampleMask[32]);
 
-AFX void                AfxDescribeRasterizerConfiguration(afxRasterizer ras, afxRasterizationConfig* config);
+AFX void                AfxDescribeRasterizerConfiguration(afxRasterizer rast, afxRasterizationConfig* config);
 
 #endif//AFX_RASTERIZER_H

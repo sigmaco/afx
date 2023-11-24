@@ -58,6 +58,8 @@ _AFX afxString const afxDrawCmdStrings[] =
     AFX_STRING("UpdateViewports"),
     AFX_STRING("ResetScissors"),
     AFX_STRING("UpdateScissors"),
+    AFX_STRING("ResetAreas"),
+    AFX_STRING("UpdateAreas"),
 
     AFX_STRING("BindIndexSource"),
     AFX_STRING("BindVertexSources"),
@@ -86,7 +88,7 @@ _AFX void AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxN
     dscr->stdCmds->BindBuffers(dscr, set, baseIdx, cnt, buf, offset, range);
 }
 
-_AFX void AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxTexture tex[])
+_AFX void AfxCmdBindTextures(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -221,13 +223,13 @@ _AFX void AfxCmdResetViewports(afxDrawScript dscr, afxNat cnt, afxViewport const
     dscr->stdCmds->ResetViewports(dscr, cnt, vp);
 }
 
-_AFX void AfxCmdUpdateViewports(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxViewport const vp[])
+_AFX void AfxCmdReadjustViewports(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertRange(8, baseIdx, cnt);
     AfxAssert(!cnt || vp);
-    dscr->stdCmds->UpdateViewports(dscr, baseIdx, cnt, vp);
+    dscr->stdCmds->ReadjustViewports(dscr, baseIdx, cnt, vp);
 }
 
 _AFX void AfxCmdResetScissors(afxDrawScript dscr, afxNat cnt, afxRect const rc[])
@@ -238,13 +240,30 @@ _AFX void AfxCmdResetScissors(afxDrawScript dscr, afxNat cnt, afxRect const rc[]
     dscr->stdCmds->ResetScissors(dscr, cnt, rc);
 }
 
-_AFX void AfxCmdUpdateScissors(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxRect const rect[])
+_AFX void AfxCmdReadjustScissors(afxDrawScript dscr, afxNat baseIdx, afxNat cnt, afxRect const rect[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertRange(8, baseIdx, cnt);
     AfxAssert(!cnt || rect);
-    dscr->stdCmds->UpdateScissors(dscr, baseIdx, cnt, rect);
+    dscr->stdCmds->ReadjustScissors(dscr, baseIdx, cnt, rect);
+}
+
+_AFX void AfxCmdResetAreas(afxDrawScript dscr, afxBool exclusive, afxNat cnt, afxRect const rc[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssert(!cnt || rc);
+    dscr->stdCmds->ResetAreas(dscr, exclusive, cnt, rc);
+}
+
+_AFX void AfxCmdReadjustAreas(afxDrawScript dscr, afxBool exclusive, afxNat baseIdx, afxNat cnt, afxRect const rect[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertRange(8, baseIdx, cnt);
+    AfxAssert(!cnt || rect);
+    dscr->stdCmds->ReadjustAreas(dscr, exclusive, baseIdx, cnt, rect);
 }
 
 // Vertex input source
@@ -273,14 +292,15 @@ _AFX void AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat con
     dscr->stdCmds->ResetVertexAttributes(dscr, cnt, location, fmt, srcIdx, offset);
 }
 
-_AFX void AfxCmdBindIndexSource(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 idxSiz)
+_AFX void AfxCmdBindIndexSource(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(AfxGetBufferSize(buf), offset, 1);
+    AfxAssertRange(AfxGetBufferSize(buf), offset, range);
+    AfxAssert(range);
     AfxAssert(idxSiz);
-    dscr->stdCmds->BindIndexSource(dscr, buf, offset, idxSiz);
+    dscr->stdCmds->BindIndexSource(dscr, buf, offset, range, idxSiz);
 }
 
 _AFX void AfxCmdSetPrimitiveTopology(afxDrawScript dscr, afxPrimTopology topology)
@@ -328,7 +348,7 @@ _AFX void AfxCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat b
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssert(vtxCnt);
-    AfxAssert(instCnt);
+    //AfxAssert(instCnt);
     dscr->stdCmds->Draw(dscr, vtxCnt, instCnt, baseVtxIdx, baseInstIdx);
 }
 
@@ -359,7 +379,7 @@ _AFX void AfxCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, a
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssert(idxCnt);
-    AfxAssert(instCnt);
+    //AfxAssert(instCnt);
     dscr->stdCmds->DrawIndexed(dscr, idxCnt, instCnt, baseIdx, vtxOff, baseInstIdx);
 }
 
@@ -381,13 +401,4 @@ _AFX void AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, afxN
     AfxAssert(maxDrawCnt);
     AfxAssert(stride);
     dscr->stdCmds->DrawIndexedIndirectCount(dscr, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
-}
-
-_AFX void AfxCmdDrawPrefab(afxDrawScript dscr, afxDrawPrefab prefab, afxNat instCnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertRange(afxDrawPrefab_TOTAL, prefab, 1);
-    AfxAssert(instCnt);
-    dscr->stdCmds->DrawPrefab(dscr, prefab, instCnt);
 }

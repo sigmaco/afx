@@ -65,7 +65,7 @@ AFX_DECLARE_STRUCT(afxInstance);
 
 AFX_DEFINE_STRUCT(afxEvent)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxEventType    type;
     afxBool         posted, accepted;
     union

@@ -1,6 +1,8 @@
 
 // POSSÍVEIS PROBLEMAS
 
+Uso de constante 4 ao invés de sizeof(pointer). Quando compilando em x64, tenha certeza que vai dar merda.
+
 Quando realizando operações aritméticas sem parênteses envolvendo adição e multiplicação, o multiplicador é executado antes do adicionador, independente da ordem.
 
 Quando usando 'for', é possível que a variável de índice operada por 'for' não esteja sendo usada em favor do valor total.
@@ -10,6 +12,15 @@ Quando houver erros a respeito da alocação de memória em si, como corrupção anôm
 Evite usar union's para converter valores. O compilador pode arranjar os dados com alinhamentos diferentes.
 
 Quando usando afxArray's (mas pode ser qualquer alocação), tipos que se auto-referenciem, tais como afxString e afxLinkage, terão suas referêncais quebradas em caso de realocação onde o buffer mude de endereço.
+
+Quando a afxChain começa por first linkage, avança-se com obtendo o prêvio linkage.
+
+Loop dentro de loop usando a mesma variável de controle. Exemplo: i, j, etc.
+warning : declaration shadows a local variable [-Wshadow]
+
+Float sendo convertido para int e então para float. Principalmente fatores.
+
+Ints sendo encapsulados em ints menores. Principalmente int array para structured int16/8.
 
 // POSSÍVEIS ABORDAGENS
 

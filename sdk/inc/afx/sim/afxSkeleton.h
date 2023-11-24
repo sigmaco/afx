@@ -21,6 +21,7 @@
 #include "afxWorldPose.h"
 #include "afx/core/afxUri.h"
 #include "afxSimDefs.h"
+#include "afx/math/afxMatrix.h"
 
 /// O objeto afxSkeleton é uma coleção hierárquica de articulações que descrevem a estrutura articular interna de um afxModel, e auxilia no manejo e na animação do mesmo. 
 
@@ -39,8 +40,6 @@
 /// Nodes that affect a particular geometry are usually organized into a single hierarchy called a 'skeleton', although the influencing nodes may come from unrelated parts of the hierarchy.
 /// The nodes of such a hierarchy represents the 'joints' of the skeleton, which should not be confused with the 'bones', which are the imaginary line segments connecting two joints.
 
-AFX_DEFINE_HANDLE(afxSkeleton);
-
 AFX_DEFINE_STRUCT(afxSkeletonBone)
 {
     afxString           id; // 32
@@ -54,26 +53,24 @@ AFX_DEFINE_STRUCT(afxSkeletonBone)
 #ifdef _AFX_SKELETON_C
 AFX_OBJECT(afxSkeleton)
 {
-    afxUri              id; // 128
     afxNat              boneCnt;
     afxSkeletonBone*    bones; // afxNode
     afxNat              lodType;
+    afxString           id; // 128
 };
-#endif
+#endif//_AFX_SKELETON_C
 
 AFX_DEFINE_STRUCT(afxSkeletonBuilder)
 {
-    void                (*GetInfo)(void* data, afxNat* boneCnt, afxNat* lodType);
-    afxNat              (*GetParent)(void* data, afxNat boneIdx);
-    void                (*GetLocalTransform)(void* data, afxNat boneIdx, afxTransform* local);
-    void                (*GetIw)(void* data, afxNat boneIdx, afxReal iw[4][4]);
-    afxReal             (*GetLodError)(void* data, afxNat boneIdx);
-    void                (*GetTag)(void* data, afxNat boneIdx, afxString* dst);
-    void                (*GetExtendedData)(void* data, afxNat boneIdx, void** udd);
+    _AFX_DBG_FCC;
+    afxNat              boneCnt;
+    afxSkeletonBone*    bones;
+    afxNat              lodType;
+    afxString32         id;
     void                (*IndexRemapping)(void* data, afxNat boneIdx, afxNat outIdx);
 };
 
-AFX afxUri const*       AfxGetSkeletonId(afxSkeleton skl);
+AFX afxString const*    AfxGetSkeletonId(afxSkeleton skl);
 
 AFX afxNat              AfxCountBones(afxSkeleton skl);
 AFX afxNat              AfxCountBonesForLod(afxSkeleton skl, afxReal allowedErr);
@@ -96,8 +93,18 @@ AFX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, afxWorldPose 
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxBuildSkeletons(afxSimulation sim, afxSkeletonBuilder const* sklb, afxNat cnt, void* data[], afxSkeleton skl[]);
+AFX afxError            AfxBuildSkeletons(afxSimulation sim, afxNat cnt, afxSkeletonBuilder const sklb[], afxSkeleton skl[]);
 
-AFX void                AfxTransformSkeletons(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal affineTol, afxReal linearTol, afxNat cnt, afxSkeleton skl[]);
+AFX void                AfxTransformSkeletons(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxNat cnt, afxSkeleton skl[]);
+
+////////////////////////////////////////////////////////////////////////////////
+// BUILDING OPERATIONS                                                        //
+////////////////////////////////////////////////////////////////////////////////
+
+AFXINL afxError         AfxBeginSkeletonBuilding(afxSkeletonBuilder* sklb, afxNat boneCnt, afxString const* id, afxNat lodType);
+AFXINL void             AfxEndSkeletonBuilding(afxSkeletonBuilder* sklb);
+
+AFXINL void             AfxResetBoneWithIw(afxSkeletonBuilder const* sklb, afxNat boneIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxReal const iw[4][4]);
+AFXINL void             AfxResetBone(afxSkeletonBuilder const* sklb, afxNat boneIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxTransform const* wt);
 
 #endif//AFX_SKELETON_H

@@ -152,7 +152,7 @@ _AFX afxError _AfxDthrCtor(afxDrawThread dthr, afxCookie const* cookie)
     afxThreadConfig thrConfig = { 0 };
     thrConfig.proc = _AfxThrProcDthrCb;
     thrConfig.udd = (void*)dthr;
-    AfxAcquireThreads(1, &dthr->thr, &thrConfig, AfxSpawnHint());
+    AfxAcquireThreads(1, &dthr->thr, &thrConfig, AfxHint());
 
     return err;
 }

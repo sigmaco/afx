@@ -29,6 +29,8 @@
 #include "afx/math/afxMatrix.h"
 #include "afx/math/afxProjectiveMatrix.h"
 #include "afx/math/afxVector.h"
+#include "afx/sim/modeling/afxMeshTopology.h"
+#include "afx/sim/modeling/afxVertexData.h"
 
 _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afxBody bodies[])
 {
@@ -55,7 +57,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                 AfxAssertObjects(1, &msh, afxFcc_MSH);
 
                 afxNat baseVtxIdx = 0, vtxCnt = 0;
-                afxVertexData vtd = AfxGetMeshVertices(msh, &baseVtxIdx, &vtxCnt);
+                afxVertexData vtd = AfxGetMeshVertices(msh);
 
                 AfxBufferizeVertexData(vtd);
                 AfxBindVertexData(vtd, dscr);
@@ -64,17 +66,20 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                 AfxGetMeshTopology(msh, &msht);
 
                 AfxBufferizeMeshTopology(msht);
-                AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.idxSiz);
+                AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
                 
                 //AfxCmdBindPipeline(dscr, 0, rnd->lighting);
                 //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
-                AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
+                //AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
                 //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
-                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
+                AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
                 //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
-                AfxCmdSetCullMode(dscr, afxCullMode_BACK);
-                AfxCmdSwitchFrontFace(dscr, FALSE);
+                //AfxCmdSetCullMode(dscr, afxCullMode_BACK);
+                //AfxCmdSwitchFrontFace(dscr, FALSE);
+
+                //AfxCmdEnableDepthTest(dscr, TRUE);
+                //AfxCmdEnableDepthWrite(dscr, TRUE);
 
                 afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
@@ -87,7 +92,7 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
 
                     if (sec->mtlIdx == AFX_INVALID_INDEX)
                     {
-                        AfxSetColor(mat.Kd, 0.3, 0.3, 0.3, 1.0);
+                        AfxSetColor(mat.Kd, 0.3f, 0.3f, 0.3f, 1.0f);
                         mat.hasDiffTex = FALSE;
                         //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].mtlConstantsBuffer, 0, sizeof(mat), &mat);
                     }
@@ -99,17 +104,17 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                         if (mtl)
                         {
                             AfxAssertObjects(1, &mtl, afxFcc_MTL);
-                            afxTexture tex = mtl->tex;
+                            afxRaster tex = mtl->tex;
 
                             if (tex)
                             {
-                                AfxAssertObjects(1, &tex, afxFcc_TEX);
-                                AfxSetColor(mat.Kd, 0.3, 0.3, 0.3, 1.0);
+                                AfxAssertObjects(1, &tex, afxFcc_RAS);
+                                AfxSetColor(mat.Kd, 0.3f, 0.3f, 0.3f, 1.0f);
                                 mat.hasDiffTex = TRUE;
                             }
                             else
                             {
-                                AfxSetColor(mat.Kd, 0.3, 0.3, 0.3, 1.0);
+                                AfxSetColor(mat.Kd, 0.3f, 0.3f, 0.3f, 1.0f);
                                 mat.hasDiffTex = FALSE;
                             }
 
@@ -126,23 +131,31 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                     //AfxUpdateBodyModelMatrix(bod, 1, AFX_M4D_IDENTITY, m, FALSE);
                     
                     //afxM4d w;
-                    //AfxInvertM4d(w, m);
-                    //AfxM4dFromEuler(w, AfxSpawnV3d(0, AfxRandomReal2(0, 360), 0));
+                    //AfxInverseM4d(w, m);
+                    //AfxRotationM4dFromEuler(w, AfxSpawnV3d(0, AfxRandomReal2(0, 360), 0));
                     AfxGetModelInitialPlacement(mdl, m);
-                    AfxInvertM4d(m2, m);
+                    AfxInverseM4d(m2, m);
                     //AfxComposeTransformWorldM4d(&mdl->init, m2, m);
 
                     AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, w), sizeof(CompositeMatrix), CompositeMatrix);
-                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, m), sizeof(m), m);
+                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(afxInstanceConstants, m), sizeof(m), AFX_M4D_IDENTITY);
+                    
+                    
+                    afxInstanceConstants *objConstants = &rnd->framesets[rnd->frameIdx].objConstants;
+                    
+                    AfxCopyAffineM4d(objConstants->m, AFX_M4D_IDENTITY);
+                    AfxCopyAffineM4d(objConstants->w[0], AFX_M4D_IDENTITY);
+
+                    //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(*objConstants), objConstants);
                     afxNat zeros[] = { 0, 0, 0 };
                     AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
 
                     afxNat idxCnt = (sec->triCnt * 3);
-                    afxNat firstIdx = (sec->firstTriIdx * 3);
-                    //AfxCmdDrawIndexed(dscr, idxCnt, 1, firstIdx, 0, 0);
+                    afxNat firstIdx = (sec->baseTriIdx * 3);
+                    AfxCmdDrawIndexed(dscr, idxCnt, 0, firstIdx, baseVtxIdx, 0);
                     //AfxCmdDraw(dscr, msh->vtxCnt, 1, msh->baseVtx, 0);
                 }
-                AfxCmdDrawIndexed(dscr, msht->vtxIdxCnt, 1, 0, 0, 0);
+                //AfxCmdDrawIndexed(dscr, msht->triCnt *3, 1, 0, 0, 0);
             }
         }
     }
@@ -156,9 +169,9 @@ _AFX afxError AfxDrawTestIndexed(afxDrawScript dscr, afxRenderer rnd)
     AfxCmdBindVertexSources(dscr, 0, 1, (afxBuffer[]) { rnd->testVbo }, NIL, NIL);
     AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
     AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
-    AfxCmdBindIndexSource(dscr, rnd->testIbo, 0, sizeof(afxNat32));
-    //AfxCmdDrawIndexed(dscr, 6, 1, 0, 0, 0);
-    AfxCmdDraw(dscr, 6, 1, 0, 0);
+    AfxCmdBindIndexSource(dscr, rnd->testIbo, 0, sizeof(afxNat32) * 6, sizeof(afxNat32));
+    AfxCmdDrawIndexed(dscr, 6, 1, 0, 0, 0);
+    //AfxCmdDraw(dscr, 6, 1, 0, 0);
     return 0;
 }
 
@@ -186,7 +199,7 @@ _AFX afxError AfxEndSceneRendering(afxDrawScript dscr, afxRenderer rnd)
     return err;
 }
 
-_AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf)
+_AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxRaster surf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -205,7 +218,7 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
     else if (surf)
     {
         afxWhd whd;
-        AfxGetTextureExtent(surf, 0, whd);
+        AfxGetRasterExtent(surf, 0, whd);
         rnd->drawArea.extent[0] = whd[0];
         rnd->drawArea.extent[1] = whd[1];
 
@@ -217,18 +230,18 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
 
 #if 0
     afxWhd depthWhd;
-    AfxGetTextureExtent(rnd->framesets[frameIdx].depthSurf, 0, depthWhd);
+    AfxGetRasterExtent(rnd->framesets[frameIdx].depthSurf, 0, depthWhd);
 
     if (depthWhd[0] != whd[0] || depthWhd[1] != whd[1])
     {
         afxTextureBlueprint depthSurfB;
-        AfxAcquireTextureBlueprint(&depthSurfB, whd, AFX_PFD_D24, afxTextureFlag_DRAW);
+        AfxAcquireTextureBlueprint(&depthSurfB, whd, AFX_PFD_D24, afxRasterFlag_DRAW);
         AfxTextureBlueprintAddImage(&depthSurfB, AFX_PFD_D24, whd, NIL, 0);
 
         for (afxNat i = 0; i < rnd->frameCnt; i++)
         {
             AfxReleaseObjects(1, (void*[]) { rnd->framesets[i].depthSurf });
-            AfxBuildTextures(rnd->cachedDctx, 1, &rnd->framesets[i].depthSurf, &depthSurfB);
+            AfxBuildRasters(rnd->cachedDctx, 1, &rnd->framesets[i].depthSurf, &depthSurfB);
             AfxAssert(rnd->framesets[i].depthSurf != surf);
         }
 
@@ -236,17 +249,31 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
     }
 #endif
             
-    afxDrawTarget rdt;
+    afxDrawTarget rdt = { 0 };
     rdt.tex = surf;
-    rdt.clearValue.color[0] = 0.1;
-    rdt.clearValue.color[1] = 0.1;
-    rdt.clearValue.color[2] = 0.1;
+    rdt.clearValue.color[0] = 0.1f;
+    rdt.clearValue.color[1] = 0.1f;
+    rdt.clearValue.color[2] = 0.1f;
     rdt.clearValue.color[3] = 1;
     rdt.loadOp = afxSurfaceLoadOp_CLEAR;
     rdt.storeOp = afxSurfaceStoreOp_STORE;
 
-    afxDrawTarget ddt;
-    ddt.tex = NIL;// rnd->framesets[frameIdx].depthSurf;
+    if (!(rnd->framesets[frameIdx].depthSurf))
+    {
+        afxRasterInfo texi = { 0 };
+        texi.fmt = AFX_PFD_D32F;
+        texi.layerCnt = 1;
+        texi.lodCnt = 1;
+        texi.sampleCnt = 1;
+        texi.usage = afxRasterFlag_DRAW;
+        texi.whd[0] = rnd->drawArea.extent[0];
+        texi.whd[1] = rnd->drawArea.extent[1];
+        texi.whd[2] = 1;
+        AfxAcquireRasters(rnd->cachedDctx, 1, &texi, &rnd->framesets[frameIdx].depthSurf);
+    }
+
+    afxDrawTarget ddt = { 0 };
+    ddt.tex = rnd->framesets[frameIdx].depthSurf;
     ddt.clearValue.depth = 1.0;
     ddt.clearValue.stencil = 0;
     ddt.loadOp = afxSurfaceLoadOp_CLEAR;
@@ -379,7 +406,7 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
     rnd->frameIdx = 0;
 
     //AfxZero(rnd->canv, sizeof(rnd->canv));
-    AfxZero(rnd->framesets, sizeof(rnd->framesets));
+    AfxZero(1, sizeof(rnd->framesets), rnd->framesets);
 
     // acquire and set up our dedicated draw input device.
     {
@@ -452,16 +479,16 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
             { sizeof(afxInstanceConstants), afxBufferUsage_UNIFORM, NIL }
         };
 #if 0
-        afxTextureInfo texiDepthSurfB = { 0 };
+        afxRasterInfo texiDepthSurfB = { 0 };
         texiDepthSurfB.e
         afxTextureBlueprint depthSurfB;
-        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, AFX_PFD_D24, afxTextureFlag_DRAW);
+        AfxAcquireTextureBlueprint(&depthSurfB, (afxWhd) {1024, 1024, 1 }, AFX_PFD_D24, afxRasterFlag_DRAW);
         AfxTextureBlueprintAddImage(&depthSurfB, AFX_PFD_D24, (afxWhd) { 1, 1, 1 }, NIL, 0);
 #endif
 
         for (afxNat i = 0; i < rnd->frameCnt; i++)
         {
-            //AfxBuildTextures(dctx, 1, &rnd->framesets[i].depthSurf, &depthSurfB);
+            //AfxBuildRasters(dctx, 1, &rnd->framesets[i].depthSurf, &depthSurfB);
 
             AfxAcquireBuffers(dctx, 1, &rnd->framesets[i].viewConstantsBuffer, &bufSpec[0]);
             AfxAcquireBuffers(dctx, 1, &rnd->framesets[i].shdConstantsBuffer, &bufSpec[1]);
@@ -473,7 +500,6 @@ _AFX afxError _AfxRndCtor(afxRenderer rnd, afxCookie const *cookie)
     }
 
     {
-        afxUri uri;
         AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?rigid", 0);
         rnd->rigidBodyPip = AfxLoadPipelineFromXsh(dctx, &uri);
         AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?skinned", 0);

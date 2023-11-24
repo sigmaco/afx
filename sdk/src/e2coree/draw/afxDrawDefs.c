@@ -116,10 +116,13 @@ afxChar const *fmtNames[] =
 _AFX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
 {
     AFX_STRING(""),
-    AFX_STRING("REAL"),
-    AFX_STRING("V2D"),
-    AFX_STRING("V3D"),
-    AFX_STRING("V4D"),
+    AFX_STRING("float"),
+    AFX_STRING("vec2"),
+    AFX_STRING("vec3"),
+    AFX_STRING("vec4"),
+    AFX_STRING("mat2"),
+    AFX_STRING("mat3"),
+    AFX_STRING("mat4"),
 
     //AFX_STRING("V4B"),
     //AFX_STRING("v8B"),

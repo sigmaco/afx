@@ -30,7 +30,7 @@
 #define _AFX_BUFFER_C
 #define _AFX_INDEX_BUFFER_C
 #define _AFX_VERTEX_BUFFER_C
-#define _AFX_TEXTURE_C
+#define _AFX_RASTER_C
 #define _AFX_SURFACE_C
 #define _AFX_PIPELINE_C
 #define _AFX_PIPELINE_RIG_C
@@ -100,13 +100,13 @@ _AFX afxNat AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, 
     return AfxEnumerateInstances(&dctx->surfaces, first, cnt, (afxHandle*)surf);
 }
 
-_AFX afxNat AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[])
+_AFX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster ras[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(tex);
+    AfxAssert(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    return AfxEnumerateInstances(&dctx->textures, first, cnt, (afxHandle*)tex);
+    return AfxEnumerateInstances(&dctx->rasters, first, cnt, (afxHandle*)ras);
 }
 
 _AFX afxNat AfxCountConnectedDrawInputs(afxDrawContext dctx)

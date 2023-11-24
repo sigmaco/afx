@@ -19,17 +19,17 @@
 _AFXINL afxBool AfxIsGreaterThanEpsilon(afxReal value) // if not, it is less or equal
 {
     return (value <= AFX_EPSILON);
-};
+}
 
 _AFXINL afxBool AfxIsNan(afxReal value)
 {
     return isnan(value);
-};
+}
 
 _AFXINL afxBool AfxIsInfinite(afxReal value)
 {
     return isinf(value);
-};
+}
 
 _AFXINL afxBool AfxRealIsEquivalent(afxReal a, afxReal b)
 {
@@ -113,10 +113,10 @@ _AFXINL afxReal AfxCos(afxReal radians)
 
 // A combined cosine and sine function
 
-_AFXINL void AfxCosSin(afxReal radians, afxReal cosSin[2])
+_AFXINL void AfxCosSin(afxReal radians, afxReal* cos, afxReal* sin)
 {
-    cosSin[0] = AfxCos(radians);
-    cosSin[1] = AfxSin(radians);
+    *cos = AfxCos(radians);
+    *sin = AfxSin(radians);
 }
 
 // The standard trigonometric tangent function.

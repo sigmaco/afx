@@ -25,6 +25,7 @@
 /// Um ator seria um modelo, assim seria um veículo, ou mesmo uma edificação inteira se essa fossa modelada como uma hierarquia singular.
 /// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
+#ifdef _AFX_MODEL_C
 AFX_DEFINE_STRUCT(afxMeshSlot)
 {
     afxMesh             msh;
@@ -33,10 +34,9 @@ AFX_DEFINE_STRUCT(afxMeshSlot)
     afxSkeleton         srcSkl;
 };
 
-#ifdef _AFX_MODEL_C
 AFX_OBJECT(afxModel)
 {
-    afxUri              id; // 128
+    afxString           id; // 128
     afxSkeleton         skl;
     afxTransform        init;
     afxAabb             aabb;
@@ -45,7 +45,7 @@ AFX_OBJECT(afxModel)
 };
 #endif
 
-AFX afxUri const*       AfxGetModelId(afxModel mdl);
+AFX afxString const*    AfxGetModelId(afxModel mdl);
 
 AFX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
 AFX void                AfxRelinkModelSkeleton(afxModel mdl, afxSkeleton skl);
@@ -70,7 +70,16 @@ AFX void                AfxBuildAttachedMeshMatrixArray(afxModel mdl, afxNat slo
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxModel            AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
+AFX_DEFINE_STRUCT(afxModelAssembler)
+{
+    afxString       id;
+    afxSkeleton     skl;
+    afxTransform    init;
+    afxNat          mshCnt;
+    afxMesh*        meshes;
+};
+
+AFX afxModel            AfxAssembleModel(afxSimulation sim, afxString const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[]);
 
 AFX void                AfxTransformModels(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxModel mdl[]);
 

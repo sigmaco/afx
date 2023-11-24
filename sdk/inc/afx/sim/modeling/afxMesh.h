@@ -17,8 +17,15 @@
 #ifndef AFX_MESH_H
 #define AFX_MESH_H
 
-#include "afxMeshTopology.h"
-#include "afxVertexData.h"
+#include "afx/sim/afxSimDefs.h"
+#include "afx/core/afxArray.h"
+#include "afx/math/afxAabb.h"
+#include "afx/core/afxInstance.h"
+#include "afx/sim/afxMaterial.h"
+#include "afx/sim/afxSkeleton.h"
+#include "afx/core/afxUrd.h"
+#include "afx/math/afxVertex.h"
+#include "afx/sim/modeling/afxMeshTopology.h"
 
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
 /// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshVertebra's.
@@ -44,7 +51,7 @@
 
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxString           id; // 16
     afxVertexData       vtd;
     afxNat              baseVtxIdx;
@@ -54,11 +61,11 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 
 AFX_DEFINE_STRUCT(afxMeshVertebra)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxString16         id; // 16
     afxAabb             aabb; // originally oobb;
     afxNat              triCnt;
-    afxNat*             triIdx; // indices to vertices
+    afxNat*             tris; // indices to vertices
 };
 
 AFX_DEFINE_STRUCT(afxMaterialSlot)
@@ -66,14 +73,12 @@ AFX_DEFINE_STRUCT(afxMaterialSlot)
     afxMaterial         mtl;
 };
 
-AFX_OBJECT(afxMesh)
 #ifdef _AFX_MESH_C
+AFX_OBJECT(afxMesh)
 {
-    afxUri              id; // 128
+    afxString           id; // 128
 
     afxVertexData       vtd;
-    afxNat              baseVtxIdx; // when vtd is shared with other meshes or morphes it may not be 0. Maybe that index buffer already does this?
-    afxNat              vtxCnt;
 
     afxNat              morphCnt;
     afxMeshMorph*       morphs;
@@ -86,12 +91,11 @@ AFX_OBJECT(afxMesh)
     afxNat              vertebraCnt;
     afxMeshVertebra*    vertebras;
     void*               extData;
-}
+};
 #endif
-;
 
-AFX afxUri const*       AfxGetMeshId(afxMesh msh);
-AFX afxVertexData       AfxGetMeshVertices(afxMesh msh, afxNat* baseVtxIdx, afxNat* vtxCnt);
+AFX afxString const*    AfxGetMeshId(afxMesh msh);
+AFX afxVertexData       AfxGetMeshVertices(afxMesh msh);
 AFX afxNat              AfxCountMeshVertices(afxMesh msh);
 
 AFX afxNat              AfxCountMeshMorphes(afxMesh msh);
@@ -105,7 +109,7 @@ AFX void                AfxSetMeshMaterial(afxMesh msh, afxNat mtlIdx, afxMateri
 AFX afxBool             AfxGetMeshMaterial(afxMesh msh, afxNat mtlIdx, afxMaterial* mtl);
 AFX afxBool             AfxFindMeshMaterial(afxMesh msh, afxUri const *id, afxMaterial* mtl);
 
-AFX afxBool             AfxMeshIsRigid(afxMesh msh);
+AFX afxBool             AfxMeshIsDeformable(afxMesh msh);
 AFX afxNat              AfxCountMeshVertebras(afxMesh msh);
 AFX afxMeshVertebra*    AfxGetMeshVertebra(afxMesh msh, afxNat artIdx);
 
@@ -113,8 +117,10 @@ AFX afxMeshVertebra*    AfxGetMeshVertebra(afxMesh msh, afxNat artIdx);
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxBuildMeshes(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxMesh msh[]);
+AFX afxMesh             AfxAssembleMesh(afxSimulation sim, afxVertexData vtd, afxNat baseVtxIdx, afxNat vtxCnt, afxMeshTopology msht, afxNat baseSurfIdx, afxNat surfCnt, afxString const pivots[]);
 
-AFX void                AfxTransformMeshes(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxReal atTol, afxReal ltTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
+AFX afxError            AfxBuildMeshes(afxSimulation sim, afxNat cnt, afxMeshBuilder const mshb[], afxMesh msh[]);
+
+AFX void                AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
 
 #endif//AFX_MESH_H

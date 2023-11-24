@@ -137,10 +137,10 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == afxFcc_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxSpawnHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[AFXERR_INVALID]),0))
+#   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == afxFcc_OBJC)))||(err = (afxError)__LINE__,AfxLogError(AfxHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[AFXERR_INVALID]),0))
 
-#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AFX_STRINGIFY((obj_))));
-#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxSpawnHint(), AFX_STRINGIFY((obj_))))));
+#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxHint(), AFX_STRINGIFY((obj_))));
+#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxHandle)obj_), (fcc_), AfxHint(), AFX_STRINGIFY((obj_))))));
 
 #else
 
@@ -155,7 +155,7 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 typedef struct
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxSize     data[2];
     afxNat      refCnt;
     afxFlags    flags;
@@ -203,13 +203,13 @@ AFX_DEFINE_STRUCT(afxAggregator)
     afxError    (*drop)(afxNat, afxHandle[], afxAggregator*, void*);
 };
 
-AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxHandle obj[], void** udd);
+AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxHandle obj[], void const*const* udd);
 AFX afxError    AfxReacquireObjects(afxNat cnt, afxHandle obj[]);
 AFX afxBool     AfxReleaseObjects(afxNat cnt, void* obj[]);
 
 AFX afxResult   _AfxAssertObjects(afxNat cnt, afxHandle const obj[], afxFcc fcc);
-#define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_)));
-#define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxHandle const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_))));
+#define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_)))
+#define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxHandle const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxHandle const*)(objs_),(fcc_))))
 
 AFX afxNat      AfxIdentifyObject(afxHandle obj);
 

@@ -149,6 +149,7 @@ _SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, 
                 AfxAssert(buf->glUsage == usage);
 
                 gl->BindBuffer(buf->glTarget, buf->glHandle); _SglThrowErrorOccuried();
+                AfxAssertRange(buf->base.siz, buf->lastUpdOffset, buf->lastUpdRange);
                 gl->BufferSubData(buf->glTarget, buf->lastUpdOffset, buf->lastUpdRange, &(buf->base.bytemap[buf->lastUpdOffset])); _SglThrowErrorOccuried();
                 buf->updFlags &= ~(SGL_UPD_FLAG_DEVICE_FLUSH);
             }
@@ -269,8 +270,14 @@ _SGL void* _SglMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFl
     void *map = &(buf->base.bytemap[offset]);
 
     ++buf->locked;
-    buf->lastUpdOffset = offset;
-    buf->lastUpdRange = range;
+
+    if (buf->lastUpdOffset > offset)
+        buf->lastUpdOffset = offset;
+
+    if (buf->lastUpdOffset + buf->lastUpdRange < offset + range)
+        buf->lastUpdRange = offset + range;
+
+    AfxAssertRange(buf->base.siz, buf->lastUpdOffset, buf->lastUpdRange);
 
     if (flags & AFX_BUF_MAP_W)
         buf->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
@@ -330,11 +337,11 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, afxFcc_CTX);
 
-    if (!(buf->base.bytemap = AfxAllocate(mem, buf->base.siz, 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(buf->base.bytemap = AfxAllocate(mem, sizeof(afxByte), buf->base.siz, 0, AfxHint()))) AfxThrowError();
     else
     {
         if (spec->src)
-            AfxCopy(buf->base.bytemap, spec->src, buf->base.siz);
+            AfxCopy(1, buf->base.siz, spec->src, buf->base.bytemap);
 
         buf->lastUpdOffset = 0;
         buf->lastUpdRange = buf->base.siz;

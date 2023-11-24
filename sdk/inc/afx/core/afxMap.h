@@ -21,7 +21,7 @@
 
 AFX_DEFINE_STRUCT(afxMap)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxNat      unitsPerPage;
     afxNat      keyUnitSiz;
     afxNat      valUnitSiz;

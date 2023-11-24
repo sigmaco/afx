@@ -32,7 +32,7 @@ enum
 
 AFX_DEFINE_STRUCT(afxString)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxNat16                range;
     afxNat16                flags; // 0 = dynamic, 1 = remote source, 2 = string source
     struct
@@ -150,11 +150,11 @@ AFX afxError            AfxGetStringAsReal(afxString const *str, afxReal *value)
 
 AFX afxString const     AFX_STR_EMPTY;
 
-//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
-//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxSpawnHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
+//#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
+//#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
 
-#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxSpawnHint(), AFX_STRINGIFY((str_))));
-#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxSpawnHint(), AFX_STRINGIFY((str_)))));
+#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_))));
+#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_)))));
 
 AFXINL afxError _AfxStringAssert(afxString const *str_, afxHint const hint_, afxChar const *exp_)
 {

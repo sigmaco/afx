@@ -20,8 +20,11 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 
-#include "../src/e2coree/deps/gl/glcorearb.h"
-#include "../src/e2coree/deps/gl/wglext.h"
+//#include "../src/e2coree/deps/gl/glcorearb.h"
+//#include "../src/e2coree/deps/gl/wglext.h"
+
+#include "../src/e2coree/deps/gl/glad.h"
+#include "../src/e2coree/deps/gl/glad_wgl.h"
 
 #define _AFX_DRAW_C
 
@@ -117,7 +120,7 @@ AFX_DEFINE_UNION(sglLegoData) // A GPUBindGroupEntry describes a single resource
     struct
     {
         afxSampler          smp;
-        afxTexture          tex;
+        afxRaster          tex;
     };
 };
 
@@ -147,6 +150,7 @@ AFX_DEFINE_STRUCT(sglVertexInput)
 
     afxBuffer           idxSrcBuf;
     afxNat32            idxSrcOff;
+    afxNat32            idxSrcRange;
     afxNat32            idxSrcSiz;
     GLuint              vao;
 };
@@ -246,6 +250,8 @@ typedef struct
         afxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
 
 
+        afxNat              areaCnt; /// 0
+        afxRect             areaRects[SGL_MAX_VIEWPORTS];
         afxNat              scisCnt; /// 0
         afxRect             scisRects[SGL_MAX_VIEWPORTS];
 
@@ -271,7 +277,7 @@ typedef struct
         struct
         {
             afxSampler      smp;
-            afxTexture      tex;
+            afxRaster      tex;
         };
     }                       activeResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO], nextResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
     afxMask                 nextResBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
@@ -290,6 +296,8 @@ typedef struct
     afxNat                  nextViewportUpdCnt;
     afxMask                 nextScissorUpdMask;
     afxNat                  nextScissorUpdCnt;
+    afxMask                 nextAreaUpdMask;
+    afxNat                  nextAreaUpdCnt;
     afxBool                 scissorTestEnabled;
 
     afxBool                 flushPip, flushPass, flushSr, flushIbb;
@@ -329,10 +337,10 @@ AFX_OBJECT(afxDrawContext)
     struct afxBaseDrawContext base;
     // presentation stuff, only on unit 0.
     afxBool presentationSuspended;
-    GLuint presentFboGpuHandle;
+    //GLuint presentFboGpuHandle;
     afxPipeline presentPip;
     afxSampler presentSmp;
-    afxBuffer tristrippedQuad2dPosBuf;
+    //afxBuffer tristrippedQuad2dPosBuf;
 };
 
 AFX_OBJECT(afxDrawQueue)
@@ -368,9 +376,9 @@ AFX_OBJECT(afxDrawInput)
 
 AFX_DEFINE_STRUCT(_afxDscrCmd)
 {
+    afxLinkage          script;
     afxNat              id;
     afxNat              siz;
-    afxLinkage          script;
 };
 
 AFX_OBJECT(afxPipeline)
@@ -425,9 +433,9 @@ AFX_OBJECT(afxBuffer)
     afxBool         locked;
 };
 
-AFX_OBJECT(afxTexture)
+AFX_OBJECT(afxRaster)
 {
-    struct afxBaseTexture base;
+    struct afxBaseRaster base;
     sglUpdateFlags  updFlags;
     GLuint          glHandle;
     GLuint          glHandleAux; // for draw buffers
@@ -519,51 +527,53 @@ typedef struct _DrawPipelineResource
 
 typedef enum afxDrawCmdId
 {
-    AFX_DCMD_END = offsetof(afxCmd, EndOfScript) / 4,
-    AFX_DCMD_EXECUTE_COMMANDS = offsetof(afxCmd, ExecuteCommands) / 4,
-    AFX_DCMD_BEGIN_CANVAS = offsetof(afxCmd, BeginCanvas) / 4,
-    AFX_DCMD_NEXT_PASS = offsetof(afxCmd, NextPass) / 4,
-    AFX_DCMD_END_CANVAS = offsetof(afxCmd, EndCanvas) / 4,
+    AFX_DCMD_END = offsetof(afxCmd, EndOfScript) / sizeof(void*),
+    AFX_DCMD_EXECUTE_COMMANDS = offsetof(afxCmd, ExecuteCommands) / sizeof(void*),
+    AFX_DCMD_BEGIN_CANVAS = offsetof(afxCmd, BeginCanvas) / sizeof(void*),
+    AFX_DCMD_NEXT_PASS = offsetof(afxCmd, NextPass) / sizeof(void*),
+    AFX_DCMD_END_CANVAS = offsetof(afxCmd, EndCanvas) / sizeof(void*),
     
-    AFX_DCMD_BIND_BUFFERS = offsetof(afxCmd, BindBuffers) / 4,
-    AFX_DCMD_BIND_TEXTURES = offsetof(afxCmd, BindTextures) / 4,
+    AFX_DCMD_BIND_BUFFERS = offsetof(afxCmd, BindBuffers) / sizeof(void*),
+    AFX_DCMD_BIND_TEXTURES = offsetof(afxCmd, BindTextures) / sizeof(void*),
     
-    AFX_DCMD_BIND_PIPELINE = offsetof(afxCmd, BindPipeline) / 4,
+    AFX_DCMD_BIND_PIPELINE = offsetof(afxCmd, BindPipeline) / sizeof(void*),
 
-    AFX_DCMD_UPDATE_VIEWPORTS = offsetof(afxCmd, UpdateViewports) / 4,
-    AFX_DCMD_RESET_VIEWPORTS = offsetof(afxCmd, ResetViewports) / 4,    
-    AFX_DCMD_UPDATE_SCISSORS = offsetof(afxCmd, UpdateScissors) / 4,
-    AFX_DCMD_RESET_SCISSORS = offsetof(afxCmd, ResetScissors) / 4,
+    AFX_DCMD_READJUST_VIEWPORTS = offsetof(afxCmd, ReadjustViewports) / sizeof(void*),
+    AFX_DCMD_RESET_VIEWPORTS = offsetof(afxCmd, ResetViewports) / sizeof(void*),    
+    AFX_DCMD_READJUST_SCISSORS = offsetof(afxCmd, ReadjustScissors) / sizeof(void*),
+    AFX_DCMD_RESET_SCISSORS = offsetof(afxCmd, ResetScissors) / sizeof(void*),
+    AFX_DCMD_READJUST_AREAS = offsetof(afxCmd, ReadjustAreas) / sizeof(void*),
+    AFX_DCMD_RESET_AREAS = offsetof(afxCmd, ResetAreas) / sizeof(void*),
 
-    AFX_DCMD_BIND_VERTEX_SOURCES = offsetof(afxCmd, BindVertexSources) / 4,
-    AFX_DCMD_RESET_VERTEX_STREAMS = offsetof(afxCmd, ResetVertexStreams) / 4,
-    AFX_DCMD_RESET_VERTEX_ATTRIBUTES = offsetof(afxCmd, ResetVertexAttributes) / 4,
-    AFX_DCMD_BIND_INDEX_SOURCE = offsetof(afxCmd, BindIndexSource) / 4,
-    AFX_DCMD_SET_PRIMITIVE_TOPOLOGY = offsetof(afxCmd, SetPrimitiveTopology) / 4,
+    AFX_DCMD_BIND_VERTEX_SOURCES = offsetof(afxCmd, BindVertexSources) / sizeof(void*),
+    AFX_DCMD_RESET_VERTEX_STREAMS = offsetof(afxCmd, ResetVertexStreams) / sizeof(void*),
+    AFX_DCMD_RESET_VERTEX_ATTRIBUTES = offsetof(afxCmd, ResetVertexAttributes) / sizeof(void*),
+    AFX_DCMD_BIND_INDEX_SOURCE = offsetof(afxCmd, BindIndexSource) / sizeof(void*),
+    AFX_DCMD_SET_PRIMITIVE_TOPOLOGY = offsetof(afxCmd, SetPrimitiveTopology) / sizeof(void*),
     
-    AFX_DCMD_DRAW = offsetof(afxCmd, Draw) / 4,
-    AFX_DCMD_DRAW_INDEXED = offsetof(afxCmd, DrawIndexed) / 4,
+    AFX_DCMD_DRAW = offsetof(afxCmd, Draw) / sizeof(void*),
+    AFX_DCMD_DRAW_INDEXED = offsetof(afxCmd, DrawIndexed) / sizeof(void*),
 
-    AFX_DCMD_DISABLE_RASTERIZATION = offsetof(afxCmd, DisableRasterization) / 4,
-    AFX_DCMD_SWITCH_FRONT_FACE = offsetof(afxCmd, SwitchFrontFace) / 4,
-    AFX_DCMD_SET_CULL_MODE = offsetof(afxCmd, SetCullMode) / 4,
-    AFX_DCMD_ENABLE_DEPTH_BIAS = offsetof(afxCmd, EnableDepthBias) / 4,
-    AFX_DCMD_SET_DEPTH_BIAS = offsetof(afxCmd, SetDepthBias) / 4,
-    AFX_DCMD_SET_LINE_WIDTH = offsetof(afxCmd, SetLineWidth) / 4,
+    AFX_DCMD_DISABLE_RASTERIZATION = offsetof(afxCmd, DisableRasterization) / sizeof(void*),
+    AFX_DCMD_SWITCH_FRONT_FACE = offsetof(afxCmd, SwitchFrontFace) / sizeof(void*),
+    AFX_DCMD_SET_CULL_MODE = offsetof(afxCmd, SetCullMode) / sizeof(void*),
+    AFX_DCMD_ENABLE_DEPTH_BIAS = offsetof(afxCmd, EnableDepthBias) / sizeof(void*),
+    AFX_DCMD_SET_DEPTH_BIAS = offsetof(afxCmd, SetDepthBias) / sizeof(void*),
+    AFX_DCMD_SET_LINE_WIDTH = offsetof(afxCmd, SetLineWidth) / sizeof(void*),
 
-    AFX_DCMD_ENABLE_DEPTH_BOUNDS_TEST = offsetof(afxCmd, EnableDepthBoundsTest) / 4,
-    AFX_DCMD_SET_DEPTH_BOUNDS = offsetof(afxCmd, SetDepthBounds) / 4,
-    AFX_DCMD_ENABLE_STENCIL_TEST = offsetof(afxCmd, EnableStencilTest) / 4,
-    AFX_DCMD_SET_STENCIL_COMPARE_MASK = offsetof(afxCmd, SetStencilCompareMask) / 4,
-    AFX_DCMD_SET_STENCIL_WRITE_MASK = offsetof(afxCmd, SetStencilWriteMask) / 4,
-    AFX_DCMD_SET_STENCIL_REFERENCE = offsetof(afxCmd, SetStencilReference) / 4,
-    AFX_DCMD_ENABLE_DEPTH_TEST = offsetof(afxCmd, EnableDepthTest) / 4,
-    AFX_DCMD_SET_DEPTH_COMPARE_OP = offsetof(afxCmd, SetDepthCompareOp) / 4,
-    AFX_DCMD_ENABLE_DEPTH_WRITE = offsetof(afxCmd, EnableDepthWrite) / 4,
+    AFX_DCMD_ENABLE_DEPTH_BOUNDS_TEST = offsetof(afxCmd, EnableDepthBoundsTest) / sizeof(void*),
+    AFX_DCMD_SET_DEPTH_BOUNDS = offsetof(afxCmd, SetDepthBounds) / sizeof(void*),
+    AFX_DCMD_ENABLE_STENCIL_TEST = offsetof(afxCmd, EnableStencilTest) / sizeof(void*),
+    AFX_DCMD_SET_STENCIL_COMPARE_MASK = offsetof(afxCmd, SetStencilCompareMask) / sizeof(void*),
+    AFX_DCMD_SET_STENCIL_WRITE_MASK = offsetof(afxCmd, SetStencilWriteMask) / sizeof(void*),
+    AFX_DCMD_SET_STENCIL_REFERENCE = offsetof(afxCmd, SetStencilReference) / sizeof(void*),
+    AFX_DCMD_ENABLE_DEPTH_TEST = offsetof(afxCmd, EnableDepthTest) / sizeof(void*),
+    AFX_DCMD_SET_DEPTH_COMPARE_OP = offsetof(afxCmd, SetDepthCompareOp) / sizeof(void*),
+    AFX_DCMD_ENABLE_DEPTH_WRITE = offsetof(afxCmd, EnableDepthWrite) / sizeof(void*),
     
-    AFX_DCMD_SET_BLEND_CONSTANTS = offsetof(afxCmd, SetBlendConstants) / 4,
+    AFX_DCMD_SET_BLEND_CONSTANTS = offsetof(afxCmd, SetBlendConstants) / sizeof(void*),
 
-    AFX_DCMD_TOTAL = offsetof(afxCmd, Total) / 4,
+    AFX_DCMD_TOTAL = offsetof(afxCmd, Total) / sizeof(void*),
 } afxDrawCmdId;
 
 
@@ -607,7 +617,7 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBindTextures)
     afxNat32                        set;
     afxNat32                        first, cnt;
     afxSampler                      smp[_SGL_MAX_ENTRY_PER_LEGO];
-    afxTexture                      tex[_SGL_MAX_ENTRY_PER_LEGO];
+    afxRaster                      tex[_SGL_MAX_ENTRY_PER_LEGO];
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdBindBuffers)
@@ -655,7 +665,8 @@ AFX_DEFINE_STRUCT(_afxDscrCmdBufferRange)
     _afxDscrCmd                     cmd;
     afxBuffer                       buf;
     afxNat32                        offset;
-    afxNat32                        idxSiz;
+    afxNat32                        range;
+    afxNat32                        stride;
 };
 
 AFX_DEFINE_STRUCT(_afxDscrCmdPipeline)
@@ -716,6 +727,15 @@ AFX_DEFINE_STRUCT(_afxDscrCmdScissor)
     afxBool                         reset;
 };
 
+AFX_DEFINE_STRUCT(_afxDscrCmdArea)
+{
+    _afxDscrCmd                     cmd;
+    afxBool                         exclusive;
+    afxNat32                        first, cnt;
+    afxRect                         rect[SGL_MAX_VIEWPORTS];
+    afxBool                         reset;
+};
+
 AFX_DEFINE_STRUCT(_afxDscrCmdViewport)
 {
     _afxDscrCmd                     cmd;
@@ -740,10 +760,10 @@ AFX_DEFINE_STRUCT(_afxDscrCmdExecCmds)
 AFX_DEFINE_STRUCT(_afxDscrCmdCopyTex)
 {
     _afxDscrCmd                     cmd;
-    afxTexture                      dst;
-    afxTexture                      src;
+    afxRaster                      dst;
+    afxRaster                      src;
     afxNat32                        rgnCnt;
-    afxTextureRegion                rgn[16];
+    afxRasterRegion                rgn[16];
 };
 // vkCmdBindDescriptorSets - Binds descriptor sets to a command buffer
 
@@ -757,14 +777,14 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, afxNat unit, afxSampler smp, glVmt const* gl);
 SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
 SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
-SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxTexture tex, glVmt const* gl);
+SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxRaster tex, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bindPip, afxBool bindVao, afxBool bindRas);
-SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer ras);
+SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer rast);
 SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, afxPipeline pip, afxNat unit, afxPipelineRig legt, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxCanvas canv, GLenum target, glVmt const* gl);
 SGL afxError _SglDpuBindAndSyncBuf(sglDpuIdd* dpu, afxNat unit, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum target, GLenum usage, glVmt const* gl);
 
-//SGL afxSize _AfxMeasureTextureRegion(afxTexture tex, afxTextureRegion const *rgn);
+//SGL afxSize _AfxMeasureTextureRegion(afxRaster tex, afxRasterRegion const *rgn);
 
 SGL BOOL SglMakeCurrent(HDC hdc, HGLRC hrc, sglDpuIdd const *dpu);
 SGL afxError SglSwapBuffers(HDC hdc, sglDpuIdd const *dpu);

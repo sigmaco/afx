@@ -41,7 +41,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
         }
     }
 
-    AfxZero(dscr->levelCaches, sizeof(dscr->levelCaches[0]));
+    AfxZero(1, sizeof(dscr->levelCaches[0]), dscr->levelCaches);
 
 #if 0
     while (1)
@@ -123,7 +123,7 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
 
     //AfxAssert(!dscr->base.idd);
 
-    AfxReleaseArena(&dscr->base.cmdArena);
+    AfxDeallocateArena(&dscr->base.cmdArena);
 
     return err;
 }
@@ -147,7 +147,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
 
     dscr->base.submRefCnt = 0;
     dscr->base.portIdx = portIdx;
-    AfxAcquireArena(ctx, &dscr->base.cmdArena, NIL, AfxSpawnHint());
+    AfxAllocateArena(ctx, &dscr->base.cmdArena, NIL, AfxHint());
 
     dscr->base.din = din;
 
@@ -174,7 +174,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     }
 
     if (err)
-        AfxReleaseArena(&dscr->base.cmdArena);
+        AfxDeallocateArena(&dscr->base.cmdArena);
 
     return err;
 }

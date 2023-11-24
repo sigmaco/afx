@@ -6,9 +6,9 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D' stream='0'>aPos</In>
-        <In location='3' format='V3D' stream='1'>aNormal</In>
-        <In location='6' format='V2D' stream='1'>aUv</In>
+        <In location='0' stream='0'>vec4 aPos</In>
+        <In location='3' stream='1'>vec3 aNormal</In>
+        <In location='6' stream='1'>vec2 aUv</In>
         <![CDATA[
         
         layout (location = 0) in vec4 aPos;
@@ -40,16 +40,16 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D' stream='0'>aPos</In>
-        <In location='3' format='V3D' stream='1'>aNormal</In>
-        <In location='6' format='V2D' stream='1'>aUv</In>
-        <In location='1' format='V4D' stream='0'>aBlendIndices</In>
-        <In location='2' format='V4D' stream='0'>aBlendWeights</In>
+        <In location='0' stream='0'>vec4 aPos</In>
+        <In location='3' stream='1'>vec3 aNormal</In>
+        <In location='6' stream='1'>vec2 aUv</In>
+        <In location='1' stream='0'>vec4 aBlendIndices</In>
+        <In location='2' stream='0'>vec4 aBlendWeights</In>
         <![CDATA[
         
         layout (location = 0) in vec4 aPos;
         layout (location = 3) in vec3 aNormal;
-        layout (location = 5) in vec2 aUv;
+        layout (location = 6) in vec2 aUv;
         layout (location = 1) in vec4 aBlendIndices;
         layout (location = 2) in vec4 aBlendWeights;
 
@@ -95,7 +95,7 @@
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='2' type='CONSTANT_BUFFER'>sgl_mtl</Resource>
         <Resource set='2' binding='1' type='COMBINED_IMAGE_SAMPLER'>diffuse_sampler</Resource>
-        <Out location='0' format='V4D'>FragColor</Out>
+        <Out location='0'>vec4 FragColor</Out>
         <![CDATA[
         
         uniform sampler2D diffuse_sampler;
