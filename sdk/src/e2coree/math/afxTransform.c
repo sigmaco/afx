@@ -77,11 +77,11 @@ _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTra
     AfxMultiplyM3d(Temp, a->scaleShear, tmp);
     AfxMultiplyTransposedM3d(t->scaleShear, OrientationB, Temp);
     
-    AfxPostMultiplyV3d(t->position, a->scaleShear, b->position);
+    AfxPostMultiplyV3d(a->scaleShear, b->position, t->position);
 
     afxM3d OrientationA;
     AfxM3dFromQuat(OrientationA, a->orientation);
-    AfxPostMultiplyV3d(t->position, OrientationA, t->position);
+    AfxPostMultiplyV3d(OrientationA, t->position, t->position);
     AfxAddV3d(t->position, a->position, t->position);
     
     AfxMultiplyQuat(t->orientation, a->orientation, b->orientation);
@@ -92,14 +92,14 @@ _AFXINL void AfxPreMultiplyTransform(afxTransform* t, afxTransform const* pre)
 {
     afxTransform tmp;
     AfxMultiplyTransform(&tmp, pre, t);
-    AfxCopy(t, &tmp, sizeof(t));
+    AfxCopy(1, sizeof(tmp), &tmp, t);
 }
 
 _AFXINL void AfxPostMultiplyTransform(afxTransform* t, afxTransform const* post)
 {
     afxTransform tmp;
     AfxMultiplyTransform(&tmp, t, post);
-    AfxCopy(t, &tmp, sizeof(t));
+    AfxCopy(1, sizeof(tmp), &tmp, t);
 }
 
 _AFXINL void AfxLerpTransform(afxTransform *t, afxTransform const* a, afxTransform const* b, afxReal time)
@@ -111,7 +111,7 @@ _AFXINL void AfxLerpTransform(afxTransform *t, afxTransform const* a, afxTransfo
 
     afxTransformFlags flags = b->flags | a->flags;
     t->flags = flags;
-    afxReal s = 1.0 - time;
+    afxReal s = 1.f - time;
 
     if (!(flags & afxTransformFlags_ORIGIN)) AfxZeroV3d(t->position);
     else
@@ -155,14 +155,14 @@ _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
     
     afxM3d iqm, ss, tmp;
     AfxM3dFromQuat(iqm, q);
-    AfxInvertM3d(ss, in->scaleShear);
+    AfxInverseM3d(ss, in->scaleShear);
     AfxMultiplyM3d(tmp, ss, iqm);
     AfxMultiplyTransposedM3d(ss, iqm, tmp);
 
     afxV4d ip, ip2, ip3;
-    AfxNegateV3d(ip, in->position);
-    AfxPostMultiplyV3d(ip2, ss, ip);
-    AfxPostMultiplyV3d(ip3, iqm, ip2);
+    AfxNegV3d(ip, in->position);
+    AfxPostMultiplyV3d(ss, ip, ip2);
+    AfxPostMultiplyV3d(iqm, ip2, ip3);
 
     AfxSetTransformWithIdentityCheck(t, ip3, q, ss);
 }
@@ -272,14 +272,14 @@ _AFX void AfxComposeTransformM4d(afxTransform const* t, afxReal m[4][4])
                 AfxCopyM3d(tmp, t->scaleShear);
         }
         
-        AfxM4dFromM3dTransposed(m, tmp, hasPos ? t->position : AFX_V4D_W);
+        AfxM4dFromTransposedM3d(m, tmp, hasPos ? t->position : AFX_V4D_W);
     }
     else
     {
         if (!hasPos)
             AfxResetM4d(m);
         else
-            AfxMakeTranslationM4d(m, t->position);
+            AfxTranslationM4d(m, t->position);
     }
 }
 
@@ -355,21 +355,21 @@ _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxRe
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxAssimilateTransforms(afxReal const lt[3][3], afxReal const ilt[3][3], afxReal const at[3], afxNat cnt, afxTransform const in[], afxTransform out[])
+_AFXINL void AfxAssimilateTransforms(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxTransform const in[], afxTransform out[])
 {
     afxError err = NIL;
-    AfxAssert(lt);
-    AfxAssert(ilt);
-    AfxAssert(at);
+    AfxAssert(ltm);
+    AfxAssert(iltm);
+    AfxAssert(atv);
     AfxAssert(cnt);
     AfxAssert(in);
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssimilatePointV3d(lt, at, 1, &in[i].position, &out[i].position);
-        AfxAssimilateQuat(lt, ilt, 1, &in[i].orientation, &out[i].orientation);
-        AfxAssimilateM3d(lt, ilt, 1, &in[i].scaleShear, &out[i].scaleShear);
+        AfxAssimilateAffineV3d(ltm, atv, 1, &in[i].position, &out[i].position);
+        AfxAssimilateQuat(ltm, iltm, 1, &in[i].orientation, &out[i].orientation);
+        AfxAssimilateM3d(ltm, iltm, 1, &in[i].scaleShear, &out[i].scaleShear);
     }
 }
 

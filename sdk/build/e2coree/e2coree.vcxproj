@@ -89,7 +89,7 @@
     <ClInclude Include="..\..\inc\afx\draw\afxShader.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxShaderBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxSurface.h" />
-    <ClInclude Include="..\..\inc\afx\draw\afxTexture.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxRaster.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxVertex1.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxXsh.h" />
     <ClInclude Include="..\..\inc\afx\math\afxAabb.h" />
@@ -125,6 +125,7 @@
     <ClInclude Include="..\..\inc\afx\sim\anim\afxAnimator.h" />
     <ClInclude Include="..\..\inc\afx\sim\anim\afxCurve2.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMesh.h" />
+    <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshBuilder.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertexData.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshTopology.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h" />
@@ -229,12 +230,7 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawQueue.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawScript.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawSystem.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxDrawTechnique.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxDrawTechnique.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawThread.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipeline.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxPipelineRig.c" />
@@ -243,7 +239,7 @@
     <ClCompile Include="..\..\src\e2coree\draw\afxShader.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxSurface.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxTarga.c" />
-    <ClCompile Include="..\..\src\e2coree\draw\afxTexture.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxRaster.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxVertex1.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxXsh.c" />
     <ClCompile Include="..\..\src\e2coree\math\afxAabb.c" />
@@ -279,6 +275,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMesh.c" />
+    <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshBuilder.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertexData.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshTopology.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c" />
@@ -385,7 +382,10 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
@@ -403,7 +403,10 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ControlFlowGuard>Guard</ControlFlowGuard>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>

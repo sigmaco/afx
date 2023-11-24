@@ -21,7 +21,7 @@
 
 #include "afxMatrix.h"
 
-AFXINL void     AfxComputeShadowM4d(afxM4d m, afxPlane const* p, afxReal const lightPos[3]);
+AFXINL void     AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const lightPos[3]);
 
 AFXINL void     AfxCubemapM4d_OpenGL(afxM4d m, afxNat face);
 AFXINL void     AfxCubemapM4d_Direct3D(afxM4d m, afxNat face);

@@ -164,7 +164,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.code = NIL;
     afxNat codeLen = AfxCountArrayElements(&blueprint->codes);
 
-    if (codeLen && !(shd->base.code = AfxAllocate(ctx, codeLen, 0, AfxSpawnHint()))) AfxThrowError();
+    if (codeLen && !(shd->base.code = AfxAllocate(ctx, sizeof(afxChar), codeLen, 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxAssertType(&blueprint->codes, afxFcc_ARR);
@@ -183,7 +183,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
         afxNat resDeclCnt = AfxCountArrayElements(&blueprint->resources);
 
-        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(ctx, resDeclCnt * sizeof(shd->base.resDecls[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(ctx, sizeof(shd->base.resDecls[0]), resDeclCnt, 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat j = 0; j < resDeclCnt; j++)
@@ -208,7 +208,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             shd->base.ioDeclCnt = 0;
             shd->base.ioDecls = NIL;
 
-            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ctx, ioCnt * sizeof(shd->base.ioDecls[0]), 0, AfxSpawnHint()))) AfxThrowError();
+            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ctx, sizeof(shd->base.ioDecls[0]), ioCnt, 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < ioCnt; i++)

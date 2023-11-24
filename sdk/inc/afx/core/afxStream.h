@@ -34,9 +34,7 @@ typedef enum afxIoFlags
     AFX_IO_FLAG_RX          = (AFX_IO_FLAG_R | AFX_IO_FLAG_X),
     AFX_IO_FLAG_WX          = (AFX_IO_FLAG_W | AFX_IO_FLAG_X),
     AFX_IO_FLAG_RWX         = (AFX_IO_FLAG_R | AFX_IO_FLAG_W | AFX_IO_FLAG_X),
-    AFX_IO_PERM_MASK        = AFX_IO_FLAG_RWX,
-
-    AFX_IO_FLAG_FORCE_NAT   = AFX_N32_MAX
+    AFX_IO_PERM_MASK        = AFX_IO_FLAG_RWX
 }
 afxIoFlags;
 
@@ -65,7 +63,7 @@ AFX_DEFINE_STRUCT(afxStreamIoCtrl)
 
 AFX_DEFINE_STRUCT(afxStream)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxStreamIoCtrl         ioctl;
     void                    (*dtor)(afxStream*);
     afxIoFlags              flags;

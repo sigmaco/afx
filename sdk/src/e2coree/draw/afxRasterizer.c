@@ -24,212 +24,212 @@
 
  // OpenGL/Vulkan Continuous Integration
 
-_AFX void AfxDescribeRasterizerConfiguration(afxRasterizer ras, afxRasterizationConfig* config)
+_AFX void AfxDescribeRasterizerConfiguration(afxRasterizer rast, afxRasterizationConfig* config)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
 
-    config->dsFlags = ras->dsFlags;
-    config->msFlags = ras->msFlags;
-    config->rasFlags = ras->rasFlags;
-    config->pixelFlags = ras->pixelFlags;
+    config->dsFlags = rast->dsFlags;
+    config->msFlags = rast->msFlags;
+    config->rasFlags = rast->rasFlags;
+    config->pixelFlags = rast->pixelFlags;
 
-    config->fillMode = ras->fillMode;
-    config->lineWidth = ras->lineWidth;
+    config->fillMode = rast->fillMode;
+    config->lineWidth = rast->lineWidth;
     
-    config->depthBiasEnabled = ras->depthBiasEnabled;
-    config->depthBiasSlopeScale = ras->depthBiasSlopeScale;
-    config->depthBiasConstFactor = ras->depthBiasConstFactor;
-    config->depthBiasClamp = ras->depthBiasClamp;
+    config->depthBiasEnabled = rast->depthBiasEnabled;
+    config->depthBiasSlopeScale = rast->depthBiasSlopeScale;
+    config->depthBiasConstFactor = rast->depthBiasConstFactor;
+    config->depthBiasClamp = rast->depthBiasClamp;
     
-    config->msEnabled = ras->msEnabled;
+    config->msEnabled = rast->msEnabled;
     
-    if ((config->sampleCnt = ras->sampleCnt))
-        AfxCopy(config->sampleMasks, ras->sampleMasks, ras->sampleCnt * sizeof(ras->sampleMasks[0]));
+    if ((config->sampleCnt = rast->sampleCnt))
+        AfxCopy(rast->sampleCnt, sizeof(rast->sampleMasks[0]), rast->sampleMasks, config->sampleMasks);
 
-    config->alphaToOneEnabled = ras->alphaToOneEnabled;
-    config->alphaToCoverageEnabled = ras->alphaToCoverageEnabled;
-    config->sampleShadingEnabled = ras->sampleShadingEnabled;
-    config->minSampleShadingValue = ras->minSampleShadingValue;
+    config->alphaToOneEnabled = rast->alphaToOneEnabled;
+    config->alphaToCoverageEnabled = rast->alphaToCoverageEnabled;
+    config->sampleShadingEnabled = rast->sampleShadingEnabled;
+    config->minSampleShadingValue = rast->minSampleShadingValue;
 
-    if ((config->stencilTestEnabled = ras->stencilTestEnabled))
+    if ((config->stencilTestEnabled = rast->stencilTestEnabled))
     {
-        config->stencilFront = ras->stencilFront;
-        config->stencilBack = ras->stencilBack;
+        config->stencilFront = rast->stencilFront;
+        config->stencilBack = rast->stencilBack;
     }
 
-    config->depthTestEnabled = ras->depthTestEnabled;
-    config->depthCompareOp = ras->depthCompareOp;
-    config->depthWriteEnabled = ras->depthWriteEnabled;
-    config->dsFmt = ras->dsFmt;
+    config->depthTestEnabled = rast->depthTestEnabled;
+    config->depthCompareOp = rast->depthCompareOp;
+    config->depthWriteEnabled = rast->depthWriteEnabled;
+    config->dsFmt = rast->dsFmt;
     
-    if ((config->depthBoundsTestEnabled = ras->depthBoundsTestEnabled))
-        AfxCopyV2d(config->depthBounds, ras->depthBounds);
+    if ((config->depthBoundsTestEnabled = rast->depthBoundsTestEnabled))
+        AfxCopyV2d(config->depthBounds, rast->depthBounds);
 
-    if ((config->colorOutCnt = ras->outCnt))
-        AfxCopy(config->colorOuts, ras->outs, ras->outCnt * sizeof(ras->outs[0]));
+    if ((config->colorOutCnt = rast->outCnt))
+        AfxCopy(rast->outCnt, sizeof(rast->outs[0]), rast->outs, config->colorOuts);
 
-    AfxCopyColor(config->blendConstants, ras->blendConstants);
-    config->pixelLogicOpEnabled = ras->logicOpEnabled;
-    config->pixelLogicOp = ras->logicOp;
+    AfxCopyColor(config->blendConstants, rast->blendConstants);
+    config->pixelLogicOpEnabled = rast->logicOpEnabled;
+    config->pixelLogicOp = rast->logicOp;
 }
 
-_AFX afxBool AfxGetDepthTestInfo(afxRasterizer ras, afxCompareOp* op, afxBool* writeEnabled) // return TRUE if depth test is enabled
+_AFX afxBool AfxGetDepthTestInfo(afxRasterizer rast, afxCompareOp* op, afxBool* writeEnabled) // return TRUE if depth test is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->depthTestEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->depthTestEnabled;
 
     if (op && enabled)
-        *op = ras->depthCompareOp;
+        *op = rast->depthCompareOp;
 
     if (writeEnabled && enabled)
-        *writeEnabled = ras->depthWriteEnabled;
+        *writeEnabled = rast->depthWriteEnabled;
 
     return enabled;
 }
 
-_AFX afxBool AfxGetDepthBiasInfo(afxRasterizer ras, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
+_AFX afxBool AfxGetDepthBiasInfo(afxRasterizer rast, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->depthBiasEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->depthBiasEnabled;
 
     if (constFactor && enabled)
-        *constFactor = ras->depthBiasConstFactor;
+        *constFactor = rast->depthBiasConstFactor;
 
     if (clamp && enabled)
-        *clamp = ras->depthBiasClamp;
+        *clamp = rast->depthBiasClamp;
 
     if (slopeScale && enabled)
-        *slopeScale = ras->depthBiasSlopeScale;
+        *slopeScale = rast->depthBiasSlopeScale;
 
     return enabled;
 }
 
-_AFX afxBool AfxGetDepthBoundsInfo(afxRasterizer ras, afxReal bounds[2]) // return TRUE if depth bounds is enabled
+_AFX afxBool AfxGetDepthBoundsInfo(afxRasterizer rast, afxReal bounds[2]) // return TRUE if depth bounds is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->depthBoundsTestEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->depthBoundsTestEnabled;
 
     if (bounds && enabled)
-        AfxCopyV2d(bounds, ras->depthBounds);
+        AfxCopyV2d(bounds, rast->depthBounds);
 
     return enabled;
 }
 
-_AFX afxBool AfxGetStencilConfig(afxRasterizer ras, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
+_AFX afxBool AfxGetStencilConfig(afxRasterizer rast, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->stencilTestEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->stencilTestEnabled;
 
     if (front && enabled)
-        *front = ras->stencilFront;
+        *front = rast->stencilFront;
 
     if (back && enabled)
-        *back = ras->stencilBack;
+        *back = rast->stencilBack;
 
     return enabled;
 }
 
-_AFX afxBool AfxGetLogicalPixelOperation(afxRasterizer ras, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
+_AFX afxBool AfxGetLogicalPixelOperation(afxRasterizer rast, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->logicOpEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->logicOpEnabled;
 
     if (op && enabled)
-        *op = ras->logicOp;
+        *op = rast->logicOp;
 
     return enabled;
 }
 
-_AFX void AfxGetColorBlendConstants(afxRasterizer ras, afxReal rgba[4])
+_AFX void AfxGetColorBlendConstants(afxRasterizer rast, afxReal rgba[4])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxCopyV4d(rgba, ras->blendConstants);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    AfxCopyV4d(rgba, rast->blendConstants);
 }
 
-_AFX afxNat AfxCountColorOutputChannels(afxRasterizer ras)
+_AFX afxNat AfxCountColorOutputChannels(afxRasterizer rast)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    return ras->outCnt;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    return rast->outCnt;
 }
 
-_AFX afxNat AfxGetColorOutputChannels(afxRasterizer ras, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
+_AFX afxNat AfxGetColorOutputChannels(afxRasterizer rast, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertRange(ras->outCnt, first, cnt);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    AfxAssertRange(rast->outCnt, first, cnt);
     AfxAssert(ch);
 
     afxNat i = 0;
 
     for (; i < cnt; i++)
-        ch[i] = ras->outs[first + i];
+        ch[i] = rast->outs[first + i];
 
     return i;
 }
 
-_AFX afxBool AfxGetMultisamplingInfo(afxRasterizer ras, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
+_AFX afxBool AfxGetMultisamplingInfo(afxRasterizer rast, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->msEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->msEnabled;
 
     if (sampleCnt && enabled)
-        *sampleCnt = ras->sampleCnt;
+        *sampleCnt = rast->sampleCnt;
 
     if (sampleMask && enabled)
-        for (afxNat i = 0; i < ras->sampleCnt; i++)
-            sampleMask[i] = ras->sampleMasks[i];
+        for (afxNat i = 0; i < rast->sampleCnt; i++)
+            sampleMask[i] = rast->sampleMasks[i];
 
     return enabled;
 }
 
-_AFX afxBool AfxGetSampleShadingInfo(afxRasterizer ras, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
+_AFX afxBool AfxGetSampleShadingInfo(afxRasterizer rast, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    afxBool enabled = ras->sampleShadingEnabled;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    afxBool enabled = rast->sampleShadingEnabled;
 
     if (minSampleShadingValue && enabled)
-        *minSampleShadingValue = ras->minSampleShadingValue;
+        *minSampleShadingValue = rast->minSampleShadingValue;
 
     return enabled;
 }
 
-_AFX afxFillMode AfxGetRasterizationMode(afxRasterizer ras)
+_AFX afxFillMode AfxGetRasterizationMode(afxRasterizer rast)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    return ras->fillMode;
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    return rast->fillMode;
 }
 
-_AFX afxBool AfxGetLineRasterizationInfo(afxRasterizer ras, afxReal* lineWidth) // return TRUE if rasterization enabled.
+_AFX afxBool AfxGetLineRasterizationInfo(afxRasterizer rast, afxReal* lineWidth) // return TRUE if rasterization enabled.
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
     
     if (lineWidth)
-        *lineWidth = ras->lineWidth;
+        *lineWidth = rast->lineWidth;
 
     return 1;
 }
 
-_AFX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer ras[])
+_AFX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer rast[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(config);
-    AfxAssert(ras);
+    AfxAssert(rast);
     AfxAssert(cnt);
 
-    if (AfxAcquireObjects(&dctx->rasterizers, cnt, (afxHandle*)ras, (void*[]) { dctx, (void*)config }))
+    if (AfxAcquireObjects(&dctx->rasterizers, cnt, (afxHandle*)rast, (void*[]) { dctx, (void*)config }))
         AfxThrowError();
 
     return err;
@@ -239,7 +239,7 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
 {
     afxError err = AFX_ERR_NONE;
 
-    afxRasterizer ras = NIL;
+    afxRasterizer rast = NIL;
 
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, afxFcc_CTX);
@@ -255,9 +255,8 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
-        afxUri fpath, query;
+        afxUri fpath;
         AfxGetUriPath(&fpath, uri);
-        AfxGetUriQuery(&query, uri, TRUE);
 
         if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -267,26 +266,24 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
             else
             {
                 AfxAssertType(&xml, afxFcc_XML);
+                afxBool isQwadroXml = AfxTestXmlRoot(&xml, &AfxStaticString("Qwadro"));
+                AfxAssert(isQwadroXml);
 
-                afxXmlNode const *node = AfxGetXmlRoot(&xml);
-                afxString const *name = AfxGetXmlNodeName(node);
-                AfxAssert(0 == AfxCompareString(name, &AfxStaticString("Qwadro")));
-                afxString const *queryStr = AfxGetUriString(&query);
-                afxBool hasQuery = !AfxStringIsEmpty(queryStr);
-                node = AfxXmlNodeFindChild(node, &AfxStaticString("Rasterizer"), hasQuery ? &AfxStaticString("id") : NIL, hasQuery ? queryStr : NIL);
+                afxString query;
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx;
-                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Rasterizer"), &AfxStaticString("id"), 1, queryStr, &xmlElemIdx);
+                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Rasterizer"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
                 AfxAssert(xmlElemIdx != AFX_INVALID_INDEX);
 
-                if (node)
+                if (foundCnt)
                 {
                     afxRasterizationConfig defConfig = { 0 };
                     defConfig.depthCompareOp = afxCompareOp_LESS;
                     defConfig.fillMode = afxFillMode_SOLID;
                     afxRasterizationConfig config = defConfig;
 
-                    if (AfxLoadRasterizationConfigFromXml(&config, &defConfig, 0, node, &xml, xmlElemIdx)) AfxThrowError();
+                    if (AfxLoadRasterizationConfigFromXml(&config, &defConfig, 0, &xml, xmlElemIdx)) AfxThrowError();
                     else
                     {
 #if 0
@@ -304,10 +301,10 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
                         AfxUriFromString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
-                        if (AfxAcquireRasterizers(dctx, 1, &config, &ras)) AfxThrowError();
+                        if (AfxAcquireRasterizers(dctx, 1, &config, &rast)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &ras, afxFcc_RAS);
+                            AfxAssertObjects(1, &rast, afxFcc_PIPR);
                         }
                     }
                 }
@@ -322,5 +319,5 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
         }
     }
 
-    return ras;
+    return rast;
 }

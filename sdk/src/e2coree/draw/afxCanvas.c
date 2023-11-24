@@ -50,7 +50,7 @@ _AFXINL void AfxCanvasBlueprintSetDepth(afxCanvasBlueprint *blueprint, afxPixelF
     blueprint->ds[1].fmt = stencil;
 }
 
-_AFXINL void AfxCanvasBlueprintAddRaster(afxCanvasBlueprint *blueprint, afxPixelFormat fmt, afxTextureFlags usage)
+_AFXINL void AfxCanvasBlueprintAddRaster(afxCanvasBlueprint *blueprint, afxPixelFormat fmt, afxRasterFlags usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -61,7 +61,7 @@ _AFXINL void AfxCanvasBlueprintAddRaster(afxCanvasBlueprint *blueprint, afxPixel
     ++blueprint->rasterCnt;
 }
 
-_AFXINL void AfxCanvasBlueprintAddExistingRaster(afxCanvasBlueprint *blueprint, afxTexture existing)
+_AFXINL void AfxCanvasBlueprintAddExistingRaster(afxCanvasBlueprint *blueprint, afxRaster existing)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -81,11 +81,11 @@ _AFX afxError _AfxCanvFreeAllSurfaces(afxCanvas canv)
     {
         for (afxNat i = 0; i < canv->annexCnt; i++)
         {
-            afxTexture tex = canv->annexes[i].tex;
+            afxRaster tex = canv->annexes[i].tex;
 
             if (tex)
             {
-                AfxAssertObjects(1, &tex, afxFcc_TEX);
+                AfxAssertObjects(1, &tex, afxFcc_RAS);
                 AfxReleaseObjects(1, (void*[]) { tex });
                 canv->annexes[i].tex = NIL;
             }
@@ -115,15 +115,15 @@ _AFX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
     return canv->flags & bitmask;
 }
 
-_AFX afxBool AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil)
+_AFX afxBool AfxGetAnnexedStencilSurface(afxCanvas canv, afxRaster *stencil)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxTexture tex = canv->dsIdx[1] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[1]].tex : NIL;
+    afxRaster tex = canv->dsIdx[1] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[1]].tex : NIL;
 
     if (tex)
     {
-        AfxAssertObjects(1, &tex, afxFcc_TEX);
+        AfxAssertObjects(1, &tex, afxFcc_RAS);
 
         if (stencil)
             *stencil = tex;
@@ -131,15 +131,15 @@ _AFX afxBool AfxGetAnnexedStencilSurface(afxCanvas canv, afxTexture *stencil)
     return !!tex;
 }
 
-_AFX afxBool AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth)
+_AFX afxBool AfxGetAnnexedDepthSurface(afxCanvas canv, afxRaster *depth)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxTexture tex = canv->dsIdx[0] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[0]].tex : NIL;
+    afxRaster tex = canv->dsIdx[0] != AFX_INVALID_INDEX ? canv->annexes[canv->dsIdx[0]].tex : NIL;
 
     if (tex)
     {
-        AfxAssertObjects(1, &tex, afxFcc_TEX);
+        AfxAssertObjects(1, &tex, afxFcc_RAS);
 
         if (depth)
             *depth = tex;
@@ -147,17 +147,17 @@ _AFX afxBool AfxGetAnnexedDepthSurface(afxCanvas canv, afxTexture *depth)
     return !!tex;
 }
 
-_AFX afxBool AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxTexture *raster)
+_AFX afxBool AfxGetAnnexedRasterSurface(afxCanvas canv, afxNat rasIdx, afxRaster *raster)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssert(rasIdx < canv->rasterCnt);
 
     afxBool rslt;
-    afxTexture tex2;
+    afxRaster tex2;
     if ((rslt = !!(tex2 = canv->annexes[rasIdx].tex)))
     {
-        AfxAssertObjects(1, &tex2, afxFcc_TEX);
+        AfxAssertObjects(1, &tex2, afxFcc_RAS);
 
         if (raster)
             *raster = tex2;
@@ -172,17 +172,17 @@ _AFX afxNat AfxGetAnnexedRasterSurfaceCount(afxCanvas canv)
     return canv->rasterCnt;
 }
 
-_AFX afxBool AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxTexture *tex)
+_AFX afxBool AfxGetAnnexedSurface(afxCanvas canv, afxNat surfIdx, afxRaster *tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssert(surfIdx < canv->annexCnt);
     
     afxBool rslt;
-    afxTexture tex2;
+    afxRaster tex2;
     if ((rslt = !!(tex2 = canv->annexes[surfIdx].tex)))
     {
-        AfxAssertObjects(1, &tex2, afxFcc_TEX);
+        AfxAssertObjects(1, &tex2, afxFcc_RAS);
 
         if (tex)
             *tex = tex2;

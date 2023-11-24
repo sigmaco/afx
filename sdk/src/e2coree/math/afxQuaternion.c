@@ -239,7 +239,7 @@ _AFXINL void AfxQuatFromEuler(afxQuat q, afxReal const pitchYawRoll[3])
 
 _AFXINL afxBool AfxQuatIsIdentity(afxQuat const q)
 {
-    return (q[0] + q[1] + q[2]) == 0 && (q[3] == 1);
+    return (q[0] + q[1] + q[2]) == 0.f && (q[3] == 1.f);
 }
 
 _AFXINL afxBool AfxQuatIsEqual(afxQuat const q, afxQuat const other)
@@ -283,7 +283,7 @@ _AFXINL afxReal AfxNormalizeQuat(afxQuat q, afxQuat const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(q);
-    return AfxGetNormalizedV4d(q, in);
+    return AfxNormalV4d(q, in);
 }
 
 _AFXINL afxReal AfxEstimateNormalizedQuat(afxQuat q, afxQuat const in)
@@ -362,16 +362,16 @@ _AFXINL void AfxConjugateQuat(afxQuat q, afxQuat const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
     AfxAssert(in);
-    AfxNegateV3d(q, in);
+    AfxNegV3d(q, in);
     q[3] = in[3]; // w is preserved
 }
 
-_AFXINL void AfxNegateQuat(afxQuat q, afxQuat const in)
+_AFXINL void AfxNegQuat(afxQuat q, afxQuat const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
     AfxAssert(q);
-    AfxNegateV4d(q, in);
+    AfxNegV4d(q, in);
 }
 
 _AFXINL void AfxInvertQuat(afxQuat q, afxQuat const in)
@@ -483,9 +483,9 @@ _AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
                 if (dot < AfxScalar(0))
                 {
                     afxQuat neg;
-                    AfxNegateQuat(neg, a);
+                    AfxNegQuat(neg, a);
                     AfxSlerpQuat(q, a, neg, percent);
-                    AfxNegateQuat(q, q);
+                    AfxNegQuat(q, q);
                 }
                 else
                 {
@@ -509,13 +509,13 @@ _AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
 // Affine transformation                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxAssimilateQuat(afxReal const lt[3][3], afxReal const ilt[3][3], afxNat cnt, afxQuat const in[], afxQuat out[])
+_AFXINL void AfxAssimilateQuat(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxQuat const in[], afxQuat out[])
 {
     // Should be compatible with void InPlaceSimilarityTransformOrientation(const float *Linear3x3, const float *InverseLinear3x3, float *Orientation4)
 
     afxError err = NIL;
-    AfxAssert(lt);
-    AfxAssert(ilt);
+    AfxAssert(ltm);
+    AfxAssert(iltm);
     AfxAssert(cnt);
     AfxAssert(in);
     AfxAssert(out);
@@ -527,8 +527,8 @@ _AFXINL void AfxAssimilateQuat(afxReal const lt[3][3], afxReal const ilt[3][3], 
 
         afxM3d rm, tmp;
         AfxM3dFromQuat(rm, out[i]);
-        AfxMultiplyM3d(tmp, lt, rm);
-        AfxMultiplyM3d(rm, tmp, ilt);
+        AfxMultiplyM3d(tmp, ltm, rm);
+        AfxMultiplyM3d(rm, tmp, iltm);
         AfxQuatFromM3d(out[i], rm);
 
         AfxScaleQuat(out[i], out[i], len);
@@ -622,11 +622,11 @@ _AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxReal const tbn[3][3])
     // ** Also our shaders assume qTangent.w is never 0. **
 
     afxNat const BITS = 16;
-    afxReal const bias = 1.0 / (2 ^ (BITS - 1) - 1);
+    afxReal const bias = 1.f / (2 ^ (BITS - 1) - 1);
 
     if (q[3] < bias)
     {
-        afxReal normFactor = AfxSqrt(1 - bias * bias);
+        afxReal normFactor = AfxSqrt(1.f - bias * bias);
         AfxScaleV3d(q, q, normFactor);
         q[3] = bias;
     }
@@ -637,7 +637,7 @@ _AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxReal const tbn[3][3])
     AfxCrossV3d(naturalBinormal, tbn[0], tbn[2]);
 
     if (AfxDotV3d(naturalBinormal, tbn[1]) <= 0)
-        AfxNegateQuat(q, q);
+        AfxNegQuat(q, q);
 }
 
 _AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxReal const normal[3], afxReal const tangent[3], afxReal const bitangent[3])
@@ -659,7 +659,7 @@ _AFXINL void AfxQuatFromHeading(afxQuat q, afxReal const from[3], afxReal const 
     
     afxV3d h;
     AfxAddV3d(h, from, to);
-    AfxGetNormalizedV3d(h, h);
+    AfxNormalV3d(h, h);
 
     q[3] = AfxDotV3d(from, h);
     q[0] = from[1] * h[2] - from[2] * h[1];
@@ -718,7 +718,7 @@ _AFXINL void AfxEnsureQuaternionContinuity(afxNat cnt, afxQuat quat[])
         AfxCopyQuat(tmp, quat[i]);
 
         if (AfxDotQuat(tmp, last) < 0.0)
-            AfxNegateQuat(tmp, tmp);
+            AfxNegQuat(tmp, tmp);
 
         AfxCopyQuat(last, tmp);
         AfxCopyQuat(quat[i], tmp);

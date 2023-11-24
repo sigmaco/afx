@@ -29,7 +29,7 @@ AFX_OBJECT(afxModule)
     void                *osHandle;
     afxBool             hasBeenLoaded;
 };
-#endif
+#endif//_AFX_MODULE_C
 
 AFX afxModule           AfxFindModule(afxUri const *uri);
 AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule mdle[]);

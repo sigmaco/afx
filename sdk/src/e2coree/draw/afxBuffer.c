@@ -37,7 +37,7 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxS
     {
         if (!dstStride || dstStride == stride)
         {
-            AfxCopy(dst, map, (cnt * stride));
+            AfxCopy(cnt, stride, map, dst);
         }
         else
         {
@@ -45,7 +45,7 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxS
 
             for (afxNat i = 0; i < cnt; i++)
             {
-                AfxCopy(&(dst2[i * dstStride]), &(map[i * stride]), stride);
+                AfxCopy(1, stride, &(map[i * stride]), &(dst2[i * dstStride]));
             }
         }
 
@@ -70,7 +70,7 @@ _AFX afxError AfxDumpBuffer(afxBuffer buf, afxSize offset, afxSize range, void *
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(dst, map, range);
+        AfxCopy(1, range, map, dst);
 
         AfxUnmapBufferRange(buf);
     }
@@ -95,17 +95,21 @@ _AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
     {
         if ((srcStride == rgn->stride) && rgn->stride)
         {
-            AfxCopy(map, src, rgn->range);
+            AfxCopy(1, rgn->range, src, map);
         }
         else
         {
             afxByte const *src2 = src;
-            //afxNat unitSiz = AfxMinorNonZero(rgn->stride, srcStride); // minor non-zero
+            afxNat unitSiz = AfxMinorNonZero(rgn->stride, srcStride); // minor non-zero
+            AfxAssert(unitSiz == rgn->unitSiz);
             afxNat cnt = rgn->range / rgn->stride;
+            afxNat cnt2 = rgn->range % rgn->stride;
+            AfxAssert(!cnt2);
 
             for (afxNat i = 0; i < cnt; i++)
             {
-                AfxCopy(&(map[(i * rgn->stride) + rgn->offset]), &(src2[i * srcStride]), rgn->unitSiz);
+                AfxAssertRange(bufSiz, (i * rgn->stride) + rgn->offset, rgn->unitSiz);
+                AfxCopy(1, rgn->unitSiz, &(src2[i * srcStride]), &(map[(i * rgn->stride) + rgn->offset]));
             }
         }
 
@@ -132,13 +136,15 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afx
     {
         if ((srcStride == stride) && stride)
         {
-            AfxCopy(map, src, range);
+            AfxCopy(1, range, src, map);
         }
         else
         {
             afxByte const *src2 = src;
             afxNat unitSiz = AfxMinorNonZero(stride, srcStride); // minor non-zero
             afxNat cnt = range / unitSiz;
+            afxNat cnt2 = range % unitSiz;
+            AfxAssert(!cnt2);
 
             for (afxNat i = 0; i < cnt; i++)
             {
@@ -146,7 +152,7 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afx
                 AfxAssert(stride != 2 || (stride == 2 && AFX_N16_MAX >= (afxNat16)(src2[i * srcStride])));
                 AfxAssert(stride != 4 || (stride == 4 && AFX_N32_MAX >= (afxNat32)(src2[i * srcStride])));
 
-                AfxCopy(&(map[i * stride]), &(src2[i * srcStride]), unitSiz);
+                AfxCopy(1, unitSiz, &(src2[i * srcStride]), &(map[i * stride]));
             }
         }
 
@@ -169,7 +175,7 @@ _AFX afxError AfxUpdateBuffer(afxBuffer buf, afxSize offset, afxSize range, void
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(map, src, range);
+        AfxCopy(1, range, src, map);
 
         AfxUnmapBufferRange(buf);
     }
@@ -192,7 +198,6 @@ _AFX void* AfxMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFla
     AfxAssertRange(buf->siz, offset, range);
 
     return buf->map(buf, offset, range, flags);
-    return NIL;
 }
 
 _AFX void AfxUnmapBufferRange(afxBuffer buf)

@@ -99,7 +99,7 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
     for (afxNat i = 0; i < dout->base.bufCnt; i++)
     {
         //afxCanvas canv = dout->base.buffers[i].canv;
-        afxTexture tex = dout->base.buffers[i].tex;
+        afxRaster tex = dout->base.buffers[i].tex;
 
         if (!tex)
         {
@@ -107,7 +107,7 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
         }
         else
         {
-            AfxAssertObjects(1, &tex, afxFcc_TEX);
+            AfxAssertObjects(1, &tex, afxFcc_RAS);
             //AfxAssertObjects(1, &canv, afxFcc_CANV);
             AfxReleaseObjects(1, (void*[]) { tex });
             //AfxReleaseObjects(1, (void*[]) { canv });
@@ -165,12 +165,12 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
     for (;;)
     {
         idx = (idx + 1) % dout->base.bufCnt;
-        afxTexture tex = dout->base.buffers[idx].tex;
+        afxRaster tex = dout->base.buffers[idx].tex;
 
         if (!tex) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &tex, afxFcc_TEX);
+            AfxAssertObjects(1, &tex, afxFcc_RAS);
 
             if (!dout->base.buffers[idx].booked)
             {
@@ -271,9 +271,6 @@ _SGL HWND _SglFindShellBackgroundWindowW32(void)
     return hwnd;
 }
 
-static const afxString g_str_desktop = AFX_STRING("desktop");
-static const afxString g_str_window = AFX_STRING("window");
-
 _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 {
     AfxEntry("dout=%p", dout);
@@ -312,7 +309,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.flags = NIL;
     dout->base.pixelFmt = AFX_PFD_RGBA8; // or AFX_PFD_RGBA8R ?
     dout->base.colorSpc = afxColorSpace_SRGB; // sRGB is the default
-    dout->base.bufUsage = afxTextureFlag_DRAW;
+    dout->base.bufUsage = afxRasterFlag_DRAW;
     dout->base.bufferLockCnt = 1;
     dout->base.bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
     dout->base.lastReqBufIdx = dout->base.bufCnt - 1; // to start at 0 instead of 1 we set to last one.
@@ -398,12 +395,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
     afxString const *surface = AfxGetUriString(&name);
 
-    if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &g_str_window)) // print to window surface
+    if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &AfxStaticString("window"))) // print to window surface
     {
         dout->wnd = CreateWindowEx(WS_EX_CONTEXTHELP, ddev->wndClss.lpszClassName, ddev->wndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, NIL);
         isWnd = TRUE;
     }
-    else if (0 == AfxCompareString(surface, &g_str_desktop))
+    else if (0 == AfxCompareString(surface, &AfxStaticString("desktop")))
     {
         dout->wnd = _SglFindShellBackgroundWindowW32();// GetDesktopWindow();
         isDesk = TRUE;
@@ -456,12 +453,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                 dout->base.bufCnt = 1;
 
             if (!dout->base.bufUsage)
-                dout->base.bufUsage = afxTextureFlag_DRAW;
+                dout->base.bufUsage = afxRasterFlag_DRAW;
 
             int pxlAttrPairs[][2] =
             {
                 { WGL_DRAW_TO_WINDOW_ARB, GL_TRUE },
-                { WGL_SUPPORT_OPENGL_ARB, GL_TRUE },
+                { WGL_SUPPORT_OPENGL_ARB, GL_TRUE }, // suportar o que se não OpenGL na fucking API do OpenGL? Direct3D, filha da puta?!
                 { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB },
                 { WGL_DOUBLE_BUFFER_ARB, TRUE }, // single buffer not supported anymore today. Qwadro will just virtualizes it.
                 { WGL_PIXEL_TYPE_ARB, AfxPixelFormatIsReal(dout->base.pixelFmt) ? WGL_TYPE_RGBA_FLOAT_ARB : WGL_TYPE_RGBA_ARB },
@@ -490,7 +487,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                 AfxAssert(formatCount);
 
                 PIXELFORMATDESCRIPTOR pfd;
-                AfxZero(&pfd, sizeof(pfd));
+                AfxZero(1, sizeof(pfd), &pfd);
                 SglDescribePixelFormat(dout->dc, dout->dcPxlFmt, sizeof(pfd), &pfd, dpu);
 #if 0
                 pfd.nSize = sizeof(pfd);
@@ -513,15 +510,18 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                         bb.dwFlags = DWM_BB_ENABLE;
                         bb.fEnable = TRUE;
                         bb.hRgnBlur = NULL;
-                        DwmEnableBlurBehindWindow(dout->wnd, &(bb));
+                        DwmEnableBlurBehindWindow(dout->wnd, &(bb)); // não functiona no chad Windows XP
                     }
 
                     //DragAcceptFiles(dout->base.wglWnd, TRUE);
-
                     if (isWnd)
                     {
-                        SetWindowPos(dout->wnd, NULL, AfxFromNdc(0.166666666666666, dout->base.resolution[0]), AfxFromNdc(0.166666666666666, dout->base.resolution[1]), dout->base.extent[0], dout->base.extent[1], SWP_NOZORDER | SWP_NOOWNERZORDER);
+#if 0
+                        SetWindowPos(dout->wnd, NULL, AfxFromNdc(0.166666666666666, dout->base.resolution[0]), AfxFromNdc(0.166666666666666, dout->base.resolution[1]), dout->base.extent[0], dout->base.extent[1], 0);
                         AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+#else
+                        SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.extent[0], dout->base.extent[1], SWP_NOMOVE);
+#endif
                     }
 
                     {
@@ -533,13 +533,13 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                         AfxAssertExtent(dout->base.resolution[2], dout->base.extent[2]);
 
                         AfxAssert(dout->base.bufCnt);
-                        AfxAssert(dout->base.bufUsage & afxTextureFlag_DRAW);
+                        AfxAssert(dout->base.bufUsage & afxRasterFlag_DRAW);
                         AfxAssert(dout->base.refreshRate);
                         AfxAssert(dout->base.wpOverHp);
                         AfxAssert(dout->base.wrOverHr);
                         AfxAssert(dout->base.wwOverHw);
 
-                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(ctx, dout->base.bufCnt * sizeof(dout->base.buffers[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(ctx, sizeof(dout->base.buffers[0]), dout->base.bufCnt, 0, AfxHint()))) AfxThrowError();
                         else for (afxNat i = 0; i < dout->base.bufCnt; i++)
                             dout->base.buffers[i].tex = NIL, /*dout->base.buffers[i].canv = NIL,*/ dout->base.buffers[i].booked = FALSE;
 

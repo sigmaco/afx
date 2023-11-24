@@ -47,11 +47,11 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
         if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
         else
         {
-            afxTexture surf;
+            afxRaster surf;
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
             AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
-            AfxAssertObjects(1, &surf, afxFcc_TEX);
+            AfxAssertObjects(1, &surf, afxFcc_RAS);
 
             AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
             
@@ -59,7 +59,7 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
 
             AfxEndSceneRendering(dscr, rnd);
 
-            if (AfxFinishDrawScript(dscr)) AfxThrowError();
+            if (AfxCompileDrawScript(dscr)) AfxThrowError();
             else if (AfxSubmitDrawScripts(din, 1, &dscr))
                 AfxThrowError();
 
@@ -78,12 +78,17 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
     afxReal64 MovementThisFrame = DeltaTime * CameraSpeed;
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
-    // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
-    // camera up and down, but it should be clear how to add one.
+    // think about the 'W' or 'S' key's action.
     afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
     afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
-
-    AfxApplyCameraMotion(cam, AfxSpawnV3d(MovementThisFrame * RightSpeed, 0.0f, MovementThisFrame * ForwardSpeed));
+    afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxV3d v =
+    {
+        MovementThisFrame * RightSpeed,
+        MovementThisFrame * UpSpeed,
+        MovementThisFrame * ForwardSpeed
+    };
+    AfxApplyCameraMotion(cam, v);
 }
 
 _AFXEXPORT void AfxUpdateApplication(afxThread thr, afxApplication app)

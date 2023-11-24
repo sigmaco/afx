@@ -25,32 +25,32 @@
 // Projective transformation matrix operations                                //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const* p, afxReal const lightPos[3])
+_AFXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const lightPos[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
 
     afxReal d = AfxFindPlaneDistance(p, lightPos);
 #if !0
-    m[0][0] = d - lightPos[0] * p->normal[0];
-    m[1][0] = -lightPos[0] * p->normal[1];
-    m[2][0] = -lightPos[0] * p->normal[2];
-    m[3][0] = -lightPos[0] * p->offset;
+    m[0][0] = d - lightPos[0] * p[0];
+    m[1][0] = -lightPos[0] * p[1];
+    m[2][0] = -lightPos[0] * p[2];
+    m[3][0] = -lightPos[0] * p[AFX_PLANE_OFFSET];
 
-    m[0][1] = -lightPos[1] * p->normal[0];
-    m[1][1] = d - lightPos[1] * p->normal[1];
-    m[2][1] = -lightPos[1] * p->normal[2];
-    m[3][1] = -lightPos[1] * p->offset;
+    m[0][1] = -lightPos[1] * p[0];
+    m[1][1] = d - lightPos[1] * p[1];
+    m[2][1] = -lightPos[1] * p[2];
+    m[3][1] = -lightPos[1] * p[AFX_PLANE_OFFSET];
 
-    m[0][2] = -lightPos[2] * p->normal[0];
-    m[1][2] = -lightPos[2] * p->normal[1];
-    m[2][2] = d - lightPos[2] * p->normal[2];
-    m[3][2] = -lightPos[2] * p->offset;
+    m[0][2] = -lightPos[2] * p[0];
+    m[1][2] = -lightPos[2] * p[1];
+    m[2][2] = d - lightPos[2] * p[2];
+    m[3][2] = -lightPos[2] * p[AFX_PLANE_OFFSET];
 
-    m[0][3] = -p->normal[0];
-    m[1][3] = -p->normal[1];
-    m[2][3] = -p->normal[2];
-    m[3][3] = d - p->offset;
+    m[0][3] = -p[0];
+    m[1][3] = -p[1];
+    m[2][3] = -p[2];
+    m[3][3] = d - p[AFX_PLANE_OFFSET];
 #else
     m[0][0] = d - lightPos[0] * p->normal[0];
     m[0][1] =   -lightPos[1] * p->normal[0];
@@ -177,16 +177,16 @@ _AFXINL void AfxComputeLookToM4d_LH(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxAssert(!AfxV3dIsInfinite(up));
 
     afxV4d x, y, z;
-    AfxGetNormalizedV3d(z, dir);
+    AfxNormalV3d(z, dir);
     z[3] = 0;
     AfxCrossV3d(x, up, z);
     x[3] = 0;
-    AfxGetNormalizedV3d(x, x);
+    AfxNormalV3d(x, x);
     AfxCrossV3d(y, z, x);
     y[3] = 0;
 
     afxV3d negEye;
-    AfxNegateV3d(negEye, eye);
+    AfxNegV3d(negEye, eye);
 
     afxV4d const w = { AfxDotV3d(x, negEye), AfxDotV3d(y, negEye), AfxDotV3d(z, negEye), (afxReal)1 };
     AfxSetTransposedM4d(m, x, y, z, w);    
@@ -204,7 +204,7 @@ _AFXINL void AfxComputeLookToM4d_RH(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxAssert(!AfxV3dIsInfinite(up));
 
     afxV3d negDir;
-    AfxNegateV3d(negDir, dir);
+    AfxNegV3d(negDir, dir);
     AfxComputeLookToM4d_LH(m, eye, negDir, up);
 }
 
@@ -221,10 +221,10 @@ _AFXINL void AfxComputeLookAtM4d_LH(afxReal m[4][4], afxReal const eye[3], afxRe
     afxV4d z, x, y;
     AfxSubV3d(z, target, eye);
     z[3] = 0;
-    AfxGetNormalizedV3d(z, z);
+    AfxNormalV3d(z, z);
     AfxCrossV3d(x, up, z);
     x[3] = 0;
-    AfxGetNormalizedV3d(x, x);
+    AfxNormalV3d(x, x);
     AfxCrossV3d(y, z, x);
     y[3] = 0;
 
@@ -247,24 +247,18 @@ _AFXINL void AfxComputeLookAtM4d_RH(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxAssert(target);
     AfxAssert(up);
 
-#if 0
     afxV4d z, x, y;
-    AfxSubV3d(z, eye, target);
+    AfxSubV3d(z, target, eye);
     z[3] = 0;
-    AfxGetNormalizedV3d(z, z);
+    AfxNormalV3d(z, z);
     AfxCrossV3d(x, up, z);
     x[3] = 0;
-    AfxGetNormalizedV3d(x, x);
+    AfxNormalV3d(x, x);
     AfxCrossV3d(y, z, x);
     y[3] = 0;
     
     afxV4d const w = { -AfxDotV3d(x, eye), -AfxDotV3d(y, eye), -AfxDotV3d(z, eye), (afxReal)1 };
     AfxSetTransposedM4d(m, x, y, z, w);
-#else
-    afxV4d negDir;
-    AfxSubV3d(negDir, eye, target);
-    AfxComputeLookToM4d_LH(m, eye, negDir, up);
-#endif
 }
 
 _AFXINL void AfxComputeOffcenterOrthographicM4d_LH(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far)
@@ -277,12 +271,11 @@ _AFXINL void AfxComputeOffcenterOrthographicM4d_LH(afxReal m[4][4], afxReal left
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxResetM4d(m);
-
     afxReal rw = 1.0f / (right - left);
     afxReal rh = 1.0f / (top - bottom);
     afxReal range = 1.0f / (far - near);
 
+    AfxResetM4d(m);
     m[0][0] = rw + rw;
     m[1][1] = rh + rh;
     m[2][2] = range;
@@ -301,12 +294,11 @@ _AFXINL void AfxComputeOffcenterOrthographicM4d_RH(afxReal m[4][4], afxReal left
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
     
-    AfxResetM4d(m);
-
     afxReal rw = 1.0f / (right - left);
     afxReal rh = 1.0f / (top - bottom);
     afxReal range = 1.0f / (far - near);
 
+    AfxResetM4d(m);
     m[0][0] = rw + rw;
     m[1][1] = rh + rh;
     m[2][2] = range;
@@ -326,10 +318,9 @@ _AFXINL void AfxComputeOrthographicM4d_LH(afxReal m[4][4], afxReal const extent[
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxResetM4d(m);
-
     afxReal range = 1.f / (far - near);
 
+    AfxResetM4d(m);
     m[0][0] = AfxScalar(2) / extent[0];
     m[1][1] = AfxScalar(2) / extent[1];
     m[2][2] = range;
@@ -347,10 +338,9 @@ _AFXINL void AfxComputeOrthographicM4d_RH(afxReal m[4][4], afxReal const extent[
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxResetM4d(m);
-
     afxReal range = 1.f / (near - far);
 
+    AfxResetM4d(m);
     m[0][0] = AfxScalar(2) / extent[0];
     m[1][1] = AfxScalar(2) / extent[1];
     m[2][2] = range;
@@ -369,11 +359,10 @@ _AFXINL void AfxComputePerspectiveM4d_LH(afxReal m[4][4], afxReal const extent[2
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal near2 = near + near;
     afxReal range = far / (far - near);
 
+    AfxZeroM4d(m);
     m[0][0] = near2 / extent[0];
     m[1][1] = near2 / extent[1];
     m[2][2] = range;
@@ -393,11 +382,10 @@ _AFXINL void AfxComputePerspectiveM4d_RH(afxReal m[4][4], afxReal const extent[2
     AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal near2 = near + near;
     afxReal range = far / (near - far);
 
+    AfxZeroM4d(m);
     m[0][0] = near2 / extent[0];
     m[1][1] = near2 / extent[1];
     m[2][2] = range;
@@ -416,12 +404,11 @@ _AFXINL void AfxComputeFovPerspectiveM4dLH(afxReal m[4][4], afxReal fovY, afxRea
     AfxAssert(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal h = AfxCos(0.5f * fovY) / AfxSin(0.5f * fovY);
     afxReal w = h / aspectRatio;
     afxReal range = far / (near - far);
 
+    AfxZeroM4d(m);
     m[0][0] = w;
     m[1][1] = h;
     m[2][2] = range;
@@ -440,12 +427,11 @@ _AFXINL void AfxComputeFovPerspectiveM4dRH(afxReal m[4][4], afxReal fovY, afxRea
     AfxAssert(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal h = AfxCos(0.5f * fovY) / AfxSin(0.5f * fovY);
     afxReal w = h / aspectRatio;
     afxReal range = far / (near - far);
 
+    AfxZeroM4d(m);
     m[0][0] = w;
     m[1][1] = h;
     m[2][2] = range;
@@ -464,13 +450,12 @@ _AFXINL void AfxComputeOffcenterPerspectiveM4d_LH(afxReal m[4][4], afxReal left,
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal near2 = near + near;
     afxReal rw = 1.0f / (right - left);
     afxReal rh = 1.0f / (top - bottom);
     afxReal range = far / (far - near);
 
+    AfxZeroM4d(m);
     m[0][0] = near2 * rw;
     m[1][1] = near2 * rh;
     m[2][0] = -(left + right) * rw;
@@ -491,13 +476,12 @@ _AFXINL void AfxComputeOffcenterPerspectiveM4d_RH(afxReal m[4][4], afxReal left,
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    AfxZeroM4d(m);
-
     afxReal near2 = near + near;
     afxReal rw = 1.0f / (right - left);
     afxReal rh = 1.0f / (top - bottom);
     afxReal range = far / (near - far);
 
+    AfxZeroM4d(m);
     m[0][0] = near2 * rw;
     m[1][1] = near2 * rh;
     m[2][0] = (left + right) * rw;
@@ -516,10 +500,8 @@ _AFXINL void AfxComputeRenderWareViewM4d(afxReal view[4][4], afxReal const cam[4
     AfxAssert(view);
     AfxAssert(cam);
 
-    // WARNING wrongly left-handed
-
     afxM4d inv;
-    AfxInvertM4d(inv, cam);
+    AfxInverseM4d(inv, cam);
     view[0][0] = -inv[0][0];
     view[0][1] = inv[0][1];
     view[0][2] = inv[0][2];

@@ -44,8 +44,8 @@ _AFXINL void AfxEncapsulateVertices(afxAabb* aabb, afxNat cnt, afxReal const poi
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxiV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
-        AfxMiniV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
+        AfxMinV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
     }
 }
 
@@ -57,8 +57,8 @@ _AFXINL void AfxEncapsulatePoints(afxAabb* aabb, afxNat cnt, afxReal const point
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxiV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
-        AfxMiniV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
+        AfxMinV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
     }
 }
 
@@ -177,12 +177,12 @@ _AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
     AfxPostMultiplyArrayedV4d(m, 2, aabb->extremes, to->extremes);
 }
 
-_AFXINL void AfxTransformAabbs(afxReal const linear[3][3], afxReal const affine[3], afxNat cnt, afxAabb const in[], afxAabb out[])
+_AFXINL void AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxAabb const in[], afxAabb out[])
 {
     // Should be compatible with void TransformBoundingBox(const float *Affine3, const float *Linear3x3, float *OBBMin, float *OBBMax)
     afxError err = AFX_ERR_NONE;
-    AfxAssert(affine);
-    AfxAssert(linear);
+    AfxAssert(atv);
+    AfxAssert(ltm);
     AfxAssert(cnt);
     AfxAssert(in);
     AfxAssert(out);
@@ -202,10 +202,11 @@ _AFXINL void AfxTransformAabbs(afxReal const linear[3][3], afxReal const affine[
                     afxV3d tmp;
                     AfxSetV3d(tmp, x ? in[i].extremes[AFX_AABB_SUP][0] : in[i].extremes[AFX_AABB_INF][0], y ? in[i].extremes[AFX_AABB_SUP][1] : in[i].extremes[AFX_AABB_INF][1], z ? in[i].extremes[AFX_AABB_SUP][2] : in[i].extremes[AFX_AABB_INF][2]);
 
-                    AfxPostMultiplyV3d(pos, linear, tmp);
+                    AfxPostMultiplyV3d(ltm, tmp, pos);
+                    AfxAddV3d(pos, pos, atv);
 
-                    AfxMiniV3d(min, min, pos);
-                    AfxMaxiV3d(max, max, pos);
+                    AfxMinV3d(min, min, pos);
+                    AfxMaxV3d(max, max, pos);
                 }
             }
         }

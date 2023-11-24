@@ -28,7 +28,7 @@
 
 AFX_DEFINE_STRUCT(afxSource)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxNat32    iExternalSrcCookie;    ///< Cookie identifying the source, given by hashing the name of the source given in the project.  See \ref AK::SoundEngine::GetIDFromString. \aknote If an event triggers the playback of more than one external source, they must be named uniquely in the project therefore have a unique cookie) in order to tell them apart when filling the AkExternalSourceInfo structures. \endaknote
     afxNat32    idCodec;              ///< Codec ID for the file.  One of the audio formats defined in AkTypes.h (AKCODECID_XXX)
     afxUri      uri;              ///< File path for the source.  If not NULL, the source will be streaming from disk. Set pInMemory to NULL. If idFile is set, this field is used as stream name (for profiling purposes). /// The only file format accepted is a fully formed WEM file, as converted by Wwise.

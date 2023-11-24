@@ -19,7 +19,7 @@
 #ifndef AFX_SURFACE_H
 #define AFX_SURFACE_H
 
-#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxRaster.h"
 #include "afx/draw/afxDrawCommands.h"
 
 typedef enum afxSurfaceState
@@ -37,11 +37,11 @@ AFX_OBJECT(afxSurface)
 struct afxBaseSurface
 #endif
 {
-    afxTexture          tex; /// the texture subresource that will be output to for this color attachment.
+    afxRaster          tex; /// the texture subresource that will be output to for this color attachment.
     afxSurfaceLoadOp    loadOp; /// Indicates the load operation to perform on view prior to executing the render pass.
     afxSurfaceStoreOp   storeOp; /// The store operation to perform on view after executing the render pass.
     afxClearValue       clearValue; /// Indicates the value to clear view to prior to executing the render pass.
-    afxTexture          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
+    afxRaster          resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
 };
 #endif
 
@@ -50,6 +50,6 @@ AFX afxError                AfxAcquireDepthSurfaces(afxDrawContext dctx, afxNat 
 
 AFX afxError                AfxAcquireSurfaces(afxDrawContext dctx, afxNat cnt, afxSurface surf[], afxWhd const extent, afxPixelFormat fmt, afxFlags usage);
 
-AFX afxTexture              AfxGetSurfaceTexture(afxSurface surf);
+AFX afxRaster              AfxGetSurfaceTexture(afxSurface surf);
 
 #endif//AFX_SURFACE_H

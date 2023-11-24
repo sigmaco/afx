@@ -30,7 +30,7 @@ AFX_DEFINE_STRUCT(afxPoolPage)
 
 AFX_DEFINE_STRUCT(afxPool)
 {
-    _AFX_DBG_FCC
+    _AFX_DBG_FCC;
     afxNat          unitSiz;
     afxNat          unitsPerPage;
     afxNat          totalUsedCnt;

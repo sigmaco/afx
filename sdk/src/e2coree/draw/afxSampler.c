@@ -24,7 +24,7 @@ _AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(spec);
-    AfxAssertObjects(1, &samp, afxFcc_SAMP)
+    AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
     spec->magFilter = samp->magFilter;
     spec->minFilter = samp->minFilter;

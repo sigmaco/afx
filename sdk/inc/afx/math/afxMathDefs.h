@@ -45,18 +45,18 @@
 #define AFX_PI_OVER2    (AFX_PI / AfxScalar(2))
 #define AFX_EPSILON     AfxScalar(FLT_EPSILON)
 
-typedef afxReal         afxSimd(afxV2d[2]);
-typedef afxReal         afxSimd(afxV3d[3]);
-typedef afxReal         afxSimd(afxV4d[4]);
+typedef afxReal         afxV2d[2];
+typedef afxReal         afxV3d[3];
+typedef afxReal         afxV4d[4];
 static_assert(sizeof(__m128) == sizeof(afxV4d), "");
 
-typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
-typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxQuat; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxRotor; // 0,1,2 = imaginary, 3 = real
 
-typedef afxV2d         afxSimd(afxM2d[2]);
-typedef afxV3d         afxSimd(afxM3d[3]);
-typedef afxV4d         afxSimd(afxM4d[4]);
-typedef afxV4d         afxSimd(afxM4d3[3]);
+typedef afxV2d         afxM2d[2];
+typedef afxV3d         afxM3d[3];
+typedef afxV4d         afxM4d[4];
+typedef afxV4d         afxM4d3[3];
 
 #if 0
 static_assert(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");

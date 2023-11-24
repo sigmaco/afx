@@ -159,8 +159,7 @@ typedef enum afxFcc
     afxFcc_CANV    = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     afxFcc_DCTX    = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     afxFcc_PIP     = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
-    afxFcc_RAS     = AfxPackFcc('r', 'a', 's', '\0'), // afxRasterizer
-    afxFcc_PIPR    = AfxPackFcc('p', 'i', 'p', 'a'), // afxPipelineRig
+    afxFcc_PIPR     = AfxPackFcc('r', 'a', 's', '\0'), // afxRasterizer
     afxFcc_LEGT2= AfxPackFcc('l', 'e', 'g', 't'), // afxPipelineRig
     afxFcc_LEGO    = AfxPackFcc('l', 'e', 'g', 'o'), // afxPipelineRig
     afxFcc_SHD     = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
@@ -219,7 +218,7 @@ typedef enum afxFcc
     afxFcc_IBUF    = AfxPackFcc('i', 'b', 'u', 'f'), // afxIndexBuffer
     afxFcc_IMGH    = AfxPackFcc('i', 'm', 'g', 'h'), // AfxImageHub
     afxFcc_IMIO    = AfxPackFcc('i', 'm', 'i', 'o'), // AfxImageIoAssistent
-    afxFcc_TEX     = AfxPackFcc('t', 'e', 'x', '\0'), // afxTexture
+    afxFcc_RAS     = AfxPackFcc('t', 'e', 'x', '\0'), // afxRaster
     afxFcc_SURF    = AfxPackFcc('s', 'u', 'r', 'f'), // afxSurface
     afxFcc_TEXB    = AfxPackFcc('t', 'e', 'x', 'b'), // afxTextureBlueprint
 

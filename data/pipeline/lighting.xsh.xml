@@ -6,9 +6,9 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D'>in_posn</In>
-        <In location='3' format='V3D'>in_nrm</In>
-        <In location='6' format='V2D'>in_uv0</In>
+        <In location='0'>vec4 in_posn</In>
+        <In location='3'>vec3 in_nrm</In>
+        <In location='6'>vec2 in_uv0</In>
         <![CDATA[
         
         layout (location = 0) in vec4 in_posn;
@@ -38,7 +38,7 @@
         <Include>data/pipeline/stdMaterial.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='2' type='CONSTANT_BUFFER'>sgl_mtl</Resource>
-        <Out location='0' format='V4D'>out_rgba0</Out>
+        <Out location='0'>vec4 out_rgba0</Out>
         <![CDATA[
         
         uniform sampler2D floorTexture;

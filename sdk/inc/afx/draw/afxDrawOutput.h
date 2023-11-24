@@ -97,7 +97,7 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
     afxWhd              whd;
     afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
     afxColorSpace       colorSpc; // afxColorSpace_SRGB; if sRGB isn't present, fall down to LINEAR.
-    afxTextureFlags     bufUsage; // RASTER; used as (color) rasterization surface.
+    afxRasterFlags     bufUsage; // RASTER; used as (color) rasterization surface.
     afxNat              bufCnt; // 2 or 3; double or triple-buffered.
 
     afxPresentAlpha     presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
@@ -144,11 +144,11 @@ struct afxBaseDrawOutput
     afxPixelFormat      pixelFmt; // pixel format of raster surfaces.
     afxColorSpace       colorSpc; // color space of raster surfaces. sRGB is the default.
     
-    afxTextureFlags     bufUsage; // what evil things we will do with it? Usually AFX_TEX_FLAG_SURFACE_RASTER
+    afxRasterFlags     bufUsage; // what evil things we will do with it? Usually AFX_TEX_FLAG_SURFACE_RASTER
     afxNat              bufCnt; // usually 2 or 3; double or triple buffered.
     struct
     {
-        afxTexture      tex; // afxCanvas // should have 1 fb for each swapchain raster.
+        afxRaster      tex; // afxCanvas // should have 1 fb for each swapchain raster.
         //afxCanvas           canv;
         afxBool         booked;
     }*                  buffers;
@@ -194,10 +194,10 @@ AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxR
 
 // Buffer
 
-AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxTexture *tex);
+AFX afxBool             AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat idx, afxRaster *tex);
 AFX afxBool             AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat idx, afxCanvas *canv);
 AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
-AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxTexture tex[]);
+AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster tex[]);
 AFX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 

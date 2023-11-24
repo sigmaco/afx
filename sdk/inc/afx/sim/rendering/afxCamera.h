@@ -50,9 +50,9 @@ typedef enum
 
 typedef enum afxCameraDepthRange
 {
-    afxCameraDepthRange_ZERO2ONE = 0x0, // Direct3D
-    afxCameraDepthRange_NEGONE2ONE = 0x1, // OpenGL (default in Qwadro)
-    afxCameraDepthRange_NEGONE2ZERO = 0x2,
+    afxCameraDepthRange_ZERO2ONE, // Direct3D
+    afxCameraDepthRange_NEGONE2ONE, // OpenGL (default in Qwadro)
+    afxCameraDepthRange_NEGONE2ZERO,
 } afxCameraDepthRange;
 
 #ifdef _AFX_CAMERA_C
@@ -80,7 +80,7 @@ AFX_OBJECT(afxCamera)
     afxBool     perspective; // is projection perspective or orthographic.
     afxFrustum  frustum;
 };
-#endif
+#endif//_AFX_CAMERA_C
 
 //static_assert(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
@@ -210,6 +210,6 @@ AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInP
 // If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 // you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AFX afxReal AfxTryFindPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight);
+AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 #endif//AFX_CAMERA_H

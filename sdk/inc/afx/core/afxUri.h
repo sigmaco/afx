@@ -76,8 +76,10 @@ AFXINL afxNat           AfxGetUriPath(afxUri *uri, afxUri const *parent);
 AFXINL afxNat           AfxGetUriDirectory(afxUri *uri, afxUri const *parent);
 AFXINL afxNat           AfxGetUriObject(afxUri *uri, afxUri const *parent); // file name + extension (if any)
 AFXINL afxNat           AfxGetUriName(afxUri *uri, afxUri const *parent); // just file name, without extension
+AFXINL afxNat           AfxGetUriNameString(afxUri const *parent, afxString* name);
 AFXINL afxNat           AfxGetUriExtension(afxUri *uri, afxUri const *parent, afxBool skipDot);
 AFXINL afxNat           AfxGetUriQuery(afxUri *uri, afxUri const *parent, afxBool skipSep);
+AFXINL afxNat           AfxGetUriQueryString(afxUri const *uri, afxBool skipSep, afxString* query);
 AFXINL afxNat           AfxGetUriFragment(afxUri *uri, afxUri const *parent, afxBool skipSep);
 AFXINL afxNat           AfxGetUriScheme(afxUri *uri, afxUri const *parent); // "https"
 
@@ -95,7 +97,7 @@ AFXINL afxNat           AfxUriFromStringRange(afxUri *uri, afxString const *src,
 AFXINL void             AfxMakeUri(afxUri *uri, void const *start, afxNat range); // will not set capacity (will be read only)
 AFXINL void             AfxMakeMutableUri(afxUri *uri, void *start, afxNat range);
 
-AFXINL void             AfxMakeBufferedUri(afxUri *uri, void const *start, afxNat cap);
+AFXINL void             AfxMakeBufferedUri(afxUri *uri, void *start, afxNat cap);
 
 AFXINL void             AfxResetUri(afxUri *uri); // WARNING string storage is resetted too. Any storage assigned will be nulled.
 

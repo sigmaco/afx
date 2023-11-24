@@ -21,14 +21,7 @@
 #ifndef AFX_VERTEX_DATA_H
 #define AFX_VERTEX_DATA_H
 
-#include "afx/sim/afxSimDefs.h"
-#include "afx/core/afxArray.h"
-#include "afx/math/afxAabb.h"
-#include "afx/core/afxInstance.h"
-#include "afx/sim/afxMaterial.h"
-#include "afx/sim/afxSkeleton.h"
-#include "afx/core/afxUrd.h"
-#include "afx/math/afxVertex.h"
+#include "afx/sim/modeling/afxMeshBuilder.h"
 
 typedef enum afxVertexUsage
 {
@@ -42,8 +35,9 @@ typedef enum afxVertexUsage
     afxVertexUsage_TAN          = AfxGetBitOffset(4),
     afxVertexUsage_BIT          = AfxGetBitOffset(5),
     afxVertexUsage_TBC          = AfxGetBitOffset(10), // tangent-binormal cross
-    afxVertexUsage_LIGHTING     = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BIT,
-    afxVertexUsage_SPATIAL      = afxVertexUsage_POSITIONAL | afxVertexUsage_LIGHTING,
+    afxVertexUsage_UVN          = AfxGetBitOffset(11),
+    afxVertexUsage_TANGENT      = afxVertexUsage_NRM | afxVertexUsage_TAN | afxVertexUsage_BIT | afxVertexUsage_TBC | afxVertexUsage_UVN,
+    afxVertexUsage_SPATIAL      = afxVertexUsage_POSITIONAL | afxVertexUsage_TANGENT,
 
     afxVertexUsage_UV           = AfxGetBitOffset(6),
     afxVertexUsage_VISUAL       = afxVertexUsage_UV,
@@ -74,14 +68,8 @@ typedef enum afxVertexFlag
 
 AFX_DEFINE_STRUCT(afxVertexBias)
 {
-    afxNat8 baseWeightIdx;
-    afxNat8 weightCnt;
-};
-
-AFX_DEFINE_STRUCT(afxVertexWeight)
-{
-    afxReal weight;
     afxNat8 pivotIdx;
+    afxReal weight;
 };
 
 AFX_DEFINE_STRUCT(afxVertexDataStream)
@@ -111,59 +99,38 @@ AFX_DEFINE_STRUCT(afxVertexDataCache)
     afxVertexDataComponent* comps;
 };
 
-AFX_OBJECT(afxVertexData)
 #ifdef _AFX_VERTEX_DATA_C
+
+AFX_DEFINE_STRUCT(afxVertexDataAttr)
+{
+    afxNat          cacheIdx;
+    afxVertexUsage  usage;
+    afxVertexFlags  flags;
+    afxVertexFormat fmt;
+    void*           data;
+    afxString8      id;
+};
+
+AFX_OBJECT(afxVertexData)
 {
     afxNat              vtxCnt;
-    afxVertexBias*      biases; // one for each vertex
-    afxNat              weightCnt;
-    afxVertexWeight*    weights;
-    struct
-    {
-        afxNat          cacheIdx;
-        afxVertexUsage  usage;
-        afxVertexFlags  flags;
-        afxVertexFormat fmt;
-        void*           data;
-        afxString8      id;
-    }                  *attrs;
+    afxVertex*          vtx; // one for each vertex
+    afxNat              biasCnt;
+    afxVertexBias*      biases;
     afxNat              attrCnt;
+    afxVertexDataAttr*  attrs;
     afxNat              cacheCnt;
     afxVertexDataCache* caches;
-}
+};
 #endif
-;
 
 AFX_DEFINE_STRUCT(afxVertexAttrSpec)
 {
-    afxChar const*  id;
-    afxVertexFormat fmt;
-    afxVertexUsage  usage;
-    afxVertexFlags  flags;
-    afxNat          cacheIdx;
-};
-
-AFX_DEFINE_STRUCT(afxMeshBuilder)
-{
-    void(*GetVertexInfo)(void* data, afxNat* vtxCnt, afxBool* biased, afxNat* weightCnt, afxNat* attrCnt);
-    void(*GetVertexBiases)(void* data, afxNat baseVtxIdx, afxNat vtxCnt, afxVertexBias bias[]);
-    void(*GetVertexWeights)(void* data, afxNat first, afxNat cnt, afxVertexWeight weight[]);
-    void(*GetVertexSpecs)(void* data, afxNat baseAttrIdx, afxNat attrCnt, afxVertexAttrSpec spec[], afxBool hasData[]);
-    void(*GetVertexData)(void* data, afxNat attrIdx, afxNat baseVtxIdx, afxNat vtxCnt, void *dst);
-    
-    afxNat(*GetTopologyInfo)(void* data, afxNat* triCnt, afxNat* surfaceCnt);
-    afxNat(*GetSurfaceData)(void* data, afxNat surfaceIdx, afxNat* mtlIdx, afxNat triangles[]); // output tri indices for a given surface
-    void(*GetCoincidentMap)(void* data, afxNat firstVtx, afxNat vtxCnt, afxNat map[]); // output original vtx
-    void(*GetTriangleMap)(void* data, afxNat firstVtx, afxNat vtxCnt, afxNat map[]); // output owner tri for each vertex
-    void(*GetEdgeMap)(void* data, afxNat first, afxNat triCnt, afxNat const indices[], afxNat map[]); // output edge data for each tri
-    
-    void(*GetBindingInfo)(void* data, afxNat* mtlCnt, afxNat* artCnt);
-    afxMaterial(*GetMaterial)(void* data, afxNat mtlIdx);    
-    afxNat(*GetVertebraInfo)(void* data, afxNat artIdx, afxString* name);
-    void(*GetVertebraData)(void* data, afxString const* name, afxNat baseTriIdx, afxNat triCnt, void *dst);
-
-    void(*Cleanup)(void* data);
-    void*data[4];
+    afxChar const*      id;
+    afxVertexFormat     fmt;
+    afxVertexUsage      usage;
+    afxVertexFlags      flags;
+    afxNat              cacheIdx;
 };
 
 AFX afxNat              AfxFindVertexDataAttributes(afxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
@@ -188,8 +155,8 @@ AFX void*               AfxExposeVertexData(afxVertexData vtd, afxNat attrIdx, a
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxBuildVertexDatas(afxSimulation sim, afxMeshBuilder const* mshb, afxNat cnt, void *data[], afxVertexData vtxd[]);
+AFX afxVertexData       AfxBuildVertexData(afxSimulation sim, afxMeshBuilder const* mshb);
 
-AFX void                AfxTransformVertexDatas(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxBool renormalize, afxNat cnt, afxVertexData vtd[]);
+AFX void                AfxTransformVertexDatas(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxBool renormalize, afxNat cnt, afxVertexData vtd[]);
 
 #endif//AFX_VERTEX_DATA_H

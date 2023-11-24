@@ -32,44 +32,44 @@
 #define _AFX_DBG_IGNORE_STENCIL
 #define _AFX_DBG_IGNORE_DEPTH_BIAS
 
-_SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer ras)
+_SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer rast)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
-    afxBool rasterizationDisabled = !ras;
+    afxBool rasterizationDisabled = !rast;
 
-    AfxAssert(ras);
+    AfxAssert(rast);
 
     afxRasterizationConfig config;
-    AfxDescribeRasterizerConfiguration(ras, &config);
+    AfxDescribeRasterizerConfiguration(rast, &config);
 
     return err;
 }
 
-_SGL afxError _SglRasDtor(afxRasterizer ras)
+_SGL afxError _SglPiprDtor(afxRasterizer rast)
 {
-    AfxEntry("ras=%p", ras);
+    AfxEntry("rast=%p", rast);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
 
-    afxDrawContext dctx = AfxGetObjectProvider(ras);
+    afxDrawContext dctx = AfxGetObjectProvider(rast);
     afxContext mem = AfxGetDrawContextMemory(dctx);
     AfxAssertObjects(1, &mem, afxFcc_CTX);
 
-    if (ras->base.sampleMasks)
-        AfxDeallocate(mem, ras->base.sampleMasks);
+    if (rast->base.sampleMasks)
+        AfxDeallocate(mem, rast->base.sampleMasks);
 
-    if (ras->base.outs)
-        AfxDeallocate(mem, ras->base.outs);
+    if (rast->base.outs)
+        AfxDeallocate(mem, rast->base.outs);
 
     return err;
 }
 
-_SGL afxError _SglRasCtor(afxRasterizer ras, afxCookie const* cookie)
+_SGL afxError _SglPiprCtor(afxRasterizer rast, afxCookie const* cookie)
 {
-    AfxEntry("ras=%p", ras);
+    AfxEntry("rast=%p", rast);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
 
     afxDrawContext dctx = cookie->udd[0];
     afxRasterizationConfig const *rasc = ((afxRasterizationConfig const*)cookie->udd[1]) + cookie->no;
@@ -80,98 +80,98 @@ _SGL afxError _SglRasCtor(afxRasterizer ras, afxCookie const* cookie)
     AfxAssertObjects(1, &mem, afxFcc_CTX);
 
     afxRasterizationFlags rasFlags = rasc->rasFlags;
-    ras->base.rasFlags = NIL;
+    rast->base.rasFlags = NIL;
 
-    ras->base.fillMode = rasc->fillMode;
-    ras->base.lineWidth = rasc->lineWidth;
+    rast->base.fillMode = rasc->fillMode;
+    rast->base.lineWidth = rasc->lineWidth;
 
-    ras->base.depthBiasEnabled = !!rasc->depthBiasEnabled;
-    ras->base.depthBiasSlopeScale = rasc->depthBiasSlopeScale;
-    ras->base.depthBiasConstFactor = rasc->depthBiasConstFactor;
-    ras->base.depthBiasClamp = rasc->depthBiasClamp;
+    rast->base.depthBiasEnabled = !!rasc->depthBiasEnabled;
+    rast->base.depthBiasSlopeScale = rasc->depthBiasSlopeScale;
+    rast->base.depthBiasConstFactor = rasc->depthBiasConstFactor;
+    rast->base.depthBiasClamp = rasc->depthBiasClamp;
 
     afxMultisamplingFlags msFlags = rasc->msFlags;
-    ras->base.msFlags = NIL;
+    rast->base.msFlags = NIL;
 
-    ras->base.msEnabled = !!rasc->msEnabled;
-    ras->base.minSampleShadingValue = rasc->minSampleShadingValue;
+    rast->base.msEnabled = !!rasc->msEnabled;
+    rast->base.minSampleShadingValue = rasc->minSampleShadingValue;
 
-    ras->base.sampleCnt = rasc->sampleCnt;
-    ras->base.sampleMasks = NIL;
+    rast->base.sampleCnt = rasc->sampleCnt;
+    rast->base.sampleMasks = NIL;
 
-    if (ras->base.sampleCnt && !(ras->base.sampleMasks = AfxAllocate(mem, ras->base.sampleCnt * sizeof(ras->base.sampleMasks[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    if (rast->base.sampleCnt && !(rast->base.sampleMasks = AfxAllocate(mem, sizeof(rast->base.sampleMasks[0]), rast->base.sampleCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
-        for (afxNat i = 0; i < ras->base.sampleCnt; i++)
-            ras->base.sampleMasks[i] = rasc->sampleMasks[i];
+        for (afxNat i = 0; i < rast->base.sampleCnt; i++)
+            rast->base.sampleMasks[i] = rasc->sampleMasks[i];
     }
 
     if (!err)
     {
         afxDepthStencilFlags dsFlags = rasc->dsFlags;
-        ras->base.dsFlags = NIL;
+        rast->base.dsFlags = NIL;
 
-        ras->base.depthTestEnabled = !!rasc->depthTestEnabled;
-        ras->base.depthCompareOp = rasc->depthCompareOp;
-        ras->base.depthWriteEnabled = !!rasc->depthWriteEnabled;
+        rast->base.depthTestEnabled = !!rasc->depthTestEnabled;
+        rast->base.depthCompareOp = rasc->depthCompareOp;
+        rast->base.depthWriteEnabled = !!rasc->depthWriteEnabled;
 
-        ras->base.stencilTestEnabled = !!rasc->stencilTestEnabled;
-        ras->base.stencilFront = rasc->stencilFront;
-        ras->base.stencilBack = rasc->stencilBack;
+        rast->base.stencilTestEnabled = !!rasc->stencilTestEnabled;
+        rast->base.stencilFront = rasc->stencilFront;
+        rast->base.stencilBack = rasc->stencilBack;
         
-        ras->base.depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
-        AfxCopyV2d(ras->base.depthBounds, rasc->depthBounds);
+        rast->base.depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
+        AfxCopyV2d(rast->base.depthBounds, rasc->depthBounds);
 
-        ras->base.dsFmt = rasc->dsFmt; // ?
+        rast->base.dsFmt = rasc->dsFmt; // ?
 
         afxColorOutputFlags pixelFlags = rasc->pixelFlags;
-        ras->base.pixelFlags = NIL;
+        rast->base.pixelFlags = NIL;
 
-        ras->base.outCnt = rasc->colorOutCnt;
-        ras->base.outs = NIL;
+        rast->base.outCnt = rasc->colorOutCnt;
+        rast->base.outs = NIL;
 
-        if (ras->base.outCnt && !(ras->base.outs = AfxAllocate(mem, ras->base.outCnt * sizeof(ras->base.outs[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        if (rast->base.outCnt && !(rast->base.outs = AfxAllocate(mem, sizeof(rast->base.outs[0]), rast->base.outCnt, 0, AfxHint()))) AfxThrowError();
         else
         {
-            for (afxNat i = 0; i < ras->base.outCnt; i++)
-                ras->base.outs[i] = rasc->colorOuts[i];
+            for (afxNat i = 0; i < rast->base.outCnt; i++)
+                rast->base.outs[i] = rasc->colorOuts[i];
 
             // deveria ser só o blend/write, já que só podemos determinar as saídas quando assembleado com fragment shaders enquanto pipeline completo.
         }
 
         if (!err)
         {
-            AfxCopyV4d(ras->base.blendConstants, rasc->blendConstants);
+            AfxCopyV4d(rast->base.blendConstants, rasc->blendConstants);
 
-            ras->base.logicOpEnabled = !!rasc->pixelLogicOpEnabled;
-            ras->base.logicOp = rasc->pixelLogicOp;
+            rast->base.logicOpEnabled = !!rasc->pixelLogicOpEnabled;
+            rast->base.logicOp = rasc->pixelLogicOp;
 
-            ras->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+            rast->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
             if (err)
             {
-                if (ras->base.outs)
-                    AfxDeallocate(mem, ras->base.outs);
+                if (rast->base.outs)
+                    AfxDeallocate(mem, rast->base.outs);
             }
         }
 
         if (err)
         {
-            if (ras->base.sampleMasks)
-                AfxDeallocate(mem, ras->base.sampleMasks);
+            if (rast->base.sampleMasks)
+                AfxDeallocate(mem, rast->base.sampleMasks);
         }
     }
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertObjects(1, &rast, afxFcc_PIPR);
     return err;
 }
 
-_SGL afxClassConfig _SglRasClsConfig =
+_SGL afxClassConfig _SglPiprClsConfig =
 {
-    .fcc = afxFcc_RAS,
+    .fcc = afxFcc_PIPR,
     .name = "Rasterizer",
     .unitsPerPage = 4,
     .size = sizeof(AFX_OBJECT(afxRasterizer)),
     .ctx = NIL,
-    .ctor = (void*)_SglRasCtor,
-    .dtor = (void*)_SglRasDtor
+    .ctor = (void*)_SglPiprCtor,
+    .dtor = (void*)_SglPiprDtor
 };

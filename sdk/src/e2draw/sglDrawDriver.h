@@ -20,8 +20,12 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 
-#include "../src/e2coree/deps/gl/glcorearb.h"
-#include "../src/e2coree/deps/gl/wglext.h"
+ //#include "../src/e2coree/deps/gl/glcorearb.h"
+ //#include "../src/e2coree/deps/gl/wglext.h"
+
+#include "../src/e2coree/deps/gl/glad.h"
+#include "../src/e2coree/deps/gl/glad_wgl.h"
+
 #include <windows.h>
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/draw/afxDrawScript.h"
@@ -892,7 +896,7 @@ SGL GLenum SglToGlTexelFilterModeMipmapped(afxTexelFilter min, afxTexelFilter mi
 SGL GLenum SglToGlTexWrapMode(afxTexelAddress twm);
 SGL GLenum SglToGlColorSwizzle(afxColorSwizzle swizzle);
 SGL void SglToGlColorSwizzling(afxColorSwizzling const *swizzling, GLenum *arrayedSwizzles);
-SGL void SglDetermineGlTargetInternalFormatType(afxTexture tex, GLenum *target, GLint *intFmt, GLenum *fmt, GLenum *type);
+SGL void SglDetermineGlTargetInternalFormatType(afxRaster tex, GLenum *target, GLint *intFmt, GLenum *fmt, GLenum *type);
 
 #ifdef _AFX_DEBUG
 #   define _SglThrowErrorOccuried() { GLenum err = gl->GetError(); switch (err) { case GL_NO_ERROR: break; case 1280: AfxError("GL: INVAL_PARAM"); break; case 1281: AfxError("GL: INVAL_VALUE"); break; case 1282: AfxError("GL: INVAL_OP"); break; case 1283: AfxError("GL: STACK_OVERFLOW"); break; case 1284: AfxError("GL: STACK_UNDERFLOW"); break; case 1285: AfxError("GL: OUT_OF_MEM"); break; default: AfxError("GL: %d", err); break; }}

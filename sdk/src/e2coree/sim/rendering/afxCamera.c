@@ -272,7 +272,7 @@ _AFX void AfxGetCameraLeft(afxCamera cam, afxReal left[3])
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(left);
-    AfxNegateV3d(left, cam->iv[0]);
+    AfxNegV3d(left, cam->iv[0]);
 }
 
 _AFX void AfxGetCameraRight(afxCamera cam, afxReal right[3])
@@ -296,7 +296,7 @@ _AFX void AfxGetCameraDown(afxCamera cam, afxReal down[3])
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(down);
-    AfxNegateV3d(down, cam->iv[1]);
+    AfxNegV3d(down, cam->iv[1]);
 }
 
 _AFX void AfxGetCameraForward(afxCamera cam, afxReal fwd[3])
@@ -304,7 +304,7 @@ _AFX void AfxGetCameraForward(afxCamera cam, afxReal fwd[3])
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(fwd);
-    AfxNegateV3d(fwd, cam->iv[2]);
+    AfxNegV3d(fwd, cam->iv[2]);
 }
 
 _AFX void AfxGetCameraBack(afxCamera cam, afxReal back[3])
@@ -323,7 +323,7 @@ _AFX void AfxResetCamera(afxCamera cam)
     cam->wrOverHr = 1.33;
     cam->wwOverHw = 1.0;
     cam->fovY = 1.0471976;
-    cam->nearClipPlane = 0.4;
+    cam->nearClipPlane = 0.0001;// 0.4;
     cam->farClipPlane = 1000.0;
     cam->depthRange = afxCameraDepthRange_NEGONE2ONE;
     cam->useQuatOrient = TRUE;
@@ -368,60 +368,75 @@ _AFX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
 
 _AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxAssert(p);
-    AfxAssert(ip);
-
-    afxReal halfFovY = cam->fovY * 0.5f;
-    afxReal halfFovSinOverCos = AfxSin(halfFovY) / AfxCos(halfFovY);    
-    afxReal nearMinusFarRecip = 1.f / (cam->nearClipPlane - cam->farClipPlane);
-    afxReal nearTimesFar = cam->nearClipPlane * cam->farClipPlane;
-    afxReal farClipPlane = cam->farClipPlane;
-
-    AfxZeroM4d(p);
-    p[0][0] = cam->wrOverHr / (cam->wwOverHw * cam->wpOverHp * halfFovSinOverCos);
-    p[1][1] = 1.f / halfFovSinOverCos;
-    p[2][3] = -1.f;
-
-    if (cam->depthRange == afxCameraDepthRange_NEGONE2ONE)
+    afxReal64 h = AfxSin(cam->fovY * 0.5) / AfxCos(cam->fovY * 0.5);
+    p[0][0] = cam->wrOverHr / (cam->wwOverHw * cam->wpOverHp * h);
+    p[0][1] = 0.0;
+    p[0][2] = 0.0;
+    p[0][3] = 0.0;
+    p[1][0] = 0.0;
+    p[1][1] = 1.0 / h;
+    p[1][2] = 0.0;
+    p[1][3] = 0.0;
+    p[2][0] = 0.0;
+    p[2][1] = 0.0;
+    p[2][3] =-1.0;
+    p[3][0] = 0.0;
+    p[3][1] = 0.0;
+    p[3][3] = 0.0;
+    afxCameraDepthRange depthRange = cam->depthRange;
+    afxReal far = cam->farClipPlane;
+    afxReal near = cam->nearClipPlane;
+    afxReal epsilon = cam->depthRangeEpsilon;
+    afxReal nearMinusFarRecip = 1.0 / (near - far);
+    afxReal nearTimesFar = near * far;
+    
+    if (depthRange == afxCameraDepthRange_NEGONE2ONE)
     {
-        if (farClipPlane == 0.f)
+        if (far == 0.0)
         {
-            p[2][2] = cam->depthRangeEpsilon - 1.f;
-            p[3][2] = (cam->depthRangeEpsilon - 2.f) * cam->nearClipPlane;
+            p[2][2] = epsilon - 1.0;
+            p[3][2] = (epsilon - 2.0) * near;
         }
         else
         {
-            p[2][2] = (cam->nearClipPlane + cam->farClipPlane) * nearMinusFarRecip;
+            p[2][2] = nearMinusFarRecip * (near + far);
             p[3][2] = nearMinusFarRecip * nearTimesFar + nearMinusFarRecip * nearTimesFar;
         }
     }
-    else if (cam->depthRange != afxCameraDepthRange_NEGONE2ZERO)
+    else if (depthRange != afxCameraDepthRange_NEGONE2ZERO)
     {
-        if (farClipPlane == 0.f)
+        if (far == 0.0)
         {
-            p[2][2] = cam->depthRangeEpsilon - 1.f;
-            p[3][2] = (cam->depthRangeEpsilon - 1.f) * cam->nearClipPlane;
+            p[2][2] = epsilon - 1.0;
+            p[3][2] = (epsilon - 1.0) * near;
         }
         else
         {
-            p[2][2] = nearMinusFarRecip * cam->farClipPlane;
+            p[2][2] = nearMinusFarRecip * far;
             p[3][2] = nearMinusFarRecip * nearTimesFar;
         }
     }
-    else if (farClipPlane != 0.f)
+    else if (far != 0.0)
     {
-        p[2][2] = nearMinusFarRecip * cam->nearClipPlane;
+        p[2][2] = nearMinusFarRecip * near;
         p[3][2] = nearMinusFarRecip * nearTimesFar;
     }
-
-    AfxZeroM4d(ip);
-    ip[0][0] = 1.f / p[0][0];    
-    ip[1][1] = 1.f / p[1][1];    
-    ip[2][3] = 1.f / p[3][2];
-    ip[3][2] = 1.f / p[2][3];
-    ip[3][3] = -(p[2][2] / (p[3][2] * p[2][3]));    
+    ip[0][0] = 1.0 / p[0][0];
+    ip[0][1] = 0.0;
+    ip[0][2] = 0.0;
+    ip[0][3] = 0.0;
+    ip[1][0] = 0.0;
+    ip[1][1] = 1.0 / p[1][1];
+    ip[1][2] = 0.0;
+    ip[1][3] = 0.0;
+    ip[2][0] = 0.0;
+    ip[2][1] = 0.0;
+    ip[2][2] = 0.0;
+    ip[2][3] = 1.0 / p[3][2];
+    ip[3][0] = 0.0;
+    ip[3][1] = 0.0;
+    ip[3][2] = 1.0 / p[2][3];
+    ip[3][3] = -(p[2][2] / (p[3][2] * p[2][3]));
 }
 
 _AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
@@ -473,7 +488,7 @@ _AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal i
     AfxMultiplyM3d(c, a, b);
 
     afxV4d at;
-    AfxPreMultiplyV3d(at, cam->pos, c);
+    AfxPreMultiplyV3d(c, cam->pos, at);
     at[0] = -(at[0] + cam->offset[0]);
     at[1] = -(at[1] + cam->offset[1]);
     at[2] = -(at[2] + cam->offset[2]);
@@ -481,7 +496,7 @@ _AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal i
     AfxM4dFromM3d(v, c, at);
     AfxCopyTransposedAffineM4d(iv, v);
     AfxEnsureAffineM4d(iv);
-    AfxPostMultiplyV3d(at, c, cam->offset);
+    AfxPostMultiplyV3d(c, cam->offset, at);
     AfxAddV3d(iv[3], at, cam->pos);
     iv[3][3] = 1.f;
 }
@@ -512,8 +527,8 @@ _AFX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal co
     };
 
     afxV4d v2;
-    AfxPreMultiplyV4d(v2, v, cam->ip);
-    AfxPreMultiplyV4d(v, v2, cam->iv);
+    AfxPreMultiplyV4d(cam->ip, v, v2);
+    AfxPreMultiplyV4d(cam->iv, v2, v);
     AfxScaleV3d(worldPoint, v, 1.0 / v[3]);
     worldPoint[3] = 1.0;
 }
@@ -528,8 +543,8 @@ _AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal c
     AfxAssert(screenPoint);
 
     afxV4d v, v2;
-    AfxPreMultiplyV4d(v, worldPoint, cam->v);
-    AfxPreMultiplyV4d(v2, v, cam->p);    
+    AfxPreMultiplyV4d(cam->v, worldPoint, v);
+    AfxPreMultiplyV4d(cam->p, v, v2);
     AfxScaleV3d(v, v2, 1.0 / v2[3]);
 
     if (cam->depthRange == afxCameraDepthRange_NEGONE2ONE)
@@ -557,9 +572,9 @@ _AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal con
     };
 
     afxV4d v2;
-    AfxPreMultiplyV4d(v2, v, cam->ip);
+    AfxPreMultiplyV4d(cam->ip, v, v2);
     v2[3] = 0.0;
-    AfxPreMultiplyV4d(v, v2, cam->iv);
+    AfxPreMultiplyV4d(cam->iv, v2, v);
     
     // should normalize or zero
     afxReal len = AfxMagV3d(v);
@@ -600,12 +615,12 @@ _AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrtho
     yBasis[2] = (v[1] * planeNormal[0]) - (v[0] * planeNormal[1]);
 
     // should normalize or zero
-    afxReal len = AfxMagV3d(yBasis);
+    afxReal64 len = AfxMagV3d(yBasis);
     
     if (len <= 0.0000099999997)
         AfxZeroV3d(yBasis);
     else
-        AfxScaleV3d(yBasis, yBasis, 1.0 / len);
+        AfxScaleV3d(yBasis, yBasis, AfxRecip(len));
 }
 
 _AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
@@ -644,6 +659,27 @@ _AFX afxBool _AfxCamEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
 
             AfxApplyCameraElevAzimRoll(cam, deltaEar);
         }
+
+
+
+        if (AfxRmbIsPressed(0))
+        {
+            afxV2d delta;
+            afxV3d off;
+            AfxGetLastMouseMotion(0, delta);
+            off[0] = -((afxReal)(delta[0] * AFX_PI / 180.0));
+            off[1] = -((afxReal)(delta[1] * AFX_PI / 180.0));
+            off[2] = 0;
+
+            AfxApplyCameraOffset(cam, off);
+        }
+        break;
+    }
+    case AFX_EVENT_MSE_WHEEL_UPDATED:
+    {
+        afxReal w = AfxGetLastMouseWheelData(0);
+        w = w / 120.0f; // WHEEL_DELTA
+        AfxApplyCameraDistance(cam, w);
         break;
     }
     case AFX_EVENT_KBD_PRESSED:
@@ -701,17 +737,17 @@ _AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[])
     return err;
 }
 
-_AFX afxReal AfxTryFindPhysicalAspectRatio(afxInt screenWidth, afxInt screenHeight)
+_AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
 {
-    afxReal div = (double)screenWidth / (double)screenHeight;
+    afxReal64 div = (afxReal64)screenWidth / (afxReal64)screenHeight;
 
     if (div <= 1.4)
-        return 1.33;
+        return 1.33f;
 
     if (div <= 1.6)
-        return 1.5599999;
+        return 1.5599999f;
 
-    return 1.78;
+    return 1.78f;
 }
 
 _AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam)

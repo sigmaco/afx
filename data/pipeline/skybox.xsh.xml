@@ -13,7 +13,7 @@
         <Sampler binding='1'>samp</Sampler>
         
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
-        <In format='V3D'>a_xyz</In>
+        <In location='0'>vec3 a_xyz</In>
         <![CDATA[
         
         layout(location = 0) in vec3 a_xyz;
@@ -26,7 +26,7 @@
         void main()
         {
             sgl_v.uvw0 = a_xyz;
-            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            vec4 pos = p * mat4(mat3(v)) * vec4(a_xyz, 1.0);
             
             gl_Position = pos.xyww;
         }
@@ -36,7 +36,7 @@
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
         <Resource binding='1' type='COMBINED_IMAGE_SAMPLER'>samp</Resource>
-        <Out format='V4D'>sgl_rgba</Out>
+        <Out>vec4 sgl_rgba</Out>
         <![CDATA[
         
         uniform samplerCube samp;

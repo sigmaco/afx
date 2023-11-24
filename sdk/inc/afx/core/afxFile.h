@@ -47,8 +47,6 @@ typedef enum afxFileFlags
     AFX_FILE_FLAG_E         = AfxGetBitOffset(12), // Encrypted. The data is encrypted. For a file, all data streams in the file are encrypted. This is used by SIGMA Future Storage.
     AFX_FILE_FLAG_O         = AfxGetBitOffset(13), // Offline. The data isn't available immediately. This flag indicates that the data is physically moved to remote/offline storage. This is used by SIGMA Future Storage.
     AFX_FILE_FLAG_S         = AfxGetBitOffset(14), // Sparse. The data is a sparse file. Empty ranges (zeroed ranges) are generated dynamically by some algorithm. This is used by SIGMA Future Storage.
-
-    AFX_FILE_FLAG_FORCE_NAT = AFX_N32_MAX
 }
 afxFileFlags;
 
@@ -61,7 +59,7 @@ AFX_OBJECT(afxFile)
     afxBool                 shouldBeFlushed;
     afxFileFlags            flags;
 };
-#endif
+#endif//_AFX_FILE_C
 
 AFX afxNat                  AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile file[]);
 

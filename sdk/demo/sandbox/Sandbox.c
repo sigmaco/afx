@@ -22,6 +22,9 @@ afxDrawSystem dsys;
 afxClock StartClock;
 afxClock LastClock;
 
+afxBody cubeBod = NIL;
+afxModel cubeMdl = NIL;
+afxMesh cube = NIL;
 const afxReal CameraSpeed = 30.0f;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
@@ -51,24 +54,28 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
         if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
         else
         {
-            afxTexture surf;
+            afxRaster surf;
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
             AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
-            AfxAssertObjects(1, &surf, afxFcc_TEX);
+            AfxAssertObjects(1, &surf, afxFcc_RAS);
 
             AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
 
-            //AfxDrawSky(dscr, &rnd->sky);
-
+            
             if (bod)
                 AfxDrawBodies(dscr, rnd, 1, &bod);
 
-            //AfxDrawTestIndexed(dscr, rnd);
+            if (cubeBod)
+                //AfxDrawBodies(dscr, rnd, 1, &cubeBod);
+
+            AfxDrawTestIndexed(dscr, rnd);
+
+            AfxDrawSky(dscr, &rnd->sky);
 
             AfxEndSceneRendering(dscr, rnd);
 
-            if (AfxFinishDrawScript(dscr)) AfxThrowError();
+            if (AfxCompileDrawScript(dscr)) AfxThrowError();
             else if (AfxSubmitDrawScripts(din, 1, &dscr))
                 AfxThrowError();
 
@@ -87,8 +94,7 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
     afxReal64 MovementThisFrame = DeltaTime * CameraSpeed;
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
-    // think about the 'W' or 'S' key's action.  Also, we don't have a key for moving the
-    // camera up and down, but it should be clear how to add one.
+    // think about the 'W' or 'S' key's action.
     afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
     afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
     afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
@@ -163,28 +169,30 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxMakeUri(&uriMap, "art/actor/hellknight/hellknight.md5mesh", 0);
     //AfxSimulationLoadMD5Assets(sim, &uriMap, NIL);
 
-    afxAsset cad2;
-    //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad2);
-
     //AfxFindResources(cad2, afxFcc_MDL, 1, &uriMap2, &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
 
+    //AfxMakeUri(&uriMap, "art/scenario/cod-mw3/ny_manhattan/ny_manhattan.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/control-statiopn/uploads_files_3580612_control+statiopn.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/cs_rio/cs_rio_base.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/resdogs/resdogs.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
     //AfxMakeUri(&uriMap, "art/f16/f16.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    //AfxMakeUri(&uriMap, "art/scenario/zero/zero.obj", 0);
+    AfxMakeUri(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
-    AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
+    //AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
     afxAsset cad;
     AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
+    //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
 
-    afxV3d at;
-    afxM3d lt, ilt;
-    AfxComputeBasisConversion(sim, 0.001, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, lt, ilt, at);
-    AfxTransformAssets(lt, ilt, at, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
+    afxV3d atv;
+    afxM3d ltm, iltm;
+    AfxComputeBasisConversion(sim, 10.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
+    //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
 
     //AfxMakeString(&str, "bibliotheca", 0);
     //AfxMakeString(&str, "gtabr", 0);
@@ -202,6 +210,12 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxEmbodyModel(mdl, 1, &bod);
     AfxAssert(bod);
+
+    //cube = AfxBuildCubeMesh(sim, 100.0);
+    //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
+    //cube = AfxBuildDomeMesh(sim, 100.0, 4);
+    cubeMdl = AfxAssembleModel(sim, &AfxStaticString("cube"), AfxGetModelSkeleton(mdl), NIL, 1, &cube);
+    AfxEmbodyModel(cubeMdl, 1, &cubeBod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
     body = AfxSimulationAcquireBody(sim, &str, NIL, mdl);
@@ -214,7 +228,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxAcquireCameras(sim, 1, &cam);
     AfxAssert(cam);
-    AfxSetCameraFov(cam, AFX_PI / 4.0);
+    //AfxSetCameraFov(cam, AFX_PI / 4.0);
     //cam->farClip = -100000.0;
     //AfxApplyCameraOffset(cam, AfxSpawnV3d(0, 1.1, 0));
 
@@ -260,7 +274,7 @@ _AFXEXPORT afxError SandboxThrProc(afxThread thr, afxApplication app, afxThreadO
 
 int AfxMain(afxApplication app, int argc, char const* argv[])
 {
-
+    return 0;
 }
 
 int main(int argc, char const* argv[])

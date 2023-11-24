@@ -18,7 +18,7 @@
 #define AFX_MEMORY_H
 
 #ifdef _DEBUG
-//#   define VLD_FORCE_ENABLE
+#   define VLD_FORCE_ENABLE
 #endif
 
 #include <stdlib.h>
@@ -32,6 +32,7 @@
 #include "afx/core/afxChain.h"
 #include "afx/core/afxFcc.h"
 #include "afx/core/afxDebug.h"
+#include "afx/core/afxSlock.h"
 
 //#define _AFX_TRY_ASSERT_ALLOCATION_AREA 1
 
@@ -54,9 +55,10 @@ AFXINL void AfxMakeSegment(afxSegment *seg, afxSize off, afxSize siz, afxSize st
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(seg); AfxAssert(siz);
-    seg->off = off, seg->siz = siz;
+    seg->off = off;
+    seg->siz = siz;
     seg->stride = stride ? stride : siz;
-};
+}
 
 typedef enum afxAllocationFlags
 {
@@ -117,8 +119,18 @@ AFX_DEFINE_STRUCT(afxContextPage)
 };
 
 
+AFX_DEFINE_HANDLE(afxMemory);
+
 typedef enum afxMemFlags
 {
+    afxMemFlag_ZEROED       = AfxGetBitOffset(0),
+    afxMemFlag_RESIZABLE    = AfxGetBitOffset(1),
+
+    afxMemFlag_TEMPORARY    = AfxGetBitOffset(8), // to be used just inside "this" function.
+    afxMemFlag_TRANSIENT    = AfxGetBitOffset(9), // to be used across functions, as example signaling objects about an event occurance.
+    afxMemFlag_PERMANENT    = AfxGetBitOffset(10), // to be used across the entire system and or subsystem, 
+    afxMemFlag_DURATION_MASK= afxMemFlag_TEMPORARY | afxMemFlag_TRANSIENT | afxMemFlag_PERMANENT,
+
     AFX_MEM_PROP_DEVICE_LOCAL, // specifies that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the VK_MEMORY_HEAP_DEVICE_LOCAL_BIT set.
     AFX_MEM_PROP_HOST_VISIBLE, // specifies that memory allocated with this type can be mapped for host access using vkMapMemory.
     AFX_MEM_PROP_HOST_COHERENT, // specifies that the host cache management commands vkFlushMappedMemoryRanges and vkInvalidateMappedMemoryRanges are not needed to flush host writes to the device or make device writes visible to the host, respectively.
@@ -126,11 +138,17 @@ typedef enum afxMemFlags
     AFX_MEM_PROP_LAZILY_ALLOCATED // specifies that the memory type only allows device access to the memory.
 } afxMemFlags;
 
-typedef void*(*afxAllocCallback)(afxContext mem, afxSize siz, afxSize align, afxHint const hint);
-typedef void*(*afxReallocCallback)(afxContext mem, void* p, afxSize siz, afxSize align, afxHint const hint);
+typedef void*(*afxAllocCallback)(afxContext mem, afxSize cnt, afxSize siz, afxSize align, afxHint const hint);
+typedef void*(*afxReallocCallback)(afxContext mem, void* p, afxSize cnt, afxSize siz, afxSize align, afxHint const hint);
 typedef void(*afxDeallocCallback)(afxContext mem, void* p);
-typedef void(*afxNotifyAllocCallback)(afxContext mem, afxSize siz, afxHint const hint);
-typedef void(*afxNotifyDeallocCallback)(afxContext mem, afxSize siz, afxHint const hint);
+typedef void(*afxNotifyAllocCallback)(afxContext mem, afxSize cnt, afxSize siz, afxHint const hint);
+typedef void(*afxNotifyDeallocCallback)(afxContext mem, afxSize cnt, afxSize siz, afxHint const hint);
+
+typedef afxMemory(*afxAllocCallback2)(afxContext ctx, afxSize cnt, afxSize siz, afxSize align, afxMemFlags flags, afxHint const hint);
+typedef afxError(*afxResizeCallback2)(afxMemory mem, afxSize cnt, afxSize siz, afxHint const hint);
+typedef afxError(*afxDeallocCallback2)(afxMemory mem, afxHint const hint);
+typedef void(*afxNotifyAllocCallback2)(afxContext ctx, afxMemory mem, afxSize cnt, afxSize siz, afxHint const hint);
+typedef void(*afxNotifyDeallocCallback2)(afxContext ctx, afxMemory mem, afxSize cnt, afxSize siz, afxHint const hint);
 
 AFX_DEFINE_STRUCT(afxAllocator)
 {
@@ -143,41 +161,32 @@ AFX_DEFINE_STRUCT(afxAllocator)
 
 typedef void*(*ator)(afxContext mem, void* old, afxSize siz, afxSize align, afxHint const hint); // if siz is zero, memory is freed
 
-AFX_DEFINE_STRUCT(afxMem)
+AFX_OBJECT(afxMemory)
 {
-    _AFX_DBG_FCC
-    afxAllocator    ator;
+    afxLinkage      ctx;
     afxSize         siz;
-    struct
-    {
-        afxNat      base; // when forked
-        union
-        {
-            afxByte*start; // when wrapped or externally buffered.
-            afxMem* parent; // when forked
-        };
-    }               src;
+    afxSize         cnt;
+    afxNat          align;
+    afxMask         flags;
+    afxByte*        start;
 };
 
-AFX_DEFINE_STRUCT(afxMappedMemoryRange)
-{
-    afxMem*     mem;
-    afxNat      off;
-    afxNat      siz;
-};
+AFX afxError    AfxMapMemory(afxMemory mem, afxSize off, afxSize siz, void **ptr); // Map a memory object into application address space
+AFX void        AfxUnmapMemory(afxMemory mem); // Unmap a previously mapped memory object
 
-AFX afxError    AfxMapMemory(afxMem *mem, afxSize off, afxNat siz, void **ptr); // Map a memory object into application address space
-AFX void        AfxUnmapMemory(afxMem *mem); // Unmap a previously mapped memory object
+AFX afxMemory   AfxAllocateMemory(afxContext ctx, afxSize siz, afxSize cnt, afxNat align, afxMemFlags flags, afxHint const hint); // Allocate memory
+AFX void        AfxDeallocateMemory(afxMemory mem, afxHint const hint); // Free memory
 
-AFX afxError    AfxAllocateMemory(afxMem *mem, afxMem *parent, afxNat siz, afxNat align); // Allocate memory
-AFX afxError    AfxReallocateMemory(afxMem *mem, afxNat siz, afxNat align);
-AFX void        AfxDeallocateMemory(afxMem *mem); // Free memory
+AFX void        AfxZeroMemory(afxMemory mem, afxSize offset, afxSize range);
+AFX void        AfxFillMemory(afxMemory mem, afxSize offset, afxSize range, afxNat unitSiz, void const* value);
+AFX void        AfxCopyMemory(afxMemory mem, afxSize base, afxMemory in, afxSize offset, afxSize range, afxNat unitSiz);
 
-AFX afxError    AfxCopyMemory(afxMem *mem, afxMem const* in); // returns non-copied range in error occurence.
-AFX afxError    AfxCopyMemoryRange(afxMem *mem, afxMem const* in, afxNat offset, afxNat range); // returns non-copied range in error occurence.
+AFX afxError    AfxResizeMemory(afxMemory mem, afxSize siz, afxSize cnt, afxHint const hint);
 
-AFX void        AfxZeroMemory(afxMem *mem);
-AFX afxError    AfxZeroMemoryRange(afxMem *mem, afxNat offset, afxNat range); // returns non-zeroed range in error occurence.
+AFX void        AfxUpdateMemory(afxMemory mem, afxSize offset, afxSize range, afxNat unitSiz, void const* src);
+AFX void        AfxDumpMemory(afxMemory mem, afxSize offset, afxSize range, afxNat unitSiz, void* dst);
+
+AFX afxMemory   AfxOpenMemory(afxContext ctx, afxSize siz, void const* start);
 
 #ifdef _AFX_CONTEXT_C
 AFX_OBJECT(afxContext)
@@ -188,6 +197,14 @@ AFX_OBJECT(afxContext)
     afxNotifyAllocCallback      allocNotCb;
     afxNotifyDeallocCallback    deallocNotCb;
 
+    afxAllocCallback2           allocCb2;
+    afxResizeCallback2          reallocCb2;
+    afxDeallocCallback2         deallocCb2;
+    afxNotifyAllocCallback2     allocNotCb2;
+    afxNotifyDeallocCallback2   deallocNotCb2;
+
+    afxSlock                    memSlock;
+    afxChain                    memChain;
     afxSize                     defAlign;
 
 // debug
@@ -196,7 +213,7 @@ AFX_OBJECT(afxContext)
     afxChar const*              fname;
     afxSize                     fline;
 };
-#endif
+#endif//_AFX_CONTEXT_C
 
 AFX afxNat                  AfxEnumerateContexts(afxNat first, afxNat cnt, afxContext mem[]);
 
@@ -205,15 +222,15 @@ AFX afxError                AfxAcquireContexts(afxNat cnt, afxContext ctx[], afx
 AFX afxError                AfxMemoryEnableDebugging(afxContext mem, afxNat level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxContext mem);
 
-AFX void*                   AfxAllocate(afxContext mem, afxSize siz, afxNat align, afxHint const hint);
-AFX void*                   AfxCoallocate(afxContext mem, afxSize cnt, afxSize siz, afxNat align, afxHint const hint);
-AFX void*                   AfxReallocate(afxContext mem, void *p, afxSize siz, afxNat align, afxHint const hint);
+AFX void*                   AfxAllocate(afxContext mem, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
+AFX void*                   AfxCoallocate(afxContext mem, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
+AFX void*                   AfxReallocate(afxContext mem, void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
 AFX void                    AfxDeallocate(afxContext mem, void *p);
 
 AFX void                    AfxStream(afxNat cnt, afxSize srcStride, afxNat dstStride, void const* src, void* dst);
-AFX void                    AfxCopy(void *dst, void const *src, afxSize range);
-AFX void                    AfxFill(void *p, afxNat cnt, afxNat unitSiz, void const* value);
-AFX void                    AfxZero(void *p, afxSize range);
+AFX void                    AfxCopy(afxSize cnt, afxSize siz, void const *src, void *dst);
+AFX void                    AfxFill(afxSize cnt, afxSize siz, void const* value, void *p);
+AFX void                    AfxZero(afxSize cnt, afxSize siz, void *p);
 
 #define AFX_ALIGN(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 

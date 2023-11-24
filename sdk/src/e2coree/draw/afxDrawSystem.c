@@ -354,7 +354,7 @@ _AFX afxError _AfxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
 
     ddev->portCnt = AfxMaxi(1, info->portCnt);
     AfxAssert(ddev->portCnt);
-    ddev->portCaps = AfxAllocate(ctx, ddev->portCnt * sizeof(ddev->portCaps[0]), 0, AfxSpawnHint());
+    ddev->portCaps = AfxAllocate(ctx, sizeof(ddev->portCaps[0]), ddev->portCnt, 0, AfxHint());
 
     ddev->serving = FALSE;
 
@@ -774,7 +774,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const* cookie)
 
                 afxDrawThread dthr[16];
                 afxNat threadCnt = AfxMini(AfxGetThreadingCapacity(), 1);
-                afxDrawThreadConfig dthrConfig = { 0 };
+                //afxDrawThreadConfig dthrConfig = { 0 };
                 //dthrConfig.udd = ddev->dpus[]
 
                 if (AfxAcquireDrawThreads(dsys, threadCnt, NIL, dthr)) AfxThrowError();
@@ -824,7 +824,7 @@ _AFX void AfxChooseDrawSystemConfiguration(afxDrawSystemConfig *config, afxNat e
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
-    AfxZero(config, AfxMaxi(extendedSiz, sizeof(*config)));
+    AfxZero(1, AfxMaxi(extendedSiz, sizeof(*config)), config);
 }
 
 _AFX afxClassConfig _AfxDsysClsConfig =

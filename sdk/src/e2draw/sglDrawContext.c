@@ -30,7 +30,7 @@
 extern afxClassConfig _SglBufClsConfig;
 extern afxClassConfig _SglSampClsConfig;
 extern afxClassConfig _SglPipClsConfig;
-extern afxClassConfig _SglRasClsConfig;
+extern afxClassConfig _SglPiprClsConfig;
 extern afxClassConfig _SglShdClsConfig;
 extern afxClassConfig _SglLegoClsConfig;
 extern afxClassConfig _SglCanvClsConfig;
@@ -140,7 +140,7 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
 
     _AfxDctxFreeAllQueueSlots(dctx);
     
-    AfxReleaseArena(&dctx->base.aren);
+    AfxDeallocateArena(&dctx->base.aren);
     AfxReleaseObjects(1, (void*[]) { dctx->base.ctx });
 
     return err;
@@ -170,7 +170,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
     afxContext ctx = dctx->base.ctx;
 
-    AfxAcquireArena(ctx, &dctx->base.aren, NIL, AfxSpawnHint());
+    AfxAllocateArena(ctx, &dctx->base.aren, NIL, AfxHint());
 
     //if (!(AfxObjectReacquire(&dctx->base.memD->obj, &dctx->base.obj, NIL, NIL, NIL))) AfxThrowError();
     //else
@@ -185,7 +185,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         AfxMountClass(&dctx->base.buffers, classes, &tmpClsConf);
         tmpClsConf = _SglTexClsConfig;
         tmpClsConf.ctx = ctx;
-        AfxMountClass(&dctx->base.textures, classes, &tmpClsConf);
+        AfxMountClass(&dctx->base.rasters, classes, &tmpClsConf);
         tmpClsConf = _SglSurfClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.surfaces, classes, &tmpClsConf);
@@ -204,7 +204,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         tmpClsConf = _SglPipClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.pipelines, classes, &tmpClsConf);
-        tmpClsConf = _SglRasClsConfig;
+        tmpClsConf = _SglPiprClsConfig;
         tmpClsConf.ctx = ctx;
         AfxMountClass(&dctx->base.rasterizers, classes, &tmpClsConf);
 
@@ -218,7 +218,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
         dctx->base.openPorts = NIL;
 
-        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(ctx, dctx->base.openPortCnt * sizeof(dctx->base.openPorts[0]), 0, AfxSpawnHint()))) AfxThrowError();
+        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(ctx, sizeof(dctx->base.openPorts[0]), dctx->base.openPortCnt, 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < dctx->base.openPortCnt; i++)
@@ -263,7 +263,8 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
             if (!err)
             {
                 afxUri uri;
-                AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
+                AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml", 0);
+                //AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
                 //AfxMakeUri(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
                 //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
@@ -282,7 +283,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
                 AfxAcquireSamplers(dctx, 1, &smpSpec, &dctx->presentSmp);
                 AfxAssertObjects(1, &dctx->presentSmp, afxFcc_SAMP);
-
+#if 0
                 afxString tmpStr;
                 AfxMakeString(&tmpStr, "a_xy", 0);
                 const afxV2d tristrippedQuad2dPos[] =
@@ -293,7 +294,6 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                     {  1.0, -1.0 },
                 };
 
-#if 0
                 afxVertexBufferBlueprint vbub;
                 AfxVertexBufferBlueprintReset(&vbub, 4);
                 afxVertexSpec vtxAttrSpec = { 0 };
@@ -307,7 +307,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 AfxVertexBufferBlueprintAddAttributes(&vbub, 1, &vtxAttrSpec);
                 AfxBuildVertexBuffers(dctx, 1, &dctx->presentVbuf, &vbub);
                 AfxAssertObjects(1, &dctx->presentVbuf, afxFcc_VBUF);
-#endif
+
                 afxBufferSpecification vbufSpec;
                 vbufSpec.siz = sizeof(tristrippedQuad2dPos);
                 vbufSpec.src = tristrippedQuad2dPos;
@@ -317,6 +317,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 AfxAssertObjects(1, &dctx->tristrippedQuad2dPosBuf, afxFcc_BUF);
 
                 dctx->presentFboGpuHandle = 0;
+#endif
 
                 //AfxAssert(dctx->base.vmt);
 

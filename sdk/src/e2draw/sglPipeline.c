@@ -245,51 +245,53 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bin
                             gl->BindVertexArray(vao); _SglThrowErrorOccuried();
 
                             afxShader vsh;
-                            AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh);
-                            afxNat attrCnt = AfxCountPipelineInputs(pip);
-                            
-                            afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
 
-                            for (afxNat i = 0; i < attrCnt; i++)
+                            if (AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh))
                             {
-                                afxPipelineInputLocation in;
-                                AfxGetPipelineInputs(pip, i, 1, &in);
-                                
-                                afxNat location = in.location;
-                                afxNat srcIdx = in.stream;
+                                afxNat attrCnt = AfxCountPipelineInputs(pip);
 
-                                GLint glsiz;
-                                GLenum gltype;
-                                GLuint glStride;
-                                AfxToGlVertexFormat(in.fmt, &glsiz, &gltype, &glStride);
+                                afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
 
-                                gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+                                for (afxNat i = 0; i < attrCnt; i++)
+                                {
+                                    afxPipelineInputLocation in;
+                                    AfxGetPipelineInputs(pip, i, 1, &in);
 
-                                AfxAssert(16 > location);  // max vertex attrib
-                                gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
-                                AfxAssert(gl->BindVertexBuffer);
-                                gl->VertexAttribFormat(location, glsiz, gltype, FALSE, offset[srcIdx]); _SglThrowErrorOccuried();
-                                //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
-                                //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
-                                AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
-                                gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
+                                    afxNat location = in.location;
+                                    afxNat srcIdx = in.stream;
 
-                                offset[srcIdx] += AfxVertexFormatGetSize(in.fmt);
+                                    GLint glsiz;
+                                    GLenum gltype;
+                                    GLuint glStride;
+                                    AfxToGlVertexFormat(in.fmt, &glsiz, &gltype, &glStride);
 
-                                // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
+                                    gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+
+                                    AfxAssert(16 > location);  // max vertex attrib
+                                    gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
+                                    AfxAssert(gl->BindVertexBuffer);
+                                    gl->VertexAttribFormat(location, glsiz, gltype, FALSE, offset[srcIdx]); _SglThrowErrorOccuried();
+                                    //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
+                                    //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
+                                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
+                                    gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
+
+                                    offset[srcIdx] += AfxVertexFormatGetSize(in.fmt);
+
+                                    // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
+                                }
                             }
-
                             pip->vertexInput.vao = vao;
 
                             afxShader fsh;
                             AfxFindLinkedShader(pip, afxShaderStage_PIXEL, &fsh);
-                            afxNat outCnt = AfxCountColorOutputChannels(pip->base.ras);
+                            afxNat outCnt = AfxCountColorOutputChannels(pip->base.rasterizer);
                             //vtxShd->base.ioDecls.
                             for (afxNat i = 0; i < outCnt; i++)
                             {
                                 afxColorOutputChannel out;
-                                AfxGetColorOutputChannels(pip->base.ras, i, 1, &out);
-                                gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetMutableStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+                                AfxGetColorOutputChannels(pip->base.rasterizer, i, 1, &out);
+                                //gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetMutableStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
                             }
                         }
                     }
@@ -310,16 +312,6 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bin
             //dpu->activePip = pip;
         }
 
-        if (!err)
-        {
-            AfxAssertObjects(1, &pip, afxFcc_PIP);
-
-            if (pip->base.ras)
-            {
-                AfxAssertObjects(1, &pip->base.ras, afxFcc_RAS);
-                _SglDpuBindAndSyncRasterizer(dpu, pip->base.ras);
-            }
-        }
     }
     return err;
 }
@@ -353,9 +345,9 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
         AfxDeallocate(mem, pip->base.wiring);
     }
 
-    if (pip->base.ras)
+    if (pip->base.rasterizer)
     {
-        AfxReleaseObjects(1, (void*[]) { pip->base.ras });
+        AfxReleaseObjects(1, (void*[]) { pip->base.rasterizer });
     }
 
     if (pip->glHandle)
@@ -390,7 +382,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssert(shaderCnt);
     pip->base.shaderCnt = 0;
 
-    if (!(pip->base.shaders = AfxAllocate(mem, shaderCnt * sizeof(pip->base.shaders[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    if (!(pip->base.shaders = AfxAllocate(mem, sizeof(pip->base.shaders[0]), shaderCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < shaderCnt; i++)
@@ -434,7 +426,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             pip->base.wiringCnt = 0;
 
-            if (setCnt && !(pip->base.wiring = AfxAllocate(mem, setCnt * sizeof(pip->base.wiring[0]), 0, AfxSpawnHint()))) AfxThrowError();
+            if (setCnt && !(pip->base.wiring = AfxAllocate(mem, sizeof(pip->base.wiring[0]), setCnt, 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
@@ -506,13 +498,13 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                         pip->base.cullMode = pipb->cullMode;
                 }
 
-                if ((pip->base.ras = pipb->ras))
+                if ((pip->base.rasterizer = pipb->rasterizer))
                 {
-                    AfxReacquireObjects(1, (void*[]) { pip->base.ras });
+                    AfxReacquireObjects(1, (void*[]) { pip->base.rasterizer });
                 }
 
                 pip->glHandle = 0;
-                AfxZero(&pip->vertexInput, sizeof(pip->vertexInput));
+                AfxZero(1, sizeof(pip->vertexInput), &pip->vertexInput);
                 pip->vertexInput.vao = 0;
                 pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
             }

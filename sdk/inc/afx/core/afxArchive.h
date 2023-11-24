@@ -30,7 +30,7 @@ AFX_OBJECT(afxArchive)
     afxFile             file;
     afxArray            entries;
 };
-#endif
+#endif//_AFX_ARCHIVE_C
 
 /* URI for open zipped streams.
  * art.zip#idx

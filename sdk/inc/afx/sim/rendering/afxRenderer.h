@@ -90,7 +90,7 @@ AFX_OBJECT(afxRenderer)
         afxBuffer           mtlConstantsBuffer;
         afxBuffer           objConstantsBuffer; // m
 
-        //afxTexture          depthSurf;
+        afxRaster          depthSurf;
     }                       framesets[3];
 
     afxM4d              p;
@@ -139,7 +139,7 @@ for each view {
 }
 #endif
 
-AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxTexture surf);
+AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxRaster surf);
 AFX afxError AfxEndSceneRendering(afxDrawScript dscr, afxRenderer rnd);
 
 AFX afxError AfxRendererSetStar(afxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
@@ -154,4 +154,4 @@ AFX afxError AfxDrawTestIndexed(afxDrawScript dscr, afxRenderer rnd);
 
 AFX afxError AfxAcquireRenderers(afxSimulation sim, afxNat cnt, afxRenderer rnd[], afxRendererConfig const config[]);
 
-#endif///RENDERER_H
+#endif//RENDERER_H

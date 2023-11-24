@@ -60,9 +60,11 @@ AFX_DEFINE_STRUCT(afxArrayInfo)
     afxContext      ctx;
 };
 
+#define AfxArray(type_, cap_, initialVal_) AfxAllocateArray((cap_), sizeof(type_), (initialVal_) ? ((type_ const[]){(initialVal_)}) : NIL)
+
 AFXINL afxArray     AfxWrapArray(afxNat cap, afxNat cnt, void** storage);
-AFXINL afxArray     AfxAcquireArray(afxNat cap, afxNat unitSiz, void const* const initial);
-AFXINL void         AfxReleaseArray(afxArray *arr);
+AFXINL afxError     AfxAllocateArray(afxArray* arr, afxNat cap, afxNat unitSiz, void const* const initial);
+AFXINL void         AfxDeallocateArray(afxArray *arr);
 
 AFXINL void*        AfxInsertArrayUnit(afxArray *arr, afxNat *idx);
 AFXINL void*        AfxInsertArrayUnits(afxArray *arr, afxNat cnt, afxNat *firstIdx, void const *initialVal);

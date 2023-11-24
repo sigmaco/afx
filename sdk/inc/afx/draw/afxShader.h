@@ -61,33 +61,33 @@ AFX_DEFINE_STRUCT(afxShaderBlueprint)
 
 AFX_DEFINE_STRUCT(afxShaderResource)
 {
-    afxNat8                 set;
-    afxNat8                 binding;
+    afxNat                  set;
+    afxNat                  binding;
     afxShaderResourceType   type;
-    afxNat8                 cnt;
+    afxNat                  cnt;
     afxString               name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxShaderInOut)
 {
-    afxNat8                 location;
+    afxNat                  location;
     afxVertexFormat         fmt;
 };
 
 AFX_DEFINE_STRUCT(afxShaderBlueprintResource)
 {
-    afxNat8                 set;
-    afxNat8                 binding;
+    afxNat                  set;
+    afxNat                  binding;
     afxShaderResourceType   type;
-    afxNat8                 cnt;
+    afxNat                  cnt;
     afxString               name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
 {
-    afxNat8                 location;
+    afxNat                  location;
     afxVertexFormat         fmt;
-    afxNat8                 stream;
+    afxNat                  stream;
     afxString               semantic; // 8
 };
 
@@ -120,10 +120,10 @@ AFX_DEFINE_STRUCT(afxShaderBuilder)
     void        (*GetCode)(void* data, afxByte* code);    
 };
 
-AFX afxError                AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShader shd[], afxShaderBlueprint const blueprint[]);
+AFX afxError                AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);
 
 /// Builds a shader from a eXtensible Shader Language (.xsh) file, part of Qwadro.
-AFX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxXmlNode const* xmlNode);
+AFX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 AFX afxShader               AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri);
 
 AFX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);

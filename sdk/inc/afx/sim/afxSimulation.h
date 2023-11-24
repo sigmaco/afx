@@ -92,7 +92,7 @@ AFX_OBJECT(afxSimulation)
 
     afxDrawContext          dctx;
 };
-#endif
+#endif//_AFX_SIMULATION_C
 
 AFX afxContext      AfxSimulationGetMemory(afxSimulation sim);
 
@@ -131,7 +131,7 @@ AFX void            AfxRecenterAllAnimatorClocks(afxSimulation sim, afxReal dCur
 
 AFX void            AfxComputeAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 
-AFX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxReal const right[3], afxReal const up[3], afxReal const back[3], afxReal const origin[3], afxReal lt[3][3], afxReal ilt[3][3], afxReal at[3]);
+AFX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxReal const right[3], afxReal const up[3], afxReal const back[3], afxReal const origin[3], afxReal ltm[3][3], afxReal iltm[3][3], afxReal atv[3]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

@@ -3,14 +3,14 @@
 
 #include "../src/e2coree/deps/bink/bink.h"
 #include "afx/mmux/afxMmuiDefs.h"
-#include "afx/draw/afxTexture.h"
+#include "afx/draw/afxRaster.h"
 #include "afx/draw/afxBuffer.h"
 #include "afx/draw/afxDrawSystem.h"
 
 AFX_DEFINE_STRUCT(BINKFRAMETEXTURES)
 {
     afxNat      sizes[4]; // Y, cR, cB, A.
-    afxTexture  surfaces[4]; // Y, cR, cB, A.
+    afxRaster  surfaces[4]; // Y, cR, cB, A.
 };
 
 AFX_DEFINE_STRUCT(BINKTEXTURESET)
@@ -53,6 +53,6 @@ AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxTexture surf, afxBool readjust, afxBool upscale, afxDrawScript dscr);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxRaster surf, afxBool readjust, afxBool upscale, afxDrawScript dscr);
 
 #endif//AFX_BINK_VIDEO_H

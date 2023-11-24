@@ -17,7 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_DRAW_QUEUE_C
 #define _AFX_SURFACE_C
-#define _AFX_TEXTURE_C
+#define _AFX_RASTER_C
 #define _AFX_DRAW_SCRIPT_C
 #define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_CONTEXT_C

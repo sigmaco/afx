@@ -46,7 +46,7 @@
 #define AFX_OBJECT(handle_) struct handle_##_T
 #define AFX_INTERFACE(object, symbol) object##Interface const symbol
 
-#define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object;
+#define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_
 #define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_
@@ -109,7 +109,7 @@
 
 #define NIL 0
 
-#define AFX_SIMD_ALIGN 16
+#define AFX_SIMD_ALIGN 16u
 #define afxSimd(x) __declspec(align(AFX_SIMD_ALIGN)) x
 
 typedef int8_t      afxInt8;
@@ -127,6 +127,7 @@ typedef float       afxReal32;
 typedef double      afxReal64;
 
 typedef afxInt8     afxBool8;
+typedef afxInt16    afxBool16;
 typedef afxInt32    afxBool32;
 
 typedef char        afxChar8;
@@ -137,7 +138,7 @@ typedef afxChar8    afxChar;
 typedef afxNat8     afxByte;
 typedef afxInt32    afxInt; // signed
 typedef afxNat32    afxNat; // unsigned
-typedef afxReal32   afxSimd(afxReal);
+typedef afxReal32   afxReal;
 typedef afxBool32   afxBool;
 typedef afxInt32    afxResult;
 
@@ -201,13 +202,15 @@ static_assert(AFX_INVALID_INDEX8 == AFX_N8_MAX, "");
 static_assert(AFX_INVALID_INDEX16 == AFX_N16_MAX, "");
 static_assert(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
-#define AFX_REBASE(link_, type_, entry_) ((type_ *)(((afxByte *)(link_)) - offsetof(type_, entry_)))
+#define AFX_REBASE(link_, type_, entry_) ((type_ *)((void const*)(((afxByte const*)(link_)) - offsetof(type_, entry_))))
 
-#define AfxAbs(x_) ((0 > ((afxReal)x_)) ? -((afxReal)x_) : ((afxReal)x_))
+#define AFX_COUNTOF(array_) (sizeof(array_) / sizeof(array_[0]))
+
+#define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
 
 #define AfxMini(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AfxMaxi(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
-#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)); // minor non-zero
+#define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
 
 #define AfxElse(a_,b_) (((a_) ? (a_) : (b_))
 
@@ -238,12 +241,10 @@ typedef enum afxError3
     AFXERR_CORRUPTED, // Corruption in data integrity was detected for the given object.
     AFXERR_UNSUPPORTED, // Operation unsupported.
     AFXERR_UNINITIALIZED, // Object or resource wasn't initialized yet.
-
-    FORCE_ERROR_SIZE = AFX_N64_MAX
 } afxError3;
 
 typedef afxInt afxError;
-#define AFX_ERR_NONE (afxError)0;
+#define AFX_ERR_NONE (afxError)0
 
 enum
 {
@@ -333,7 +334,8 @@ AFX_DEFINE_HANDLE(afxResource);
 AFX_DEFINE_HANDLE(afxWidget);
 
 
-struct _afxSysD;
+#define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
+AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
 
 AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len);
 

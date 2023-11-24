@@ -45,7 +45,7 @@ AFX_OBJECT(afxMouse)
     afxV2d              lastMotion;
     afxV2d              prevMotion;
 };
-#endif
+#endif//_AFX_MOUSE_C
 
 AFX afxError    AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mse[]);
 

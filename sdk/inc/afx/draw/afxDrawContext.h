@@ -21,7 +21,6 @@
 
 #include "afx/core/afxClass.h"
 #include "afx/draw/afxCanvasBlueprint.h"
-#include "afx/draw/afxDrawOperation.h"
 #include "afx/draw/afxPipeline.h"
 #include "afx/draw/afxPipeline.h"
 #include "afx/draw/afxShaderBlueprint.h"
@@ -87,7 +86,7 @@ struct afxBaseDrawContext
     afxChain            inlinks;
     afxChain            outlinks;
 
-    afxClass            textures;
+    afxClass            rasters;
     afxClass            buffers;
     afxClass            surfaces;
     afxClass            shaders;
@@ -127,6 +126,6 @@ AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first,
 AFX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samp[]);
 AFX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shd[]);
 AFX afxNat              AfxEnumerateSurfaces(afxDrawContext dctx, afxNat first, afxNat cnt, afxSurface surf[]);
-AFX afxNat              AfxEnumerateTextures(afxDrawContext dctx, afxNat first, afxNat cnt, afxTexture tex[]);
+AFX afxNat              AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster ras[]);
 
 #endif//AFX_DRAW_CONTEXT_H

@@ -71,7 +71,7 @@ AFXINL void     AfxComposeTransformWorldM4d(afxTransform const *t, afxReal const
 AFXINL void     AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4]);
 AFXINL void     AfxComposeTransformCompactMatrix(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
 
-AFXINL void     AfxAssimilateTransforms(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal const affine[3], afxNat cnt, afxTransform const in[], afxTransform out[]);
+AFXINL void     AfxAssimilateTransforms(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxTransform const in[], afxTransform out[]);
 
 AFXINL void     AfxTransformArrayedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 AFXINL void     AfxTransformArrayedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);

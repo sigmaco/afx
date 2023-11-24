@@ -126,33 +126,33 @@ _AFX afxError AfxAttachMeshes(afxModel mdl, afxSkeleton srcSkl, afxNat first, af
 
                 afxNat artCnt = msh->vertebraCnt;
 
-                if (artCnt && !(dstBoneIndices = AfxAllocate(mem, artCnt * sizeof(dstBoneIndices[0]), 0, AfxSpawnHint()))) AfxThrowError();
+                if (artCnt && !(dstBoneIndices = AfxAllocate(mem, sizeof(dstBoneIndices[0]), artCnt, 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     if (!transfered) srcBoneIndices = dstBoneIndices;
-                    else if (artCnt && !(srcBoneIndices = AfxAllocate(mem, artCnt * sizeof(srcBoneIndices[0]), 0, AfxSpawnHint())))
+                    else if (artCnt && !(srcBoneIndices = AfxAllocate(mem, sizeof(srcBoneIndices[0]), artCnt, 0, AfxHint())))
                         AfxThrowError();
 
                     if (!err)
                     {
-                        for (afxNat i = 0; i < artCnt; i++)
+                        for (afxNat j = 0; j < artCnt; j++)
                         {
-                            afxString const* artId = &msh->vertebras[i].id.str;
+                            afxString const* artId = &msh->vertebras[j].id.str;
 
-                            if (!AfxFindBone(dstSkl, artId, &dstBoneIndices[i]))
+                            if (!AfxFindBone(dstSkl, artId, &dstBoneIndices[j]))
                             {
                                 AfxError("Unable to find vertebra '%.*s' in the destination skeleton", AfxPushString(artId));
-                                AfxAssert(dstBoneIndices[i] == AFX_INVALID_INDEX);
+                                AfxAssert(dstBoneIndices[j] == AFX_INVALID_INDEX);
                             }
 
-                            if (transfered && !AfxFindBone(srcSkl, artId, &srcBoneIndices[i]))
+                            if (transfered && !AfxFindBone(srcSkl, artId, &srcBoneIndices[j]))
                             {
                                 AfxError("Unable to find vertebra '%.*s' in the source skeleton", AfxPushString(artId));
-                                AfxAssert(srcBoneIndices[i] == AFX_INVALID_INDEX);
+                                AfxAssert(srcBoneIndices[j] == AFX_INVALID_INDEX);
                             }
                         }
                         err = NIL; // skip any soft fail by bone indexing.
-
+                         
                         AfxReacquireObjects(1, (void*[]) { msh });
 
                         if (srcSkl && (srcSkl != mdl->skl))
@@ -295,7 +295,7 @@ _AFX void AfxRelinkModelSkeleton(afxModel mdl, afxSkeleton skl)
     }
 }
 
-_AFX afxUri const* AfxGetModelId(afxModel mdl)
+_AFX afxString const* AfxGetModelId(afxModel mdl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
@@ -322,7 +322,7 @@ _AFX afxError _AfxMdlDtor(afxModel mdl)
         AfxRelinkModelSkeleton(mdl, NIL);
 
     //if (mdl->uri)
-    AfxUriDeallocate(&mdl->id);
+    AfxDeallocateString(&mdl->id);
 
     return err;
 }
@@ -334,13 +334,13 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
-    afxUri const* id = cookie->udd[0];
+    afxString const* id = cookie->udd[0];
     afxSkeleton skl = cookie->udd[1];
     afxTransform const* init = cookie->udd[2];
     afxNat meshCnt = *((afxNat*)cookie->udd[3]);
     afxMesh* meshes = cookie->udd[4];
 
-    AfxCloneUri(&mdl->id, id);
+    AfxCloneString(&mdl->id, id);
 
     if ((mdl->skl = skl))
     {
@@ -357,14 +357,14 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
 
     mdl->cap = 0;
 
-    if (meshCnt && !(mdl->meshSlots = AfxAllocate(NIL, meshCnt * sizeof(mdl->meshSlots[0]), 0, AfxSpawnHint()))) AfxThrowError();
+    if (meshCnt && !(mdl->meshSlots = AfxAllocate(NIL, sizeof(mdl->meshSlots[0]), meshCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
         if (meshCnt)
         {
             mdl->cap = meshCnt;
 
-            AfxZero(mdl->meshSlots, meshCnt * sizeof(mdl->meshSlots[0]));
+            AfxZero(meshCnt, sizeof(mdl->meshSlots[0]), mdl->meshSlots);
 
             if (AfxAttachMeshes(mdl, NIL, 0, meshCnt, meshes))
                 AfxThrowError();
@@ -377,6 +377,12 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     {
         AfxReleaseObjects(1, (void*[]) { skl });
     }
+
+    if (!err)
+    {
+        afxChar const* echStr = "Model %p assembled. Id: \"%.*s\"\n    %u meshes.\n    %u joints\n";
+        AfxEcho(echStr, mdl, AfxPushString(&mdl->id), mdl->cap, mdl->skl->boneCnt);
+    }
     return err;
 }
 
@@ -384,7 +390,7 @@ _AFX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxModel AfxAssembleModel(afxSimulation sim, afxUri const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[])
+_AFX afxModel AfxAssembleModel(afxSimulation sim, afxString const* id, afxSkeleton skl, afxTransform const* init, afxNat mshCnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -457,7 +463,7 @@ _AFX afxClassConfig _AfxMdlClsConfig =
 {
     .fcc = afxFcc_MDL,
     .name = "Model",
-    .unitsPerPage = 1,
+    .unitsPerPage = 8,
     .size = sizeof(AFX_OBJECT(afxModel)),
     .ctx = NIL,
     .ctor = (void*)_AfxMdlCtor,

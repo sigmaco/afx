@@ -192,7 +192,8 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxContext mem = AfxGetDrawSystemMemory(dsys);
     din->base.mem = mem;
 
-    din->base.scripts = AfxAcquireArray(32, sizeof(afxDrawScript), NIL);
+    din->base.scripts;
+    AfxAllocateArray(&din->base.scripts, 32, sizeof(afxDrawScript), NIL);
     din->base.minScriptReserve = 2;
 
     din->base.submitCb = _SglDinSubmit;

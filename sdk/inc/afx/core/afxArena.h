@@ -63,8 +63,8 @@ AFX_DEFINE_STRUCT(afxArena)
     afxNat      recycleSiz;
 };
 
-AFX afxError    AfxAcquireArena(afxContext mem, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint);
-AFX void        AfxReleaseArena(afxArena* aren);
+AFX afxError    AfxAllocateArena(afxContext mem, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint);
+AFX void        AfxDeallocateArena(afxArena* aren);
 
 
 AFX afxSize     AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data, void*extra), void *data, void*extra);

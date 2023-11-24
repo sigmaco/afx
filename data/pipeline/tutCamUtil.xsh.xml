@@ -6,9 +6,9 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V3D' stream='0'>in_pos</In>
-        <In location='3' format='V3D' stream='1'>in_nrm</In>
-        <In location='6' format='V2D' stream='1'>in_uv0</In>
+        <In location='0' stream='0'>vec3 in_pos</In>
+        <In location='3' stream='1'>vec3 in_nrm</In>
+        <In location='6' stream='1'>vec2 in_uv0</In>
         <![CDATA[
         
         layout (location = 0) in vec3 in_pos;
@@ -50,11 +50,11 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' format='V4D' stream='0'>in_posn</In>
-        <In location='1' format='V4D' stream='0'>in_wgt</In>
-        <In location='2' format='V4D' stream='0'>in_jnt</In>
-        <In location='3' format='V3D' stream='1'>in_nrm</In>
-        <In location='6' format='V2D' stream='1'>in_uv0</In>
+        <In location='0' stream='0'>vec4 in_posn</In>
+        <In location='1' stream='0'>vec4 in_wgt</In>
+        <In location='2' stream='0'>vec4 in_jnt</In>
+        <In location='3' stream='1'>vec3 in_nrm</In>
+        <In location='6' stream='1'>vec2 in_uv0</In>
         <![CDATA[
         
         layout (location = 0) in vec4 in_posn;
@@ -110,7 +110,7 @@
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='2' type='CONSTANT_BUFFER'>sgl_mtl</Resource>
         <Resource set='2' binding='1' type='COMBINED_IMAGE_SAMPLER'>diffuse_sampler</Resource>
-        <Out location='0' format='V4D'>out_rgba0</Out>
+        <Out location='0'>vec4 out_rgba0</Out>
         <![CDATA[
         
         in block

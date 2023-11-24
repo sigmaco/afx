@@ -93,7 +93,7 @@ AFX_DEFINE_STRUCT(afxPipelineConfig)
     afxNat                      shdCnt;
     afxShader                   shd[8];
     afxUri                      shdUri[8];
-    afxRasterizer               ras;
+    afxRasterizer               rasterizer;
     afxUri                      rasUri;
 };
 
@@ -134,7 +134,7 @@ struct afxBasePipeline
 
     afxCullMode             cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
     afxBool                 frontFacingInverted; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
-    afxRasterizer           ras;
+    afxRasterizer           rasterizer;
 };
 #endif
 

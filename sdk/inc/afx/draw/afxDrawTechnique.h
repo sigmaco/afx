@@ -27,31 +27,25 @@
 
 #include "afx/draw/afxPipeline.h"
 
-AFX_DEFINE_HANDLE(afxDrawTechnique);
-
 AFX_DEFINE_STRUCT(afxDrawPass)
 {
-    _AFX_DBG_FCC                    // afxFcc_DPAS
-    afxString*                      name; // 32
+    _AFX_DBG_FCC;                   // afxFcc_DPAS
+    afxString                       id; // 32
     afxPipeline                     pip;
 };
 
 AFX_OBJECT(afxDrawTechnique)
 {
-    afxString*                      name; // 32
+    afxString                       id; // 32
     afxNat                          passCnt;
     afxDrawPass*                    passes;
 };
 
-AFX void*                           AfxDrawOperationGetContext(afxDrawOperation dop);
+AFX afxString const*                AfxGetDrawTechniqueName(afxDrawTechnique dtec);
 
-AFX afxNat                          AfxDrawOperationGetTechniqueCount(afxDrawOperation dop);
-AFX afxBool                         AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const *name, afxNat *idx);
-AFX afxString const*                AfxDrawOperationGetTechniqueName(afxDrawOperation dop, afxNat tecIdx);
-
-AFX afxNat                          AfxDrawOperationGetPassCount(afxDrawOperation dop, afxNat tecIdx);
-AFX afxBool                         AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxString const *name, afxNat *idx);
-AFX afxString const*                AfxDrawOperationGetPassName(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
-AFX afxPipeline                     AfxDrawOperationGetPipeline(afxDrawOperation dop, afxNat tecIdx, afxNat passIdx);
+AFX afxNat                          AfxCountDrawPasses(afxDrawTechnique dtec);
+AFX afxBool                         AfxFindDrawPass(afxDrawTechnique dtec, afxString const *name, afxNat *idx);
+AFX afxString const*                AfxGetDrawPassName(afxDrawTechnique dtec, afxNat passIdx);
+AFX afxPipeline                     AfxGetDrawPipeline(afxDrawTechnique dtec, afxNat passIdx);
 
 #endif//AFX_DRAW_TECHNIQUE_H
