@@ -25,6 +25,7 @@
 #include "afx/draw/afxDrawOutput.h"
 #include "afx/draw/afxDrawInput.h"
 #include "afx/draw/afxDrawThread.h"
+#include "afx/draw/afxCamera.h"
 
 #include "afx/draw/afxColor.h"
 #include "afx/draw/afxVertex1.h"
@@ -328,6 +329,7 @@ AFX_OBJECT(afxDrawSystem)
     afxClass            outputs;
     afxClass            inputs;
     afxClass            threads;
+    afxClass            cameras;
     afxDrawIcd          e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
 
     struct
@@ -351,6 +353,7 @@ AFX afxContext      AfxGetDrawSystemMemory(afxDrawSystem dsys);
 
 AFX afxClass*       AfxGetDrawThreadClass(afxDrawSystem dsys);
 AFX afxClass*       AfxGetDrawDeviceClass(afxDrawSystem dsys);
+AFX afxClass*       AfxGetCameraClass(afxDrawSystem dsys);
 
 AFX afxNat          AfxCountDrawThreads(afxDrawSystem dsys);
 AFX afxNat          AfxCountDrawDevices(afxDrawSystem dsys);
@@ -360,6 +363,7 @@ AFX afxNat          AfxEnumerateDrawDevices(afxDrawSystem dsys, afxNat first, af
 AFX afxNat          AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawInput din[]);
 AFX afxNat          AfxEnumerateDrawOutputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawOutput dout[]);
 AFX afxNat          AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawContext dctx[]);
+AFX afxNat          AfxEnumerateCameras(afxDrawSystem dsys, afxNat base, afxNat cnt, afxCamera cam[]);
 
 AFX afxNat          AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
 AFX afxNat          AfxCurateDrawDevices(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);

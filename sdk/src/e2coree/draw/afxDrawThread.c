@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_DRAW_THREAD_C
-#define _AFX_DRAW_SYSTEM_C
+//#define _AFX_DRAW_SYSTEM_C
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_THREAD_C
 #include "afx/draw/afxDrawSystem.h"
@@ -160,17 +160,48 @@ _AFX afxError _AfxDthrCtor(afxDrawThread dthr, afxCookie const* cookie)
 _AFX afxError AfxAcquireDrawThreads(afxDrawSystem dsys, afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("cnt=%u,dthr=%p,config=%p", cnt, dthr, config);
+    AfxEntry("cnt=%u,config=%p,dthr=%p", cnt, config, dthr);
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    AfxAssertClass(&dsys->threads, afxFcc_DTHR);
+    afxClass* cls = AfxGetDrawThreadClass(dsys);
+    AfxAssertClass(cls, afxFcc_DTHR);
 
-    if (AfxAcquireObjects(&dsys->threads, cnt, (afxHandle*)dthr, (void*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxHandle*)dthr, (void*[]) { (void*)config }))
         AfxThrowError();
 
     AfxAssertObjects(cnt, dthr, afxFcc_DTHR);
 
     return err;
 };
+
+_AFX afxNat AfxCurateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawThreadClass(dsys);
+    AfxAssertClass(cls, afxFcc_DTHR);
+    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+}
+
+_AFX afxNat AfxEnumerateDrawThreads(afxDrawSystem dsys, afxNat first, afxNat cnt, afxDrawThread dthr[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(dthr);
+    afxClass* cls = AfxGetDrawThreadClass(dsys);
+    AfxAssertClass(cls, afxFcc_DTHR);
+    return AfxEnumerateInstances(cls, first, cnt, (afxHandle*)dthr);
+}
+
+_AFX afxNat AfxCountDrawThreads(afxDrawSystem dsys)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawThreadClass(dsys);
+    AfxAssertClass(cls, afxFcc_DTHR);
+    return AfxCountInstances(cls);
+}
 
 _AFX afxClassConfig _AfxDthrClsConfig =
 {

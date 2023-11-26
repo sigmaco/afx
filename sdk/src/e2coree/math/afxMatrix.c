@@ -152,7 +152,7 @@ _AFXINL void AfxResetM4d(afxReal m[4][4])
     AfxCopyM4d(m, AFX_M4D_IDENTITY);
 }
 
-_AFXINL void AfxEnsureLinearM4d(afxReal m[4][4])
+_AFXINL void AfxMakeLinearM4d(afxReal m[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -165,7 +165,7 @@ _AFXINL void AfxEnsureLinearM4d(afxReal m[4][4])
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxEnsureAffineM4d(afxReal m[4][4])
+_AFXINL void AfxMakeAffineM4d(afxReal m[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -350,7 +350,7 @@ _AFXINL void AfxCopyM4d(afxReal m[4][4], afxReal const in[4][4])
     m[3][3] = in[3][3];
 }
 
-_AFXINL void AfxCopyLinearM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL void AfxCopyLtm4(afxReal m[4][4], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
@@ -378,7 +378,7 @@ _AFXINL void AfxCopyLinearM4d(afxReal m[4][4], afxReal const in[4][4])
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxCopyAffineM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL void AfxCopyAtm4(afxReal m[4][4], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
@@ -406,7 +406,7 @@ _AFXINL void AfxCopyAffineM4d(afxReal m[4][4], afxReal const in[4][4])
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxCopyTransposedLinearM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL void AfxCopyTransposedLtm4(afxReal m[4][4], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
@@ -433,7 +433,7 @@ _AFXINL void AfxCopyTransposedLinearM4d(afxReal m[4][4], afxReal const in[4][4])
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxCopyTransposedAffineM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL void AfxCopyTransposedAtm4(afxReal m[4][4], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(in);
@@ -490,7 +490,7 @@ _AFXINL void AfxM2dFromM4d(afxReal m[2][2], afxReal const in[4][4])
     m[1][1] = in[1][1];
 }
 
-_AFXINL void AfxM3dFromM4d(afxReal m[3][3], afxReal const in[4][4])
+_AFXINL void AfxExtractM3d(afxReal m[3][3], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -510,7 +510,7 @@ _AFXINL void AfxM3dFromM4d(afxReal m[3][3], afxReal const in[4][4])
     m[2][2] = in[2][2];
 }
 
-_AFXINL void AfxM3dFromTransposedM4d(afxReal m[3][3], afxReal const in[4][4])
+_AFXINL void AfxExtractTransposedM3d(afxReal m[3][3], afxReal const in[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -846,7 +846,7 @@ _AFXINL void AfxCombineM3d(afxReal m[3][3], afxReal lambda1, afxReal const a[3][
     m[2][2] = lambda1 * a[2][2] + lambda2 * b[2][2];
 }
 
-_AFXINL void AfxCombineLinearM4d(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4])
+_AFXINL void AfxCombineLtm4(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -958,7 +958,7 @@ _AFXINL afxReal AfxInverseM4d(afxReal m[4][4], afxReal const in[4][4])
     return det;
 }
 
-_AFXINL afxReal AfxInverseAffineM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL afxReal AfxInverseAtm4(afxReal m[4][4], afxReal const in[4][4])
 {
     // Should be compatible with void MatrixInvert4x3(float *DestInit, const float *SourceInit)
 
@@ -1071,9 +1071,9 @@ _AFXINL void AfxScalingM4d(afxReal m[4][4], afxReal const scale[3])
 
 // MakeRotation
 
-_AFXINL void AfxM3dFromQuat(afxReal m[3][3], afxQuat const q)
+_AFXINL void AfxRotationM3dFromQuat(afxReal m[3][3], afxQuat const q)
 {
-    // Inspired in AfxM4dFromQuat
+    // Inspired in AfxRotationM4dFromQuat
 
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1098,7 +1098,7 @@ _AFXINL void AfxM3dFromQuat(afxReal m[3][3], afxQuat const q)
     m[2][2] = 1.f - 2.f * qxx - 2.f * qyy;
 }
 
-_AFXINL void AfxM4dFromQuat(afxReal m[4][4], afxQuat const q)
+_AFXINL void AfxRotationM4dFromQuat(afxReal m[4][4], afxQuat const q)
 {
     // Should be compatible with XMMATRIX XMMatrixRotationQuaternion(FXMVECTOR Quaternion)
 
@@ -1367,11 +1367,11 @@ _AFXINL void AfxComposeM4d(afxReal m[4][4], afxReal const scalOrigin[3], afxQuat
     afxM4d scalOriginI, scalOrientM, scalOrientT, scalM, rotM;
     AfxResetM4d(scalOriginI);
     AfxCopyV3d(scalOriginI[3], negScaOrigin);
-    AfxM4dFromQuat(scalOrientM, scalOrient);
+    AfxRotationM4dFromQuat(scalOrientM, scalOrient);
     AfxTransposeM4d(scalOrientT, scalOrientM);
     AfxResetM4d(scalM);
     AfxScalingM4d(scalM, scaling);
-    AfxM4dFromQuat(rotM, rotQuat);
+    AfxRotationM4dFromQuat(rotM, rotQuat);
 
     afxM4d t;
     AfxMultiplyM4d(t, scalOriginI, scalOrientT);
@@ -1384,7 +1384,7 @@ _AFXINL void AfxComposeM4d(afxReal m[4][4], afxReal const scalOrigin[3], afxQuat
     AfxAddV3d(m[3], m[3], translation);
 }
 
-_AFXINL void AfxComposeAffineM4d(afxReal m[4][4], afxReal const scale[3], afxReal const rotAxis[3], afxQuat const rot, afxReal const translation[3])
+_AFXINL void AfxComposeAtm4(afxReal m[4][4], afxReal const scale[3], afxReal const rotAxis[3], afxQuat const rot, afxReal const translation[3])
 {
     // Should be compatible with XMMATRIX XMMatrixAffineTransformation(FXMVECTOR Scaling, FXMVECTOR RotationOrigin, FXMVECTOR RotationQuaternion, GXMVECTOR Translation)
 
@@ -1399,7 +1399,7 @@ _AFXINL void AfxComposeAffineM4d(afxReal m[4][4], afxReal const scale[3], afxRea
     afxM4d sm, rm, c;
     AfxResetM4d(sm);
     AfxScalingM4d(sm, scale);
-    AfxM4dFromQuat(rm, rot);
+    AfxRotationM4dFromQuat(rm, rot);
     AfxSubV3d(sm[3], sm[3], rotAxis);
     AfxMultiplyM4d(m, sm, rm);
     AfxAddV3d(m[3], m[3], rotAxis);
@@ -1514,7 +1514,7 @@ _AFXINL void AfxMultiplyPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxRea
     m[2][2] = 1.f;
 }
 
-_AFXINL void AfxMultiplyLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyLtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1546,7 +1546,7 @@ _AFXINL void AfxMultiplyLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxRea
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxMultiplyAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyAtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1672,7 +1672,7 @@ _AFXINL void AfxMultiplyTransposedPlanarM3d(afxReal m[3][3], afxReal const a[3][
     m[2][2] = 1.f;
 }
 
-_AFXINL void AfxMultiplyTransposedLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyTransposedLtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1702,7 +1702,7 @@ _AFXINL void AfxMultiplyTransposedLinearM4d(afxReal m[4][4], afxReal const a[4][
     m[3][3] = 1.f;
 }
 
-_AFXINL void AfxMultiplyTransposedAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
+_AFXINL void AfxMultiplyTransposedAtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1772,7 +1772,7 @@ _AFXINL void AfxPostMultiplyArrayedV4d(afxReal const m[4][4], afxNat cnt, afxRea
         AfxPostMultiplyV4d(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPostMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3])
+_AFXINL void AfxPostMultiplyArrayedAtv3(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1781,10 +1781,10 @@ _AFXINL void AfxPostMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, a
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPostMultiplyAffineV3d(m, in[i], out[i]);
+        AfxPostMultiplyAtv3(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPostMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPostMultiplyArrayedLtv4(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1793,10 +1793,10 @@ _AFXINL void AfxPostMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, 
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPostMultiplyLinearV4d(m, in[i], out[i]);
+        AfxPostMultiplyLtv4(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPostMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPostMultiplyArrayedAtv4(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1805,7 +1805,7 @@ _AFXINL void AfxPostMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, 
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPostMultiplyAffineV4d(m, in[i], out[i]);
+        AfxPostMultiplyAtv4(m, in[i], out[i]);
 }
 
 // PreMultiply
@@ -1846,7 +1846,7 @@ _AFXINL void AfxPreMultiplyArrayedV4d(afxReal const m[4][4], afxNat cnt, afxReal
         AfxPreMultiplyV4d(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPreMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3])
+_AFXINL void AfxPreMultiplyArrayedAtv3(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1855,10 +1855,10 @@ _AFXINL void AfxPreMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, af
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPreMultiplyAffineV3d(m, in[i], out[i]);
+        AfxPreMultiplyAtv3(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPreMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPreMultiplyArrayedLtv4(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1867,10 +1867,10 @@ _AFXINL void AfxPreMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, a
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPreMultiplyLinearV4d(m, in[i], out[i]);
+        AfxPreMultiplyLtv4(m, in[i], out[i]);
 }
 
-_AFXINL void AfxPreMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPreMultiplyArrayedAtv4(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1879,7 +1879,7 @@ _AFXINL void AfxPreMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, a
     AfxAssert(out);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxPreMultiplyAffineV4d(m, in[i], out[i]);
+        AfxPreMultiplyAtv4(m, in[i], out[i]);
 }
 
 // TransformSerialized
@@ -1950,7 +1950,7 @@ _AFXINL void AfxPostMultiplySerializedV4d(afxReal const m[4][4], afxNat inStride
     }
 }
 
-_AFXINL void AfxPostMultiplySerializedPointV3d(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3])
+_AFXINL void AfxPostMultiplySerializedAtv3(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1965,14 +1965,14 @@ _AFXINL void AfxPostMultiplySerializedPointV3d(afxReal const m[4][4], afxNat inS
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxPostMultiplyAffineV3d(m, (void*)inPtr, (void*)outPtr);
+        AfxPostMultiplyAtv3(m, (void*)inPtr, (void*)outPtr);
 
         inPtr += inStride;
         outPtr += outStride;
     }
 }
 
-_AFXINL void AfxPostMultiplySerializedNormalV4d(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPostMultiplySerializedLtv4(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -1987,14 +1987,14 @@ _AFXINL void AfxPostMultiplySerializedNormalV4d(afxReal const m[3][3], afxNat in
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxPostMultiplyLinearV4d(m, (void*)inPtr, (void*)outPtr);
+        AfxPostMultiplyLtv4(m, (void*)inPtr, (void*)outPtr);
 
         inPtr += inStride;
         outPtr += outStride;
     }
 }
 
-_AFXINL void AfxPostMultiplySerializedAffineV4d(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
+_AFXINL void AfxPostMultiplySerializedAtv4(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -2009,7 +2009,7 @@ _AFXINL void AfxPostMultiplySerializedAffineV4d(afxReal const m[4][4], afxNat in
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxPostMultiplyAffineV4d(m, (void*)inPtr, (void*)outPtr);
+        AfxPostMultiplyAtv4(m, (void*)inPtr, (void*)outPtr);
 
         inPtr += inStride;
         outPtr += outStride;
@@ -2018,7 +2018,7 @@ _AFXINL void AfxPostMultiplySerializedAffineV4d(afxReal const m[4][4], afxNat in
 
 // Assimilate
 
-_AFXINL void AfxAssimilateM3d(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3])
+_AFXINL void AfxAssimilateLtm3(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3])
 {
     // Should be compatible with void InPlaceSimilarityTransformScaleShear(const float *Linear3x3, const float *InverseLinear3x3, float *ScaleShear3x3)
     afxError err = NIL;
@@ -2036,7 +2036,7 @@ _AFXINL void AfxAssimilateM3d(afxReal const ltm[3][3], afxReal const iltm[3][3],
     }
 }
 
-_AFXINL void AfxAssimilateAffineM4d(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4])
+_AFXINL void AfxAssimilateAtm4(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4])
 {
     // Should be compatible with void InPlaceSimilarityTransform4x3(const float *Affine3, const float *Linear3x3, const float *InverseLinear3x3, float *ResultInit)
     afxError err = NIL;
@@ -2050,10 +2050,10 @@ _AFXINL void AfxAssimilateAffineM4d(afxReal const ltm[3][3], afxReal const iltm[
     for (afxNat i = 0; i < cnt; i++)
     {
         afxM3d ss;
-        AfxM3dFromM4d(ss, in[i]);
-        AfxAssimilateM3d(ltm, iltm, 1, &ss, &ss);
+        AfxExtractM3d(ss, in[i]);
+        AfxAssimilateLtm3(ltm, iltm, 1, &ss, &ss);
         afxV4d pos;
-        AfxAssimilateAffineV4d(ltm, atv, 1, &in[i][3], &pos);
+        AfxAssimilateAtv4(ltm, atv, 1, &in[i][3], &pos);
         AfxM4dFromM3d(out[i], ss, pos);
     }
 }
@@ -2080,6 +2080,6 @@ _AFX void AfxApplyRootMotionVectorsToMatrix(afxReal const translation[3], afxRea
     }
 
     afxM4d tmp;
-    AfxMultiplyTransposedAffineM4d(tmp, upd, mm);
+    AfxMultiplyTransposedAtm4(tmp, upd, mm);
     AfxCopyM4d(m, tmp);
 }

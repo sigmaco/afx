@@ -153,8 +153,8 @@ AFX afxString const     AFX_STR_EMPTY;
 //#define AfxAssertString(var_, code_) ((!!((var_) && ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
 //#define AfxTryAssertString(var_, code_) ((!!(!(var_) || ((var_)->h.fcc == afxFcc_STRC || (var_)->h.fcc == afxFcc_STRE || ((var_)->h.fcc >= afxFcc_STR0 && (var_)->h.fcc <= afxFcc_STR9))))||(AfxThrowError(rslt),AfxLogError(AfxHint(),"%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[(code_)]),0))
 
-#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_))));
-#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_)))));
+#define AfxAssertString(str_) (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_))))
+#define AfxTryAssertString(str_) ((!str_) || (err = _AfxStringAssert((str_), AfxHint(), AFX_STRINGIFY((str_)))))
 
 AFXINL afxError _AfxStringAssert(afxString const *str_, afxHint const hint_, afxChar const *exp_)
 {

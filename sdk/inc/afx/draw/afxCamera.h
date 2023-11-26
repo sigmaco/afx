@@ -17,9 +17,9 @@
 #ifndef AFX_CAMERA_H
 #define AFX_CAMERA_H
 
+#include "afx/draw/afxDrawDefs.h"
 #include "afx/core/afxArray.h"
 #include "afx/math/afxFrustum.h"
-#include "../afxNode.h"
 
 #define AFX_CAM_ALIGN AFX_SIMD_ALIGN
 
@@ -55,6 +55,7 @@ typedef enum afxCameraDepthRange
     afxCameraDepthRange_NEGONE2ZERO,
 } afxCameraDepthRange;
 
+#ifdef _AFX_DRAW_C
 #ifdef _AFX_CAMERA_C
 AFX_OBJECT(afxCamera)
 {
@@ -81,6 +82,7 @@ AFX_OBJECT(afxCamera)
     afxFrustum  frustum;
 };
 #endif//_AFX_CAMERA_C
+#endif//_AFX_DRAW_C
 
 //static_assert(offsetof(afxCamera, focus % AFX_CAM_ALIGN == 0, "");
 
@@ -203,13 +205,13 @@ AFX void    AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError AfxAcquireCameras(afxSimulation sim, afxNat cnt, afxCamera cam[]);
+AFX afxError    AfxAcquireCameras(afxDrawSystem dsys, afxNat cnt, afxCamera cam[]);
 
-AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+AFX afxReal     AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
 
 // If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 // you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
+AFX afxReal     AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 #endif//AFX_CAMERA_H

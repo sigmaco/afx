@@ -68,11 +68,11 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                 AfxBufferizeMeshTopology(msht);
                 AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
                 
-                //AfxCmdBindPipeline(dscr, 0, rnd->lighting);
+                AfxCmdBindPipeline(dscr, 0, rnd->lighting);
                 //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
                 //AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
                 //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
-                AfxCmdBindPipeline(dscr, 0, rnd->testPip);
+                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
                 //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
                 //AfxCmdSetCullMode(dscr, afxCullMode_BACK);
@@ -143,8 +143,8 @@ _AFX afxError AfxDrawBodies(afxDrawScript dscr, afxRenderer rnd, afxNat cnt, afx
                     
                     afxInstanceConstants *objConstants = &rnd->framesets[rnd->frameIdx].objConstants;
                     
-                    AfxCopyAffineM4d(objConstants->m, AFX_M4D_IDENTITY);
-                    AfxCopyAffineM4d(objConstants->w[0], AFX_M4D_IDENTITY);
+                    AfxCopyAtm4(objConstants->m, AFX_M4D_IDENTITY);
+                    AfxCopyAtm4(objConstants->w[0], AFX_M4D_IDENTITY);
 
                     //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(*objConstants), objConstants);
                     afxNat zeros[] = { 0, 0, 0 };
@@ -251,9 +251,9 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
             
     afxDrawTarget rdt = { 0 };
     rdt.tex = surf;
-    rdt.clearValue.color[0] = 0.1f;
+    rdt.clearValue.color[0] = 0.3f;
     rdt.clearValue.color[1] = 0.1f;
-    rdt.clearValue.color[2] = 0.1f;
+    rdt.clearValue.color[2] = 0.3f;
     rdt.clearValue.color[3] = 1;
     rdt.loadOp = afxSurfaceLoadOp_CLEAR;
     rdt.storeOp = afxSurfaceStoreOp_STORE;
@@ -333,8 +333,8 @@ _AFX afxError AfxBeginSceneRendering(afxDrawScript dscr, afxRenderer rnd, afxCam
         //AfxTransposeM4d(m2, m2);
 
         //AfxComputeRenderWareViewM4d(v, iv);
-        AfxCopyAffineM4d(viewConstants->v, v);
-        AfxEnsureAffineM4d(viewConstants->v);
+        AfxCopyAtm4(viewConstants->v, v);
+        AfxMakeAffineM4d(viewConstants->v);
         //AfxCopyM4d(viewConstants->iv, iv);
         //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);
         //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);

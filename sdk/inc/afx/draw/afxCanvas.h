@@ -21,58 +21,6 @@
 
 #include "afx/draw/afxSurface.h"
 
-#if 0
-AFX_DEFINE_STRUCT(afxInterlink)
-{
-    void            *a; // usually a active object controlling B.
-    afxInterlink    *aPrev;
-    afxInterlink    *aNext;
-    void            *b; // usually a passive object being controlled by A.
-    afxInterlink    *bPrev;
-    afxInterlink    *bNext;
-};
-
-#define AFX_DEFINE_INTERLINK(interlink_, typeA_, nameA_, typeB_, nameB_) typedef struct interlink_ { typeA_ nameA_; typeA_*nameA_##Prev;typeA_*nameA_##Next;typeB_ nameB_; typeB_*nameB_##Prev;typeB_*nameB_##Next;} interlink_;
-
-AFXINL afxError AfxInterlinkDeployAsA(afxInterlink *intk, void *a, afxInterlink *prev, afxInterlink *next)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(intk);
-    AfxAssert(a);
-    intk->b = NIL;
-    intk->aPrev = NIL;
-    intk->bNext = NIL;
-    intk->a = a;
-    intk->aPrev = prev;
-    intk->aNext = next;
-}
-
-AFXINL afxError AfxInterlinkDeployAsB(afxInterlink *intk, void *b, afxInterlink *prev, afxInterlink *next)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(intk);
-    AfxAssert(b);
-    intk->a = NIL;
-    intk->aPrev = NIL;
-    intk->aNext = NIL;
-    intk->b = b;
-    intk->bPrev = prev;
-    intk->bNext = next;
-}
-
-AFX_DEFINE_STRUCT(afxCanvasSurfaceInterlink2222222)
-{
-    afxCanvas   canv;
-    afxCanvas   *canvPrev;
-    afxCanvas   *canvNext;
-    afxSurface  surf;
-    afxSurface  *surfPrev;
-    afxSurface  *surfNext;
-};
-
-AFX_DEFINE_INTERLINK(afxCanvasSurfaceInterlink, afxCanvas, canv, afxSurface, surf);
-#endif
-
 typedef enum afxEventCanvas
 {
     AFX_EVENT_CANV_RESIZ

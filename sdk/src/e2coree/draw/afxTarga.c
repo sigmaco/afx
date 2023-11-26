@@ -221,9 +221,9 @@ _AFX afxError _AfxTgaLoad(afxContext mem, afxBool bgrToRgb, afxStream *stream, _
             case 32:
             {
                 if (header.imageSpec.pixelDepth == 32)
-                    tga->fmt = AFX_PFD_BGRA8;
+                    tga->fmt = bgrToRgb ? AFX_PFD_RGBA8 : AFX_PFD_BGRA8;
                 else if (header.imageSpec.pixelDepth == 24)
-                    tga->fmt = AFX_PFD_BGR8;
+                    tga->fmt = bgrToRgb ? AFX_PFD_RGB8 : AFX_PFD_BGR8;
                 else
                     tga->fmt = AFX_PFD_R8;
 

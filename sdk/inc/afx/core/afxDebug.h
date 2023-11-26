@@ -106,6 +106,9 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssertType(var_, fcc_) ((void)(err))
 #   define AfxTryAssertType(var_, fcc_) ((void)(err))
 
+#   define AfxAssertBool(value_)
+#   define AfxAssertAbs(value_)
+
 #   define AfxAssertRange(total_, base_, range_)
 #   define AfxAssertRangei(total_, base_, range_)
 #   define AfxAssertRangef(total_, base_, range_)
@@ -113,6 +116,7 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 // diferente de um range, um extent sempre há um valor mínimo. Algo não pode ter largura igual a zero e existir.
 #   define AfxAssertExtent(total_, range_)
 
+#   define AfxAssignFcc(obj_,fcc_)
 #   define AfxAssignTypeFcc(type_,fcc_)
 #endif
 
@@ -145,7 +149,7 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #   define _AFX_DBG_FCC    afxFcc    fcc
 #   define _AFX_DBG_FCC16   afxNat16  fcc
 #else
-#   define _AFX_DBG_FCC;
+#   define _AFX_DBG_FCC ;
 #   define _AFX_DBG_FCC16 
 #endif
 

@@ -205,11 +205,76 @@ _AFX afxError AfxOpenDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat cnt, a
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        afxClass* cls = AfxGetDrawInputClass(ddev);
+        AfxAssertClass(cls, afxFcc_DIN);
 
-        if (AfxAcquireObjects(AfxGetDrawInputClass(ddev), cnt, (afxHandle*)din, (void*[]) { &ddevId, (void*)config }))
+        if (AfxAcquireObjects(cls, cnt, (afxHandle*)din, (void*[]) { &ddevId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, din, afxFcc_DIN);
     }
     return err;
+}
+
+_AFX afxNat AfxCurateDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(f);
+    AfxAssert(cnt);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawDeviceClass(dsys);
+    AfxAssertClass(cls, afxFcc_DDEV);
+    afxDrawDevice ddev;
+    afxNat rslt = 0;
+
+    if ((ddevId != AFX_INVALID_INDEX) && !(AfxGetInstance(cls, ddevId, (afxHandle*)&ddev))) AfxThrowError();
+    else
+    {
+        if ((ddevId == AFX_INVALID_INDEX)) cls = &dsys->inputs;
+        else
+        {
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+            cls = AfxGetDrawInputClass(ddev);
+        }
+
+        AfxAssertClass(cls, afxFcc_DIN);
+        rslt = AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    }
+    return rslt;
+}
+
+_AFX afxNat AfxEnumerateDrawInputs(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawInput din[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(din);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawDeviceClass(dsys);
+    AfxAssertClass(cls, afxFcc_DDEV);
+    afxDrawDevice ddev;
+    afxNat rslt = 0;
+
+    if ((ddevId != AFX_INVALID_INDEX) && !(AfxGetInstance(cls, ddevId, (afxHandle*)&ddev))) AfxThrowError();
+    else
+    {
+        if ((ddevId == AFX_INVALID_INDEX)) cls = &dsys->inputs;
+        else
+        {
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+            cls = AfxGetDrawInputClass(ddev);
+        }
+
+        AfxAssertClass(cls, afxFcc_DIN);
+        rslt = AfxEnumerateInstances(cls, first, cnt, (afxHandle*)din);
+    }
+    return rslt;
+}
+
+_AFX afxNat AfxCountDrawInputs(afxDrawDevice ddev)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    afxClass*cls = AfxGetDrawInputClass(ddev);
+    AfxAssertClass(cls, afxFcc_DIN);
+    return AfxCountInstances(cls);
 }

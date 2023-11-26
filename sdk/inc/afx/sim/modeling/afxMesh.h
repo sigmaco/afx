@@ -123,4 +123,6 @@ AFX afxError            AfxBuildMeshes(afxSimulation sim, afxNat cnt, afxMeshBui
 
 AFX void                AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, afxMesh msh[]);
 
+AFX void                AfxRenormalizeMeshes(afxNat cnt, afxMesh msh[]);
+
 #endif//AFX_MESH_H

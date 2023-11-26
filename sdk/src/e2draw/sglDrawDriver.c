@@ -2034,7 +2034,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             AfxMakeString(&dpu->subsysName, (afxChar const*)gl->GetString(GL_RENDERER), 0); _SglThrowErrorOccuried();
             AfxMakeString(&dpu->subsysVer, (afxChar const*)gl->GetString(GL_VERSION), 0); _SglThrowErrorOccuried();
 
-            AfxLogMessageFormatted(0xFFFF0000, "\n Opening the GL/2 Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
+            AfxLogMessageFormatted(0xFFFF0000, "\n Opening the SIGMA GL/2 Drawing Execution Port %.03u\n\t%.*s %.*s", unitIdx, AfxPushString(&dpu->subsysName), AfxPushString(&dpu->subsysVer));
 
             PFNWGLGETEXTENSIONSSTRINGARBPROC _wglGetExtensionsStringARB = (void*)dpu->GetProcAddress("wglGetExtensionsStringARB");
             AfxAssert(_wglGetExtensionsStringARB);
@@ -2253,7 +2253,7 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDr
         AfxRegenerateDrawOutputBuffers(dout);
     }
 
-    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
+    AfxFormatString(&dout->base.caption, "Draw Output %p (%s) --- OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", dout, dctx && !err ? "On line" : "Off line");
 
     return err;
 }
@@ -2353,7 +2353,7 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
     ddev->wndClss.hCursor = NULL;
     ddev->wndClss.hbrBackground = NULL;
     ddev->wndClss.lpszMenuName = NULL;
-    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build";
+    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build";
     ddev->wndClss.hIconSm = NULL;
 
     if (!(RegisterClassEx(&(ddev->wndClss)))) AfxThrowError();
@@ -2476,11 +2476,12 @@ _SGL afxError AfxGetDrawIcdInformation(afxDrawIcdInfo *info)
     afxUri file;
     AfxMakeUri(&file, "e2draw.icd", 0);
     static afxString name, vendor, website, note;
-    AfxMakeString(&name, "OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System", 0);
+    AfxMakeString(&name, "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Draw System", 0);
     AfxMakeString(&vendor, "SIGMA Technology Group", 0);
     AfxMakeString(&website, "www.sigmaco.org", 0);
     AfxMakeString(&note, sigmaSignature, 0);
 
+    *info = (afxDrawIcdInfo) { 0 };
     info->mdle = AfxFindModule(&file);
     info->name = &name;
     info->vendor = &vendor;
@@ -2490,7 +2491,7 @@ _SGL afxError AfxGetDrawIcdInformation(afxDrawIcdInfo *info)
     info->verMinor = 7;
     info->verPatch = 2;
 
-    afxClassConfig const devClsExt =
+    static afxClassConfig const devClsExt =
     {
         .fcc = afxFcc_DDEV,
         .name = "Draw Device",

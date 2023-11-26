@@ -11,6 +11,7 @@
 
 #ifdef ENABLE_DRAW
 #include "afx/draw/afxDrawSystem.h"
+#include "afx/draw/afxCamera.h"
 #include "afx/sim/rendering/afxRenderer.h"
 #endif
 
@@ -160,7 +161,7 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     rndConf.dinProc = DrawInputProc;
     AfxAcquireRenderers(sim, 1, &rnd, &rndConf);
     
-    AfxAcquireCameras(sim, 1, &cam);
+    AfxAcquireCameras(dsys, 1, &cam);
     AfxAssert(cam);
 
     rnd->activeCam = cam;

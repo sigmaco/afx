@@ -340,11 +340,76 @@ _AFX afxError AfxAcquireDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat c
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        afxClass* cls = AfxGetDrawContextClass(ddev);
+        AfxAssertClass(cls, afxFcc_DCTX);
 
-        if (AfxAcquireObjects(AfxGetDrawContextClass(ddev), cnt, (afxHandle*)dctx, (void*[]) { &ddevId, (void*)config }))
+        if (AfxAcquireObjects(cls, cnt, (afxHandle*)dctx, (void*[]) { &ddevId, (void*)config }))
             AfxThrowError();
 
         AfxAssertObjects(cnt, dctx, afxFcc_DCTX);
     }
     return err;
+}
+
+_AFX afxNat AfxCurateDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(f);
+    AfxAssert(cnt);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawDeviceClass(dsys);
+    AfxAssertClass(cls, afxFcc_DDEV);
+    afxDrawDevice ddev;
+    afxNat rslt = 0;
+
+    if ((ddevId != AFX_INVALID_INDEX) && !(AfxGetInstance(cls, ddevId, (afxHandle*)&ddev))) AfxThrowError();
+    else
+    {
+        if ((ddevId == AFX_INVALID_INDEX)) cls = &dsys->contexts;
+        else
+        {
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+            cls = AfxGetDrawContextClass(ddev);
+        }
+
+        AfxAssertClass(cls, afxFcc_DCTX);
+        rslt = AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    }
+    return rslt;
+}
+
+_AFX afxNat AfxEnumerateDrawContexts(afxDrawSystem dsys, afxNat ddevId, afxNat first, afxNat cnt, afxDrawContext dctx[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(dctx);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+    afxClass* cls = AfxGetDrawDeviceClass(dsys);
+    AfxAssertClass(cls, afxFcc_DDEV);
+    afxDrawDevice ddev;
+    afxNat rslt = 0;
+
+    if ((ddevId != AFX_INVALID_INDEX) && !(AfxGetInstance(cls, ddevId, (afxHandle*)&ddev))) AfxThrowError();
+    else
+    {
+        if ((ddevId == AFX_INVALID_INDEX)) cls = &dsys->contexts;
+        else
+        {
+            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+            cls = AfxGetDrawContextClass(ddev);
+        }
+
+        AfxAssertClass(cls, afxFcc_DCTX);
+        rslt = AfxEnumerateInstances(cls, first, cnt, (afxHandle*)dctx);
+    }
+    return rslt;
+}
+
+_AFX afxNat AfxCountDrawContexts(afxDrawDevice ddev)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    afxClass*cls = AfxGetDrawContextClass(ddev);
+    AfxAssertClass(cls, afxFcc_DCTX);
+    return AfxCountInstances(cls);
 }

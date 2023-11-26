@@ -52,7 +52,7 @@
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_
 #define AFX_DECLARE_UNION(union_) typedef union union_ union_
 
-#define AfxRebase(p_,s_,m_) ((s_)(((afxByte*)p_) - ((size_t)&(((s_)0)->m_))))
+#define AfxRebase(p_,s_,m_) ((s_)(void*)(((afxByte*)p_) - ((size_t)&(((s_)0)->m_))))
 #define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 #ifdef _WIN64

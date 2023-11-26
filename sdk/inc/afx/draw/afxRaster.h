@@ -116,8 +116,11 @@ AFX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
 AFX afxNat          AfxCountRasterLods(afxRaster ras);
 AFX afxNat          AfxCountRasterLayers(afxRaster ras);
 AFX afxNat          AfxGetRasterSampleCount(afxRaster ras);
+AFX afxNat          AfxMeasureRasterRow(afxRaster ras);
+AFX afxNat          AfxMeasureRasterLayer(afxRaster ras);
 
 AFX afxBool         AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw);
+AFX void            AfxFlipRasterVertically(afxRaster ras);
 AFX afxError        AfxSwapRasterChannels(afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const *rgn);
 
 AFX afxResult       AfxTestRaster(afxRaster ras, afxRasterFlags bitmask);

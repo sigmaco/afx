@@ -699,6 +699,68 @@ _AFX afxError AfxGenerateRasterLods(afxRaster ras, afxNat firstLod, afxNat lodCn
     return err;
 }
 
+_AFX afxNat AfxMeasureRasterRow(afxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);    
+    afxPixelLayout pfd;
+    AfxDescribePixelFormat(ras->fmt, &pfd);
+    afxNat stride = (pfd.bpp / AFX_BYTE_SIZE);
+    afxNat bpr = ras->whd[0] * stride;
+    AfxAssert(bpr); // bytes per row
+    return bpr;
+}
+
+_AFX afxNat AfxMeasureRasterLayer(afxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    afxPixelLayout pfd;
+    AfxDescribePixelFormat(ras->fmt, &pfd);
+    afxNat stride = (pfd.bpp / AFX_BYTE_SIZE);
+    afxNat bpl = ras->whd[0] * ras->whd[1] * stride;
+    AfxAssert(bpl); // bytes per layer
+    return bpl;
+}
+
+_AFX void AfxFlipRasterVertically(afxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    afxNat bpr = AfxMeasureRasterRow(ras);
+    AfxAssert(bpr);
+    afxNat h = ras->whd[1];
+    afxByte tmp[2048]; // used to be max texture size supported in old days
+    afxByte *bytes = ras->maps;
+
+    afxNat layerCnt = ras->layerCnt;
+    afxNat bpl = AfxMeasureRasterLayer(ras);
+    AfxAssert(bpl);
+
+    for (afxNat layer = 0; layer < layerCnt; ++layer)
+    {
+        for (afxNat row = 0; row < (h >> 1); row++)
+        {
+            afxByte *first = bytes + row * bpr;
+            afxByte *next = bytes + (h - row - 1) * bpr;
+            // swap row0 with row1
+            afxNat bytesLeft = bpr;
+
+            while (bytesLeft)
+            {
+                afxSize bytesCpy = (bytesLeft < sizeof(tmp)) ? bytesLeft : sizeof(tmp);
+                AfxCopy(1, bytesCpy, first, tmp);
+                AfxCopy(1, bytesCpy, next, first);
+                AfxCopy(1, bytesCpy, tmp, next);
+                first += bytesCpy;
+                next += bytesCpy;
+                bytesLeft -= bytesCpy;
+            }
+        }
+        bytes += bpl;
+    }
+}
+
 _AFX afxError AfxSwapRasterChannels(afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const *rgn)
 {
     afxError err = AFX_ERR_NONE;

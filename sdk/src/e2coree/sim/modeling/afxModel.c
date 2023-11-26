@@ -87,7 +87,7 @@ _AFX void AfxBuildAttachedMeshMatrixArray(afxModel mdl, afxNat slotIdx, afxWorld
             {
                 afxV4d* w = AfxWorldPoseGetWorldMatrix(WorldPose, mdl->meshSlots[slotIdx].boneIndices[i]);
                 afxSkeletonBone* bone = AfxGetBone(mdl->meshSlots[slotIdx].srcSkl, mdl->meshSlots[slotIdx].srcBoneIndices[i]);
-                AfxMultiplyAffineM4d(xformBuffer[i], w, bone->iw);
+                AfxMultiplyAtm4(xformBuffer[i], w, bone->iw);
             }
         }
     }

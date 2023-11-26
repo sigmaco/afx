@@ -147,9 +147,6 @@
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxRenderer.h">
       <Filter>e2coree\sim\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\afx\sim\rendering\afxCamera.h">
-      <Filter>e2coree\sim\rendering</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\afx\sim\anim\afxBody.h">
       <Filter>e2coree\sim\anim</Filter>
     </ClInclude>
@@ -396,12 +393,14 @@
     <ClInclude Include="..\..\inc\afx\draw\afxRaster.h">
       <Filter>e2coree\draw</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\inc\afx\draw\afxCamera.h">
+      <Filter>e2coree\draw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\afx\README.md">
       <Filter>e2coree</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\inc\afx\go-horse.txt">
@@ -497,9 +496,6 @@
       <Filter>e2coree\sim\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c">
-      <Filter>e2coree\sim\rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c">
       <Filter>e2coree\sim\rendering</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\sim\anim\afxBody.c">
@@ -731,6 +727,9 @@
       <Filter>e2coree\sim\modeling</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\draw\afxRaster.c">
+      <Filter>e2coree\draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\draw\afxCamera.c">
       <Filter>e2coree\draw</Filter>
     </ClCompile>
   </ItemGroup>

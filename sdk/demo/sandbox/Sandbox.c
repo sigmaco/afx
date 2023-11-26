@@ -66,7 +66,7 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             if (bod)
                 AfxDrawBodies(dscr, rnd, 1, &bod);
 
-            if (cubeBod)
+            //if (cubeBod)
                 //AfxDrawBodies(dscr, rnd, 1, &cubeBod);
 
             AfxDrawTestIndexed(dscr, rnd);
@@ -139,9 +139,9 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
     simSpec.unitsPerMeter = 1.f;
-    AfxSetV3d(simSpec.right, 1, 0, 0);
-    AfxSetV3d(simSpec.up, 0, 1, 0);
-    AfxSetV3d(simSpec.back, 0, 0, 1);
+    AfxSetV3d(simSpec.right,    1, 0, 0);
+    AfxSetV3d(simSpec.up,       0, 1, 0);
+    AfxSetV3d(simSpec.back,     0, 0, 1);
     AfxZeroV3d(simSpec.origin);
     AfxAcquireSimulations(1, &sim, &simSpec);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -194,15 +194,6 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     AfxComputeBasisConversion(sim, 10.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
     //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
 
-    //AfxMakeString(&str, "bibliotheca", 0);
-    //AfxMakeString(&str, "gtabr", 0);
-    //AfxString32DeployRaw(&str, "TV-Stand-5", 0);
-    //AfxString32DeployRaw(&str, "SpaceStation", 0);
-    //AfxString32DeployRaw(&str, "f16", 0);
-    //AfxMakeString(&str, "zero", 0);
-    //AfxMakeString(&str, "container", 0);
-
-
     AfxGetUriName(&uriMap2, &uriMap);
     AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
@@ -213,6 +204,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     //cube = AfxBuildCubeMesh(sim, 100.0);
     //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
+    //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 100, 10));
     //cube = AfxBuildDomeMesh(sim, 100.0, 4);
     cubeMdl = AfxAssembleModel(sim, &AfxStaticString("cube"), AfxGetModelSkeleton(mdl), NIL, 1, &cube);
     AfxEmbodyModel(cubeMdl, 1, &cubeBod);
@@ -226,7 +218,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
-    AfxAcquireCameras(sim, 1, &cam);
+    AfxAcquireCameras(dsys, 1, &cam);
     AfxAssert(cam);
     //AfxSetCameraFov(cam, AFX_PI / 4.0);
     //cam->farClip = -100000.0;

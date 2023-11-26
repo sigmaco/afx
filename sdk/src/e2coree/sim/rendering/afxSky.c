@@ -26,7 +26,7 @@ _AFX void AfxStepSky(afxSky* sky, afxReal dt)
 {
     sky->currRot += sky->rotSpeed * dt;
     AfxQuatFromAxisAngle(sky->rotQuat, sky->rotPivot, sky->currRot);
-    AfxM4dFromQuat(sky->rotMtx, sky->rotQuat);
+    AfxRotationM4dFromQuat(sky->rotMtx, sky->rotQuat);
 }
 
 _AFX afxError AfxDrawSky(afxDrawScript dscr, afxSky* sky)

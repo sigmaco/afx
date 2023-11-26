@@ -47,16 +47,16 @@
 
 typedef afxReal         afxV2d[2];
 typedef afxReal         afxV3d[3];
-typedef afxReal         afxV4d[4];
+typedef afxReal         afxSimd(afxV4d[4]);
 static_assert(sizeof(__m128) == sizeof(afxV4d), "");
 
-typedef afxV4d          afxQuat; // 0,1,2 = imaginary, 3 = real
-typedef afxV4d          afxRotor; // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
+typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
 
-typedef afxV2d         afxM2d[2];
-typedef afxV3d         afxM3d[3];
-typedef afxV4d         afxM4d[4];
-typedef afxV4d         afxM4d3[3];
+typedef afxV2d          afxM2d[2];
+typedef afxV3d          afxM3d[3];
+typedef afxV4d          afxSimd(afxM4d[4]);
+typedef afxV4d          afxSimd(afxM4d3[3]);
 
 #if 0
 static_assert(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");
@@ -151,8 +151,6 @@ AFXINL void AfxUnmakeV2dNdc(afxReal v[2], afxV2d const total)
     v[0] = AfxFromNdc(v[0], total[0]);
     v[1] = AfxFromNdc(v[1], total[1]);
 }
-
-AFXINL void AfxCorrectRenderWareMatrix(afxReal m[4][4], afxReal const in[4][4]);
 
 #include "afx/core/afxContext.h"
 

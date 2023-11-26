@@ -27,6 +27,8 @@
 // Isto porque, no QWADRO, você executa as operações de desenho. Ao invés, você submete elas a serem processadas através de um afxDrawInput.
 // Uma afxDrawQueue livre, por sua vez, e que pode realizar determinada operação submetida, então puxará a submissão.
 
+// A afxDrawQueue é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
+
 AFX_DEFINE_STRUCT(_afxDqueSubm)
 {
     afxLinkage              chain;

@@ -2696,7 +2696,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         AfxAssertObjects(1, &surf, afxFcc_RAS);
         //AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
         glVmt const* gl = &dpu->gl;
-#if !0
+#if 0
         dpu->activeTmpFboIdx = (dpu->activeTmpFboIdx + 1) % (sizeof(dpu->tmpFbo) / sizeof(dpu->tmpFbo[0]));
         GLuint tmpFbo = dpu->tmpFbo[dpu->activeTmpFboIdx];
 
@@ -2714,6 +2714,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         gl->FramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, surf->glTarget, surf->glHandle, 0); _SglThrowErrorOccuried();
 
         gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
+        gl->Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  _SglThrowErrorOccuried();
         gl->BlitFramebuffer(0, 0, surf->base.whd[0], surf->base.whd[1], 0, 0, surf->base.whd[0], surf->base.whd[1], GL_COLOR_BUFFER_BIT, GL_LINEAR); _SglThrowErrorOccuried();
         gl->BindFramebuffer(GL_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
         gl->Flush();
@@ -2745,7 +2746,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
         //cmdBeginOp.canv = NIL;
         cmdBeginOp.area = (afxRect const){ { { 0, 0 } }, { { extent[0], extent[1] } } };
         cmdBeginOp.rasterCnt = 1;
-        cmdBeginOp.rasters[0] = (afxDrawTarget const){ .tex = NIL, .resolve = NIL, .loadOp = afxSurfaceLoadOp_DONT_CARE, .storeOp = afxSurfaceStoreOp_STORE, .clearValue = { .color = { 0.3, 0.0, 0.3, 1 } } };
+        cmdBeginOp.rasters[0] = (afxDrawTarget const){ .tex = NIL, .resolve = NIL, .loadOp = afxSurfaceLoadOp_DONT_CARE, .storeOp = afxSurfaceStoreOp_STORE, .clearValue = { .color = { 0.3, 0.1, 0.3, 1 } } };
 
         _SglDpuBeginCanvas(dpu, &cmdBeginOp);
 
@@ -2853,7 +2854,7 @@ _SGL afxError _SglDpuPresentSurf(sglDpuIdd* dpu, afxDrawOutput dout, afxNat outB
 
         if (0 == currIter)
         {
-            AfxFormatString(&dout->base.caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq, currIter);
+            AfxFormatString(&dout->base.caption, "Delta %0f, IPS %u/%u --- OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Draw System (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq, currIter);
             SetWindowTextA(dout->wnd, AfxGetStringData(&dout->base.caption, 0));
         }
         dout->base.swapping = FALSE;

@@ -197,7 +197,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //BinkSoundUseDirectSound(0);
     err = AfxBinkDeploy(&bnk, dctx);
     AfxAssert(!err);
-#if !0
+#if 0
     AfxFormatUri(&uri.uri, "art/fmv/t2.bik");
 #else
     AfxFormatUri(&uri.uri, "art/fmv/ubi.bik");

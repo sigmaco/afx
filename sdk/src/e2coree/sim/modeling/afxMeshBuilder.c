@@ -332,7 +332,7 @@ _AFXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat v
     for (afxNat i = 0; i < vtxCnt; i++)
     {
         afxVertex *v = &mshb->vtx[baseVtxIdx + i];
-        //AfxV4dFromAffineV3d(v->posn, posn[i]);
+        //AfxAtv4FromAtv3(v->posn, posn[i]);
         v->baseBiasIdx = baseBiasIdx ? baseBiasIdx[i] : 0;
         v->biasCnt = biasCnt ? biasCnt[i] : 1;
         //AfxCopyV2d(v->uv, uv ? uv[i] : AfxSpawnV2d(0, 0));
@@ -349,7 +349,7 @@ _AFXINL void AfxUpdateVertexPositions(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     AfxAssert(posn);
 
     for (afxNat i = 0; i < vtxCnt; i++)
-        AfxV4dFromAffineV3d(mshb->posn[baseVtxIdx + i], posn[i]);
+        AfxAtv4FromAtv3(mshb->posn[baseVtxIdx + i], posn[i]);
 }
 
 _AFXINL void AfxUpdateVertexPositions4(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const posn[][4])
@@ -537,7 +537,7 @@ _AFX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxRea
     AfxResetM4d(m);
     AfxScalingM4d(m, AfxSpawnV4d(width, height, 1.0, 1.0));
 
-    AfxPostMultiplyArrayedAffineV4d(m, AFX_COUNTOF(vertices), mshb.posn, mshb.posn);
+    AfxPostMultiplyArrayedAtv4(m, AFX_COUNTOF(vertices), mshb.posn, mshb.posn);
 
     AfxUpdateVertexNormals(&mshb, 0, AFX_COUNTOF(normals), normals);
     AfxUpdateVertexWraps(&mshb, 0, AFX_COUNTOF(texCoords), texCoords);
@@ -607,7 +607,7 @@ _AFX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
 
             // use quaternion to get the tangent vector
             AfxQuatFromAxisAngle(helpQuaternion, AfxSpawnV3d(0, 1, 0), 360.0f * texCoords[texCoordsIndex][0]);
-            AfxM4dFromQuat(helpMatrix, helpQuaternion);
+            AfxRotationM4dFromQuat(helpMatrix, helpQuaternion);
             //AfxPostMultiplyV3d(&tangents[tangentIndex], helpMatrix, AFX_V3D_X);
         }
     }

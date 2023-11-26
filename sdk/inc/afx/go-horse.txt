@@ -22,6 +22,8 @@ Float sendo convertido para int e então para float. Principalmente fatores.
 
 Ints sendo encapsulados em ints menores. Principalmente int array para structured int16/8.
 
+Retornando referências para valores armazenados na call stack. Strucs, por exemplo.
+
 // POSSÍVEIS ABORDAGENS
 
 NORM#1 O Qwadro não mais vai tentar evitar erros internos, apenas em entrada e saída de dados. O Qwadro apenas vai tentar informar argumentos inválidos. É responsabilidade do programador a resiliência e qualidade do código.

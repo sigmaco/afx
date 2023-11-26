@@ -44,7 +44,6 @@ AFX_DEFINE_HANDLE(afxMeshTopology);
 
 AFX_DEFINE_HANDLE(afxModel);
 
-AFX_DEFINE_HANDLE(afxCamera);
 
 AFX_DEFINE_HANDLE(afxLight);
 

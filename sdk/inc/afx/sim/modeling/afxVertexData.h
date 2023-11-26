@@ -142,6 +142,9 @@ AFX afxVertexUsage      AfxGetVertexAttributeUsage(afxVertexData vtd, afxNat att
 AFX afxVertexFlags      AfxGetVertexAttributeFlags(afxVertexData vtd, afxNat attrIdx);
 AFX afxNat              AfxGetVertexAttributeCache(afxVertexData vtd, afxNat attrIdx);
 
+AFX afxError            AfxZeroVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx, afxNat vtxCnt);
+AFX afxError            AfxNormalizeVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx, afxNat vtxCnt);
+AFX afxError            AfxFillVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx, afxNat vtxCnt, void const* src);
 AFX afxError            AfxUpdateVertexData(afxVertexData vtd, afxNat attrIdx, afxNat baseVtxIdx, afxNat vtxCnt, void const* src, afxNat32 srcStride);
 
 AFX afxVertexDataCache* AfxGetVertexDataCache(afxVertexData vtd, afxNat cacheIdx);

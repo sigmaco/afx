@@ -21,7 +21,7 @@
 #include "afx/sim/afxEntity.h"
 #include "afx/core/afxSource.h"
 #include "afx/sim/rendering/afxLight.h"
-#include "afx/sim/rendering/afxCamera.h"
+#include "afx/draw/afxCamera.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/sim/modeling/afxModel.h"
 #include "afx/sim/afxMaterial.h"

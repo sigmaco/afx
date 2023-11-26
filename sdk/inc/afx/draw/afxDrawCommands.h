@@ -566,7 +566,7 @@ AFX void                AfxCmdSetBlendConstants
 
 
 
-
+//                      TODO Pipeline Gateway
 AFX void                AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
 AFX void                AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
 

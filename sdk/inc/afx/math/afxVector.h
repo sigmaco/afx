@@ -132,11 +132,11 @@ AFXINL void     AfxCopyArrayedV2d(afxNat cnt, afxReal const in[][2], afxReal out
 AFXINL void     AfxCopyArrayedV3d(afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 AFXINL void     AfxCopyArrayedV4d(afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
-AFXINL void     AfxV3dFromLinearV2d(afxReal v[3], afxReal const in[2]); // 2D linear transformation vector. Z is 0.
+AFXINL void     AfxLtv3FromLtv2(afxReal v[3], afxReal const in[2]); // 2D linear transformation vector. Z is 0.
 AFXINL void     AfxV4dFromV2d(afxReal v[4], afxReal const in[2]);
 AFXINL void     AfxV4dFromV3d(afxReal v[4], afxReal const in[3]);
-AFXINL void     AfxV3dFromAffineV2d(afxReal v[3], afxReal const in[2]); // 2D affine transfomartion vector. Z is 1.
-AFXINL void     AfxV4dFromAffineV3d(afxReal v[4], afxReal const in[3]); // 3D affine transformation vector. W is 1.
+AFXINL void     AfxAtv3FromAtv2(afxReal v[3], afxReal const in[2]); // 2D affine transfomartion vector. Z is 1.
+AFXINL void     AfxAtv4FromAtv3(afxReal v[4], afxReal const in[3]); // 3D affine transformation vector. W is 1.
 
 AFXINL void     AfxSwapV2d(afxReal v[2], afxReal other[2]);
 AFXINL void     AfxSwapV3d(afxReal v[3], afxReal other[3]);
@@ -338,7 +338,7 @@ AFXINL void     AfxExp10V4d(afxReal v[4], afxReal const in[4]);
 AFXINL void     AfxNegV2d(afxReal v[2], afxReal const in[2]);
 AFXINL void     AfxNegV3d(afxReal v[3], afxReal const in[3]);
 AFXINL void     AfxNegV4d(afxReal v[4], afxReal const in[4]);
-AFXINL void     AfxNegAffineV4d(afxReal v[4], afxReal const in[4]); // v = inverse of in
+AFXINL void     AfxNegAtv4(afxReal v[4], afxReal const in[4]); // v = inverse of in
 
 AFXINL afxReal  AfxSumV2d(afxReal const v[2]);
 AFXINL afxReal  AfxSumV3d(afxReal const v[3]);
@@ -397,13 +397,12 @@ AFXINL void     AfxPostMultiplyV2d(afxReal const m[2][2], afxReal const in[2], a
 AFXINL void     AfxPostMultiplyV3d(afxReal const m[3][3], afxReal const in[3], afxReal out[3]);
 AFXINL void     AfxPostMultiplyV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPostMultiplyAffineV2d(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
-AFXINL void     AfxPostMultiplyAffineV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPostMultiplyLtv3(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPostMultiplyLtv4(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPostMultiplyLinearV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
-AFXINL void     AfxPostMultiplyLinearV4d(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
-
-AFXINL void     AfxPostMultiplyAffineV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
+AFXINL void     AfxPostMultiplyAtv2(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPostMultiplyAtv3(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPostMultiplyAtv4(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
 // With pre-multiplication, the dot product is with the vector and each column of the matrix (since the matrix is now on the right side of the multiplication operator).
 
@@ -413,17 +412,16 @@ AFXINL void     AfxPreMultiplyV2d(afxReal const m[2][2], afxReal const in[2], af
 AFXINL void     AfxPreMultiplyV3d(afxReal const m[3][3], afxReal const in[3], afxReal out[3]);
 AFXINL void     AfxPreMultiplyV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPreMultiplyAffineV2d(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
-AFXINL void     AfxPreMultiplyAffineV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPreMultiplyLtv3(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPreMultiplyLtv4(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
 
-AFXINL void     AfxPreMultiplyLinearV3d(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
-AFXINL void     AfxPreMultiplyLinearV4d(afxReal const m[3][3], afxReal const in[4], afxReal out[4]);
-
-AFXINL void     AfxPreMultiplyAffineV4d(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
+AFXINL void     AfxPreMultiplyAtv2(afxReal const m[4][4], afxReal const in[2], afxReal out[2]);
+AFXINL void     AfxPreMultiplyAtv3(afxReal const m[4][4], afxReal const in[3], afxReal out[3]);
+AFXINL void     AfxPreMultiplyAtv4(afxReal const m[4][4], afxReal const in[4], afxReal out[4]);
 
 // Similarity transform
 
-AFXINL void     AfxAssimilateAffineV3d(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
-AFXINL void     AfxAssimilateAffineV4d(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAtv3(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][3], afxReal out[][3]); // make similarity transformation on afxV3d-based position.
+AFXINL void     AfxAssimilateAtv4(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4], afxReal out[][4]); // make similarity transformation on afxV3d-based position.
 
 #endif//AFX_VECTOR_H

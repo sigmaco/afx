@@ -68,6 +68,7 @@
     <ClInclude Include="..\..\inc\afx\core\afxVersion.h" />
     <ClInclude Include="..\..\inc\afx\core\afxXml.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxBuffer.h" />
+    <ClInclude Include="..\..\inc\afx\draw\afxCamera.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxCanvas.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxCanvasBlueprint.h" />
     <ClInclude Include="..\..\inc\afx\draw\afxColor.h" />
@@ -129,7 +130,6 @@
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxVertexData.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxMeshTopology.h" />
     <ClInclude Include="..\..\inc\afx\sim\modeling\afxModel.h" />
-    <ClInclude Include="..\..\inc\afx\sim\rendering\afxCamera.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxLight.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxRenderer.h" />
     <ClInclude Include="..\..\inc\afx\sim\rendering\afxSky.h" />
@@ -143,7 +143,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\afx\README.md" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\inc\afx\go-horse.txt" />
@@ -214,6 +213,7 @@
     <ClCompile Include="..\..\src\e2coree\core\afxVersion.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxXml.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxBuffer.c" />
+    <ClCompile Include="..\..\src\e2coree\draw\afxCamera.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxCanvas.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxColor.c" />
     <ClCompile Include="..\..\src\e2coree\draw\afxDrawCommands.c" />
@@ -279,7 +279,6 @@
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxVertexData.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxMeshTopology.c" />
     <ClCompile Include="..\..\src\e2coree\sim\modeling\afxModel.c" />
-    <ClCompile Include="..\..\src\e2coree\sim\rendering\afxCamera.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxLight.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxRenderer.c" />
     <ClCompile Include="..\..\src\e2coree\sim\rendering\afxSky.c" />
@@ -423,6 +422,7 @@
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
@@ -439,6 +439,7 @@
       <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>

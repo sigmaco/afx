@@ -72,7 +72,7 @@ _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTra
     AfxAssert(b);
 
     afxM3d OrientationB, Temp, tmp;
-    AfxM3dFromQuat(OrientationB, b->orientation);
+    AfxRotationM3dFromQuat(OrientationB, b->orientation);
     AfxMultiplyM3d(tmp, OrientationB, b->scaleShear);
     AfxMultiplyM3d(Temp, a->scaleShear, tmp);
     AfxMultiplyTransposedM3d(t->scaleShear, OrientationB, Temp);
@@ -80,7 +80,7 @@ _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTra
     AfxPostMultiplyV3d(a->scaleShear, b->position, t->position);
 
     afxM3d OrientationA;
-    AfxM3dFromQuat(OrientationA, a->orientation);
+    AfxRotationM3dFromQuat(OrientationA, a->orientation);
     AfxPostMultiplyV3d(OrientationA, t->position, t->position);
     AfxAddV3d(t->position, a->position, t->position);
     
@@ -154,7 +154,7 @@ _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
     AfxInvertQuat(q, in->orientation);
     
     afxM3d iqm, ss, tmp;
-    AfxM3dFromQuat(iqm, q);
+    AfxRotationM3dFromQuat(iqm, q);
     AfxInverseM3d(ss, in->scaleShear);
     AfxMultiplyM3d(tmp, ss, iqm);
     AfxMultiplyTransposedM3d(ss, iqm, tmp);
@@ -262,7 +262,7 @@ _AFX void AfxComposeTransformM4d(afxTransform const* t, afxReal m[4][4])
         afxM3d tmp, tmp2;
 
         if (hasRot)
-            AfxM3dFromQuat(hasSs ? tmp2 : tmp, t->orientation);
+            AfxRotationM3dFromQuat(hasSs ? tmp2 : tmp, t->orientation);
 
         if (hasSs)
         {
@@ -299,7 +299,7 @@ _AFX void AfxComposeTransformCompactMatrix(afxTransform const* t, afxReal m[4][3
         afxM3d tmp, tmp2;
 
         if (hasRot)
-            AfxM3dFromQuat(hasSs ? tmp2 : tmp, t->orientation);
+            AfxRotationM3dFromQuat(hasSs ? tmp2 : tmp, t->orientation);
 
         if (hasSs)
         {
@@ -336,7 +336,7 @@ _AFXINL void AfxComposeTransformWorldM4d(afxTransform const *t, afxReal const pa
 
     afxM4d m;
     AfxComposeTransformM4d(t, m);
-    AfxMultiplyTransposedAffineM4d(w, m, parent);
+    AfxMultiplyTransposedAtm4(w, m, parent);
 }
 
 _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4])
@@ -350,7 +350,7 @@ _AFXINL void AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxRe
     AfxAssert(w);
 
     AfxComposeTransformWorldM4d(t, parent, w);
-    AfxMultiplyTransposedAffineM4d(composite, iw, w);
+    AfxMultiplyTransposedAtm4(composite, iw, w);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -367,9 +367,9 @@ _AFXINL void AfxAssimilateTransforms(afxReal const ltm[3][3], afxReal const iltm
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssimilateAffineV3d(ltm, atv, 1, &in[i].position, &out[i].position);
+        AfxAssimilateAtv3(ltm, atv, 1, &in[i].position, &out[i].position);
         AfxAssimilateQuat(ltm, iltm, 1, &in[i].orientation, &out[i].orientation);
-        AfxAssimilateM3d(ltm, iltm, 1, &in[i].scaleShear, &out[i].scaleShear);
+        AfxAssimilateLtm3(ltm, iltm, 1, &in[i].scaleShear, &out[i].scaleShear);
     }
 }
 

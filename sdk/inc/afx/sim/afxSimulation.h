@@ -20,7 +20,6 @@
 #include "afx/core/afxClass.h"
 #include "afx/sim/afxEntity.h"
 #include "afx/sim/rendering/afxLight.h"
-#include "afx/sim/rendering/afxCamera.h"
 #include "afx/sim/afxSkeleton.h"
 #include "afx/sim/modeling/afxModel.h"
 #include "afx/sim/afxMaterial.h"
@@ -46,7 +45,6 @@ AFX_DEFINE_STRUCT(afxSimulationConfig)
     afxReal                 unitsPerMeter;
     afxNat          maxBodCnt;
     afxNat          maxEntCnt;
-    afxNat          maxCamCnt;
     afxNat          maxLitCnt;
     afxNat          maxMtlCnt;
     afxNat          maxMshCnt;
@@ -64,7 +62,6 @@ AFX_OBJECT(afxSimulation)
     afxClass                bodies;
     afxClass                bcontrols;
     afxClass                entities;
-    afxClass                cameras;
     afxClass                lights;
     afxClass                materials;
     afxClass                meshes;
@@ -98,7 +95,6 @@ AFX afxContext      AfxSimulationGetMemory(afxSimulation sim);
 
 AFX afxClass*       AfxGetAnimatorClass(afxSimulation sim);
 AFX afxClass*       AfxGetBodyClass(afxSimulation sim);
-AFX afxClass*       AfxGetCameraClass(afxSimulation sim);
 AFX afxClass*       AfxGetEntityClass(afxSimulation sim);
 AFX afxClass*       AfxGetLightClass(afxSimulation sim);
 AFX afxClass*       AfxGetMaterialClass(afxSimulation sim);
@@ -111,7 +107,6 @@ AFX afxClass*       AfxGetRendererClass(afxSimulation sim);
 AFX afxClass*       AfxGetSkeletonClass(afxSimulation sim);
 
 AFX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bod[]);
-AFX afxNat          AfxEnumerateCameras(afxSimulation sim, afxNat base, afxNat cnt, afxCamera cam[]);
 AFX afxNat          AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, afxEntity ent[]);
 AFX afxNat          AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[]);
 AFX afxNat          AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);

@@ -65,6 +65,8 @@ AFX_DEFINE_HANDLE(afxSurface);
 AFX_DEFINE_HANDLE(afxCanvas);
 //typedef afxHandle afxCanvas;
 
+AFX_DEFINE_HANDLE(afxCamera);
+
 typedef afxNat afxSimd(afxWhd[3]);
 typedef afxReal afxSimd(afxNdc[3]);
 

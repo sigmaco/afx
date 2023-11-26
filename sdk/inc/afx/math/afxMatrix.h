@@ -102,8 +102,8 @@ AFXINL void     AfxSetTransposedM2d(afxReal m[2][2], afxReal const x[2], afxReal
 AFXINL void     AfxSetTransposedM3d(afxReal m[3][3], afxReal const x[3], afxReal const y[3], afxReal const z[3]);
 AFXINL void     AfxSetTransposedM4d(afxReal m[4][4], afxReal const x[4], afxReal const y[4], afxReal const z[4], afxReal const w[4]);
 
-AFXINL void     AfxEnsureLinearM4d(afxReal m[4][4]); // make affine and zero translation.
-AFXINL void     AfxEnsureAffineM4d(afxReal m[4][4]); // make affine; zero every W column.
+AFXINL void     AfxMakeLinearM4d(afxReal m[4][4]); // make affine and zero translation.
+AFXINL void     AfxMakeAffineM4d(afxReal m[4][4]); // make a matrix affine; zero every W column.
 
 AFXINL afxBool  AfxM2dIsIdentity(afxReal const m[2][2]);
 AFXINL afxBool  AfxM3dIsIdentity(afxReal const m[3][3]);
@@ -113,17 +113,17 @@ AFXINL void     AfxCopyM2d(afxReal m[2][2], afxReal const in[2][2]);
 AFXINL void     AfxCopyM3d(afxReal m[3][3], afxReal const in[3][3]);
 AFXINL void     AfxCopyM4d(afxReal m[4][4], afxReal const in[4][4]); // copy every row and column.
 
-AFXINL void     AfxCopyLinearM4d(afxReal m[4][4], afxReal const in[4][4]); // copy only the 3x3
-AFXINL void     AfxCopyAffineM4d(afxReal m[4][4], afxReal const in[4][4]); // copy only the 4x3
+AFXINL void     AfxCopyLtm4(afxReal m[4][4], afxReal const in[4][4]); // copy only the 3x3
+AFXINL void     AfxCopyAtm4(afxReal m[4][4], afxReal const in[4][4]); // copy only the 4x3
 
-AFXINL void     AfxCopyTransposedLinearM4d(afxReal m[4][4], afxReal const in[4][4]); // only consider 3x3; ignore W components and the W row.
-AFXINL void     AfxCopyTransposedAffineM4d(afxReal m[4][4], afxReal const in[4][4]); // only consider 4x3; ignore W components.
+AFXINL void     AfxCopyTransposedLtm4(afxReal m[4][4], afxReal const in[4][4]); // only consider 3x3; ignore W components and the W row.
+AFXINL void     AfxCopyTransposedAtm4(afxReal m[4][4], afxReal const in[4][4]); // only consider 4x3; ignore W components.
 
 AFXINL void     AfxM2dFromM3d(afxReal m[2][2], afxReal const in[3][3]);
 AFXINL void     AfxM2dFromM4d(afxReal m[2][2], afxReal const in[4][4]);
 
-AFXINL void     AfxM3dFromM4d(afxReal m[3][3], afxReal const in[4][4]);
-AFXINL void     AfxM3dFromTransposedM4d(afxReal m[3][3], afxReal const in[4][4]);
+AFXINL void     AfxExtractM3d(afxReal m[3][3], afxReal const in[4][4]);
+AFXINL void     AfxExtractTransposedM3d(afxReal m[3][3], afxReal const in[4][4]);
 
 
 AFXINL void     AfxM3dFromM2d(afxReal m[3][3], afxReal const in[2][2]);
@@ -150,11 +150,11 @@ AFXINL void     AfxSubM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const 
 
 AFXINL void     AfxCombineM2d(afxReal v[2][2], afxReal lambda1, afxReal const a[2][2], afxReal lambda2, afxReal const b[2][2]);
 AFXINL void     AfxCombineM3d(afxReal v[3][3], afxReal lambda1, afxReal const a[3][3], afxReal lambda2, afxReal const b[3][3]);
-AFXINL void     AfxCombineLinearM4d(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4]);
+AFXINL void     AfxCombineLtm4(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4]);
 
 AFXINL afxReal  AfxInverseM3d(afxReal m[3][3], afxReal const in[3][3]); // m = inverse of in
 AFXINL afxReal  AfxInverseM4d(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
-AFXINL afxReal  AfxInverseAffineM4d(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
+AFXINL afxReal  AfxInverseAtm4(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
 
 AFXINL afxReal  AfxDetM2d(afxReal const m[2][2]);
 AFXINL afxReal  AfxDetM3d(afxReal const m[3][3]);
@@ -176,8 +176,8 @@ AFXINL void     AfxScalingM4d(afxReal m[4][4], afxReal const scale[3]);
 /// It is useful to be able to move between the 3x3 matrix representation of a rotation and its quaternion counterpart. 
 /// Qwadro provides functions for converting in both directions: 
 
-AFXINL void     AfxM3dFromQuat(afxReal m[3][3], afxQuat const q);
-AFXINL void     AfxM4dFromQuat(afxReal m[4][4], afxQuat const q);
+AFXINL void     AfxRotationM3dFromQuat(afxReal m[3][3], afxQuat const q);
+AFXINL void     AfxRotationM4dFromQuat(afxReal m[4][4], afxQuat const q);
 
 AFXINL void     AfxRotationM3dFromAxis(afxReal m[3][3], afxReal const axis[3], afxReal /*theta*/radians);
 AFXINL void     AfxRotationM4dFromAxis(afxReal m[4][4], afxReal const axis[3], afxReal /*theta*/radians);
@@ -203,7 +203,7 @@ AFXINL afxBool  AfxPolarDecomposeM3d(afxReal const m[3][3], afxReal tol, afxReal
 // Compose
 
 AFXINL void     AfxComposeM4d(afxReal m[4][4], afxReal const scalOrigin[3], afxQuat const scalOrient, afxReal const scaling[3], afxReal const rotOrigin[3], afxQuat const rotQuat, afxReal const translation[3]);
-AFXINL void     AfxComposeAffineM4d(afxReal m[4][4], afxReal const scale[3], afxReal const rotAxis[3], afxQuat const rot, afxReal const translation[3]);
+AFXINL void     AfxComposeAtm4(afxReal m[4][4], afxReal const scale[3], afxReal const rotAxis[3], afxQuat const rot, afxReal const translation[3]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MATRIX TRANSFORMATION METHODS                                              //
@@ -226,16 +226,16 @@ AFXINL void     AfxMultiplyM3d(afxReal m[3][3], afxReal const a[3][3], afxReal c
 AFXINL void     AfxMultiplyM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]);
 
 AFXINL void     AfxMultiplyPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3]); // 2x2 subset only
-AFXINL void     AfxMultiplyLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 3x3 subset only
-AFXINL void     AfxMultiplyAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
+AFXINL void     AfxMultiplyLtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 3x3 subset only
+AFXINL void     AfxMultiplyAtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
 
 AFXINL void     AfxMultiplyTransposedM2d(afxReal m[2][2], afxReal const a[2][2], afxReal const b[2][2]);
 AFXINL void     AfxMultiplyTransposedM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3]);
 AFXINL void     AfxMultiplyTransposedM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]);
 
 AFXINL void     AfxMultiplyTransposedPlanarM3d(afxReal m[3][3], afxReal const a[3][3], afxReal const b[3][3]); // 2x2 subset only
-AFXINL void     AfxMultiplyTransposedLinearM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 3x3 subset only
-AFXINL void     AfxMultiplyTransposedAffineM4d(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
+AFXINL void     AfxMultiplyTransposedLtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 3x3 subset only
+AFXINL void     AfxMultiplyTransposedAtm4(afxReal m[4][4], afxReal const a[4][4], afxReal const b[4][4]); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
 
 AFXINL void     AfxPostMultiplyArrayedV2d(afxReal const m[2][2], afxNat cnt, afxReal const in[][2], afxReal out[][2]);
 AFXINL void     AfxPostMultiplyArrayedV3d(afxReal const m[3][3], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
@@ -245,26 +245,26 @@ AFXINL void     AfxPreMultiplyArrayedV2d(afxReal const m[2][2], afxNat cnt, afxR
 AFXINL void     AfxPreMultiplyArrayedV3d(afxReal const m[3][3], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 AFXINL void     AfxPreMultiplyArrayedV4d(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
-AFXINL void     AfxPostMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-AFXINL void     AfxPostMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
-AFXINL void     AfxPostMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPostMultiplyArrayedAtv3(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxPostMultiplyArrayedLtv4(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPostMultiplyArrayedAtv4(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
-AFXINL void     AfxPreMultiplyArrayedPointV3d(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-AFXINL void     AfxPreMultiplyArrayedNormalV4d(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
-AFXINL void     AfxPreMultiplyArrayedAffineV4d(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPreMultiplyArrayedAtv3(afxReal const m[4][4], afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxPreMultiplyArrayedLtv4(afxReal const m[3][3], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPreMultiplyArrayedAtv4(afxReal const m[4][4], afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
 AFXINL void     AfxPostMultiplySerializedV2d(afxReal const m[2][2], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][2], afxReal out[][2]);
 AFXINL void     AfxPostMultiplySerializedV3d(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 AFXINL void     AfxPostMultiplySerializedV4d(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
-AFXINL void     AfxPostMultiplySerializedPointV3d(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-AFXINL void     AfxPostMultiplySerializedNormalV4d(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
-AFXINL void     AfxPostMultiplySerializedAffineV4d(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPostMultiplySerializedAtv3(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void     AfxPostMultiplySerializedLtv4(afxReal const m[3][3], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
+AFXINL void     AfxPostMultiplySerializedAtv4(afxReal const m[4][4], afxNat inStride, afxNat outStride, afxNat cnt, afxReal const in[][4], afxReal out[][4]);
 
 // Assimilate
 
-AFXINL void     AfxAssimilateM3d(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3]); // make similarity transformation on afxM3d-based scale/shear.
-AFXINL void     AfxAssimilateAffineM4d(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4]);
+AFXINL void     AfxAssimilateLtm3(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxReal const in[][3][3], afxReal out[][3][3]); // make similarity transformation on afxM3d-based scale/shear.
+AFXINL void     AfxAssimilateAtm4(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxReal const in[][4][4], afxReal out[][4][4]);
 
 
 AFX void        AfxApplyRootMotionVectorsToMatrix(afxReal const translation[3], afxReal const rotation[3], afxReal const mm[4][4], afxReal m[4][4]);

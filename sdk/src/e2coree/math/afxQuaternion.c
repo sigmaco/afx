@@ -526,7 +526,7 @@ _AFXINL void AfxAssimilateQuat(afxReal const ltm[3][3], afxReal const iltm[3][3]
         AfxScaleQuat(out[i], in[i], 1.f / len);
 
         afxM3d rm, tmp;
-        AfxM3dFromQuat(rm, out[i]);
+        AfxRotationM3dFromQuat(rm, out[i]);
         AfxMultiplyM3d(tmp, ltm, rm);
         AfxMultiplyM3d(rm, tmp, iltm);
         AfxQuatFromM3d(out[i], rm);

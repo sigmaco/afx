@@ -527,6 +527,55 @@ _AFX void AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], 
     }
 }
 
+_AFX void AfxRenormalizeMeshes(afxNat cnt, afxMesh msh[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(msh);
+    AfxAssert(cnt);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxMesh msh2 = msh[i];
+        AfxAssertObjects(1, &msh2, afxFcc_MSH);
+        afxVertexData vtd = msh2->vtd;
+        afxMeshTopology msht = msh2->topology;
+
+        afxString const attrs[] =
+        {
+            AfxString("posn"),
+            AfxString("nrm")
+        };
+        afxNat attrIdx[2];
+        AfxFindVertexDataAttributes(vtd, 2, attrs, attrIdx);
+        afxV4d* posn = AfxExposeVertexData(vtd, attrIdx[0], 0);
+        afxV3d* nrm = AfxExposeVertexData(vtd, attrIdx[1], 0);
+
+        afxIndexedTriangle const* tris = AfxGetMeshTriangles(msht, 0);
+        afxNat triCnt = AfxCountMeshTriangles(msht);
+        afxNat vtxCnt = AfxCountMeshVertices(msh2);
+
+        AfxZeroVertexData(vtd, attrIdx[1], 0, vtxCnt);
+
+        for (afxNat j = 0; j < triCnt; j++)
+        {
+            afxNat const ia = tris[j][0];
+            afxNat const ib = tris[j][1];
+            afxNat const ic = tris[j][2];
+
+            afxV4d const e1, e2, no;
+            AfxSubV4d(e1, posn[ia], posn[ib]);
+            AfxSubV4d(e2, posn[ic], posn[ib]);
+            AfxCrossV3d(no, e1, e2);
+
+            AfxAddV3d(nrm[ia], nrm[ia], no);
+            AfxAddV3d(nrm[ib], nrm[ib], no);
+            AfxAddV3d(nrm[ic], nrm[ic], no);
+        }
+
+        AfxNormalizeVertexData(vtd, attrIdx[1], 0, vtxCnt);
+    }
+}
+
 _AFX afxClassConfig _AfxMshClsConfig =
 {
     .fcc = afxFcc_MSH,
