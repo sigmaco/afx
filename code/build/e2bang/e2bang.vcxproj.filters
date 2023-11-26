@@ -6,18 +6,18 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2bang\afxDirectDrawTexture.c">
+    <ClCompile Include="..\..\e2bang\afxDirectDrawTexture.c">
       <Filter>e2bang</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2bang\afxDirectDrawSurface.c">
+    <ClCompile Include="..\..\e2bang\afxDirectDrawSurface.c">
       <Filter>e2bang</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2bang\afxDirectDrawSurface.h">
+    <ClInclude Include="..\..\e2bang\afxDirectDrawSurface.h">
       <Filter>e2bang</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\e2bang\afxDirectDrawTexture.h">
+    <ClInclude Include="..\..\e2bang\afxDirectDrawTexture.h">
       <Filter>e2bang</Filter>
     </ClInclude>
   </ItemGroup>

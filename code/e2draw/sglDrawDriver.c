@@ -1984,7 +1984,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                             if (err)
                                 dpu->MakeCurrent(bkpHdc, bkpGlrc);
                         }
-                        //dpu->DeleteContext(tmpHrc);
+                        //dpu->DeleteContext(tmpHrc); // disable for detour of some bug caused by OBS
                     }
                     ReleaseDC(tmpHwnd, tmpHdc);
                 }

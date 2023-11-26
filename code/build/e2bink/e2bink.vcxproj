@@ -152,7 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2bink\afxBinkVideo.c" />
+    <ClCompile Include="..\..\e2bink\afxBinkVideo.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
@@ -160,7 +160,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2bink\afxBinkVideo.h" />
+    <ClInclude Include="..\..\e2bink\afxBinkVideo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

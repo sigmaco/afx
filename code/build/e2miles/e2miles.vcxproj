@@ -152,7 +152,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2miles\afxMilesSoundSystem.c" />
+    <ClCompile Include="..\..\e2miles\afxMilesSoundSystem.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

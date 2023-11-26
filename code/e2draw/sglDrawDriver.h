@@ -23,8 +23,8 @@
  //#include "../src/e2coree/deps/gl/glcorearb.h"
  //#include "../src/e2coree/deps/gl/wglext.h"
 
-#include "../src/e2coree/deps/gl/glad.h"
-#include "../src/e2coree/deps/gl/glad_wgl.h"
+#include "../deps/gl/glad.h"
+#include "../deps/gl/glad_wgl.h"
 
 #include <windows.h>
 #include "afx/draw/afxDrawSystem.h"

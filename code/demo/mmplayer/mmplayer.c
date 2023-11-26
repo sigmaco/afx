@@ -8,7 +8,7 @@
 
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/afxQwadro.h"
-#include "../src/e2bink/afxBinkVideo.h"
+#include "../e2bink/afxBinkVideo.h"
 #include "afx/draw/afxDrawSystem.h"
 #include "afx/core/afxBitmap.h"
 

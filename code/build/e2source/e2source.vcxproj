@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2goldsrc\afxStudiomdl.c" />
+    <ClCompile Include="..\..\e2goldsrc\afxStudiomdl.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

@@ -6,12 +6,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2bink\afxBinkVideo.c">
+    <ClCompile Include="..\..\e2bink\afxBinkVideo.c">
       <Filter>e2bink</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2bink\afxBinkVideo.h">
+    <ClInclude Include="..\..\e2bink\afxBinkVideo.h">
       <Filter>e2bink</Filter>
     </ClInclude>
   </ItemGroup>

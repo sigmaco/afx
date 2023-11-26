@@ -6,7 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2goldsrc\afxStudiomdl.c">
+    <ClCompile Include="..\..\e2goldsrc\afxStudiomdl.c">
       <Filter>e2goldsrc</Filter>
     </ClCompile>
   </ItemGroup>

@@ -98,7 +98,7 @@ AFX_DEFINE_STRUCT(afxClass)
 
     afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
     afxContext      ctx; // afxContext
-    afxSize         siz;
+    afxNat          siz;
 
     afxError        (*ctor)(afxHandle obj, afxCookie const* cookie); // void to avoid warnings
     afxError        (*dtor)(afxHandle obj);

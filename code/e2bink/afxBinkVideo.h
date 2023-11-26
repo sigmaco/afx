@@ -1,7 +1,7 @@
 #ifndef AFX_BINK_VIDEO_H
 #define AFX_BINK_VIDEO_H
 
-#include "../src/e2coree/deps/bink/bink.h"
+#include "../deps/bink/bink.h"
 #include "afx/mmux/afxMmuiDefs.h"
 #include "afx/draw/afxRaster.h"
 #include "afx/draw/afxBuffer.h"

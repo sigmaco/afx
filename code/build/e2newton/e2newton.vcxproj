@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2newton\e2newton.c" />
+    <ClCompile Include="..\..\e2newton\e2newton.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

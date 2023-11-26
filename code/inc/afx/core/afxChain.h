@@ -87,9 +87,9 @@ AFXINL afxLinkage* AfxGetNextLinkage(afxLinkage const *lnk);
 
 AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk);
 
-#define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLinkage *_next##lnk2_ = (afxLinkage*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
-#define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLinkage *_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
-#define AfxChainForEveryLinkageB2F(ch_, type_, offset_, lnk_) for (afxLinkage *_last##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+#define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk2_ = (afxLinkage*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
+#define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
+#define AfxChainForEveryLinkageB2F(ch_, type_, offset_, lnk_) for (afxLinkage const*_last##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
 
 AFX_DEFINE_STRUCT(afxLink)
 {

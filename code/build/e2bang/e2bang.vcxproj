@@ -156,12 +156,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2bang\afxDirectDrawSurface.c" />
-    <ClCompile Include="..\..\src\e2bang\afxDirectDrawTexture.c" />
+    <ClCompile Include="..\..\e2bang\afxDirectDrawSurface.c" />
+    <ClCompile Include="..\..\e2bang\afxDirectDrawTexture.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2bang\afxDirectDrawSurface.h" />
-    <ClInclude Include="..\..\src\e2bang\afxDirectDrawTexture.h" />
+    <ClInclude Include="..\..\e2bang\afxDirectDrawSurface.h" />
+    <ClInclude Include="..\..\e2bang\afxDirectDrawTexture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

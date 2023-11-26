@@ -161,26 +161,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2draw\sgl.h" />
-    <ClInclude Include="..\..\src\e2draw\sglDrawDriver.h" />
+    <ClInclude Include="..\..\e2draw\sgl.h" />
+    <ClInclude Include="..\..\e2draw\sglDrawDriver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2draw\sglBuffer.c" />
-    <ClCompile Include="..\..\src\e2draw\sglCanvas.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawCommands.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawContext.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawQueue.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawInput.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawOutput.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawScript.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDrawDriver.c" />
-    <ClCompile Include="..\..\src\e2draw\sglPipelineRig.c" />
-    <ClCompile Include="..\..\src\e2draw\sglPipeline.c" />
-    <ClCompile Include="..\..\src\e2draw\sglRasterizer.c" />
-    <ClCompile Include="..\..\src\e2draw\sglShader.c" />
-    <ClCompile Include="..\..\src\e2draw\sglSampler.c" />
-    <ClCompile Include="..\..\src\e2draw\sglSurface.c" />
-    <ClCompile Include="..\..\src\e2draw\sglRaster.c" />
+    <ClCompile Include="..\..\e2draw\sglBuffer.c" />
+    <ClCompile Include="..\..\e2draw\sglCanvas.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawCommands.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawContext.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawQueue.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawInput.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawOutput.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawScript.c" />
+    <ClCompile Include="..\..\e2draw\sglDrawDriver.c" />
+    <ClCompile Include="..\..\e2draw\sglPipelineRig.c" />
+    <ClCompile Include="..\..\e2draw\sglPipeline.c" />
+    <ClCompile Include="..\..\e2draw\sglRasterizer.c" />
+    <ClCompile Include="..\..\e2draw\sglShader.c" />
+    <ClCompile Include="..\..\e2draw\sglSampler.c" />
+    <ClCompile Include="..\..\e2draw\sglSurface.c" />
+    <ClCompile Include="..\..\e2draw\sglRaster.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

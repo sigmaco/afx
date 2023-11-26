@@ -12,39 +12,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2cad\afxWavefrontObject.c">
+    <ClCompile Include="..\..\e2cad\afxWavefrontObject.c">
       <Filter>e2cad</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_complex.c">
+    <ClCompile Include="..\..\deps\glus\glus_complex.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_line.c">
+    <ClCompile Include="..\..\deps\glus\glus_line.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_math.c">
+    <ClCompile Include="..\..\deps\glus\glus_math.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_matrix.c">
+    <ClCompile Include="..\..\deps\glus\glus_matrix.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_point.c">
+    <ClCompile Include="..\..\deps\glus\glus_point.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_quaternion.c">
+    <ClCompile Include="..\..\deps\glus\glus_quaternion.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_shape.c">
+    <ClCompile Include="..\..\deps\glus\glus_shape.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_vector.c">
+    <ClCompile Include="..\..\deps\glus\glus_vector.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\deps\glus\glus_wavefront.c">
+    <ClCompile Include="..\..\deps\glus\glus_wavefront.c">
       <Filter>e2cad\deps\obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2cad\afxWavefrontObject.h">
+    <ClInclude Include="..\..\e2cad\afxWavefrontObject.h">
       <Filter>e2cad</Filter>
     </ClInclude>
   </ItemGroup>

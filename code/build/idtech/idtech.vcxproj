@@ -159,13 +159,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2idtech\afxIdTech.c" />
-    <ClCompile Include="..\..\src\e2idtech\afxMD5Model.c" />
-    <ClCompile Include="..\..\src\e2idtech\afxRoqVideo.c" />
+    <ClCompile Include="..\..\e2idtech\afxIdTech.c" />
+    <ClCompile Include="..\..\e2idtech\afxMD5Model.c" />
+    <ClCompile Include="..\..\e2idtech\afxRoqVideo.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2idtech\afxMD5Model.h" />
-    <ClInclude Include="..\..\src\e2idtech\afxRoqVideo.h" />
+    <ClInclude Include="..\..\e2idtech\afxMD5Model.h" />
+    <ClInclude Include="..\..\e2idtech\afxRoqVideo.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

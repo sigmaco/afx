@@ -152,11 +152,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2granny3d\afxGranny2Model.c" />
-    <ClCompile Include="..\..\src\e2granny3d\afxGranny3d.c" />
+    <ClCompile Include="..\..\e2granny3d\afxGranny2Model.c" />
+    <ClCompile Include="..\..\e2granny3d\afxGranny3d.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2granny3d\afxGranny2Model.h" />
+    <ClInclude Include="..\..\e2granny3d\afxGranny2Model.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

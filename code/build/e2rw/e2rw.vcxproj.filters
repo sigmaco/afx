@@ -6,7 +6,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2rw\afxTextureDictionary.c">
+    <ClCompile Include="..\..\e2rw\afxTextureDictionary.c">
       <Filter>e2rw</Filter>
     </ClCompile>
   </ItemGroup>

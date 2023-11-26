@@ -6,8 +6,8 @@
 #include "afx/core/afxDebug.h"
 #include "afx/math/afxMathDefs.h"
 #include "afx/core/afxMouse.h"
-#include "../src/e2idtech/afxMD5Model.h"
-#include "../src/e2cad/afxWavefrontObject.h"
+#include "../e2idtech/afxMD5Model.h"
+#include "../e2cad/afxWavefrontObject.h"
 
 #define ENABLE_DRAW 1
 

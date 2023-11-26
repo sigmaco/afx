@@ -6,60 +6,60 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\src\e2draw\sgl.h">
+    <ClInclude Include="..\..\e2draw\sgl.h">
       <Filter>e2draw</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\e2draw\sglDrawDriver.h">
+    <ClInclude Include="..\..\e2draw\sglDrawDriver.h">
       <Filter>e2draw</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\e2draw\sglBuffer.c">
+    <ClCompile Include="..\..\e2draw\sglBuffer.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglCanvas.c">
+    <ClCompile Include="..\..\e2draw\sglCanvas.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawContext.c">
+    <ClCompile Include="..\..\e2draw\sglDrawContext.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawInput.c">
+    <ClCompile Include="..\..\e2draw\sglDrawInput.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawOutput.c">
+    <ClCompile Include="..\..\e2draw\sglDrawOutput.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawScript.c">
+    <ClCompile Include="..\..\e2draw\sglDrawScript.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglPipeline.c">
+    <ClCompile Include="..\..\e2draw\sglPipeline.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglSampler.c">
+    <ClCompile Include="..\..\e2draw\sglSampler.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglSurface.c">
+    <ClCompile Include="..\..\e2draw\sglSurface.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawQueue.c">
+    <ClCompile Include="..\..\e2draw\sglDrawQueue.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglShader.c">
+    <ClCompile Include="..\..\e2draw\sglShader.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawDriver.c">
+    <ClCompile Include="..\..\e2draw\sglDrawDriver.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglPipelineRig.c">
+    <ClCompile Include="..\..\e2draw\sglPipelineRig.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDrawCommands.c">
+    <ClCompile Include="..\..\e2draw\sglDrawCommands.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglRasterizer.c">
+    <ClCompile Include="..\..\e2draw\sglRasterizer.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglRaster.c">
+    <ClCompile Include="..\..\e2draw\sglRaster.c">
       <Filter>e2draw</Filter>
     </ClCompile>
   </ItemGroup>
