@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="e2draw">
+      <UniqueIdentifier>{334cc892-f619-4b48-96b8-2d8997caec44}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\e2draw\sgl.h">
+      <Filter>e2draw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e2draw\sglDrawDriver.h">
+      <Filter>e2draw</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\e2draw\sglBuffer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglCanvas.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawContext.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawInput.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawOutput.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawScript.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglPipeline.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglSampler.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglSurface.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawQueue.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglShader.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawDriver.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglPipelineRig.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglDrawCommands.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglRasterizer.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglRaster.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

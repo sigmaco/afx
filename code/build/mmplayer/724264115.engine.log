@@ -1,0 +1,72 @@
+
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fed84d8c90 by 0000000000000000 over 0000000000000000 with 000007fed84d5848)
+ afxClass<Basic I/O System>::ConstructObject(0000000000408760)
+ Entering the Threading Execution Environment 4294967295
+ Installing Context at 00000000004087b0 by 0000000000408788 over 0000000000000000 with 000007fed84d50d8)
+ Installing Module at 00000000004088e0 by 0000000000408788 over 0000000000000000 with 000007fed84d5770)
+ Installing Thread at 0000000000408c70 by 0000000000408788 over 0000000000000000 with 000007fed84d58a0)
+ Installing File at 0000000000408ed0 by 0000000000408788 over 0000000000000000 with 000007fed84d56c0)
+ Installing Archive at 0000000000409000 by 0000000000408788 over 0000000000000000 with 000007fed84d5058)
+ Installing Application at 0000000000408da0 by 0000000000408788 over 0000000000000000 with 000007fed84d5000)
+ Installing Keyboard at 0000000000408a10 by 0000000000408788 over 0000000000000000 with 000007fed84d5718)
+ Installing Mouse at 0000000000408b40 by 0000000000408788 over 0000000000000000 with 000007fed84d57c8)
+ Installing Draw I/O System at 0000000000409130 by 0000000000408788 over 0000000000000000 with 000007fed84d6190)
+ Installing Simulation at 0000000000409260 by 0000000000408788 over 0000000000000000 with 000007fed84d6408)
+ [!] afxSystem.c:1082?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1083?_AfxSysCtor
+  Logical processor count: 2
+ afxClass<Context>::ConstructObject(0000000000409590)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system64".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxClass<Module>::ConstructObject(000000000040cb90)
+ E:/qwadro/afx/system64/e2coree.dll
+ afxClass<Keyboard>::ConstructObject(000000000040d100)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw I/O System>::ConstructObject(000000000040da40)
+ Installing Draw Thread at 000000000040e0d8 by 000000000040dac0 over 0000000000000000 with 000000000020ee60)
+ Installing Installable Client (Draw) Driver at 000000000040dae8 by 000000000040dac0 over 0000000000000000 with 000000000020ee08)
+ Installing Draw Device at 000000000040dc18 by 000000000040dac0 over 0000000000000000 with 000000000020edb0)
+ Installing Draw Context at 000000000040dd48 by 000000000040dac0 over 0000000000000000 with 000000000020ed58)
+ Installing Draw Output at 000000000040de78 by 000000000040dac0 over 0000000000000000 with 000000000020ed00)
+ Installing Draw Input at 000000000040dfa8 by 000000000040dac0 over 0000000000000000 with 000000000020eca8)
+ Loading draw ICD system/e2draw.icd
+ afxClass<Module>::ConstructObject(000000000040cc18)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(0000000000411850)
+Installing 'e2draw.icd' ICD on draw system 000000000040da40...
+	OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing HƒÄ8ÃÌÌÌÌÌÌÌÌÌÌH‰\$UVWATAVHƒì@I‹M‹P0E3ö‹CM‹áN94„— at 0000000000411878 by 0000000000411850 over 000000000040dc18 with 000000000020ddb0)

@@ -1,0 +1,425 @@
+
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 50ca96e4 by 00000000 over 00000000 with 50ca6680)
+ afxClass<Basic I/O System>::ConstructObject(006975c0)
+ Installing Context at 006975f0 by 006975dc over 00000000 with 50ca6074)
+ Installing Module at 006976ac by 006975dc over 00000000 with 50ca6604)
+ Installing Thread at 006978e0 by 006975dc over 00000000 with 50ca66b0)
+ Installing File at 00697a58 by 006975dc over 00000000 with 50ca65a4)
+ Installing Archive at 00697b14 by 006975dc over 00000000 with 50ca6030)
+ Installing Application at 0069799c by 006975dc over 00000000 with 50ca6000)
+ Installing Keyboard at 00697768 by 006975dc over 00000000 with 50ca65d4)
+ Installing Mouse at 00697824 by 006975dc over 00000000 with 50ca6634)
+ Installing Draw I/O System at 00697bd0 by 006975dc over 00000000 with 50ca6ef0)
+ Installing Simulation at 00697c8c by 006975dc over 00000000 with 50ca7050)
+ [!] afxSystem.c:1082?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1083?_AfxSysCtor
+  Logical processor count: 2
+ afxClass<Context>::ConstructObject(00693cb0)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxClass<Module>::ConstructObject(0069b7a0)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxClass<Keyboard>::ConstructObject(0069bb10)
+ Entering the Threading Execution Environment  0
+ afxClass<Draw I/O System>::ConstructObject(0069c420)
+ Installing Draw Thread at 0069c834 by 0069c474 over 00000000 with 0042ef44)
+ Installing Installable Client (Draw) Driver at 0069c488 by 0069c474 over 00000000 with 0042ef14)
+ Installing Draw Device at 0069c544 by 0069c474 over 00000000 with 0042eee4)
+ Installing Draw Context at 0069c600 by 0069c474 over 00000000 with 0042eeb4)
+ Installing Draw Output at 0069c6bc by 0069c474 over 00000000 with 0042ee84)
+ Installing Draw Input at 0069c778 by 0069c474 over 00000000 with 0042ee54)
+ Loading draw ICD system/e2draw.icd
+ afxClass<Module>::ConstructObject(0069b7f4)
+ afxClass<Installable Client (Draw) Driver>::ConstructObject(0069d3b0)
+Installing 'e2draw.icd' ICD on draw system 0069c420...
+	OpenGL/Vulkan Continuous Integration --- GL/2 over Qwadro Draw System 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing …À}
+Pèñ[ at 0069d3c4 by 0069d3b0 over 0069c544 with 0042e72c)
+ afxClass<…À}
+Pèñ[, Draw Device>ConstructingObject(7fff0060)
+ afxClass<Draw Device>::ConstructObject(7fff0060)
+ Installing Draw Context at 7fff0074 by 7fff0060 over 0069c600 with 50d19108)
+ Installing Draw Output at 7fff0130 by 7fff0060 over 0069c6bc with 50d19240)
+ Installing Draw Input at 7fff01ec by 7fff0060 over 0069c778 with 50d19210)
+ afxClass<…À}
+Pèñ[>::ConstructObject(7fff0060)
+Draw device '
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               ' <'targa'> discovered on draw system 0069c420.
+ E:/qwadro/afx/system32/*.icd
+ ERR afxSystem.c:684?AfxResolveUris
+  
+ ERR afxSystem.c:704?AfxResolveUri
+  
+ Loading draw ICD e2newton.icd
+ afxClass<Module>::ConstructObject(0069b848)
+ Dismantling Module object (#0) 0069b848...
+ Destructing instance 0069b848 of Module class.
+ afxClass<Draw Thread>::ConstructObject(0069ff70)
+ afxClass<Thread>::ConstructObject(0069d510)
+ afxClass<Draw Context, Draw Context>ConstructingObject(0069d5f0)
+ afxClass<Draw Context>::ConstructObject(0069d5f0)
+ afxClass<Draw Context>::ConstructObject(0069d5f0)
+ Installing Buffer at 0069d750 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Raster at 0069d694 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Surface at 0069d80c by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Sampler at 0069dc74 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Canvas at 0069dbb8 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Lego at 0069dafc by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Shader at 0069d8c8 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Pipeline at 0069da40 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Rasterizer at 0069d984 by 0069d5f8 over 00000000 with 0042ef08)
+ Installing Draw Queue at 006a0fc4 by 0069d5f8 over 00000000 with 50d191e0)
+ Installing Draw Script at 006a1080 by 0069d5f8 over 00000000 with 50d19270)
+ afxClass<Draw Queue>::ConstructObject(006a1310)
+ afxClass<Draw Queue>::ConstructObject(006a13d0)
+ Installing Draw Queue at 006a1140 by 0069d5f8 over 00000000 with 50d191e0)
+ Installing Draw Script at 006a11fc by 0069d5f8 over 00000000 with 50d19270)
+ afxClass<Draw Queue>::ConstructObject(006a4b30)
+ afxClass<Draw Queue>::ConstructObject(006a4bf0)
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml'
+ afxClass<File>::ConstructObject(006a8d10)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 5 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 35, 5 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 40, 2 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 38, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 39, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ Dismantling File object (#0) 006a8d10...
+ Destructing instance 006a8d10 of File class.
+ ERR afxPool.c:444?AfxDeallocatePoolUnit
+  
+ data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs
+ data/pipeline/rgbaToRgba.xsh.xml?fs
+ data/pipeline/rgbaToRgba.xsh.xml
+ Uploading shader 'data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs'
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 5 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 35, 5 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 40, 2 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 38, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 39, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<Shader>::ConstructObject(006b2800)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+
+        const vec3 tristrippedQuadPos[4] = vec3[](vec3(-1,  1, 0), vec3(-1, -1, 0), vec3(1,  1, 0), vec3(1, -1, 0));
+        const vec2 tristrippedQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
+
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        void main()
+        {
+            // draw tristrip with 4 tris.
+            gl_Position = vec4(tristrippedQuadPos[gl_VertexID], 1.0);
+            sgl_v.uv0 = tristrippedQuadUv[gl_VertexID];
+        }
+       
+ Uploading shader 'data/pipeline/rgbaToRgba.xsh.xml?fs'
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 5 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 35, 5 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 40, 2 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 38, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 39, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<Shader>::ConstructObject(006b2888)
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        uniform sampler2D samp;
+
+        in block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uv0);
+        }
+       
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml'
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 5 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 35, 5 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 40, 2 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 34, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 38, @ 8, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 39, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 41, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<Rasterizer>::ConstructObject(006b08f0)
+ afxClass<Pipeline>::ConstructObject(006ab9f0)
+ afxClass<Lego>::ConstructObject(006d8a00)
+ afxClass<Sampler>::ConstructObject(006aa280)
+ afxClass<Application>::ConstructObject(006d8e80)
+ afxClass<Thread>::ConstructObject(006b07b0)
+ afxClass<Mouse>::ConstructObject(006a90c0)
+ afxClass<Draw Input, Draw Input>ConstructingObject(006a9160)
+ afxClass<Draw Input>::ConstructObject(006a9160)
+ afxClass<Draw Input>::ConstructObject(006a9160)
+ Installing Widget at 006d8e94 by 006d8e80 over 00000000 with 50ca6f60)
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/art/world.tga
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ afxClass<Raster>::ConstructObject(006ac2c0)
+ afxClass<File>::ConstructObject(006a8da8)
+ E:/qwadro/afx/tmp/world2.tga
+ Dismantling File object (#0) 006a8da8...
+ Destructing instance 006a8da8 of File class.
+ Dismantling Raster object (#0) 006ac2c0...
+ Destructing instance 006ac2c0 of Raster class.
+ ERR afxPool.c:444?AfxDeallocatePoolUnit
+  
+ afxClass<Draw Output, Draw Output>ConstructingObject(006b0cd0)
+ afxClass<Draw Output>::ConstructObject(006b0cd0)
+ afxClass<Draw Output>::ConstructObject(006b0cd0)

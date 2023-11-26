@@ -1,0 +1,3 @@
+[submodule "code/e2draw"]
+	path = code/e2draw
+	url = https://github.com/Veryzon/e2draw.git
