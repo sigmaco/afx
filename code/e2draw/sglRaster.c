@@ -16,8 +16,8 @@
 
 #include "sgl.h"
 
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/core/afxSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/core/afxSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // IMAGE                                                                      //
@@ -133,11 +133,11 @@ _SGL void SglToGlFormat(afxPixelFormat pf, GLint *fmt, GLenum *layout, GLenum *t
     };
     
     afxError err = NIL;
-    AfxAssert(v[AFX_PFD_D32F].intFmt == GL_DEPTH_COMPONENT32F);
-    AfxAssert(v[AFX_PFD_D32].intFmt == GL_DEPTH_COMPONENT32);
-    AfxAssert(v[AFX_PFD_D24].intFmt == GL_DEPTH_COMPONENT24);
-    AfxAssert(v[AFX_PFD_D24S8].intFmt == GL_DEPTH24_STENCIL8);
-    AfxAssert(v[AFX_PFD_D32FS8].intFmt == GL_DEPTH32F_STENCIL8);
+    AfxAssert(v[afxPixelFormat_D32F].intFmt == GL_DEPTH_COMPONENT32F);
+    AfxAssert(v[afxPixelFormat_D32].intFmt == GL_DEPTH_COMPONENT32);
+    AfxAssert(v[afxPixelFormat_D24].intFmt == GL_DEPTH_COMPONENT24);
+    AfxAssert(v[afxPixelFormat_D24S8].intFmt == GL_DEPTH24_STENCIL8);
+    AfxAssert(v[afxPixelFormat_D32FS8].intFmt == GL_DEPTH32F_STENCIL8);
 
     *fmt = v[pf].intFmt;
     *layout = v[pf].layout;
@@ -293,261 +293,57 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxRaster tex, GLenum *target, 
     SglToGlFormat(tex->base.fmt, intFmt, fmt, type);
 }
 
-_SGL afxError _SglTexInstDevice(afxRaster tex, glVmt const* gl) // tex must be bound.
+_SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afxNat baseLayer, afxNat layerCnt, afxWhd const xyz, afxWhd const whd, GLenum glFmt, GLenum glType, void const* data)
 {
-    afxError err = AFX_ERR_NONE;
-    
-    AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_INST) == SGL_UPD_FLAG_DEVICE_INST);
+    afxError err = NIL;
 
-    //gl->TexStorage2D();
-
-    afxNat const lvlCnt = AfxCountRasterLods(tex);
-    AfxAssert(lvlCnt);
-    gl->TexParameteri(tex->glTarget, GL_TEXTURE_BASE_LEVEL, 0); _SglThrowErrorOccuried();
-    gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAX_LEVEL, (lvlCnt - 1)); _SglThrowErrorOccuried();
-
-#if 0 // to be removed
-
-    if (tex->glTarget == GL_TEXTURE_CUBE_MAP)
+    switch (glTarget)
     {
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(afxTexelFilter_LINEAR)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(afxTexelFilter_LINEAR)); _SglThrowErrorOccuried();
-
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(afxTexelAddress_CLAMP)); _SglThrowErrorOccuried();
-    }
-    else
+    case GL_TEXTURE_1D_ARRAY:
     {
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MAG_FILTER, SglToGlTexelFilterMode(afxTexelFilter_POINT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_MIN_FILTER, SglToGlTexelFilterMode(afxTexelFilter_POINT)); _SglThrowErrorOccuried();
-
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_S, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_T, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
-        gl->TexParameteri(tex->glTarget, GL_TEXTURE_WRAP_R, SglToGlTexWrapMode(afxTexelAddress_REPEAT)); _SglThrowErrorOccuried();
-    }
-#endif
-
-    //afxWhd extent;
-
-    if (tex->base.swizzling)
-    {
-        GLenum arrayedSwizzle[4];
-        SglToGlColorSwizzling(tex->base.swizzling, arrayedSwizzle);
-        gl->TexParameteriv(tex->glTarget, GL_TEXTURE_SWIZZLE_RGBA, (GLint*)arrayedSwizzle); _SglThrowErrorOccuried();
-    }
-
-    //afxBool const isSurface = AfxTestRaster(tex, afxRasterFlag_DRAW);
-    afxBool const isCubemap = AfxTestRaster(tex, AFX_TEX_FLAG_CUBEMAP);
-    AfxAssert(!(isCubemap && tex->base.whd[2] > 1)); // can't be both 3D and cubemap at same time
-
-    if (lvlCnt > 1)
-    {
-        // what if we want to upload it?
-        //gl->GenerateMipmap(tex->glTarget); _SglThrowErrorOccuried();
-    }
-
-    afxRasterRegion rgn;
-    afxNat rgnSize;
-    void const* data;
-    
-    switch (tex->glTarget)
-    {
-    case GL_TEXTURE_CUBE_MAP:
-    {
-        AfxAssert(isCubemap);
-        AfxAssert(tex->base.layerCnt == 6);
-
-        for (afxNat j = 0; j < tex->base.layerCnt; j++)
-        {
-            for (afxNat i = 0; i < lvlCnt; i++)
-            {
-                rgn.lodIdx = i;
-                rgn.baseLayer = j;
-                rgn.layerCnt = 1;
-                rgn.offset[0] = 0;
-                rgn.offset[1] = 0;
-                rgn.offset[2] = 0;
-                rgn.extent[0] = tex->base.whd[0];
-                rgn.extent[1] = tex->base.whd[1];
-                rgn.extent[2] = tex->base.whd[2];
-
-                data = NIL;
-
-                //if (!isSurface)
-                    data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-                AfxAssert(data);
-                gl->TexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + rgn.baseLayer, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], rgn.extent[1], 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-                
-                //if (!isSurface)
-                    AfxCloseRasterRegion(tex, &rgn);                
-            }
-        }
-        break;
-    }
-    case GL_TEXTURE_3D:
-    {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = tex->base.whd[0];
-            rgn.extent[1] = tex->base.whd[1];
-            rgn.extent[2] = tex->base.whd[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexImage3D(tex->glTarget, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], rgn.extent[1], rgn.extent[2], 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-            
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_2D_ARRAY:
-    {
-        AfxAssert(tex->base.layerCnt > 1);
-
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = tex->base.whd[0];
-            rgn.extent[1] = tex->base.whd[1];
-            rgn.extent[2] = tex->base.whd[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexImage3D(tex->glTarget, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], rgn.extent[1], tex->base.layerCnt, 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
+        gl->TexSubImage2D(glTarget, level, xyz[0], baseLayer, whd[0], layerCnt, glFmt, glType, data); _SglThrowErrorOccuried();
         break;
     }
     case GL_TEXTURE_2D:
+    case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+    case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+    case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+    case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+    case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+    case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
     {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = tex->base.whd[0];
-            rgn.extent[1] = tex->base.whd[1];
-            rgn.extent[2] = tex->base.whd[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexImage2D(tex->glTarget, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], rgn.extent[1], 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-            
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_1D_ARRAY:
-    {
-        AfxAssert(tex->base.layerCnt > 1);
-
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = tex->base.whd[0];
-            rgn.extent[1] = tex->base.whd[1];
-            rgn.extent[2] = tex->base.whd[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexImage2D(tex->glTarget, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], tex->base.layerCnt, 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-            
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
+        gl->TexSubImage2D(glTarget, level, xyz[0], xyz[1], whd[0], whd[1], glFmt, glType, data); _SglThrowErrorOccuried();
         break;
     }
     case GL_TEXTURE_1D:
     {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = 0;
-            rgn.offset[1] = 0;
-            rgn.offset[2] = 0;
-            rgn.extent[0] = tex->base.whd[0];
-            rgn.extent[1] = tex->base.whd[1];
-            rgn.extent[2] = tex->base.whd[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexImage1D(tex->glTarget, rgn.lodIdx, tex->glIntFmt, rgn.extent[0], 0, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-            
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
+        gl->TexSubImage1D(glTarget, level, xyz[0], whd[0], glFmt, glType, data); _SglThrowErrorOccuried();
+        break;
+    }
+    case GL_TEXTURE_3D:
+    {
+        gl->TexSubImage3D(glTarget, level, xyz[0], xyz[1], xyz[2], whd[0], whd[1], whd[2], glFmt, glType, data); _SglThrowErrorOccuried();
+        break;
+    }
+    case GL_TEXTURE_2D_ARRAY:
+    {
+        gl->TexSubImage3D(glTarget, level, xyz[0], xyz[1], baseLayer, whd[0], whd[1], layerCnt, glFmt, glType, data); _SglThrowErrorOccuried();
         break;
     }
     default:
+    {
         AfxThrowError();
         break;
     }
-
-    {
-        //gl->BindTexture(tex->glTarget, 0); _SglThrowErrorOccuried();
     }
-    //AfxAdvertise("tex %p, gl/target %x, gl/intFmt %x, gl/fmt %x, gl/type %x", tex->glTarget, tex->glIntFmt, tex->glFmt, tex->glType);
-    
-    // build or rebuild forces total data update
-    tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
-    tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
-    tex->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
     return err;
 }
 
-_SGL afxError _SglTexFlushDevice(afxRaster tex, glVmt const* gl) // tex must be bound
+_SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster tex) // tex must be bound
 {
     afxError err = AFX_ERR_NONE;
 
-    AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH) == SGL_UPD_FLAG_DEVICE_FLUSH);
+    //AfxAssert((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH) == SGL_UPD_FLAG_DEVICE_FLUSH);
 
     //afxWhd const xyz = { 0, 0, 0 };
     //afxWhd extent;
@@ -559,11 +355,15 @@ _SGL afxError _SglTexFlushDevice(afxRaster tex, glVmt const* gl) // tex must be 
     afxNat const lvlCnt = AfxCountRasterLods(tex);
     AfxAssert(lvlCnt);
 
+    afxPixelLayout pfd;
+    AfxDescribePixelFormat(tex->base.fmt, &pfd);
+    GLint gpuUnpackAlign = 1;// (8 >= pfd.bpp ? 1 : ((16 >= pfd.bpp ? 2 : (pfd.bpp <= 32 ? 4 : (pfd.bpp <= 32))));
+
     afxRasterRegion rgn;
     afxNat rgnSize;
     void const* data;
 
-    switch (tex->glTarget)
+    switch (glTarget)
     {
     case GL_TEXTURE_CUBE_MAP:
     {
@@ -580,17 +380,18 @@ _SGL afxError _SglTexFlushDevice(afxRaster tex, glVmt const* gl) // tex must be 
                 rgn.offset[0] = tex->lastUpdOffset[0];
                 rgn.offset[1] = tex->lastUpdOffset[1];
                 rgn.offset[2] = tex->lastUpdOffset[2];
-                rgn.extent[0] = tex->lastUpdRange[0];
-                rgn.extent[1] = tex->lastUpdRange[1];
-                rgn.extent[2] = tex->lastUpdRange[2];
+                rgn.whd[0] = tex->lastUpdRange[0];
+                rgn.whd[1] = tex->lastUpdRange[1];
+                rgn.whd[2] = tex->lastUpdRange[2];
 
                 data = NIL;
 
                 //if (!isSurface)
-                    data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
+                    data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize, NIL);
 
                 AfxAssert(data);
-                gl->TexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + rgn.baseLayer, rgn.lodIdx, rgn.offset[0], rgn.offset[1], rgn.extent[0], rgn.extent[1], tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
+                gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
+                _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP_POSITIVE_X + rgn.baseLayer, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, tex->glFmt, tex->glType, data);
 
                 //if (!isSurface)
                     AfxCloseRasterRegion(tex, &rgn);
@@ -598,238 +399,178 @@ _SGL afxError _SglTexFlushDevice(afxRaster tex, glVmt const* gl) // tex must be 
         }
         break;
     }
-    case GL_TEXTURE_3D:
-    {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexSubImage3D(tex->glTarget, rgn.lodIdx, rgn.offset[0], rgn.offset[1], rgn.offset[2], rgn.extent[0], rgn.extent[1], rgn.extent[2], tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_2D_ARRAY:
-    {
-        AfxAssert(tex->base.layerCnt > 1);
-
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = tex->base.layerCnt;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexSubImage3D(tex->glTarget, rgn.lodIdx, rgn.offset[0], rgn.offset[1], rgn.baseLayer, rgn.extent[0], rgn.extent[1], rgn.layerCnt, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_2D:
-    {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = 0;
-            rgn.baseLayer = i;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexSubImage2D(tex->glTarget, rgn.lodIdx, rgn.offset[0], rgn.offset[1], rgn.extent[0], rgn.extent[1], tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_1D_ARRAY:
-    {
-        AfxAssert(tex->base.layerCnt > 1);
-
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = tex->base.layerCnt;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexSubImage2D(tex->glTarget, rgn.lodIdx, rgn.offset[0], rgn.baseLayer, rgn.extent[0], rgn.layerCnt, tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
-    case GL_TEXTURE_1D:
-    {
-        for (afxNat i = 0; i < lvlCnt; i++)
-        {
-            rgn.lodIdx = i;
-            rgn.baseLayer = 0;
-            rgn.layerCnt = 1;
-            rgn.offset[0] = tex->lastUpdOffset[0];
-            rgn.offset[1] = tex->lastUpdOffset[1];
-            rgn.offset[2] = tex->lastUpdOffset[2];
-            rgn.extent[0] = tex->lastUpdRange[0];
-            rgn.extent[1] = tex->lastUpdRange[1];
-            rgn.extent[2] = tex->lastUpdRange[2];
-
-            data = NIL;
-
-            //if (!isSurface)
-                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize);
-
-            AfxAssert(data);
-            gl->TexSubImage1D(tex->glTarget, rgn.lodIdx, rgn.offset[0], rgn.extent[0], tex->glFmt, tex->glType, data); _SglThrowErrorOccuried();
-
-            //if (!isSurface)
-                AfxCloseRasterRegion(tex, &rgn);
-        }
-        break;
-    }
     default:
-        AfxThrowError();
+    {
+        for (afxNat i = tex->lastUpdLodBase; i < tex->lastUpdLodRange; i++)
+        {
+            for (afxNat j = tex->lastUpdImgBase; j < tex->lastUpdImgRange; j++)
+            {
+                rgn.lodIdx = i;
+                rgn.baseLayer = j;
+                rgn.layerCnt = 1;
+                rgn.offset[0] = tex->lastUpdOffset[0];
+                rgn.offset[1] = tex->lastUpdOffset[1];
+                rgn.offset[2] = tex->lastUpdOffset[2];
+                rgn.whd[0] = tex->lastUpdRange[0];
+                rgn.whd[1] = tex->lastUpdRange[1];
+                rgn.whd[2] = tex->lastUpdRange[2];
+
+                data = NIL;
+
+                //if (!isSurface)
+                data = AfxOpenRasterRegion(tex, &rgn, AFX_TEX_OPEN_R, &rgnSize, NIL);
+
+                AfxAssert(data);
+                gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
+                _SglTexSubImage(gl, glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, tex->glFmt, tex->glType, data);
+
+                //if (!isSurface)
+                AfxCloseRasterRegion(tex, &rgn);
+            }
+        }
         break;
     }
-    tex->lastUpdOffset[0] = (tex->lastUpdOffset[1] = (tex->lastUpdOffset[2] = 0));
-    tex->lastUpdRange[0] = (tex->lastUpdRange[1] = (tex->lastUpdRange[2] = 0));
-    tex->updFlags &= ~(SGL_UPD_FLAG_DEVICE_FLUSH);
-    return err;
-}
-
-_SGL afxError _SglTexReinstantiateIdd(afxRaster tex, afxNat unit, glVmt const* gl)
-{
-    AfxEntry("tex=%p", tex);
-    afxError err = AFX_ERR_NONE;
-    afxDrawContext dctx = AfxGetObjectProvider(tex);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
-    
-    if (tex->glHandle)
-    {
-        gl->DeleteTextures(1, &tex->glHandle); _SglThrowErrorOccuried();
-        tex->glHandle = 0;
-    }
-
-    tex->updFlags = SGL_UPD_FLAG_DEVICE_INST;
-    
-    if (!err && !tex->glHandle)
-    {
-        SglDetermineGlTargetInternalFormatType(tex, &tex->glTarget, &tex->glIntFmt, &tex->glFmt, &tex->glType);
-
-        AfxAssert(NIL == tex->glHandle);
-        gl->GenTextures(1, &(tex->glHandle)); _SglThrowErrorOccuried();
-        gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
-        gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
-        AfxAssert(gl->IsTexture(tex->glHandle));
-
-        _SglTexInstDevice(tex, gl); // already clear flags
-        AfxEcho("afxRaster %p hardware-side data instanced.", tex);
     }
     return err;
 }
 
-_SGL afxError _SglDpuBindAndSyncTex(sglDpuIdd* dpu, afxNat unit, afxRaster tex, glVmt const* gl)
+_SGL afxError _SglBindAndSyncTex(glVmt const* gl, afxBool syncOnly, afxNat glUnit, afxRaster tex)
 {
     //AfxEntry("img=%p", img);
     afxError err = AFX_ERR_NONE;
-    (void)dpu;
+    GLuint glHandle;
+    GLenum glTarget;
 
-    if (tex)
+    if (!tex)
     {
-        AfxAssertObjects(1, &tex, afxFcc_RAS);
-
-        if (!tex->glHandle || tex->updFlags & SGL_UPD_FLAG_DEVICE_INST)
-        {
-            if (_SglTexReinstantiateIdd(tex, unit, gl))
-                AfxThrowError();
-        }
-
-        if ((tex->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
-        {
-            AfxAssert(tex->glHandle);
-            gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
-            gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
-
-            _SglTexFlushDevice(tex, gl); // already clear flags
-        }
-        else
-        {
-            AfxAssert(tex->glHandle);
-            AfxAssert(tex->glTarget);
-
-            if (gl->BindTextureUnit)
-            {
-                gl->BindTextureUnit(unit, tex->glHandle); _SglThrowErrorOccuried();
-            }
-            else
-            {
-                gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
-                gl->BindTexture(tex->glTarget, tex->glHandle); _SglThrowErrorOccuried();
-            }
-        }
+        glHandle = 0;
+        glTarget = GL_TEXTURE_2D;
+        gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
+        gl->BindTexture(glTarget, glHandle); _SglThrowErrorOccuried();
     }
     else
     {
-        if (gl->BindTextureUnit)
+        AfxAssertObjects(1, &tex, afxFcc_RAS);
+
+        afxBool bound = FALSE;
+        glHandle = tex->glHandle;
+        glTarget = tex->glTarget;
+        sglUpdateFlags devUpdReq = (tex->updFlags & SGL_UPD_FLAG_DEVICE);
+
+        gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
+
+        if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
         {
-            gl->BindTextureUnit(unit, 0); _SglThrowErrorOccuried();
+            if (glHandle)
+            {
+                AfxAssert(gl->IsTexture(glHandle));
+                gl->DeleteTextures(1, &glHandle); _SglThrowErrorOccuried();
+                tex->glHandle = NIL;
+                glHandle = NIL;
+            }
+        
+            GLint glIntFmt;
+            SglDetermineGlTargetInternalFormatType(tex, &glTarget, &glIntFmt, &tex->glFmt, &tex->glType);
+
+            gl->GenTextures(1, &(glHandle)); _SglThrowErrorOccuried();
+            gl->BindTexture(glTarget, glHandle); _SglThrowErrorOccuried();
+            bound = TRUE;
+            AfxAssert(gl->IsTexture(glHandle));
+            tex->glHandle = glHandle;
+            tex->glTarget = glTarget;
+            tex->glIntFmt = glIntFmt;
+
+            switch (glTarget)
+            {
+            case GL_TEXTURE_1D:
+            case GL_PROXY_TEXTURE_1D:
+            {
+                AfxAssert(gl->TexStorage1D);
+                gl->TexStorage1D(glTarget, AfxCountRasterLods(tex), glIntFmt, tex->base.whd[0]); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_2D:
+            case GL_TEXTURE_RECTANGLE:
+            case GL_TEXTURE_CUBE_MAP:
+            case GL_PROXY_TEXTURE_2D:
+            case GL_PROXY_TEXTURE_RECTANGLE:
+            case GL_PROXY_TEXTURE_CUBE_MAP:
+            {
+                AfxAssert(gl->TexStorage2D);
+                gl->TexStorage2D(glTarget, AfxCountRasterLods(tex), glIntFmt, tex->base.whd[0], tex->base.whd[1]); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_1D_ARRAY:
+            case GL_PROXY_TEXTURE_1D_ARRAY:
+            {
+                AfxAssert(gl->TexStorage2D);
+                gl->TexStorage2D(glTarget, AfxCountRasterLods(tex), glIntFmt, tex->base.whd[0], tex->base.layerCnt); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_3D:
+            {
+                AfxAssert(gl->TexStorage3D);
+                gl->TexStorage3D(glTarget, AfxCountRasterLods(tex), glIntFmt, tex->base.whd[0], tex->base.whd[1], tex->base.whd[2]); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_2D_ARRAY:
+            {
+                AfxAssert(gl->TexStorage3D);
+                gl->TexStorage3D(glTarget, AfxCountRasterLods(tex), glIntFmt, tex->base.whd[0], tex->base.whd[1], tex->base.layerCnt); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_2D_MULTISAMPLE:
+            case GL_PROXY_TEXTURE_2D_MULTISAMPLE:
+            {
+                AfxAssert(gl->TexStorage2DMultisample);
+                gl->TexStorage2DMultisample(glTarget, AfxCountRasterSamples(tex), glIntFmt, tex->base.whd[0], tex->base.whd[1], GL_FALSE); _SglThrowErrorOccuried();
+                break;
+            }
+            case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
+            case GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY:
+            {
+                AfxAssert(gl->TexStorage3DMultisample);
+                gl->TexStorage3DMultisample(glTarget, AfxCountRasterSamples(tex), glIntFmt, tex->base.whd[0], tex->base.whd[1], tex->base.layerCnt, GL_FALSE); _SglThrowErrorOccuried();
+                break;
+            }
+            default: AfxThrowError(); break;
+            }
+            AfxEcho("afxRaster %p hardware-side data instanced. Target %x, format %x, whd [%u,%u,%u]", tex, glTarget, glIntFmt, tex->base.whd[0], tex->base.whd[1], tex->base.whd[2]);
         }
-        else
+        
+        if ((devUpdReq & SGL_UPD_FLAG_DEVICE_FLUSH))
         {
-            gl->ActiveTexture(GL_TEXTURE0 + unit); _SglThrowErrorOccuried();
-            gl->BindTexture(GL_TEXTURE_1D, 0); _SglThrowErrorOccuried();
+            if (!bound)
+            {
+                AfxAssert(gl->IsTexture(glHandle));
+                gl->BindTexture(glTarget, glHandle); _SglThrowErrorOccuried();
+                AfxAssert(tex->glHandle == glHandle);
+                bound = TRUE;
+            }
+
+            _SglTexFlushDevice(gl, glTarget, tex);
+            tex->lastUpdOffset[0] = 0;
+            tex->lastUpdOffset[1] = 0;
+            tex->lastUpdOffset[2] = 0;
+            tex->lastUpdRange[0] = 0;
+            tex->lastUpdRange[1] = 0;
+            tex->lastUpdRange[2] = 0;
         }
+        else if (!syncOnly)
+        {
+            AfxAssert(gl->IsTexture(glHandle));
+            gl->BindTexture(glTarget, glHandle); _SglThrowErrorOccuried();
+            AfxAssert(tex->glHandle == glHandle);
+            bound = TRUE;
+        }
+        
+        if (bound && syncOnly)
+        {
+            //gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
+            gl->BindTexture(glTarget, 0); _SglThrowErrorOccuried();
+        }
+
+        tex->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
     }
     return err;
 }
@@ -845,16 +586,16 @@ _SGL afxError _AfxCloseTextureRegion(afxRaster tex, afxRasterRegion const *rgn)
     return err;
 };
 
-_SGL afxError _AfxOpenTextureRegion(afxRaster tex, afxRasterRegion const *rgn, afxRasterOpenFlags flags, afxNat *size, void**ptr)
+_SGL afxError _AfxOpenTextureRegion(afxRaster tex, afxRasterRegion const *rgn, afxRasterOpenFlags flags, afxNat *size, afxNat* rowLen, void**ptr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &tex, afxFcc_RAS);
     AfxAssert(rgn);
     AfxAssert(tex->base.lodCnt > rgn->lodIdx);
     AfxAssertRange(tex->base.layerCnt, rgn->baseLayer, rgn->layerCnt);
-    AfxAssertRange(tex->base.whd[0], rgn->offset[0], rgn->extent[0]);
-    AfxAssertRange(tex->base.whd[1], rgn->offset[1], rgn->extent[1]);
-    AfxAssertRange(tex->base.whd[2], rgn->offset[2], rgn->extent[2]);
+    AfxAssertRange(tex->base.whd[0], rgn->offset[0], rgn->whd[0]);
+    AfxAssertRange(tex->base.whd[1], rgn->offset[1], rgn->whd[1]);
+    AfxAssertRange(tex->base.whd[2], rgn->offset[2], rgn->whd[2]);
 
     //afxDrawContext dctx = AfxGetObjectProvider(tex);
 
@@ -865,6 +606,9 @@ _SGL afxError _AfxOpenTextureRegion(afxRaster tex, afxRasterRegion const *rgn, a
 
     afxNat offset = AfxLocateRasterRegion(tex, rgn->lodIdx, rgn->baseLayer, rgn->offset);
 
+    if (rowLen)
+        *rowLen = AfxMeasureRasterRow(tex);
+
     if (size)
         *size = AfxMeasureRasterRegion(tex, rgn);
 
@@ -872,18 +616,18 @@ _SGL afxError _AfxOpenTextureRegion(afxRaster tex, afxRasterRegion const *rgn, a
 
     ++tex->locked;
 
-    tex->lastUpdImgBase = AfxMini(tex->lastUpdImgBase, rgn->baseLayer);
-    tex->lastUpdImgRange = AfxMaxi(tex->lastUpdImgRange, rgn->layerCnt);
-    tex->lastUpdLodBase = AfxMini(tex->lastUpdLodBase, rgn->lodIdx);
-    tex->lastUpdLodRange = AfxMaxi(tex->lastUpdLodRange, rgn->lodIdx);
+    tex->lastUpdImgBase = AfxMin(tex->lastUpdImgBase, rgn->baseLayer);
+    tex->lastUpdImgRange = AfxMax(tex->lastUpdImgRange, rgn->layerCnt);
+    tex->lastUpdLodBase = AfxMin(tex->lastUpdLodBase, rgn->lodIdx);
+    tex->lastUpdLodRange = AfxMax(tex->lastUpdLodRange, rgn->lodIdx + 1);
 
-    tex->lastUpdOffset[0] = AfxMini(tex->lastUpdOffset[0], rgn->offset[0]);
-    tex->lastUpdOffset[1] = AfxMini(tex->lastUpdOffset[1], rgn->offset[1]);
-    tex->lastUpdOffset[2] = AfxMini(tex->lastUpdOffset[2], rgn->offset[2]);
+    tex->lastUpdOffset[0] = AfxMin(tex->lastUpdOffset[0], rgn->offset[0]);
+    tex->lastUpdOffset[1] = AfxMin(tex->lastUpdOffset[1], rgn->offset[1]);
+    tex->lastUpdOffset[2] = AfxMin(tex->lastUpdOffset[2], rgn->offset[2]);
 
-    tex->lastUpdRange[0] = AfxMaxi(tex->lastUpdRange[0], rgn->extent[0]);
-    tex->lastUpdRange[1] = AfxMaxi(tex->lastUpdRange[1], rgn->extent[1]);
-    tex->lastUpdRange[2] = AfxMaxi(tex->lastUpdRange[2], rgn->extent[2]);
+    tex->lastUpdRange[0] = AfxMax(tex->lastUpdRange[0], rgn->whd[0]);
+    tex->lastUpdRange[1] = AfxMax(tex->lastUpdRange[1], rgn->whd[1]);
+    tex->lastUpdRange[2] = AfxMax(tex->lastUpdRange[2], rgn->whd[2]);
 
     if (flags & AFX_TEX_OPEN_W)
         tex->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
@@ -896,15 +640,15 @@ _SGL afxError _AfxOpenTextureRegion(afxRaster tex, afxRasterRegion const *rgn, a
     return err;
 }
 
-_SGL afxError _SglTexDtor(afxRaster tex)
+_SGL afxError _SglRasDtor(afxRaster tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("tex=%p", tex);
     AfxAssertObjects(1, &tex, afxFcc_RAS);
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     if (tex->glHandle)
     {
@@ -914,13 +658,13 @@ _SGL afxError _SglTexDtor(afxRaster tex)
 
     if (tex->base.maps)
     {
-        AfxDeallocate(mem, tex->base.maps);
+        AfxDeallocate(mmu, tex->base.maps);
     }
 
     return err;
 }
 
-_SGL afxError _SglTexCtor(afxRaster tex, afxCookie const* cookie)
+_SGL afxError _SglRasCtor(afxRaster tex, afxCookie const* cookie)
 {
     AfxEntry("tex=%p", tex);
 
@@ -929,23 +673,23 @@ _SGL afxError _SglTexCtor(afxRaster tex, afxCookie const* cookie)
     afxRasterInfo const *texi = ((afxRasterInfo const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(tex);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     tex->base.swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
-    tex->base.sampleCnt = AfxMaxi(texi->sampleCnt, 1);
+    tex->base.sampleCnt = AfxMax(texi->sampleCnt, 1);
     //tex->base.linearlyTiled = FALSE;
 
-    tex->base.layerCnt = AfxMaxi(texi->layerCnt, 1);
-    tex->base.lodCnt = AfxMaxi(texi->lodCnt, 1);
+    tex->base.layerCnt = AfxMax(texi->layerCnt, 1);
+    tex->base.lodCnt = AfxMax(texi->lodCnt, 1);
 
     tex->base.flags = texi->usage;
 
     tex->base.fmt = texi->fmt;
 
-    tex->base.whd[0] = AfxMaxi(texi->whd[0], 1);
-    tex->base.whd[1] = AfxMaxi(texi->whd[1], 1);
-    tex->base.whd[2] = AfxMaxi(texi->whd[2], 1);
+    tex->base.whd[0] = AfxMax(texi->whd[0], 1);
+    tex->base.whd[1] = AfxMax(texi->whd[1], 1);
+    tex->base.whd[2] = AfxMax(texi->whd[2], 1);
 
     tex->base.maps = NIL;
 
@@ -965,19 +709,19 @@ _SGL afxError _SglTexCtor(afxRaster tex, afxCookie const* cookie)
 
     if (err && tex->base.maps)
     {
-        AfxDeallocate(mem, tex->base.maps);
+        AfxDeallocate(mmu, tex->base.maps);
     }
 
     return err;
 }
 
-_SGL afxClassConfig _SglTexClsConfig =
+_SGL afxClassConfig _SglRasClsConfig =
 {
     .fcc = afxFcc_RAS,
     .name = "Raster",
     .unitsPerPage = 32,
     .size = sizeof(AFX_OBJECT(afxRaster)),
-    .ctx = NIL,
-    .ctor = (void*)_SglTexCtor,
-    .dtor = (void*)_SglTexDtor
+    .mmu = NIL,
+    .ctor = (void*)_SglRasCtor,
+    .dtor = (void*)_SglRasDtor
 };

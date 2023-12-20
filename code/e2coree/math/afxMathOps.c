@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxTransform.h"
-#include "afx/sim/afxSimulation.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/sim/afxAsset.h"
+#include "qwadro/math/afxTransform.h"
+#include "qwadro/sim/awxSimulation.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/sim/awxAsset.h"

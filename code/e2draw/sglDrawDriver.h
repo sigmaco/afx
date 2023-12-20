@@ -27,8 +27,8 @@
 #include "../deps/gl/glad_wgl.h"
 
 #include <windows.h>
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/draw/afxDrawScript.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/pipe/afxDrawScript.h"
 
 #ifndef __e2draw__
 #   ifdef _DEBUG
@@ -882,6 +882,7 @@ SGL GLenum AfxToGlCullMode(afxCullMode cm);
 SGL GLenum AfxToGlFillMode(afxFillMode pm);
 SGL GLenum SglToGlCompareOp(afxCompareOp co);
 SGL GLuint AfxToGlShaderStage(afxShaderStage s);
+SGL GLuint AfxToGlShaderStageBit(afxShaderStage s);
 SGL GLenum AfxToGlTopology(afxPrimTopology pm);
 SGL GLenum AfxToGlBufferUsage(afxInt bt);
 SGL GLenum AfxToGlStencilOp(afxStencilOp so);

@@ -1,19 +1,19 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-#include "afx/afxQwadro.h"
-#include "afx/core/afxApplication.h"
-#include "afx/core/afxDebug.h"
-#include "afx/math/afxMathDefs.h"
-#include "afx/core/afxMouse.h"
+#include "qwadro/afxQwadro.h"
+#include "qwadro/core/afxApplication.h"
+#include "qwadro/core/afxDebug.h"
+#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/core/afxMouse.h"
 #include "../e2idtech/afxMD5Model.h"
 #include "../e2cad/afxWavefrontObject.h"
 
 #define ENABLE_DRAW 1
 
 #ifdef ENABLE_DRAW
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/sim/rendering/afxRenderer.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/sim/rendering/awxRenderer.h"
 #endif
 
 afxSystem sys;
@@ -22,27 +22,26 @@ afxDrawSystem dsys;
 afxClock StartClock;
 afxClock LastClock;
 
-afxBody cubeBod = NIL;
-afxModel cubeMdl = NIL;
-afxMesh cube = NIL;
+awxBody cubeBod = NIL;
+awxModel cubeMdl = NIL;
+awxMesh cube = NIL;
 const afxReal CameraSpeed = 30.0f;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
-afxSimulation sim = NIL;
+awxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
-afxRenderer rnd = NIL;
+awxRenderer rnd = NIL;
 
 afxCamera cam = NIL;
-afxBody bod = NIL;
+awxBody bod = NIL;
 
 afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxRenderer rnd = AfxGetDrawInputUdd(din);
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
+    awxRenderer rnd = AfxGetDrawInputUdd(din);
+    afxDrawContext dctx = AfxGetDrawInputContext(din);
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
 
@@ -54,26 +53,29 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
         if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
         else
         {
-            afxRaster surf;
+            
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
-            AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
+            afxRaster surf;
+            AfxGetDrawOutputSurface(dout, outBufIdx, 1, &surf);
+            afxCanvas canv;
+            AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
             AfxAssertObjects(1, &surf, afxFcc_RAS);
 
-            AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
+            AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
 
             
-            if (bod)
-                AfxDrawBodies(dscr, rnd, 1, &bod);
+            //if (bod)
+                //AwxCmdDrawBodies(dscr, rnd, 1, &bod);
 
-            //if (cubeBod)
-                //AfxDrawBodies(dscr, rnd, 1, &cubeBod);
+            if (cubeBod)
+                AwxCmdDrawBodies(dscr, rnd, 1, &cubeBod);
 
-            AfxDrawTestIndexed(dscr, rnd);
+            AwxCmdDrawTestIndexed(dscr, rnd);
 
             AfxDrawSky(dscr, &rnd->sky);
 
-            AfxEndSceneRendering(dscr, rnd);
+            AwxCmdEndSceneRendering(dscr, rnd);
 
             if (AfxCompileDrawScript(dscr)) AfxThrowError();
             else if (AfxSubmitDrawScripts(din, 1, &dscr))
@@ -133,8 +135,8 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
 
     afxUri uriMap;
     AfxMakeUri(&uriMap, "e2newton.icd", 0);
-    afxSimulationConfig simSpec = { 0 };
-    simSpec.extent = NIL;
+    awxSimulationConfig simSpec = { 0 };
+    AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
@@ -148,17 +150,18 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     
     AfxMakeUri(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
+    doutConfig.auxDsFmt[0] = afxPixelFormat_D32F;
     AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
-    afxRendererConfig rndConf = { 0 };
+    awxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DrawInputProc;
-    AfxAcquireRenderers(sim, 1, &rnd, &rndConf);
+    AwxAcquireRenderers(sim, 1, &rnd, &rndConf);
 
     afxUri uriMap2;
     afxString str;
-    afxModel mdl;
+    awxModel mdl;
     //AfxAcquireSky();
 
     //AfxFormatUri(&uri, "%.*s/scenario/zero/zero.obj", AfxPushString(AfxApplication_GetArtDirectory(app)));
@@ -179,19 +182,19 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxMakeUri(&uriMap, "art/scenario/TV-Stand-5/TV-Stand-5.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/gtabr/gtabr.obj", 0);
     //AfxMakeUri(&uriMap, "art/f16/f16.obj", 0);
-    //AfxMakeUri(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
-    AfxMakeUri(&uriMap, "art/scenario/zero/zero.obj", 0);
+    AfxMakeUri(&uriMap, "art/scenario/bibliotheca/bibliotheca.obj", 0);
+    //AfxMakeUri(&uriMap, "art/scenario/zero/zero.obj", 0);
     //AfxMakeUri(&uriMap, "art/scenario/SpaceStation/SpaceStation.obj", 0);
     //AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
-    afxAsset cad;
+    awxAsset cad;
     AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
     //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
 
     afxV3d atv;
     afxM3d ltm, iltm;
-    AfxComputeBasisConversion(sim, 10.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
+    AfxComputeBasisConversion(sim, 1.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
     //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
 
     AfxGetUriName(&uriMap2, &uriMap);
@@ -199,22 +202,22 @@ _AFXEXPORT afxResult AfxEnterApplication(afxThread thr, afxApplication app)
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
-    AfxEmbodyModel(mdl, 1, &bod);
+    AwxEmbodyModel(mdl, 1, &bod);
     AfxAssert(bod);
 
-    //cube = AfxBuildCubeMesh(sim, 100.0);
+    cube = AfxBuildCubeMesh(sim, -200.0);
     //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
     //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 100, 10));
     //cube = AfxBuildDomeMesh(sim, 100.0, 4);
-    cubeMdl = AfxAssembleModel(sim, &AfxStaticString("cube"), AfxGetModelSkeleton(mdl), NIL, 1, &cube);
-    AfxEmbodyModel(cubeMdl, 1, &cubeBod);
+    cubeMdl = AwxAssembleModel(sim, &AfxStaticString("cube"), AwxGetModelSkeleton(mdl), NIL, 1, &cube);
+    AwxEmbodyModel(cubeMdl, 1, &cubeBod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
     body = AfxSimulationAcquireBody(sim, &str, NIL, mdl);
     AfxAssert(body);
 #endif
     //AfxCopyStringLiteral(&str, 0, "zero");
-    //afxBody body2;
+    //awxBody body2;
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
@@ -274,8 +277,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri2048 romUri;
-    AfxUri2048(&romUri);
+    afxFixedUri2048 romUri;
+    AfxMakeFixedUri2048(&romUri);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

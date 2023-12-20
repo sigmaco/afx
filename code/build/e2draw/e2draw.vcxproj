@@ -174,13 +174,13 @@
     <ClCompile Include="..\..\e2draw\sglDrawOutput.c" />
     <ClCompile Include="..\..\e2draw\sglDrawScript.c" />
     <ClCompile Include="..\..\e2draw\sglDrawDriver.c" />
-    <ClCompile Include="..\..\e2draw\sglPipelineRig.c" />
+    <ClCompile Include="..\..\e2draw\sglBindSchema.c" />
     <ClCompile Include="..\..\e2draw\sglPipeline.c" />
     <ClCompile Include="..\..\e2draw\sglRasterizer.c" />
     <ClCompile Include="..\..\e2draw\sglShader.c" />
     <ClCompile Include="..\..\e2draw\sglSampler.c" />
-    <ClCompile Include="..\..\e2draw\sglSurface.c" />
     <ClCompile Include="..\..\e2draw\sglRaster.c" />
+    <ClCompile Include="..\..\e2draw\sglVertexInput.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

@@ -14,29 +14,29 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxAabb.h"
-#include "afx/math/afxMathDefs.h"
-#include "afx/math/afxVector.h"
-#include "afx/math/afxMatrix.h"
+#include "qwadro/math/afxAabb.h"
+#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxMatrix.h"
 
-_AFXINL void AfxResetAabb(afxAabb* aabb)
+_AFXINL void AfxResetAabb(afxAabb aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
-    AfxResetV4d(aabb->extremes[AFX_AABB_SUP]);
-    AfxResetV4d(aabb->extremes[AFX_AABB_INF]);
+    AfxResetV4d(aabb[AFX_AABB_SUP]);
+    AfxResetV4d(aabb[AFX_AABB_INF]);
 }
 
-_AFXINL void AfxCopyAabb(afxAabb* aabb, afxAabb const* in)
+_AFXINL void AfxCopyAabb(afxAabb aabb, afxAabb const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(in);
-    AfxCopyV4d(aabb->extremes[AFX_AABB_SUP], in->extremes[AFX_AABB_SUP]);
-    AfxCopyV4d(aabb->extremes[AFX_AABB_INF], in->extremes[AFX_AABB_INF]);
+    AfxCopyV4d(aabb[AFX_AABB_SUP], in[AFX_AABB_SUP]);
+    AfxCopyV4d(aabb[AFX_AABB_INF], in[AFX_AABB_INF]);
 }
 
-_AFXINL void AfxEncapsulateVertices(afxAabb* aabb, afxNat cnt, afxReal const point[][3])
+_AFXINL void AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxReal const point[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -44,12 +44,12 @@ _AFXINL void AfxEncapsulateVertices(afxAabb* aabb, afxNat cnt, afxReal const poi
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
-        AfxMinV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], point[i]);
+        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], point[i]);
     }
 }
 
-_AFXINL void AfxEncapsulatePoints(afxAabb* aabb, afxNat cnt, afxReal const point[][4])
+_AFXINL void AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxReal const point[][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -57,12 +57,12 @@ _AFXINL void AfxEncapsulatePoints(afxAabb* aabb, afxNat cnt, afxReal const point
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxV3d(aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_SUP], point[i]);
-        AfxMinV3d(aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], point[i]);
+        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], point[i]);
     }
 }
 
-_AFXINL void AfxEncapsulateSpheres(afxAabb *aabb, afxNat cnt, afxSphere const sph[])
+_AFXINL void AfxEncapsulateSpheres(afxAabb aabb, afxNat cnt, afxSphere const sph[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -75,31 +75,31 @@ _AFXINL void AfxEncapsulateSpheres(afxAabb *aabb, afxNat cnt, afxSphere const sp
         AfxSubV3d(range[1], sph[i].origin, radius);
         AfxEncapsulateVertices(aabb, 2, range);
     }    
-    aabb->extremes[AFX_AABB_SUP][3] = (aabb->extremes[AFX_AABB_INF][3] = AfxScalar(1));
+    aabb[AFX_AABB_SUP][3] = (aabb[AFX_AABB_INF][3] = AfxScalar(1));
 }
 
-_AFXINL void AfxEncapsulateAabbs(afxAabb *aabb, afxNat cnt, afxAabb const other[])
+_AFXINL void AfxEncapsulateAabbs(afxAabb aabb, afxNat cnt, afxAabb const other[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(other);
 
     for (afxNat i = 0; i < cnt; i++)
-        AfxEncapsulatePoints(aabb, 2, other[i].extremes);
+        AfxEncapsulatePoints(aabb, 2, other[i]);
 }
 
-_AFXINL void AfxRecomputeAabb(afxAabb *aabb, afxNat cnt, afxReal const points[][3])
+_AFXINL void AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxReal const points[][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(points);
     AfxAssert(cnt);
-    AfxResetV4d(aabb->extremes[AFX_AABB_SUP]);
-    AfxResetV4d(aabb->extremes[AFX_AABB_INF]);
+    AfxResetV4d(aabb[AFX_AABB_SUP]);
+    AfxResetV4d(aabb[AFX_AABB_INF]);
     AfxEncapsulateVertices(aabb, cnt, points);
 }
 
-_AFXINL afxMask AfxAabbContainsPoints(afxAabb const *aabb, afxNat cnt, afxReal const point[32][3])
+_AFXINL afxMask AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxReal const point[32][3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -111,8 +111,8 @@ _AFXINL afxMask AfxAabbContainsPoints(afxAabb const *aabb, afxNat cnt, afxReal c
     {
         if
         (
-            (!(aabb->extremes[AFX_AABB_SUP][0] < point[i][0])) && (!(aabb->extremes[AFX_AABB_SUP][1] < point[i][1])) && (!(aabb->extremes[AFX_AABB_SUP][2] < point[i][2])) &&
-            (!(aabb->extremes[AFX_AABB_INF][0] > point[i][0])) && (!(aabb->extremes[AFX_AABB_INF][1] > point[i][1])) && (!(aabb->extremes[AFX_AABB_INF][2] > point[i][2]))
+            (!(aabb[AFX_AABB_SUP][0] < point[i][0])) && (!(aabb[AFX_AABB_SUP][1] < point[i][1])) && (!(aabb[AFX_AABB_SUP][2] < point[i][2])) &&
+            (!(aabb[AFX_AABB_INF][0] > point[i][0])) && (!(aabb[AFX_AABB_INF][1] > point[i][1])) && (!(aabb[AFX_AABB_INF][2] > point[i][2]))
         )
         {
             rslt |= AfxGetBitOffset(i);
@@ -121,32 +121,32 @@ _AFXINL afxMask AfxAabbContainsPoints(afxAabb const *aabb, afxNat cnt, afxReal c
     return rslt;
 }
 
-_AFXINL void AfxGetAabbExtents(afxAabb const *aabb, afxReal extent[3])
+_AFXINL void AfxGetAabbExtents(afxAabb const aabb, afxReal extent[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(extent);
 #if 0
-    AfxSubV4d(extent, aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_INF]);
+    AfxSubV4d(extent, aabb[AFX_AABB_SUP], aabb[AFX_AABB_INF]);
 #else
     // 0.5 * (max - min)
-    AfxSubV3d(extent, aabb->extremes[AFX_AABB_SUP], aabb->extremes[AFX_AABB_INF]);
+    AfxSubV3d(extent, aabb[AFX_AABB_SUP], aabb[AFX_AABB_INF]);
     AfxHalfV3d(extent, extent);
 #endif
 }
 
-_AFXINL void AfxGetAabbCentre(afxAabb const *aabb, afxReal centre[4])
+_AFXINL void AfxGetAabbCentre(afxAabb const aabb, afxReal centre[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(centre);
     // 0.5 * (min + max)
-    AfxAddV3d(centre, aabb->extremes[AFX_AABB_INF], aabb->extremes[AFX_AABB_SUP]);
+    AfxAddV3d(centre, aabb[AFX_AABB_INF], aabb[AFX_AABB_SUP]);
     AfxHalfV3d(centre, centre);
     centre[3] = 1.f;
 }
 
-_AFXINL void AfxExtractAabbCorner(afxAabb const *aabb, afxNat index, afxV4d corner)
+_AFXINL void AfxExtractAabbCorner(afxAabb const aabb, afxNat index, afxV4d corner)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -155,26 +155,26 @@ _AFXINL void AfxExtractAabbCorner(afxAabb const *aabb, afxNat index, afxV4d corn
 
     switch (index)
     {
-    case 0: AfxSetV4d(corner, aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 1: AfxSetV4d(corner, aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 2: AfxSetV4d(corner, aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 3: AfxSetV4d(corner, aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_SUP][2], (afxReal)1); break;
-    case 4: AfxSetV4d(corner, aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_INF][2], (afxReal)1); break;
-    case 5: AfxSetV4d(corner, aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_INF][2], (afxReal)1); break;
-    case 6: AfxSetV4d(corner, aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_INF][2], (afxReal)1); break;
-    case 7: AfxSetV4d(corner, aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_INF][2], (afxReal)1); break;
+    case 0: AfxSetV4d(corner, aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 1: AfxSetV4d(corner, aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 2: AfxSetV4d(corner, aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 3: AfxSetV4d(corner, aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], (afxReal)1); break;
+    case 4: AfxSetV4d(corner, aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 5: AfxSetV4d(corner, aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 6: AfxSetV4d(corner, aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], (afxReal)1); break;
+    case 7: AfxSetV4d(corner, aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], (afxReal)1); break;
     default: AfxThrowError(); break;
     }
 }
 
-_AFXINL void AfxTransformAabb(afxAabb const* aabb, afxM4d const m, afxAabb* to)
+_AFXINL void AfxTransformAabb(afxAabb const aabb, afxM4d const m, afxAabb to)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
     AfxAssert(m);
     AfxAssert(to);
     AfxResetAabb(to);
-    AfxPostMultiplyArrayedV4d(m, 2, aabb->extremes, to->extremes);
+    AfxPostMultiplyArrayedV4d(m, 2, aabb, to);
 }
 
 _AFXINL void AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxAabb const in[], afxAabb out[])
@@ -200,7 +200,7 @@ _AFXINL void AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], af
                 for (afxNat x = 0; x < 2; x++)
                 {
                     afxV3d tmp;
-                    AfxSetV3d(tmp, x ? in[i].extremes[AFX_AABB_SUP][0] : in[i].extremes[AFX_AABB_INF][0], y ? in[i].extremes[AFX_AABB_SUP][1] : in[i].extremes[AFX_AABB_INF][1], z ? in[i].extremes[AFX_AABB_SUP][2] : in[i].extremes[AFX_AABB_INF][2]);
+                    AfxSetV3d(tmp, x ? in[i][AFX_AABB_SUP][0] : in[i][AFX_AABB_INF][0], y ? in[i][AFX_AABB_SUP][1] : in[i][AFX_AABB_INF][1], z ? in[i][AFX_AABB_SUP][2] : in[i][AFX_AABB_INF][2]);
 
                     AfxPostMultiplyV3d(ltm, tmp, pos);
                     AfxAddV3d(pos, pos, atv);
@@ -211,11 +211,11 @@ _AFXINL void AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], af
             }
         }
 
-        out[i].extremes[AFX_AABB_SUP][0] = max[0];
-        out[i].extremes[AFX_AABB_SUP][1] = max[1];
-        out[i].extremes[AFX_AABB_SUP][2] = max[2];
-        out[i].extremes[AFX_AABB_INF][0] = min[0];
-        out[i].extremes[AFX_AABB_INF][1] = min[1];
-        out[i].extremes[AFX_AABB_INF][2] = min[2];
+        out[i][AFX_AABB_SUP][0] = max[0];
+        out[i][AFX_AABB_SUP][1] = max[1];
+        out[i][AFX_AABB_SUP][2] = max[2];
+        out[i][AFX_AABB_INF][0] = min[0];
+        out[i][AFX_AABB_INF][1] = min[1];
+        out[i][AFX_AABB_INF][2] = min[2];
     }
 }

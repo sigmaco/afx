@@ -1,0 +1,198 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
+ *                                    www.sigmaco.org
+ */
+
+#include "qwadro/core/afxXml.h"
+#include "sgl.h"
+
+#include "qwadro/draw/pipe/afxPipeline.h"
+
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/core/afxUri.h"
+#include "qwadro/core/afxSystem.h"
+
+_SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxBool syncOnly, afxVertexInput vin)
+{
+    //AfxEntry("pip=%p", pip);
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+
+    if (!vin)
+    {
+        gl->BindVertexArray(dpu->emptyVao); _SglThrowErrorOccuried();
+    }
+    else
+    {
+        AfxAssertObjects(1, &vin, afxFcc_VIN);
+
+        GLuint glHandle = vin->glHandle;
+
+        if ((vin->updFlags & SGL_UPD_FLAG_DEVICE))
+        {
+            if ((!glHandle) || (vin->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            {
+                if (glHandle)
+                {
+                    gl->DeleteVertexArrays(1, &glHandle); _SglThrowErrorOccuried();
+                    glHandle = NIL;
+                }
+
+                gl->GenVertexArrays(1, &glHandle); _SglThrowErrorOccuried();
+                gl->BindVertexArray(glHandle); _SglThrowErrorOccuried();
+                vin->glHandle = glHandle;
+
+                afxNat attrCnt = vin->base.attrCnt;
+
+                for (afxNat i = 0; i < attrCnt; i++)
+                {
+                    afxVertexInputAttr const* attr = &vin->base.attrs[i];
+                    AfxAssertRange(afxVertexFormat_TOTAL, attr->fmt, 1);
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIBS, attr->location, 1);
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, attr->streamIdx, 1);
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, attr->offset, 1);
+
+                    afxNat location = attr->location;
+                    afxNat srcIdx = attr->streamIdx;
+
+                    GLint glsiz;
+                    GLenum gltype;
+                    GLuint glStride;
+                    AfxToGlVertexFormat(attr->fmt, &glsiz, &gltype, &glStride);
+
+                    //gl->BindAttribLocation(glHandle, location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+
+                    AfxAssert(16 > location);  // max vertex attrib
+                    gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
+                    AfxAssert(gl->BindVertexBuffer);
+                    gl->VertexAttribFormat(location, glsiz, gltype, FALSE, attr->offset); _SglThrowErrorOccuried();
+                    //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
+                    //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
+                    gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
+
+                    afxNat instDivisor = vin->base.streams[attr->streamIdx].instanceRate;
+
+                    if (instDivisor)
+                    {
+                        gl->VertexAttribDivisor(location, instDivisor); _SglThrowErrorOccuried();
+                    }
+                }
+
+                afxNat streamCnt = vin->base.streamCnt;
+
+                for (afxNat i = 0; i < streamCnt; i++)
+                {
+                    afxVertexInputStream const* stream = &vin->base.streams[i];
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, stream->slotIdx, 1);
+                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_STRIDE, 0, stream->stride);
+                    //gl->BindVertexBuffer(stream->slotIdx, 0, 0, stream->stride); _SglThrowErrorOccuried();
+                }
+
+                if (syncOnly)
+                {
+                    gl->BindVertexArray(0); _SglThrowErrorOccuried();
+                }
+            }
+            else if ((vin->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+            {
+                AfxAssert(glHandle);
+                AfxThrowError(); // can't be modified
+            }
+            vin->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+        }
+        else
+        {
+            if (!syncOnly)
+            {
+                gl->BindVertexArray(glHandle); _SglThrowErrorOccuried();
+            }
+        }
+
+    }
+    return err;
+}
+
+_SGL afxError _SglVinDtor(afxVertexInput vin)
+{
+    AfxEntry("vin=%p", vin);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &vin, afxFcc_VIN);
+    afxDrawContext dctx = AfxGetObjectProvider(vin);
+
+    if (vin->glHandle)
+    {
+        _SglDctxDeleteGlRes(dctx, 7, vin->glHandle);
+        vin->glHandle = 0;
+    }
+    return err;
+}
+
+_SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
+{
+    AfxEntry("vin=%p", vin);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &vin, afxFcc_VIN);
+
+    afxDrawContext dctx = cookie->udd[0];
+    afxNat streamCnt = *(afxNat const*)cookie->udd[1];
+    afxVertexInputStream const* streams = cookie->udd[2];
+    afxNat attrCnt = *(afxNat const*)cookie->udd[3];
+    afxVertexInputAttr const* attrs = cookie->udd[4];
+
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+
+    if (attrCnt && !(vin->base.attrs = AfxAllocate(mmu, sizeof(vin->base.attrs[0]), attrCnt, 0, AfxHint()))) AfxThrowError();
+    else
+    {
+        for (afxNat i = 0; i < attrCnt; i++)
+        {
+            afxVertexInputAttr* attr = &vin->base.attrs[i];
+            attr->fmt = attrs[i].fmt;
+            attr->location = attrs[i].location;
+            attr->offset = attrs[i].offset;
+            attr->streamIdx = attrs[i].streamIdx;
+        }
+        vin->base.attrCnt = attrCnt;
+
+        if (streamCnt && !(vin->base.streams = AfxAllocate(mmu, sizeof(vin->base.attrs[0]), streamCnt, 0, AfxHint()))) AfxThrowError();
+        else
+        {
+            for (afxNat i = 0; i < streamCnt; i++)
+            {
+                afxVertexInputStream* stream = &vin->base.streams[i];
+                stream->slotIdx = streams[i].slotIdx;
+                stream->stride = streams[i].stride;
+                stream->instanceRate = streams[i].instanceRate;
+            }
+            vin->base.streamCnt = streamCnt;
+
+            vin->glHandle = 0;
+            vin->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+        }
+    }
+    return err;
+}
+
+_SGL afxClassConfig _SglVinClsConfig =
+{
+    .fcc = afxFcc_VIN,
+    .name = "Vertex Input",
+    .unitsPerPage = 4,
+    .size = sizeof(AFX_OBJECT(afxVertexInput)),
+    .mmu = NIL,
+    .ctor = (void*)_SglVinCtor,
+    .dtor = (void*)_SglVinDtor
+};

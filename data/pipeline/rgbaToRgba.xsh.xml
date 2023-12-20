@@ -263,19 +263,18 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs</Shader>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
+        <VertexShader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs</VertexShader>
         <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='yFlipped'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadUvFlippedVs</Shader>
-        <Shader>data/pipeline/rgbaToRgba.xsh.xml?fs</Shader>
+        <VertexShader>data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadUvFlippedVs</VertexShader>
         <Rasterizer>data/pipeline/rgbaToRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthWriteEnabled></DepthWriteEnabled>
+        <FragmentShader>data/pipeline/rgbaToRgba.xsh.xml?fs</FragmentShader>
     </Rasterizer>
 </Qwadro>

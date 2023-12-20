@@ -16,12 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_DRAW_QUEUE_C
-#define _AFX_SURFACE_C
-#define _AFX_RASTER_C
-#define _AFX_DRAW_SCRIPT_C
-#define _AFX_DRAW_SYSTEM_C
-#define _AFX_DRAW_CONTEXT_C
-#include "afx/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawContext.h"
 
 #if 0
 
@@ -44,7 +39,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
     {
         AfxAssertObject(subm->outputs[i], afxFcc_DOUT);
         AfxAssertRange(AfxGetDrawOutputCapacity(subm->outputs[i]), subm->outputBufIdx[i], 1);
-        afxSurface surf = AfxGetDrawOutputBuffer(subm->outputs[i], subm->outputBufIdx[i]);
+        afxSurface surf = AfxGetDrawOutputSurface(subm->outputs[i], subm->outputBufIdx[i]);
 
         if (surf->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
             surf->state = AFX_SURF_STATE_PRESENTABLE;
@@ -267,7 +262,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
         {
             AfxAssertObject(spec->outputs[i], afxFcc_DOUT);
             AfxAssertRange(AfxGetDrawOutputCapacity(spec->outputs[i]), spec->outputBufIdx[i], 1);
-            afxSurface surf = AfxGetDrawOutputBuffer(spec->outputs[i], spec->outputBufIdx[i]);
+            afxSurface surf = AfxGetDrawOutputSurface(spec->outputs[i], spec->outputBufIdx[i]);
 
             if (AfxGetSurfaceState(surf) > AFX_SURF_STATE_PRESENTABLE)
             {
@@ -275,7 +270,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
                 for (afxNat j = 0; j < i; ++j)
                 {
-                    surf = AfxGetDrawOutputBuffer(spec->outputs[j], spec->outputBufIdx[j]);
+                    surf = AfxGetDrawOutputSurface(spec->outputs[j], spec->outputBufIdx[j]);
                     surf->state = AFX_SURF_STATE_PRESENTABLE;
                 }
                 break;
@@ -296,65 +291,27 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
 #endif
 
-#if 0
-_AFX afxError AfxWaitForDrawQueueIdle(afxDrawQueue dque)
+_AFX afxError AfxWaitForIdleDrawQueue(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-
-    struct _afxDqueD *dque;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
-    AfxAssertType(&TheDrawSystem, afxFcc_DSYS);
-    AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
-    AfxAssertType(dque, afxFcc_DQUE);
-
-    return dque->vmt->wait(dque);
+    return dque->waitCb(dque);
 }
 
-
-_AFX afxDrawDevice AfxGetDrawQueueDriver(afxDrawQueue dque)
+_AFX afxDrawContext AfxGetDrawQueueContext(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObject(dque, afxFcc_DQUE);
-    //afxDrawDevice ddev = AfxGetObjectProvider(&dque->obj);
-    //AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    return 0;// ddev;
-}
-#endif
-
-#if 0
-_AFX void _AfxObjDeallocDque(afxDrawQueue dque)
-{
-    AfxEntry("dque=%p", dque);
-    afxError err = AFX_ERR_NONE;
-
-    struct _afxDqueD *dque;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
-    AfxAssertType(&TheDrawSystem, afxFcc_DSYS);
-    AfxExposeResidentObjects(&TheDrawSystem.queues, 1, &dque, (void**)&dque);
-    AfxAssertType(dque, afxFcc_DQUE);
-
-    _AfxDqueDtor(dque, dque);
-    AfxDeallocateResidentObjects(&TheDrawSystem.queues, 1, &dque);
-}
-
-_AFX void AfxReleaseDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue dque[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(cnt, dque, afxFcc_DQUE);
-    AfxReleaseObjects(cnt, dque, _AfxObjDeallocDque);
-}
-#endif
-
-#if 0
-_AFX afxError AfxAcquireDrawQueues(afxDrawContext dctx, afxNat cnt, afxDrawQueue dque[], afxDrawQueueSpecification const *spec[])
-{
-    AfxEntry("cnt=%u,dque=%p,spec=%p,", cnt, dque, spec);
-    afxError err = AFX_ERR_NONE;
+    afxDrawContext dctx = dque->dctx;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-
-    if (AfxAcquireObjects(&dctx->queues, cnt, (afxHandle*)dque, (void*[]) { (void*)spec }))
-        AfxThrowError();
-
-    return err;
+    return dctx;
 }
-#endif
+
+_AFX afxDrawDevice AfxGetDrawQueueDevice(afxDrawQueue dque)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dque, afxFcc_DQUE);
+    afxDrawDevice ddev = AfxGetObjectProvider(dque);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    return ddev;
+}

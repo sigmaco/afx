@@ -14,9 +14,9 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxFrustum.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxPlane.h"
+#include "qwadro/math/afxFrustum.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxPlane.h"
 
 _AFX afxV4d const AFX_V4D_LBN = { -1, -1, -1, 1 };
 _AFX afxV4d const AFX_V4D_RBN = { 1, -1, -1, 1 };
@@ -58,7 +58,7 @@ _AFXINL afxBool AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* s
     return TRUE;
 }
 
-_AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb)
+_AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -84,14 +84,14 @@ _AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb)
         v[3] = f->planes[i][3];
 
         afxNat out = 0;
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_INF][1], aabb->extremes[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_INF][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
-        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb->extremes[AFX_AABB_SUP][0], aabb->extremes[AFX_AABB_SUP][1], aabb->extremes[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_INF][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_INF][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_INF][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
+        out += ((AfxDotV4d(v, AfxSpawnV4d(aabb[AFX_AABB_SUP][0], aabb[AFX_AABB_SUP][1], aabb[AFX_AABB_SUP][2], 1.0f)) < 0.0) ? 1 : 0);
         
         if (out == 8)
         {
@@ -109,7 +109,7 @@ _AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb)
             afxNat out;
 
             for (afxNat i = 0; i < afxCubeCorner_TOTAL; i++)
-                out += ((f->corners[i][j] > aabb->extremes[AFX_AABB_SUP][j]) ? 1 : 0);
+                out += ((f->corners[i][j] > aabb[AFX_AABB_SUP][j]) ? 1 : 0);
 
             if (out == 8)
             {
@@ -118,7 +118,7 @@ _AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const* aabb)
             }
 
             for (afxNat i = 0; i < afxCubeCorner_TOTAL; i++)
-                out += ((f->corners[i][j] < aabb->extremes[AFX_AABB_INF][j]) ? 1 : 0);
+                out += ((f->corners[i][j] < aabb[AFX_AABB_INF][j]) ? 1 : 0);
 
             if (out == 8)
             {
@@ -155,7 +155,7 @@ _AFXINL afxBool AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const*
     return allOut;
 }
 
-_AFXINL void AfxAabbEncapsulateFrustum(afxAabb* aabb, afxFrustum const* f)
+_AFXINL void AfxAabbEncapsulateFrustum(afxAabb aabb, afxFrustum const* f)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);

@@ -2,17 +2,17 @@
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
 
-#include "afx/afxQwadro.h"
-#include "afx/core/afxApplication.h"
-#include "afx/core/afxDebug.h"
-#include "afx/math/afxMathDefs.h"
+#include "qwadro/afxQwadro.h"
+#include "qwadro/core/afxApplication.h"
+#include "qwadro/core/afxDebug.h"
+#include "qwadro/math/afxMathDefs.h"
 
 #define ENABLE_DRAW 1
 
 #ifdef ENABLE_DRAW
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/draw/afxCamera.h"
-#include "afx/sim/rendering/afxRenderer.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/afxCamera.h"
+#include "qwadro/sim/rendering/awxRenderer.h"
 #endif
 
 afxSystem sys;
@@ -21,22 +21,21 @@ afxDrawSystem dsys;
 const afxReal CameraSpeed = 30.0f;
 afxKeyboard kbd = NIL;
 afxMouse mse = NIL;
-afxSimulation sim = NIL;
+awxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
-afxRenderer rnd = NIL;
+awxRenderer rnd = NIL;
 
 afxCamera cam = NIL;
 
-afxUri2048 uri;
+afxFixedUri2048 uri;
 
 afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxRenderer rnd = AfxGetDrawInputUdd(din);
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
+    awxRenderer rnd = AfxGetDrawInputUdd(din);
+    afxDrawContext dctx = AfxGetDrawInputContext(din);
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
 
@@ -48,17 +47,19 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
         if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
         else
         {
-            afxRaster surf;
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
-            AfxGetDrawOutputBuffer(dout, outBufIdx, &surf);
+            afxRaster surf;
+            AfxGetDrawOutputSurface(dout, outBufIdx, 1, &surf);
+            afxCanvas canv;
+            AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
             AfxAssertObjects(1, &surf, afxFcc_RAS);
 
-            AfxBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, surf);
+            AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
             
             AfxDrawSky(dscr, &rnd->sky);
 
-            AfxEndSceneRendering(dscr, rnd);
+            AwxCmdEndSceneRendering(dscr, rnd);
 
             if (AfxCompileDrawScript(dscr)) AfxThrowError();
             else if (AfxSubmitDrawScripts(din, 1, &dscr))
@@ -110,14 +111,14 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     afxString str, str2;
     afxUri uriMap;
 
-    afxUri128 uri128;
-    AfxUri128(&uri128);
+    afxFixedUri128 uri128;
+    AfxMakeFixedUri128(&uri128);
     afxStoragePointSpecification mpSpec = { 0 };
     AfxFormatUri(&uri128.uri, "art/mnt.zip");
     mpSpec.hostPath = &uri128.uri;
     AfxMakeUri(&uriMap, "art", 0);
     mpSpec.namespace = &uriMap;
-    mpSpec.perm = AFX_IO_FLAG_R;
+    mpSpec.perm = afxIoFlag_R;
     afxResult rslt = AfxMountStoragePoints(1, &mpSpec);
     AfxAssert(rslt == 1);
 #if 0
@@ -136,8 +137,8 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
     AfxReleaseObjects(1, (void*[]) { arc });
 #endif
     AfxMakeUri(&uriMap, "e2newton.icd", 0);
-    afxSimulationConfig simSpec = { 0 };
-    simSpec.extent = NIL;
+    awxSimulationConfig simSpec = { 0 };
+    AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     simSpec.dctx = dctx;
     simSpec.din = NIL;
     simSpec.driver = &uriMap;
@@ -151,15 +152,16 @@ _AFXEXPORT void AfxEnterApplication(afxThread thr, afxApplication app)
 
     AfxMakeUri(&uriMap, "window", 0);
     afxDrawOutputConfig doutConfig = {0};
-    doutConfig.pixelFmt = AFX_PFD_RGB8_SRGB;
+    doutConfig.pixelFmt = afxPixelFormat_RGB8_SRGB;
+    doutConfig.auxDsFmt[0] = afxPixelFormat_D32F;
     doutConfig.endpoint = &uriMap;
     AfxOpenDrawOutputs(dsys, 0, 1, &doutConfig, &dout);
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxReconnectDrawOutput(dout, dctx);
 
-    afxRendererConfig rndConf = { 0 };
+    awxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DrawInputProc;
-    AfxAcquireRenderers(sim, 1, &rnd, &rndConf);
+    AwxAcquireRenderers(sim, 1, &rnd, &rndConf);
     
     AfxAcquireCameras(dsys, 1, &cam);
     AfxAssert(cam);
@@ -199,8 +201,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri2048 romUri;
-    AfxUri2048(&romUri);
+    afxFixedUri2048 romUri;
+    AfxMakeFixedUri2048(&romUri);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

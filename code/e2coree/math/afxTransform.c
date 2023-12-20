@@ -14,10 +14,10 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxTransform.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxVector.h"
-#include "afx/math/afxQuaternion.h"
+#include "qwadro/math/afxTransform.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxQuaternion.h"
 
 AFX afxTransform const AFX_TRANSFORM_ZERO;
 AFX afxTransform const AFX_TRANSFORM_IDENTITY;

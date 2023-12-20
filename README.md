@@ -1,41 +1,108 @@
 # The Qwadro Execution Ecosystem
-Uma plataforma virtual de execução de aplicação.
+The SIGMA autonomous execution platform.
 
-Qwadro é uma iniciativa da Federação SIGMA para fomentar o desenvolvimento genuíno de aplicações de desenho 2D, 3D e 4D acelerado por hardware para o público latino. O nome QWADRO é um acrônimo surgido duma sigla para Quadridimensional World Approximation, que foi um projeto anterior experimentando como seria uma simulação onde tempo-espaço fossem manipulados de forma singular.
-Apesar do nome, o prefixo de domínio de código (em C, equivale ao namespace em C++) é "AFX", que é um domínio onde ocorre o "crossover" (o "X") das APIs Qwadro. Existem outros prefixos para outros frameworks internos (AFG, AFS, AFM, GFX, SFX, XFX, MFX, ZFX, EFX, VFX, AVX, AEX, AAX, AUX, etc), que conforme items são "promovidos ao núcleo" da implementação, têm seu prefixo substituído por AFX.
+Qwadro is an initiative of the SIGMA Federation to foster the genuine development of hardware-accelerated 2D, 3D and 4D drawing applications for the Latin American audience. This is a top secret project with top secret objectives as expected. Yeah, now you know about it we have to led you to some basement from El Dorado.
 
-O Qwadro não é um "game engine", como é erroneamente tratado. Qwadro é um ecossistema de execução de aplicação, uma plataforma virtual, que oferece um conjunto de blocos comuns de construção para edificar sistemas análogos a game engines.
-Por que o Qwadro não é uma game engine? Porque o Qwadro foi feito inicialmente para embarcar demoscenes da RenderWare, e logo para ser necessariamente customizado, criando sempre produtos diferentes, como eram feitas as game engines in-house do passado, quando tudo não parecia ser distinguível de cara que foi feito numa Unity da vida. Se você não gosta do renderizador da SIGMA, pode fazer o seu próprio com os componentes singulares do AFX.
+Qwadro is not a game engine. Qwadro is an autonomous execution ecosystem, a data-oriented virtual platform, that offers a set of common building blocks to build systems analogous to game engines.
 
-Apesar de pouca semelhança atual, QWADRO surgiu como uma bifurcação da RenderWare Platform na tentativa de reconstruir as demos num paradigma multithreaded e no OpenGL.
-Depois de certas manobras, a RenderWare se mostrou muito ineficiente, isto é, certos procedimentos poderiam ser melhor optimizados para as capacidades atuais de hardware ao mesmo custo computacional.
-Atualmente o QWADRO constitui uma coleção de sisemas, subsistemas e drivers em middlewares integrados abstraindo sistemas operacionais e plataformas um pouco inspirado no Qt; algo parecido bastante com um Qt implementado em C.
-O design de API e código geral foi inspirado em Havok Physics e, principalmente o modelo de objeto, em Qt Framework, além de preservar algumas semânticas remanescentes da RenderWare.
+Why is Qwadro not a game engine? Because the Qwadro ecosystem was initially made to run old demoscenes, mainly from RenderWare, but not limited to them, and then to be necessarily customized, always creating different products, as in-house game engines were made in the past, when everything seemed to be distinguishable and was made using a specific technology.
 
-Há diversos nomes estranhos no Qwadro, porque o Qwadro é um experimento que implementa vários paradigmas de uma mesmo conceito com nomes aleatórios para atestar ambos em paralelo, e sua API muda frequentemente conforme optimização de uso.
+Despite little current similarity, Qwadro emerged as a fork of the RenderWare Platform in an attempt to rebuild the demos in a multithreaded paradigm and OpenGL.
+After certain maneuvers, RenderWare proved to be very inefficient on new hardware, that is, certain procedures could be better optimized for current hardware capabilities at the same or lower computational cost.
 
-QWADRO; 4D Math Foundation Experiments
+Currently, Qwadro constitutes a collection of middlewares integrating systems, subsystems and drivers, abstracting operating systems and platforms.
 
-Algumas heranças da RenderWare ainda presentes certamente está no MFX, onde reside a matemática do Qwadro.
-afxMatrix, afxQuat, afxV3d, afxV4d, apesar de oferecer opção as vezes, tem sua computação feita no chamado "right-handled coordinate system", tal como é predominantemente nas shaders do OpenGL, e seu arranjo em memória é "row-major" (uma multidimensional array em C), tal como é predominantemente no Direct3D, assim como é na RenderWare.
-Esta é uma abordagem complicada porque mescla tanto conceitos, funções e operações do OpenGL quanto do Direct3D ao mesmo tempo. Escrever o MFX (math framework) foi um inferno devido a isto, e nem todas as funções foram testadas ainda.
+Despite the name, the code domain prefix (in C, equivalent to the namespace in C++) is AFX. There are other prefixes for other partitions (AVX, AEX, AAX, AMX, AUX, ATX, etc). The SIGMA reserves for itself and its experiments every possible prefix A\*X for official expansions of the Qwadro.
 
-# The Qwadro Draw I/O System
+The API and general code design was inspired by Havok Physics and, mainly the object model, by Qt Framework, in addition to preserving some semantics remaining from RenderWare.
 
-Draw I/O System foi implementado inspirado fortemente nos paradigmas do que seria o OpenGL 5 (atualmente parece muito um "Vulkan over OpenGL" wrapper) como uma quarta opção à tríade OpenGL/Vulkan, Direct3D e Metal.
+There are several strange names in Qwadro, because Qwadro is an experiment that implements several paradigms of the same concept with random names to test both in parallel, and its API changes frequently depending on usage optimization.
+Some RenderWare heritage still present is certainly in the AMX, where Qwadro's mathematics resides. For example, we have afxMatrix, afxQuat, afxV3d, afxV4d.
 
-Draw I/O System é um esforço da SIGMA para oferecer uma API de desenho 3D de alto desempenho em tempo real. A SIGMA escolheu uma abordagem diferente: introduzir suas próprias abstrações e não espelha diretamente quaisquer das APIs nativas da atualidade. Uma das razões é pelo fato de nenhuma única API estar disponível em todos os sistemas, e também porque muitos conceitos (tais como manuseio de memória em nível extremamente baixo) não são idiomático para usuários não acustomado com o calor do metal.
-Apesar de certas características herdadas de APIs da 3dfx (Voodoo) haverem sido retrabalhadas para parecerem mais com Vulkan. E também a maioria do dialeto é herdado do lado OpenGL/Vulkan da força.
+Qwadro was firstly designed for POSIX/Unix/Linux systems. But due complexities handling OpenGL contexts in Windows, we was forced to move to Windows and stay there still now.
 
-Um exemplo da abstração pela SIGMA é a inexistência de um objeto conhecido como "framebuffer". O tal do framebuffer é um nome problemático para seu conceito de operação onde não há nenhum buffer de fato e foi um nome herdado do hardware. Devido a isto, no Qwadro, seu pseudo-equivalente é um "canvas", que é um objeto que manuseia um arranjo de texturas, de tipo raster ou depth/stencil, onde um desenho é realizado.
+Game-related works featured in Qwadro are strongely inspired in notorious gaming works on Bang! Engine by Ensemble Studios and MaxFX by Remedy Entertainment.
 
-Draw I/O System funciona no modelo "bring your own driver". Ao ver Vulkan, sucessor do OpenGL, sofrer dos mesmos problemas que o OpenGL sofreu no passado em plataformas que não queriam dispor de tal API, a SIGMA optou por replicar um modelo dos tempos ancestrais da computação gráfica acelerada por hardware, onde as pessoas procuravam drivers lógicos e implementações de drivers melhores, feitas sobre APIs comuns já existentes ou APIs específicas da VGA instalada; o installable client driver (ICD) ou, sua versão mais minimalista, o mini client driver (MCD).
-SIGMA GL (SGL), distribuído pelo arquivo "e2draw.icd", é um modelo de referência de ICD implementado sobre OpenGL 3.3 core e aproveitando extensões do 4.x, desenvolvido pela SIGMA.
+## The Unified Qwadro Simulation Infrastructure
+The quadridimensional world approximation.
 
-Diferente das APIs de baixo nível, o Qwadro todo segue uma filosofia de rapid application development (RAD), onde entrega várias utilidades para acelerar e automatizar operações, ainda permitindo que o usuário faça a sua própria maneira se assim quiser.
+Before Qwadro become an whole execution ecosystem, it was an old project experimenting with what a simulation would be like where time-space (see, time over space) were manipulated in unconventional ways. From there became its name, which is an acronym for Tetradimensional/Quadridimensional World Approximation.
+The old project was a experiment to test the possibility of our real world be in fact some type of simulation. We discovered interesting things about the "behavior and fabric of the reality", but it is too complex concept to explain.
 
-Grande parte do Qwadro ainda está em código fechado devido a tecnologia proprietária. Mas a SIGMA trabalha e confia, e não descansa nem de dia nem de noite, para substituí-las e liberar o restante do código.
+Such as RenderWare, Qwadro forces the use of the so-called "right-handed coordination system", where positive X advances to right, positive Y advances to up and positive Z advances to front.
 
-Agradecimentos especiais a Nicol Bolas, Markus Tavenrath, Christoph Kubisch, Evgeny Makarov e NVIDIA, por contribuírem com suas técnicas e conhecimentos em desenho 3D acelerado por hardware.
+In Qwadro, a matrix is neither row-major nor column-major. Their matrices are hybrids. The upper 3x3 submatrix (where linear operations occur) is column-major, while the translation set is row-major. Yes, that madness there. Different from what you will expect in the war of row-major (Direct3D) vs. column-major (OpenGL). Qwadro is the definitive supremacy.
 
-Junte-se a nós no Discord. https://sigmaco.org/discord
+This is a complicated approach because it mixes both OpenGL and Direct3D concepts, functions, and operations at the same time. Writing AMX was hell because of this, and not all functions have been tested yet.
+
+Several parts of simulators in Qwadro is inspired in Bang! Engine (Age Of Empires III engineering) and MaxFX 2.0 (Max Payne 2 engineering) in how to handle assets.
+
+A Qwadro Simulation works on the "bring your own driver" model. Driver? Yes. You can install a custom device driver to run your simulation. 
+It allow you to change physics engines and sample animations in GPU pipelines with OpenGL, Vulkan, OpenCL, CUDA, DSPs, SPUs or other coprocessors.
+This is why we don't have SIMD methods for math (at least yet); you can install a hardware-accelerated physics engine.
+
+## The Unified Qwadro Draw I/O System Infrastructure
+The purple side of the force.
+
+SIGMA GL/2 is an data-oriented API specification where the common things are (relatively) easy, and the super powerful low-level optimizations are optional.
+
+The idea behind its proposal was the development overhead of Vulkan API being absolutely insane when we tried to move from OpenGL to Vulkan in our recent works.
+
+There were several helper functions to produce a minimalist usable library that made Vulkan a lot productive, which became effectily an other middleware.
+
+After several deployments in Vulkan, the SIGMA Technology Group, the technology arm of Federação SIGMA, pushed by graphics programming community, started development a new API: the purple side of the force.
+
+This new API was firstly idealized to be easy as OpenGL but still trying to be powerful close to Vulkan, Direct3D e Metal. Another Glide?
+
+But don't think we are just creating a wrapper around them.
+
+Draw I/O System is a modulation of Qwadro Execution Ecosystem, also developed by SIGMA, effectively a try to implement the SIGMA GL/2 API specification. You can install custom device drivers in Qwadro, like in early days of computer graphics where you could download and install device drivers directly in root directory of your application.
+
+These custom device drivers obviously will be wrappers. But you can write your own so no relying on the only driver to X platform or Y API. Could have even drivers using combined physical devices at once.
+
+Why custom device drivers? Well. You see. Vulkan started suffering of same issues than OpenGL suffered in past. Vulkan runs over wrappers in Metal, for example. For presentation, Vulkan relies on Direct3D 12 swapchains on Windows.
+
+Old APIs such as Direct3D 9 and OpenGL also runs over wrappers in some recent versions of some IHV drivers. WebGL (almost unnecessarily) runs over wrappers. WebGPU runs over wrappers. These wrappers seems several bugs and issues due to IHVs being negligent. In the end, almost everything will run in wrappers.
+
+In SIGMA GL/2, devices are virtual. You probably will not seen the name of your GPU there, but a custom name. Wrappers broken the concept of handling a real device, so we adopted it as a fact.
+
+The first (standard) implementation of SIGMA GL/2 is strongely inspired on paradigms of that was supposed to be OpenGL 5.
+This is an effort by SIGMA to offer a high-performance real-time 3D drawing API. SIGMA chose a different approach with SIGMA GL/2: introducing its own abstractions and not directly mirroring any of today's native APIs. One reason is because no single API is available on all systems, and also because many concepts (such as extremely low-level memory handling) are not idiomatic to users not accustomed to the heat of metal.
+Although certain features inherited from 3dfx Voodoo APIs, they have been reworked to look more like Vulkan. And also most of the dialect of SIGMA GL/2 is inherited from the OpenGL/Vulkan side of the force, becoming the purple side (blue + red).
+
+An example of abstraction in SIGMA GL/2 is the lack of an object known as a "framebuffer". The framebuffer is a problematic name for its concept of operation where there is no actual buffer and it was a name inherited from the hardware. Due to this, in Qwadro, its pseudo-equivalent is a "canvas", which is an object that handles an arrangement of surfaces, capable of being bound with rasters (de facto, the buffer), where a drawing is made.
+
+As aforementioned, SIGMA GL/2 works on the "bring your own driver" model. Seeing Vulkan, OpenGL's successor, suffer from the same problems that OpenGL suffered in the past when platform holders did not want to have such an API, SIGMA chose to replicate a model from the ancient times of hardware-accelerated computer graphics, where people looked for better driver implementations, including those based on existing common APIs or APIs specific to the installed VGA; the installable client driver (ICD) or, its more minimalist version, the mini client driver (MCD).
+
+SIGMA GL/2 is distributed with the "e2draw.icd" module, which is a reference model for ICD implemented on OpenGL 3.3 core and taking advantage of 4.x extensions, developed by SIGMA.
+
+Due to several problems in OpenGL architecture, SIGMA GL/2 on Qwadro works in differently of any other API. For every CPU core available in the host platform, SIGMA GL/2 will run a Drawing Processing Unit (DPU). 
+
+DPUs are autonomous services, designed as a system on a threading unit, provided by a drawing device for process the lines of execution in Qwadro Draw I/O System. DPUs calls draw input services to perform transhipment of draw workload, process the drawing queues and flushes draw output services.
+
+In Qwadro, threads are virtualized effectively working as fibers. Real threads in Qwadro are abstracted as "threading units". This allow us to better manage host platform resources and consistence across synchronization primitives avoiding several manual sync/lock operations.
+
+Unlike other low-level APIs, SIGMA G/2 follows a rapid application development (RAD) philosophy, where it delivers several utilities to speed up and automate operations, still allowing the user to do it their own way if they want.
+
+SIGMA GL/2 tried and will keep trying to match the OpenGL conventions or, when not existing, the Vulkan conventions.
+
+The default pixel format will probably be ARGB (as known in LE as, BGRA) why it is faster.
+And the image data origin will continue to be bottom-left why it makes sense going up in positive Y and right in positive X and far in positive Z.
+Also, in SIGMA GL/2, the triangle front facing is counter-clockwise (CCW).
+
+Why happened to "GL/1"? Flopped. There were several problems inherited from RenderWare way of doing drawing.
+
+SIGMA GL/2 will include a fixed-function video decoder.
+
+To establish the mandatory features in SIGMA GL/2, we grab a ordinary office desktop PC released in 2010 and we are working with the whole set of features available in OpenGL driver (updated by Intel until 2021) for this machine. By default, this machine garantees full support up to OpenGL 4.0 but it have extensions up to 4.6 (the last one). Things like buffer storage and texture storage are required, for example, when using SIGMA GL/2 over Advanced OpenGL.
+
+Special thanks to Markus Tavenrath, Christoph Kubisch, Alfonse Reinheart, Evgeny Makarov and NVIDIA, for contributing their techniques and knowledge in hardware-accelerated 3D design.
+
+## The Unified Qwadro Sound I/O System Infrastructure
+The autonomous accoustic system.
+
+SIGMA A4D is an API for rendering accoustic simulations inspired on Miles Sound System way of handling several applicable service interfaces.
+
+Instead of just offer another API, the SIGMA proposal is to allow you to run other middlewares using same interface. But it is in phase of decisions for its basic foundation.
+
+(c) 2017 Federação SIGMA. All rights reserved; to its elaborators and collaborators.

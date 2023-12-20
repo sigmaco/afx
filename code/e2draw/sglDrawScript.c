@@ -15,29 +15,22 @@
  */
 
 #include "sgl.h"
-#include "afx/afxQwadro.h"
+#include "qwadro/afxQwadro.h"
 
 _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state != afxDrawScriptState_PENDING);
 
-    _afxDscrCmd const* cmdHdr;
-    AfxChainForEveryLinkageB2F(&dscr->commands, _afxDscrCmd, script, cmdHdr)
+    _sglCmd const* cmdHdr;
+    AfxChainForEveryLinkageB2F(&dscr->commands, _sglCmd, script, cmdHdr)
     {
-        if (cmdHdr->id == AFX_DCMD_END)
+        if (cmdHdr->id == SGL_CMD_END)
             break;
 
-        if (cmdHdr->id == AFX_DCMD_BEGIN_CANVAS)
+        if (cmdHdr->id == SGL_CMD_BEGIN_SYNTHESIS)
         {
-            _afxDscrCmdBeginCanvas const *cmd = AFX_REBASE(cmdHdr, _afxDscrCmdBeginCanvas, cmd);
-
-            if (cmd->fboHandle)
-            {
-                afxDrawContext dctx = AfxGetObjectProvider(dscr);
-                _SglDctxDeleteGlRes(dctx, 3, cmd->fboHandle);
-                //cmd->fboHandle = 0;
-            }
+            _sglCmdBeginSynthesis const *cmd = AFX_REBASE(cmdHdr, _sglCmdBeginSynthesis, cmd);
         }
     }
 
@@ -52,7 +45,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
         if (first == dummy) break;
         else
         {
-            _afxDscrCmd *cmd = AFX_REBASE(first, _afxDscrCmd, script);
+            _sglCmd *cmd = AFX_REBASE(first, _sglCmd, script);
             AfxPopLinkage(&cmd->script);
 
             //if (cmd != &dscr->base.cmdEnd)
@@ -67,7 +60,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     AfxExhaustArena(&dscr->base.cmdArena);
 #endif
 
-    AfxAcquireChain(&dscr->commands, dscr);
+    AfxTakeChain(&dscr->commands, dscr);
 
     return err;
 }
@@ -140,14 +133,13 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     
     AfxAssertObjects(1, &din, afxFcc_DIN);
 
-    afxDrawContext dctx2;
-    AfxGetDrawInputConnection(din, &dctx2);
+    afxDrawContext dctx2 = AfxGetDrawInputContext(din);
     AfxAssert(dctx2 == dctx);
-    afxContext ctx = AfxGetDrawContextMemory(dctx);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
 
     dscr->base.submRefCnt = 0;
     dscr->base.portIdx = portIdx;
-    AfxAllocateArena(ctx, &dscr->base.cmdArena, NIL, AfxHint());
+    AfxAllocateArena(mmu, &dscr->base.cmdArena, NIL, AfxHint());
 
     dscr->base.din = din;
 
@@ -160,7 +152,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     
     dscr->base.stdCmds = NIL;
 
-    AfxAcquireChain(&dscr->commands, dscr);
+    AfxTakeChain(&dscr->commands, dscr);
     
     dscr->base.beginCb = _SglDscrBeginCb;
     dscr->base.endCb = _SglDscrEndCb;
@@ -185,7 +177,7 @@ _SGL afxClassConfig _SglDscrClsConfig =
     .name = "Draw Script",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawScript)),
-    .ctx = NIL,
+    .mmu = NIL,
     .ctor = (void*)_SglDscrCtor,
     .dtor = (void*)_SglDscrDtor
 };

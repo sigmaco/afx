@@ -14,11 +14,11 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxRotor.h"
-#include "afx/math/afxQuaternion.h"
-#include "afx/math/afxReal.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxVector.h"
+#include "qwadro/math/afxRotor.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/math/afxReal.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
 
 _AFXINL void AfxSetBiv3d(afxV3d biv, afxReal b01, afxReal b02, afxReal b12)
 {

@@ -9,14 +9,8 @@
     <ClCompile Include="..\..\e2bang\afxDirectDrawTexture.c">
       <Filter>e2bang</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\e2bang\afxDirectDrawSurface.c">
-      <Filter>e2bang</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\e2bang\afxDirectDrawSurface.h">
-      <Filter>e2bang</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\e2bang\afxDirectDrawTexture.h">
       <Filter>e2bang</Filter>
     </ClInclude>

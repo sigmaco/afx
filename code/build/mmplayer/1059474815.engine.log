@@ -1,0 +1,22 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fee9e2aeb0 by 0000000000000000 over 0000000000000000 with 000007fee9e27950)
+ afxClass<Basic I/O System>::ConstructObject(00000000002c2120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=00000000002c2120)
+ Installing Thread Execution Unit at 00000000002c27b8 by 00000000002c2150 over 0000000000000000 with 00000000001cd8d0)

@@ -159,6 +159,11 @@
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\e2rw\RwExtensionIo.h" />
+    <ClInclude Include="..\..\e2rw\RwStream.h" />
+    <ClInclude Include="..\..\e2rw\RwTxdIo.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

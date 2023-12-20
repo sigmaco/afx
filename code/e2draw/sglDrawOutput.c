@@ -25,10 +25,11 @@
 //#pragma comment(lib, "opengl32")
 
 #include "sgl.h"
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/draw/afxDrawOutput.h"
-#include "afx/core/afxString.h"
-#include "afx/math/afxVector.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/core/afxTxu.h"
+#include "qwadro/draw/afxDrawOutput.h"
+#include "qwadro/core/afxString.h"
+#include "qwadro/math/afxVector.h"
 
 _SGL afxNat _SglDoutBuffersAreLocked(afxDrawOutput dout)
 {
@@ -98,21 +99,21 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
 
     for (afxNat i = 0; i < dout->base.bufCnt; i++)
     {
-        //afxCanvas canv = dout->base.buffers[i].canv;
-        afxRaster tex = dout->base.buffers[i].tex;
+        afxCanvas canv = dout->base.buffers[i].canv;
+        //afxRaster tex = dout->base.buffers[i].ras;
 
-        if (!tex)
+        if (/*!tex*/!canv)
         {
             AfxAssert(_SglDoutIsSuspended(dout)); // dout sem surfaces é inoperante
         }
         else
         {
-            AfxAssertObjects(1, &tex, afxFcc_RAS);
-            //AfxAssertObjects(1, &canv, afxFcc_CANV);
-            AfxReleaseObjects(1, (void*[]) { tex });
-            //AfxReleaseObjects(1, (void*[]) { canv });
-            dout->base.buffers[i].tex = NIL;
-            //dout->base.buffers[i].canv = NIL;
+            //AfxAssertObjects(1, &tex, afxFcc_RAS);
+            AfxAssertObjects(1, &canv, afxFcc_CANV);
+            //AfxReleaseObjects(1, (void*[]) { tex });
+            AfxReleaseObjects(1, (void*[]) { canv });
+            //dout->base.buffers[i].ras = NIL;
+            dout->base.buffers[i].canv = NIL;
         }
     }
 
@@ -120,30 +121,13 @@ _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
     return err;
 }
 
-
-//############################################################################
-//##                                                                        ##
-//## Calc_window_values - calculates the extra width and height to add to   ##
-//##   the windows's size so that the video fits.                           ##
-//##                                                                        ##
-//############################################################################
-
-// Democratized from Bink, by SIGMA Co., Technology Group.
-
 _SGL void Calc_window_values(HWND window, afxInt* out_extra_width, afxInt32* out_extra_height)
 {
     RECT r, c;
 
-    //
     // Get the current window rect (in screen space).
-    //
-
     GetWindowRect(window, &r);
-
-    //
     // Get the client rectangle of the window.
-    //
-
     GetClientRect(window, &c);
 
     *out_extra_width = (r.right - r.left) - (c.right - c.left);
@@ -165,12 +149,15 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
     for (;;)
     {
         idx = (idx + 1) % dout->base.bufCnt;
-        afxRaster tex = dout->base.buffers[idx].tex;
+        //afxRaster tex = dout->base.buffers[idx].ras;
+        afxCanvas canv = dout->base.buffers[idx].canv;
 
-        if (!tex) AfxThrowError();
+        //if (!tex) AfxThrowError();
+        if (!canv) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &tex, afxFcc_RAS);
+            //AfxAssertObjects(1, &tex, afxFcc_RAS);
+            AfxAssertObjects(1, &canv, afxFcc_CANV);
 
             if (!dout->base.buffers[idx].booked)
             {
@@ -205,7 +192,7 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 
     //if (idd->fcc == afxFcc_WND || idd->fcc == afxFcc_WPP)
     {
-        SetWindowTextA(dout->wnd, AfxGetStringData(&dout->base.caption, 0));
+        SetWindowTextA(dout->wnd, AfxGetStringData(&dout->base.caption.str, 0));
         //UpdateWindow(dout->base.wglWnd);
     }
     return err;
@@ -284,37 +271,38 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
     afxDrawDevice ddev = AfxGetObjectProvider(dout);
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
-    afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
 
-    afxContext ctx = AfxGetDrawSystemMemory(dsys);
+    afxMmu mmu = AfxGetDrawSystemMmu();
     AfxPushLinkage(&dout->base.dctx, NIL);
 
     AfxAssignFcc(dout, afxFcc_DOUT);
 
     dout->base.suspendCnt = 1;
-    AfxAcquireSlock(&dout->base.suspendSlock);
+    AfxTakeSlock(&dout->base.suspendSlock);
 
     // absolute extent
     dout->base.resolution[0] = 1280;
     dout->base.resolution[1] = 720;
     dout->base.resolution[2] = 1;
 
-    dout->base.extent[0] = 1280;
-    dout->base.extent[1] = 720;
-    dout->base.extent[2] = 1;
+    dout->base.whd[0] = 1280;
+    dout->base.whd[1] = 720;
+    dout->base.whd[2] = 1;
     dout->base.resizable = TRUE;
 
     // swapchain-related data
     dout->base.flags = NIL;
-    dout->base.pixelFmt = AFX_PFD_RGBA8; // or AFX_PFD_RGBA8R ?
+    dout->base.pixelFmt = afxPixelFormat_RGBA8; // or afxPixelFormat_RGBA8R ?
     dout->base.colorSpc = afxColorSpace_SRGB; // sRGB is the default
-    dout->base.bufUsage = afxRasterFlag_DRAW;
+    dout->base.rasUsage = afxRasterFlag_DRAW;
     dout->base.bufferLockCnt = 1;
     dout->base.bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
     dout->base.lastReqBufIdx = dout->base.bufCnt - 1; // to start at 0 instead of 1 we set to last one.
-    AfxAcquireChain(&dout->base.swapchain, (void*)dout);
-    AfxAcquireSlock(&dout->base.buffersLock);
+    AfxTakeChain(&dout->base.swapchain, (void*)dout);
+    AfxTakeSlock(&dout->base.buffersLock);
+
+    dout->base.auxDsFmt[0] = NIL;
+    dout->base.auxDsFmt[1] = NIL;
 
     dout->base.presentAlpha = TRUE; // consider transparency for window composing.
     dout->base.presentTransform = afxPresentTransform_FLIP_V; // NIL leaves it as it is.
@@ -329,24 +317,24 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
     if (config)
     {
-        dout->base.extent[0] = config->whd[0];
-        dout->base.extent[1] = config->whd[1];
-        dout->base.extent[2] = config->whd[2];
+        dout->base.whd[0] = config->whd[0];
+        dout->base.whd[1] = config->whd[1];
+        dout->base.whd[2] = config->whd[2];
 
         // swapchain-related data
         dout->base.pixelFmt = config->pixelFmt;
         dout->base.colorSpc = config->colorSpc;
-        dout->base.bufUsage |= config->bufUsage;
+        dout->base.rasUsage |= config->bufUsage;
         dout->base.bufCnt = config->bufCnt;
 
         dout->base.presentAlpha = config->presentAlpha;
         dout->base.presentTransform = config->presentTransform;
         dout->base.presentMode = config->presentMode;
         dout->base.clipped = !!config->clipped;
-    }
 
-    dout->base.auxDsFmt[0] = NIL;
-    dout->base.auxDsFmt[1] = NIL;
+        dout->base.auxDsFmt[0] = config->auxDsFmt[0];
+        dout->base.auxDsFmt[1] = config->auxDsFmt[1];
+    }
 
     dout->base.flushCb = NIL;
     dout->base.reqCb = NIL;
@@ -423,9 +411,9 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
             AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
 
             if (isWnd)
-                AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+                AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
             else
-                AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(1, 1, 1));
+                AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(1, 1, 1));
 
             afxNat bpp = 0;
 
@@ -435,11 +423,11 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
                 switch (bpp)
                 {
-                case 8: dout->base.pixelFmt = AFX_PFD_R8; break;
-                case 16: dout->base.pixelFmt = AFX_PFD_GR8; break;
-                case 24: dout->base.pixelFmt = AFX_PFD_BGR8; break;
-                case 32: dout->base.pixelFmt = AFX_PFD_BGRA8; break;
-                default: dout->base.pixelFmt = AFX_PFD_ARGB8; break;
+                case 8: dout->base.pixelFmt = afxPixelFormat_R8; break;
+                case 16: dout->base.pixelFmt = afxPixelFormat_GR8; break;
+                case 24: dout->base.pixelFmt = afxPixelFormat_BGR8; break;
+                case 32: dout->base.pixelFmt = afxPixelFormat_BGRA8; break;
+                default: dout->base.pixelFmt = afxPixelFormat_ARGB8; break;
                 }
             }
 
@@ -452,8 +440,8 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
             if (!dout->base.bufCnt)
                 dout->base.bufCnt = 1;
 
-            if (!dout->base.bufUsage)
-                dout->base.bufUsage = afxRasterFlag_DRAW;
+            if (!dout->base.rasUsage)
+                dout->base.rasUsage = afxRasterFlag_DRAW;
 
             int pxlAttrPairs[][2] =
             {
@@ -518,9 +506,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                     {
 #if 0
                         SetWindowPos(dout->wnd, NULL, AfxFromNdc(0.166666666666666, dout->base.resolution[0]), AfxFromNdc(0.166666666666666, dout->base.resolution[1]), dout->base.extent[0], dout->base.extent[1], 0);
-                        AfxReadjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+                        AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
 #else
-                        SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.extent[0], dout->base.extent[1], SWP_NOMOVE);
+                        SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.whd[0], dout->base.whd[1], SWP_NOMOVE);
+                        afxInt32 extraWndWidth, extraWndHeight;
+                        Calc_window_values(dout->wnd, &extraWndWidth, &extraWndHeight);
+                        SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.whd[0] + extraWndWidth, dout->base.whd[1] + extraWndHeight, SWP_NOMOVE);
 #endif
                     }
 
@@ -528,25 +519,25 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                         AfxAssert(dout->base.resolution[0]);
                         AfxAssert(dout->base.resolution[1]);
                         AfxAssert(dout->base.resolution[2]);
-                        AfxAssertExtent(dout->base.resolution[0], dout->base.extent[0]);
-                        AfxAssertExtent(dout->base.resolution[1], dout->base.extent[1]);
-                        AfxAssertExtent(dout->base.resolution[2], dout->base.extent[2]);
+                        AfxAssertExtent(dout->base.resolution[0], dout->base.whd[0]);
+                        AfxAssertExtent(dout->base.resolution[1], dout->base.whd[1]);
+                        AfxAssertExtent(dout->base.resolution[2], dout->base.whd[2]);
 
                         AfxAssert(dout->base.bufCnt);
-                        AfxAssert(dout->base.bufUsage & afxRasterFlag_DRAW);
+                        AfxAssert(dout->base.rasUsage & afxRasterFlag_DRAW);
                         AfxAssert(dout->base.refreshRate);
                         AfxAssert(dout->base.wpOverHp);
                         AfxAssert(dout->base.wrOverHr);
                         AfxAssert(dout->base.wwOverHw);
 
-                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(ctx, sizeof(dout->base.buffers[0]), dout->base.bufCnt, 0, AfxHint()))) AfxThrowError();
+                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(mmu, sizeof(dout->base.buffers[0]), dout->base.bufCnt, 0, AfxHint()))) AfxThrowError();
                         else for (afxNat i = 0; i < dout->base.bufCnt; i++)
-                            dout->base.buffers[i].tex = NIL, /*dout->base.buffers[i].canv = NIL,*/ dout->base.buffers[i].booked = FALSE;
+                            /*dout->base.buffers[i].ras = NIL, */dout->base.buffers[i].canv = NIL, dout->base.buffers[i].booked = FALSE;
 
                         if (err && dout->base.buffers)
                         {
                             _SglDoutFreeAllBuffers(dout);
-                            AfxDeallocate(ctx, dout->base.buffers);
+                            AfxDeallocate(mmu, dout->base.buffers);
                         }
                     }
 
@@ -573,7 +564,7 @@ _SGL afxClassConfig _SglDoutClsConfig =
     .name = "Draw Output",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawOutput)),
-    .ctx = NIL,
+    .mmu = NIL,
     .ctor = (void*)_SglDoutCtor,
     .dtor = (void*)_SglDoutDtor
 };

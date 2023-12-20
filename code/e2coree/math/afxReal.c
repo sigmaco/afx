@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxReal.h"
+#include "qwadro/math/afxReal.h"
 
 _AFXINL afxBool AfxIsGreaterThanEpsilon(afxReal value) // if not, it is less or equal
 {
@@ -414,5 +414,5 @@ _AFXINL afxInt16 AfxReal32ToSnorm(afxReal v)
 _AFXINL afxReal AfxSnorm16ToReal32(afxInt16 v)
 {
     // -32768 & -32767 both map to -1 according to D3D10 rules.
-    return AfxMaxi(v / 32767.0f, -1.0f);
+    return AfxMax(v / 32767.0f, -1.0f);
 }

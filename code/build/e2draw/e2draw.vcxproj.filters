@@ -38,9 +38,6 @@
     <ClCompile Include="..\..\e2draw\sglSampler.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\e2draw\sglSurface.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\e2draw\sglDrawQueue.c">
       <Filter>e2draw</Filter>
     </ClCompile>
@@ -50,9 +47,6 @@
     <ClCompile Include="..\..\e2draw\sglDrawDriver.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\e2draw\sglPipelineRig.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\e2draw\sglDrawCommands.c">
       <Filter>e2draw</Filter>
     </ClCompile>
@@ -60,6 +54,12 @@
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\e2draw\sglRaster.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglBindSchema.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\e2draw\sglVertexInput.c">
       <Filter>e2draw</Filter>
     </ClCompile>
   </ItemGroup>

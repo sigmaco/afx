@@ -1,14 +1,14 @@
 #ifndef AFX_DIRECTDRAW_TEXTURE_H
 #define AFX_DIRECTDRAW_TEXTURE_H
 
-#include "afx/draw/afxDrawContext.h"
+#include "qwadro/draw/avxDrawContext.h"
 
-_AFXIMPORT afxError    AfxLoadTexturesDdt(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxRaster tex[]);
+_AFXIMPORT afxError    AfxLoadTexturesDdt(avxDrawContext dctx, afxNat cnt, afxUri const uri[], avxRaster tex[]);
 
-_AFXIMPORT afxError    AfxFetchRasterDdt(afxRaster tex, afxUri const *uri);
-_AFXIMPORT afxError    AfxFetchRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);
+_AFXIMPORT afxError    AfxFetchRasterDdt(avxRaster tex, afxUri const *uri);
+_AFXIMPORT afxError    AfxFetchRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
 
-_AFXIMPORT afxError    AfxPrintRasterDdt(afxRaster tex, afxUri const *uri);
-_AFXIMPORT afxError    AfxPrintRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);
+_AFXIMPORT afxError    AfxPrintRasterDdt(avxRaster tex, afxUri const *uri);
+_AFXIMPORT afxError    AfxPrintRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
 
 #endif//AFX_DIRECTDRAW_TEXTURE_H

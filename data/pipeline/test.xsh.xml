@@ -34,8 +34,7 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/test.xsh.xml?vs</Shader>
-        <Shader>data/pipeline/test.xsh.xml?fs</Shader>
+        <VertexShader>data/pipeline/test.xsh.xml?vs</VertexShader>
         <Rasterizer>data/pipeline/test.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
@@ -43,5 +42,6 @@
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/test.xsh.xml?fs</FragmentShader>
     </Rasterizer>
 </Qwadro>

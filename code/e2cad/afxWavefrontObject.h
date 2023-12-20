@@ -1,10 +1,10 @@
 #ifndef AFX_WAVEFRONT_OBJECT_H
 #define AFX_WAVEFRONT_OBJECT_H
 
-#include "afx/sim/afxSimulation.h"
-#include "afx/sim/afxAsset.h"
+#include "qwadro/sim/awxSimulation.h"
+#include "qwadro/sim/awxAsset.h"
 
-_AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], afxAsset cad[]);
+_AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(awxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], awxAsset cad[]);
 
 
 #endif//AFX_WAVEFRONT_OBJECT_H

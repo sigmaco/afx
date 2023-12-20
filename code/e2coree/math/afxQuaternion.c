@@ -14,11 +14,11 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxMathDefs.h"
-#include "afx/math/afxQuaternion.h"
-#include "afx/math/afxReal.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxVector.h"
+#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/math/afxReal.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
 
 _AFX afxQuat const AFX_QUAT_ZERO = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(0) };
 _AFX afxQuat const AFX_QUAT_IDENTITY = { AfxScalar(0), AfxScalar(0), AfxScalar(0), AfxScalar(1) };
