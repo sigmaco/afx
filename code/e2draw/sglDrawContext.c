@@ -20,26 +20,28 @@
 
 #define _AFX_DRAW_THREAD_C
 #include "sgl.h"
-#include "afx/core/afxTerminal.h"
-#include "afx/core/afxSystem.h"
+#include "qwadro/core/afxTerminal.h"
+#include "qwadro/core/afxSystem.h"
 #include "sgl.h"
-#include "afx/math/afxVector.h"
-#include "afx/core/afxSystem.h"
-#include "afx/core/afxString.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/core/afxSystem.h"
+#include "qwadro/core/afxString.h"
+#include "qwadro/draw/io/afxVertexStream.h"
 
 extern afxClassConfig _SglBufClsConfig;
 extern afxClassConfig _SglSampClsConfig;
 extern afxClassConfig _SglPipClsConfig;
-extern afxClassConfig _SglPiprClsConfig;
+extern afxClassConfig _SglVinClsConfig;
+extern afxClassConfig _SglRazrClsConfig;
 extern afxClassConfig _SglShdClsConfig;
-extern afxClassConfig _SglLegoClsConfig;
+extern afxClassConfig _SglBschClsConfig;
 extern afxClassConfig _SglCanvClsConfig;
-extern afxClassConfig _SglTexClsConfig;
-extern afxClassConfig _SglSurfClsConfig;
-extern afxClassConfig _SglDscrClsConfig;
-extern afxClassConfig _SglDqueClsConfig;
+extern afxClassConfig _SglRasClsConfig;
 
-_SGL void _AfxDctxFreeAllQueueSlots(afxDrawContext dctx)
+//AFX afxClassConfig const _AfxVbufClsConfig;
+//AFX afxClassConfig const _AfxIbufClsConfig;
+
+_SGL void _SglDctxFreeAllQueueSlots(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -48,10 +50,11 @@ _SGL void _AfxDctxFreeAllQueueSlots(afxDrawContext dctx)
     {
         for (afxNat i = 0; i < dctx->base.openPortCnt; i++)
         {
-            AfxDismountClass(&dctx->base.openPorts[i].queues);
-            AfxDismountClass(&dctx->base.openPorts[i].scripts);
+            AfxReleaseObjects(dctx->base.openPorts[i].dqueCnt, (void**)dctx->base.openPorts[i].queues);
+            AfxDeallocate(dctx->base.mmu, dctx->base.openPorts[i].queues);
+            dctx->base.openPorts[i].queues = NIL;
         }
-        AfxDeallocate(dctx->base.ctx, dctx->base.openPorts);
+        AfxDeallocate(dctx->base.mmu, dctx->base.openPorts);
     }
 }
 
@@ -109,7 +112,7 @@ _SGL afxError _SglDctxProcCb(afxDrawContext dctx, afxDrawThread dthr)
 
     afxNat i = 0;
     afxDrawQueue dque;
-    while (AfxEnumerateInstances(&dctx->base.openPorts[unitIdx].queues, i, 1, (afxHandle*)&dque))
+    while ((i < dctx->base.openPorts[unitIdx].dqueCnt) && (dque = dctx->base.openPorts[unitIdx].queues[i]))
     {
         AfxAssertObjects(1, &dque, afxFcc_DQUE);
 
@@ -138,10 +141,10 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
 
     _AfxUninstallChainedClasses(&dctx->base.classes);
 
-    _AfxDctxFreeAllQueueSlots(dctx);
+    _SglDctxFreeAllQueueSlots(dctx);
     
     AfxDeallocateArena(&dctx->base.aren);
-    AfxReleaseObjects(1, (void*[]) { dctx->base.ctx });
+    AfxReleaseObjects(1, (void*[]) { dctx->base.mmu });
 
     return err;
 }
@@ -163,100 +166,117 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
     dctx->base.running = FALSE;
 
-    dctx->base.ctx = AfxGetDrawSystemMemory(dsys);
+    dctx->base.mmu = AfxGetDrawSystemMmu();
     
 
-    AfxAssertObjects(1, &dctx->base.ctx, afxFcc_CTX);
+    AfxAssertObjects(1, &dctx->base.mmu, afxFcc_MMU);
 
-    afxContext ctx = dctx->base.ctx;
+    afxMmu mmu = dctx->base.mmu;
 
-    AfxAllocateArena(ctx, &dctx->base.aren, NIL, AfxHint());
+    AfxAllocateArena(mmu, &dctx->base.aren, NIL, AfxHint());
 
     //if (!(AfxObjectReacquire(&dctx->base.memD->obj, &dctx->base.obj, NIL, NIL, NIL))) AfxThrowError();
     //else
     {
         afxChain *classes = &dctx->base.classes;
-        AfxAcquireChain(classes, (void*)dctx);
+        AfxTakeChain(classes, (void*)dctx);
 
         afxClassConfig tmpClsConf;
 
         tmpClsConf = _SglBufClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.buffers, classes, &tmpClsConf);
-        tmpClsConf = _SglTexClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf = _SglRasClsConfig;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.rasters, classes, &tmpClsConf);
-        tmpClsConf = _SglSurfClsConfig;
-        tmpClsConf.ctx = ctx;
-        AfxMountClass(&dctx->base.surfaces, classes, &tmpClsConf);
         tmpClsConf = _SglSampClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.samplers, classes, &tmpClsConf);
         tmpClsConf = _SglCanvClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.canvases, classes, &tmpClsConf);
-        tmpClsConf = _SglLegoClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf = _SglBschClsConfig;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.legos, classes, &tmpClsConf);
         tmpClsConf = _SglShdClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.shaders, classes, &tmpClsConf);
-        tmpClsConf = _SglPipClsConfig;
-        tmpClsConf.ctx = ctx;
-        AfxMountClass(&dctx->base.pipelines, classes, &tmpClsConf);
-        tmpClsConf = _SglPiprClsConfig;
-        tmpClsConf.ctx = ctx;
+        tmpClsConf = _SglVinClsConfig;
+        tmpClsConf.mmu = mmu;
+        AfxMountClass(&dctx->base.vinputs, classes, &tmpClsConf);
+        tmpClsConf = _SglRazrClsConfig;
+        tmpClsConf.mmu = mmu;
         AfxMountClass(&dctx->base.rasterizers, classes, &tmpClsConf);
+        tmpClsConf = _SglPipClsConfig;
+        tmpClsConf.mmu = mmu;
+        AfxMountClass(&dctx->base.pipelines, classes, &tmpClsConf);
+        
+#if 0
+        tmpClsConf = _AfxVbufClsConfig;
+        tmpClsConf.mmu = mmu;
+        AfxMountClass(&dctx->base.vbuffers, classes, &tmpClsConf);
+        tmpClsConf = _AfxIbufClsConfig;
+        tmpClsConf.mmu = mmu;
+        AfxMountClass(&dctx->base.ibuffers, classes, &tmpClsConf);
+#endif
 
         dctx->base.openPortCnt = AfxCountDrawPorts(ddev); //spec && spec->portCnt ? spec->portCnt : 1;
 
         if (config && config->queueingCnt)
-            dctx->base.openPortCnt = config->queueingCnt;
+            dctx->base.openPortCnt = AfxMax(1, AfxMin(AfxCountDrawPorts(ddev), config->queueingCnt));
 
-        AfxAcquireChain(&dctx->base.inlinks, dctx);
-        AfxAcquireChain(&dctx->base.outlinks, dctx);
+        AfxTakeChain(&dctx->base.inlinks, dctx);
+        AfxTakeChain(&dctx->base.outlinks, dctx);
 
         dctx->base.openPorts = NIL;
 
-        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(ctx, sizeof(dctx->base.openPorts[0]), dctx->base.openPortCnt, 0, AfxHint()))) AfxThrowError();
+        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(mmu, sizeof(dctx->base.openPorts[0]), dctx->base.openPortCnt, 0, AfxHint()))) AfxThrowError();
         else
         {
+            AfxAssert(dctx->base.openPortCnt);
+
             for (afxNat i = 0; i < dctx->base.openPortCnt; i++)
             {
                 afxDrawQueueingConfig const*queueing = config && config->queueings ? &config->queueings[i] : (afxDrawQueueingConfig[]) { {i, 2 } };
-                tmpClsConf = _SglDqueClsConfig;
-                tmpClsConf.unitsPerPage = queueing->minQueueCnt;
-                tmpClsConf.maxCnt = tmpClsConf.unitsPerPage;
-                tmpClsConf.ctx = ctx;
-                AfxMountClass(&dctx->base.openPorts[i].queues, classes, &_SglDqueClsConfig);
-                tmpClsConf = _SglDscrClsConfig;
-                tmpClsConf.ctx = ctx;
-                AfxMountClass(&dctx->base.openPorts[i].scripts, classes, &_SglDscrClsConfig);
-
+                
                 dctx->base.openPorts[i].lastReqQueIdx = (dctx->base.openPorts[i].lastReqQueIdx + 1) % queueing->minQueueCnt;
                 //dctx->base.ports[i].minRecyclSubmCnt = 2;
-                        
-                for (afxNat j = 0; j < queueing->minQueueCnt; j++)
+                dctx->base.openPorts[i].dqueCnt = AfxMax(1, queueing->minQueueCnt);
+
+                if (!(dctx->base.openPorts[i].queues = AfxAllocate(mmu, sizeof(dctx->base.openPorts[i].queues[0]), dctx->base.openPorts[i].dqueCnt, 0, AfxHint()))) AfxThrowError();
+                else
                 {
-                    afxDrawQueue dque;
-                    afxDrawQueueSpecification dqueSpec = { 0 };
-                    dqueSpec.portIdx = i;
-                    //dqueSpec.dctx = dctx;
+                    for (afxNat j = 0; j < queueing->minQueueCnt; j++)
+                    {
+                        afxDrawQueue dque;
+                        afxDrawQueueSpecification dqueSpec = { 0 };
+                        dqueSpec.dctx = dctx;
 
-                    if (AfxAcquireObjects(&dctx->base.openPorts[i].queues, 1, (afxHandle*)&dque, (void*[]) { &dqueSpec }))
-                        AfxThrowError();
+                        if (AfxAcquireObjects(&ddev->base.ports[i].queues, 1, (afxObject*)&dque, (void const*[]) { ddev, &i, &dqueSpec }))
+                        {
+                            AfxThrowError();
+                            AfxReleaseObjects(j, (void**)dctx->base.openPorts[i].queues);
+                        }
 
+                        AfxAssertObjects(1, &dque, afxFcc_DQUE);
+                        dctx->base.openPorts[i].queues[j] = dque;
+                    }
+
+                    if (err)
+                    {
+                        AfxDeallocate(mmu, dctx->base.openPorts[i].queues);
+                        dctx->base.openPorts[i].queues = NIL;
+                    }
                 }
 
                 if (err)
                 {
-                    for (afxNat j = 0; j < i; j++)
+                    for (afxNat j = i; j-- > 0;)
                     {
-                        AfxDismountClass(&dctx->base.openPorts[i].scripts);
-                        AfxDismountClass(&dctx->base.openPorts[i].queues);
+                        AfxReleaseObjects(dctx->base.openPorts[j].dqueCnt, (void**)dctx->base.openPorts[j].queues);
+                        AfxDeallocate(mmu, dctx->base.openPorts[j].queues);
+                        dctx->base.openPorts[j].queues = NIL;
                     }
-                    AfxDeallocate(ctx, dctx->base.openPorts);
-                    dctx->base.openPorts = NIL;
                 }
             }
 
@@ -300,7 +320,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 vtxAttrSpec.secIdx = 0;
                 vtxAttrSpec.semantic = &tmpStr;
                 vtxAttrSpec.fmt = afxVertexFormat_V2D;
-                vtxAttrSpec.usage = afxVertexUsage_POS;
+                vtxAttrSpec.usage = awxVertexUsage_POS;
                 vtxAttrSpec.src = vtxPos;
                 vtxAttrSpec.srcFmt = afxVertexFormat_V2D;
                 vtxAttrSpec.srcStride = sizeof(afxV2d);
@@ -330,14 +350,14 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
             }
 
             if (err && dctx->base.openPorts)
-                _AfxDctxFreeAllQueueSlots(dctx);
+                _SglDctxFreeAllQueueSlots(dctx);
         }
 
         if (err)
         {
             _AfxUninstallChainedClasses(&dctx->base.classes);
 
-            AfxReleaseObjects(1, (void*[]) { dctx->base.ctx });
+            AfxReleaseObjects(1, (void*[]) { dctx->base.mmu });
         }
     }
 
@@ -350,7 +370,7 @@ _SGL afxClassConfig _SglDctxClsConfig =
     .name = "Draw Context",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawContext)),
-    .ctx = NIL,
+    .mmu = NIL,
     .ctor = (void*)_SglDctxCtor,
     .dtor = (void*)_SglDctxDtor
 };

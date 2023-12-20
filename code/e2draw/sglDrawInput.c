@@ -15,8 +15,8 @@
  */
 
 #include "sgl.h"
-#include "afx/afxQwadro.h"
-#include "afx/draw/afxDrawInput.h"
+#include "qwadro/afxQwadro.h"
+#include "qwadro/draw/afxDrawInput.h"
 
 _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 {
@@ -88,8 +88,7 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
     AfxAssert(cnt);
     AfxAssert(scripts);
 
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
+    afxDrawContext dctx = AfxGetDrawInputContext(din);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -100,7 +99,7 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
         afxNat j = 0;
         afxDrawQueue dque;
         afxNat portIdx = dscr->base.portIdx;
-        while (AfxEnumerateInstances(&dctx->base.openPorts[portIdx].queues, j, 1, (afxHandle*)&dque))
+        while ((dque = dctx->base.openPorts[portIdx].queues[j]))
         {
             afxDrawSubmissionSpecification spec = { 0 };
             spec.scriptCnt = 1;
@@ -124,8 +123,7 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
     AfxAssert(outputs);
     AfxAssert(outputBufIdx);
 
-    afxDrawContext dctx;
-    AfxGetDrawInputConnection(din, &dctx);
+    afxDrawContext dctx = AfxGetDrawInputContext(din);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -136,7 +134,7 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
         afxNat j = 0;
         afxDrawQueue dque;
         afxNat portIdx = 0;
-        while (AfxEnumerateInstances(&dctx->base.openPorts[portIdx].queues, j, 1, (afxHandle*)&dque))
+        while ((dque = dctx->base.openPorts[portIdx].queues[j]))
         {
             afxDrawSubmissionSpecification spec = { 0 };
             spec.outputCnt = 1;
@@ -183,14 +181,10 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxNat devId = *(afxNat const *)(cookie->udd[0]);
     afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[1]) + cookie->no;
 
-    afxDrawDevice ddev = AfxGetObjectProvider(din);
-    afxDrawIcd ddrv = AfxGetObjectProvider(ddev);
-    afxDrawSystem dsys = AfxGetObjectProvider(ddrv);
-    
     AfxPushLinkage(&din->base.dctx, NIL);
 
-    afxContext mem = AfxGetDrawSystemMemory(dsys);
-    din->base.mem = mem;
+    afxMmu mmu = AfxGetDrawSystemMmu();
+    din->base.mmu = mmu;
 
     din->base.scripts;
     AfxAllocateArray(&din->base.scripts, 32, sizeof(afxDrawScript), NIL);
@@ -198,6 +192,13 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
 
     din->base.submitCb = _SglDinSubmit;
     din->base.presentCb = _SglDinPresent;
+
+    afxNat defStreamSiz = 32000000; // 32MB (I think it is the total of RAM in PlayStation 2)
+
+    din->base.minIdxBufSiz = defStreamSiz / 4;
+    din->base.maxIdxBufSiz = 0;
+    din->base.minVtxBufSiz = defStreamSiz - din->base.minIdxBufSiz;
+    din->base.maxVtxBufSiz = 0;
 
     if (config && config->udd)
         din->base.udd = config->udd;
@@ -214,7 +215,7 @@ _SGL afxClassConfig _SglDinClsConfig =
     .name = "Draw Input",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawInput)),
-    .ctx = NIL,
+    .mmu = NIL,
     .ctor = (void*)_SglDinCtor,
     .dtor = (void*)_SglDinDtor
 };

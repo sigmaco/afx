@@ -1,2 +1,2 @@
-#include "afx/afxQwadro.h"
+#include "qwadro/afxQwadro.h"
 

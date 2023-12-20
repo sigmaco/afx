@@ -1,0 +1,81 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fed6cbaeb0 by 0000000000000000 over 0000000000000000 with 000007fed6cb7950)
+ afxClass<Basic I/O System>::ConstructObject(0000000000312120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=0000000000312120)
+ Installing Thread Execution Unit at 00000000003127b8 by 0000000000312150 over 0000000000000000 with 00000000001adc60)
+ Installing Memory Management Unit at 0000000000312178 by 0000000000312150 over 0000000000000000 with 000007fed6cb7080)
+ Installing Module at 00000000003122b8 by 0000000000312150 over 0000000000000000 with 000007fed6cb7720)
+ Installing Thread at 0000000000312678 by 0000000000312150 over 0000000000000000 with 000007fed6cb79a8)
+ Installing Service at 00000000003128f8 by 0000000000312150 over 0000000000000000 with 000007fed6c445c8)
+ Installing File at 0000000000312cb8 by 0000000000312150 over 0000000000000000 with 000007fed6cb7670)
+ Installing I/O Stream at 0000000000312b78 by 0000000000312150 over 0000000000000000 with 000007fed6cb78e0)
+ Installing Archive at 0000000000312df8 by 0000000000312150 over 0000000000000000 with 000007fed6cb7000)
+ Installing Application at 0000000000312a38 by 0000000000312150 over 0000000000000000 with 000007fed6c2e9e8)
+ Installing Keyboard at 00000000003123f8 by 0000000000312150 over 0000000000000000 with 000007fed6cb76c8)
+ Installing Mouse at 0000000000312538 by 0000000000312150 over 0000000000000000 with 000007fed6cb7778)
+ Installing Simulation at 0000000000312f38 by 0000000000312150 over 0000000000000000 with 000007fed6cb8638)
+ Entering the Thread Execution Environment 4294967295
+ [!] afxSystem.c:1164?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1165?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(000000000030ca20)
+ afxArena.c:768
+  AfxAllocateArena(aren=00000000003130e0)
+ afxArena.c:769
+  AfxAllocateArena(spec=0000000000000000,hint="afxSystem.c:1217!_AfxSysCtor")
+ afxSystem.c:822
+  AfxMountStoragePoints(6,00000000001adfd0)
+ ERR afxString.c:722?AfxMakeBufferedString
+  
+ ERR afxString.c:722?AfxMakeBufferedString
+  (cap)
+    Invalid
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system64".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ ERR afxUri.c:1215?AfxNormalizePath
+  
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=0000000000313090,uri=00000000001aded8)
+ afxClass<Module>::ConstructObject(00000000002fb0d0)
+ afxModule.c:94
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ ERR afxString.c:465?_AfxWriteString
+  
+ ERR afxString.c:465?_AfxWriteString
+  (cap >= len)
+    Invalid
+ ERR afxString.c:467?_AfxWriteString
+  
+ ERR afxString.c:467?_AfxWriteString
+  (len <= effectiveCap)
+    Invalid
+ ERR afxString.c:547?AfxAppendString
+  
+ E:/qwadro/afx/system64/e2coree.dll
+ afxKeyboard.c:299
+  AfxAcquireKeyboards(cnt=1,port=00000000001adc04,kbd=0000000000313098)
+ afxClass<Keyboard>::ConstructObject(0000000000316300)
+ afxKeyboard.c:250
+  _AfxKbdCtor(kbd=0000000000316300)

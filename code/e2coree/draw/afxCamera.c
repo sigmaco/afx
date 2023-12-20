@@ -16,13 +16,15 @@
 
 #define _AFX_CAMERA_C
 #define _AFX_DRAW_C
-#include "afx/draw/afxCamera.h"
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/math/afxQuaternion.h"
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxVector.h"
-#include "afx/math/afxFrustum.h"
-#include "afx/core/afxClass.h"
+#include "qwadro/draw/afxCamera.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxFrustum.h"
+#include "qwadro/core/afxClass.h"
+
+AFXINL afxDrawSystem _AfxGetDsysData(void);
 
 _AFX void AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
@@ -692,14 +694,6 @@ _AFX afxBool _AfxCamEventFilter(afxInstance *obj, afxInstance *watched, afxEvent
     return FALSE;
 }
 
-_AFX afxError _AfxCamDtor(afxCamera cam)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxEntry("cam=%p", cam);
-    AfxAssertObjects(1, &cam, afxFcc_CAM);
-    return err;
-}
-
 _AFX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
@@ -719,18 +713,37 @@ _AFX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
     return err;
 }
 
+_AFX afxError _AfxCamDtor(afxCamera cam)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxEntry("cam=%p", cam);
+    AfxAssertObjects(1, &cam, afxFcc_CAM);
+    return err;
+}
+
+_AFX afxClassConfig const _camClsConfig =
+{
+    .fcc = afxFcc_CAM,
+    .name = "Camera",
+    .unitsPerPage = 1,
+    .size = sizeof(AFX_OBJECT(afxCamera)),
+    .mmu = NIL,
+    .ctor = (void*)_AfxCamCtor,
+    .dtor = (void*)_AfxCamDtor,
+    .eventFilter = (void*)_AfxCamEventFilter
+};
+
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireCameras(afxDrawSystem dsys, afxNat cnt, afxCamera cam[])
+_AFX afxError AfxAcquireCameras(afxNat cnt, afxCamera cam[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    afxClass* cls = AfxGetCameraClass(dsys);
+    afxClass* cls = AfxGetCameraClass();
     AfxAssertClass(cls, afxFcc_CAM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxHandle*)cam, (void*[]) { (void*)NIL }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)cam, (void const*[]) { (void*)NIL }))
         AfxThrowError();
 
     AfxAssertObjects(cnt, cam, afxFcc_CAM);
@@ -738,13 +751,12 @@ _AFX afxError AfxAcquireCameras(afxDrawSystem dsys, afxNat cnt, afxCamera cam[])
     return err;
 }
 
-_AFX afxNat AfxEnumerateCameras(afxDrawSystem dsys, afxNat base, afxNat cnt, afxCamera cam[])
+_AFX afxNat AfxEnumerateCameras(afxNat first, afxNat cnt, afxCamera cam[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    afxClass *cls = AfxGetCameraClass(dsys);
+    afxClass *cls = AfxGetCameraClass();
     AfxAssertClass(cls, afxFcc_CAM);
-    return AfxEnumerateInstances(cls, base, cnt, (afxHandle*)cam);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)cam);
 }
 
 _AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
@@ -764,15 +776,3 @@ _AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightIn
 {
     return AfxSin(fovY * 0.5f) / AfxCos(fovY * 0.5f) * errInPixels * distanceFromCam / ((afxReal)vpHeightInPixels * 0.5f);
 }
-
-_AFX afxClassConfig _AfxCamClsConfig =
-{
-    .fcc = afxFcc_CAM,
-    .name = "Camera",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxCamera)),
-    .ctx = NIL,
-    .ctor = (void*)_AfxCamCtor,
-    .dtor = (void*)_AfxCamDtor,
-    .eventFilter = (void*)_AfxCamEventFilter
-};

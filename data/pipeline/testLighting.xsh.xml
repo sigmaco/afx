@@ -6,11 +6,11 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0'>vec4 in_posn</In>
+        <In location='0'>vec3 in_pos</In>
         <In location='3'>vec3 in_nrm</In>
         <![CDATA[
         
-        layout (location = 0) in vec4 in_posn;
+        layout (location = 0) in vec3 in_pos;
         layout (location = 3) in vec3 in_nrm;
         
         out block
@@ -21,11 +21,11 @@
 
         void main()
         {
-            sgl_out.posn = vec4(v * m * in_posn);
+            sgl_out.posn = v * m * vec4(in_pos, 1);
             mat3 n = mat3(transpose(inverse(m))); // gambiarra
             sgl_out.nrm = normalize(n * in_nrm);
 
-            gl_Position = p * v * m * in_posn;
+            gl_Position = p * v * m * vec4(in_pos, 1);
         }
         ]]>
     </Shader>
@@ -84,8 +84,7 @@
     <Pipeline id='blinn'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/testLighting.xsh.xml?blinnVsh</Shader>
-        <Shader>data/pipeline/testLighting.xsh.xml?blinnFsh</Shader>
+        <VertexShader>data/pipeline/testLighting.xsh.xml?blinnVsh</VertexShader>
         <Rasterizer>data/pipeline/testLighting.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
@@ -93,5 +92,6 @@
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/testLighting.xsh.xml?blinnFsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

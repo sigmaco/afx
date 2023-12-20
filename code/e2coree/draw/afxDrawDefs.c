@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxDrawDefs.h"
 
 
 _AFX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
@@ -288,7 +288,7 @@ _AFX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
 _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxPrimTopology_TOTAL; i++)
     {
@@ -302,7 +302,7 @@ _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxLogicOp_TOTAL; i++)
     {
@@ -316,7 +316,7 @@ _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
 _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxStencilOp_TOTAL; i++)
     {
@@ -330,7 +330,7 @@ _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
 _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxCompareOp_TOTAL; i++)
     {
@@ -344,7 +344,7 @@ _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
 _AFX afxCullMode AfxFindCullMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxCullMode_TOTAL; i++)
     {
@@ -358,7 +358,7 @@ _AFX afxCullMode AfxFindCullMode(afxString const *str)
 _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxFrontFace_TOTAL; i++)
     {
@@ -372,7 +372,7 @@ _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
 _AFX afxFillMode AfxFindFillMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxFillMode_TOTAL; i++)
     {
@@ -386,7 +386,7 @@ _AFX afxFillMode AfxFindFillMode(afxString const *str)
 _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxShaderStage_TOTAL; i++)
     {
@@ -400,7 +400,7 @@ _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
 _AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertString(str);
+    AfxAssertType(str, afxFcc_STR);
 
     for (afxNat i = 0; i < afxVertexFormat_TOTAL; i++)
     {
@@ -411,76 +411,76 @@ _AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
     return (afxVertexFormat)-1;
 }
 
-_AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxString *out)
+_AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ss < afxShaderStage_TOTAL);
     AfxCopyString(out, &shaderStageString[ss]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxString *out)
+_AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fm < afxFillMode_TOTAL);
     AfxCopyString(out, &fillModeString[fm]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxString *out)
+_AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ff < afxFrontFace_TOTAL);
     AfxCopyString(out, &frontFaceString[ff]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxString *out)
+_AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cm < afxCullMode_TOTAL);
     AfxCopyString(out, &cullModeString[cm]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxString *out)
+_AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(co < afxCompareOp_TOTAL);
     AfxCopyString(out, &compareOpString[co]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxString *out)
+_AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(so < afxStencilOp_TOTAL);
     AfxCopyString(out, &stencilOpString[so]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxString *out)
+_AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lo < afxLogicOp_TOTAL);
     AfxCopyString(out, &logicOpString[lo]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxString *out)
+_AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pt < afxPrimTopology_TOTAL);
     AfxCopyString(out, &primTopologyString[pt]);
-    return out;
+    return &out->str;
 }
 
-_AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxString *out)
+_AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxBufferedString *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fmt < afxVertexFormat_TOTAL);
     AfxCopyString(out, &vtxFmtString[fmt]);
-    return out;
+    return &out->str;
 }
 
 _AFX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint)

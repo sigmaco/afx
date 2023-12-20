@@ -1,0 +1,33 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fed618aeb0 by 0000000000000000 over 0000000000000000 with 000007fed6187950)
+ afxClass<Basic I/O System>::ConstructObject(00000000002c2120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=00000000002c2120)
+ Installing Thread Execution Unit at 00000000002c27b8 by 00000000002c2150 over 0000000000000000 with 000000000024d930)
+ Installing Memory Management Unit at 00000000002c2178 by 00000000002c2150 over 0000000000000000 with 000007fed6187080)
+ Installing Module at 00000000002c22b8 by 00000000002c2150 over 0000000000000000 with 000007fed6187720)
+ Installing Thread at 00000000002c2678 by 00000000002c2150 over 0000000000000000 with 000007fed61879a8)
+ Installing Service at 00000000002c28f8 by 00000000002c2150 over 0000000000000000 with 000007fed61145c8)
+ Installing File at 00000000002c2cb8 by 00000000002c2150 over 0000000000000000 with 000007fed6187670)
+ Installing I/O Stream at 00000000002c2b78 by 00000000002c2150 over 0000000000000000 with 000007fed61878e0)
+ Installing Archive at 00000000002c2df8 by 00000000002c2150 over 0000000000000000 with 000007fed6187000)
+ Installing Application at 00000000002c2a38 by 00000000002c2150 over 0000000000000000 with 000007fed60fe9e8)
+ Installing Keyboard at 00000000002c23f8 by 00000000002c2150 over 0000000000000000 with 000007fed61876c8)
+ Installing Mouse at 00000000002c2538 by 00000000002c2150 over 0000000000000000 with 000007fed6187778)
+ Installing Simulation at 00000000002c2f38 by 00000000002c2150 over 0000000000000000 with 000007fed6188638)

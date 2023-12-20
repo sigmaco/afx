@@ -25,11 +25,9 @@
         float4 LightColour = vec4(0.9, 0.9, 0.9, 1);
         float4 AmbientColour = vec4(0.1, 0.1, 0.1, 0.1);
         
-        #define in_posn vec4(in_pos, 1)
-        
         void main()
         {
-            float4 WorldPos = m * in_posn;
+            float4 WorldPos = m * vec4(in_pos, 1);
             float4 ViewPos  = v * WorldPos;
             float4 ClipPos  = p * ViewPos;
 
@@ -50,14 +48,14 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0'>vec4 in_posn</In>
+        <In location='0'>vec3 in_posn</In>
         <In location='1'>vec4 in_wgt</In>
         <In location='2'>vec4 in_jnt</In>
         <In location='3'>vec3 in_nrm</In>
         <In location='6'>vec2 in_uv0</In>
         <![CDATA[
         
-        layout (location = 0) in vec4 in_posn;
+        layout (location = 0) in vec3 in_posn;
         layout (location = 1) in vec4 in_wgt;
         layout (location = 2) in vec4 in_jnt;
         layout (location = 3) in vec3 in_nrm;
@@ -135,15 +133,13 @@
     <Pipeline id='tutCamUtil'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/tutCamUtil.xsh.xml?rigid</Shader>
-        <Shader>data/pipeline/tutCamUtil.xsh.xml?fsh</Shader>
+        <VertexShader>data/pipeline/tutCamUtil.xsh.xml?rigid</VertexShader>
         <Rasterizer>data/pipeline/tutCamUtil.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='tutCamUtilSkinned'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/tutCamUtil.xsh.xml?skinned</Shader>
-        <Shader>data/pipeline/tutCamUtil.xsh.xml?fsh</Shader>
+        <VertexShader>data/pipeline/tutCamUtil.xsh.xml?skinned</VertexShader>
         <Rasterizer>data/pipeline/tutCamUtil.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
@@ -151,5 +147,6 @@
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/tutCamUtil.xsh.xml?fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

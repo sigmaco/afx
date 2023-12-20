@@ -14,8 +14,8 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxVector.h"
-#include "afx/math/afxPlane.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxPlane.h"
 
 _AFXINL void AfxCopyPlane(afxPlane p, afxPlane const in)
 {
@@ -91,7 +91,7 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxReal c
     return (AfxFindPlaneDistance(p, a)) / AfxDotV3d(p, t);
 }
 
-_AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxAabb const* aabb)
+_AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxAabb const aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -102,35 +102,35 @@ _AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxAabb const* aabb)
 
     if (p[0] > 0.0f)
     {
-        minD = p[0] * aabb->extremes[AFX_AABB_INF][0];
-        maxD = p[0] * aabb->extremes[AFX_AABB_SUP][0];
+        minD = p[0] * aabb[AFX_AABB_INF][0];
+        maxD = p[0] * aabb[AFX_AABB_SUP][0];
     }
     else
     {
-        minD = p[0] * aabb->extremes[AFX_AABB_SUP][0];
-        maxD = p[0] * aabb->extremes[AFX_AABB_INF][0];
+        minD = p[0] * aabb[AFX_AABB_SUP][0];
+        maxD = p[0] * aabb[AFX_AABB_INF][0];
     }
 
     if (p[1] > 0.0f)
     {
-        minD += p[1] * aabb->extremes[AFX_AABB_INF][1];
-        maxD += p[1] * aabb->extremes[AFX_AABB_SUP][1];
+        minD += p[1] * aabb[AFX_AABB_INF][1];
+        maxD += p[1] * aabb[AFX_AABB_SUP][1];
     }
     else
     {
-        minD += p[1] * aabb->extremes[AFX_AABB_SUP][1];;
-        maxD += p[1] * aabb->extremes[AFX_AABB_INF][1];
+        minD += p[1] * aabb[AFX_AABB_SUP][1];;
+        maxD += p[1] * aabb[AFX_AABB_INF][1];
     }
 
     if (p[2] > 0.0f)
     {
-        minD += p[2] * aabb->extremes[AFX_AABB_INF][2];
-        maxD += p[2] * aabb->extremes[AFX_AABB_SUP][2];
+        minD += p[2] * aabb[AFX_AABB_INF][2];
+        maxD += p[2] * aabb[AFX_AABB_SUP][2];
     }
     else
     {
-        minD += p[2] * aabb->extremes[AFX_AABB_SUP][2];
-        maxD += p[2] * aabb->extremes[AFX_AABB_INF][2];
+        minD += p[2] * aabb[AFX_AABB_SUP][2];
+        maxD += p[2] * aabb[AFX_AABB_INF][2];
     }
 
     // What side of the plane

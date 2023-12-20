@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxTrigonometry.h"
+#include "qwadro/math/afxTrigonometry.h"
 
 _AFXINL void AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal n[3])
 {

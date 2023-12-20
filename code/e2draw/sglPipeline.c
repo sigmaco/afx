@@ -14,15 +14,14 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/core/afxXml.h"
+#include "qwadro/core/afxXml.h"
 #include "sgl.h"
 
-#include "afx/draw/afxPipeline.h"
-#include "afx/draw/afxPipeline.h"
-
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/core/afxUri.h"
-#include "afx/core/afxSystem.h"
+#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/afxXsh.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/core/afxUri.h"
+#include "qwadro/core/afxSystem.h"
 // OpenGL/Vulkan Continuous Integration
 
 #define _AFX_DBG_IGNORE_PRIM_RESTART
@@ -156,7 +155,53 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 }
 #endif
 
-_SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bindPip, afxBool bindVao, afxBool bindRas)
+_SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    afxUri fext;
+    AfxGetUriExtension(&fext, uri, FALSE);
+
+    if (AfxUriIsBlank(&fext)) AfxThrowError();
+    else
+    {
+        afxUri fpath;
+        AfxGetUriPath(&fpath, uri);
+
+        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
+        {
+            afxXml xml;
+
+            if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
+            else
+            {
+                AfxAssertType(&xml, afxFcc_XML);
+
+                afxString query;
+                AfxGetUriQueryString(uri, TRUE, &query);
+
+                afxNat xmlElemIdx = 0;
+                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Shader"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
+                AfxAssert(xmlElemIdx != AFX_INVALID_INDEX);
+
+                if (foundCnt)
+                {
+                    AfxShaderBlueprintBegin(shdb, NIL, NIL, NIL, 0, 0, 0);
+
+                    if (AfxParseXmlBackedShaderBlueprint(shdb, 0, &xml, xmlElemIdx)) AfxThrowError();
+                    else
+                    {
+
+                    }
+                    //AfxShaderBlueprintEnd(shdb, 0, NIL);
+                }
+                AfxReleaseXml(&xml);
+            }
+        }
+    }
+    return err;
+}
+
+_SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool syncOnly, afxPipeline pip)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -164,154 +209,238 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxPipeline pip, afxBool bin
 
     if (!pip)
     {
-        gl->UseProgram(0); _SglThrowErrorOccuried();
-        gl->BindVertexArray(0); _SglThrowErrorOccuried();
+        gl->BindProgramPipeline(0); _SglThrowErrorOccuried();
+        //gl->UseProgram(0); _SglThrowErrorOccuried();
+        //gl->BindVertexArray(0); _SglThrowErrorOccuried();
     }
     else
     {
         AfxAssertObjects(1, &pip, afxFcc_PIP);
-
         GLuint glHandle = pip->glHandle;
+        GLuint glHandleXformStages = pip->glHandleXformStages;
+        sglUpdateFlags devUpdReq = (pip->updFlags & SGL_UPD_FLAG_DEVICE);
 
-        if ((pip->updFlags & SGL_UPD_FLAG_DEVICE))
+        if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
         {
-            if ((pip->updFlags & SGL_UPD_FLAG_DEVICE_INST))
+            if (glHandle)
             {
-                if (glHandle)
+                gl->DeleteProgramPipelines(1, &glHandle); _SglThrowErrorOccuried();
+
+                if (glHandleXformStages)
                 {
-                    gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
-                    glHandle = NIL;
+                    gl->DeleteProgram(glHandleXformStages); _SglThrowErrorOccuried();
                 }
+                glHandle = NIL;
+                glHandleXformStages = NIL;
+            }
 
-                AfxAssert(NIL == glHandle);
+            //afxArray code;
+            afxChar errStr[1024];
+            GLuint tmpShdGlHandles[4];
+            //AfxAllocateArray(&code, 2048, sizeof(afxChar), NIL);
 
-                if (!(glHandle = gl->CreateProgram()))
+            for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+            {
+                //AfxEmptyArray(&code);
+                //AfxLoadGlScript(&code, &pip->base.stages[stageIdx].shd.uri);
+                afxShaderBlueprint shdb;
+                _SglLoadShaderBlueprint(&shdb, &pip->base.stages[stageIdx].shd.uri);
+                
+                GLuint shader;
+
+                if (!(shader = gl->CreateShader(AfxToGlShaderStage(pip->base.stages[stageIdx].stage))))
                 {
-                    AfxThrowError();
                     _SglThrowErrorOccuried();
                 }
                 else
                 {
-                    AfxAssert(gl->IsProgram(glHandle));
+                    GLint compiled = 0;
+                    //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                    gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)shdb.codes.bytemap }, (GLint const[]) { shdb.codes.cnt }); _SglThrowErrorOccuried();
+                    gl->CompileShader(shader); _SglThrowErrorOccuried();
+                    gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
 
-                    for (afxNat i = 0; i < pip->base.shaderCnt; i++)
+                    if (compiled == GL_FALSE)
                     {
-                        afxShader shd = pip->base.shaders[i];
-                        AfxAssertObjects(1, &shd, afxFcc_SHD);
-                        afxShaderStage stage = AfxGetShaderStage(shd);
+                        AfxThrowError();
+                        gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                        AfxError(errStr);
+                    }
+                    else
+                    {
+                        tmpShdGlHandles[stageIdx] = shader;
+                    }
+                    //gl->DeleteShader(shader); _SglThrowErrorOccuried();
+                }
 
-                        _SglDpuSyncShd(dpu, shd, stage, gl);
-                        AfxAssert(gl->IsShader(shd->glHandle));
-                        gl->AttachShader(glHandle, shd->glHandle); _SglThrowErrorOccuried();
+                AfxShaderBlueprintEnd(&shdb, 0, NIL);
+
+                if (err)
+                {
+                    for (afxNat i = stageIdx; i-- > 0;)
+                    {
+                        gl->DeleteShader(tmpShdGlHandles[i]); _SglThrowErrorOccuried();
+                        tmpShdGlHandles[i] = NIL;
+                    }
+                    break;
+                }
+            }
+
+            //AfxDeallocateArray(&code);
+
+            if (!err)
+            {
+                if (!(glHandleXformStages = gl->CreateProgram()))
+                {
+                    _SglThrowErrorOccuried();
+                }
+                else
+                {
+                    afxBool linked;
+                    gl->ProgramParameteri(glHandleXformStages, GL_PROGRAM_SEPARABLE, GL_TRUE); _SglThrowErrorOccuried();
+
+                    for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+                    {
+                        gl->AttachShader(glHandleXformStages, tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
                     }
 
-                    gl->LinkProgram(glHandle); _SglThrowErrorOccuried();
-                    afxBool linked;
-                    gl->GetProgramiv(glHandle, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
+                    gl->LinkProgram(glHandleXformStages); _SglThrowErrorOccuried();
+                    gl->GetProgramiv(glHandleXformStages, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
+
+                    for (afxNat stageIdx = pip->base.stageCnt; stageIdx-- > 0;)
+                    {
+                        gl->DetachShader(glHandleXformStages, tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
+                    }
 
                     if (linked == GL_FALSE)
                     {
                         AfxThrowError();
-                        afxChar str[1024];
-                        gl->GetProgramInfoLog(glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
-                        AfxError(str);
-                        gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
-                        glHandle = NIL;
+                        gl->GetProgramInfoLog(glHandleXformStages, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                        AfxError(errStr);
                     }
-                    else
+
+                    if (!err)
                     {
-                        pip->assembled = linked;
-                        pip->glHandle = glHandle;
-                        gl->UseProgram(glHandle); _SglThrowErrorOccuried();
-                        //dpu->activePip = pip;
+                        AfxAssert(NIL == glHandle);
+                        gl->GenProgramPipelines(1, &glHandle); _SglThrowErrorOccuried();
+                        gl->BindProgramPipeline(glHandle); _SglThrowErrorOccuried();
+                        GLbitfield xformStages = NIL;
 
-                        //_AfxRegisterOpenGlResourcesToQwadroDrawPipeline(pip);
-                        AfxEcho("afxPipeline %p hardware-side data instanced.", pip);
-                        pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
+                        for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+                            xformStages |= AfxToGlShaderStageBit(pip->base.stages[stageIdx].stage);
 
-                        if (!err)
+                        gl->UseProgramStages(glHandle, xformStages, glHandleXformStages); _SglThrowErrorOccuried();
+                        
+                        for (afxNat i = 0; i < pip->base.wiringCnt; i++)
+                            if (_SglDpuBindAndResolveLego(dpu, glHandleXformStages, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl))
+                                AfxThrowError();
+
+                        if (pip->base.razr)
                         {
+                            if (_SglDpuBindAndSyncRazr(dpu, pip->base.razr))
+                                AfxThrowError();
+
+                            gl->UseProgramStages(glHandle, GL_FRAGMENT_SHADER_BIT, pip->base.razr->glHandleFragShdProg); _SglThrowErrorOccuried();
+
                             for (afxNat i = 0; i < pip->base.wiringCnt; i++)
-                            {
-                                if (!pip->base.wiring[i].resolved)
-                                {
-                                    _SglDpuBindAndResolveLego(dpu, pip, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl);
-                                    pip->base.wiring[i].resolved = TRUE;
-                                }
-                            }
+                                if (_SglDpuBindAndResolveLego(dpu, pip->base.razr->glHandleFragShdProg, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl))
+                                    AfxThrowError();
+                        }
 
-                            GLuint vao;
-                            gl->GenVertexArrays(1, &vao); _SglThrowErrorOccuried();
-                            gl->BindVertexArray(vao); _SglThrowErrorOccuried();
+                        gl->ValidateProgramPipeline(glHandle);
 
-                            afxShader vsh;
+                        if (syncOnly)
+                        {
+                            gl->BindProgramPipeline(0); _SglThrowErrorOccuried();
+                        }
 
-                            if (AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh))
-                            {
-                                afxNat attrCnt = AfxCountPipelineInputs(pip);
-
-                                afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
-
-                                for (afxNat i = 0; i < attrCnt; i++)
-                                {
-                                    afxPipelineInputLocation in;
-                                    AfxGetPipelineInputs(pip, i, 1, &in);
-
-                                    afxNat location = in.location;
-                                    afxNat srcIdx = in.stream;
-
-                                    GLint glsiz;
-                                    GLenum gltype;
-                                    GLuint glStride;
-                                    AfxToGlVertexFormat(in.fmt, &glsiz, &gltype, &glStride);
-
-                                    gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
-
-                                    AfxAssert(16 > location);  // max vertex attrib
-                                    gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
-                                    AfxAssert(gl->BindVertexBuffer);
-                                    gl->VertexAttribFormat(location, glsiz, gltype, FALSE, offset[srcIdx]); _SglThrowErrorOccuried();
-                                    //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
-                                    //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
-                                    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
-                                    gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
-
-                                    offset[srcIdx] += AfxVertexFormatGetSize(in.fmt);
-
-                                    // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
-                                }
-                            }
-                            pip->vertexInput.vao = vao;
-
-                            afxShader fsh;
-                            AfxFindLinkedShader(pip, afxShaderStage_PIXEL, &fsh);
-                            afxNat outCnt = AfxCountColorOutputChannels(pip->base.rasterizer);
-                            //vtxShd->base.ioDecls.
-                            for (afxNat i = 0; i < outCnt; i++)
-                            {
-                                afxColorOutputChannel out;
-                                AfxGetColorOutputChannels(pip->base.rasterizer, i, 1, &out);
-                                //gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetMutableStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
-                            }
+                        if (err)
+                        {
+                            gl->DeleteProgramPipelines(1, &glHandle); _SglThrowErrorOccuried();
+                            glHandle = NIL;
                         }
                     }
+
+                    if (err)
+                    {
+                        gl->DeleteProgram(glHandleXformStages); _SglThrowErrorOccuried();
+                        glHandleXformStages = NIL;
+                    }
                 }
-                pip->glHandle = glHandle;
+
+                for (afxNat stageIdx = pip->base.stageCnt; stageIdx-- > 0;)
+                {
+                    gl->DeleteShader(tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
+                    tmpShdGlHandles[stageIdx] = NIL;
+                }
             }
-            else if ((pip->updFlags & SGL_UPD_FLAG_DEVICE_FLUSH))
+
+            pip->glHandle = glHandle;
+            pip->glHandleXformStages = glHandleXformStages;
+
+            if (!err)
             {
-                AfxAssert(glHandle);
-                AfxThrowError(); // can't be modified
+                AfxEcho("afxPipeline %p hardware-side data instanced.", pip);
+                pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+
+#if 0
+                GLuint vao;
+                gl->GenVertexArrays(1, &vao); _SglThrowErrorOccuried();
+                gl->BindVertexArray(vao); _SglThrowErrorOccuried();
+
+                afxShader vsh;
+
+                if (AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh))
+                {
+                    afxNat attrCnt = AfxCountPipelineInputs(pip);
+
+                    afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
+
+                    for (afxNat i = 0; i < attrCnt; i++)
+                    {
+                        afxPipelineInputLocation in;
+                        AfxGetPipelineInputs(pip, i, 1, &in);
+
+                        afxNat location = in.location;
+                        afxNat srcIdx = in.stream;
+
+                        GLint glsiz;
+                        GLenum gltype;
+                        GLuint glStride;
+                        AfxToGlVertexFormat(in.fmt, &glsiz, &gltype, &glStride);
+
+                        gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+
+                        AfxAssert(16 > location);  // max vertex attrib
+                        gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
+                        AfxAssert(gl->BindVertexBuffer);
+                        gl->VertexAttribFormat(location, glsiz, gltype, FALSE, offset[srcIdx]); _SglThrowErrorOccuried();
+                        //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
+                        //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
+                        AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
+                        gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
+
+                        offset[srcIdx] += AfxVertexFormatGetSize(in.fmt);
+
+                        // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
+                    }
+                    pip->vertexInput.attrCnt = attrCnt;
+                }
+                pip->vertexInput.vao = vao;
+#else
+
+#endif
+
             }
         }
         else
         {
-            AfxAssert(glHandle);
-            gl->UseProgram(glHandle); _SglThrowErrorOccuried();
-            gl->BindVertexArray(pip->vertexInput.vao); _SglThrowErrorOccuried();
-            //dpu->activePip = pip;
+            if (!syncOnly)
+            {
+                AfxAssert(gl->IsProgramPipeline(glHandle));
+                gl->BindProgramPipeline(glHandle); _SglThrowErrorOccuried();
+            }
         }
-
     }
     return err;
 }
@@ -323,43 +452,40 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     afxDrawContext dctx = AfxGetObjectProvider(pip);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    if (err)
-    {
-        for (afxNat i = 0; i < pip->base.shaderCnt; i++)
-        {
-            AfxReleaseObjects(1, (void*[]) { pip->base.shaders[i] });
-        }
-    }
-
-    AfxAssert(pip->base.shaders);
-    AfxDeallocate(mem, pip->base.shaders);
+    AfxAssert(pip->base.stages);
+    AfxDeallocate(mmu, pip->base.stages);
 
     if (pip->base.wiring)
     {
         for (afxNat i = 0; i < pip->base.wiringCnt; i++)
             AfxReleaseObjects(1, (void*[]) { pip->base.wiring[i].legt });
 
-        AfxDeallocate(mem, pip->base.wiring);
+        AfxDeallocate(mmu, pip->base.wiring);
     }
 
-    if (pip->base.rasterizer)
+    if (pip->base.razr)
     {
-        AfxReleaseObjects(1, (void*[]) { pip->base.rasterizer });
+        AfxReleaseObjects(1, (void*[]) { pip->base.razr });
+    }
+
+    if (pip->base.vin)
+    {
+        AfxReleaseObjects(1, (void*[]) { pip->base.vin });
     }
 
     if (pip->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 5, pip->glHandle);
+        _SglDctxDeleteGlRes(dctx, 8, pip->glHandle);
         pip->glHandle = 0;
     }
 
-    if (pip->vertexInput.vao)
+    if (pip->glHandleXformStages)
     {
-        _SglDctxDeleteGlRes(dctx, 7, pip->vertexInput.vao);
-        pip->vertexInput.vao = 0;
+        _SglDctxDeleteGlRes(dctx, 5, pip->glHandleXformStages);
+        pip->glHandle = 0;
     }
     return err;
 }
@@ -374,36 +500,67 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
     //AfxAssertType(pipb, afxFcc_PIPB);
 
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    pip->base.shaders = NIL;
-    afxNat shaderCnt = pipb->shdCnt;
-    AfxAssert(shaderCnt);
-    pip->base.shaderCnt = 0;
+    // GRAPHICS STATE SETTING
 
-    if (!(pip->base.shaders = AfxAllocate(mem, sizeof(pip->base.shaders[0]), shaderCnt, 0, AfxHint()))) AfxThrowError();
+    afxPipelinePrimitiveFlags primFlags = pipb->primFlags;
+    pip->base.primFlags = NIL;
+
+    //if (primFlags)
+    {
+        if (primFlags & afxPipelinePrimitiveFlag_TOPOLOGY)
+            pip->base.primTop = pipb->primTop;
+
+        if (primFlags & afxPipelinePrimitiveFlag_CTRL_POINTS)
+            pip->base.patchControlPoints = pipb->patchControlPoints;
+
+        if (primFlags & afxPipelinePrimitiveFlag_CULL_MODE)
+            pip->base.cullMode = pipb->cullMode;
+    }
+
+    if ((pip->base.razr = pipb->razr))
+    {
+        AfxReacquireObjects(1, (void*[]) { pip->base.razr });
+    }
+
+    // XFORM STATE SETTING
+
+    pip->base.stages = NIL;
+    afxNat stageCnt = pipb->shdCnt;
+    AfxAssert(stageCnt);
+    pip->base.stageCnt = 0;
+
+    if (!(pip->base.stages = AfxAllocate(mmu, sizeof(pip->base.stages[0]), stageCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
-        for (afxNat i = 0; i < shaderCnt; i++)
+        afxShaderBlueprint shdb[5];
+
+        for (afxNat i = 0; i < stageCnt; i++)
         {
-            afxShader shd = pipb->shd[i];
-            AfxAssertObjects(1, &shd, afxFcc_SHD);
-            AfxReacquireObjects(1, (void*[]) { shd });
-            pip->base.shaders[pip->base.shaderCnt] = shd;
-            pip->base.shaderCnt++;            
+            AfxMakeFixedUri128(&pip->base.stages[pip->base.stageCnt].shd, &pipb->shdUri[i]);
+            AfxMakeFixedString8(&pip->base.stages[pip->base.stageCnt].fn, &pipb->shdFn[i]);
+            pip->base.stages[pip->base.stageCnt].stage = pipb->shdStage[i];
+
+            _SglLoadShaderBlueprint(&shdb[i], &pip->base.stages[pip->base.stageCnt].shd.uri);
+
+            pip->base.stageCnt++;
         }
 
         if (!err)
         {
-            AfxAssert(pip->base.shaderCnt == shaderCnt);
+            AfxAssert(pip->base.stageCnt == stageCnt);
+
+            _SglLoadShaderBlueprint(&shdb[4], &pip->base.razr->base.fragShd.uri);
+
             afxPipelineRigBlueprint legb[/*_SGL_MAX_LEGO_PER_BIND*/4];
 
             for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
             {
                 AfxLegoBlueprintBegin(&legb[i], 1);
 
-                if (AfxLegoBlueprintAddShaderContributions(&legb[i], i, shaderCnt, pip->base.shaders))
+                if (AfxLegoBlueprintAddShaderContributions(&legb[i], i, stageCnt, shdb))
                 {
                     AfxThrowError();
                 }
@@ -426,21 +583,20 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             pip->base.wiringCnt = 0;
 
-            if (setCnt && !(pip->base.wiring = AfxAllocate(mem, sizeof(pip->base.wiring[0]), setCnt, 0, AfxHint()))) AfxThrowError();
+            if (setCnt && !(pip->base.wiring = AfxAllocate(mmu, sizeof(pip->base.wiring[0]), setCnt, 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
                 {
                     if (AfxCountArrayElements(&legb[i].bindings))
                     {
-                        if (AfxBuildPipelineRigs(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
+                        if (AfxBuildBindSchemas(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
                         {
                             AfxThrowError();
                         }
                         else
                         {
                             AfxAssertObjects(1, &(pip->base.wiring[pip->base.wiringCnt].legt), afxFcc_LEGO);
-                            pip->base.wiring[pip->base.wiringCnt].resolved = FALSE;
                             pip->base.wiring[pip->base.wiringCnt].set = i;
                             ++pip->base.wiringCnt;
                         }
@@ -460,53 +616,82 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
             {
                 pip->base.inCnt = 0;
 
-                for (afxNat i = 0; i < shaderCnt; i++)
+                for (afxNat i = 0; i < stageCnt; i++)
                 {
-                    afxShader shd;
-                    AfxGetLinkedShaders(pip, i, 1, &shd);
-                    AfxAssertObjects(1, &shd, afxFcc_SHD);
-
-                    if (afxShaderStage_VERTEX == AfxGetShaderStage(shd))
+                    if (afxShaderStage_VERTEX == shdb->stage)
                     {
-                        for (afxNat j = 0; j < shd->base.ioDeclCnt; j++)
+                        for (afxNat j = 0; j < shdb->inOuts.cnt; j++)
                         {
-                            pip->base.ins[pip->base.inCnt].location = shd->base.ioDecls[j].location;
+                            afxShaderBlueprintInOut shdio = *(afxShaderBlueprintInOut*)AfxGetArrayUnit(&shdb->inOuts, j);
+
+                            pip->base.ins[pip->base.inCnt].location = shdio.location;
                             //pip->base.ins[pip->base.inCnt].binding = pip->base.ins[pip->base.inCnt].location;
-                            pip->base.ins[pip->base.inCnt].fmt = shd->base.ioDecls[j].fmt;
+                            pip->base.ins[pip->base.inCnt].fmt = shdio.fmt;
                             //pip->base.ins[pip->base.inCnt].offset = 0;
-                            pip->base.ins[pip->base.inCnt].stream = shd->base.ioDecls[j].stream;
+                            pip->base.ins[pip->base.inCnt].stream = shdio.stream;
                             pip->base.inCnt++;
                         }
                         break;
                     }
                 }
 
-                // GRAPHICS STATE SETTING
+                pip->base.vin = NIL;
 
-                afxPipelinePrimitiveFlags primFlags = pipb->primFlags;
-                pip->base.primFlags = NIL;
+                afxNat totalAttrCnt = pip->base.inCnt;
+                afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
+                afxVertexInputAttr vinAttrs[16];
+                afxNat vinAttrCnt = { 0 };
+                afxVertexInputStream vinStreams[16] = {0};
+                afxNat vinStreamMap[16] = { 0 };
+                afxNat vinStreamCnt = 0;
 
-                //if (primFlags)
+                for (afxNat i = 0; i < totalAttrCnt; i++)
                 {
-                    if (primFlags & afxPipelinePrimitiveFlag_TOPOLOGY)
-                        pip->base.primTop = pipb->primTop;
+                    afxNat srcIdx = pip->base.ins[i].stream;
+                    afxNat vinStreamIdx = AFX_INVALID_INDEX;
+
+                    for (afxNat j = 0; j < vinStreamCnt; j++)
+                    {
+                        if (vinStreamMap[j] == srcIdx)
+                        {
+                            vinStreamIdx = j;
+                            break;
+                        }
+                    }
+
+                    if (vinStreamIdx == AFX_INVALID_INDEX)
+                    {
+                        vinStreamMap[(vinStreamIdx = vinStreamCnt)] = srcIdx;
+                        ++vinStreamCnt;
+                    }
+
+                    vinAttrs[vinAttrCnt].location = pip->base.ins[i].location;
+                    vinAttrs[vinAttrCnt].streamIdx = vinStreamIdx;
+                    vinAttrs[vinAttrCnt].offset = offset[vinStreamIdx];
+                    afxNat attrSiz = AfxVertexFormatGetSize(pip->base.ins[i].fmt);
+                    offset[vinStreamIdx] += attrSiz;
+                    vinStreams[vinStreamIdx].stride += attrSiz;
+                    vinAttrs[vinAttrCnt].fmt = pip->base.ins[i].fmt;
+                    ++vinAttrCnt;
+
+                    // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
+                }
+
+                if (totalAttrCnt && !(pip->base.vin = AfxAcquireVertexInput(dctx, vinStreamCnt, vinStreams, vinAttrCnt, vinAttrs)))
+                    AfxThrowError();
+
+                if (!err)
+                {
                     
-                    if (primFlags & afxPipelinePrimitiveFlag_CTRL_POINTS)
-                        pip->base.patchControlPoints = pipb->patchControlPoints;
-
-                    if (primFlags & afxPipelinePrimitiveFlag_CULL_MODE)
-                        pip->base.cullMode = pipb->cullMode;
+                    pip->glHandle = 0;
+                    pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
                 }
+            }
 
-                if ((pip->base.rasterizer = pipb->rasterizer))
-                {
-                    AfxReacquireObjects(1, (void*[]) { pip->base.rasterizer });
-                }
-
-                pip->glHandle = 0;
-                AfxZero(1, sizeof(pip->vertexInput), &pip->vertexInput);
-                pip->vertexInput.vao = 0;
-                pip->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+            for (afxNat i = stageCnt; i-- > 0;)
+            {
+                
+                AfxShaderBlueprintEnd(&shdb[i], 0, NIL);
             }
 
             if (err && pip->base.wiring)
@@ -514,19 +699,14 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 for (afxNat i = 0; i < pip->base.wiringCnt; i++)
                     AfxReleaseObjects(1, (void*[]) { pip->base.wiring[i].legt });
 
-                AfxDeallocate(mem, pip->base.wiring);
+                AfxDeallocate(mmu, pip->base.wiring);
             }
         }
 
         if (err)
         {
-            for (afxNat i = 0; i < pip->base.shaderCnt; i++)
-            {
-                AfxReleaseObjects(1, (void*[]) { pip->base.shaders[i] });
-            }
-
-            AfxAssert(pip->base.shaders);
-            AfxDeallocate(mem, pip->base.shaders);
+            AfxAssert(pip->base.stages);
+            AfxDeallocate(mmu, pip->base.stages);
         }
     }
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -537,9 +717,9 @@ _SGL afxClassConfig _SglPipClsConfig =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",
-    .unitsPerPage = 4,
+    .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxPipeline)),
-    .ctx = NIL,
+    .mmu = NIL,
     .ctor = (void*)_SglPipCtor,
     .dtor = (void*)_SglPipDtor
 };

@@ -1,0 +1,218 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0f8ce874 by 00000000 over 00000000 with 0f8cb770)
+ afxClass<Basic I/O System>::ConstructObject(0063f160)
+ afxSystem.c:1068
+  _AfxSysCtor(sys=0063f160)
+ Installing Thread Execution Unit at 0063f56c by 0063f184 over 00000000 with 0020de14)
+ Entering the Thread Execution Environment 5764
+ afxClass<Thread Execution Unit>::ConstructObject(0063fc20)
+ afxTxu.c:397
+  _AfxTxuCtor(0063fc20)
+ Installing Memory Management Unit at 0063f198 by 0063f184 over 00000000 with 0f8cb044)
+ Installing Module at 0063f25c by 0063f184 over 00000000 with 0f8cb5d4)
+ Installing Thread at 0063f4a8 by 0063f184 over 00000000 with 0f8cb7a0)
+ Installing Service at 0063f630 by 0063f184 over 00000000 with 0f8a8b7c)
+ Installing File at 0063f87c by 0063f184 over 00000000 with 0f8cb574)
+ Installing I/O Stream at 0063f7b8 by 0063f184 over 00000000 with 0f8cb728)
+ Installing Archive at 0063f940 by 0063f184 over 00000000 with 0f8cb000)
+ Installing Application at 0063f6f4 by 0063f184 over 00000000 with 0f8a3334)
+ Installing Keyboard at 0063f320 by 0063f184 over 00000000 with 0f8cb5a4)
+ Installing Mouse at 0063f3e4 by 0063f184 over 00000000 with 0f8cb604)
+ Installing Simulation at 0063fa04 by 0063f184 over 00000000 with 0f8cc1d0)
+ [!] afxSystem.c:1170?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1171?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(0063fd20)
+ afxArena.c:768
+  AfxAllocateArena(aren=0063fb08)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem.c:1223!_AfxSysCtor")
+ afxSystem.c:823
+  AfxMountStoragePoints(6,0020df94)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=0063fad8,uri=0020decc)
+ afxClass<Module>::ConstructObject(00644790)
+ afxModule.c:94
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:299
+  AfxAcquireKeyboards(cnt=1,port=0020ddd4,kbd=0063fadc)
+ afxClass<Keyboard>::ConstructObject(00642d40)
+ afxKeyboard.c:250
+  _AfxKbdCtor(kbd=00642d40)
+ afxDrawSystem.c:437
+  _AfxDsysCtor(dsys=00644850)
+ Installing Draw Thread at 00644c80 by 0063f184 over 00000000 with 0020dbe8)
+ Installing Installable Client Driver for Draw Device at 006448ac by 0063f184 over 00000000 with 0020dbb8)
+ Installing Draw Device at 00644970 by 0063f184 over 00000000 with 0020db88)
+ Installing Draw Context at 00644a34 by 0063f184 over 00000000 with 0020dbe8)
+ Installing Draw Output at 00644af8 by 0063f184 over 00000000 with 0020dbe8)
+ Installing Draw Input at 00644bbc by 0063f184 over 00000000 with 0020dbe8)
+ Installing Camera at 00644d44 by 0063f184 over 00000000 with 0020dbe8)
+ Loading draw ICD system/e2draw.icd
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=0020d9f0,uri=0020d9f8)
+ afxClass<Module>::ConstructObject(00644ef0)
+ afxModule.c:94
+  _AfxMdleCtor(uri:e2draw.icd)
+ afxClass<Installable Client Driver for Draw Devic>::ConstructObject(00646c20)
+ afxDrawSystem.c:177
+  _AfxDdrvCtor(ddrv=00646c20)
+Installing 'e2draw.icd' ICD on draw system 00644850...
+	OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 00646c34 by 00646c20 over 00644970 with 0020d128)
+ afxClass<Draw Device, Draw Device>ConstructingObject(00646db0)
+ afxClass<Draw Device>::ConstructObject(00646db0)
+ afxClass<Draw Device>::ConstructObject(00646db0)
+ sglDrawDriver.c:2395
+  _SglDdevCtor(ddev=00646db0)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8000005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ Installing Draw Queue at 00647368 by 00646db0 over 00000000 with 0020c840)
+ Installing Draw Script at 0064742c by 00646db0 over 00000000 with 0020c840)
+ Installing Draw Context at 00646dc4 by 00646db0 over 00644a34 with 50869128)
+ Installing Draw Output at 00646e88 by 00646db0 over 00644af8 with 50869280)
+ Installing Draw Input at 00646f4c by 00646db0 over 00644bbc with 50869250)
+ Creating temp OpenGL context
+ Creating definitive OpenGL context
+ 000 glCullFace core found.
+ 001 glFrontFace core found.
+ 002 glHint core found.
+ 003 glLineWidth core found.
+ 004 glPointSize core found.
+ 005 glPolygonMode core found.
+ 006 glScissor core found.
+ 007 glTexParameterf core found.
+ 008 glTexParameterfv core found.
+ 009 glTexParameteri core found.
+ 010 glTexParameteriv core found.
+ 011 glTexImage1D core found.
+ 012 glTexImage2D core found.
+ 013 glDrawBuffer core found.
+ 014 glClear core found.
+ 015 glClearColor core found.
+ 016 glClearStencil core found.
+ 017 glClearDepth core found.
+ 018 glStencilMask core found.
+ 019 glColorMask core found.
+ 020 glDepthMask core found.
+ 021 glDisable core found.
+ 022 glEnable core found.
+ 023 glFinish core found.
+ 024 glFlush core found.
+ 025 glBlendFunc core found.
+ 026 glLogicOp core found.
+ 027 glStencilFunc core found.
+ 028 glStencilOp core found.
+ 029 glDepthFunc core found.
+ 030 glPixelStoref core found.
+ 031 glPixelStorei core found.
+ 032 glReadBuffer core found.
+ 033 glReadPixels core found.
+ 034 glGetBooleanv core found.
+ 035 glGetDoublev core found.
+ 036 glGetError core found.
+ 037 glGetFloatv core found.
+ 038 glGetIntegerv core found.
+ 039 glGetString core found.
+ 040 glGetTexImage core found.
+ 041 glGetTexParameterfv core found.
+ 042 glGetTexParameteriv core found.
+ 043 glGetTexLevelParameterfv core found.
+ 044 glGetTexLevelParameteriv core found.
+ 045 glIsEnabled core found.
+ 046 glDepthRange core found.
+ 047 glViewport core found.
+ 048 glDrawArrays core found.
+ 049 glDrawElements core found.
+ 050 glGetPointerv core found.
+ 051 glPolygonOffset core found.
+ 052 glCopyTexImage1D core found.
+ 053 glCopyTexImage2D core found.
+ 054 glCopyTexSubImage1D core found.
+ 055 glCopyTexSubImage2D core found.
+ 056 glTexSubImage1D core found.
+ 057 glTexSubImage2D core found.
+ 058 glBindTexture core found.
+ 059 glDeleteTextures core found.
+ 060 glGenTextures core found.
+ 061 glIsTexture core found.
+ 062 glDrawRangeElements core found.
+ 063 glTexImage3D core found.
+ 064 glTexSubImage3D core found.
+ 065 glCopyTexSubImage3D core found.
+ 066 glActiveTexture core found.
+ 067 glSampleCoverage core found.
+ 068 glCompressedTexImage3D core found.
+ 069 glCompressedTexImage2D core found.
+ 070 glCompressedTexImage1D core found.
+ 071 glCompressedTexSubImage3D core found.
+ 072 glCompressedTexSubImage2D core found.
+ 073 glCompressedTexSubImage1D core found.
+ 074 glGetCompressedTexImage core found.
+ 075 glBlendFuncSeparate core found.
+ 076 glMultiDrawArrays core found.
+ 077 glMultiDrawElements core found.
+ 078 glPointParameterf core found.
+ 079 glPointParameterfv core found.
+ 080 glPointParameteri core found.
+ 081 glPointParameteriv core found.
+ 082 glBlendColor core found.
+ 083 glBlendEquation core found.
+ 084 glGenQueries core found.
+ 085 glDeleteQueries core found.
+ 086 glIsQuery core found.
+ 087 glBeginQuery core found.
+ 088 glEndQuery core found.
+ 089 glGetQueryiv core found.
+ 090 glGetQueryObjectiv core found.
+ 091 glGetQueryObjectuiv core found.
+ 092 glBindBuffer core found.
+ 093 glDeleteBuffers core found.
+ 094 glGenBuffers core found.
+ 095 glIsBuffer core found.
+ 096 glBufferData core found.
+ 097 glBufferSubData core found.

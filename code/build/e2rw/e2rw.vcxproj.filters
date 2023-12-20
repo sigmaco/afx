@@ -10,4 +10,15 @@
       <Filter>e2rw</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\e2rw\RwStream.h">
+      <Filter>e2rw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e2rw\RwTxdIo.h">
+      <Filter>e2rw</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\e2rw\RwExtensionIo.h">
+      <Filter>e2rw</Filter>
+    </ClInclude>
+  </ItemGroup>
 </Project>

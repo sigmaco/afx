@@ -14,7 +14,7 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxVertex.h"
+#include "qwadro/math/afxVertex.h"
 
 _AFXINL afxReal AfxGetDistanceBetweenV3d(afxReal const v[3], afxReal const other[3])
 {

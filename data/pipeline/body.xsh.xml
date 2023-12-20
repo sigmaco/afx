@@ -6,12 +6,12 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' stream='0'>vec4 aPos</In>
+        <In location='0' stream='0'>vec3 aPos</In>
         <In location='3' stream='1'>vec3 aNormal</In>
         <In location='6' stream='1'>vec2 aUv</In>
         <![CDATA[
         
-        layout (location = 0) in vec4 aPos;
+        layout (location = 0) in vec3 aPos;
         layout (location = 3) in vec3 aNormal;
         layout (location = 6) in vec2 aUv;
 
@@ -26,7 +26,7 @@
 
         void main()
         {
-            sgl_v.xyz = vec3(m * aPos);
+            sgl_v.xyz = vec3(m * vec4(aPos, 1));
             sgl_v.nrm = mat3(transpose(inverse(m))) * aNormal;  
             
             gl_Position = p * v * vec4(sgl_v.xyz, 1.0);
@@ -40,18 +40,18 @@
         <Include>data/pipeline/stdObject.inc</Include>
         <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
         <Resource set='3' type='CONSTANT_BUFFER'>sgl_obj</Resource>
-        <In location='0' stream='0'>vec4 aPos</In>
+        <In location='0' stream='0'>vec3 aPos</In>
         <In location='3' stream='1'>vec3 aNormal</In>
         <In location='6' stream='1'>vec2 aUv</In>
         <In location='1' stream='0'>vec4 aBlendIndices</In>
         <In location='2' stream='0'>vec4 aBlendWeights</In>
         <![CDATA[
         
-        layout (location = 0) in vec4 aPos;
-        layout (location = 3) in vec3 aNormal;
-        layout (location = 6) in vec2 aUv;
+        layout (location = 0) in vec3 aPos;
         layout (location = 1) in vec4 aBlendIndices;
         layout (location = 2) in vec4 aBlendWeights;
+        layout (location = 3) in vec3 aNormal;
+        layout (location = 6) in vec2 aUv;
 
         out block
         {
@@ -64,7 +64,7 @@
         
         void main()
         {
-            vec4 InPos     = aPos;
+            vec3 InPos     = aPos;
             vec4 WorldPos    = 0;
             vec3 WorldNormal = 0;
             
@@ -74,8 +74,8 @@
             for( int i = 0; i < 4; ++i )
             {
                 mat4 BoneMatrix = w[int(aBlendIndices[i])];
-                WorldPos    += (aBlendWeights[i] * vec4( InPos * BoneMatrix ));
-                WorldNormal += vec3(vec4(aBlendWeights[i] * vec4( vec4( aNormal, 0 ) * BoneMatrix )));
+                WorldPos    += (aBlendWeights[i] * (BoneMatrix * vec4(InPos, 1)));
+                WorldNormal += vec3(vec4(aBlendWeights[i] * (BoneMatrix * vec4(aNormal, 0))));
             }
 
             vec4 ViewPosL = (WorldPos * v);
@@ -139,15 +139,13 @@
     <Pipeline id='rigid'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/body.xsh.xml?vsRigid</Shader>
-        <Shader>data/pipeline/body.xsh.xml?fs</Shader>
+        <VertexShader>data/pipeline/body.xsh.xml?vsRigid</VertexShader>
         <Rasterizer>data/pipeline/body.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='skinned'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader specialization='1'>data/pipeline/body.xsh.xml?vsSkinned</Shader>
-        <Shader>data/pipeline/body.xsh.xml?fs</Shader>
+        <VertexShader specialization='1'>data/pipeline/body.xsh.xml?vsSkinned</VertexShader>
         <Rasterizer>data/pipeline/body.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
@@ -155,5 +153,6 @@
         <DepthWriteEnabled></DepthWriteEnabled>
         <FillMode>SOLID</FillMode>
         <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/body.xsh.xml?fs</FragmentShader>
     </Rasterizer>
 </Qwadro>

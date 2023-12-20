@@ -32,6 +32,63 @@
         }
         ]]>
     </Shader>
+    <Shader id='tristrippedInnerCubemapVs'>
+        <Stage>VERTEX</Stage>
+        <Include>data/pipeline/stdEnv.inc</Include>
+        <Include>data/pipeline/stdView.inc</Include>        
+        <Resource type='CONSTANT_BUFFER'>sgl_view</Resource>
+        <![CDATA[
+        
+        const vec3 pos[14] =
+        {
+            vec3(-1, 1, 1),
+            vec3( 1, 1, 1),
+            vec3(-1,-1, 1),
+            vec3( 1,-1, 1),
+            vec3( 1,-1,-1),
+            vec3( 1, 1, 1),
+            vec3( 1, 1,-1),
+            vec3(-1, 1, 1),
+            vec3(-1, 1,-1),
+            vec3(-1,-1, 1),
+            vec3(-1,-1,-1),
+            vec3( 1,-1,-1),
+            vec3(-1, 1,-1),
+            vec3( 1, 1,-1)
+        };
+        
+        const vec2 uv[14] =
+        {
+            vec2(0, 0),
+            vec2(1, 0),
+            vec2(0, 1),
+            vec2(1, 1),
+            vec2(1, 0),
+            vec2(0, 1),
+            vec2(0, 0),
+            vec2(1, 1),
+            vec2(1, 0),
+            vec2(0, 1),
+            vec2(0, 0),
+            vec2(1, 0),
+            vec2(0, 1),
+            vec2(1, 1)
+        };
+        
+        out block
+        {
+            vec2 uv0;
+        } sgl_v;
+
+        // to use, draw 12 triangles in TRI_STRIP mode.
+
+        void main()
+        {
+            sgl_v.uv0 = uv[gl_VertexID];            
+            gl_Position = pos[gl_VertexID];
+        }
+        ]]>
+    </Shader>
     <Shader id='fs'>
         <Stage>FRAGMENT</Stage>
         <Include>data/pipeline/stdEnv.inc</Include>
@@ -57,8 +114,7 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <Shader>data/pipeline/skybox.xsh.xml?vs</Shader>
-        <Shader>data/pipeline/skybox.xsh.xml?fs</Shader>
+        <VertexShader>data/pipeline/skybox.xsh.xml?vs</VertexShader>
         <Rasterizer>data/pipeline/skybox.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
@@ -66,6 +122,7 @@
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LEQUAL</DepthCompareOp>
+        <FragmentShader>data/pipeline/skybox.xsh.xml?fs</FragmentShader>
     </Rasterizer>
     <DrawTechnique>
         <Pass>

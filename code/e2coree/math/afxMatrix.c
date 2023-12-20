@@ -14,11 +14,11 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/math/afxMatrix.h"
-#include "afx/math/afxMathDefs.h"
-#include "afx/math/afxReal.h"
-#include "afx/math/afxVector.h"
-#include "afx/math/afxPlane.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/math/afxReal.h"
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxPlane.h"
 
 // Memory layout: row-major
 

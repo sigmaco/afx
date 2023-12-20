@@ -1,12 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-#include "afx/afxQwadro.h"
+#include "qwadro/afxQwadro.h"
 
 afxSystem sys = NIL;
 afxDrawSystem dsys = NIL;
 afxApplication TheApp = NIL;
-afxSimulation sim = NIL;
+awxSimulation sim = NIL;
 
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
@@ -26,7 +26,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
 
     afxUri uriMap;
     AfxMakeUri(&uriMap, "e2newton.icd", 0);
-    afxSimulationConfig simSpec = { 0 };
+    awxSimulationConfig simSpec = { 0 };
     simSpec.bounding = NIL;
     simSpec.dctx = dctx;
     simSpec.din = NIL;
@@ -44,7 +44,7 @@ _AFXEXPORT afxResult AfxEnterApplication(afxApplication app)
     doutConfig.clipped = TRUE;
     doutConfig.colorSpc = NIL;
     doutConfig.presentAlpha = FALSE;
-    doutConfig.pixelFmt = AFX_PFD_RGBA8;
+    doutConfig.pixelFmt = afxPixelFormat_RGBA8;
     doutConfig.presentMode = afxPresentMode_LIFO;
     doutConfig.presentTransform = NIL;
     doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
@@ -87,8 +87,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri2048 romUri;
-    AfxUri2048(&romUri);
+    afxFixedUri2048 romUri;
+    AfxMakeFixedUri2048(&romUri);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

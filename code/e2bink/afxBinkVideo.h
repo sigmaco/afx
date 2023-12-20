@@ -2,10 +2,10 @@
 #define AFX_BINK_VIDEO_H
 
 #include "../deps/bink/bink.h"
-#include "afx/mmux/afxMmuiDefs.h"
-#include "afx/draw/afxRaster.h"
-#include "afx/draw/afxBuffer.h"
-#include "afx/draw/afxDrawSystem.h"
+#include "qwadro/mmux/afxMmuiDefs.h"
+#include "qwadro/draw/io/afxRaster.h"
+#include "qwadro/draw/io/afxBuffer.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 AFX_DEFINE_STRUCT(BINKFRAMETEXTURES)
 {
@@ -17,7 +17,7 @@ AFX_DEFINE_STRUCT(BINKTEXTURESET)
 {
     // this is the Bink info on the textures
     BINKFRAMEBUFFERS        bink_buffers;
-    //afxCanvas               canv[BINKMAXFRAMEBUFFERS];
+    //avxCanvas               canv[BINKMAXFRAMEBUFFERS];
     // this is the GPU info for the textures
     BINKFRAMETEXTURES       rsrc[BINKMAXFRAMEBUFFERS];
 };
@@ -53,6 +53,6 @@ AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxRaster surf, afxBool readjust, afxBool upscale, afxDrawScript dscr);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr);
 
 #endif//AFX_BINK_VIDEO_H

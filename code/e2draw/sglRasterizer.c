@@ -14,164 +14,270 @@
  *                                    www.sigmaco.org
  */
 
-#include "afx/core/afxXml.h"
+#include "qwadro/core/afxXml.h"
 #include "sgl.h"
 
-#include "afx/draw/afxPipeline.h"
-#include "afx/draw/afxPipeline.h"
+#include "qwadro/draw/pipe/afxPipeline.h"
 
-#include "afx/draw/afxDrawSystem.h"
-#include "afx/core/afxUri.h"
-#include "afx/core/afxSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/core/afxUri.h"
+#include "qwadro/core/afxSystem.h"
+#include "qwadro/draw/afxXsh.h"
 // OpenGL/Vulkan Continuous Integration
 
-#define _AFX_DBG_IGNORE_BLEND
-#define _AFX_DBG_IGNORE_COLOR_MASK
-#define _AFX_DBG_IGNORE_LOGICAL_OP
-#define _AFX_DBG_IGNORE_MULTISAMPLING
-#define _AFX_DBG_IGNORE_STENCIL
-#define _AFX_DBG_IGNORE_DEPTH_BIAS
-
-_SGL afxError _SglDpuBindAndSyncRasterizer(sglDpuIdd* dpu, afxRasterizer rast)
+_SGL afxError _SglDpuBindAndSyncRazr(sglDpuIdd* dpu, afxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
-    afxBool rasterizationDisabled = !rast;
+    afxBool rasterizationDisabled = !razr;
 
-    AfxAssert(rast);
+    AfxAssert(razr);
 
     afxRasterizationConfig config;
-    AfxDescribeRasterizerConfiguration(rast, &config);
+    AfxDescribeRasterizerConfiguration(razr, &config);
+
+    if (!razr)
+    {
+
+    }
+    else
+    {
+        AfxAssertObjects(1, &razr, afxFcc_RAZR);
+        GLuint glHandleFragShdProg = razr->glHandleFragShdProg;
+        sglUpdateFlags devUpdReq = (razr->updFlags & SGL_UPD_FLAG_DEVICE);
+
+        if ((!glHandleFragShdProg) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
+        {
+            if (glHandleFragShdProg)
+            {
+                gl->DeleteProgram(glHandleFragShdProg); _SglThrowErrorOccuried();
+                glHandleFragShdProg = NIL;
+            }
+
+            //afxArray code;
+            //AfxAllocateArray(&code, 2048, sizeof(afxChar), NIL);
+            //AfxLoadGlScript(&code, &razr->base.fragShd.uri);
+            afxShaderBlueprint shdb;
+            _SglLoadShaderBlueprint(&shdb, &razr->base.fragShd.uri);
+
+            if (gl->CreateShaderProgramv)
+            {
+                //if (!(glHandleFragShdProg = gl->CreateShaderProgramv(GL_FRAGMENT_SHADER, 1, (GLchar const*const[]) { (void*)code.bytemap })))
+                if (!(glHandleFragShdProg = gl->CreateShaderProgramv(GL_FRAGMENT_SHADER, 1, (GLchar const*const[]) { (void*)shdb.codes.bytemap })))
+                {
+                    _SglThrowErrorOccuried();
+                }
+            }
+            else
+            {
+                GLuint shader;
+
+                if (!(shader = gl->CreateShader(GL_FRAGMENT_SHADER)))
+                {
+                    _SglThrowErrorOccuried();
+                }
+                else
+                {
+                    afxChar errStr[1024];
+                    GLint compiled = 0;
+                    //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                    gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)shdb.codes.bytemap }, (GLint const[]) { shdb.codes.cnt }); _SglThrowErrorOccuried();
+                    gl->CompileShader(shader); _SglThrowErrorOccuried();
+                    gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
+
+                    if (compiled == GL_FALSE)
+                    {
+                        AfxThrowError();
+                        gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                        AfxError(errStr);
+                    }
+                    else
+                    {
+                        GLuint program;
+
+                        if (!(program = gl->CreateProgram()))
+                        {
+                            _SglThrowErrorOccuried();
+                        }
+                        else
+                        {
+                            gl->ProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE); _SglThrowErrorOccuried();
+                            afxBool linked;
+                            gl->AttachShader(program, shader); _SglThrowErrorOccuried();
+                            gl->LinkProgram(program); _SglThrowErrorOccuried();
+                            gl->GetProgramiv(program, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
+
+                            if (linked == GL_FALSE)
+                            {
+                                AfxThrowError();
+                                gl->GetProgramInfoLog(program, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                                AfxError(errStr);
+                            }
+                            gl->DetachShader(program, shader); _SglThrowErrorOccuried();
+                        }
+                        glHandleFragShdProg = program;
+                    }
+                    gl->DeleteShader(shader); _SglThrowErrorOccuried();
+                }
+            }
+
+#if 0
+            afxShader fsh;
+            AfxFindLinkedShader(pip, afxShaderStage_FRAGMENT, &fsh);
+            afxNat outCnt = AfxCountColorOutputChannels(pip->base.razr);
+            //vtxShd->base.ioDecls.
+            for (afxNat i = 0; i < outCnt; i++)
+            {
+                afxColorOutputChannel out;
+                AfxGetColorOutputChannels(pip->base.razr, i, 1, &out);
+                //gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetBufferedStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
+            }
+#endif
+
+
+            //AfxEcho("%.*s", code.cnt, code.bytemap);
+            AfxEcho("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
+            //AfxDeallocateArray(&code);
+            AfxShaderBlueprintEnd(&shdb, 0, NIL);
+
+            AfxAssert(gl->IsProgram(glHandleFragShdProg));
+            
+            razr->glHandleFragShdProg = glHandleFragShdProg;
+            razr->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+        }
+    }
+    return err;
+}
+
+_SGL afxError _SglRazrDtor(afxRasterizer razr)
+{
+    AfxEntry("razr=%p", razr);
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
+
+    afxDrawContext dctx = AfxGetObjectProvider(razr);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+
+    if (razr->base.sampleMasks)
+        AfxDeallocate(mmu, razr->base.sampleMasks);
+
+    if (razr->base.outs)
+        AfxDeallocate(mmu, razr->base.outs);
 
     return err;
 }
 
-_SGL afxError _SglPiprDtor(afxRasterizer rast)
+_SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
 {
-    AfxEntry("rast=%p", rast);
+    AfxEntry("razr=%p", razr);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &rast, afxFcc_PIPR);
-
-    afxDrawContext dctx = AfxGetObjectProvider(rast);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
-
-    if (rast->base.sampleMasks)
-        AfxDeallocate(mem, rast->base.sampleMasks);
-
-    if (rast->base.outs)
-        AfxDeallocate(mem, rast->base.outs);
-
-    return err;
-}
-
-_SGL afxError _SglPiprCtor(afxRasterizer rast, afxCookie const* cookie)
-{
-    AfxEntry("rast=%p", rast);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
     afxDrawContext dctx = cookie->udd[0];
     afxRasterizationConfig const *rasc = ((afxRasterizationConfig const*)cookie->udd[1]) + cookie->no;
     //AfxAssertType(rasc, afxFcc_RASB);
 
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxContext mem = AfxGetDrawContextMemory(dctx);
-    AfxAssertObjects(1, &mem, afxFcc_CTX);
+    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     afxRasterizationFlags rasFlags = rasc->rasFlags;
-    rast->base.rasFlags = NIL;
+    razr->base.rasFlags = NIL;
 
-    rast->base.fillMode = rasc->fillMode;
-    rast->base.lineWidth = rasc->lineWidth;
+    razr->base.fillMode = rasc->fillMode;
+    razr->base.lineWidth = rasc->lineWidth;
 
-    rast->base.depthBiasEnabled = !!rasc->depthBiasEnabled;
-    rast->base.depthBiasSlopeScale = rasc->depthBiasSlopeScale;
-    rast->base.depthBiasConstFactor = rasc->depthBiasConstFactor;
-    rast->base.depthBiasClamp = rasc->depthBiasClamp;
+    razr->base.depthBiasEnabled = !!rasc->depthBiasEnabled;
+    razr->base.depthBiasSlopeScale = rasc->depthBiasSlopeScale;
+    razr->base.depthBiasConstFactor = rasc->depthBiasConstFactor;
+    razr->base.depthBiasClamp = rasc->depthBiasClamp;
 
     afxMultisamplingFlags msFlags = rasc->msFlags;
-    rast->base.msFlags = NIL;
+    razr->base.msFlags = NIL;
 
-    rast->base.msEnabled = !!rasc->msEnabled;
-    rast->base.minSampleShadingValue = rasc->minSampleShadingValue;
+    razr->base.msEnabled = !!rasc->msEnabled;
+    razr->base.minSampleShadingValue = rasc->minSampleShadingValue;
 
-    rast->base.sampleCnt = rasc->sampleCnt;
-    rast->base.sampleMasks = NIL;
+    razr->base.sampleCnt = rasc->sampleCnt;
+    razr->base.sampleMasks = NIL;
 
-    if (rast->base.sampleCnt && !(rast->base.sampleMasks = AfxAllocate(mem, sizeof(rast->base.sampleMasks[0]), rast->base.sampleCnt, 0, AfxHint()))) AfxThrowError();
+    if (razr->base.sampleCnt && !(razr->base.sampleMasks = AfxAllocate(mmu, sizeof(razr->base.sampleMasks[0]), razr->base.sampleCnt, 0, AfxHint()))) AfxThrowError();
     else
     {
-        for (afxNat i = 0; i < rast->base.sampleCnt; i++)
-            rast->base.sampleMasks[i] = rasc->sampleMasks[i];
+        for (afxNat i = 0; i < razr->base.sampleCnt; i++)
+            razr->base.sampleMasks[i] = rasc->sampleMasks[i];
     }
 
     if (!err)
     {
         afxDepthStencilFlags dsFlags = rasc->dsFlags;
-        rast->base.dsFlags = NIL;
+        razr->base.dsFlags = NIL;
 
-        rast->base.depthTestEnabled = !!rasc->depthTestEnabled;
-        rast->base.depthCompareOp = rasc->depthCompareOp;
-        rast->base.depthWriteEnabled = !!rasc->depthWriteEnabled;
+        razr->base.depthTestEnabled = !!rasc->depthTestEnabled;
+        razr->base.depthCompareOp = rasc->depthCompareOp;
+        razr->base.depthWriteEnabled = !!rasc->depthWriteEnabled;
 
-        rast->base.stencilTestEnabled = !!rasc->stencilTestEnabled;
-        rast->base.stencilFront = rasc->stencilFront;
-        rast->base.stencilBack = rasc->stencilBack;
+        razr->base.stencilTestEnabled = !!rasc->stencilTestEnabled;
+        razr->base.stencilFront = rasc->stencilFront;
+        razr->base.stencilBack = rasc->stencilBack;
         
-        rast->base.depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
-        AfxCopyV2d(rast->base.depthBounds, rasc->depthBounds);
+        razr->base.depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
+        AfxCopyV2d(razr->base.depthBounds, rasc->depthBounds);
 
-        rast->base.dsFmt = rasc->dsFmt; // ?
+        razr->base.dsFmt = rasc->dsFmt; // ?
 
         afxColorOutputFlags pixelFlags = rasc->pixelFlags;
-        rast->base.pixelFlags = NIL;
+        razr->base.pixelFlags = NIL;
 
-        rast->base.outCnt = rasc->colorOutCnt;
-        rast->base.outs = NIL;
+        razr->base.outCnt = rasc->colorOutCnt;
+        razr->base.outs = NIL;
 
-        if (rast->base.outCnt && !(rast->base.outs = AfxAllocate(mem, sizeof(rast->base.outs[0]), rast->base.outCnt, 0, AfxHint()))) AfxThrowError();
+        if (razr->base.outCnt && !(razr->base.outs = AfxAllocate(mmu, sizeof(razr->base.outs[0]), razr->base.outCnt, 0, AfxHint()))) AfxThrowError();
         else
         {
-            for (afxNat i = 0; i < rast->base.outCnt; i++)
-                rast->base.outs[i] = rasc->colorOuts[i];
+            for (afxNat i = 0; i < razr->base.outCnt; i++)
+                razr->base.outs[i] = rasc->colorOuts[i];
 
             // deveria ser só o blend/write, já que só podemos determinar as saídas quando assembleado com fragment shaders enquanto pipeline completo.
         }
 
         if (!err)
         {
-            AfxCopyV4d(rast->base.blendConstants, rasc->blendConstants);
+            AfxCopyV4d(razr->base.blendConstants, rasc->blendConstants);
 
-            rast->base.logicOpEnabled = !!rasc->pixelLogicOpEnabled;
-            rast->base.logicOp = rasc->pixelLogicOp;
+            razr->base.logicOpEnabled = !!rasc->pixelLogicOpEnabled;
+            razr->base.logicOp = rasc->pixelLogicOp;
 
-            rast->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+            AfxMakeFixedUri128(&razr->base.fragShd, &rasc->fragShd);
+            AfxMakeFixedString8(&razr->base.fragFn, &rasc->fragFn);
 
+            razr->updFlags = SGL_UPD_FLAG_DEVICE_INST;
+            
             if (err)
             {
-                if (rast->base.outs)
-                    AfxDeallocate(mem, rast->base.outs);
+                if (razr->base.outs)
+                    AfxDeallocate(mmu, razr->base.outs);
             }
         }
 
         if (err)
         {
-            if (rast->base.sampleMasks)
-                AfxDeallocate(mem, rast->base.sampleMasks);
+            if (razr->base.sampleMasks)
+                AfxDeallocate(mmu, razr->base.sampleMasks);
         }
     }
-    AfxAssertObjects(1, &rast, afxFcc_PIPR);
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return err;
 }
 
-_SGL afxClassConfig _SglPiprClsConfig =
+_SGL afxClassConfig _SglRazrClsConfig =
 {
-    .fcc = afxFcc_PIPR,
+    .fcc = afxFcc_RAZR,
     .name = "Rasterizer",
-    .unitsPerPage = 4,
+    .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxRasterizer)),
-    .ctx = NIL,
-    .ctor = (void*)_SglPiprCtor,
-    .dtor = (void*)_SglPiprDtor
+    .mmu = NIL,
+    .ctor = (void*)_SglRazrCtor,
+    .dtor = (void*)_SglRazrDtor
 };

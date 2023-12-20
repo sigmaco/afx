@@ -1,0 +1,45 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fed6cbaeb0 by 0000000000000000 over 0000000000000000 with 000007fed6cb7950)
+ afxClass<Basic I/O System>::ConstructObject(0000000000382120)
+ afxSystem.c:1067
+  _AfxSysCtor(sys=0000000000382120)
+ Installing Thread Execution Unit at 00000000003827b8 by 0000000000382150 over 0000000000000000 with 00000000002ad7b0)
+ Installing Memory Management Unit at 0000000000382178 by 0000000000382150 over 0000000000000000 with 000007fed6cb7080)
+ Installing Module at 00000000003822b8 by 0000000000382150 over 0000000000000000 with 000007fed6cb7720)
+ Installing Thread at 0000000000382678 by 0000000000382150 over 0000000000000000 with 000007fed6cb79a8)
+ Installing Service at 00000000003828f8 by 0000000000382150 over 0000000000000000 with 000007fed6c445c8)
+ Installing File at 0000000000382cb8 by 0000000000382150 over 0000000000000000 with 000007fed6cb7670)
+ Installing I/O Stream at 0000000000382b78 by 0000000000382150 over 0000000000000000 with 000007fed6cb78e0)
+ Installing Archive at 0000000000382df8 by 0000000000382150 over 0000000000000000 with 000007fed6cb7000)
+ Installing Application at 0000000000382a38 by 0000000000382150 over 0000000000000000 with 000007fed6c2e9e8)
+ Installing Keyboard at 00000000003823f8 by 0000000000382150 over 0000000000000000 with 000007fed6cb76c8)
+ Installing Mouse at 0000000000382538 by 0000000000382150 over 0000000000000000 with 000007fed6cb7778)
+ Installing Simulation at 0000000000382f38 by 0000000000382150 over 0000000000000000 with 000007fed6cb8638)
+ Entering the Thread Execution Environment 4294967295
+ [!] afxSystem.c:1164?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1165?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(000000000037ca20)
+ ERR afxString.c:34?AfxGetBufferedStringData
+  
+ ERR afxString.c:34?AfxGetBufferedStringData
+  <base>0 + <1>1 is out of capacity <str->cap>0.
+ ERR afxString.c:39?AfxGetBufferedStringData
+  
