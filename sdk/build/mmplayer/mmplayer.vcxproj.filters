@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="mmplayer">
+      <UniqueIdentifier>{818a71a5-aea5-4e47-b4e6-3666b24b5e0e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\demos\mmplayer\mmplayer.c">
+      <Filter>mmplayer</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,206 @@
+
+ afxDebug_w32.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 000007fecf30ff28 by 0000000000000000 over 0000000000000000 with 000007fecf30d848)
+ afxClass<Basic I/O System>::ConstructObject(00000000002b2080)
+ afxSystem_w32.c:670
+  _AfxSysCtor(sys=00000000002b2080)
+ Installing Thread Execution Unit at 00000000002b2998 by 00000000002b20b0 over 0000000000000000 with 000000000022d5e0)
+ Entering the Thread Execution Environment 720
+ afxClass<Thread Execution Unit>::ConstructObject(00000000002ac730)
+ afxTxu_w32.c:397
+  _AfxTxuCtor(00000000002ac730)
+ Installing Memory Management Unit at 00000000002b20d8 by 00000000002b20b0 over 0000000000000000 with 000007fecf30e480)
+ Installing Thread at 00000000002b2858 by 00000000002b20b0 over 0000000000000000 with 000007fecf30d000)
+ Installing Device at 00000000002b2ad8 by 00000000002b20b0 over 0000000000000000 with 000000000022d588)
+ Installing Service at 00000000002b2c18 by 00000000002b20b0 over 0000000000000000 with 000007fecf285c38)
+ Installing File at 00000000002b2e98 by 00000000002b20b0 over 0000000000000000 with 000007fecf30e2b8)
+ Installing I/O Stream at 00000000002b2d58 by 00000000002b20b0 over 0000000000000000 with 000007fecf30e3c0)
+ Installing File Archive at 00000000002b2fd8 by 00000000002b20b0 over 0000000000000000 with 000007fecf30e260)
+ Installing Extension Module at 00000000002b2218 by 00000000002b20b0 over 0000000000000000 with 000007fecf30d6c0)
+ Installing Installable Client Driver at 00000000002b2358 by 00000000002b20b0 over 00000000002b2218 with 000007fecf30d0d8)
+ Installing Storage Point at 00000000002b3118 by 00000000002b20b0 over 0000000000000000 with 000000000022d588)
+ Installing Application at 00000000002b3398 by 00000000002b20b0 over 0000000000000000 with 000007fecf2f26a0)
+ Installing Human Input Device at 00000000002b2498 by 00000000002b20b0 over 00000000002b2ad8 with 000007fecf2b0c80)
+ Installing Keyboard at 00000000002b25d8 by 00000000002b20b0 over 00000000002b2498 with 000007fecf30e310)
+ Installing Mouse at 00000000002b2718 by 00000000002b20b0 over 00000000002b2498 with 000007fecf30e368)
+ Installing Simulation at 00000000002b3258 by 00000000002b20b0 over 0000000000000000 with 000007fecf30e638)
+ [!] afxSystem_w32.c:782?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:783?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(00000000002ac8f0)
+ afxArena.c:768
+  AfxAllocateArena(aren=00000000002b3570)
+ afxArena.c:769
+  AfxAllocateArena(spec=0000000000000000,hint="afxSystem_w32.c:796!_AfxSysCtor")
+ afxClass<Storage Point>::ConstructObject(00000000002b5840)
+ Storage point "." 5 mounted -> "E:/qwadro/afx".
+ afxClass<Storage Point>::ConstructObject(00000000002733b0)
+ Storage point "system" 5 mounted -> "E:/qwadro/afx/system64".
+ afxClass<Storage Point>::ConstructObject(00000000002b6c90)
+ Storage point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ afxClass<Storage Point>::ConstructObject(00000000002b6dc0)
+ Storage point "data" 5 mounted -> "E:/qwadro/afx/data".
+ afxClass<Storage Point>::ConstructObject(00000000002b6ef0)
+ Storage point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<Storage Point>::ConstructObject(00000000002b7020)
+ Storage point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=00000000002b3520,uri=000000000022d788)
+ afxClass<Extension Module>::ConstructObject(00000000002b7b80)
+ afxModule.c:79
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system64/e2coree.dll
+ afxKeyboard.c:301
+  AfxAcquireKeyboards(cnt=1,port=000000000022d52c,kbd=00000000002b3528)
+ afxClass<Keyboard, Human Input Device>ConstructingObject(00000000002b7d50)
+ afxClass<Human Input Device, Device>ConstructingObject(00000000002b7d50)
+ afxClass<Device>::ConstructObject(00000000002b7d50)
+ afxClass<Human Input Device>::ConstructObject(00000000002b7d50)
+ afxClass<Keyboard>::ConstructObject(00000000002b7d50)
+ afxKeyboard.c:252
+  _AfxKbdCtor(kbd=00000000002b7d50)
+ afxSoundSystem.c:127
+  _AfxSsysCtor(ssys=00000000002b8730)
+ Installing Sound Device at 00000000002b8740 by 00000000002b20b0 over 00000000002b2ad8 with 000000000022d178)
+ Installing Sound Context at 00000000002b8880 by 00000000002b20b0 over 0000000000000000 with 000000000022d120)
+ Installing Sound Thread at 00000000002b89c0 by 00000000002b20b0 over 00000000002b2858 with 000000000022d0c8)
+ Loading draw ICD system/e2sound.icd
+ afxClass<Installable Client Driver, Extension Module>ConstructingObject(00000000002b8bc0)
+ afxClass<Extension Module>::ConstructObject(00000000002b8bc0)
+ afxModule.c:79
+  _AfxMdleCtor(uri:system/e2sound.icd)
+ E:/qwadro/afx/system64/e2sound.icd
+ afxClass<Installable Client Driver>::ConstructObject(00000000002b8bc0)
+Installing 'e2sound.icd' ICD on sound system...
+	A4D --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Sound Device at 00000000002b8d00 by 00000000002b8cd8 over 00000000002b8740 with 000007fee6967dd0)
+ afxClass<Sound Device, Sound Device>ConstructingObject(00000000002be020)
+ afxClass<Sound Device, Device>ConstructingObject(00000000002be020)
+ afxClass<Device>::ConstructObject(00000000002be020)
+ afxClass<Sound Device>::ConstructObject(00000000002be020)
+ afxClass<Sound Device>::ConstructObject(00000000002be020)
+ salSdev.c:419
+  _SalSdevCtor(sdev=00000000002be020)
+ Installing Sound Context at 00000000002be1b0 by 00000000002be188 over 00000000002b8880 with 000007fee6968bc8)
+ 0  - OpenAL Soft
+ 1  - Generic Software
+ Listing devices available with ALC_ENUMERATE_ALL_EXT
+ 0  - OpenAL Soft on Alto-falantes (VIA HD Audio(Compatible))
+ 1  - OpenAL Soft on Headphone (VIA HD Audio(Compatible))
+ 2  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))
+ 3  - Generic Software on Headphone (VIA HD Audio(Compatible))
+ Listing available capture devices:
+ 0  - OpenAL Soft on Microfone (VIA HD Audio(Compatible))
+ 1  - OpenAL Soft on Mixagem estÃ©reo (VIA HD Audio(Compatible))
+ 2  - Microfone (VIA HD Audio(Compati
+ 3  - Mixagem estéreo (VIA HD Audio(C
+ 000 alEnable core found.
+ 001 alDisable core found.
+ 002 alIsEnabled core found.
+ 003 alGetString core found.
+ 004 alGetBooleanv core found.
+ 005 alGetIntegerv core found.
+ 006 alGetFloatv core found.
+ 007 alGetDoublev core found.
+ 008 alGetBoolean core found.
+ 009 alGetInteger core found.
+ 010 alGetFloat core found.
+ 011 alGetDouble core found.
+ 012 alGetError core found.
+ 013 alIsExtensionPresent core found.
+ 014 alGetProcAddress core found.
+ 015 alGetEnumValue core found.
+ 016 alListenerf core found.
+ 017 alListener3f core found.
+ 018 alListenerfv core found.
+ 019 alListeneri core found.
+ 020 alListener3i core found.
+ 021 alListeneriv core found.
+ 022 alGetListenerf core found.
+ 023 alGetListener3f core found.
+ 024 alGetListenerfv core found.
+ 025 alGetListeneri core found.
+ 026 alGetListener3i core found.
+ 027 alGetListeneriv core found.
+ 028 alGenSources core found.
+ 029 alDeleteSources core found.
+ 030 alIsSource core found.
+ 031 alSourcef core found.
+ 032 alSource3f core found.
+ 033 alSourcefv core found.
+ 034 alSourcei core found.
+ 035 alSource3i core found.
+ 036 alSourceiv core found.
+ 037 alGetSourcef core found.
+ 038 alGetSource3f core found.
+ 039 alGetSourcefv core found.
+ 040 alGetSourcei core found.
+ 041 alGetSource3i core found.
+ 042 alGetSourceiv core found.
+ 043 alSourcePlayv core found.
+ 044 alSourceStopv core found.
+ 045 alSourceRewindv core found.
+ 046 alSourcePausev core found.
+ 047 alSourcePlay core found.
+ 048 alSourceStop core found.
+ 049 alSourceRewind core found.
+ 050 alSourcePause core found.
+ 051 alSourceQueueBuffers core found.
+ 052 alSourceUnqueueBuffers core found.
+ 053 alGenBuffers core found.
+ 054 alDeleteBuffers core found.
+ 055 alIsBuffer core found.
+ 056 alBufferData core found.
+ 057 alBufferf core found.
+ 058 alBuffer3f core found.
+ 059 alBufferfv core found.
+ 060 alBufferi core found.
+ 061 alBuffer3i core found.
+ 062 alBufferiv core found.
+ 063 alGetBufferf core found.
+ 064 alGetBuffer3f core found.
+ 065 alGetBufferfv core found.
+ 066 alGetBufferi core found.
+ 067 alGetBuffer3i core found.
+ 068 alGetBufferiv core found.
+ afxClass<File>::ConstructObject(00000000002d8f10)
+ E:/qwadro/afx/sound/qwadroDeepNote44kHz
+ afxStream.c:673
+  AfxAcquireStream(cap=0,flags=1,start=0000000000000000,len=0)
+ afxClass<I/O Stream>::ConstructObject(00000000002ea4c0)
+ ERR afxStream.c:147?AfxGetStreamData
+  
+ ERR afxStream.c:147?AfxGetStreamData
+  <offset>0 + <1>1 is out of capacity <ios->len>0.

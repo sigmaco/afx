@@ -1,0 +1,118 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 0fef1874 by 00000000 over 00000000 with 0feee770)
+ afxClass<Basic I/O System>::ConstructObject(0043f610)
+ afxSystem.c:1104
+  _AfxSysCtor(sys=0043f610)
+ Installing Thread Execution Unit at 0043fa1c by 0043f634 over 00000000 with 0036e330)
+ Entering the Thread Execution Environment 3704
+ afxClass<Thread Execution Unit>::ConstructObject(004401a0)
+ afxTxu.c:398
+  _AfxTxuCtor(004401a0)
+ Installing Memory Management Unit at 0043f648 by 0043f634 over 00000000 with 0feee044)
+ Installing Module at 0043f70c by 0043f634 over 00000000 with 0feee5d4)
+ Installing Thread at 0043f958 by 0043f634 over 00000000 with 0feee7a0)
+ Installing Service at 0043fba4 by 0043f634 over 00000000 with 0fecbb6c)
+ Installing File at 0043fdf0 by 0043f634 over 00000000 with 0feee574)
+ Installing I/O Stream at 0043fd2c by 0043f634 over 00000000 with 0feee728)
+ Installing Archive at 0043feb4 by 0043f634 over 00000000 with 0feee000)
+ Installing Application at 0043fc68 by 0043f634 over 00000000 with 0fec6334)
+ Installing Keyboard at 0043f7d0 by 0043f634 over 00000000 with 0feee5a4)
+ Installing Mouse at 0043f894 by 0043f634 over 00000000 with 0feee604)
+ Installing Simulation at 0043ff78 by 0043f634 over 00000000 with 0feef1d0)
+ Installing Device at 0043fae0 by 0043f634 over 00000000 with 0036e300)
+ ERR afxClass.c:607?AfxMountClass
+  
+ ERR afxClass.c:607?AfxMountClass
+  (config->fcc)
+    Invalid
+ [!] afxSystem.c:1213?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1214?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(004402a0)
+ afxArena.c:768
+  AfxAllocateArena(aren=0044007c)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem.c:1266!_AfxSysCtor")
+ afxSystem.c:859
+  AfxMountStoragePoints(6,0036e4b0)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:152
+  AfxAcquireModules(cnt=1,mdle=0044004c,uri=0036e3e8)
+ afxClass<Module>::ConstructObject(00442ff0)
+ afxModule.c:95
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:300
+  AfxAcquireKeyboards(cnt=1,port=0036e2c0,kbd=00440050)
+ afxClass<Keyboard>::ConstructObject(004430f0)
+ afxKeyboard.c:251
+  _AfxKbdCtor(kbd=004430f0)
+ afxDrawSystem.c:432
+  _AfxDsysCtor(dsys=00443940)
+ Installing Draw Thread at 00443d70 by 0043f634 over 00000000 with 0036e098)
+ Installing Installable Client Driver for Draw Device at 0044399c by 0043f634 over 0043f70c with 0036e068)
+ ERR afxSystem.c:251?AfxGetDeviceClass
+  
+ ERR afxSystem.c:251?AfxGetDeviceClass
+  (var_)
+    Invalid
+ Installing Draw Device at 00443a60 by 0043f634 over 0043fae0 with 0036e038)
+ Installing Draw Context at 00443b24 by 0043f634 over 00000000 with 0036e098)
+ Installing Draw Output at 00443be8 by 0043f634 over 00000000 with 0036e098)
+ Installing Draw Input at 00443cac by 0043f634 over 00000000 with 0036e098)
+ Installing Camera at 00443e34 by 0043f634 over 00000000 with 0036e098)
+ Loading draw ICD system/e2draw.icd
+ afxClass<Installable Client Driver for Draw Devic, Module>ConstructingObject(00443f80)
+ afxClass<Module>::ConstructObject(00443f80)
+ ERR afxUri.c:453?AfxGetUriString
+  
+ ERR afxUri.c:453?AfxGetUriString
+  (uri)
+    Invalid
+ ERR afxUri.c:453?AfxGetUriString
+  
+ ERR afxUri.c:453?AfxGetUriString
+  (uri)
+    Invalid
+ ERR afxString.c:46?AfxGetStringData
+  
+ ERR afxString.c:46?AfxGetStringData
+  (str)
+    Invalid
+ ERR afxUri.c:453?AfxGetUriString
+  
+ ERR afxUri.c:453?AfxGetUriString
+  (uri)
+    Invalid
+ ERR afxUri.c:453?AfxGetUriString
+  
+ ERR afxUri.c:453?AfxGetUriString
+  (uri)
+    Invalid
+ ERR afxString.c:59?AfxGetStringLength
+  
+ ERR afxString.c:59?AfxGetStringLength
+  (str)
+    Invalid

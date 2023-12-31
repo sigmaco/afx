@@ -16,10 +16,10 @@ Despite the name, the code domain prefix (in C, equivalent to the namespace in C
 
 The API and general code design was inspired by Havok Physics and, mainly the object model, by Qt Framework, in addition to preserving some semantics remaining from RenderWare.
 
-There are several strange names in Qwadro, because Qwadro is an experiment that implements several paradigms of the same concept with random names to test both in parallel, and its API changes frequently depending on usage optimization.
+There are several strange names in Qwadro, because Qwadro is an experiment that implements several paradigms of the same concept with random names to test both in parallel, and its API changes frequently depending on usage optimization. And... it is governed by methodist laws of Go Horse.
 Some RenderWare heritage still present is certainly in the AMX, where Qwadro's mathematics resides. For example, we have afxMatrix, afxQuat, afxV3d, afxV4d.
 
-Qwadro was firstly designed for POSIX/Unix/Linux systems. But due complexities handling OpenGL contexts in Windows, we was forced to move to Windows and stay there still now.
+Qwadro was firstly designed for POSIX/Unix/Linux systems. But due complexities handling multiple OpenGL contexts in Windows, we was forced to move to Windows and stay there still now.
 
 Game-related works featured in Qwadro are strongely inspired in notorious gaming works on Bang! Engine by Ensemble Studios and MaxFX by Remedy Entertainment.
 
@@ -44,7 +44,7 @@ This is why we don't have SIMD methods for math (at least yet); you can install 
 ## The Unified Qwadro Draw I/O System Infrastructure
 The purple side of the force.
 
-SIGMA GL/2 is an data-oriented API specification where the common things are (relatively) easy, and the super powerful low-level optimizations are optional.
+SIGMA GL/2 (aka SGL, SIGGL) is an data-oriented API specification where the common things are (relatively) easy, and the super powerful low-level optimizations are optional.
 
 The idea behind its proposal was the development overhead of Vulkan API being absolutely insane when we tried to move from OpenGL to Vulkan in our recent works.
 
@@ -74,20 +74,20 @@ An example of abstraction in SIGMA GL/2 is the lack of an object known as a "fra
 
 As aforementioned, SIGMA GL/2 works on the "bring your own driver" model. Seeing Vulkan, OpenGL's successor, suffer from the same problems that OpenGL suffered in the past when platform holders did not want to have such an API, SIGMA chose to replicate a model from the ancient times of hardware-accelerated computer graphics, where people looked for better driver implementations, including those based on existing common APIs or APIs specific to the installed VGA; the installable client driver (ICD) or, its more minimalist version, the mini client driver (MCD).
 
-SIGMA GL/2 is distributed with the "e2draw.icd" module, which is a reference model for ICD implemented on OpenGL 3.3 core and taking advantage of 4.x extensions, developed by SIGMA.
+SIGMA GL/2 is distributed with the "e2draw.icd" module, which is a reference model for ICD implemented on OpenGL 4 core and taking advantage of 4.x extensions, developed by SIGMA.
 
 Due to several problems in OpenGL architecture, SIGMA GL/2 on Qwadro works in differently of any other API. For every CPU core available in the host platform, SIGMA GL/2 will run a Drawing Processing Unit (DPU). 
 
 DPUs are autonomous services, designed as a system on a threading unit, provided by a drawing device for process the lines of execution in Qwadro Draw I/O System. DPUs calls draw input services to perform transhipment of draw workload, process the drawing queues and flushes draw output services.
 
-In Qwadro, threads are virtualized effectively working as fibers. Real threads in Qwadro are abstracted as "threading units". This allow us to better manage host platform resources and consistence across synchronization primitives avoiding several manual sync/lock operations.
+In Qwadro, threads are virtualized effectively working as fibers. Real threads in Qwadro are abstracted as "thread execution units". This allow us to better manage host platform resources and consistence across synchronization primitives avoiding several manual sync/lock operations.
 
 Unlike other low-level APIs, SIGMA G/2 follows a rapid application development (RAD) philosophy, where it delivers several utilities to speed up and automate operations, still allowing the user to do it their own way if they want.
 
 SIGMA GL/2 tried and will keep trying to match the OpenGL conventions or, when not existing, the Vulkan conventions.
 
 The default pixel format will probably be ARGB (as known in LE as, BGRA) why it is faster.
-And the image data origin will continue to be bottom-left why it makes sense going up in positive Y and right in positive X and far in positive Z.
+And the image data origin will continue to be left-bottom-near (even it being weird for work in video ops) why it makes sense going up in positive Y and right in positive X and far in positive Z, preserving consistence to the right-handed coordinate system.
 Also, in SIGMA GL/2, the triangle front facing is counter-clockwise (CCW).
 
 Why happened to "GL/1"? Flopped. There were several problems inherited from RenderWare way of doing drawing.
@@ -103,6 +103,6 @@ The autonomous accoustic system.
 
 SIGMA A4D is an API for rendering accoustic simulations inspired on Miles Sound System way of handling several applicable service interfaces.
 
-Instead of just offer another API, the SIGMA proposal is to allow you to run other middlewares using same interface. But it is in phase of decisions for its basic foundation.
+Instead of just offer another API, the SIGMA proposal is to allow you to run other middlewares using same interface. But it is in phase of decisions for its basic foundation, mainly due to Microsoft have killed hardware acceleration for audio since Windows Vista.
 
 (c) 2017 Federação SIGMA. All rights reserved; to its elaborators and collaborators.
