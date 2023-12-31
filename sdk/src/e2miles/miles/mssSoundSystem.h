@@ -1,0 +1,6 @@
+#ifndef MSS_SOUND_SYSTEM_H
+#define MSS_SOUND_SYSTEM_H
+
+
+
+#endif//MSS_SOUND_SYSTEM_H

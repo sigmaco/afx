@@ -2,7 +2,7 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/code/build/.vs
+/sdk/build/.vs
 /art/actor
 /art/scenario
 /art/skybox/red3
@@ -12,30 +12,13 @@
 /art/skybox/lightblue
 /art/skybox/cloudy-day
 /art/skybox/blue
-/code/exp/projs
-/code/exp
-/code/e2coree/**/*.h
-/code/e2coree/**/*.c
-!/code/e2coree/draw/**
-/code/e2coree/core/**/*.c
-!/code/e2coree/math/**
-/code/e2coree/sim/**/*.c
-!/code/e2coree/sim/modeling/**/*.c
-!/code/e2coree/sim/rendering/**/*.c
-/code/e2coree/sound/**/*.c
-/code/e2bang/**/*.c
-/code/e2bink/**/*.c
-/code/e2cad/**/*.c
-/code/e2miles/**/*.c
-/code/e2granny3d/**/*.c
-/code/e2idtech/**/*.c
-/code/e2rw/**/*.c
-/code/e2goldsrc/**/*.c
-/code/deps/**
+/sdk/exp/projs
+/sdk/exp
+/sdk/dep/**
 /art/building/sponza
 /art/exp
 /art/fmv/ubi.bik
 /art/fmv/disco.bik
 /art/object/backpack
-/code/build/**/Debug
-/code/build/**/Release
+/sdk/build/**/Debug
+/sdk/build/**/Release

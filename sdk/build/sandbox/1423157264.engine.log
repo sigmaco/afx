@@ -1,0 +1,71 @@
+
+ afxDebug.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Basic I/O System at 50e11874 by 00000000 over 00000000 with 50e0e770)
+ afxClass<Basic I/O System>::ConstructObject(007bf0c0)
+ afxSystem.c:1110
+  _AfxSysCtor(sys=007bf0c0)
+ Installing Thread Execution Unit at 007bf4cc by 007bf0e4 over 00000000 with 003ee098)
+ Entering the Thread Execution Environment 5412
+ afxClass<Thread Execution Unit>::ConstructObject(007bfc40)
+ afxTxu.c:397
+  _AfxTxuCtor(007bfc40)
+ Installing Memory Management Unit at 007bf0f8 by 007bf0e4 over 00000000 with 50e0e044)
+ Installing Module at 007bf1bc by 007bf0e4 over 00000000 with 50e0e5d4)
+ Installing Thread at 007bf408 by 007bf0e4 over 00000000 with 50e0e7a0)
+ Installing Service at 007bf654 by 007bf0e4 over 00000000 with 50debb6c)
+ Installing File at 007bf8a0 by 007bf0e4 over 00000000 with 50e0e574)
+ Installing I/O Stream at 007bf7dc by 007bf0e4 over 00000000 with 50e0e728)
+ Installing Archive at 007bf964 by 007bf0e4 over 00000000 with 50e0e000)
+ Installing Application at 007bf718 by 007bf0e4 over 00000000 with 50de6334)
+ Installing Keyboard at 007bf280 by 007bf0e4 over 00000000 with 50e0e5a4)
+ Installing Mouse at 007bf344 by 007bf0e4 over 00000000 with 50e0e604)
+ Installing Simulation at 007bfa28 by 007bf0e4 over 00000000 with 50e0f1d0)
+ Installing Device at 007bf590 by 007bf0e4 over 00000000 with 003ee068)
+ ERR afxClass.c:607?AfxInstallClassExtension
+  
+ ERR afxClass.c:607?AfxInstallClassExtension
+  (config->fcc)
+    Invalid
+ [!] afxSystem.c:1219?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem.c:1220?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(007bfd50)
+ afxArena.c:768
+  AfxAllocateArena(aren=007bfb2c)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem.c:1272!_AfxSysCtor")
+ afxSystem.c:865
+  AfxMountStoragePoints(6,003ee218)
+ Point "." 5 mounted -> "E:/qwadro/afx".
+ Point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ Point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ Point "data" 5 mounted -> "E:/qwadro/afx/data".
+ Point "art" 5 mounted -> "E:/qwadro/afx/art".
+ Point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=007bfafc,uri=003ee150)
+ afxClass<Module>::ConstructObject(007c47d0)
+ afxModule.c:94
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:299
+  AfxAcquireKeyboards(cnt=1,port=003ee028,kbd=007bfb00)
+ afxClass<Keyboard>::ConstructObject(007c2d70)
+ afxKeyboard.c:250
+  _AfxKbdCtor(kbd=007c2d70)

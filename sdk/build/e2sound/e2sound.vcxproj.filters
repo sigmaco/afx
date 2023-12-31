@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="e2sound">
+      <UniqueIdentifier>{b6431235-55fe-4642-8ffd-16a65a827a88}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\e2sound\salSctx.c">
+      <Filter>e2sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2sound\salSdev.c">
+      <Filter>e2sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2sound\salSbuf.c">
+      <Filter>e2sound</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\e2sound\salSdev.h">
+      <Filter>e2sound</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
