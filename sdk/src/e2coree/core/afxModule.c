@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -86,7 +86,7 @@ _AFX afxError _AfxMdleCtor(afxModule mdle, afxCookie const* cookie)
     afxFixedUri128 absUri;
     AfxMakeFixedUri128(&absUri, NIL);
 
-    AfxResolveUri(AFX_FILE_FLAG_R, uri, &absUri.uri);
+    AfxResolveUri(afxFileFlag_R, uri, &absUri.uri);
 
     //afxString1024 str;
     //AfxString1024(&str, 0, 0);
@@ -133,7 +133,7 @@ _AFX afxError _AfxMdleDtor(afxModule mdle)
     return err;
 }
 
-_AFX afxClassConfig _AfxMdleClsConfig =
+_AFX afxClassConfig const _AfxMdleClsConfig =
 {
     .fcc = afxFcc_MDLE,
     .name = "Executable & Linkable Module",
@@ -146,7 +146,7 @@ _AFX afxClassConfig _AfxMdleClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireModules(afxNat cnt, afxUri const uri[], afxModule mdle[])
+_AFX afxError AfxMountLoadableModules(afxNat cnt, afxUri const uri[], afxModule mdle[])
 {
     AfxEntry("cnt=%u,mdle=%p,uri=%p", cnt, mdle, uri);
     afxError err = AFX_ERR_NONE;
@@ -181,14 +181,14 @@ _AFX afxError AfxAcquireModules(afxNat cnt, afxUri const uri[], afxModule mdle[]
     return err;
 }
 
-_AFX afxNat AfxCurateModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd)
+_AFX afxNat AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetModuleClass();
     AfxAssertClass(cls, afxFcc_MDLE);
-    return cnt ? AfxCurateInstances(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
 }
 
 _AFX afxNat AfxEnumerateModules(afxNat first, afxNat cnt, afxModule mdle[])

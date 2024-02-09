@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -36,13 +36,13 @@ afxNat AfxGetTimer(void)
 afxNat64 AfxGetTickCounter(void)
 {
     afxNat64 ticks;
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
     // Using intrinsics for AMD64 until the compiler supports __asm
     ticks = __rdtsc();
 #else // Win32 or Xbox
     // note: using cpuid as a serializing makes timings more accurate, 
     // at the expense of more overhead. (1.5% without versus 5% with cpuid)
-#   ifdef AFX_PLATFORM_X86
+#   ifdef AFX_PLATFORM_32
     __asm
     {
         pushad

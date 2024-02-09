@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/mem/afxPool.h"
@@ -119,7 +119,7 @@ _AFX afxNat AfxEnumeratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt,
     return rslt;
 }
 
-_AFX afxNat AfxCuratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd)
+_AFX afxNat AfxInvokePoolItems(afxPool const* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -189,7 +189,7 @@ _AFX afxNat AfxCuratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, af
     return rslt;
 }
 
-_AFX afxNat AfxCuratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool(*f)(void* item, void* udd), void *udd)
+_AFX afxNat AfxInvokePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool(*f)(void* item, void* udd), void *udd)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -347,7 +347,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
 
         if (!pag->data)
         {
-            if (!(pag->data = AfxAllocate(pool->mem, pool->unitSiz, pool->unitsPerPage, 0, AfxHint()))) AfxThrowError();
+            if (!(pag->data = AfxAllocate(pool->mem, pool->unitsPerPage, pool->unitSiz, 0, AfxHint()))) AfxThrowError();
             else
                 AfxZero(pool->unitsPerPage, pool->unitSiz, pag->data);
 

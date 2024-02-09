@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -29,7 +29,7 @@
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxOpticalMatrix.h"
 #include "qwadro/math/afxVector.h"
-#include "qwadro/sim/modeling/awxMeshTopology.h"
+#include "qwadro/sim/modeling/afxMeshTopology.h"
 #include "qwadro/sim/modeling/awxVertexData.h"
 
 _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[])
@@ -43,27 +43,26 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
         awxBody bod = bodies[bodIdx];
         AfxAssertObjects(1, &bod, afxFcc_BOD);
 
-        awxModel mdl = AwxGetBodyModel(bod);
+        afxModel mdl = AwxGetBodyModel(bod);
         AfxAssertObjects(1, &mdl, afxFcc_MDL);
-        awxSkeleton skl = AwxGetModelSkeleton(mdl);
+        afxSkeleton skl = AfxGetModelSkeleton(mdl);
         AfxTryAssertObjects(1, &skl, afxFcc_SKL);
 
         for (afxNat mshIdx = 0; mshIdx < mdl->slotCnt; mshIdx++)
         {
-            awxMesh msh = mdl->slots[mshIdx].msh;
+            afxMesh msh = mdl->slots[mshIdx].msh;
 
             if (msh)
             {
                 AfxAssertObjects(1, &msh, afxFcc_MSH);
 
                 afxNat baseVtxIdx = 0, vtxCnt = 0;
-                awxVertexData vtd = AwxGetMeshVertices(msh);
+                awxVertexData vtd = AfxGetMeshVertices(msh);
 
                 AwxBufferizeVertexData(rnd->din, vtd);
                 AwxCmdBindVertexDataCache(dscr, 0, vtd);
 
-                awxMeshTopology msht;
-                AwxGetMeshTopology(msh, &msht);
+                afxMeshTopology msht = AfxGetMeshTopology(msh);
 
                 AfxBufferizeMeshTopology(msht);
                 AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
@@ -81,14 +80,14 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
                 //AfxCmdEnableDepthTest(dscr, TRUE);
                 //AfxCmdEnableDepthWrite(dscr, TRUE);
 
-                afxNat surfCnt = AwxCountMeshSurfaces(msht);
+                afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
                 for (afxNat j = 0; j < surfCnt; j++)
                 {
-                    awxMeshSurface *sec = AwxGetMeshSurface(msht, j);
+                    afxMeshSurface *sec = AfxGetMeshSurface(msht, j);
                     //AfxAssert(msh->topology->primType == afxPrimTopology_TRI_LIST);
 
-                    awxMaterialConstants mat;
+                    afxMaterialConstants mat;
 
                     if (sec->mtlIdx == AFX_INVALID_INDEX)
                     {
@@ -100,7 +99,7 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
                     {
 #if 0
                         AfxAssert(sec->mtlIdx < msh->mtlSlotCnt);
-                        awxMaterial mtl = msh->mtlSlots[sec->mtlIdx].mtl;
+                        afxMaterial mtl = msh->mtlSlots[sec->mtlIdx].mtl;
 
                         if (mtl)
                         {
@@ -126,17 +125,17 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
 
 
                     afxM4d CompositeMatrix;
-                    afxNat const *ToBoneIndices = AwxGetLinkedMeshBoneMap(mdl, mshIdx);
+                    afxNat const *ToBoneIndices = AfxGetMeshBoneMap(mdl, mshIdx);
                     //AfxBuildIndexedCompositeBuffer(skl, rnd->wp, ToBoneIndices, 1, &CompositeMatrix);
                     
                     afxM4d m, m2;
                     //AwxUpdateBodyModelMatrix(bod, 1, AFX_M4D_IDENTITY, m, FALSE);
                     
                     //afxM4d w;
-                    //AfxInverseM4d(w, m);
+                    //AfxInvertM4d(w, m);
                     //AfxRotationM4dFromEuler(w, AfxSpawnV3d(0, AfxRandomReal2(0, 360), 0));
-                    AwxGetModelInitialPlacement(mdl, m);
-                    AfxInverseM4d(m2, m);
+                    AfxGetModelInitialPlacement(mdl, m);
+                    AfxInvertM4d(m, m2);
                     //AfxComposeTransformWorldM4d(&mdl->init, m2, m);
 
                     AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(awxInstanceConstants, w), sizeof(CompositeMatrix), CompositeMatrix);
@@ -399,7 +398,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     // acquire and set up our dedicated draw input device.
     {
         afxDrawInputConfig dinConfig = { 0 };
-        dinConfig.prefetch = (void*)config->dinProc;
+        dinConfig.proc = config->dinProc;
         dinConfig.udd = rnd;
         dinConfig.cmdPoolMemStock = 4096;
         dinConfig.estimatedSubmissionCnt = 3;
@@ -443,7 +442,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
         AfxAcquireBuffers(dctx, 1, &iboSpec, &rnd->testIbo);
         
         AfxMakeUri(&uri, "data/pipeline/test.xsh.xml", 0);
-        rnd->testPip = AfxLoadPipelineFromXsh(dctx, &uri);
+        rnd->testPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     }
 
     // acquire needed resources and set up our sky.
@@ -461,7 +460,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
         {
             { .siz = sizeof(awxViewConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
             { .siz = sizeof(awxShaderConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
-            { .siz = sizeof(awxMaterialConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
+            { .siz = sizeof(afxMaterialConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL },
             { .siz = sizeof(awxInstanceConstants), .access = afxBufferAccess_W, .usage = afxBufferUsage_UNIFORM, .src = NIL }
         };
 #if 0
@@ -487,9 +486,9 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
 
     {
         AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?rigid", 0);
-        rnd->rigidBodyPip = AfxLoadPipelineFromXsh(dctx, &uri);
+        rnd->rigidBodyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
         AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?skinned", 0);
-        rnd->skinnedBodyPip = AfxLoadPipelineFromXsh(dctx, &uri);
+        rnd->skinnedBodyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     }
 
     AfxRendererSetStar(rnd, AfxSpawnV4d(0, 0, 0, 1), AfxSpawnV3d(-0.8660f, 0.5f, 0), AfxSpawnV4d(0.8, 0.8, 0.8, 0.8));
@@ -499,13 +498,13 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {FALSE}, &rnd->wp);
 
     AfxMakeUri(&uri, "data/pipeline/testLighting.xsh.xml?blinn", 0);
-    rnd->blinnTestPip = AfxLoadPipelineFromXsh(dctx, &uri);
+    rnd->blinnTestPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
     AfxMakeUri(&uri, "data/pipeline/tutCamUtil.xsh.xml?tutCamUtil", 0);
-    rnd->tutCamUtil = AfxLoadPipelineFromXsh(dctx, &uri);
+    rnd->tutCamUtil = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
     AfxMakeUri(&uri, "data/pipeline/lighting.xsh.xml?lighting", 0);
-    rnd->lighting = AfxLoadPipelineFromXsh(dctx, &uri);
+    rnd->lighting = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
     return err;
 }

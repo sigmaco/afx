@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -23,20 +23,20 @@
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxMatrix.h"
 
-_AFX awxModel AwxGetBodyModel(awxBody bod)
+_AFX afxModel AwxGetBodyModel(awxBody bod)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &bod, afxFcc_BOD);
-    awxModel mdl = bod->mdl;
+    afxModel mdl = bod->mdl;
     AfxTryAssertObjects(1, &mdl, afxFcc_MDL);
     return mdl;
 }
 
-_AFX awxSkeleton AwxGetBodySkeleton(awxBody bod)
+_AFX afxSkeleton AwxGetBodySkeleton(awxBody bod)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &bod, afxFcc_BOD);
-    awxSkeleton skl = bod->cachedSkl;
+    afxSkeleton skl = bod->cachedSkl;
     AfxTryAssertObjects(1, &skl, afxFcc_SKL);
     return skl;
 }
@@ -46,10 +46,10 @@ _AFX void AwxSetBodyClock(awxBody bod, afxReal newClock)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &bod, afxFcc_BOD);
 
-    awxMotorInterlink *intk;
-    AfxChainForEveryLinkage(&bod->motors, awxMotorInterlink, bod, intk)
+    awxAnimusInterlink *intk;
+    AfxChainForEveryLinkage(&bod->motors, awxAnimusInterlink, bod, intk)
     {
-        awxMotor anir = _AwxMotorInterlinkGetMotor(intk);
+        awxAnimus anir = _AwxAnimusInterlinkGetAnimus(intk);
         afxReal v6 = newClock - anir->currentClock;
         anir->currentClock = newClock;
         anir->dTLocalClockPending = v6 + anir->dTLocalClockPending;
@@ -61,10 +61,10 @@ _AFX void AwxFreeCompletedBodyControls(awxBody bod)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &bod, afxFcc_BOD);
 
-    awxMotorInterlink *intk;
-    AfxChainForEveryLinkage(&bod->motors, awxMotorInterlink, bod, intk)
+    awxAnimusInterlink *intk;
+    AfxChainForEveryLinkage(&bod->motors, awxAnimusInterlink, bod, intk)
     {
-        awxMotor anir = _AwxMotorInterlinkGetMotor(intk);
+        awxAnimus anir = _AwxAnimusInterlinkGetAnimus(intk);
         AwxFreeMotorIfComplete(anir);
     }
 }
@@ -83,15 +83,15 @@ _AFX void AwxResetBodyClock(awxBody bod)
 
 _AFX void GetUnnormalizedRootMotionVectors(awxBody bod, afxReal secsElapsed, afxBool inverse, afxReal *totalWeight, afxReal translation[3], afxReal rotation[3])
 {
-    awxMotorInterlink *intk;
-    AfxChainForEveryLinkage(&bod->motors, awxMotorInterlink, bod, intk)
+    awxAnimusInterlink *intk;
+    AfxChainForEveryLinkage(&bod->motors, awxAnimusInterlink, bod, intk)
     {
-        awxMotor anir = _AwxMotorInterlinkGetMotor(intk);
+        awxAnimus anir = _AwxAnimusInterlinkGetAnimus(intk);
         
         if (!(_AfxMotorHasEffect(anir)))
             break;
 
-        AfxAccumulateMotorInterlinkLoopTransform(intk, secsElapsed, totalWeight, translation, rotation, inverse);
+        AfxAccumulateAnimusInterlinkLoopTransform(intk, secsElapsed, totalWeight, translation, rotation, inverse);
     }
 }
 
@@ -129,11 +129,11 @@ _AFX void AwxRecenterBodyAllClocks(awxBody bod, afxReal currClock)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &bod, afxFcc_BOD);
 
-    awxMotorInterlink *intk;
-    AfxChainForEveryLinkage(&bod->motors, awxMotorInterlink, bod, intk)
+    awxAnimusInterlink *intk;
+    AfxChainForEveryLinkage(&bod->motors, awxAnimusInterlink, bod, intk)
     {
-        awxMotor anir = _AwxMotorInterlinkGetMotor(intk);
-        AwxRecenterMotorClocks(anir, currClock);
+        awxAnimus anir = _AwxAnimusInterlinkGetAnimus(intk);
+        AwxRecenterAnimusClocks(anir, currClock);
     }
 }
 
@@ -158,9 +158,9 @@ _AFX afxError _AwxBodCtor(awxBody bod, afxCookie const* cookie)
     AfxAssertObjects(1, &bod, afxFcc_BOD);
 
     afxSimulation sim = cookie->udd[0];
-    awxModel mdl = cookie->udd[1];
+    afxModel mdl = cookie->udd[1];
 
-    awxSkeleton skl = AwxGetModelSkeleton(mdl);
+    afxSkeleton skl = AfxGetModelSkeleton(mdl);
     
     if (!skl) AfxThrowError();
     else
@@ -192,7 +192,7 @@ _AFX afxError _AwxBodCtor(awxBody bod, afxCookie const* cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AwxEmbodyModel(awxModel mdl, afxNat cnt, awxBody bod[])
+_AFX afxError AwxEmbodyModel(afxModel mdl, afxNat cnt, awxBody bod[])
 {
     AfxEntry("mdl=%p", mdl);
 

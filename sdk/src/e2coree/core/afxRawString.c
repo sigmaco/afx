@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -257,9 +257,9 @@ static char * number(char * buf, char * end, long long num, int base, int size, 
  */
 
 //int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
-afxResult AfxFormatMeasuredRawStringFromVaList(afxChar* buf, size_t size, afxChar const* fmt, va_list args)
+_AFXINL afxResult AfxVsnprintf(afxChar* buf, size_t size, afxChar const* fmt, va_list args)
 {
-    return vsnprintf(buf, size, fmt, args);
+    return stbsp_vsnprintf(buf, size, fmt, args);
 
     int len;
     unsigned long long num;
@@ -501,13 +501,13 @@ afxResult AfxFormatMeasuredRawStringFromVaList(afxChar* buf, size_t size, afxCha
  */
 
 //int snprintf(char * buf, size_t size, const char *fmt, ...)
-afxResult AfxFormatMeasuredRawString(afxChar* buf, afxNat size, afxChar const* fmt, ...)
+_AFXINL afxResult AfxSnprintf(afxChar* buf, afxNat size, afxChar const* fmt, ...)
 {
     va_list args;
     int i;
 
     va_start(args, fmt);
-    i = AfxFormatMeasuredRawStringFromVaList(buf, size, fmt, args);
+    i = AfxVsnprintf(buf, size, fmt, args);
     va_end(args);
     return i;
 }
@@ -523,9 +523,9 @@ afxResult AfxFormatMeasuredRawString(afxChar* buf, afxNat size, afxChar const* f
  */
 
 //int vsprintf(char *buf, const char *fmt, va_list args)
-afxResult AfxFormatRawStringFromVaList(afxChar* buf, afxChar const* fmt, va_list args)
+_AFXINL afxResult AfxVsprintf(afxChar* buf, afxChar const* fmt, va_list args)
 {
-    return AfxFormatMeasuredRawStringFromVaList(buf, 0xFFFFFFFFUL, fmt, args);
+    return AfxVsnprintf(buf, 0xFFFFFFFFUL, fmt, args);
 }
 
 /**
@@ -536,13 +536,13 @@ afxResult AfxFormatRawStringFromVaList(afxChar* buf, afxChar const* fmt, va_list
  */
 
 //int sprintf(char * buf, const char *fmt, ...)
-afxResult AfxFormatRawString(afxChar* buf, afxChar const* fmt, ...)
+_AFXINL afxResult AfxSprintf(afxChar* buf, afxChar const* fmt, ...)
 {
     va_list args;
     int i;
 
     va_start(args, fmt);
-    i = AfxFormatRawStringFromVaList(buf, fmt, args);
+    i = AfxVsprintf(buf, fmt, args);
     va_end(args);
     return i;
 }
@@ -555,7 +555,7 @@ afxResult AfxFormatRawString(afxChar* buf, afxChar const* fmt, ...)
  */
 
 //int vsscanf(const char * buf, const char * fmt, va_list args)
-afxResult AfxScanRawStringIntoVaList(afxChar const* buf, afxChar const* fmt, va_list args)
+_AFXINL afxResult AfxVsscanf(afxChar const* buf, afxChar const* fmt, va_list args)
 {
     return vsscanf(buf, fmt, args);
 
@@ -749,13 +749,13 @@ afxResult AfxScanRawStringIntoVaList(afxChar const* buf, afxChar const* fmt, va_
  */
 
 //int sscanf(const char * buf, const char * fmt, ...)
-afxResult AfxScanRawString(afxChar const* buf, afxChar const* fmt, ...)
+_AFXINL afxResult AfxSscanf(afxChar const* buf, afxChar const* fmt, ...)
 {
     va_list args;
     int i;
 
     va_start(args, fmt);
-    i = AfxScanRawStringIntoVaList(buf, fmt, args);
+    i = AfxVsscanf(buf, fmt, args);
     va_end(args);
     return i;
 }
@@ -764,7 +764,7 @@ afxResult AfxScanRawString(afxChar const* buf, afxChar const* fmt, ...)
 
 #if 0 // RAW ANSI STRING FUNCTIONS
 
-AFXINL afxResult AfxCompareRawString(afxChar const* str, afxChar const* str2)
+AFXINL afxResult AfxStrcmp(afxChar const* str, afxChar const* str2)
 {
     AfxAssert2(str, str2);
 
@@ -775,13 +775,13 @@ AFXINL afxResult AfxCompareRawString(afxChar const* str, afxChar const* str2)
     return (*(str - 1) - *(str2 - 1));
 }
 
-AFXINL void AfxCopyRawString(afxChar* str, afxChar const* from)
+AFXINL void AfxStrcpy(afxChar* str, afxChar const* from)
 {
     AfxAssert2(str, from);
     while ((*(str)++ = *(from)++));
 }
 
-AFXINL afxResult AfxMeasureRawString(afxChar const* str)
+AFXINL afxResult AfxStrlen(afxChar const* str)
 {
     AfxAssert(str);
     afxChar const* x = str;
@@ -789,15 +789,15 @@ AFXINL afxResult AfxMeasureRawString(afxChar const* str)
     return (x - str - 1);
 }
 
-AFXINL void AfxConcatRawString(afxChar* str, afxChar const* str2)
+AFXINL void AfxStrcat(afxChar* str, afxChar const* str2)
 {
     AfxAssert2(str, str2);
-    AfxCopyRawString(str + AfxMeasureRawString(str), str2);
+    AfxStrcpy(str + AfxStrlen(str), str2);
 }
 
 #define TOUPPER(CH) (((CH) >= 'a' && (CH) <= 'z') ? ((CH) - 'a' + 'A') : (CH))
 
-AFXINL afxResult AfxCompareRawStringCi(afxChar const* str, afxChar const* str2)
+AFXINL afxResult AfxStricmp(afxChar const* str, afxChar const* str2)
 {
     AfxAssert2(str, str2);
 
@@ -833,7 +833,7 @@ AFXINL afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
     return str;
 }
 
-AFXINL void AfxCopyMeasuredRawString(afxChar const* str, afxNat len, afxChar* to)
+AFXINL void AfxStrncpy(afxChar const* str, afxNat len, afxChar* to)
 {
     AfxAssert3(to, str, len);
     afxNat i;
@@ -845,7 +845,7 @@ AFXINL void AfxCopyMeasuredRawString(afxChar const* str, afxNat len, afxChar* to
         to[i] = '\0';
 }
 
-AFXINL afxResult AfxCompareMeasuredRawStringCi(afxChar const* str, afxChar const* str2, afxNat len)
+AFXINL afxResult AfxStrnicmp(afxChar const* str, afxChar const* str2, afxNat len)
 {
     afxInt f, l;
 
@@ -858,7 +858,7 @@ AFXINL afxResult AfxCompareMeasuredRawStringCi(afxChar const* str, afxChar const
     return (f - l);
 }
 
-AFXINL afxChar* AfxFindCharRaw(afxChar const* str, afxInt ch)
+AFXINL afxChar* AfxStrchr(afxChar const* str, afxInt ch)
 {
     while (*(str) && *(str) != (afxChar)ch)
         ++(str);
@@ -866,7 +866,7 @@ AFXINL afxChar* AfxFindCharRaw(afxChar const* str, afxInt ch)
     return ((*(str) == (afxChar)ch) ? (afxChar*)str : NIL);
 }
 
-AFXINL afxChar* AfxFindCharRawB2F(afxChar const* str, afxInt ch)
+AFXINL afxChar* AfxStrrchr(afxChar const* str, afxInt ch)
 {
     afxChar* start = (afxChar*)str;
     while (*(str)++);
@@ -874,7 +874,7 @@ AFXINL afxChar* AfxFindCharRawB2F(afxChar const* str, afxInt ch)
     return ((*(str) == (afxChar)ch) ? (afxChar*)str : NIL);
 }
 
-AFXINL afxChar* AfxFindExcerptRaw(afxChar const* str, afxChar const* str2)
+AFXINL afxChar* AfxStrstr(afxChar const* str, afxChar const* str2)
 {
     afxChar* cp = (afxChar*)str;
 
@@ -1111,7 +1111,7 @@ int ___vsscanf(const char *buf, const char *s, va_list ap)
     return ((int)count);
 }
 
-afxInt AfxScanRawString(afxChar const* str, afxChar const* fmt, ...)
+afxInt AfxSscanf(afxChar const* str, afxChar const* fmt, ...)
 {
     afxInt count;
     va_list ap;
@@ -1121,7 +1121,7 @@ afxInt AfxScanRawString(afxChar const* str, afxChar const* fmt, ...)
     return (count);
 }
 
-afxInt AfxFormatRawString(afxChar* str, afxChar const* fmt, ...)
+afxInt AfxSprintf(afxChar* str, afxChar const* fmt, ...)
 {
     AfxAssert(str);
     afxInt _Result;
@@ -1134,7 +1134,7 @@ afxInt AfxFormatRawString(afxChar* str, afxChar const* fmt, ...)
 
 #endif
 
-void* utf8codepoint(const void* str, afxInt32* out_codepoint)
+_AFXINL void* utf8codepoint(const void* str, afxInt32* out_codepoint)
 {
     const afxChar* s = (const afxChar*)str;
 
@@ -1167,7 +1167,7 @@ void* utf8codepoint(const void* str, afxInt32* out_codepoint)
     return (void*)s;
 }
 
-size_t utf8codepointsize(afxInt32 ch)
+_AFXINL size_t utf8codepointsize(afxInt32 ch)
 {
     if (0 == ((afxInt32)0xffffff80 & ch)) return 1;
     else if (0 == ((afxInt32)0xfffff800 & ch)) return 2;
@@ -1176,7 +1176,7 @@ size_t utf8codepointsize(afxInt32 ch)
         return 4;
 }
 
-afxInt32 utf8lwrcodepoint(afxInt32 cp)
+_AFXINL afxInt32 utf8lwrcodepoint(afxInt32 cp)
 {
     if (((0x0041 <= cp) && (0x005a >= cp)) || ((0x00c0 <= cp) && (0x00d6 >= cp)) || ((0x00d8 <= cp) && (0x00de >= cp)) || ((0x0391 <= cp) && (0x03a1 >= cp)) || ((0x03a3 <= cp) && (0x03ab >= cp))) cp += 32;
     else if (((0x0100 <= cp) && (0x012f >= cp)) || ((0x0132 <= cp) && (0x0137 >= cp)) || ((0x014a <= cp) && (0x0177 >= cp)) || ((0x0182 <= cp) && (0x0185 >= cp)) || ((0x01a0 <= cp) && (0x01a5 >= cp)) || ((0x01de <= cp) && (0x01ef >= cp)) || ((0x01f8 <= cp) && (0x021f >= cp)) || ((0x0222 <= cp) && (0x0233 >= cp)) || ((0x0246 <= cp) && (0x024f >= cp)) || ((0x03d8 <= cp) && (0x03ef >= cp))) cp |= 0x1;
@@ -1237,7 +1237,7 @@ afxInt32 utf8lwrcodepoint(afxInt32 cp)
     return cp;
 }
 
-afxInt32 utf8uprcodepoint(afxInt32 cp)
+_AFXINL afxInt32 utf8uprcodepoint(afxInt32 cp)
 {
     if (((0x0061 <= cp) && (0x007a >= cp)) || ((0x00e0 <= cp) && (0x00f6 >= cp)) || ((0x00f8 <= cp) && (0x00fe >= cp)) || ((0x03b1 <= cp) && (0x03c1 >= cp)) || ((0x03c3 <= cp) && (0x03cb >= cp))) cp -= 32;
     else if (((0x0100 <= cp) && (0x012f >= cp)) || ((0x0132 <= cp) && (0x0137 >= cp)) || ((0x014a <= cp) && (0x0177 >= cp)) || ((0x0182 <= cp) && (0x0185 >= cp)) || ((0x01a0 <= cp) && (0x01a5 >= cp)) || ((0x01de <= cp) && (0x01ef >= cp)) || ((0x01f8 <= cp) && (0x021f >= cp)) || ((0x0222 <= cp) && (0x0233 >= cp)) || ((0x0246 <= cp) && (0x024f >= cp)) || ((0x03d8 <= cp) && (0x03ef >= cp))) cp &= ~0x1;
@@ -1298,7 +1298,7 @@ afxInt32 utf8uprcodepoint(afxInt32 cp)
     return cp;
 }
 
-afxResult AfxCompareMeasuredRawString(afxChar const* str, afxChar const* str2, afxNat len)
+_AFXINL afxResult AfxStrncmp(afxChar const* str, afxChar const* str2, afxNat len)
 {
     return strncmp(str, str2, len);
 #if 0
@@ -1340,7 +1340,7 @@ afxResult AfxCompareMeasuredRawString(afxChar const* str, afxChar const* str2, a
 #endif
 }
 
-afxResult AfxCompareRawString(afxChar const* str, afxChar const* str2)
+_AFXINL afxResult AfxStrcmp(afxChar const* str, afxChar const* str2)
 {
     return strcmp(str, str2);
 #if 0
@@ -1361,7 +1361,7 @@ afxResult AfxCompareRawString(afxChar const* str, afxChar const* str2)
 #endif
 }
 
-void AfxCopyRawString(afxChar* str, afxChar const* from)
+_AFXINL void AfxStrcpy(afxChar* str, afxChar const* from)
 {
     strcpy(str, from);
 #if 0
@@ -1377,7 +1377,7 @@ void AfxCopyRawString(afxChar* str, afxChar const* from)
 #endif
 }
 
-afxResult AfxCountRawStringCodepoints(afxChar const* str)
+_AFXINL afxResult AfxCountRawStringCodepoints(afxChar const* str)
 {
     const afxByte* s = (const afxByte*)str;
     afxResult length = 0;
@@ -1395,7 +1395,7 @@ afxResult AfxCountRawStringCodepoints(afxChar const* str)
     return length;
 }
 
-afxResult AfxCountMeasuredRawStringCodepoints(afxChar const* str, afxSize siz)
+_AFXINL afxResult AfxCountMeasuredRawStringCodepoints(afxChar const* str, afxSize siz)
 {
     const afxByte* s = (const afxByte*)str;
     afxResult length = 0;
@@ -1413,7 +1413,7 @@ afxResult AfxCountMeasuredRawStringCodepoints(afxChar const* str, afxSize siz)
     return length;
 }
 
-afxResult AfxMeasureRawString(afxChar const* str)
+_AFXINL afxResult AfxStrlen(afxChar const* str)
 {
     return strlen(str);
 #if 0
@@ -1426,7 +1426,7 @@ afxResult AfxMeasureRawString(afxChar const* str)
 #endif
 }
 
-void AfxConcatRawString(afxChar* str, afxChar const* str2)
+_AFXINL void AfxStrcat(afxChar* str, afxChar const* str2)
 {
     strcat(str, str2);
 #if 0
@@ -1443,7 +1443,7 @@ void AfxConcatRawString(afxChar* str, afxChar const* str2)
 #endif
 }
 
-afxResult AfxCompareRawStringCi(afxChar const* str, afxChar const* str2)
+_AFXINL afxResult AfxStricmp(afxChar const* str, afxChar const* str2)
 {
     return _stricmp(str, str2);
 #if 0
@@ -1485,7 +1485,7 @@ afxResult AfxCompareRawStringCi(afxChar const* str, afxChar const* str2)
 #endif
 }
 
-afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
+_AFXINL afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
 {
     afxInt n;
 
@@ -1511,7 +1511,7 @@ afxChar* AfxConvertRawStringCpToUtf8(afxChar* str, afxInt cp)
     return str;
 }
 
-afxResult AfxCopyMeasuredRawString(afxChar const* str, afxSize len, afxChar* to)
+_AFXINL afxResult AfxStrncpy(afxChar const* str, afxSize len, afxChar* to)
 {
     strncpy(to, str, len);
     return len;
@@ -1536,7 +1536,7 @@ afxResult AfxCopyMeasuredRawString(afxChar const* str, afxSize len, afxChar* to)
 #endif
 }
 
-afxResult AfxCompareMeasuredRawStringCi(afxChar const* str, afxChar const* str2, afxSize len)
+_AFXINL afxResult AfxStrnicmp(afxChar const* str, afxChar const* str2, afxSize len)
 {
     return _strnicmp(str, str2, len);
 #if 0
@@ -1609,9 +1609,9 @@ afxResult AfxCompareMeasuredRawStringCi(afxChar const* str, afxChar const* str2,
 #endif
 }
 
-afxChar* AfxFindExcerptRaw(afxChar const* str, afxChar const* excerpt);
+_AFXINL afxChar* AfxStrstr(afxChar const* str, afxChar const* excerpt);
 
-afxChar* AfxFindCharRaw(afxChar const* str, afxInt ch)
+_AFXINL afxChar* AfxStrchr(afxChar const* str, afxInt ch)
 {
     return strchr(str, ch);
 #if 0
@@ -1650,11 +1650,11 @@ afxChar* AfxFindCharRaw(afxChar const* str, afxInt ch)
     }
 
     // we've made c into a 2 utf8 codepoint string, one for the chr we are seeking, another for the null terminating byte. Now use utf8str to search
-    return AfxFindExcerptRaw(str, c);
+    return AfxStrstr(str, c);
 #endif
 }
 
-afxChar* AfxFindCharRawB2F(afxChar const* str, afxInt ch)
+_AFXINL afxChar* AfxStrrchr(afxChar const* str, afxInt ch)
 {
     return strrchr(str, ch);
 #if 0
@@ -1725,7 +1725,28 @@ afxChar* AfxFindCharRawB2F(afxChar const* str, afxInt ch)
 #endif
 }
 
-afxChar* AfxFindExcerptRaw(afxChar const* str, afxChar const* excerpt)
+_AFXINL afxChar const* AfxStrnstr(afxChar const* str, afxNat strLen, afxChar const* substr, afxNat substrLen)
+{
+    // C doesn't have a equivalent function
+
+    afxChar const *p = str;
+    strLen = strLen ? strLen : AfxStrlen(str);
+    afxSize const len2 = substrLen ? substrLen : AfxStrlen(substr);
+
+    if (!len2)
+        return str;
+
+    afxNat i = 0;
+
+    for (; (strLen >= len2) && ((p = AfxStrchr(p, *substr)) != 0); p++)
+    {
+        if (AfxStrncmp(p, substr, len2) == 0)
+            return (char *)p;
+    }
+    return NIL;
+}
+
+_AFXINL afxChar* AfxStrstr(afxChar const* str, afxChar const* excerpt)
 {
     return strstr(str, excerpt);
 #if 0
@@ -1759,4 +1780,3 @@ afxChar* AfxFindExcerptRaw(afxChar const* str, afxChar const* excerpt)
 }
 
 #endif//0
-

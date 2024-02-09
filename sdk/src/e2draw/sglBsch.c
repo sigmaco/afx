@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -24,7 +24,7 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxBind
 {
     afxError err = AFX_ERR_NONE;
     afxBindSchema legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, afxFcc_LEGO);
+    AfxAssertObject(legt, afxFcc_BSCH);
     AfxAssert(lego->base.entryCnt >= legt2->entryCnt);
 
     for (afxNat j = 0; j < lego->base.entryCnt; j++)
@@ -94,9 +94,9 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxBindSch
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
     afxBindSchema legt = AfxLegoGetTemplate(lego);
-    AfxAssertObject(legt, afxFcc_LEGO);
+    AfxAssertObject(legt, afxFcc_BSCH);
     glVmt const* gl = &dque->wglVmt;
     
     if (dque->state.pip)
@@ -129,7 +129,7 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawQueue dque, afxNat unit, afxBindSch
 _SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat unit, afxBindSchema lego, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
     AfxAssert(glHandle);
     
     afxFixedString32 tmp;
@@ -196,6 +196,16 @@ _SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat 
             }
             break;
         }
+        case AFX_SHD_RES_TYPE_STORAGE_BUFFER:
+        {
+            GLuint storBlckIdx = gl->GetUniformBlockIndex(glHandle, rawName); _SglThrowErrorOccuried();
+
+            if (storBlckIdx != GL_INVALID_INDEX)
+            {
+                gl->ShaderStorageBlockBinding(glHandle, storBlckIdx, binding); _SglThrowErrorOccuried();
+            }
+            break;
+        }
         default:
         {
             AfxError("");
@@ -236,7 +246,7 @@ _SGL afxBindSchema _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, 
     afxBindSchema lego;
     while (AfxEnumerateBindSchemas(dctx, i, 1, &lego))
     {
-        AfxAssertObjects(1, &lego, afxFcc_LEGO);
+        AfxAssertObjects(1, &lego, afxFcc_BSCH);
         
         if (lego->base.crc32 == crc)
         {
@@ -251,7 +261,7 @@ _SGL afxError _SglBschDtor(afxBindSchema lego)
 {
     AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
 
     afxDrawContext dctx = AfxGetObjectProvider(lego);
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
@@ -274,7 +284,7 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
 {
     AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
 
     afxPipelineRigBlueprint const *blueprint = ((afxPipelineRigBlueprint const *)cookie->udd[0]) + cookie->no;
 
@@ -290,7 +300,7 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
     lego->base.entryCnt = 0;
     lego->base.entries = NIL;
 
-    if (bindCnt && !(lego->base.entries = AfxAllocate(mmu, sizeof(lego->base.entries[0]), bindCnt, 0, AfxHint()))) AfxThrowError();
+    if (bindCnt && !(lego->base.entries = AfxAllocate(mmu, bindCnt, sizeof(lego->base.entries[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < bindCnt; i++)
@@ -330,13 +340,13 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
         //AfxCrc32(&crc, tmpCrc, sizeof(tmpCrc[0]) * lego->base.entryCnt);
         lego->base.crc32 = crc;
     }
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
     return err;
 }
 
-_SGL afxClassConfig _SglBschClsConfig =
+_SGL afxClassConfig const _SglBschClsConfig =
 {
-    .fcc = afxFcc_LEGO,
+    .fcc = afxFcc_BSCH,
     .name = "Lego",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxBindSchema)),

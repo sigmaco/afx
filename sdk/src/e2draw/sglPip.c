@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/io/afxXml.h"
@@ -168,7 +168,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
         afxUri fpath;
         AfxGetUriPath(&fpath, uri);
 
-        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
+        if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 
@@ -490,7 +490,7 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
 
     if (pip->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 5, pip->glHandle);
+        _SglDctxDeleteGlRes(dctx, 5, (void*)pip->glHandle);
         pip->glHandle = 0;
     }
 
@@ -539,7 +539,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssert(stageCnt);
     pip->base.stageCnt = 0;
 
-    if (!(pip->base.stages = AfxAllocate(mmu, sizeof(pip->base.stages[0]), stageCnt, 0, AfxHint()))) AfxThrowError();
+    if (!(pip->base.stages = AfxAllocate(mmu, stageCnt, sizeof(pip->base.stages[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         afxNat shaderCnt = 0;
@@ -593,20 +593,20 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             pip->base.wiringCnt = 0;
 
-            if (setCnt && !(pip->base.wiring = AfxAllocate(mmu, sizeof(pip->base.wiring[0]), setCnt, 0, AfxHint()))) AfxThrowError();
+            if (setCnt && !(pip->base.wiring = AfxAllocate(mmu, setCnt, sizeof(pip->base.wiring[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
                 {
                     if (AfxCountArrayElements(&legb[i].bindings))
                     {
-                        if (AfxBuildBindSchemas(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
+                        if (AfxAcquireBindSchemas(dctx, 1, &(pip->base.wiring[pip->base.wiringCnt].legt), &legb[i]))
                         {
                             AfxThrowError();
                         }
                         else
                         {
-                            AfxAssertObjects(1, &(pip->base.wiring[pip->base.wiringCnt].legt), afxFcc_LEGO);
+                            AfxAssertObjects(1, &(pip->base.wiring[pip->base.wiringCnt].legt), afxFcc_BSCH);
                             pip->base.wiring[pip->base.wiringCnt].set = i;
                             ++pip->base.wiringCnt;
                         }
@@ -723,7 +723,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglPipClsConfig =
+_SGL afxClassConfig const _SglPipClsConfig =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",

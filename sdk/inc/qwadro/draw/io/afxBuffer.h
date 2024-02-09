@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -48,11 +48,11 @@ AFX_OBJECT(afxBuffer)
 struct afxBaseBuffer
 #endif
 {
-    afxSize             siz;
+    afxNat              siz;
     afxBufferUsage      usage;
     afxBufferAccess     access;
     afxByte*            bytemap;
-    void*               (*map)(afxBuffer, afxSize offset, afxNat range, afxFlags flags);
+    void*               (*map)(afxBuffer, afxNat offset, afxNat range, afxFlags flags);
     afxError            (*unmap)(afxBuffer);
 };
 #endif
@@ -60,14 +60,23 @@ struct afxBaseBuffer
 
 AFX_DEFINE_STRUCT(afxBufferCopyOp)
 {
-    afxSize             range; /// is the number of bytes to copy.
-    afxSize             srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
-    afxSize             dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
+    afxNat              srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
+    afxNat              dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
+    afxNat              range; /// is the number of bytes to copy.
+};
+
+AFX_DEFINE_STRUCT(afxBufferIoOp)
+{
+    afxNat              range; /// is the number of bytes to copy.
+    afxNat              srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
+    afxNat              srcStride;
+    afxNat              dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
+    afxNat              dstStride;
 };
 
 AFX_DEFINE_STRUCT(afxBufferSpecification)
 {
-    afxSize             siz;
+    afxNat              siz;
     afxBufferAccess     access;
     afxBufferUsage      usage;
     void const*         src;
@@ -77,46 +86,49 @@ AFX_DEFINE_STRUCT(afxBufferRef)
 {
     afxBuffer           buf;
     afxFormat           fmt;
-    afxSize             off;
-    afxSize             range;
+    afxNat              off;
+    afxNat              range;
 };
 
 AFX_DEFINE_STRUCT(afxMappedBufferRange)
 {
     afxMappedBufferRange*   next;
     afxBuffer               buf;
-    afxSize                 offset;
+    afxNat                  offset;
     afxNat                  size;
 };
 
-AFX afxError        AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buf[]);
+AFX afxError        AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buffers[]);
 
 AFX afxDrawContext  AfxGetBufferContext(afxBuffer buf);
 
-AFX afxSize         AfxGetBufferCapacity(afxBuffer buf);
+AFX afxNat          AfxGetBufferCapacity(afxBuffer buf);
 
 AFX afxBufferUsage  AfxGetBufferUsage(afxBuffer buf);
-AFX afxBufferAccess AfxGetBufferAccess(afxBuffer buf);
+AFX afxBufferUsage  AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage);
 
-AFX void*           AfxMapBufferRange(afxBuffer buf, afxSize offset, afxNat range, afxFlags flags);
+AFX afxBufferAccess AfxGetBufferAccess(afxBuffer buf);
+AFX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access);
+
+AFX void*           AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags);
 AFX void            AfxUnmapBufferRange(afxBuffer buf);
 
-AFX afxError        AfxDumpBuffer(afxBuffer buf, afxSize offset, afxSize range, void *dst);
-AFX afxError        AfxDumpBuffer2(afxBuffer buf, afxSize offset, afxSize stride, afxSize cnt, void *dst, afxSize dstStride);
+AFX afxError        AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *dst);
+AFX afxError        AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat cnt, void *dst, afxNat dstStride);
 
-AFX afxError        AfxUpdateBuffer(afxBuffer buf, afxSize offset, afxSize range, void const *src);
-AFX afxError        AfxUpdateBuffer2(afxBuffer buf, afxSize offset, afxSize range, afxSize stride, void const *src, afxSize srcStride);
+AFX afxError        AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void const *src);
+AFX afxError        AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNat stride, void const *src, afxNat srcStride);
 
 AFX_DEFINE_STRUCT(afxBufferRegion)
 {
-    afxNat32 base;
-    afxNat32 range;
-    afxNat32 stride;
-    afxNat32 offset;
-    afxNat32 unitSiz;
+    afxNat base;
+    afxNat range;
+    afxNat stride;
+    afxNat offset;
+    afxNat unitSiz;
 };
 
-AFX afxError        AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxSize srcStride);
+AFX afxError        AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxNat srcStride);
 
 
   //////////////////////////////////////////////////////////////////////////////
@@ -138,10 +150,10 @@ AFX afxCmdId                AfxCmdCopyBufferRegion
 (
     afxDrawScript           dscr,
     afxBuffer               src, /// the source buffer.
-    afxSize                 srcOffset, /// the starting offset in bytes from the start of srcBuffer.
+    afxNat                  srcOffset, /// the starting offset in bytes from the start of srcBuffer.
     afxBuffer               dst, /// the destination buffer.
-    afxSize                 dstOffset, /// the starting offset in bytes from the start of dstBuffer.
-    afxSize                 range /// the number of bytes to copy.
+    afxNat                  dstOffset, /// the starting offset in bytes from the start of dstBuffer.
+    afxNat                  range /// the number of bytes to copy.
 );
 
 AFX afxCmdId                AfxCmdFillBuffer
@@ -149,8 +161,8 @@ AFX afxCmdId                AfxCmdFillBuffer
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// the buffer to be filled.
-    afxSize                 offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxSize                 range, /// the number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
+    afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
+    afxNat                  range, /// the number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
     afxNat                  value /// the 4-byte word written repeatedly to the buffer to fill size bytes of data. The data word is written to memory according to the host endianness.
 );
 
@@ -159,8 +171,8 @@ AFX afxCmdId                AfxCmdClearBuffer
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// the buffer to be zeroed.
-    afxSize                 offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
-    afxSize                 range /// the number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
+    afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
+    afxNat                  range /// the number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
 );
 
 AFX afxCmdId                AfxCmdUpdateBuffer
@@ -168,19 +180,19 @@ AFX afxCmdId                AfxCmdUpdateBuffer
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// the buffer to be updated.
-    afxSize                 offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
-    afxSize                 range, /// the number of bytes to update, and must be a multiple of 4.
-    void const*             data /// the source data for the buffer update, and must be at least @range bytes in size.
+    afxNat                  offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
+    afxNat                  range, /// the number of bytes to update, and must be a multiple of 4.
+    void const*             src /// the source data for the buffer update, and must be at least @range bytes in size.
 );
 
-AFX afxCmdId                AfxCmdUpdateBuffer
-/// Update a afxBuffer's contents from host memory.
+AFX afxCmdId                AfxCmdDumpBuffer
+/// Dump a afxBuffer's contents to host memory.
 (
     afxDrawScript           dscr,
-    afxBuffer               buf, /// the buffer to be updated.
-    afxSize                 offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
-    afxSize                 range, /// the number of bytes to update, and must be a multiple of 4.
-    void const*             data /// the source data for the buffer update, and must be at least @range bytes in size.
+    afxBuffer               buf, /// the buffer to be dumped.
+    afxNat                  offset, /// the byte offset into the buffer to start dumping, and must be a multiple of 4.
+    afxNat                  range, /// the number of bytes to dump, and must be a multiple of 4.
+    void*                   dst /// the destination place for the buffer dump, and must be at least @range bytes in size.
 );
 
 #endif//AFX_BUFFER_H

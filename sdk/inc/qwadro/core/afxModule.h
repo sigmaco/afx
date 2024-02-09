@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 /// Um afxModule é uma API do QWADRO para Applicable Service Interface (.asi) e Installable Client Driver (.icd), 
@@ -57,6 +57,6 @@ AFX afxResult           AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar
 AFX void                AfxGetModuleVendor(afxModule mdle, afxString const* name);
 AFX void                AfxGetModuleVersion(afxModule mdle, afxNat *major, afxNat *minor, afxNat *patch);
 
-AFX afxError            AfxAcquireModules(afxNat cnt, afxUri const uri[], afxModule mdle[]);
+AFX afxError            AfxMountLoadableModules(afxNat cnt, afxUri const uri[], afxModule mdle[]);
 
 #endif//AFX_MODULE_H

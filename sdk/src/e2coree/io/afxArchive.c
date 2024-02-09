@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -476,7 +476,7 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxNat idx, afxStream *ios)
         *ios = ios2;
         AfxAssertObjects(1, &ios2, afxFcc_IOS);
 
-        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), ios2, e->offset, size, 0))
+        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), e->offset, size, 0, ios2))
             AfxThrowError();
 
         if (err)
@@ -520,7 +520,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxNat idx, afxStream *in)
         *in = in2;
         AfxAssertType(in2, afxFcc_IOS);
 
-        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), in2, e->offset, size, 0))
+        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), e->offset, size, 0, in2))
             AfxThrowError();
 
         if (err)
@@ -549,12 +549,12 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxNat idx, afxUri const *u
     //AfxGoToStreamBegin(ios, e->offset);
     afxFile file;
 
-    if (AfxOpenFiles(AFX_FILE_FLAG_W, 1, uri, &file)) AfxThrowError();
+    if (AfxOpenFiles(afxFileFlag_W, 1, uri, &file)) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
-        if (AfxCopyStreamRange(AfxGetFileStream(file), ios, e->offset, size, 0))
+        if (AfxCopyStreamRange(ios, e->offset, size, 0, AfxGetFileStream(file)))
             AfxThrowError();
 
         AfxReleaseObjects(1, (void*[]) { file });
@@ -640,7 +640,7 @@ _AFX afxError _AfxArcDtor(afxArchive arc)
     return err;
 }
 
-_AFX afxClassConfig _AfxArcClsConfig =
+_AFX afxClassConfig const _AfxArcClsConfig =
 {
     .fcc = afxFcc_ARC,
     .name = "File Archive",
@@ -667,14 +667,14 @@ _AFX afxError AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[
     return err;
 }
 
-_AFX afxNat AfxCurateArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd)
+_AFX afxNat AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive arc[])

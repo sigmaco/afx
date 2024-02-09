@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/core/afxChain.h"
@@ -286,7 +286,7 @@ _AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk)
     return lnk->prev;
 }
 
-_AFXINL afxNat AfxCurateLinkages(afxChain *ch, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd)
+_AFXINL afxNat AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
@@ -301,7 +301,7 @@ _AFXINL afxNat AfxCurateLinkages(afxChain *ch, afxBool fromLast, afxNat first, a
         if (lnk == &ch->anchor)
             break;
 
-        if (i >= (afxInt)first)
+        if (i >= (afxNat)first)
         {
             ++rslt;
 

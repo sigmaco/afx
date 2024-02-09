@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -283,7 +283,7 @@ _AFX afxResult _AfxKbdCtor(afxKeyboard kbd, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxKbdClsConfig =
+_AFX afxClassConfig const _AfxKbdClsConfig =
 {
     .fcc = afxFcc_KBD,
     .name = "Keyboard",
@@ -330,14 +330,14 @@ _AFX afxError AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard k
     return err;
 }
 
-_AFX afxNat AfxCurateKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd)
+_AFX afxNat AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[])

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // The Unified Qwadro Video Graphics Infrastructure
@@ -279,9 +279,12 @@ struct _afxBaseDrawDevice
     afxString               domain;
     afxString               name;
 
+    afxClipSpace            clipCfg;
+
     afxError                (*procCb)(afxDrawDevice,afxDrawThread); // call their draw threads.
-    afxError                (*relinkDin)(afxDrawDevice,afxDrawInput,afxDrawContext);
-    afxError                (*relinkDout)(afxDrawDevice,afxDrawOutput,afxDrawContext);
+    afxError                (*relinkDin)(afxDrawDevice,afxDrawContext,afxNat,afxDrawInput[]);
+    afxError                (*relinkDout)(afxDrawDevice,afxDrawContext,afxNat,afxDrawOutput[]);
+    afxMutex                ioConMtx;
 };
 #endif//_AFX_DRAW_DEVICE_C
 #endif//_AFX_DRAW_C
@@ -298,13 +301,14 @@ AFX_OBJECT(afxDrawSystem)
     afxFcc              fcc;
     afxMmu              mmu;
     afxArena            aren;
+    afxChain            classes;
     afxClass            dthreads;
-    afxClass            ddevices;
     afxClass            dcontexts;
-    afxClass            doutputs;
-    afxClass            dinputs;
     afxClass            oends;
+    afxClass            doutputs;
     afxClass            iends;
+    afxClass            dinputs;
+    afxClass            ddevices;
     afxIcd              e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
 };
 #endif//_AFX_DRAW_SYSTEM_C
@@ -323,8 +327,8 @@ AFX afxNat          AfxCountDrawDevices(void);
 AFX afxNat          AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread dthr[]);
 AFX afxNat          AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice ddev[]);
 
-AFX afxNat          AfxCurateDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
-AFX afxNat          AfxCurateDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
+AFX afxNat          AfxInvokeDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
+AFX afxNat          AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
 
 AFX afxDrawDevice   AfxGetDrawDevice(afxNat ddevIdx);
 
@@ -354,9 +358,9 @@ AFX afxNat          AfxEnumerateDrawContexts(afxDrawDevice ddev, afxNat first, a
 AFX afxNat          AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawOutput dout[]);
 AFX afxNat          AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawInput din[]);
 
-AFX afxNat          AfxCurateDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
-AFX afxNat          AfxCurateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AFX afxNat          AfxCurateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AFX afxNat          AfxInvokeDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawContext, void*), void *udd);
+AFX afxNat          AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+AFX afxNat          AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 
 AFX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputEndpointCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
 AFX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);

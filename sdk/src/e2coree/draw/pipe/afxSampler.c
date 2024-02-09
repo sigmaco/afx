@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -39,48 +39,33 @@ _AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
     spec->unnormalizedCoords = samp->unnormalizedCoords;
 }
 
-_AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samp[])
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("cnt=%u,samp=%p,config=%p", cnt, samp, config);
-    AfxAssert(cnt);
-    AfxAssert(samp);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(samplers);
+    AfxAssert(cnt);
+    afxClass* cls = AfxGetSamplerClass(dctx);
+    AfxAssertClass(cls, afxFcc_SAMP);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)samplers);
+}
+
+_AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(samplers);
+    AfxAssert(cnt);
 
     afxClass* cls = AfxGetSamplerClass(dctx);
     AfxAssertClass(cls, afxFcc_SAMP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)samp, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)samplers, (void const*[]) { (void*)config }))
         AfxThrowError();
 
     return err;
-}
-
-AFX afxSampler AfxAcquireBilinearSampler(afxDrawContext dctx)
-{
-    afxError err = NIL;
-    afxSamplerConfig config;
-    AfxDescribeDefaultSampler(&config);
-    afxSampler smp;
-
-    if (AfxAcquireSamplers(dctx, 1, &config, &smp))
-        AfxThrowError();
-
-    return smp;
-}
-
-AFX afxSampler AfxAcquireTrilinearSampler(afxDrawContext dctx)
-{
-    afxError err = NIL;
-    afxSamplerConfig config;
-    AfxDescribeDefaultSampler(&config);
-    config.minFilter = afxTexelFilter_LINEAR;
-    afxSampler smp;
-
-    if (AfxAcquireSamplers(dctx, 1, &config, &smp))
-        AfxThrowError();
-
-    return smp;
 }
 
 AFX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
@@ -109,4 +94,31 @@ AFX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
         .unnormalizedCoords = FALSE
     };
     *config = def;
+}
+
+AFX afxSampler AfxAcquireBilinearSampler(afxDrawContext dctx)
+{
+    afxError err = NIL;
+    afxSamplerConfig config;
+    AfxDescribeDefaultSampler(&config);
+    afxSampler smp;
+
+    if (AfxAcquireSamplers(dctx, 1, &config, &smp))
+        AfxThrowError();
+
+    return smp;
+}
+
+AFX afxSampler AfxAcquireTrilinearSampler(afxDrawContext dctx)
+{
+    afxError err = NIL;
+    afxSamplerConfig config;
+    AfxDescribeDefaultSampler(&config);
+    config.minFilter = afxTexelFilter_LINEAR;
+    afxSampler smp;
+
+    if (AfxAcquireSamplers(dctx, 1, &config, &smp))
+        AfxThrowError();
+
+    return smp;
 }

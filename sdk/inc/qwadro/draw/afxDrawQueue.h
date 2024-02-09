@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -19,7 +19,7 @@
 #ifndef AFX_DRAW_QUEUE_H
 #define AFX_DRAW_QUEUE_H
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/pipe/afxPipeline.h"
 
 // No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
 // Ao criar um afxDrawContext, necessariamente ao menos uma afxDrawQueue foi criada consequentemente e associado ao mesmo.
@@ -70,6 +70,9 @@ AFX_DEFINE_STRUCT(afxDrawSubmissionSpecification)
     afxNat              outputCnt;
     afxDrawOutput*      outputs;
     afxNat*             outBufIdx;
+    afxSemaphore*       wait;
+    afxPipelineStage const*waitStage;
+    afxSemaphore*       signal;
     void*               data;
 };
 
@@ -81,12 +84,6 @@ typedef enum afxDrawQueueFlags
     AFX_DQUE_TRANSFER       = AfxGetBitOffset(3), // supports transfer ops
     AFX_DQUE_VHS            = AfxGetBitOffset(4), // supports VHS enc/dec
 } afxDrawQueueFlags;
-
-AFX_DEFINE_STRUCT(afxDrawQueueSpecification)
-{
-    afxDrawContext          dctx;
-    //afxDrawQueueFlags       caps;
-};
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_QUEUE_C
@@ -100,7 +97,6 @@ struct afxBaseDrawQueue
     afxNat                  portIdx;
 
     afxError                (*waitCb)(afxDrawQueue);
-    afxError                (*procCb)(afxDrawQueue,afxDrawContext,afxDrawThread);
 
     afxSlock                pendingChainSlock;
     afxChain                pendingChain;

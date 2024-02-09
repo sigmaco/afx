@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -89,7 +89,7 @@ _AFX afxNat AfxFindResources(awxAsset cad, afxFcc fcc, afxNat cnt, afxString con
 
         for (afxNat i = 0; i < resCnt; i++)
         {
-            if (0 == AfxCompareString(&id[rslt], &(cad->resSlots[baseResIdx + i].id.str.str)))
+            if (0 == AfxTestStringEquality(&id[rslt], &(cad->resSlots[baseResIdx + i].id.str.str)))
             {
                 res[rslt] = cad->resSlots[baseResIdx + i].obj;
                 AfxAssertObjects(1, &res[rslt], fcc);
@@ -113,7 +113,7 @@ _AFX afxNat AfxFindTextures(awxAsset cad, afxNat cnt, afxString const id[], afxR
     return AfxFindResources(cad, afxFcc_RAS, cnt, id, (void**)tex);
 }
 
-_AFX afxNat AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], awxMaterial mt[])
+_AFX afxNat AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -133,7 +133,7 @@ _AFX afxNat AfxFindVertexDatas(awxAsset cad, afxNat cnt, afxString const id[], a
     return AfxFindResources(cad, afxFcc_VTD, cnt, id, (void**)vtd);
 }
 
-_AFX afxNat AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], awxMeshTopology msht[])
+_AFX afxNat AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -143,7 +143,7 @@ _AFX afxNat AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], aw
     return AfxFindResources(cad, afxFcc_MSHT, cnt, id, (void**)msht);
 }
 
-_AFX afxNat AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], awxMesh msh[])
+_AFX afxNat AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -153,7 +153,7 @@ _AFX afxNat AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], awxMes
     return AfxFindResources(cad, afxFcc_MSH, cnt, id, (void**)msh);
 }
 
-_AFX afxNat AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], awxSkeleton skl[])
+_AFX afxNat AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -163,7 +163,7 @@ _AFX afxNat AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], awx
     return AfxFindResources(cad, afxFcc_SKL, cnt, id, (void**)skl);
 }
 
-_AFX afxNat AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], awxModel mdl[])
+_AFX afxNat AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], afxModel mdl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cad, afxFcc_CAD);
@@ -240,7 +240,7 @@ _AFX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
     AfxAssert(typeCnt);
     AfxAssert(totalResCnt);
 
-    if (typeCnt && !(cad->nests = AfxAllocate(NIL, sizeof(cad->nests[0]), typeCnt, 0, AfxHint()))) AfxThrowError();
+    if (typeCnt && !(cad->nests = AfxAllocate(NIL, typeCnt, sizeof(cad->nests[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         if (typeCnt)
@@ -248,7 +248,7 @@ _AFX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
 
         cad->nestCnt = typeCnt;
 
-        if (totalResCnt && !(cad->resSlots = AfxAllocate(NIL, sizeof(cad->resSlots[0]), totalResCnt, 0, AfxHint()))) AfxThrowError();
+        if (totalResCnt && !(cad->resSlots = AfxAllocate(NIL, totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             if (totalResCnt)
@@ -363,7 +363,7 @@ _AFX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
             resCnt = AfxCountResources(cad2, afxFcc_SKL);
 
             for (afxNat j = 0; j < resCnt; j++)
-                AfxTransformSkeletons(ltm, iltm, atv, affineTol, linearTol, 1, (awxSkeleton[]) { cad2->resSlots[baseResIdx + j].obj });
+                AfxTransformSkeletons(ltm, iltm, linearTol, atv, affineTol, 1, (afxSkeleton[]) { cad2->resSlots[baseResIdx + j].obj });
         }
 
         if (AfxFindResourceNests(cad2, 1, (afxFcc[]) { afxFcc_MSH }, &nestIdx))
@@ -372,7 +372,7 @@ _AFX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
             resCnt = AfxCountResources(cad2, afxFcc_MSH);
 
             for (afxNat j = 0; j < resCnt; j++)
-                AwxTransformMeshes(ltm, iltm, atv, affineTol, linearTol, flags, 1, (awxMesh[]) { cad2->resSlots[baseResIdx + j].obj });
+                AfxTransformMeshes(ltm, iltm, linearTol, atv, affineTol, flags, 1, (afxMesh[]) { cad2->resSlots[baseResIdx + j].obj });
         }
 
         if (AfxFindResourceNests(cad2, 1, (afxFcc[]) { afxFcc_MDL }, &nestIdx))
@@ -382,7 +382,7 @@ _AFX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
             
             for (afxNat j = 0; j < resCnt; j++)
             {
-                awxModel mdl = cad2->resSlots[baseResIdx + j].obj;
+                afxModel mdl = cad2->resSlots[baseResIdx + j].obj;
                 AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl->init, &mdl->init);
             }
         }

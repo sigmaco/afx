@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -25,12 +25,12 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     _sglCmd const* cmdHdr;
     AfxChainForEveryLinkageB2F(&dscr->commands, _sglCmd, script, cmdHdr)
     {
-        if (cmdHdr->id == SGL_CMD_END)
+        if (cmdHdr->id == NIL/*SGL_CMD_END*/)
             break;
 
-        if (cmdHdr->id == SGL_CMD_BEGIN_SYNTHESIS)
+        //if (cmdHdr->id == SGL_CMD_BEGIN_SYNTHESIS)
         {
-            _sglCmdBeginSynthesis const *cmd = AFX_REBASE(cmdHdr, _sglCmdBeginSynthesis, cmd);
+            //_sglCmdBeginSynthesis const *cmd = AFX_REBASE(cmdHdr, _sglCmdBeginSynthesis, cmd);
         }
     }
 
@@ -157,6 +157,11 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     dscr->base.beginCb = _SglDscrBeginCb;
     dscr->base.endCb = _SglDscrEndCb;
     dscr->base.resetCb = _SglDscrResetCb;
+
+    _SglEncodeCmdVmt.Transformation = _SglEncodeCmdTransformationVmt;
+    _SglEncodeCmdVmt.Rasterization = _SglEncodeCmdRasterizationVmt;
+    _SglEncodeCmdVmt.buf = _SglEncodeCmdBufferVmt;
+    _SglEncodeCmdVmt.ras = _SglEncodeCmdRasterVmt;
 
     dscr->base.stdCmds = &_SglEncodeCmdVmt;
 

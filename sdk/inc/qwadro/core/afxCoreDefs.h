@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_CORE_DEFS_H
@@ -49,11 +49,15 @@
 #define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 #ifdef _WIN64
-#   define AFX_PLATFORM_X64
-#   define AFX_PLATFORM_WIN32
+#   define AFX_PLATFORM_64
+#   define AFX_PLATFORM_X86_64
+#   define AFX_PLATFORM_WIN
+#   define AFX_PLATFORM_W64
 #elif _WIN32
-#   define AFX_PLATFORM_X86
-#   define AFX_PLATFORM_WIN32
+#   define AFX_PLATFORM_32
+#   define AFX_PLATFORM_X86_32
+#   define AFX_PLATFORM_WIN
+#   define AFX_PLATFORM_W32
 #else
 #   error ""
 #endif//_WIN64
@@ -129,9 +133,9 @@ typedef afxInt32    afxChar32;
 
 typedef afxChar8    afxChar;
 typedef afxNat8     afxByte;
-typedef afxInt32    afxInt; // signed
-typedef afxNat32    afxNat; // unsigned
-typedef afxReal32   afxReal;
+typedef afxInt32    afxInt; // (signed) integral number unit
+typedef afxNat32    afxNat; // (unsigned) natural number unit
+typedef afxReal32   afxReal; // (floating-point) real number unit
 typedef afxBool32   afxBool;
 typedef afxInt32    afxResult;
 
@@ -208,7 +212,7 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxTestBitPosition(mask_,bit_) ((mask_) &  (1 << (bit_))) // Return bit position or 0 depending on if the bit is actually enabled.
 #define AfxTestBitEnabled(mask_,bit_) (((mask_)>>(bit_)) & 1) // Return 1 or 0 if bit is enabled and not the position;
 
-#define AfxFlagsTest(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
+#define AfxTestFlags(_var_,_mask_) ((((afxFlags)(_var_)) & ((afxFlags)(_mask_))) == (afxFlags)(_mask_))
 #define AfxFlagsSet(_var_,_mask_) (((afxFlags)(_var_)) = ((afxFlags)(_mask_)))
 #define AfxFlagsMark(_var_,_mask_) (((afxFlags)(_var_)) |= ((afxFlags)(_mask_)))
 #define AfxFlagsClear(_var_,_mask_) (((afxFlags)(_var_)) &= ~((afxFlags)(_mask_)))
@@ -348,6 +352,7 @@ AFX_DEFINE_HANDLE(afxIcd);
 AFX_DEFINE_HANDLE(afxUrd);
 AFX_DEFINE_HANDLE(afxArchive);
 //typedef afxObject afxArchive;
+AFX_DEFINE_HANDLE(afxCodec);
 AFX_DEFINE_HANDLE(afxStream);
 AFX_DEFINE_HANDLE(afxFile);
 //typedef afxObject afxFile;
@@ -367,13 +372,15 @@ AFX_DEFINE_HANDLE(afxStorage);
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSimulation);
+AFX_DEFINE_HANDLE(afxStringCatalog);
+
 
 
 
 #define AfxFind(first_,last_,val_) _AfxFind(first_, last_, sizeof(val_), &val_)
 AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, void const* val);
 
-AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len);
+AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 
 #define AFX_FUNC( _type, _name ) _type AKSOUNDENGINE_CALL _name // Declare a function

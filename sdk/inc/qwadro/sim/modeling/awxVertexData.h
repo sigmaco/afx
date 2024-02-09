@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 /// Vertex data consists of vertex elements combined to form vertex components.
@@ -21,7 +21,7 @@
 #ifndef AFX_VERTEX_DATA_H
 #define AFX_VERTEX_DATA_H
 
-#include "qwadro/sim/modeling/awxMeshBuilder.h"
+#include "qwadro/sim/modeling/afxMeshBuilder.h"
 #include "qwadro/draw/io/afxVertexStream.h"
 
 typedef enum awxVertexUsage
@@ -67,7 +67,7 @@ typedef enum awxVertexFlag
     awxVertexFlag_DELTA = AfxGetBitOffset(13), // treat as delta
 } awxVertexFlags;
 
-AFX_DEFINE_STRUCT(awxVertexBias)
+AFX_DEFINE_STRUCT(afxVertexBias)
 {
     afxNat              pivotIdx;
     afxReal             weight;
@@ -90,6 +90,7 @@ AFX_DEFINE_STRUCT(awxVertexDataAttr)
     afxVertexFormat     fmt;
     void*               data;
     afxFixedString8     id;
+    afxNat              idStrIdx;
 
     afxNat              cacheIdx;
     afxNat32            cachedOffset;
@@ -98,19 +99,36 @@ AFX_DEFINE_STRUCT(awxVertexDataAttr)
 
 AFX_OBJECT(awxVertexData)
 {
+    afxNat              biasCnt;
+    afxVertexBias*      biases;
     afxNat              vtxCnt;
     afxVertex*          vtx; // one for each vertex
-    afxNat              biasCnt;
-    awxVertexBias*      biases;
     afxNat              attrCnt;
     awxVertexDataAttr*  attrs;
     afxAabb             aabb;
 
     afxBool             cached;
     awxVertexDataCache  cache[2];
+
+    afxUri              urd;
+    afxNat              urdEntryIdx;
+
+    afxStringCatalog    strc;
 };
 
 #endif
+
+AFX_DEFINE_STRUCT(awxVertexDataSpec)
+{
+    afxNat              vtxCnt;
+    afxVertex const*    vtxSrc;
+    afxNat              vtxSrcStride;
+    afxNat              biasCnt;
+    afxVertexBias const*biasSrc;
+    afxNat              biasSrcStride;
+    afxNat              baseAttrIdx;
+    afxNat              attrCnt;
+};
 
 AFX_DEFINE_STRUCT(awxVertexAttrSpec)
 {
@@ -118,7 +136,11 @@ AFX_DEFINE_STRUCT(awxVertexAttrSpec)
     afxVertexFormat     fmt;
     awxVertexUsage      usage;
     awxVertexFlags      flags;
+    void const*         src;
+    afxNat              srcStride;
 };
+
+AFX afxNat              AwxCountVertices(awxVertexData vtd);
 
 AFX afxNat              AwxFindVertexDataAttributes(awxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
 
@@ -127,6 +149,9 @@ AFX afxError            AwxGetVertexAttributeInfo(awxVertexData vtd, afxNat attr
 AFX afxVertexFormat     AwxGetVertexAttributeFormat(awxVertexData vtd, afxNat attrIdx);
 AFX awxVertexUsage      AwxGetVertexAttributeUsage(awxVertexData vtd, afxNat attrIdx);
 AFX awxVertexFlags      AwxGetVertexAttributeFlags(awxVertexData vtd, afxNat attrIdx);
+
+AFX afxNat              AwxCountVertexBiases(awxVertexData vtd);
+AFX afxVertexBias const*AwxGetVertexBiases(awxVertexData vtd, afxNat baseBiasIdx);
 
 AFX void*               AwxExposeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx);
 AFX afxError            AwxZeroVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
@@ -137,12 +162,16 @@ AFX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, a
 AFX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
 AFX afxError            AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd);
 
+AFX afxError            AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat srcStride);
+AFX afxError            AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat srcStride);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX awxVertexData       AwxBuildVertexData(afxSimulation sim, awxMeshBuilder const* mshb);
+AFX afxError            AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[]);
+
+AFX awxVertexData       AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, afxMeshBuilder const* mshb);
 
 AFX void                AwxTransformVertexDatas(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxBool renormalize, afxNat cnt, awxVertexData vtd[]);
 

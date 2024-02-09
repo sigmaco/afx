@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/io/afxXml.h"
@@ -115,7 +115,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
     razr->base.sampleCnt = rasc->sampleCnt;
     razr->base.sampleMasks = NIL;
 
-    if (razr->base.sampleCnt && !(razr->base.sampleMasks = AfxAllocate(mmu, sizeof(razr->base.sampleMasks[0]), razr->base.sampleCnt, 0, AfxHint()))) AfxThrowError();
+    if (razr->base.sampleCnt && !(razr->base.sampleMasks = AfxAllocate(mmu, razr->base.sampleCnt, sizeof(razr->base.sampleMasks[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < razr->base.sampleCnt; i++)
@@ -129,7 +129,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
 
         razr->base.depthTestEnabled = !!rasc->depthTestEnabled;
         razr->base.depthCompareOp = rasc->depthCompareOp;
-        razr->base.depthWriteEnabled = !!rasc->depthWriteEnabled;
+        razr->base.depthWriteDisabled = !!rasc->depthWriteDisabled;
 
         razr->base.stencilTestEnabled = !!rasc->stencilTestEnabled;
         razr->base.stencilFront = rasc->stencilFront;
@@ -146,7 +146,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
         razr->base.outCnt = rasc->colorOutCnt;
         razr->base.outs = NIL;
 
-        if (razr->base.outCnt && !(razr->base.outs = AfxAllocate(mmu, sizeof(razr->base.outs[0]), razr->base.outCnt, 0, AfxHint()))) AfxThrowError();
+        if (razr->base.outCnt && !(razr->base.outs = AfxAllocate(mmu, razr->base.outCnt, sizeof(razr->base.outs[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < razr->base.outCnt; i++)
@@ -184,7 +184,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglRazrClsConfig =
+_SGL afxClassConfig const _SglRazrClsConfig =
 {
     .fcc = afxFcc_RAZR,
     .name = "Rasterizer",

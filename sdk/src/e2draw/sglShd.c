@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -98,13 +98,13 @@ _SGL afxError _SglShdDtor(afxShader shd)
     
     if (shd->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 6, shd->glHandle);
+        _SglDctxDeleteGlRes(dctx, 6, (void*)shd->glHandle);
         shd->glHandle = 0;
     }
 
     if (shd->glProgHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 7, shd->glProgHandle);
+        _SglDctxDeleteGlRes(dctx, 7, (void*)shd->glProgHandle);
         shd->glProgHandle = 0;
     }
 
@@ -164,7 +164,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.code = NIL;
     afxNat codeLen = AfxCountArrayElements(&blueprint->codes);
 
-    if (codeLen && !(shd->base.code = AfxAllocate(mmu, sizeof(afxChar), codeLen, 0, AfxHint()))) AfxThrowError();
+    if (codeLen && !(shd->base.code = AfxAllocate(mmu, codeLen, sizeof(afxChar), 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxAssertType(&blueprint->codes, afxFcc_ARR);
@@ -183,7 +183,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
         afxNat resDeclCnt = AfxCountArrayElements(&blueprint->resources);
 
-        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(mmu, sizeof(shd->base.resDecls[0]), resDeclCnt, 0, AfxHint()))) AfxThrowError();
+        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(mmu, resDeclCnt, sizeof(shd->base.resDecls[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat j = 0; j < resDeclCnt; j++)
@@ -208,7 +208,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             shd->base.ioDeclCnt = 0;
             shd->base.ioDecls = NIL;
 
-            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(mmu, sizeof(shd->base.ioDecls[0]), ioCnt, 0, AfxHint()))) AfxThrowError();
+            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(mmu, ioCnt, sizeof(shd->base.ioDecls[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < ioCnt; i++)
@@ -242,7 +242,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglShdClsConfig =
+_SGL afxClassConfig const _SglShdClsConfig =
 {
     .fcc = afxFcc_SHD,
     .name = "Shader",

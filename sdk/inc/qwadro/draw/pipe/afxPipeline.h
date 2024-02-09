@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -24,6 +24,8 @@
 #define AFX_PIPELINE_H
 
 #include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/io/afxUri.h"
+#include "qwadro/core/afxFixedString.h"
 
 /*
     The first stage of the graphics pipeline (Input Assembler) assembles vertices to form geometric primitives such as points, lines, and triangles, based on a requested primitive topology.
@@ -36,6 +38,28 @@
     Framebuffer operations then read and write the color and depth/stencil attachments of the framebuffer for a given subpass of a render pass instance.
     The attachments can be used as input attachments in the fragment shader in a later subpass of the same render pass.
 */
+
+typedef enum afxPipelineStage
+{
+    // NIL,
+    afxPipelineStage_TOP            = AfxGetBitOffset(0),
+    afxPipelineStage_DRAW_INDIRECT  = AfxGetBitOffset(1), /// where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
+    afxPipelineStage_VERTEX_INPUT   = AfxGetBitOffset(2), /// where vertex and index buffers are consumed.
+    afxPipelineStage_VERTEX         = AfxGetBitOffset(3), /// the vertex shader stage.
+    afxPipelineStage_DOMAIN         = AfxGetBitOffset(4), /// the tessellation control shader stage.
+    afxPipelineStage_HULL           = AfxGetBitOffset(5), /// the tessellation evaluation shader stage.
+    afxPipelineStage_PRIM           = AfxGetBitOffset(6), /// the primitive (aka geometry) shader stage.
+    afxPipelineStage_FRAGMENT       = AfxGetBitOffset(7), /// the fragment shader stage.
+    afxPipelineStage_EARLY_TESTS    = AfxGetBitOffset(8), /// where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes render pass load operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_LATE_TESTS     = AfxGetBitOffset(9), /// where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes render pass store operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_COLOR_OUTPUT   = AfxGetBitOffset(10), /// where the final color values are output from the pipeline. This stage includes blending, logic operations, render pass load and store operations for color attachments, render pass multisample resolve operations, and AfxCmdClearAttachments.
+    afxPipelineStage_COMPUTE        = AfxGetBitOffset(11), /// the execution of a compute shader.
+    afxPipelineStage_TRANSFER       = AfxGetBitOffset(12), /// the following commands: copies, blits, resolves, clears.
+    afxPipelineStage_BOTTOM         = AfxGetBitOffset(13), 
+    afxPipelineStage_HOST           = AfxGetBitOffset(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
+    afxPipelineStage_GRAPHICS       = AfxGetBitOffset(15), /// the execution of all graphics pipeline stages.
+    afxPipelineStage_COMMANDS       = AfxGetBitOffset(16), /// all operations performed by all commands supported on the queue it is used with.
+} afxPipelineStage;
 
 AFX_DEFINE_STRUCT(afxPipelineInputLocation)
 /// vertex attribute input stream
@@ -133,11 +157,11 @@ AFX_DEFINE_STRUCT(afxPipelineAssembler)
 //AFX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
 //AFX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
 
-AFX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-AFX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
+//AFX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AFX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
 
-AFX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pip[]);
-AFX afxPipeline         AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri);
+AFX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
+AFX afxPipeline         AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri);
 
 AFX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
 AFX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);

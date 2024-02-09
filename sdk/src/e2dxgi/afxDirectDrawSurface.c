@@ -158,7 +158,7 @@ void align_memory(afxMmu mmu, DdsData *dds, DdsImage *surface)
     newSurface.data.height = surface->data.height;
     newSurface.data.depth = surface->data.depth;
     newSurface.data.size = imagesize;
-    newSurface.data.pixels = AfxAllocate(mmu, imagesize, 1, AfxHint());
+    newSurface.data.pixels = AfxAllocate(mmu, 1, imagesize, AfxHint());
     AfxArrayDeploy(&newSurface.mipmaps, NIL, sizeof(DdsMap), 1);
 
     // add pad bytes to end of each line
@@ -187,7 +187,7 @@ void align_memory(afxMmu mmu, DdsData *dds, DdsImage *surface)
 // swap to sections of memory
 void swap(afxMmu mmu, void *byte1, void *byte2, int size)
 {
-    unsigned char *tmp = AfxAllocate(mmu, sizeof(afxByte), size, 0, AfxHint());
+    unsigned char *tmp = AfxAllocate(mmu, size, sizeof(afxByte), 0, AfxHint());
     AfxCopy(1, size, byte1, tmp);
     AfxCopy(1, size, byte2, byte1);
     AfxCopy(1, size, tmp, byte2);
@@ -510,7 +510,7 @@ _AFXEXPORT afxBool _AfxDdsLoad(afxMmu mmu, afxUri *filename, afxBool flipImage, 
         img.data.height = height;
         img.data.depth = depth;
         img.data.size = size;
-        img.data.pixels = AfxAllocate(mmu, sizeof(afxByte), size, AfxHint());
+        img.data.pixels = AfxAllocate(mmu, size, sizeof(afxByte), AfxHint());
         
         fread(img.data.pixels, 1, img.data.size, fp);
 
@@ -544,7 +544,7 @@ _AFXEXPORT afxBool _AfxDdsLoad(afxMmu mmu, afxUri *filename, afxBool flipImage, 
             mipmap.height = height;
             mipmap.depth = depth;
             mipmap.size = size;
-            mipmap.pixels = AfxAllocate(mmu, sizeof(afxByte), size, AfxHint());
+            mipmap.pixels = AfxAllocate(mmu, size, sizeof(afxByte), AfxHint());
 
             fread(&mipmap, 1, mipmap.size, fp);
 

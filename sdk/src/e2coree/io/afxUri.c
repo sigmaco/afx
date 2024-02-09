@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include <stdlib.h>
@@ -136,7 +136,7 @@ _AFXINL afxResult _AfxUrlParseRaw(const char *str, afxNat strLenTotal, url_field
             str = pch + 3;
 
             pch = memchr(str, '@', strLen);   /* parse user info */
-            
+
             if (pch)
             {
                 pch = memchr(str, ':', strLen);
@@ -400,7 +400,7 @@ _AFXINL afxResult AfxCompareUriToString(afxUri const *uri, afxString const *str)
     afxString const *strA = AfxGetUriString(uri);
     AfxAssertType(strA, afxFcc_STR);
 
-    return AfxCompareString(strA, str);
+    return AfxTestStringEquality(strA, str);
 }
 
 _AFXINL afxResult AfxCompareUriToStringCi(afxUri const *uri, afxString const *str)
@@ -412,7 +412,7 @@ _AFXINL afxResult AfxCompareUriToStringCi(afxUri const *uri, afxString const *st
     afxString const *strA = AfxGetUriString(uri);
     AfxAssertType(strA, afxFcc_STR);
 
-    return AfxCompareStringCi(strA, str);
+    return AfxTestStringEquivalence(strA, str);
 }
 
 _AFXINL afxResult AfxCompareUri(afxUri const *uri, afxUri const *other)
@@ -424,7 +424,7 @@ _AFXINL afxResult AfxCompareUri(afxUri const *uri, afxUri const *other)
     afxString const *strA = AfxGetUriString(uri), *strB = AfxGetUriString(other);
     AfxAssertType(strA, afxFcc_STR);
     AfxAssertType(strB, afxFcc_STR);
-    return AfxCompareString(strA, strB);
+    return AfxTestStringEquality(strA, strB);
 }
 
 _AFXINL afxResult AfxCompareUriCi(afxUri const *uri, afxUri const *other)
@@ -437,7 +437,7 @@ _AFXINL afxResult AfxCompareUriCi(afxUri const *uri, afxUri const *other)
     AfxAssertType(strA, afxFcc_STR);
     AfxAssertType(strB, afxFcc_STR);
 
-    return AfxCompareStringCi(strA, strB);
+    return AfxTestStringEquivalence(strA, strB);
 }
 
 _AFXINL afxBufferedString* AfxGetBufferedUriString(afxUri *uri)
@@ -957,7 +957,7 @@ _AFXINL afxBool AfxPathIsRelative(afxUri const *uri)
     return (!data || (data[0] != '/' && data[1] != ':'));
 }
 
-_AFXINL afxBool AfxUriIsWriteable(afxUri const *uri)
+_AFXINL afxBool AfxUriIsEditable(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
@@ -971,81 +971,81 @@ _AFXINL afxBool AfxUriIsBlank(afxUri const *uri)
     return 0 == (uri->schem + uri->user + uri->pass + uri->host + uri->port + uri->dir + uri->fname + uri->fext + uri->query + uri->frag);
 }
 
-_AFXINL afxBool AfxUriHasScheme(afxUri const *uri)
+_AFXINL afxNat AfxGetUriSchemeLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->schem));
+    return uri->schem;
 }
 
-_AFXINL afxBool AfxUriHasPassword(afxUri const *uri)
+_AFXINL afxNat AfxGetUriPasswordLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->pass));
+    return uri->pass;
 }
 
-_AFXINL afxBool AfxUriHasUsername(afxUri const *uri)
+_AFXINL afxNat AfxGetUriUsernameLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->user));
+    return uri->user;
 }
 
-_AFXINL afxBool AfxUriHasHost(afxUri const *uri)
+_AFXINL afxNat AfxGetUriHostLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->host));
+    return uri->host;
 }
 
-_AFXINL afxBool AfxUriHasPort(afxUri const *uri)
+_AFXINL afxNat AfxGetUriPortLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->port));
+    return uri->port;
 }
 
-_AFXINL afxBool AfxUriHasPath(afxUri const *uri)
+_AFXINL afxNat AfxGetUriPathLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->dir + uri->fname + uri->fext));
+    return uri->dir + uri->fname + uri->fext;
 }
 
-_AFXINL afxBool AfxUriHasDirectory(afxUri const *uri)
+_AFXINL afxNat AfxGetUriDirectoryLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->dir));
+    return uri->dir;
 }
 
-_AFXINL afxBool AfxUriHasName(afxUri const *uri)
+_AFXINL afxNat AfxGetFileNameLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->fname));
+    return uri->fname;
 }
 
-_AFXINL afxBool AfxUriHasExtension(afxUri const *uri)
+_AFXINL afxNat AfxGetFileExtensionLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->fext));
+    return uri->fext;
 }
 
-_AFXINL afxBool AfxUriHasQuery(afxUri const *uri)
+_AFXINL afxNat AfxGetUriQueryLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->query));
+    return uri->query;
 }
 
-_AFXINL afxBool AfxUriHasFragment(afxUri const *uri)
+_AFXINL afxNat AfxGetUriFragmentLength(afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    return (!!(uri->frag));
+    return uri->frag;
 }
 
 _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, void* data)
@@ -1056,7 +1056,7 @@ _AFXINL afxResult _AfxFindUriQueryAttribute(afxString *attr, afxString *value, v
     AfxAssert(data);
     struct { afxString const* key; afxBufferedString* dst; afxBool success; } *data2 = data;
 
-    if (0 == AfxCompareString(data2->key, attr))
+    if (0 == AfxTestStringEquality(data2->key, attr))
     {
         AfxCopyString(data2->dst, value);
         data2->success = TRUE;
@@ -1141,7 +1141,7 @@ _AFXINL void AfxNormalizePath(afxUri *uri) // c:\shit\\\by\\M$\foo.poo -> /c/shi
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    AfxAssert(AfxUriIsWriteable(uri));
+    AfxAssert(AfxUriIsEditable(uri));
     afxUri path, query, frag;
     
     if (AfxGetUriPathRW(&path, uri))
@@ -1271,10 +1271,10 @@ _AFXINL void AfxNormalizePath(afxUri *uri) // c:\shit\\\by\\M$\foo.poo -> /c/shi
         uri->ext.base;
         uri->ext.range;
 #endif
-        if (AfxUriHasQuery(&query))
+        if (AfxGetUriQueryLength(&query))
             AfxAppendString(pathStr, AfxGetUriString(&query));
 
-        if (AfxUriHasFragment(&frag))
+        if (AfxGetUriFragmentLength(&frag))
             AfxAppendString(pathStr, AfxGetUriString(&frag));
 
         AfxReparseUri(uri);
@@ -1316,7 +1316,7 @@ _AFXINL void AfxFormatUri(afxUri *uri, afxChar const *fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(uri, afxFcc_URI);
-    AfxAssert(AfxUriIsWriteable(uri));
+    AfxAssert(AfxUriIsEditable(uri));
 
     AfxAssert(fmt);
 
@@ -1336,7 +1336,7 @@ _AFXINL afxError AfxCopyUri(afxUri *uri, afxUri const *src)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(src, afxFcc_URI);
     AfxAssertType(uri, afxFcc_URI);
-    AfxAssert(AfxUriIsWriteable(uri));
+    AfxAssert(AfxUriIsEditable(uri));
     
     if (AfxCopyString(&uri->str, &src->str.str))
         AfxThrowError();
@@ -1409,7 +1409,7 @@ _AFXINL void AfxMakeBufferedUri(afxUri *uri, afxNat cap, void *start, afxNat len
     AfxAssert(uri);
     AfxResetUri(uri);
     AfxMakeBufferedString(&uri->str, cap, start, len);
-    AfxAssert(AfxUriIsWriteable(uri));
+    AfxAssert(AfxUriIsEditable(uri));
     AfxReparseUri(uri);
     AfxNormalizePath(uri);
 }
@@ -1483,7 +1483,7 @@ _AFXINL afxError AfxReallocateUri(afxUri *uri, afxNat cap, void const *start, af
     void *buf = NIL;
 
     if (start && !range)
-        range = AfxMeasureRawString(start);
+        range = AfxStrlen(start);
 
     AfxAssert(!range || (range && start));
 

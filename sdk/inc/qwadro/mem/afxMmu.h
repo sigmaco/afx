@@ -10,18 +10,17 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_MMU_H
 #define AFX_MMU_H
 
-#ifdef _DEBUG
+#ifdef _AFX_DEBUG
 #   define VLD_FORCE_ENABLE
 #endif
 
-#include <stdlib.h>
 #if (defined(_WIN64) || defined(_WIN32))
 #   ifdef VLD_FORCE_ENABLE
 #       include <vld.h>
@@ -218,12 +217,13 @@ AFX_OBJECT(afxMmu)
 AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxNat level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxMmu mmu);
 
-AFX void*                   AfxAllocate(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
+AFX void*                   AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHint const hint);
 AFX void*                   AfxCoallocate(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
 AFX void*                   AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
 AFX void                    AfxDeallocate(afxMmu mmu, void *p);
 
-AFX void                    AfxStream(afxNat cnt, afxSize srcStride, afxNat dstStride, void const* src, void* dst);
+#define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
+AFX void                    AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, afxNat dstStride);
 AFX void                    AfxCopy(afxSize cnt, afxSize siz, void const *src, void *dst);
 AFX void                    AfxFill(afxSize cnt, afxSize siz, void const* value, void *p);
 AFX void                    AfxZero(afxSize cnt, afxSize siz, void *p);

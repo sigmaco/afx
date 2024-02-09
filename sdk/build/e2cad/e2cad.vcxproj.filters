@@ -15,33 +15,15 @@
     <ClCompile Include="..\..\src\e2cad\afxWavefrontObject.c">
       <Filter>e2cad</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_complex.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_line.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_math.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_matrix.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_point.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_quaternion.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_shape.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_vector.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\deps\glus\glus_wavefront.c">
-      <Filter>e2cad\deps\obj</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\dep\glus\glus_complex.c" />
+    <ClCompile Include="..\..\dep\glus\glus_line.c" />
+    <ClCompile Include="..\..\dep\glus\glus_math.c" />
+    <ClCompile Include="..\..\dep\glus\glus_matrix.c" />
+    <ClCompile Include="..\..\dep\glus\glus_point.c" />
+    <ClCompile Include="..\..\dep\glus\glus_quaternion.c" />
+    <ClCompile Include="..\..\dep\glus\glus_shape.c" />
+    <ClCompile Include="..\..\dep\glus\glus_vector.c" />
+    <ClCompile Include="..\..\dep\glus\glus_wavefront.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\e2cad\afxWavefrontObject.h">

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_CORE_C
@@ -118,7 +118,7 @@ _AFX afxError _AfxThrProcSthrCb(afxThread thr, void *udd, afxThreadOpcode opcode
 
     //AfxAssert(sthr == (afxSoundThread)AfxGetThreadUdd(&sthr->thr));
 
-    AfxCurateSoundDevices(0, AFX_N32_MAX, _AfxProcessSdevCb, sthr);
+    AfxInvokeSoundDevices(0, AFX_N32_MAX, _AfxProcessSdevCb, sthr);
 
     return err;
 }
@@ -182,14 +182,14 @@ _AFX afxError AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const conf
     return err;
 };
 
-_AFX afxNat AfxCurateSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd)
+_AFX afxNat AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetSoundThreadClass();
     AfxAssertClass(cls, afxFcc_STHR);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[])

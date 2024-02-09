@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -23,13 +23,17 @@
 // FRAME BUFFER                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttachment, GLenum texTarget, GLuint texHandle, GLint level, GLuint z)
+_SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttachment, GLenum texTarget, GLuint texHandle, GLint level, GLuint layer, GLuint z)
 {
     afxError err = AFX_ERR_NONE;
 
     switch (texTarget)
     {
     case GL_TEXTURE_2D:
+    {
+        gl->FramebufferTexture2D(glTarget, glAttachment, texTarget, texHandle, level); _SglThrowErrorOccuried();
+        break;
+    }
     case GL_TEXTURE_1D_ARRAY:
     {
         gl->FramebufferTexture2D(glTarget, glAttachment, texTarget, texHandle, level); _SglThrowErrorOccuried();
@@ -41,9 +45,13 @@ _SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttac
         break;
     }
     case GL_TEXTURE_3D:
-    case GL_TEXTURE_2D_ARRAY:
     {
         gl->FramebufferTexture3D(glTarget, glAttachment, texTarget, texHandle, level, z); _SglThrowErrorOccuried();
+        break;
+    }
+    case GL_TEXTURE_2D_ARRAY:
+    {
+        gl->FramebufferTexture3D(glTarget, glAttachment, texTarget, texHandle, level, layer); _SglThrowErrorOccuried();
         break;
     }
     case GL_TEXTURE_CUBE_MAP:
@@ -53,16 +61,19 @@ _SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttac
     };
 }
 
-_SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
+_SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
-   
+    glVmt const* gl = &dpu->gl;
+    afxBool bound = (canv == dpu->activeRasterState.pass.canv);
+
     if (!canv)
     {
-        if (bind)
+        if (bind && !bound)
         {
             gl->BindFramebuffer(glTarget, 0); _SglThrowErrorOccuried();
+            dpu->activeRasterState.pass.canv = NIL;
         }
     }
     else
@@ -74,7 +85,6 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
             sglUpdateFlags devUpdReq = (canv->updFlags & SGL_UPD_FLAG_DEVICE);
             afxNat surCnt = AfxCountSurfaces(canv);
             afxRaster surfaces[_SGL_MAX_SURF_PER_CANV];
-            afxBool bound = FALSE;
             
             if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
             {
@@ -88,7 +98,10 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                 gl->GenFramebuffers(1, &(glHandle)); _SglThrowErrorOccuried();
                 gl->BindFramebuffer(glTarget, glHandle); _SglThrowErrorOccuried();
                 AfxAssert(gl->IsFramebuffer(glHandle));
+                canv->glHandle = glHandle;
+                AfxAssert(!bound);
                 bound = TRUE;
+                dpu->activeRasterState.pass.canv = canv;
 
                 if (surCnt)
                 {
@@ -133,12 +146,12 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                             AfxAssertObjects(1, &ras, afxFcc_RAS);
                             AfxAssert(AfxTestRasterUsage(ras, afxRasterUsage_DRAW));
 
-                            _SglBindAndSyncRas(gl, FALSE, TRUE, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+                            _SglBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
                             glTexHandle = ras->glHandle;
                             glTexTarget = ras->glTarget;
                             AfxAssert(gl->IsTexture(glTexHandle));
                         }
-                        _SglBindFboAttachment(gl, glTarget, glAttachment, glTexTarget, glTexHandle, 0, 0);
+                        _SglBindFboAttachment(&dpu->gl, glTarget, glAttachment, glTexTarget, glTexHandle, 0, 0, 0);
                     }
                 }
 
@@ -146,7 +159,6 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                 {
                 case GL_FRAMEBUFFER_COMPLETE:
                     canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                    canv->glHandle = glHandle;
                     AfxEcho("afxCanvas %p hardware-side data instanced.", canv);
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -178,11 +190,12 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                     _SglThrowErrorOccuried();
                     break;
                 }
-#if 0
+#if !0
                 if (!bind)
                 {
                     gl->BindFramebuffer(glTarget, 0); _SglThrowErrorOccuried();
                     bound = FALSE;
+                    dpu->activeRasterState.pass.canv = NIL;
                 }
 #endif
             }
@@ -192,6 +205,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                 {
                     gl->BindFramebuffer(glTarget, glHandle); _SglThrowErrorOccuried();
                     bound = TRUE;
+                    dpu->activeRasterState.pass.canv = canv;
                 }
 
                 if (sync)
@@ -208,7 +222,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync
                             if (ras)
                             {
                                 AfxAssertObjects(1, &ras, afxFcc_RAS);
-                                _SglBindAndSyncRas(gl, FALSE, TRUE, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+                                _SglBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
                             }
                         }
                     }
@@ -276,13 +290,13 @@ _SGL afxError _SglRelinkSurfacesCb(afxCanvas canv, afxBool managed, afxNat baseS
     return err;
 }
 
-_SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxNat const wh[])
+_SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxWhd const whd)
 {
 	afxError err = AFX_ERR_NONE;
 	AfxAssertObjects(1, &canv, afxFcc_CANV);
-	AfxAssert(wh);
-	AfxAssert(wh[0]);
-	AfxAssert(wh[1]);
+	AfxAssert(whd);
+	AfxAssert(whd[0]);
+	AfxAssert(whd[1]);
     afxWhd minWhd = { SGL_MAX_CANVAS_WIDTH, SGL_MAX_CANVAS_HEIGHT, SGL_MAX_CANVAS_LAYERS }, surWhd;
     
     for (afxNat i = 0; i < canv->base.surfaceCnt; i++)
@@ -297,13 +311,13 @@ _SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxNat const wh[])
         }
     }
 
-    if ((wh[0] > minWhd[0]) || (wh[1] > minWhd[1]))
+    if ((whd[0] > minWhd[0]) || (whd[1] > minWhd[1]))
         AfxThrowError();
 
-    if ((wh[0] != minWhd[0]) || (wh[1] != minWhd[1]))
+    if ((whd[0] != minWhd[0]) || (whd[1] != minWhd[1]))
     {
-        canv->base.wh[0] = wh[0] < minWhd[0] ? wh[0] : minWhd[0];
-        canv->base.wh[1] = wh[1] < minWhd[1] ? wh[1] : minWhd[1];
+        canv->base.wh[0] = whd[0] < minWhd[0] ? whd[0] : minWhd[0];
+        canv->base.wh[1] = whd[1] < minWhd[1] ? whd[1] : minWhd[1];
         canv->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
     }
 	return err;
@@ -346,7 +360,7 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
 
     if (canv->glHandle)
     {
-        _SglDctxDeleteGlRes(dctx, 3, canv->glHandle);
+        _SglDctxDeleteGlRes(dctx, 3, (void*)canv->glHandle);
         canv->glHandle = 0;
     }
     //AfxAssert(!canv->idd);
@@ -427,7 +441,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     canv->base.ownershipMask = NIL;
     canv->base.combinedDs = combinedDs;
 
-    if (!(canv->base.surfaces = AfxAllocate(mmu, sizeof(canv->base.surfaces[0]), surfaceCnt, 0, AfxHint()))) AfxThrowError();
+    if (!(canv->base.surfaces = AfxAllocate(mmu, surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         afxSurface* surf;
@@ -484,7 +498,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglCanvClsConfig =
+_SGL afxClassConfig const _SglCanvClsConfig =
 {
     .fcc = afxFcc_CANV,
     .name = "Canvas",

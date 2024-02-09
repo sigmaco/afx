@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -85,7 +85,7 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
 }
 #endif
 
-_SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[])
+_SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[], afxSemaphore wait[], afxPipelineStage const waitStage[], afxSemaphore signal[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -108,6 +108,9 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
             afxDrawSubmissionSpecification spec = { 0 };
             spec.scriptCnt = 1;
             spec.scripts = &dscr;
+            spec.wait = wait;
+            spec.waitStage = waitStage;
+            spec.signal = signal;
             afxNat submNo;
 
             if (_SglDqueVmtSubmitCb(dctx, dque, &spec, &submNo))
@@ -119,7 +122,7 @@ _SGL afxError _SglDinSubmit(afxDrawInput din, afxNat cnt, afxDrawScript scripts[
     return err;
 }
 
-_SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
+_SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[], afxSemaphore wait[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -144,6 +147,7 @@ _SGL afxError _SglDinPresent(afxDrawInput din, afxNat cnt, afxDrawOutput outputs
             spec.outputCnt = 1;
             spec.outputs = outputs;
             spec.outBufIdx = outputBufIdx;
+            spec.wait = wait;
             afxNat submNo;
 
             if (_SglDqueVmtSubmitCb(dctx, dque, &spec, &submNo))
@@ -166,7 +170,6 @@ _SGL afxError _SglDinDtor(afxDrawInput din)
 
     // avoid draw thread entrance
 
-    AfxEnableDrawInputPrefetching(din, FALSE);
     //AfxDiscardAllDrawInputSubmissions(din);
     //AfxYieldThreading();
     //while (!AfxTryEnterSlockExclusive(&din->prefetchSlock)) AfxYieldThreading();
@@ -187,7 +190,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     afxDrawDevice ddev = cookie->udd[0];
     afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[1]) + cookie->no;
 
-    AfxPushLinkage(&din->base.dctx, NIL);
+    din->base.dctx = NIL;
 
     afxMmu mmu = AfxGetDrawSystemMmu();
     din->base.mmu = mmu;
@@ -209,9 +212,8 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     if (config && config->udd)
         din->base.udd = config->udd;
 
-    din->base.prefetchCb = config ? config->prefetch : NIL;
-    din->base.prefetchEnabled = FALSE; // must be explicitally enabled to avoid unready fetches.
-
+    din->base.procCb = config ? config->proc : NIL;
+    
     afxChain *classes = &din->base.classes;
     AfxTakeChain(classes, (void*)din);
 
@@ -224,6 +226,8 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     tmpClsConf = _AfxCamClsConfig;
     tmpClsConf.mmu = mmu;
     AfxMountClass(&din->base.cameras, NIL, classes, &tmpClsConf);
+
+    din->base.cachedClipCfg = ddev->base.clipCfg;
 
     return err;
 }

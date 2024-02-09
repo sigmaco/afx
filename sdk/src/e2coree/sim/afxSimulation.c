@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -19,12 +19,12 @@
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/rendering/awxLight.h"
-#include "qwadro/sim/awxMaterial.h"
-#include "qwadro/sim/modeling/awxModel.h"
+#include "qwadro/sim/afxMaterial.h"
+#include "qwadro/sim/modeling/afxModel.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 
-#include "qwadro/sim/modeling/awxMesh.h"
+#include "qwadro/sim/modeling/afxMesh.h"
 
 extern afxClassConfig const _AfxNodClsConfig;
 extern afxClassConfig const _AfxSklClsConfig;
@@ -42,7 +42,7 @@ extern afxClassConfig const _AfxCadClsConfig;
 
 // SIMULATION API //////////////////////////////////////////////////////////////
 
-_AFX afxMmu AfxSimulationGetMemory(afxSimulation sim)
+_AFX afxMmu AfxGetSimulationMmu(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -123,7 +123,7 @@ _AFX afxClass* AfxGetBodyClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetMotorClass(afxSimulation sim)
+_AFX afxClass* AwxGetAnimusClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -179,7 +179,7 @@ _AFX afxNat AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awx
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)ent);
 }
 
-_AFX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, awxMaterial mtl[])
+_AFX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -189,7 +189,7 @@ _AFX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, aw
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mtl);
 }
 
-_AFX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, awxMesh msh[])
+_AFX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -199,7 +199,7 @@ _AFX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, awxMe
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)msh);
 }
 
-_AFX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, awxModel mdl[])
+_AFX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -209,7 +209,7 @@ _AFX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, awxMo
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mdl);
 }
 
-_AFX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, awxSkeleton skl[])
+_AFX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -260,7 +260,7 @@ _AFX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, af
     AfxScaleV3d(ltm[1], ltm[1], lambda);
     AfxScaleV3d(ltm[2], ltm[2], lambda);
     
-    AfxInverseM3d(iltm, ltm);
+    AfxInvertM3d(ltm, iltm);
 
     AfxSubV3d(atv, sim->origin, origin);
 }
@@ -452,14 +452,14 @@ _AFX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config
     return err;
 }
 
-_AFX afxNat AfxCurateSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
+_AFX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation sim[])

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA Simulation Infrastructure.
@@ -22,12 +22,12 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/sim/awxEntity.h"
 #include "qwadro/sim/rendering/awxLight.h"
-#include "qwadro/sim/awxSkeleton.h"
-#include "qwadro/sim/modeling/awxModel.h"
-#include "qwadro/sim/awxMaterial.h"
+#include "qwadro/sim/afxSkeleton.h"
+#include "qwadro/sim/modeling/afxModel.h"
+#include "qwadro/sim/afxMaterial.h"
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/sim/anim/awxMotor.h"
+#include "qwadro/sim/anim/awxAnimus.h"
 #include "qwadro/sim/rendering/awxRenderer.h"
 #include "qwadro/sound/afxSoundDefs.h"
 
@@ -91,15 +91,15 @@ AFX_OBJECT(afxSimulation)
     afxSize                 stepTime, swapTime;
     afxReal                 stepDeltaTime;
 
-    awxMotorInterlink    globalMotorInterlinks;
+    awxAnimusInterlink    globalAnimusInterlinks;
 
     afxDrawContext          dctx;
 };
 #endif//_AFX_SIMULATION_C
 
-AFX afxMmu      AfxSimulationGetMemory(afxSimulation sim);
+AFX afxMmu      AfxGetSimulationMmu(afxSimulation sim);
 
-AFX afxClass*       AwxGetMotorClass(afxSimulation sim);
+AFX afxClass*       AwxGetAnimusClass(afxSimulation sim);
 AFX afxClass*       AfxGetBodyClass(afxSimulation sim);
 AFX afxClass*       AfxGetEntityClass(afxSimulation sim);
 AFX afxClass*       AfxGetLightClass(afxSimulation sim);
@@ -114,10 +114,10 @@ AFX afxClass*       AfxGetSkeletonClass(afxSimulation sim);
 
 AFX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBody bod[]);
 AFX afxNat          AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awxEntity ent[]);
-AFX afxNat          AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, awxMaterial mtl[]);
-AFX afxNat          AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, awxMesh msh[]);
-AFX afxNat          AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, awxModel mdl[]);
-AFX afxNat          AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, awxSkeleton skl[]);
+AFX afxNat          AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[]);
+AFX afxNat          AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);
+AFX afxNat          AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[]);
+AFX afxNat          AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[]);
 
 
 AFX afxError        _AfxSimulationProcess(afxSimulation sim);
@@ -126,7 +126,7 @@ AFX afxError        AfxStepSimulation(afxSimulation sim);
 AFX afxError        AfxCullSimulation(afxSimulation sim, afxCamera cam, afxArray* pvs);
 AFX afxError        AfxRenderSimulation(afxSimulation sim, afxArray const* pvs);
 
-AFX void            AfxRecenterAllMotorClocks(afxSimulation sim, afxReal dCurrentClock);
+AFX void            AfxRecenterAllAnimusClocks(afxSimulation sim, afxReal dCurrentClock);
 
 AFX void            AfxComputeAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler);
 

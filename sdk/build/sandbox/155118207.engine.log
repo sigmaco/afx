@@ -1,0 +1,137 @@
+
+ afxDebug_w32.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0febb6b8 by 00000000 over 00000000 with 0fe92a94)
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(0041faa0)
+ afxSystem_w32.c:225
+  _AfxSysCtor(sys=0041faa0)
+ Installing Thread Execution Unit at 00420034 by 0041fac4 over 00000000 with 0028e428)
+ Entering the Thread Execution Environment 3076
+ afxClass<Thread Execution Unit>::ConstructObject(00420870)
+ afxTxu_w32.c:397
+  _AfxTxuCtor(00420870)
+ Installing Memory Management Unit at 0041fad8 by 0041fac4 over 00000000 with 0fe9fec4)
+ Installing Thread at 0041ff70 by 0041fac4 over 00000000 with 0fe8f57c)
+ Installing Device at 004200f8 by 0041fac4 over 00000000 with 0028e3f8)
+ Installing Autonomous Service at 004201bc by 0041fac4 over 00000000 with 0fe9230c)
+ Installing File at 00420344 by 0041fac4 over 00000000 with 0fe9a51c)
+ Installing I/O Stream at 00420280 by 0041fac4 over 00000000 with 0fe9c160)
+ Installing File Archive at 00420408 by 0041fac4 over 00420344 with 0fe99e8c)
+ Installing Executable & Linkable Module at 0041fb9c by 0041fac4 over 00000000 with 0fe91560)
+ Installing Installable Client Driver at 0041fc60 by 0041fac4 over 0041fb9c with 0feb9014)
+ Installing Storage Point at 004204cc by 0041fac4 over 00000000 with 0028e3f8)
+ Installing Application at 00420654 by 0041fac4 over 00000000 with 0fea4a88)
+ Installing Human Input Device at 0041fd24 by 0041fac4 over 004200f8 with 0fe9b13c)
+ Installing Keyboard at 0041fde8 by 0041fac4 over 0041fd24 with 0fe9ba44)
+ Installing Mouse at 0041feac by 0041fac4 over 0041fd24 with 0fe9bc34)
+ Installing Simulation at 00420590 by 0041fac4 over 00000000 with 0feb9ff0)
+ [!] afxSystem_w32.c:340?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:341?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(00420970)
+ afxArena.c:768
+  AfxAllocateArena(aren=00420778)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:354!_AfxSysCtor")
+ afxClass<Storage Point>::ConstructObject(004228e0)
+ Storage point "." 5 mounted -> "E:/qwadro/afx".
+ afxClass<Storage Point>::ConstructObject(00422968)
+ Storage point "system" 5 mounted -> "E:/qwadro/afx/system32".
+ afxClass<Storage Point>::ConstructObject(004229f0)
+ Storage point "sound" 5 mounted -> "E:/qwadro/afx/sound".
+ afxClass<Storage Point>::ConstructObject(00422a78)
+ Storage point "data" 5 mounted -> "E:/qwadro/afx/data".
+ afxClass<Storage Point>::ConstructObject(00422b00)
+ Storage point "art" 5 mounted -> "E:/qwadro/afx/art".
+ afxClass<Storage Point>::ConstructObject(00422b88)
+ Storage point "tmp" 7 mounted -> "E:/qwadro/afx/tmp".
+ afxModule.c:151
+  AfxAcquireModules(cnt=1,mdle=00420748,uri=0028e500)
+ afxClass<Executable & Linkable Module>::ConstructObject(00424020)
+ afxModule.c:79
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system32/e2coree.dll
+ afxKeyboard.c:301
+  AfxAcquireKeyboards(cnt=1,port=0028e3b8,kbd=0042074c)
+ afxClass<Keyboard, Human Input Device>ConstructingObject(004242a0)
+ afxClass<Human Input Device, Device>ConstructingObject(004242a0)
+ afxClass<Device>::ConstructObject(004242a0)
+ afxClass<Human Input Device>::ConstructObject(004242a0)
+ afxClass<Keyboard>::ConstructObject(004242a0)
+ afxKeyboard.c:252
+  _AfxKbdCtor(kbd=004242a0)
+ afxDrawSystem.c:233
+  _AfxDsysCtor(dsys=00425330)
+ Installing Draw Device at 00425838 by 0042538c over 004200f8 with 0028e148)
+ Installing Draw Context at 00425464 by 0042538c over 00000000 with 0028e118)
+ Installing Draw Output at 004255ec by 0042538c over 00000000 with 0028e0e8)
+ Installing Draw Input at 00425774 by 0042538c over 00000000 with 0028e0b8)
+ Installing Draw Thread at 004253a0 by 0042538c over 0041ff70 with 0028e088)
+ Loading draw ICD system/e2draw.icd
+ afxClass<Installable Client Driver, Executable & Linkable Module>ConstructingObject(00424c00)
+ afxClass<Executable & Linkable Module>::ConstructObject(00424c00)
+ afxModule.c:79
+  _AfxMdleCtor(uri:system/e2draw.icd)
+ E:/qwadro/afx/system32/e2draw.icd
+ afxClass<Installable Client Driver>::ConstructObject(00424c00)
+Installing 'e2draw.icd' ICD on draw system...
+	OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 00424d00 by 00424cec over 00425838 with 0065824c)
+ afxClass<Draw Device, Draw Device>ConstructingObject(00427750)
+ afxClass<Draw Device, Device>ConstructingObject(00427750)
+ afxClass<Device>::ConstructObject(00427750)
+ afxClass<Draw Device>::ConstructObject(00427750)
+ afxClass<Draw Device>::ConstructObject(00427750)
+ sglDdrv_w32.c:2642
+  _SglDdevCtor(ddev=00427750)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ afxMutex.c:24
+  AfxTakeMutex(mtx=00427d7c,type=00000000)
+ Created. (mtx)00427d7c
+ Installing Draw Script at 00427efc by 00427828 over 00000000 with 0028d10c)
+ Installing Draw Queue at 00427e38 by 00427828 over 00000000 with 0028d10c)
+ Installing Draw Context at 0042783c by 00427828 over 00425464 with 006620e0)
+ Installing Draw Output at 00427900 by 00427828 over 004255ec with 00662250)
+ Installing Draw Input at 004279c4 by 00427828 over 00425774 with 00662220)
+ Creating transient OpenGL context
+ ERR sglDdrv_w32.c:2029?_SglBuildDpu
+  
+ ERR sglDdrv_w32.c:2029?_SglBuildDpu
+  (_wglChoosePixelFormatARB)
+    Invalid

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // The Unified Qwadro Accoustic Infrastructure
@@ -82,6 +82,7 @@ AFX_OBJECT(afxSoundSystem)
 {
     afxFcc              fcc;
     afxMmu              mmu;
+    afxChain            classes;
     afxClass            sdevices;
     afxClass            scontexts;
     afxClass            sthreads;
@@ -110,8 +111,8 @@ AFX afxSoundDevice  AfxGetSoundDevice(afxNat sdevIdx);
 AFX afxNat          AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[]);
 AFX afxNat          AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sdev[]);
 
-AFX afxNat          AfxCurateSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
-AFX afxNat          AfxCurateSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
+AFX afxNat          AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
+AFX afxNat          AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // SOUND DEVICE                                                               //
@@ -125,7 +126,7 @@ AFX afxNat          AfxCountSoundContexts(afxSoundDevice sdev);
 
 AFX afxNat          AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext sctx[]);
 
-AFX afxNat          AfxCurateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd);
+AFX afxNat          AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd);
 
 AFX_DEFINE_STRUCT(afxSoundContextConfig)
 {

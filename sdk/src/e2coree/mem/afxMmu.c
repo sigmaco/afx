@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -285,7 +285,7 @@ _AFX afxError _AfxMmuDtor(afxMmu mmu)
     return err;
 }
 
-_AFX afxClassConfig _AfxMmuClsConfig =
+_AFX afxClassConfig const _AfxMmuClsConfig =
 {
     .fcc = afxFcc_MMU,
     .name = "Memory Management Unit",
@@ -311,14 +311,14 @@ _AFX afxError AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrate
     return err;
 }
 
-_AFX afxNat AfxCurateMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd)
+_AFX afxNat AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmu[])
@@ -341,7 +341,7 @@ _AFX afxNat AfxCountMmus(void)
 
 // MEMORY API
 
-_AFX void AfxStream(afxNat cnt, afxSize srcStride, afxNat dstStride, void const* src, void* dst)
+_AFX void AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, afxNat dstStride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(src);
@@ -549,7 +549,7 @@ _AFX void* AfxCoallocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afx
     return p;
 }
 
-_AFX void* AfxAllocate(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxHint const hint)
+_AFX void* AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
 {
     //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;

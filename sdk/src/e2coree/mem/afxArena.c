@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include <stdio.h>
@@ -248,7 +248,7 @@ static void* alloc_region_base(afxArena* result, afxSize initial_cleanupCnt)
     AfxAssert(initial_cleanupCnt > 0);
     result->maxCleanupCnt = initial_cleanupCnt;
     result->cleanupCnt = 0;
-    result->cleanups = (afxArenaCleanup *)AfxAllocate(result->mmu, sizeof(afxArenaCleanup), result->maxCleanupCnt, 0, AfxHint());
+    result->cleanups = (afxArenaCleanup *)AfxAllocate(result->mmu, result->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
     
     if (!result->cleanups)
     {
@@ -268,7 +268,7 @@ _AFX void* AfxArenaCtor(afxArena* result)
     if (!result)
         return NIL;
 
-    result->data = (char *)AfxAllocate(result->mmu, result->chunkSiz, 1, 0, AfxHint());
+    result->data = (char *)AfxAllocate(result->mmu, 1, result->chunkSiz, 0, AfxHint());
 
     if (!result->data)
     {
@@ -295,7 +295,7 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
 
     if (result->chunkSiz > 0)
     {
-        result->data = (char *)AfxAllocate(result->mmu, result->chunkSiz, 1, 0, AfxHint());
+        result->data = (char *)AfxAllocate(result->mmu, 1, result->chunkSiz, 0, AfxHint());
 
         if (!result->data)
         {
@@ -308,7 +308,7 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
 
     if (recycle)
     {
-        result->recycleBin = AfxAllocate(result->mmu, sizeof(afxArenaRecycleItem*), result->largeItemSiz, 0, AfxHint());
+        result->recycleBin = AfxAllocate(result->mmu, result->largeItemSiz, sizeof(afxArenaRecycleItem*), 0, AfxHint());
 
         if (!result->recycleBin)
         {
@@ -358,7 +358,7 @@ _AFX afxSize AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data, void*e
 
     if (aren->cleanupCnt >= aren->maxCleanupCnt)
     {
-        cleanups = (afxArenaCleanup *)AfxAllocate(aren->mmu, sizeof(afxArenaCleanup), 2 * aren->maxCleanupCnt, 0, AfxHint());
+        cleanups = (afxArenaCleanup *)AfxAllocate(aren->mmu, 2 * aren->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
 
         if (!cleanups)
             return 0;
@@ -415,7 +415,7 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
 
     if (aligned_size >= aren->largeItemSiz)
     {
-        result = AfxAllocate(aren->mmu, sizeof(afxArenaLargeItem) + size, 1, 0, AfxHint());
+        result = AfxAllocate(aren->mmu, 1, sizeof(afxArenaLargeItem) + size, 0, AfxHint());
 
         if (!result)
             return NIL;
@@ -450,7 +450,7 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
 
     if (aren->allocated + aligned_size > aren->chunkSiz)
     {
-        void *chunk = AfxAllocate(aren->mmu, aren->chunkSiz, 1, 0, AfxHint());
+        void *chunk = AfxAllocate(aren->mmu, 1, aren->chunkSiz, 0, AfxHint());
         afxSize wasted;
 
         if (!chunk)

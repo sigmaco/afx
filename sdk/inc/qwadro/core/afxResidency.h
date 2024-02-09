@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_HANDLING_H
@@ -52,7 +52,7 @@ AFX afxError    AfxDeallocateObjects(afxNat cnt, afxObject obj[], afxResidency* 
 AFX afxNat      AfxFindObjectsResidency(afxNat cnt, afxObject obj[], afxNat unitIdx[], afxResidency* hndl);
 
 AFX afxNat      AfxEnumerateResidentObjects(afxResidency* hdlr, afxNat first, afxNat cnt, afxObject obj[]);
-AFX afxNat      AfxCurateResidentObjects(afxResidency* hndl, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void* udd), void *udd);
+AFX afxNat      AfxInvokeResidentObjects(afxResidency* hndl, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void* udd), void *udd);
 
 AFX afxNat      AfxGetResidencyCount(afxResidency* hndl);
 

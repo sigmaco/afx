@@ -10,14 +10,15 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/math/afxTransform.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxQuaternion.h"
+#include "qwadro/io/afxStream.h"
 
 AFX afxTransform const AFX_TRANSFORM_ZERO;
 AFX afxTransform const AFX_TRANSFORM_IDENTITY;
@@ -155,7 +156,7 @@ _AFXINL void AfxGetInverseTransform(afxTransform* t, afxTransform const* in)
     
     afxM3d iqm, ss, tmp;
     AfxRotationM3dFromQuat(iqm, q);
-    AfxInverseM3d(ss, in->scaleShear);
+    AfxInvertM3d(in->scaleShear, ss);
     AfxMultiplyM3d(tmp, ss, iqm);
     AfxMultiplyTransposedM3d(ss, iqm, tmp);
 
@@ -412,4 +413,28 @@ _AFXINL void AfxTransformArrayedTransposedNormalV3d(afxTransform const* t, afxNa
     AfxConjugateQuat(iq, t->orientation);
     AfxRotateV3d(iq, cnt, in, out);
     AfxPreMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
+}
+
+_AFXINL afxError AfxReadTransforms(afxStream in, afxNat cnt, afxTransform dst[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssert(dst);
+    AfxAssert(cnt);
+
+    AfxReadStream2(in, cnt * sizeof(dst[0]), sizeof(dst[0]), dst, sizeof(dst[0]));
+
+    return err;
+}
+
+_AFXINL afxError AfxWriteTransforms(afxStream out, afxNat cnt, afxTransform const src[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssert(src);
+    AfxAssert(cnt);
+
+    AfxWriteStream2(out, cnt * sizeof(src[0]), sizeof(src[0]), src, sizeof(src[0]));
+
+    return err;
 }

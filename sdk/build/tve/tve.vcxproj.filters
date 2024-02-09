@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="tve">
+      <UniqueIdentifier>{72797ebe-47d8-449b-8e47-0cd7e8f3364c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

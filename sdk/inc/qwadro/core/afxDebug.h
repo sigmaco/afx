@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_DEBUG_H
@@ -116,6 +116,10 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssertRange(total_, base_, range_)
 #   define AfxAssertRangei(total_, base_, range_)
 #   define AfxAssertRangef(total_, base_, range_)
+
+#   define AfxAssertWhd(total_, offset_, range_)
+
+#   define AfxAssertAlign(addr_,align_)
 
 // diferente de um range, um extent sempre há um valor mínimo. Algo não pode ter largura igual a zero e existir.
 #   define AfxAssertExtent(total_, range_)

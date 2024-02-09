@@ -12,7 +12,7 @@
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
- *                                    www.sigmaco.org
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_CURVE_H

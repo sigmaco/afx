@@ -45,7 +45,7 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
             afxRaster surf;
-            AfxGetDrawOutputSurface(dout, outBufIdx, 1, &surf);
+            AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
             afxCanvas canv;
             AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
             AfxAssertObjects(1, &surf, afxFcc_RAS);
@@ -57,10 +57,10 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             AwxCmdEndSceneRendering(dscr, rnd);
 
             if (AfxCompileDrawScript(dscr)) AfxThrowError();
-            else if (AfxSubmitDrawScripts(din, 1, &dscr))
+            else if (AfxExecuteDrawScripts(din, 1, &dscr))
                 AfxThrowError();
 
-            if (AfxPresentDrawOutputBuffers(din, 1, &dout, &outBufIdx))
+            if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx))
                 AfxThrowError();
         }
     }
@@ -109,7 +109,7 @@ _AFXEXPORT void Once(afxApplication app)
     AfxAssert(rslt == 1);
 #if 0
     afxArchive arc;
-    AfxAcquireArchives(1, &arc, &uri128.uri, (afxFileFlags[]) { AFX_FILE_FLAG_R });
+    AfxAcquireArchives(1, &arc, &uri128.uri, (afxFileFlags[]) { afxFileFlag_R });
     AfxAssertObjects(1, &arc, afxFcc_ARC);
     afxUri itemNam;
     AfxMakeUri(&itemNam, "art/worldtest.tga", 0);

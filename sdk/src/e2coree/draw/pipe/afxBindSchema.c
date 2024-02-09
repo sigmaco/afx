@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -63,7 +63,7 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBind
     {
         if (AfxCountArrayElements(&blueprint->bindings))
         {
-            if (AfxBuildBindSchemas(blueprint->dctx, 1, lego, blueprint))
+            if (AfxAcquireBindSchemas(blueprint->dctx, 1, lego, blueprint))
             {
                 AfxThrowError();
             }
@@ -179,7 +179,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 _AFX afxResult AfxGetBindSchemaEntry(afxBindSchema lego, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
     AfxAssert(cnt);
     AfxAssertRange(lego->entryCnt, first, cnt);
     AfxAssert(decl);
@@ -204,18 +204,31 @@ _AFX afxResult AfxGetBindSchemaEntry(afxBindSchema lego, afxNat first, afxNat cn
 _AFX afxNat32 AfxGetBindSchemaHash(afxBindSchema lego)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &lego, afxFcc_LEGO);
+    AfxAssertObjects(1, &lego, afxFcc_BSCH);
     return lego->crc32;
 }
 
-_AFX afxError AfxBuildBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema lego[], afxPipelineRigBlueprint const blueprint[])
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(schemas);
+    AfxAssert(cnt);
+    afxClass* cls = AfxGetBindSchemaClass(dctx);
+    AfxAssertClass(cls, afxFcc_BSCH);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)schemas);
+}
+
+_AFX afxError AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetBindSchemaClass(dctx);
-    AfxAssertClass(cls, afxFcc_LEGO);
+    AfxAssertClass(cls, afxFcc_BSCH);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)lego, (void const*[]) { (void*)blueprint }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)schemas, (void const*[]) { (void*)blueprint }))
         AfxThrowError();
 
     return err;

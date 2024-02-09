@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_TRANSFORM_H
@@ -75,5 +75,8 @@ AFXINL void     AfxAssimilateTransforms(afxReal const ltm[3][3], afxReal const i
 
 AFXINL void     AfxTransformArrayedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
 AFXINL void     AfxTransformArrayedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+
+AFXINL afxError AfxReadTransforms(afxStream in, afxNat cnt, afxTransform dst[]);
+AFXINL afxError AfxWriteTransforms(afxStream out, afxNat cnt, afxTransform const src[]);
 
 #endif//AFX_TRANSFORM_H

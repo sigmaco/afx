@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_CORE_C
@@ -105,14 +105,14 @@ _AFX afxError _AfxSysLoadIcd(afxSystem sys, afxUri const* file, afxIcd *icd)
     return err;
 }
 
-_AFX afxNat AfxCurateIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), void *udd)
+_AFX afxNat AfxInvokeIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetIcdClass();
     AfxAssertClass(cls, afxFcc_ICD);
-    return cnt ? AfxCurateInstances(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
 }
 
 _AFX afxNat AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icd[])

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "sgl.h"
@@ -23,23 +23,18 @@
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDpuBindAndSyncSamp(glVmt const* gl, afxBool syncOnly, afxNat glUnit, afxSampler samp)
+_SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = AFX_ERR_NONE;
-    GLuint glHandle;
+    glVmt const* gl = &dpu->gl;
 
-    if (!samp)
-    {
-        glHandle = 0;
-        gl->BindSampler(glUnit, glHandle); _SglThrowErrorOccuried();
-    }
-    else
+    if (samp)
     {
         AfxAssertObjects(1, &samp, afxFcc_SAMP);
-        //afxBool bound = FALSE;
-        glHandle = samp->glHandle;
         sglUpdateFlags devUpdReq = (samp->updFlags & SGL_UPD_FLAG_DEVICE);
+        GLuint glHandle = samp->glHandle;
+        afxBool bound = FALSE;
 
         if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
         {
@@ -49,12 +44,12 @@ _SGL afxError _SglDpuBindAndSyncSamp(glVmt const* gl, afxBool syncOnly, afxNat g
                 samp->glHandle = NIL;
                 glHandle = NIL;
             }
-        
+
             gl->GenSamplers(1, &(glHandle)); _SglThrowErrorOccuried();
             gl->BindSampler(glUnit, glHandle); _SglThrowErrorOccuried();
-            //bound = TRUE;
             AfxAssert(gl->IsSampler(glHandle));
             samp->glHandle = glHandle;
+            bound = TRUE;
 
             GLenum magF = SglToGlTexelFilterMode(samp->base.magFilter);
             GLenum minF = SglToGlTexelFilterModeMipmapped(samp->base.minFilter, samp->base.mipmapFilter);
@@ -94,29 +89,14 @@ _SGL afxError _SglDpuBindAndSyncSamp(glVmt const* gl, afxBool syncOnly, afxNat g
 
             AfxEcho("afxSampler %p hardware-side data instanced.", samp);
 
-            if (syncOnly)
+            if (bound && !(bindFlags & sglBindFlag_KEEP))
             {
                 gl->BindSampler(glUnit, 0); _SglThrowErrorOccuried();
                 //bound = FALSE;
             }
         }
-        else
-        {
-            if ((devUpdReq & SGL_UPD_FLAG_DEVICE_FLUSH))
-            {
-                AfxThrowError(); // immutable
-            }
-
-            if (!syncOnly)
-            {
-                gl->BindSampler(glUnit, glHandle); _SglThrowErrorOccuried();
-                //bound = TRUE;
-            }
-        }
-
         samp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
     }
-    
     return err;
 }
 
@@ -129,7 +109,7 @@ _SGL afxError _SglSampDtor(afxSampler samp)
     if (samp->glHandle)
     {
         afxDrawContext dctx = AfxGetObjectProvider(samp);
-        _SglDctxDeleteGlRes(dctx, 4, samp->glHandle);
+        _SglDctxDeleteGlRes(dctx, 4, (void*)samp->glHandle);
         samp->glHandle = 0;
     }
 
@@ -153,7 +133,7 @@ _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
     AfxAssert(config[0].uvw[2] < afxTexelAddress_TOTAL);
 
     samp->base.crc32 = 0;
-    AfxCrc32(&samp->base.crc32, config, sizeof(*config));
+    AfxAccumulateCrc32(&samp->base.crc32, config, sizeof(*config));
 
     samp->base.magFilter = config->magFilter;
     samp->base.minFilter = config->minFilter;
@@ -177,7 +157,7 @@ _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglSampClsConfig =
+_SGL afxClassConfig const _SglSampClsConfig =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",

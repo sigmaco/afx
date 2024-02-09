@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -59,7 +59,7 @@ _AFX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
 
     config->depthTestEnabled = razr->depthTestEnabled;
     config->depthCompareOp = razr->depthCompareOp;
-    config->depthWriteEnabled = razr->depthWriteEnabled;
+    config->depthWriteDisabled = razr->depthWriteDisabled;
     config->dsFmt = razr->dsFmt;
     
     if ((config->depthBoundsTestEnabled = razr->depthBoundsTestEnabled))
@@ -76,19 +76,23 @@ _AFX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
     AfxReplicateString(&config->fragFn, &razr->fragFn.str.str);
 }
 
-_AFX afxBool AfxGetDepthTestInfo(afxRasterizer razr, afxCompareOp* op, afxBool* writeEnabled) // return TRUE if depth test is enabled
+_AFX afxBool AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op) // return TRUE if depth test is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->depthTestEnabled;
 
-    if (op && enabled)
+    if (enabled && op)
         *op = razr->depthCompareOp;
 
-    if (writeEnabled && enabled)
-        *writeEnabled = razr->depthWriteEnabled;
-
     return enabled;
+}
+
+_AFX afxBool AfxDepthWriteIsDisabled(afxRasterizer razr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
+    return razr->depthWriteDisabled;
 }
 
 _AFX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
@@ -97,13 +101,13 @@ _AFX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxRea
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->depthBiasEnabled;
 
-    if (constFactor && enabled)
+    if (enabled && constFactor)
         *constFactor = razr->depthBiasConstFactor;
 
-    if (clamp && enabled)
+    if (enabled && clamp)
         *clamp = razr->depthBiasClamp;
 
-    if (slopeScale && enabled)
+    if (enabled && slopeScale)
         *slopeScale = razr->depthBiasSlopeScale;
 
     return enabled;
@@ -115,7 +119,7 @@ _AFX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // ret
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->depthBoundsTestEnabled;
 
-    if (bounds && enabled)
+    if (enabled && bounds)
         AfxCopyV2d(bounds, razr->depthBounds);
 
     return enabled;
@@ -139,10 +143,10 @@ _AFX afxBool AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, af
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->stencilTestEnabled;
 
-    if (front && enabled)
+    if (enabled && front)
         *front = razr->stencilFront;
 
-    if (back && enabled)
+    if (enabled && back)
         *back = razr->stencilBack;
 
     return enabled;
@@ -154,7 +158,7 @@ _AFX afxBool AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op) // 
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->logicOpEnabled;
 
-    if (op && enabled)
+    if (enabled && op)
         *op = razr->logicOp;
 
     return enabled;
@@ -195,23 +199,23 @@ _AFX afxBool AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxM
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->msEnabled;
 
-    if (sampleCnt && enabled)
+    if (enabled && sampleCnt)
         *sampleCnt = razr->sampleCnt;
 
-    if (sampleMask && enabled)
+    if (enabled && sampleMask)
         for (afxNat i = 0; i < razr->sampleCnt; i++)
             sampleMask[i] = razr->sampleMasks[i];
 
     return enabled;
 }
 
-_AFX afxBool AfxGetSampleShadingInfo(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
+_AFX afxBool AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->sampleShadingEnabled;
 
-    if (minSampleShadingValue && enabled)
+    if (enabled && minSampleShadingValue)
         *minSampleShadingValue = razr->minSampleShadingValue;
 
     return enabled;
@@ -224,7 +228,7 @@ _AFX afxFillMode AfxGetRasterizationMode(afxRasterizer razr)
     return razr->fillMode;
 }
 
-_AFX afxBool AfxGetLineRasterizationInfo(afxRasterizer razr, afxReal* lineWidth) // return TRUE if rasterization enabled.
+_AFX afxBool AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth) // return TRUE if rasterization enabled.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -232,7 +236,7 @@ _AFX afxBool AfxGetLineRasterizationInfo(afxRasterizer razr, afxReal* lineWidth)
     if (lineWidth)
         *lineWidth = razr->lineWidth;
 
-    return 1;
+    return razr->fillMode == afxFillMode_EDGE;
 }
 
 _AFX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[])
@@ -275,7 +279,7 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
         afxUri fpath;
         AfxGetUriPath(&fpath, uri);
 
-        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
+        if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 

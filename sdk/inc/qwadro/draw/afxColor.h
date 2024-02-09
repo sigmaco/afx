@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -27,6 +27,12 @@ typedef afxNat32    afxRgb8, afxBgr8;
 typedef afxNat32    afxRgba8;
 typedef afxByte     afxBgra8;
 typedef afxByte     afxArgb8;
+
+typedef enum afxColorSpace
+{
+    afxColorSpace_LINEAR = AfxGetBitOffset(0),
+    afxColorSpace_SRGB = AfxGetBitOffset(1)
+} afxColorSpace;
 
 typedef enum afxColorSwizzle
 {

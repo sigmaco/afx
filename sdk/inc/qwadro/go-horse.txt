@@ -24,6 +24,8 @@ Ints sendo encapsulados em ints menores. Principalmente int array para structure
 
 Retornando referências para valores armazenados na call stack. Strucs, por exemplo.
 
+Ao usar high-color (16-bit) video mode, Intel drivers doesn't provide WGL extensions, causing DPU creation failure.
+
 // POSSÍVEIS ABORDAGENS
 
 NORM#1 O Qwadro não mais vai tentar evitar erros internos, apenas em entrada e saída de dados. O Qwadro apenas vai tentar informar argumentos inválidos. É responsabilidade do programador a resiliência e qualidade do código.

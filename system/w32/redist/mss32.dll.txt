@@ -1,0 +1,11 @@
+Mss32.dll#3.0.0.0 (6.1a) — GTA III
+Mss32.dll#3.0.0.0 (6.1a) — GTA Vice City
+mss32.dll#3.0.0.0 (6.5b) — IGI 2
+mss32.dll#3.0.0.0 (6.5e) — Call Of Duty
+mss32.dll#3.0.0.0 (6.5e) — Enter The Matrix
+mss32.dll#3.0.0.0 (6.5h) — Manhunt
+mss32.dll#3.0.0.0 (6.6a) — Left 4 Dead
+mss32.dll#3.0.0.0 (6.6g) — Marc Ecko's Getting Up - Contents Under Pressure
+mss32.dll#7.0.10.0 (7.0t) — Miles Sound Tools
+mss32.dll#7.0.23.0 (7.0w) — Call Of Duty: Modern Warfare
+mss32.dll#7.2.4.0 (7.2e) — Anno 1404

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
@@ -19,7 +19,7 @@
 #ifndef AFX_URI_H
 #define AFX_URI_H
 
-#include "qwadro/core/afxString.h"
+#include "qwadro/core/afxBufferedString.h"
 
 #define AFX_URI_FILE_EXT_SEP '.'
 #define AFX_URI_PATH_HERE '.'
@@ -140,20 +140,20 @@ AFXINL void const*      AfxGetUriData(afxUri const *uri, afxNat base);
 AFXINL afxBufferedString*AfxGetBufferedUriString(afxUri *uri);
 AFXINL afxString const* AfxGetUriString(afxUri const *uri);
 
-AFXINL afxBool          AfxUriHasUsername(afxUri const *uri);
-AFXINL afxBool          AfxUriHasPassword(afxUri const *uri);
-AFXINL afxBool          AfxUriHasHost(afxUri const *uri);
-AFXINL afxBool          AfxUriHasPort(afxUri const *uri);
-AFXINL afxBool          AfxUriHasFragment(afxUri const *uri);
-AFXINL afxBool          AfxUriHasPath(afxUri const *uri);
-AFXINL afxBool          AfxUriHasDirectory(afxUri const *uri);
-AFXINL afxBool          AfxUriHasName(afxUri const *uri);
-AFXINL afxBool          AfxUriHasExtension(afxUri const *uri);
-AFXINL afxBool          AfxUriHasQuery(afxUri const *uri);
-AFXINL afxBool          AfxUriHasScheme(afxUri const *uri);
+AFXINL afxNat           AfxGetUriUsernameLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriPasswordLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriHostLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriPortLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriFragmentLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriPathLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriDirectoryLength(afxUri const *uri);
+AFXINL afxNat           AfxGetFileNameLength(afxUri const *uri);
+AFXINL afxNat           AfxGetFileExtensionLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriQueryLength(afxUri const *uri);
+AFXINL afxNat           AfxGetUriSchemeLength(afxUri const *uri);
 
 AFXINL afxBool          AfxUriIsBlank(afxUri const *uri);
-AFXINL afxBool          AfxUriIsWriteable(afxUri const *uri);
+AFXINL afxBool          AfxUriIsEditable(afxUri const *uri);
 AFXINL afxBool          AfxPathIsRelative(afxUri const *uri);
 AFXINL void             AfxNormalizePath(afxUri *uri);
 AFXINL void             AfxReparseUri(afxUri *uri);

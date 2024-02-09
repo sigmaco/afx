@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -54,6 +54,18 @@ AFX_DEFINE_STRUCT(_afxStreamTargaHdr)
     afxWhd      whd;
 
 };
+
+AFX_DEFINE_STRUCT(afxTargaFileHeader)
+{
+    afxFcc      fcc;
+    afxFlags    flags;
+    afxNat      pxlFmt;
+    afxNat      lodCnt;
+    afxNat      layerCnt;
+    afxWhd      whd;
+    afxNat      rowLen;
+};
+
 #pragma pack(pop)
 
 void DecompressRleChunk(afxStream stream, afxNat width, afxNat height, afxNat bpp, afxByte *dst)
@@ -118,7 +130,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
         {
         case 32:
         {
-            if (!(img->data = AfxAllocate(NIL, sizeof(afxNat32), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
@@ -131,7 +143,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
         }
         case 24:
         {
-            if (!(img->data = AfxAllocate(NIL, 3 * sizeof(afxByte), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
@@ -145,7 +157,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
         case 16:
         case 15:
         {
-            if (!(img->data = AfxAllocate(NIL, sizeof(afxNat16), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
@@ -169,13 +181,13 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 {
                 case 32:
                 {
-                    if (!(palette = AfxAllocate(NIL, sizeof(afxNat32), hdr.paletteLen, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
                         if (AfxReadStream(stream, palette, hdr.paletteLen * sizeof(afxNat32), 0)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, 1, hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
@@ -184,7 +196,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                                     if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, sizeof(afxNat32), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -203,13 +215,13 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 }
                 case 24:
                 {
-                    if (!(palette = AfxAllocate(NIL, 3 * sizeof(afxByte), hdr.paletteLen, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
                         if (AfxReadStream(stream, palette, hdr.paletteLen * 3, 0)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, 1, hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
@@ -218,7 +230,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                                     if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, 3 * sizeof(afxByte), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -237,13 +249,13 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 case 16:
                 case 15:
                 {
-                    if (!(palette = AfxAllocate(NIL, sizeof(afxNat16), hdr.paletteLen, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
                         if (AfxReadStream(stream, palette, hdr.paletteLen * sizeof(afxNat16), 0)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, 1, hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
@@ -252,7 +264,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                                     if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, sizeof(afxNat16), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -276,7 +288,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
             }
             else
             {
-                if (!(img->data = AfxAllocate(NIL, sizeof(afxNat8), hdr.width * hdr.height, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat8), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                 else
                 {
                     if (hdr.imgType == 11)
@@ -299,7 +311,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 afxNat siz = scanline * hdr.height;
                 afxByte *buf;
 
-                if (!(buf = AfxAllocate(NIL, siz, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(buf = AfxAllocate(NIL, 1, siz, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                 else
                 {
                     for (i = 0; i < hdr.height; i++)
@@ -339,7 +351,7 @@ _AFX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, a
 
         afxFile file;
 
-        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_W })) AfxThrowError();
+        if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_W })) AfxThrowError();
         else
         {
             _afxTga im;
@@ -413,8 +425,8 @@ _AFX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, a
         AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, &uri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, &uri[i], afxFileFlag_RX)) AfxThrowError();
         else
         {
             _afxTga im;
@@ -490,8 +502,8 @@ _AFX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags,
         AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, &uri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, &uri[i], afxFileFlag_RX)) AfxThrowError();
         else
         {
             _afxTga im;
@@ -566,8 +578,8 @@ _AFX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags 
         AfxAssertType(&layerUri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, &layerUri[i], AFX_FILE_FLAG_RX)) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, &layerUri[i], afxFileFlag_RX)) AfxThrowError();
         else
         {
             _afxTga im;
@@ -762,7 +774,7 @@ _AFX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
 
     afxNat pixelSiz = bitsPerPixel / AFX_BYTE_SIZE;
 
-    if (!(data = AfxAllocate(mmu, pixelSiz, tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
+    if (!(data = AfxAllocate(mmu, tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxCopy(tga->width * tga->height, pixelSiz, tga->data, data);
@@ -853,7 +865,7 @@ _AFX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                 {
                     afxInt bytesPerPixel = header.colorMapSpec.entrySiz / AFX_BYTE_SIZE;
 
-                    if (!(colorMap = AfxAllocate(mmu, bytesPerPixel, header.colorMapSpec.entrySiz, 0, AfxHint()))) AfxThrowError();
+                    if (!(colorMap = AfxAllocate(mmu, header.colorMapSpec.entrySiz, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
                     else
                     {
                         if (AfxReadStream(stream, colorMap, header.colorMapSpec.nofEntries * bytesPerPixel, 0)) AfxThrowError();
@@ -876,7 +888,7 @@ _AFX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                 afxNat pixelSiz = header.imageSpec.pixelDepth / AFX_BYTE_SIZE;
 
-                if (!(tga->data = AfxAllocate(mmu, pixelSiz, (size_t)tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
+                if (!(tga->data = AfxAllocate(mmu, (size_t)tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     afxNat i, k;
@@ -953,7 +965,7 @@ _AFX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                             // Allocating new memory, as current memory is a look up table index and not a color.
 
-                            if (!(tga->data = AfxAllocate(mmu, bytesPerPixel, tga->width * tga->height, 0, AfxHint()))) AfxThrowError();
+                            if (!(tga->data = AfxAllocate(mmu, tga->width * tga->height, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (header.colorMapSpec.entrySiz == 32)
@@ -1022,7 +1034,7 @@ _AFX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height,
         return FALSE;
     }
 
-    if (!(tga->data = AfxAllocate(mmu, stride * sizeof(afxByte), width * height * depth, 0, AfxHint())))
+    if (!(tga->data = AfxAllocate(mmu, width * height * depth, stride * sizeof(afxByte), 0, AfxHint())))
     {
         return FALSE;
     }
@@ -1051,7 +1063,7 @@ _AFX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
         
         afxFile file;
 
-        if (AfxOpenFiles(AFX_FILE_FLAG_W, 1, &uri[i], &file)) AfxThrowError();
+        if (AfxOpenFiles(afxFileFlag_W, 1, &uri[i], &file)) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1125,8 +1137,8 @@ _AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
         AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, AFX_FILE_FLAG_RX, &uri[i])) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1186,7 +1198,7 @@ _AFX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseI
     return err;
 }
 
-_AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster ras[])
+_AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -1200,8 +1212,8 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
         AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, AFX_FILE_FLAG_RX, &uri[i])) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1210,7 +1222,7 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
             if (_AfxTgaLoad(mmu, TRUE, /*AfxGetFileStream(file)*/ios, &im))
             {
                 AfxThrowError();
-                ras[i] = NIL;
+                rasters[i] = NIL;
             }
             else
             {
@@ -1225,10 +1237,10 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
                 texi.whd[1] = im.height;
                 texi.whd[2] = im.depth;
 
-                if (AfxAcquireRasters(dctx, 1, &texi, &ras[i]))
+                if (AfxAcquireRasters(dctx, 1, &texi, &rasters[i]))
                 {
                     AfxThrowError();
-                    AfxReleaseObjects(i, (void**)ras);
+                    AfxReleaseObjects(i, (void**)rasters);
                 }
                 else
                 {
@@ -1249,7 +1261,7 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
                     op.bufRowCnt = 0;
                     op.bufRowSiz = 0;
 
-                    AfxUpdateRasterRegions(ras[i], 1, &op, im.data);
+                    AfxUpdateRasterRegions(rasters[i], 1, &op, im.data);
                 }
             }
 
@@ -1275,8 +1287,8 @@ _AFX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
         AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { AFX_FILE_FLAG_R })) AfxThrowError();
-        if (AfxReloadFile(ios, AFX_FILE_FLAG_RX, &uri[i])) AfxThrowError();
+        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
+        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
         else
         {
             _afxTga im;

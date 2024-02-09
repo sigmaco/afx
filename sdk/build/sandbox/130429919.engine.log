@@ -1,0 +1,72 @@
+
+ afxDebug_w32.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0fc236e8 by 00000000 over 00000000 with 0fbfaa44)
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(0049f810)
+ afxSystem_w32.c:227
+  _AfxSysCtor(sys=0049f810)
+ Installing Thread Execution Unit at 0049fda4 by 0049f834 over 00000000 with 0014e0b4)
+ Entering the Thread Execution Environment 3196
+ afxClass<Thread Execution Unit>::ConstructObject(004a06a0)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(004a06a0)
+ Installing Memory Management Unit at 0049f848 by 0049f834 over 00000000 with 0fc082e4)
+ Installing Thread at 0049fce0 by 0049f834 over 00000000 with 0fbf757c)
+ Installing Device at 0049fe68 by 0049f834 over 00000000 with 0014e084)
+ Installing Autonomous Service at 0049ff2c by 0049f834 over 00000000 with 0fbfa2bc)
+ Installing File at 004a0178 by 0049f834 over 00000000 with 0fc028ec)
+ Installing I/O Stream at 0049fff0 by 0049f834 over 00000000 with 0fc04530)
+ Installing Codec at 004a00b4 by 0049f834 over 00000000 with 0fc21ef0)
+ Installing File Archive at 004a023c by 0049f834 over 004a0178 with 0fc02190)
+ Installing Executable & Linkable Module at 0049f90c by 0049f834 over 00000000 with 0fbf950c)
+ Installing Installable Client Driver at 0049f9d0 by 0049f834 over 0049f90c with 0fc21014)
+ Installing Storage Point at 004a0300 by 0049f834 over 00000000 with 0014e084)
+ Installing Application at 004a0488 by 0049f834 over 00000000 with 0fc0cfa8)
+ Installing Human Input Device at 0049fa94 by 0049f834 over 0049fe68 with 0fc0350c)
+ Installing Keyboard at 0049fb58 by 0049f834 over 0049fa94 with 0fc03e14)
+ Installing Mouse at 0049fc1c by 0049f834 over 0049fa94 with 0fc04004)
+ Installing Simulation at 004a03c4 by 0049f834 over 00000000 with 0fc22020)
+ [!] afxSystem_w32.c:343?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:344?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(004a07b0)
+ afxArena.c:768
+  AfxAllocateArena(aren=004a05b0)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:357!_AfxSysCtor")
+ afxClass<Storage Point>::ConstructObject(004a2720)
+ Storage point "." 5 mounted -> "E:/qwadro".
+ afxClass<Storage Point>::ConstructObject(004a27a8)
+ ERR afxStorage.c:244?_AfxStoCtor
+  
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:763?AfxAcquireObjects
+  
+ Dismantling Storage Point object (#0) 004a2720...
+ Destructing instance 004a2720 of Storage Point class.
+ Storage point "." 5 unmounted -> "E:/qwadro".
+ ERR afxClass.c:782?AfxAcquireObjects
+  
+ ERR afxClass.c:782?AfxAcquireObjects
+  (ptr)
+    Invalid
+ ERR afxStorage.c:336?AfxMountStoragePoints
+  
+ ERR afxSystem_w32.c:407?_AfxSysCtor
+  

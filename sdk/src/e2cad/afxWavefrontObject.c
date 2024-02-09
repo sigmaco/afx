@@ -5,8 +5,8 @@
 #define _AFX_SKELETON_C
 #include "qwadro/core/afxSystem.h"
 #include "afxWavefrontObject.h"
-#include "qwadro/sim/modeling/awxMesh.h"
-#include "qwadro/sim/awxMaterial.h"
+#include "qwadro/sim/modeling/afxMesh.h"
+#include "qwadro/sim/afxMaterial.h"
 #include "qwadro/sim/awxAsset.h"
 #include "../dep/glus/GL/glus.h"
 #include "../dep/glus/GLUS/glus_wavefront.h"
@@ -22,10 +22,10 @@ struct cadbData
 {
     afxUri const* name;
     afxNat meshCnt;
-    awxMesh* meshes;
+    afxMesh* meshes;
     afxUri* meshNames;
-    awxModel mdl;
-    awxSkeleton skl;
+    afxModel mdl;
+    afxSkeleton skl;
 };
 
 _AFXEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
@@ -93,13 +93,15 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 {
     afxError err = AFX_ERR_NONE;
 
-    // a entire file should be an awxModel.
-    // each object should be an awxMesh, if none at least one awxMesh must pack all groups.
-    // each group should be an awxMeshSurface
-    // .obj doesn't contains skeletal info, so must have one single awxMeshVertebra bound to all groups.
+    // a entire file should be an afxModel.
+    // each object should be an afxMesh, if none at least one afxMesh must pack all groups.
+    // each group should be an afxMeshSurface
+    // .obj doesn't contains skeletal info, so must have one single afxMeshPivot bound to all groups.
 
     AfxAssert(sim);
-    afxMmu mmu = AfxSimulationGetMemory(sim);
+    afxMmu mmu = AfxGetSimulationMmu(sim);
+    afxStringCatalog strc;
+    AfxAcquireStringCatalogs(1, &strc);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -110,7 +112,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
         afxFixedUri2048 uri2;
         AfxMakeFixedUri2048(&uri2, NIL);
         AfxGetUriPath(&file2, &file[i]);
-        AfxResolveUri(AFX_FILE_FLAG_R, &file2, &uri2.uri);
+        AfxResolveUri(afxFileFlag_R, &file2, &uri2.uri);
 
         if (!_ldrWavefrontLoadScene(AfxGetBufferedUriData(&uri2.uri, 0), &g_wavefrontScene, NIL)) AfxThrowError();
         else
@@ -135,11 +137,12 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 
             afxTransform t;
             AfxResetTransform(&t);
-            awxSkeletonBuilder sklb = { 0 };
+            afxSkeletonBuilder sklb = { 0 };
             AfxBeginSkeletonBuilding(&sklb, meshCnt, AfxGetUriString(&file2), NIL);
+            AfxResetTransform(&t); // stack corruption after calling BeginSkeletonBuilding
 
             afxArray builders;
-            AfxAllocateArray(&builders, meshCnt, sizeof(awxMeshBuilder), NIL);
+            AfxAllocateArray(&builders, meshCnt, sizeof(afxMeshBuilder), NIL);
             afxNat meshIdx = 0;
             objectWalker = g_wavefrontScene.objectList;
             while (objectWalker)
@@ -162,7 +165,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 triCnt /= 3;
 
                 afxNat mshIdx2 = 0;
-                awxMeshBuilder *mshb2 = AfxInsertArrayUnits(&builders, 1, &mshIdx2, NIL);
+                afxMeshBuilder *mshb2 = AfxInsertArrayUnits(&builders, 1, &mshIdx2, NIL);
                 AfxAssert(mshIdx2 == meshIdx);
                 afxString tmp;
                 AfxMakeString(&tmp, objectWalker->object.name, 0);
@@ -180,13 +183,13 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 afxNat baseVtxIdx = 0;
                 AfxUpdateVertices(mshb2, baseVtxIdx, vtxCnt, NIL, NIL);
                 AfxAssert(baseVtxIdx != AFX_INVALID_INDEX);
-                AfxUpdateVertexPositions4(mshb2, baseVtxIdx, vtxCnt, posn);
+                AfxUpdateVertexPositions4(mshb2, baseVtxIdx, vtxCnt, posn, sizeof(posn[0]));
 
                 if (nrm)
-                    AfxUpdateVertexNormals(mshb2, baseVtxIdx, vtxCnt, nrm);
+                    AfxUpdateVertexNormals(mshb2, baseVtxIdx, vtxCnt, nrm, sizeof(nrm[0]));
 
                 if (uv)
-                    AfxUpdateVertexWraps(mshb2, baseVtxIdx, vtxCnt, uv);
+                    AfxUpdateVertexWraps(mshb2, baseVtxIdx, vtxCnt, uv, sizeof(uv[0]));
 
                 afxNat surfIdx = 0;
                 afxNat addedTris = 0;
@@ -237,26 +240,26 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 objectWalker = objectWalker->next;
             }
 #endif
-            //afxArray meshes = AfxAllocateArray(meshCnt, sizeof(awxMesh), NIL);
+            //afxArray meshes = AfxAllocateArray(meshCnt, sizeof(afxMesh), NIL);
             //
             
             afxArray meshes;
-            AfxAllocateArray(&meshes, meshCnt, sizeof(awxMesh), NIL);
+            AfxAllocateArray(&meshes, meshCnt, sizeof(afxMesh), NIL);
             AfxReserveArraySpace(&meshes, meshCnt);
 
-            if (AwxBuildMeshes(sim, meshCnt, builders.data, meshes.data))
+            if (AfxBuildMeshes(sim, strc, meshCnt, builders.data, meshes.data))
                 AfxThrowError();
 
-            //AwxRenormalizeMeshes(meshCnt, meshes.data);
+            //AfxRenormalizeMeshes(meshCnt, meshes.data);
             AfxAssertObjects(meshCnt, meshes.data, afxFcc_MSH);
             //AfxDeallocateArray(&meshRes);
             meshes.cnt = meshCnt;
 
             // build the skeleton
 
-            awxSkeleton skl = NIL;
+            afxSkeleton skl = NIL;
             
-            if (AfxBuildSkeletons(sim, 1, &sklb, &skl))
+            if (AfxBuildSkeletons(sim, strc, 1, &sklb, &skl))
                 AfxThrowError();
 
             AfxAssertObjects(1, &skl, afxFcc_SKL);
@@ -264,7 +267,14 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 
             // assemble all things into a model
 
-            awxModel mdl = AwxAssembleModel(sim, mdlName, skl, NIL, meshCnt, meshes.data);
+            afxModel mdl;
+            afxModelBlueprint mdlb = { 0 };
+            AfxResetTransform(&mdlb.init);
+            mdlb.skl = skl;
+            mdlb.mshCnt = meshCnt;
+            mdlb.baseMshIdx = 0;
+            AfxMakeFixedString32(&mdlb.id, mdlName);
+            AfxAssembleModel(sim, strc, meshes.data, 1, &mdlb, &mdl);
             AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
             awxAssetBuilder cadb = { 0 };

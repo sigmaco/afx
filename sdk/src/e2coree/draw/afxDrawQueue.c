@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -40,7 +40,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
     {
         AfxAssertObject(subm->outputs[i], afxFcc_DOUT);
         AfxAssertRange(AfxGetDrawOutputCapacity(subm->outputs[i]), subm->outputBufIdx[i], 1);
-        afxSurface surf = AfxGetDrawOutputSurface(subm->outputs[i], subm->outputBufIdx[i]);
+        afxSurface surf = AfxGetDrawOutputBuffer(subm->outputs[i], subm->outputBufIdx[i]);
 
         if (surf->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
             surf->state = AFX_SURF_STATE_PRESENTABLE;
@@ -263,7 +263,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
         {
             AfxAssertObject(spec->outputs[i], afxFcc_DOUT);
             AfxAssertRange(AfxGetDrawOutputCapacity(spec->outputs[i]), spec->outputBufIdx[i], 1);
-            afxSurface surf = AfxGetDrawOutputSurface(spec->outputs[i], spec->outputBufIdx[i]);
+            afxSurface surf = AfxGetDrawOutputBuffer(spec->outputs[i], spec->outputBufIdx[i]);
 
             if (AfxGetSurfaceState(surf) > AFX_SURF_STATE_PRESENTABLE)
             {
@@ -271,7 +271,7 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
                 for (afxNat j = 0; j < i; ++j)
                 {
-                    surf = AfxGetDrawOutputSurface(spec->outputs[j], spec->outputBufIdx[j]);
+                    surf = AfxGetDrawOutputBuffer(spec->outputs[j], spec->outputBufIdx[j]);
                     surf->state = AFX_SURF_STATE_PRESENTABLE;
                 }
                 break;

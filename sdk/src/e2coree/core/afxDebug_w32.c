@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -26,8 +26,10 @@
 //#include <Mmsystem.h>
 #pragma comment (lib, "Shlwapi")
 
+#if 0
 #include <dwmapi.h>
 #pragma comment (lib, "dwmapi")
+#endif
 
 #include "qwadro/core//afxSystem.h"
 #include "qwadro/core/afxDebug.h"
@@ -139,7 +141,7 @@ void AfxLogCall(afxHint const hint, afxChar const* args, ...)
         afxChar msg[8192];
         int len;
 
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
         len = stbsp_sprintf(msg, "\n %s:%lli\n  %s(", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
 #else
         len = stbsp_sprintf(msg, "\n %s:%i\n  %s(",  AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
@@ -170,7 +172,7 @@ void AfxLogComment(afxHint const hint, afxChar const* msg, ...)
     }
         else
         {
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
             len = stbsp_sprintf(msg2, "\n ... %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
 #else
             len = stbsp_sprintf(msg2, "\n ... %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
@@ -208,7 +210,7 @@ void AfxLogEcho(afxHint const hint, afxChar const* msg, ...)
         }
         else
         {
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
             len = stbsp_sprintf(msg2, "\n SUC %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
 #else
             len = stbsp_sprintf(msg2, "\n SUC %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
@@ -240,7 +242,7 @@ void AfxLogAssistence(afxHint const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
         len = stbsp_sprintf(msg2, "\n [$] %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
 #else
         len = stbsp_sprintf(msg2, "\n [$] %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
@@ -271,7 +273,7 @@ void AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
         len = stbsp_sprintf(msg2, "\n [!] %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
 #else
         len = stbsp_sprintf(msg2, "\n [!] %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
@@ -302,7 +304,7 @@ void AfxLogError(afxHint const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_X64
+#ifdef AFX_PLATFORM_64
         len = stbsp_sprintf(msg2, "\n ERR %s:%lli?%s\n  ", AfxFindPathTarget((char const * const)hint[0]), hint[1], (char const * const)hint[2]);
 #else
         len = stbsp_sprintf(msg2, "\n ERR %s:%i?%s\n  ", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1], (char const * const)hint[2]);

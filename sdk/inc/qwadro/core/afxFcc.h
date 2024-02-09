@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef afxFcc_H
@@ -68,7 +68,7 @@ typedef enum afxFcc
     afxFcc_QUE      = AfxPackFcc('q', 'u', 'e', '\0'), // afxQueue
     afxFcc_STR      = (('q'<<8)|'s'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
     afxFcc_STRB     = (('q' << 8) | 'z'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
-#if 0
+#if !0
     afxFcc_STR0     = AfxPackFcc('s', 't', 'r', '0'), // afxFixedString8
     afxFcc_STR1     = AfxPackFcc('s', 't', 'r', '1'), // afxFixedString16
     afxFcc_STR2     = AfxPackFcc('s', 't', 'r', '2'), // afxFixedString32
@@ -79,9 +79,9 @@ typedef enum afxFcc
     afxFcc_STR7     = AfxPackFcc('s', 't', 'r', '7'), // afxString1024
     afxFcc_STR8     = AfxPackFcc('s', 't', 'r', '8'), // afxString2048
     afxFcc_STR9     = AfxPackFcc('s', 't', 'r', '9'), // afxString4096
-    afxFcc_STRC     = AfxPackFcc('s', 't', 'r', 'c'), // afxString
-    afxFcc_STRE     = AfxPackFcc('s', 't', 'r', 'e'), // afxString excerpt; It is just a view of another string; canv't modify data.
-    afxFcc_STRF     = AfxPackFcc('s', 't', 'r', 'f'), // afxString
+    afxFcc_STRC     = AfxPackFcc('s', 't', 'r', 'c'),
+    afxFcc_STRE     = AfxPackFcc('s', 't', 'r', 'e'),
+    afxFcc_STRF     = AfxPackFcc('s', 't', 'r', 'f'),
 #endif
     afxFcc_URI      = AfxPackFcc('u', 'r', 'i', '\0'), // afxUri
     afxFcc_SRC      = AfxPackFcc('s', 'r', 'c', '\0'), // afxSource
@@ -100,6 +100,7 @@ typedef enum afxFcc
     afxFcc_BLCK     = AfxPackFcc('b', 'l', 'c', 'k'),
     afxFcc_BLOB     = AfxPackFcc('b', 'l', 'o', 'b'), // afxBlob
     afxFcc_IOS      = AfxPackFcc('i', 'o', 's', '\0'), // afxStream
+    afxFcc_CDC      = AfxPackFcc('c', 'd', 'c', '\0'), // afxCodec
     afxFcc_FSSP     = AfxPackFcc('f', 's', 's', 'p'), // afxStoragePoint
     afxFcc_STO      = AfxPackFcc('s', 't', 'o', '\0'), // afxStorage
     afxFcc_ARC      = AfxPackFcc('a', 'r', 'c', '\0'), // afxArchive
@@ -162,13 +163,16 @@ typedef enum afxFcc
     afxFcc_DQUE     = AfxPackFcc('d', 'q', 'u', 'e'), // afxDrawQueue
     afxFcc_DTHR     = AfxPackFcc('d', 't', 'h', 'r'), // afxDrawThread
     afxFcc_CANV     = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
-    afxFcc_FEN      = AfxPackFcc('f', 'e', 'n', '\0'), // afxFence
+    afxFcc_FENC     = AfxPackFcc('f', 'e', 'n', 'c'), // afxFence
+    afxFcc_SEM      = AfxPackFcc('s', 'e', 'm', '\0'), // afxSemaphore
     afxFcc_DCTX     = AfxPackFcc('d', 'c', 't', 'x'), // afxDrawContext
     afxFcc_PIP      = AfxPackFcc('p', 'i', 'p', '\0'), // afxPipeline
     afxFcc_RAZR     = AfxPackFcc('r', 'a', 's', '\0'), // afxRasterizer
     afxFcc_VIN      = AfxPackFcc('v', 'i', 'n', '\0'), // afxVertexInput
     afxFcc_LEGT2    = AfxPackFcc('l', 'e', 'g', 't'), // afxBindSchema
     afxFcc_LEGO     = AfxPackFcc('l', 'e', 'g', 'o'), // afxBindSchema
+    afxFcc_BSCH     = AfxPackFcc('b', 's', 'c', 'h'), // afxBindSchema
+    afxFcc_QRYP     = AfxPackFcc('q', 'r', 'y', 'p'), // afxQueryPool
     afxFcc_SHD      = AfxPackFcc('s', 'h', 'd', '\0'), // afxShader
     afxFcc_SHDB     = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint
     afxFcc_PIPB     = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint
@@ -234,25 +238,25 @@ typedef enum afxFcc
     afxFcc_SURF     = AfxPackFcc('s', 'u', 'r', 'f'), // afxSurface
     afxFcc_TEXB     = AfxPackFcc('t', 'e', 'x', 'b'), // afxTextureBlueprint
 
-    afxFcc_MDL      = AfxPackFcc('m', 'd', 'l', '\0'), // awxModel
-    afxFcc_MDLB     = AfxPackFcc('m', 'd', 'l', 'b'), // awxModelBlueprint
-    afxFcc_SKL      = AfxPackFcc('s', 'k', 'l', '\0'), // awxSkeleton
-    afxFcc_SKLB     = AfxPackFcc('s', 'k', 'l', 'b'), // awxSkeletonBlueprint
+    afxFcc_MDL      = AfxPackFcc('m', 'd', 'l', '\0'), // afxModel
+    afxFcc_MDLB     = AfxPackFcc('m', 'd', 'l', 'b'), // afxModelBlueprint
+    afxFcc_SKL      = AfxPackFcc('s', 'k', 'l', '\0'), // afxSkeleton
+    afxFcc_SKLB     = AfxPackFcc('s', 'k', 'l', 'b'), // afxSkeletonBlueprint
     afxFcc_BONB     = AfxPackFcc('b', 'o', 'n', 'b'), // afxBoneBlueprint
-    afxFcc_MSHV     = AfxPackFcc('m', 's', 'h', 'v'), // awxMeshVertebra
-    afxFcc_MSHC     = AfxPackFcc('m', 's', 'h', 'c'), // awxMeshConnection
-    afxFcc_MSH      = AfxPackFcc('m', 's', 'h', '\0'), // awxMesh
-    afxFcc_MSHB     = AfxPackFcc('m', 's', 'h', 'b'), // awxMeshBlueprint
+    afxFcc_MSHV     = AfxPackFcc('m', 's', 'h', 'v'), // afxMeshPivot
+    afxFcc_MSHC     = AfxPackFcc('m', 's', 'h', 'c'), // afxMeshConnection
+    afxFcc_MSH      = AfxPackFcc('m', 's', 'h', '\0'), // afxMesh
+    afxFcc_MSHB     = AfxPackFcc('m', 's', 'h', 'b'), // afxMeshBlueprint
     afxFcc_VTD      = AfxPackFcc('v', 't', 'd', '\0'), // awxVertexData
     afxFcc_VTDS     = AfxPackFcc('v', 't', 'd', 's'), // awxVertexDataStream
-    afxFcc_MSHT     = AfxPackFcc('m', 's', 'h', 't'), // awxMeshTopology
-    afxFcc_MSHS     = AfxPackFcc('m', 's', 'h', 's'), // awxMeshSurface
-    afxFcc_MSHM     = AfxPackFcc('m', 's', 'h', 'm'), // awxMeshMorph
-    afxFcc_MSHR     = AfxPackFcc('m', 's', 'h', 'r'), // awxMeshRig
+    afxFcc_MSHT     = AfxPackFcc('m', 's', 'h', 't'), // afxMeshTopology
+    afxFcc_MSHS     = AfxPackFcc('m', 's', 'h', 's'), // afxMeshSurface
+    afxFcc_MSHM     = AfxPackFcc('m', 's', 'h', 'm'), // afxMeshMorph
+    afxFcc_MSHR     = AfxPackFcc('m', 's', 'h', 'r'), // afxMeshRig
     afxFcc_MDLM     = AfxPackFcc('m', 'd', 'l', 'm'), // AfxModelingMechanism
-    afxFcc_MDIO     = AfxPackFcc('m', 'd', 'i', 'o'), // awxModelIoAssistent
-    afxFcc_MTL      = AfxPackFcc('m', 't', 'l', '\0'), // awxMaterial
-    afxFcc_MTLB     = AfxPackFcc('m', 't', 'l', 'b'), // awxMaterialBlueprint
+    afxFcc_MDIO     = AfxPackFcc('m', 'd', 'i', 'o'), // afxModelIoAssistent
+    afxFcc_MTL      = AfxPackFcc('m', 't', 'l', '\0'), // afxMaterial
+    afxFcc_MTLB     = AfxPackFcc('m', 't', 'l', 'b'), // afxMaterialBlueprint
     afxFcc_TXD      = AfxPackFcc('t', 'x', 'd', '\0'), // afxTxd
 
     afxFcc_CAD      = AfxPackFcc('c', 'a', 'd', '\0'), // awxAsset
@@ -267,8 +271,9 @@ typedef enum afxFcc
     afxFcc_TERR     = AfxPackFcc('t', 'e', 'r', 'r'), // afxTerrain
     afxFcc_BRN      = AfxPackFcc('b', 'r', 'n', '\0'), // afxBrain
     afxFcc_BOD      = AfxPackFcc('b', 'o', 'd', '\0'), // awxBody
+    afxFcc_AMUS     = AfxPackFcc('a', 'm', 'u', 's'), // awxAnimus
     afxFcc_MOTO     = AfxPackFcc('m', 'o', 't', '\0'), // awxMotor
-    afxFcc_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // awxMotor
+    afxFcc_BODC     = AfxPackFcc('p', 'u', 'p', '\0'), // awxBodyControl
     afxFcc_BODP     = AfxPackFcc('b', 'o', 'd', 'p'), // awxBodyPart
     afxFcc_ANI      = AfxPackFcc('a', 'n', 'i', '\0'), // awxAnimation
     afxFcc_MOT      = AfxPackFcc('m', 'o', 't', '\0'), // awxMotion

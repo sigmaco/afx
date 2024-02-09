@@ -31,7 +31,7 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             afxNat outBufIdx = 0;
             AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
             afxRaster surf;
-            AfxGetDrawOutputSurface(dout, outBufIdx, 1, &surf);
+            AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
             afxCanvas canv;
             AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
             AfxAssertObjects(1, &surf, afxFcc_RAS);
@@ -39,13 +39,14 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
 
 
+
             AwxCmdEndSceneRendering(dscr, rnd);
 
             if (AfxCompileDrawScript(dscr)) AfxThrowError();
-            else if (AfxSubmitDrawScripts(din, 1, &dscr))
+            else if (AfxExecuteDrawScripts(din, 1, &dscr))
                 AfxThrowError();
 
-            if (AfxPresentDrawOutputBuffers(din, 1, &dout, &outBufIdx))
+            if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx))
                 AfxThrowError();
         }
     }

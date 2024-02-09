@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -35,12 +35,6 @@ typedef enum afxEventDout
     AFX_EVENT_DOUT_SWAPBUF,
     AFX_EVENT_DOUT_REBUF,
 } afxEventDout;
-
-typedef enum afxColorSpace
-{
-    afxColorSpace_LINEAR    = AfxGetBitOffset(0),
-    afxColorSpace_SRGB      = AfxGetBitOffset(1)
-} afxColorSpace;
 
 typedef enum afxPresentScaling
 /// tmask specifying presentation scaling methods
@@ -125,7 +119,7 @@ struct afxBaseDrawOutput
 #endif
 {
     afxLinkage          endpoint;
-    afxLinkage          dctx; // bound context
+    afxDrawContext      dctx; // bound context
     afxNat              suspendCnt;
     afxSlock            suspendSlock;
     
@@ -152,6 +146,7 @@ struct afxBaseDrawOutput
     {
         //afxRaster       ras; // afxCanvas // should have 1 fb for each swapchain raster.
         afxCanvas       canv;
+        afxSemaphore    readySem;
         afxBool         booked;
     }*                  buffers;
     afxPixelFormat      auxDsFmt[2]; // D24/S8/D24S8
@@ -175,9 +170,7 @@ struct afxBaseDrawOutput
 
     afxBufferedString   caption;
 
-    afxError(*reqCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
-    afxError(*flushCb)(afxDrawOutput, afxTime timeout);
-    afxError(*procCb)(afxDrawOutput, afxNat thrUnitIdx);
+    afxError            (*reqCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
 
     void*               udd; // user-defined data
 };
@@ -188,10 +181,10 @@ AFX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
 
-AFX afxBool             AfxDrawOutputIsConnected(afxDrawOutput dout);
+AFX afxBool             AfxDrawOutputIsOnline(afxDrawOutput dout);
 AFX afxDrawContext      AfxGetDrawOutputContext(afxDrawOutput dout);
-AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
+AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 
 // Extent
 
@@ -203,10 +196,10 @@ AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxR
 
 // Buffer
 
-AFX afxNat              AfxGetDrawOutputSurface(afxDrawOutput dout, afxNat baseBufIdx, afxNat bufCnt, afxRaster rasters[]);
-AFX afxNat              AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat baseBufIdx, afxNat bufCnt, afxCanvas canvases[]);
 AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
-AFX afxNat              AfxEnumerateDrawOutputSurfaces(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
+AFX afxNat              AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
+AFX afxNat              AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat first, afxNat cnt, afxCanvas canvases[]);
+AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
 AFX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
 AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 

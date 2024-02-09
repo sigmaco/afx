@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -467,7 +467,7 @@ _AFX afxError _AfxMseCtor(afxMouse mse, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxMseClsConfig =
+_AFX afxClassConfig const _AfxMseClsConfig =
 {
     .fcc = afxFcc_MSE,
     .name = "Mouse",
@@ -515,14 +515,14 @@ _AFX afxError AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mse[])
     return err;
 }
 
-_AFX afxNat AfxCurateMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void*), void *udd)
+_AFX afxNat AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetMouseClass();
     AfxAssertClass(cls, afxFcc_MSE);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[])

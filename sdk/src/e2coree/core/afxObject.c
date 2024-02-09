@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 //#define _AFX_SYSTEM_C
@@ -407,7 +407,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
         }
         else
         {
-            if (!(inst->watchers = AfxAllocate(NIL, sizeof(*inst->watchers), 1, 0, AfxHint()))) AfxThrowError();
+            if (!(inst->watchers = AfxAllocate(NIL, 1, sizeof(*inst->watchers), 0, AfxHint()))) AfxThrowError();
             else
             {
                 AfxTakeChain(inst->watchers, obj);
@@ -418,7 +418,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
         {
             if (!filterInst->watching)
             {
-                if (!(filterInst->watching = AfxAllocate(NIL, sizeof(*filterInst->watching),1, 0, AfxHint()))) AfxThrowError();
+                if (!(filterInst->watching = AfxAllocate(NIL, 1, sizeof(*filterInst->watching), 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     AfxTakeChain(filterInst->watching, filter);
@@ -427,7 +427,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
 
             if (!err)
             {
-                if (!(flt = AfxAllocate(NIL, sizeof(*flt), 1, 0, AfxHint()))) AfxThrowError();
+                if (!(flt = AfxAllocate(NIL, 1, sizeof(*flt), 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     AfxPushLinkage(&flt->holder, filterInst->watching);
@@ -605,7 +605,7 @@ _AFXINL afxConnection* AfxObjectConnect(afxObject obj, afxObject holder, void (*
         afxSystem sys;
         afxMmu mmu = AfxGetSystemContext();
 
-        afxBool alloced = (!slot && !!(slot = AfxAllocate(mmu, sizeof(*slot), 1, 0, AfxHint())));
+        afxBool alloced = (!slot && !!(slot = AfxAllocate(mmu, 1, sizeof(*slot), 0, AfxHint())));
         
         if (!slot) AfxThrowError();
         else

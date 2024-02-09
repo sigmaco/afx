@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -131,12 +131,12 @@ _AFX afxReal64 AfxGetSecondsElapsed(afxClock const *start, afxClock const *end)
     afxNat32 v3 = start->data[0];
     afxNat32 v4 = end->data[0];
     afxInt32 v5 = end->data[1];
-    afxReal64 result;
+    afxReal64 rslt;
 
     if (v2 > v5 || (v2 >= v5 && v3 >= v4))
-        result = 0.0;
+        rslt = 0.0;
     else
-        result = (afxReal64)(__PAIR__(v5, v4) - __PAIR__(v2, v3)) * 0.000001;
+        rslt = (afxReal64)(__PAIR__(v5, v4) - __PAIR__(v2, v3)) * 0.000001;
 
-    return result;
+    return rslt;
 }

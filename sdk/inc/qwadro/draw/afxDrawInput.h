@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -19,34 +19,51 @@
 // afxDrawInput devices operates like device submission queues grouping sets of draw streams and present their result to the connected draw output devices.
 
 // No QWADRO, há um conceito de uma fila de submissão de trabalho para a GPU. Porém, diferentemente do Vulkan, no QWADRO esta "fila" é separada em dois.
-// A primeira parte contém a demanda e a segunda parte o estado da fila. Isto porque assim podemos usar a mesma demanda para dois contextos diferentes, cada qual contendo a outra parte, e logo, seu estado particular.
+// A primeira parte contém a demanda e a segunda parte o estado da fila junto a ponte.
+// Isto porque assim podemos usar a mesma demanda para dois contextos diferentes, cada qual contendo a outra parte, e logo, seu estado particular.
 
 #ifndef AFX_DRAW_INPUT_H
 #define AFX_DRAW_INPUT_H
 
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/pipe/afxPipeline.h"
 // provided classes.
 #include "qwadro/draw/afxCamera.h"
 
 typedef enum afxDrawEventId
 {
-    afxDrawEventId_
+    afxDrawEventId_FENCE,
+    afxDrawEventId_EXECUTE,
+    afxDrawEventId_PRESENT,
+    afxDrawEventId_UPLOAD,
+    afxDrawEventId_DOWNLOAD,
 } afxDrawEventId;
 
 AFX_DEFINE_STRUCT(afxDrawEvent)
 {
-    afxDrawEventId id;
+    _AFX_DBG_FCC;
+    afxDrawEventId  id;
+    afxBool         posted, accepted;
+    afxDrawThread   dthr;
+    afxDrawDevice   ddev;
+    afxNat          portIdx;
+    afxDrawContext  dctx;
+    union
+    {
+        void*       receiver;
+        void*       obj;
+    };
+    void*           udd[4];
 };
 
-typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxNat msg, afxSize argv[][1][1]);
+typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxDrawEvent const* ev);
 
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
     afxUri const*       endpoint;
+    afxDrawInputProc    proc;
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
-    afxError            (*prefetch)(afxDrawInput din, afxNat thrUnitIdx);
     afxNat              minVtxBufCap;
     afxNat              maxVtxBufCap;
     afxNat              minIdxBufCap;
@@ -63,7 +80,7 @@ struct afxBaseDrawInput
 #endif
 {
     afxLinkage          endpoint;
-    afxLinkage          dctx; // bound context
+    afxDrawContext      dctx; // bound context
     afxMmu              mmu;
 
     afxChain            classes;
@@ -71,8 +88,13 @@ struct afxBaseDrawInput
     afxClass            ibuffers;
     afxClass            vbuffers;
 
-    afxError            (*submitCb)(afxDrawInput, afxNat, afxDrawScript[]);
-    afxError            (*presentCb)(afxDrawInput, afxNat, afxDrawOutput[], afxNat[]);
+    afxClipSpace        cachedClipCfg;
+
+    afxFixedUri128      txdUris[8];
+    afxFile             txdHandles[8];
+
+    afxError            (*submitCb)(afxDrawInput, afxNat, afxDrawScript[], afxSemaphore[], afxPipelineStage const[], afxSemaphore[]);
+    afxError            (*presentCb)(afxDrawInput, afxNat, afxDrawOutput[], afxNat[], afxSemaphore[]);
 
     afxArray            scripts;
     afxNat              minScriptReserve;
@@ -82,10 +104,7 @@ struct afxBaseDrawInput
     afxNat              minIdxBufSiz;
     afxNat              maxIdxBufSiz; // 13500000
 
-    //afxSlock              prefetchSlock;
-    afxBool             prefetching;
-    afxBool             prefetchEnabled;
-    afxError            (*prefetchCb)(afxDrawInput din, afxNat thrUnitIdx);
+    afxDrawInputProc    procCb;
     void*               udd;
 };
 #endif
@@ -94,10 +113,10 @@ struct afxBaseDrawInput
 AFX afxDrawDevice       AfxGetDrawInputDevice(afxDrawInput din);
 
 // Connection
-AFX afxBool             AfxDrawInputIsConnected(afxDrawInput din);
+AFX afxBool             AfxDrawInputIsOnline(afxDrawInput din);
 AFX afxDrawContext      AfxGetDrawInputContext(afxDrawInput din);
-AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
 AFX afxError            AfxDisconnectDrawInput(afxDrawInput din);
+AFX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
 
 AFX afxClass*           AfxGetCameraClass(afxDrawInput din);
 AFX afxClass*           AfxGetVertexBufferClass(afxDrawInput din);
@@ -105,19 +124,37 @@ AFX afxClass*           AfxGetIndexBufferClass(afxDrawInput din);
 
 AFX afxNat              AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[]);
 
-//AFX afxError            AfxRequestDrawInputScript(afxDrawInput din, afxDrawQueueFlags caps, afxTime timeout, afxNat *scrIdx);
-AFX afxError            AfxRecycleDrawInputScripts(afxDrawInput din, afxNat firstScrIdx, afxNat scrCnt);
-AFX void                AfxDiscardDrawInputScripts(afxDrawInput din, afxNat cnt, afxNat scrIdx[]);
+AFX afxError            AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[], afxSemaphore wait[], afxPipelineStage const waitStage[], afxSemaphore signal[]);
 
-AFX afxError            AfxRequestDrawInputBuffer(afxDrawInput din, afxNat portIdx, afxNat *scrIdx);
-AFX afxBool             AfxGetDrawInputBuffer(afxDrawInput din, afxNat idx, afxDrawScript *dscr);
-AFX afxError            AfxSubmitDrawInputBuffers(afxDrawInput din, afxNat cnt, afxNat inBufIdx[]);
+AFX_DEFINE_STRUCT(afxPresentationQueueing)
+{
+    afxNat          cnt;
+    afxDrawOutput   outputs[4];
+    afxNat          outBufIdx[4];
+    afxSemaphore    wait;
+};
 
-AFX afxError            AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[]);
-AFX afxError            AfxPresentDrawOutputBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[]);
-
-AFX afxError            AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled);
+AFX afxError            AfxPresentDrawBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outBufIdx[], afxSemaphore wait[]);
 
 AFX void*               AfxGetDrawInputUdd(afxDrawInput din);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AFX void            AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip);
+
+AFX void            AfxComputeLookToMatrices(afxDrawInput din, afxReal const eye[3], afxReal const dir[3], afxReal v[4][4], afxReal iv[4][4]);
+AFX void            AfxComputeLookAtMatrices(afxDrawInput din, afxReal const eye[3], afxReal const target[3], afxReal v[4][4], afxReal iv[4][4]);
+
+AFX void            AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputeOrthographicMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxAabb const aabb, afxReal p[4][4], afxReal ip[4][4]);
+
+AFX void            AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxReal p[4][4], afxReal ip[4][4]);
+AFX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+
+AFX afxError        AfxUplinkTextureDictionaries(afxDrawInput din, afxNat baseSlotIdx, afxNat slotCnt, afxUri const uris[]);
 
 #endif//AFX_DRAW_INPUT_H

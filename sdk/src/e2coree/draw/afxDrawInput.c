@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -22,8 +22,25 @@
 #define _AFX_DRAW_INPUT_C
 #include "qwadro/core/afxClass.h"
 #include "qwadro/core/afxSystem.h"
+#include "qwadro/math/afxOpticalMatrix.h"
 
 AFXINL afxDrawSystem _AfxGetDsysData(void);
+
+_AFX void* AfxGetDrawInputUdd(afxDrawInput din)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    return din->udd;
+}
+
+_AFX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    afxDrawDevice ddev = AfxGetObjectProvider(din);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    return ddev;
+}
 
 _AFX afxClass* AfxGetCameraClass(afxDrawInput din)
 {
@@ -52,20 +69,16 @@ _AFX afxClass* AfxGetIndexBufferClass(afxDrawInput din)
     return cls;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// CONNECTION                                                                 //
-////////////////////////////////////////////////////////////////////////////////
-
 _AFX afxDrawContext AfxGetDrawInputContext(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxDrawContext dctx = AfxGetLinker(&din->dctx);
+    afxDrawContext dctx = din->dctx;
     AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
 
-_AFX afxBool AfxDrawInputIsConnected(afxDrawInput din)
+_AFX afxBool AfxDrawInputIsOnline(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -95,22 +108,11 @@ _AFX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx)
 
         if (!err)
         {
-            if (dctx)
-                AfxReacquireObjects(1, (void*[]) { dctx });
-
-            if (ddev->relinkDin(ddev, din, dctx))
+            if (ddev->relinkDin(ddev, dctx, 1, &din))
                 AfxThrowError();
-
-            if (err)
-                AfxReleaseObjects(1, (void*[]) { dctx });
-            else if (curr)
-            {
-                AfxAssertObjects(1, &curr, afxFcc_DCTX);
-                AfxReleaseObjects(1, (void*[]) { curr });
-            }
         }
     }
-    AfxAssert(AfxGetLinker(&din->dctx) == dctx);
+    AfxAssert(din->dctx == dctx);
     return !err;
 }
 
@@ -122,30 +124,157 @@ _AFX afxError AfxDisconnectDrawInput(afxDrawInput din)
     if (!AfxReconnectDrawInput(din, NIL))
         AfxThrowError();
 
-    AfxAssert(!AfxDrawInputIsConnected(din));
+    AfxAssert(!AfxDrawInputIsOnline(din));
     return err;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// PREFETCHING                                                                //
-////////////////////////////////////////////////////////////////////////////////
-
-_AFX void* AfxGetDrawInputUdd(afxDrawInput din)
-{ 
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    return din->udd;
-}
-
-_AFX afxError AfxEnableDrawInputPrefetching(afxDrawInput din, afxBool enabled)
+_AFX void AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    din->prefetchEnabled = !!enabled;
-    return err;
+    AfxAssert(clip);
+    *clip = din->cachedClipCfg;
 }
 
-_AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[])
+_AFX void AfxComputeLookToMatrices(afxDrawInput din, afxReal const eye[3], afxReal const dir[3], afxReal v[4][4], afxReal iv[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(dir);
+    AfxAssert(!AfxV3dIsZero(dir));
+    AfxAssert(!AfxV3dIsInfinite(dir));    
+    AfxAssert(v);
+    AfxComputeLookToMatrix(v, eye, dir, AFX_V4D_Y, &din->cachedClipCfg);
+
+    if (iv)
+        AfxInvertM4d(v, iv);
+}
+
+_AFX void AfxComputeLookAtMatrices(afxDrawInput din, afxReal const eye[3], afxReal const target[3], afxReal v[4][4], afxReal iv[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(target);
+    AfxAssert(eye);
+    AfxAssert(v);
+    AfxComputeLookAtMatrix(v, eye, target, AFX_V4D_Y, &din->cachedClipCfg);
+
+    if (iv)
+        AfxInvertM4d(v, iv);
+}
+
+_AFX void AfxComputeOrthographicMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(extent);
+    AfxAssert(!AfxRealIsEqual(extent[0], 0.0f, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
+    AfxAssert(p);
+    AfxComputeOrthographicMatrix(p, extent, near, far, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(!AfxRealIsEqual(right, left, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
+    AfxAssert(p);
+    AfxComputeOffcenterOrthographicMatrix(p, left, right, bottom, top, near, far, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxAabb const aabb, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(aabb); // afxAabb deve estar no view space.
+    AfxAssert(p);
+    AfxComputeBoundingOrthographicMatrix(p, aabb, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(aspectRatio); // w/h
+    AfxAssert(p);
+    AfxComputeBasicOrthographicMatrix(p, aspectRatio, scale, range, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputePerspectiveMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(extent);
+    AfxAssert(!AfxRealIsEqual(extent[0], 0.0f, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(extent[1], 0.0f, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
+    AfxAssert(near > 0.f && far > 0.f);
+    AfxAssert(p);
+    AfxComputePerspectiveMatrix(p, extent, near, far, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(!AfxRealIsEqual(fovY, 0.0f, 0.00001f * 2.0f));
+    AfxAssert(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
+    AfxAssert(near > 0.f && far > 0.f);
+    AfxAssert(p);
+    AfxComputeFovPerspectiveMatrix(p, fovY, aspectRatio, near, far, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(!AfxRealIsEqual(right, left, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
+    AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
+    AfxAssert(near > 0.f && far > 0.f);
+    AfxAssert(p);
+    AfxComputeOffcenterPerspectiveMatrix(p, left, right, bottom, top, near, far, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX void AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxReal p[4][4], afxReal ip[4][4])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxAssert(!AfxRealIsEqual(aspectRatio, 0.0f, 0.00001f));
+    AfxAssert(p);
+    AfxComputeBasicPerspectiveMatrix(p, aspectRatio, range, &din->cachedClipCfg);
+
+    if (ip)
+        AfxInvertM4d(p, ip);
+}
+
+_AFX afxError AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[], afxSemaphore wait[], afxPipelineStage const waitStage[], afxSemaphore signal[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -165,19 +294,19 @@ _AFX afxError AfxSubmitDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript s
     {
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-        if (din->submitCb(din,1,scripts))
+        if (din->submitCb(din, cnt, scripts, wait, waitStage, signal))
             AfxThrowError();
     }
     return err;
 }
 
-_AFX afxError AfxPresentDrawOutputBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outputBufIdx[])
+_AFX afxError AfxPresentDrawBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outBufIdx[], afxSemaphore wait[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
     AfxAssert(cnt);
     AfxAssert(outputs);
-    AfxAssert(outputBufIdx);
+    AfxAssert(outBufIdx);
 
     /*
         Any writes to memory backing the images referenced by the pImageIndices and pSwapchains members of pPresentInfo, 
@@ -195,23 +324,35 @@ _AFX afxError AfxPresentDrawOutputBuffers(afxDrawInput din, afxNat cnt, afxDrawO
     {
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-        if (din->presentCb(din, 1, outputs, outputBufIdx))
+        if (din->presentCb(din, cnt, outputs, outBufIdx, wait))
             AfxThrowError();
     }
     return err;
 }
 
-_AFX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
+_AFX afxError AfxUplinkTextureDictionaries(afxDrawInput din, afxNat baseSlotIdx, afxNat slotCnt, afxUri const uris[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxDrawDevice ddev = AfxGetObjectProvider(din);
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    return ddev;
+    AfxAssertRange(8, baseSlotIdx, slotCnt);
+    
+    if (!uris)
+    {
+        for (afxNat i = 0; i < slotCnt; i++)
+        {
+            AfxClearUri(&din->txdUris[i].uri);
+        }
+    }
+    else
+    {
+        for (afxNat i = 0; i < slotCnt; i++)
+        {
+            AfxCopyUri(&din->txdUris[i].uri, &uris[i]);
+        }
+    }
+    return err;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// SYSTEM                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
 _AFX afxError AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig const cfg[], afxDrawInput din[])
@@ -234,7 +375,7 @@ _AFX afxError AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig co
     return err;
 }
 
-_AFX afxNat AfxCurateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
+_AFX afxNat AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -253,7 +394,7 @@ _AFX afxNat AfxCurateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, af
         cls = &dsys->dinputs;
     }
     AfxAssertClass(cls, afxFcc_DIN);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawInput din[])

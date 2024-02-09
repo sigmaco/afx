@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -21,6 +21,7 @@
 
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/io/afxXml.h"
+#include "qwadro/core/afxFixedString.h"
 
 typedef enum afxShaderResourceType
 {
@@ -121,13 +122,13 @@ AFX_DEFINE_STRUCT(afxShaderBuilder)
     void        (*GetCode)(void* data, afxByte* code);    
 };
 
-AFX afxError                AfxBuildShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shd[]);
+AFX afxError                AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shaders[]);
 
 /// Builds a shader from a eXtensible Shader Language (.xsh) file, part of Qwadro.
 AFX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 AFX afxShader               AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shd[]);
+AFX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shaders[]);
 
 AFX afxNat                  AfxCountShaderInterfaces(afxShader shd);
 AFX afxResult               AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);

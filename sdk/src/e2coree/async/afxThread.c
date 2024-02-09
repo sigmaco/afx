@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_CORE_C
@@ -321,7 +321,7 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxThrClsConfig =
+_AFX afxClassConfig const _AfxThrClsConfig =
 {
     .fcc = afxFcc_THR,
     .name = "Thread",
@@ -361,14 +361,14 @@ _AFX afxNat AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[])
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)thr);
 }
 
-_AFX afxNat AfxCurateThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd)
+_AFX afxNat AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
     AfxAssert(cnt);
     afxClass* cls = AfxGetThreadClass();
     AfxAssertClass(cls, afxFcc_THR);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxCountThreads(void)
