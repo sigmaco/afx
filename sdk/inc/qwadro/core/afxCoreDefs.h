@@ -59,7 +59,10 @@
 #   define AFX_PLATFORM_WIN
 #   define AFX_PLATFORM_W32
 #else
-#   error ""
+#   define AFX_PLATFORM_64
+#   define AFX_PLATFORM_X86_64
+#   define AFX_PLATFORM_LINUX
+#   define AFX_PLATFORM_X64
 #endif//_WIN64
 
 #if !defined(AFX_ENDIANNESS_LITTLE) && !defined(AFX_ENDIANNESS_BIG)

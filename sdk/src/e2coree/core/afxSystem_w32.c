@@ -252,15 +252,21 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
     AfxMakeString(&tmpHostPaths[5], "data", 0);
     AfxMakeString(&tmpHostPaths[6], "art", 0);
     AfxMakeString(&tmpHostPaths[7], "tmp", 0);
-#else
+#else // non-Windows
+#   ifdef AFX_PLATFORM_LINUX
     AfxMakeString(&tmpHostPaths[0], "", 0);
     AfxMakeString(&tmpHostPaths[1], "system", 0);
-    AfxMakeString(&tmpHostPaths[2], "system/unix", 0);
+#   ifdef AFX_PLATFORM_X64
+    AfxMakeString(&tmpHostPaths[2], "system/x64", 0);
+#   elif defined(AFX_PLATFORM_X32)
+    AfxMakeString(&tmpHostPaths[2], "system/x32", 0);
+#   endif
     AfxMakeString(&tmpHostPaths[3], "code", 0);
     AfxMakeString(&tmpHostPaths[4], "sound", 0);
     AfxMakeString(&tmpHostPaths[5], "data", 0);
     AfxMakeString(&tmpHostPaths[6], "art", 0);
     AfxMakeString(&tmpHostPaths[7], "tmp", 0);
+#   endif
 #endif
 
     afxStoragePointSpecification mnptSpecs[] =
