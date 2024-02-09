@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -78,11 +78,11 @@ _AFX afxError AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[],
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        wp[i] = AfxAllocate(NIL, sizeof(*wp[0]), 1, 0, AfxHint());
+        wp[i] = AfxAllocate(NIL, 1, sizeof(*wp[0]), 0, AfxHint());
         AfxAssert(wp[i]);
         wp[i]->xformCnt = artCnt[i];
-        wp[i]->world = wp[i]->xformCnt ? AfxAllocate(NIL, sizeof(wp[i]->world[0]), wp[i]->xformCnt, 0, AfxHint()) : NIL;
-        wp[i]->composite = !excludeComposite && wp[i]->xformCnt ? AfxAllocate(NIL, sizeof(wp[i]->composite[0]), wp[i]->xformCnt, 0, AfxHint()) : NIL;
+        wp[i]->world = wp[i]->xformCnt ? AfxAllocate(NIL, wp[i]->xformCnt, sizeof(wp[i]->world[0]), 0, AfxHint()) : NIL;
+        wp[i]->composite = !excludeComposite && wp[i]->xformCnt ? AfxAllocate(NIL, wp[i]->xformCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
     }
     return err;
 }

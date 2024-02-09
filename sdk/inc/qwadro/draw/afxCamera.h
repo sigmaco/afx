@@ -11,7 +11,7 @@
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
- *                                    www.sigmaco.org
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_CAMERA_H
@@ -20,6 +20,7 @@
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/mem/afxArray.h"
 #include "qwadro/math/afxFrustum.h"
+#include "qwadro/math/afxOpticalMatrix.h"
 
 #define AFX_CAM_ALIGN AFX_SIMD_ALIGN
 
@@ -48,13 +49,6 @@ typedef enum
     afxCameraType_PERSPECTIVE
 } afxCameraType;
 
-typedef enum afxCameraDepthRange
-{
-    afxCameraDepthRange_ZERO2ONE, // Direct3D
-    afxCameraDepthRange_NEGONE2ONE, // OpenGL (default in Qwadro)
-    afxCameraDepthRange_NEGONE2ZERO,
-} afxCameraDepthRange;
-
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_CAMERA_C
 AFX_OBJECT(afxCamera)
@@ -66,7 +60,7 @@ AFX_OBJECT(afxCamera)
     afxReal             nearClipPlane;
     afxReal             farClipPlane;
     afxReal             depthRangeEpsilon;
-    afxCameraDepthRange depthRange;
+    afxClipBoundary     depthRange;
     afxBool             useQuatOrient;
     afxQuat             orient;
     afxM3d              orientM3d;
@@ -178,8 +172,8 @@ AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthog
 // When using a afxCamera with certain graphics APIs and/or certain algorithms, you may find that you need explicit control over what the Z projection range is, 
 // and whether or not there is a far clipping plane. To accomodate these needs, the afxCamera has some expert settings that you can adjust:
 
-AFX afxCameraDepthRange AfxGetCameraDepthRange(afxCamera cam);
-AFX void                AfxSetCameraDepthRange(afxCamera cam, afxCameraDepthRange range);
+AFX afxClipBoundary AfxGetCameraDepthRange(afxCamera cam);
+AFX void                AfxSetCameraDepthRange(afxCamera cam, afxClipBoundary range);
 
 AFX afxReal             AfxGetCameraDepthRangeEpsilon(afxCamera cam);
 AFX void                AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal epsilon);

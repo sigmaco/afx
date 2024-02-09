@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -171,20 +171,33 @@ _AFX afxRasterizer AfxGetLinkedRasterizer(afxPipeline pip)
     return razr;
 }
 
-_AFX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pip[])
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(pipelines);
+    AfxAssert(cnt);
+    afxClass* cls = AfxGetPipelineClass(dctx);
+    AfxAssertClass(cls, afxFcc_PIP);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)pipelines);
+}
+
+_AFX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetPipelineClass(dctx);
     AfxAssertClass(cls, afxFcc_PIP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)pip, (void const*[]) { dctx, (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dctx, (void*)config }))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -207,7 +220,7 @@ _AFX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
         afxUri fpath;
         AfxGetUriPath(&fpath, uri);
 
-        if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
+        if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 

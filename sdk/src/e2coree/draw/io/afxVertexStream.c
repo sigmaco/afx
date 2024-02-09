@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -184,7 +184,7 @@ _AFX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxN
 
     if (!err)
     {
-        if (!(room = AfxAllocate(NIL, sizeof(*room), 1, 0, AfxHint()))) AfxThrowError();
+        if (!(room = AfxAllocate(NIL, 1, sizeof(*room), 0, AfxHint()))) AfxThrowError();
         else
         {
             room->baseIdx = baseIdx;

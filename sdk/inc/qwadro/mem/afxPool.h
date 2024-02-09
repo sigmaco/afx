@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_POOL_H
@@ -59,7 +59,7 @@ AFX afxError    AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val);
 AFX afxNat      AfxEnumeratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, void *items[]);
 AFX afxNat      AfxEnumeratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, void *items[]);
 
-AFX afxNat      AfxCuratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd);
-AFX afxNat      AfxCuratePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
+AFX afxNat      AfxInvokePoolItems(afxPool const* pool, afxNat first, afxNat cnt, afxBool(*f)(void* item, void* udd), void *udd);
+AFX afxNat      AfxInvokePoolUnits(afxPool const* pool, afxNat first, afxNat cnt, afxBool freeOnly, afxBool (*f)(void* item, void* udd), void *udd);
 
 #endif//AFX_POOL_H

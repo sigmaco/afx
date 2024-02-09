@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_GAME_OBJECT_H
@@ -55,15 +55,6 @@ typedef enum agxResourceType
     agxResourceType_WOOD,
     agxResourceType_GOLD
 } agxResourceType;
-
-typedef enum agxAge
-{
-    agxAge_DISCOVERY,
-    agxAge_COLONIAL,
-    agxAge_FORTRESS,
-    agxAge_INDUSTRIAL,
-    agxAge_IMPERIAL
-} agxAge;
 
 typedef enum agxAttackType
 {
@@ -142,7 +133,7 @@ AFX_DEFINE_STRUCT(agxEntityDecl)
         afxReal             value;
     }*                      costs;
     afxNat                  costCnt;
-    agxAge                  allowedAge;
+    afxNat                  allowedAge;
     struct
     {
         agxAttackType       attackType;

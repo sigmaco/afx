@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -36,7 +36,7 @@
 #ifndef _AFX_FENCE_IMPL
 AFX_OBJECT(afxFence)
 #else
-struct afxBaseFence
+struct _afxBaseFence
 #endif
 {
     afxBool         signaled;
@@ -44,38 +44,37 @@ struct afxBaseFence
 #endif
 #endif
 
+/// Return the draw context witch this fence belongs to.
+AFX afxDrawContext  AfxGetFenceContext(afxFence fenc);
+
+/// Return the status of this fence.
+AFX afxBool         AfxFenceIsSignaled(afxFence fenc);
+
+////////////////////////////////////////////////////////////////////////////////
+
 AFX afxError        AfxAcquireFences
 /// Create a new fence object.
 (
     afxDrawContext  dctx, /// the logical device that creates the fence.
     afxBool         signaled, /// fence object is created in the signaled state.
     afxNat          cnt,
-    afxFence        fen[] /// a array of handles in which the resulting fence objects are returned.
+    afxFence        fences[] /// a array of handles in which the resulting fence objects are returned.
 );
 
 AFX afxError        AfxWaitForFences
 /// Wait for one or more fences to become signaled.
 (
-    afxDrawContext  dctx, /// the logical device that owns the fences.
-    afxNat          fenceCnt, /// the number of fences to wait on.
-    afxFence const  fences[], /// an array of fenceCount fence handles.
     afxBool         waitAll, /// the condition is that all fences must be signaled, else at least one fence is signaled.
-    afxNat64        timeout /// the timeout period in units of nanoseconds.
+    afxNat64        timeout, /// the timeout period in units of nanoseconds.
+    afxNat          cnt, /// the number of fences to wait on.
+    afxFence const  fences[] /// an array of cnt fence handles.    
 );
 
 AFX afxError        AfxResetFences
 /// Resets one or more fence objects.
 (
-    afxDrawContext  dctx, /// the logical device that owns the fences.
-    afxNat          fenceCnt, /// the number of fences to reset.
+    afxNat          cnt, /// the number of fences to reset.
     afxFence const  fences[] /// an array of fence handles to reset.
-);
-
-AFX afxBool        AfxFenceIsSignaled
-/// Return the status of a fence.
-(
-    afxDrawContext  dctx, /// the logical device that owns the fences.
-    afxFence        fence /// the handle of the fence to query.
 );
 
 #endif//AFX_FENCE_H

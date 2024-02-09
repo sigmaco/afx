@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -63,7 +63,7 @@ struct afxBaseCanvas
     afxNat          dsIdx[2];
     afxBool         combinedDs; // just for convenience
     afxCanvasFlags  flags;
-    afxError        (*readjust)(afxCanvas,afxNat const[2]);
+    afxError        (*readjust)(afxCanvas, afxWhd const);
     afxError        (*relink)(afxCanvas,afxBool,afxNat,afxNat,afxRaster[]);
     void*           udd[2];
 };
@@ -72,8 +72,8 @@ struct afxBaseCanvas
 
 // An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 
-AFX void            AfxGetCanvasExtent(afxCanvas canv, afxNat wh[2]);
-AFX afxError        AfxReadjustCanvas(afxCanvas canv, afxNat const wh[2]);
+AFX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd whd);
+AFX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const whd);
 
 AFX afxResult       AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 
@@ -105,6 +105,6 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
     afxRasterFlags      rasFlags;
 };
 
-AFX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxNat const wh[2], afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canv[]);
+AFX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
 
 #endif//AFX_CANVAS_H

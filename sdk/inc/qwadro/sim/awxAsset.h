@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_ASSET_H
@@ -22,14 +22,120 @@
 #include "qwadro/io/afxSource.h"
 #include "qwadro/sim/rendering/awxLight.h"
 #include "qwadro/draw/afxCamera.h"
-#include "qwadro/sim/awxSkeleton.h"
-#include "qwadro/sim/modeling/awxModel.h"
-#include "qwadro/sim/awxMaterial.h"
+#include "qwadro/sim/afxSkeleton.h"
+#include "qwadro/sim/modeling/afxModel.h"
+#include "qwadro/sim/afxMaterial.h"
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/sim/anim/awxMotor.h"
+#include "qwadro/sim/anim/awxAnimus.h"
 #include "qwadro/sim/rendering/awxRenderer.h"
 #include "qwadro/sim/anim/awxAnimation.h"
+
+#pragma pack(push, 1)
+AFX_DEFINE_STRUCT(_afxMddFileData)
+/// Modelling diagram dictionary
+{
+    afxNat  mdlCnt;
+    afxSize mdlDirBaseOffset;
+    afxNat  sklCnt;
+    afxSize sklDirBaseOffset;
+    afxNat  mshCnt;
+    afxSize mshDirBaseOffset;
+    afxNat  mshtCnt;
+    afxSize mshtDirBaseOffset;
+    afxNat  vtdCnt;
+    afxSize vtdDirBaseOffset;
+};
+
+AFX_DEFINE_STRUCT(_afxMtdFileData)
+/// Material template dictionary
+{
+    afxNat  mtlCnt;
+    afxSize mtlDirBaseOffset;
+    afxNat  texCnt;
+    afxSize texDirBaseOffset;
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedChunk)
+{
+    afxFcc          fcc;
+    afxNat          len;
+    //afxNat          cnt; // if nested it is more than 1; // variable length of instances did it unusable
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedStr)
+{
+    afxSize         start;
+    afxNat          len;
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedMdl)
+{
+    afxString       name;
+    afxNat          sklIdx;
+    afxTransform    init;
+    afxNat          mshCnt;
+    // followed by sizeof(afxNat mshIdx[mshCnt]);
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedMsh)
+{
+    afxString       name;
+    afxNat          vtdIdx;
+    afxNat          mshtIdx;
+    afxNat          mtlCnt;
+    afxNat          pivotCnt;
+    // followed by sizeof(afxNat pivotNameStrIdx[pivotCnt]);
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedMsht)
+{
+    afxNat          triCnt;
+    afxNat          surCnt;
+    afxSize         firstTriOffset;
+    afxSize         firstSurOffset;
+    // followed by sizeof(afxMeshSurface surfs[surCnt]);
+    // followed by sizeof(afxNat tris[triCnt]);
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedVtxa)
+{
+    afxNat          biasCnt;
+    afxNat          vtxCnt;
+    afxNat          attrCnt;
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedVtd)
+{
+    afxNat          biasCnt;
+    afxNat          vtxCnt;
+    afxNat          attrCnt;
+    afxSize         firstBiasOffset;
+    afxSize         firstVtxOffset;
+    // followed by sizeof(afxVertexBias biases[surCnt]);
+    // followed by sizeof(afxVertex vertices[triCnt]);
+};
+
+AFX_DEFINE_STRUCT(_afxSerializedSkl)
+{
+    afxString name;
+    afxNat lodType;
+    afxNat boneCnt;
+    afxSize firstBoneOffset;
+    afxSize firstBoneNameOfffset;
+    // followed by sizeof(afxNat lt[boneCnt]);
+    // followed by sizeof(afxNat iw[boneCnt]);
+    // followed by sizeof(afxNat parIdx[boneCnt]);
+    // followed by sizeof(afxNat lodErr[boneCnt]);
+    // followed by sizeof(afxString boneNames[boneCnt]);
+};
+#pragma pack(pop)
+
+AFX_DEFINE_STRUCT(afxAssertReference)
+{
+    afxNat              type;
+    afxUri const*       file;
+};
 
 AFX_DEFINE_STRUCT(afxCadToolInfo)
 {
@@ -101,12 +207,12 @@ AFX afxNat              AfxFindResources(awxAsset cad, afxFcc fcc, afxNat cnt, a
 AFX afxNat              AfxCountResources(awxAsset cad, afxFcc fcc);
 
 AFX afxNat              AfxFindTextures(awxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
-AFX afxNat              AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], awxMaterial mt[]);
+AFX afxNat              AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
 AFX afxNat              AfxFindVertexDatas(awxAsset cad, afxNat cnt, afxString const id[], awxVertexData vtd[]);
-AFX afxNat              AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], awxMeshTopology msht[]);
-AFX afxNat              AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], awxMesh msh[]);
-AFX afxNat              AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], awxSkeleton skl[]);
-AFX afxNat              AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], awxModel mdl[]);
+AFX afxNat              AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
+AFX afxNat              AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[]);
+AFX afxNat              AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[]);
+AFX afxNat              AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], afxModel mdl[]);
 AFX afxNat              AfxFindAnimations(awxAsset cad, afxNat cnt, afxString const id[], awxAnimation anim[]);
 
 ////////////////////////////////////////////////////////////////////////////////

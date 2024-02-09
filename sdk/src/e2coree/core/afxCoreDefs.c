@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -99,14 +99,18 @@ _AFX void init_tables(uint32_t* table, uint32_t* wtable)
         table[i] = crc32_for_byte(i);
 
     for (size_t k = 0; k < sizeof(accum_t); ++k)
-        for (size_t w, i = 0; i < 0x100; ++i) {
+    {
+        for (size_t w, i = 0; i < 0x100; ++i)
+        {
             for (size_t j = w = 0; j < sizeof(accum_t); ++j)
                 w = table[(uint8_t)(j == k ? w ^ i : w)] ^ w >> 8;
+
             wtable[(k << 8) + i] = w ^ (k ? wtable[0] : 0);
         }
+    }
 }
 
-_AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len)
+_AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len)
 {
     static uint32_t table[0x100], wtable[0x100 * sizeof(accum_t)];
     size_t n_accum = len / sizeof(accum_t);
@@ -114,11 +118,14 @@ _AFX void AfxCrc32(afxNat32 *crc, void const* data, afxSize len)
     if (!*table)
         init_tables(table, wtable);
 
-    for (size_t i = 0; i < n_accum; ++i) {
+    for (size_t i = 0; i < n_accum; ++i)
+    {
         accum_t a = *crc ^ ((accum_t*)data)[i];
+
         for (size_t j = *crc = 0; j < sizeof(accum_t); ++j)
             *crc ^= wtable[(j << 8) + (uint8_t)(a >> 8 * j)];
     }
+
     for (size_t i = n_accum * sizeof(accum_t); i < len; ++i)
         *crc = table[(uint8_t)*crc ^ ((uint8_t*)data)[i]] ^ *crc >> 8;
 }

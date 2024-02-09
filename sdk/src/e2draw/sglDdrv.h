@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_STD_DRAW_DRIVER_DEFS_H
@@ -521,8 +521,8 @@ typedef union glVmt
             PFNGLGETSAMPLERPARAMETERFVPROC GetSamplerParamterfv;
             PFNGLGETSAMPLERPARAMETERIUIVPROC GetSamplerParamterIuiv;
             PFNGLQUERYCOUNTERPROC QueryCounter;
-            PFNGLGETQUERYOBJECTI64VPROC GetQueryObjectI64v;
-            PFNGLGETQUERYOBJECTUI64VPROC GetQueryObjectUI64v;
+            PFNGLGETQUERYOBJECTI64VPROC GetQueryObjecti64v;
+            PFNGLGETQUERYOBJECTUI64VPROC GetQueryObjectui64v;
             PFNGLVERTEXATTRIBDIVISORPROC VertexAttribDivisor;
             PFNGLVERTEXATTRIBP1UIPROC VertexAttribP1ui;
             PFNGLVERTEXATTRIBP1UIVPROC VertexAttribP1uiv;
@@ -537,10 +537,10 @@ typedef union glVmt
         {
             // 400
             PFNGLMINSAMPLESHADINGPROC MinSampleShading;
-            PFNGLBLENDEQUATIONIPROC BlendEquationI;
-            PFNGLBLENDEQUATIONSEPARATEIPROC BlendEquationSeparateI;
-            PFNGLBLENDFUNCIPROC BlendFuncI;
-            PFNGLBLENDFUNCSEPARATEIPROC BlendFuncSeparateI;
+            PFNGLBLENDEQUATIONIPROC BlendEquationi;
+            PFNGLBLENDEQUATIONSEPARATEIPROC BlendEquationSeparatei;
+            PFNGLBLENDFUNCIPROC BlendFunci;
+            PFNGLBLENDFUNCSEPARATEIPROC BlendFuncSeparatei;
             PFNGLDRAWARRAYSINDIRECTPROC DrawArraysIndirect;
             PFNGLDRAWELEMENTSINDIRECTPROC DrawElementsIndirect;
             PFNGLUNIFORM1DPROC Uniform1d;
@@ -571,7 +571,7 @@ typedef union glVmt
             PFNGLGETPROGRAMSTAGEIVPROC GetProgramStage;
             PFNGLPATCHPARAMETERIPROC PatchParameterI;
             PFNGLPATCHPARAMETERFVPROC PatchParameterfv;
-            PFNGLBINDTRANSFORMFEEDBACKPROC glBindTransformFeedback;
+            PFNGLBINDTRANSFORMFEEDBACKPROC BindTransformFeedback;
             PFNGLDELETETRANSFORMFEEDBACKSPROC DeleteTransformFeedbacks;
             PFNGLGENTRANSFORMFEEDBACKSPROC GenTransformFeedbacks;
             PFNGLISTRANSFORMFEEDBACKPROC IsTransformFeedback;

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This is just a straightforward rendering tool. Do not serve as model to a efficient renderer.
@@ -44,7 +44,7 @@ AFX_DEFINE_STRUCT(awxShaderConstants) // pass
     afxV3d wirecolor;
 };
 
-AFX_DEFINE_STRUCT(awxMaterialConstants)
+AFX_DEFINE_STRUCT(afxMaterialConstants)
 {
     //afxColor    Ka; // ambient color
     afxV3d  Kd; // diffuse color
@@ -66,7 +66,7 @@ AFX_DEFINE_STRUCT(awxInstanceConstants)
 
 AFX_DEFINE_STRUCT(awxRendererConfig)
 {
-    afxError (*dinProc)(afxDrawInput din, afxNat thrUnitIdx);
+    afxDrawInputProc    dinProc;
 };
 
 AFX_OBJECT(awxRenderer)
@@ -84,7 +84,7 @@ AFX_OBJECT(awxRenderer)
     {
         awxViewConstants    viewConstants;
         awxShaderConstants  shaderConstants;
-        awxMaterialConstants materialConstants;
+        afxMaterialConstants materialConstants;
         awxInstanceConstants  objConstants;
         afxBuffer           viewConstantsBuffer; // p, v
         afxBuffer           shdConstantsBuffer;

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -108,6 +108,9 @@ _AFX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
             AfxReleaseObjects(1, (void*[]) { canv });
             //dout->buffers[i].ras = NIL;
             dout->buffers[i].canv = NIL;
+
+            if (dout->buffers[i].readySem)
+                AfxReleaseObjects(1, (void*[]) { dout->buffers[i].readySem }), dout->buffers[i].readySem = NIL;
         }
     }
 
@@ -161,7 +164,7 @@ _AFX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
         {
             afxRaster raster;
             
-            if (!(raster = AfxGetDrawOutputSurface(dout, first + i))) AfxThrowError();
+            if (!(raster = AfxGetDrawOutputBuffer(dout, first + i))) AfxThrowError();
             else
             {
                 AfxAssertObjects(1, &raster, afxFcc_RAS);
@@ -210,12 +213,12 @@ _AFX afxDrawContext AfxGetDrawOutputContext(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    afxDrawContext dctx = AfxGetLinker(&dout->dctx);
+    afxDrawContext dctx = dout->dctx;
     AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
 
-_AFX afxBool AfxDrawOutputIsConnected(afxDrawOutput dout)
+_AFX afxBool AfxDrawOutputIsOnline(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
@@ -245,22 +248,11 @@ _AFX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
 
         if (!err)
         {
-            if (dctx)
-                AfxReacquireObjects(1, (void*[]) { dctx });
-
-            if (ddev->relinkDout(ddev, dout, dctx))
+            if (ddev->relinkDout(ddev, dctx, 1, &dout))
                 AfxThrowError();
-
-            if (err)
-                AfxReleaseObjects(1, (void*[]) { dctx });
-            else if (curr)
-            {
-                AfxAssertObjects(1, &curr, afxFcc_DCTX);
-                AfxReleaseObjects(1, (void*[]) { curr });
-            }
         }
     }
-    AfxAssert(AfxGetLinker(&dout->dctx) == dctx);
+    AfxAssert(dout->dctx == dctx);
     return !err;
 }
 
@@ -272,7 +264,7 @@ _AFX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
     if (!AfxReconnectDrawOutput(dout, NIL))
         AfxThrowError();
 
-    AfxAssert(!AfxDrawOutputIsConnected(dout));
+    AfxAssert(!AfxDrawOutputIsOnline(dout));
     return err;
 }
 
@@ -303,7 +295,7 @@ _AFX afxNat AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat baseBufIdx, afxNat
     return rslt;
 }
 
-_AFX afxNat AfxGetDrawOutputSurface(afxDrawOutput dout, afxNat baseBufIdx, afxNat bufCnt, afxRaster rasters[])
+_AFX afxNat AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat baseBufIdx, afxNat bufCnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
@@ -354,7 +346,7 @@ _AFX afxError AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, af
     return err;
 }
 
-_AFX afxNat AfxEnumerateDrawOutputSurfaces(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[])
+_AFX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
@@ -367,7 +359,7 @@ _AFX afxNat AfxEnumerateDrawOutputSurfaces(afxDrawOutput dout, afxNat first, afx
         afxNat bufIdx = first + i;
         afxRaster ras = NIL;
         
-        if (AfxGetDrawOutputSurface(dout, bufIdx, 1, &ras))
+        if (AfxGetDrawOutputBuffer(dout, bufIdx, 1, &ras))
         {
             AfxAssertObjects(1, &ras, afxFcc_RAS);
             ++rslt;
@@ -404,6 +396,15 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
                 AfxAssertObjects(1, &canv, afxFcc_CANV);
                 AfxReleaseObjects(1, (void*[]) { canv });
                 dout->buffers[i].canv = NIL;
+            }
+
+            afxSemaphore sem = dout->buffers[i].readySem;
+
+            if (sem)
+            {
+                AfxAssertObjects(1, &sem, afxFcc_SEM);
+                AfxReleaseObjects(1, (void*[]) { sem });
+                dout->buffers[i].readySem = NIL;
             }
 
             afxDrawContext dctx;
@@ -474,6 +475,8 @@ _AFX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
                         if (AfxRelinkDrawBuffers(canv, 0, 1, &ras2))
                             AfxThrowError();
 #endif
+                        if (AfxAcquireSemaphores(dctx, 1, &dout->buffers[i].readySem))
+                            AfxThrowError();
                     }
 #if 0
                 }
@@ -617,7 +620,7 @@ _AFX afxError AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig 
     return err;
 }
 
-_AFX afxNat AfxCurateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
+_AFX afxNat AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -636,7 +639,7 @@ _AFX afxNat AfxCurateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, a
         cls = &dsys->doutputs;
     }
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawOutput dout[])

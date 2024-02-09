@@ -10,14 +10,30 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 
 #define _AFX_SIM_C
 #define _AFX_POSE_C
 #include "qwadro/sim/afxSimulation.h"
+#include "qwadro/math/afxQuaternion.h"
+
+_AFX afxNat AfxGetPoseCapacity(awxPose const *lp)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(lp);
+    return lp->cap;
+}
+
+_AFX afxTransform* AfxGetPoseTransform(awxPose const *lp, afxNat artIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(lp);
+    AfxAssert(artIdx < lp->cap);
+    return &lp->xforms[artIdx].xform;
+}
 
 _AFX void AfxCopyPose(awxPose *pose, awxPose const *from)
 {
@@ -35,19 +51,14 @@ _AFX void AfxCopyPose(awxPose *pose, awxPose const *from)
     }
 }
 
-_AFX afxTransform* AfxGetPoseTransform(awxPose const *lp, afxNat artIdx)
+_AFX void AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3])
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(lp);
-    AfxAssert(artIdx < lp->cap);
-    return &lp->xforms[artIdx].xform;
-}
+    afxTransform* t = AfxGetPoseTransform(pose, 0);
+    AfxAddV3d(t->position, t->position, translation);
 
-_AFX afxNat AfxGetPoseCapacity(awxPose const *lp)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(lp);
-    return lp->cap;
+    afxQuat rot;
+    AfxQuatFromAngularVelocity(rot, rotation);
+    AfxMultiplyQuat(t->orientation, rot, t->orientation);
 }
 
 _AFX void AfxReleasePoses(afxNat cnt, awxPose *lp[])
@@ -69,12 +80,12 @@ _AFX afxError AfxAcquirePoses(void *sim, afxNat cnt, afxNat const cap[], awxPose
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        lp[i] = AfxAllocate(NIL, sizeof(*lp[0]), 1, 0, AfxHint());
+        lp[i] = AfxAllocate(NIL, 1, sizeof(*lp[0]), 0, AfxHint());
         AfxAssert(lp[i]);
         lp[i]->cap = cap[i];
         lp[i]->fillThreshold = 0.2;
         lp[i]->traversalId = 0;
-        lp[i]->xforms = lp[i]->cap ? AfxAllocate(NIL, sizeof(lp[i]->xforms[0]), lp[i]->cap, 0, AfxHint()) : NIL;
+        lp[i]->xforms = lp[i]->cap ? AfxAllocate(NIL, lp[i]->cap, sizeof(lp[i]->xforms[0]), 0, AfxHint()) : NIL;
         AfxAssert(lp[i]->xforms);
         AfxZero(lp[i]->cap, sizeof(lp[i]->xforms[0]), lp[i]->xforms);
     }

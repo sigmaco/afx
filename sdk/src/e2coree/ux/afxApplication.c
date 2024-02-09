@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -300,7 +300,7 @@ _AFX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
                         afxDrawInputConfig dinConfig = { 0 };
                         dinConfig.cmdPoolMemStock = 4096;
                         dinConfig.estimatedSubmissionCnt = 2;
-                        dinConfig.prefetch = NIL;
+                        dinConfig.proc = NIL;
 
                         if (AfxOpenDrawInputs(0, 1, &dinConfig, &app->din))
                             AfxThrowError();
@@ -373,14 +373,14 @@ _AFX afxError AfxAcquireApplications(afxNat cnt, afxApplicationConfig const conf
     return err;
 }
 
-_AFX afxNat AfxCurateApplications(afxNat first, afxNat cnt, afxBool(*f)(afxApplication, void*), void *udd)
+_AFX afxNat AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxApplication, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetApplicationClass();
     AfxAssertClass(cls, afxFcc_APP);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication app[])

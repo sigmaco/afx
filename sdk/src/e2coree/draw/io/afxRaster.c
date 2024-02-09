@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -348,7 +348,7 @@ _AFX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
         AfxAssertType(&uri[i], afxFcc_URI);
         afxFile file;
 
-        if (AfxOpenFiles(AFX_FILE_FLAG_R, 1, &uri[i], &file)) AfxThrowError();
+        if (AfxOpenFiles(afxFileFlag_R, 1, &uri[i], &file)) AfxThrowError();
         else
         {
             afxStream stream = AfxGetFileStream(file);
@@ -401,7 +401,7 @@ _AFX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
         AfxAssertType(&uri[i], afxFcc_URI);
         afxFile file;
 
-        if (AfxOpenFiles(AFX_FILE_FLAG_W, 1, &uri[i], &file)) AfxThrowError();
+        if (AfxOpenFiles(afxFileFlag_W, 1, &uri[i], &file)) AfxThrowError();
         else
         {
             afxStream stream = AfxGetFileStream(file);
@@ -608,21 +608,34 @@ _AFX afxError AfxBufferizeRaster(afxRaster ras)
     return err;
 }
 
-_AFX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster ras[])
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(rasters);
     AfxAssert(cnt);
+    afxClass* cls = AfxGetRasterClass(dctx);
+    AfxAssertClass(cls, afxFcc_RAS);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)rasters);
+}
+
+_AFX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(rasters);
     AfxAssert(info);
-    AfxAssert(ras);
+    AfxAssert(cnt);
 
     afxClass* cls = AfxGetRasterClass(dctx);
     AfxAssertClass(cls, afxFcc_RAS);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)ras, (void const*[]) { (void*)info }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dctx, info }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, ras, afxFcc_RAS);
+    AfxAssertObjects(cnt, rasters, afxFcc_RAS);
 
     return err;
 }
@@ -657,29 +670,3 @@ _AFX afxRaster AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usa
 
     return ras;
 }
-
-_AFX afxError AfxReadjustRasters(afxDrawInput din, afxWhd const whd, afxNat cnt, afxRaster rasters[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    AfxAssertObjects(cnt, rasters, afxFcc_RAS);
-    AfxAssert(whd);
-    AfxAssert(whd[0]);
-    AfxAssert(whd[1]);
-    AfxAssert(whd[2]);
-    AfxAssert(cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxRaster ras = rasters[i];
-        AfxAssertObjects(1, &ras, afxFcc_RAS);
-
-
-    }
-    return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-// QUEUED OPERATIONS                                                          //
-////////////////////////////////////////////////////////////////////////////////
-

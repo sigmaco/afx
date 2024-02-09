@@ -12,7 +12,7 @@
  *
  *                                   Public Test Build
  *                      (c 2017 SIGMA Co. & SIGMA Technology Group
- *                                    www.sigmaco.org
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_ANIMATION_H
@@ -21,6 +21,7 @@
 #include "qwadro/sim/awxSimDefs.h"
 #include "afxCurve2.h"
 #include "qwadro/math/afxTransform.h"
+#include "qwadro/core/afxFixedString.h"
 
 AFX_DEFINE_STRUCT(awxMotionData)
 {
@@ -68,7 +69,7 @@ AFX_OBJECT(awxMotion)
     afxFixedString32         id;
     afxMask             flags;
     afxNat              xformSeqCnt;
-    awxMotionTransform* xformSeqs; // uma arranjo de registros da moção de junta de awxSkeleton do correspondente awxModel.
+    awxMotionTransform* xformSeqs; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
     afxNat              xformLodErrorCnt;
     afxReal*            xformLodErrors;
     afxNat              vecSeqCnt;
@@ -83,9 +84,9 @@ AFX_OBJECT(awxMotion)
 #endif
 
 /// Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
-/// Assim sendo, uma awxAnimation é a moção de um conjunto de awxModel's animando sobre tempo.
+/// Assim sendo, uma awxAnimation é a moção de um conjunto de afxModel's animando sobre tempo.
 /// A awxAnimation contém um ou mais awxMotion's, cada do qual correspondendo à moção de um modelo específico (desde que uma animação pode envolver múltiplos modelos, se o autor assim escolher).
-/// O awxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no awxSkeleton do correspondente awxModel.
+/// O awxMotion é constituído de curvas, cada da qual especifica a translação, rotação e escala de uma junta no afxSkeleton do correspondente afxModel.
 
 #ifdef _AFX_ANIMATION_C
 AFX_OBJECT(awxAnimation)

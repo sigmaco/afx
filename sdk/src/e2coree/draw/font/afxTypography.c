@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -68,7 +68,7 @@ _AFX afxTypography AfxAcquireTypography(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxTypography typ = AfxAllocate(NIL, sizeof(*typ), 1, 0, AfxHint());
+    afxTypography typ = AfxAllocate(NIL, 1, sizeof(*typ), 0, AfxHint());
 
     return typ;
 }

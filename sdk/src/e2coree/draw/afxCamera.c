@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_CAMERA_C
@@ -84,7 +84,7 @@ _AFX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far)
     far[1] = cam->farClipPlane;
 }
 
-_AFX afxCameraDepthRange AfxGetCameraDepthRange(afxCamera cam)
+_AFX afxClipBoundary AfxGetCameraDepthRange(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -92,7 +92,7 @@ _AFX afxCameraDepthRange AfxGetCameraDepthRange(afxCamera cam)
     return cam->depthRange;
 }
 
-_AFX void AfxSetCameraDepthRange(afxCamera cam, afxCameraDepthRange range)
+_AFX void AfxSetCameraDepthRange(afxCamera cam, afxClipBoundary range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -320,13 +320,19 @@ _AFX void AfxResetCamera(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
+
+    afxDrawInput din = AfxGetObjectProvider(cam);
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+    afxClipSpace clip;
+    AfxDescribeClipSpace(din, &clip);
+
     cam->wpOverHp = 1.33f;
     cam->wrOverHr = 1.33f;
     cam->wwOverHw = 1.f;
     cam->fovY = 1.0471976f;
     cam->nearClipPlane = 0.0001f;// 0.4;
     cam->farClipPlane = 1000.f;
-    cam->depthRange = afxCameraDepthRange_NEGONE2ONE;
+    cam->depthRange = clip.boundary; //afxClipBoundary_NEG_ONE_TO_ONE;
     cam->useQuatOrient = TRUE;
     cam->depthRangeEpsilon = 0.f;
     AfxZeroV3d(cam->pos);
@@ -384,14 +390,14 @@ _AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afx
     p[3][0] = 0.f;
     p[3][1] = 0.f;
     p[3][3] = 0.f;
-    afxCameraDepthRange depthRange = cam->depthRange;
+    afxClipBoundary depthRange = cam->depthRange;
     afxReal far = cam->farClipPlane;
     afxReal near = cam->nearClipPlane;
     afxReal epsilon = cam->depthRangeEpsilon;
     afxReal nearMinusFarRecip = 1.f / (near - far);
     afxReal nearTimesFar = near * far;
     
-    if (depthRange == afxCameraDepthRange_NEGONE2ONE)
+    if (depthRange == afxClipBoundary_NEG_ONE_TO_ONE)
     {
         if (far == 0.f)
         {
@@ -404,7 +410,7 @@ _AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afx
             p[3][2] = nearMinusFarRecip * nearTimesFar + nearMinusFarRecip * nearTimesFar;
         }
     }
-    else if (depthRange != afxCameraDepthRange_NEGONE2ZERO)
+    else if (depthRange != afxClipBoundary_NEG_ONE_TO_ZERO)
     {
         if (far == 0.f)
         {
@@ -548,7 +554,7 @@ _AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal c
     AfxPreMultiplyV4d(cam->p, v, v2);
     AfxScaleV3d(v, v2, 1.f / v2[3]);
 
-    if (cam->depthRange == afxCameraDepthRange_NEGONE2ONE)
+    if (cam->depthRange == afxClipBoundary_NEG_ONE_TO_ONE)
         v[2] = v[2] + v[2] - 1.f;
 
     AfxSetV3d(screenPoint, (v[0] + 1.0) * wh[0] * 0.5f, (v[1] + 1.0) * wh[1] * 0.5f, v[2]);

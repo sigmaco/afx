@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "salSdev.h"
@@ -71,7 +71,7 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
         afxChain *classes = &sctx->base.classes;
         AfxTakeChain(classes, (void*)sctx);
 
-        afxClassConfig tmpClsConf;
+        afxClassConfig tmpClsConf = {0};
 
         //tmpClsConf = _SalBufClsConfig;
         tmpClsConf.mmu = mmu;

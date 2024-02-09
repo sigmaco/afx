@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_CORE_C
@@ -29,14 +29,14 @@ _AFX afxClassConfig const _AfxDevClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxCurateDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd)
+_AFX afxNat AfxInvokeDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice dev[])

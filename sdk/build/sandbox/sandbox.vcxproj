@@ -67,22 +67,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -119,13 +119,11 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <SDLCheck>true</SDLCheck>
-      <SupportJustMyCode>true</SupportJustMyCode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
-      <SubSystem>Console</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -150,14 +148,10 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <SDLCheck>true</SDLCheck>
-      <SupportJustMyCode>true</SupportJustMyCode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
-    <Link>
-      <LargeAddressAware>true</LargeAddressAware>
-      <SubSystem>Console</SubSystem>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\demos\sandbox\Sandbox.c" />
@@ -171,6 +165,9 @@
     </ProjectReference>
     <ProjectReference Include="..\e2draw\e2draw.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2grn3d2\e2grn3d2.vcxproj">
+      <Project>{ada2daf6-6f68-4d16-9ea5-25faf07fe8ed}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2newton\e2newton.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>

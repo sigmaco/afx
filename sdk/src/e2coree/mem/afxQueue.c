@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/mem/afxQueue.h"
@@ -27,7 +27,7 @@ AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap)
 
     afxMmu mmu = AfxGetSystemContext();
 
-    if (!(que->bytemap = AfxAllocate(mmu, unitSiz, cap, 0, AfxHint()))) AfxThrowError();
+    if (!(que->bytemap = AfxAllocate(mmu, cap, unitSiz, 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxAssignTypeFcc(que, afxFcc_QUE);

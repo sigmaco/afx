@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_POSE_H
@@ -35,8 +35,8 @@ AFX_DEFINE_STRUCT(awxPose)
     afxNat              traversalId;
 };
 
-/// O objeto afxPostura é um buffer usado para manter o estado de um awxSkeleton de um awxModel como expressado em sua "pose local". 
-/// Neste contexto, "pose local" significa que cada articulação no awxSkeleton é representada por um afxTransform que é relativo a sua articulação-parente imediata. 
+/// O objeto afxPostura é um buffer usado para manter o estado de um afxSkeleton de um afxModel como expressado em sua "pose local". 
+/// Neste contexto, "pose local" significa que cada articulação no afxSkeleton é representada por um afxTransform que é relativo a sua articulação-parente imediata. 
 /// Você pode criar uma afxPostura assim: 
 
 AFX afxError        AfxAcquirePoses(void *sim, afxNat cnt, afxNat const cap[], awxPose *lp[]);
@@ -57,5 +57,7 @@ AFX afxTransform*   AfxGetPoseTransform(awxPose const *pose, afxNat artIdx);
 /// Portanto, não há uma função "Set" para AfxGetPoseTransform() devido ao fato de que você pode ler de ou escrever para o ponteiro que você recebe.
 
 AFX void            AfxCopyPose(awxPose *pose, awxPose const *from);
+
+AFX void            AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3]);
 
 #endif//AFX_POSE_H

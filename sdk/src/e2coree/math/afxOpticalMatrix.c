@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/math/afxMatrix.h"
@@ -20,6 +20,30 @@
 #include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxPlane.h"
+
+afxClipSpace const  AFX_CLIP_SPACE_OPENGL =
+{
+    .nonRh = FALSE,
+    .boundary = afxClipBoundary_NEG_ONE_TO_ONE,
+    .boundMin = {-1,-1,-1 },
+    .boundMax = { 1, 1, 1 }
+};
+
+afxClipSpace const  AFX_CLIP_SPACE_VULKAN =
+{
+    .nonRh = FALSE,
+    .boundary = afxClipBoundary_ZERO_TO_ONE,
+    .boundMin = {-1,-1, 0 },
+    .boundMax = { 1, 1, 1 }
+};
+
+afxClipSpace const  AFX_CLIP_SPACE_D3D =
+{
+    .nonRh = TRUE,
+    .boundary = afxClipBoundary_ZERO_TO_ONE,
+    .boundMin = {-1,-1, 0 },
+    .boundMax = { 1, 1, 1 }
+};
 
 ////////////////////////////////////////////////////////////////////////////////
 // Projective transformation matrix operations                                //
@@ -168,7 +192,7 @@ _AFXINL void AfxCubemapMatrix_OpenGL(afxReal m[4][4], afxNat face)
     }
 }
 
-_AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const dir[3], afxReal const up[3], afxBool lh)
+_AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const dir[3], afxReal const up[3], afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -177,7 +201,7 @@ _AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxAssert(!AfxV3dIsZero(up));
     AfxAssert(!AfxV3dIsInfinite(up));
 
-    if (lh) // OpenGL
+    if (clip->nonRh) // Direct3D
     {
         // Should be compatible with XMMATRIX XMMatrixLookToLH(FXMVECTOR EyePosition, FXMVECTOR EyeDirection, FXMVECTOR UpDirection)
 
@@ -206,7 +230,7 @@ _AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
     }
 }
 
-_AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const target[3], afxReal const up[3], afxBool lh)
+_AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const target[3], afxReal const up[3], afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -214,13 +238,13 @@ _AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
     AfxAssert(target);
     AfxAssert(up);
 
-    if (lh) // Direct3D
+    if (clip->nonRh) // Direct3D
     {
         // Should be compatible with XMMATRIX XMMatrixLookAtLH(FXMVECTOR EyePosition, FXMVECTOR FocusPosition, FXMVECTOR UpDirection)
 
         afxV4d dir;
         AfxSubV3d(dir, target, eye);
-        AfxComputeLookToMatrix(m, eye, dir, up, TRUE);
+        AfxComputeLookToMatrix(m, eye, dir, up, clip);
     }
     else // OpenGL/Vulkan/Qwadro
     {
@@ -228,7 +252,7 @@ _AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
 
         afxV4d dir;
         AfxSubV3d(dir, eye, target);
-        AfxComputeLookToMatrix(m, eye, dir, up, TRUE);
+        AfxComputeLookToMatrix(m, eye, dir, up, clip);
 
         afxV4d f, u, s;
         AfxSubV3d(f, target, eye);
@@ -246,7 +270,7 @@ _AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
 
 // ORTHOGRAPHIC ////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -256,9 +280,9 @@ _AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
     AfxResetM4d(m);
 
-    if (lh)
+    if (clip->nonRh)
     {
-        AfxAssert(cdr == afxClipDepthRange_ZERO_TO_ONE); // Direct3D
+        AfxAssert(clip->boundary == afxClipBoundary_ZERO_TO_ONE); // Direct3D
 
         // Should be compatible with XMMATRIX XMMatrixOrthographicLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
 
@@ -270,7 +294,7 @@ _AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[
     }
     else
     {
-        if (cdr == afxClipDepthRange_ZERO_TO_ONE) // Vulkan
+        if (clip->boundary == afxClipBoundary_ZERO_TO_ONE) // Vulkan
         {
             // Should be compatible with XMMATRIX XMMatrixOrthographicRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
 
@@ -280,9 +304,9 @@ _AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[
             m[2][2] = range;
             m[3][2] = range * near;
         }
-        else if (cdr == afxClipDepthRange_NEG_ONE_TO_ONE) // OpenGL
+        else if (clip->boundary == afxClipBoundary_NEG_ONE_TO_ONE) // OpenGL
         {
-            AfxResetOrthographicMatrix(m, extent[0] / extent[1], 1, FALSE, cdr);
+            AfxComputeBasicOrthographicMatrix(m, extent[0] / extent[1], 1, far, clip);
         }
         else
         {
@@ -291,7 +315,7 @@ _AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[
     }
 }
 
-_AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -301,9 +325,9 @@ _AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left
     AfxAssert(!AfxRealIsEqual(top, bottom, 0.00001f));
     AfxAssert(!AfxRealIsEqual(far, near, 0.00001f));
 
-    if (lh)
+    if (clip->nonRh)
     {
-        AfxAssert(cdr == afxClipDepthRange_ZERO_TO_ONE); // Direct3D
+        AfxAssert(clip->boundary == afxClipBoundary_ZERO_TO_ONE); // Direct3D
 
         // Should be compatible with XMMATRIX XM_CALLCONV XMMatrixOrthographicOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ)
 
@@ -319,7 +343,7 @@ _AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left
     }
     else
     {
-        if (cdr == afxClipDepthRange_ZERO_TO_ONE) // Vulkan
+        if (clip->boundary == afxClipBoundary_ZERO_TO_ONE) // Vulkan
         {
             // Should be compatible with XMMATRIX XM_CALLCONV XMMatrixOrthographicOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ)
 
@@ -333,7 +357,7 @@ _AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left
             m[3][1] = -(top + bottom) * rh;
             m[3][2] = range * near;
         }
-        else if (cdr == afxClipDepthRange_NEG_ONE_TO_ONE) // OpenGL
+        else if (clip->boundary == afxClipBoundary_NEG_ONE_TO_ONE) // OpenGL
         {
             // Should be compatible with glOrtho
             
@@ -354,7 +378,7 @@ _AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left
     }
 }
 
-_AFXINL void AfxComputeOrthographicMatrixFromAabb(afxReal m[4][4], afxAabb const aabb, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeBoundingOrthographicMatrix(afxReal m[4][4], afxAabb const aabb, afxClipSpace const* clip)
 {
     // Computa uma afxM4d de projeção ortográfica desde uma afxAabb.
     afxError err = AFX_ERR_NONE;
@@ -362,32 +386,32 @@ _AFXINL void AfxComputeOrthographicMatrixFromAabb(afxReal m[4][4], afxAabb const
     AfxAssert(aabb); // afxAabb deve estar no view space.
 
     // OpenGL
-    AfxComputeOffcenterOrthographicMatrix(m, aabb[0][0], aabb[1][0], aabb[0][1], aabb[1][1], -aabb[1][2], -aabb[0][2], lh, cdr);
+    AfxComputeOffcenterOrthographicMatrix(m, aabb[0][0], aabb[1][0], aabb[0][1], aabb[1][1], -aabb[1][2], -aabb[0][2], clip);
 }
 
-_AFXINL void AfxResetOrthographicMatrix(afxReal m[4][4], afxReal aspectRatio, afxReal scale, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeBasicOrthographicMatrix(afxReal m[4][4], afxReal aspectRatio, afxReal scale, afxReal range, afxClipSpace const* clip)
 {
     // Computa uma afxM4d de projeção ortográfica genérica.
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
     AfxAssert(aspectRatio); // w/h
-
+    
     // OpenGL
 
     if (aspectRatio >= 1.f)
     {
-        AfxComputeOffcenterOrthographicMatrix(m, -scale * aspectRatio, scale * aspectRatio, -scale, scale, -scale - 100.f, scale + 100.f, lh, cdr);
+        AfxComputeOffcenterOrthographicMatrix(m, -scale * aspectRatio, scale * aspectRatio, -scale, scale, -scale - range, scale + range, clip);
     }
     else
     {
         aspectRatio = 1.f / aspectRatio;
-        AfxComputeOffcenterOrthographicMatrix(m, -scale, scale, -scale / aspectRatio, scale / aspectRatio, -scale - 100.f, scale + 100.f, lh, cdr);
+        AfxComputeOffcenterOrthographicMatrix(m, -scale, scale, -scale / aspectRatio, scale / aspectRatio, -scale - range, scale + range, clip);
     }
 }
 
 // PERSPECTIVE /////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -398,9 +422,9 @@ _AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2
     AfxAssert(near > 0.f && far > 0.f);
     AfxZeroM4d(m);
 
-    if (lh)
+    if (clip->nonRh)
     {
-        AfxAssert(cdr == afxClipDepthRange_ZERO_TO_ONE); // Direct3D
+        AfxAssert(clip->boundary == afxClipBoundary_ZERO_TO_ONE); // Direct3D
 
         // Should be compatible with XMMATRIX XMMatrixPerspectiveLH(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
         
@@ -414,7 +438,7 @@ _AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2
     }
     else
     {
-        if (cdr == afxClipDepthRange_ZERO_TO_ONE) // Vulkan
+        if (clip->boundary == afxClipBoundary_ZERO_TO_ONE) // Vulkan
         {
             // Should be compatible with XMMATRIX XMMatrixPerspectiveRH(float ViewWidth, float ViewHeight, float NearZ, float FarZ)
 
@@ -426,7 +450,7 @@ _AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2
             m[2][3] = -1.f;
             m[3][2] = range * near;
         }
-        else if (cdr == afxClipDepthRange_NEG_ONE_TO_ONE) // OpenGL
+        else if (clip->boundary == afxClipBoundary_NEG_ONE_TO_ONE) // OpenGL
         {
             AfxThrowError();
         }
@@ -437,7 +461,7 @@ _AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2
     }
 }
 
-_AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -447,9 +471,9 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxRe
     AfxAssert(near > 0.f && far > 0.f);
     AfxZeroM4d(m);
 
-    if (lh)
+    if (clip->nonRh)
     {
-        AfxAssert(cdr == afxClipDepthRange_ZERO_TO_ONE); // Direct3D
+        AfxAssert(clip->boundary == afxClipBoundary_ZERO_TO_ONE); // Direct3D
 
         // Should be compatible with XMMATRIX XMMatrixPerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 
@@ -464,7 +488,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxRe
     }
     else
     {
-        if (cdr == afxClipDepthRange_ZERO_TO_ONE) // Vulkan
+        if (clip->boundary == afxClipBoundary_ZERO_TO_ONE) // Vulkan
         {
             // Should be compatible with XMMATRIX XMMatrixPerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 
@@ -477,7 +501,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxRe
             m[2][3] = -1.f;
             m[3][2] = range * near;
         }
-        else if (cdr == afxClipDepthRange_NEG_ONE_TO_ONE) // OpenGL
+        else if (clip->boundary == afxClipBoundary_NEG_ONE_TO_ONE) // OpenGL
         {
             // Should be compatible with glPerspective
 
@@ -496,7 +520,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxRe
     }
 }
 
-_AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -506,9 +530,9 @@ _AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left,
     AfxAssert(near > 0.f && far > 0.f);
     AfxZeroM4d(m);
 
-    if (lh)
+    if (clip->nonRh)
     {
-        AfxAssert(cdr == afxClipDepthRange_ZERO_TO_ONE); // Direct3D
+        AfxAssert(clip->boundary == afxClipBoundary_ZERO_TO_ONE); // Direct3D
 
         // Should be compatible with XMMATRIX XMMatrixPerspectiveOffCenterLH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ)
 
@@ -526,7 +550,7 @@ _AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left,
     }
     else
     {
-        if (cdr == afxClipDepthRange_ZERO_TO_ONE) // Vulkan
+        if (clip->boundary == afxClipBoundary_ZERO_TO_ONE) // Vulkan
         {
             // Should be compatible with XMMATRIX XMMatrixPerspectiveOffCenterRH(float ViewLeft, float ViewRight, float ViewBottom, float ViewTop, float NearZ, float FarZ)
 
@@ -542,7 +566,7 @@ _AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left,
             m[2][3] = -1.f;
             m[3][2] = range * near;
         }
-        else if (cdr == afxClipDepthRange_NEG_ONE_TO_ONE) // OpenGL
+        else if (clip->boundary == afxClipBoundary_NEG_ONE_TO_ONE) // OpenGL
         {
             // Preprojective matrix
             // Should be compatible with glFrustum
@@ -566,11 +590,11 @@ _AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left,
     }
 }
 
-_AFXINL void AfxResetPerspectiveMatrix(afxReal m[4][4], afxReal aspectRatio, afxBool lh, afxClipDepthRange cdr)
+_AFXINL void AfxComputeBasicPerspectiveMatrix(afxReal m[4][4], afxReal aspectRatio, afxReal range, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
-    AfxComputeFovPerspectiveMatrix(m, AFX_PI / 4.f, aspectRatio, 0.01f, 100.f, lh, cdr);
+    AfxComputeFovPerspectiveMatrix(m, AFX_PI / 4.f, aspectRatio, 0.01f, range, clip);
 }
 
 // MakeView
@@ -583,7 +607,7 @@ _AFXINL void AfxComputeRenderWareViewM4d(afxReal view[4][4], afxReal const cam[4
     AfxAssert(cam);
 
     afxM4d inv;
-    AfxInverseM4d(inv, cam);
+    AfxInvertM4d(cam, inv);
     view[0][0] = -inv[0][0];
     view[0][1] = inv[0][1];
     view[0][2] = inv[0][2];

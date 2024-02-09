@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -41,7 +41,7 @@ _AFXINL afxBool AfxFindMotionSequence(awxMotion mot, afxString const* seqId, afx
     {
         for (afxNat i = 0; i < seqCnt; i++)
         {
-            if (0 == AfxCompareString(seqId, &mot->xformSeqs[i].id.str.str))
+            if (0 == AfxTestStringEquality(seqId, &mot->xformSeqs[i].id.str.str))
             {
                 *seqIdx = i;
                 found = TRUE;
@@ -59,7 +59,7 @@ _AFXINL afxBool AfxFindMotionSequence(awxMotion mot, afxString const* seqId, afx
             afxNat currIdx2 = i + remainCnt / 2;
             afxResult diff;
 
-            if (0 == (diff = AfxCompareString(seqId, &mot->xformSeqs[currIdx2].id.str.str)))
+            if (0 == (diff = AfxTestStringEquality(seqId, &mot->xformSeqs[currIdx2].id.str.str)))
             {
                 *seqIdx = currIdx2;
                 found = TRUE;
@@ -97,7 +97,7 @@ _AFXINL afxBool AfxFindMotionDataSequence(awxMotion mot, afxString const* seqId,
 
     for (afxNat i = 0; i < vecSeqCnt; i++)
     {
-        if (0 == AfxCompareString(seqId, &mot->vecSeqs[i].id.str.str))
+        if (0 == AfxTestStringEquality(seqId, &mot->vecSeqs[i].id.str.str))
         {
             *seqIdx = i;
             rslt = TRUE;
@@ -118,7 +118,7 @@ _AFXINL afxBool AfxFindCorrelatedMotion(awxAnimation ani, afxString const* mdlId
 
     for (afxNat i = 0; i < motCnt; i++)
     {
-        if (0 == AfxCompareString(&(ani->motions[*motIdx]->id.str.str), mdlId))
+        if (0 == AfxTestStringEquality(&(ani->motions[*motIdx]->id.str.str), mdlId))
         {
             *motIdx = i;
             found = TRUE;

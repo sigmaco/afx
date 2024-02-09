@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -26,6 +26,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/draw/afxColor.h"
+#include "qwadro/core/afxFixedString.h"
 
 /*
     The first stage of the graphics pipeline (Input Assembler) assembles vertices to form geometric primitives such as points, lines, and triangles, based on a requested primitive topology.
@@ -90,7 +91,7 @@ typedef enum afxDepthStencilFlag
 {
     afxDepthStencilFlag_TEST            = AfxGetBitOffset(0),
     afxDepthStencilFlag_COMPARE         = AfxGetBitOffset(1),
-    afxDepthStencilFlag_WRITE           = AfxGetBitOffset(2),
+    afxDepthStencilFlag_DONT_WRITE      = AfxGetBitOffset(2),
     
     afxDepthStencilFlag_STENCIL_OP_F    = AfxGetBitOffset(4),
     afxDepthStencilFlag_STENCIL_TEST_F  = AfxGetBitOffset(5),
@@ -176,7 +177,7 @@ AFX_DEFINE_STRUCT(afxRasterizationConfig)
     // depth test
     afxBool                     depthTestEnabled; /// controls whether depth testing is enabled. FALSE
     afxCompareOp                depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. afxCompareOp_LESS
-    afxBool                     depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. FALSE
+    afxBool                     depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. FALSE
     afxPixelFormat              dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
     // depth bounds test
     afxBool                     depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled.
@@ -245,7 +246,7 @@ struct afxBaseRasterizer
     // depth test
     afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
     afxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
-    afxBool                 depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
+    afxBool                 depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
     afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
     // depth bounds test
     afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
@@ -264,7 +265,8 @@ struct afxBaseRasterizer
 AFX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[]);
 AFX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxBool             AfxGetDepthTestInfo(afxRasterizer razr, afxCompareOp* op, afxBool* writeEnabled); // return TRUE if depth test is enabled
+AFX afxBool             AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op); // return TRUE if depth test is enabled
+AFX afxBool             AfxDepthWriteIsDisabled(afxRasterizer razr);
 AFX afxBool             AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
 AFX afxBool             AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]); // return TRUE if depth bounds is enabled
 AFX afxBool             AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
@@ -272,9 +274,9 @@ AFX afxBool             AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogic
 AFX void                AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4]);
 AFX afxNat              AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
 AFX afxNat              AfxCountColorOutputChannels(afxRasterizer razr);
-AFX afxBool             AfxGetSampleShadingInfo(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
+AFX afxBool             AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
 AFX afxFillMode         AfxGetRasterizationMode(afxRasterizer razr);
-AFX afxBool             AfxGetLineRasterizationInfo(afxRasterizer razr, afxReal* lineWidth);
+AFX afxBool             AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth);
 AFX afxBool             AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]);
 
 AFX void                AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn);

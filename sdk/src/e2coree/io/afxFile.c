@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -106,60 +106,62 @@ _AFX afxError _AfxFileStreamReadCallback(afxStream ios, void *dst, afxSize siz)
     return clampedOffRange;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 _AFX afxBool AfxFileIsVirtual(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_V);
+    return AfxTestFlags(file->flags, afxFileFlag_V);
 }
 
 _AFX afxBool AfxFileIsArchive(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_A);
+    return AfxTestFlags(file->flags, afxFileFlag_A);
 }
 
 _AFX afxBool AfxFileIsTemporary(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_T);
+    return AfxTestFlags(file->flags, afxFileFlag_T);
 }
 
 _AFX afxBool AfxFileIsSparse(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_S);
+    return AfxTestFlags(file->flags, afxFileFlag_S);
 }
 
 _AFX afxBool AfxFileIsCompressed(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_Z);
+    return AfxTestFlags(file->flags, afxFileFlag_Z);
 }
 
 _AFX afxBool AfxFileIsEncrypted(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_E);
+    return AfxTestFlags(file->flags, afxFileFlag_E);
 }
 
 _AFX afxBool AfxFileIsHidden(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_H);
+    return AfxTestFlags(file->flags, afxFileFlag_H);
 }
 
 _AFX afxBool AfxFileIsReserved(afxFile file)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxFlagsTest(file->flags, AFX_FILE_FLAG_Q);
+    return AfxTestFlags(file->flags, afxFileFlag_Q);
 }
 
 _AFX afxBool AfxFileShouldBeFlushed(afxFile file)
@@ -167,6 +169,18 @@ _AFX afxBool AfxFileShouldBeFlushed(afxFile file)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
     return file->shouldBeFlushed;
+}
+
+_AFX afxStream AfxGetFileStream(afxFile file)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    return file->ios;
+}
+
+_AFX afxFileSection* AfxGetFileSection(afxFile file)
+{
+    return (afxFileSection*)(((afxByte*)file->hdr) + file->hdr->secOffset);
 }
 
 _AFX afxResult AfxFlushFile(afxFile file)
@@ -180,13 +194,6 @@ _AFX afxResult AfxFlushFile(afxFile file)
     return err;
 }
 
-_AFX afxStream AfxGetFileStream(afxFile file)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-    return file->ios;
-}
-
 _AFX afxError AfxReadFileString(afxFile file, afxBufferedString* str)
 {
     afxError err = AFX_ERR_NONE;
@@ -198,20 +205,6 @@ _AFX afxError AfxReadFileString(afxFile file, afxBufferedString* str)
         AfxThrowError();
 
     return err;
-}
-
-_AFX afxResult AfxExtractFilePath(afxFile file, afxBufferedString *str)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxCopyString(str, AfxGetUriString(&file->path));
-}
-
-_AFX afxString const* AfxGetFilePathString(afxFile file)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &file, afxFcc_FILE);
-    return AfxGetUriString(&file->path);
 }
 
 _AFX afxUri const* AfxGetFilePath(afxFile file)
@@ -228,28 +221,163 @@ _AFX void* AfxGetFileHostDescriptor(afxFile file)
     return file->fd;
 }
 
-_AFX afxResult _AfxFileDtor(afxFile file)
+_AFX afxResult AfxCopyFilePath(afxFile file, afxUri* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    AfxAssertType(uri, afxFcc_URI);
+    return AfxCopyUri(uri, &file->path);
+}
+
+_AFX afxString const* AfxGetFilePathString(afxFile file)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    return AfxGetUriString(&file->path);
+}
+
+_AFX afxResult AfxCopyFilePathString(afxFile file, afxBufferedString* str)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    return AfxCopyString(str, AfxGetUriString(&file->path));
+}
+
+_AFX void* LoadFileSection(afxUrdSection const* sec, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(sec);
+    AfxAssert(DestinationMemory);
+    AfxAssert(Reader);
+
+    void *result = 0;
+    void *Result = 0;
+
+    if (sec->expandedDataSiz)
+    {
+        afxNat alignedSiz = (sec->expandedDataSiz + 3) & 0xFFFFFFFC;
+
+        if (DestinationMemory)
+        {
+            result = DestinationMemory;
+            Result = DestinationMemory;
+        }
+        else
+        {
+            //use Section->InternalAlignment
+            Result = AfxAllocate(NIL, 1, alignedSiz, sec->internalAlignment, AfxHint());
+            result = Result;
+        }
+
+        if (result)
+        {
+            if (sec->fmt)
+            {
+                afxNat v8 = AfxGetCompressionPaddingSize(sec->fmt);
+                void *v9 = AfxAllocate(NIL, 1, sec->dataSiz + v8, 0, AfxHint());
+
+                if (v9)
+                {
+                    AfxReadStreamAt(Reader, sec->dataOffset, v9, sec->dataSiz, 0);
+
+                    if (!AfxDecompressData(sec->fmt, fileIsByteReversed, sec->dataSiz, v9, /*Section->first16Bit*/0, /*Section->first8Bit*/0, sec->expandedDataSiz, Result))
+                    {
+                        AfxDeallocate(NIL, Result);
+                        Result = 0;
+                    }
+                }
+
+                AfxDeallocate(NIL, v9);
+                result = Result;
+            }
+            else
+            {
+                AfxReadStreamAt(Reader, sec->dataOffset, result, sec->dataSiz, 0);
+                result = Result;
+            }
+        }
+    }
+    return result;
+}
+
+_AFX afxBool AfxOpenFileSections(afxFile file, afxNat baseSec, afxNat secCnt, void *buf[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
 
-    AfxDeallocateUri(&file->path);
+    AfxAssert(file->hdr);
+    AfxAssertRange(file->openSecCnt, baseSec, secCnt);
 
-    AfxReleaseObjects(1, (void*[]) { file->ios });
+    afxBool ret = TRUE;
 
-    if (file->fd)
+    afxUrdSection *sections = ((afxUrdSection*)((afxByte*)file->hdr + file->hdr->secOffset));
+
+    for (afxNat i = 0; i < secCnt; i++)
     {
-        if (file->shouldBeFlushed)
-        {
-            fflush(file->fd);
-            file->shouldBeFlushed = FALSE;
-        }
+        afxNat secIdx = baseSec + i;
+        afxUrdSection *sec = &sections[secIdx];
 
-        //setvbuf(file->fd, NIL, _IONBF, BUFSIZ);
-        fclose(file->fd);
+        if (!file->openSections[secIdx]) AfxThrowError();
+        else
+        {
+            file->openSections[secIdx] = LoadFileSection(&sections[secIdx], buf, file, FALSE);
+            file->isUserMem[secIdx] = !!buf;
+
+            if (!(!sec->expandedDataSiz || file->openSections[secIdx]))
+                ret = FALSE;
+        }
     }
-    
-    return err;
+    return ret;
+}
+
+_AFX afxBool AfxOpenFileSection(afxFile file, afxNat secIdx, void *buf)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    return AfxOpenFileSections(file, secIdx, 1, buf ? &buf : NIL);
+}
+
+_AFX void AfxCloseFileSections(afxFile file, afxNat baseSec, afxNat secCnt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+
+    afxMmu mmu = AfxGetIoContext();
+    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+
+    AfxAssertRange(file->openSecCnt, baseSec, secCnt);
+
+    for (afxNat i = 0; i < secCnt; i++)
+    {
+        afxNat secIdx = baseSec + i;
+        AfxAssertRange(file->openSecCnt, secIdx, 1);
+
+        if (file->openSections[secIdx])
+        {
+            if (!file->isUserMem[secIdx])
+                AfxDeallocate(mmu, file->openSections[secIdx]);
+
+            file->isUserMem[secIdx] = FALSE;
+            file->marshalled[secIdx] = FALSE;
+            file->openSections[secIdx] = NIL;
+        }
+    }
+}
+
+_AFX void AfxCloseFileSection(afxFile file, afxNat secIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+    AfxCloseFileSections(file, secIdx, 1);
+}
+
+_AFX void AfxCloseAllFileSections(afxFile file)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+
+    if (file->openSecCnt)
+        AfxCloseFileSections(file, 0, file->openSecCnt);
 }
 
 _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
@@ -264,18 +392,18 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
     afxChar mode[9] = { NIL }, *modePtr = mode;
     afxIoFlags ioFlags = NIL;
 
-    if (AfxFlagsTest(flags, AFX_FILE_FLAG_W))
+    if (AfxTestFlags(flags, afxFileFlag_W))
     {
         ioFlags |= afxIoFlag_W;
         *modePtr++ = 'w';
     }
-    else if (AfxFlagsTest(flags, AFX_FILE_FLAG_R))
+    else if (AfxTestFlags(flags, afxFileFlag_R))
     {
         ioFlags |= afxIoFlag_R;
         *modePtr++ = 'r';
     }
 
-    if (AfxFlagsTest(flags, AFX_FILE_FLAG_X))
+    if (AfxTestFlags(flags, afxFileFlag_X))
     {
         ioFlags |= afxIoFlag_X;
         //*modePtr++ = 'x';
@@ -336,7 +464,34 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxFileClsConfig =
+_AFX afxResult _AfxFileDtor(afxFile file)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &file, afxFcc_FILE);
+
+    AfxDeallocateUri(&file->path);
+
+    AfxReleaseObjects(1, (void*[]) { file->ios });
+
+    if (file->fd)
+    {
+        if (file->shouldBeFlushed)
+        {
+            fflush(file->fd);
+            file->shouldBeFlushed = FALSE;
+        }
+
+        //setvbuf(file->fd, NIL, _IONBF, BUFSIZ);
+        fclose(file->fd);
+    }
+    
+    if (file->openSecCnt)
+        AfxCloseAllFileSections(file);
+
+    return err;
+}
+
+_AFX afxClassConfig const _AfxFileClsConfig =
 {
     .fcc = afxFcc_FILE,
     .name = "File",
@@ -402,21 +557,21 @@ _AFX afxError AfxReloadFile(afxStream ios, afxFileFlags flags, afxUri const *uri
     {
         AfxReadjustStreamBuffer(ios, AfxMeasureStream(AfxGetFileStream(file)));
         AfxGoToStreamBegin(ios, 0);
-        AfxCopyStream(ios, file->ios, 0);
+        AfxCopyStream(file->ios, 0, ios);
         AfxGoToStreamBegin(ios, 0);
         AfxReleaseObjects(1, (void*[]) { file });
     }
     return err;
 }
 
-_AFX afxNat AfxCurateFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd)
+_AFX afxNat AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetFileClass();
     AfxAssertClass(cls, afxFcc_FILE);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile file[])

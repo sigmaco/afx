@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -90,14 +90,14 @@ _AFX afxNat AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sd
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sdev);
 }
 
-_AFX afxNat AfxCurateSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd)
+_AFX afxNat AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetSoundDeviceClass();
     AfxAssertClass(cls, afxFcc_SDEV);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxSoundDevice AfxGetSoundDevice(afxNat sdevIdx)
@@ -130,7 +130,8 @@ _AFX afxError _AfxSsysCtor(afxSoundSystem ssys, afxSystem sys, afxSoundSystemCon
 
     AfxAssignFcc(ssys, afxFcc_SSYS);
 
-    afxChain *classes = &sys->classes;
+    afxChain *classes = &ssys->classes;
+    AfxTakeChain(classes, sys);
 
     ssys->mmu = AfxGetSystemContext();
 
@@ -230,9 +231,10 @@ _AFX afxError _AfxSsysCtor(afxSoundSystem ssys, afxSystem sys, afxSoundSystemCon
             {
                 //AfxDismountClass(&ssys->inputs);
                 //AfxDismountClass(&ssys->outputs);
-                AfxDismountClass(&ssys->scontexts);
-                AfxDismountClass(&ssys->sdevices);
-                AfxDismountClass(&ssys->sthreads);
+                //AfxDismountClass(&ssys->scontexts);
+                //AfxDismountClass(&ssys->sdevices);
+                //AfxDismountClass(&ssys->sthreads);
+                _AfxUninstallChainedClasses(classes);
             }
         }
 
@@ -253,9 +255,11 @@ _AFX afxError _AfxSsysDtor(afxSoundSystem ssys)
 
     //AfxDismountClass(&ssys->inputs);
     //AfxDismountClass(&ssys->outputs);
-    AfxDismountClass(&ssys->scontexts);
-    AfxDismountClass(&ssys->sdevices);
-    AfxDismountClass(&ssys->sthreads);
+    //AfxDismountClass(&ssys->scontexts);
+    //AfxDismountClass(&ssys->sdevices);
+    //AfxDismountClass(&ssys->sthreads);
+    
+    _AfxUninstallChainedClasses(&ssys->classes);
 
     AfxReleaseObjects(1, (void*[]) { ssys->mmu });
 

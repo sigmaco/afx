@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_CLASS_H
@@ -141,7 +141,7 @@ AFXINL afxBool      AfxClassFindObjectIndex(afxClass const* cls, afxBool b2f, af
 
 AFXINL afxNat       AfxEnumerateInstances(afxClass const* cls, afxNat first, afxNat cnt, afxObject obj[]);
 
-AFXINL afxNat       AfxCurateInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
+AFXINL afxNat       AfxInvokeInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
 
 AFX afxResult       AfxClassForEveryInstance(afxClass *cls, afxBool exclusive, void(*f)(afxIterator *obji), void *data);
 AFX afxResult       AfxClassForEveryDerivedInstance(afxClass *cls, afxFcc superset, afxBool exclusive, void(*f)(afxIterator *obji), void *data);

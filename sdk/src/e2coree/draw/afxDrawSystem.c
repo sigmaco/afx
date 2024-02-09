@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -196,14 +196,14 @@ _AFX afxNat AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice ddev
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)ddev);
 }
 
-_AFX afxNat AfxCurateDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd)
+_AFX afxNat AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetDrawDeviceClass();
     AfxAssertClass(cls, afxFcc_DDEV);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxDrawDevice AfxGetDrawDevice(afxNat ddevIdx)
@@ -236,7 +236,9 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxSystem sys, afxDrawSystemConfi
 
     AfxAssignFcc(dsys, afxFcc_DSYS);
 
-    afxChain *classes = &sys->classes;
+    afxChain *classes = &dsys->classes;
+    AfxTakeChain(classes, sys);
+
     dsys->mmu = AfxGetSystemContext();
 
     afxMmu mmu = dsys->mmu;
@@ -333,11 +335,7 @@ _AFX afxError _AfxDsysCtor(afxDrawSystem dsys, afxSystem sys, afxDrawSystemConfi
 
             if (err)
             {
-                AfxDismountClass(&dsys->dinputs);
-                AfxDismountClass(&dsys->doutputs);
-                AfxDismountClass(&dsys->dcontexts);
-                AfxDismountClass(&dsys->ddevices);
-                AfxDismountClass(&dsys->dthreads);                
+                _AfxUninstallChainedClasses(classes);
             }
         }
 
@@ -356,11 +354,12 @@ _AFX afxError _AfxDsysDtor(afxDrawSystem dsys)
 
     //AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
 
-    AfxDismountClass(&dsys->dinputs);
-    AfxDismountClass(&dsys->doutputs);
-    AfxDismountClass(&dsys->dcontexts);
-    AfxDismountClass(&dsys->ddevices);
-    AfxDismountClass(&dsys->dthreads);
+    //AfxDismountClass(&dsys->dinputs);
+    //AfxDismountClass(&dsys->doutputs);
+    //AfxDismountClass(&dsys->dcontexts);
+    //AfxDismountClass(&dsys->ddevices);
+    //AfxDismountClass(&dsys->dthreads);
+    _AfxUninstallChainedClasses(&dsys->classes);
 
     AfxReleaseObjects(1, (void*[]) { dsys->mmu });
 

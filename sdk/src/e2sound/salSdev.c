@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "salSdev.h"
@@ -318,7 +318,7 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
                     afxFile fd;
                     afxUri uri;
                     AfxMakeUri(&uri, "sound/qwadroDeepNote44kHz", 0);
-                    AfxOpenFiles(AFX_FILE_FLAG_R, 1, &uri, &fd);
+                    AfxOpenFiles(afxFileFlag_R, 1, &uri, &fd);
 
                     afxNat dataSiz = AfxMeasureStream(AfxGetFileStream(fd));
                     void *data = AfxAllocate(NIL, dataSiz, 1, 0, AfxHint());
@@ -409,7 +409,7 @@ _A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxSoundThread sthr)
 
     sthr->portIdx = unitIdx;
 
-    AfxCurateSoundContexts(sdev, 0, AFX_N32_MAX, _SalProcessSctxCb, (void*)sthr);
+    AfxInvokeSoundContexts(sdev, 0, AFX_N32_MAX, _SalProcessSctxCb, (void*)sthr);
 
     return err;
 }
@@ -441,7 +441,7 @@ _A4D afxError _SalSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
 
     sdev->spuCnt = 1;
 
-    if (!(sdev->spus = AfxAllocate(mmu, sizeof(sdev->spus[0]), sdev->spuCnt, 0, AfxHint()))) AfxThrowError();
+    if (!(sdev->spus = AfxAllocate(mmu, sdev->spuCnt, sizeof(sdev->spus[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxZero(sdev->spuCnt, sizeof(sdev->spus[0]), sdev->spus);

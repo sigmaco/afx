@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -26,7 +26,7 @@
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/core/afxData.h"
+#include "qwadro/io/afxData.h"
 
 #define LOWORD(l) ((afxNat16)(l))
 #define HIWORD(l) ((afxNat16)(((afxNat32)(l) >> 16) & 0xFFFF))
@@ -42,7 +42,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-_AFX void Reverse32(int Count, void *BufferInit)
+_AFX void Reverse32_(int Count, void *BufferInit)
 {
     afxNat32 *v2; // ecx
     int v3; // edx
@@ -104,11 +104,11 @@ _AFX void Reverse16(int Count, void *BufferInit)
 
 _AFX void ReverseSection(int First16Bit, int First8Bit, int End, void *BufferInit)
 {
-    Reverse32(First16Bit, BufferInit);
+    Reverse32_(First16Bit, BufferInit);
     Reverse16(First8Bit - First16Bit, (char *)BufferInit + First16Bit);
 }
 
-_AFX void* LoadFileSection(afxUrdSection const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
+_AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(Section);
@@ -130,7 +130,7 @@ _AFX void* LoadFileSection(afxUrdSection const *Section, void *DestinationMemory
         else
         {
             //use Section->InternalAlignment
-            Result = AfxAllocate(NIL, alignedSiz, 1, 0, AfxHint());
+            Result = AfxAllocate(NIL, 1, alignedSiz, 0, AfxHint());
             result = Result;
         }
 
@@ -139,7 +139,7 @@ _AFX void* LoadFileSection(afxUrdSection const *Section, void *DestinationMemory
             if (Section->fmt)
             {
                 afxNat v8 = AfxGetCompressionPaddingSize(Section->fmt);
-                void *v9 = AfxAllocate(NIL, Section->dataSiz + v8, 1, 0, AfxHint());
+                void *v9 = AfxAllocate(NIL, 1, Section->dataSiz + v8, 0, AfxHint());
 
                 if (v9)
                 {
@@ -172,8 +172,6 @@ _AFX void* AfxDecodeUrdReference(void const **sections, afxUrdReference const* r
 
 _AFX afxNat AfxFindUrdSectionOfLoadedObject(afxUrd urd, void const* obj)
 {
-    // Should be compatible with unsigned int GetFileSectionOfLoadedObject(const file *File, const void *Object)
-
     afxNat secCnt = urd->hdr->secCnt;    
     afxNat result = 0;
 
@@ -197,8 +195,6 @@ _AFX afxNat AfxFindUrdSectionOfLoadedObject(afxUrd urd, void const* obj)
 
 _AFX afxBool AfxOpenUrdSections(afxUrd urd, afxNat baseIdx, afxNat secCnt, void *buf[])
 {
-    // Should be compatible with char ReadFileSectionInPlace(granny::file_reader *Reader, granny::file *File, int SectionIndex, void *DestinationMemory)
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
 
@@ -275,7 +271,7 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxFile file;
 
-    if (AfxOpenFiles(AFX_FILE_FLAG_R, 1, path, &file)) AfxThrowError();
+    if (AfxOpenFiles(afxFileFlag_R, 1, path, &file)) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
@@ -299,7 +295,7 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxFile file;
 
-    if (AfxOpenFiles(AFX_FILE_FLAG_R, 1, path, &file)) AfxThrowError();
+    if (AfxOpenFiles(afxFileFlag_R, 1, path, &file)) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);

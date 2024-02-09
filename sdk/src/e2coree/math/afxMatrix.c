@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/math/afxMatrix.h"
@@ -19,6 +19,7 @@
 #include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxPlane.h"
+#include "qwadro/io/afxStream.h"
 
 // Memory layout: row-major
 
@@ -880,34 +881,34 @@ _AFXINL void AfxCombineLtm4(afxReal m[4][4], afxReal lambda1, afxReal const a[4]
 
 // Negate
 
-_AFXINL afxReal AfxInverseM3d(afxReal m[3][3], afxReal const in[3][3])
+_AFXINL afxReal AfxInvertM3d(afxReal const m[3][3], afxReal im[3][3])
 {
     // Inspired on void MatrixInvert3x3(float *DestInit, const float *SourceInit)
     afxError err = AFX_ERR_NONE;
-    AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(in != m);
+    AfxAssert(im);
+    AfxAssert(m != im);
 
-    afxReal det = (in[1][1] * in[2][2] - in[2][1] * in[1][2]) * in[0][0] - (in[2][2] * in[1][0] - in[2][0] * in[1][2]) * in[0][1] + (in[2][1] * in[1][0] - in[2][0] * in[1][1]) * in[0][2];
+    afxReal det = (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * m[0][0] - (m[2][2] * m[1][0] - m[2][0] * m[1][2]) * m[0][1] + (m[2][1] * m[1][0] - m[2][0] * m[1][1]) * m[0][2];
 
     if (det != 0.0)
     {
         det = 1.0 / det;
-        m[0][0] =  ( in[1][1] * in[2][2] - in[2][1] * in[1][2]) * det;
-        m[1][0] = -((in[2][2] * in[1][0] - in[2][0] * in[1][2]) * det);
-        m[2][0] =  ( in[2][1] * in[1][0] - in[2][0] * in[1][1]) * det;
+        im[0][0] =  ( m[1][1] * m[2][2] - m[2][1] * m[1][2]) * det;
+        im[1][0] = -((m[2][2] * m[1][0] - m[2][0] * m[1][2]) * det);
+        im[2][0] =  ( m[2][1] * m[1][0] - m[2][0] * m[1][1]) * det;
 
-        m[0][1] = -((in[0][1] * in[2][2] - in[2][1] * in[0][2]) * det);
-        m[1][1] =  ( in[2][2] * in[0][0] - in[2][0] * in[0][2]) * det;
-        m[2][1] = -((in[2][1] * in[0][0] - in[2][0] * in[0][1]) * det);
+        im[0][1] = -((m[0][1] * m[2][2] - m[2][1] * m[0][2]) * det);
+        im[1][1] =  ( m[2][2] * m[0][0] - m[2][0] * m[0][2]) * det;
+        im[2][1] = -((m[2][1] * m[0][0] - m[2][0] * m[0][1]) * det);
 
-        m[0][2] =  ( in[0][1] * in[1][2] - in[1][1] * in[0][2]) * det;
-        m[1][2] = -((in[1][2] * in[0][0] - in[0][2] * in[1][0]) * det);
-        m[2][2] =  ( in[1][1] * in[0][0] - in[0][1] * in[1][0]) * det;
+        im[0][2] =  ( m[0][1] * m[1][2] - m[1][1] * m[0][2]) * det;
+        im[1][2] = -((m[1][2] * m[0][0] - m[0][2] * m[1][0]) * det);
+        im[2][2] =  ( m[1][1] * m[0][0] - m[0][1] * m[1][0]) * det;
     }
     else
     {
-        AfxCopyM3d(m, in);
+        AfxCopyM3d(im, m);
         AfxAssert(det != 0.0);
     }
     return det;
@@ -916,36 +917,36 @@ _AFXINL afxReal AfxInverseM3d(afxReal m[3][3], afxReal const in[3][3])
 // Invert
 // Memory layout: hybrid
 
-_AFXINL afxReal AfxInverseM4d(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL afxReal AfxInvertM4d(afxReal const m[4][4], afxReal im[4][4])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(in);
     AfxAssert(m);
-    AfxAssert(in != m);
+    AfxAssert(im);
+    AfxAssert(m != im);
 
     // From StackOverflow, by wangzhe, at https://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
 
-    m[0][0] =  in[1][1] * in[2][2] * in[3][3] - in[1][1] * in[2][3] * in[3][2] - in[2][1] * in[1][2] * in[3][3] + in[2][1] * in[1][3] * in[3][2] + in[3][1] * in[1][2] * in[2][3] - in[3][1] * in[1][3] * in[2][2];
-    m[1][0] = -in[1][0] * in[2][2] * in[3][3] + in[1][0] * in[2][3] * in[3][2] + in[2][0] * in[1][2] * in[3][3] - in[2][0] * in[1][3] * in[3][2] - in[3][0] * in[1][2] * in[2][3] + in[3][0] * in[1][3] * in[2][2];
-    m[2][0] =  in[1][0] * in[2][1] * in[3][3] - in[1][0] * in[2][3] * in[3][1] - in[2][0] * in[1][1] * in[3][3] + in[2][0] * in[1][3] * in[3][1] + in[3][0] * in[1][1] * in[2][3] - in[3][0] * in[1][3] * in[2][1];
-    m[3][0] = -in[1][0] * in[2][1] * in[3][2] + in[1][0] * in[2][2] * in[3][1] + in[2][0] * in[1][1] * in[3][2] - in[2][0] * in[1][2] * in[3][1] - in[3][0] * in[1][1] * in[2][2] + in[3][0] * in[1][2] * in[2][1];
+    im[0][0] =  m[1][1] * m[2][2] * m[3][3] - m[1][1] * m[2][3] * m[3][2] - m[2][1] * m[1][2] * m[3][3] + m[2][1] * m[1][3] * m[3][2] + m[3][1] * m[1][2] * m[2][3] - m[3][1] * m[1][3] * m[2][2];
+    im[1][0] = -m[1][0] * m[2][2] * m[3][3] + m[1][0] * m[2][3] * m[3][2] + m[2][0] * m[1][2] * m[3][3] - m[2][0] * m[1][3] * m[3][2] - m[3][0] * m[1][2] * m[2][3] + m[3][0] * m[1][3] * m[2][2];
+    im[2][0] =  m[1][0] * m[2][1] * m[3][3] - m[1][0] * m[2][3] * m[3][1] - m[2][0] * m[1][1] * m[3][3] + m[2][0] * m[1][3] * m[3][1] + m[3][0] * m[1][1] * m[2][3] - m[3][0] * m[1][3] * m[2][1];
+    im[3][0] = -m[1][0] * m[2][1] * m[3][2] + m[1][0] * m[2][2] * m[3][1] + m[2][0] * m[1][1] * m[3][2] - m[2][0] * m[1][2] * m[3][1] - m[3][0] * m[1][1] * m[2][2] + m[3][0] * m[1][2] * m[2][1];
     
-    m[0][1] = -in[0][1] * in[2][2] * in[3][3] + in[0][1] * in[2][3] * in[3][2] + in[2][1] * in[0][2] * in[3][3] - in[2][1] * in[0][3] * in[3][2] - in[3][1] * in[0][2] * in[2][3] + in[3][1] * in[0][3] * in[2][2];
-    m[1][1] =  in[0][0] * in[2][2] * in[3][3] - in[0][0] * in[2][3] * in[3][2] - in[2][0] * in[0][2] * in[3][3] + in[2][0] * in[0][3] * in[3][2] + in[3][0] * in[0][2] * in[2][3] - in[3][0] * in[0][3] * in[2][2];
-    m[2][1] = -in[0][0] * in[2][1] * in[3][3] + in[0][0] * in[2][3] * in[3][1] + in[2][0] * in[0][1] * in[3][3] - in[2][0] * in[0][3] * in[3][1] - in[3][0] * in[0][1] * in[2][3] + in[3][0] * in[0][3] * in[2][1];
-    m[3][1] =  in[0][0] * in[2][1] * in[3][2] - in[0][0] * in[2][2] * in[3][1] - in[2][0] * in[0][1] * in[3][2] + in[2][0] * in[0][2] * in[3][1] + in[3][0] * in[0][1] * in[2][2] - in[3][0] * in[0][2] * in[2][1];
+    im[0][1] = -m[0][1] * m[2][2] * m[3][3] + m[0][1] * m[2][3] * m[3][2] + m[2][1] * m[0][2] * m[3][3] - m[2][1] * m[0][3] * m[3][2] - m[3][1] * m[0][2] * m[2][3] + m[3][1] * m[0][3] * m[2][2];
+    im[1][1] =  m[0][0] * m[2][2] * m[3][3] - m[0][0] * m[2][3] * m[3][2] - m[2][0] * m[0][2] * m[3][3] + m[2][0] * m[0][3] * m[3][2] + m[3][0] * m[0][2] * m[2][3] - m[3][0] * m[0][3] * m[2][2];
+    im[2][1] = -m[0][0] * m[2][1] * m[3][3] + m[0][0] * m[2][3] * m[3][1] + m[2][0] * m[0][1] * m[3][3] - m[2][0] * m[0][3] * m[3][1] - m[3][0] * m[0][1] * m[2][3] + m[3][0] * m[0][3] * m[2][1];
+    im[3][1] =  m[0][0] * m[2][1] * m[3][2] - m[0][0] * m[2][2] * m[3][1] - m[2][0] * m[0][1] * m[3][2] + m[2][0] * m[0][2] * m[3][1] + m[3][0] * m[0][1] * m[2][2] - m[3][0] * m[0][2] * m[2][1];
     
-    m[0][2] =  in[0][1] * in[1][2] * in[3][3] - in[0][1] * in[1][3] * in[3][2] - in[1][1] * in[0][2] * in[3][3] + in[1][1] * in[0][3] * in[3][2] + in[3][1] * in[0][2] * in[1][3] - in[3][1] * in[0][3] * in[1][2];
-    m[1][2] = -in[0][0] * in[1][2] * in[3][3] + in[0][0] * in[1][3] * in[3][2] + in[1][0] * in[0][2] * in[3][3] - in[1][0] * in[0][3] * in[3][2] - in[3][0] * in[0][2] * in[1][3] + in[3][0] * in[0][3] * in[1][2];
-    m[2][2] =  in[0][0] * in[1][1] * in[3][3] - in[0][0] * in[1][3] * in[3][1] - in[1][0] * in[0][1] * in[3][3] + in[1][0] * in[0][3] * in[3][1] + in[3][0] * in[0][1] * in[1][3] - in[3][0] * in[0][3] * in[1][1];
-    m[3][2] = -in[0][0] * in[1][1] * in[3][2] + in[0][0] * in[1][2] * in[3][1] + in[1][0] * in[0][1] * in[3][2] - in[1][0] * in[0][2] * in[3][1] - in[3][0] * in[0][1] * in[1][2] + in[3][0] * in[0][2] * in[1][1];
+    im[0][2] =  m[0][1] * m[1][2] * m[3][3] - m[0][1] * m[1][3] * m[3][2] - m[1][1] * m[0][2] * m[3][3] + m[1][1] * m[0][3] * m[3][2] + m[3][1] * m[0][2] * m[1][3] - m[3][1] * m[0][3] * m[1][2];
+    im[1][2] = -m[0][0] * m[1][2] * m[3][3] + m[0][0] * m[1][3] * m[3][2] + m[1][0] * m[0][2] * m[3][3] - m[1][0] * m[0][3] * m[3][2] - m[3][0] * m[0][2] * m[1][3] + m[3][0] * m[0][3] * m[1][2];
+    im[2][2] =  m[0][0] * m[1][1] * m[3][3] - m[0][0] * m[1][3] * m[3][1] - m[1][0] * m[0][1] * m[3][3] + m[1][0] * m[0][3] * m[3][1] + m[3][0] * m[0][1] * m[1][3] - m[3][0] * m[0][3] * m[1][1];
+    im[3][2] = -m[0][0] * m[1][1] * m[3][2] + m[0][0] * m[1][2] * m[3][1] + m[1][0] * m[0][1] * m[3][2] - m[1][0] * m[0][2] * m[3][1] - m[3][0] * m[0][1] * m[1][2] + m[3][0] * m[0][2] * m[1][1];
     
-    m[0][3] = -in[0][1] * in[1][2] * in[2][3] + in[0][1] * in[1][3] * in[2][2] + in[1][1] * in[0][2] * in[2][3] - in[1][1] * in[0][3] * in[2][2] - in[2][1] * in[0][2] * in[1][3] + in[2][1] * in[0][3] * in[1][2];
-    m[1][3] =  in[0][0] * in[1][2] * in[2][3] - in[0][0] * in[1][3] * in[2][2] - in[1][0] * in[0][2] * in[2][3] + in[1][0] * in[0][3] * in[2][2] + in[2][0] * in[0][2] * in[1][3] - in[2][0] * in[0][3] * in[1][2];
-    m[2][3] = -in[0][0] * in[1][1] * in[2][3] + in[0][0] * in[1][3] * in[2][1] + in[1][0] * in[0][1] * in[2][3] - in[1][0] * in[0][3] * in[2][1] - in[2][0] * in[0][1] * in[1][3] + in[2][0] * in[0][3] * in[1][1];
-    m[3][3] =  in[0][0] * in[1][1] * in[2][2] - in[0][0] * in[1][2] * in[2][1] - in[1][0] * in[0][1] * in[2][2] + in[1][0] * in[0][2] * in[2][1] + in[2][0] * in[0][1] * in[1][2] - in[2][0] * in[0][2] * in[1][1];
+    im[0][3] = -m[0][1] * m[1][2] * m[2][3] + m[0][1] * m[1][3] * m[2][2] + m[1][1] * m[0][2] * m[2][3] - m[1][1] * m[0][3] * m[2][2] - m[2][1] * m[0][2] * m[1][3] + m[2][1] * m[0][3] * m[1][2];
+    im[1][3] =  m[0][0] * m[1][2] * m[2][3] - m[0][0] * m[1][3] * m[2][2] - m[1][0] * m[0][2] * m[2][3] + m[1][0] * m[0][3] * m[2][2] + m[2][0] * m[0][2] * m[1][3] - m[2][0] * m[0][3] * m[1][2];
+    im[2][3] = -m[0][0] * m[1][1] * m[2][3] + m[0][0] * m[1][3] * m[2][1] + m[1][0] * m[0][1] * m[2][3] - m[1][0] * m[0][3] * m[2][1] - m[2][0] * m[0][1] * m[1][3] + m[2][0] * m[0][3] * m[1][1];
+    im[3][3] =  m[0][0] * m[1][1] * m[2][2] - m[0][0] * m[1][2] * m[2][1] - m[1][0] * m[0][1] * m[2][2] + m[1][0] * m[0][2] * m[2][1] + m[2][0] * m[0][1] * m[1][2] - m[2][0] * m[0][2] * m[1][1];
 
-    afxReal det = in[0][0] * m[0][0] + in[0][1] * m[1][0] + in[0][2] * m[2][0] + in[0][3] * m[3][0];
+    afxReal det = m[0][0] * im[0][0] + m[0][1] * im[1][0] + m[0][2] * im[2][0] + m[0][3] * im[3][0];
 
     if (det)
     {
@@ -953,40 +954,40 @@ _AFXINL afxReal AfxInverseM4d(afxReal m[4][4], afxReal const in[4][4])
 
         for (afxNat i = 0; i < 4; i++)
             for (afxNat j = 0; j < 4; j++)
-                m[i][j] = m[i][j] * det;
+                im[i][j] = im[i][j] * det;
     }
     return det;
 }
 
-_AFXINL afxReal AfxInverseAtm4(afxReal m[4][4], afxReal const in[4][4])
+_AFXINL afxReal AfxInvertAtm4(afxReal const m[4][4], afxReal im[4][4])
 {
     // Should be compatible with void MatrixInvert4x3(float *DestInit, const float *SourceInit)
 
-    afxReal det = (in[1][1] * in[2][2] - in[2][1] * in[1][2]) * in[0][0] - (in[2][2] * in[0][1] - in[2][1] * in[0][2]) * in[1][0] + (in[1][2] * in[0][1] - in[1][1] * in[0][2]) * in[2][0];
+    afxReal det = (m[1][1] * m[2][2] - m[2][1] * m[1][2]) * m[0][0] - (m[2][2] * m[0][1] - m[2][1] * m[0][2]) * m[1][0] + (m[1][2] * m[0][1] - m[1][1] * m[0][2]) * m[2][0];
 
-    if (det == (afxReal)0) AfxResetM4d(m); // granny ignora LT se não for inversível mas nulifica o W.
+    if (det == (afxReal)0) AfxResetM4d(im); // granny ignora LT se não for inversível mas nulifica o W.
     else
     {
         afxReal recip = 1.0 / det;
-        m[0][0] =  ( in[1][1] * in[2][2] - in[2][1] * in[1][2]) * recip;
-        m[0][1] = -((in[2][2] * in[0][1] - in[2][1] * in[0][2]) * recip);
-        m[0][2] =  ( in[1][2] * in[0][1] - in[1][1] * in[0][2]) * recip;
-        m[0][3] = 0.f;
+        im[0][0] =  ( m[1][1] * m[2][2] - m[2][1] * m[1][2]) * recip;
+        im[0][1] = -((m[2][2] * m[0][1] - m[2][1] * m[0][2]) * recip);
+        im[0][2] =  ( m[1][2] * m[0][1] - m[1][1] * m[0][2]) * recip;
+        im[0][3] = 0.f;
 
-        m[1][0] = -((in[1][0] * in[2][2] - in[2][0] * in[1][2]) * recip);
-        m[1][1] =  ( in[2][2] * in[0][0] - in[2][0] * in[0][2]) * recip;
-        m[1][2] = -((in[1][2] * in[0][0] - in[0][2] * in[1][0]) * recip);
-        m[1][3] = 0.f;
+        im[1][0] = -((m[1][0] * m[2][2] - m[2][0] * m[1][2]) * recip);
+        im[1][1] =  ( m[2][2] * m[0][0] - m[2][0] * m[0][2]) * recip;
+        im[1][2] = -((m[1][2] * m[0][0] - m[0][2] * m[1][0]) * recip);
+        im[1][3] = 0.f;
 
-        m[2][0] =  ( in[2][1] * in[1][0] - in[2][0] * in[1][1]) * recip;
-        m[2][1] = -((in[2][1] * in[0][0] - in[2][0] * in[0][1]) * recip);
-        m[2][2] =  ( in[1][1] * in[0][0] - in[1][0] * in[0][1]) * recip;
-        m[2][3] = 0.f;
+        im[2][0] =  ( m[2][1] * m[1][0] - m[2][0] * m[1][1]) * recip;
+        im[2][1] = -((m[2][1] * m[0][0] - m[2][0] * m[0][1]) * recip);
+        im[2][2] =  ( m[1][1] * m[0][0] - m[1][0] * m[0][1]) * recip;
+        im[2][3] = 0.f;
     }
-    m[3][0] = -(m[2][0] * in[3][2] + m[1][0] * in[3][1] + m[0][0] * in[3][0]);
-    m[3][1] = -(m[2][1] * in[3][2] + m[1][1] * in[3][1] + m[0][1] * in[3][0]);
-    m[3][2] = -(m[2][2] * in[3][2] + m[1][2] * in[3][1] + m[0][2] * in[3][0]);
-    m[3][3] = 1.f;
+    im[3][0] = -(im[2][0] * m[3][2] + im[1][0] * m[3][1] + im[0][0] * m[3][0]);
+    im[3][1] = -(im[2][1] * m[3][2] + im[1][1] * m[3][1] + im[0][1] * m[3][0]);
+    im[3][2] = -(im[2][2] * m[3][2] + im[1][2] * m[3][1] + im[0][2] * m[3][0]);
+    im[3][3] = 1.f;
     return det;
 }
 
@@ -1320,7 +1321,7 @@ _AFXINL afxBool AfxPolarDecomposeM3d(afxReal const m[3][3], afxReal tol, afxReal
 
     while (1)
     {
-        AfxInverseM3d(ssm, rm);
+        AfxInvertM3d(rm, ssm);
         AfxAddM3d(ssm, ssm, rm);
 
         AfxScaleV3d(ssm[0], ssm[0], 0.5);
@@ -2082,4 +2083,76 @@ _AFX void AfxApplyRootMotionVectorsToMatrix(afxReal const translation[3], afxRea
     afxM4d tmp;
     AfxMultiplyTransposedAtm4(tmp, upd, mm);
     AfxCopyM4d(m, tmp);
+}
+
+_AFX afxError AfxReadMatrices2(afxStream in, afxNat cnt, afxM2d dst[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssert(dst);
+    AfxAssert(cnt);
+
+    AfxReadStream2(in, cnt * sizeof(dst[0]), sizeof(dst[0]), dst, sizeof(dst[0]));
+
+    return err;
+}
+
+_AFX afxError AfxReadMatrices3(afxStream in, afxNat cnt, afxM3d dst[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssert(dst);
+    AfxAssert(cnt);
+
+    AfxReadStream2(in, cnt * sizeof(dst[0]), sizeof(dst[0]), dst, sizeof(dst[0]));
+
+    return err;
+}
+
+_AFX afxError AfxReadMatrices4(afxStream in, afxNat cnt, afxM4d dst[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssert(dst);
+    AfxAssert(cnt);
+
+    AfxReadStream2(in, cnt * sizeof(dst[0]), sizeof(dst[0]), dst, sizeof(dst[0]));
+
+    return err;
+}
+
+_AFX afxError AfxWriteMatrices2(afxStream out, afxNat cnt, afxM2d const src[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssert(src);
+    AfxAssert(cnt);
+
+    AfxWriteStream2(out, cnt * sizeof(src[0]), sizeof(src[0]), src, sizeof(src[0]));
+
+    return err;
+}
+
+_AFX afxError AfxWriteMatrices3(afxStream out, afxNat cnt, afxM3d const src[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssert(src);
+    AfxAssert(cnt);
+
+    AfxWriteStream2(out, cnt * sizeof(src[0]), sizeof(src[0]), src, sizeof(src[0]));
+
+    return err;
+}
+
+_AFX afxError AfxWriteMatrices4(afxStream out, afxNat cnt, afxM4d const src[])
+{
+    afxError err = NIL;
+    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssert(src);
+    AfxAssert(cnt);
+
+    AfxWriteStream2(out, cnt * sizeof(src[0]), sizeof(src[0]), src, sizeof(src[0]));
+
+    return err;
 }

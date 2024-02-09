@@ -1,0 +1,81 @@
+
+ afxDebug_w32.c:391
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0f2036e8...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(0069f810)
+ afxSystem_w32.c:227
+  _AfxSysCtor(sys=0069f810)
+ Installing Thread Execution Unit at 0069fdc8 by 0069f858...
+ Entering the Thread Execution Environment 6532
+ afxClass<Thread Execution Unit>::ConstructObject(006a06d0)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(006a06d0)
+ Installing Memory Management Unit at 0069f86c by 0069f858...
+ Installing Thread at 0069fd04 by 0069f858...
+ Installing Device at 0069fe8c by 0069f858...
+ Installing Autonomous Service at 0069ff50 by 0069f858...
+ Installing File at 006a019c by 0069f858...
+ Installing I/O Stream at 006a0014 by 0069f858...
+ Installing Codec at 006a00d8 by 0069f858...
+ Installing File Archive at 006a0260 by 0069f858 over 006a019c...
+ Installing Executable & Linkable Module at 0069f930 by 0069f858...
+ Installing Installable Client Driver at 0069f9f4 by 0069f858 over 0069f930...
+ Installing Storage Point at 006a0324 by 0069f858...
+ Installing Application at 006a04ac by 0069f858...
+ Installing Human Input Device at 0069fab8 by 0069f858 over 0069fe8c...
+ Installing Keyboard at 0069fb7c by 0069f858 over 0069fab8...
+ Installing Mouse at 0069fc40 by 0069f858 over 0069fab8...
+ Installing Simulation at 006a03e8 by 0069f858...
+ [!] afxSystem_w32.c:338?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:339?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(006a07d0)
+ afxArena.c:768
+  AfxAllocateArena(aren=006a05d4)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:352!_AfxSysCtor")
+ afxClass<Storage Point>::ConstructObject(006a2740)
+ ERR afxUri.c:642?AfxGetUriPath
+  
+ ERR afxUri.c:642?AfxGetUriPath
+  (src)
+    Invalid
+ ERR afxUri.c:481?AfxMeasurePath
+  
+ ERR afxUri.c:481?AfxMeasurePath
+  (uri)
+    Invalid
+ ERR afxString.c:762?AfxExcerptString
+  
+ ERR afxString.c:762?AfxExcerptString
+  (src)
+    Invalid
+ ERR afxString.c:59?AfxGetStringLength
+  
+ ERR afxString.c:59?AfxGetStringLength
+  (str)
+    Invalid
+ ERR afxString.c:764?AfxExcerptString
+  
+ ERR afxString.c:764?AfxExcerptString
+  <offset>146 + <len>33088 is out of capacity <maxRange>29043.
+ ERR afxString.c:46?AfxGetStringData
+  
+ ERR afxString.c:46?AfxGetStringData
+  (str)
+    Invalid

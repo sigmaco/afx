@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_QUATERNION_H
@@ -279,6 +279,8 @@ AFXINL void AfxBarycentricQuat(afxQuat q, afxQuat const a, afxQuat const b, afxQ
 AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxReal const tbn[3][3]);
 
 AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxReal const normal[3], afxReal const tangent[3], afxReal const bitangent[3]);
+
+AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxReal const rot[3]);
 
 /// Updating the dynamical state of a rigid body is referred to as integration. 
 /// If you represent the orientation of this body with a quaternion, you will need to know how to update it. 

@@ -1,13 +1,13 @@
 # The Qwadro Execution Ecosystem
 The SIGMA autonomous execution platform.
 
-Qwadro is an initiative of the SIGMA Federation to foster the genuine development of hardware-accelerated 2D, 3D and 4D drawing applications for the Latin American audience. This is a top secret project with top secret objectives as expected. Yeah, now you know about it we have to led you to some basement from El Dorado.
+Qwadro is an autonomous execution ecosystem, a level-3 system infrastructure, a data-oriented virtual platform, that offers a set of common building blocks to build systems analogous to game engines. It is a coalition of middlewares and engines.
 
-Qwadro is not a game engine. Qwadro is an autonomous execution ecosystem, a data-oriented virtual platform, that offers a set of common building blocks to build systems analogous to game engines.
+Qwadro is not a game engine. Qwadro is an initiative of the SIGMA Federation to foster the genuine development of hardware-accelerated 2D, 3D and 4D drawing applications for the Latin American audience. This is a top secret project with top secret objectives as expected. Yeah, now you know about it we have to led you to some basement from El Dorado.
 
 Why is Qwadro not a game engine? Because the Qwadro ecosystem was initially made to run old demoscenes, mainly from RenderWare, but not limited to them, and then to be necessarily customized, always creating different products, as in-house game engines were made in the past, when everything seemed to be distinguishable and was made using a specific technology.
 
-Despite little current similarity, Qwadro emerged as a fork of the RenderWare Platform in an attempt to rebuild the demos in a multithreaded paradigm and OpenGL.
+Despite little current similarity, Qwadro AFX emerged as a fork of the RenderWare Platform in an attempt to rebuild the demos in a multithreaded paradigm and OpenGL.
 After certain maneuvers, RenderWare proved to be very inefficient on new hardware, that is, certain procedures could be better optimized for current hardware capabilities at the same or lower computational cost.
 
 Currently, Qwadro constitutes a collection of middlewares integrating systems, subsystems and drivers, abstracting operating systems and platforms.

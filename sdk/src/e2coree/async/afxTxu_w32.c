@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
  
 //#include "../src/e2coree/deps/tinycthread.h"
@@ -115,7 +115,7 @@ _AFX void AfxGetThread(afxThread *thr)
     afxNat32 tid;
     AfxGetThreadingId(&tid);
     struct _txuFindThreadParam param = { .thr = thr, .tid = tid};
-    AfxCurateTxus(0, AFX_N32_MAX, _TxuFindThreadCb, &param);
+    AfxInvokeTxus(0, AFX_N32_MAX, _TxuFindThreadCb, &param);
 }
 
 _AFXINL afxBool _TxuFindUnitCb(afxTxu txu, void* udd)
@@ -140,7 +140,7 @@ _AFX void AfxGetThreadingUnit(afxNat *txuIdx)
     afxNat32 tid;
     AfxGetThreadingId(&tid);
     struct _txuFindUnitParam param = { .unitIdx = txuIdx, .tid = tid };
-    AfxCurateTxus(0, AFX_N32_MAX, _TxuFindUnitCb, &param);
+    AfxInvokeTxus(0, AFX_N32_MAX, _TxuFindUnitCb, &param);
 }
 
 _AFX void AfxGetExecutionCounter(afxNat *currIter, afxNat *lastFreq)
@@ -201,10 +201,10 @@ _AFX void AfxExitExecution(afxInt code)
     AfxAssertObjects(1, &thr, afxFcc_THR);
 
     // Tells the thread's event loop to exit with a return code.
-    // After calling this function, the thread leaves the event loop and returns from the call to QEventLoop::exec().The QEventLoop::exec() function returns returnCode.
+    // After calling this function, the thread leaves the event loop and returns from the call to exec(). The exec() function returns returnCode.
     // By convention, a returnCode of 0 means success, any non - zero value indicates an error.
     // Note that unlike the C library function of the same name, this function does return to the caller -- it is event processing that stops.
-    // No QEventLoops will be started anymore in this thread until QThread::exec() has been called again.If the eventloop in QThread::exec() is not running then the next call to QThread::exec() will also return immediately.
+    // No EventLoops will be started anymore in this thread until exec() has been called again.If the eventloop in exec() is not running then the next call to exec() will also return immediately.
 
     thr->exitCode = code;
     thr->exited = TRUE;
@@ -214,7 +214,7 @@ _AFX void AfxExitExecution(afxInt code)
 
 _AFX void AfxQuitExecution(void)
 {
-    // Tells the thread's event loop to exit with return code 0 (success). Equivalent to calling QThread::exit(0).
+    // Tells the thread's event loop to exit with return code 0 (success). Equivalent to calling exit(0).
     // This function does nothing if the thread does not have an event loop.
     AfxExitExecution(0);
 }
@@ -252,7 +252,7 @@ _AFX afxBool _AfxThrExecuteCb(afxThread thr, void *udd)
         {
             afxThread backedUpThr;
 
-            if (thr != (backedUpThr = txu->activeThr)) // do not allow reentrancy
+            if (thr != (backedUpThr = txu->activeThr)) // do not allow reentrancy on same thread
             {
                 txu->activeThr = thr;
 
@@ -265,12 +265,13 @@ _AFX afxBool _AfxThrExecuteCb(afxThread thr, void *udd)
 
                     if (thr->running)
                     {
-                        // Ignore clock recentering issues for this example
-                        AfxGetClock(&thr->currClock);
-                        thr->currTime = AfxGetSecondsElapsed(&thr->startClock, &thr->currClock);
-                        thr->deltaTime = AfxGetSecondsElapsed(&thr->lastClock, &thr->currClock);
+                        afxClock currClock;
+                        AfxGetClock(&currClock);
                         thr->lastClock = thr->currClock;
-
+                        thr->currClock = currClock;
+                        thr->currTime = AfxGetSecondsElapsed(&thr->startClock, &currClock);
+                        thr->deltaTime = AfxGetSecondsElapsed(&thr->lastClock, &currClock);
+                        
 #if 0
                         if ((ev = AfxPullNextQueueUnit(&thr->events)))
                         {
@@ -340,15 +341,16 @@ _AFX afxResult _AfxDoSystemThreading(afxSystem sys, afxTime timeout)
         AfxEnumerateTxus(txuIdx, 1, &txu);
         AfxAssertObjects(1, &txu, afxFcc_TXU);
 
-        // Ignore clock recentering issues for this example
-        AfxGetClock(&txu->currClock);
-        txu->currTime = AfxGetSecondsElapsed(&txu->startClock, &txu->currClock);
-        txu->deltaTime = AfxGetSecondsElapsed(&txu->lastClock, &txu->currClock);
+        afxClock currClock;
+        AfxGetClock(&currClock);
         txu->lastClock = txu->currClock;
+        txu->currClock = currClock;
+        txu->currTime = AfxGetSecondsElapsed(&txu->startClock, &currClock);
+        txu->deltaTime = AfxGetSecondsElapsed(&txu->lastClock, &currClock);
 
-        if (1 < AfxGetSecondsElapsed(&txu->iterCntSwapClock, &txu->currClock))
+        if (1.0 < AfxGetSecondsElapsed(&txu->iterCntSwapClock, &currClock))
         {
-            txu->iterCntSwapClock = txu->currClock;
+            txu->iterCntSwapClock = currClock;
             txu->lastIterCnt = txu->iterCnt;
             txu->iterCnt = 0;
         }
@@ -357,7 +359,7 @@ _AFX afxResult _AfxDoSystemThreading(afxSystem sys, afxTime timeout)
             ++txu->iterCnt;
         }
 
-        AfxCurateThreads(0, AFX_N32_MAX, _AfxThrExecuteCb, txu);
+        AfxInvokeThreads(0, AFX_N32_MAX, _AfxThrExecuteCb, txu);
 
         if (sys->isInShutdown)
             code = sys->exitCode;
@@ -451,7 +453,7 @@ _AFX afxError _AfxTxuDtor(afxTxu txu)
     return err;
 }
 
-_AFX afxClassConfig _AfxTxuClsConfig =
+_AFX afxClassConfig const _AfxTxuClsConfig =
 {
     .fcc = afxFcc_TXU,
     .name = "Thread Execution Unit",
@@ -464,14 +466,14 @@ _AFX afxClassConfig _AfxTxuClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxCurateTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd)
+_AFX afxNat AfxInvokeTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetTxuClass();
     AfxAssertClass(cls, afxFcc_TXU);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txu[])

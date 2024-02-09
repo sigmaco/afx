@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -197,14 +197,14 @@ _AFX afxClassConfig const _AfxHidClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxCurateHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd)
+_AFX afxNat AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetHidClass();
     AfxAssertClass(cls, afxFcc_HID);
-    return cnt ? AfxCurateInstances(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
 }
 
 _AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hid[])

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include <sys/stat.h>
@@ -67,19 +67,19 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
         AfxAssertType(&out[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(&in[i]));
 
-        afxFileFlags ioPerms = permissions ? permissions & AFX_FILE_PERM_MASK : AFX_FILE_FLAG_RX;
+        afxFileFlags ioPerms = permissions ? permissions & AFX_FILE_PERM_MASK : afxFileFlag_RX;
         afxBool resolved = FALSE;
         struct stat st;
 
         unsigned short flagsToTest = NIL;
 
-        if (AfxFlagsTest(ioPerms, AFX_FILE_FLAG_R))
+        if (AfxTestFlags(ioPerms, afxFileFlag_R))
             flagsToTest |= _S_IREAD;
 
-        if (AfxFlagsTest(ioPerms, AFX_FILE_FLAG_W))
+        if (AfxTestFlags(ioPerms, afxFileFlag_W))
             flagsToTest |= _S_IWRITE;
 
-        //if (AfxFlagsTest(ioPerms, afxIoFlag_X))
+        //if (AfxTestFlags(ioPerms, afxIoFlag_X))
             //flagsToTest |= _S_IEXEC;
 
 #if 0
@@ -120,7 +120,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
 
             afxChar const *pointStart = srcData;
 
-            afxChar const *pointEnd = AfxFindCharRaw(pointStart, '/');
+            afxChar const *pointEnd = AfxStrchr(pointStart, '/');
 
             afxString point;
             AfxMakeString(&point, pointStart, pointEnd ? pointEnd - pointStart : AfxGetStringLength(pathStr));
@@ -131,6 +131,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
 
             afxNat pointEndRange = pointEnd ? AfxGetStringLength(pathStr) - (pointEnd - pointStart) : AfxGetStringLength(pathStr);
 
+            afxBool hasWildcard = !!AfxFindStringChar(pathStr, 0, '*');
 
 #if 0
 #define _S_IFMT   0xF000 // File class mask
@@ -160,22 +161,22 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
             }
             else
             {
-                afxNat j = 0;
+                afxNat j = AfxCountStorages();
                 afxStorage sto;
-                while (AfxEnumerateStorages(j, 1, &sto))
+                while (AfxEnumerateStorages(--j, 1, &sto))
                 {
                     AfxAssertObjects(1, &sto, afxFcc_STO);
 
                     if ((sto->flags & ioPerms) == ioPerms)
                     {
-                        if (0 == AfxCompareString(&point, AfxGetUriString(&sto->name.uri)))
+                        if (0 == AfxTestStringEquality(&point, AfxGetUriString(&sto->name.uri)))
                         {
                             AfxFormatUri(&out[i], "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&sto->path)), pointEndRange, pointEnd);
                             AfxEcho(dstData);
 
-                            if (!stat(dstData, &(st)) || (ioPerms & AFX_FILE_FLAG_W))
+                            if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
                             {
-                                if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & AFX_FILE_FLAG_W)
+                                if (((st.st_mode & flagsToTest) == flagsToTest) || ioPerms & afxFileFlag_W || hasWildcard)
                                 {
                                     resolved = TRUE;
                                     break;
@@ -183,7 +184,6 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
                             }
                         }
                     }
-                    ++j;
                 }
 
                 if (!resolved)
@@ -221,17 +221,31 @@ _AFX afxError _AfxStoCtor(afxStorage sto, afxCookie const* cookie)
     AfxAssert(spec);
     AfxAssert(spec->perm & AFX_IO_PERM_MASK);
 
-    afxUri path;
-    AfxGetUriPath(&path, spec->hostPath);
+    afxUri path, hostPath;
+    AfxUriFromString(&hostPath, spec->hostPath);
+    AfxGetUriPath(&path, &hostPath);
 
     afxFixedUri2048 bufUri;
     AfxMakeFixedUri2048(&bufUri, NIL);
 
     if (AfxPathIsRelative(&path))
     {
-        afxUri const *rootUri = AfxGetSystemRootPath(NIL);
-        afxString const *rootUriString = AfxGetSystemRootPathString(NIL);
-        AfxFormatUri(&bufUri.uri, "%.*s/%.*s", AfxPushString(rootUriString), AfxPushString(AfxGetUriString(&path)));
+        afxUri const *rootUri = AfxGetSystemDirectory(NIL);
+        afxString const *rootUriString = AfxGetSystemDirectoryString(NIL);
+        AfxFormatString(&bufUri.uri.str, "%.*s"
+#ifdef AFX_PLATFORM_WIN
+            "\\"
+#else
+            "/"
+#endif
+            "%.*s"
+#ifdef AFX_PLATFORM_WIN
+            "\\"
+#else
+            "/"
+#endif
+            , AfxPushString(rootUriString), AfxPushString(AfxGetUriString(&path)));
+        AfxReparseUri(&bufUri.uri);
     }
     else
     {
@@ -247,13 +261,13 @@ _AFX afxError _AfxStoCtor(afxStorage sto, afxCookie const* cookie)
         unsigned short flagsToTest = NIL;
         afxIoFlags ioPerms = spec->perm & AFX_IO_PERM_MASK;
 
-        if (AfxFlagsTest(ioPerms, afxIoFlag_R))
+        if (AfxTestFlags(ioPerms, afxIoFlag_R))
             flagsToTest |= _S_IREAD;
 
-        if (AfxFlagsTest(ioPerms, afxIoFlag_W))
+        if (AfxTestFlags(ioPerms, afxIoFlag_W))
             flagsToTest |= _S_IWRITE;
 
-        if (AfxFlagsTest(ioPerms, afxIoFlag_X))
+        if (AfxTestFlags(ioPerms, afxIoFlag_X))
             flagsToTest |= _S_IEXEC;
 
         if (!((st.st_mode & flagsToTest) == flagsToTest)) AfxThrowError();
@@ -263,7 +277,7 @@ _AFX afxError _AfxStoCtor(afxStorage sto, afxCookie const* cookie)
             afxBool isFile = !!(st.st_mode & _S_IFREG);
             afxArchive arc = NIL;
 
-            if (!isDir && (isFile && AfxAcquireArchives(1, &arc, &bufUri.uri, (afxFileFlags[]) { ioPerms | AFX_FILE_FLAG_D }))) AfxThrowError();
+            if (!isDir && (isFile && AfxAcquireArchives(1, &arc, &bufUri.uri, (afxFileFlags[]) { ioPerms | afxFileFlag_D }))) AfxThrowError();
             else
             {
                 AfxMakeFixedUri8(&sto->name, spec->namespace);
@@ -338,14 +352,14 @@ _AFX afxError AfxMountStoragePoints(afxNat cnt, afxStoragePointSpecification con
     return err;
 }
 
-_AFX afxNat AfxCurateStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd)
+_AFX afxNat AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
     afxClass* cls = AfxGetStorageClass();
     AfxAssertClass(cls, afxFcc_STO);
-    return AfxCurateInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage sto[])

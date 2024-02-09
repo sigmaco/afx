@@ -65,22 +65,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -127,7 +127,6 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -135,7 +134,6 @@
       <PreprocessorDefinitions>AFX_DRAW_DRIVER_SRC;__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LargeAddressAware>true</LargeAddressAware>
@@ -146,7 +144,6 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -154,11 +151,8 @@
       <PreprocessorDefinitions>AFX_DRAW_DRIVER_SRC;__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
-    <Link>
-      <LargeAddressAware>true</LargeAddressAware>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\e2draw\sgl.h" />
@@ -168,14 +162,20 @@
     <ClCompile Include="..\..\src\e2draw\sglBuf.c" />
     <ClCompile Include="..\..\src\e2draw\sglCanv.c" />
     <ClCompile Include="..\..\src\e2draw\sglDcmd.c" />
+    <ClCompile Include="..\..\src\e2draw\sglBufOps.c" />
+    <ClCompile Include="..\..\src\e2draw\sglRasOps.c" />
+    <ClCompile Include="..\..\src\e2draw\sglRazrOps.c" />
+    <ClCompile Include="..\..\src\e2draw\sglTmerOps.c" />
     <ClCompile Include="..\..\src\e2draw\sglDctx.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDque.c" />
+    <ClCompile Include="..\..\src\e2draw\sglDque_w32.c" />
     <ClCompile Include="..\..\src\e2draw\sglDin.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDout.c" />
+    <ClCompile Include="..\..\src\e2draw\sglDout_w32.c" />
     <ClCompile Include="..\..\src\e2draw\sglDscr.c" />
-    <ClCompile Include="..\..\src\e2draw\sglDdrv.c" />
+    <ClCompile Include="..\..\src\e2draw\sglDdrv_w32.c" />
     <ClCompile Include="..\..\src\e2draw\sglBsch.c" />
+    <ClCompile Include="..\..\src\e2draw\sglFenc.c" />
     <ClCompile Include="..\..\src\e2draw\sglPip.c" />
+    <ClCompile Include="..\..\src\e2draw\sglQryp.c" />
     <ClCompile Include="..\..\src\e2draw\sglRazr.c" />
     <ClCompile Include="..\..\src\e2draw\sglShd.c" />
     <ClCompile Include="..\..\src\e2draw\sglSamp.c" />

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_SIM_C
@@ -141,7 +141,7 @@ _AFX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
 
     afxUri uri;
     AfxMakeUri(&uri, "data/pipeline/skybox.xsh.xml", 0);
-    sky->skyPip = AfxLoadPipelineFromXsh(dctx, &uri);
+    sky->skyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     sky->type = awxSkyType_BOX;
 
     afxVertexInputStream const vinStreams[] =

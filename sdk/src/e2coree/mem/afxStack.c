@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/mem/afxStack.h"
@@ -20,8 +20,8 @@
 _AFX afxAllocationBlock* _AfxStackAllocateBlock(afxStack *stck)
 {
     afxNat v1 = stck->unitSiz * stck->unitsPerBlock;
-    afxAllocationBlock *block = AfxAllocate(stck->ctx, sizeof(*block), 1, 0, AfxHint());
-    block->base = AfxAllocate(stck->ctx, v1, 1, 0, AfxHint());
+    afxAllocationBlock *block = AfxAllocate(stck->ctx, 1, sizeof(*block), 0, AfxHint());
+    block->base = AfxAllocate(stck->ctx, 1, v1, 0, AfxHint());
 
     {
         block->usedUnitCnt = 0;
@@ -338,7 +338,7 @@ _AFX void AfxAllocatePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerB
     stck->lastBlock = NIL;
     stck->activeBlocks = 0;
     stck->maxActiveBlocks = v4;
-    afxAllocationBlock**v5 = AfxAllocate(stck->ctx, sizeof(afxAllocationBlock*), v4, 0, AfxHint());
+    afxAllocationBlock**v5 = AfxAllocate(stck->ctx, v4, sizeof(afxAllocationBlock*), 0, AfxHint());
     afxNat v6 = sizeof(afxAllocationBlock*) * stck->maxActiveBlocks;
     stck->blockDir = v5;
     AfxZero(1, v6, v5);

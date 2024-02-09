@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/core/afxClass.h"
@@ -47,10 +47,10 @@ _AFX afxResult _AfxUninstallChainedClasses(afxChain *provisions)
             AfxAssertType(cls, afxFcc_CLS);
             ++cnt;
 
-            if (cls->objFcc != afxFcc_SYS)
+            if (cls->objFcc == afxFcc_SYS)
+                break; // has only the SYS. We can't drop it or will shit the entire platform. Break.
+            else
                 AfxDismountClass(cls);
-            else if (provisions->cnt == 1) // has only the SYS. We can't drop it or will shit the entire platform. Break.
-                break;
         }
     }
     return cnt;
@@ -179,9 +179,8 @@ _AFXINL afxNat _AfxClsEnumerateInstances(afxClass const* cls, afxBool fromLast, 
 
     if (cnt)
     {
-        afxChain const *supersets = &cls->deriveds;
-
         afxClass *superset;
+        afxChain const *supersets = &cls->deriveds;
         AfxChainForEveryLinkageB2F(supersets, afxClass, base, superset)
         {
             AfxAssertType(superset, afxFcc_CLS);
@@ -231,14 +230,12 @@ _AFXINL afxNat AfxEnumerateInstances(afxClass const* cls, afxNat first, afxNat c
     afxError err = AFX_ERR_NONE;
     AfxAssert(cls);
     AfxAssertType(cls, afxFcc_CLS);
+    AfxAssert(cnt);
     afxNat rslt = 0;
 
-    if (cnt)
-    {
-        AfxClassLockInclusive((afxClass*)cls);
-        rslt = _AfxClsEnumerateInstances(cls, FALSE, first, cnt, obj);
-        AfxClassUnlockInclusive((afxClass*)cls);
-    }
+    AfxClassLockInclusive((afxClass*)cls);
+    rslt = _AfxClsEnumerateInstances(cls, FALSE, first, cnt, obj);
+    AfxClassUnlockInclusive((afxClass*)cls);
     return rslt;
 }
 
@@ -268,19 +265,16 @@ _AFXINL afxNat _AfxClsCurateInstances(afxClass const* cls, afxBool fromLast, afx
     return rslt;
 }
 
-AFXINL afxNat AfxCurateInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd)
+AFXINL afxNat AfxInvokeInstances(afxClass const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cls);
     AfxAssertType(cls, afxFcc_CLS);
+    AfxAssert(cnt);
+    AfxAssert(f);
     afxNat rslt = 0;
-
-    if (cnt)
-    {
-        AfxClassLockInclusive((afxClass*)cls);
-        rslt = _AfxClsCurateInstances(cls, FALSE, first, cnt, f, udd);
-        AfxClassUnlockInclusive((afxClass*)cls);
-    }
+    AfxClassLockInclusive((afxClass*)cls);
+    rslt = _AfxClsCurateInstances(cls, FALSE, first, cnt, f, udd);
+    AfxClassUnlockInclusive((afxClass*)cls);
     return rslt;
 }
 
@@ -560,7 +554,7 @@ _AFX afxError AfxDismountClass(afxClass *cls)
 
     AfxAssert(cls);
     AfxAssertType(cls, afxFcc_CLS);
-    AfxEcho("Dismounting %s class... (%p)", cls->name, cls);
+    AfxEcho("Dismounting %s : %s class... (%p)", cls->name, cls->base.chain ? ((afxClass*)cls->base.chain)->name : "", cls);
 
     //AfxEnterSlockExclusive(&cls->slock);
 
@@ -610,8 +604,29 @@ _AFX afxError AfxMountClass(afxClass *cls, afxClass *base, afxChain* provider, a
     AfxAssert(cls);
     AfxAssert(config);
 
-    AfxEcho("Installing %s at %p by %p over %p with %p)", config->name, cls, provider, base, config);
-    
+    if (provider)
+    {
+        if (base)
+        {
+            AfxEcho("Installing %s at %p by %p over %p...", config->name, cls, provider, base);
+        }
+        else
+        {
+            AfxEcho("Installing %s at %p by %p...", config->name, cls, provider);
+        }
+    }
+    else
+    {
+        if (base)
+        {
+            AfxEcho("Installing %s at %p over %p...", config->name, cls, base);
+        }
+        else
+        {
+            AfxEcho("Installing %s at %p...", config->name, cls);
+        }
+    }
+
     //AfxTakeSlock(&cls->slock);
     //AfxEnterSlockExclusive(&cls->slock);
 
@@ -642,7 +657,7 @@ _AFX afxError AfxMountClass(afxClass *cls, afxClass *base, afxChain* provider, a
     cls->ctor = config->ctor ? config->ctor : _AfxClsDummyCtor;
     cls->dtor = config->dtor ? config->dtor : _AfxClsDummyDtor;
     AfxAssert(config->name && config->name[0]);
-    AfxCopyRawString(cls->name, config->name);
+    AfxStrcpy(cls->name, config->name ? config->name : "");
     cls->input = NIL;
     cls->output = NIL;
     cls->event = config->event;
@@ -734,7 +749,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
                 }
 
                 if (err)
-                    AfxDeallocatePoolUnit(&cls->pool, ptr);
+                    AfxDeallocatePoolUnit(&cls->pool, (afxByte*)ptr);
             }
 
             if (err)
@@ -748,7 +763,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
                 }
                 
                 if (i)
-                    AfxDeallocatePoolUnits(&cls->pool, i, (void**)obj);
+                    AfxDeallocatePoolUnits(&cls->pool, i, (afxByte**)obj);
 
                 break;
             }
@@ -789,7 +804,7 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
                     obj[j] = ptr;
                 }
 
-                AfxDeallocatePoolUnits(&cls->pool, cnt, (void**)obj);
+                AfxDeallocatePoolUnits(&cls->pool, cnt, (afxByte**)obj);
             }
         }
 

@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/math/afxMathDefs.h"
@@ -665,6 +665,25 @@ _AFXINL void AfxQuatFromHeading(afxQuat q, afxReal const from[3], afxReal const 
     q[0] = from[1] * h[2] - from[2] * h[1];
     q[1] = from[2] * h[0] - from[0] * h[2];
     q[2] = from[0] * h[1] - from[1] * h[0];
+}
+
+_AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxReal const rot[3])
+{
+    afxError err = NIL;
+    AfxAssert(rot);
+    AfxAssert(q);
+
+    afxReal sq = AfxMagV3dSq(rot);
+    afxV4d const n =
+    {
+        1.f / sq * rot[0],
+        1.f / sq * rot[1],
+        1.f / sq * rot[2],
+        0.f
+    };
+    afxReal halfSq = sq * 0.5f;
+    AfxScaleV3d(q, n, AfxSin(halfSq));
+    q[3] = AfxCos(halfSq);
 }
 
 _AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxReal const omega[3], afxReal dt)

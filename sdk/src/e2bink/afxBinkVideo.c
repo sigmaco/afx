@@ -602,7 +602,7 @@ _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
 
     AfxAssert(!bnk->bik);
 
-    AfxResolveUri(AFX_FILE_FLAG_R, uri, &uri2.uri);
+    AfxResolveUri(afxFileFlag_R, uri, &uri2.uri);
 
     bink19c.BinkSetSoundSystem(bink19c.BinkOpenDirectSound, (UINTa)0);
 
@@ -654,7 +654,7 @@ _AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
     AfxMakeUri(&uri, "binkw32.dll", 0);
 #endif
 
-    if (AfxAcquireModules(1, &uri, &bnk->binkw32)) AfxThrowError();
+    if (AfxMountLoadableModules(1, &uri, &bnk->binkw32)) AfxThrowError();
     else
     {
 #ifdef _WIN64
@@ -685,7 +685,7 @@ _AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
     AfxAssertObjects(1, &bnk->smp, afxFcc_SAMP);
 
     AfxMakeUri(&uri, "data/pipeline/yv12ToRgba.xsh.xml?yFlipped", 0);
-    bnk->yv12ToRgbaPip = AfxLoadPipelineFromXsh(dctx, &uri);
+    bnk->yv12ToRgbaPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     AfxAssert(bnk->yv12ToRgbaPip);
 
     return err;

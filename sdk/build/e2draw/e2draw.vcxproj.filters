@@ -23,16 +23,7 @@
     <ClCompile Include="..\..\src\e2draw\sglDscr.c">
       <Filter>e2draw</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDque.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDout.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglDin.c">
-      <Filter>e2draw</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2draw\sglDdrv.c">
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglDctx.c">
@@ -60,6 +51,33 @@
       <Filter>e2draw</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2draw\sglVin.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglFenc.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglQryp.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDque_w32.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDout_w32.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDdrv_w32.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRazrOps.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRasOps.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglBufOps.c">
+      <Filter>e2draw</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglTmerOps.c">
       <Filter>e2draw</Filter>
     </ClCompile>
   </ItemGroup>

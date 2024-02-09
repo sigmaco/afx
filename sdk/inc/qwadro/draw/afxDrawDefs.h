@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 // This section is part of SIGMA GL/2.
@@ -24,6 +24,7 @@
 #include "qwadro/async/afxThread.h"
 #include "qwadro/async/afxCondition.h"
 #include "qwadro/io/afxStream.h"
+#include "qwadro/core/afxBufferedString.h"
 
 // Object handles defined by SIGMA Draw System
 
@@ -54,6 +55,8 @@ AFX_DEFINE_HANDLE(afxBindSchema);
 AFX_DEFINE_HANDLE(afxSampler);
 //typedef afxObject afxSampler;
 
+AFX_DEFINE_HANDLE(afxQueryPool);
+
 AFX_DEFINE_HANDLE(afxBuffer);
 //typedef afxObject afxBuffer;
 
@@ -69,6 +72,7 @@ AFX_DEFINE_HANDLE(afxCanvas);
 //typedef afxObject afxCanvas;
 
 AFX_DEFINE_HANDLE(afxFence);
+AFX_DEFINE_HANDLE(afxSemaphore);
 
 AFX_DEFINE_HANDLE(afxCamera);
 

@@ -20,21 +20,21 @@
 #define DDT_DXT3 8
 #define DDT_DXT5 9
 
-typedef struct DDTHeader
+typedef struct ddtHdr
 {
-    afxNat32 Magic;
-    afxInt8 TextureUsage;
-    afxInt8 TextureAlphaUsage;
-    afxInt8 TextureType;
-    afxInt8 ImageCount;
-    afxNat32 Width;
-    afxNat32 Height;
+    afxNat32 fcc;
+    afxInt8 usage;
+    afxInt8 alphaUsage;
+    afxInt8 type;
+    afxInt8 layerCnt;
+    afxNat32 w;
+    afxNat32 h;
 } DDTHeader;
 
-typedef struct DDTImageEntry
+typedef struct DdtLayer
 {
-    afxNat32 Offset;
-    afxNat32 Size;
+    afxNat32 offset;
+    afxNat32 siz;
 } DDTImageEntry;
 
 _AFXEXPORT afxError AfxLoadTexturesDdt(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxRaster tex[]);

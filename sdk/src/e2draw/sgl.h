@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H
@@ -63,6 +63,12 @@
 #define _AFX_BIND_SCHEMA_IMPL
 #define _AFX_DRAW_QUEUE_C
 #define _AFX_DRAW_QUEUE_IMPL
+#define _AFX_FENCE_C
+#define _AFX_FENCE_IMPL
+#define _AFX_SEMAPHORE_C
+#define _AFX_SEMAPHORE_IMPL
+#define _AFX_QUERY_POOL_C
+#define _AFX_QUERY_POOL_IMPL
 
 #include "qwadro/core/afxClass.h"
 #include "qwadro/mem/afxArena.h"
@@ -131,7 +137,6 @@ typedef union wglVmt
 {
     struct
     {
-#if 0
         HGLRC(WINAPI*CreateContext)(HDC);
         BOOL(WINAPI*DeleteContext)(HGLRC);
         HGLRC(WINAPI*GetCurrentContext)(VOID);
@@ -139,11 +144,10 @@ typedef union wglVmt
         PROC(WINAPI*GetProcAddress)(LPCSTR);
         BOOL(WINAPI*MakeCurrent)(HDC, HGLRC);
         int(WINAPI*ChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);  // "wglChoosePixelFormat" funciona com Intel mas não com AMD.
-        int(WINAPI*DescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd); 
+        int(WINAPI*DescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
         BOOL(WINAPI*SetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
         int(WINAPI*GetPixelFormat)(HDC hdc);
         BOOL(WINAPI*SwapBuffers)(HDC);
-#endif
         // ARB/EXT
         PFNWGLCHOOSEPIXELFORMATARBPROC ChoosePixelFormatARB;
         PFNWGLMAKECONTEXTCURRENTARBPROC MakeContextCurrentARB;
@@ -200,25 +204,20 @@ AFX_DEFINE_STRUCT(sglVertexInputState)
     afxNat32            idxSrcOff;
     afxNat32            idxSrcRange;
     afxNat32            idxSrcSiz;
+
+
+    // used by queue
+    afxMask             streamUpdMask;
+    afxNat              streamUpdCnt;
+    afxMask             attribUpdMask;
+    afxNat              attribUpdCnt;
+    afxBool             iboUpdReq;
 };
 
 typedef struct
 {
-    glVmt const             gl;
-    HGLRC                   (WINAPI*CreateContext)(HDC);
-    BOOL                    (WINAPI*DeleteContext)(HGLRC);
-    HGLRC                   (WINAPI*GetCurrentContext)(VOID);
-    HDC                     (WINAPI*GetCurrentDC)(VOID);
-    PROC                    (WINAPI*GetProcAddress)(LPCSTR);
-    BOOL                    (WINAPI*MakeCurrent)(HDC, HGLRC);
-    int                     (WINAPI*ChoosePixelFormat)(HDC hdc, CONST PIXELFORMATDESCRIPTOR *ppfd);  // "wglChoosePixelFormat" funciona com Intel mas não com AMD.
-    int                     (WINAPI*DescribePixelFormat)(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd);
-    BOOL                    (WINAPI*SetPixelFormat)(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * ppfd); // "wglSetPixelFormat" funciona com Intel mas não com AMD.
-    int                     (WINAPI*GetPixelFormat)(HDC hdc);
-    BOOL                    (WINAPI*SwapBuffers)(HDC);
-    PFNWGLSWAPINTERVALEXTPROC SwapIntervalEXT;
-
-    //wglVmt const            wgl;
+    glVmt const             gl;    
+    wglVmt const            wgl;
     HWND                    wnd;
     HDC                     dc;
     int                     dcPxlFmt;
@@ -288,7 +287,7 @@ typedef struct
 
         afxBool             depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
         afxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
-        afxBool             depthWriteEnabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
+        afxBool             depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
         afxBool             depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
         afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
         afxBool             stencilTestEnabled; /// FALSE
@@ -330,6 +329,8 @@ typedef struct
     }                       activeResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO], nextResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
     afxMask                 nextResBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
 
+    afxBuffer               activePixelUnpackBuf;
+    afxBuffer               activePixelPackBuf;
 
     afxMask                 nextVinBindingsMask;
     afxNat                  nextVinBindingsCnt;
@@ -345,7 +346,7 @@ typedef struct
     afxNat                  nextAreaUpdCnt;
     afxBool                 scissorTestEnabled;
 
-    afxBool                 flushPip, flushPass, flushSr, flushIbb;
+    afxBool                 flushPip, flushPass, flushSr;
     
     afxBool                 flushDepthTest, flushDepthBoundsTest, flushStencilTest, flushDepthBias;
     afxBool                 flushRasterizer, flushPrimCulling;
@@ -369,6 +370,10 @@ typedef struct
     afxNat          activeVaoIdx;
 
     GLuint          emptyVao;
+    GLuint          fboOpSrc;
+    afxRaster       fboOpSrcAnnex;
+    GLuint          fboOpDst;
+    afxRaster       fboOpDstAnnex;
 } sglDpuIdd;
 
 AFX_OBJECT(afxDrawDevice)
@@ -390,6 +395,11 @@ AFX_OBJECT(afxDrawContext)
     //afxBuffer tristrippedQuad2dPosBuf;
 };
 
+AFX_DEFINE_STRUCT(sglDrawQueueSpecification)
+{
+    //afxDrawQueueFlags       caps;
+};
+
 AFX_OBJECT(afxDrawQueue)
 {
     struct afxBaseDrawQueue base;
@@ -397,7 +407,11 @@ AFX_OBJECT(afxDrawQueue)
 
 AFX_DEFINE_STRUCT(_sglDeleteGlRes)
 {
-    GLuint  gpuHandle;
+    union
+    {
+        GLuint  gpuHandle;
+        void*   gpuHandlePtr;
+    };
     GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 shd, 7 shd (separate) program
 };
 
@@ -451,6 +465,14 @@ AFX_OBJECT(afxRasterizer)
 
 };
 
+AFX_OBJECT(afxQueryPool)
+{
+    struct _afxBaseQueryPool base;
+    sglUpdateFlags  updFlags;
+    GLuint         *glHandle; // * cap
+    GLenum          glTarget;
+};
+
 AFX_OBJECT(afxBindSchema)
 {
     struct afxBaseBindSchema base;
@@ -473,6 +495,18 @@ AFX_OBJECT(afxSampler)
     afxNat          glHandle;
 };
 
+AFX_OBJECT(afxFence)
+{
+    struct _afxBaseFence base;
+    sglUpdateFlags  updFlags;
+    GLsync          glHandle;
+};
+
+AFX_OBJECT(afxSemaphore)
+{
+    struct _afxBaseSemaphore base;
+};
+
 AFX_OBJECT(afxBuffer)
 {
     struct afxBaseBuffer    base;
@@ -481,7 +515,7 @@ AFX_OBJECT(afxBuffer)
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
     GLenum          glTarget;
-    GLenum          glUsage;
+    //GLenum          glUsage;
     GLbitfield      glAccess;
     
     afxSize         lastUpdOffset;
@@ -574,7 +608,7 @@ typedef struct _DrawPipelineResource
     afxChar name[16];
 } _DrawPipelineResource;
 
-
+#if 0
 typedef enum afxDrawCmdId
 {
     SGL_CMD_END = offsetof(afxCmd, EndOfScript) / sizeof(void*),
@@ -632,7 +666,9 @@ typedef enum afxDrawCmdId
 
     SGL_CMD_TOTAL = offsetof(afxCmd, Total) / sizeof(void*),
 } afxDrawCmdId;
-
+#else
+#define SGL_CMD_TOTAL offsetof(afxCmd, Total) / sizeof(void*)
+#endif
 
 AFX_DEFINE_STRUCT(_sglCmdDraw)
 {
@@ -778,6 +814,17 @@ AFX_DEFINE_STRUCT(_sglCmdPackRasterRegions)
     afxRasterIoOp ops[8];
 };
 
+AFX_DEFINE_STRUCT(_sglCmdRwRasterRegions)
+{
+    _sglCmd         cmd;
+    afxBool         down;
+    afxRaster ras;
+    afxStream ios;
+    afxNat opCnt;
+    afxRasterIoOp ops[8];
+    afxCodec cdc;
+};
+
 AFX_DEFINE_STRUCT(_sglCmdCopyRasterRegions)
 {
     _sglCmd         cmd;
@@ -791,7 +838,7 @@ AFX_DEFINE_STRUCT(_sglCmdRegenerateMipmaps)
 {
     _sglCmd         cmd;
     afxRaster           ras;
-    afxNat              baseLodIdx;
+    afxNat              baseLod;
     afxNat              lodCnt;
 };
 
@@ -809,10 +856,48 @@ AFX_DEFINE_STRUCT(_sglCmdFlipRasterRegions)
 {
     _sglCmd             cmd;
     afxRaster           ras;
-    afxBool             rows;
-    afxBool             columns;
+    afxM4d              m;
     afxNat              rgnCnt;
     afxRasterRegion     rgn[8];
+};
+
+AFX_DEFINE_STRUCT(_sglCmdBufIo)
+{
+    _sglCmd         cmd;
+    afxBuffer       buf;
+    afxNat          opCnt;
+    afxBufferIoOp   ops[8];
+    afxBool         export;
+    afxStream       io;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdBufRw)
+{
+    _sglCmd         cmd;
+    afxBuffer       buf;
+    afxNat          offset;
+    afxNat          range;
+    afxBool         toHost;
+    void*           data;
+    void const*     dataConst;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdBufCpy)
+{
+    _sglCmd         cmd;
+    afxBuffer src;
+    afxBuffer dst;
+    afxNat opCnt;
+    afxBufferCopyOp ops[8];
+};
+
+AFX_DEFINE_STRUCT(_sglCmdBufSet)
+{
+    _sglCmd         cmd;
+    afxBuffer buf;
+    afxNat  offset;
+    afxNat  range;
+    afxNat data;
 };
 
 AFX_DEFINE_STRUCT(_sglCmdNat)
@@ -896,23 +981,30 @@ AFX_DEFINE_STRUCT(_sglCmdUniformMatrixEXT)
 
 //SGL afxError _SglCreateCombinedDeviceContext(WNDCLASSEXA *oglWndClss, HGLRC shareCtx, HWND *phwnd, HDC *phdc, HGLRC *phrc, wglVmt const* wgl, HMODULE opengl32);
 
-SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, GLuint gpuHandle);
+SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle);
 
+
+typedef enum sglBindFlags
+{
+    sglBindFlag_BIND,
+    sglBindFlag_SYNC,
+    sglBindFlag_KEEP,
+}sglBindFlags;
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
-SGL afxError _SglDpuBindAndSyncSamp(glVmt const* gl, afxBool syncOnly, afxNat glUnit, afxSampler samp);
+SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp);
 SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
 SGL afxError _SglDpuSurfSync(sglDpuIdd* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
-SGL afxError _SglBindAndSyncRas(glVmt const* gl, afxBool bind, afxBool sync, afxNat unit, afxRaster tex);
-SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afxNat baseLayer, afxNat layerCnt, afxWhd const xyz, afxWhd const whd, GLenum glFmt, GLenum glType, void const* data);
+SGL afxError _SglBindAndSyncRas(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxRaster tex);
+SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afxNat baseLayer, afxNat layerCnt, afxWhd const xyz, afxWhd const whd, GLenum glFmt, GLenum glType, afxAddress const src);
 
-SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxBool syncOnly, afxVertexInput vin);
+SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings);
 SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, afxPipeline pip);
 SGL afxError _SglDpuBindAndSyncRazr(sglDpuIdd* dpu, afxRasterizer razr);
 SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat unit, afxBindSchema legt, glVmt const* gl);
-SGL afxError _SglDpuBindAndSyncCanv(glVmt const* gl, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv);
-SGL afxError _SglBindAndSyncBuf(glVmt const* gl, afxBool syncOnly, GLenum glTarget, afxNat glUnit, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage);
+SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv);
+SGL afxError _SglBindAndSyncBuf(sglDpuIdd* dpu, sglBindFlags bindFlags, GLenum glTarget, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage);
 
 //SGL afxSize _AfxMeasureTextureRegion(afxRaster tex, afxRasterRegion const *rgn);
 
@@ -926,13 +1018,26 @@ SGL int SglGetPixelFormat(HDC hdc, sglDpuIdd const *dpu);
 SGL afxBindSchema _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
 
 SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
+SGL afxError _SglDdevProcDpuCb(afxDrawThread dthr, afxDrawContext dctx, afxNat basePort, afxNat portCnt, afxNat baseQue, afxNat queCnt);
 
 SGL afxClassConfig _SglDctxClsConfig;
 SGL afxClassConfig _SglDoutClsConfig;
 SGL afxClassConfig _SglDinClsConfig;
 
+SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout);
+
 SGL afxError _SglDinFreeAllBuffers(afxDrawInput din);
 
 SGL afxCmd _SglEncodeCmdVmt;
+SGL afxCmdBuffer const _SglEncodeCmdBufferVmt;
+SGL afxCmdRaster const _SglEncodeCmdRasterVmt;
+SGL afxCmdTransformation const _SglEncodeCmdTransformationVmt;
+SGL afxCmdRasterization const _SglEncodeCmdRasterizationVmt;
+SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttachment, GLenum texTarget, GLuint texHandle, GLint level, GLuint layer, GLuint z);
+
+SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[]);
+SGL afxError _SglResetFenc(afxNat cnt, afxFence const fences[]);
+
+SGL afxCmdId _SglEncodeCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _sglCmd *cmd);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

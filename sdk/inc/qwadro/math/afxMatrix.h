@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #ifndef AFX_MATRIX_H
@@ -152,9 +152,9 @@ AFXINL void     AfxCombineM2d(afxReal v[2][2], afxReal lambda1, afxReal const a[
 AFXINL void     AfxCombineM3d(afxReal v[3][3], afxReal lambda1, afxReal const a[3][3], afxReal lambda2, afxReal const b[3][3]);
 AFXINL void     AfxCombineLtm4(afxReal m[4][4], afxReal lambda1, afxReal const a[4][4], afxReal lambda2, afxReal const b[4][4]);
 
-AFXINL afxReal  AfxInverseM3d(afxReal m[3][3], afxReal const in[3][3]); // m = inverse of in
-AFXINL afxReal  AfxInverseM4d(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
-AFXINL afxReal  AfxInverseAtm4(afxReal m[4][4], afxReal const in[4][4]); // m = inverse of in
+AFXINL afxReal  AfxInvertM3d(afxReal const m[3][3], afxReal im[3][3]); // im = inverse of m
+AFXINL afxReal  AfxInvertM4d(afxReal const m[4][4], afxReal im[4][4]); // im = inverse of m
+AFXINL afxReal  AfxInvertAtm4(afxReal const m[4][4], afxReal im[4][4]); // im = inverse of m
 
 AFXINL afxReal  AfxDetM2d(afxReal const m[2][2]);
 AFXINL afxReal  AfxDetM3d(afxReal const m[3][3]);
@@ -268,5 +268,13 @@ AFXINL void     AfxAssimilateAtm4(afxReal const ltm[3][3], afxReal const iltm[3]
 
 
 AFX void        AfxApplyRootMotionVectorsToMatrix(afxReal const translation[3], afxReal const rotation[3], afxReal const mm[4][4], afxReal m[4][4]);
+
+AFX afxError    AfxReadMatrices2(afxStream in, afxNat cnt, afxM2d dst[]);
+AFX afxError    AfxReadMatrices3(afxStream in, afxNat cnt, afxM3d dst[]);
+AFX afxError    AfxReadMatrices4(afxStream in, afxNat cnt, afxM4d dst[]);
+
+AFX afxError    AfxWriteMatrices2(afxStream out, afxNat cnt, afxM2d const src[]);
+AFX afxError    AfxWriteMatrices3(afxStream out, afxNat cnt, afxM3d const src[]);
+AFX afxError    AfxWriteMatrices4(afxStream out, afxNat cnt, afxM4d const src[]);
 
 #endif//AFX_MATRIX_H

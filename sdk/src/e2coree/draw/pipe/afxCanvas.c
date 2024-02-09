@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #define _AFX_DRAW_C
@@ -47,13 +47,14 @@ _AFX afxNat AfxCountDrawSurfaces(afxCanvas canv)
     return canv->colorCnt;
 }
 
-_AFX void AfxGetCanvasExtent(afxCanvas canv, afxNat wh[2])
+_AFX void AfxGetCanvasExtent(afxCanvas canv, afxWhd whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    AfxAssert(wh);
-    wh[0] = canv->wh[0];
-    wh[1] = canv->wh[1];
+    AfxAssert(whd);
+    whd[0] = canv->wh[0];
+    whd[1] = canv->wh[1];
+    whd[2] = 1;
     //wh[2] = canv->layerCnt;
 }
 
@@ -138,13 +139,13 @@ _AFX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
     return ras;
 }
 
-_AFX afxError AfxReadjustCanvas(afxCanvas canv, afxNat const wh[2])
+_AFX afxError AfxReadjustCanvas(afxCanvas canv, afxWhd const whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    AfxAssert(wh);
+    AfxAssert(whd);
 
-    if (canv->readjust(canv, wh))
+    if (canv->readjust(canv, whd))
         AfxThrowError();
 
     return err;
@@ -235,22 +236,35 @@ _AFX afxError AfxGenerateDrawBuffers(afxCanvas canv)
     return err;
 }
 
-_AFX afxError AfxAcquireCanvases(afxDrawContext dctx, afxNat const wh[2], afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canv[])
+////////////////////////////////////////////////////////////////////////////////
+
+_AFX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(canvases);
+    AfxAssert(cnt);
+    afxClass* cls = AfxGetCanvasClass(dctx);
+    AfxAssertClass(cls, afxFcc_CANV);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)canvases);
+}
+
+_AFX afxError AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(canvases);
     AfxAssert(surCnt);
     AfxAssert(surCfg);
-    AfxAssert(canv);
-    AfxAssert(wh);
-    AfxAssert(wh[0]);
-    AfxAssert(wh[1]);
-    AfxEntry("dctx=%p,wh=[%u,%u],layerCnt=%u,surCnt=%p", dctx, wh[0], wh[1], layerCnt, surCnt);
+    AfxAssert(whd);
+    AfxAssert(whd[0]);
+    AfxAssert(whd[1]);
+    AfxEntry("dctx=%p,wh=[%u,%u],layerCnt=%u,surCnt=%p", dctx, whd[0], whd[1], layerCnt, surCnt);
 
     afxClass* cls = AfxGetCanvasClass(dctx);
     AfxAssertClass(cls, afxFcc_CANV);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)canv, (void const*[]) { dctx, wh, &layerCnt, &surCnt, surCfg }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)canvases, (void const*[]) { dctx, whd, &layerCnt, &surCnt, surCfg }))
         AfxThrowError();
 
     return err;

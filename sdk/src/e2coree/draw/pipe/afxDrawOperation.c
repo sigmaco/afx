@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/draw/afxDrawSystem.h"
@@ -340,7 +340,7 @@ _AFX afxBool AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxSt
         {
             afxDrawPass *dpas = &dtec->passes[j];
 
-            if (0 == AfxCompareStringCi(name, dpas->name))
+            if (0 == AfxTestStringEquivalence(name, dpas->name))
             {
                 AfxAssert(idx);
                 *idx = j;
@@ -375,7 +375,7 @@ _AFX afxBool AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const
     {
         afxDrawTechnique *dtec = &dop->techniques[i];
 
-        if (0 == AfxCompareStringCi(name, dtec->name))
+        if (0 == AfxTestStringEquivalence(name, dtec->name))
         {
             AfxAssert(idx);
             *idx = i;
@@ -495,7 +495,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
             AfxGetUriPath(&fpath, &uri[i]);
             AfxGetUriQuery(&query, &uri[i], TRUE);
 
-            if (0 == AfxCompareStringLiteralCi(AfxGetUriString(&fext), 0, ".xml", 4))
+            if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
             {
                 afxXml xml;
 
@@ -506,7 +506,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
 
                     afxXmlNode const *node = AfxGetXmlRoot(&xml);
                     afxString const *name = AfxGetXmlNodeName(node);
-                    AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
+                    AfxAssert(0 == AfxTestStringEquality(name, &g_str_Qwadro));
                     afxString const *queryStr = AfxGetUriString(&query);
                     afxBool hasQuery = !AfxStringIsEmpty(queryStr);
                     node = AfxXmlNodeFindChild(node, &g_str_DrawOperation, hasQuery ? &g_str_name : NIL, hasQuery ? queryStr : NIL);
@@ -717,7 +717,7 @@ _AFX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
     afxNat techCnt = AfxCountArrayElements(techniques);
     AfxAssert(techCnt);
 
-    if (!(dop->techniques = AfxAllocate(mmu, sizeof(dop->techniques[0]), techCnt, 0, AfxHint()))) AfxThrowError();
+    if (!(dop->techniques = AfxAllocate(mmu, techCnt, sizeof(dop->techniques[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < techCnt; i++)

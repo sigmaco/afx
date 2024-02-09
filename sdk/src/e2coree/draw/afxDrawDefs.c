@@ -10,8 +10,8 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                   (c) 2017 SIGMA Technology Group — Federação SIGMA
- *                                    www.sigmaco.org
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
  */
 
 #include "qwadro/draw/afxDrawDefs.h"
@@ -292,7 +292,7 @@ _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 
     for (afxNat i = 0; i < afxPrimTopology_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &primTopologyString[i]))
+        if (0 == AfxTestStringEquivalence(str, &primTopologyString[i]))
             return (afxPrimTopology)i;
     }
 
@@ -306,7 +306,7 @@ _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
 
     for (afxNat i = 0; i < afxLogicOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &logicOpString[i]))
+        if (0 == AfxTestStringEquivalence(str, &logicOpString[i]))
             return (afxLogicOp)i;
     }
 
@@ -320,7 +320,7 @@ _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
 
     for (afxNat i = 0; i < afxStencilOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &stencilOpString[i]))
+        if (0 == AfxTestStringEquivalence(str, &stencilOpString[i]))
             return (afxStencilOp)i;
     }
 
@@ -334,7 +334,7 @@ _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
 
     for (afxNat i = 0; i < afxCompareOp_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &compareOpString[i]))
+        if (0 == AfxTestStringEquivalence(str, &compareOpString[i]))
             return (afxCompareOp)i;
     }
 
@@ -348,7 +348,7 @@ _AFX afxCullMode AfxFindCullMode(afxString const *str)
 
     for (afxNat i = 0; i < afxCullMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &cullModeString[i]))
+        if (0 == AfxTestStringEquivalence(str, &cullModeString[i]))
             return (afxCullMode)i;
     }
 
@@ -362,7 +362,7 @@ _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
 
     for (afxNat i = 0; i < afxFrontFace_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &frontFaceString[i]))
+        if (0 == AfxTestStringEquivalence(str, &frontFaceString[i]))
             return (afxFrontFace)i;
     }
 
@@ -376,7 +376,7 @@ _AFX afxFillMode AfxFindFillMode(afxString const *str)
 
     for (afxNat i = 0; i < afxFillMode_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &fillModeString[i]))
+        if (0 == AfxTestStringEquivalence(str, &fillModeString[i]))
             return (afxFillMode)i;
     }
 
@@ -390,7 +390,7 @@ _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
 
     for (afxNat i = 0; i < afxShaderStage_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &shaderStageString[i]))
+        if (0 == AfxTestStringEquivalence(str, &shaderStageString[i]))
             return (afxShaderStage)i;
     }
 
@@ -404,7 +404,7 @@ _AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
 
     for (afxNat i = 0; i < afxVertexFormat_TOTAL; i++)
     {
-        if (0 == AfxCompareStringCi(str, &vtxFmtString[i]))
+        if (0 == AfxTestStringEquivalence(str, &vtxFmtString[i]))
             return (afxVertexFormat)i;
     }
 
