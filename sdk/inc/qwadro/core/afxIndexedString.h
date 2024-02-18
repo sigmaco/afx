@@ -20,6 +20,12 @@
 #include "qwadro/core/afxString.h"
 #include "qwadro/mem/afxArray.h"
 
+AFX_DEFINE_STRUCT(afxIndexedString)
+{
+    afxString           str; // stores just a offset into string arena
+    afxStringCatalog    arena;
+};
+
 AFX_OBJECT(afxStringCatalog)
 {
     afxNat              cnt;
@@ -27,9 +33,13 @@ AFX_OBJECT(afxStringCatalog)
     afxArray            buf;
 };
 
-AFX afxError    AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString const src[], afxNat strIdx[], afxNat strIdxStride);
+AFX afxError    AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString const sources[], afxNat strIdx[], afxNat strIdxStride);
+
+AFX afxNat      AfxCatalogStrings2(afxStringCatalog strc, afxNat cnt, afxString const in[], afxString out[]);
 
 AFX afxError    AfxResolveStrings(afxStringCatalog strc, afxNat cnt, afxNat strIdx[], afxString dst[]);
+
+AFX afxNat      AfxResolveStrings2(afxStringCatalog strc, afxNat cnt, afxString const in[], afxString out[]);
 
 AFX afxError    AfxAcquireStringCatalogs(afxNat cnt, afxStringCatalog catalogs[]);
 

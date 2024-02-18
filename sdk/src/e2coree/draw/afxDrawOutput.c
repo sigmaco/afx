@@ -509,7 +509,7 @@ _AFX void AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd)
     whd[2] = dout->whd[2];
 }
 
-_AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
+_AFX afxError AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
@@ -528,7 +528,7 @@ _AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
         dout->whd[1] = AfxMax(whd[1], 1);
         dout->whd[2] = AfxMax(whd[2], 1);
 
-        AfxReadjustDrawOutputProportion(dout, dout->wpOverHp, dout->resolution);
+        AfxAdjustDrawOutputProportion(dout, dout->wpOverHp, dout->resolution);
 
         AfxRegenerateDrawOutputBuffers(dout);
 
@@ -545,16 +545,16 @@ _AFX afxError AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
     return err;
 }
 
-_AFX afxError AfxReadjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+_AFX afxError AfxAdjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd) // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert(whd);
     afxWhd const whd2 = { (afxNat)AfxFromNdc(whd[0], dout->resolution[0]), (afxNat)AfxFromNdc(whd[1], dout->resolution[1]), 1 };
-    return AfxReadjustDrawOutput(dout, whd2);
+    return AfxAdjustDrawOutput(dout, whd2);
 }
 
-_AFX void AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution)
+_AFX void AfxAdjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);

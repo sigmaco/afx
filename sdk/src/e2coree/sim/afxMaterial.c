@@ -108,11 +108,11 @@ _AFX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
-    AfxAssertType(usage, afxFcc_STR);
+    AfxAssert(usage);
 
     for (afxNat i = 0; i < mtl->mapCnt; i++)
     {
-        if (0 == AfxTestStringEquivalence(usage, &mtl->maps[i].usage.str))
+        if (0 == AfxCompareStringCi(usage, &mtl->maps[i].usage.str))
         {
             afxMaterial subMtl = mtl->maps[i].sub;
             AfxTryAssertObjects(1, &subMtl, afxFcc_MTL);

@@ -1,0 +1,18 @@
+<Qwadro>
+    <Pipeline id='lighting'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/lighting/lighting.vsh</VertexShader>
+        <Rasterizer>data/pipeline/lighting/lighting.xsh.xml</Rasterizer>
+        <Input stream='0'>0</Input>
+        <Input stream='1'>3</Input>
+        <Input stream='1'>6</Input>
+    </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/lighting/lighting.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

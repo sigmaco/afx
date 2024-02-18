@@ -160,15 +160,15 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
 {
     afxError err = AFX_ERR_NONE;
     afxUri fext;
-    AfxGetUriExtension(&fext, uri, FALSE);
+    AfxExcerptUriExtension(uri, FALSE, &fext);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxGetUriPath(&fpath, uri);
+        AfxExcerptUriPath(uri, &fpath);
 
-        if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
+        if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 
@@ -178,7 +178,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
                 AfxAssertType(&xml, afxFcc_XML);
 
                 afxString query;
-                AfxGetUriQueryString(uri, TRUE, &query);
+                AfxExcerptUriQueryToString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Shader"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
@@ -195,7 +195,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
                     }
                     //AfxShaderBlueprintEnd(shdb, 0, NIL);
                 }
-                AfxReleaseXml(&xml);
+                AfxCleanUpXml(&xml);
             }
         }
     }
@@ -244,7 +244,12 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
                     //AfxEmptyArray(&code);
                     //AfxLoadGlScript(&code, &pip->base.stages[stageIdx].shd.uri);
                     afxShaderBlueprint shdb;
+#if 0
                     _SglLoadShaderBlueprint(&shdb, &pip->base.stages[stageIdx].shd.uri);
+#else
+                    AfxShaderBlueprintBegin(&shdb, NIL, NIL, NIL, 0, 0, 0);
+                    AfxLoadGlScript(&shdb, &pip->base.stages[stageIdx].shd.uri);
+#endif
 
                     GLuint shader;
 
@@ -290,7 +295,12 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
 
                 {
                     afxShaderBlueprint shdb;
+#if 0
                     _SglLoadShaderBlueprint(&shdb, &pip->base.razr->base.fragShd.uri);
+#else
+                    AfxShaderBlueprintBegin(&shdb, NIL, NIL, NIL, 0, 0, 0);
+                    AfxLoadGlScript(&shdb, &pip->base.razr->base.fragShd.uri);
+#endif
 
                     GLuint shader;
 
@@ -548,12 +558,16 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
         for (afxNat i = 0; i < stageCnt; i++)
         {
             AfxMakeFixedUri128(&pip->base.stages[pip->base.stageCnt].shd, &pipb->shdUri[i]);
-            AfxMakeFixedString8(&pip->base.stages[pip->base.stageCnt].fn, &pipb->shdFn[i]);
+            AfxMakeFixedString8(&pip->base.stages[pip->base.stageCnt].fn, NIL/*&pipb->shdFn[i]*/);
             pip->base.stages[pip->base.stageCnt].stage = pipb->shdStage[i];
 
+#if 0
             _SglLoadShaderBlueprint(&shdb[shaderCnt], &pip->base.stages[pip->base.stageCnt].shd.uri);
+#else
+            AfxShaderBlueprintBegin(&shdb[shaderCnt], afxShaderStage_VERTEX, NIL, NIL, 0, 0, 0);
+            AfxLoadGlScript(&shdb[shaderCnt], &pip->base.stages[pip->base.stageCnt].shd.uri);
+#endif
             shaderCnt++;
-
             pip->base.stageCnt++;
         }
 
@@ -561,7 +575,18 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
         {
             AfxAssert(pip->base.stageCnt == stageCnt);
 
+#if 0
             _SglLoadShaderBlueprint(&shdb[shaderCnt], &pip->base.razr->base.fragShd.uri);
+            
+#else
+            //afxShaderBlueprint test;
+            AfxShaderBlueprintBegin(&shdb[shaderCnt], afxShaderStage_FRAGMENT, NIL, NIL, 0, 0, 0);
+            AfxLoadGlScript(&shdb[shaderCnt], &pip->base.razr->base.fragShd.uri);
+
+            AfxEcho("%s", &shdb[shaderCnt].codes.bytemap);
+
+            int a = 1;
+#endif
             shaderCnt++;
 
             afxPipelineRigBlueprint legb[/*_SGL_MAX_LEGO_PER_BIND*/4];

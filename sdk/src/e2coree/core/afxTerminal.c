@@ -26,7 +26,7 @@ afxResult AfxRequestIntervention(afxString *str)
     {
         //afxString512 tmp;
         //AfxString512DeployRaw(&tmp, (afxChar const*)&(ch), 0);
-        //AfxAppendString(&tmp.str, 1, &str);
+        //AfxConcatenateString(&tmp.str, 1, &str);
     }
     return ch;
 }

@@ -24,11 +24,15 @@
 
 typedef afxNat8 afxVertexIndex8;
 typedef afxNat16 afxVertexIndex16;
-typedef afxNat afxVertexIndex;
+typedef afxNat32 afxVertexIndex32;
+typedef afxNat64 afxVertexIndex64;
+typedef afxVertexIndex32 afxVertexIndex;
 typedef afxNat afxFaceIndex;
 typedef afxVertexIndex8 afxIndexedTriangle8[3];
 typedef afxVertexIndex16 afxIndexedTriangle16[3];
-typedef afxVertexIndex afxIndexedTriangle[3];
+typedef afxVertexIndex32 afxIndexedTriangle32[3];
+typedef afxVertexIndex64 afxIndexedTriangle64[3];
+typedef afxIndexedTriangle32 afxIndexedTriangle;
 
 /// The afxMeshSurface array specifies the actual triangulation of the mesh. 
 /// Each afxMeshSurface structure indexes into either the vertex index array, for the indices that make up the triangles.  
@@ -36,7 +40,6 @@ typedef afxVertexIndex afxIndexedTriangle[3];
 
 AFX_DEFINE_STRUCT(afxMeshSurface)
 {
-    _AFX_DBG_FCC;
     afxNat                  mtlIdx;
     afxNat                  baseTriIdx;
     afxNat                  triCnt;
@@ -120,9 +123,9 @@ AFX afxNat              AfxCountMeshTriangles(afxMeshTopology msht);
 AFX afxNat              AfxCountMeshTriangleEdges(afxMeshTopology msht);
 
 AFX afxNat              AfxCountMeshSurfaces(afxMeshTopology msht);
-AFX afxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surfIdx);
+AFX afxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx);
 
-AFX afxBool             AfxGetMeshCoverage(afxMeshTopology msht, afxNat surfIdx, afxNat* mtlIdx, afxNat* baseTriIdx, afxNat* triCnt);
+AFX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc);
 
 /// By default, Qwadro always write triangle indices in counter-clockwise winding. 
 /// If you need your indices in clockwise order, or if you've manipulated your mesh vertices such that they've been mirrored in some way, 
@@ -151,8 +154,12 @@ AFX_DEFINE_STRUCT(afxMeshTopologySpec)
     afxNat      triCnt;
     afxNat      surCnt;
     afxNat      vtxCnt;
+    
     void const* src;
     afxNat      srcIdxSiz;
+    
+    void        (*sur)(afxNat i, afxMeshSurface* mshs, void* udd);
+    void*       udd;
 };
 
 AFX afxError            AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[]);

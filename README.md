@@ -1,3 +1,21 @@
+```
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
+ */
+```
+
 # The Qwadro Execution Ecosystem
 The SIGMA autonomous execution platform.
 
@@ -20,6 +38,8 @@ There are several strange names in Qwadro, because Qwadro is an experiment that 
 Some RenderWare heritage still present is certainly in the AMX, where Qwadro's mathematics resides. For example, we have afxMatrix, afxQuat, afxV3d, afxV4d.
 
 Qwadro was firstly designed for POSIX/Unix/Linux systems. But due complexities handling multiple OpenGL contexts in Windows, we was forced to move to Windows and stay there still now.
+
+About code generation, Qwadro code base was written for compilation in LLVM/Clang. No other toolset was tested except MSVC, wich is not supported due it had never been a real C compiler but a C++ compiler. Qwadro also doesn't use CMake because the main developer had problems with Visual Studio 2017, the IDE used to code Qwadro.
 
 Game-related works featured in Qwadro are strongely inspired in notorious gaming works on Bang! Engine by Ensemble Studios and MaxFX by Remedy Entertainment.
 
@@ -94,7 +114,9 @@ Why happened to "GL/1"? Flopped. There were several problems inherited from Rend
 
 SIGMA GL/2 will include a fixed-function video decoder.
 
-To establish the mandatory features in SIGMA GL/2, we grab a ordinary office desktop PC released in 2010 and we are working with the whole set of features available in OpenGL driver (updated by Intel until 2021) for this machine. By default, this machine garantees full support up to OpenGL 4.0 but it have extensions up to 4.6 (the last one). Things like buffer storage and texture storage are required, for example, when using SIGMA GL/2 over Advanced OpenGL.
+To establish the mandatory features in SIGMA GL/2, we grab a ordinary office desktop PC released in 2013, four years before the begining of Qwadro Execution Ecosystem development and we are working with the whole set of features available in OpenGL driver (updated by Intel until 2021) for this machine. By default, this machine garantees full support up to OpenGL 4.0 but it have extensions up to 4.6 (the last one). Things like buffer storage and texture storage are required, for example, when using SIGMA GL/2 over Advanced OpenGL.
+
+Despite driver implementation, Qwadro uses extended OpenGL Shading Language (GLSL) as native shading language.
 
 Special thanks to Markus Tavenrath, Christoph Kubisch, Alfonse Reinheart, Evgeny Makarov and NVIDIA, for contributing their techniques and knowledge in hardware-accelerated 3D design.
 

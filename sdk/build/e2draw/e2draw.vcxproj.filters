@@ -4,6 +4,9 @@
     <Filter Include="e2draw">
       <UniqueIdentifier>{334cc892-f619-4b48-96b8-2d8997caec44}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{69824dbb-b6b2-43db-9c39-51761f93644c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\e2draw\sgl.h">
@@ -11,6 +14,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\e2draw\sglDdrv.h">
       <Filter>e2draw</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,5 +86,10 @@
     <ClCompile Include="..\..\src\e2draw\sglTmerOps.c">
       <Filter>e2draw</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2draw.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

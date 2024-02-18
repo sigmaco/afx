@@ -1,0 +1,21 @@
+<Qwadro>
+    <Pipeline id='tutCamUtil'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/tutCamUtil/tutCamUtilRigid.vsh</VertexShader>
+        <Rasterizer>data/pipeline/tutCamUtil/tutCamUtil.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Pipeline id='tutCamUtilSkinned'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/tutCamUtil/tutCamUtilSkinned.vsh</VertexShader>
+        <Rasterizer>data/pipeline/tutCamUtil/tutCamUtil.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/tutCamUtil/tutCamUtil.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

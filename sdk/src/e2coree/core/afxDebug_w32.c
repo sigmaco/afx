@@ -21,6 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <Windows.h>
 #include <Shlwapi.h>
 //#include <Mmsystem.h>
@@ -37,6 +38,8 @@
 #include "qwadro/async/afxCondition.h"
 #include "qwadro/core/afxObject.h"
 #include "qwadro/core/afxString.h"
+
+extern afxString const qwadroSignature;
 
 AFX_DEFINE_STRUCT(afxDebugger)
 {
@@ -65,42 +68,6 @@ AFX_DEFINE_STRUCT(afxDebugger)
     .dump = NIL,
     .conWnd = NIL,
     .conOutHnd = INVALID_HANDLE_VALUE
-};
-
-_AFXEXPORT afxChar const sigmaLogo[] =
-{
-    "\n       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          "
-    "\n      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        "
-    "\n      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       "
-    "\n      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      "
-    "\n             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      "
-    "\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
-    "\n       ########    ###########    ########    ###       ###   ###     ###      "
-    "\n                                                                               "
-    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
-    "\n                                                                               "
-    "\n                               Public Test Build                               "
-    "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              "
-    "\n                                www.sigmaco.org                                "
-    "\n                                                                               "
-};
-
-_AFXEXPORT char const *qwadroLogo[] =
-{
-    "\n      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      ",
-    "\n     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     ",
-    "\n     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     ",
-    "\n     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     ",
-    "\n     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     ",
-    "\n     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     ",
-    "\n      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      ",
-    "\n                                                                               ",
-    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              ",
-    "\n                                                                               ",
-    "\n                               Public Test Build                               ",
-    "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              ",
-    "\n                                www.sigmaco.org                                ",
-    "\n                                                                               "
 };
 
 AFXINL afxResult _AfxLogFn(afxNat32 color, afxChar const* msg)
@@ -538,7 +505,7 @@ afxResult AfxAttachDebugger(afxChar const* file)
         {
             if (file[0])
             {
-                sprintf(path, "%s", file);
+                AfxSprintf(path, "%s", file);
                 //AfxPopulateString(path, file);
 
                 if (!(debugger.dump = fopen(path, "w+")))
@@ -547,7 +514,19 @@ afxResult AfxAttachDebugger(afxChar const* file)
         }
         else
         {
-            sprintf(path, "%u.engine.log", AfxGetTimer());
+            afxChar sys[2048], buf2[2048], exeName[2048];
+            GetModuleFileNameA(NIL, exeName, sizeof(exeName));
+            PathStripPathA(exeName);
+            
+            GetModuleFileNameA(GetModuleHandleA("e2coree.dll"), sys, sizeof(sys));
+            PathRemoveFileSpecA(sys);
+            
+            time_t t;
+            time(&t);
+            struct tm * ti;
+            ti = localtime(&t);
+            
+            AfxSprintf(path, "%s\\diag\\%s(%04i%02i%02i-%02i%02i%02i).log", sys, exeName, 1900 + ti->tm_year, ti->tm_mon, ti->tm_mday, ti->tm_hour, ti->tm_min, ti->tm_sec);
             
             if (!(debugger.dump = fopen(path, "w+"))) AfxThrowError();
             else
@@ -569,8 +548,8 @@ afxResult AfxAttachDebugger(afxChar const* file)
             {
                 SetConsoleTextAttribute(debugger.conOutHnd, (WORD)(~(MAXUINT16) | FOREGROUND_RED | FOREGROUND_GREEN));
 
-                for (afxNat i = 0; i < sizeof(qwadroLogo) / sizeof(qwadroLogo[0]); i++)
-                    AfxLogMessage(0xFFFF0000, qwadroLogo[i]);
+                for (afxNat i = 0; i < 1120; i++)
+                    AfxLogMessageFormatted(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
 
                 Sleep(1000);
 

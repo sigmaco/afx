@@ -193,7 +193,7 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 
     afxFixedString128 tmpStr;
     AfxMakeFixedString128(&tmpStr, tag_open);
-    tmp = (char*)AfxGetBufferedStringData(&tmpStr.str,0);
+    tmp = (char*)AfxGetStringStorage(&tmpStr.str,0);
 
     token = xml_strtok_r(tmp, " ", &rest); // skip the first value
     
@@ -369,7 +369,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
 
         // If tag ends with '/' it's self closing, skip content lookup. Drop '/' and go to node creation
 
-        if (!(tag_open.len > 0 && '/' == tag_open.start[original_length - 1] /**(afxChar*)AfxGetBufferedStringData(&tag_open, original_length - 1)*/))
+        if (!(tag_open.len > 0 && '/' == tag_open.start[original_length - 1] /**(afxChar*)AfxGetStringStorage(&tag_open, original_length - 1)*/))
         {
             // If the content does not start with '<', a text content is assumed
 
@@ -567,7 +567,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                     /* Close tag has to match open tag
                      */
 
-                    if (0 != AfxTestStringEquality(&tag_open, &tag_close))
+                    if (0 != AfxCompareString(&tag_open, &tag_close))
                     {
                         AfxThrowError();
                         AfxError(" %.*s %.*s", AfxPushString(&tag_open), AfxPushString(&tag_close));
@@ -703,8 +703,8 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
                         afxXmlElement* elem2 = AfxInsertArrayUnit(&sorted, &idx);
                         indicesMap[i] = idx;
                         //AfxAssert(idx == i);
-                        AfxReplicateString(&elem2->name, &elem->name);
-                        AfxReplicateString(&elem2->content, &elem->content);
+                        AfxReflectString(&elem->name, &elem2->name);
+                        AfxReflectString(&elem->content, &elem2->content);
                         elem2->childCnt = elem->childCnt;
                         elem2->tagCnt = elem->tagCnt;
                         elem2->baseChildIdx = 0;
@@ -737,11 +737,13 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             xml->elemCnt = sorted.cnt;
             xml->elems = sorted.data;
 
+#if 0
             for (afxNat i = 0; i < elemCnt; i++)
             {
                 afxXmlElement*elem = &xml->elems[i];//AfxGetArrayUnit(&xml->tempElemArr, i);
                 AfxEcho("# %u, @ %u, [ %u, %u ], [ %u, %u ], %.*s : %.8s;", i, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
             }
+#endif
 
             int b = 1;
         }
@@ -867,7 +869,7 @@ _AFX afxBool AfxXmlNodeHasAttribute(afxXmlNode const* node, afxString const* key
     {
         afxXmlAttr const *a = node->attributes[i];
 
-        if ((ci && (0 == AfxTestStringEquivalence(key, &a->name))) || (0 == AfxTestStringEquality(key, &a->name)))
+        if ((ci && (0 == AfxCompareStringCi(key, &a->name))) || (0 == AfxCompareString(key, &a->name)))
             return TRUE;
     }
     return FALSE;
@@ -884,7 +886,7 @@ _AFX afxString const* AfxFindXmlAttribute(afxXmlNode const* node, afxString cons
     {
         afxXmlAttr const *a = node->attributes[i];
 
-        if ((ci && (0 == AfxTestStringEquivalence(key, &a->name))) || (0 == AfxTestStringEquality(key, &a->name)))
+        if ((ci && (0 == AfxCompareStringCi(key, &a->name))) || (0 == AfxCompareString(key, &a->name)))
             return &a->content;
     }
     return NIL;
@@ -963,7 +965,7 @@ _AFX afxBool AfxTestXmlRoot(afxXml const* xml, afxString const* name)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(xml, afxFcc_XML);
-    return (0 == AfxTestStringEquality(&(xml->root->name), name));
+    return (0 == AfxCompareString(&(xml->root->name), name));
 }
 
 _AFX afxBool AfxIndexXmlElements(afxXml const* xml, afxNat parentIdx, afxNat base, afxNat cnt, afxString const names[], afxNat* nameIdx)
@@ -978,7 +980,7 @@ _AFX afxBool AfxIndexXmlElements(afxXml const* xml, afxNat parentIdx, afxNat bas
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (0 == AfxTestStringEquality(&xml->elems[parent->baseChildIdx].name, &names[i]))
+        if (0 == AfxCompareString(&xml->elems[parent->baseChildIdx].name, &names[i]))
         {
             if (nameIdx)
                 *nameIdx = i;
@@ -1000,7 +1002,7 @@ _AFX afxBool AfxTestXmlTag(afxXml const* xml, afxNat elemIdx, afxNat cnt, afxStr
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (0 == AfxTestStringEquality(&xml->elems[elemIdx].name, &names[i]))
+        if (0 == AfxCompareString(&xml->elems[elemIdx].name, &names[i]))
         {
             if (nameIdx)
                 *nameIdx = i;
@@ -1099,10 +1101,10 @@ _AFX void AfxQueryXmlElement(afxXml const* xml, afxNat elemIdx, afxString* name,
     afxXmlElement const* elem = &xml->elems[elemIdx];
 
     if (name)
-        AfxReplicateString(name, &elem->name);
+        AfxReflectString(&elem->name, name);
 
     if (content)
-        AfxReplicateString(content, &elem->content);
+        AfxReflectString(&elem->content, content);
 }
 
 _AFX void AfxQueryXmlTag(afxXml const* xml, afxNat elemIdx, afxNat tagIdx, afxString* name, afxString* content)
@@ -1115,10 +1117,10 @@ _AFX void AfxQueryXmlTag(afxXml const* xml, afxNat elemIdx, afxNat tagIdx, afxSt
     afxXmlTag const* tag = &xml->tags[elem->baseTagIdx + tagIdx];
 
     if (name)
-        AfxReplicateString(name, &tag->name);
+        AfxReflectString(&tag->name, name);
 
     if (content)
-        AfxReplicateString(content, &tag->content);
+        AfxReflectString(&tag->content, content);
 }
 
 _AFX afxNat AfxEnumerateXmlElements(afxXml const* xml, afxNat parentIdx, afxNat first, afxNat cnt, afxNat childIdx[])
@@ -1157,7 +1159,7 @@ _AFX afxNat AfxFindXmlElements(afxXml const* xml, afxNat parentIdx, afxString co
 
     for (afxNat i = 0; i < childCnt; i++)
     {
-        if (0 == AfxTestStringEquality(&xml->elems[firstChildIdx + first + i].name, name))
+        if (0 == AfxCompareString(&xml->elems[firstChildIdx + first + i].name, name))
             ++foundCnt;
 
         if (foundCnt == cnt)
@@ -1189,7 +1191,7 @@ _AFX afxNat AfxFindXmlTaggedElements(afxXml const* xml, afxNat parentIdx, afxNat
         afxNat currElemIdx = firstChildIdx + first + i;
         afxXmlElement* currElem = &xml->elems[currElemIdx];
 
-        if (!ignoreName && AfxTestStringEquality(&currElem->name, elem))
+        if (!ignoreName && AfxCompareString(&currElem->name, elem))
             continue;
 
         if (ignoreTag)
@@ -1206,9 +1208,9 @@ _AFX afxNat AfxFindXmlTaggedElements(afxXml const* xml, afxNat parentIdx, afxNat
             {
                 afxXmlTag* currTag = &xml->tags[firstTagIdx + j];
 
-                if (0 == AfxTestStringEquality(&currTag->name, tag))
+                if (0 == AfxCompareString(&currTag->name, tag))
                 {
-                    if (ignoreValue || 0 == AfxTestStringEquality(value, &currTag->content))
+                    if (ignoreValue || 0 == AfxCompareString(value, &currTag->content))
                     {
                         childIdx[foundCnt] = currElemIdx;
                         ++foundCnt;
@@ -1235,7 +1237,7 @@ _AFX afxXmlNode const* AfxXmlNodeFindChild(afxXmlNode const *base, afxString con
     {
         afxXmlNode const *n = base->children[i];
 
-        if (0 == AfxTestStringEquality(child, &n->name))
+        if (0 == AfxCompareString(child, &n->name))
         {
             if (!attr || AfxStringIsEmpty(attr))
                 return n;
@@ -1246,12 +1248,12 @@ _AFX afxXmlNode const* AfxXmlNodeFindChild(afxXmlNode const *base, afxString con
             {
                 afxXmlAttr const *a = n->attributes[j];
 
-                if (0 == AfxTestStringEquality(attr, &a->name))
+                if (0 == AfxCompareString(attr, &a->name))
                 {
                     if (!value || AfxStringIsEmpty(value))
                         return n;
 
-                    if (0 == AfxTestStringEquality(value, &a->content))
+                    if (0 == AfxCompareString(value, &a->content))
                         return n;
                 }
             }
@@ -1260,7 +1262,7 @@ _AFX afxXmlNode const* AfxXmlNodeFindChild(afxXmlNode const *base, afxString con
     return NIL;
 }
 
-_AFX void AfxReleaseXml(afxXml* xml)
+_AFX void AfxCleanUpXml(afxXml* xml)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(xml, afxFcc_XML);

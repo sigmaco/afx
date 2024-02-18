@@ -15,7 +15,7 @@
  */
 
 #define _AFX_CORE_C
-#define _AFX_MODULE_C
+#define _AFX_EXECUTABLE_C
 #define _AFX_ICD_C
 #include "qwadro/core/afxClass.h"
 #include "qwadro/core/afxSystem.h"
@@ -29,8 +29,8 @@ _AFX afxError _AfxIcdCtor(afxIcd icd, afxCookie const* cookie)
 
     afxSystem sys = cookie->udd[0];
 
-    afxModule mdle = &icd->mdle;
-    afxError (*IcdHookPoint)(afxIcd icd) = AfxFindModuleSymbol(mdle, "AfxIcdHookPoint");
+    afxExecutable exe = &icd->exe;
+    afxError (*IcdHookPoint)(afxIcd icd) = AfxFindExecutableSymbol(exe, "AfxIcdHookPoint");
 
     if (!IcdHookPoint) AfxThrowError();
     else
@@ -76,11 +76,11 @@ _AFX afxError _AfxSysLoadIcd(afxSystem sys, afxUri const* file, afxIcd *icd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    AfxAssertType(file, afxFcc_URI);
+    AfxAssert(file);
     AfxComment("Loading draw ICD %.*s", AfxPushString(AfxGetUriString(file)));
 
     afxUri file2;
-    AfxGetUriObject(&file2, file);
+    AfxExcerptUriFile(file, &file2);
     afxIcd icd2;
 
     if ((icd2 = AfxFindIcd(&file2))) AfxReacquireObjects(1, (void*[]) { icd2 });
@@ -115,14 +115,14 @@ _AFX afxNat AfxInvokeIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), 
     return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
 }
 
-_AFX afxNat AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icd[])
+_AFX afxNat AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icds[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(icd);
+    AfxAssert(icds);
     afxClass* cls = AfxGetIcdClass();
     AfxAssertClass(cls, afxFcc_ICD);
-    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)icd) : 0;
+    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)icds) : 0;
 }
 
 _AFX afxNat AfxCountIcds(void)
@@ -138,8 +138,8 @@ _AFX afxIcd AfxFindIcd(afxUri const *uri)
     afxError err = AFX_ERR_NONE;
 
     afxUri target;
-    AfxAssertType(uri, afxFcc_URI);
-    AfxGetUriObject(&target, uri);
+    AfxAssert(uri);
+    AfxExcerptUriFile(uri, &target);
 
     afxIcd icd;
     afxNat i = 0;
@@ -148,7 +148,7 @@ _AFX afxIcd AfxFindIcd(afxUri const *uri)
         AfxAssertObjects(1, &icd, afxFcc_ICD);
 
         afxUri tmp;
-        AfxGetUriObject(&tmp, AfxGetModulePath(&icd->mdle));
+        AfxExcerptUriFile(AfxGetExecutablePath(&icd->exe), &tmp);
 
         if (0 == AfxCompareUri(&target, &tmp))
             return icd;

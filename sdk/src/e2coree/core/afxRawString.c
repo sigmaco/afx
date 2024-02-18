@@ -503,13 +503,12 @@ _AFXINL afxResult AfxVsnprintf(afxChar* buf, size_t size, afxChar const* fmt, va
 //int snprintf(char * buf, size_t size, const char *fmt, ...)
 _AFXINL afxResult AfxSnprintf(afxChar* buf, afxNat size, afxChar const* fmt, ...)
 {
-    va_list args;
-    int i;
+    va_list va;
+    va_start(va, fmt);
 
-    va_start(args, fmt);
-    i = AfxVsnprintf(buf, size, fmt, args);
-    va_end(args);
-    return i;
+    afxResult result = stbsp_vsnprintf(buf, size, fmt, va);
+    va_end(va);
+    return result;
 }
 
 /**
@@ -525,7 +524,7 @@ _AFXINL afxResult AfxSnprintf(afxChar* buf, afxNat size, afxChar const* fmt, ...
 //int vsprintf(char *buf, const char *fmt, va_list args)
 _AFXINL afxResult AfxVsprintf(afxChar* buf, afxChar const* fmt, va_list args)
 {
-    return AfxVsnprintf(buf, 0xFFFFFFFFUL, fmt, args);
+    return stbsp_vsprintf(buf, fmt, args);
 }
 
 /**
@@ -1041,7 +1040,7 @@ int ___vsscanf(const char *buf, const char *s, va_list ap)
                 {
                     afxString* str = va_arg(ap, afxString*);
                     AfxCopyStringLiteral(str, width, buf);
-                    AfxGetBufferedStringData(str)[width] = '\0';
+                    AfxGetStringStorage(str)[width] = '\0';
                     //strncpy(t = va_arg(ap, char *), buf, width);
                     //t[width] = '\0';
                 }

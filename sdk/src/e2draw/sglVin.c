@@ -106,10 +106,8 @@ _SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVerte
             }
             vin->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
         }
-        else
-        {
-            gl->BindVertexArray(glHandle); _SglThrowErrorOccuried();
-        }
+
+        gl->BindVertexArray(glHandle); _SglThrowErrorOccuried();
 
         //sglVertexInputState const* nextVinBindings = &dpu->nextVinBindings;
         afxMask updMask = nextVinBindings->streamUpdMask;
@@ -142,25 +140,22 @@ _SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVerte
                     rebind = TRUE;
                 }
             }
+            
+            AfxAssert(gl->BindVertexBuffer);
 
-            if (rebind)
+            if (!buf)
             {
-                AfxAssert(gl->BindVertexBuffer);
-                
-                if (buf)
-                {
-                    _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC, GL_ARRAY_BUFFER, buf, offset, range, stride, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
-                    gl->BindVertexBuffer(streamIdx, buf->glHandle, offset, stride); _SglThrowErrorOccuried();
-                }
-                else
-                {
-                    gl->BindVertexBuffer(streamIdx, 0, 0, 0); _SglThrowErrorOccuried();
-                }
+                gl->BindVertexBuffer(streamIdx, 0, 0, 0); _SglThrowErrorOccuried();
+            }
+            else
+            {
+                _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC, GL_ARRAY_BUFFER, buf, offset, range, stride, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
+                gl->BindVertexBuffer(streamIdx, buf->glHandle, offset, stride); _SglThrowErrorOccuried();
             }
         }
 
-        nextVinBindings->streamUpdMask = NIL;
-        nextVinBindings->streamUpdCnt = 0;
+        //nextVinBindings->streamUpdMask = NIL;
+        //nextVinBindings->streamUpdCnt = 0;
         
         afxBuffer buf = nextVinBindings->idxSrcBuf;
         afxNat32 off = nextVinBindings->idxSrcOff;
@@ -182,17 +177,14 @@ _SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVerte
             vin->bindings.idxSrcSiz = idxSrcSiz;
         }
 
-        if (rebind)
+        if (!buf)
         {
-            if (!buf)
-            {
-                gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-            }
-            else
-            {
-                _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC | sglBindFlag_BIND | sglBindFlag_KEEP, GL_ELEMENT_ARRAY_BUFFER, buf, off, range, idxSrcSiz, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
-                gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf->glHandle);
-            }
+            gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        }
+        else
+        {
+            _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC | sglBindFlag_BIND | sglBindFlag_KEEP, GL_ELEMENT_ARRAY_BUFFER, buf, off, range, idxSrcSiz, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
+            gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf->glHandle);
         }
     }
     return err;

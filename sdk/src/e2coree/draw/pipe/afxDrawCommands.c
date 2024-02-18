@@ -99,7 +99,7 @@ _AFX afxCmdId AfxCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDrawScrip
 
 // Draw
 
-_AFX afxCmdId AfxCmdDraw(afxDrawScript dscr, afxNat vtxCnt, afxNat instCnt, afxNat baseVtxIdx, afxNat baseInstIdx)
+_AFX afxCmdId AfxCmdDraw(afxDrawScript dscr, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -130,7 +130,7 @@ _AFX afxCmdId AfxCmdDrawIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat3
     return dscr->stdCmds->DrawIndirectCount(dscr, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
-_AFX afxCmdId AfxCmdDrawIndexed(afxDrawScript dscr, afxNat idxCnt, afxNat instCnt, afxNat baseIdx, afxNat vtxOff, afxNat baseInstIdx)
+_AFX afxCmdId AfxCmdDrawIndexed(afxDrawScript dscr, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

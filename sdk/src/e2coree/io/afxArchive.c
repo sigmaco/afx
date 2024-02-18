@@ -379,7 +379,7 @@ _AFX afxBool AfxFindArchivedFile(afxArchive arc, afxUri const *name, afxNat *idx
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
-    AfxAssertType(name, afxFcc_URI);
+    AfxAssert(name);
     AfxAssert(!AfxUriIsBlank(name));
 
     //_afxZipEntry const *e;
@@ -535,7 +535,7 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxNat idx, afxUri const *u
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
     AfxAssert(idx < AfxCountArrayElements(&arc->entries));
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
     afxMmu mmu = AfxGetIoContext();
@@ -599,7 +599,7 @@ _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxNat idx, afxUri *name)
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
     AfxAssert(idx < AfxCountArrayElements(&arc->entries));
-    AfxAssertType(name, afxFcc_URI);
+    AfxAssert(name);
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
     AfxCopyUri(name, &e->path.uri);
     return (afxString*)AfxGetUriString(name);
@@ -653,7 +653,7 @@ _AFX afxClassConfig const _AfxArcClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[], afxFileFlags const flags[])
+_AFX afxError AfxAcquireArchives(afxNat cnt, afxArchive archives[], afxUri const uri[], afxFileFlags const flags[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -661,7 +661,7 @@ _AFX afxError AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[
     afxClass* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)arc, (void const*[]) { flags, uri }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)archives, (void const*[]) { flags, uri }))
         AfxThrowError();
 
     return err;
@@ -677,14 +677,14 @@ _AFX afxNat AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, 
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive arc[])
+_AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(arc);
+    AfxAssert(archives);
     afxClass* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)arc);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)archives);
 }
 
 _AFX afxNat AfxCountArchives(void)

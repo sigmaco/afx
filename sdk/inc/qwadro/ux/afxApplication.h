@@ -98,6 +98,6 @@ AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWid
 
 //AFX afxBool                 _AfxGetAppD(afxApplication app, struct _afxAppD **appD, struct _afxSysD* sysD);
 
-AFX afxError                AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication app[]);
+AFX afxError                AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[]);
 
 #endif//AFX_APPLICATION_H

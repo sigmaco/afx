@@ -146,7 +146,6 @@ _AFXINL void AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprin
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_DOPB);
-    AfxTryAssertType(uri, afxFcc_URI);
     AfxCopyUri(&blueprint->uri.uri, uri);
 }
 
@@ -206,7 +205,6 @@ _AFXINL void AfxDrawOperationBlueprintRenameTechnique(afxDrawOperationBlueprint 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_DOPB);
-    AfxTryAssertType(name, afxFcc_STR);
     AfxAssert(AfxCountArrayElements(&blueprint->techniques) > tecIdx);
     afxDrawOperationBlueprintTechnique *tec = AfxGetArrayUnit(&blueprint->techniques, tecIdx);
 
@@ -340,7 +338,7 @@ _AFX afxBool AfxDrawOperationFindPass(afxDrawOperation dop, afxNat tecIdx, afxSt
         {
             afxDrawPass *dpas = &dtec->passes[j];
 
-            if (0 == AfxTestStringEquivalence(name, dpas->name))
+            if (0 == AfxCompareStringCi(name, dpas->name))
             {
                 AfxAssert(idx);
                 *idx = j;
@@ -375,7 +373,7 @@ _AFX afxBool AfxDrawOperationFindTechnique(afxDrawOperation dop, afxString const
     {
         afxDrawTechnique *dtec = &dop->techniques[i];
 
-        if (0 == AfxTestStringEquivalence(name, dtec->name))
+        if (0 == AfxCompareStringCi(name, dtec->name))
         {
             AfxAssert(idx);
             *idx = i;
@@ -444,7 +442,6 @@ _AFX afxResult AfxFindDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri con
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&name[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(name));
     }
 
@@ -480,22 +477,21 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!AfxUriIsBlank(&uri[i]));
         
         AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
         
         afxUri fext;
-        AfxGetUriExtension(&fext, &uri[i], FALSE);
+        AfxExcerptUriExtension(&fext, &uri[i], FALSE);
         
         if (AfxUriIsBlank(&fext)) AfxThrowError();
         else
         {
             afxUri fpath, query;
-            AfxGetUriPath(&fpath, &uri[i]);
-            AfxGetUriQuery(&query, &uri[i], TRUE);
+            AfxExcerptUriPath(&fpath, &uri[i]);
+            AfxExcerptUriQuery(&query, &uri[i], TRUE);
 
-            if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
+            if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
             {
                 afxXml xml;
 
@@ -506,7 +502,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
 
                     afxXmlNode const *node = AfxGetXmlRoot(&xml);
                     afxString const *name = AfxGetXmlNodeName(node);
-                    AfxAssert(0 == AfxTestStringEquality(name, &g_str_Qwadro));
+                    AfxAssert(0 == AfxCompareString(name, &g_str_Qwadro));
                     afxString const *queryStr = AfxGetUriString(&query);
                     afxBool hasQuery = !AfxStringIsEmpty(queryStr);
                     node = AfxXmlNodeFindChild(node, &g_str_DrawOperation, hasQuery ? &g_str_name : NIL, hasQuery ? queryStr : NIL);
@@ -525,8 +521,8 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
 
                             if (!AfxUriIsBlank(&blueprint.uri.uri))
                             {
-                                AfxAppendStringLiteral(&tmp.str, "?", 1);
-                                AfxAppendString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
+                                AfxConcatenateStringL(&tmp.str, "?", 1);
+                                AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                             }
 
                             afxUri tmpUri;
@@ -543,7 +539,7 @@ _AFX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                         AfxDrawOperationBlueprintEnd(&blueprint, 0, NIL);
                     }
 
-                    AfxReleaseXml(&xml);
+                    AfxCleanUpXml(&xml);
                 }
             }
             else
@@ -586,9 +582,8 @@ _AFX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
     for (afxNat i = 0; i < cnt; i++)
     {
         afxUri name;
-        AfxAssertType(&uri[i], afxFcc_URI);
         AfxAssert(!(AfxUriIsBlank(&uri[i])));
-        AfxGetUriName(&name, &uri[i]);
+        AfxExcerptUriName(&name, &uri[i]);
         AfxAssert(!(AfxUriIsBlank(&name)));
 
         if (1 == AfxFindDrawOperations(dctx, 1, &name, &dop[i]))

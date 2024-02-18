@@ -358,17 +358,17 @@ _AFX afxClassConfig const _AfxAppClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication app[])
+_AFX afxError AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[])
 {
-    AfxEntry("cnt=%u,app=%p,config=%p", cnt, app, config);
+    AfxEntry("cnt=%u,app=%p,config=%p", cnt, applications, config);
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetApplicationClass();
     AfxAssertClass(cls, afxFcc_APP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)app, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)applications, (void const*[]) { (void*)config }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, app, afxFcc_APP);
+    AfxAssertObjects(cnt, applications, afxFcc_APP);
 
     return err;
 }
@@ -383,14 +383,14 @@ _AFX afxNat AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxAppli
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication app[])
+_AFX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication applications[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(app);
+    AfxAssert(applications);
     afxClass* cls = AfxGetApplicationClass();
     AfxAssertClass(cls, afxFcc_APP);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)app);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)applications);
 }
 
 _AFX afxNat AfxCountApplications(void)

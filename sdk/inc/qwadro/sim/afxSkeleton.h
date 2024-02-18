@@ -56,12 +56,15 @@ AFX_DEFINE_STRUCT(afxSkeletonBone)
 AFX_OBJECT(afxSkeleton)
 {
     afxNat              boneCnt;
-    afxSkeletonBone*    bones; // awxNode
-    afxNat              lodType;
-    afxFixedString32    id; // 128
-    afxNat              idStrIdx;
+    afxNat*             parentIdx;
+    afxTransform*       local;
+    afxM4d*             iw;
+    afxReal*            lodError;
+    afxString*          pivotId;
+    void**              udd;
 
-    afxString*          _boneNames; // TODO nest bone names to speed up search and reduce memory
+    afxNat              lodType;
+    afxString           id; // 32
     afxStringCatalog    strc;
 };
 #endif//_AFX_SKELETON_C
@@ -90,6 +93,8 @@ AFX afxNat              AfxGetBoneCountForLod(afxSkeleton skl, afxReal allowedEr
 
 AFX afxSkeletonBone*    AfxGetBone(afxSkeleton skl, afxNat boneIdx);
 AFX afxBool             AfxGetBoneId(afxSkeleton skl, afxNat boneIdx, afxString* id);
+
+AFX afxM4d*             AfxGetBoneIw(afxSkeleton skl, afxNat boneIdx);
 
 AFX afxBool             AfxFindBone(afxSkeleton skl, afxString const* id, afxNat *boneIdx);
 AFX afxNat              AfxFindBones(afxSkeleton skl, afxNat cnt, afxString const ids[], afxNat indices[]);

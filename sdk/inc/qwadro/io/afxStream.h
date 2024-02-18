@@ -84,7 +84,7 @@ AFX afxStream               AfxAcquireOutputStream(afxNat cap, void* start, afxS
 
 // Make a stream fork from another stream.
 AFX afxStream               AfxForkStream(afxStream ios); // em caso de erro, retorna o comprimento deixado de fora.
-AFX afxStream               AfxForkStreamRange(afxStream ios, afxSize offset, afxSize range); // em caso de erro, retorna o comprimento deixado de fora.
+AFX afxStream               AfxForkStreamRange(afxStream ios, afxSize offset, afxNat range); // em caso de erro, retorna o comprimento deixado de fora.
 
 // Reads data from a stream
 

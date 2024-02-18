@@ -194,15 +194,16 @@ _AFX afxResult AfxFlushFile(afxFile file)
     return err;
 }
 
-_AFX afxError AfxReadFileString(afxFile file, afxBufferedString* str)
+_AFX afxError AfxReadFileString(afxFile file, afxRestring* str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(AfxStringIsWriteable(str));
     
-    if (!fgets(str->str.buf, str->cap, file->fd))
-        AfxThrowError();
+    err = !fgets(str->str.buf, str->cap, file->fd);
+
+    str->str.len = AfxStrlen(str->str.start);
 
     return err;
 }
@@ -225,7 +226,7 @@ _AFX afxResult AfxCopyFilePath(afxFile file, afxUri* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     return AfxCopyUri(uri, &file->path);
 }
 
@@ -236,7 +237,7 @@ _AFX afxString const* AfxGetFilePathString(afxFile file)
     return AfxGetUriString(&file->path);
 }
 
-_AFX afxResult AfxCopyFilePathString(afxFile file, afxBufferedString* str)
+_AFX afxResult AfxCopyFilePathString(afxFile file, afxRestring* str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_FILE);
@@ -413,10 +414,10 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
     *modePtr++ = '+';
 
     afxUri path;
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     
 
-    if (!AfxGetUriPath(&path, uri)) AfxThrowError();
+    if (!AfxExcerptUriPath(uri, &path)) AfxThrowError();
     else
     {
         afxFixedUri2048 uri2;
@@ -424,7 +425,7 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
 
         AfxResolveUri(flags, &path, &uri2.uri);
         
-        afxChar const *rawName = AfxGetBufferedUriData(&uri2.uri, 0);
+        afxChar const *rawName = AfxGetUriStorage(&uri2.uri, 0);
 
         if (!(file->fd = fopen(rawName, mode))) AfxThrowError();
         else
@@ -504,40 +505,40 @@ _AFX afxClassConfig const _AfxFileClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxOpenFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile file[])
+_AFX afxError AfxOpenFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile files[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(uri);
 
     afxClass* cls = AfxGetFileClass();
     AfxAssertClass(cls, afxFcc_FILE);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)file, (void const*[]) { &flags, uri }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)files, (void const*[]) { &flags, uri }))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxError AfxLoadFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile file[])
+_AFX afxError AfxLoadFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile files[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(uri);
 
     afxClass* cls = AfxGetFileClass();
     AfxAssertClass(cls, afxFcc_FILE);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)file, (void const*[]) { &flags, uri })) AfxThrowError();
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)files, (void const*[]) { &flags, uri })) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < cnt; i++)
         {
-            AfxReadjustStreamBuffer(file[i]->ios, AfxMeasureStream(AfxGetFileStream(file[i])));
-            AfxGoToStreamBegin(file[i]->ios, 0);
+            AfxReadjustStreamBuffer(files[i]->ios, AfxMeasureStream(AfxGetFileStream(files[i])));
+            AfxGoToStreamBegin(files[i]->ios, 0);
             
             AfxThrowError();
-            AfxGoToStreamBegin(file[i]->ios, 0);
+            AfxGoToStreamBegin(files[i]->ios, 0);
         }
     }
 
@@ -547,7 +548,7 @@ _AFX afxError AfxLoadFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], a
 _AFX afxError AfxReloadFile(afxStream ios, afxFileFlags flags, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxEntry("uri=%p,flags=%x", uri, flags);
     AfxAssert(uri);
     afxFile file;
@@ -574,14 +575,14 @@ _AFX afxNat AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*)
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile file[])
+_AFX afxNat AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(file);
+    AfxAssert(files);
     afxClass* cls = AfxGetFileClass();
     AfxAssertClass(cls, afxFcc_FILE);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)file);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)files);
 }
 
 _AFX afxNat AfxCountFiles(void)

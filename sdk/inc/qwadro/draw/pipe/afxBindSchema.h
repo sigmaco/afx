@@ -39,7 +39,7 @@ AFX_DEFINE_STRUCT(afxPipelineRigBlueprintBinding)
     afxMask                 visibility;
     afxShaderResourceType   type;
     afxNat                  cnt;
-    afxBufferedString       name; // 16
+    afxRestring       name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxPipelineRigBlueprint)
@@ -65,7 +65,7 @@ AFX_DEFINE_STRUCT(afxBindSchemaEntry) // A afxBindSchemaEntry describes a single
     afxMask                 visibility; // A bitset of the members of afxShaderStage. Each set bit indicates that a afxBindSchemaEntry's resource will be accessible from the associated shader stage.
     afxShaderResourceType   type;
     afxNat                  cnt;
-    afxBufferedString       name; // by QWADRO
+    afxRestring       name; // by QWADRO
 
     union
     {

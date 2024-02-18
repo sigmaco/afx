@@ -52,7 +52,6 @@ _SGL afxError _SglDpuBindAndSyncRazr(sglDpuIdd* dpu, afxRasterizer razr)
             {
                 afxColorOutputChannel out;
                 AfxGetColorOutputChannels(pip->base.razr, i, 1, &out);
-                //gl->BindFragDataLocationIndexed(glHandle, i, fsh->base.ioDecls[i].location, AfxGetBufferedStringData(&(fsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
             }
 #endif
 

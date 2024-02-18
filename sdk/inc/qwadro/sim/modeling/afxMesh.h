@@ -52,9 +52,7 @@
 
 AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 {
-    _AFX_DBG_FCC;
     afxString           id; // 16
-    afxNat              idStrIdx;
     awxVertexData       vtd;
     afxNat              baseVtx;
     afxNat              vtxCnt;
@@ -63,9 +61,7 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 
 AFX_DEFINE_STRUCT(afxMeshPivot)
 {
-    _AFX_DBG_FCC;
-    afxFixedString32    id;
-    afxNat              idStrIdx;
+    afxString           id; // 32
     afxAabb             aabb; // originally oobb;
     afxNat              triCnt;
     afxNat*             tris; // indices to vertices
@@ -74,10 +70,15 @@ AFX_DEFINE_STRUCT(afxMeshPivot)
 #ifdef _AFX_MESH_C
 AFX_OBJECT(afxMesh)
 {
-    afxNat              idStrIdx;
-    afxFixedString32    id;
-
+    afxMeshTopology     topology;
     awxVertexData       vtd;
+    afxNat              morphCnt;
+    afxMeshMorph*       morphs;
+    afxNat              pivotCnt;
+    afxMeshPivot*       pivots;
+    afxString           id; // 32
+    afxStringCatalog    strc;
+    void*               extData;
 
     // EXP ---
     struct
@@ -88,17 +89,6 @@ AFX_OBJECT(afxMesh)
     }*                  lods;
     afxNat              lodCnt;
     // --- EXP
-
-    afxNat              morphCnt;
-    afxMeshMorph*       morphs;
-
-    afxMeshTopology     topology;
-    
-    afxNat              pivotCnt;
-    afxMeshPivot*       pivots;
-    void*               extData;
-
-    afxStringCatalog    strc;
 };
 #endif
 
@@ -106,11 +96,12 @@ AFX_DEFINE_STRUCT(afxMeshBlueprint)
 /// Data needed for mesh assembly
 {
     afxFixedString32    id;
-    afxNat              vtxDataIdx;
-    afxNat              topologyIdx;
+    awxVertexData       vertices;
+    afxMeshTopology     topology;
     afxNat              mtlCnt;
     afxNat              pivotCnt;
     afxString const*    pivots;
+    afxStringCatalog    strc;
 };
 
 AFX afxBool             AfxGetMeshId(afxMesh msh, afxString* id);
@@ -134,7 +125,7 @@ AFX afxBool             AfxGetMeshPivotId(afxMesh msh, afxNat pvtIdx, afxString*
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAssembleMeshes(afxSimulation sim, afxStringCatalog strc, awxVertexData const datas[], afxMeshTopology const topologies[], afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+AFX afxError            AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
 
 AFX afxError            AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
 

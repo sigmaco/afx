@@ -6,9 +6,9 @@
 #include "qwadro/core/afxDebug.h"
 #include "qwadro/math/afxMathDefs.h"
 #include "qwadro/io/afxMouse.h"
-#include "../src/e2idtech/afxMD5Model.h"
-#include "../src/e2cad/afxWavefrontObject.h"
-#include "../src/e2grn3d2/afxGranny2Model.h"
+#include "../src/techid/afxMD5Model.h"
+#include "../src/cadio/afxWavefrontObject.h"
+#include "../src/rad3d/afxGranny2Model.h"
 
 #define ENABLE_DRAW 1
 
@@ -168,20 +168,22 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
+    AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
     //AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
-    //afxModel millMdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0);
+    mdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0);
 
     awxAsset cad;
-    AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
+    //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
     //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
 
     afxV3d atv;
     afxM3d ltm, iltm;
     AfxComputeBasisConversion(sim, 1.0, AFX_V3D_X, AFX_V3D_Y, AFX_V3D_Z, AFX_V3D_ZERO, ltm, iltm, atv);
     //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
+    //AfxTransformModels(ltm, iltm, 1e-5f, atv, 1e-5f, 3, 1, &mdl);
 
-    AfxGetUriName(&uriMap2, &uriMap);
-    AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
+    AfxExcerptUriName(&uriMap, &uriMap2);
+    //AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
@@ -197,11 +199,12 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxAcquireStringCatalogs(1, &strc);
 
     afxModelBlueprint mdlb = { 0 };
-    mdlb.baseMshIdx = 0;
+    mdlb.meshes = &cube;
     mdlb.mshCnt = 1;
     AfxMakeFixedString32(&mdlb.id, &AfxStaticString("cube"));
     mdlb.skl = AfxGetModelSkeleton(mdl);
-    AfxAssembleModel(sim, strc, &cube, 1, &mdlb, &cubeMdl);
+    mdlb.strc = strc;
+    AfxAssembleModel(sim, 1, &mdlb, &cubeMdl);
     AwxEmbodyModel(cubeMdl, 1, &cubeBod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
@@ -247,7 +250,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxDeserializeSkeletons(fs, sim, 1, &skl);
 #endif
 
-#if !0
+#if 0
     AfxGoToStreamBegin(fs, hdr.mshtDirBaseOffset);
     afxMeshTopology msht;
     AfxDeserializeMeshTopologies(fs, sim, 1, &msht);
@@ -335,7 +338,7 @@ int main(int argc, char const* argv[])
         AfxChooseDrawSystemConfiguration(&dsysCfg);
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
-        AfxBootUpSystem(&sysCfg);
+        AfxDoSystemBootUp(&sysCfg);
 
         afxDrawContextConfig dctxCfg = { 0 };
         AfxAcquireDrawContexts(0, 1, &dctxCfg, &dctx);
@@ -358,7 +361,7 @@ int main(int argc, char const* argv[])
 
         AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxShutdownSystem(0);
+        AfxDoSystemShutdown(0);
     }
     Sleep(3000);
     return 0;

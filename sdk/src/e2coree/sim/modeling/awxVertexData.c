@@ -75,17 +75,20 @@ _AFX afxError AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd)
         afxVertexFormat cachedFmt = NIL;
         afxNat cacheIdx;
 
-        if (AFX_INVALID_INDEX != AfxStringsAreEqual(&attr->id.str.str, 3, positionals))
+        afxString str;
+        AfxResolveStrings2(vtd->strc, 1, &attr->id, &str);
+
+        if (AFX_INVALID_INDEX != AfxStringsAreEqual(&str, 3, positionals))
         {
-            if (0 == AfxTestStringEquality(&attr->id.str.str, &positionals[0]))
+            if (0 == AfxCompareString(&str, &positionals[0]))
             {
                 cachedFmt = afxVertexFormat_V3D;
             }
-            else if (0 == AfxTestStringEquality(&attr->id.str.str, &positionals[1]))
+            else if (0 == AfxCompareString(&str, &positionals[1]))
             {
                 cachedFmt = afxVertexFormat_REAL;
             }
-            else if (0 == AfxTestStringEquality(&attr->id.str.str, &positionals[2]))
+            else if (0 == AfxCompareString(&str, &positionals[2]))
             {
                 cachedFmt = afxVertexFormat_REAL;
             }
@@ -98,7 +101,7 @@ _AFX afxError AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd)
         }
         else
         {
-            cacheIdx = 1;
+            cacheIdx = 0;//1;
             cachedFmt = attr->fmt;
         }
 
@@ -152,6 +155,8 @@ _AFX afxError AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd)
 
         if (attr->data)
             AfxUpdateBufferRegion(buf, &rgn, attr->data, srcStride);
+
+        
     }
     return err;
 }
@@ -170,7 +175,10 @@ _AFX afxNat AwxFindVertexDataAttributes(awxVertexData vtd, afxNat cnt, afxString
 
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
-        if (0 == AfxTestStringEquality(&id[rslt], &vtd->attrs[i].id.str.str))
+        afxString str;
+        AfxResolveStrings2(vtd->strc, 1, &vtd->attrs[i].id, &str);
+
+        if (0 == AfxCompareString(&id[rslt], &str))
             attrIdx[rslt++] = i;
 
         if (cnt == rslt)
@@ -250,7 +258,7 @@ _AFX afxError AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat base
     AfxAssertRange(vtd->attrCnt, attrIdx, 1);
     AfxAssertRange(vtd->vtxCnt, baseVtx, vtxCnt);
     AfxAssert(src);
-    AfxAssert(srcStride);
+    //AfxAssert(srcStride);
 #if 0
     afxByte const* src2 = src;
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
@@ -267,13 +275,13 @@ _AFX afxError AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat base
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
-    if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(NIL, vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
-            AfxThrowError();
+    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(NIL, vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        AfxThrowError();
 
     if (!err)
     {
-        AfxStream(vtxCnt, srcStride, unitSiz, src, vtd->attrs[attrIdx].data);
+        AfxStream2(vtxCnt, src, srcStride, &(vtd->attrs[attrIdx].data[unitSiz * baseVtx]), unitSiz);
+        //AfxStream(vtxCnt, srcStride, unitSiz, src, vtd->attrs[attrIdx].data);
     }
     return err;
 }
@@ -373,54 +381,77 @@ _AFX afxError AwxZeroVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVt
     return err;
 }
 
-_AFX afxError AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat srcStride)
+_AFX afxError AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat fetchRate)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
     AfxAssertRange(vtd->biasCnt, baseBiasIdx, biasCnt);
-    AfxAssert(srcStride);
+    //AfxAssert(srcStride);
     AfxAssert(src);
 
     afxByte const* src2 = (afxByte const*)src;
-    afxVertexBias* biases = vtd->biases;
+    afxVertexBias* biases = (afxVertexBias*)AwxGetVertexBiases(vtd, baseBiasIdx);
 
-    for (afxNat i = 0; i < biasCnt; i++)
+    if (0 == fetchRate)
     {
-        afxVertexBias const* in = (afxVertexBias const*)src2;;
-        src2 += srcStride;
-
-        biases[i] = *in;
-        //biases[i].pivotIdx = in->pivotIdx;
-        //biases[i].weight = in->weight;
-        AfxAssert(1.0 >= biases[i].weight);
-        //AfxAssertRange(pivotCnt, biases[i].pivotIdx, 1);
+        for (afxNat i = 0; i < biasCnt; i++)
+            biases[i] = src[0];
     }
+    else
+    {
+        for (afxNat i = 0, j = 0, k = 0; i < biasCnt; i++)
+        {
+            biases[i] = src[k];
 
+            //biases[i].pivotIdx = in->pivotIdx;
+            //biases[i].weight = in->weight;
+            AfxAssert(1.0 >= biases[i].weight);
+            //AfxAssertRange(pivotCnt, biases[i].pivotIdx, 1);
+
+            if (j != fetchRate) j++;
+            else
+            {
+                ++k, j = 0;
+            }
+        }
+    }
     return err;
 }
 
-_AFX afxError AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat srcStride)
+_AFX afxError AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat fetchRate)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
     AfxAssertRange(vtd->vtxCnt, baseVtx, vtxCnt);
-    AfxAssert(srcStride);
+    //AfxAssert(srcStride);
     AfxAssert(src);
 
     afxByte const* src2 = (afxByte const*)src;
-    afxVertex* vertices = vtd->vtx;
+    afxVertex* vertices = &vtd->vtx[baseVtx];
     afxNat totalBiasCnt = vtd->biasCnt;
 
-    for (afxNat i = 0; i < vtxCnt; i++)
+    if (0 == fetchRate)
     {
-        afxVertex const* in = (afxVertex const*)src2;
-        src2 += srcStride;
+        AfxAssertRange(totalBiasCnt, src[0].baseBiasIdx, src[0].biasCnt);
 
-        vertices[i] = *in;
-        //vertices[i].baseBiasIdx = in->baseBiasIdx;
-        //vertices[i].biasCnt = in->biasCnt;
-        AfxAssertRange(totalBiasCnt, vertices[i].baseBiasIdx, vertices[i].biasCnt);
+        for (afxNat i = 0; i < vtxCnt; i++)
+            vertices[i] = src[0];
     }
+    else
+    {
+        for (afxNat i = 0, j = 0, k = 0; i < vtxCnt; i++)
+        {
+            AfxAssertRange(totalBiasCnt, src[k].baseBiasIdx, src[k].biasCnt);
+            vertices[i] = src[k];
+
+            if (j != fetchRate) j++;
+            else
+            {
+                ++k, j = 0;
+            }
+        }
+    }
+
     return err;
 }
 
@@ -515,21 +546,16 @@ _AFX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
 
                     afxBool hasData = TRUE;
 
-                    AfxMakeFixedString8(&attrs[i].id, 0);
                     afxString tmp;
                     AfxMakeString(&tmp, attrSpec->id, 0);
-                    AfxCopyString(&attrs[i].id.str, &tmp);
 
                     if (!strc)
-                        attrs[i].idStrIdx = AFX_INVALID_INDEX;
-                    else if (AfxCatalogStrings(strc, 1, &attrs[i].id.str.str, &attrs[i].idStrIdx, 0))
+                        AfxResetString(&attrs[i].id);
+                    else if (!AfxCatalogStrings2(strc, 1, &tmp, &attrs[i].id))
                         AfxThrowError();
 
                     attrs[i].usage = attrSpec->usage;
                     attrs[i].flags = NIL;
-
-                    if (attrs[i].usage & awxVertexUsage_POS)
-                        attrs[i].flags |= awxVertexFlag_AFFINE | awxVertexFlag_LINEAR;
 
                     if (attrs[i].usage & awxVertexUsage_POS)
                         attrs[i].flags |= awxVertexFlag_AFFINE | awxVertexFlag_LINEAR;
@@ -545,15 +571,10 @@ _AFX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
 
                     afxSize vtxSiz = AfxVertexFormatGetSize(attrs[i].fmt);
 
-                    if (!(attrs[i].data = AfxAllocate(mmu, vtxCnt, vtxSiz, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
-                    else
-                    {
-                        if (attrSpec->src)
-                            AwxUpdateVertexData(vtd, i, 0, vtxCnt, attrSpec->src, attrSpec->srcStride);
-                    }
+                    if (attrSpec->src)
+                        if (AwxUpdateVertexData(vtd, i, 0, vtxCnt, attrSpec->src, attrSpec->srcStride))
+                            AfxThrowError();
                 }
-
-
             }
         }
     }
@@ -625,6 +646,8 @@ _AFX void AwxTransformVertexDatas(afxReal const ltm[3][3], afxReal const iltm[3]
                             for (afxNat k = 0; k < vtxCnt; k++)
                                 AfxAddV3d(((afxV3d*)data)[k], ((afxV3d*)data)[k], atv);
                     }
+
+                    normalized = FALSE;
                 }
 #if !0
                 else if (usage & awxVertexUsage_TAN)

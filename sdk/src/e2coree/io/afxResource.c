@@ -67,7 +67,7 @@ _AFXINL afxNat AfxExcerptResourceName(afxResource res, afxUri *name)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(res, afxFcc_RES);
     AfxAssert(name);
-    return AfxGetUriName(name, res->uri);
+    return AfxExcerptUriName(name, res->uri);
 }
 
 _AFXINL afxUri const* AfxGetResourceUri(afxResource res)

@@ -28,7 +28,7 @@
     <ClInclude Include="..\..\inc\qwadro\async\afxTime.h" />
     <ClInclude Include="..\..\inc\qwadro\async\afxTxu.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxBitmap.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxBufferedString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxClass.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxDevice.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h" />
@@ -40,10 +40,11 @@
     <ClInclude Include="..\..\inc\qwadro\core\afxEvent.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxFcc.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxIndexedString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxInitialization.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxIterator.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxChain.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxMap.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxModule.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxExecutable.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxObject.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxRawString.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxResidency.h" />
@@ -91,13 +92,14 @@
     <ClInclude Include="..\..\inc\qwadro\io\afxArchive.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxData.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxFile.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxGamepad.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxHid.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxIoScript.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxKeyboard.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxMouse.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxResource.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxSource.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxStorage.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxFileSystem.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxStream.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxUrd.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxUri.h" />
@@ -161,6 +163,7 @@
     <ClInclude Include="..\..\inc\qwadro\ux\afxOverlay.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxUxDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxWidget.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\qwadro\README.md" />
@@ -184,7 +187,7 @@
     <ClCompile Include="..\..\src\e2coree\async\afxTime_w32.c" />
     <ClCompile Include="..\..\src\e2coree\async\afxTxu_w32.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxBitmap.c" />
-    <ClCompile Include="..\..\src\e2coree\core\afxBufferedString.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxRestring.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxClass.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxDevice.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxFixedString.c" />
@@ -195,13 +198,14 @@
     <ClCompile Include="..\..\src\e2coree\core\afxDatajack.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxDebug_w32.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxIndexedString.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxInitialization.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxMap.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\afxModule.c" />
+    <ClCompile Include="..\..\src\e2coree\core\afxExecutable.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxObject.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxRawString.c" />
     <ClCompile Include="..\..\src\e2coree\core\afxService.c" />
@@ -260,6 +264,7 @@
     <ClCompile Include="..\..\src\e2coree\io\afxArchive.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxData.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxFile.c" />
+    <ClCompile Include="..\..\src\e2coree\io\afxGamepad.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxHid.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxIoScript.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxKeyboard.c" />
@@ -271,7 +276,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\io\afxSource.c" />
-    <ClCompile Include="..\..\src\e2coree\io\afxStorage.c" />
+    <ClCompile Include="..\..\src\e2coree\io\afxFileSystem.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxStream.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxUrd.c" />
     <ClCompile Include="..\..\src\e2coree\io\afxUri.c" />
@@ -335,6 +340,9 @@
     <ClCompile Include="..\..\src\e2coree\ux\afxOverlay.c" />
     <ClCompile Include="..\..\src\e2coree\ux\afxWidget.c" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2coree.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -382,19 +390,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

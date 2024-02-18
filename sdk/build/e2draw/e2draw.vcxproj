@@ -65,22 +65,22 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <TargetExt>.icd</TargetExt>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\e2draw\sgl.h" />
     <ClInclude Include="..\..\src\e2draw\sglDdrv.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\e2draw\sglBuf.c" />
@@ -186,6 +187,9 @@
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
       <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2draw.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

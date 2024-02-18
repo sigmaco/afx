@@ -31,6 +31,6 @@ AFX afxError    AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, 
 AFX afxError    AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 AFX afxError    AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 
-AFX afxError AfxLoadGlScript(afxArray* code, afxUri const* path);
+AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path);
 
 #endif//AFX_XML_BACKED_DRAWABLE_RESOURCES_H

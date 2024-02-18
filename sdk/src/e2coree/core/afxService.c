@@ -51,16 +51,16 @@ _AFX afxClassConfig const _AfxSvcClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireServices(afxNat cnt, afxServiceConfig const config[], afxService svc[])
+_AFX afxError AfxAcquireServices(afxNat cnt, afxServiceConfig const config[], afxService services[])
 {
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)svc, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { (void*)config }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, svc, afxFcc_SVC);
+    AfxAssertObjects(cnt, services, afxFcc_SVC);
 
     return err;
 }
@@ -75,14 +75,14 @@ _AFX afxNat AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, 
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateServices(afxNat first, afxNat cnt, afxService svc[])
+_AFX afxNat AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(svc);
+    AfxAssert(services);
     afxClass* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)svc);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)services);
 }
 
 _AFX afxNat AfxCountServices(void)

@@ -56,8 +56,16 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
             {
                 AfxAssertObjects(1, &msh, afxFcc_MSH);
 
+                //AfxCmdBindPipeline(dscr, 0, rnd->lighting);
+                //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
+                AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
+                //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
+                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
+
                 afxNat baseVtxIdx = 0, vtxCnt = 0;
                 awxVertexData vtd = AfxGetMeshVertices(msh);
+
+                vtxCnt = AwxCountVertices(vtd);
 
                 AwxBufferizeVertexData(rnd->din, vtd);
                 AwxCmdBindVertexDataCache(dscr, 0, vtd);
@@ -67,15 +75,10 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
                 AfxBufferizeMeshTopology(msht);
                 AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
                 
-                AfxCmdBindPipeline(dscr, 0, rnd->lighting);
-                //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
-                //AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
-                //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
-                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
-
                 //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
-                //AfxCmdSetCullMode(dscr, afxCullMode_BACK);
-                //AfxCmdSwitchFrontFace(dscr, FALSE);
+                //AfxCmdSetCullMode(dscr, NIL);
+                //AfxCmdSwitchFrontFace(dscr, AfxRandom2(0, 1));
+
 
                 //AfxCmdEnableDepthTest(dscr, TRUE);
                 //AfxCmdEnableDepthWrite(dscr, TRUE);
@@ -153,10 +156,12 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
 
                     afxNat idxCnt = (sec->triCnt * 3);
                     afxNat firstIdx = (sec->baseTriIdx * 3);
-                    AfxCmdDrawIndexed(dscr, idxCnt, 0, firstIdx, baseVtxIdx, 0);
-                    //AfxCmdDraw(dscr, msh->vtxCnt, 1, msh->baseVtx, 0);
+                    //AfxCmdDrawIndexed(dscr, baseVtxIdx, 0, 1, firstIdx, idxCnt);
+                    //AfxCmdDraw(dscr, 0, 1, 0, vtxCnt);
                 }
-                //AfxCmdDrawIndexed(dscr, msht->triCnt *3, 1, 0, 0, 0);
+                //AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
+
+                AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
             }
         }
     }
@@ -171,7 +176,7 @@ _AFX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd)
     //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
     //AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
     AfxCmdBindIndexSource(dscr, rnd->testIbo, 0, sizeof(afxNat32) * 6, sizeof(afxNat32));
-    AfxCmdDrawIndexed(dscr, 6, 1, 0, 0, 0);
+    AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, 6);
     //AfxCmdDraw(dscr, 6, 1, 0, 0);
     return 0;
 }
@@ -249,7 +254,7 @@ _AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afx
         AfxTextureBlueprintEnd(&depthSurfB, 0, NIL);
     }
 #endif
-            
+
     afxDrawTarget rdt = { 0 };
     //rdt.tex = surf;
     rdt.clearValue.color[0] = 0.3f;
@@ -441,7 +446,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
         iboSpec.usage = afxBufferUsage_INDEX;
         AfxAcquireBuffers(dctx, 1, &iboSpec, &rnd->testIbo);
         
-        AfxMakeUri(&uri, "data/pipeline/test.xsh.xml", 0);
+        AfxMakeUri(&uri, "data/pipeline/test/test.xsh.xml", 0);
         rnd->testPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     }
 
@@ -485,9 +490,9 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     }
 
     {
-        AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?rigid", 0);
+        AfxMakeUri(&uri, "data/pipeline/body/body.xsh.xml?rigid", 0);
         rnd->rigidBodyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
-        AfxMakeUri(&uri, "data/pipeline/body.xsh.xml?skinned", 0);
+        AfxMakeUri(&uri, "data/pipeline/body/body.xsh.xml?skinned", 0);
         rnd->skinnedBodyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     }
 
@@ -497,13 +502,13 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     AfxAcquirePoses(sim, 1, (afxNat[]) { 255 }, &rnd->lp);
     AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {FALSE}, &rnd->wp);
 
-    AfxMakeUri(&uri, "data/pipeline/testLighting.xsh.xml?blinn", 0);
+    AfxMakeUri(&uri, "data/pipeline/testLighting/testLighting.xsh.xml?blinn", 0);
     rnd->blinnTestPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
-    AfxMakeUri(&uri, "data/pipeline/tutCamUtil.xsh.xml?tutCamUtil", 0);
+    AfxMakeUri(&uri, "data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil", 0);
     rnd->tutCamUtil = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
-    AfxMakeUri(&uri, "data/pipeline/lighting.xsh.xml?lighting", 0);
+    AfxMakeUri(&uri, "data/pipeline/lighting/lighting.xsh.xml?lighting", 0);
     rnd->lighting = AfxAssemblyPipelineFromXsh(dctx, &uri);
 
     return err;

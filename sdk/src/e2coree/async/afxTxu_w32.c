@@ -476,14 +476,14 @@ _AFX afxNat AfxInvokeTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), 
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txu[])
+_AFX afxNat AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txus[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(txu);
+    AfxAssert(txus);
     afxClass* cls = AfxGetTxuClass();
     AfxAssertClass(cls, afxFcc_TXU);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)txu);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)txus);
 }
 
 _AFX afxNat AfxCountTxus(void)

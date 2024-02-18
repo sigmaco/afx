@@ -113,6 +113,6 @@ AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
 
 // functions affection the currrent caller thread.
 
-AFX afxError    AfxAcquireThreads(afxNat cnt, afxHint const hint, afxThreadConfig const config[], afxThread thr[]);
+AFX afxError    AfxAcquireThreads(afxNat cnt, afxHint const hint, afxThreadConfig const config[], afxThread threads[]);
 
 #endif//AFX_THREAD_H

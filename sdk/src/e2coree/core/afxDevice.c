@@ -39,14 +39,14 @@ _AFX afxNat AfxInvokeDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, vo
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice dev[])
+_AFX afxNat AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice devices[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(dev);
+    AfxAssert(devices);
     afxClass* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)dev);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)devices);
 }
 
 _AFX afxNat AfxCountDevices(void)

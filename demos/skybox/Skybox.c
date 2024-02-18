@@ -57,10 +57,10 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
             AwxCmdEndSceneRendering(dscr, rnd);
 
             if (AfxCompileDrawScript(dscr)) AfxThrowError();
-            else if (AfxExecuteDrawScripts(din, 1, &dscr))
+            else if (AfxExecuteDrawScripts(din, 1, &dscr, NIL, NIL, NIL))
                 AfxThrowError();
 
-            if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx))
+            if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx, NIL))
                 AfxThrowError();
         }
     }
@@ -100,12 +100,12 @@ _AFXEXPORT void Once(afxApplication app)
     AfxMakeFixedUri128(&uri128, NIL);
     afxStoragePointSpecification mpSpec = { 0 };
     AfxFormatUri(&uri128.uri, "art/mnt.zip");
-    mpSpec.hostPath = &uri128.uri;
+    mpSpec.hostPath = &uri128.uri.str;
     AfxMakeUri(&uriMap, "art", 0);
     mpSpec.namespace = &uriMap;
     mpSpec.perm = afxIoFlag_R;
-    afxStorage stop;
-    afxResult rslt = AfxMountStoragePoints(1, &mpSpec, &stop);
+    afxFileSystem stop;
+    afxResult rslt = AfxMountFileSystems(1, &mpSpec, &stop);
     AfxAssert(rslt == 1);
 #if 0
     afxArchive arc;
@@ -157,7 +157,7 @@ _AFXEXPORT void Once(afxApplication app)
     afxMouse mse = AfxGetMouse(0);
     AfxObjectInstallEventFilter(mse, cam);
     
-    AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
+    //AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
     
 }
 
@@ -208,7 +208,7 @@ int main(int argc, char const* argv[])
         AfxChooseDrawSystemConfiguration(&dsysCfg);
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
-        AfxBootUpSystem(&sysCfg);
+        AfxDoSystemBootUp(&sysCfg);
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 
         afxDrawDevice ddev = AfxGetDrawDevice(0);
@@ -236,7 +236,7 @@ int main(int argc, char const* argv[])
 
         AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxShutdownSystem(0);
+        AfxDoSystemShutdown(0);
     }
     Sleep(3000);
     return 0;

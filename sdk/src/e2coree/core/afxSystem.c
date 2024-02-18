@@ -24,6 +24,40 @@
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/sound/afxSoundSystem.h"
 
+_AFX afxString const sigmaSignature = AFX_STRING(
+"\n       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          "
+"\n      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        "
+"\n      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       "
+"\n      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      "
+"\n             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      "
+"\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
+"\n       ########    ###########    ########    ###       ###   ###     ###      "
+"\n                                                                               "
+"\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
+"\n                                                                               "
+"\n                               Public Test Build                               "
+"\n                   (c) 2017 SIGMA, Engineering In Technology                   "
+"\n                                www.sigmaco.org                                "
+"\n                                                                               "
+);
+
+_AFX afxString const qwadroSignature = AFX_STRING(
+"\n      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      "
+"\n     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     "
+"\n     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     "
+"\n     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     "
+"\n     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     "
+"\n     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     "
+"\n      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      "
+"\n                                                                               "
+"\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
+"\n                                                                               "
+"\n                               Public Test Build                               "
+"\n                   (c) 2017 SIGMA, Engineering In Technology                   "
+"\n                                www.sigmaco.org                                "
+"\n                                                                               "
+);
+
 _AFX afxClass _sysClass;
 afxClass _sysClass;
 _AFX afxBool _sysClassInited = FALSE;
@@ -124,13 +158,13 @@ _AFX afxNat AfxGetMemoryPageSize(void)
     return sys->memPageSize;
 }
 
-_AFX afxClass* AfxGetStorageClass(void)
+_AFX afxClass* AfxGetFileSystemClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->storages;
-    AfxAssertClass(cls, afxFcc_STO);
+    afxClass *cls = &sys->fsystems;
+    AfxAssertClass(cls, afxFcc_FSYS);
     return cls;
 }
 
@@ -272,13 +306,23 @@ _AFX afxClass* AfxGetMouseClass(void)
     return cls;
 }
 
-_AFX afxClass* AfxGetModuleClass(void)
+_AFX afxClass* AfxGetControllerClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->modules;
-    AfxAssertClass(cls, afxFcc_MDLE);
+    afxClass *cls = &sys->controllers;
+    AfxAssertClass(cls, afxFcc_CTRL);
+    return cls;
+}
+
+_AFX afxClass* AfxGetExecutableClass(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys = AfxGetSystem();
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    afxClass *cls = &sys->executables;
+    AfxAssertClass(cls, afxFcc_EXE);
     return cls;
 }
 
@@ -307,16 +351,16 @@ _AFX afxUri const* AfxGetSystemDirectory(afxUri *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxUri const* qwd = &sys->qwd;
+    afxUri const* qwd = &sys->qwd.uri;
     return dst ? AfxCopyUri(dst, qwd), dst : qwd;
 }
 
-_AFX afxString const* AfxGetSystemDirectoryString(afxBufferedString *dst)
+_AFX afxString const* AfxGetSystemDirectoryString(afxRestring *dst)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxString const* qwd = AfxGetUriString(&sys->qwd);
+    afxString const* qwd = AfxGetUriString(&sys->qwd.uri);
     return dst ? AfxCopyString(dst, qwd), &dst->str : qwd;
 }
 
@@ -325,16 +369,16 @@ _AFX afxUri const* AfxGetPwd(afxUri *dst)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxUri const* pwd = &sys->pwd;
+    afxUri const* pwd = &sys->pwd.uri;
     return dst ? AfxCopyUri(dst, pwd), dst : pwd;
 }
 
-_AFX afxString const* AfxGetPwdString(afxBufferedString *dst)
+_AFX afxString const* AfxGetPwdString(afxRestring *dst)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxString const* pwd = AfxGetUriString(&sys->pwd);
+    afxString const* pwd = AfxGetUriString(&sys->pwd.uri);
     return dst ? AfxCopyString(dst, pwd), &dst->str : pwd;
 }
 
@@ -466,7 +510,7 @@ _AFX afxError AfxPostEvent(afxHandle *receiver, afxEvent *ev)
     return err;
 }
 
-_AFX void AfxShutdownSystem(afxInt exitCode)
+_AFX void AfxDoSystemShutdown(afxInt exitCode)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -482,7 +526,7 @@ _AFX void AfxShutdownSystem(afxInt exitCode)
 #endif
 }
 
-_AFX afxError AfxBootUpSystem(afxSystemConfig const *config)
+_AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
 {
     afxError err = AFX_ERR_NONE;
 

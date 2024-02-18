@@ -4,6 +4,9 @@
     <Filter Include="e2sound">
       <UniqueIdentifier>{b6431235-55fe-4642-8ffd-16a65a827a88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{e079bb88-1f5f-4aad-abba-47ccd6d6b3a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\e2sound\salSctx.c">
@@ -20,5 +23,13 @@
     <ClInclude Include="..\..\src\e2sound\salSdev.h">
       <Filter>e2sound</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2sound.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

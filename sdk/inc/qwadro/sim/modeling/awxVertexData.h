@@ -65,6 +65,8 @@ typedef enum awxVertexFlag
     /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
 
     awxVertexFlag_DELTA = AfxGetBitOffset(13), // treat as delta
+
+    awxVertexFlag_RESIDENT = AfxGetBitOffset(14) // allocation for data is resident
 } awxVertexFlags;
 
 AFX_DEFINE_STRUCT(afxVertexBias)
@@ -88,9 +90,8 @@ AFX_DEFINE_STRUCT(awxVertexDataAttr)
     awxVertexUsage      usage;
     awxVertexFlags      flags;
     afxVertexFormat     fmt;
-    void*               data;
-    afxFixedString8     id;
-    afxNat              idStrIdx;
+    afxByte*            data;
+    afxString           id; // 8
 
     afxNat              cacheIdx;
     afxNat32            cachedOffset;
@@ -162,8 +163,8 @@ AFX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, a
 AFX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
 AFX afxError            AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd);
 
-AFX afxError            AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat srcStride);
-AFX afxError            AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat srcStride);
+AFX afxError            AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat fetchRate);
+AFX afxError            AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat fetchRate);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

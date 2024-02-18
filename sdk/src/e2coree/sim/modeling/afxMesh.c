@@ -94,17 +94,9 @@ _AFX afxBool AfxGetMeshPivotId(afxMesh msh, afxNat pvtIdx, afxString* id)
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     AfxAssertRange(msh->pivotCnt, pvtIdx, 1);
     AfxAssert(id);
-    afxBool rslt = TRUE;
-
     afxMeshPivot *mshv = &msh->pivots[pvtIdx];
-    AfxAssertType(mshv, afxFcc_MSHV);
-
-    if (mshv->idStrIdx != AFX_INVALID_INDEX)
-        rslt = !!AfxResolveStrings(msh->strc, 1, &mshv->idStrIdx, id);
-    else
-        AfxResetString(id);
-
-    return rslt;
+    //AfxAssertType(mshv, afxFcc_MSHV);
+    return AfxResolveStrings2(msh->strc, 1, &mshv->id, id);
 }
 
 _AFX afxNat AfxCountMeshVertebras(afxMesh msh)
@@ -192,14 +184,7 @@ _AFX afxBool AfxGetMeshId(afxMesh msh, afxString* id)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     AfxAssert(id);
-    afxBool rslt = TRUE;
-
-    if (msh->idStrIdx != AFX_INVALID_INDEX)
-        rslt = !!AfxResolveStrings(msh->strc, 1, &msh->idStrIdx, id);
-    else
-        AfxResetString(id);
-
-    return rslt;
+    return AfxResolveStrings2(msh->strc, 1, &msh->id, id);
 }
 
 _AFX afxError _AfxMshDtor(afxMesh msh)
@@ -251,24 +236,20 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxStringCatalog strc = cookie->udd[1];
-    awxVertexData const* vtdDatas = cookie->udd[2];
-    awxVertexData vtd = vtdDatas[cookie->no];
+    afxMeshBlueprint const* mshb = cookie->udd[1];
+
+    afxStringCatalog strc = mshb->strc;
+    awxVertexData vtd = mshb->vertices;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
-    afxMeshTopology const* topologies = cookie->udd[3];
-    afxMeshTopology msht = topologies[cookie->no];
+    afxMeshTopology msht = mshb->topology;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
-    afxMeshBlueprint const* mshb = cookie->udd[4];
 
     if (!(msh->strc = strc))
-        msh->idStrIdx = AFX_INVALID_INDEX;
-    else if (AfxCatalogStrings(strc, 1, &mshb->id.str.str, &msh->idStrIdx, 0))
+        AfxResetString(&msh->id);
+    else if (!AfxCatalogStrings2(strc, 1, &mshb->id.str.str, &msh->id))
         AfxThrowError();
     else
         AfxReacquireObjects(1, (void*[]) { strc });
-
-    AfxMakeFixedString32(&msh->id, &mshb->id.str.str);
-
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
@@ -328,14 +309,10 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
                     mshv->triCnt = 0;
                     mshv->tris = NIL; // AfxAllocate(mmu, mshv->triCnt * sizeof(mshv->triIdx[0]), NIL, AfxHint());
 
-                    if (!strc)
-                        mshv->idStrIdx = AFX_INVALID_INDEX;
-                    else if (AfxCatalogStrings(strc, 1, &mshb->pivots[i], &mshv->idStrIdx, 0))
+                    if (!(strc))
+                        AfxResetString(&mshv->id);
+                    else if (!AfxCatalogStrings2(strc, 1, &mshb->pivots[i], &mshv->id))
                         AfxThrowError();
-
-                    AfxMakeFixedString32(&mshv->id, 0);
-                    afxString const *str = &mshb->pivots[i];
-                    AfxCopyString(&mshv->id.str, str);
 
                     AfxResetAabb(mshv->aabb);
                 }
@@ -408,8 +385,27 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 
     if (!err)
     {
-        afxChar const* echStr = "%.*s Mesh %p assembled. Id: \"%.*s\"\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    %u vertebras\n";
-        AfxEcho(echStr, AfxPushString(msh->pivotCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")), msh, AfxPushString(&msh->id.str.str), vtd->vtxCnt, vtd->attrCnt, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt, msh->pivotCnt);
+        afxString s;
+
+        if (!msh->strc)
+            AfxResetString(&s);
+        else
+            AfxResolveStrings2(msh->strc, 1, &msh->id, &s);
+
+        AfxEcho("%.*s Mesh %p assembled. <%.*s>\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u pivots:",
+            AfxPushString(msh->pivotCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
+            msh, AfxPushString(&s), vtd->vtxCnt, vtd->attrCnt, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt, msh->pivotCnt
+        );
+
+        for (afxNat i = 0; i < msh->pivotCnt; i++)
+        {
+            if (!msh->strc)
+                AfxResetString(&s);
+            else
+                AfxResolveStrings2(msh->strc, 1, &(msh->pivots[i].id), &s);
+
+            AfxLogMessageFormatted(0xFF, "\n    #%03u %u <%.*s>", i, msh->pivots[i].triCnt, AfxPushString(&s));
+        }
     }
     return err;
 }
@@ -538,7 +534,7 @@ _AFX void AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[])
     }
 }
 
-_AFX afxError AfxAssembleMeshes(afxSimulation sim, afxStringCatalog strc, awxVertexData const datas[], afxMeshTopology const topologies[], afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
+_AFX afxError AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -546,7 +542,7 @@ _AFX afxError AfxAssembleMeshes(afxSimulation sim, afxStringCatalog strc, awxVer
     AfxAssert(meshes);
     AfxAssert(cnt);
 
-    if (AfxAcquireObjects(AwxGetMeshClass(sim), cnt, (afxObject*)meshes, (void const*[]) { sim, strc, datas, topologies, blueprints }))
+    if (AfxAcquireObjects(AwxGetMeshClass(sim), cnt, (afxObject*)meshes, (void const*[]) { sim, blueprints }))
         AfxThrowError();
 
     return err;
@@ -567,13 +563,14 @@ _AFX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cn
         afxMeshTopology msht = AfxBuildMeshTopology(sim, mshb, 0, mshb->surfCnt);
 
         afxMeshBlueprint blueprint = { 0 };
-        blueprint.vtxDataIdx = 0;
-        blueprint.topologyIdx = 0;
+        blueprint.vertices = vtd;
+        blueprint.topology = msht;
         blueprint.pivotCnt = mshb->artCnt;
         blueprint.pivots = mshb->pivots;
+        blueprint.strc = strc;
         AfxMakeFixedString32(&blueprint.id, &mshb->id.str.str);
 
-        if (AfxAssembleMeshes(sim, strc, &vtd, &msht, 1, &blueprint, &meshes[i]))
+        if (AfxAssembleMeshes(sim, 1, &blueprint, &meshes[i]))
         {
             AfxThrowError();
             AfxReleaseObjects(i, (void**)meshes);

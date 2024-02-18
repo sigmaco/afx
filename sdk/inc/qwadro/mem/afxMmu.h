@@ -236,6 +236,6 @@ AFX void                    AfxZero(afxSize cnt, afxSize siz, void *p);
 
 //AFX afxBool             _AfxGetMemD(afxMmu mmu, struct _afxCtxD **memD, struct _afxSysD* sysD);
 
-AFX afxError                AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmu[]);
+AFX afxError                AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmus[]);
 
 #endif//AFX_MMU_H

@@ -207,14 +207,14 @@ _AFX afxNat AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), 
     return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
 }
 
-_AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hid[])
+_AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(hid);
+    AfxAssert(hids);
     afxClass* cls = AfxGetHidClass();
     AfxAssertClass(cls, afxFcc_HID);
-    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)hid) : 0;
+    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)hids) : 0;
 }
 
 _AFX afxNat AfxCountHids(void)

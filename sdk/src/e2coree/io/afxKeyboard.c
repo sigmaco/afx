@@ -74,17 +74,6 @@ afxKey const kbdLayoutBr[AFX_KEY_TOTAL] =
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
-#if 0
-_AFX afxBool _AfxGetKbdD(afxKeyboard kbd, struct _afxKbdD **kbd, struct _afxSysD* sysD)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &kbd, afxFcc_KBD);
-    AfxAssert(kbd);
-    AfxAssertType(sysD, afxFcc_SYS);
-    return AfxExposeResidentObjects(1, &kbd, (void**)kbd, &theSys->keyboards);
-}
-#endif
-
 _AFX afxError AfxEmulateKeysAction(afxNat port, afxNat cnt, afxKey const key[], afxBool const pressed[])
 {
     afxError err = AFX_ERR_NONE;
@@ -296,9 +285,9 @@ _AFX afxClassConfig const _AfxKbdClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard kbd[])
+_AFX afxError AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard keyboards[])
 {
-    AfxEntry("cnt=%u,port=%p,kbd=%p", cnt, port, kbd);
+    AfxEntry("cnt=%u,port=%p,keyboards=%p", cnt, port, keyboards);
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
@@ -312,18 +301,18 @@ _AFX afxError AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard k
             if (AfxReacquireObjects(1, (afxObject*)&tmp)) AfxThrowError();
             else
             {
-                kbd[i] = tmp;
+                keyboards[i] = tmp;
             }
         }
         else
         {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&kbd[i], (void const*[]) { port ? (void*)&port[i] : 0 }))
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&keyboards[i], (void const*[]) { port ? (void*)&port[i] : 0 }))
                 AfxThrowError();
         }
 
         if (err)
         {
-            AfxReleaseObjects(i, (afxObject*)kbd);
+            AfxReleaseObjects(i, (afxObject*)keyboards);
             break;
         }
     }
@@ -340,14 +329,14 @@ _AFX afxNat AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard kbd[])
+_AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboards[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(kbd);
+    AfxAssert(keyboards);
     afxClass* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)kbd);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)keyboards);
 }
 
 _AFX afxNat AfxCountKeyboards(void)

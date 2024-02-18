@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="rad3d">
+      <UniqueIdentifier>{4703e53d-d0e4-4c93-86a4-4e979b3735a4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\rad3d\afxGranny3d.c">
+      <Filter>rad3d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\rad3d\afxGranny2Model.c">
+      <Filter>rad3d</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\rad3d\afxGranny2Model.h">
+      <Filter>rad3d</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

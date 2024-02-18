@@ -230,7 +230,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 dctx->base.clipCfg = ddev->base.clipCfg;
                 
                 afxUri uri;
-                AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml", 0);
+                AfxMakeUri(&uri, "data/pipeline/video/sampleOutRgba.xsh.xml", 0);
                 //AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
                 //AfxMakeUri(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
                 //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);

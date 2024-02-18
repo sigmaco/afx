@@ -42,7 +42,7 @@ _AFX afxError AfxDrawSky(afxDrawScript dscr, awxSky* sky)
     AfxCmdBindVertexSources(dscr, 0, 1, (afxBuffer[]) { sky->cube }, NIL, NIL, (afxNat32[]) {sizeof(afxV3d)});
     //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
     //AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
-    AfxCmdDraw(dscr, 36, 1, 0, 0);
+    AfxCmdDraw(dscr, 0, 1, 0, 36);
     
     return err;
 }
@@ -140,7 +140,7 @@ _AFX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
     AfxAssertObjects(1, &sky->cube, afxFcc_BUF);
 
     afxUri uri;
-    AfxMakeUri(&uri, "data/pipeline/skybox.xsh.xml", 0);
+    AfxMakeUri(&uri, "data/pipeline/skybox/skybox.xsh.xml", 0);
     sky->skyPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
     sky->type = awxSkyType_BOX;
 

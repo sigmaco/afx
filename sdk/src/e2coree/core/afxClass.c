@@ -164,7 +164,7 @@ _AFXINL afxNat _AfxClsEnumerateInstances(afxClass const* cls, afxBool fromLast, 
             {
                 afxHandle* inst = obj[i];
                 AfxAssertType(inst, afxFcc_OBJ);
-                //afxModule inst2 = (inst + 1);
+                //afxExecutable inst2 = (inst + 1);
                 //AfxAssertObjects(1, &inst2, cls->objFcc);
                 obj[i] = (inst + 1);
                 AfxAssertObjects(1, &obj[i], cls->objFcc);

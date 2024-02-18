@@ -480,9 +480,9 @@ _AFX afxClassConfig const _AfxMseClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mse[])
+_AFX afxError AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mouses[])
 {
-    AfxEntry("cnt=%u,port=%p,mse=%p", cnt, port, mse);
+    AfxEntry("cnt=%u,port=%p,mouses=%p", cnt, port, mouses);
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetMouseClass();
@@ -497,18 +497,18 @@ _AFX afxError AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mse[])
             if (AfxReacquireObjects(1, (afxObject*)&tmp)) AfxThrowError();
             else
             {
-                mse[i] = tmp;
+                mouses[i] = tmp;
             }
         }
         else
         {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&mse[i], (void const*[]) { port ? (void*)&port[i] : 0 }))
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&mouses[i], (void const*[]) { port ? (void*)&port[i] : 0 }))
                 AfxThrowError();
         }
 
         if (err)
         {
-            AfxReleaseObjects(i, (afxObject*)mse);
+            AfxReleaseObjects(i, (afxObject*)mouses);
             break;
         }
     }
@@ -525,14 +525,14 @@ _AFX afxNat AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mse[])
+_AFX afxNat AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mouses[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(mse);
+    AfxAssert(mouses);
     afxClass* cls = AfxGetMouseClass();
     AfxAssertClass(cls, afxFcc_MSE);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)mse);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)mouses);
 }
 
 _AFX afxNat AfxCountMouses(void)

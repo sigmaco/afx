@@ -427,8 +427,8 @@ _A4D afxError _SalSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
 
     afxMmu mmu = AfxGetSoundSystemMmu();
 
-    AfxReplicateString(&sdev->base.domain, info->domain);
-    AfxReplicateString(&sdev->base.name, info->name);
+    AfxReflectString(info->domain, &sdev->base.domain);
+    AfxReflectString(info->name, &sdev->base.name);
 
     afxChain *classes = &sdev->base.classes;
     AfxTakeChain(classes, sdev);
@@ -520,12 +520,12 @@ _A4D afxError AfxIcdHookPoint(afxIcd icd)
         icd->verPatch = 2;
 
         afxUri file;
-        AfxGetUriObject(&file, AfxGetModulePath(&icd->mdle));
+        AfxExcerptUriFile(AfxGetExecutablePath(&icd->exe), &file);
 
         AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on sound system...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxGetUriString(&file)), AfxPushString(&icd->name), icd->verMajor, icd->verMinor, icd->verPatch, AfxPushString(&icd->vendor), AfxPushString(&icd->website), AfxPushString(&icd->note));
 
         //ddrv->mdle = info->mdle;
-        //AfxAssertObjects(1, &ddrv->mdle, afxFcc_MDLE);
+        //AfxAssertObjects(1, &ddrv->mdle, afxFcc_EXE);
         //AfxReacquireObjects(1, (void*[]) { ddrv->mdle });
 
         afxChain *classes = &icd->classes;

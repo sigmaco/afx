@@ -36,6 +36,6 @@ AFX_OBJECT(afxService)
 #endif//_AFX_CORE_C
 
 
-AFX afxError    AfxAcquireServices(afxNat cnt, afxServiceConfig const config[], afxService svc[]);
+AFX afxError    AfxAcquireServices(afxNat cnt, afxServiceConfig const config[], afxService services[]);
 
 #endif//AFX_SERVICE_H

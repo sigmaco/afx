@@ -29,7 +29,7 @@ _AFX afxString const AFX_STR_EMPTY = AFX_STRING("");
 _AFXINL void const* AfxGetStringData(afxString const* str, afxNat base)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(str->len >= base);
     afxChar const* data;
 
@@ -42,14 +42,14 @@ _AFXINL void const* AfxGetStringData(afxString const* str, afxNat base)
 _AFXINL afxNat AfxGetStringLength(afxString const* str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     return str->len;
 }
 
 _AFXINL afxError AfxGetStringAsHex(afxString const* str, afxNat32 *value)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(value);
     AfxScanString(str, "%x", value);
     return err;
@@ -58,7 +58,7 @@ _AFXINL afxError AfxGetStringAsHex(afxString const* str, afxNat32 *value)
 _AFXINL afxError AfxGetStringAsReal(afxString const* str, afxReal *value)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(value);
     void const *src = AfxGetStringData(str, 0);
     AfxAssert(src);
@@ -69,43 +69,71 @@ _AFXINL afxError AfxGetStringAsReal(afxString const* str, afxReal *value)
 _AFXINL afxBool AfxStringIsEmpty(afxString const* str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     return (0 == str->len);
 }
 
-_AFXINL afxChar* AfxFindStringCharB2F(afxString const* str, afxNat base, afxInt ch)
+_AFXINL afxNat AfxFindFirstChar(afxString const* str, afxNat base, afxInt ch)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
-    void const *src = AfxGetStringData(str, base);
-    AfxAssert(src);
-    AfxAssert(0 < str->len - base);
-    return (0 < str->len - base) && src ? strrchr(src, ch) : NIL; // can fault if str isn't null terminated
+    AfxAssert(str);
+    afxNat posn = AFX_INVALID_INDEX;
+    afxNat strLen = str->len;
+    AfxAssertRange(strLen, base, 1);
+
+    if (strLen > base)
+    {
+        afxChar const *src = AfxGetStringData(str, base);
+
+        if (src)
+        {
+            posn = ((afxChar*)memchr(src, ch, str->len - base) - (afxChar*)AfxGetStringData(str, 0));
+        }
+    }
+    return posn;
 }
 
-_AFXINL afxChar* AfxFindStringChar(afxString const* str, afxNat base, afxInt ch)
+_AFXINL afxNat AfxFindLastChar(afxString const* str, afxNat base, afxInt ch)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
-    void const *src = AfxGetStringData(str, base);
-    AfxAssert(src);
-    AfxAssert(0 < str->len - base);
-    return (0 < str->len - base) && src ? memchr(src, ch, str->len - base) : NIL;
+    AfxAssert(str);
+    afxNat posn = AFX_INVALID_INDEX;
+
+    afxNat strLen = str->len;
+    AfxAssertRange(strLen, base, 1);
+
+    if (strLen > base)
+    {
+        afxChar const *src = AfxGetStringData(str, 0);
+        
+        if (src)
+        {
+            for (afxNat i = strLen - base; i-- > 0;)
+            {
+                if (ch == src[i])
+                {
+                    posn = i;
+                    break;
+                }
+            }
+        }
+    }
+    return posn;
 }
 
-_AFX afxBool AfxExtractExcerpt(afxString const* str, afxString const* substring, afxString* excerpt)
+_AFXINL afxNat AfxFindSubstring(afxString const* str, afxString const* excerpt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
-    AfxAssertType(substring, afxFcc_STR);    
-    AfxMakeString(excerpt, AfxStrnstr(str->start, str->len, substring->start, substring->len), substring->len);
-    return !!excerpt->len;
+    AfxAssert(str);
+    AfxAssert(excerpt);
+    afxChar const* start = str->start ? AfxStrnstr(str->start, str->len, excerpt->start, excerpt->len) : NIL;
+    return start ? (afxNat)(afxSize)start : AFX_INVALID_INDEX;
 }
 
-_AFXINL afxResult AfxTestStringEquivalenceLiteral(afxString const* str, afxNat base, afxChar const *start, afxNat len)
+_AFXINL afxResult AfxCompareStringCil(afxString const* str, afxNat base, afxChar const *start, afxNat len)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(start);
 
     if (!len)
@@ -116,15 +144,15 @@ _AFXINL afxResult AfxTestStringEquivalenceLiteral(afxString const* str, afxNat b
         return str->len - len;
 
     afxString a, b;
-    AfxExcerptString(&a, str, base, len);
+    AfxExcerptString(str, base, len, &a);
     AfxMakeString(&b, start, len);
-    return AfxTestStringEquivalence(&a, &b);
+    return AfxCompareStringCi(&a, &b);
 }
 
-_AFXINL afxResult AfxTestStringEqualityLiteral(afxString const* str, afxNat base, afxChar const *start, afxNat len)
+_AFXINL afxResult AfxCompareStringL(afxString const* str, afxNat base, afxChar const *start, afxNat len)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(start);
 
     if (!len)
@@ -133,40 +161,40 @@ _AFXINL afxResult AfxTestStringEqualityLiteral(afxString const* str, afxNat base
     if (str->len + len == 0) return 0;
     else if ((str->len != len) || ((!str->len && len) || (!len && str->len))) // if have different lenghts or any of them is blank.
         return str->len - len;
-
+    
     afxString a, b;
-    AfxExcerptString(&a, str, base, len);
+    AfxExcerptString(str, base, len, &a);
     AfxMakeString(&b, start, len);
-    return AfxTestStringEquality(&a, &b);
+    return AfxCompareString(&a, &b);
 }
 
-_AFXINL afxResult AfxTestStringRangeEquivalence(afxString const* str, afxString const* other, afxNat base, afxNat len)
+_AFXINL afxResult AfxCompareStringRangeCi(afxString const* str, afxString const* other, afxNat base, afxNat len)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     afxString a, b;
     AfxMakeString(&a, AfxGetStringData(str, base), len);
     AfxMakeString(&b, AfxGetStringData(other, base), len);
-    return AfxTestStringEquivalence(&a, &b);
+    return AfxCompareStringCi(&a, &b);
 }
 
-_AFXINL afxResult AfxTestStringRangeEquality(afxString const* str, afxString const* other, afxNat base, afxNat len)
+_AFXINL afxResult AfxCompareStringRange(afxString const* str, afxString const* other, afxNat base, afxNat len)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     afxString a, b;
     AfxMakeString(&a, AfxGetStringData(str, base), len);
     AfxMakeString(&b, AfxGetStringData(other, base), len);
-    return AfxTestStringEquality(&a, &b);
+    return AfxCompareString(&a, &b);
 }
 
-_AFXINL afxResult AfxTestStringEquivalence(afxString const* str, afxString const* other)
+_AFXINL afxResult AfxCompareStringCi(afxString const* str, afxString const* other)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
-    AfxAssertType(other, afxFcc_STR);
+    AfxAssert(str);
+    AfxAssert(other);
 
     afxNat lenA = str->len, lenB = other->len;
 
@@ -181,11 +209,11 @@ _AFXINL afxResult AfxTestStringEquivalence(afxString const* str, afxString const
     return _strnicmp(a, b, lenA);
 }
 
-_AFXINL afxResult AfxTestStringEquality(afxString const* str, afxString const* other)
+_AFXINL afxResult AfxCompareString(afxString const* str, afxString const* other)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
-    AfxAssertType(other, afxFcc_STR);
+    AfxAssert(str);
+    AfxAssert(other);
 
     afxNat lenA = str->len, lenB = other->len;
 
@@ -203,14 +231,14 @@ _AFXINL afxResult AfxTestStringEquality(afxString const* str, afxString const* o
 _AFXINL afxNat AfxStringsAreEqual(afxString const* str, afxNat cnt, afxString const others[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssert(cnt);
     AfxAssert(others);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         afxString const* other = &others[i];
-        AfxAssertType(other, afxFcc_STR);
+        AfxAssert(other);
 
         afxNat lenA = str->len, lenB = other->len;
 
@@ -232,7 +260,7 @@ _AFXINL afxNat AfxStringsAreEqual(afxString const* str, afxNat cnt, afxString co
 _AFXINL afxResult AfxScanStringArg(afxString const* str, afxChar const *fmt, va_list args)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     void const *src = AfxGetStringData(str, 0);
     AfxAssert(src);
     AfxAssert(fmt);
@@ -243,7 +271,7 @@ _AFXINL afxResult AfxScanStringArg(afxString const* str, afxChar const *fmt, va_
 _AFXINL afxResult AfxScanString(afxString const* str, afxChar const *fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     void const *src = AfxGetStringData(str, 0);
     AfxAssert(src);
     AfxAssert(fmt);
@@ -257,7 +285,7 @@ _AFXINL afxResult AfxScanString(afxString const* str, afxChar const *fmt, ...)
 _AFXINL afxResult AfxDumpString(afxString const* str, afxNat base, afxNat len, void *dst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
     AfxAssertRange(str->len, base, len);
     afxNat maxRange = AfxGetStringLength(str);
     AfxAssert(base + len <= maxRange);
@@ -334,7 +362,7 @@ _AFXINL afxBool WildCardMatch(afxString const* str, const char *Wildcard, char *
                     AfxMakeString(&t1, v4, v10);
                     AfxMakeString(&t2, v3, v10);
 
-                    while (AfxTestStringEquality(&t1, &t2) || !WildCardMatch(&t2, v4, v6))
+                    while (AfxCompareString(&t1, &t2) || !WildCardMatch(&t2, v4, v6))
                     {
                         *v6 = *v3;
                         afxChar v11 = v3[1];
@@ -394,29 +422,28 @@ _AFXINL afxError AfxWriteStrings(afxStream out, afxNat cnt, afxString const src[
     return err;
 }
 
-_AFXINL afxNat AfxExcerptString(afxString* str, afxString const* src, afxNat offset, afxNat len)
+_AFXINL afxNat AfxExcerptString(afxString const* src, afxNat offset, afxNat len, afxString* selection)
 {
     afxError err = AFX_ERR_NONE;
     
-    AfxAssertType(src, afxFcc_STR);
+    AfxAssert(src);
     afxNat maxRange = AfxGetStringLength(src);
     AfxAssertRange(maxRange, offset, len);
     afxNat clampedRange = len > maxRange ? maxRange : len;
     
-    AfxAssert(str);
-    AfxAssignFcc(str, afxFcc_STR);
-    str->len = clampedRange;
-    str->start = AfxGetStringData(src, offset);
+    AfxAssert(selection);
+    selection->len = clampedRange;
+    selection->start = AfxGetStringData(src, offset);
     return len - clampedRange; // return clipped off amount
 }
 
-_AFXINL void AfxReplicateString(afxString* str, afxString const* src)
+_AFXINL void AfxReflectString(afxString const* str, afxString* reflection)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
-    AfxAssertType(src, afxFcc_STR);
+    AfxAssert(reflection);
     
-    if (AfxExcerptString(str, src, 0, AfxGetStringLength(src)))
+    if (AfxExcerptString(str, 0, AfxGetStringLength(str), reflection))
         AfxThrowError();
 }
 
@@ -425,9 +452,7 @@ _AFXINL void AfxMakeString(afxString* str, void const *start, afxNat len)
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     //AfxAssert(!len || (len && start));
-
-    AfxAssignFcc(str, afxFcc_STR);
-    str->len = len ? len : (start ? AfxStrlen(start) : 0);
+    str->len = len ? (start ? len : 0) : (start ? AfxStrlen(start) : 0);
     str->start = start;
 }
 
@@ -435,7 +460,6 @@ _AFXINL void AfxResetString(afxString* str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
-    AfxAssignFcc(str, afxFcc_STR);
     str->len = 0;
     str->start = NIL;
 }

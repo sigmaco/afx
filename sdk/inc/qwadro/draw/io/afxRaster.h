@@ -273,7 +273,7 @@ AFX afxCmdId                AfxCmdUploadRasterRegion
     afxNat                  srcRowSiz, /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
     afxNat                  srcRowCnt, /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
     afxCodec                cdc
-    );
+);
 
 AFX afxCmdId                AfxCmdPackRaster
 /// Copy afxRaster data into a afxBuffer.

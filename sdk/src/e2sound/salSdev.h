@@ -27,7 +27,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_ICD_C
-#define _AFX_MODULE_C
+#define _AFX_EXECUTABLE_C
 #define _AFX_SOUND_C
 #define _AFX_THREAD_C
 #define _AFX_SOUND_THREAD_C

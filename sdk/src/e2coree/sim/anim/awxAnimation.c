@@ -32,7 +32,7 @@ _AFXINL afxBool AfxFindMotionSequence(awxMotion mot, afxString const* seqId, afx
 {
     afxError err = NIL;
     AfxAssertObjects(1, &mot, afxFcc_MOT);
-    AfxAssertType(seqId, afxFcc_STR);
+    AfxAssert(seqId);
     AfxAssert(seqIdx);
     afxBool found = FALSE;
     afxNat seqCnt = mot->xformSeqCnt;
@@ -41,7 +41,7 @@ _AFXINL afxBool AfxFindMotionSequence(awxMotion mot, afxString const* seqId, afx
     {
         for (afxNat i = 0; i < seqCnt; i++)
         {
-            if (0 == AfxTestStringEquality(seqId, &mot->xformSeqs[i].id.str.str))
+            if (0 == AfxCompareString(seqId, &mot->xformSeqs[i].id.str.str))
             {
                 *seqIdx = i;
                 found = TRUE;
@@ -59,7 +59,7 @@ _AFXINL afxBool AfxFindMotionSequence(awxMotion mot, afxString const* seqId, afx
             afxNat currIdx2 = i + remainCnt / 2;
             afxResult diff;
 
-            if (0 == (diff = AfxTestStringEquality(seqId, &mot->xformSeqs[currIdx2].id.str.str)))
+            if (0 == (diff = AfxCompareString(seqId, &mot->xformSeqs[currIdx2].id.str.str)))
             {
                 *seqIdx = currIdx2;
                 found = TRUE;
@@ -90,14 +90,14 @@ _AFXINL afxBool AfxFindMotionDataSequence(awxMotion mot, afxString const* seqId,
 {
     afxError err = NIL;
     AfxAssertObjects(1, &mot, afxFcc_MOT);
-    AfxAssertType(seqId, afxFcc_STR);
+    AfxAssert(seqId);
     AfxAssert(seqIdx);
     afxBool rslt = FALSE;
     afxNat vecSeqCnt = mot->vecSeqCnt;
 
     for (afxNat i = 0; i < vecSeqCnt; i++)
     {
-        if (0 == AfxTestStringEquality(seqId, &mot->vecSeqs[i].id.str.str))
+        if (0 == AfxCompareString(seqId, &mot->vecSeqs[i].id.str.str))
         {
             *seqIdx = i;
             rslt = TRUE;
@@ -118,7 +118,7 @@ _AFXINL afxBool AfxFindCorrelatedMotion(awxAnimation ani, afxString const* mdlId
 
     for (afxNat i = 0; i < motCnt; i++)
     {
-        if (0 == AfxTestStringEquality(&(ani->motions[*motIdx]->id.str.str), mdlId))
+        if (0 == AfxCompareString(&(ani->motions[*motIdx]->id.str.str), mdlId))
         {
             *motIdx = i;
             found = TRUE;

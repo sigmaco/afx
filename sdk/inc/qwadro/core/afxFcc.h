@@ -132,11 +132,14 @@ typedef enum afxFcc
     afxFcc_HID      = AfxPackFcc('h', 'i', 'd', '\0'), // afxHid
     afxFcc_KBD      = AfxPackFcc('k', 'b', 'd', '\0'), // afxKeyboard
     afxFcc_MSE      = AfxPackFcc('m', 's', 'e', '\0'), // afxMouse
+    afxFcc_PAD      = AfxPackFcc('p', 'a', 'd', '\0'), // afxGamepad
+    afxFcc_CTRL      = AfxPackFcc('c', 't', 'r', 'l'), // afxController
     afxFcc_DSO      = AfxPackFcc('d', 's', 'o', '\0'), // afxDso
     afxFcc_AGTR     = AfxPackFcc('a', 'g', 't', 'r'), // afxAggregator
     afxFcc_AGGR     = AfxPackFcc('a', 'g', 'g', 'r'), // afxAggregation
 
     afxFcc_ASI      = AfxPackFcc('a', 's', 'i', '\0'), // afxService
+    afxFcc_EXE      = AfxPackFcc('e', 'x', 'e', '\0'), // afxExecutable
     afxFcc_MDLE     = AfxPackFcc('m', 'd', 'l', 'e'), // afxModule
     afxFcc_ICD      = AfxPackFcc('i', 'c', 'd', '\0'), // afxIcd
     afxFcc_AUTR     = AfxPackFcc('a', 'u', 't', 'r'), // afxAutomator
