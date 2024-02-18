@@ -178,6 +178,38 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
     if (!err)
     {
+        afxString src;
+        AfxMakeString(&src, shd->base.code, shd->base.codeLen);
+        afxFixedString128 line;
+        AfxMakeFixedString128(&line, NIL);
+        afxFixedString32 type;
+        AfxMakeFixedString32(&type, NIL);
+        afxFixedString128 name;
+        AfxMakeFixedString128(&name, NIL);
+
+        while (1)
+        {
+            AfxScanString(&src, "%99[^\n]", line.buf);
+            AfxMakeRestring(&line.str, sizeof(line.buf), line.buf, 0);
+            AfxMakeString(&src, &shd->base.code[src.len], shd->base.codeLen - src.len);
+
+            afxNat location = AFX_INVALID_INDEX;
+
+            if (shd->base.stage == afxShaderStage_VERTEX)
+                AfxScanString(&line.str.str, "layout ( location = %u ) in %[A-Za-z0-9] %[A-Za-z0-9]", &location, &type.buf, &name.buf);
+            else if (shd->base.stage == afxShaderStage_FRAGMENT)
+                AfxScanString(&line.str.str, "layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", &location, &type.buf, &name.buf);
+
+            AfxMakeRestring(&type.str, sizeof(type.buf), type.buf, 0);
+            AfxMakeRestring(&name.str, sizeof(name.buf), name.buf, 0);
+
+            AfxEcho("layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", location, type.buf, name.buf);
+            break;
+        }
+
+
+
+
         shd->base.resDeclCnt = 0;
         shd->base.resDecls = NIL;
 

@@ -345,7 +345,6 @@ _AFX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         afxFile file;
 
         if (AfxOpenFiles(afxFileFlag_R, 1, &uri[i], &file)) AfxThrowError();
@@ -367,7 +366,7 @@ _AFX afxError AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afx
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertRange(ras->lodCnt, lodIdx, 1);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
     afxRasterIoOp op;
@@ -398,7 +397,6 @@ _AFX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         afxFile file;
 
         if (AfxOpenFiles(afxFileFlag_W, 1, &uri[i], &file)) AfxThrowError();
@@ -421,7 +419,7 @@ _AFX afxError AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afx
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertRange(ras->lodCnt, lodIdx, 1);
     AfxAssertRange(ras->layerCnt, baseLayer, layerCnt);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
     afxRasterIoOp op;

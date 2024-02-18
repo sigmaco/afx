@@ -106,7 +106,7 @@ AFX_OBJECT(afxFile)
 };
 #endif//_AFX_FILE_C
 
-AFX afxError                AfxOpenFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile file[]);
+AFX afxError                AfxOpenFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile files[]);
 AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
 AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
 AFX afxError                AfxReloadFile(afxStream ios, afxFileFlags flags, afxUri const *uri); // will fully load the opened file then close it.
@@ -120,10 +120,10 @@ AFX afxUri const*           AfxGetFilePath(afxFile file);
 AFX afxResult               AfxCopyFilePath(afxFile file, afxUri* uri);
 
 AFX afxString const*        AfxGetFilePathString(afxFile file);
-AFX afxResult               AfxCopyFilePathString(afxFile file, afxBufferedString *str);
+AFX afxResult               AfxCopyFilePathString(afxFile file, afxRestring *str);
 
 AFX afxStream               AfxGetFileStream(afxFile file);
-AFX afxError                AfxReadFileString(afxFile file, afxBufferedString* str);
+AFX afxError                AfxReadFileString(afxFile file, afxRestring* str);
 
 AFX afxResult               AfxFlushFile(afxFile file);
 AFX afxBool                 AfxFileShouldBeFlushed(afxFile file);

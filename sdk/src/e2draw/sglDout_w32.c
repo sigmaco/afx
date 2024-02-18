@@ -371,7 +371,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxUri name;
 
     if (config->endpoint)
-        AfxGetUriName(&name, config->endpoint);
+        AfxExcerptUriName(config->endpoint, &name);
     else
         AfxResetUri(&name);
 
@@ -379,12 +379,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     
     afxString const *surface = AfxGetUriString(&name);
 
-    if (AfxStringIsEmpty(surface) || 0 == AfxTestStringEquality(surface, &AfxStaticString("window"))) // print to window surface
+    if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &AfxStaticString("window"))) // print to window surface
     {
         dout->wnd = CreateWindowEx(WS_EX_CONTEXTHELP, ddev->wndClss.lpszClassName, ddev->wndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, NIL);
         isWnd = TRUE;
     }
-    else if (0 == AfxTestStringEquality(surface, &AfxStaticString("desktop")))
+    else if (0 == AfxCompareString(surface, &AfxStaticString("desktop")))
     {
         dout->wnd = _SglFindShellBackgroundWindowW32();// GetDesktopWindow();
         isDesk = TRUE;
@@ -404,12 +404,12 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
             afxWhd const resolution = { GetDeviceCaps(dout->dc, HORZRES), GetDeviceCaps(dout->dc, VERTRES), GetDeviceCaps(dout->dc, PLANES) };
             dout->base.refreshRate = GetDeviceCaps(dout->dc, VREFRESH);
             afxReal64 physAspRatio = (afxReal64)GetDeviceCaps(dout->dc, HORZSIZE) / (afxReal64)GetDeviceCaps(dout->dc, VERTSIZE);
-            AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
+            AfxAdjustDrawOutputProportion(dout, physAspRatio, resolution);
 
             if (isWnd)
-                AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+                AfxAdjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
             else
-                AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(1, 1, 1));
+                AfxAdjustDrawOutputNormalized(dout, AfxSpawnV3d(1, 1, 1));
 
             afxNat bpp = 0;
 
@@ -502,7 +502,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                     {
 #if 0
                         SetWindowPos(dout->wnd, NULL, AfxFromNdc(0.166666666666666, dout->base.resolution[0]), AfxFromNdc(0.166666666666666, dout->base.resolution[1]), dout->base.extent[0], dout->base.extent[1], 0);
-                        AfxReadjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+                        AfxAdjustDrawOutputNormalized(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
 #else
                         SetWindowPos(dout->wnd, NULL, 0, 0, dout->base.whd[0], dout->base.whd[1], SWP_NOMOVE);
                         afxInt32 extraWndWidth, extraWndHeight;

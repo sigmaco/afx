@@ -1,0 +1,15 @@
+<Qwadro>
+    <Pipeline>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/test/test.vsh</VertexShader>
+        <Rasterizer>data/pipeline/test/test.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/test/test.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

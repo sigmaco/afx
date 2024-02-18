@@ -160,7 +160,7 @@ _AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
     {
         if ((srcStride == rgn->stride) && rgn->stride)
         {
-            AfxCopy(1, rgn->range, src, map);
+            AfxCopy(rgn->range, 1, src, map);
         }
         else
         {
@@ -169,7 +169,7 @@ _AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
             AfxAssert(unitSiz == rgn->unitSiz);
             afxNat cnt = rgn->range / rgn->stride;
             afxNat cnt2 = rgn->range % rgn->stride;
-            AfxAssert(!cnt2);
+            //AfxAssert(!cnt2);
 
             for (afxNat i = 0; i < cnt; i++)
             {

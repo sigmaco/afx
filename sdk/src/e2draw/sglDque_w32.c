@@ -500,28 +500,24 @@ _SGL void _SglFlushResourcingStateChanges(sglDpuIdd* dpu)
                     }
                 }
 
-                if (!buf && rebind)
+                if (!buf)
                 {
                     gl->BindBufferBase(glTarget, glUnit, 0); _SglThrowErrorOccuried();
                 }
                 else
                 {
                     _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC, glTarget, buf, offset, range, 0, /*buf->glUsage ? buf->glUsage : */GL_DYNAMIC_DRAW);
+                    bufSiz = AfxGetBufferCapacity(buf);
 
-                    if (rebind)
+                    if (offset || range)
                     {
-                        bufSiz = AfxGetBufferCapacity(buf);
-
-                        if (offset || range)
-                        {
-                            AfxAssert(range);
-                            AfxAssertRange(bufSiz, offset, range);
-                            gl->BindBufferRange(glTarget, glUnit, buf->glHandle, offset, range); _SglThrowErrorOccuried();
-                        }
-                        else
-                        {
-                            gl->BindBufferBase(glTarget, glUnit, buf->glHandle); _SglThrowErrorOccuried();
-                        }
+                        AfxAssert(range);
+                        AfxAssertRange(bufSiz, offset, range);
+                        gl->BindBufferRange(glTarget, glUnit, buf->glHandle, offset, range); _SglThrowErrorOccuried();
+                    }
+                    else
+                    {
+                        gl->BindBufferBase(glTarget, glUnit, buf->glHandle); _SglThrowErrorOccuried();
                     }
                 }
                 break;
@@ -552,37 +548,29 @@ _SGL void _SglFlushResourcingStateChanges(sglDpuIdd* dpu)
 
                 if (entry->type == AFX_SHD_RES_TYPE_SAMPLED_IMAGE || entry->type == AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER)
                 {
-                    if (!ras && rebindRas)
+                    if (!ras)
                     {
                         gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
                         gl->BindTexture(GL_TEXTURE_2D, 0); _SglThrowErrorOccuried();
                     }
                     else
                     {
-                        _SglBindAndSyncRas(dpu, sglBindFlag_SYNC, glUnit, ras);
-
-                        if (rebindRas)
-                        {
-                            gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
-                            gl->BindTexture(ras->glTarget, ras->glHandle); _SglThrowErrorOccuried();
-                        }
+                        _SglBindAndSyncRas(dpu, sglBindFlag_SYNC | sglBindFlag_KEEP | sglBindFlag_BIND, glUnit, ras);
+                        gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
+                        gl->BindTexture(ras->glTarget, ras->glHandle); _SglThrowErrorOccuried();
                     }
                 }
 
                 if (entry->type == AFX_SHD_RES_TYPE_SAMPLER || entry->type == AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER)
                 {
-                    if (!samp && rebindSamp)
+                    if (!samp)
                     {
                         gl->BindSampler(glUnit, 0); _SglThrowErrorOccuried();
                     }
                     else
                     {
-                        _SglDpuBindAndSyncSamp(dpu, sglBindFlag_SYNC, glUnit, samp);
-
-                        if (rebindSamp)
-                        {
-                            gl->BindSampler(glUnit, samp->glHandle); _SglThrowErrorOccuried();
-                        }
+                        _SglDpuBindAndSyncSamp(dpu, sglBindFlag_SYNC | sglBindFlag_KEEP | sglBindFlag_BIND, glUnit, samp);
+                        gl->BindSampler(glUnit, samp->glHandle); _SglThrowErrorOccuried();
                     }
                 }
                 break;
@@ -710,6 +698,7 @@ _SGL void _SglDpuDrawIndexed(sglDpuIdd* dpu, _sglCmdDrawIndexed const* cmd)
     afxSize idxBaseOff = dpu->activeVin->bindings.idxSrcOff;
     
     GLint vtxOff2 = cmd->vtxOff;
+    afxSize dataOff = (idxBaseOff + (idxSiz * cmd->firstIdx));
 
     GLenum top = AfxToGlTopology(dpu->activeXformState.primTop);
 
@@ -720,16 +709,16 @@ _SGL void _SglDpuDrawIndexed(sglDpuIdd* dpu, _sglCmdDrawIndexed const* cmd)
         if (cmd->firstInst)
         {
             AfxAssert(gl->DrawElementsInstancedBaseVertexBaseInstance);
-            gl->DrawElementsInstancedBaseVertexBaseInstance(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)(idxBaseOff + (idxSiz * cmd->firstIdx)), cmd->instCnt, cmd->vtxOff, cmd->firstInst); _SglThrowErrorOccuried();
+            gl->DrawElementsInstancedBaseVertexBaseInstance(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)dataOff, cmd->instCnt, vtxOff2, cmd->firstInst); _SglThrowErrorOccuried();
         }
         else
         {
-            gl->DrawElementsInstancedBaseVertex(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)(idxBaseOff + (idxSiz * cmd->firstIdx)), cmd->instCnt, vtxOff2); _SglThrowErrorOccuried();
+            gl->DrawElementsInstancedBaseVertex(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)dataOff, cmd->instCnt, vtxOff2); _SglThrowErrorOccuried();
         }
     }
     else
     {
-        gl->DrawElementsBaseVertex(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)(idxBaseOff + (idxSiz * cmd->firstIdx)), vtxOff2); _SglThrowErrorOccuried();
+        gl->DrawElementsBaseVertex(top, cmd->idxCnt, idxSizGl[idxSiz], (void const*)dataOff, vtxOff2); _SglThrowErrorOccuried();
     }
     //dpu->numOfFedVertices += cmd->idxCnt;
     dpu->numOfFedIndices += cmd->idxCnt;

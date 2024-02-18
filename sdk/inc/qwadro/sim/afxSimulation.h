@@ -136,6 +136,6 @@ AFX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPe
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation sim[]);
+AFX afxError        AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[]);
 
 #endif//AFX_SIMULATION_H

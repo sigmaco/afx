@@ -288,11 +288,11 @@ _AFX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
 _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxPrimTopology_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &primTopologyString[i]))
+        if (0 == AfxCompareStringCi(str, &primTopologyString[i]))
             return (afxPrimTopology)i;
     }
 
@@ -302,11 +302,11 @@ _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxLogicOp_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &logicOpString[i]))
+        if (0 == AfxCompareStringCi(str, &logicOpString[i]))
             return (afxLogicOp)i;
     }
 
@@ -316,11 +316,11 @@ _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
 _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxStencilOp_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &stencilOpString[i]))
+        if (0 == AfxCompareStringCi(str, &stencilOpString[i]))
             return (afxStencilOp)i;
     }
 
@@ -330,11 +330,11 @@ _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
 _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxCompareOp_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &compareOpString[i]))
+        if (0 == AfxCompareStringCi(str, &compareOpString[i]))
             return (afxCompareOp)i;
     }
 
@@ -344,11 +344,11 @@ _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
 _AFX afxCullMode AfxFindCullMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxCullMode_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &cullModeString[i]))
+        if (0 == AfxCompareStringCi(str, &cullModeString[i]))
             return (afxCullMode)i;
     }
 
@@ -358,11 +358,11 @@ _AFX afxCullMode AfxFindCullMode(afxString const *str)
 _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxFrontFace_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &frontFaceString[i]))
+        if (0 == AfxCompareStringCi(str, &frontFaceString[i]))
             return (afxFrontFace)i;
     }
 
@@ -372,11 +372,11 @@ _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
 _AFX afxFillMode AfxFindFillMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxFillMode_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &fillModeString[i]))
+        if (0 == AfxCompareStringCi(str, &fillModeString[i]))
             return (afxFillMode)i;
     }
 
@@ -386,11 +386,11 @@ _AFX afxFillMode AfxFindFillMode(afxString const *str)
 _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxShaderStage_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &shaderStageString[i]))
+        if (0 == AfxCompareStringCi(str, &shaderStageString[i]))
             return (afxShaderStage)i;
     }
 
@@ -400,18 +400,18 @@ _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
 _AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(str, afxFcc_STR);
+    AfxAssert(str);
 
     for (afxNat i = 0; i < afxVertexFormat_TOTAL; i++)
     {
-        if (0 == AfxTestStringEquivalence(str, &vtxFmtString[i]))
+        if (0 == AfxCompareStringCi(str, &vtxFmtString[i]))
             return (afxVertexFormat)i;
     }
 
     return (afxVertexFormat)-1;
 }
 
-_AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxBufferedString *out)
+_AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ss < afxShaderStage_TOTAL);
@@ -419,7 +419,7 @@ _AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxBufferedStri
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxBufferedString *out)
+_AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fm < afxFillMode_TOTAL);
@@ -427,7 +427,7 @@ _AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxBufferedString *ou
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxBufferedString *out)
+_AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ff < afxFrontFace_TOTAL);
@@ -435,7 +435,7 @@ _AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxBufferedString *
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxBufferedString *out)
+_AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cm < afxCullMode_TOTAL);
@@ -443,7 +443,7 @@ _AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxBufferedString *ou
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxBufferedString *out)
+_AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(co < afxCompareOp_TOTAL);
@@ -451,7 +451,7 @@ _AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxBufferedString *
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxBufferedString *out)
+_AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(so < afxStencilOp_TOTAL);
@@ -459,7 +459,7 @@ _AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxBufferedString *
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxBufferedString *out)
+_AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lo < afxLogicOp_TOTAL);
@@ -467,7 +467,7 @@ _AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxBufferedString *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxBufferedString *out)
+_AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pt < afxPrimTopology_TOTAL);
@@ -475,7 +475,7 @@ _AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxBuffe
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxBufferedString *out)
+_AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fmt < afxVertexFormat_TOTAL);

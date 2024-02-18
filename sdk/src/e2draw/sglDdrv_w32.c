@@ -15,6 +15,7 @@
  */
 
 #define _AFX_CORE_C
+#define _AFX_EXECUTABLE_C
 #define _AFX_ICD_C
 #define _AFX_DRAW_C
 #define _AFX_THREAD_C
@@ -1086,43 +1087,6 @@ _SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxN
 
 }
 
-_SGL afxChar const sigmaSignature[] =
-{
-    "\n       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          "
-    "\n      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        "
-    "\n      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       "
-    "\n      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      "
-    "\n             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      "
-    "\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
-    "\n       ########    ###########    ########    ###       ###   ###     ###      "
-    "\n                                                                               "
-    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
-    "\n                                                                               "
-    "\n                               Public Test Build                               "
-    "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              "
-    "\n                                www.sigmaco.org                                "
-    "\n                                                                               "
-};
-
-_SGL afxChar const targaSigmaSignature[];
-afxChar const targaSigmaSignature[] =
-{
-    "\n           :::::::::::     :::     :::::::::   ::::::::      :::               "
-    "\n               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             "
-    "\n               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            "
-    "\n               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           "
-    "\n               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           "
-    "\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
-    "\n               ###     ###     ### ###    ###  ########  ###     ###           "
-    "\n                                                                               "
-    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
-    "\n                                                                               "
-    "\n                               Public Test Build                               "
-    "\n              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              "
-    "\n                                www.sigmaco.org                                "
-    "\n                                                                               "
-};
-
 _SGL BOOL SglMakeCurrent(HDC hdc, HGLRC hrc, sglDpuIdd const *dpu)
 {
     afxError err = AFX_ERR_NONE;
@@ -1264,7 +1228,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
                 if (whdNew[0] * whdNew[1] * whdNew[2]) // don't set to zero
                 {
-                    AfxReadjustDrawOutput(dout, whdNew);
+                    AfxAdjustDrawOutput(dout, whdNew);
                 }
             }
             //AfxDrawOutputProcess(dout);
@@ -1275,7 +1239,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
             afxWhd const resolution = { GetDeviceCaps(dout->dc, HORZRES), GetDeviceCaps(dout->dc, VERTRES), GetDeviceCaps(dout->dc, PLANES) };
             dout->base.refreshRate = GetDeviceCaps(dout->dc, VREFRESH);
             afxReal64 physAspRatio = AfxTryFindPhysicalAspectRatio(GetDeviceCaps(dout->dc, HORZSIZE), GetDeviceCaps(dout->dc, VERTSIZE));
-            AfxReadjustDrawOutputProportion(dout, physAspRatio, resolution);
+            AfxAdjustDrawOutputProportion(dout, physAspRatio, resolution);
             break;
         }
         case WM_STYLECHANGED: // Sent to a window after the SetWindowLong function has changed one or more of the window's styles.
@@ -1289,7 +1253,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
             if (whdNew[0] * whdNew[1] * whdNew[2]) // don't set to zero
             {
-                AfxReadjustDrawOutput(dout, whdNew);
+                AfxAdjustDrawOutput(dout, whdNew);
             }
             break;
         }
@@ -2703,8 +2667,8 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
             }
         };
 
-        AfxReplicateString(&ddev->base.domain, info->domain);
-        AfxReplicateString(&ddev->base.name, info->name);
+        AfxReflectString(info->domain, &ddev->base.domain);
+        AfxReflectString(info->name, &ddev->base.name);
 
         afxChain *classes = &ddev->base.classes;
         AfxTakeChain(classes, ddev);
@@ -2810,7 +2774,7 @@ _SGL afxError AfxIcdHookPoint(afxIcd icd)
     AfxMakeString(&icd->name, "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem", 0);
     AfxMakeString(&icd->vendor, "SIGMA Technology Group", 0);
     AfxMakeString(&icd->website, "www.sigmaco.org", 0);
-    AfxMakeString(&icd->note, sigmaSignature, 0);
+    AfxMakeString(&icd->note, "Vesa", 0);
     icd->verMajor = 0;
     icd->verMinor = 7;
     icd->verPatch = 2;
@@ -2828,12 +2792,12 @@ _SGL afxError AfxIcdHookPoint(afxIcd icd)
     
 
     afxUri file;
-    AfxGetUriObject(&file, AfxGetModulePath(&icd->mdle));
+    AfxExcerptUriFile(AfxGetExecutablePath(&icd->exe), &file);
 
     AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on draw system...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxGetUriString(&file)), AfxPushString(&icd->name), icd->verMajor, icd->verMinor, icd->verPatch, AfxPushString(&icd->vendor), AfxPushString(&icd->website), AfxPushString(&icd->note));
 
     //ddrv->mdle = info->mdle;
-    //AfxAssertObjects(1, &ddrv->mdle, afxFcc_MDLE);
+    //AfxAssertObjects(1, &ddrv->mdle, afxFcc_EXE);
     //AfxReacquireObjects(1, (void*[]) { ddrv->mdle });
 
     afxChain *classes = &icd->classes;
@@ -2850,7 +2814,7 @@ _SGL afxError AfxIcdHookPoint(afxIcd icd)
         };
         static afxString devDomain, devName;
         AfxMakeString(&devDomain, "targa", 0);
-        AfxMakeString(&devName, targaSigmaSignature, 0);
+        AfxMakeString(&devName, "Vesa", 0);
         afxDrawDeviceInfo const devInfo[] =
         {
             {

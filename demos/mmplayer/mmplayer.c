@@ -9,7 +9,7 @@
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/sound/afxSoundSystem.h"
 #include "qwadro/afxQwadro.h"
-#include "../src/e2bink/afxBinkVideo.h"
+#include "../src/bink1/afxBinkVideo.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/font/afxTypography.h"
 #include "qwadro/draw/io/afxVertexStream.h"
@@ -135,7 +135,7 @@ void AfxCmdDrawText(afxDrawScript dscr, afxNat fontIdx, afxWhd origin, afxReal s
 
     //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV4d) * 2 }, (afxBool const[]) { 1 });
     AfxCmdBindVertexSources(dscr, 0, 1, &textVbo, NIL, NIL, NIL);
-    AfxCmdDraw(dscr, 4, numchar, 0, 0);
+    AfxCmdDraw(dscr, 0, numchar, 0, 4);
 }
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
@@ -420,13 +420,13 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxAssert(!err);
 
 #ifdef ENABLE_DOUT1
-    AfxReadjustDrawOutput(dout[0], bnk.whd);
+    AfxAdjustDrawOutput(dout[0], bnk.whd);
 #endif
 #ifdef ENABLE_DOUT2
-    AfxReadjustDrawOutput(dout[1], bnk.whd);
+    AfxAdjustDrawOutput(dout[1], bnk.whd);
 #endif
 #ifdef ENABLE_DOUT3
-    AfxReadjustDrawOutput(dout[2], bnk.whd);
+    AfxAdjustDrawOutput(dout[2], bnk.whd);
 #endif
 
     afxUri uri2;
@@ -440,7 +440,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     vis[0].instanceRate = 1;
     vis[0].slotIdx = 0;
     vis[0].stride = 0;
-    AfxMakeUri(&uri2, "data/pipeline/font.xsh.xml?instanced", 0);
+    AfxMakeUri(&uri2, "data/pipeline/video/font.xsh.xml?instanced", 0);
     fontPip = AfxAssemblyPipelineFromXsh(dctx, &uri2);
 
     afxBufferSpecification vboSpec = { 0 };
@@ -457,6 +457,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     smpCnf.uvw[1] = afxTexelAddress_CLAMP;
     smpCnf.uvw[2] = afxTexelAddress_CLAMP;
     AfxAcquireSamplers(dctx, 1, &smpCnf, &fontSmp);
+    AfxAssertObjects(1, &fontSmp, afxFcc_SAMP);
 
     afxBufferSpecification bufSpec;
     bufSpec.siz = sizeof(awxViewConstants);
@@ -534,7 +535,7 @@ int main(int argc, char const* argv[])
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
         sysCfg.sound = TRUE;
-        AfxBootUpSystem(&sysCfg);
+        AfxDoSystemBootUp(&sysCfg);
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 
         afxSoundContext sctx;
@@ -564,7 +565,7 @@ int main(int argc, char const* argv[])
         
         AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxShutdownSystem(0);
+        AfxDoSystemShutdown(0);
     }
     Sleep(3000);
     return 0;

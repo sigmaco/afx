@@ -1,0 +1,21 @@
+<Qwadro>
+    <Pipeline id='rigid'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/body/rigidBody.vsh</VertexShader>
+        <Rasterizer>data/pipeline/body/body.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Pipeline id='skinned'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader specialization='1'>data/pipeline/body/skinnedBody.vsh</VertexShader>
+        <Rasterizer>data/pipeline/body/body.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Rasterizer>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <FillMode>SOLID</FillMode>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/body/body.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

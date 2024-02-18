@@ -1,0 +1,4449 @@
+
+ afxDebug_w32.c:394
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0ffef720...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(00500940)
+ afxSystem_w32.c:323
+  _AfxSysCtor(sys=00500940)
+ Installing Thread Execution Unit at 00501080 by 00500988...
+ Entering the Thread Execution Environment 6508
+ afxClass<Thread Execution Unit>::ConstructObject(004ff130)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(004ff130)
+ Installing Memory Management Unit at 0050099c by 00500988...
+ Installing Thread at 00500fbc by 00500988...
+ Installing Device at 00501144 by 00500988...
+ Installing Autonomous Service at 00501208 by 00500988...
+ Installing File at 00501454 by 00500988...
+ Installing I/O Stream at 005012cc by 00500988...
+ Installing Codec at 00501390 by 00500988...
+ Installing File Archive at 00501518 by 00500988 over 00501454...
+ Installing Executable & Linkable Module at 00500b24 by 00500988...
+ Installing Installable Client Driver at 00500be8 by 00500988 over 00500b24...
+ Installing File System at 005015dc by 00500988...
+ Installing Application at 00501764 by 00500988...
+ Installing Human Input Device at 00500cac by 00500988 over 00501144...
+ Installing Keyboard at 00500d70 by 00500988 over 00500cac...
+ Installing Mouse at 00500e34 by 00500988 over 00500cac...
+ Installing Controller at 00500ef8 by 00500988 over 00500cac...
+ Installing String Catalog at 00500a60 by 00500988...
+ Installing Simulation at 005016a0 by 00500988...
+ [!] afxSystem_w32.c:436?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:437?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(004ff240)
+ afxArena.c:768
+  AfxAllocateArena(aren=00501894)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:450!_AfxSysCtor")
+ afxClass<File System>::ConstructObject(00503380)
+ Storage point "." 5 mounted -> "E:\qwadro\afx\\\".
+ afxClass<File System>::ConstructObject(00503408)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\".
+ afxClass<File System>::ConstructObject(00503490)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\w32d\".
+ afxClass<File System>::ConstructObject(00503518)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\w32\".
+ afxClass<File System>::ConstructObject(005035a0)
+ Storage point "code" 5 mounted -> "E:\qwadro\afx\\code\".
+ afxClass<File System>::ConstructObject(00503628)
+ Storage point "sound" 5 mounted -> "E:\qwadro\afx\\sound\".
+ afxClass<File System>::ConstructObject(00503750)
+ Storage point "data" 5 mounted -> "E:\qwadro\afx\\data\".
+ afxClass<File System>::ConstructObject(005037d8)
+ Storage point "art" 5 mounted -> "E:\qwadro\afx\\art\".
+ afxClass<File System>::ConstructObject(00503860)
+ Storage point "tmp" 7 mounted -> "E:\qwadro\afx\\tmp\".
+ afxModule.c:243
+  AfxMountLoadableModules(cnt=1,modules=00501864,uri=0046de48)
+ afxClass<Executable & Linkable Module>::ConstructObject(00504c40)
+ afxModule.c:153
+  _AfxMdleCtor(uri:system/e2coree.dll)
+ E:/qwadro/afx/system/w32/e2coree.dll
+ E:/qwadro/afx/system/w32d/e2coree.dll
+ afxKeyboard.c:290
+  AfxAcquireKeyboards(cnt=1,port=0046dd00,keyboards=00501868)
+ afxClass<Keyboard, Human Input Device>ConstructingObject(00504ed0)
+ afxClass<Human Input Device, Device>ConstructingObject(00504ed0)
+ afxClass<Device>::ConstructObject(00504ed0)
+ afxClass<Human Input Device>::ConstructObject(00504ed0)
+ afxClass<Keyboard>::ConstructObject(00504ed0)
+ afxKeyboard.c:241
+  _AfxKbdCtor(kbd=00504ed0)
+ afxDrawSystem.c:233
+  _AfxDsysCtor(dsys=00505800)
+ Installing Draw Device at 00505d08 by 0050585c over 00501144...
+ Installing Draw Context at 00505934 by 0050585c...
+ Installing Draw Output at 00505abc by 0050585c...
+ Installing Draw Input at 00505c44 by 0050585c...
+ Installing Draw Thread at 00505870 by 0050585c over 00500fbc...
+ Loading draw ICD system/e2draw.icd
+ afxClass<Installable Client Driver, Executable & Linkable Module>ConstructingObject(00505e40)
+ afxClass<Executable & Linkable Module>::ConstructObject(00505e40)
+ afxModule.c:153
+  _AfxMdleCtor(uri:system/e2draw.icd)
+ E:/qwadro/afx/system/w32/e2draw.icd
+ E:/qwadro/afx/system/w32d/e2draw.icd
+ afxClass<Installable Client Driver>::ConstructObject(00505e40)
+Installing 'e2draw.icd' ICD on draw system...
+	OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Draw Device at 00505f44 by 00505f30 over 00505d08...
+ afxClass<Draw Device, Draw Device>ConstructingObject(00508010)
+ afxClass<Draw Device, Device>ConstructingObject(00508010)
+ afxClass<Device>::ConstructObject(00508010)
+ afxClass<Draw Device>::ConstructObject(00508010)
+ afxClass<Draw Device>::ConstructObject(00508010)
+ sglDdrv_w32.c:2663
+  _SglDdevCtor(ddev=00508010)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ afxMutex.c:24
+  AfxTakeMutex(mtx=0050863c,type=00000000)
+ Created. (mtx)0050863c
+ Installing Draw Script at 005087bc by 005080e8...
+ Installing Draw Queue at 005086f8 by 005080e8...
+ Installing Draw Context at 005080fc by 005080e8 over 00505934...
+ Installing Draw Output at 005081c0 by 005080e8 over 00505abc...
+ Installing Draw Input at 00508284 by 005080e8 over 00505c44...
+ Creating transient OpenGL context
+ 000 wglCreateContextAttribsARB core found.
+ 000 wglChoosePixelFormatARB core found.
+ 000 wglSwapIntervalEXT core found.
+ 000 wglGetExtensionsStringARB core found.
+ Creating definitive OpenGL context
+ 000 wglCreateContextAttribsARB core found.
+ 000 wglChoosePixelFormatARB core found.
+ 000 wglSwapIntervalEXT core found.
+ 000 wglGetExtensionsStringARB core found.
+ 000 glCullFace core found.
+ 001 glFrontFace core found.
+ 002 glHint core found.
+ 003 glLineWidth core found.
+ 004 glPointSize core found.
+ 005 glPolygonMode core found.
+ 006 glScissor core found.
+ 007 glTexParameterf core found.
+ 008 glTexParameterfv core found.
+ 009 glTexParameteri core found.
+ 010 glTexParameteriv core found.
+ 011 glTexImage1D core found.
+ 012 glTexImage2D core found.
+ 013 glDrawBuffer core found.
+ 014 glClear core found.
+ 015 glClearColor core found.
+ 016 glClearStencil core found.
+ 017 glClearDepth core found.
+ 018 glStencilMask core found.
+ 019 glColorMask core found.
+ 020 glDepthMask core found.
+ 021 glDisable core found.
+ 022 glEnable core found.
+ 023 glFinish core found.
+ 024 glFlush core found.
+ 025 glBlendFunc core found.
+ 026 glLogicOp core found.
+ 027 glStencilFunc core found.
+ 028 glStencilOp core found.
+ 029 glDepthFunc core found.
+ 030 glPixelStoref core found.
+ 031 glPixelStorei core found.
+ 032 glReadBuffer core found.
+ 033 glReadPixels core found.
+ 034 glGetBooleanv core found.
+ 035 glGetDoublev core found.
+ 036 glGetError core found.
+ 037 glGetFloatv core found.
+ 038 glGetIntegerv core found.
+ 039 glGetString core found.
+ 040 glGetTexImage core found.
+ 041 glGetTexParameterfv core found.
+ 042 glGetTexParameteriv core found.
+ 043 glGetTexLevelParameterfv core found.
+ 044 glGetTexLevelParameteriv core found.
+ 045 glIsEnabled core found.
+ 046 glDepthRange core found.
+ 047 glViewport core found.
+ 048 glDrawArrays core found.
+ 049 glDrawElements core found.
+ 050 glGetPointerv core found.
+ 051 glPolygonOffset core found.
+ 052 glCopyTexImage1D core found.
+ 053 glCopyTexImage2D core found.
+ 054 glCopyTexSubImage1D core found.
+ 055 glCopyTexSubImage2D core found.
+ 056 glTexSubImage1D core found.
+ 057 glTexSubImage2D core found.
+ 058 glBindTexture core found.
+ 059 glDeleteTextures core found.
+ 060 glGenTextures core found.
+ 061 glIsTexture core found.
+ 062 glDrawRangeElements core found.
+ 063 glTexImage3D core found.
+ 064 glTexSubImage3D core found.
+ 065 glCopyTexSubImage3D core found.
+ 066 glActiveTexture core found.
+ 067 glSampleCoverage core found.
+ 068 glCompressedTexImage3D core found.
+ 069 glCompressedTexImage2D core found.
+ 070 glCompressedTexImage1D core found.
+ 071 glCompressedTexSubImage3D core found.
+ 072 glCompressedTexSubImage2D core found.
+ 073 glCompressedTexSubImage1D core found.
+ 074 glGetCompressedTexImage core found.
+ 075 glBlendFuncSeparate core found.
+ 076 glMultiDrawArrays core found.
+ 077 glMultiDrawElements core found.
+ 078 glPointParameterf core found.
+ 079 glPointParameterfv core found.
+ 080 glPointParameteri core found.
+ 081 glPointParameteriv core found.
+ 082 glBlendColor core found.
+ 083 glBlendEquation core found.
+ 084 glGenQueries core found.
+ 085 glDeleteQueries core found.
+ 086 glIsQuery core found.
+ 087 glBeginQuery core found.
+ 088 glEndQuery core found.
+ 089 glGetQueryiv core found.
+ 090 glGetQueryObjectiv core found.
+ 091 glGetQueryObjectuiv core found.
+ 092 glBindBuffer core found.
+ 093 glDeleteBuffers core found.
+ 094 glGenBuffers core found.
+ 095 glIsBuffer core found.
+ 096 glBufferData core found.
+ 097 glBufferSubData core found.
+ 098 glGetBufferSubData core found.
+ 099 glMapBuffer core found.
+ 100 glUnmapBuffer core found.
+ 101 glGetBufferParameteriv core found.
+ 102 glGetBufferPointerv core found.
+ 103 glBlendEquationSeparate core found.
+ 104 glDrawBuffers core found.
+ 105 glStencilOpSeparate core found.
+ 106 glStencilFuncSeparate core found.
+ 107 glStencilMaskSeparate core found.
+ 108 glAttachShader core found.
+ 109 glBindAttribLocation core found.
+ 110 glCompileShader core found.
+ 111 glCreateProgram core found.
+ 112 glCreateShader core found.
+ 113 glDeleteProgram core found.
+ 114 glDeleteShader core found.
+ 115 glDetachShader core found.
+ 116 glDisableVertexAttribArray core found.
+ 117 glEnableVertexAttribArray core found.
+ 118 glGetActiveAttrib core found.
+ 119 glGetActiveUniform core found.
+ 120 glGetAttachedShaders core found.
+ 121 glGetAttribLocation core found.
+ 122 glGetProgramiv core found.
+ 123 glGetProgramInfoLog core found.
+ 124 glGetShaderiv core found.
+ 125 glGetShaderInfoLog core found.
+ 126 glGetShaderSource core found.
+ 127 glGetUniformLocation core found.
+ 128 glGetUniformfv core found.
+ 129 glGetUniformiv core found.
+ 130 glGetVertexAttribdv core found.
+ 131 glGetVertexAttribfv core found.
+ 132 glGetVertexAttribiv core found.
+ 133 glGetVertexAttribPointerv core found.
+ 134 glIsProgram core found.
+ 135 glIsShader core found.
+ 136 glLinkProgram core found.
+ 137 glShaderSource core found.
+ 138 glUseProgram core found.
+ 139 glUniform1f core found.
+ 140 glUniform2f core found.
+ 141 glUniform3f core found.
+ 142 glUniform4f core found.
+ 143 glUniform1i core found.
+ 144 glUniform2i core found.
+ 145 glUniform3i core found.
+ 146 glUniform4i core found.
+ 147 glUniform1fv core found.
+ 148 glUniform2fv core found.
+ 149 glUniform3fv core found.
+ 150 glUniform4fv core found.
+ 151 glUniform1iv core found.
+ 152 glUniform2iv core found.
+ 153 glUniform3iv core found.
+ 154 glUniform4iv core found.
+ 155 glUniformMatrix2fv core found.
+ 156 glUniformMatrix3fv core found.
+ 157 glUniformMatrix4fv core found.
+ 158 glValidateProgram core found.
+ 159 glVertexAttrib1d core found.
+ 160 glVertexAttrib1dv core found.
+ 161 glVertexAttrib1f core found.
+ 162 glVertexAttrib1fv core found.
+ 163 glVertexAttrib1s core found.
+ 164 glVertexAttrib1sv core found.
+ 165 glVertexAttrib2d core found.
+ 166 glVertexAttrib2dv core found.
+ 167 glVertexAttrib2f core found.
+ 168 glVertexAttrib2fv core found.
+ 169 glVertexAttrib2s core found.
+ 170 glVertexAttrib2sv core found.
+ 171 glVertexAttrib3d core found.
+ 172 glVertexAttrib3dv core found.
+ 173 glVertexAttrib3f core found.
+ 174 glVertexAttrib3fv core found.
+ 175 glVertexAttrib3s core found.
+ 176 glVertexAttrib3sv core found.
+ 177 glVertexAttrib4Nbv core found.
+ 178 glVertexAttrib4Niv core found.
+ 179 glVertexAttrib4Nsv core found.
+ 180 glVertexAttrib4Nub core found.
+ 181 glVertexAttrib4Nubv core found.
+ 182 glVertexAttrib4Nuiv core found.
+ 183 glVertexAttrib4Nusv core found.
+ 184 glVertexAttrib4bv core found.
+ 185 glVertexAttrib4d core found.
+ 186 glVertexAttrib4dv core found.
+ 187 glVertexAttrib4f core found.
+ 188 glVertexAttrib4fv core found.
+ 189 glVertexAttrib4iv core found.
+ 190 glVertexAttrib4s core found.
+ 191 glVertexAttrib4sv core found.
+ 192 glVertexAttrib4ubv core found.
+ 193 glVertexAttrib4uiv core found.
+ 194 glVertexAttrib4usv core found.
+ 195 glVertexAttribPointer core found.
+ 196 glUniformMatrix2x3fv core found.
+ 197 glUniformMatrix3x2fv core found.
+ 198 glUniformMatrix2x4fv core found.
+ 199 glUniformMatrix4x2fv core found.
+ 200 glUniformMatrix3x4fv core found.
+ 201 glUniformMatrix4x3fv core found.
+ 202 glColorMaski core found.
+ 203 glGetBooleani_v core found.
+ 204 glGetIntegeri_v core found.
+ 205 glEnablei core found.
+ 206 glDisablei core found.
+ 207 glIsEnabledi core found.
+ 208 glBeginTransformFeedback core found.
+ 209 glEndTransformFeedback core found.
+ 210 glBindBufferRange core found.
+ 211 glBindBufferBase core found.
+ 212 glTransformFeedbackVaryings core found.
+ 213 glGetTransformFeedbackVarying core found.
+ 214 glClampColor core found.
+ 215 glBeginConditionalRender core found.
+ 216 glEndConditionalRender core found.
+ 217 glVertexAttribIPointer core found.
+ 218 glGetVertexAttribIiv core found.
+ 219 glGetVertexAttribIuiv core found.
+ 220 glVertexAttribI1i core found.
+ 221 glVertexAttribI2i core found.
+ 222 glVertexAttribI3i core found.
+ 223 glVertexAttribI4i core found.
+ 224 glVertexAttribI1ui core found.
+ 225 glVertexAttribI2ui core found.
+ 226 glVertexAttribI3ui core found.
+ 227 glVertexAttribI4ui core found.
+ 228 glVertexAttribI1iv core found.
+ 229 glVertexAttribI2iv core found.
+ 230 glVertexAttribI3iv core found.
+ 231 glVertexAttribI4iv core found.
+ 232 glVertexAttribI1uiv core found.
+ 233 glVertexAttribI2uiv core found.
+ 234 glVertexAttribI3uiv core found.
+ 235 glVertexAttribI4uiv core found.
+ 236 glVertexAttribI4bv core found.
+ 237 glVertexAttribI4sv core found.
+ 238 glVertexAttribI4ubv core found.
+ 239 glVertexAttribI4usv core found.
+ 240 glGetUniformuiv core found.
+ 241 glBindFragDataLocation core found.
+ 242 glGetFragDataLocation core found.
+ 243 glUniform1ui core found.
+ 244 glUniform2ui core found.
+ 245 glUniform3ui core found.
+ 246 glUniform4ui core found.
+ 247 glUniform1uiv core found.
+ 248 glUniform2uiv core found.
+ 249 glUniform3uiv core found.
+ 250 glUniform4uiv core found.
+ 251 glTexParameterIiv core found.
+ 252 glTexParameterIuiv core found.
+ 253 glGetTexParameterIiv core found.
+ 254 glGetTexParameterIuiv core found.
+ 255 glClearBufferiv core found.
+ 256 glClearBufferuiv core found.
+ 257 glClearBufferfv core found.
+ 258 glClearBufferfi core found.
+ 259 glGetStringi core found.
+ 260 glIsRenderbuffer core found.
+ 261 glBindRenderbuffer core found.
+ 262 glDeleteRenderbuffers core found.
+ 263 glGenRenderbuffers core found.
+ 264 glRenderbufferStorage core found.
+ 265 glGetRenderbufferParameteriv core found.
+ 266 glIsFramebuffer core found.
+ 267 glBindFramebuffer core found.
+ 268 glDeleteFramebuffers core found.
+ 269 glGenFramebuffers core found.
+ 270 glCheckFramebufferStatus core found.
+ 271 glFramebufferTexture1D core found.
+ 272 glFramebufferTexture2D core found.
+ 273 glFramebufferTexture3D core found.
+ 274 glFramebufferRenderbuffer core found.
+ 275 glGetFramebufferAttachmentParameteriv core found.
+ 276 glGenerateMipmap core found.
+ 277 glBlitFramebuffer core found.
+ 278 glRenderbufferStorageMultisample core found.
+ 279 glFramebufferTextureLayer core found.
+ 280 glMapBufferRange core found.
+ 281 glFlushMappedBufferRange core found.
+ 282 glBindVertexArray core found.
+ 283 glDeleteVertexArrays core found.
+ 284 glGenVertexArrays core found.
+ 285 glIsVertexArray core found.
+ 286 glDrawArraysInstanced core found.
+ 287 glDrawElementsInstanced core found.
+ 288 glTexBuffer core found.
+ 289 glPrimitiveRestartIndex core found.
+ 290 glCopyBufferSubData core found.
+ 291 glGetUniformIndices core found.
+ 292 glGetActiveUniformsiv core found.
+ 293 glGetActiveUniformName core found.
+ 294 glGetUniformBlockIndex core found.
+ 295 glGetActiveUniformBlockiv core found.
+ 296 glGetActiveUniformBlockName core found.
+ 297 glUniformBlockBinding core found.
+ 298 glDrawElementsBaseVertex core found.
+ 299 glDrawRangeElementsBaseVertex core found.
+ 300 glDrawElementsInstancedBaseVertex core found.
+ 301 glMultiDrawElementsBaseVertex core found.
+ 302 glProvokingVertex core found.
+ 303 glFenceSync core found.
+ 304 glIsSync core found.
+ 305 glDeleteSync core found.
+ 306 glClientWaitSync core found.
+ 307 glWaitSync core found.
+ 308 glGetInteger64v core found.
+ 309 glGetSynciv core found.
+ 310 glGetInteger64i_v core found.
+ 311 glGetBufferParameteri64v core found.
+ 312 glFramebufferTexture core found.
+ 313 glTexImage2DMultisample core found.
+ 314 glTexImage3DMultisample core found.
+ 315 glGetMultisamplefv core found.
+ 316 glSampleMaski core found.
+ 317 glBindFragDataLocationIndexed core found.
+ 318 glGetFragDataIndex core found.
+ 319 glGenSamplers core found.
+ 320 glDeleteSamplers core found.
+ 321 glIsSampler core found.
+ 322 glBindSampler core found.
+ 323 glSamplerParameteri core found.
+ 324 glSamplerParameteriv core found.
+ 325 glSamplerParameterf core found.
+ 326 glSamplerParameterfv core found.
+ 327 glSamplerParameterIiv core found.
+ 328 glSamplerParameterIuiv core found.
+ 329 glGetSamplerParameteriv core found.
+ 330 glGetSamplerParameterIiv core found.
+ 331 glGetSamplerParameterfv core found.
+ 332 glGetSamplerParameterIuiv core found.
+ 333 glQueryCounter core found.
+ 334 glGetQueryObjecti64v core found.
+ 335 glGetQueryObjectui64v core found.
+ 336 glVertexAttribDivisor core found.
+ 337 glVertexAttribP1ui core found.
+ 338 glVertexAttribP1uiv core found.
+ 339 glVertexAttribP2ui core found.
+ 340 glVertexAttribP2uiv core found.
+ 341 glVertexAttribP3ui core found.
+ 342 glVertexAttribP3uiv core found.
+ 343 glVertexAttribP4ui core found.
+ 344 glVertexAttribP4uiv core found.
+ 345 glMinSampleShading core found.
+ 346 glBlendEquationi core found.
+ 347 glBlendEquationSeparatei core found.
+ 348 glBlendFunci core found.
+ 349 glBlendFuncSeparatei core found.
+ 350 glDrawArraysIndirect core found.
+ 351 glDrawElementsIndirect core found.
+ 352 glUniform1d core found.
+ 353 glUniform2d core found.
+ 354 glUniform3d core found.
+ 355 glUniform4d core found.
+ 356 glUniform1dv core found.
+ 357 glUniform2dv core found.
+ 358 glUniform3dv core found.
+ 359 glUniform4dv core found.
+ 360 glUniformMatrix2dv core found.
+ 361 glUniformMatrix3dv core found.
+ 362 glUniformMatrix4dv core found.
+ 363 glUniformMatrix2x3dv core found.
+ 364 glUniformMatrix2x4dv core found.
+ 365 glUniformMatrix3x2dv core found.
+ 366 glUniformMatrix3x4dv core found.
+ 367 glUniformMatrix4x2dv core found.
+ 368 glUniformMatrix4x3dv core found.
+ 369 glGetUniformdv core found.
+ 370 glGetSubroutineUniformLocation core found.
+ 371 glGetSubroutineIndex core found.
+ 372 glGetActiveSubroutineUniformiv core found.
+ 373 glGetActiveSubroutineUniformName core found.
+ 374 glGetActiveSubroutineName core found.
+ 375 glUniformSubroutinesuiv core found.
+ 376 glGetUniformSubroutineuiv core found.
+ 377 glGetProgramStageiv core found.
+ 378 glPatchParameteri core found.
+ 379 glPatchParameterfv core found.
+ 380 glBindTransformFeedback core found.
+ 381 glDeleteTransformFeedbacks core found.
+ 382 glGenTransformFeedbacks core found.
+ 383 glIsTransformFeedback core found.
+ 384 glPauseTransformFeedback core found.
+ 385 glResumeTransformFeedback core found.
+ 386 glDrawTransformFeedback core found.
+ 387 glDrawTransformFeedbackStream core found.
+ 388 glBeginQueryIndexed core found.
+ 389 glEndQueryIndexed core found.
+ 390 glGetQueryIndexediv core found.
+ 391 glReleaseShaderCompiler core found.
+ 392 glShaderBinary core found.
+ 393 glGetShaderPrecisionFormat core found.
+ 394 glDepthRangef core found.
+ 395 glClearDepthf core found.
+ 396 glGetProgramBinary core found.
+ 397 glProgramBinary core found.
+ 398 glProgramParameteri core found.
+ 399 glUseProgramStages core found.
+ 400 glActiveShaderProgram core found.
+ 401 glCreateShaderProgramv core found.
+ 402 glBindProgramPipeline core found.
+ 403 glDeleteProgramPipelines core found.
+ 404 glGenProgramPipelines core found.
+ 405 glIsProgramPipeline core found.
+ 406 glGetProgramPipelineiv core found.
+ 407 glProgramUniform1i core found.
+ 408 glProgramUniform1iv core found.
+ 409 glProgramUniform1f core found.
+ 410 glProgramUniform1fv core found.
+ 411 glProgramUniform1d core found.
+ 412 glProgramUniform1dv core found.
+ 413 glProgramUniform1ui core found.
+ 414 glProgramUniform1uiv core found.
+ 415 glProgramUniform2i core found.
+ 416 glProgramUniform2iv core found.
+ 417 glProgramUniform2f core found.
+ 418 glProgramUniform2fv core found.
+ 419 glProgramUniform2d core found.
+ 420 glProgramUniform2dv core found.
+ 421 glProgramUniform2ui core found.
+ 422 glProgramUniform2uiv core found.
+ 423 glProgramUniform3i core found.
+ 424 glProgramUniform3iv core found.
+ 425 glProgramUniform3f core found.
+ 426 glProgramUniform3fv core found.
+ 427 glProgramUniform3d core found.
+ 428 glProgramUniform3dv core found.
+ 429 glProgramUniform3ui core found.
+ 430 glProgramUniform3uiv core found.
+ 431 glProgramUniform4i core found.
+ 432 glProgramUniform4iv core found.
+ 433 glProgramUniform4f core found.
+ 434 glProgramUniform4fv core found.
+ 435 glProgramUniform4d core found.
+ 436 glProgramUniform4dv core found.
+ 437 glProgramUniform4ui core found.
+ 438 glProgramUniform4uiv core found.
+ 439 glProgramUniformMatrix2fv core found.
+ 440 glProgramUniformMatrix3fv core found.
+ 441 glProgramUniformMatrix4fv core found.
+ 442 glProgramUniformMatrix2dv core found.
+ 443 glProgramUniformMatrix3dv core found.
+ 444 glProgramUniformMatrix4dv core found.
+ 445 glProgramUniformMatrix2x3fv core found.
+ 446 glProgramUniformMatrix3x2fv core found.
+ 447 glProgramUniformMatrix2x4fv core found.
+ 448 glProgramUniformMatrix4x2fv core found.
+ 449 glProgramUniformMatrix3x4fv core found.
+ 450 glProgramUniformMatrix4x3fv core found.
+ 451 glProgramUniformMatrix2x3dv core found.
+ 452 glProgramUniformMatrix3x2dv core found.
+ 453 glProgramUniformMatrix2x4dv core found.
+ 454 glProgramUniformMatrix4x2dv core found.
+ 455 glProgramUniformMatrix3x4dv core found.
+ 456 glProgramUniformMatrix4x3dv core found.
+ 457 glValidateProgramPipeline core found.
+ 458 glGetProgramPipelineInfoLog core found.
+ 459 glVertexAttribL1d core found.
+ 460 glVertexAttribL2d core found.
+ 461 glVertexAttribL3d core found.
+ 462 glVertexAttribL4d core found.
+ 463 glVertexAttribL1dv core found.
+ 464 glVertexAttribL2dv core found.
+ 465 glVertexAttribL3dv core found.
+ 466 glVertexAttribL4dv core found.
+ 467 glVertexAttribLPointer core found.
+ 468 glGetVertexAttribLdv core found.
+ 469 glViewportArrayv core found.
+ 470 glViewportIndexedf core found.
+ 471 glViewportIndexedfv core found.
+ 472 glScissorArrayv core found.
+ 473 glScissorIndexed core found.
+ 474 glScissorIndexedv core found.
+ 475 glDepthRangeArrayv core found.
+ 476 glDepthRangeIndexed core found.
+ 477 glGetFloati_v core found.
+ 478 glGetDoublei_v core found.
+ 479 glDrawArraysInstancedBaseInstance core found.
+ 480 glDrawElementsInstancedBaseInstance core found.
+ 481 glDrawElementsInstancedBaseVertexBaseInstance core found.
+ 482 glGetInternalformativ core found.
+ 483 glGetActiveAtomicCounterBufferiv core found.
+ 484 glBindImageTexture core found.
+ 485 glMemoryBarrier core found.
+ 486 glTexStorage1D core found.
+ 487 glTexStorage2D core found.
+ 488 glTexStorage3D core found.
+ 489 glDrawTransformFeedbackInstanced core found.
+ 490 glDrawTransformFeedbackStreamInstanced core found.
+ 493 glDispatchCompute core found.
+ 494 glDispatchComputeIndirect core found.
+ 496 glFramebufferParameteri core found.
+ 497 glGetFramebufferParameteriv core found.
+ 498 glGetInternalformati64v core found.
+ 503 glInvalidateFramebuffer core found.
+ 504 glInvalidateSubFramebuffer core found.
+ 505 glMultiDrawArraysIndirect core found.
+ 506 glMultiDrawElementsIndirect core found.
+ 507 glGetProgramInterfaceiv core found.
+ 508 glGetProgramResourceIndex core found.
+ 509 glGetProgramResourceName core found.
+ 510 glGetProgramResourceiv core found.
+ 511 glGetProgramResourceLocation core found.
+ 512 glGetProgramResourceLocationIndex core found.
+ 513 glShaderStorageBlockBinding core found.
+ 514 glTexBufferRange core found.
+ 515 glTexStorage2DMultisample core found.
+ 516 glTexStorage3DMultisample core found.
+ 518 glBindVertexBuffer core found.
+ 519 glVertexAttribFormat core found.
+ 520 glVertexAttribIFormat core found.
+ 521 glVertexAttribLFormat core found.
+ 522 glVertexAttribBinding core found.
+ 523 glVertexBindingDivisor core found.
+ 524 glDebugMessageControl core found.
+ 525 glDebugMessageInsert core found.
+ 526 glDebugMessageCallback core found.
+ 527 glGetDebugMessageLog core found.
+ 528 glPushDebugGroup core found.
+ 529 glPopDebugGroup core found.
+ 530 glObjectLabel core found.
+ 531 glGetObjectLabel core found.
+ 532 glObjectPtrLabel core found.
+ 533 glGetObjectPtrLabel core found.
+ 534 glBufferStorage core found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  543 glClipControlEXT ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  551 glNamedBufferStorageEXT ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  589 glTextureBufferRangeEXT ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  606 glTextureParameteriEXT ext found.
+ 641 glMemoryBarrierByRegion core found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  644 glGetGraphicsResetStatusARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  645 glGetnCompressedTexImageARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  646 glGetnTexImageARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  647 glGetnUniformdvARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  648 glGetnUniformfvARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  649 glGetnUniformivARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  650 glGetnUniformuivARB ext found.
+ [!] sglDdrv_w32.c:807?SglLoadOpenGlVmt
+  651 glReadnPixelsARB ext found.
+ Listing #187 "core" GL supported extensions.
+ 000 GL_EXT_blend_minmax ext found.
+ 001 GL_EXT_blend_subtract ext found.
+ 002 GL_EXT_blend_color ext found.
+ 003 GL_EXT_abgr ext found.
+ 004 GL_EXT_texture3D ext found.
+ 005 GL_EXT_clip_volume_hint ext found.
+ 006 GL_EXT_compiled_vertex_array ext found.
+ 007 GL_SGIS_texture_edge_clamp ext found.
+ 008 GL_SGIS_generate_mipmap ext found.
+ 009 GL_EXT_draw_range_elements ext found.
+ 010 GL_SGIS_texture_lod ext found.
+ 011 GL_EXT_rescale_normal ext found.
+ 012 GL_EXT_packed_pixels ext found.
+ 013 GL_EXT_texture_edge_clamp ext found.
+ 014 GL_EXT_separate_specular_color ext found.
+ 015 GL_ARB_multitexture ext found.
+ 016 GL_ARB_map_buffer_alignment ext found.
+ 017 GL_ARB_conservative_depth ext found.
+ 018 GL_EXT_texture_env_combine ext found.
+ 019 GL_EXT_bgra ext found.
+ 020 GL_EXT_blend_func_separate ext found.
+ 021 GL_EXT_secondary_color ext found.
+ 022 GL_EXT_fog_coord ext found.
+ 023 GL_EXT_texture_env_add ext found.
+ 024 GL_ARB_texture_cube_map ext found.
+ 025 GL_ARB_transpose_matrix ext found.
+ 026 GL_ARB_internalformat_query ext found.
+ 027 GL_ARB_internalformat_query2 ext found.
+ 028 GL_ARB_texture_env_add ext found.
+ 029 GL_IBM_texture_mirrored_repeat ext found.
+ 030 GL_EXT_multi_draw_arrays ext found.
+ 031 GL_SUN_multi_draw_arrays ext found.
+ 032 GL_NV_blend_square ext found.
+ 033 GL_ARB_texture_compression ext found.
+ 034 GL_3DFX_texture_compression_FXT1 ext found.
+ 035 GL_EXT_texture_filter_anisotropic ext found.
+ 036 GL_ARB_texture_border_clamp ext found.
+ 037 GL_ARB_point_parameters ext found.
+ 038 GL_ARB_texture_env_combine ext found.
+ 039 GL_ARB_texture_env_dot3 ext found.
+ 040 GL_ARB_texture_env_crossbar ext found.
+ 041 GL_EXT_texture_compression_s3tc ext found.
+ 042 GL_ARB_shadow ext found.
+ 043 GL_ARB_window_pos ext found.
+ 044 GL_EXT_shadow_funcs ext found.
+ 045 GL_EXT_stencil_wrap ext found.
+ 046 GL_ARB_vertex_program ext found.
+ 047 GL_EXT_texture_rectangle ext found.
+ 048 GL_ARB_fragment_program ext found.
+ 049 GL_EXT_stencil_two_side ext found.
+ 050 GL_ATI_separate_stencil ext found.
+ 051 GL_ARB_vertex_buffer_object ext found.
+ 052 GL_EXT_texture_lod_bias ext found.
+ 053 GL_ARB_occlusion_query ext found.
+ 054 GL_ARB_fragment_shader ext found.
+ 055 GL_ARB_shader_objects ext found.
+ 056 GL_ARB_shading_language_100 ext found.
+ 057 GL_ARB_texture_non_power_of_two ext found.
+ 058 GL_ARB_vertex_shader ext found.
+ 059 GL_NV_texgen_reflection ext found.
+ 060 GL_ARB_point_sprite ext found.
+ 061 GL_ARB_fragment_program_shadow ext found.
+ 062 GL_EXT_blend_equation_separate ext found.
+ 063 GL_ARB_depth_texture ext found.
+ 064 GL_ARB_texture_rectangle ext found.
+ 065 GL_ARB_draw_buffers ext found.
+ 066 GL_ARB_color_buffer_float ext found.
+ 067 GL_ARB_half_float_pixel ext found.
+ 068 GL_ARB_texture_float ext found.
+ 069 GL_ARB_pixel_buffer_object ext found.
+ 070 GL_EXT_framebuffer_object ext found.
+ 071 GL_ARB_draw_instanced ext found.
+ 072 GL_ARB_half_float_vertex ext found.
+ 073 GL_ARB_occlusion_query2 ext found.
+ 074 GL_EXT_draw_buffers2 ext found.
+ 075 GL_WIN_swap_hint ext found.
+ 076 GL_EXT_texture_sRGB ext found.
+ 077 GL_ARB_multisample ext found.
+ 078 GL_EXT_packed_float ext found.
+ 079 GL_EXT_texture_shared_exponent ext found.
+ 080 GL_ARB_texture_rg ext found.
+ 081 GL_ARB_texture_compression_rgtc ext found.
+ 082 GL_NV_conditional_render ext found.
+ 083 GL_ARB_texture_swizzle ext found.
+ 084 GL_EXT_texture_swizzle ext found.
+ 085 GL_ARB_texture_gather ext found.
+ 086 GL_ARB_sync ext found.
+ 087 GL_ARB_framebuffer_sRGB ext found.
+ 088 GL_EXT_packed_depth_stencil ext found.
+ 089 GL_ARB_depth_buffer_float ext found.
+ 090 GL_EXT_transform_feedback ext found.
+ 091 GL_ARB_transform_feedback2 ext found.
+ 092 GL_ARB_draw_indirect ext found.
+ 093 GL_EXT_framebuffer_blit ext found.
+ 094 GL_EXT_framebuffer_multisample ext found.
+ 095 GL_ARB_framebuffer_object ext found.
+ 096 GL_ARB_framebuffer_no_attachments ext found.
+ 097 GL_EXT_texture_array ext found.
+ 098 GL_EXT_texture_integer ext found.
+ 099 GL_ARB_map_buffer_range ext found.
+ 100 GL_ARB_texture_buffer_range ext found.
+ 101 GL_EXT_texture_buffer ext found.
+ 102 GL_EXT_texture_snorm ext found.
+ 103 GL_ARB_blend_func_extended ext found.
+ 104 GL_INTEL_performance_queries ext found.
+ 105 GL_INTEL_performance_query ext found.
+ 106 GL_ARB_copy_buffer ext found.
+ 107 GL_ARB_sampler_objects ext found.
+ 108 GL_NV_primitive_restart ext found.
+ 109 GL_ARB_seamless_cube_map ext found.
+ 110 GL_ARB_uniform_buffer_object ext found.
+ 111 GL_ARB_depth_clamp ext found.
+ 112 GL_ARB_vertex_array_bgra ext found.
+ 113 GL_ARB_shader_bit_encoding ext found.
+ 114 GL_ARB_draw_buffers_blend ext found.
+ 115 GL_ARB_geometry_shader4 ext found.
+ 116 GL_EXT_geometry_shader4 ext found.
+ 117 GL_ARB_texture_query_lod ext found.
+ 118 GL_ARB_explicit_attrib_location ext found.
+ 119 GL_ARB_draw_elements_base_vertex ext found.
+ 120 GL_ARB_instanced_arrays ext found.
+ 121 GL_ARB_base_instance ext found.
+ 122 GL_ARB_fragment_coord_conventions ext found.
+ 123 GL_EXT_gpu_program_parameters ext found.
+ 124 GL_ARB_texture_buffer_object_rgb32 ext found.
+ 125 GL_ARB_texture_rgb10_a2ui ext found.
+ 126 GL_ARB_texture_multisample ext found.
+ 127 GL_ARB_vertex_type_2_10_10_10_rev ext found.
+ 128 GL_ARB_timer_query ext found.
+ 129 GL_ARB_tessellation_shader ext found.
+ 130 GL_ARB_vertex_array_object ext found.
+ 131 GL_ARB_provoking_vertex ext found.
+ 132 GL_ARB_sample_shading ext found.
+ 133 GL_ARB_texture_cube_map_array ext found.
+ 134 GL_EXT_gpu_shader4 ext found.
+ 135 GL_ARB_gpu_shader5 ext found.
+ 136 GL_ARB_gpu_shader_fp64 ext found.
+ 137 GL_ARB_shader_subroutine ext found.
+ 138 GL_ARB_transform_feedback3 ext found.
+ 139 GL_ARB_get_program_binary ext found.
+ 140 GL_ARB_separate_shader_objects ext found.
+ 141 GL_ARB_shader_precision ext found.
+ 142 GL_ARB_vertex_attrib_64bit ext found.
+ 143 GL_ARB_viewport_array ext found.
+ 144 GL_ARB_transform_feedback_instanced ext found.
+ 145 GL_ARB_compressed_texture_pixel_storage ext found.
+ 146 GL_ARB_shader_atomic_counters ext found.
+ 147 GL_ARB_shading_language_packing ext found.
+ 148 GL_ARB_shading_language_420pack ext found.
+ 149 GL_ARB_texture_storage ext found.
+ 150 GL_EXT_texture_storage ext found.
+ 151 GL_ARB_vertex_attrib_binding ext found.
+ 152 GL_ARB_multi_draw_indirect ext found.
+ 153 GL_ARB_program_interface_query ext found.
+ 154 GL_ARB_texture_storage_multisample ext found.
+ 155 GL_ARB_buffer_storage ext found.
+ 156 GL_ARB_debug_output ext found.
+ 157 GL_KHR_debug ext found.
+ 158 GL_ARB_arrays_of_arrays ext found.
+ 159 GL_INTEL_map_texture ext found.
+ 160 GL_ARB_texture_compression_bptc ext found.
+ 161 GL_ARB_ES2_compatibility ext found.
+ 162 GL_ARB_ES3_compatibility ext found.
+ 163 GL_ARB_robustness ext found.
+ 164 GL_EXT_texture_sRGB_decode ext found.
+ 165 GL_KHR_blend_equation_advanced ext found.
+ 166 GL_EXT_shader_integer_mix ext found.
+ 167 GL_ARB_stencil_texturing ext found.
+ 168 WGL_EXT_depth_float ext found.
+ 169 WGL_ARB_buffer_region ext found.
+ 170 WGL_ARB_extensions_string ext found.
+ 171 WGL_ARB_make_current_read ext found.
+ 172 WGL_ARB_pixel_format ext found.
+ 173 WGL_ARB_pbuffer ext found.
+ 174 WGL_EXT_extensions_string ext found.
+ 175 WGL_EXT_swap_control ext found.
+ 176 WGL_EXT_swap_control_tear ext found.
+ 177 WGL_ARB_multisample ext found.
+ 178 WGL_ARB_pixel_format_float ext found.
+ 179 WGL_ARB_framebuffer_sRGB ext found.
+ 180 WGL_ARB_create_context ext found.
+ 181 WGL_ARB_create_context_profile ext found.
+ 182 WGL_EXT_pixel_format_packed_float ext found.
+ 183 WGL_EXT_create_context_es_profile ext found.
+ 184 WGL_EXT_create_context_es2_profile ext found.
+ 185 WGL_NV_DX_interop ext found.
+ 186 WGL_ARB_create_context_robustness ext found.
+ [!] sglDdrv_w32.c:2090?_SglBuildDpu
+  677 381 1920 1080 96 96 32 1 36 36 51 60 1 
+ Opening the SIGMA GL/2 Drawing Execution Port 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.4425
+ [$] sglDdrv_w32.c:2116?_SglBuildDpu
+  WGL_EXT_depth_float WGL_ARB_buffer_region WGL_ARB_extensions_string WGL_ARB_make_current_read WGL_ARB_pixel_format WGL_ARB_pbuffer WGL_EXT_extensions_string WGL_EXT_swap_control WGL_EXT_swap_control_tear WGL_ARB_multisample WGL_ARB_pixel_format_float WGL_ARB_framebuffer_sRGB WGL_ARB_create_context WGL_ARB_create_context_profile WGL_EXT_pixel_format_packed_float WGL_EXT_create_context_es_profile WGL_EXT_create_context_es2_profile WGL_NV_DX_interop WGL_ARB_create_context_robustness 
+ ERR sglDdrv_w32.c:1791?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2247?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1791?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2273?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1791?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2283?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1791?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2285?_SglBuildDpu
+  GL: INVAL_PARAM
+ ERR sglDdrv_w32.c:1791?_glDbgMsgCb
+  API ERROR HIGH 1280 GL error GL_INVALID_ENUM
+ ERR sglDdrv_w32.c:2289?_SglBuildDpu
+  GL: INVAL_PARAM
+Draw device '
+           :::::::::::     :::     :::::::::   ::::::::      :::               
+               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             
+               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            
+               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           
+               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           
+               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           
+               ###     ###     ### ###    ###  ########  ###     ###           
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               ' <'targa'> registered on draw system
+ afxDrawThread.c:171
+  AfxAcquireDrawThreads(cnt=1,config=0046d99c,dthr=0046daf8)
+ afxClass<Draw Thread, Thread>ConstructingObject(043da4b0)
+ afxClass<Thread>::ConstructObject(043da4b0)
+ afxThread.c:263
+  _AfxThrCtor(043da4b0)
+ afxClass<Draw Thread>::ConstructObject(043da4b0)
+ afxDrawThread.c:128
+  _AfxDthrCtor(dthr=043da4b0)
+ afxThread.c:204
+  AfxRunThread(thr=043da4b0)
+ E:/qwadro/afx/system/w32/*.icd
+ Loading draw ICD 
+ afxClass<Installable Client Driver, Executable & Linkable Module>ConstructingObject(00506074)
+ afxClass<Executable & Linkable Module>::ConstructObject(00506074)
+ afxModule.c:153
+  _AfxMdleCtor(uri:)
+ ERR afxModule.c:156?_AfxMdleCtor
+  
+ ERR afxModule.c:156?_AfxMdleCtor
+  (!isEmpty)
+    Invalid
+ ERR afxFileSystem.c:209?AfxResolveUri
+  
+ ERR afxFileSystem.c:209?AfxResolveUri
+  (!AfxUriIsBlank(in))
+    Invalid
+ ERR afxFileSystem.c:70?AfxResolveUris
+  
+ ERR afxFileSystem.c:70?AfxResolveUris
+  (!AfxUriIsBlank(&in[i]))
+    Invalid
+ ERR afxString.c:92?AfxFindStringChar
+  
+ ERR afxString.c:92?AfxFindStringChar
+  (0 < str->len - base)
+    Invalid
+ ERR afxUri.c:1319?AfxFormatUri
+  
+ ERR afxUri.c:1319?AfxFormatUri
+  (AfxUriIsEditable(uri))
+    Invalid
+ ERR afxBufferedString.c:173?AfxFormatStringArg
+  
+ ERR afxBufferedString.c:173?AfxFormatStringArg
+  (AfxStringIsWriteable(str))
+    Invalid
+ ERR afxBufferedString.c:175?AfxFormatStringArg
+  
+ ERR afxBufferedString.c:175?AfxFormatStringArg
+  (cap)
+    Invalid
+ ERR afxBufferedString.c:179?AfxFormatStringArg
+  
+ ERR afxBufferedString.c:179?AfxFormatStringArg
+  (map)
+    Invalid
+ ERR afxUri.c:1144?AfxNormalizePath
+  
+ ERR afxUri.c:1144?AfxNormalizePath
+  (AfxUriIsEditable(uri))
+    Invalid
+ ERR afxBufferedString.c:404?AfxMakeBufferedString
+  
+ ERR afxBufferedString.c:404?AfxMakeBufferedString
+  (start)
+    Invalid
+ ERR afxBufferedString.c:410?AfxMakeBufferedString
+  
+ ERR afxFileSystem.c:154?AfxResolveUris
+  
+ ERR afxFileSystem.c:212?AfxResolveUri
+  
+ ERR afxModule.c:183?_AfxMdleCtor
+  
+ ERR afxClass.c:487?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:478?_AfxClsRunSubsetCtor
+  
+ ERR afxClass.c:784?AfxAcquireObjects
+  
+ ERR afxIcd.c:92?_AfxSysLoadIcd
+  
+ afxClass<Draw Context, Draw Context>ConstructingObject(0280f870)
+ afxClass<Draw Context>::ConstructObject(0280f870)
+ afxClass<Draw Context>::ConstructObject(0280f870)
+ sglDctx.c:84
+  _SglDctxCtor(dctx=0280f870)
+ afxArena.c:768
+  AfxAllocateArena(aren=0280f878)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="sglDctx.c:103!_SglDctxCtor")
+ Installing GPU Synchronization Semaphore at 0280fc0c by 0280f8e8...
+ Installing GPU Synchronization Fence at 0280fb48 by 0280f8e8...
+ Installing Query Pool at 0280ff1c by 0280f8e8...
+ Installing Lego at 0280fe58 by 0280f8e8...
+ Installing Sampler at 028100a4 by 0280f8e8...
+ Installing Buffer at 0280f9c0 by 0280f8e8...
+ Installing Raster at 0280f8fc by 0280f8e8...
+ Installing Canvas at 0280ffe0 by 0280f8e8...
+ Installing Vertex Input at 02810168 by 0280f8e8...
+ Installing Shader at 0280fa84 by 0280f8e8...
+ Installing Rasterizer at 0280fcd0 by 0280f8e8...
+ Installing Pipeline at 0280fd94 by 0280f8e8...
+ afxClass<Draw Queue>::ConstructObject(005c14f0)
+ sglDque_w32.c:1312
+  _SglDqueCtor(dque=005c14f0)
+ afxArena.c:768
+  AfxAllocateArena(aren=005c153c)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="sglDque_w32.c:1338!_SglDqueCtor")
+ afxClass<Draw Queue>::ConstructObject(005c15c0)
+ sglDque_w32.c:1312
+  _SglDqueCtor(dque=005c15c0)
+ afxArena.c:768
+  AfxAllocateArena(aren=005c160c)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="sglDque_w32.c:1338!_SglDqueCtor")
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 4 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 34, 4 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 3 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ data/pipeline/rgbaToRgba.xsh.xml?tristrippedQuadVs
+ data/pipeline/rgbaToRgba.xsh.xml
+ Uploading pipeline 'data/pipeline/rgbaToRgba.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 4 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 34, 4 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 3 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/rgbaToRgba.xsh.xml?fs
+ afxClass<Rasterizer>::ConstructObject(044bc7b0)
+ sglRazr.c:85
+  _SglRazrCtor(razr=044bc7b0)
+ afxClass<Pipeline>::ConstructObject(04436120)
+ sglPip.c:502
+  _SglPipCtor(pip=04436120)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 4 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 34, 4 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 3 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/rgbaToRgba.xsh.xml)
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/rgbaToRgba.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 9 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 10, 2 ], Shader : null;
+ # 2, @ 0, [ 1, 1 ], [ 12, 2 ], Shader : null;
+ # 3, @ 0, [ 2, 1 ], [ 14, 4 ], Shader : null;
+ # 4, @ 0, [ 4, 1 ], [ 18, 4 ], Shader : null;
+ # 5, @ 0, [ 6, 1 ], [ 22, 4 ], Shader : null;
+ # 6, @ 0, [ 8, 1 ], [ 26, 4 ], Shader : null;
+ # 7, @ 0, [ 0, 0 ], [ 30, 4 ], Pipeline : null;
+ # 8, @ 0, [ 10, 1 ], [ 34, 4 ], Pipeline : null;
+ # 9, @ 0, [ 0, 0 ], [ 38, 3 ], Rasterizer : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 3, [ 3, 1 ], [ 0, 0 ], Resource : null;
+ # 17, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 4, [ 5, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 22, @ 5, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 23, @ 5, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 24, @ 5, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 25, @ 5, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 26, @ 6, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 27, @ 6, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 28, @ 6, [ 9, 1 ], [ 0, 0 ], Resource : null;
+ # 29, @ 6, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 30, @ 7, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 31, @ 7, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 32, @ 7, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 33, @ 7, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 34, @ 8, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 35, @ 8, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 36, @ 8, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 37, @ 8, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 38, @ 9, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 39, @ 9, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 40, @ 9, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(0450aec0)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(028495e0)
+ Dismantling File object (#0) 0450aec0...
+ Destructing instance 0450aec0 of File class.
+ Dismantling I/O Stream object (#0) 028495e0...
+ Destructing instance 028495e0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(027c2e20)
+ sglBsch.c:285
+  _SglBschCtor(lego=027c2e20)
+ afxClass<Sampler>::ConstructObject(0280e740)
+ sglSamp.c:122
+  _SglSampCtor(samp=0280e740)
+ afxApplication.c:363
+  AfxAcquireApplications(cnt=1,app=0046f3f8,config=0046f3d4)
+ afxClass<Application>::ConstructObject(0442a390)
+ afxApplication.c:256
+  _AfxAppCtor(app=0442a390)
+ afxThread.c:339
+  AfxAcquireThreads(cnt=1,threads=0442a52c,config=0046ef44,hint="afxApplication.c:266!_AfxAppCtor")
+ afxClass<Thread>::ConstructObject(027d5060)
+ afxThread.c:263
+  _AfxThrCtor(027d5060)
+ afxMouse.c:485
+  AfxAcquireMouses(cnt=1,port=0046ef58,mouses=0442a534)
+ afxClass<Mouse, Human Input Device>ConstructingObject(027d5240)
+ afxClass<Human Input Device, Device>ConstructingObject(027d5240)
+ afxClass<Device>::ConstructObject(027d5240)
+ afxClass<Human Input Device>::ConstructObject(027d5240)
+ afxClass<Mouse>::ConstructObject(027d5240)
+ afxMouse.c:431
+  _AfxMseCtor(mse=027d5240)
+ afxClass<Draw Input, Draw Input>ConstructingObject(04434850)
+ afxClass<Draw Input>::ConstructObject(04434850)
+ afxClass<Draw Input>::ConstructObject(04434850)
+ Installing Vertex Buffer at 04434a00 by 04434864...
+ Installing Camera at 04434878 by 04434864...
+ Installing Widget at 0442a468 by 0442a390...
+ afxApplication.c:174
+  AfxRunApplication(app=0442a390)
+ afxThread.c:204
+  AfxRunThread(thr=027d5060)
+ Sandbox.c:117
+  Once(app=0442a390)
+ afxClass<Simulation>::ConstructObject(044463c0)
+ afxSimulation.c:336
+  _AfxSimCtor(sim=044463c0)
+ afxClass<Memory Management Unit>::ConstructObject(02831f40)
+ Installing CAD Asset at 044463d8 by 044463c4...
+ Installing Material at 044467ac by 044463c4...
+ Installing Mesh at 04446870 by 044463c4...
+ Installing Mesh Topology at 044469f8 by 044463c4...
+ Installing Vertex Data at 04446934 by 044463c4...
+ Installing Node at 04446c44 by 044463c4...
+ ERR afxClass.c:636?AfxMountClass
+  
+ ERR afxClass.c:636?AfxMountClass
+  (config->size)
+    Invalid
+ Installing Skeleton at 04446b80 by 044463c4...
+ Installing Model at 04446abc by 044463c4...
+ Installing Body at 0444649c by 044463c4...
+ Installing Animus at 04446560 by 044463c4...
+ Installing Entity at 04446624 by 044463c4...
+ Installing Light at 044466e8 by 044463c4...
+ Installing Renderer at 04446d08 by 044463c4...
+ afxClass<Draw Output, Draw Output>ConstructingObject(04467550)
+ afxClass<Draw Output>::ConstructObject(04467550)
+ afxClass<Draw Output>::ConstructObject(04467550)
+ sglDout_w32.c:256
+  _SglDoutCtor(dout=04467550)
+ Draw output (04467550) porportions readjusted. P 1.776903, R 1.777778 W -NaN
+ Draw output (04467550) porportions readjusted. P 1.776903, R 1.777778 W 1.778859
+ afxDrawOutput.c:374
+  AfxRegenerateDrawOutputBuffers(dout=04467550)
+ Draw output (04467550) whd readjusted to 536870912x1071993105; 1:0% of 0x1061434102.
+ Draw output (04467550) porportions readjusted. P 1.776903, R 1.777778 W 1.855474
+ afxDrawOutput.c:374
+  AfxRegenerateDrawOutputBuffers(dout=04467550)
+ Draw output (04467550) whd readjusted to 0x1071984367; 1:0% of 3758096384x1061371503.
+ afxDrawOutput.c:374
+  AfxRegenerateDrawOutputBuffers(dout=04467550)
+ afxCanvas.c:262
+  AfxAcquireCanvases(dctx=0280f870,wh=[1271,685],layerCnt=1,surCnt=00000002)
+ afxClass<Canvas>::ConstructObject(04447f80)
+ sglCanv.c:375
+  _SglCanvCtor(canv=04447f80)
+ afxClass<Raster>::ConstructObject(044480d0)
+ sglRas.c:660
+  _SglRasCtor(ras=044480d0)
+ afxClass<Raster>::ConstructObject(04448190)
+ sglRas.c:660
+  _SglRasCtor(ras=04448190)
+ afxClass<GPU Synchronization Semaphore>::ConstructObject(04436300)
+ afxClass<Renderer>::ConstructObject(0446e490)
+ awxRenderer.c:379
+  _AfxRndCtor(rnd=0446e490)
+ afxClass<Draw Input, Draw Input>ConstructingObject(044705c0)
+ afxClass<Draw Input>::ConstructObject(044705c0)
+ afxClass<Draw Input>::ConstructObject(044705c0)
+ Installing Vertex Buffer at 04470770 by 044705d4...
+ Installing Camera at 044705e8 by 044705d4...
+ afxClass<Buffer>::ConstructObject(044482a0)
+ sglBuf.c:316
+  _SglBufCtor(buf=044482a0)
+ afxClass<Buffer>::ConstructObject(04448304)
+ sglBuf.c:316
+  _SglBufCtor(buf=04448304)
+ Uploading pipeline 'data/pipeline/test.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(044483b0)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(044484f0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 044483b0...
+ Destructing instance 044483b0 of File class.
+ Dismantling I/O Stream object (#0) 044484f0...
+ Destructing instance 044484f0 of I/O Stream class.
+ data/pipeline/test.xsh.xml?vs
+ data/pipeline/test.xsh.xml
+ Uploading pipeline 'data/pipeline/test.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(04472630)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04472770)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04472630...
+ Destructing instance 04472630 of File class.
+ Dismantling I/O Stream object (#0) 04472770...
+ Destructing instance 04472770 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/test.xsh.xml?fs
+ afxClass<Rasterizer>::ConstructObject(044bc970)
+ sglRazr.c:85
+  _SglRazrCtor(razr=044bc970)
+ afxClass<Pipeline>::ConstructObject(044361f0)
+ sglPip.c:502
+  _SglPipCtor(pip=044361f0)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(04472630)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04472770)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04472630...
+ Destructing instance 04472630 of File class.
+ Dismantling I/O Stream object (#0) 04472770...
+ Destructing instance 04472770 of I/O Stream class.
+ afxClass<File>::ConstructObject(04484ef0)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04472630)
+ Dismantling File object (#0) 04484ef0...
+ Destructing instance 04484ef0 of File class.
+ Dismantling I/O Stream object (#0) 04472630...
+ Destructing instance 04472630 of I/O Stream class.
+ afxClass<File>::ConstructObject(04484ef0)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04472630)
+ Dismantling File object (#0) 04484ef0...
+ Destructing instance 04484ef0 of File class.
+ Dismantling I/O Stream object (#0) 04472630...
+ Destructing instance 04472630 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(04471e40)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04471f80)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04471e40...
+ Destructing instance 04471e40 of File class.
+ Dismantling I/O Stream object (#0) 04471f80...
+ Destructing instance 04471f80 of I/O Stream class.
+ afxClass<File>::ConstructObject(04483e90)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04471e40)
+ Dismantling File object (#0) 04483e90...
+ Destructing instance 04483e90 of File class.
+ Dismantling I/O Stream object (#0) 04471e40...
+ Destructing instance 04471e40 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(027c2e6c)
+ sglBsch.c:285
+  _SglBschCtor(lego=027c2e6c)
+ afxClass<Vertex Input>::ConstructObject(04471e40)
+ sglVin.c:218
+  _SglVinCtor(vin=04471e40)
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=7,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d10)
+ afxFile.c:551
+  AfxReloadFile(uri=0046e404,flags=5)
+ afxClass<File>::ConstructObject(04485e40)
+ E:/qwadro/afx/art/skybox/day/right.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04485e40...
+ Destructing instance 04485e40 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ afxClass<Raster>::ConstructObject(04485e40)
+ sglRas.c:660
+  _SglRasCtor(ras=04485e40)
+ afxFile.c:551
+  AfxReloadFile(uri=0046e428,flags=5)
+ afxClass<File>::ConstructObject(04476d70)
+ E:/qwadro/afx/art/skybox/day/left.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04476d70...
+ Destructing instance 04476d70 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ afxFile.c:551
+  AfxReloadFile(uri=0046e44c,flags=5)
+ afxClass<File>::ConstructObject(04476d70)
+ E:/qwadro/afx/art/skybox/day/top.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04476d70...
+ Destructing instance 04476d70 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ afxFile.c:551
+  AfxReloadFile(uri=0046e470,flags=5)
+ afxClass<File>::ConstructObject(04476d70)
+ E:/qwadro/afx/art/skybox/day/bottom.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04476d70...
+ Destructing instance 04476d70 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ afxFile.c:551
+  AfxReloadFile(uri=0046e494,flags=5)
+ afxClass<File>::ConstructObject(04476d70)
+ E:/qwadro/afx/art/skybox/day/front.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04476d70...
+ Destructing instance 04476d70 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ afxFile.c:551
+  AfxReloadFile(uri=0046e4b8,flags=5)
+ afxClass<File>::ConstructObject(04476d70)
+ E:/qwadro/afx/art/skybox/day/back.tga
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04485d80)
+ Dismantling File object (#0) 04476d70...
+ Destructing instance 04476d70 of File class.
+ Dismantling I/O Stream object (#0) 04485d80...
+ Destructing instance 04485d80 of I/O Stream class.
+ Dismantling I/O Stream object (#0) 04485d10...
+ Destructing instance 04485d10 of I/O Stream class.
+ afxClass<Buffer>::ConstructObject(04485d10)
+ sglBuf.c:316
+  _SglBufCtor(buf=04485d10)
+ Uploading pipeline 'data/pipeline/skybox.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(04476fa0)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04483920)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 04476fa0...
+ Destructing instance 04476fa0 of File class.
+ Dismantling I/O Stream object (#0) 04483920...
+ Destructing instance 04483920 of I/O Stream class.
+ data/pipeline/skybox.xsh.xml?vs
+ data/pipeline/skybox.xsh.xml
+ Uploading pipeline 'data/pipeline/skybox.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/skybox.xsh.xml?fs
+ afxClass<Rasterizer>::ConstructObject(0448bbb0)
+ sglRazr.c:85
+  _SglRazrCtor(razr=0448bbb0)
+ afxClass<Pipeline>::ConstructObject(0451b9a0)
+ sglPip.c:502
+  _SglPipCtor(pip=0451b9a0)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04472810)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(04476fa0)
+ Dismantling File object (#0) 04472810...
+ Destructing instance 04472810 of File class.
+ Dismantling I/O Stream object (#0) 04476fa0...
+ Destructing instance 04476fa0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(0448bf70)
+ sglBsch.c:285
+  _SglBschCtor(lego=0448bf70)
+ afxClass<Vertex Input>::ConstructObject(04471f2c)
+ sglVin.c:218
+  _SglVinCtor(vin=04471f2c)
+ afxClass<Vertex Input>::ConstructObject(04534a20)
+ sglVin.c:218
+  _SglVinCtor(vin=04534a20)
+ afxClass<Sampler>::ConstructObject(0280e7e0)
+ sglSamp.c:122
+  _SglSampCtor(samp=0280e7e0)
+ afxClass<Buffer>::ConstructObject(04485d74)
+ sglBuf.c:316
+  _SglBufCtor(buf=04485d74)
+ afxClass<Buffer>::ConstructObject(04472810)
+ sglBuf.c:316
+  _SglBufCtor(buf=04472810)
+ afxClass<Buffer>::ConstructObject(04472874)
+ sglBuf.c:316
+  _SglBufCtor(buf=04472874)
+ afxClass<Buffer>::ConstructObject(04476fa0)
+ sglBuf.c:316
+  _SglBufCtor(buf=04476fa0)
+ afxClass<Buffer>::ConstructObject(04477004)
+ sglBuf.c:316
+  _SglBufCtor(buf=04477004)
+ afxClass<Buffer>::ConstructObject(04530330)
+ sglBuf.c:316
+  _SglBufCtor(buf=04530330)
+ afxClass<Buffer>::ConstructObject(04530394)
+ sglBuf.c:316
+  _SglBufCtor(buf=04530394)
+ afxClass<Buffer>::ConstructObject(04534f30)
+ sglBuf.c:316
+  _SglBufCtor(buf=04534f30)
+ Uploading pipeline 'data/pipeline/body.xsh.xml?rigid'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(0453d9a0)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0448afc0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of File class.
+ Dismantling I/O Stream object (#0) 0448afc0...
+ Destructing instance 0448afc0 of I/O Stream class.
+ data/pipeline/body.xsh.xml?vsRigid
+ data/pipeline/body.xsh.xml
+ Uploading pipeline 'data/pipeline/body.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/body.xsh.xml?fs
+ afxClass<Rasterizer>::ConstructObject(0448bd70)
+ sglRazr.c:85
+  _SglRazrCtor(razr=0448bd70)
+ afxClass<Pipeline>::ConstructObject(0451ba70)
+ sglPip.c:502
+  _SglPipCtor(pip=0451ba70)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d9f0)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0456d9f0...
+ Destructing instance 0456d9f0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0448b220)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0448b220...
+ Destructing instance 0448b220 of I/O Stream class.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d9f0)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0456d9f0...
+ Destructing instance 0456d9f0 of I/O Stream class.
+ afxClass<File>::ConstructObject(04554e40)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0453d9a0)
+ Dismantling File object (#0) 04554e40...
+ Destructing instance 04554e40 of File class.
+ Dismantling I/O Stream object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(0448bfbc)
+ sglBsch.c:285
+  _SglBschCtor(lego=0448bfbc)
+ afxClass<Lego>::ConstructObject(04554e40)
+ sglBsch.c:285
+  _SglBschCtor(lego=04554e40)
+ afxClass<Lego>::ConstructObject(04554e8c)
+ sglBsch.c:285
+  _SglBschCtor(lego=04554e8c)
+ afxClass<Vertex Input>::ConstructObject(04534b0c)
+ sglVin.c:218
+  _SglVinCtor(vin=04534b0c)
+ Uploading pipeline 'data/pipeline/body.xsh.xml?skinned'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(0453d9a0)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ data/pipeline/body.xsh.xml?vsSkinned
+ data/pipeline/body.xsh.xml
+ Uploading pipeline 'data/pipeline/body.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(0453d9a0)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0453d9a0...
+ Destructing instance 0453d9a0 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/body.xsh.xml?fs
+ afxClass<Rasterizer>::ConstructObject(05bf11b0)
+ sglRazr.c:85
+  _SglRazrCtor(razr=05bf11b0)
+ afxClass<Pipeline>::ConstructObject(0453d9a0)
+ sglPip.c:502
+  _SglPipCtor(pip=0453d9a0)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(0456d870)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d9b0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0456d870...
+ Destructing instance 0456d870 of File class.
+ Dismantling I/O Stream object (#0) 0456d9b0...
+ Destructing instance 0456d9b0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ [!] afxXsh.c:209?AfxParseXmlBackedShaderBlueprint
+  Attribute 'stream' not handled.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/body.xsh.xml)
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/body.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 24, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 32, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 33, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 2 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 6, 2 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 8, 2 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 12, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 14, 2 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 16, 2 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 18, 2 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 20, 2 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 22, 2 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 25, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 26, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 28, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 31, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 34, 1 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<File>::ConstructObject(05bf5e00)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0456d870)
+ Dismantling File object (#0) 05bf5e00...
+ Destructing instance 05bf5e00 of File class.
+ Dismantling I/O Stream object (#0) 0456d870...
+ Destructing instance 0456d870 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(05bf5e00)
+ sglBsch.c:285
+  _SglBschCtor(lego=05bf5e00)
+ afxClass<Lego>::ConstructObject(05bf5e4c)
+ sglBsch.c:285
+  _SglBschCtor(lego=05bf5e4c)
+ afxClass<Lego>::ConstructObject(0456d870)
+ sglBsch.c:285
+  _SglBschCtor(lego=0456d870)
+ afxClass<Vertex Input>::ConstructObject(045cfd70)
+ sglVin.c:218
+  _SglVinCtor(vin=045cfd70)
+ Uploading pipeline 'data/pipeline/testLighting.xsh.xml?blinn'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/testLighting.xsh.xml)
+ afxClass<File>::ConstructObject(0456d950)
+ E:/qwadro/afx/data/pipeline/testLighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 8 ], Shader : null;
+ # 2, @ 0, [ 6, 1 ], [ 13, 7 ], Shader : null;
+ # 3, @ 0, [ 11, 1 ], [ 20, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 24, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 18, @ 2, [ 8, 2 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 10, 1 ], [ 0, 0 ], Out : null;
+ # 20, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 24, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 0456d950...
+ Destructing instance 0456d950 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ data/pipeline/testLighting.xsh.xml?blinnVsh
+ data/pipeline/testLighting.xsh.xml
+ Uploading pipeline 'data/pipeline/testLighting.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/testLighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/testLighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 8 ], Shader : null;
+ # 2, @ 0, [ 6, 1 ], [ 13, 7 ], Shader : null;
+ # 3, @ 0, [ 11, 1 ], [ 20, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 24, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 18, @ 2, [ 8, 2 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 10, 1 ], [ 0, 0 ], Out : null;
+ # 20, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 24, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/testLighting.xsh.xml?blinnFsh
+ afxClass<Rasterizer>::ConstructObject(05bf1370)
+ sglRazr.c:85
+  _SglRazrCtor(razr=05bf1370)
+ afxClass<Pipeline>::ConstructObject(0453da70)
+ sglPip.c:502
+  _SglPipCtor(pip=0453da70)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/testLighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/testLighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 8 ], Shader : null;
+ # 2, @ 0, [ 6, 1 ], [ 13, 7 ], Shader : null;
+ # 3, @ 0, [ 11, 1 ], [ 20, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 24, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 18, @ 2, [ 8, 2 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 10, 1 ], [ 0, 0 ], Out : null;
+ # 20, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 24, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/testLighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/testLighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 8 ], Shader : null;
+ # 2, @ 0, [ 6, 1 ], [ 13, 7 ], Shader : null;
+ # 3, @ 0, [ 11, 1 ], [ 20, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 24, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 7, 1 ], [ 0, 0 ], Resource : null;
+ # 18, @ 2, [ 8, 2 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 10, 1 ], [ 0, 0 ], Out : null;
+ # 20, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 24, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(0456d8bc)
+ sglBsch.c:285
+  _SglBschCtor(lego=0456d8bc)
+ afxClass<Lego>::ConstructObject(04581d50)
+ sglBsch.c:285
+  _SglBschCtor(lego=04581d50)
+ afxClass<Lego>::ConstructObject(04581d9c)
+ sglBsch.c:285
+  _SglBschCtor(lego=04581d9c)
+ afxClass<Vertex Input>::ConstructObject(045cfe5c)
+ sglVin.c:218
+  _SglVinCtor(vin=045cfe5c)
+ Uploading pipeline 'data/pipeline/tutCamUtil.xsh.xml?tutCamUtil'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/tutCamUtil.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/tutCamUtil.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 16, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 24, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 25, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 11, 1 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 12, 1 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 13, 1 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 14, 1 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 15, 1 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 17, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 18, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 20, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 23, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ data/pipeline/tutCamUtil.xsh.xml?rigid
+ data/pipeline/tutCamUtil.xsh.xml
+ Uploading pipeline 'data/pipeline/tutCamUtil.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/tutCamUtil.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/tutCamUtil.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 16, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 24, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 25, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 11, 1 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 12, 1 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 13, 1 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 14, 1 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 15, 1 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 17, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 18, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 20, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 23, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/tutCamUtil.xsh.xml?fsh
+ afxClass<Rasterizer>::ConstructObject(0457f850)
+ sglRazr.c:85
+  _SglRazrCtor(razr=0457f850)
+ afxClass<Pipeline>::ConstructObject(04479770)
+ sglPip.c:502
+  _SglPipCtor(pip=04479770)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/tutCamUtil.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/tutCamUtil.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 16, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 24, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 25, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 11, 1 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 12, 1 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 13, 1 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 14, 1 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 15, 1 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 17, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 18, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 20, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 23, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/tutCamUtil.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/tutCamUtil.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 16, 11 ], Shader : null;
+ # 3, @ 0, [ 16, 1 ], [ 27, 8 ], Shader : null;
+ # 4, @ 0, [ 24, 1 ], [ 35, 4 ], Pipeline : null;
+ # 5, @ 0, [ 25, 1 ], [ 39, 4 ], Pipeline : null;
+ # 6, @ 0, [ 0, 0 ], [ 43, 5 ], Rasterizer : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 11, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 12, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 13, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 15, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 22, @ 2, [ 11, 1 ], [ 0, 0 ], In : null;
+ # 23, @ 2, [ 12, 1 ], [ 0, 0 ], In : null;
+ # 24, @ 2, [ 13, 1 ], [ 0, 0 ], In : null;
+ # 25, @ 2, [ 14, 1 ], [ 0, 0 ], In : null;
+ # 26, @ 2, [ 15, 1 ], [ 0, 0 ], In : null;
+ # 27, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 28, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 29, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 30, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 31, @ 3, [ 17, 1 ], [ 0, 0 ], Resource : null;
+ # 32, @ 3, [ 18, 2 ], [ 0, 0 ], Resource : null;
+ # 33, @ 3, [ 20, 3 ], [ 0, 0 ], Resource : null;
+ # 34, @ 3, [ 23, 1 ], [ 0, 0 ], Out : null;
+ # 35, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 36, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 37, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 38, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 39, @ 5, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 40, @ 5, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 5, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 42, @ 5, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 43, @ 6, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 44, @ 6, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 45, @ 6, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 46, @ 6, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 47, @ 6, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045547d0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045547d0...
+ Destructing instance 045547d0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(04479950)
+ sglBsch.c:285
+  _SglBschCtor(lego=04479950)
+ afxClass<Lego>::ConstructObject(0447999c)
+ sglBsch.c:285
+  _SglBschCtor(lego=0447999c)
+ afxClass<Lego>::ConstructObject(045547d0)
+ sglBsch.c:285
+  _SglBschCtor(lego=045547d0)
+ afxClass<Vertex Input>::ConstructObject(044777c0)
+ sglVin.c:218
+  _SglVinCtor(vin=044777c0)
+ Uploading pipeline 'data/pipeline/lighting.xsh.xml?lighting'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(045cfa80)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 045cfa80...
+ Destructing instance 045cfa80 of I/O Stream class.
+ data/pipeline/lighting.xsh.xml?vsh
+ data/pipeline/lighting.xsh.xml
+ [!] afxXsh.c:715?AfxLoadPipelineConfigFromXml
+  Node 'Input' not handled.
+ [!] afxXsh.c:715?AfxLoadPipelineConfigFromXml
+  Node 'Input' not handled.
+ [!] afxXsh.c:715?AfxLoadPipelineConfigFromXml
+  Node 'Input' not handled.
+ Uploading pipeline 'data/pipeline/lighting.xsh.xml'
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ [!] afxXsh.c:482?AfxLoadRasterizationConfigFromXml
+  Node 'DepthWriteEnabled' not handled.
+ data/pipeline/lighting.xsh.xml?fsh
+ afxClass<Rasterizer>::ConstructObject(0457fa10)
+ sglRazr.c:85
+  _SglRazrCtor(razr=0457fa10)
+ afxClass<Pipeline>::ConstructObject(04479840)
+ sglPip.c:502
+  _SglPipCtor(pip=04479840)
+ ERR afxBufferedString.c:341?AfxCopyString
+  
+ ERR afxBufferedString.c:341?AfxCopyString
+  (in)
+    Invalid
+ ERR afxString.c:45?AfxGetStringLength
+  
+ ERR afxString.c:45?AfxGetStringLength
+  (str)
+    Invalid
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<File>::ConstructObject(045c6b70)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0447f3e0)
+ Dismantling File object (#0) 045c6b70...
+ Destructing instance 045c6b70 of File class.
+ Dismantling I/O Stream object (#0) 0447f3e0...
+ Destructing instance 0447f3e0 of I/O Stream class.
+ afxClass<Lego>::ConstructObject(0455481c)
+ sglBsch.c:285
+  _SglBschCtor(lego=0455481c)
+ afxClass<Lego>::ConstructObject(05c49f10)
+ sglBsch.c:285
+  _SglBschCtor(lego=05c49f10)
+ afxClass<Lego>::ConstructObject(05c49f5c)
+ sglBsch.c:285
+  _SglBschCtor(lego=05c49f5c)
+ afxClass<Vertex Input>::ConstructObject(044778ac)
+ sglVin.c:218
+  _SglVinCtor(vin=044778ac)
+ E:/qwadro/afx/art/building/mill/w_mill_3age.gr2
+ afxClass<String Catalog>::ConstructObject(045c6520)
+ afxClass<Skeleton>::ConstructObject(045c6b70)
+ afxSkeleton.c:1035
+  _AfxSklCtor(skl=045c6b70)
+ Skeleton 045c6b70 assembled. <Bone_main>
+    Listing 10 joints:
+    #000 4294967295 <Bone_main>
+    #001 4294967295 <Mill>
+    #002 4294967295 <Bone_hitpointbar>
+    #003 4294967295 <Bone_Upper_mill>
+    #004 4294967295 <Upper Mill>
+    #005 4294967295 <Bone_Flag_Civ>
+    #006 4294967295 <Bone_Mill_Blades>
+    #007 4294967295 <Mill Blades>
+    #008 4294967295 <Bone_Mill_Wheel>
+    #009 4294967295 <Mill Wheel>
+ ERR afxModel.c:546?AfxAssembleModel
+  
+ ERR afxModel.c:546?AfxAssembleModel
+  (meshes)
+    Invalid
+ afxClass<Model>::ConstructObject(04580550)
+ Model 04580550 assembled. Id: "Bone_main"
+    4 meshes.
+    10 joints
+
+ afxClass<Vertex Data>::ConstructObject(0456dc80)
+ awxVertexData.c:462
+  _AfxVtdCtor(vtd=0456dc80)
+ afxClass<Mesh Topology>::ConstructObject(045c6200)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=045c6200)
+ Mesh topology 045c6200 built. With 139 triangles (2 bytes per index) arranged in 1 surfaces.
+ afxClass<Mesh>::ConstructObject(027d26d0)
+ afxMesh.c:250
+  _AfxMshCtor(msh=027d26d0)
+ Rigid Mesh 027d26d0 assembled. <Mill>
+    524 vertices with 3 attributes.
+    139 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 pivots:
+    #000 0 <Mill>
+ afxClass<Vertex Data>::ConstructObject(0456dd50)
+ awxVertexData.c:462
+  _AfxVtdCtor(vtd=0456dd50)
+ afxClass<Mesh Topology>::ConstructObject(045c6288)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=045c6288)
+ Mesh topology 045c6288 built. With 126 triangles (2 bytes per index) arranged in 2 surfaces.
+ afxClass<Mesh>::ConstructObject(027d275c)
+ afxMesh.c:250
+  _AfxMshCtor(msh=027d275c)
+ Rigid Mesh 027d275c assembled. <Upper Mill>
+    472 vertices with 3 attributes.
+    126 triangles (2 bytes per index) arranged in 2 surfaces.
+    Listing 1 pivots:
+    #000 0 <Upper Mill>
+ afxClass<Vertex Data>::ConstructObject(0456de70)
+ awxVertexData.c:462
+  _AfxVtdCtor(vtd=0456de70)
+ afxClass<Mesh Topology>::ConstructObject(0456e050)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=0456e050)
+ Mesh topology 0456e050 built. With 70 triangles (2 bytes per index) arranged in 1 surfaces.
+ afxClass<Mesh>::ConstructObject(027d29a0)
+ afxMesh.c:250
+  _AfxMshCtor(msh=027d29a0)
+ Rigid Mesh 027d29a0 assembled. <Mill Blades>
+    278 vertices with 3 attributes.
+    70 triangles (2 bytes per index) arranged in 1 surfaces.
+    Listing 1 pivots:
+    #000 0 <Mill Blades>
+ afxClass<Vertex Data>::ConstructObject(0456df40)
+ awxVertexData.c:462
+  _AfxVtdCtor(vtd=0456df40)
+ afxClass<Mesh Topology>::ConstructObject(0456e0d8)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=0456e0d8)
+ Mesh topology 0456e0d8 built. With 20 triangles (1 bytes per index) arranged in 1 surfaces.
+ afxClass<Mesh>::ConstructObject(027d2a2c)
+ afxMesh.c:250
+  _AfxMshCtor(msh=027d2a2c)
+ Rigid Mesh 027d2a2c assembled. <Mill Wheel>
+    58 vertices with 3 attributes.
+    20 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 pivots:
+    #000 0 <Mill Wheel>
+ awxBody.c:197
+  AwxEmbodyModel(mdl=04580550)
+ afxClass<Body>::ConstructObject(0457d6e0)
+ awxBody.c:156
+  _AwxBodCtor(bod=0457d6e0)
+ afxClass<Vertex Data>::ConstructObject(05c6e350)
+ awxVertexData.c:462
+  _AfxVtdCtor(vtd=05c6e350)
+ afxClass<Mesh Topology>::ConstructObject(05c6e860)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=05c6e860)
+ Mesh topology 05c6e860 built. With 12 triangles (4 bytes per index) arranged in 1 surfaces.
+ afxClass<Mesh>::ConstructObject(027d2b00)
+ afxMesh.c:250
+  _AfxMshCtor(msh=027d2b00)
+ Rigid Mesh 027d2b00 assembled. <>
+    24 vertices with 3 attributes.
+    12 triangles (1 bytes per index) arranged in 1 surfaces.
+    Listing 1 pivots:
+    #000 0 <>
+ afxClass<String Catalog>::ConstructObject(045c6570)
+ afxClass<Model>::ConstructObject(04580640)
+ ERR afxModel.c:213?AfxRelinkMeshes
+  Pivot '' not found in the destination skeleton.
+ Model 04580640 assembled. Id: "cube"
+    1 meshes.
+    10 joints
+
+ awxBody.c:197
+  AwxEmbodyModel(mdl=04580640)
+ afxClass<Body>::ConstructObject(0457d7b0)
+ awxBody.c:156
+  _AwxBodCtor(bod=0457d7b0)
+ afxClass<File>::ConstructObject(05c6e020)
+ E:/qwadro/afx/tmp/test.skl
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=2,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0457d8d0)
+ ERR afxStream.c:277?AfxSeekStream
+  
+ ERR afxStream.c:277?AfxSeekStream
+  (((((afxFlags)(ios->flags)) & ((afxFlags)(afxIoFlag_X))) == (afxFlags)(afxIoFlag_X)))
+    Invalid
+ ERR afxStream.c:278?AfxSeekStream
+  
+ ERR afxStream.c:278?AfxSeekStream
+  <afxSeekMode_ABSOLUTE>0 + <afxSeekMode_INVERSE>2 is out of capacity <origin>0.
+ ERR afxStream.c:295?AfxSkipStream
+  
+ ERR afxStream.c:295?AfxSkipStream
+  (((((afxFlags)(ios->flags)) & ((afxFlags)(afxIoFlag_X))) == (afxFlags)(afxIoFlag_X)))
+    Invalid
+ Dismantling File object (#0) 05c6e020...
+ Destructing instance 05c6e020 of File class.
+ Dismantling I/O Stream object (#0) 0457d8d0...
+ Destructing instance 0457d8d0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c6e020)
+ E:/qwadro/afx/tmp/test.skl
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0457d8d0)
+ ERR afxStream.c:304?AfxGoToStreamEnd
+  
+ ERR afxStream.c:304?AfxGoToStreamEnd
+  (((((afxFlags)(ios->flags)) & ((afxFlags)(afxIoFlag_X))) == (afxFlags)(afxIoFlag_X)))
+    Invalid
+ ERR afxStream.c:713?AfxReadStream
+  
+ ERR afxStream.c:312?AfxGoToStreamBegin
+  
+ ERR afxStream.c:312?AfxGoToStreamBegin
+  (((((afxFlags)(ios->flags)) & ((afxFlags)(afxIoFlag_X))) == (afxFlags)(afxIoFlag_X)))
+    Invalid
+ afxClass<Mesh Topology>::ConstructObject(05c6e8e8)
+ afxMeshTopology.c:352
+  _AfxMshtCtor(msht=05c6e8e8)
+ Mesh topology 05c6e8e8 built. With 12 triangles (4 bytes per index) arranged in 1 surfaces.
+ Dismantling File object (#0) 05c6e020...
+ Destructing instance 05c6e020 of File class.
+ Dismantling I/O Stream object (#0) 0457d8d0...
+ Destructing instance 0457d8d0 of I/O Stream class.
+ afxClass<Camera>::ConstructObject(05c6e020)
+ afxCamera.c:706
+  _AfxCamCtor(cam=05c6e020)
+ afxHandle<027d5240>::InstallEventFilter(05c6e020)
+ afxClass<Draw Script>::ConstructObject(05c6ea70)
+ sglDscr.c:126
+  _SglDscrCtor(dscr=05c6ea70)
+ afxArena.c:768
+  AfxAllocateArena(aren=05c6ea88)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="sglDscr.c:142!_SglDscrCtor")
+ afxClass<Vertex Buffer>::ConstructObject(0457d8d0)
+ afxClass<Buffer>::ConstructObject(04534f94)
+ sglBuf.c:316
+  _SglBufCtor(buf=04534f94)
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ afxClass<Buffer>::ConstructObject(05c748f0)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c748f0)
+ afxClass<Vertex Buffer>::ConstructObject(0457d924)
+ afxClass<Buffer>::ConstructObject(05c74954)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c74954)
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ afxClass<Buffer>::ConstructObject(05c78970)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c78970)
+ afxClass<Vertex Buffer>::ConstructObject(05c78df0)
+ afxClass<Buffer>::ConstructObject(05c789d4)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c789d4)
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ afxClass<Buffer>::ConstructObject(05c7b250)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c7b250)
+ afxClass<Vertex Buffer>::ConstructObject(05c78e44)
+ afxClass<Buffer>::ConstructObject(05c7b2b4)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c7b2b4)
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  
+ ERR afxBuffer.c:172?AfxUpdateBufferRegion
+  (!cnt2)
+    Invalid
+ afxClass<Buffer>::ConstructObject(05c7bd70)
+ sglBuf.c:316
+  _SglBufCtor(buf=05c7bd70)
+ afxRaster 044480d0 hardware-side data instanced. Target de1, format 8058, whd [1271,685,1]
+ afxRaster 04448190 hardware-side data instanced. Target de1, format 81a6, whd [1271,685,1]
+ afxCanvas 04447f80 hardware-side data instanced.
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(05c7e3f0)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05c7e530)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 05c7e3f0...
+ Destructing instance 05c7e3f0 of File class.
+ Dismantling I/O Stream object (#0) 05c7e530...
+ Destructing instance 05c7e530 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c7e3f0)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05c7e530)
+ Dismantling File object (#0) 05c7e3f0...
+ Destructing instance 05c7e3f0 of File class.
+ Dismantling I/O Stream object (#0) 05c7e530...
+ Destructing instance 05c7e530 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c7e3f0)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05c7e530)
+ Dismantling File object (#0) 05c7e3f0...
+ Destructing instance 05c7e3f0 of File class.
+ Dismantling I/O Stream object (#0) 05c7e530...
+ Destructing instance 05c7e530 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c83040)
+ E:/qwadro/afx/data/pipeline/stdObject.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05c83420)
+ Dismantling File object (#0) 05c83040...
+ Destructing instance 05c83040 of File class.
+ Dismantling I/O Stream object (#0) 05c83420...
+ Destructing instance 05c83420 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+layout(std140) uniform sgl_obj
+{
+    int boneCnt;
+    mat4 m;
+    mat4 w[32];
+};
+
+        
+        layout (location = 0) in vec3 in_pos;
+        layout (location = 3) in vec3 in_nrm;
+        layout (location = 6) in vec2 in_uv0;
+        
+        out block
+        {
+            vec4 posn;
+            vec3 nrm;
+            vec2 uv0;
+        } sgl_out;
+
+        void main()
+        {
+            sgl_out.posn = m * vec4(in_pos, 1);
+            sgl_out.nrm = in_nrm;
+            sgl_out.uv0 = in_uv0;
+            gl_Position = p * v * m * vec4(in_pos, 1);
+        }
+       
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/lighting.xsh.xml)
+ afxClass<File>::ConstructObject(05c9bba0)
+ E:/qwadro/afx/data/pipeline/lighting.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05cb3a70)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 9 ], Shader : null;
+ # 2, @ 0, [ 7, 1 ], [ 14, 7 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 7 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 28, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 10, @ 1, [ 2, 2 ], [ 0, 0 ], Resource : null;
+ # 11, @ 1, [ 4, 1 ], [ 0, 0 ], In : null;
+ # 12, @ 1, [ 5, 1 ], [ 0, 0 ], In : null;
+ # 13, @ 1, [ 6, 1 ], [ 0, 0 ], In : null;
+ # 14, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 15, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 16, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 18, @ 2, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 19, @ 2, [ 9, 2 ], [ 0, 0 ], Resource : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Out : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 23, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 25, @ 3, [ 13, 1 ], [ 0, 0 ], Input : null;
+ # 26, @ 3, [ 14, 1 ], [ 0, 0 ], Input : null;
+ # 27, @ 3, [ 15, 1 ], [ 0, 0 ], Input : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 29, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 30, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 31, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 32, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 05c9bba0...
+ Destructing instance 05c9bba0 of File class.
+ Dismantling I/O Stream object (#0) 05cb3a70...
+ Destructing instance 05cb3a70 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c9bba0)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05cb3a70)
+ Dismantling File object (#0) 05c9bba0...
+ Destructing instance 05c9bba0 of File class.
+ Dismantling I/O Stream object (#0) 05cb3a70...
+ Destructing instance 05cb3a70 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c9bba0)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccda50)
+ Dismantling File object (#0) 05c9bba0...
+ Destructing instance 05c9bba0 of File class.
+ Dismantling I/O Stream object (#0) 05ccda50...
+ Destructing instance 05ccda50 of I/O Stream class.
+ afxClass<File>::ConstructObject(05c9bba0)
+ E:/qwadro/afx/data/pipeline/stdMaterial.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05cb3a70)
+ Dismantling File object (#0) 05c9bba0...
+ Destructing instance 05c9bba0 of File class.
+ Dismantling I/O Stream object (#0) 05cb3a70...
+ Destructing instance 05cb3a70 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+layout(std140) uniform sgl_mtl
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+        
+        uniform sampler2D floorTexture;
+        vec3 lightPos = vec3(100, 100, 0);
+        int blinn = 1;
+        
+        in block
+        {
+            vec4 posn;
+            vec3 nrm;
+            vec2 uv0;
+        } sgl_in;
+        
+        out vec4 out_rgba0;
+        
+        void main (void)
+        { 
+            vec3 color = vec3(0.5,0.5,0.5);//texture(floorTexture, sgl_in.uv0).rgb;
+            
+            // ambient
+            vec3 ambient = 0.05 * color;
+            
+            // diffuse
+            vec3 lightDir = normalize(lightPos - vec3(sgl_in.posn));
+            vec3 normal = normalize(sgl_in.nrm);
+            float diff = max(dot(lightDir, normal), 0.0);
+            vec3 diffuse = diff * color;
+            
+            // specular
+            vec3 viewDir = vec3(normalize(viewPos - sgl_in.posn));
+            vec3 reflectDir = reflect(-lightDir, normal);
+            float spec = 0.0;
+            
+            if(blinn == 1)
+            {
+                vec3 halfwayDir = normalize(lightDir + viewDir);  
+                spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+            }
+            else
+            {
+                vec3 reflectDir = reflect(-lightDir, normal);
+                spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+            }
+            
+            vec3 specular = vec3(0.3) * spec; // assuming bright white light color
+            out_rgba0 = vec4(ambient + diffuse + specular, 1.0);
+        }
+       
+ afxPipeline 04479840 hardware-side data instanced.
+ afxBuffer 04534f94 hardware-side data instanced. glTarget 34962, glHandle 1, offset 0, range 6336, stride 12, usage 88e4
+ afxBuffer 05c748f0 hardware-side data instanced. glTarget 34963, glHandle 2, offset 0, range 834, stride 2, usage 88e4
+ afxBuffer 04477004 hardware-side data instanced. glTarget 35345, glHandle 3, offset 0, range 0, stride 0, usage 88e8
+ afxBuffer 04534f30 hardware-side data instanced. glTarget 35345, glHandle 4, offset 0, range 0, stride 0, usage 88e8
+ afxBuffer 05c74954 hardware-side data instanced. glTarget 34962, glHandle 5, offset 0, range 5696, stride 12, usage 88e4
+ afxBuffer 05c78970 hardware-side data instanced. glTarget 34963, glHandle 6, offset 0, range 756, stride 2, usage 88e4
+ afxBuffer 05c789d4 hardware-side data instanced. glTarget 34962, glHandle 7, offset 0, range 3392, stride 12, usage 88e4
+ afxBuffer 05c7b250 hardware-side data instanced. glTarget 34963, glHandle 8, offset 0, range 420, stride 2, usage 88e4
+ afxBuffer 05c7b2b4 hardware-side data instanced. glTarget 34962, glHandle 9, offset 0, range 704, stride 12, usage 88e4
+ afxBuffer 05c7bd70 hardware-side data instanced. glTarget 34963, glHandle 10, offset 0, range 60, stride 1, usage 88e4
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        void main()
+        {
+            vec4 pos = p * v * vec4(a_xyz, 1.0);
+            gl_Position = pos;
+        }
+       
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/test.xsh.xml)
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/test.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 4 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 5, 5 ], Shader : null;
+ # 2, @ 0, [ 2, 1 ], [ 10, 3 ], Shader : null;
+ # 3, @ 0, [ 0, 0 ], [ 13, 4 ], Pipeline : null;
+ # 4, @ 0, [ 0, 0 ], [ 17, 5 ], Rasterizer : null;
+ # 5, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 6, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 8, @ 1, [ 1, 1 ], [ 0, 0 ], Resource : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], In : null;
+ # 10, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 11, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 12, @ 2, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 13, @ 3, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 14, @ 3, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 15, @ 3, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 16, @ 3, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 17, @ 4, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 18, @ 4, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 19, @ 4, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 20, @ 4, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 21, @ 4, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = vec4(0.1, 0.2, 0.3, 1.0);
+        }
+        
+       
+ afxPipeline 044361f0 hardware-side data instanced.
+ afxBuffer 044482a0 hardware-side data instanced. glTarget 34962, glHandle 11, offset 0, range 48, stride 12, usage 88e4
+ afxBuffer 04448304 hardware-side data instanced. glTarget 34963, glHandle 12, offset 0, range 24, stride 4, usage 88e4
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdView.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+layout(std140) uniform sgl_view
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+        
+        layout(location = 0) in vec3 a_xyz;
+
+        out block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        void main()
+        {
+            sgl_v.uvw0 = a_xyz;
+            vec4 pos = p * mat4(mat3(v)) * vec4(a_xyz, 1.0);
+            
+            gl_Position = pos.xyww;
+        }
+       
+ afxXml.c:1282
+  AfxLoadXml(uri:data/pipeline/skybox.xsh.xml)
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/skybox.xsh.xml
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ # 0, @ 4294967295, [ 0, 0 ], [ 1, 6 ], Qwadro : null;
+ # 1, @ 0, [ 0, 1 ], [ 7, 10 ], Shader : null;
+ # 2, @ 0, [ 10, 1 ], [ 17, 4 ], Shader : null;
+ # 3, @ 0, [ 12, 1 ], [ 21, 4 ], Shader : null;
+ # 4, @ 0, [ 0, 0 ], [ 25, 4 ], Pipeline : null;
+ # 5, @ 0, [ 0, 0 ], [ 29, 5 ], Rasterizer : null;
+ # 6, @ 0, [ 0, 0 ], [ 34, 1 ], DrawTechnique : null;
+ # 7, @ 1, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 8, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 9, @ 1, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 10, @ 1, [ 1, 1 ], [ 0, 0 ], Constant : null;
+ # 11, @ 1, [ 2, 2 ], [ 0, 0 ], Specialization : null;
+ # 12, @ 1, [ 4, 1 ], [ 0, 0 ], Buffer : null;
+ # 13, @ 1, [ 5, 2 ], [ 0, 0 ], Buffer : null;
+ # 14, @ 1, [ 7, 1 ], [ 0, 0 ], Sampler : null;
+ # 15, @ 1, [ 8, 1 ], [ 0, 0 ], Resource : null;
+ # 16, @ 1, [ 9, 1 ], [ 0, 0 ], In : null;
+ # 17, @ 2, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 18, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 19, @ 2, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 20, @ 2, [ 11, 1 ], [ 0, 0 ], Resource : null;
+ # 21, @ 3, [ 0, 0 ], [ 0, 0 ], Stage : null;
+ # 22, @ 3, [ 0, 0 ], [ 0, 0 ], Include : null;
+ # 23, @ 3, [ 13, 2 ], [ 0, 0 ], Resource : null;
+ # 24, @ 3, [ 0, 0 ], [ 0, 0 ], Out : null;
+ # 25, @ 4, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 26, @ 4, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 27, @ 4, [ 0, 0 ], [ 0, 0 ], VertexShader : null;
+ # 28, @ 4, [ 0, 0 ], [ 0, 0 ], Rasterizer : null;
+ # 29, @ 5, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 30, @ 5, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 31, @ 5, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 32, @ 5, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 33, @ 5, [ 0, 0 ], [ 0, 0 ], FragmentShader : null;
+ # 34, @ 6, [ 0, 0 ], [ 35, 8 ], Pass : null;
+ # 35, @ 34, [ 0, 0 ], [ 0, 0 ], FillMode : null;
+ # 36, @ 34, [ 0, 0 ], [ 0, 0 ], CullMode : null;
+ # 37, @ 34, [ 0, 0 ], [ 0, 0 ], DepthTestEnabled : null;
+ # 38, @ 34, [ 0, 0 ], [ 0, 0 ], DepthWriteEnabled : null;
+ # 39, @ 34, [ 0, 0 ], [ 0, 0 ], DepthCompareOp : null;
+ # 40, @ 34, [ 0, 0 ], [ 0, 0 ], PrimitiveTopology : null;
+ # 41, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ # 42, @ 34, [ 0, 0 ], [ 0, 0 ], Shader : null;
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ afxClass<File>::ConstructObject(05d51610)
+ E:/qwadro/afx/data/pipeline/stdEnv.inc
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=5,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(05ccdaa0)
+ Dismantling File object (#0) 05d51610...
+ Destructing instance 05d51610 of File class.
+ Dismantling I/O Stream object (#0) 05ccdaa0...
+ Destructing instance 05ccdaa0 of I/O Stream class.
+ #version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+        
+        uniform samplerCube samp;
+
+        in block
+        {
+            vec3 uvw0;
+        } sgl_v;
+
+        out vec4 sgl_rgba;
+
+        void main()
+        {
+            sgl_rgba = texture(samp, sgl_v.uvw0);
+        }
+       
+ afxPipeline 0451b9a0 hardware-side data instanced.
+ afxBuffer 04485d10 hardware-side data instanced. glTarget 34962, glHandle 13, offset 0, range 432, stride 12, usage 88e4
+ afxRaster 04485e40 hardware-side data instanced. Target 8513, format 8051, whd [2048,2048,1]
+ afxSampler 0280e7e0 hardware-side data instanced.
+ afxBuffer 04485d74 hardware-side data instanced. glTarget 35345, glHandle 14, offset 0, range 0, stride 0, usage 88e8
+ afxBuffer 04476fa0 hardware-side data instanced. glTarget 35345, glHandle 15, offset 0, range 0, stride 0, usage 88e8

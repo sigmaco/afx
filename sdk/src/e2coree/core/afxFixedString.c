@@ -16,12 +16,12 @@
 
 #include "qwadro/core/afxFixedString.h"
 
-_AFX afxBufferedString* AfxMakeFixedString4(afxFixedString4 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString4(afxFixedString4 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -29,11 +29,11 @@ _AFX afxBufferedString* AfxMakeFixedString4(afxFixedString4 *str, afxString cons
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString8(afxFixedString8 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString8(afxFixedString8 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -41,12 +41,12 @@ _AFX afxBufferedString* AfxMakeFixedString8(afxFixedString8 *str, afxString cons
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString16(afxFixedString16 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString16(afxFixedString16 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -54,12 +54,12 @@ _AFX afxBufferedString* AfxMakeFixedString16(afxFixedString16 *str, afxString co
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString32(afxFixedString32 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString32(afxFixedString32 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -67,12 +67,12 @@ _AFX afxBufferedString* AfxMakeFixedString32(afxFixedString32 *str, afxString co
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString128(afxFixedString128 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString128(afxFixedString128 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -80,12 +80,12 @@ _AFX afxBufferedString* AfxMakeFixedString128(afxFixedString128 *str, afxString 
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString2048(afxFixedString2048 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString2048(afxFixedString2048 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);
@@ -93,12 +93,12 @@ _AFX afxBufferedString* AfxMakeFixedString2048(afxFixedString2048 *str, afxStrin
     return &str->str;
 }
 
-_AFX afxBufferedString* AfxMakeFixedString4096(afxFixedString4096 *str, afxString const* src)
+_AFX afxRestring* AfxMakeFixedString4096(afxFixedString4096 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     str->buf[0] = '\0';
-    AfxMakeBufferedString(&str->str, sizeof(str->buf), str->buf, 0);
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
 
     if (src)
         AfxCopyString(&str->str, src);

@@ -67,6 +67,6 @@ AFX afxNat32    AfxGetArchivedFileCrc(afxArchive arc, afxNat idx);
 
 //AFX afxBool     _AfxGetArcD(afxArchive arc, struct _afxArcD **arcD, struct _afxSysD* sysD);
 
-AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive arc[], afxUri const uri[], afxFileFlags const flags[]);
+AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive archives[], afxUri const uri[], afxFileFlags const flags[]);
 
 #endif//AFX_ARCHIVE_H

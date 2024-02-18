@@ -80,7 +80,7 @@ AFX_DEFINE_STRUCT(afxShaderBlueprintResource)
     afxNat                  binding;
     afxShaderResourceType   type;
     afxNat                  cnt;
-    afxBufferedString       name; // 16
+    afxRestring       name; // 16
 };
 
 AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
@@ -88,7 +88,7 @@ AFX_DEFINE_STRUCT(afxShaderBlueprintInOut)
     afxNat                  location;
     afxVertexFormat         fmt;
     afxNat                  stream;
-    afxBufferedString       semantic; // 8
+    afxRestring       semantic; // 8
 };
 
 #ifdef _AFX_DRAW_C
@@ -104,7 +104,7 @@ struct afxBaseShader
 
     afxByte*                    code;
     afxNat16                    codeLen;
-    afxBufferedString           entry;
+    afxRestring           entry;
 
     afxNat8                     resDeclCnt;
     afxShaderBlueprintResource* resDecls;

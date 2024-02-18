@@ -4,9 +4,6 @@
     <Filter Include="e2coree">
       <UniqueIdentifier>{48bb229e-5a12-4bc7-90ba-2054655dfe4e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="e2coree\core">
-      <UniqueIdentifier>{629751d2-24e3-44d0-a657-fa62690906f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="e2coree\draw">
       <UniqueIdentifier>{ada7227f-fd81-4edf-adb5-0e5505d193f8}</UniqueIdentifier>
     </Filter>
@@ -52,11 +49,14 @@
     <Filter Include="e2coree\mem">
       <UniqueIdentifier>{b64972ca-8a8c-4c1c-aab2-0059ec9c49a0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="e2coree\core">
+      <UniqueIdentifier>{629751d2-24e3-44d0-a657-fa62690906f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{ee902471-68b0-4120-8ab6-db72fcab549e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\core\afxModule.h">
-      <Filter>e2coree\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxSystem.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
@@ -357,9 +357,6 @@
     <ClInclude Include="..\..\inc\qwadro\io\afxSource.h">
       <Filter>e2coree\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\io\afxStorage.h">
-      <Filter>e2coree\io</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\io\afxStream.h">
       <Filter>e2coree\io</Filter>
     </ClInclude>
@@ -474,10 +471,25 @@
     <ClInclude Include="..\..\inc\qwadro\core\afxIndexedString.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxBufferedString.h">
+    <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h">
+    <ClInclude Include="..\..\inc\qwadro\io\afxGamepad.h">
+      <Filter>e2coree\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\io\afxFileSystem.h">
+      <Filter>e2coree\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\core\afxInitialization.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\core\afxExecutable.h">
+      <Filter>e2coree\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h">
       <Filter>e2coree\core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -494,9 +506,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\e2coree\afxQwadro.c">
       <Filter>e2coree</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\afxModule.c">
-      <Filter>e2coree\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxTerminal.c">
       <Filter>e2coree\core</Filter>
@@ -759,9 +768,6 @@
     <ClCompile Include="..\..\src\e2coree\io\afxResource.c">
       <Filter>e2coree\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\io\afxStorage.c">
-      <Filter>e2coree\io</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\io\afxStream.c">
       <Filter>e2coree\io</Filter>
     </ClCompile>
@@ -891,11 +897,28 @@
     <ClCompile Include="..\..\src\e2coree\core\afxIndexedString.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\e2coree\core\afxBufferedString.c">
-      <Filter>e2coree\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\e2coree\core\afxFixedString.c">
       <Filter>e2coree\core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\io\afxGamepad.c">
+      <Filter>e2coree\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\io\afxFileSystem.c">
+      <Filter>e2coree\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxInitialization.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxExecutable.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2coree\core\afxRestring.c">
+      <Filter>e2coree\core</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2coree.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

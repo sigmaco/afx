@@ -170,7 +170,7 @@ _AFX afxError _AwxBodCtor(awxBody bod, afxCookie const* cookie)
         AfxReacquireObjects(1, (void*[]) { mdl });
         bod->mdl = mdl;
         bod->cachedSkl = skl;
-        bod->cachedBones = skl->bones;
+        bod->cachedBones = NIL;// skl->bones;
         bod->cachedBoneCnt = skl->boneCnt;
         AfxTakeChain(&bod->motors, bod);
         bod->reserved0 = 0;

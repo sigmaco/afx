@@ -62,7 +62,7 @@ _AFXINL void AfxSetTransformWithIdentityCheck(afxTransform* t, afxV3d const posi
     AfxAssert(orientation);
     AfxAssert(scaleShear);
     AfxSetTransform(t, position, orientation, scaleShear);
-    t->flags = NIL | (AfxV4dIsIdentity(position) ? NIL : afxTransformFlags_ORIGIN) | (AfxQuatIsIdentity(orientation) ? NIL : afxTransformFlags_ORIENTATION) | (AfxM3dIsIdentity(scaleShear) ? NIL : afxTransformFlags_DEFORM);
+    t->flags = NIL | (AfxV3dIsZero(position) ? NIL : afxTransformFlags_ORIGIN) | (AfxQuatIsIdentity(orientation) ? NIL : afxTransformFlags_ORIENTATION) | (AfxM3dIsIdentity(scaleShear) ? NIL : afxTransformFlags_DEFORM);
 }
 
 _AFXINL void AfxMultiplyTransform(afxTransform *t, afxTransform const *a, afxTransform const *b)

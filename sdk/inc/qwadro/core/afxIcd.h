@@ -19,19 +19,20 @@
 #ifndef AFX_ICD_H
 #define AFX_ICD_H
 
-#include "qwadro/core/afxModule.h"
+#include "qwadro/core/afxExecutable.h"
 
 typedef enum afxIcdType
 {
     afxIcdType_DRAW,
     afxIcdType_SOUND,
+    afxIcdType_TELECOM,
     afxIcdType_SIM
 } afxIcdType;
 
 #if 0
 AFX_DEFINE_STRUCT(afxIcdInfo)
 {
-    afxModule               mdle;
+    afxExecutable               mdle;
     afxString const*        name; // driver name: SIGMA GL/2
     afxString const*        vendor; // author: SIGMA Technology Group (The technology arm of Federação SIGMA)
     afxString const*        website; // website: sigmaco.org
@@ -48,7 +49,7 @@ AFX_DEFINE_STRUCT(afxIcdInfo)
 #ifdef _AFX_ICD_C
 AFX_OBJECT(afxIcd)
 {
-    AFX_OBJECT(afxModule)   mdle;
+    AFX_OBJECT(afxExecutable)exe;
     afxChain                classes;
     afxClass                devices;
 

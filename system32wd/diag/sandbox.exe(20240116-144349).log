@@ -1,0 +1,91 @@
+
+ afxDebug_w32.c:394
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 5221f728...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(003a17b0)
+ afxSystem_w32.c:317
+  _AfxSysCtor(sys=003a17b0)
+ ERR afxInitialization.c:206?AfxIniLoadFromFile
+  1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.
+ Installing Thread Execution Unit at 003a2ef0 by 003a27f8...
+ Entering the Thread Execution Environment 6532
+ afxClass<Thread Execution Unit>::ConstructObject(00373920)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(00373920)
+ Installing Memory Management Unit at 003a280c by 003a27f8...
+ Installing Thread at 003a2e2c by 003a27f8...
+ Installing Device at 003a2fb4 by 003a27f8...
+ Installing Autonomous Service at 003a3078 by 003a27f8...
+ Installing File at 003a32c4 by 003a27f8...
+ Installing I/O Stream at 003a313c by 003a27f8...
+ Installing Codec at 003a3200 by 003a27f8...
+ Installing File Archive at 003a3388 by 003a27f8 over 003a32c4...
+ Installing Executable & Linkable Module at 003a2994 by 003a27f8...
+ Installing Installable Client Driver at 003a2a58 by 003a27f8 over 003a2994...
+ Installing File System at 003a344c by 003a27f8...
+ Installing Application at 003a35d4 by 003a27f8...
+ Installing Human Input Device at 003a2b1c by 003a27f8 over 003a2fb4...
+ Installing Keyboard at 003a2be0 by 003a27f8 over 003a2b1c...
+ Installing Mouse at 003a2ca4 by 003a27f8 over 003a2b1c...
+ Installing Controller at 003a2d68 by 003a27f8 over 003a2b1c...
+ Installing String Catalog at 003a28d0 by 003a27f8...
+ Installing Simulation at 003a3510 by 003a27f8...
+ [!] afxSystem_w32.c:503?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:504?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(003a0220)
+ afxArena.c:768
+  AfxAllocateArena(aren=003a3704)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:517!_AfxSysCtor")
+ afxClass<File System>::ConstructObject(003a52b0)
+ ERR afxUri.c:624?AfxGetUriPath
+  
+ ERR afxUri.c:624?AfxGetUriPath
+  (uri)
+    Invalid
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  (str)
+    Invalid
+ ERR afxBufferedString.c:25?AfxGetBufferedStringData
+  
+ ERR afxBufferedString.c:25?AfxGetBufferedStringData
+  (str->cap >= base)
+    Invalid
+ ERR afxUri.c:856?AfxPathIsRelative
+  
+ ERR afxUri.c:856?AfxPathIsRelative
+  (uri)
+    Invalid
+ ERR afxUri.c:624?AfxGetUriPath
+  
+ ERR afxUri.c:624?AfxGetUriPath
+  (uri)
+    Invalid
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  
+ ERR afxBufferedString.c:24?AfxGetBufferedStringData
+  (str)
+    Invalid
+ ERR afxBufferedString.c:25?AfxGetBufferedStringData
+  
+ ERR afxBufferedString.c:25?AfxGetBufferedStringData
+  (str->cap >= base)
+    Invalid

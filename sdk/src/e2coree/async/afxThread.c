@@ -334,9 +334,9 @@ _AFX afxClassConfig const _AfxThrClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireThreads(afxNat cnt, afxHint const hint, afxThreadConfig const config[], afxThread thr[])
+_AFX afxError AfxAcquireThreads(afxNat cnt, afxHint const hint, afxThreadConfig const config[], afxThread threads[])
 {
-    AfxEntry("cnt=%u,thr=%p,config=%p,hint=\"%s:%i!%s\"", cnt, thr, config, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+    AfxEntry("cnt=%u,threads=%p,config=%p,hint=\"%s:%i!%s\"", cnt, threads, config, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     
     // Creates a new QThread object that will execute the function f with the arguments args.
@@ -345,20 +345,20 @@ _AFX afxError AfxAcquireThreads(afxNat cnt, afxHint const hint, afxThreadConfig 
     afxClass* cls = AfxGetThreadClass();
     AfxAssertClass(cls, afxFcc_THR);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)thr, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)threads, (void const*[]) { (void*)config }))
         AfxThrowError();
 
     return err;
 }
 
-_AFX afxNat AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread thr[])
+_AFX afxNat AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread threads[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(thr);
+    AfxAssert(threads);
     AfxAssert(cnt);
     afxClass* cls = AfxGetThreadClass();
     AfxAssertClass(cls, afxFcc_THR);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)thr);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)threads);
 }
 
 _AFX afxNat AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd)

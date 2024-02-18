@@ -298,14 +298,14 @@ _AFX afxClassConfig const _AfxMmuClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmu[])
+_AFX afxError AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmus[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)mmu, (void const*[]) { strategy, hint }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)mmus, (void const*[]) { strategy, hint }))
         AfxThrowError();
 
     return err;
@@ -321,14 +321,14 @@ _AFX afxNat AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), 
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmu[])
+_AFX afxNat AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(mmu);
+    AfxAssert(mmus);
     afxClass* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)mmu);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)mmus);
 }
 
 _AFX afxNat AfxCountMmus(void)
@@ -348,7 +348,7 @@ _AFX void AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, 
     AfxAssert(dst);
     AfxAssert(src != dst);
     AfxAssert(cnt);
-    AfxAssert(srcStride);
+    //AfxAssert(srcStride);
     AfxAssert(dstStride);
 
     afxByte* dst2 = dst;
@@ -425,8 +425,6 @@ _AFX void AfxFill(afxSize cnt, afxSize siz, void const* value, void *p)
     AfxAssert(cnt);
     //AfxAssert(value);
     AfxAssert(siz);
-
-    //afxApplication app = AfxApplicationGet();
 
     if (value)
     {

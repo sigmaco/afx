@@ -265,7 +265,6 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
 {
     AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(path, afxFcc_URI);
     afxUrd urd = NIL;
 
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
@@ -289,7 +288,6 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
 {
     AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
     afxError err = AFX_ERR_NONE;
-    AfxTryAssertType(path, afxFcc_URI);
     afxUrd urd = NIL;
 
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));

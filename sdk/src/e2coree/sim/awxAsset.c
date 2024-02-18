@@ -89,7 +89,7 @@ _AFX afxNat AfxFindResources(awxAsset cad, afxFcc fcc, afxNat cnt, afxString con
 
         for (afxNat i = 0; i < resCnt; i++)
         {
-            if (0 == AfxTestStringEquality(&id[rslt], &(cad->resSlots[baseResIdx + i].id.str.str)))
+            if (0 == AfxCompareString(&id[rslt], &(cad->resSlots[baseResIdx + i].id.str.str)))
             {
                 res[rslt] = cad->resSlots[baseResIdx + i].obj;
                 AfxAssertObjects(1, &res[rslt], fcc);
@@ -226,7 +226,6 @@ _AFX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
     AfxAssert(loader);
     afxFlags flags = *(afxFlags*)cookie->udd[2];
     afxUri const *file = ((afxUri const *)cookie->udd[3]) + cookie->no;
-    AfxAssert(file, afxFcc_URI);
 #endif
     awxAssetBuilder const* cadb = cookie->udd[1];
     void* data = ((void **)(cookie->udd[2]))[cookie->no];

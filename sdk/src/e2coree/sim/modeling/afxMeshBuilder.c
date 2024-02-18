@@ -484,7 +484,7 @@ _AFXINL void AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, af
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxReplicateString(&mshb->pivots[basePivotIdx + i], &name[i]);
+        AfxReflectString(&name[i], &mshb->pivots[basePivotIdx + i]);
     }
 }
 

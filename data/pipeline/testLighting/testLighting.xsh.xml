@@ -1,0 +1,15 @@
+<Qwadro>
+    <Pipeline id='blinn'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
+        <VertexShader>data/pipeline/testLighting/testLightingBlinn.vsh</VertexShader>
+        <Rasterizer>data/pipeline/testLighting/testLighting.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <DepthTestEnabled></DepthTestEnabled>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <DepthCompareOp>LESS</DepthCompareOp>
+        <FragmentShader>data/pipeline/testLighting/testLightingBlinn.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

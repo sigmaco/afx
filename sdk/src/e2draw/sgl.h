@@ -26,6 +26,8 @@
 #include "../dep/gl/glad.h"
 #include "../dep/gl/glad_wgl.h"
 
+//#define DISABLE_SHARED_HARDWARE_CONTEXT
+
 #define _AFX_DRAW_C
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
@@ -214,6 +216,79 @@ AFX_DEFINE_STRUCT(sglVertexInputState)
     afxBool             iboUpdReq;
 };
 
+typedef struct sglXfrmState
+{
+    afxNat              vpCnt; /// 0
+    afxViewport         vps[SGL_MAX_VIEWPORTS];
+
+    afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+    afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
+    afxNat              patchControlPoints; /// is the number of control points per patch.
+
+    afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
+
+    afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+    afxBool             cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
+
+} sglXfrmState;
+
+typedef struct sglRasterizerState
+{
+    afxBool             rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
+
+    struct
+    {
+        afxCanvas       canv;
+        afxRect         area;
+        afxNat32        layerCnt;
+        afxNat32        rasterCnt;
+        afxDrawTarget   rasters[SGL_MAX_COLOR_ATTACHMENTS];
+        afxDrawTarget   ds[2];
+        afxBool         defFbo;
+    }                   pass; // always active pass
+
+    afxFillMode         fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
+    afxReal             lineWidth; /// is the width of rasterized line segments. /// 1.f    
+
+    afxBool             depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
+    afxReal             depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
+    afxReal             depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
+    afxReal             depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
+
+    afxBool             msEnabled; /// If enabld, multisample rasterization will be used. FALSE
+    afxNat              sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+    afxMask             sampleMasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+    afxBool             sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
+    afxReal             minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
+    afxBool             alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
+    afxBool             alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
+
+    afxPixelFormat      dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
+
+    afxBool             depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
+    afxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
+    afxBool             depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
+    afxBool             depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
+    afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
+    afxBool             stencilTestEnabled; /// FALSE
+    afxStencilConfig    stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
+    afxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
+
+
+    afxNat              areaCnt; /// 0
+    afxRect             areaRects[SGL_MAX_VIEWPORTS];
+    afxNat              scisCnt; /// 0
+    afxRect             scisRects[SGL_MAX_VIEWPORTS];
+
+    afxNat              outCnt;
+    afxColorOutputChannel   outs[8];
+    afxBool             anyBlendEnabled;
+    afxReal             blendConstants[4]; /// [ 0, 0, 0, 1 ]
+    afxBool             logicOpEnabled; /// FALSE
+    afxLogicOp          logicOp; /// afxLogicOp_NOP
+} sglRasterizerState;
+
+
 typedef struct
 {
     glVmt const             gl;    
@@ -235,78 +310,9 @@ typedef struct
     afxDrawContext          activeDctx;
 
     afxSize                 numOfFedVertices, numOfFedIndices, numOfFedInstances;
-
-    struct
-    {
-        afxNat              vpCnt; /// 0
-        afxViewport         vps[SGL_MAX_VIEWPORTS];
-
-        afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
-        afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
-        afxNat              patchControlPoints; /// is the number of control points per patch.
-        
-        afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
-
-        afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
-        afxBool             cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
-
-    }                       activeXformState, nextXformState;
-
-    struct
-    {
-        afxBool             rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
-
-        struct
-        {
-            afxCanvas       canv;
-            afxRect         area;
-            afxNat32        layerCnt;
-            afxNat32        rasterCnt;
-            afxDrawTarget   rasters[SGL_MAX_COLOR_ATTACHMENTS];
-            afxDrawTarget   ds[2];
-            afxBool         defFbo;
-        }                   pass; // always active pass
-
-        afxFillMode         fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
-        afxReal             lineWidth; /// is the width of rasterized line segments. /// 1.f    
-
-        afxBool             depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
-        afxReal             depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
-        afxReal             depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
-        afxReal             depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
-
-        afxBool             msEnabled; /// If enabld, multisample rasterization will be used. FALSE
-        afxNat              sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-        afxMask             sampleMasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
-        afxBool             sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
-        afxReal             minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
-        afxBool             alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
-        afxBool             alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
-
-        afxPixelFormat      dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
-
-        afxBool             depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
-        afxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
-        afxBool             depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
-        afxBool             depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
-        afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
-        afxBool             stencilTestEnabled; /// FALSE
-        afxStencilConfig    stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
-        afxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
-
-
-        afxNat              areaCnt; /// 0
-        afxRect             areaRects[SGL_MAX_VIEWPORTS];
-        afxNat              scisCnt; /// 0
-        afxRect             scisRects[SGL_MAX_VIEWPORTS];
-
-        afxNat              outCnt;
-        afxColorOutputChannel   outs[8];
-        afxBool             anyBlendEnabled;
-        afxReal             blendConstants[4]; /// [ 0, 0, 0, 1 ]
-        afxBool             logicOpEnabled; /// FALSE
-        afxLogicOp          logicOp; /// afxLogicOp_NOP
-    }                       activeRasterState, nextRasterState;
+ 
+    sglXfrmState            activeXformState, nextXformState;
+    sglRasterizerState      activeRasterState, nextRasterState;
 
     afxPipeline             activePip, nextPip;
     afxVertexInput          activeVin, nextVin;
@@ -991,7 +997,7 @@ typedef enum sglBindFlags
     sglBindFlag_KEEP,
 }sglBindFlags;
 
-_SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
+_SGL afxError AfxRegisterDrawDrivers(afxExecutable mdle, afxDrawSystem dsys);
 
 SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp);
 SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);

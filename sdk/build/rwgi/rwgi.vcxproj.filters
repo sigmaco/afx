@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="rwgi">
+      <UniqueIdentifier>{8b82e0df-a2a4-417c-a535-5e91aaa817dc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\rwgi\afxTextureDictionary.c">
+      <Filter>rwgi</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\rwgi\RwStream.h">
+      <Filter>rwgi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rwgi\RwTxdIo.h">
+      <Filter>rwgi</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\rwgi\RwExtensionIo.h">
+      <Filter>rwgi</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

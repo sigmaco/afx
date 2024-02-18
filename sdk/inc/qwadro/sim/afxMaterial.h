@@ -31,14 +31,14 @@
 
 AFX_DEFINE_STRUCT(afxMaterialMap)
 {
-    afxBufferedString   usage; // usage 16
+    afxRestring   usage; // usage 16
     afxMaterial         sub; // afxMaterial
 };
 
 #ifdef _AFX_MATERIAL_C
 AFX_OBJECT(afxMaterial)
 {
-    afxBufferedString   id; // 128
+    afxRestring     id; // 128
     afxRaster       tex;
     afxSampler      smp;
     afxNat          mapCnt;

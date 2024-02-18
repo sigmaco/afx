@@ -131,7 +131,7 @@ int main(int argc, char const* argv[])
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
         sysCfg.sound = TRUE;
-        AfxBootUpSystem(&sysCfg);
+        AfxDoSystemBootUp(&sysCfg);
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 
         afxSoundContextConfig sctxCfg = { 0 };
@@ -160,7 +160,7 @@ int main(int argc, char const* argv[])
 
         AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxShutdownSystem(0);
+        AfxDoSystemShutdown(0);
     }
     Sleep(3000);
     return 0;

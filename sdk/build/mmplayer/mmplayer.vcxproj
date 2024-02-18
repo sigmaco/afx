@@ -64,24 +64,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
-    <TargetExt>.exe</TargetExt>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
-    <TargetExt>.exe</TargetExt>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
-    <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClangClAdditionalOptions>
@@ -173,7 +169,7 @@
     <ClCompile Include="..\..\..\demos\mmplayer\mmplayer.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\e2bink\e2bink.vcxproj">
+    <ProjectReference Include="..\bink1\bink1.vcxproj">
       <Project>{696ebd89-fcda-44b6-b1a6-28bc64671216}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">

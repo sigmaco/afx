@@ -24,7 +24,7 @@
 #include "qwadro/async/afxThread.h"
 #include "qwadro/async/afxCondition.h"
 #include "qwadro/io/afxStream.h"
-#include "qwadro/core/afxBufferedString.h"
+#include "qwadro/core/afxRestring.h"
 
 // Object handles defined by SIGMA Draw System
 
@@ -437,15 +437,15 @@ AFX afxFillMode             AfxFindFillMode(afxString const *str);
 AFX afxShaderStage          AfxFindShaderStage(afxString const *str);
 AFX afxVertexFormat         AfxFindVertexFormat(afxString const *str);
 
-AFX afxString const*        AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxBufferedString *out);
-AFX afxString const*        AfxStringifyLogicOp(afxLogicOp f, afxBufferedString *out);
-AFX afxString const*        AfxStringifyStencilOp(afxStencilOp f, afxBufferedString *out);
-AFX afxString const*        AfxStringifyCompareOp(afxCompareOp f, afxBufferedString *out);
-AFX afxString const*        AfxStringifyCullMode(afxCullMode cm, afxBufferedString *out);
-AFX afxString const*        AfxStringifyFrontFace(afxFrontFace ff, afxBufferedString *out);
-AFX afxString const*        AfxStringifyFillMode(afxFillMode fm, afxBufferedString *out);
-AFX afxString const*        AfxStringifyShaderStage(afxShaderStage ss, afxBufferedString *out);
-AFX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxBufferedString *out);
+AFX afxString const*        AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestring *out);
+AFX afxString const*        AfxStringifyLogicOp(afxLogicOp f, afxRestring *out);
+AFX afxString const*        AfxStringifyStencilOp(afxStencilOp f, afxRestring *out);
+AFX afxString const*        AfxStringifyCompareOp(afxCompareOp f, afxRestring *out);
+AFX afxString const*        AfxStringifyCullMode(afxCullMode cm, afxRestring *out);
+AFX afxString const*        AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out);
+AFX afxString const*        AfxStringifyFillMode(afxFillMode fm, afxRestring *out);
+AFX afxString const*        AfxStringifyShaderStage(afxShaderStage ss, afxRestring *out);
+AFX afxString const*        AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out);
 
 AFX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt);
 

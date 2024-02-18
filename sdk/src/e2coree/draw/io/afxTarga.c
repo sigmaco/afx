@@ -20,6 +20,23 @@
 #include "qwadro/draw/io/afxRaster.h"
 #include "qwadro/afxQwadro.h"
 
+_AFX afxString const targaSignature = AFX_STRING(
+"\n           :::::::::::     :::     :::::::::   ::::::::      :::               "
+"\n               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             "
+"\n               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            "
+"\n               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           "
+"\n               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           "
+"\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
+"\n               ###     ###     ### ###    ###  ########  ###     ###           "
+"\n                                                                               "
+"\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
+"\n                                                                               "
+"\n                               Public Test Build                               "
+"\n                   (c) 2017 SIGMA, Engineering In Technology                   "
+"\n                                www.sigmaco.org                                "
+"\n                                                                               "
+);
+
 typedef struct _afxTgaImg
 {
     afxWhd  whd;
@@ -55,15 +72,31 @@ AFX_DEFINE_STRUCT(_afxStreamTargaHdr)
 
 };
 
-AFX_DEFINE_STRUCT(afxTargaFileHeader)
+AFX_DEFINE_STRUCT(afxTargaLayerHdr)
 {
-    afxFcc      fcc;
-    afxFlags    flags;
-    afxNat      pxlFmt;
+    afxSize     offset;
+    afxNat      siz;
+};
+
+AFX_DEFINE_STRUCT(afxTargaLodHdr)
+{
+    afxNat      lodSiz;
+    afxNat      layerSiz; // sizeof layer for this LOD
+};
+
+AFX_DEFINE_STRUCT(afxTargaFileHdr)
+{
+    afxFcc      fcc; // tga3
+    afxNat      udd[2];
+    afxFlags    flags; // 0x01 = Cubemap
+    afxNat      codec; // 0x01 = RLE-encoded
+    afxNat      fmt;
     afxNat      lodCnt;
     afxNat      layerCnt;
     afxWhd      whd;
     afxNat      rowLen;
+    // for each lod
+    // sizeof lod is rowLen * whd[1] * whd[2] * layerCnt 
 };
 
 #pragma pack(pop)
@@ -347,7 +380,6 @@ _AFX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, a
     {
         afxRasterIoOp const op = ops[i];
 
-        AfxAssertType(&uri[i], afxFcc_URI);
 
         afxFile file;
 
@@ -387,7 +419,7 @@ _AFX afxError AfxDownloadRasterToTarga(afxDrawInput din, afxRaster ras, afxNat l
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssertRange(AfxCountRasterLods(ras), lodIdx, 1);
     AfxAssertRange(AfxCountRasterLayers(ras), baseImg, imgCnt);
 
@@ -422,7 +454,6 @@ _AFX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, a
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
@@ -464,7 +495,7 @@ _AFX afxError AfxUploadRasterFromTarga(afxDrawInput din, afxRaster ras, afxNat l
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssertRange(AfxCountRasterLods(ras), lodIdx, 1);
     AfxAssertRange(AfxCountRasterLayers(ras), baseImg, imgCnt);
 
@@ -499,7 +530,6 @@ _AFX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags,
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
@@ -575,7 +605,6 @@ _AFX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags 
 
     for (afxNat i = 0; i < layerCnt; i++)
     {
-        AfxAssertType(&layerUri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
@@ -1059,7 +1088,6 @@ _AFX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
     {
         afxRasterIoOp const op = ops[i];
 
-        AfxAssertType(&uri[i], afxFcc_URI);
         
         afxFile file;
 
@@ -1099,7 +1127,7 @@ _AFX afxError AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssertRange(AfxCountRasterLods(ras), lodIdx, 1);
     AfxAssertRange(AfxCountRasterLayers(ras), baseImg, imgCnt);
 
@@ -1134,7 +1162,6 @@ _AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
@@ -1176,7 +1203,7 @@ _AFX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseI
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssertRange(AfxCountRasterLods(ras), lodIdx, 1);
     AfxAssertRange(AfxCountRasterLayers(ras), baseImg, imgCnt);
 
@@ -1209,7 +1236,6 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
@@ -1284,7 +1310,6 @@ _AFX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
     
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxAssertType(&uri[i], afxFcc_URI);
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();

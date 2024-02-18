@@ -89,7 +89,7 @@ AFX_DEFINE_STRUCT(afxXml)
 
 AFX afxError            AfxLoadXml(afxXml* xml, afxUri const *uri);
 AFX afxError            AfxParseXml(afxXml* xml, void* buffer, afxNat bufSiz);
-AFX void                AfxReleaseXml(afxXml* xml);
+AFX void                AfxCleanUpXml(afxXml* xml);
 
 AFX afxXmlNode*         AfxGetXmlRoot(afxXml* xml);
 AFX afxString const*    AfxGetXmlNodeName(afxXmlNode const *node);

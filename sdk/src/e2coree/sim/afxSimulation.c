@@ -437,17 +437,17 @@ _AFX afxClassConfig _AfxSimClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation sim[])
+_AFX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxClass* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)sim, (void const*[]) { (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)simulations, (void const*[]) { (void*)config }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, sim, afxFcc_SIM);
+    AfxAssertObjects(cnt, simulations, afxFcc_SIM);
 
     return err;
 }
@@ -462,14 +462,14 @@ _AFX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimula
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation sim[])
+_AFX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(sim);
+    AfxAssert(simulations);
     afxClass* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sim);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)simulations);
 }
 
 _AFX afxNat AfxCountSimulations(void)

@@ -102,6 +102,8 @@ AFX_DEFINE_STRUCT(afxModelAssembler)
     afxArray        meshes;
 };
 
+AFX afxError    AfxAssembleModels(afxModelAssembler mdla, afxNat cnt, afxString const id[], afxNat sklIdx[], afxNat mshCnt[], afxNat mshIdx[][1], afxTransform init[]);
+
 // afxStringCatalog strc, afxMesh const meshes[], afxNat cnt, afxModelBlueprint const blueprints[]
 AFX afxError    _AfxAssembleModel(afxSimulation sim, afxModelAssembler* assembler, afxNat cnt, afxNat const blueIndices[], afxModel models[]);
 

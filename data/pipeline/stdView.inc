@@ -1,5 +1,5 @@
 
-layout(std140) uniform sgl_view
+UNIFORM_UNIT(0, 0, sgl_view)
 {
     mat4 v;
     mat4 iv;

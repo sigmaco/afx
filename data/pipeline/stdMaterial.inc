@@ -1,5 +1,5 @@
 
-layout(std140) uniform sgl_mtl
+UNIFORM_UNIT(2, 0, sgl_mtl)
 {
     vec3  Kd;
     vec3  Ks;

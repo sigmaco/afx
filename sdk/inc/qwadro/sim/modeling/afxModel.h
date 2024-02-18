@@ -37,13 +37,12 @@ AFX_DEFINE_STRUCT(awxLinkedMesh)
 
 AFX_OBJECT(afxModel)
 {
-    afxNat              idStrIdx;
-    afxFixedString32    id; // 128
     afxSkeleton         skl;
-    afxTransform        init;
-    afxAabb             aabb;
     afxNat              slotCnt;
     awxLinkedMesh*      slots;
+    afxAabb             aabb;
+    afxTransform        init;
+    afxString           id; // 32
     afxStringCatalog    strc;
 };
 #endif
@@ -54,8 +53,9 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
     afxFixedString32    id;
     afxSkeleton         skl;
     afxTransform        init;
-    afxNat              baseMshIdx;
     afxNat              mshCnt;
+    afxMesh*            meshes;
+    afxStringCatalog    strc;
 };
 
 AFX afxBool             AfxGetModelId(afxModel mdl, afxString* id);
@@ -86,8 +86,8 @@ AFX void                AwxBuildLinkedMeshMatrixArray(afxModel mdl, afxNat slotI
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAssembleModel(afxSimulation sim, afxStringCatalog strc, afxMesh const meshes[], afxNat cnt, afxModelBlueprint const blueprints[], afxModel models[]);
+AFX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, afxModelBlueprint const blueprints[], afxModel models[]);
 
-AFX void                AfxTransformModels(afxReal const linear[3][3], afxReal const invLinear[3][3], afxReal linearTol, afxReal const affine[3], afxReal affineTol, afxFlags flags, afxNat cnt, afxModel models[]);
+AFX void                AfxTransformModels(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[3], afxReal affineTol, afxFlags flags, afxNat cnt, afxModel models[]);
 
 #endif//AFX_MODEL_H

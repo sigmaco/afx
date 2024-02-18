@@ -66,23 +66,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetExt>.exe</TargetExt>
-    <OutDir>$(SolutionDir)..\..\system\w$(PlatformArchitecture)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -157,7 +153,7 @@
     <ClCompile Include="..\..\..\demos\sandbox\Sandbox.c" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\e2cad\e2cad.vcxproj">
+    <ProjectReference Include="..\cadio\cadio.vcxproj">
       <Project>{60b64922-a066-4894-90ac-66ff7a934804}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
@@ -166,13 +162,13 @@
     <ProjectReference Include="..\e2draw\e2draw.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\e2grn3d2\e2grn3d2.vcxproj">
-      <Project>{ada2daf6-6f68-4d16-9ea5-25faf07fe8ed}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\e2newton\e2newton.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\idtech\idtech.vcxproj">
+    <ProjectReference Include="..\rad3d\rad3d.vcxproj">
+      <Project>{ada2daf6-6f68-4d16-9ea5-25faf07fe8ed}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\techid\techid.vcxproj">
       <Project>{55bb14fb-8087-49f3-bb3f-1f06d8c336a0}</Project>
     </ProjectReference>
   </ItemGroup>

@@ -1243,14 +1243,14 @@ _AFX afxNat AfxInvokeStreams(afxNat first, afxNat cnt, afxBool(*f)(afxStream, vo
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream ios[])
+_AFX afxNat AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream streams[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(ios);
+    AfxAssert(streams);
     afxClass* cls = AfxGetStreamClass();
     AfxAssertClass(cls, afxFcc_IOS);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)ios);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)streams);
 }
 
 _AFX afxNat AfxCountStreams(void)

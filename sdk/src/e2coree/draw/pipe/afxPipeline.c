@@ -206,21 +206,21 @@ _AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* u
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    AfxAssertType(uri, afxFcc_URI);
+    AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
     AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxGetUriExtension(&fext, uri, FALSE);
+    AfxExcerptUriExtension(uri, FALSE, &fext);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxGetUriPath(&fpath, uri);
+        AfxExcerptUriPath(uri, &fpath);
 
-        if (0 == AfxTestStringEquivalenceLiteral(AfxGetUriString(&fext), 0, ".xml", 4))
+        if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
             afxXml xml;
 
@@ -232,7 +232,7 @@ _AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* u
                 AfxAssert(isQwadroXml);
 
                 afxString query;
-                AfxGetUriQueryString(uri, TRUE, &query);
+                AfxExcerptUriQueryToString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
@@ -255,8 +255,8 @@ _AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* u
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))
                         {
-                            AfxAppendStringLiteral(&tmp.str, "?", 1);
-                            AfxAppendString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
+                            AfxConcatenateStringL(&tmp.str, "?", 1);
+                            AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
                         }
 
                         afxUri tmpUri;
@@ -287,7 +287,7 @@ _AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* u
                     }
                 }
 
-                AfxReleaseXml(&xml);
+                AfxCleanUpXml(&xml);
             }
         }
         else

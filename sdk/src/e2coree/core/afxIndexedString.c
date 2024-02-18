@@ -25,20 +25,43 @@
 #include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
 
+_AFX afxNat AfxResolveStrings2(afxStringCatalog strc, afxNat cnt, afxString const in[], afxString out[])
+{
+    afxError err = NIL;
+    AfxTryAssertObjects(1, &strc, afxFcc_STRC);
+    afxNat rslt = 0;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        if (!in || !in[i].len)
+            AfxResetString(&out[i]);
+        else
+            AfxMakeString(&out[i], &strc->buf.bytemap[in[i].offset], in[i].len), ++rslt;
+    }
+    return rslt;
+}
+
 _AFX afxError AfxResolveStrings(afxStringCatalog strc, afxNat cnt, afxNat strIdx[], afxString dst[])
 {
     afxError err = NIL;
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        dst[i] = strc->strings[strIdx[i]];
-        dst[i].start = strc->buf.bytemap + (afxSize)dst[i].start;
+        if (strIdx[i] == AFX_INVALID_INDEX)
+        {
+            AfxResetString(&dst[i]);
+        }
+        else
+        {
+            dst[i] = strc->strings[strIdx[i]];
+            dst[i].start = strc->buf.bytemap + (afxSize)dst[i].start;
+        }
     }
 
     return err;
 }
 
-_AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString const src[], afxNat strIdx[], afxNat strIdxStride)
+_AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString const sources[], afxNat strIdx[], afxNat strIdxStride)
 {
     afxError err = NIL;
     
@@ -47,6 +70,7 @@ _AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString con
     for (afxNat i = 0; i < cnt; i++)
     {
         afxNat strIdx2 = AFX_INVALID_INDEX;
+        afxString const* src = &sources[i];
 
         if (src->len)
         {
@@ -55,7 +79,7 @@ _AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString con
                 afxString tmp;
                 AfxResolveStrings(strc, 1, &j, &tmp);
 
-                if (0 == AfxTestStringEquality(src, &tmp))
+                if (0 == AfxCompareString(src, &tmp))
                 {
                     strIdx2 = j;
                     break;
@@ -104,6 +128,47 @@ _AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString con
             break;
     }
     return err;
+}
+
+_AFX afxNat AfxCatalogStrings2(afxStringCatalog strc, afxNat cnt, afxString const in[], afxString out[])
+{
+    afxError err = NIL;
+    afxNat rslt = 0;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxString const* src = &in[i];
+        afxNat srcLen = src->len;
+
+        if (srcLen)
+        {
+            void* dataStart = NIL;
+
+            if (strc->buf.cnt)
+                dataStart = AfxStrnstr(strc->buf.data, strc->buf.cnt, src->start, srcLen);
+
+            if (!dataStart)
+            {
+                afxNat firstCh;
+
+                if (!(dataStart = AfxInsertArrayUnits(&strc->buf, srcLen, &firstCh, NIL))) AfxThrowError();
+                else
+                {
+                    AfxCopy(srcLen, sizeof(afxChar), src->start, dataStart);
+                }
+            }
+
+            if (!err)
+            {
+                AfxMakeString(&out[i], (afxSize)dataStart - (afxSize)strc->buf.data, srcLen);
+                out[i].offset = (afxSize)dataStart - (afxSize)strc->buf.data;
+                out[i].len = srcLen;
+                ++strc->cnt;
+                ++rslt;
+            }
+        }
+    }
+    return rslt;
 }
 
 _AFX afxError _AfxStrcCtor(afxStringCatalog strc, afxCookie const* cookie)

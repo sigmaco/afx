@@ -185,10 +185,10 @@ AFX afxCmdId                AfxCmdExecuteCommands
 AFX afxCmdId                AfxCmdDraw
 (
     afxDrawScript           dscr,
-    afxNat                  vtxCnt, /// is the number of vertices to draw.
+    afxNat                  baseInstIdx, /// is the instance ID of the first instance to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
     afxNat                  baseVtxIdx, /// is the index of the first vertex to draw.
-    afxNat                  baseInstIdx /// is the instance ID of the first instance to draw.
+    afxNat                  vtxCnt /// is the number of vertices to draw.
 );
 
 /// Draw primitives with indirect parameters.
@@ -235,11 +235,11 @@ AFX afxCmdId                AfxCmdDrawIndirectCount
 AFX afxCmdId                AfxCmdDrawIndexed
 (
     afxDrawScript           dscr,
-    afxNat                  idxCnt, /// is the number of vertices to draw.
+    afxNat                  vtxOff, /// is the value added to the vertex index before indexing into the vertex buffer.
+    afxNat                  baseInstIdx, /// is the instance ID of the first instance to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
     afxNat                  baseIdx, /// is the base index within the index buffer.
-    afxNat                  vtxOff, /// is the value added to the vertex index before indexing into the vertex buffer.
-    afxNat                  baseInstIdx /// is the instance ID of the first instance to draw.
+    afxNat                  idxCnt /// is the number of vertices to draw.
 );
 
 /// Draw primitives with indirect parameters and indexed vertices.

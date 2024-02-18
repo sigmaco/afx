@@ -168,7 +168,7 @@ struct afxBaseDrawOutput
                         ndcCursorPos,
                         ndcCursorMove;
 
-    afxBufferedString   caption;
+    afxRestring   caption;
 
     afxError            (*reqCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
 
@@ -188,11 +188,11 @@ AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContex
 
 // Extent
 
-AFX afxError            AfxReadjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
-AFX afxError            AfxReadjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd);
+AFX afxError            AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
+AFX afxError            AfxAdjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd);
 AFX void                AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd); // d is always 1; it is here just for compatibility.
 AFX void                AfxGetDrawOutputNormalizedExtent(afxDrawOutput dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
-AFX void                AfxReadjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution);
+AFX void                AfxAdjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution);
 
 // Buffer
 
