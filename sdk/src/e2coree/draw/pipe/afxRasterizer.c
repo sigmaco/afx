@@ -23,7 +23,7 @@
 
  // OpenGL/Vulkan Continuous Integration
 
-_AFX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizationConfig* config)
+_AVX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizationConfig* config)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -76,7 +76,7 @@ _AFX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
     AfxReflectString(&razr->fragFn.str.str, &config->fragFn);
 }
 
-_AFX afxBool AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op) // return TRUE if depth test is enabled
+_AVX afxBool AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op) // return TRUE if depth test is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -88,14 +88,14 @@ _AFX afxBool AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op) // retu
     return enabled;
 }
 
-_AFX afxBool AfxDepthWriteIsDisabled(afxRasterizer razr)
+_AVX afxBool AfxDepthWriteIsDisabled(afxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return razr->depthWriteDisabled;
 }
 
-_AFX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
+_AVX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp) // return TRUE if depth bias is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -113,7 +113,7 @@ _AFX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxRea
     return enabled;
 }
 
-_AFX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // return TRUE if depth bounds is enabled
+_AVX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // return TRUE if depth bounds is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -125,7 +125,7 @@ _AFX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // ret
     return enabled;
 }
 
-_AFX void AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn)
+_AVX void AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -137,7 +137,7 @@ _AFX void AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn)
         AfxReflectString(&razr->fragFn.str.str, fn);
 }
 
-_AFX afxBool AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
+_AVX afxBool AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -152,7 +152,7 @@ _AFX afxBool AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, af
     return enabled;
 }
 
-_AFX afxBool AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
+_AVX afxBool AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op) // return TRUE if logical pixel operation is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -164,21 +164,21 @@ _AFX afxBool AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op) // 
     return enabled;
 }
 
-_AFX void AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4])
+_AVX void AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     AfxCopyV4d(rgba, razr->blendConstants);
 }
 
-_AFX afxNat AfxCountColorOutputChannels(afxRasterizer razr)
+_AVX afxNat AfxCountColorOutputChannels(afxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return razr->outCnt;
 }
 
-_AFX afxNat AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
+_AVX afxNat AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]) // return the number of channels obtained.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -193,7 +193,7 @@ _AFX afxNat AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat c
     return i;
 }
 
-_AFX afxBool AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
+_AVX afxBool AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]) // return TRUE if multisampling rasterization is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -209,7 +209,7 @@ _AFX afxBool AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxM
     return enabled;
 }
 
-_AFX afxBool AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
+_AVX afxBool AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -221,14 +221,14 @@ _AFX afxBool AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSam
     return enabled;
 }
 
-_AFX afxFillMode AfxGetRasterizationMode(afxRasterizer razr)
+_AVX afxFillMode AfxGetRasterizationMode(afxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return razr->fillMode;
 }
 
-_AFX afxBool AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth) // return TRUE if rasterization enabled.
+_AVX afxBool AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth) // return TRUE if rasterization enabled.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -239,7 +239,7 @@ _AFX afxBool AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth
     return razr->fillMode == afxFillMode_EDGE;
 }
 
-_AFX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[])
+_AVX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -256,7 +256,7 @@ _AFX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasteriz
     return err;
 }
 
-_AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -308,8 +308,8 @@ _AFX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
                     else
                     {
 #if 0
-                        afxFixedString128 tmp;
-                        AfxMakeFixedString128(&tmp);
+                        afxString128 tmp;
+                        AfxMakeString128(&tmp);
                         AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))

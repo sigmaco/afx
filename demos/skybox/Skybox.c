@@ -23,7 +23,7 @@ awxRenderer rnd = NIL;
 
 afxCamera cam = NIL;
 
-afxFixedUri2048 uri;
+afxUri2048 uri;
 
 afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw thread
 {
@@ -96,8 +96,8 @@ _AFXEXPORT void Once(afxApplication app)
     afxString str, str2;
     afxUri uriMap;
 
-    afxFixedUri128 uri128;
-    AfxMakeFixedUri128(&uri128, NIL);
+    afxUri128 uri128;
+    AfxMakeUri128(&uri128, NIL);
     afxStoragePointSpecification mpSpec = { 0 };
     AfxFormatUri(&uri128.uri, "art/mnt.zip");
     mpSpec.hostPath = &uri128.uri.str;
@@ -194,8 +194,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxFixedUri2048 romUri;
-    AfxMakeFixedUri2048(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxMakeUri2048(&romUri, NIL);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

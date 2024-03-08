@@ -161,8 +161,8 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
             razr->base.logicOpEnabled = !!rasc->pixelLogicOpEnabled;
             razr->base.logicOp = rasc->pixelLogicOp;
 
-            AfxMakeFixedUri128(&razr->base.fragShd, &rasc->fragShd);
-            AfxMakeFixedString8(&razr->base.fragFn, &rasc->fragFn);
+            AfxMakeUri128(&razr->base.fragShd, &rasc->fragShd);
+            AfxMakeString8(&razr->base.fragFn, &rasc->fragFn);
 
             razr->updFlags = SGL_UPD_FLAG_DEVICE_INST;
             

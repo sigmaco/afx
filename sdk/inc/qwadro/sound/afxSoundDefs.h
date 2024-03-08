@@ -21,6 +21,27 @@
 #include "qwadro/core/afxSimd.h"
 #include "qwadro/math/afxTransform.h"
 
+#ifndef __e2sound__
+#   ifdef _DEBUG
+#       define AAX _AFXIMPORT extern 
+#       define AAXINL _AFXIMPORT extern inline
+#   else
+#       define AAX _AFXIMPORT extern 
+#       define AAXINL _AFXIMPORT extern inline
+#   endif
+#else
+#   ifdef _DEBUG
+#       define _AAX _AFXEXPORT
+#       define AAX _AFXEXPORT extern 
+#       define _AAXINL _AFXEXPORT inline
+#       define AAXINL _AFXEXPORT extern inline
+#   else
+#       define _AAX _AFXEXPORT
+#       define AAX _AFXEXPORT extern 
+#       define _AAXINL _AFXEXPORT inline
+#       define AAXINL _AFXEXPORT extern inline
+#   endif
+#endif//__e2sound__
 
 //AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSoundThread);
@@ -70,7 +91,7 @@ AFX_DEFINE_STRUCT(aaxListener) // Listener information.
     afxBool             spatialized;
 };
 
-AFXINL void AaxAcquireListener(aaxListener *list)
+AAXINL void AaxAcquireListener(aaxListener *list)
 {
     afxError err = NIL;
     AfxAssert(list);
@@ -84,7 +105,7 @@ AFX_DEFINE_STRUCT(aaxRamp) // volume ramp specified by end points "previous" and
     afxReal32 next;
 };
 
-AFXINL void AaxTakeRamp(aaxRamp *ramp, afxReal prev, afxReal next)
+AAXINL void AaxTakeRamp(aaxRamp *ramp, afxReal prev, afxReal next)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -92,14 +113,14 @@ AFXINL void AaxTakeRamp(aaxRamp *ramp, afxReal prev, afxReal next)
     ramp->next = (afxReal32)next;
 }
 
-AFXINL void AaxResetRamp(aaxRamp *ramp)
+AAXINL void AaxResetRamp(aaxRamp *ramp)
 {
     afxError err = NIL;
     AfxAssert(ramp);
     AaxTakeRamp(ramp, 1, 1);
 }
 
-AFXINL void AaxCopyRamp(aaxRamp *ramp, aaxRamp const* in)
+AAXINL void AaxCopyRamp(aaxRamp *ramp, aaxRamp const* in)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -108,7 +129,7 @@ AFXINL void AaxCopyRamp(aaxRamp *ramp, aaxRamp const* in)
     ramp->next = in->next;
 }
 
-AFXINL void AaxScaleRamp(aaxRamp *ramp, aaxRamp const *rhs)
+AAXINL void AaxScaleRamp(aaxRamp *ramp, aaxRamp const *rhs)
 {
     afxError err = NIL;
     AfxAssert(ramp);
@@ -117,7 +138,7 @@ AFXINL void AaxScaleRamp(aaxRamp *ramp, aaxRamp const *rhs)
     ramp->next *= rhs->next;
 }
 
-AFXINL aaxRamp AaxMergeRamps(aaxRamp const* lhs, aaxRamp const* rhs)
+AAXINL aaxRamp AaxMergeRamps(aaxRamp const* lhs, aaxRamp const* rhs)
 {
     aaxRamp rslt;
     AaxCopyRamp(&rslt, lhs);

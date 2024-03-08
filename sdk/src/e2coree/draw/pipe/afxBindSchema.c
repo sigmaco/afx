@@ -23,7 +23,7 @@
 // BLUEPRINT                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat estBindCnt)
+_AVXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat estBindCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -36,7 +36,7 @@ _AFXINL void AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat es
     AfxAllocateArray(&blueprint->bindings, AfxMax(estBindCnt, 10), sizeof(afxPipelineRigBlueprintBinding), NIL);
 }
 
-_AFXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
+_AVXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -54,7 +54,7 @@ _AFXINL void AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint)
     AfxEmptyArray(&blueprint->bindings);
 }
 
-_AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBindSchema *lego)
+_AVXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBindSchema *lego)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -90,7 +90,7 @@ _AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBind
     return err;
 }
 
-_AFXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name)
+_AVXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -115,7 +115,7 @@ _AFXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, 
     return err;
 }
 
-_AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint *blueprint, afxNat set, afxNat cnt, afxShaderBlueprint shdb_[])
+_AVXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint *blueprint, afxNat set, afxNat cnt, afxShaderBlueprint shdb_[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -176,7 +176,7 @@ _AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 // LEGO                                                                       //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxResult AfxGetBindSchemaEntry(afxBindSchema lego, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[])
+_AVX afxResult AfxGetBindSchemaEntry(afxBindSchema lego, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
@@ -201,7 +201,7 @@ _AFX afxResult AfxGetBindSchemaEntry(afxBindSchema lego, afxNat first, afxNat cn
     return rslt;
 }
 
-_AFX afxNat32 AfxGetBindSchemaHash(afxBindSchema lego)
+_AVX afxNat32 AfxGetBindSchemaHash(afxBindSchema lego)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
@@ -210,7 +210,7 @@ _AFX afxNat32 AfxGetBindSchemaHash(afxBindSchema lego)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[])
+_AVX afxNat AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -221,7 +221,7 @@ _AFX afxNat AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cn
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)schemas);
 }
 
-_AFX afxError AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[])
+_AVX afxError AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[])
 {
     afxError err = AFX_ERR_NONE;
 

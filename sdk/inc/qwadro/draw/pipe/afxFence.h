@@ -45,14 +45,14 @@ struct _afxBaseFence
 #endif
 
 /// Return the draw context witch this fence belongs to.
-AFX afxDrawContext  AfxGetFenceContext(afxFence fenc);
+AVX afxDrawContext  AfxGetFenceContext(afxFence fenc);
 
 /// Return the status of this fence.
-AFX afxBool         AfxFenceIsSignaled(afxFence fenc);
+AVX afxBool         AfxFenceIsSignaled(afxFence fenc);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireFences
+AVX afxError        AfxAcquireFences
 /// Create a new fence object.
 (
     afxDrawContext  dctx, /// the logical device that creates the fence.
@@ -61,7 +61,7 @@ AFX afxError        AfxAcquireFences
     afxFence        fences[] /// a array of handles in which the resulting fence objects are returned.
 );
 
-AFX afxError        AfxWaitForFences
+AVX afxError        AfxWaitForFences
 /// Wait for one or more fences to become signaled.
 (
     afxBool         waitAll, /// the condition is that all fences must be signaled, else at least one fence is signaled.
@@ -70,7 +70,7 @@ AFX afxError        AfxWaitForFences
     afxFence const  fences[] /// an array of cnt fence handles.    
 );
 
-AFX afxError        AfxResetFences
+AVX afxError        AfxResetFences
 /// Resets one or more fence objects.
 (
     afxNat          cnt, /// the number of fences to reset.

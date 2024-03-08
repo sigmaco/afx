@@ -115,7 +115,7 @@ _AFX void AfxGetThread(afxThread *thr)
     afxNat32 tid;
     AfxGetThreadingId(&tid);
     struct _txuFindThreadParam param = { .thr = thr, .tid = tid};
-    AfxInvokeTxus(0, AFX_N32_MAX, _TxuFindThreadCb, &param);
+    AfxInvokeThreadingUnits(0, AFX_N32_MAX, _TxuFindThreadCb, &param);
 }
 
 _AFXINL afxBool _TxuFindUnitCb(afxTxu txu, void* udd)
@@ -140,7 +140,7 @@ _AFX void AfxGetThreadingUnit(afxNat *txuIdx)
     afxNat32 tid;
     AfxGetThreadingId(&tid);
     struct _txuFindUnitParam param = { .unitIdx = txuIdx, .tid = tid };
-    AfxInvokeTxus(0, AFX_N32_MAX, _TxuFindUnitCb, &param);
+    AfxInvokeThreadingUnits(0, AFX_N32_MAX, _TxuFindUnitCb, &param);
 }
 
 _AFX void AfxGetExecutionCounter(afxNat *currIter, afxNat *lastFreq)
@@ -338,7 +338,7 @@ _AFX afxResult _AfxDoSystemThreading(afxSystem sys, afxTime timeout)
     else
     {
         afxTxu txu;
-        AfxEnumerateTxus(txuIdx, 1, &txu);
+        AfxEnumerateThreadingUnits(txuIdx, 1, &txu);
         AfxAssertObjects(1, &txu, afxFcc_TXU);
 
         afxClock currClock;
@@ -416,7 +416,7 @@ _AFX afxError _AfxTxuCtor(afxTxu txu, afxCookie const *cookie)
     txu->iterCntSwapClock = txu->lastClock;
     txu->iterCnt = 0;
 
-    //AfxTakeChain(&procUnit->threads, sys);
+    //AfxSetUpChain(&procUnit->threads, sys);
 
     afxNat tid = 0;
     void* osHandle = 0;
@@ -466,30 +466,42 @@ _AFX afxClassConfig const _AfxTxuClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxInvokeTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd)
+_AFX afxError AfxMountThreadingUnits(afxNat cnt, afxMutex* mtx, afxArray const* threads, afxTxu units[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(threads);
+    AfxAssert(units);
+    AfxAssert(cnt);
+    
+
+
+    return err;
+}
+
+_AFX afxNat AfxInvokeThreadingUnits(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetTxuClass();
+    afxClass* cls = AfxGetThreadingUnitClass();
     AfxAssertClass(cls, afxFcc_TXU);
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txus[])
+_AFX afxNat AfxEnumerateThreadingUnits(afxNat first, afxNat cnt, afxTxu txus[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(txus);
-    afxClass* cls = AfxGetTxuClass();
+    afxClass* cls = AfxGetThreadingUnitClass();
     AfxAssertClass(cls, afxFcc_TXU);
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)txus);
 }
 
-_AFX afxNat AfxCountTxus(void)
+_AFX afxNat AfxCountThreadingUnits(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetTxuClass();
+    afxClass* cls = AfxGetThreadingUnitClass();
     AfxAssertClass(cls, afxFcc_TXU);
     return AfxCountInstances(cls);
 }

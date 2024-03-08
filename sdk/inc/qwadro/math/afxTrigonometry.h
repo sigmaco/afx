@@ -19,7 +19,7 @@
 
 #include "afxVector.h"
 
-AFXINL void     AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal n[3]);
+AFXINL void     AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxReal n[3]);
 
 /// Barycentric coordinates are very useful in 2D and 3D graphics. 
 /// Most graphic applications use them because they provide an easy way to interpolate the value of attributes (color, textures, normals…) between vertices. 
@@ -31,12 +31,12 @@ AFXINL void     AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3],
 
 /// Returns a point in Barycentric coordinates, using the specified position vectors.
 
-AFXINL void     AfxBarycentricV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal f, afxReal g);
-AFXINL void     AfxBarycentricV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal f, afxReal g);
-AFXINL void     AfxBarycentricV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal f, afxReal g);
+AFXINL void     AfxBarycentricV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c, afxReal f, afxReal g);
+AFXINL void     AfxBarycentricV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxReal f, afxReal g);
+AFXINL void     AfxBarycentricV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxReal f, afxReal g);
 
-AFXINL void     AfxBarycentricV2d2(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal const f[2], afxReal const g[2]);
-AFXINL void     AfxBarycentricV3d2(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal const f[3], afxReal const g[3]);
-AFXINL void     AfxBarycentricV4d2(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal const f[4], afxReal const g[4]);
+AFXINL void     AfxBarycentricV2d2(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c, afxV2d const f, afxV2d const g);
+AFXINL void     AfxBarycentricV3d2(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxV3d const f, afxV3d const g);
+AFXINL void     AfxBarycentricV4d2(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxV4d const f, afxV4d const g);
 
 #endif//AFX_TRIGONOMETRY_H

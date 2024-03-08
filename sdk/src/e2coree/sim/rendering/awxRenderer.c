@@ -32,7 +32,7 @@
 #include "qwadro/sim/modeling/afxMeshTopology.h"
 #include "qwadro/sim/modeling/awxVertexData.h"
 
-_AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[])
+_AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -48,8 +48,13 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
         afxSkeleton skl = AfxGetModelSkeleton(mdl);
         AfxTryAssertObjects(1, &skl, afxFcc_SKL);
 
+        afxM4d m, m2;
+        AfxGetModelInitialPlacement(bod->mdl, m);
+        AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, rnd->lp, rnd->wp, 0.0);
+
         for (afxNat mshIdx = 0; mshIdx < mdl->slotCnt; mshIdx++)
         {
+            
             afxMesh msh = mdl->slots[mshIdx].msh;
 
             if (msh)
@@ -82,6 +87,15 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
 
                 //AfxCmdEnableDepthTest(dscr, TRUE);
                 //AfxCmdEnableDepthWrite(dscr, TRUE);
+
+                afxNat zeros[] = { 0, 0, 0 };
+                AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
+
+                afxNat const *ToBoneIndices = AfxGetRiggedMeshMapping(mdl, mshIdx);
+                AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, ToBoneIndices, 1, m);
+                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(m), m);
+                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 64, sizeof(m), m);
+                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
 
                 afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
@@ -128,47 +142,55 @@ _AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
 
 
                     afxM4d CompositeMatrix;
-                    afxNat const *ToBoneIndices = AfxGetMeshBoneMap(mdl, mshIdx);
                     //AfxBuildIndexedCompositeBuffer(skl, rnd->wp, ToBoneIndices, 1, &CompositeMatrix);
                     
                     afxM4d m, m2;
-                    //AwxUpdateBodyModelMatrix(bod, 1, AFX_M4D_IDENTITY, m, FALSE);
+                    //AwxUpdateBodyMatrix(bod, 1, AFX_M4D_IDENTITY, m, FALSE);
                     
                     //afxM4d w;
                     //AfxInvertM4d(w, m);
                     //AfxRotationM4dFromEuler(w, AfxSpawnV3d(0, AfxRandomReal2(0, 360), 0));
                     AfxGetModelInitialPlacement(mdl, m);
                     AfxInvertM4d(m, m2);
-                    //AfxComposeTransformWorldM4d(&mdl->init, m2, m);
+                    //BuildFullWorldPoseOnly_Generic(&mdl->init, m2, m);
 
-                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(awxInstanceConstants, w), sizeof(CompositeMatrix), CompositeMatrix);
-                    AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(awxInstanceConstants, m), sizeof(m), AFX_M4D_IDENTITY);
-                    
-                    
+
                     awxInstanceConstants *objConstants = &rnd->framesets[rnd->frameIdx].objConstants;
                     
-                    AfxCopyAtm4(objConstants->m, AFX_M4D_IDENTITY);
-                    AfxCopyAtm4(objConstants->w[0], AFX_M4D_IDENTITY);
+                    //if (ToBoneIndices[0] == 7)
+                    {
+                        //AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, ToBoneIndices, 1, w[ToBoneIndices[0]]);
+                    }
+                    //if (ToBoneIndices[0] == 7)
+                    //AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, AfxGetRiggedMeshMapping(bod->mdl, mshIdx), 1, objConstants->m);
+                    //AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, AfxGetRiggedMeshMapping(bod->mdl, mshIdx), 6, objConstants->w);
+                    //AfxScadM4d(m, m, 0.001);
+
+                    //AfxCopyAtm4d(objConstants->m, rnd->wp->world[AfxGetRiggedMeshMapping(bod->mdl, mshIdx)[0]]);
+
+                    //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, offsetof(awxInstanceConstants, w), 32 * sizeof(CompositeMatrix), objConstants->w);
+                    //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(*objConstants), objConstants);
+                    
+                    //AfxCopyAtm4d(objConstants->m, AFX_M4D_IDENTITY);
+                    //AfxCopyAtm4d(objConstants->w[0], AFX_M4D_IDENTITY);
 
                     //AfxUpdateBuffer(rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(*objConstants), objConstants);
-                    afxNat zeros[] = { 0, 0, 0 };
-                    AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
-
+                    
                     afxNat idxCnt = (sec->triCnt * 3);
                     afxNat firstIdx = (sec->baseTriIdx * 3);
-                    //AfxCmdDrawIndexed(dscr, baseVtxIdx, 0, 1, firstIdx, idxCnt);
+                    AfxCmdDrawIndexed(dscr, baseVtxIdx, 0, 1, firstIdx, idxCnt);
                     //AfxCmdDraw(dscr, 0, 1, 0, vtxCnt);
                 }
                 //AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
 
-                AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
+                //AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
             }
         }
     }
     return err;
 }
 
-_AFX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd)
+_AKX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd)
 {
     AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
@@ -181,7 +203,7 @@ _AFX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd)
     return 0;
 }
 
-_AFX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd)
+_AKX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -195,7 +217,7 @@ _AFX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const
     return err;
 }
 
-_AFX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd)
+_AKX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -205,7 +227,7 @@ _AFX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd)
     return err;
 }
 
-_AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
+_AKX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -310,8 +332,14 @@ _AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afx
 
         afxM4d v, iv, p, ip;
         AfxRecomputeCameraMatrices(cam);
-        AfxGetCameraViewMatrices(cam, v, iv);
         AfxGetCameraProjectionMatrices(cam, p, ip);
+        AfxCopyM4d(viewConstants->p, p);
+        AfxCopyM4d(viewConstants->ip, ip);
+        AfxGetCameraViewMatrices(cam, v, iv);
+        AfxCopyAtm4d(viewConstants->v, v);
+        AfxCopyM4d(viewConstants->iv, iv);
+        AfxMultiplyM4d(viewConstants->pv, p, v);
+        AfxInvertM4d(viewConstants->pv, viewConstants->ipv);
 
         //AfxSetM4dPosition(viewpoint, m);
         //AfxComputeRenderWareViewM4d(v, v);
@@ -325,15 +353,16 @@ _AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afx
         //AfxTransposeM4d(m2, m2);
 
         //AfxComputeRenderWareViewM4d(v, iv);
-        AfxCopyAtm4(viewConstants->v, v);
-        AfxMakeAffineM4d(viewConstants->v);
-        //AfxCopyM4d(viewConstants->iv, iv);
+        AfxCopyAtm4d(viewConstants->v, v);
+        AfxEnsureAtm4d(viewConstants->v);
+        AfxCopyM4d(viewConstants->iv, iv);
         //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);
         //AfxComputeRenderWareProjectionM4d(p, &vp, TRUE);
         //AfxTransposeM4d(viewConstants->p, p);
         AfxCopyM4d(viewConstants->p, p);
         //AfxTransposeM4d(viewConstants->p, p);
-        //AfxCopyM4d(viewConstants->ip, ip);
+        AfxCopyM4d(viewConstants->ip, ip);
+
     }
 
     AfxUpdateBuffer(rnd->framesets[frameIdx].viewConstantsBuffer, 0, sizeof(*viewConstants), viewConstants);
@@ -342,7 +371,7 @@ _AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afx
     return err;
 }
 
-_AFX afxError _AfxRndDtor(awxRenderer rnd)
+_AKX afxError _AfxRndDtor(awxRenderer rnd)
 {
     AfxEntry("rnd=%p", rnd);
     afxError err = AFX_ERR_NONE;
@@ -379,7 +408,7 @@ _AFX afxError _AfxRndDtor(awxRenderer rnd)
     return err;
 }
 
-_AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
+_AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
 {
     AfxEntry("rnd=%p", rnd);
     afxError err = AFX_ERR_NONE;
@@ -500,7 +529,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     // ambient 0.2, 0.2, 0.2, 0.2
 
     AfxAcquirePoses(sim, 1, (afxNat[]) { 255 }, &rnd->lp);
-    AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {FALSE}, &rnd->wp);
+    AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {TRUE}, &rnd->wp);
 
     AfxMakeUri(&uri, "data/pipeline/testLighting/testLighting.xsh.xml?blinn", 0);
     rnd->blinnTestPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
@@ -518,7 +547,7 @@ _AFX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AwxAcquireRenderers(afxSimulation sim, afxNat cnt, awxRenderer rnd[], awxRendererConfig const config[])
+_AKX afxError AwxAcquireRenderers(afxSimulation sim, afxNat cnt, awxRenderer rnd[], awxRendererConfig const config[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -529,7 +558,7 @@ _AFX afxError AwxAcquireRenderers(afxSimulation sim, afxNat cnt, awxRenderer rnd
     return err;
 }
 
-_AFX afxClassConfig _AfxRndClsConfig =
+_AKX afxClassConfig _AfxRndClsConfig =
 {
     .fcc = afxFcc_RND,
     .name = "Renderer",

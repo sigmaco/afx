@@ -57,7 +57,7 @@ afxResult AfxTakeMutex(afxMutex* mtx, afxMutexType type)
 #endif
 }
 
-void AfxReleaseMutex(afxMutex* mtx)
+void AfxCleanUpMutex(afxMutex* mtx)
 {
     AfxEntry("mtx=%p", mtx);
 

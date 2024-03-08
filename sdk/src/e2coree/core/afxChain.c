@@ -17,7 +17,7 @@
 #include "qwadro/core/afxChain.h"
 
 
-_AFXINL void AfxTakeChain(afxChain *ch, void *owner)
+_AFXINL void AfxSetUpChain(afxChain *ch, void *owner)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
@@ -131,7 +131,7 @@ _AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
     return lnkIdx;
 }
 
-_AFXINL afxNat AfxPushLinkageAtEnd(afxLinkage *lnk, afxChain *ch)
+_AFXINL afxNat AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lnk);
@@ -276,14 +276,16 @@ _AFXINL afxLinkage* AfxGetNextLinkage(afxLinkage const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lnk);
-    return lnk->next;
+    afxLinkage* n = lnk->next;
+    return lnk->chain && &lnk->chain->anchor != n ? n : NIL;
 }
 
 _AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lnk);
-    return lnk->prev;
+    afxLinkage* p = lnk->prev;
+    return lnk->chain && &lnk->chain->anchor != p ? p : NIL;
 }
 
 _AFXINL afxNat AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd)

@@ -10,6 +10,7 @@
 #include "../src/cadio/afxWavefrontObject.h"
 #include "../src/rad3d/afxGranny2Model.h"
 
+
 #define ENABLE_DRAW 1
 
 #ifdef ENABLE_DRAW
@@ -28,9 +29,12 @@ afxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
 awxRenderer rnd = NIL;
-
+awxAnimation ani = NIL;
 afxCamera cam = NIL;
 awxBody bod = NIL;
+
+awxPose *sharedLocalPose;
+awxWorldPose *sharedWorldPose;
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -109,6 +113,21 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
         MovementThisFrame * ForwardSpeed
     };
     AfxApplyCameraMotion(cam, v);
+    
+    afxReal64 curTime;
+    AfxGetExecutionTime(&curTime, NIL);
+    AwxReclockLinkedMotors(bod, curTime);
+
+#if 0
+    afxM4d m;
+    AfxGetModelInitialPlacement(bod->mdl, m);
+    AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedWorldPose, 0.0);
+#if 0
+    afxM4d CompositeMatrix;
+    AfxEnumerateRiggedMeshes(bod->mdl, i);
+    AfxBuildIndexedCompositeBuffer(bod->cachedSkl, sharedWorldPose, AfxGetRiggedMeshMapping(bod->mdl, i), 1, &CompositeMatrix);
+#endif
+#endif
 }
 
 _AFXEXPORT afxResult Once(afxApplication app)
@@ -168,10 +187,12 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
-    AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
-    //AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
-    mdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0);
+    //AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
+    AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
+    //AfxMakeUri(&uriMap, "art/actor/p_explorer.gr2", 0);
+    mdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
 
+    
     awxAsset cad;
     //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
     //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
@@ -190,6 +211,19 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AwxEmbodyModel(mdl, 1, &bod);
     AfxAssert(bod);
 
+    AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age_idle.gr2", 0);
+    //AfxMakeUri(&uriMap, "art/actor/knockout_recover.gr2", 0);
+    ani = AwxLoadAnimationsFromGrn3d2(sim, &uriMap, 0); // .k4d
+
+    
+
+    awxMotor moto = AwxRunAnimation(bod, 0, ani);
+    //awxMotor moto2 = AwxRunAnimation(bod, 0, ani);
+    
+    AwxAdjustMotorIterations(moto, 0);
+    //AwxAdjustMotorIterations(moto2, 0);
+    //AwxReleaseOnceUnusedMotors(1, &moto);
+
     cube = AfxBuildCubeMesh(sim, -200.0);
     //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
     //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 100, 10));
@@ -201,7 +235,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     afxModelBlueprint mdlb = { 0 };
     mdlb.meshes = &cube;
     mdlb.mshCnt = 1;
-    AfxMakeFixedString32(&mdlb.id, &AfxStaticString("cube"));
+    AfxMakeString32(&mdlb.id, &AfxStaticString("cube"));
     mdlb.skl = AfxGetModelSkeleton(mdl);
     mdlb.strc = strc;
     AfxAssembleModel(sim, 1, &mdlb, &cubeMdl);
@@ -274,6 +308,9 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxGetClock(&StartClock);
     LastClock = StartClock;
 
+    AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
+    AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 256 }, NIL, &sharedWorldPose);
+
     return AFX_SUCCESS; 
 }
 
@@ -324,8 +361,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxFixedUri2048 romUri;
-    AfxMakeFixedUri2048(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxMakeUri2048(&romUri, NIL);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

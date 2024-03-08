@@ -41,95 +41,6 @@ _AFX afxNat AfxResolveStrings2(afxStringCatalog strc, afxNat cnt, afxString cons
     return rslt;
 }
 
-_AFX afxError AfxResolveStrings(afxStringCatalog strc, afxNat cnt, afxNat strIdx[], afxString dst[])
-{
-    afxError err = NIL;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        if (strIdx[i] == AFX_INVALID_INDEX)
-        {
-            AfxResetString(&dst[i]);
-        }
-        else
-        {
-            dst[i] = strc->strings[strIdx[i]];
-            dst[i].start = strc->buf.bytemap + (afxSize)dst[i].start;
-        }
-    }
-
-    return err;
-}
-
-_AFX afxError AfxCatalogStrings(afxStringCatalog strc, afxNat cnt, afxString const sources[], afxNat strIdx[], afxNat strIdxStride)
-{
-    afxError err = NIL;
-    
-    afxByte* dst = strIdx;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxNat strIdx2 = AFX_INVALID_INDEX;
-        afxString const* src = &sources[i];
-
-        if (src->len)
-        {
-            for (afxNat j = 0; j < strc->cnt; j++)
-            {
-                afxString tmp;
-                AfxResolveStrings(strc, 1, &j, &tmp);
-
-                if (0 == AfxCompareString(src, &tmp))
-                {
-                    strIdx2 = j;
-                    break;
-                }
-            }
-
-            if (strIdx2 == AFX_INVALID_INDEX)
-            {
-                void* dataStart = NIL;
-
-                if (strc->buf.cnt)
-                    dataStart = AfxStrnstr(strc->buf.data, strc->buf.cnt, src->start, src->len);
-
-                if (!dataStart)
-                {
-                    afxNat firstCh;
-
-                    if (!(dataStart = AfxInsertArrayUnits(&strc->buf, src->len, &firstCh, NIL))) AfxThrowError();
-                    else
-                    {
-                        AfxCopy(src->len, sizeof(afxChar), src->start, dataStart);
-                    }
-                }
-
-                if (!err)
-                {
-                    afxString* strings = AfxReallocate(NIL, strc->strings, sizeof(strc->strings[0]), strc->cnt + 1, 0, AfxHint());
-
-                    if (!strings) AfxThrowError();
-                    else
-                    {
-                        strIdx2 = strc->cnt;
-                        AfxMakeString(&strings[strIdx2], (afxSize)dataStart - (afxSize)strc->buf.data, src->len);
-                        strc->strings = strings;
-                        ++strc->cnt;
-                    }
-                }
-            }
-        }
-
-        afxNat* dst2 = dst;
-        dst2[0] = strIdx2;
-        dst += strIdxStride;
-
-        if (err)
-            break;
-    }
-    return err;
-}
-
 _AFX afxNat AfxCatalogStrings2(afxStringCatalog strc, afxNat cnt, afxString const in[], afxString out[])
 {
     afxError err = NIL;
@@ -142,7 +53,7 @@ _AFX afxNat AfxCatalogStrings2(afxStringCatalog strc, afxNat cnt, afxString cons
 
         if (srcLen)
         {
-            void* dataStart = NIL;
+            void const* dataStart = NIL;
 
             if (strc->buf.cnt)
                 dataStart = AfxStrnstr(strc->buf.data, strc->buf.cnt, src->start, srcLen);
@@ -154,7 +65,7 @@ _AFX afxNat AfxCatalogStrings2(afxStringCatalog strc, afxNat cnt, afxString cons
                 if (!(dataStart = AfxInsertArrayUnits(&strc->buf, srcLen, &firstCh, NIL))) AfxThrowError();
                 else
                 {
-                    AfxCopy(srcLen, sizeof(afxChar), src->start, dataStart);
+                    AfxCopy(srcLen, sizeof(afxChar), src->start, (void*)dataStart);
                 }
             }
 

@@ -77,7 +77,7 @@ _AFX void AfxGetClock(afxClock *clock)
     afxNat i = 0;
     afxNat32 tid;
     AfxGetThreadingId(&tid);
-    while (AfxEnumerateTxus(i, 1, (void*)&txu))
+    while (AfxEnumerateThreadingUnits(i, 1, (void*)&txu))
     {
         if (tid == txu->tid)
         {

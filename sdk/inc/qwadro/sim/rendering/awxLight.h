@@ -118,8 +118,8 @@ AFX_OBJECT(awxLight)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
-AFX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
-AFX afxError    AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AKX afxError    AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AKX afxError    AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
+AKX afxError    AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[]);
 
 #endif//AFX_LIGHT_H

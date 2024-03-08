@@ -512,8 +512,8 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
     afxStringCatalog strc;
     AfxAcquireStringCatalogs(1, &strc);
 
-    afxFixedUri2048 uri2;
-    AfxMakeFixedUri2048(&uri2, NIL);
+    afxUri2048 uri2;
+    AfxMakeUri2048(&uri2, NIL);
 
     for (afxNat y = 0; y < cnt; y++)
     {
@@ -756,7 +756,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                 afxTransform t;
                 AfxMakeString(&str, jnt->name, 0);
                 AfxSetTransformWithIdentityCheck(&t, jnt->pos, jnt->orient, AFX_M3D_IDENTITY);
-                AfxResetBone(&sklb, i, &str, jnt->parent, &t, &wt);
+                AfxResetBone(&sklb, i, &str, jnt->parent, &t, &wt, -1.0);
             }
 
             afxSkeleton skl;
@@ -771,7 +771,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             mdlb.skl = skl;
             mdlb.mshCnt = md5.num_meshes;
             AfxResetTransform(&mdlb.init);
-            AfxMakeFixedString32(&mdlb.id, AfxGetUriString(&nameUri));
+            AfxMakeString32(&mdlb.id, AfxGetUriString(&nameUri));
             mdlb.strc = strc;
             AfxAssembleModel(sim, 1, &mdlb, &mdl);
             AfxTryAssertObjects(1, &mdl, afxFcc_MDL);
@@ -799,18 +799,18 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             AfxReleaseObjects(1, (void*[]) { mdl });
 
 
-            for (afxNat i = 0; i < skl->boneCnt; i++)
+            for (afxNat i = 0; i < skl->jointCnt; i++)
             {
                 //afxSkeletonBone *bone = &skl->bones[i];
                 //bone = bone;
             }
 
             awxPose *lp;
-            AfxAcquirePoses(sim, 1, &skl->boneCnt, &lp);
-            AfxComputeSkeletonRestLocalPose(skl, 0, skl->boneCnt, lp);
+            AfxAcquirePoses(sim, 1, &skl->jointCnt, &lp);
+            AfxComputeRestLocalPose(skl, 0, skl->jointCnt, lp);
             awxWorldPose *wp;
-            AfxAcquireWorldPoses(sim, 1, &skl->boneCnt, NIL, &wp);
-            AfxComputeSkeletonRestWorldPose(skl, 0, skl->boneCnt, AFX_M4D_IDENTITY, wp);
+            AfxAcquireWorldPoses(sim, 1, &skl->jointCnt, NIL, &wp);
+            AfxComputeRestWorldPose(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
 
             fclose(fp);
         }

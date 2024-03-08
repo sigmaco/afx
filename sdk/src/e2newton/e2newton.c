@@ -1,2 +1,0 @@
-#include "qwadro/afxQwadro.h"
-

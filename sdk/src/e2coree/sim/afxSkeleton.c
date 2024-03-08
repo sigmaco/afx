@@ -24,9 +24,166 @@
 #include "qwadro/sim/awxAsset.h"
 #include "qwadro/core/afxIndexedString.h"
 
+_AKX afxNat AfxCountSkeletonJoints(afxSkeleton skl)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    return skl->jointCnt;
+}
+
+_AKX afxM4d* AfxGetSkeletonIwm(afxSkeleton skl, afxNat jointIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    AfxAssertRange(skl->jointCnt, jointIdx, 1);
+    return &skl->iw[jointIdx];
+}
+
+_AKXINL afxBool AfxGetSkeletonId(afxSkeleton skl, afxString* id)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    AfxAssert(id);
+    return AfxResolveStrings2(skl->strc, 1, &skl->id, id);
+}
+
+_AKX afxBool AfxGetSkeletonJointTag(afxSkeleton skl, afxNat jointIdx, afxString* id)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    AfxAssertRange(skl->jointCnt, jointIdx, 1);
+    AfxAssert(id);
+    return AfxResolveStrings2(skl->strc, 1, &skl->label[jointIdx], id);
+}
+
+_AKXINL void AfxQuerySkeletonErrorTolerance(afxSkeleton skl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+
+    if (allowedErr > 0.0)
+    {
+        afxReal s = skl->allowedLodErrFadingFactor * allowedErr;
+        allowedErrEnd[0] = s;
+        allowedErrScaler[0] = 1.0 / (allowedErr - s);
+    }
+    else
+    {
+        allowedErrEnd[0] = 0.0;
+        allowedErrScaler[0] = 0.0;
+    }
+}
+
+_AKX afxNat AfxCountSkeletonJointsForLod(afxSkeleton skl, afxReal allowedErr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    afxNat rslt = 0;
+
+    if (allowedErr == 0.0 || !skl->lodType) rslt = skl->jointCnt;
+    else
+    {
+        afxReal errEnd, errScaler;
+        AfxQuerySkeletonErrorTolerance(skl, allowedErr, &errEnd, &errScaler);
+
+        afxNat jointCnt = skl->jointCnt;
+        afxReal* lodError = skl->lodError;
+
+        if (jointCnt >= 4)
+        {
+            while (lodError[rslt + 0] >= errEnd)
+            {
+                if (lodError[rslt + 1] < errEnd)
+                {
+                    ++rslt;
+                    break;
+                }
+
+                if (lodError[rslt + 2] < errEnd)
+                {
+                    rslt += 2;
+                    break;
+                }
+
+                if (lodError[rslt + 3] < errEnd)
+                {
+                    rslt += 3;
+                    break;
+                }
+
+                rslt += 4;
+
+                if (rslt >= jointCnt - 3)
+                    break;
+            }
+        }
+
+        for (; rslt < jointCnt; rslt++)
+        {
+            if (lodError[rslt] < errEnd)
+                break;
+        }
+    }
+    return rslt;
+}
+
+_AKX afxNat AfxFindSkeletonJoints(afxSkeleton skl, afxStringCatalog strc, afxNat cnt, afxString const ids[], afxNat indices[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    AfxAssert(indices);
+    AfxAssert(cnt);
+    AfxAssert(ids);
+    afxNat rslt = 0;
+    afxNat jointCnt = skl->jointCnt;
+
+    for (afxNat j = 0; j < cnt; j++)
+    {
+        afxNat jointIdx = AFX_INVALID_INDEX;
+        afxString target;
+
+        if (!strc)
+            target = ids[j];
+        else
+            AfxResolveStrings2(strc, 1, &ids[j], &target);
+
+        for (afxNat i = 0; i < jointCnt; i++)
+        {
+            afxString jointTag;
+
+            if (AfxGetSkeletonJointTag(skl, i, &jointTag) && (0 == AfxCompareStringCi(&target, &jointTag)))
+            {
+                jointIdx = i;
+                ++rslt;
+                break;
+            }
+        }
+        indices[j] = jointIdx;
+    }
+    return rslt;
+}
+
+_AKX afxBool AfxFindSkeletonJoint(afxSkeleton skl, afxString const* id, afxNat *jointIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    afxNat rslt = AfxFindSkeletonJoints(skl, NIL, 1, id, jointIdx);
+    AfxAssert(rslt == 1);
+    return rslt;
+}
+
+_AKX void AfxGetSkeletonAttachmentOffset(afxSkeleton skl, afxNat baseJoint, awxPose const* lp, afxM4d const offset, afxM4d m, afxNat const* sparseArtArray, afxNat const* sparseArtArrayReverse)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &skl, afxFcc_SKL);
+    afxM4d tmp;
+    AfxGetWorldMatrixFromLocalPose(skl, baseJoint, lp, offset, tmp, sparseArtArray, sparseArtArrayReverse);
+    AfxInvertAtm4d(tmp, m);
+}
+
 // Amen
 
-_AFX afxError AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxNat cnt, afxSkeleton dst[])
+_AKX afxError AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxNat cnt, afxSkeleton dst[])
 {
     afxError err = NIL;
     AfxAssertObjects(1, &in, afxFcc_IOS);
@@ -41,20 +198,20 @@ _AFX afxError AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxNat cn
 
         _afxSerializedSkl chnk = { 0 };
         AfxRead(in, 1, sizeof(chnk), &chnk, sizeof(chnk));
-        afxNat boneCnt = chnk.boneCnt;
+        afxNat jointCnt = chnk.jointCnt;
 
         afxSkeletonBuilder sklb;
-        AfxBeginSkeletonBuilding(&sklb, boneCnt, &chnk.name, chnk.lodType);
+        AfxBeginSkeletonBuilding(&sklb, jointCnt, &chnk.name, chnk.lodType);
         
-        AfxRead(in, boneCnt, sizeof(sklb.bones[0].local), &sklb.bones[0].local, sizeof(sklb.bones[0]));
+        AfxRead(in, jointCnt, sizeof(sklb.bones[0].local), &sklb.bones[0].local, sizeof(sklb.bones[0]));
 
-        AfxRead(in, boneCnt, sizeof(sklb.bones[0].iw), &sklb.bones[0].iw, sizeof(sklb.bones[0]));
+        AfxRead(in, jointCnt, sizeof(sklb.bones[0].iw), &sklb.bones[0].iw, sizeof(sklb.bones[0]));
 
-        AfxRead(in, boneCnt, sizeof(sklb.bones[0].parentIdx), &sklb.bones[0].parentIdx, sizeof(sklb.bones[0]));
+        AfxRead(in, jointCnt, sizeof(sklb.bones[0].parentIdx), &sklb.bones[0].parentIdx, sizeof(sklb.bones[0]));
 
-        AfxRead(in, boneCnt, sizeof(sklb.bones[0].lodError), &sklb.bones[0].lodError, sizeof(sklb.bones[0]));
+        AfxRead(in, jointCnt, sizeof(sklb.bones[0].lodError), &sklb.bones[0].lodError, sizeof(sklb.bones[0]));
 
-        AfxRead(in, boneCnt, sizeof(sklb.bones[0].id.str), &sklb.bones[0].id.str, sizeof(sklb.bones[0]));
+        AfxRead(in, jointCnt, sizeof(sklb.bones[0].id.str), &sklb.bones[0].id.str, sizeof(sklb.bones[0]));
 
         if (AfxBuildSkeletons(sim, NIL, 1, &sklb, &dst[i]))
             AfxThrowError();
@@ -67,7 +224,7 @@ _AFX afxError AfxDeserializeSkeletons(afxStream in, afxSimulation sim, afxNat cn
     return err;
 }
 
-_AFX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const src[])
+_AKX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const src[])
 {
     afxError err = NIL;
     AfxAssertObjects(1, &out, afxFcc_IOS);
@@ -85,19 +242,19 @@ _AFX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const
         
         afxSkeleton skl = src[i];
         _afxSerializedSkl chnk = { 0 };
-        afxNat boneCnt = (chnk.boneCnt = skl->boneCnt);
+        afxNat jointCnt = (chnk.jointCnt = skl->jointCnt);
         AfxReflectString(&skl->id, &chnk.name);
         AfxWrite(out, 1, sizeof(chnk), &chnk, sizeof(chnk));
 
-        AfxWrite(out, boneCnt, sizeof(skl->local[0]), &skl->local[0], sizeof(skl->local[0]));
+        AfxWrite(out, jointCnt, sizeof(skl->local[0]), &skl->local[0], sizeof(skl->local[0]));
 
-        AfxWrite(out, boneCnt, sizeof(skl->iw[0]), &skl->iw[0], sizeof(skl->iw[0]));
+        AfxWrite(out, jointCnt, sizeof(skl->iw[0]), &skl->iw[0], sizeof(skl->iw[0]));
 
-        AfxWrite(out, boneCnt, sizeof(skl->parentIdx[0]), &skl->parentIdx[0], sizeof(skl->parentIdx[0]));
+        AfxWrite(out, jointCnt, sizeof(skl->parentIdx[0]), &skl->parentIdx[0], sizeof(skl->parentIdx[0]));
 
-        AfxWrite(out, boneCnt, sizeof(skl->lodError[0]), &skl->lodError[0], sizeof(skl->lodError[0]));
+        AfxWrite(out, jointCnt, sizeof(skl->lodError[0]), &skl->lodError[0], sizeof(skl->lodError[0]));
 
-        AfxWrite(out, boneCnt, sizeof(skl->pivotId[0]), &skl->pivotId[0], sizeof(skl->pivotId[0]));
+        AfxWrite(out, jointCnt, sizeof(skl->label[0]), &skl->label[0], sizeof(skl->label[0]));
 
 
         chnkHdr.len = AfxAskStreamPosn(out) - chnkStartPos;
@@ -108,144 +265,50 @@ _AFX afxError AfxSerializeSkeletons(afxStream out, afxNat cnt, afxSkeleton const
     return err;
 }
 
-_AFX void BuildSingleCompositeFromWorldPose_Generic(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite[4][4])
-{
-    AfxMultiplyTransposedAtm4(ResultComposite, WorldMatrix, InverseWorld4x4);
-}
-
-_AFX void BuildSingleCompositeFromWorldPoseTranspose_Generic(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite3x4[3][4])
-{
-    AfxMultiplyTransposedAtm4(ResultComposite3x4, WorldMatrix, InverseWorld4x4);
-}
-
-_AFX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, awxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][3][4])
+_AKX void AfxBuildIndexedCompositeBufferTransposed(afxSkeleton skl, awxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][3][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, idxCnt, 1);
+    AfxAssertRange(skl->jointCnt, idxCnt, 1);
     AfxAssertRange(wp->xformCnt, idxCnt, 1);
     AfxAssert(wp);
     AfxAssert(buffer);
 
     for (afxNat i = 0; i < idxCnt; i++)
     {
-        BuildSingleCompositeFromWorldPoseTranspose_Generic(skl->iw[indices[i]], buffer[4 * indices[i]], buffer[i]);
+        Mmt.BuildSingleCompositeFromWorldPoseTranspose_Generic(skl->iw[indices[i]], wp->world[indices[i]], buffer[i]);
     }
 }
 
-_AFX void AfxBuildIndexedCompositeBuffer(afxSkeleton skl, awxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxReal buffer[][4][4])
+_AKX void AfxBuildIndexedCompositeBuffer(afxSkeleton skl, awxWorldPose const* wp, afxNat const* indices, afxNat idxCnt, afxM4d buffer[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, idxCnt, 1);
+    AfxAssertRange(skl->jointCnt, idxCnt, 1);
     AfxAssertRange(wp->xformCnt, idxCnt, 1);
     AfxAssert(wp);
     AfxAssert(buffer);
 
     for (afxNat i = 0; i < idxCnt; i++)
     {
-        BuildSingleCompositeFromWorldPose_Generic(skl->iw[indices[i]], wp->world[indices[i]], buffer[i]);
+        Mmt.BuildSingleCompositeFromWorldPose_Generic(skl->iw[indices[i]], wp->world[indices[i]], buffer[i]);
     }
 }
 
-_AFXINL void BuildPositionWorldPoseOnly/*_Generic*/(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    AfxCopyM4d(ResultWorldMatrix, ParentMatrix);
-    AfxPreMultiplyAtv3(ParentMatrix, Position, ResultWorldMatrix[3]);
-}
-
-_AFXINL void BuildPositionWorldPoseComposite/*_Generic*/(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    BuildPositionWorldPoseOnly/*_Generic*/(Position, ParentMatrix, ResultWorldMatrix);
-    AfxMultiplyTransposedAtm4(ResultComposite, ResultWorldMatrix, InverseWorld4x4);
-}
-
-_AFXINL void BuildPositionOrientationWorldPoseOnly/*_Generic*/(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    afxTransform Transform;
-    AfxResetTransform(&Transform);
-    Transform.position[2] = Position[2];
-    Transform.position[0] = Position[0];
-    Transform.position[1] = Position[1];
-    Transform.orientation[0] = Orientation[0];
-    Transform.orientation[1] = Orientation[1];
-    Transform.orientation[2] = Orientation[2];
-    Transform.orientation[3] = Orientation[3];
-    Transform.flags = afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION;
-    AfxComposeTransformWorldM4d/*_Generic*/(&Transform, ParentMatrix, ResultWorldMatrix);
-}
-
-_AFXINL void BuildPositionOrientationWorldPoseComposite/*_Generic*/(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    BuildPositionOrientationWorldPoseOnly/*_Generic*/(Position, Orientation, ParentMatrix, ResultWorldMatrix);
-    AfxMultiplyTransposedAtm4(ResultComposite, ResultWorldMatrix, InverseWorld4x4);
-}
-
-_AFXINL void BuildIdentityWorldPoseOnly/*_Generic*/(afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    AfxCopyM4d(ResultWorldMatrix, ParentMatrix);
-}
-
-_AFXINL void BuildIdentityWorldPoseComposite/*_Generic*/(afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4])
-{
-    BuildIdentityWorldPoseOnly/*_Generic*/(ParentMatrix, ResultWorldMatrix);
-    AfxMultiplyTransposedAtm4(ResultComposite, ResultWorldMatrix, InverseWorld4x4);
-}
-
-_AFXINL void BWP_Dispatch(afxTransform *t, afxReal const parentW[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4])
-{
-    if (t->flags & afxTransformFlags_DEFORM)
-    {
-        AfxGetTransformWorldAndCompositeMatrix(t, parentW, iw, composite, w);
-    }
-    else if (t->flags == afxTransformFlags_ORIGIN)
-    {
-        BuildPositionWorldPoseComposite(t->position, parentW, iw, composite, w);
-    }
-    else if (t->flags)
-    {
-        BuildPositionOrientationWorldPoseComposite(t->position, t->orientation, parentW, iw, composite, w);
-    }
-    else
-    {
-        BuildIdentityWorldPoseComposite(parentW, iw, composite, w);
-    }
-}
-
-_AFXINL void BWPNC_Dispatch(afxTransform *t, afxReal const parentW[4][4], afxReal w[4][4])
-{
-    if (t->flags & afxTransformFlags_DEFORM)
-    {
-        AfxComposeTransformWorldM4d(t, parentW, w);
-    }
-    else if (t->flags == afxTransformFlags_ORIGIN)
-    {
-        BuildPositionWorldPoseOnly(t->position, parentW, w);
-    }
-    else if (t->flags)
-    {
-        BuildPositionOrientationWorldPoseOnly(t->position, t->orientation, parentW, w);
-    }
-    else
-    {
-        BuildIdentityWorldPoseOnly(parentW, w);
-    }
-}
-
-_AFXINL void UpdateWorldPoseChildren(afxSkeleton skl, afxNat parentBone, awxPose* lp, afxReal const offset[4][4], awxWorldPose* wp)
+_AKXINL void UpdateWorldPoseChildren(afxSkeleton skl, afxNat parentBone, awxPose* lp, afxM4d const offset, awxWorldPose* wp)
 {
     // Should be compatible with void UpdateWorldPoseChildren(const skeleton *Skeleton, int ParentBone, local_pose *LocalPose, const float *Offset4x4, world_pose *Result)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, parentBone, 1);
+    AfxAssertRange(skl->jointCnt, parentBone, 1);
     AfxAssertRange(wp->xformCnt, parentBone, 1);
     AfxAssertRange(lp->cap, parentBone, 1);
 
     if (!offset)
         offset = AFX_M4D_IDENTITY;
 
-    afxNat boneCnt = skl->boneCnt;
+    afxNat jointCnt = skl->jointCnt;
     
     lp->traversalId += 1;
 
@@ -253,7 +316,7 @@ _AFXINL void UpdateWorldPoseChildren(afxSkeleton skl, afxNat parentBone, awxPose
     afxNat bone = parentBone;    
     afxM4d* World = &wp->world[parentBone];
     awxPoseTransform* v13 = &lp->xforms[parentBone];
-    afxNat remainBoneCnt = boneCnt - parentBone;
+    afxNat remainBoneCnt = jointCnt - parentBone;
 
     if (remainBoneCnt > 0)
     {
@@ -265,11 +328,11 @@ _AFXINL void UpdateWorldPoseChildren(afxSkeleton skl, afxNat parentBone, awxPose
 
             if (composite)
             {
-                BWP_Dispatch(v16, v15, skl->iw[bone], composite[0], World[0]);
+                Mmt.BWP_Dispatch(v16, v15, skl->iw[bone], composite[0], World[0]);
                 ++composite;
             }
             else
-                BWPNC_Dispatch(v16, v15, World[0]);
+                Mmt.BWPNC_Dispatch(v16, v15, World[0]);
 
             v13->traversalId = lp->traversalId;
             ++v13;
@@ -305,7 +368,7 @@ LABEL_28:
     return;
 }
 
-_AFXINL void __cdecl AfxIKUpdate(afxNat LinkCountInit, afxNat EEBoneIdx, afxReal const desiredPos[3], afxNat iterCnt, afxSkeleton skl, afxReal const ModelRootTransform[4][4], awxPose* lp, awxWorldPose* wp)
+_AKXINL void __cdecl AfxIKUpdate(afxNat LinkCountInit, afxNat EEBoneIdx, afxReal const desiredPos[3], afxNat iterCnt, afxSkeleton skl, afxReal const ModelRootTransform[4][4], awxPose* lp, awxWorldPose* wp)
 {
     // Should be compatible with void IKUpdate(int LinkCountInit, int EEBoneIndex, const float *DesiredPosition3, int IterationCount, const skeleton *Skeleton, const float *ModelRootTransform, local_pose *LocalPose, world_pose *WorldPose)
 
@@ -373,7 +436,7 @@ _AFXINL void __cdecl AfxIKUpdate(afxNat LinkCountInit, afxNat EEBoneIdx, afxReal
                     LocalRotationIncrement[3] = vb[2] * va[2] + vb[1] * va[1] + vb[0] * va[0];
                     AfxEstimateNormalizedQuat(LocalRotationIncrement, LocalRotationIncrement);
 
-                    t->flags |= afxTransformFlags_ORIENTATION;
+                    t->flags |= afxTransformFlags_ROTATED;
                     afxQuat v40;
                     AfxMultiplyQuat(v40, t->orientation, LocalRotationIncrement);
                     AfxCopyQuat(t->orientation, v40);
@@ -388,224 +451,143 @@ _AFXINL void __cdecl AfxIKUpdate(afxNat LinkCountInit, afxNat EEBoneIdx, afxReal
     }
 }
 
-_AFXINL afxBool IKUpdate2Bone(afxNat EEBoneIndex, afxReal const desiredPos[3], afxReal const restrictedMovPlaneNormal[3], afxSkeleton skl, afxReal const modelRootTransform[4][4], awxPose* lp, awxWorldPose* wp, afxReal hyperExtStart, afxReal hyperExtScale)
+_AKXINL afxBool IKUpdate2Bone(afxNat EEBoneIndex, afxReal const desiredPos[3], afxReal const restrictedMovPlaneNormal[3], afxSkeleton skl, afxReal const modelRootTransform[4][4], awxPose* lp, awxWorldPose* wp, afxReal hyperExtStart, afxReal hyperExtScale)
 {
     // Should be compatible with char IKUpdate2Bone(int EEBoneIndex, const float *DesiredPosition3, const float *RestrictedMovementPlaneNormal3, const skeleton *Skeleton, const float *ModelRootTransform, local_pose *LocalPose, world_pose *WorldPose, float HyperExtensionStart, float HyperExtensionScale)
     return 0;
 }
 
-_AFXINL void BuildWorldPoseNoCompositeLOD(afxSkeleton skl, afxNat firstArt, afxNat artCnt, afxNat firstValidLocalArt, afxNat validLocalArtCnt, awxPose const *lp, afxReal const offset[4][4], awxWorldPose *wp)
+_AKXINL void AfxComputeWorldPoseNoCompositeLod(afxSkeleton skl, afxNat baseJoint, afxNat jointCnt, afxNat firstValidLocalArt, afxNat validLocalArtCnt, awxPose const *lp, afxM4d const offset, awxWorldPose *wp)
 {
     // Should be compatible with void BuildWorldPoseNoCompositeLOD(const skeleton *Skeleton, int FirstBone, int BoneCount, int FirstValidLocalBone, int ValidLocalBoneCount, const granny::local_pose *LocalPose, const float *Offset4x4, world_pose *Result)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstArt, artCnt);
-    AfxAssertRange(wp->xformCnt, firstArt, artCnt);
-    AfxAssertRange(lp->cap, firstArt, artCnt);
+    AfxAssertRange(skl->jointCnt, baseJoint, jointCnt);
+    AfxAssertRange(wp->xformCnt, baseJoint, jointCnt);
+    AfxAssertRange(lp->cap, baseJoint, jointCnt);
 
     if (!offset)
         offset = AFX_M4D_IDENTITY;
     
-    for (afxNat i = 0; i < artCnt; i++)
+    for (afxNat i = 0; i < jointCnt; i++)
     {
-        afxNat parentIdx = skl->parentIdx[firstArt + i];
-        afxTransform *t = &lp->xforms[firstArt + i].xform;
+        afxNat jointIdx = baseJoint + i;
+        AfxAssertRange(skl->jointCnt, jointIdx, 1);
+        afxNat parentIdx = skl->parentIdx[jointIdx];
+        afxTransform *t = &lp->xforms[jointIdx].xform;
         const afxV4d *parentW = parentIdx == AFX_INVALID_INDEX ? offset : (const afxV4d *)(wp->world[parentIdx]);
 
         if (validLocalArtCnt <= 0)
-            t = &skl->local[firstArt + i];
+            t = &skl->local[jointIdx];
 
-        BWPNC_Dispatch(t, parentW, wp->world[firstArt + i]);
+        Mmt.BWPNC_Dispatch(t, parentW, wp->world[jointIdx]);
         --validLocalArtCnt;
     }
 }
 
-_AFXINL void BuildWorldPoseLOD(afxSkeleton skl, afxNat firstArt, afxNat artCnt, afxNat firstValidLocalArt, afxNat validLocalArtCnt, awxPose const *lp, afxReal const offset[4][4], awxWorldPose *wp)
+_AKXINL void AfxComputeWorldPoseLod(afxSkeleton skl, afxNat baseJoint, afxNat jointCnt, afxNat firstValidLocalArt, afxNat validLocalArtCnt, awxPose const *lp, afxM4d const offset, awxWorldPose *wp)
 {
     // Should be compatible with void BuildWorldPoseLOD(const skeleton *Skeleton, int FirstBone, int BoneCount, int FirstValidLocalBone, int ValidLocalBoneCount, const local_pose *LocalPose, const float *Offset4x4, world_pose *Result)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstArt, artCnt);
-    AfxAssertRange(lp->cap, firstArt, artCnt);
-    AfxAssertRange(wp->xformCnt, firstArt, artCnt);
+    AfxAssertRange(skl->jointCnt, baseJoint, jointCnt);
+    AfxAssertRange(lp->cap, baseJoint, jointCnt);
+    AfxAssertRange(wp->xformCnt, baseJoint, jointCnt);
 
     if (wp->composite)
     {
         if (!offset)
             offset = AFX_M4D_IDENTITY;
         
-        for (afxNat i = 0; i < artCnt; i++)
+        for (afxNat i = 0; i < jointCnt; i++)
         {
-            afxTransform *t = &lp->xforms[firstArt + i].xform;
-            afxNat parentIdx = skl->parentIdx[firstArt + i];
+            afxNat jointIdx = baseJoint + i;
+            AfxAssertRange(skl->jointCnt, jointIdx, 1);
+            afxTransform *t = &lp->xforms[jointIdx].xform;
+            afxNat parentIdx = skl->parentIdx[jointIdx];
             const afxV4d *parentW = parentIdx == AFX_INVALID_INDEX ? offset : (const afxV4d *)(wp->world[parentIdx]);
 
             if (validLocalArtCnt <= 0)
-                t = &skl->local[firstArt + i];
+                t = &skl->local[jointIdx];
 
-            BWP_Dispatch(t, parentW, skl->iw[firstArt + i], wp->composite[firstArt + i], wp->world[firstArt + i]);
+            Mmt.BWP_Dispatch(t, parentW, skl->iw[jointIdx], wp->composite[jointIdx], wp->world[jointIdx]);
         }
     }
     else
     {
-        BuildWorldPoseNoCompositeLOD(skl, firstArt, artCnt, firstValidLocalArt, validLocalArtCnt, lp, offset, wp);
+        AfxComputeWorldPoseNoCompositeLod(skl, baseJoint, jointCnt, firstValidLocalArt, validLocalArtCnt, lp, offset, wp);
     }
 }
 
-_AFX void AfxComputeSkeletonPose(afxSkeleton skl, afxNat firstArt, afxNat artCnt, awxPose const *lp, afxReal const offset[4][4], awxWorldPose *wp)
+_AKX void AfxComputeWorldPose(afxSkeleton skl, afxNat baseJoint, afxNat jointCnt, awxPose const *lp, afxM4d const offset, awxWorldPose *wp)
 {
     // Should be compatible with void BuildWorldPose(const skeleton *Skeleton, int FirstBone, int BoneCount, const local_pose *LocalPose, const float *Offset4x4, world_pose *Result)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstArt, artCnt);
-    AfxAssertRange(lp->cap, firstArt, artCnt);
-    BuildWorldPoseLOD(skl, firstArt, artCnt, firstArt, artCnt, lp, offset, wp);
+    AfxAssertRange(skl->jointCnt, baseJoint, jointCnt);
+    AfxAssertRange(lp->cap, baseJoint, jointCnt);
+    AfxComputeWorldPoseLod(skl, baseJoint, jointCnt, baseJoint, jointCnt, lp, offset, wp);
 }
 
-_AFX void AfxComputeSkeletonRestWorldPose(afxSkeleton skl, afxNat firstArt, afxNat artCnt, afxReal const offset[4][4], awxWorldPose *wp)
+_AKX void AfxComputeRestWorldPose(afxSkeleton skl, afxNat baseJoint, afxNat jointCnt, afxM4d const offset, awxWorldPose *wp)
 {
     // Should be compatible with void BuildRestWorldPose(const skeleton *Skeleton, int FirstBone, int BoneCount, const float *Offset4x4, world_pose *Result)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstArt, artCnt);
-    AfxAssertRange(wp->xformCnt, firstArt, artCnt);
+    AfxAssertRange(skl->jointCnt, baseJoint, jointCnt);
+    AfxAssertRange(wp->xformCnt, baseJoint, jointCnt);
 
     if (!offset)
         offset = AFX_M4D_IDENTITY;
 
-    for (afxNat i = 0; i < artCnt; i++)
+    for (afxNat i = 0; i < jointCnt; i++)
     {
-        afxNat parentIdx = skl->parentIdx[firstArt + i];
-        const afxV4d *parentW = AFX_INVALID_INDEX == parentIdx ? offset : (const afxV4d *)(wp->world[parentIdx]);
+        afxNat jointIdx = baseJoint + i;
+        AfxAssertRange(skl->jointCnt, jointIdx, 1);
+        afxNat parentIdx = skl->parentIdx[jointIdx];
+        const afxV4d*parentW = AFX_INVALID_INDEX == parentIdx ? offset : wp->world[parentIdx];
 
         if (parentIdx != AFX_INVALID_INDEX)
         {
-            AfxAssertRange(skl->boneCnt, parentIdx, 1);
+            AfxAssertRange(skl->jointCnt, parentIdx, 1);
         }
 
         if (wp->composite)
         {
-            BWP_Dispatch(&skl->local[firstArt + i], parentW, skl->iw[firstArt + i], wp->composite[firstArt + i], wp->world[firstArt + i]);
+            Mmt.BWP_Dispatch(&skl->local[jointIdx], parentW, skl->iw[jointIdx], wp->composite[jointIdx], wp->world[jointIdx]);
         }
         else
         {
-            BWPNC_Dispatch(&skl->local[firstArt + i], parentW, wp->world[firstArt + i]);
+            Mmt.BWPNC_Dispatch(&skl->local[jointIdx], parentW, wp->world[jointIdx]);
         }
     }
 }
 
-_AFX void AfxComputeSkeletonRestLocalPose(afxSkeleton skl, afxNat firstArt, afxNat artCnt, awxPose *lp)
+_AKX void AfxComputeRestLocalPose(afxSkeleton skl, afxNat baseJoint, afxNat jointCnt, awxPose *lp)
 {
     // Should be compatible with void BuildRestLocalPose(const skeleton *Skeleton, int FirstBone, int BoneCount, local_pose *LocalPose)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstArt, artCnt);
-    AfxAssertRange(lp->cap, firstArt, artCnt);
+    AfxAssertRange(skl->jointCnt, baseJoint, jointCnt);
+    AfxAssertRange(lp->cap, baseJoint, jointCnt);
 
-    for (afxNat i = firstArt + artCnt; i-- > 0;)
+    for (afxNat i = jointCnt; i-- > 0;)
     {
-        AfxAssertRange(skl->boneCnt, i, 1);
-        awxPoseTransform *t = &lp->xforms[i];
+        afxNat jointIdx = baseJoint + i;
+        AfxAssertRange(skl->jointCnt, jointIdx, 1);
+        awxPoseTransform *t = &lp->xforms[jointIdx];
         t->cnt = 1;
         t->weight = 1.0;
-        AfxCopyTransform(&t->xform, &skl->local[i]); // ?
+        AfxCopyTransform(&t->xform, &skl->local[jointIdx]);
     }
 }
 
-_AFX afxM4d* AfxGetBoneIw(afxSkeleton skl, afxNat boneIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, boneIdx, 1);
-    return &skl->iw[boneIdx];
-}
-
-_AFX afxBool AfxGetBoneId(afxSkeleton skl, afxNat boneIdx, afxString* id)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, boneIdx, 1);
-    AfxAssert(id);
-    return AfxResolveStrings2(skl->strc, 1, &skl->pivotId[boneIdx], id);
-}
-
-_AFX afxNat AfxGetBoneCount(afxSkeleton skl)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    return skl->boneCnt;
-}
-
-_AFX afxBool AfxFindBone(afxSkeleton skl, afxString const* id, afxNat *boneIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-
-    for (afxNat i = 0; i < skl->boneCnt; i++)
-    {
-        afxString boneId;
-
-        if (AfxGetBoneId(skl, i, &boneId))
-        {
-            afxNat rslt = AfxCompareString(&boneId, id);
-
-            if (rslt == 0)
-            {
-                *boneIdx = i;
-                return TRUE;
-            }
-        }
-    }
-
-    *boneIdx = AFX_INVALID_INDEX;
-    return FALSE;
-}
-
-_AFX afxNat AfxFindBones(afxSkeleton skl, afxNat cnt, afxString const ids[], afxNat indices[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssert(indices);
-    AfxAssert(cnt);
-    AfxAssert(ids);
-    afxNat rslt = 0;
-    afxNat boneCnt = skl->boneCnt;
-
-    for (afxNat j = 0; j < cnt; j++)
-    {
-        afxNat boneIdx = AFX_INVALID_INDEX;
-        afxString const* target = &ids[j];
-
-        for (afxNat i = 0; i < boneCnt; i++)
-        {
-            afxString boneId;
-            
-            if (AfxGetBoneId(skl, i, &boneId) && (0 == AfxCompareStringCi(target, &boneId)))
-            {
-                boneIdx = i;
-                ++rslt;
-                break;
-            }
-        }
-        indices[j] = boneIdx;
-    }
-    return rslt;
-}
-
-_AFX afxBool AfxGetSkeletonId(afxSkeleton skl, afxString* id)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssert(id);
-    return AfxResolveStrings2(skl->strc, 1, &skl->id, id);
-}
-
-_AFX void AfxLocalPoseFromWorldPose(afxSkeleton skl, awxPose *lp, awxWorldPose const* wp, afxReal const offset[4][4], afxNat firstBone, afxNat boneCnt)
+_AKX void AfxLocalPoseFromWorldPose(afxSkeleton skl, awxPose *lp, awxWorldPose const* wp, afxM4d const offset, afxNat firstBone, afxNat jointCnt)
 {
     // Should be compatible with void LocalPoseFromWorldPose(const skeleton *Skeleton, local_pose *Result, const world_pose *WorldPose, const float *Offset4x4, int FirstBone, int BoneCount)
 
@@ -613,28 +595,28 @@ _AFX void AfxLocalPoseFromWorldPose(afxSkeleton skl, awxPose *lp, awxWorldPose c
     AfxAssert(lp);
     AfxAssert(wp);
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstBone, boneCnt);
-    AfxAssertRange(lp->cap, firstBone, boneCnt);
-    AfxAssertRange(wp->xformCnt, firstBone, boneCnt);
+    AfxAssertRange(skl->jointCnt, firstBone, jointCnt);
+    AfxAssertRange(lp->cap, firstBone, jointCnt);
+    AfxAssertRange(wp->xformCnt, firstBone, jointCnt);
 
     if (!offset)
         offset = AFX_M4D_IDENTITY;
 
-    for (afxNat i = firstBone + boneCnt; i-- > 0;)
+    for (afxNat i = firstBone + jointCnt; i-- > 0;)
     {
-        AfxAssertRange(skl->boneCnt, i, 1);
+        AfxAssertRange(skl->jointCnt, i, 1);
         afxNat parentIdx = skl->parentIdx[i];
         afxM4d InverseParent;
 
-        if (parentIdx == AFX_INVALID_INDEX) AfxInvertAtm4(offset, InverseParent);
+        if (parentIdx == AFX_INVALID_INDEX) AfxInvertAtm4d(offset, InverseParent);
         else
         {
-            AfxAssertRange(skl->boneCnt, parentIdx, 1);
-            AfxInvertAtm4(wp->world[parentIdx], InverseParent);
+            AfxAssertRange(skl->jointCnt, parentIdx, 1);
+            AfxInvertAtm4d(wp->world[parentIdx], InverseParent);
         }
 
         afxM4d Local;
-        AfxMultiplyTransposedAtm4(Local, InverseParent, wp->world[i]);
+        AfxMultiplyAtm4d(Local, InverseParent, wp->world[i]);
         
         afxM3d Linear;
         AfxSetM3d(Linear, Local[0], Local[1], Local[2]);
@@ -654,7 +636,7 @@ _AFX void AfxLocalPoseFromWorldPose(afxSkeleton skl, awxPose *lp, awxWorldPose c
     }
 }
 
-_AFX void AfxLocalPoseFromWorldPoseNoScale(afxSkeleton skl, awxPose* lp, awxWorldPose const* wp, afxReal const offset[4][4], afxNat firstBone, afxNat boneCnt)
+_AKX void AfxLocalPoseFromWorldPoseNoScale(afxSkeleton skl, awxPose* lp, awxWorldPose const* wp, afxM4d const offset, afxNat firstBone, afxNat jointCnt)
 {
     // Should be compatible with void LocalPoseFromWorldPoseNoScale(const skeleton *Skeleton, local_pose *Result, const world_pose *WorldPose, const float *Offset4x4, int FirstBone, int BoneCount)
 
@@ -662,58 +644,58 @@ _AFX void AfxLocalPoseFromWorldPoseNoScale(afxSkeleton skl, awxPose* lp, awxWorl
     AfxAssert(wp);
     AfxAssert(lp);
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(skl->boneCnt, firstBone, boneCnt);
-    AfxAssertRange(lp->cap, firstBone, boneCnt);
-    AfxAssertRange(wp->xformCnt, firstBone, boneCnt);
+    AfxAssertRange(skl->jointCnt, firstBone, jointCnt);
+    AfxAssertRange(lp->cap, firstBone, jointCnt);
+    AfxAssertRange(wp->xformCnt, firstBone, jointCnt);
 
     if (!offset)
         offset = AFX_M4D_IDENTITY;
 
-    for (afxNat i = firstBone + boneCnt; i-- > 0;)
+    for (afxNat i = firstBone + jointCnt; i-- > 0;)
     {
         afxNat parentIdx = skl->parentIdx[i];
         afxM4d InverseParent;
 
-        if (parentIdx == AFX_INVALID_INDEX) AfxInvertAtm4(offset, InverseParent);
+        if (parentIdx == AFX_INVALID_INDEX) AfxInvertAtm4d(offset, InverseParent);
         else
         {
-            AfxAssertRange(skl->boneCnt, parentIdx, 1);
-            AfxInvertAtm4(wp->world[parentIdx], InverseParent);
+            AfxAssertRange(skl->jointCnt, parentIdx, 1);
+            AfxInvertAtm4d(wp->world[parentIdx], InverseParent);
         }
 
         afxM4d Local;
-        AfxMultiplyTransposedAtm4(Local, wp->world[i], InverseParent);
+        AfxMultiplyAtm4d(Local, wp->world[i], InverseParent);
         afxTransform* t = AfxGetPoseTransform(lp, i);
 
         AfxCopyV3d(t->position, Local[3]);
         afxM3d Rotation;
-        AfxSetTransposedM3d(Rotation, Local[0], Local[1], Local[2]);
+        AfxSetM3dTransposed(Rotation, Local[0], Local[1], Local[2]);
         AfxQuatFromM3d(t->orientation, Rotation);
         AfxNormalizeQuat(t->orientation, t->orientation);
         AfxResetM3d(t->scaleShear);
-        t->flags = afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION;
+        t->flags = afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED;
     }
 }
 
-_AFX void AfxGetWorldMatrixFromLocalPose(afxSkeleton skl, afxNat artIdx, awxPose const* lp, afxReal const offset[4][4], afxReal m[4][4], afxNat const* sparseBoneArray, afxNat const* sparseBoneArrayReverse)
+_AKX void AfxGetWorldMatrixFromLocalPose(afxSkeleton skl, afxNat jointIdx, awxPose const* lp, afxM4d const offset, afxM4d m, afxNat const* sparseBoneArray, afxNat const* sparseBoneArrayReverse)
 {
     // Should be compatible with void GetWorldMatrixFromLocalPose(const skeleton *Skeleton, int BoneIndex, const local_pose *LocalPose, const float *Offset4x4, float *Result4x4, const int *SparseBoneArray, const int *SparseBoneArrayReverse)
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
-    AfxAssertRange(lp->cap, artIdx, 1);
+    AfxAssertRange(lp->cap, jointIdx, 1);
 
     AfxResetM4d(m);
 
-    if (artIdx != AFX_INVALID_INDEX)
+    if (jointIdx != AFX_INVALID_INDEX)
     {
-        for (afxNat i = artIdx; i != AFX_INVALID_INDEX; i = skl->parentIdx[i])
+        for (afxNat i = jointIdx; i != AFX_INVALID_INDEX; i = skl->parentIdx[i])
         {
-            AfxAssertRange(skl->boneCnt, i, 1);
+            AfxAssertRange(skl->jointCnt, i, 1);
             afxTransform* t = AfxGetPoseTransform(lp, sparseBoneArrayReverse ? sparseBoneArrayReverse[i] : i);
             afxM4d tmp, tmp2;
             AfxComposeTransformM4d(t, tmp);
-            AfxMultiplyTransposedAtm4(tmp2, m, tmp);
+            AfxMultiplyAtm4d(tmp2, m, tmp);
             AfxCopyM4d(m, tmp2);
         }
     }
@@ -721,77 +703,13 @@ _AFX void AfxGetWorldMatrixFromLocalPose(afxSkeleton skl, afxNat artIdx, awxPose
     if (offset)
     {
         afxM4d tmp2;
-        AfxMultiplyTransposedAtm4(tmp2, offset, m);
+        AfxMultiplyAtm4d(tmp2, offset, m);
         AfxCopyM4d(m, tmp2);
     }
 }
 
-_AFX void AfxGetAttachmentOffset(afxSkeleton skl, afxNat artIdx, awxPose const* lp, afxReal const offset[4][4], afxReal m[4][4], afxNat const* sparseArtArray, afxNat const* sparseArtArrayReverse)
-{
-    // Should be compatible with void GetAttachmentOffset(const skeleton *Skeleton, int BoneIndex, const local_pose *LocalPose, const float *Offset4x4, float *Result4x4, const int *SparseBoneArray, const int *SparseBoneArrayReverse)
-
-    afxM4d tmp;
-
-    AfxGetWorldMatrixFromLocalPose(skl, artIdx, lp, offset, tmp, sparseArtArray, sparseArtArrayReverse);
-    AfxInvertAtm4(tmp, m);
-}
-
-_AFX afxNat AfxGetBoneCountForLod(afxSkeleton skl, afxReal allowedErr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &skl, afxFcc_SKL);
-    afxNat rslt = 0;
-
-    if (allowedErr == 0.0 || !skl->lodType) rslt = skl->boneCnt;
-    else
-    {
-        afxReal errEnd, errScaler;
-        afxSimulation sim = AfxGetObjectProvider(skl);
-        AfxComputeAllowedErrorValues(sim, allowedErr, &errEnd, &errScaler);
-
-        afxNat boneCnt = skl->boneCnt;
-        afxReal* lodError = skl->lodError;
-        
-        if (boneCnt >= 4)
-        {
-            while (lodError[rslt + 0] >= errEnd)
-            {
-                if (lodError[rslt + 1] < errEnd)
-                {
-                    ++rslt;
-                    break;
-                }
-
-                if (lodError[rslt + 2] < errEnd)
-                {
-                    rslt += 2;
-                    break;
-                }
-
-                if (lodError[rslt + 3] < errEnd)
-                {
-                    rslt += 3;
-                    break;
-                }
-
-                rslt += 4;
-
-                if (rslt >= boneCnt - 3)
-                    break;
-            }
-        }
-
-        for (; rslt < boneCnt; rslt++)
-        {
-            if (lodError[rslt] < errEnd)
-                break;
-        }
-    }
-    return rslt;
-}
-
 #if 0
-_AFXINL void _AfxSklCtorBubbleSortOnLod(afxSkeletonBlueprint *Builder, afxSkeletonBone *Bones, afxNat* remappingTable)
+_AKXINL void _AfxSklCtorBubbleSortOnLod(afxSkeletonBlueprint *Builder, afxSkeletonBone *Bones, afxNat* remappingTable)
 {
     afxSkeletonBone Temp;
 
@@ -948,7 +866,7 @@ _AFXINL void _AfxSklCtorBubbleSortOnLod(afxSkeletonBlueprint *Builder, afxSkelet
 }
 #endif
 
-_AFXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton skl, afxNat* boneWrittenMap, afxNat inBoneIdx, afxNat* outBoneIdx)
+_AKXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton skl, afxNat* boneWrittenMap, afxNat inBoneIdx, afxNat* outBoneIdx)
 {
     afxError err = NIL;    
     afxNat idx = boneWrittenMap[inBoneIdx];
@@ -967,7 +885,7 @@ _AFXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
 
         if (parentIdx != AFX_INVALID_INDEX)
         {
-            AfxAssertRange(skl->boneCnt, parentIdx, 1);
+            AfxAssertRange(skl->jointCnt, parentIdx, 1);
 
             _AfxSklCtorWriteBone(sklb, skl, boneWrittenMap, parentIdx, outBoneIdx);
             parentIdxWritten = boneWrittenMap[parentIdx];
@@ -985,8 +903,8 @@ _AFXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
         if (skl->lodError)
             skl->lodError[*outBoneIdx] = sklb->bones[inBoneIdx].lodError;
 
-        if (skl->pivotId)
-            if (!AfxCatalogStrings2(skl->strc, 1, &sklb->bones[inBoneIdx].id.str.str, &skl->pivotId[*outBoneIdx]))
+        if (skl->label)
+            if (!AfxCatalogStrings2(skl->strc, 1, &sklb->bones[inBoneIdx].id.str.str, &skl->label[*outBoneIdx]))
                 AfxThrowError();
 
         if (skl->udd)
@@ -999,7 +917,7 @@ _AFXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
     }
 }
 
-_AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
+_AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 {
     AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
@@ -1019,49 +937,62 @@ _AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
     else
         AfxReacquireObjects(1, (void*[]) { strc });
 
+    skl->allowedLodErrFadingFactor = sim->allowedLodErrFadingFactor;
+
     if (!err)
     {
         afxMmu mmu = AfxGetSimulationMmu(sim);
 
-        afxNat boneCnt = bluep->boneCnt;
+        afxNat jointCnt = bluep->jointCnt;
         afxNat lodType = bluep->lodType;
 
-        skl->boneCnt = boneCnt;
+        skl->jointCnt = jointCnt;
         skl->lodType = lodType;
 
-        if (!(skl->parentIdx = AfxAllocate(mmu, boneCnt, sizeof(skl->parentIdx[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(skl->parentIdx = AfxAllocate(mmu, jointCnt, sizeof(skl->parentIdx[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
-            for (afxNat i = 0; i < boneCnt; i++)
+            for (afxNat i = 0; i < jointCnt; i++)
                 skl->parentIdx[i] = AFX_INVALID_INDEX; // to avoid crashes we must set it.
 
-            if (!(skl->local = AfxAllocate(mmu, boneCnt, sizeof(skl->local[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(skl->local = AfxAllocate(mmu, jointCnt, sizeof(skl->local[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
-                for (afxNat i = 0; i < boneCnt; i++)
+                for (afxNat i = 0; i < jointCnt; i++)
                     AfxResetTransform(&skl->local[i]);
 
-                if (!(skl->iw = AfxAllocate(mmu, boneCnt, sizeof(skl->iw[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(skl->iw = AfxAllocate(mmu, jointCnt, sizeof(skl->iw[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                 else
                 {
-                    for (afxNat i = 0; i < boneCnt; i++)
+                    for (afxNat i = 0; i < jointCnt; i++)
                         AfxResetM4d(skl->iw[i]);
 
-                    if (!(skl->lodError = AfxAllocate(mmu, boneCnt, sizeof(skl->lodError[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(skl->lodError = AfxAllocate(mmu, jointCnt, sizeof(skl->lodError[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
-                        skl->pivotId = NIL;
+                        for (afxNat i = 0; i < jointCnt; i++)
+                            skl->lodError[i] = -1.0;
 
-                        if (strc && !(skl->pivotId = AfxAllocate(mmu, boneCnt, sizeof(skl->pivotId[0]), 0, AfxHint()))) AfxThrowError();
+                        skl->label = NIL;
+
+                        if (strc && !(skl->label = AfxAllocate(mmu, jointCnt, sizeof(skl->label[0]), 0, AfxHint()))) AfxThrowError();
                         else
                         {
-                            for (afxNat i = 0; i < boneCnt; i++)
-                                AfxResetString(&skl->pivotId[i]); // to avoid crashes we must set it.
+                            if (!bluep->joints)
+                            {
+                                for (afxNat i = 0; i < jointCnt; i++)
+                                    AfxResetString(&skl->label[i]); // to avoid crashes we must set it.
+                            }
+                            else
+                            {
+                                if (!AfxCatalogStrings2(strc, jointCnt, bluep->joints, skl->label))
+                                    AfxThrowError();
+                            }
 
                             skl->udd = NIL;
 
-                            if (err && skl->pivotId)
-                                AfxDeallocate(mmu, skl->pivotId);
+                            if (err && skl->label)
+                                AfxDeallocate(mmu, skl->label);
                         }
 
                         if (err && skl->lodError)
@@ -1081,23 +1012,23 @@ _AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
         }
         
         
-        AfxAssert(boneCnt);
+        AfxAssert(jointCnt);
         //skl->bones = NIL;
 
-        //if (!(skl->bones = AfxAllocate(mmu, boneCnt, sizeof(skl->bones[0]), 0, AfxHint()))) AfxThrowError();
+        //if (!(skl->bones = AfxAllocate(mmu, jointCnt, sizeof(skl->bones[0]), 0, AfxHint()))) AfxThrowError();
         //else
         {
 #if 0
-            afxNat *boneWrittenMap = AfxAllocate(mmu, boneCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
+            afxNat *boneWrittenMap = AfxAllocate(mmu, jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
             AfxAssert(boneWrittenMap);
 
-            for (afxNat i = 0; i < boneCnt; ++i)
+            for (afxNat i = 0; i < jointCnt; ++i)
                 boneWrittenMap[i] = (afxNat)AFX_INVALID_INDEX;
 #endif
 
             // estimate lod
 
-            //for (afxNat i = 0; i < skl->boneCnt; i++)
+            //for (afxNat i = 0; i < skl->jointCnt; i++)
             {
                 // to avoid crashes we must set it.
                 //skl->bones[i].idStrIdx = AFX_INVALID_INDEX;
@@ -1109,13 +1040,13 @@ _AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 
             if (!skipBoneWrite)
             {
-                for (afxNat i = 0; i < skl->boneCnt; i++)
+                for (afxNat i = 0; i < skl->jointCnt; i++)
                 {
                     if (AFX_INVALID_INDEX == sklb->bones[i].parentIdx)
                         _AfxSklCtorWriteBone(sklb, skl, boneWrittenMap, i, &outBoneIdx);
                 }
 
-                for (afxNat i = 0; i < skl->boneCnt; i++)
+                for (afxNat i = 0; i < skl->jointCnt; i++)
                 {
                     if (AFX_INVALID_INDEX != sklb->bones[i].parentIdx)
                         _AfxSklCtorWriteBone(sklb, skl, boneWrittenMap, i, &outBoneIdx);
@@ -1125,8 +1056,8 @@ _AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
             //_AfxSklCtorBubbleSortOnLOD(blueprint, skl->bones, remapTable);
 #endif
             
-            //skl->boneCnt = boneCnt;
-            AfxAssert(skl->boneCnt == boneCnt);
+            //skl->jointCnt = jointCnt;
+            AfxAssert(skl->jointCnt == jointCnt);
 
 #if 0
             AfxDeallocate(mmu, boneWrittenMap);
@@ -1139,7 +1070,7 @@ _AFX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxError _AfxSklDtor(afxSkeleton skl)
+_AKX afxError _AfxSklDtor(afxSkeleton skl)
 {
     AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
@@ -1148,14 +1079,14 @@ _AFX afxError _AfxSklDtor(afxSkeleton skl)
     afxSimulation sim = AfxGetObjectProvider(skl);
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
-    //for (afxNat i = 0; i < skl->boneCnt; i++)
+    //for (afxNat i = 0; i < skl->jointCnt; i++)
         //AfxDeallocateString(&skl->bones[i].id);
 
     //if (skl->bones)
         //AfxDeallocate(mmu, skl->bones);
 
-    if (err && skl->pivotId)
-        AfxDeallocate(mmu, skl->pivotId);
+    if (skl->label)
+        AfxDeallocate(mmu, skl->label);
 
     if (skl->lodError)
         AfxDeallocate(mmu, skl->lodError);
@@ -1175,7 +1106,7 @@ _AFX afxError _AfxSklDtor(afxSkeleton skl)
     return err;
 }
 
-_AFX afxClassConfig _AfxSklClsConfig =
+_AKX afxClassConfig _AfxSklClsConfig =
 {
     .fcc = afxFcc_SKL,
     .name = "Skeleton",
@@ -1187,42 +1118,15 @@ _AFX afxClassConfig _AfxSklClsConfig =
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
-////////////////////////////////////////////////////////////////////////////////
 
-_AFX void AfxTransformSkeletons(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[4], afxReal affineTol, afxNat cnt, afxSkeleton skeletons[])
+_AKX afxError AfxAcquireSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBlueprint const sklb[], afxSkeleton skeletons[])
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(ltm);
-    AfxAssert(iltm);
-    AfxAssert(atv);
-    AfxAssert(cnt);
-    AfxAssert(skeletons);
-    (void)affineTol;
-    (void)linearTol;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxSkeleton skl = skeletons[i];
-        AfxAssertObjects(1, &skl, afxFcc_SKL);
-        afxNat boneCnt = skl->boneCnt;
-
-        for (afxNat j = 0; j < boneCnt; j++)
-        {
-            AfxAssimilateTransforms(ltm, iltm, atv, 1, &skl->local[j], &skl->local[j]);
-            AfxAssimilateAtm4(ltm, iltm, atv, 1, &skl->iw[j], &skl->iw[j]);
-        }
-    }
-}
-
-_AFX afxError AfxAcquireSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBlueprint const sklb[], afxSkeleton skeletons[])
-{
-    //AfxEntry("sim=%p,name=%.*s,boneCnt=%u,boneName=%p,boneParentIdx=%p,bonePos=%p,boneOrient=%p,boneScale=%p", sim, AfxPushString(name), boneCnt, boneName, boneParentIdx, bonePos, boneOrient, boneScale);
+    //AfxEntry("sim=%p,name=%.*s,jointCnt=%u,boneName=%p,boneParentIdx=%p,bonePos=%p,boneOrient=%p,boneScale=%p", sim, AfxPushString(name), jointCnt, boneName, boneParentIdx, bonePos, boneOrient, boneScale);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AfxAssert(skeletons);
     AfxAssert(sklb);
     AfxAssert(cnt);
-    AfxAssert(skeletons);
 
     if (AfxAcquireObjects(AfxGetSkeletonClass(sim), cnt, (afxObject*)skeletons, (void const*[]) { sim, strc, (void*)sklb, FALSE }))
         AfxThrowError();
@@ -1230,9 +1134,9 @@ _AFX afxError AfxAcquireSkeletons(afxSimulation sim, afxStringCatalog strc, afxN
     return err;
 }
 
-_AFX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBuilder const builders[], afxSkeleton skeletons[])
+_AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBuilder const builders[], afxSkeleton skeletons[])
 {
-    //AfxEntry("sim=%p,name=%.*s,boneCnt=%u,boneName=%p,boneParentIdx=%p,bonePos=%p,boneOrient=%p,boneScale=%p", sim, AfxPushString(name), boneCnt, boneName, boneParentIdx, bonePos, boneOrient, boneScale);
+    //AfxEntry("sim=%p,name=%.*s,jointCnt=%u,boneName=%p,boneParentIdx=%p,bonePos=%p,boneOrient=%p,boneScale=%p", sim, AfxPushString(name), jointCnt, boneName, boneParentIdx, bonePos, boneOrient, boneScale);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     AfxAssert(builders);
@@ -1244,9 +1148,9 @@ _AFX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat
     for (afxNat i = 0; i < cnt; i++)
     {
         afxSkeletonBuilder const* sklb = &builders[i];
-        afxSkeletonBlueprint bluep;
-        bluep.boneCnt = sklb->boneCnt;
-        AfxMakeFixedString32(&bluep.id, &sklb->id.str.str);
+        afxSkeletonBlueprint bluep = { 0 };
+        bluep.jointCnt = sklb->jointCnt;
+        AfxMakeString32(&bluep.id, &sklb->id.str.str);
         bluep.lodType = sklb->lodType;
 
         if (AfxAcquireSkeletons(sim, strc, 1, &bluep, &skeletons[i]))
@@ -1254,21 +1158,21 @@ _AFX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat
 
         afxSkeleton skl = skeletons[i];
 
-        afxNat *boneWrittenMap = AfxAllocate(mmu, skl->boneCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
+        afxNat *boneWrittenMap = AfxAllocate(mmu, skl->jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
         AfxAssert(boneWrittenMap);
 
-        for (afxNat i = 0; i < skl->boneCnt; ++i)
+        for (afxNat i = 0; i < skl->jointCnt; ++i)
             boneWrittenMap[i] = (afxNat)AFX_INVALID_INDEX;
 
         afxNat outBoneIdx = 0;
 
-        for (afxNat i = 0; i < skl->boneCnt; i++)
+        for (afxNat i = 0; i < skl->jointCnt; i++)
         {
             if (AFX_INVALID_INDEX == sklb->bones[i].parentIdx)
                 _AfxSklCtorWriteBone(sklb, skl, boneWrittenMap, i, &outBoneIdx);
         }
 
-        for (afxNat i = 0; i < skl->boneCnt; i++)
+        for (afxNat i = 0; i < skl->jointCnt; i++)
         {
             if (AFX_INVALID_INDEX != sklb->bones[i].parentIdx)
                 _AfxSklCtorWriteBone(sklb, skl, boneWrittenMap, i, &outBoneIdx);
@@ -1285,16 +1189,16 @@ _AFX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat
         else
             AfxResolveStrings2(skl->strc, 1, &skl->id, &s);
 
-        AfxEcho("Skeleton %p assembled. <%.*s>\n    Listing %u joints:", skl, AfxPushString(&s), skl->boneCnt);
+        AfxEcho("Skeleton <%.*s> assembled. %p\n    Listing %u joints:", AfxPushString(&s), skl, skl->jointCnt);
 
-        for (afxNat i = 0; i < skl->boneCnt; i++)
+        for (afxNat i = 0; i < skl->jointCnt; i++)
         {
             if (!skl->strc)
                 AfxResetString(&s);
             else
-                AfxResolveStrings2(skl->strc, 1, &skl->pivotId[i], &s);
+                AfxResolveStrings2(skl->strc, 1, &skl->label[i], &s);
 
-            AfxLogMessageFormatted(0xFF, "\n    #%03u %i <%.*s>", i, skl->parentIdx[i], AfxPushString(&s));
+            AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %i", i, AfxPushString(&s), skl->parentIdx[i]);
         }
 
     }
@@ -1302,36 +1206,59 @@ _AFX afxError AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat
     return err;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// BUILDING OPERATIONS                                                        //
+_AKX void AfxTransformSkeletons(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxNat cnt, afxSkeleton skeletons[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(ltm);
+    AfxAssert(iltm);
+    AfxAssert(atv);
+    AfxAssert(cnt);
+    AfxAssert(skeletons);
+    (void)affineTol;
+    (void)linearTol;
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxSkeleton skl = skeletons[i];
+        AfxAssertObjects(1, &skl, afxFcc_SKL);
+        afxNat jointCnt = skl->jointCnt;
+
+        for (afxNat j = 0; j < jointCnt; j++)
+        {
+            AfxAssimilateTransforms(ltm, iltm, atv, 1, &skl->local[j], &skl->local[j]);
+            AfxAssimilateAtm4d(ltm, iltm, atv, 1, &skl->iw[j], &skl->iw[j]);
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL afxError AfxBeginSkeletonBuilding(afxSkeletonBuilder* sklb, afxNat boneCnt, afxString const* id, afxNat lodType)
+_AKXINL afxError AfxBeginSkeletonBuilding(afxSkeletonBuilder* sklb, afxNat jointCnt, afxString const* id, afxNat lodType)
 {
     afxError err = NIL;
     AfxAssert(sklb);
     
     AfxAssignFcc(sklb, afxFcc_SKLB);
-    AfxAssert(boneCnt);
-    sklb->boneCnt = boneCnt;
-    sklb->bones = AfxAllocate(NIL, boneCnt, sizeof(sklb->bones[0]), 0, AfxHint());
+    AfxAssert(jointCnt);
+    sklb->jointCnt = jointCnt;
+    sklb->bones = AfxAllocate(NIL, jointCnt, sizeof(sklb->bones[0]), 0, AfxHint());
 
-    for (afxNat i = 0; i < boneCnt; i++)
+    for (afxNat i = 0; i < jointCnt; i++)
     {
         sklb->bones[i].extendedData = NIL;
         AfxResetTransform(&sklb->bones[i].local);
         sklb->bones[i].lodError = -1.0;
         sklb->bones[i].parentIdx = AFX_INVALID_INDEX;
         AfxResetM4d(sklb->bones[i].iw);
-        AfxMakeFixedString32(&sklb->bones[i].id, NIL);
+        AfxMakeString32(&sklb->bones[i].id, NIL);
     }
 
-    AfxMakeFixedString32(&sklb->id, id);
+    AfxMakeString32(&sklb->id, id);
     sklb->lodType = lodType;
     return err;
 }
 
-_AFXINL void AfxEndSkeletonBuilding(afxSkeletonBuilder* sklb)
+_AKXINL void AfxEndSkeletonBuilding(afxSkeletonBuilder* sklb)
 {
     afxError err = NIL;
     AfxAssertType(sklb, afxFcc_SKLB);
@@ -1344,26 +1271,26 @@ _AFXINL void AfxEndSkeletonBuilding(afxSkeletonBuilder* sklb)
     AfxAssignFcc(sklb, NIL);
 }
 
-_AFXINL void AfxResetBoneWithIw(afxSkeletonBuilder const* sklb, afxNat boneIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxReal const iw[4][4])
+_AKXINL void AfxResetBoneWithIw(afxSkeletonBuilder const* sklb, afxNat jointIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxM4d const iw, afxReal lodError)
 {
     afxError err = NIL;
     AfxAssertType(sklb, afxFcc_SKLB);
-    AfxAssertRange(sklb->boneCnt, boneIdx, 1);
-    sklb->bones[boneIdx].lodError = -1.0;
-    sklb->bones[boneIdx].parentIdx = AFX_INVALID_INDEX;
-    AfxCopyTransform(&sklb->bones[boneIdx].local, lt);
-    AfxCopyM4d(sklb->bones[boneIdx].iw, iw);
-    AfxMakeFixedString32(&sklb->bones[boneIdx].id, id);
+    AfxAssertRange(sklb->jointCnt, jointIdx, 1);
+    sklb->bones[jointIdx].lodError = lodError;
+    sklb->bones[jointIdx].parentIdx = parentIdx;
+    AfxCopyTransform(&sklb->bones[jointIdx].local, lt);
+    AfxCopyM4d(sklb->bones[jointIdx].iw, iw);
+    AfxMakeString32(&sklb->bones[jointIdx].id, id);
 }
 
-_AFXINL void AfxResetBone(afxSkeletonBuilder const* sklb, afxNat boneIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxTransform const* wt)
+_AKXINL void AfxResetBone(afxSkeletonBuilder const* sklb, afxNat jointIdx, afxString const* id, afxNat parentIdx, afxTransform const* lt, afxTransform const* wt, afxReal lodError)
 {
     afxError err = NIL;
     AfxAssertType(sklb, afxFcc_SKLB);
-    AfxAssertRange(sklb->boneCnt, boneIdx, 1);
+    AfxAssertRange(sklb->jointCnt, jointIdx, 1);
     AfxAssert(id && !AfxStringIsEmpty(id));
     afxM4d w, iw;
     AfxComposeTransformM4d(wt, w);
     AfxInvertM4d(w, iw);
-    AfxResetBoneWithIw(sklb, boneIdx, id, parentIdx, lt, iw);
+    AfxResetBoneWithIw(sklb, jointIdx, id, parentIdx, lt, iw, lodError);
 }

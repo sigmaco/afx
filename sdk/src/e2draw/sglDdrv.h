@@ -30,7 +30,7 @@
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/pipe/afxDrawScript.h"
 
-#ifndef __e2draw__
+#ifndef AFX_DRAW_DRIVER_SRC
 #   ifdef _DEBUG
 #       define SGL _AFXIMPORT extern 
 #       define SGLINL _AFXIMPORT extern inline
@@ -50,7 +50,7 @@
 #       define _SGLINL _AFXEXPORT inline
 #       define SGLINL _AFXEXPORT extern inline
 #   endif
-#endif//__e2draw__
+#endif
 
 #if 0
 SGL HMODULE opengl32;

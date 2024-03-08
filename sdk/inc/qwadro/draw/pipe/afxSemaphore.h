@@ -41,16 +41,16 @@ struct _afxBaseSemaphore
 #endif
 
 /// Return the draw context witch this semaphore belongs to.
-AFX afxDrawContext      AfxGetSemaphoreContext(afxSemaphore sem);
+AVX afxDrawContext      AfxGetSemaphoreContext(afxSemaphore sem);
 
-AFX afxError            AfxSignalSemaphore
+AVX afxError            AfxSignalSemaphore
 /// Signal a timeline semaphore on the host
 (
     afxSemaphore        sem, /// the semaphore to signal.
     afxNat64            value /// the value to signal.
 );
 
-AFX afxError            AfxGetSemaphoreValue
+AVX afxError            AfxGetSemaphoreValue
 /// Query the current state of a timeline semaphore.
 (
     afxSemaphore        sem, /// the semaphore to query.
@@ -59,7 +59,7 @@ AFX afxError            AfxGetSemaphoreValue
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAcquireSemaphores
+AVX afxError            AfxAcquireSemaphores
 /// Create a new queue semaphore object.
 (
     afxDrawContext      dctx, /// the logical device that creates the semaphore.
@@ -67,7 +67,7 @@ AFX afxError            AfxAcquireSemaphores
     afxSemaphore        semaphores[] /// a array of handles in which the resulting semaphore objects are returned.
 );
 
-AFX afxError            AfxWaitForSemaphores
+AVX afxError            AfxWaitForSemaphores
 /// Wait for one or more timeline semaphores to reach particular counter values.
 (
     afxNat64            timeout, /// the timeout period in units of nanoseconds.

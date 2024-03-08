@@ -225,8 +225,8 @@ struct afxBaseRasterizer
     afxMask*                sampleMasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
     
     // fragment & pixel output operations
-    afxFixedUri128          fragShd;
-    afxFixedString8         fragFn;
+    afxUri128          fragShd;
+    afxString8         fragFn;
     //                      fragConstants;
     //                      fragSpecId;
 
@@ -262,25 +262,25 @@ struct afxBaseRasterizer
 #endif
 #endif
 
-AFX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[]);
-AFX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri);
+AVX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[]);
+AVX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxBool             AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op); // return TRUE if depth test is enabled
-AFX afxBool             AfxDepthWriteIsDisabled(afxRasterizer razr);
-AFX afxBool             AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
-AFX afxBool             AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]); // return TRUE if depth bounds is enabled
-AFX afxBool             AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
-AFX afxBool             AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op); // return TRUE if logical pixel operation is enabled
-AFX void                AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4]);
-AFX afxNat              AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
-AFX afxNat              AfxCountColorOutputChannels(afxRasterizer razr);
-AFX afxBool             AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
-AFX afxFillMode         AfxGetRasterizationMode(afxRasterizer razr);
-AFX afxBool             AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth);
-AFX afxBool             AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]);
+AVX afxBool             AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op); // return TRUE if depth test is enabled
+AVX afxBool             AfxDepthWriteIsDisabled(afxRasterizer razr);
+AVX afxBool             AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
+AVX afxBool             AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]); // return TRUE if depth bounds is enabled
+AVX afxBool             AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
+AVX afxBool             AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op); // return TRUE if logical pixel operation is enabled
+AVX void                AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4]);
+AVX afxNat              AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
+AVX afxNat              AfxCountColorOutputChannels(afxRasterizer razr);
+AVX afxBool             AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
+AVX afxFillMode         AfxGetRasterizationMode(afxRasterizer razr);
+AVX afxBool             AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth);
+AVX afxBool             AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]);
 
-AFX void                AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn);
+AVX void                AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn);
 
-AFX void                AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizationConfig* config);
+AVX void                AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizationConfig* config);
 
 #endif//AFX_RASTERIZER_H

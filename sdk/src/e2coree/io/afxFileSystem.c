@@ -217,16 +217,19 @@ _AFX afxError _AfxFsysCtor(afxFileSystem fsys, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fsys, afxFcc_FSYS);
 
-    afxStoragePointSpecification const* spec = ((afxStoragePointSpecification const*)cookie->udd[0]) + cookie->no;
-    AfxAssert(spec);
-    AfxAssert(spec->perm & AFX_IO_PERM_MASK);
+    afxString const* point = cookie->udd[0];
+    afxString const* location = cookie->udd[1];
+    afxIoFlags perm = *(afxIoFlags const*)cookie->udd[2];
+
+    AfxAssert(perm);
+    AfxAssert(perm & AFX_IO_PERM_MASK);
 
     afxUri path, hostPath;
-    AfxUriFromString(&hostPath, spec->hostPath);
+    AfxUriFromString(&hostPath, location);
     AfxExcerptUriPath(&hostPath, &path);
 
-    afxFixedUri2048 bufUri;
-    AfxMakeFixedUri2048(&bufUri, NIL);
+    afxUri2048 bufUri;
+    AfxMakeUri2048(&bufUri, NIL);
 
     if (AfxPathIsRelative(&path))
     {
@@ -259,7 +262,7 @@ _AFX afxError _AfxFsysCtor(afxFileSystem fsys, afxCookie const* cookie)
     else
     {
         unsigned short flagsToTest = NIL;
-        afxIoFlags ioPerms = spec->perm & AFX_IO_PERM_MASK;
+        afxIoFlags ioPerms = perm & AFX_IO_PERM_MASK;
 
         if (AfxTestFlags(ioPerms, afxIoFlag_R))
             flagsToTest |= _S_IREAD;
@@ -280,7 +283,9 @@ _AFX afxError _AfxFsysCtor(afxFileSystem fsys, afxCookie const* cookie)
             if (!isDir && (isFile && AfxAcquireArchives(1, &arc, &bufUri.uri, (afxFileFlags[]) { ioPerms | afxFileFlag_D }))) AfxThrowError();
             else
             {
-                AfxMakeFixedUri8(&fsys->name, spec->namespace);
+                afxUri uri;
+                AfxUriFromString(&uri, point);
+                AfxMakeUri8(&fsys->name, &uri);
 
                 //if (!(fssp->name)) AfxThrowError();
                 //else
@@ -336,17 +341,18 @@ _AFX afxClassConfig const _AfxFsysClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxMountFileSystems(afxNat cnt, afxStoragePointSpecification const spec[], afxFileSystem systems[])
+_AFX afxError AfxMountFileSystem(afxString const* point, afxString const* location, afxIoFlags ioFlags)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(spec);
-    AfxAssert(systems);
+    AfxAssert(point);
+    AfxAssert(location);
+    AfxAssert(ioFlags);
+    afxFileSystem fsys;
 
     afxClass* cls = AfxGetFileSystemClass();
     AfxAssertClass(cls, afxFcc_FSYS);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)systems, (void const*[]) { spec }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&fsys, (void const*[]) { point, location, &ioFlags }))
         AfxThrowError();
 
     return err;

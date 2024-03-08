@@ -18,6 +18,7 @@
 #define AFX_TXU_H
 
 #include "qwadro/async/afxThread.h"
+#include "qwadro/mem/afxArray.h"
 
 #ifdef _AFX_CORE_C
 #ifdef _AFX_TXU_C
@@ -78,5 +79,7 @@ AFX void        AfxGetThread(afxThread *thr);
 AFX void        AfxGetExecutionCounter(afxNat *currIter, afxNat *lastFreq);
 AFX void        AfxGetExecutionTime(afxReal64 *curr, afxReal64 *delta);
 AFX void        AfxGetExecutionClock(afxClock *curr, afxClock *last);
+
+AFX afxError    AfxMountThreadingUnits(afxNat cnt, afxMutex* mtx, afxArray const* threads, afxTxu units[]);
 
 #endif//AFX_TXU_H

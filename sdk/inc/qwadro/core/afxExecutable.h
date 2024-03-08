@@ -36,7 +36,7 @@ typedef enum afxModuleType
 AFX_OBJECT(afxExecutable)
 {
     afxModuleType       type;
-    afxFixedUri128      path;
+    afxUri128      path;
     void                *osHandle;
     afxBool             hasBeenLoaded;
     afxBool             demangle;

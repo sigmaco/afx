@@ -106,7 +106,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
     //else
     {
         afxChain *classes = &dctx->base.classes;
-        AfxTakeChain(classes, (void*)dctx);
+        AfxSetUpChain(classes, (void*)dctx);
         afxClassConfig tmpClsConf;
 
         tmpClsConf = _SglSemClsConfig;
@@ -197,7 +197,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                         afxDrawQueue dque;
                         sglDrawQueueSpecification dqueSpec = { 0 };
                         
-                        if (AfxAcquireObjects(&ddev->base.ports[i].queues, 1, (afxObject*)&dque, (void const*[]) { dctx, &i, &dqueSpec }))
+                        if (AfxAcquireObjects(&ddev->ports[i].queues, 1, (afxObject*)&dque, (void const*[]) { dctx, &i, &dqueSpec }))
                         {
                             AfxThrowError();
                             AfxReleaseObjects(j, (void**)dctx->base.openPorts[i].queues);
@@ -227,7 +227,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
             if (!err)
             {
-                dctx->base.clipCfg = ddev->base.clipCfg;
+                dctx->base.clipCfg = ddev->clipCfg;
                 
                 afxUri uri;
                 AfxMakeUri(&uri, "data/pipeline/video/sampleOutRgba.xsh.xml", 0);

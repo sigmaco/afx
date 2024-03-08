@@ -21,7 +21,7 @@
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/math/afxVector.h"
 
-_AFX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
+_AKX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -29,14 +29,14 @@ _AFX void AfxColorizeMaterial(afxMaterial mtl, afxV4d const color)
     AfxCopyV4d(mtl->color, color);
 }
 
-_AFX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
+_AKX void AfxShineMaterial(afxMaterial mtl, afxReal shininess)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     mtl->shininess = shininess;
 }
 
-_AFX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
+_AKX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -45,7 +45,7 @@ _AFX afxRaster AfxGetMaterialTexture(afxMaterial mtl)
     return tex;
 }
 
-_AFX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
+_AKX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -67,7 +67,7 @@ _AFX void AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex)
     }
 }
 
-_AFX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
+_AKX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -97,14 +97,14 @@ _AFX void AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex)
     }
 }
 
-_AFX afxNat AfxCountMaterialMaps(afxMaterial mtl)
+_AKX afxNat AfxCountMaterialMaps(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     return mtl->mapCnt;
 }
 
-_AFX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
+_AKX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -122,7 +122,7 @@ _AFX afxMaterial AfxFindSubmaterial(afxMaterial mtl, afxString const *usage)
     return NIL;
 }
 
-_AFX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx)
+_AKX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -132,7 +132,7 @@ _AFX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx)
     return subMtl;
 }
 
-_AFX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl)
+_AKX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("mtl=%p,mapIdx=%u,subMtl=%p", mtl, mapIdx, subMtl);
@@ -160,7 +160,7 @@ _AFX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMt
     }
 }
 
-_AFX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl)
+_AKX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("mtl=%p,mapIdx=%u,subMtl=%p", mtl, mapIdx, subMtl);
@@ -191,14 +191,14 @@ _AFX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* u
     }
 }
 
-_AFX afxString const* AfxGetMaterialId(afxMaterial mtl)
+_AKX afxString const* AfxGetMaterialId(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     return &mtl->id.str;
 }
 
-_AFX afxError _AfxMtlDtor(afxMaterial mtl)
+_AKX afxError _AfxMtlDtor(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -227,7 +227,7 @@ _AFX afxError _AfxMtlDtor(afxMaterial mtl)
     return err;
 }
 
-_AFX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
+_AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
@@ -314,7 +314,7 @@ _AFX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxNat subCnt, afxMaterial *mtl)
+_AKX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxNat subCnt, afxMaterial *mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -328,7 +328,7 @@ _AFX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRast
     return err;
 }
 
-_AFX afxClassConfig _AfxMtlClsConfig =
+_AKX afxClassConfig _AfxMtlClsConfig =
 {
     .fcc = afxFcc_MTL,
     .name = "Material",

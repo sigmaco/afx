@@ -46,7 +46,7 @@ struct TriWeightData
 ////////////////////////////////////////////////////////////////////////////////
 
 #if 0
-_AFX void _AfxMesh113131(afxMesh msh)
+_AKX void _AfxMesh113131(afxMesh msh)
 {
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
@@ -78,45 +78,43 @@ _AFX void _AfxMesh113131(afxMesh msh)
 }
 #endif
 
-_AFX afxMeshPivot* AfxGetMeshPivot(afxMesh msh, afxNat pvtIdx)
+_AKX afxMeshBias* AfxGetMeshBiases(afxMesh msh, afxNat baseBiasIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxAssertRange(msh->pivotCnt, pvtIdx, 1);
-    afxMeshPivot *mshv = &msh->pivots[pvtIdx];
+    AfxAssertRange(msh->biasCnt, baseBiasIdx, 1);
+    afxMeshBias *mshv = &msh->biasData[baseBiasIdx];
     AfxAssertType(mshv, afxFcc_MSHV);
     return mshv;
 }
 
-_AFX afxBool AfxGetMeshPivotId(afxMesh msh, afxNat pvtIdx, afxString* id)
+_AKX afxBool AfxGetMeshBiasName(afxMesh msh, afxNat biasIdx, afxString* id)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxAssertRange(msh->pivotCnt, pvtIdx, 1);
+    AfxAssertRange(msh->biasCnt, biasIdx, 1);
     AfxAssert(id);
-    afxMeshPivot *mshv = &msh->pivots[pvtIdx];
-    //AfxAssertType(mshv, afxFcc_MSHV);
-    return AfxResolveStrings2(msh->strc, 1, &mshv->id, id);
+    return AfxResolveStrings2(msh->strc, 1, &msh->biasName[biasIdx], id);
 }
 
-_AFX afxNat AfxCountMeshVertebras(afxMesh msh)
+_AKX afxNat AfxCountMeshBiases(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    return msh->pivotCnt;
+    return msh->biasCnt;
 }
 
-_AFX afxBool AfxMeshIsDeformable(afxMesh msh)
+_AKX afxBool AfxMeshIsDeformable(afxMesh msh)
 {
     // The vertices in a Qwadro mesh are either deforming or rigid. 
     // Deforming meshes are ones that are bound to multiple bones, whereas rigid meshes are ones that are bound to a single bone (and thus move "rigidly" with that bone). 
 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    return (1 < msh->pivotCnt);
+    return (1 < msh->biasCnt);
 }
 
-_AFX afxMeshTopology AfxGetMeshTopology(afxMesh msh)
+_AKX afxMeshTopology AfxGetMeshTopology(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -125,7 +123,7 @@ _AFX afxMeshTopology AfxGetMeshTopology(afxMesh msh)
     return msht;
 }
 
-_AFX void AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht)
+_AKX void AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -146,31 +144,31 @@ _AFX void AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht)
     }    
 }
 
-_AFX afxMeshMorph* AfxGetMeshMorph(afxMesh msh, afxNat morphIdx)
+_AKX afxMeshMorph* AfxGetMeshMorphes(afxMesh msh, afxNat baseMorphIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxAssertRange(msh->morphCnt, morphIdx, 1);
-    afxMeshMorph *mshm = &msh->morphs[morphIdx];
+    AfxAssertRange(msh->morphCnt, baseMorphIdx, 1);
+    afxMeshMorph *mshm = &msh->morphs[baseMorphIdx];
     AfxAssertType(mshm, afxFcc_MSHM);
     return mshm;
 }
 
-_AFX afxNat AfxCountMeshMorphes(afxMesh msh)
+_AKX afxNat AfxCountMeshMorphes(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     return msh->morphCnt;
 }
 
-_AFX afxNat AfxCountMeshVertices(afxMesh msh)
+_AKX afxNat AfxCountMeshVertices(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     return msh->vtd->vtxCnt;
 }
 
-_AFX awxVertexData AfxGetMeshVertices(afxMesh msh)
+_AKX awxVertexData AfxGetMeshVertices(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -179,7 +177,7 @@ _AFX awxVertexData AfxGetMeshVertices(afxMesh msh)
     return vtd;
 }
 
-_AFX afxBool AfxGetMeshId(afxMesh msh, afxString* id)
+_AKX afxBool AfxGetMeshId(afxMesh msh, afxString* id)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -187,7 +185,7 @@ _AFX afxBool AfxGetMeshId(afxMesh msh, afxString* id)
     return AfxResolveStrings2(msh->strc, 1, &msh->id, id);
 }
 
-_AFX afxError _AfxMshDtor(afxMesh msh)
+_AKX afxError _AfxMshDtor(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -197,16 +195,11 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
-    for (afxNat i = 0; i < msh->pivotCnt; i++)
-    {
-        afxMeshPivot *msha = &msh->pivots[i];
+    if (msh->biasName)
+        AfxDeallocate(mmu, msh->biasName);
 
-        //if (msha->boneName)
-            //AfxDeallocateString(&msha->id);
-    }
-
-    if (msh->pivots)
-        AfxDeallocate(mmu, msh->pivots);
+    if (msh->biasData)
+        AfxDeallocate(mmu, msh->biasData);
 
     if (msh->topology)
     {
@@ -228,7 +221,7 @@ _AFX afxError _AfxMshDtor(afxMesh msh)
     return err;
 }
 
-_AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
+_AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
@@ -256,6 +249,8 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
     msh->vtd = vtd;
     AfxReacquireObjects(1, (void*[]) { vtd });
     afxNat vtxCnt = vtd->vtxCnt;
+    msh->vtxCnt = vtxCnt;
+    msh->baseVtx = 0;
 
     msh->topology = msht;
     AfxReacquireObjects(1, (void*[]) { msht });
@@ -264,12 +259,13 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 
     for (afxNat i = 0; i < triCnt; i++)
     {
+        AfxAssertRange(vtxCnt, tris[i][0], 1);
+        AfxAssertRange(vtxCnt, tris[i][1], 1);
+        AfxAssertRange(vtxCnt, tris[i][2], 1);
+
         if ((vtxCnt < tris[i][0]) || (vtxCnt < tris[i][1]) || (vtxCnt < tris[i][2]))
         {
             AfxThrowError();
-            AfxAssertRange(vtxCnt, tris[i][0], 1);
-            AfxAssertRange(vtxCnt, tris[i][1], 1);
-            AfxAssertRange(vtxCnt, tris[i][2], 1);
         }
     }
 
@@ -278,102 +274,30 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
         afxNat mtlCnt = mshb->mtlCnt;
         //msh->mtlCnt = mtlCnt;
 
-        afxNat pivotCnt = mshb->pivotCnt;
-        afxNat biasCnt = AwxCountVertexBiases(vtd);
-        afxVertexBias const* biases = AwxGetVertexBiases(vtd, 0);
-
-        for (afxNat i = 0; i < biasCnt; i++)
-        {
-            AfxAssert(1.0 >= biases[i].weight);
-
-            if (pivotCnt < biases[i].pivotIdx)
-            {
-                AfxThrowError();
-                AfxAssertRange(pivotCnt, biases[i].pivotIdx, 1);
-            }
-        }
+        afxNat biasCnt = mshb->biasCnt;
 
         if (!err)
         {
-            msh->pivotCnt = pivotCnt;
-            msh->pivots = NIL;
+            msh->biasCnt = biasCnt;
+            msh->biasName = NIL;
+            msh->biasData = NIL;
 
-            if (pivotCnt && !(msh->pivots = AfxAllocate(mmu, pivotCnt, sizeof(msh->pivots[0]), 0, AfxHint()))) AfxThrowError();
+            if (biasCnt && !(msh->biasName = AfxAllocate(mmu, biasCnt, sizeof(msh->biasName[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
-                for (afxNat i = 0; i < pivotCnt; i++)
+                if (!strc || !mshb->pivots)
                 {
-                    afxMeshPivot *mshv = &msh->pivots[i];
-                    AfxAssignTypeFcc(mshv, afxFcc_MSHV);
-
-                    mshv->triCnt = 0;
-                    mshv->tris = NIL; // AfxAllocate(mmu, mshv->triCnt * sizeof(mshv->triIdx[0]), NIL, AfxHint());
-
-                    if (!(strc))
-                        AfxResetString(&mshv->id);
-                    else if (!AfxCatalogStrings2(strc, 1, &mshb->pivots[i], &mshv->id))
-                        AfxThrowError();
-
-                    AfxResetAabb(mshv->aabb);
+                    for (afxNat i = 0; i < biasCnt; i++)
+                        AfxResetString(&msh->biasName[i]);
                 }
-#if 0
-                afxArray skinnedTris;
-                AfxAllocateArray(&skinnedTris, triCnt, sizeof(afxIndexedTriangle), NIL);
-                AfxReserveArraySpace(&skinnedTris, triCnt);
-
-                for (afxNat h = 0; h < pivotCnt; h++)
-                {
-                    for (afxNat i = 0; i < triCnt; i++)
-                    {
-                        for (afxNat j = 0; j < 3; j++)
-                        {
-                            afxVertex const* v = &msh->vtd->vtx[tris[i][j]];
-
-                            for (afxNat k = 0; k < v->biasCnt; k++)
-                            {
-                                afxVertexBias* bias = &msh->vtd->biases[v->baseBiasIdx + k];
-
-                                if (bias->pivotIdx == h)
-                                {
-                                    afxNat idx;
-                                    AfxInsertArrayUnits(&skinnedTris, 1, &idx, &tris[i][j]);
-                                    ++msh->pivots[bias->pivotIdx].triCnt;
-                                    j = 3;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                afxNat baseSkinnedTriIdx = 0;
-
-                for (afxNat i = 0; i < pivotCnt; i++)
-                {
-                    afxMeshPivot *mshv = &msh->pivots[i];
-                    AfxAssignTypeFcc(mshv, afxFcc_MSHV);
-
-                    mshv->tris = AfxGetArrayUnit(&skinnedTris, baseSkinnedTriIdx);
-                    baseSkinnedTriIdx += mshv->triCnt;
-                }
-#endif
+                else if (!AfxCatalogStrings2(strc, biasCnt, mshb->pivots, msh->biasName))
+                    AfxThrowError();
             }
+
             msh->extData = NIL;
 
-            if (err)
-            {
-                for (afxNat i = msh->pivotCnt; i-- > 0;)
-                {
-                    afxMeshPivot *mshv = &msh->pivots[i];
-                    AfxAssertType(mshv, afxFcc_MSHV);
-
-                    if (mshv->tris)
-                        AfxDeallocate(mmu, mshv->tris);
-                }
-
-                if (msh->pivots) // what if tris is set?
-                    AfxDeallocate(mmu, msh->pivots);
-            }
+            if (err && msh->biasName)
+                AfxDeallocate(mmu, msh->biasName);
         }
     }
 
@@ -392,25 +316,25 @@ _AFX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
         else
             AfxResolveStrings2(msh->strc, 1, &msh->id, &s);
 
-        AfxEcho("%.*s Mesh %p assembled. <%.*s>\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u pivots:",
-            AfxPushString(msh->pivotCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
-            msh, AfxPushString(&s), vtd->vtxCnt, vtd->attrCnt, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt, msh->pivotCnt
+        AfxEcho("%.*s Mesh <%.*s> assembled. %p\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u biases:",
+            AfxPushString(msh->biasCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
+            AfxPushString(&s), msh, vtd->vtxCnt, vtd->attrCnt, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt, msh->biasCnt
         );
 
-        for (afxNat i = 0; i < msh->pivotCnt; i++)
+        for (afxNat i = 0; i < msh->biasCnt; i++)
         {
             if (!msh->strc)
                 AfxResetString(&s);
             else
-                AfxResolveStrings2(msh->strc, 1, &(msh->pivots[i].id), &s);
+                AfxResolveStrings2(msh->strc, 1, &(msh->biasName[i]), &s);
 
-            AfxLogMessageFormatted(0xFF, "\n    #%03u %u <%.*s>", i, msh->pivots[i].triCnt, AfxPushString(&s));
+            AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
         }
     }
     return err;
 }
 
-_AFX afxClassConfig _AfxMshClsConfig =
+_AKX afxClassConfig _AfxMshClsConfig =
 {
     .fcc = afxFcc_MSH,
     .name = "Mesh",
@@ -422,10 +346,57 @@ _AFX afxClassConfig _AfxMshClsConfig =
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
-////////////////////////////////////////////////////////////////////////////////
 
-_AFX void AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[4], afxReal affineTol, afxFlags flags, afxNat cnt, afxMesh meshes[])
+_AKX afxError AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AfxAssert(blueprints);
+    AfxAssert(meshes);
+    AfxAssert(cnt);
+
+    if (AfxAcquireObjects(AwxGetMeshClass(sim), cnt, (afxObject*)meshes, (void const*[]) { sim, blueprints }))
+        AfxThrowError();
+
+    return err;
+}
+
+_AKX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const builders[], afxMesh meshes[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sim, afxFcc_SIM);
+    AfxAssert(cnt);
+    AfxAssert(builders);
+    AfxAssert(meshes);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxMeshBuilder const* mshb = &builders[i];
+        awxVertexData vtd = AwxBuildVertexData(sim, strc, mshb);
+        afxMeshTopology msht = AfxBuildMeshTopology(sim, mshb, 0, mshb->surfCnt);
+
+        afxMeshBlueprint blueprint = { 0 };
+        blueprint.vertices = vtd;
+        blueprint.topology = msht;
+        blueprint.biasCnt = mshb->artCnt;
+        blueprint.pivots = mshb->pivots;
+        blueprint.strc = strc;
+        AfxMakeString32(&blueprint.id, &mshb->id.str.str);
+
+        if (AfxAssembleMeshes(sim, 1, &blueprint, &meshes[i]))
+        {
+            AfxThrowError();
+            AfxReleaseObjects(i, (void**)meshes);
+            break;
+        }
+        AfxReleaseObjects(1, (void*[]) { msht });
+        AfxReleaseObjects(1, (void*[]) { vtd });
+    }
+
+    return err;
+}
+
+_AKX void AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxNat cnt, afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(atv);
@@ -454,7 +425,7 @@ _AFX void AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], 
 
             for (afxNat j = 0; j < morphCnt; j++)
             {
-                afxMeshMorph* mshm = AfxGetMeshMorph(msh2, j);
+                afxMeshMorph* mshm = AfxGetMeshMorphes(msh2, j);
                 vtd = mshm->vtd;
                 AfxTryAssertObjects(1, &vtd, afxFcc_VTD);
                 AfxAssert(!mshm->delta || AwxGetVertexAttributeFlags(vtd, 0) & awxVertexFlag_DELTA);
@@ -474,18 +445,18 @@ _AFX void AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], 
             if ((flags & 2) && (AfxDetM3d(ltm) < 0.0) && (msht = AfxGetMeshTopology(msh2))) // se sinalizado para reordenar índices de faces
                 AfxInvertMeshWinding(msht);
 
-            afxNat artCnt = AfxCountMeshVertebras(msh2);
+            afxNat artCnt = AfxCountMeshBiases(msh2);
 
             for (afxNat j = 0; j < artCnt; j++)
             {
-                afxMeshPivot* mshv = AfxGetMeshPivot(msh2, j);
+                afxMeshBias* mshv = AfxGetMeshBiases(msh2, j);
                 AfxTransformAabbs(ltm, atv, 1, &mshv->aabb, &mshv->aabb);
             }
         }
     }
 }
 
-_AFX void AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[])
+_AKX void AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(meshes);
@@ -504,7 +475,7 @@ _AFX void AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[])
             AfxString("nrm")
         };
         afxNat attrIdx[2];
-        AwxFindVertexDataAttributes(vtd, 2, attrs, attrIdx);
+        AwxFindVertexAttributes(vtd, 2, attrs, attrIdx);
         afxV4d* posn = AwxExposeVertexData(vtd, attrIdx[0], 0);
         afxV3d* nrm = AwxExposeVertexData(vtd, attrIdx[1], 0);
 
@@ -532,53 +503,4 @@ _AFX void AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[])
 
         AwxNormalizeVertexData(vtd, attrIdx[1], 0, vtxCnt);
     }
-}
-
-_AFX afxError AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
-    AfxAssert(blueprints);
-    AfxAssert(meshes);
-    AfxAssert(cnt);
-
-    if (AfxAcquireObjects(AwxGetMeshClass(sim), cnt, (afxObject*)meshes, (void const*[]) { sim, blueprints }))
-        AfxThrowError();
-
-    return err;
-}
-
-_AFX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const builders[], afxMesh meshes[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sim, afxFcc_SIM);
-    AfxAssert(cnt);
-    AfxAssert(builders);
-    AfxAssert(meshes);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxMeshBuilder const* mshb = &builders[i];
-        awxVertexData vtd = AwxBuildVertexData(sim, strc, mshb);
-        afxMeshTopology msht = AfxBuildMeshTopology(sim, mshb, 0, mshb->surfCnt);
-
-        afxMeshBlueprint blueprint = { 0 };
-        blueprint.vertices = vtd;
-        blueprint.topology = msht;
-        blueprint.pivotCnt = mshb->artCnt;
-        blueprint.pivots = mshb->pivots;
-        blueprint.strc = strc;
-        AfxMakeFixedString32(&blueprint.id, &mshb->id.str.str);
-
-        if (AfxAssembleMeshes(sim, 1, &blueprint, &meshes[i]))
-        {
-            AfxThrowError();
-            AfxReleaseObjects(i, (void**)meshes);
-            break;
-        }
-        AfxReleaseObjects(1, (void*[]) { msht });
-        AfxReleaseObjects(1, (void*[]) { vtd });
-    }
-
-    return err;
 }

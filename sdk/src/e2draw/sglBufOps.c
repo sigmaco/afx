@@ -42,7 +42,7 @@ _SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawScript dscr, afxBuffer src, afxBuffer d
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdBufCpy *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBufCpy *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->src = src;
     cmd->dst = dst;
@@ -97,23 +97,22 @@ _SGL void _SglDpuBufRw(sglDpuIdd* dpu, _sglCmdBufRw const* cmd)
     GLenum glTarget = cmd->toHost ? GL_COPY_READ_BUFFER : GL_COPY_WRITE_BUFFER;
     GLenum glAccess = cmd->toHost ? GL_MAP_READ_BIT : GL_MAP_WRITE_BIT;
     AfxAssert(cmd->buf->glAccess & glAccess);
+    
+    glTarget = cmd->buf->glTarget;
 
-    _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, glTarget, cmd->buf, 0, AfxGetBufferCapacity(cmd->buf), 0, GL_INVALID_ENUM);
-
+    
     if (cmd->toHost)
     {
-        void* src = gl->MapBufferRange(glTarget, cmd->offset, cmd->range, glAccess); _SglThrowErrorOccuried();
-        AfxAssert(src);
-        AfxCopy(cmd->range, sizeof(afxByte), src, cmd->data);
-        gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
+        _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, glTarget, cmd->buf, 0, AfxGetBufferCapacity(cmd->buf), 0, GL_INVALID_ENUM);
+        
+        gl->GetBufferSubData(glTarget, cmd->offset, cmd->range, cmd->dst); _SglThrowErrorOccuried();
     }
     else
     {
-        void* dst = gl->MapBufferRange(glTarget, cmd->offset, cmd->range, glAccess); _SglThrowErrorOccuried();
-        AfxAssert(dst);
-        AfxCopy(cmd->range, sizeof(afxByte), cmd->data, dst);
-        gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
-        gl->FlushMappedBufferRange(glTarget, cmd->offset, cmd->range); _SglThrowErrorOccuried();
+        glTarget = cmd->buf->glTarget;
+        _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, glTarget, cmd->buf, 0, AfxGetBufferCapacity(cmd->buf), 0, GL_INVALID_ENUM);
+
+        gl->BufferSubData(glTarget, cmd->offset, cmd->range, cmd->src); _SglThrowErrorOccuried();
     }
 }
 
@@ -124,16 +123,35 @@ _SGL afxCmdId _SglEncodeCmdBufRw(afxDrawScript dscr, afxBuffer buf, afxNat offse
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(range);
     AfxAssert(data);
+    afxCmdId rslt;
+    _sglCmdBufRw *cmd;
 
-    _sglCmdBufRw *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->toHost = !!toHost;
-    cmd->data = data;
-    cmd->buf = buf;
-    cmd->offset = offset;
-    cmd->range = range;
+    if (!toHost)
+    {
+        cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + range);
+        AfxAssert(cmd);
+        cmd->toHost = !!toHost;
+        cmd->buf = buf;
+        cmd->offset = offset;
+        cmd->range = range;
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+        AfxCopy(range, 1, data, cmd->src);
+
+        rslt = _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    }
+    else
+    {
+        cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+        AfxAssert(cmd);
+        cmd->toHost = !!toHost;
+        cmd->buf = buf;
+        cmd->offset = offset;
+        cmd->range = range;
+        cmd->dst = data;
+
+        rslt = _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    }
+    return rslt;
 }
 
 _SGL void _SglDpuBufIo(sglDpuIdd* dpu, _sglCmdBufIo const* cmd)
@@ -187,7 +205,7 @@ _SGL afxCmdId _SglEncodeCmdBufIo(afxDrawScript dscr, afxBuffer buf, afxNat opCnt
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdBufIo *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBufIo *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->export = !!export;
     cmd->io = io;

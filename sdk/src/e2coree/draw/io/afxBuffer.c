@@ -19,7 +19,7 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/draw/afxDrawContext.h"
 
-_AFX afxDrawContext AfxGetBufferContext(afxBuffer buf)
+_AVX afxDrawContext AfxGetBufferContext(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -28,42 +28,42 @@ _AFX afxDrawContext AfxGetBufferContext(afxBuffer buf)
     return dctx;
 }
 
-_AFX afxNat AfxGetBufferCapacity(afxBuffer buf)
+_AVX afxNat AfxGetBufferCapacity(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     return buf->siz;
 }
 
-_AFX afxBufferUsage AfxGetBufferUsage(afxBuffer buf)
+_AVX afxBufferUsage AfxGetBufferUsage(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     return buf->usage;
 }
 
-_AFX afxBufferUsage AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage)
+_AVX afxBufferUsage AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     return buf->usage & usage;
 }
 
-_AFX afxBufferAccess AfxGetBufferAccess(afxBuffer buf)
+_AVX afxBufferAccess AfxGetBufferAccess(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     return buf->access;
 }
 
-_AFX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access)
+_AVX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     return buf->access & access;
 }
 
-_AFX void AfxUnmapBufferRange(afxBuffer buf)
+_AVX void AfxUnmapBufferRange(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -71,7 +71,7 @@ _AFX void AfxUnmapBufferRange(afxBuffer buf)
     buf->unmap(buf);
 }
 
-_AFX void* AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags)
+_AVX void* AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -81,7 +81,7 @@ _AFX void* AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlag
     return buf->map(buf, offset, range, flags);
 }
 
-_AFX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat cnt, void *dst, afxNat dstStride)
+_AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat cnt, void *dst, afxNat dstStride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -116,7 +116,7 @@ _AFX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
     return err;
 }
 
-_AFX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *dst)
+_AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *dst)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -140,7 +140,7 @@ _AFX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
     return err;
 }
 
-_AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxNat srcStride)
+_AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxNat srcStride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -184,7 +184,7 @@ _AFX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
     return err;
 }
 
-_AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNat stride, void const *src, afxNat srcStride)
+_AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNat stride, void const *src, afxNat srcStride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -227,7 +227,7 @@ _AFX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
     return err;
 }
 
-_AFX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void const *src)
+_AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void const *src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
@@ -251,7 +251,7 @@ _AFX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buffers[])
+_AVX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer buffers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -262,7 +262,7 @@ _AFX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, a
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)buffers);
 }
 
-_AFX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buffers[])
+_AVX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buffers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

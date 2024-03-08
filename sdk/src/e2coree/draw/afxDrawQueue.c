@@ -21,7 +21,7 @@
 
 #if 0
 
-_AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
+_AVX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -52,7 +52,7 @@ _AFX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
     return err;
 }
 
-_AFX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat submNo)
+_AVX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat submNo)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -62,14 +62,14 @@ _AFX afxDrawSubmission* AfxGetDrawQueueSubmission(afxDrawQueue dque, afxNat subm
     return AFX_REBASE(lnk, afxDrawSubmission, ordinalSubmLnk);
 }
 
-_AFX afxNat AfxGetDrawQueueSubmissionCount(afxDrawQueue dque)
+_AVX afxNat AfxGetDrawQueueSubmissionCount(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
     return AfxGetChainLength(&dque->ordinalSubmChn);
 }
 
-_AFX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first, afxNat cnt, afxDrawSubmission *subm[])
+_AVX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first, afxNat cnt, afxDrawSubmission *subm[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -92,7 +92,7 @@ _AFX afxResult AfxEnumerateDrawQueueSubmissions(afxDrawQueue dque, afxNat first,
     return hitcnt;
 }
 
-_AFX afxError AfxRequestDrawQueueSubmission(afxDrawQueue dque, afxDrawQueue dque, afxDrawSubmissionType type, afxTime timeout, afxNat *submNo)
+_AVX afxError AfxRequestDrawQueueSubmission(afxDrawQueue dque, afxDrawQueue dque, afxDrawSubmissionType type, afxTime timeout, afxNat *submNo)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -146,7 +146,7 @@ _AFX afxError AfxRequestDrawQueueSubmission(afxDrawQueue dque, afxDrawQueue dque
     return err;
 }
 
-_AFX afxError AfxDiscardDrawQueueSubmissions(afxDrawQueue dque, afxNat first, afxNat cnt)
+_AVX afxError AfxDiscardDrawQueueSubmissions(afxDrawQueue dque, afxNat first, afxNat cnt)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -172,7 +172,7 @@ _AFX afxError AfxDiscardDrawQueueSubmissions(afxDrawQueue dque, afxNat first, af
     return err;
 }
 
-_AFX afxError AfxDiscardAllDrawQueueSubmissions(afxDrawQueue dque)
+_AVX afxError AfxDiscardAllDrawQueueSubmissions(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -187,7 +187,7 @@ _AFX afxError AfxDiscardAllDrawQueueSubmissions(afxDrawQueue dque)
     return err;
 }
 
-_AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo)
+_AVX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(dque, afxFcc_DQUE);
@@ -292,14 +292,14 @@ _AFX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
 
 #endif
 
-_AFX afxError AfxWaitForIdleDrawQueue(afxDrawQueue dque)
+_AVX afxError AfxWaitForIdleDrawQueue(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
     return dque->waitCb(dque);
 }
 
-_AFX afxDrawContext AfxGetDrawQueueContext(afxDrawQueue dque)
+_AVX afxDrawContext AfxGetDrawQueueContext(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
@@ -308,7 +308,7 @@ _AFX afxDrawContext AfxGetDrawQueueContext(afxDrawQueue dque)
     return dctx;
 }
 
-_AFX afxDrawDevice AfxGetDrawQueueDevice(afxDrawQueue dque)
+_AVX afxDrawDevice AfxGetDrawQueueDevice(afxDrawQueue dque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);

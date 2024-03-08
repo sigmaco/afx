@@ -420,8 +420,8 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
     if (!AfxExcerptUriPath(uri, &path)) AfxThrowError();
     else
     {
-        afxFixedUri2048 uri2;
-        AfxMakeFixedUri2048(&uri2, NIL);
+        afxUri2048 uri2;
+        AfxMakeUri2048(&uri2, NIL);
 
         AfxResolveUri(flags, &path, &uri2.uri);
         
@@ -430,7 +430,7 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
         if (!(file->fd = fopen(rawName, mode))) AfxThrowError();
         else
         {
-            if (!(file->ios = AfxAcquireStream(0, ioFlags, NIL, 0))) AfxThrowError();
+            if (!(file->ios = AfxAcquireStream(ioFlags, 0, NIL, 0))) AfxThrowError();
             else
             {
                 AfxAssertObjects(1, &file->ios, afxFcc_IOS);
@@ -449,7 +449,7 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
                     file->ios->ioctl.seek = _AfxFileStreamMoveCursorCallback;
                     file->ios->ioctl.tell = _AfxFileStreamAskCursorCallback;
                     
-                     AfxCloneUri(&file->path, &uri2.uri);
+                    AfxCloneUri(&file->path, &uri2.uri);
                     file->ios->idd = (void*)file;
                 }
 

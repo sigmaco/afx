@@ -22,9 +22,9 @@
 #define _AFX_THREAD_C
 #include "qwadro/sound/afxSoundSystem.h"
 
-AFXINL afxSoundSystem _AfxGetSsysData(void);
+AAXINL afxSoundSystem AfxGetSoundSystem(void);
 
-_AFX afxBool AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sque)
+_AAX afxBool AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sque)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
@@ -41,7 +41,7 @@ _AFX afxBool AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sq
     return rslt;
 }
 
-_AFX afxBool AfxGetSoundThreadActiveContext(afxSoundThread sthr, afxSoundContext* sctx)
+_AAX afxBool AfxGetSoundThreadActiveContext(afxSoundThread sthr, afxSoundContext* sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
@@ -58,7 +58,7 @@ _AFX afxBool AfxGetSoundThreadActiveContext(afxSoundThread sthr, afxSoundContext
     return rslt;
 }
 
-_AFX afxSoundDevice AfxGetSoundThreadDevice(afxSoundThread sthr)
+_AAX afxSoundDevice AfxGetSoundThreadDevice(afxSoundThread sthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
@@ -67,14 +67,14 @@ _AFX afxSoundDevice AfxGetSoundThreadDevice(afxSoundThread sthr)
     return sdev;
 }
 
-_AFX void* AfxGetSoundThreadUdd(afxSoundThread sthr)
+_AAX void* AfxGetSoundThreadUdd(afxSoundThread sthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
     return sthr->udd;
 }
 
-_AFX afxThread AfxGetSoundThreadBase(afxSoundThread sthr)
+_AAX afxThread AfxGetSoundThreadBase(afxSoundThread sthr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
@@ -83,7 +83,7 @@ _AFX afxThread AfxGetSoundThreadBase(afxSoundThread sthr)
     return thr;
 }
 
-_AFX afxBool _AfxProcessSdevCb(afxSoundDevice sdev, void *udd)
+_AAX afxBool _AfxProcessSdevCb(afxSoundDevice sdev, void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
@@ -108,7 +108,7 @@ _AFX afxBool _AfxProcessSdevCb(afxSoundDevice sdev, void *udd)
     return FALSE; // dont interrupt curation
 }
 
-_AFX afxError _AfxThrProcSthrCb(afxThread thr, void *udd, afxThreadOpcode opcode)
+_AAX afxError _AfxThrProcSthrCb(afxThread thr, void *udd, afxThreadOpcode opcode)
 {
     afxError err = AFX_ERR_NONE;
     afxSoundThread sthr = (afxSoundThread)thr;// AfxRebase(thr, afxSoundThread, thr);
@@ -123,7 +123,7 @@ _AFX afxError _AfxThrProcSthrCb(afxThread thr, void *udd, afxThreadOpcode opcode
     return err;
 }
 
-_AFX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
+_AAX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
 {
     AfxEntry("sthr=%p", sthr);
     afxError err = AFX_ERR_NONE;
@@ -143,7 +143,7 @@ _AFX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxError _AfxSthrDtor(afxSoundThread sthr)
+_AAX afxError _AfxSthrDtor(afxSoundThread sthr)
 {
     AfxEntry("sthr=%p", sthr);
     afxError err = AFX_ERR_NONE;
@@ -152,7 +152,7 @@ _AFX afxError _AfxSthrDtor(afxSoundThread sthr)
     return err;
 }
 
-_AFX afxClassConfig const _sthrClsConfig =
+_AAX afxClassConfig const _sthrClsConfig =
 {
     .fcc = afxFcc_STHR,
     .name = "Sound Thread",
@@ -165,7 +165,7 @@ _AFX afxClassConfig const _sthrClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[])
+_AAX afxError AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cnt=%u,config=%p,sthr=%p", cnt, config, sthr);
@@ -182,7 +182,7 @@ _AFX afxError AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const conf
     return err;
 };
 
-_AFX afxNat AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd)
+_AAX afxNat AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -192,7 +192,7 @@ _AFX afxNat AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSound
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[])
+_AAX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -202,7 +202,7 @@ _AFX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread st
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sthr);
 }
 
-_AFX afxNat AfxCountSoundThreads(void)
+_AAX afxNat AfxCountSoundThreads(void)
 {
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetSoundThreadClass();

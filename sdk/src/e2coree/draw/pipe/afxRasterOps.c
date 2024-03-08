@@ -20,7 +20,7 @@
 #include "qwadro/draw/pipe/afxDrawCommands.h"
 #include "qwadro/draw/pipe/afxDrawScript.h"
 
-_AFX afxCmdId AfxCmdDownloadRaster(afxDrawScript dscr, afxRaster ras, afxStream dst, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
+_AVX afxCmdId AfxCmdDownloadRaster(afxDrawScript dscr, afxRaster ras, afxStream dst, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -43,7 +43,7 @@ _AFX afxCmdId AfxCmdDownloadRaster(afxDrawScript dscr, afxRaster ras, afxStream 
     return dscr->stdCmds->ras.rw(dscr, ras, dst, opCnt, ops, TRUE, cdc);
 }
 
-_AFX afxCmdId AfxCmdDownloadRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxStream dst, afxNat dstOffset, afxNat dstRowSiz, afxNat dstRowCnt, afxCodec cdc)
+_AVX afxCmdId AfxCmdDownloadRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxStream dst, afxNat dstOffset, afxNat dstRowSiz, afxNat dstRowCnt, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -58,7 +58,7 @@ _AFX afxCmdId AfxCmdDownloadRasterRegion(afxDrawScript dscr, afxRaster ras, afxR
     return AfxCmdDownloadRaster(dscr, ras, dst, 1, &op, cdc);
 }
 
-_AFX afxCmdId AfxCmdUploadRaster(afxDrawScript dscr, afxRaster ras, afxStream src, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
+_AVX afxCmdId AfxCmdUploadRaster(afxDrawScript dscr, afxRaster ras, afxStream src, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -81,7 +81,7 @@ _AFX afxCmdId AfxCmdUploadRaster(afxDrawScript dscr, afxRaster ras, afxStream sr
     return dscr->stdCmds->ras.rw(dscr, ras, src, opCnt, ops, FALSE, cdc);
 }
 
-_AFX afxCmdId AfxCmdUploadRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxStream src, afxNat srcOffset, afxNat srcRowSiz, afxNat srcRowCnt, afxCodec cdc)
+_AVX afxCmdId AfxCmdUploadRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxStream src, afxNat srcOffset, afxNat srcRowSiz, afxNat srcRowCnt, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -96,7 +96,7 @@ _AFX afxCmdId AfxCmdUploadRasterRegion(afxDrawScript dscr, afxRaster ras, afxRas
     return AfxCmdUploadRaster(dscr, ras, src, 1, &op, cdc);
 }
 
-_AFX afxCmdId AfxCmdPackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
+_AVX afxCmdId AfxCmdPackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -119,7 +119,7 @@ _AFX afxCmdId AfxCmdPackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer buf,
     return dscr->stdCmds->ras.pak(dscr, ras, buf, opCnt, ops, FALSE);
 }
 
-_AFX afxCmdId AfxCmdPackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowSiz, afxNat bufRowCnt)
+_AVX afxCmdId AfxCmdPackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowSiz, afxNat bufRowCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -134,7 +134,7 @@ _AFX afxCmdId AfxCmdPackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRaste
     return AfxCmdPackRaster(dscr, ras, buf, 1, &op);
 }
 
-_AFX afxCmdId AfxCmdUnpackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
+_AVX afxCmdId AfxCmdUnpackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -157,7 +157,7 @@ _AFX afxCmdId AfxCmdUnpackRaster(afxDrawScript dscr, afxRaster ras, afxBuffer bu
     return dscr->stdCmds->ras.pak(dscr, ras, buf, opCnt, ops, TRUE);
 }
 
-_AFX afxCmdId AfxCmdUnpackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowSiz, afxNat bufRowCnt)
+_AVX afxCmdId AfxCmdUnpackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowSiz, afxNat bufRowCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -172,7 +172,7 @@ _AFX afxCmdId AfxCmdUnpackRasterRegion(afxDrawScript dscr, afxRaster ras, afxRas
     return AfxCmdUnpackRaster(dscr, ras, buf, 1, &op);
 }
 
-_AFX afxCmdId AfxCmdCopyRaster(afxDrawScript dscr, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[])
+_AVX afxCmdId AfxCmdCopyRaster(afxDrawScript dscr, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -199,7 +199,7 @@ _AFX afxCmdId AfxCmdCopyRaster(afxDrawScript dscr, afxRaster src, afxRaster dst,
     return dscr->stdCmds->ras.cpy(dscr, src, dst, opCnt, ops);
 }
 
-_AFX afxCmdId AfxCmdCopyRasterRegion(afxDrawScript dscr, afxRaster src, afxNat srcLodIdx, afxNat srcBaseLayer, afxNat srcLayerCnt, afxWhd srcOffset, afxRaster dst, afxRasterRegion const* dstRgn)
+_AVX afxCmdId AfxCmdCopyRasterRegion(afxDrawScript dscr, afxRaster src, afxNat srcLodIdx, afxNat srcBaseLayer, afxNat srcLayerCnt, afxWhd srcOffset, afxRaster dst, afxRasterRegion const* dstRgn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -215,7 +215,7 @@ _AFX afxCmdId AfxCmdCopyRasterRegion(afxDrawScript dscr, afxRaster src, afxNat s
     return AfxCmdCopyRaster(dscr, src, dst, 1, &op);
 }
 
-AFX afxCmdId AfxCmdSubsampleRaster(afxDrawScript dscr, afxRaster ras, afxNat baseLod, afxNat lodCnt)
+AVX afxCmdId AfxCmdSubsampleRaster(afxDrawScript dscr, afxRaster ras, afxNat baseLod, afxNat lodCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -224,7 +224,7 @@ AFX afxCmdId AfxCmdSubsampleRaster(afxDrawScript dscr, afxRaster ras, afxNat bas
     return dscr->stdCmds->ras.mip(dscr, ras, baseLod, lodCnt);
 }
 
-_AFX afxCmdId AfxCmdTransformRaster(afxDrawScript dscr, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const regions[])
+_AVX afxCmdId AfxCmdTransformRaster(afxDrawScript dscr, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -246,7 +246,7 @@ _AFX afxCmdId AfxCmdTransformRaster(afxDrawScript dscr, afxRaster ras, afxReal c
     return dscr->stdCmds->ras.xform(dscr, ras, m, rgnCnt, regions);
 }
 
-_AFX afxCmdId AfxCmdTransformRasterRegion(afxDrawScript dscr, afxRaster ras, afxReal const m[4][4], afxRasterRegion const* rgn)
+_AVX afxCmdId AfxCmdTransformRasterRegion(afxDrawScript dscr, afxRaster ras, afxReal const m[4][4], afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -256,7 +256,7 @@ _AFX afxCmdId AfxCmdTransformRasterRegion(afxDrawScript dscr, afxRaster ras, afx
     return AfxCmdTransformRaster(dscr, ras, m, 1, rgn);
 }
 
-_AFX afxCmdId AfxCmdSwizzleRaster(afxDrawScript dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const regions[])
+_AVX afxCmdId AfxCmdSwizzleRaster(afxDrawScript dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -278,7 +278,7 @@ _AFX afxCmdId AfxCmdSwizzleRaster(afxDrawScript dscr, afxRaster ras, afxColorSwi
     return dscr->stdCmds->ras.swizzle(dscr, ras, a, b, rgnCnt, regions);
 }
 
-_AFX afxCmdId AfxCmdSwizzleRasterRegion(afxDrawScript dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const* rgn)
+_AVX afxCmdId AfxCmdSwizzleRasterRegion(afxDrawScript dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

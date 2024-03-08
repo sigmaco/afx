@@ -18,9 +18,9 @@
 #include "qwadro/draw/pipe/afxShaderBlueprint.h"
 #include "qwadro/io/afxFile.h"
 
-AFX afxChar const *shdResTypeNames[];
+AVX afxChar const *shdResTypeNames[];
 
-_AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
+_AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
 {
     afxError err = NIL;
 
@@ -32,10 +32,10 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
         afxUri inc;
         afxChar buf[2048] = { 0 };
         afxNat baseChar;
-        afxFixedString4096 src;
-        AfxMakeFixedString4096(&src, NIL);
-        afxFixedString2048 line;
-        AfxMakeFixedString2048(&line, NIL);
+        afxString4096 src;
+        AfxMakeString4096(&src, NIL);
+        afxString2048 line;
+        AfxMakeString2048(&line, NIL);
 
         while (!AfxReadFileString(file, &line.str))
         {
@@ -61,8 +61,8 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                 if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("OUT")))
                 {
                     afxNat location = 0;
-                    afxFixedString32 fmtName = { 0 };
-                    afxFixedString32 varName = { 0 };
+                    afxString32 fmtName = { 0 };
+                    afxString32 varName = { 0 };
                     afxNat fnd = AfxScanString(&line.str.str, "OUT(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_]);", &location, fmtName.buf, varName.buf);
 
                     if (fnd == 3)
@@ -82,8 +82,8 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                 if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("IN")))
                 {
                     afxNat location = 0;
-                    afxFixedString32 fmtName = { 0 };
-                    afxFixedString32 varName = { 0 };
+                    afxString32 fmtName = { 0 };
+                    afxString32 varName = { 0 };
                     afxNat fnd = AfxScanString(&line.str.str, "IN(%u, %32[A-Za-z0-9], %32[a-zA-Z0-9_]);", &location, fmtName.buf, varName.buf);
 
                     if (fnd == 3)
@@ -104,8 +104,8 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                     if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("SAMPLING_UNIT")))
                     {
                         afxNat set = 0, binding = 0, resCnt = 1;
-                        afxFixedString32 typeName = { 0 };
-                        afxFixedString32 varName = { 0 };
+                        afxString32 typeName = { 0 };
+                        afxString32 varName = { 0 };
                         afxNat fnd = AfxScanString(&line.str.str, "SAMPLING_UNIT(%u, %u, %32[A-Za-z0-9], %32[a-zA-Z0-9_] );", &set, &binding, typeName.buf, varName.buf);
 
                         if (fnd == 4)
@@ -134,7 +134,7 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                     if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("UNIFORM_UNIT")))
                     {
                         afxNat set = 0, binding = 0, resCnt = 1;
-                        afxFixedString32 varName = { 0 };
+                        afxString32 varName = { 0 };
                         afxNat fnd = AfxScanString(&line.str.str, "UNIFORM_UNIT(%u, %u, %32[A-Za-z0-9_] );", &set, &binding, varName.buf);
 
                         if (fnd == 3)
@@ -153,8 +153,8 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                     if (AFX_INVALID_INDEX != AfxFindSubstring(&line.str.str, &AfxString("STORAGE_UNIT")))
                     {
                         afxNat set = 0, binding = 0, resCnt = 1;
-                        afxFixedString32 accessName = { 0 };
-                        afxFixedString32 varName = { 0 };
+                        afxString32 accessName = { 0 };
+                        afxString32 varName = { 0 };
                         afxNat fnd = AfxScanString(&line.str.str, "STORAGE_UNIT(%u, %u, %32[A-Za-z0-9], %32[A-Za-z0-9_] );", &set, &binding, accessName.buf, varName.buf);
 
                         if (fnd == 4)
@@ -181,7 +181,7 @@ _AFX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
     return err;
 }
 
-_AFX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(xml, afxFcc_XML);
@@ -300,7 +300,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
             afxNat ioLocation = 0;
             afxVertexFormat ioFormat = NIL;
             afxNat inStream = 0;
-            afxFixedString32 fmtName, ioName;
+            afxString32 fmtName, ioName;
             fmtName.buf[0] = '\0';
             ioName.buf[0] = '\0';
             AfxScanString(&content, "%8s %32[a-z,0-9,_]", fmtName.buf, ioName.buf);
@@ -350,7 +350,7 @@ _AFX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
     return err;
 }
 
-_AFX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
@@ -607,7 +607,7 @@ _AFX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 }
 
 #if 0
-_AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineConfig const* identity, afxPipelineConfig *ds, afxPipelineDepthFlags *foundMask)
+_AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineConfig const* identity, afxPipelineConfig *ds, afxPipelineDepthFlags *foundMask)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -681,7 +681,7 @@ _AFX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
 }
 #endif
 
-_AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
@@ -880,7 +880,7 @@ _AFX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
 }
 
 #if 0
-_AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, afxDrawOperationBlueprint *blueprint)
+_AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, afxDrawOperationBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(node);
@@ -1068,7 +1068,7 @@ _AFX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
 }
 #endif
 #if 0
-_AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], afxDrawContext dctx, afxDrawOperation dop[])
+_AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], afxDrawContext dctx, afxDrawOperation dop[])
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("dctx=%p", dctx);
@@ -1081,7 +1081,7 @@ _AFX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
-    AfxAssertType(dsys, afxFcc_DSYS);
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxIoSystem fsys = AfxGetDrawFileSystem(dsys);
     AfxAssertObject(fsys, afxFcc_FSYS);
 

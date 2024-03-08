@@ -27,11 +27,11 @@
 
 typedef enum afxTransformFlags
 {
-    afxTransformFlags_ORIGIN        = AfxGetBitOffset(0), // has non-identity position
-    afxTransformFlags_ORIENTATION   = AfxGetBitOffset(1), // has non-identity orientation
-    afxTrasnformFlags_RIGID         = afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION,
-    afxTransformFlags_DEFORM        = AfxGetBitOffset(2), // has non-identity scale/shear
-    afxTransformFlags_ALL =         (afxTransformFlags_ORIGIN | afxTransformFlags_ORIENTATION | afxTransformFlags_DEFORM)
+    afxTransformFlags_TRANSLATED    = AfxGetBitOffset(0), // has non-identity position
+    afxTransformFlags_ROTATED       = AfxGetBitOffset(1), // has non-identity orientation
+    afxTrasnformFlags_RIGID         = afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED,
+    afxTransformFlags_DEFORMED      = AfxGetBitOffset(2), // has non-identity scale/shear
+    afxTransformFlags_ALL =         (afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED | afxTransformFlags_DEFORMED)
 } afxTransformFlags;
 
 AFX_DEFINE_STRUCT(afxTransform)
@@ -41,6 +41,9 @@ AFX_DEFINE_STRUCT(afxTransform)
     afxQuat             orientation;
     afxM3d              scaleShear;
 };
+
+AFX afxTransform const AFX_TRANSFORM_ZERO;
+AFX afxTransform const AFX_TRANSFORM_IDENTITY;
 
 // You can initialize a afxTransform to the identity transform like this:
 
@@ -58,7 +61,7 @@ AFXINL afxReal  AfxDetTransform(afxTransform const *t);
 
 AFXINL void     AfxLerpTransform(afxTransform *t, afxTransform const* a, afxTransform const* b, afxReal time);
 
-AFXINL void     AfxGetInverseTransform(afxTransform* t, afxTransform const* in);
+AFXINL void     AfxInvertTransform(afxTransform const* in, afxTransform* t);
 
 //AFXINL void     AfxLerpTransform(afxTransform const *t, afxTransform const *other, afxReal time, afxTransform *out); // aka linear blend
 
@@ -66,17 +69,13 @@ AFXINL void     AfxPreMultiplyTransform(afxTransform* t, afxTransform const* pre
 AFXINL void     AfxPostMultiplyTransform(afxTransform* t, afxTransform const* post);
 AFXINL void     AfxMultiplyTransform(afxTransform* t, afxTransform const* a, afxTransform const* b);
 
-AFXINL void     AfxComposeTransformM4d(afxTransform const *t, afxReal m[4][4]); // build composite transform 4x4
-AFXINL void     AfxComposeTransformWorldM4d(afxTransform const *t, afxReal const parent[4][4], afxReal w[4][4]); // compose transform world matrix 4x4 only
-AFXINL void     AfxGetTransformWorldAndCompositeMatrix(afxTransform const *t, afxReal const parent[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4]);
-AFXINL void     AfxComposeTransformCompactMatrix(afxTransform const *t, afxReal m[4][3]); // build composite transform 4x3 (compact matrix)
+AFXINL void     AfxTransformArrayedAtv3d(afxTransform const* t, afxNat cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxTransformArrayedLtv3d(afxTransform const* t, afxNat cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxTransformArrayedLtv3dTransposed(afxTransform const* t, afxNat cnt, afxV3d const in[], afxV3d out[]);
 
-AFXINL void     AfxAssimilateTransforms(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxNat cnt, afxTransform const in[], afxTransform out[]);
+AFXINL void     AfxAssimilateTransforms(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxNat cnt, afxTransform const in[], afxTransform out[]);
 
-AFXINL void     AfxTransformArrayedPointV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-AFXINL void     AfxTransformArrayedNormalV3d(afxTransform const* t, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
-
-AFXINL afxError AfxReadTransforms(afxStream in, afxNat cnt, afxTransform dst[]);
-AFXINL afxError AfxWriteTransforms(afxStream out, afxNat cnt, afxTransform const src[]);
+AFXINL void     AfxComposeTransformM4d(afxTransform const *t, afxM4d m); // build composite transform 4x4
+AFXINL void     AfxComposeTransformCompactMatrix(afxTransform const *t, afxV3d m[4]); // build composite transform 4x3 (compact matrix)
 
 #endif//AFX_TRANSFORM_H

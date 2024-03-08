@@ -82,10 +82,10 @@ _SGL void _SglDpuBindVertexSources(sglDpuIdd* dpu, _sglCmdVertexSources const *c
         afxNat bindingIdx = first + i;
         AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, bindingIdx, 1);
 
-        afxBuffer buf = cmd->buf[i];
-        afxNat32 offset = cmd->offset[i];
-        afxNat32 range = cmd->range[i];
-        afxNat32 stride = cmd->stride[i];
+        afxBuffer buf = cmd->sources[i].buf;
+        afxNat32 offset = cmd->sources[i].offset;
+        afxNat32 range = cmd->sources[i].range;
+        afxNat32 stride = cmd->sources[i].stride;
 
         dpu->nextVinBindings.sources[bindingIdx].buf = buf;
         dpu->nextVinBindings.sources[bindingIdx].offset = offset;
@@ -402,27 +402,27 @@ _SGL afxCmdId _SglEncodeCmdBindVertexSources(afxDrawScript dscr, afxNat baseSlot
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (slotCnt * sizeof(cmd->sources[0])));
     AfxAssert(cmd);
     cmd->first = baseSlot;
     cmd->cnt = slotCnt;
 
     for (afxNat i = 0; i < slotCnt; i++)
     {
-        if ((cmd->buf[i] = buf ? buf[i] : NIL))
+        if ((cmd->sources[i].buf = buf ? buf[i] : NIL))
         {
-            AfxAssertObjects(1, &cmd->buf[i], afxFcc_BUF);
+            AfxAssertObjects(1, &cmd->sources[i].buf, afxFcc_BUF);
         }
 
-        cmd->offset[i] = offset ? offset[i] : 0;
-        cmd->range[i] = range ? range[i] : (cmd->buf[i] ? AfxGetBufferCapacity(cmd->buf[i]) : 0);
-        cmd->stride[i] = stride ? stride[i] : 0;
+        cmd->sources[i].offset = offset ? offset[i] : 0;
+        cmd->sources[i].range = range ? range[i] : (cmd->sources[i].buf ? AfxGetBufferCapacity(cmd->sources[i].buf) : 0);
+        cmd->sources[i].stride = stride ? stride[i] : 0;
         //cmd->spec[i].instance = FALSE;
         //cmd->spec[i].instDivisor = 1;
 
-        if (cmd->buf[i])
+        if (cmd->sources[i].buf)
         {
-            AfxAssertRange(AfxGetBufferCapacity(cmd->buf[i]), cmd->offset[i], cmd->range[i]);
+            AfxAssertRange(AfxGetBufferCapacity(cmd->sources[i].buf), cmd->sources[i].offset, cmd->sources[i].range);
         }
     }
 
@@ -537,7 +537,7 @@ _SGL afxCmdId _SglEncodeCmdReadjustViewports(afxDrawScript dscr, afxNat32 first,
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -554,7 +554,7 @@ _SGL afxCmdId _SglEncodeCmdResetViewports(afxDrawScript dscr, afxNat32 cnt, afxV
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
     AfxAssert(cmd);
     cmd->first = 0;
     cmd->cnt = cnt;

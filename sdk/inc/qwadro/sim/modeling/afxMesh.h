@@ -29,20 +29,20 @@
 #include "qwadro/core/afxFixedString.h"
 
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
-/// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshPivot's.
+/// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshBias's.
 /// Assets padrões do Qwadro contêm um arranjo de afxMesh na estrutura de informação do arquivo, e afxMesh'es são também referenciadas pelos objetos afxModel que as usam.
 /// Cada afxMesh é separada em afxMeshSurface's delitmitadas por afxMaterial's.
 /// A estrutura afxMeshSurface é a estrutura primária que você interage para obter estas porções.
 /// A estrutura afxMeshSurface referencia o arranjo de índices para a afxMesh, a qual em sua vez referencia o arranjo de vértice.
-/// Se a afxMesh é deformável, as vértices no arranjo de vértice referenciam as articulações no arranjo de afxMeshPivot's.
+/// Se a afxMesh é deformável, as vértices no arranjo de vértice referenciam as articulações no arranjo de afxMeshBias's.
 /// Os dados de vértice para uma afxMesh, dados por um afxVertexBuffer referenciado pelo afxMesh, contêm todos os vértices únicos na afxMesh.
 
 /// As vértices no Qwadro são rígidos ou deformáveis.
 /// afxMesh'es deformáveis são aquelas que estão ligadas a múltiplas articulações, onde afxMesh'es rígidas são aquelas que estão ligadas a uma singela articulação (e portanto movem-se "rigidamente" com aquela articulação).
 
-/// Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshPivot's. 
+/// Para determinar quais articulações uma afxMesh está ligada a (uma para afxMesh rígida, muitas para afxMesh deformável), você pode acessar o arranjo de afxMeshBias's. 
 /// Este arranjo contém nomes das articulações as quais a afxMesh está ligada, bem como parâmetros de "oriented bounding box" para as partes da afxMesh que estão ligadas àquela articulação e outra informação pertinente a ligação malha-a-articulação.
-/// Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshPivot diretamente, porque você pode usar um objeto afxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
+/// Note que na maioria dos casos você não necessitará de usar os nomes das articulações no afxMeshBias diretamente, porque você pode usar um objeto afxMeshRig para fazer este trabalho (e outro trabalho necessário de ligação) para você.
 
 /// Os dados de índice para uma afxMesh, dado por um afxMeshTopology referenciado pelo afxMesh, contém todos os índices para os triângulos na afxMesh.
 /// Estes índices sempre descrevem uma lista de triângulo - isso é, cada grupo de três índices descrevem um singelo triângulo - os dados não são organizados em "strips" ou "fans".
@@ -59,9 +59,8 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
     afxBool             delta;
 };
 
-AFX_DEFINE_STRUCT(afxMeshPivot)
+AFX_DEFINE_STRUCT(afxMeshBias)
 {
-    afxString           id; // 32
     afxAabb             aabb; // originally oobb;
     afxNat              triCnt;
     afxNat*             tris; // indices to vertices
@@ -71,11 +70,17 @@ AFX_DEFINE_STRUCT(afxMeshPivot)
 AFX_OBJECT(afxMesh)
 {
     afxMeshTopology     topology;
+
     awxVertexData       vtd;
+    afxNat              baseVtx;
+    afxNat              vtxCnt;
     afxNat              morphCnt;
     afxMeshMorph*       morphs;
-    afxNat              pivotCnt;
-    afxMeshPivot*       pivots;
+    
+    afxNat              biasCnt;
+    afxMeshBias*        biasData;
+    afxString*          biasName;
+
     afxString           id; // 32
     afxStringCatalog    strc;
     void*               extData;
@@ -95,42 +100,42 @@ AFX_OBJECT(afxMesh)
 AFX_DEFINE_STRUCT(afxMeshBlueprint)
 /// Data needed for mesh assembly
 {
-    afxFixedString32    id;
+    afxString32         id;
     awxVertexData       vertices;
     afxMeshTopology     topology;
     afxNat              mtlCnt;
-    afxNat              pivotCnt;
+    afxNat              biasCnt;
     afxString const*    pivots;
     afxStringCatalog    strc;
 };
 
-AFX afxBool             AfxGetMeshId(afxMesh msh, afxString* id);
+AKX afxBool             AfxGetMeshId(afxMesh msh, afxString* id);
 
-AFX awxVertexData       AfxGetMeshVertices(afxMesh msh);
-AFX afxNat              AfxCountMeshVertices(afxMesh msh);
+AKX afxNat              AfxCountMeshVertices(afxMesh msh);
+AKX awxVertexData       AfxGetMeshVertices(afxMesh msh);
 
-AFX afxNat              AfxCountMeshMorphes(afxMesh msh);
-AFX afxMeshMorph*       AfxGetMeshMorph(afxMesh msh, afxNat morphIdx);
+AKX afxNat              AfxCountMeshMorphes(afxMesh msh);
+AKX afxMeshMorph*       AfxGetMeshMorphes(afxMesh msh, afxNat baseMorphIdx);
 
-AFX void                AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht);
-AFX afxMeshTopology     AfxGetMeshTopology(afxMesh msh);
+AKX void                AfxRelinkMeshTopology(afxMesh msh, afxMeshTopology msht);
+AKX afxMeshTopology     AfxGetMeshTopology(afxMesh msh);
 
-AFX afxBool             AfxMeshIsDeformable(afxMesh msh);
+AKX afxBool             AfxMeshIsDeformable(afxMesh msh);
 
-AFX afxNat              AfxCountMeshVertebras(afxMesh msh);
-AFX afxMeshPivot*       AfxGetMeshPivot(afxMesh msh, afxNat pvtIdx);
-AFX afxBool             AfxGetMeshPivotId(afxMesh msh, afxNat pvtIdx, afxString* id);
+AKX afxNat              AfxCountMeshBiases(afxMesh msh);
+AKX afxMeshBias*        AfxGetMeshBiases(afxMesh msh, afxNat baseBiasIdx);
+AKX afxBool             AfxGetMeshBiasName(afxMesh msh, afxNat biasIdx, afxString* id);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
+AKX afxError            AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
 
-AFX afxError            AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
+AKX afxError            AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
 
-AFX void                AfxTransformMeshes(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[4], afxReal affineTol, afxFlags flags, afxNat cnt, afxMesh meshes[]);
+AKX void                AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxNat cnt, afxMesh meshes[]);
 
-AFX void                AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[]);
+AKX void                AfxRenormalizeMeshes(afxNat cnt, afxMesh meshes[]);
 
 #endif//AFX_MESH_H

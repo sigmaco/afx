@@ -19,35 +19,35 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/draw/afxDrawContext.h"
 
-_AFX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
+_AVX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->flags & bitmask;
 }
 
-_AFX afxBool AfxHasCombinedDepthStencilBuffer(afxCanvas canv)
+_AVX afxBool AfxHasCombinedDepthStencilBuffer(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->combinedDs;
 }
 
-_AFX afxNat AfxCountSurfaces(afxCanvas canv)
+_AVX afxNat AfxCountSurfaces(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->surfaceCnt;
 }
 
-_AFX afxNat AfxCountDrawSurfaces(afxCanvas canv)
+_AVX afxNat AfxCountDrawSurfaces(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     return canv->colorCnt;
 }
 
-_AFX void AfxGetCanvasExtent(afxCanvas canv, afxWhd whd)
+_AVX void AfxGetCanvasExtent(afxCanvas canv, afxWhd whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -58,7 +58,7 @@ _AFX void AfxGetCanvasExtent(afxCanvas canv, afxWhd whd)
     //wh[2] = canv->layerCnt;
 }
 
-_AFX afxBool AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx)
+_AVX afxBool AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -70,7 +70,7 @@ _AFX afxBool AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx)
     return rslt;
 }
 
-_AFX afxBool AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx)
+_AVX afxBool AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -82,7 +82,7 @@ _AFX afxBool AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx)
     return rslt;
 }
 
-_AFX afxNat AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
+_AVX afxNat AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -105,7 +105,7 @@ _AFX afxNat AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, a
     return rslt;
 }
 
-_AFX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
+_AVX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -122,7 +122,7 @@ _AFX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
     return ras;
 }
 
-_AFX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
+_AVX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -139,7 +139,7 @@ _AFX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
     return ras;
 }
 
-_AFX afxError AfxReadjustCanvas(afxCanvas canv, afxWhd const whd)
+_AVX afxError AfxReadjustCanvas(afxCanvas canv, afxWhd const whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -151,7 +151,7 @@ _AFX afxError AfxReadjustCanvas(afxCanvas canv, afxWhd const whd)
     return err;
 }
 
-_AFX afxError AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
+_AVX afxError AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -165,7 +165,7 @@ _AFX afxError AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfC
     return err;
 }
 
-_AFX afxError AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth)
+_AVX afxError AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -181,7 +181,7 @@ _AFX afxError AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth)
     return err;
 }
 
-_AFX afxError AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil)
+_AVX afxError AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -197,7 +197,7 @@ _AFX afxError AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil)
     return err;
 }
 
-_AFX afxError AfxGenerateDrawBuffers(afxCanvas canv)
+_AVX afxError AfxGenerateDrawBuffers(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -238,7 +238,7 @@ _AFX afxError AfxGenerateDrawBuffers(afxCanvas canv)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[])
+_AVX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -249,7 +249,7 @@ _AFX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, 
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)canvases);
 }
 
-_AFX afxError AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[])
+_AVX afxError AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

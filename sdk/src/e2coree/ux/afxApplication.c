@@ -27,6 +27,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_APPLICATION_C
+#define _AFX_SYSTEM_C
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/io/afxStream.h"
@@ -36,7 +37,7 @@
 
 extern afxClassConfig const _AfxWidClsConfig;
 
-_AFX void AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point)
+_AUX void AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point)
 {
     AfxEntry("app=%p,widg=%p,point(%f,%f))", app, widg, point ? point[0] : NIL, point ? point[1] : NIL);
     afxError err = AFX_ERR_NONE;
@@ -67,7 +68,7 @@ _AFX void AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d co
     }
 }
 
-_AFX void AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point)
+_AUX void AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point)
 {
     AfxEntry("app=%p,widg=%p,point(%f,%f))", app, widg, point ? point[0] : NIL, point ? point[1] : NIL);
     afxError err = AFX_ERR_NONE;
@@ -94,7 +95,7 @@ _AFX void AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d c
     }
 }
 
-_AFX void AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point)
+_AUX void AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point)
 {
     AfxEntry("app=%p,widg=%p,point(%f,%f))", app, widg, point ? point[0] : NIL, point ? point[1] : NIL);
     afxError err = AFX_ERR_NONE;
@@ -123,7 +124,7 @@ _AFX void AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d c
     }
 }
 
-_AFX afxClass* AfxGetWidgetClass(afxApplication app)
+_AUX afxClass* AfxGetWidgetClass(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
@@ -132,7 +133,7 @@ _AFX afxClass* AfxGetWidgetClass(afxApplication app)
     return class;
 }
 
-_AFX afxNat AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[])
+_AUX afxNat AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
@@ -142,7 +143,7 @@ _AFX afxNat AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, af
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)wid);
 }
 
-_AFX afxDrawInput AfxApplicationGetDrawInput(afxApplication app)
+_AUX afxDrawInput AfxApplicationGetDrawInput(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
@@ -151,7 +152,7 @@ _AFX afxDrawInput AfxApplicationGetDrawInput(afxApplication app)
     return din;
 }
 
-_AFX void AfxEndApplication(afxApplication app, afxInt exitCode)
+_AUX void AfxEndApplication(afxApplication app, afxInt exitCode)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("app=%p", app);
@@ -161,7 +162,7 @@ _AFX void AfxEndApplication(afxApplication app, afxInt exitCode)
     //AfxExitExecution(app->thr, exitCode);
 }
 
-_AFX void AfxQuitApplication(afxApplication app)
+_AUX void AfxQuitApplication(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("app=%p", app);
@@ -169,7 +170,7 @@ _AFX void AfxQuitApplication(afxApplication app)
     AfxEndApplication(app, 0);
 }
 
-_AFX afxResult AfxRunApplication(afxApplication app)
+_AUX afxResult AfxRunApplication(afxApplication app)
 {
     AfxEntry("app=%p", app);
     afxError err = AFX_ERR_NONE;
@@ -180,7 +181,7 @@ _AFX afxResult AfxRunApplication(afxApplication app)
     return 0;
 }
 
-_AFX afxDrawContext AfxApplicationGetDrawContext(afxApplication app)
+_AUX afxDrawContext AfxApplicationGetDrawContext(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
@@ -189,7 +190,7 @@ _AFX afxDrawContext AfxApplicationGetDrawContext(afxApplication app)
     return dctx;
 }
 
-_AFX afxThread AfxGetApplicationThread(afxApplication app)
+_AUX afxThread AfxGetApplicationThread(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
@@ -198,7 +199,7 @@ _AFX afxThread AfxGetApplicationThread(afxApplication app)
     return thr;
 }
 
-_AFX afxError _AfxAppDtor(afxApplication app)
+_AUX afxError _AfxAppDtor(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("app=%p", app);
@@ -218,7 +219,7 @@ _AFX afxError _AfxAppDtor(afxApplication app)
     return err;
 }
 
-_AFX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
+_AUX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
 {
     afxError err = AFX_ERR_NONE;
     afxApplication app = (afxApplication)udd; //AfxRebase(thr, afxApplication, thr);
@@ -251,7 +252,7 @@ _AFX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
     return err;
 }
 
-_AFX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
+_AUX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
 {
     AfxEntry("app=%p", app);
     afxError err = AFX_ERR_NONE;
@@ -266,7 +267,7 @@ _AFX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
     if (AfxAcquireThreads(1, AfxHint(), &thrConfig, &app->thr)) AfxThrowError();
     else
     {
-        AfxTakeChain(&app->classes, (void*)app);
+        AfxSetUpChain(&app->classes, (void*)app);
 
         AfxResetString(&app->path);
 
@@ -345,7 +346,7 @@ _AFX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxAppClsConfig =
+_AUX afxClassConfig const _AfxAppClsConfig =
 {
     .fcc = afxFcc_APP,
     .name = "Application",
@@ -358,22 +359,33 @@ _AFX afxClassConfig const _AfxAppClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[])
+_AUX afxError AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[])
 {
-    AfxEntry("cnt=%u,app=%p,config=%p", cnt, applications, config);
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetApplicationClass();
-    AfxAssertClass(cls, afxFcc_APP);
+    
+    static afxBool appClsMounted = FALSE;
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)applications, (void const*[]) { (void*)config }))
-        AfxThrowError();
+    if (!appClsMounted)
+    {
+        AfxMountClass(cls, NIL, NIL, &_AfxAppClsConfig);
+        appClsMounted = TRUE;
+    }
 
-    AfxAssertObjects(cnt, applications, afxFcc_APP);
+    if (!appClsMounted) AfxThrowError();
+    else
+    {
+        AfxAssertClass(cls, afxFcc_APP);
 
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)applications, (void const*[]) { (void*)config }))
+            AfxThrowError();
+
+        AfxAssertObjects(cnt, applications, afxFcc_APP);
+    }
     return err;
 }
 
-_AFX afxNat AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxApplication, void*), void *udd)
+_AUX afxNat AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxApplication, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -383,7 +395,7 @@ _AFX afxNat AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxAppli
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication applications[])
+_AUX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication applications[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -393,10 +405,17 @@ _AFX afxNat AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication ap
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)applications);
 }
 
-_AFX afxNat AfxCountApplications(void)
+_AUX afxNat AfxCountApplications(void)
 {
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetApplicationClass();
     AfxAssertClass(cls, afxFcc_APP);
     return AfxCountInstances(cls);
+}
+
+_AUX afxClass* AfxGetApplicationClass(void)
+{
+    afxError err = AFX_ERR_NONE;
+    static afxClass _appCls = { 0 };
+    return &_appCls;
 }

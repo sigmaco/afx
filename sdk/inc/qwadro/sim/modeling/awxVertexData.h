@@ -90,7 +90,11 @@ AFX_DEFINE_STRUCT(awxVertexDataAttr)
     awxVertexUsage      usage;
     awxVertexFlags      flags;
     afxVertexFormat     fmt;
-    afxByte*            data;
+    union
+    {
+        void*           data;
+        afxByte*        dataBytemap;
+    };
     afxString           id; // 8
 
     afxNat              cacheIdx;
@@ -100,10 +104,10 @@ AFX_DEFINE_STRUCT(awxVertexDataAttr)
 
 AFX_OBJECT(awxVertexData)
 {
-    afxNat              biasCnt;
-    afxVertexBias*      biases;
+    //afxNat              biasCnt;
+    //afxVertexBias*      biases;
     afxNat              vtxCnt;
-    afxVertex*          vtx; // one for each vertex
+    //afxVertex*          vtx; // one for each vertex
     afxNat              attrCnt;
     awxVertexDataAttr*  attrs;
     afxAabb             aabb;
@@ -141,39 +145,33 @@ AFX_DEFINE_STRUCT(awxVertexAttrSpec)
     afxNat              srcStride;
 };
 
-AFX afxNat              AwxCountVertices(awxVertexData vtd);
+AKX afxNat              AwxCountVertices(awxVertexData vtd);
 
-AFX afxNat              AwxFindVertexDataAttributes(awxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
+AKX afxNat              AwxFindVertexAttributes(awxVertexData vtd, afxNat cnt, afxString const id[], afxNat attrIdx[]);
 
-AFX afxError            AwxGetVertexAttributeInfo(awxVertexData vtd, afxNat attrIdx, afxVertexFormat* fmt, awxVertexUsage* usage, awxVertexFlags* flags);
+AKX afxError            AwxGetVertexAttributeInfo(awxVertexData vtd, afxNat attrIdx, afxVertexFormat* fmt, awxVertexUsage* usage, awxVertexFlags* flags);
 
-AFX afxVertexFormat     AwxGetVertexAttributeFormat(awxVertexData vtd, afxNat attrIdx);
-AFX awxVertexUsage      AwxGetVertexAttributeUsage(awxVertexData vtd, afxNat attrIdx);
-AFX awxVertexFlags      AwxGetVertexAttributeFlags(awxVertexData vtd, afxNat attrIdx);
+AKX afxVertexFormat     AwxGetVertexAttributeFormat(awxVertexData vtd, afxNat attrIdx);
+AKX awxVertexUsage      AwxGetVertexAttributeUsage(awxVertexData vtd, afxNat attrIdx);
+AKX awxVertexFlags      AwxGetVertexAttributeFlags(awxVertexData vtd, afxNat attrIdx);
 
-AFX afxNat              AwxCountVertexBiases(awxVertexData vtd);
-AFX afxVertexBias const*AwxGetVertexBiases(awxVertexData vtd, afxNat baseBiasIdx);
+AKX void*               AwxExposeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx);
+AKX afxError            AwxZeroVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
+AKX afxError            AwxFillVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src);
+AKX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src, afxNat32 srcStride);
+AKX afxError            AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
 
-AFX void*               AwxExposeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx);
-AFX afxError            AwxZeroVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
-AFX afxError            AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
-AFX afxError            AwxFillVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src);
-AFX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt, void const* src, afxNat32 srcStride);
-
-AFX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
-AFX afxError            AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd);
-
-AFX afxError            AwxUpdateVertices(awxVertexData vtd, afxNat baseVtx, afxNat vtxCnt, afxVertex const src[], afxNat fetchRate);
-AFX afxError            AwxUpdateVertexBiases(awxVertexData vtd, afxNat baseBiasIdx, afxNat biasCnt, afxVertexBias const src[], afxNat fetchRate);
+AKX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
+AKX afxError            AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[]);
+AKX afxError            AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[]);
 
-AFX awxVertexData       AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, afxMeshBuilder const* mshb);
+AKX awxVertexData       AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, afxMeshBuilder const* mshb);
 
-AFX void                AwxTransformVertexDatas(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxBool renormalize, afxNat cnt, awxVertexData vtd[]);
+AKX void                AwxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxBool renormalize, afxNat cnt, awxVertexData vtd[]);
 
 #endif//AFX_VERTEX_DATA_H

@@ -20,7 +20,7 @@
 #include "qwadro/draw/io/afxRaster.h"
 #include "qwadro/afxQwadro.h"
 
-_AFX afxString const targaSignature = AFX_STRING(
+_AVX afxString const targaSignature = AFX_STRING(
 "\n           :::::::::::     :::     :::::::::   ::::::::      :::               "
 "\n               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             "
 "\n               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            "
@@ -367,7 +367,7 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
 }
 
 #if 0
-_AFX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -415,7 +415,7 @@ _AFX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, a
     return err;
 }
 
-_AFX afxError AfxDownloadRasterToTarga(afxDrawInput din, afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AVX afxError AfxDownloadRasterToTarga(afxDrawInput din, afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -441,7 +441,7 @@ _AFX afxError AfxDownloadRasterToTarga(afxDrawInput din, afxRaster ras, afxNat l
     return err;
 }
 
-_AFX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -491,7 +491,7 @@ _AFX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, a
     return err;
 }
 
-_AFX afxError AfxUploadRasterFromTarga(afxDrawInput din, afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AVX afxError AfxUploadRasterFromTarga(afxDrawInput din, afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -517,7 +517,7 @@ _AFX afxError AfxUploadRasterFromTarga(afxDrawInput din, afxRaster ras, afxNat l
     return err;
 }
 
-_AFX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster ras[])
+_AVX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster ras[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -592,7 +592,7 @@ _AFX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags,
     return err;
 }
 
-_AFX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags flags, afxNat layerCnt, afxUri const layerUri[], afxRaster* ras)
+_AVX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags flags, afxNat layerCnt, afxUri const layerUri[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -717,7 +717,7 @@ typedef struct _afxTga
     afxNat imgCnt;
 } _afxTga;
 
-_AFX _AFXINLINE void _AfxTgaSwapColorChannel(afxInt width, afxInt height, afxNat format, afxByte* data)
+_AVX _AFXINLINE void _AfxTgaSwapColorChannel(afxInt width, afxInt height, afxNat format, afxByte* data)
 {
     afxInt i;
     afxByte temp;
@@ -747,7 +747,7 @@ _AFX _AFXINLINE void _AfxTgaSwapColorChannel(afxInt width, afxInt height, afxNat
     }
 }
 
-_AFX void _AfxTgaDestroy(afxMmu mmu, _afxTga* tga)
+_AVX void _AfxTgaDestroy(afxMmu mmu, _afxTga* tga)
 {
     if (tga->data)
     {
@@ -761,7 +761,7 @@ _AFX void _AfxTgaDestroy(afxMmu mmu, _afxTga* tga)
     tga->fmt = 0;
 }
 
-_AFX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
+_AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
 {
     afxError err = AFX_ERR_NONE;
     afxByte bitsPerPixel;
@@ -819,7 +819,7 @@ _AFX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
     return err;
 }
 
-_AFX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTga* tga)
+_AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTga* tga)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
@@ -1037,7 +1037,7 @@ _AFX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
     return err;
 }
 
-_AFX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height, afxInt depth, afxPixelFormat format)
+_AVX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height, afxInt depth, afxPixelFormat format)
 {
     afxInt stride;
 
@@ -1075,7 +1075,7 @@ _AFX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height,
     return TRUE;
 }
 
-_AFX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1123,7 +1123,7 @@ _AFX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
     return err;
 }
 
-_AFX afxError AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1149,7 +1149,7 @@ _AFX afxError AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg
     return err;
 }
 
-_AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1158,7 +1158,7 @@ _AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(0, afxIoFlag_RWX, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
 
     for (afxNat i = 0; i < opCnt; i++)
     {
@@ -1199,7 +1199,7 @@ _AFX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
     return err;
 }
 
-_AFX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
+_AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseImg, afxNat imgCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -1225,14 +1225,14 @@ _AFX afxError AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseI
     return err;
 }
 
-_AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
+_AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(0, afxIoFlag_RWX, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -1299,14 +1299,14 @@ _AFX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
     return err;
 }
 
-_AFX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras)
+_AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
 
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(0, afxIoFlag_RWX, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
     
     for (afxNat i = 0; i < cnt; i++)
     {

@@ -16,7 +16,7 @@
 
 #include "qwadro/core/afxFixedString.h"
 
-_AFX afxRestring* AfxMakeFixedString4(afxFixedString4 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString4(afxString4 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -29,7 +29,7 @@ _AFX afxRestring* AfxMakeFixedString4(afxFixedString4 *str, afxString const* src
     return &str->str;
 }
 
-_AFX afxRestring* AfxMakeFixedString8(afxFixedString8 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString8(afxString8 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -41,20 +41,7 @@ _AFX afxRestring* AfxMakeFixedString8(afxFixedString8 *str, afxString const* src
     return &str->str;
 }
 
-_AFX afxRestring* AfxMakeFixedString16(afxFixedString16 *str, afxString const* src)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(str);
-    str->buf[0] = '\0';
-    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
-
-    if (src)
-        AfxCopyString(&str->str, src);
-
-    return &str->str;
-}
-
-_AFX afxRestring* AfxMakeFixedString32(afxFixedString32 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString16(afxString16 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -67,7 +54,7 @@ _AFX afxRestring* AfxMakeFixedString32(afxFixedString32 *str, afxString const* s
     return &str->str;
 }
 
-_AFX afxRestring* AfxMakeFixedString128(afxFixedString128 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString32(afxString32 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -80,7 +67,7 @@ _AFX afxRestring* AfxMakeFixedString128(afxFixedString128 *str, afxString const*
     return &str->str;
 }
 
-_AFX afxRestring* AfxMakeFixedString2048(afxFixedString2048 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString128(afxString128 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -93,7 +80,20 @@ _AFX afxRestring* AfxMakeFixedString2048(afxFixedString2048 *str, afxString cons
     return &str->str;
 }
 
-_AFX afxRestring* AfxMakeFixedString4096(afxFixedString4096 *str, afxString const* src)
+_AFX afxRestring* AfxMakeString2048(afxString2048 *str, afxString const* src)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(str);
+    str->buf[0] = '\0';
+    AfxMakeRestring(&str->str, sizeof(str->buf), str->buf, 0);
+
+    if (src)
+        AfxCopyString(&str->str, src);
+
+    return &str->str;
+}
+
+_AFX afxRestring* AfxMakeString4096(afxString4096 *str, afxString const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);

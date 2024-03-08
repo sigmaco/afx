@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{c80c1acf-b0e0-4300-8e08-8cb7c2a12fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gl4nd">
+      <UniqueIdentifier>{39674572-e32c-4d83-adef-0eb216f358df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="gl4nd.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\e2draw\sgl.h">
+      <Filter>gl4nd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\e2draw\sglDdrv.h">
+      <Filter>gl4nd</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\e2draw\sglBuf.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglBufOps.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglCanv.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDcmd.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDctx.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDdrv_w32.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDin.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDout_w32.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDque_w32.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglDscr.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglFenc.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglPip.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglQryp.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRas.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRasOps.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRazr.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglRazrOps.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglSamp.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglShd.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglTmerOps.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglVin.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\e2draw\sglBsch.c">
+      <Filter>gl4nd</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

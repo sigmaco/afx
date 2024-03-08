@@ -27,9 +27,9 @@
 #include "qwadro/sim/afxMaterial.h"
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/sim/anim/awxAnimus.h"
+#include "qwadro/sim/motion/awxMotor.h"
 #include "qwadro/sim/rendering/awxRenderer.h"
-#include "qwadro/sim/anim/awxAnimation.h"
+#include "qwadro/sim/motion/awxAnimation.h"
 
 #pragma pack(push, 1)
 AFX_DEFINE_STRUCT(_afxMddFileData)
@@ -120,7 +120,7 @@ AFX_DEFINE_STRUCT(_afxSerializedSkl)
 {
     afxString name;
     afxNat lodType;
-    afxNat boneCnt;
+    afxNat jointCnt;
     afxSize firstBoneOffset;
     afxSize firstBoneNameOfffset;
     // followed by sizeof(afxNat lt[boneCnt]);
@@ -171,7 +171,7 @@ AFX_DEFINE_STRUCT(afxCadResource)
 
 AFX_DEFINE_STRUCT(afxResourceSlot)
 {
-    afxFixedString32     id;
+    afxString32     id;
     void*           obj;
     afxUri          uri;
 };
@@ -202,29 +202,29 @@ AFX_DEFINE_STRUCT(awxAssetBuilder)
     afxError(*AddResources)(void* data, afxFcc type, afxUri const* name);
 };
 
-AFX afxNat              AfxFindResourceNests(awxAsset cad, afxNat cnt, afxFcc const fcc[], afxNat nestIdx[]);
-AFX afxNat              AfxFindResources(awxAsset cad, afxFcc fcc, afxNat cnt, afxString const id[], void* res[]);
-AFX afxNat              AfxCountResources(awxAsset cad, afxFcc fcc);
+AKX afxNat              AfxFindResourceNests(awxAsset cad, afxNat cnt, afxFcc const fcc[], afxNat nestIdx[]);
+AKX afxNat              AfxFindResources(awxAsset cad, afxFcc fcc, afxNat cnt, afxString const id[], void* res[]);
+AKX afxNat              AfxCountResources(awxAsset cad, afxFcc fcc);
 
-AFX afxNat              AfxFindTextures(awxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
-AFX afxNat              AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
-AFX afxNat              AfxFindVertexDatas(awxAsset cad, afxNat cnt, afxString const id[], awxVertexData vtd[]);
-AFX afxNat              AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
-AFX afxNat              AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[]);
-AFX afxNat              AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[]);
-AFX afxNat              AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], afxModel mdl[]);
-AFX afxNat              AfxFindAnimations(awxAsset cad, afxNat cnt, afxString const id[], awxAnimation anim[]);
+AKX afxNat              AfxFindTextures(awxAsset cad, afxNat cnt, afxString const id[], afxRaster tex[]);
+AKX afxNat              AfxFindMaterials(awxAsset cad, afxNat cnt, afxString const id[], afxMaterial mt[]);
+AKX afxNat              AfxFindVertexDatas(awxAsset cad, afxNat cnt, afxString const id[], awxVertexData vtd[]);
+AKX afxNat              AfxFindTopologies(awxAsset cad, afxNat cnt, afxString const id[], afxMeshTopology msht[]);
+AKX afxNat              AfxFindMeshes(awxAsset cad, afxNat cnt, afxString const id[], afxMesh msh[]);
+AKX afxNat              AfxFindSkeletons(awxAsset cad, afxNat cnt, afxString const id[], afxSkeleton skl[]);
+AKX afxNat              AfxFindModels(awxAsset cad, afxNat cnt, afxString const id[], afxModel mdl[]);
+AKX afxNat              AfxFindAnimations(awxAsset cad, afxNat cnt, afxString const id[], awxAnimation anim[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAcquireAssets(afxSimulation sim, afxNat cnt, afxNat const nestCnt[], afxNat const resCap[], awxAsset cad[]);
-AFX afxError            AfxBuildAssets(afxSimulation sim, awxAssetBuilder const* cadb, afxNat cnt, void* data[], awxAsset cad[]);
+AKX afxError            AfxAcquireAssets(afxSimulation sim, afxNat cnt, afxNat const nestCnt[], afxNat const resCap[], awxAsset cad[]);
+AKX afxError            AfxBuildAssets(afxSimulation sim, awxAssetBuilder const* cadb, afxNat cnt, void* data[], awxAsset cad[]);
 
-AFX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
-AFX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
+AKX afxError            AfxLoadAssets(afxSimulation sim, afxError(*load)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
+AKX afxError            AfxStoreAssets(afxSimulation sim, afxError(*store)(afxUri const* file, afxFlags flags), afxFlags flags, afxNat cnt, afxUri const file[]);
 
-AFX void                AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, awxAsset cad[]);
+AKX void                AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal const atv[4], afxReal affineTol, afxReal linearTol, afxFlags flags, afxNat cnt, awxAsset cad[]);
 
 #endif//AFX_ASSET_H

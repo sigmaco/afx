@@ -198,7 +198,7 @@ _SGL afxError _SglBindAndSyncBuf(sglDpuIdd* dpu, sglBindFlags bindFlags, GLenum 
 
             if (glTarget != buf->glTarget)
             {
-                gl->BindBuffer(buf->glTarget, 0); _SglThrowErrorOccuried();
+                gl->BindBuffer(glTarget, 0); _SglThrowErrorOccuried();
                 bound = FALSE;
             }
         }

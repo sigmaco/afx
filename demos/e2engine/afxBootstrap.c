@@ -116,8 +116,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxFixedUri2048 romUri;
-    AfxMakeFixedUri2048(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxMakeUri2048(&romUri, NIL);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

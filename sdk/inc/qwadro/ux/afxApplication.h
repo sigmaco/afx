@@ -77,27 +77,31 @@ AFX_OBJECT(afxApplication)
 #endif//_AFX_APPLICATION_C
 #endif//_AFX_CORE_C
 
-AFX void                    AfxEndApplication(afxApplication app, afxInt exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
-AFX void                    AfxQuitApplication(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
-AFX afxResult               AfxRunApplication(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
+AUX void                    AfxEndApplication(afxApplication app, afxInt exitCode); // Tells the application to exit with a return code. After this function has been called, the application leaves the main event loop and returns from the call to exec().The exec() function returns returnCode.If the event loop is not running, this function does nothing.
+AUX void                    AfxQuitApplication(afxApplication app); // Asks the application to quit. If the quit is not interrupted the application will exit with return code 0 (success).
+AUX afxResult               AfxRunApplication(afxApplication app); // Enters the main event loop and waits until exit() is called. Returns the value that was passed to exit() (which is 0 if exit() is called via quit()).
 
-AFX afxError                AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[]);
+AUX afxError                AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[]);
 
-AFX afxDrawContext          AfxApplicationGetDrawContext(afxApplication app);
-AFX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
+AUX afxDrawContext          AfxApplicationGetDrawContext(afxApplication app);
+AUX afxDrawInput            AfxApplicationGetDrawInput(afxApplication app);
 
-AFX afxThread               AfxGetApplicationThread(afxApplication app);
+AUX afxThread               AfxGetApplicationThread(afxApplication app);
 
-AFX afxClass*               AfxGetWidgetClass(afxApplication app);
+AUX afxClass*               AfxGetWidgetClass(afxApplication app);
 
-AFX afxNat                  AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[]);
+AUX afxNat                  AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget wid[]);
 
-AFX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
-AFX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
-AFX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
+AUX void                    AfxApplicationFocusWidget(afxApplication app, afxWidget widg, afxV2d const point);
+AUX void                    AfxApplicationGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
+AUX void                    AfxApplicationHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
 
-//AFX afxBool                 _AfxGetAppD(afxApplication app, struct _afxAppD **appD, struct _afxSysD* sysD);
+//AUX afxBool                 _AfxGetAppD(afxApplication app, struct _afxAppD **appD, struct _afxSysD* sysD);
 
-AFX afxError                AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[]);
+AUX afxNat                  AfxCountApplications(void);
+AUX afxClass*               AfxGetApplicationClass(void);
+AUX afxNat                  AfxEnumerateApplications(afxNat first, afxNat cnt, afxApplication applications[]);
+AUX afxNat                  AfxInvokeApplications(afxNat first, afxNat cnt, afxBool(*f)(afxApplication, void*), void *udd);
+AUX afxError                AfxAcquireApplications(afxNat cnt, afxApplicationConfig const config[], afxApplication applications[]);
 
 #endif//AFX_APPLICATION_H

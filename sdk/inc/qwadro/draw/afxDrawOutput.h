@@ -177,35 +177,35 @@ struct afxBaseDrawOutput
 #endif
 #endif
 
-AFX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
+AVX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
 
-AFX afxBool             AfxDrawOutputIsOnline(afxDrawOutput dout);
-AFX afxDrawContext      AfxGetDrawOutputContext(afxDrawOutput dout);
-AFX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
-AFX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
+AVX afxBool             AfxDrawOutputIsOnline(afxDrawOutput dout);
+AVX afxDrawContext      AfxGetDrawOutputContext(afxDrawOutput dout);
+AVX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
+AVX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 
 // Extent
 
-AFX afxError            AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
-AFX afxError            AfxAdjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd);
-AFX void                AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd); // d is always 1; it is here just for compatibility.
-AFX void                AfxGetDrawOutputNormalizedExtent(afxDrawOutput dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
-AFX void                AfxAdjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution);
+AVX afxError            AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd);
+AVX afxError            AfxAdjustDrawOutputNormalized(afxDrawOutput dout, afxV3d const whd);
+AVX void                AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd); // d is always 1; it is here just for compatibility.
+AVX void                AfxGetDrawOutputNormalizedExtent(afxDrawOutput dout, afxV3d whd); // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
+AVX void                AfxAdjustDrawOutputProportion(afxDrawOutput dout, afxReal physicalAspectRatio, afxWhd const resolution);
 
 // Buffer
 
-AFX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
-AFX afxNat              AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
-AFX afxNat              AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat first, afxNat cnt, afxCanvas canvases[]);
-AFX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
-AFX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
-AFX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
+AVX afxNat              AfxGetDrawOutputCapacity(afxDrawOutput dout);
+AVX afxNat              AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
+AVX afxNat              AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat first, afxNat cnt, afxCanvas canvases[]);
+AVX afxNat              AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
+AVX afxError            AfxRequestDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx);
+AVX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 
 // Utility
 
-//AFX afxError            AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelFormat depth, afxPixelFormat stencil);
-//AFX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxNat auxSurfCnt, afxSurfaceConfig const auxSurfs[], afxCanvas canv[]);
+//AVX afxError            AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelFormat depth, afxPixelFormat stencil);
+//AVX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxNat auxSurfCnt, afxSurfaceConfig const auxSurfs[], afxCanvas canv[]);
 
 #endif//AFX_DRAW_OUTPUT_H

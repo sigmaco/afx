@@ -664,8 +664,8 @@ _AFX void AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size)
 
 _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
 {
-    afxFixedString128 str;
-    AfxMakeFixedString128(&str, NIL);
+    afxString128 str;
+    AfxMakeString128(&str, NIL);
     AfxFormatString(&str.str, "%lu objects (%lu small/%lu large), %lu bytes allocated (%lu wasted) in %lu chunks, %lu cleanups, %lu in recyclebin",
         (unsigned long)(aren->smallItems + aren->largeItems),
         (unsigned long)aren->smallItems,

@@ -36,29 +36,29 @@ _AFXINL void AfxCopyAabb(afxAabb aabb, afxAabb const in)
     AfxCopyV4d(aabb[AFX_AABB_INF], in[AFX_AABB_INF]);
 }
 
-_AFXINL void AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxReal const point[][3])
+_AFXINL void AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxV3d const v[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
-    AfxAssert(point);
+    AfxAssert(v);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], point[i]);
-        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], v[i]);
+        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], v[i]);
     }
 }
 
-_AFXINL void AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxReal const point[][4])
+_AFXINL void AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxV4d const v[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
-    AfxAssert(point);
+    AfxAssert(v);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], point[i]);
-        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], point[i]);
+        AfxMaxV3d(aabb[AFX_AABB_SUP], aabb[AFX_AABB_SUP], v[i]);
+        AfxMinV3d(aabb[AFX_AABB_INF], aabb[AFX_AABB_INF], v[i]);
     }
 }
 
@@ -88,7 +88,7 @@ _AFXINL void AfxEncapsulateAabbs(afxAabb aabb, afxNat cnt, afxAabb const other[]
         AfxEncapsulatePoints(aabb, 2, other[i]);
 }
 
-_AFXINL void AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxReal const points[][3])
+_AFXINL void AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxV3d const points[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -99,7 +99,7 @@ _AFXINL void AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxReal const points[][3
     AfxEncapsulateVertices(aabb, cnt, points);
 }
 
-_AFXINL afxMask AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxReal const point[32][3])
+_AFXINL afxMask AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxV3d const point[32])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -121,7 +121,7 @@ _AFXINL afxMask AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxReal co
     return rslt;
 }
 
-_AFXINL void AfxGetAabbExtents(afxAabb const aabb, afxReal extent[3])
+_AFXINL void AfxGetAabbExtents(afxAabb const aabb, afxV3d extent)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -135,7 +135,7 @@ _AFXINL void AfxGetAabbExtents(afxAabb const aabb, afxReal extent[3])
 #endif
 }
 
-_AFXINL void AfxGetAabbCentre(afxAabb const aabb, afxReal centre[4])
+_AFXINL void AfxGetAabbCentre(afxAabb const aabb, afxV4d centre)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(aabb);
@@ -177,9 +177,8 @@ _AFXINL void AfxTransformAabb(afxAabb const aabb, afxM4d const m, afxAabb to)
     AfxPostMultiplyArrayedV4d(m, 2, aabb, to);
 }
 
-_AFXINL void AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxAabb const in[], afxAabb out[])
+_AFXINL void AfxTransformAabbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxAabb const in[], afxAabb out[])
 {
-    // Should be compatible with void TransformBoundingBox(const float *Affine3, const float *Linear3x3, float *OBBMin, float *OBBMax)
     afxError err = AFX_ERR_NONE;
     AfxAssert(atv);
     AfxAssert(ltm);

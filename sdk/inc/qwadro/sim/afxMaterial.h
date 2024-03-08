@@ -63,27 +63,27 @@ AFX_OBJECT(afxMaterial)
 
 //static_assert(offsetof(afxMaterial, color) % AFX_MTL_ALIGN == 0, "");
 
-AFX afxString const*AfxGetMaterialId(afxMaterial mtl);
-AFX afxNat          AfxCountMaterialMaps(afxMaterial mtl);
+AKX afxString const*AfxGetMaterialId(afxMaterial mtl);
+AKX afxNat          AfxCountMaterialMaps(afxMaterial mtl);
 
-AFX afxMaterial     AfxFindSubmaterial(afxMaterial mtl, afxString const *usage);
-AFX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx);
-AFX void            AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl);
+AKX afxMaterial     AfxFindSubmaterial(afxMaterial mtl, afxString const *usage);
+AKX afxMaterial     AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx);
+AKX void            AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl);
 
-AFX void            AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl);
+AKX void            AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl);
 
-AFX afxRaster       AfxGetMaterialTexture(afxMaterial mtl);
-AFX void            AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex);
-AFX void            AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex);
+AKX afxRaster       AfxGetMaterialTexture(afxMaterial mtl);
+AKX void            AfxRebindMaterialTexture(afxMaterial mtl, afxRaster tex);
+AKX void            AfxReloadMaterialTexture(afxMaterial mtl, afxUri const *tex);
 
 // non-Granny
-AFX void            AfxColorizeMaterial(afxMaterial mtl, afxV4d const color);
-AFX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
+AKX void            AfxColorizeMaterial(afxMaterial mtl, afxV4d const color);
+AKX void            AfxShineMaterial(afxMaterial mtl, afxReal shininess);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxNat subCnt, afxMaterial *mtl);
+AKX afxError        AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRaster tex, afxNat subCnt, afxMaterial *mtl);
 
 #endif//AFX_MATERIAL_H

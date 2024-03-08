@@ -26,7 +26,7 @@
 _AFX afxString strEmptyData = AFX_STRING("");
 _AFX afxString const AFX_STR_EMPTY = AFX_STRING("");
 
-_AFXINL void const* AfxGetStringData(afxString const* str, afxNat base)
+_AFXINL afxChar const* AfxGetStringData(afxString const* str, afxNat base)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -87,7 +87,8 @@ _AFXINL afxNat AfxFindFirstChar(afxString const* str, afxNat base, afxInt ch)
 
         if (src)
         {
-            posn = ((afxChar*)memchr(src, ch, str->len - base) - (afxChar*)AfxGetStringData(str, 0));
+            afxChar* p = (afxChar*)memchr(src, ch, str->len - base);
+            posn = p ? (p - (afxChar*)AfxGetStringData(str, 0)) : AFX_INVALID_INDEX;
         }
     }
     return posn;
@@ -452,7 +453,7 @@ _AFXINL void AfxMakeString(afxString* str, void const *start, afxNat len)
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     //AfxAssert(!len || (len && start));
-    str->len = len ? (start ? len : 0) : (start ? AfxStrlen(start) : 0);
+    str->len = len ? len : (start ? AfxStrlen(start) : 0);
     str->start = start;
 }
 

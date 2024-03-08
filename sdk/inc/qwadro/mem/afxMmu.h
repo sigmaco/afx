@@ -238,4 +238,21 @@ AFX void                    AfxZero(afxSize cnt, afxSize siz, void *p);
 
 AFX afxError                AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmus[]);
 
+
+AFX void*                   AfxMemset(void* dst, afxInt val, afxSize siz);
+AFX void*                   AfxMemcpy(void* dst, void const* src, afxSize siz);
+AFX afxInt                  AfxMemcmp(void const* buf1, void const* buf2, afxSize siz);
+AFX void const*             AfxMemchr(void const* buf, afxInt val, afxNat cap);
+
+
+AFX void                    AfxFree(void* block);
+AFX void*                   AfxMalloc(afxSize siz);
+AFX void*                   AfxCalloc(afxSize cnt, afxSize siz);
+AFX void*                   AfxRealloc(void* block, afxSize siz);
+
+AFX void                    AfxFreeAligned(void* block);
+AFX void*                   AfxMallocAligned(afxSize siz, afxSize align);
+AFX void*                   AfxReallocAligned(void* block, afxSize siz, afxSize align);
+AFX void*                   AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize align);
+
 #endif//AFX_MMU_H

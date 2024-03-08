@@ -293,7 +293,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->base.bufferLockCnt = 1;
     dout->base.bufCnt = 2;// 3; // 2 or 3; double or triple buffered for via-memory presentation.
     dout->base.lastReqBufIdx = dout->base.bufCnt - 1; // to start at 0 instead of 1 we set to last one.
-    AfxTakeChain(&dout->base.swapchain, (void*)dout);
+    AfxSetUpChain(&dout->base.swapchain, (void*)dout);
     AfxTakeSlock(&dout->base.buffersLock);
 
     dout->base.auxDsFmt[0] = NIL;
@@ -348,7 +348,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     //AfxAssert(ddrvIdd->wglPrimeDc == _wglGetCurrentDC());
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
-    sglDpuIdd *dpu = &ddev->dpus[unitIdx];
+    sglDpuIdd *dpu = &ddev->idd->dpus[unitIdx];
     //wglVmt const*wgl = &dpu->wgl;
 
     HGLRC rc = dpu->wgl.GetCurrentContext();
@@ -363,7 +363,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
         }
     }
     afxString title;
-    AfxMakeString(&title, ddev->wndClss.lpszClassName, 0);
+    AfxMakeString(&title, ddev->idd->wndClss.lpszClassName, 0);
 
     afxBool isDesk = FALSE;
     afxBool isWnd = FALSE;
@@ -381,7 +381,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 
     if (AfxStringIsEmpty(surface) || 0 == AfxCompareString(surface, &AfxStaticString("window"))) // print to window surface
     {
-        dout->wnd = CreateWindowEx(WS_EX_CONTEXTHELP, ddev->wndClss.lpszClassName, ddev->wndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, NIL);
+        dout->wnd = CreateWindowEx(WS_EX_CONTEXTHELP, ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.lpszClassName, /*WS_POPUP*/WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, NIL);
         isWnd = TRUE;
     }
     else if (0 == AfxCompareString(surface, &AfxStaticString("desktop")))

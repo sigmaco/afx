@@ -17,7 +17,7 @@
 #ifndef AFX_ENTITY_H
 #define AFX_ENTITY_H
 
-#include "anim/awxBody.h"
+#include "motion/awxBody.h"
 #include "awxNode.h"
 
 AFX_OBJECT(awxEntity)
@@ -28,6 +28,6 @@ AFX_OBJECT(awxEntity)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[], awxBody bod[]);
+AKX afxError        AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[], awxBody bod[]);
 
 #endif//AFX_ENTITY_H

@@ -36,6 +36,66 @@ typedef struct _afxArbitraryChunk
     afxSimd(uintptr_t)  data[];
 } _afxArbitraryChunk;
 
+_AFX void* AfxMemset(void* dst, afxInt val, afxSize siz)
+{
+    return memset(dst, val, siz);
+}
+
+_AFX void* AfxMemcpy(void* dst, void const* src, afxSize siz)
+{
+    return memcpy(dst, src, siz);
+}
+
+_AFX afxInt AfxMemcmp(void const* buf1, void const* buf2, afxSize siz)
+{
+    return memcmp(buf1, buf2, siz);
+}
+
+_AFX void const* AfxMemchr(void const* buf, afxInt val, afxNat cap)
+{
+    return memchr(buf, val, cap);
+}
+
+_AFX void* AfxMalloc(afxSize siz)
+{
+    return malloc(siz);
+}
+
+_AFX void AfxFree(void* block)
+{
+    free(block);
+}
+
+_AFX void* AfxCalloc(afxSize cnt, afxSize siz)
+{
+    return calloc(cnt, siz);
+}
+
+_AFX void* AfxRealloc(void* block, afxSize siz)
+{
+    return realloc(block, siz);
+}
+
+_AFX void AfxFreeAligned(void* block)
+{
+    _aligned_free(block);
+}
+
+_AFX void* AfxMallocAligned(afxSize siz, afxSize align)
+{
+    return _aligned_malloc(siz, align);
+}
+
+_AFX void* AfxReallocAligned(void* block, afxSize siz, afxSize align)
+{
+    return _aligned_realloc(block, siz, align);
+}
+
+_AFX void* AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize align)
+{
+    return _aligned_recalloc(block, cnt, cnt, align);
+}
+
 _AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHint const hint)
 {
     afxError err = AFX_ERR_NONE;
@@ -44,12 +104,12 @@ _AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHint const hint)
 
     if (mem->flags & afxMemFlag_RESIZABLE)
     {
-        _aligned_free(mem->start);
-        free(mem);
+        AfxFreeAligned(mem->start);
+        AfxFree(mem);
     }
     else
     {
-        _aligned_free(mem);
+        AfxFreeAligned(mem);
     }
     return err;
 }
@@ -66,7 +126,7 @@ _AFX afxError _AfxResizeCallback2(afxMemory mem, afxSize cnt, afxSize siz, afxHi
 
         void* out;
 
-        if (!(out = _aligned_realloc(mem->start, cnt * siz, mem->align ? mem->align : AFX_SIMD_ALIGN))) AfxThrowError();
+        if (!(out = AfxReallocAligned(mem->start, cnt * siz, mem->align ? mem->align : AFX_SIMD_ALIGN))) AfxThrowError();
         else
         {
             mem->siz = siz;
@@ -88,10 +148,10 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
 
     if (flags & afxMemFlag_RESIZABLE)
     {
-        if (!(mem = malloc(sizeof(*(afxMemory)0)))) AfxThrowError();
+        if (!(mem = AfxMalloc(sizeof(*(afxMemory)0)))) AfxThrowError();
         else
         {
-            void* p = _aligned_malloc(cnt * siz, align ? align : AFX_SIMD_ALIGN);
+            void* p = AfxMallocAligned(cnt * siz, align ? align : AFX_SIMD_ALIGN);
 
             if (!(p)) AfxThrowError();
             else
@@ -106,14 +166,14 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
 
             if (err)
             {
-                free(mem);
+                AfxFree(mem);
                 mem = NIL;
             }
         }
     }
     else
     {
-        void* p = _aligned_malloc(cnt * siz + sizeof(*(afxMemory)0), align ? align : AFX_SIMD_ALIGN);
+        void* p = AfxMallocAligned(cnt * siz + sizeof(*(afxMemory)0), align ? align : AFX_SIMD_ALIGN);
 
         if (!(p)) AfxThrowError();
         else
@@ -163,7 +223,7 @@ _AFX void _AfxMemDeallocStd(afxMmu mmu, void *p)
 
     AfxAssert(p);
 
-    _aligned_free(p);
+    AfxFreeAligned(p);
 
     if (mmu->deallocNotCb)
         mmu->deallocNotCb(mmu, 0, 0, AfxHint());
@@ -180,7 +240,7 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
 
     // TODO Allow rememocate to an or another memocator.
 
-    if (!(neo = _aligned_realloc(p, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
+    if (!(neo = AfxReallocAligned(p, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
         AfxThrowError();
 
     return neo;
@@ -195,7 +255,7 @@ _AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, 
     AfxAssert(hint);
     void *p = NIL;
 
-    if (!(p = _aligned_malloc(cnt * siz, align ? align : AFX_SIMD_ALIGN)))
+    if (!(p = AfxMallocAligned(cnt * siz, align ? align : AFX_SIMD_ALIGN)))
         AfxThrowError();
 
     return p;
@@ -244,7 +304,7 @@ _AFX afxError _AfxMmuCtor(afxMmu mmu, afxCookie const* cookie)
     }
 
     AfxTakeSlock(&mmu->memSlock);
-    AfxTakeChain(&mmu->memChain, mmu);
+    AfxSetUpChain(&mmu->memChain, mmu);
     // Choose which memocation mechanism to be used. Actumemy there's just two: standard (arbitrary) and arena.
 
     //if (mmu->cap != (afxSize)0) _AfxArenaAllCtor(ctx, paradigm);
@@ -372,7 +432,7 @@ _AFX void AfxCopy(afxSize cnt, afxSize siz, void const *src, void *dst)
     AfxCatchError(err);
 #if !0
     if (cnt * siz)
-        memcpy(dst, src, cnt * siz);
+        AfxMemcpy(dst, src, cnt * siz);
 #else
     register afxChar* dst2 = dst;
     register afxChar const* src2 = src;
@@ -437,7 +497,7 @@ _AFX void AfxFill(afxSize cnt, afxSize siz, void const* value, void *p)
     else
     {
         if (cnt)
-            memset(p, 0, cnt * siz);
+            AfxMemset(p, 0, cnt * siz);
     }
 }
 
@@ -447,7 +507,7 @@ _AFX void AfxZero(afxSize cnt, afxSize siz, void *p)
     AfxAssert(p);
     AfxAssert(cnt);
     AfxAssert(siz);
-    AfxFill(cnt, siz, 0, p);
+    AfxMemset(p, 0, cnt * siz);
 }
 
 _AFX void AfxDeallocate(afxMmu mmu, void *p)
@@ -467,7 +527,7 @@ _AFX void AfxDeallocate(afxMmu mmu, void *p)
         }
         else
         {
-            _aligned_free(p);
+            AfxFreeAligned(p);
         }
     }
 }
@@ -486,7 +546,7 @@ _AFX void* AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat a
         if (!mmu)
         {
 
-            if (!(out = _aligned_realloc(p, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
+            if (!(out = AfxReallocAligned(p, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
                 AfxThrowError();
 
             return out;
@@ -514,7 +574,7 @@ _AFX void* AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat a
         }
         else
         {
-            if (!(out = _aligned_realloc(NIL, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
+            if (!(out = AfxReallocAligned(NIL, cnt * siz, align ? align : AFX_SIMD_ALIGN)))
                 AfxThrowError();
 
             return out;
@@ -541,7 +601,7 @@ _AFX void* AfxCoallocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afx
     }
     else
     {
-        if (!(p = _aligned_recalloc(NIL, 1, (cnt * siz), align ? align : AFX_SIMD_ALIGN)))
+        if (!(p = AfxRecallocAligned(NIL, 1, (cnt * siz), align ? align : AFX_SIMD_ALIGN)))
             AfxThrowError();
     }
     return p;
@@ -569,7 +629,7 @@ _AFX void* AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHi
         }
         else
         {
-            if (!(p = _aligned_malloc(cnt * siz, align ? align : AFX_SIMD_ALIGN)))
+            if (!(p = AfxMallocAligned(cnt * siz, align ? align : AFX_SIMD_ALIGN)))
                 AfxThrowError();
 
             return p;
@@ -620,10 +680,10 @@ _AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat al
     {
         if (flags & afxMemFlag_RESIZABLE)
         {
-            if (!(mem = malloc(sizeof(*(afxMemory)0)))) AfxThrowError();
+            if (!(mem = AfxMalloc(sizeof(*(afxMemory)0)))) AfxThrowError();
             else
             {
-                void* p = _aligned_malloc(cnt * siz, align ? align : AFX_SIMD_ALIGN);
+                void* p = AfxMallocAligned(cnt * siz, align ? align : AFX_SIMD_ALIGN);
 
                 if (!(p)) AfxThrowError();
                 else
@@ -638,14 +698,14 @@ _AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat al
 
                 if (err)
                 {
-                    free(mem);
+                    AfxFreeAligned(mem);
                     mem = NIL;
                 }
             }
         }
         else
         {
-            void* p = _aligned_malloc(cnt * siz + sizeof(*(afxMemory)0), align ? align : AFX_SIMD_ALIGN);
+            void* p = AfxMallocAligned(cnt * siz + sizeof(*(afxMemory)0), align ? align : AFX_SIMD_ALIGN);
 
             if (!(p)) AfxThrowError();
             else
@@ -695,7 +755,7 @@ _AFX afxError AfxResizeMemory(afxMemory mem, afxSize siz, afxSize cnt, afxHint c
 
             void* out;
 
-            if (!(out = _aligned_realloc(mem->start, cnt * siz, align ? align : AFX_SIMD_ALIGN))) AfxThrowError();
+            if (!(out = AfxReallocAligned(mem->start, cnt * siz, align ? align : AFX_SIMD_ALIGN))) AfxThrowError();
             else
             {
                 mem->cnt = cnt;
@@ -751,12 +811,12 @@ _AFX void AfxDeallocateMemory(afxMemory mem, afxHint const hint) // Free memory
 
         if (mem->flags & afxMemFlag_RESIZABLE)
         {
-            _aligned_free(mem->start);
-            free(mem);
+            AfxFreeAligned(mem->start);
+            AfxFree(mem);
         }
         else
         {
-            _aligned_free(mem);
+            AfxFreeAligned(mem);
         }
     }
 }

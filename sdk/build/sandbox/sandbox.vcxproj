@@ -66,19 +66,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -164,6 +164,15 @@
     </ProjectReference>
     <ProjectReference Include="..\e2newton\e2newton.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2sound\e2sound.vcxproj">
+      <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2ux\e2ux.vcxproj">
+      <Project>{b86a5b24-69ef-42ad-86d9-e3ac4405a9ce}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\gl4nd\gl4nd.vcxproj">
+      <Project>{1bafd2ad-9548-4fa9-b268-6afe5087845d}</Project>
     </ProjectReference>
     <ProjectReference Include="..\rad3d\rad3d.vcxproj">
       <Project>{ada2daf6-6f68-4d16-9ea5-25faf07fe8ed}</Project>

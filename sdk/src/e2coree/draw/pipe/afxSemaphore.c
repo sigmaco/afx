@@ -20,7 +20,7 @@
 #include "qwadro/draw/pipe/afxSemaphore.h"
 #include "qwadro/core/afxSystem.h"
 
-_AFX afxDrawContext AfxGetSemaphoreContext(afxSemaphore sem)
+_AVX afxDrawContext AfxGetSemaphoreContext(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sem, afxFcc_SEM);
@@ -29,7 +29,7 @@ _AFX afxDrawContext AfxGetSemaphoreContext(afxSemaphore sem)
     return dctx;
 }
 
-_AFX afxError AfxAcquireSemaphores(afxDrawContext dctx, afxNat cnt, afxSemaphore semaphores[])
+_AVX afxError AfxAcquireSemaphores(afxDrawContext dctx, afxNat cnt, afxSemaphore semaphores[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

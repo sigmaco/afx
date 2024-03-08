@@ -28,63 +28,63 @@
  // cube array       = img x wh1 >> lod
  // 3d               =   1 x whd >> lod
 
-_AFXINL afxNat AfxCountRasterSamples(afxRaster ras)
+_AVXINL afxNat AfxCountRasterSamples(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->sampleCnt;
 }
 
-_AFXINL afxPixelFormat AfxGetRasterFormat(afxRaster ras)
+_AVXINL afxPixelFormat AfxGetRasterFormat(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->fmt;
 }
 
-_AFXINL afxRasterUsage AfxGetRasterUsage(afxRaster ras)
+_AVXINL afxRasterUsage AfxGetRasterUsage(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->usage;
 }
 
-_AFXINL afxRasterUsage AfxTestRasterUsage(afxRaster ras, afxRasterUsage bitmask)
+_AVXINL afxRasterUsage AfxTestRasterUsage(afxRaster ras, afxRasterUsage bitmask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->usage & bitmask;
 }
 
-_AFXINL afxRasterFlags AfxGetRasterFlags(afxRaster ras)
+_AVXINL afxRasterFlags AfxGetRasterFlags(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->flags;
 }
 
-_AFXINL afxRasterFlags AfxTestRasterFlags(afxRaster ras, afxRasterFlags bitmask)
+_AVXINL afxRasterFlags AfxTestRasterFlags(afxRaster ras, afxRasterFlags bitmask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->flags & bitmask;
 }
 
-_AFXINL afxNat AfxCountRasterLods(afxRaster ras)
+_AVXINL afxNat AfxCountRasterLods(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->lodCnt;
 }
 
-_AFXINL afxNat AfxCountRasterLayers(afxRaster ras)
+_AVXINL afxNat AfxCountRasterLayers(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     return ras->layerCnt;
 }
 
-_AFXINL afxBool AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw)
+_AVXINL afxBool AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -95,7 +95,7 @@ _AFXINL afxBool AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** c
     return !!ras->swizzling;
 }
 
-_AFXINL void AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd)
+_AVXINL void AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -115,7 +115,7 @@ _AFXINL void AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd)
     }
 }
 
-_AFXINL afxNat AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx)
+_AVXINL afxNat AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -132,7 +132,7 @@ _AFXINL afxNat AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx)
     return bpr;
 }
 
-_AFXINL afxNat AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx)
+_AVXINL afxNat AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -142,7 +142,7 @@ _AFXINL afxNat AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx)
     return bpl;
 }
 
-_AFX afxNat AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset)
+_AVX afxNat AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -182,7 +182,7 @@ _AFX afxNat AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, af
     return memOff;
 }
 
-_AFX afxNat AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *srcRgn) // can't be multiple because regions couldn't be continous.
+_AVX afxNat AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *srcRgn) // can't be multiple because regions couldn't be continous.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -243,7 +243,7 @@ _AFX afxNat AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *srcRgn)
 // SERIALIZATION AND STORAGE                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream in)
+_AVX afxError AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -289,7 +289,7 @@ _AFX afxError AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
     return err;
 }
 
-_AFX afxError AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream out)
+_AVX afxError AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -335,7 +335,7 @@ _AFX afxError AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp 
     return err;
 }
 
-_AFX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -361,7 +361,7 @@ _AFX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
     return err;
 }
 
-_AFX afxError AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri)
+_AVX afxError AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -387,7 +387,7 @@ _AFX afxError AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afx
     return err;
 }
 
-_AFX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
+_AVX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -413,7 +413,7 @@ _AFX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
     return err;
 }
 
-_AFX afxError AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri)
+_AVX afxError AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -444,7 +444,7 @@ _AFX afxError AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afx
 // TRANSFERENCE AND COPY                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void const *src)
+_AVX afxError AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void const *src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -490,7 +490,7 @@ _AFX afxError AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp 
     return err;
 }
 
-_AFX afxError AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void *dst)
+_AVX afxError AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void *dst)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -536,7 +536,7 @@ _AFX afxError AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp co
     return err;
 }
 
-_AFX void AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn)
+_AVX void AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -552,7 +552,7 @@ _AFX void AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn)
         AfxThrowError();
 };
 
-_AFX void* AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat *rgnSiz, afxNat *rowSiz)
+_AVX void* AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat *rgnSiz, afxNat *rowSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -572,7 +572,7 @@ _AFX void* AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRas
     return ptr;
 }
 
-_AFX afxError AfxBufferizeRaster(afxRaster ras)
+_AVX afxError AfxBufferizeRaster(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -608,7 +608,7 @@ _AFX afxError AfxBufferizeRaster(afxRaster ras)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[])
+_AVX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -619,7 +619,7 @@ _AFX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, a
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)rasters);
 }
 
-_AFX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[])
+_AVX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -638,7 +638,7 @@ _AFX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo c
     return err;
 }
 
-_AFX afxRaster AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[])
+_AVX afxRaster AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -654,7 +654,7 @@ _AFX afxRaster AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxR
     return ras;
 }
 
-_AFX afxRaster AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6])
+_AVX afxRaster AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

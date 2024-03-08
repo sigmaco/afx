@@ -50,7 +50,7 @@ AFXINL void AfxSetQuat(afxQuat q, afxReal x, afxReal y, afxReal z, afxReal w);
 /// Thus you only really need to store 3 components of the quaternion, and the 4th can be calculated using the formula
 /// We can compress a Quaternion down to three elements by making sure one of the them is greater than or equal to zero. We can then rebuild the missing element with this function.
 
-AFXINL void AfxQuatFromV3d(afxQuat q, afxReal const in[3]);
+AFXINL void AfxQuatFromV3d(afxQuat q, afxV3d const in);
 
 /// It is useful to be able to move between the 3x3 matrix representation of a rotation and its quaternion counterpart. 
 /// Qwadro provides functions for converting in both directions.
@@ -61,15 +61,15 @@ AFXINL void AfxQuatFromV3d(afxQuat q, afxReal const in[3]);
 /// q = Returns the rotation quaternion.
 /// m = Rotation matrix.
 
-AFXINL void AfxQuatFromM3d(afxQuat q, afxReal const m[3][3]); // aka get matrix rotation
-AFXINL void AfxQuatFromLinearM4d(afxQuat q, afxReal const m[4][4]);
+AFXINL void AfxQuatFromM3d(afxQuat q, afxM3d const m); // aka get matrix rotation
+AFXINL void AfxQuatFromLtm4d(afxQuat q, afxM4d const m);
 
 /// Computes a rotation quaternion about an axis.
 /// q = Returns the rotation quaternion.
 /// axis = 3D vector describing the axis of rotation.
 /// radians = Angle of rotation in radians. Angles are measured clockwise when looking along the rotation axis toward the origin.
 
-AFXINL void AfxQuatFromAxisAngle(afxQuat q, afxReal const axis[3], afxReal phi); // makes a quaternion rotation that will rotate around the given axis by the specified angle. The axis must be a normalized vector.
+AFXINL void AfxQuatFromAxisAngle(afxQuat q, afxV3d const axis, afxReal phi); // makes a quaternion rotation that will rotate around the given axis by the specified angle. The axis must be a normalized vector.
 
 /// Computes a rotation quaternion based on the pitch, yaw, and roll (Euler angles).
 /// Angles are measured clockwise when looking along the rotation axis toward the origin. This is a left-handed coordinate system. To use right-handed coordinates, negate all three angles.
@@ -80,10 +80,8 @@ AFXINL void AfxQuatFromAxisAngle(afxQuat q, afxReal const axis[3], afxReal phi);
 /// q = Returns the rotation quaternion.
 /// pitchYawRoll = 3D vector containing the Euler angles in the order x-axis (pitch), then y-axis (yaw), and then z-axis (roll).
 
-AFXINL void AfxQuatFromEuler(afxQuat q, afxReal const pitchYawRoll[3]);
+AFXINL void AfxQuatFromEuler(afxQuat q, afxV3d const pitchYawRoll);
 
-////////////////////////////////////////////////////////////////////////////////
-// Logic                                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
 /// Testa se um quaternion é um unit/identity quaternion.
@@ -97,8 +95,6 @@ AFXINL afxBool  AfxQuatIsIdentity(afxQuat const q);
 AFXINL afxBool  AfxQuatIsEqual(afxQuat const q, afxQuat const other);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Transferance                                                               //
-////////////////////////////////////////////////////////////////////////////////
 
 /// Cambia (operação de troca) os dados entre dois quaternions.
 
@@ -108,12 +104,6 @@ AFXINL void AfxSwapQuat(afxQuat q, afxQuat other);
 
 AFXINL void AfxCopyQuat(afxQuat q, afxQuat const in);
 
-/// Negativa todos os componentes de um quaternion.
-
-AFXINL void AfxNegQuat(afxQuat q, afxQuat const in);
-
-////////////////////////////////////////////////////////////////////////////////
-// Clamping                                                                   //
 ////////////////////////////////////////////////////////////////////////////////
 
 /// Normalizes a quaternion.
@@ -131,8 +121,6 @@ AFXINL afxReal  AfxNormalizeQuat(afxQuat q, afxQuat const in);
 
 AFXINL afxReal  AfxEstimateNormalizedQuat(afxQuat q, afxQuat const in);
 
-////////////////////////////////////////////////////////////////////////////////
-// Arithmetica                                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
 AFXINL void AfxAddQuat(afxQuat q, afxQuat const a, afxQuat const b); // q = a + b
@@ -153,8 +141,6 @@ AFXINL void AfxDivQuat(afxQuat q, afxQuat const in, afxReal dividend);
 AFXINL void AfxMultiplyQuat(afxQuat q, afxQuat const a, afxQuat const b); // q = a * b
 
 ////////////////////////////////////////////////////////////////////////////////
-// Algebra                                                                    //
-////////////////////////////////////////////////////////////////////////////////
 
 /// Computes the dot product of two quaternions.
 /// q = First quaternion.
@@ -165,7 +151,7 @@ AFXINL afxReal  AfxDotQuat(afxQuat const q, afxQuat const other);
 /// Computes the square of the magnitude of a quaternion.
 /// q = Quaternion to measure.
 
-AFXINL afxReal  AfxMagQuatSq(afxQuat const q);
+AFXINL afxReal  AfxSqQuat(afxQuat const q);
 
 /// Computes the magnitude of a quaternion.
 /// q = Quaternion to measure.
@@ -178,11 +164,9 @@ AFXINL afxReal  AfxMagQuat(afxQuat const q);
 
 AFXINL afxReal  AfxMagQuatRecip(afxQuat const q);
 
-/// Computes the inverse of a quaternion.
-/// q = Returns the inverse of in.
-/// in = Quaternion to invert.
+/// Negativa todos os componentes de um quaternion.
 
-AFXINL void AfxInvertQuat(afxQuat q, afxQuat const in); // q = inverse of in
+AFXINL void AfxNegQuat(afxQuat q, afxQuat const in);
 
 /// Computes the conjugate of a quaternion.
 /// Given a quaternion ( x, y, z, w), the AfxConjugateQuat function returns the quaternion (-x, -y, -z, w).
@@ -191,6 +175,12 @@ AFXINL void AfxInvertQuat(afxQuat q, afxQuat const in); // q = inverse of in
 /// in = The quaternion to conjugate.
 
 AFXINL void AfxConjugateQuat(afxQuat q, afxQuat const in);
+
+/// Computes the inverse of a quaternion.
+/// q = Returns the inverse of in.
+/// in = Quaternion to invert.
+
+AFXINL void AfxInvertQuat(afxQuat q, afxQuat const in); // q = inverse of in
 
 /// Interpolating a quaternion is useful when smoothly varying between an initial and final rotation. 
 /// Interpolation is good for finding arbitrary in-between values of rotation. This is employed especially in character animation systems. 
@@ -237,27 +227,23 @@ AFXINL void AfxLerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal per
 AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal t);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Affine transformation                                                      //
-////////////////////////////////////////////////////////////////////////////////
 
 /// Computes an axis and angle of rotation about that axis for a given quaternion.
 /// q = Quaternion to measure.
 /// axis = Address of a 3D vector describing the axis of rotation for the quaternion Q.
 /// radians = Address of float describing the radian angle of rotation for the quaternion Q.
 
-AFXINL void AfxExtractAxialRotation(afxQuat const q, afxReal axis[3], afxReal *radians); // extracts an axis/angle representation to this quaternion rotation.
+AFXINL void AfxExtractAxialRotation(afxQuat const q, afxV3d axis, afxReal *radians); // extracts an axis/angle representation to this quaternion rotation.
 
-AFXINL void AfxAssimilateQuat(afxReal const ltm[3][3], afxReal const iltm[3][3], afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
+AFXINL void AfxAssimilateQuat(afxM3d const ltm, afxM3d const iltm, afxNat cnt, afxQuat const in[], afxQuat out[]); // make similarity transformation on afxQuat-based orientation.
 
 /// Rotates a 3D vector using a quaternion.
 /// v = Returns the rotated 3D vector.
 /// in = 3D vector to rotate.
 /// rot = Quaternion that describes the rotation to apply to the vector.
 
-AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxReal const in[][3], afxReal out[][3]);
+AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxV3d const in[], afxV3d out[]);
 
-////////////////////////////////////////////////////////////////////////////////
-// Trigonometry                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
 /// How to find a rotation which takes some initial vector into some final vector?
@@ -265,7 +251,7 @@ AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxReal const in[][3], afx
 /// I have seen this problem solved in many different ways, many times involving inverse trig functions. We are going to solve this problem with quaternions - and it's really easy!
 /// Here is a function that will give you the rotation quaternion that will rotate some initial vector into some final vector
 
-AFXINL void AfxQuatFromHeading(afxQuat q, afxReal const from[3], afxReal const to[3]);
+AFXINL void AfxQuatFromHeading(afxQuat q, afxV3d const from, afxV3d const to);
 
 /// Returns a point in barycentric coordinates, using the specified quaternions. Note that Barycentric coordinates work for 'flat' surfaces but not for 'curved' ones.
 /// a = First quaternion in the triangle.
@@ -276,17 +262,17 @@ AFXINL void AfxQuatFromHeading(afxQuat q, afxReal const from[3], afxReal const t
 
 AFXINL void AfxBarycentricQuat(afxQuat q, afxQuat const a, afxQuat const b, afxQuat const c, afxReal f, afxReal g);
 
-AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxReal const tbn[3][3]);
+AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxM3d const tbn);
 
-AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxReal const normal[3], afxReal const tangent[3], afxReal const bitangent[3]);
+AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d const tangent, afxV3d const bitangent);
 
-AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxReal const rot[3]);
+AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const rot);
 
 /// Updating the dynamical state of a rigid body is referred to as integration. 
 /// If you represent the orientation of this body with a quaternion, you will need to know how to update it. 
 /// Here is a sample function for integrating a quaternion with a given angular velocity and time step.
 
-AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxReal const omega[3], afxReal dt);
+AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -298,7 +284,7 @@ AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxReal const omega[3]
 /// this amounts to running through the quaternion buffer and selecting the sequence of quaternions that minimizes the distance between each successive quaternion while keep the rotational meaning the same. 
 /// Qwadro makes it simple to do this:
 
-AFXINL void AfxEnsureQuaternionContinuity(afxNat cnt, afxQuat quat[]);
+AFXINL void AfxEnsureQuaternionContinuity(afxNat cnt, afxQuat q[]);
 
 /// Suffice to say, you shouldn't normally be calling AfxEnsureQuaternionContinuity on anything unless you know you need to, 
 /// because any time you're using Qwadro's higher-level animation functions, 

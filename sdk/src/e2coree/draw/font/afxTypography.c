@@ -55,7 +55,7 @@ static afxResult DecodeUtf8(afxBool* reject, unsigned int* codep, afxNat byte)
     return *reject;
 }
 
-_AFX afxBool AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph)
+_AVX afxBool AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &typ, afxFcc_TYP);
@@ -64,7 +64,7 @@ _AFX afxBool AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph)
     return FALSE;
 }
 
-_AFX afxTypography AfxAcquireTypography(afxDrawContext dctx)
+_AVX afxTypography AfxAcquireTypography(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

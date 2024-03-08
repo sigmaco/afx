@@ -18,21 +18,21 @@
 #define _AFX_WORLD_POSE_C
 #include "qwadro/sim/afxSimulation.h"
 
-_AFX afxM4d* AfxWorldPoseGetWorldMatrixArray(awxWorldPose const *wp)
+_AKX afxM4d* AfxWorldPoseGetWorldMatrixArray(awxWorldPose const *wp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
     return wp->world;
 }
 
-_AFX afxM4d* AfxWorldPoseGetCompositeMatrixArray(awxWorldPose const *wp)
+_AKX afxM4d* AfxWorldPoseGetCompositeMatrixArray(awxWorldPose const *wp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
     return wp->composite;
 }
 
-_AFX afxV4d* AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat artIdx)
+_AKX afxV4d* AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat artIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
@@ -40,7 +40,7 @@ _AFX afxV4d* AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat artId
     return wp->composite[artIdx];
 }
 
-_AFX afxV4d* AfxWorldPoseGetWorldMatrix(awxWorldPose const *wp, afxNat artIdx)
+_AKX afxV4d* AfxWorldPoseGetWorldMatrix(awxWorldPose const *wp, afxNat artIdx)
 {
     //float (*__cdecl GetWorldPose4x4(const world_pose *WorldPose, int BoneIndex))[4]
     afxError err = AFX_ERR_NONE;
@@ -49,14 +49,14 @@ _AFX afxV4d* AfxWorldPoseGetWorldMatrix(awxWorldPose const *wp, afxNat artIdx)
     return wp->world[artIdx];
 }
 
-_AFX afxNat AfxWorldPoseGetArticulationCount(awxWorldPose const *wp)
+_AKX afxNat AfxWorldPoseGetArticulationCount(awxWorldPose const *wp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
     return wp->xformCnt;
 }
 
-_AFX void AfxReleaseWorldPoses(afxNat cnt, awxWorldPose *wp[])
+_AKX void AfxReleaseWorldPoses(afxNat cnt, awxWorldPose *wp[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -72,7 +72,7 @@ _AFX void AfxReleaseWorldPoses(afxNat cnt, awxWorldPose *wp[])
     }
 }
 
-_AFX afxError AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], awxWorldPose *wp[])
+_AKX afxError AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], awxWorldPose *wp[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -82,7 +82,7 @@ _AFX afxError AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[],
         AfxAssert(wp[i]);
         wp[i]->xformCnt = artCnt[i];
         wp[i]->world = wp[i]->xformCnt ? AfxAllocate(NIL, wp[i]->xformCnt, sizeof(wp[i]->world[0]), 0, AfxHint()) : NIL;
-        wp[i]->composite = !excludeComposite && wp[i]->xformCnt ? AfxAllocate(NIL, wp[i]->xformCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
+        wp[i]->composite = (excludeComposite && !excludeComposite[i]) && wp[i]->xformCnt ? AfxAllocate(NIL, wp[i]->xformCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
     }
     return err;
 }

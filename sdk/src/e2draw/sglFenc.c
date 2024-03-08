@@ -42,7 +42,7 @@ _SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFen
     afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
     afxNat txuIdx;
     AfxGetThreadingUnit(&txuIdx);
-    glVmt const* gl = &ddev->dpus[txuIdx].gl;
+    glVmt const* gl = &ddev->idd->dpus[txuIdx].gl;
 
     afxClock startClock, currClock;
     AfxGetClock(&startClock);

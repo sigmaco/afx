@@ -59,12 +59,12 @@ AFX_DEFINE_STRUCT(afxVertexBufferSpecification)
     afxBufferAccess     access;
 };
 
-AFX afxError        AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[]);
+AVX afxError        AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[]);
 
-AFX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
-AFX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
-AFX afxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
-AFX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
+AVX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
+AVX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
+AVX afxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
+AVX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
 AFX_DECLARE_STRUCT(awxVertexDataCache);
 
@@ -108,14 +108,14 @@ AFX_DEFINE_STRUCT(afxIndexBufferSpecification)
     afxNat32            idxSiz;
 };
 
-AFX afxError        AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferSpecification const spec[], afxIndexBuffer ibuf[]);
+AVX afxError        AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferSpecification const spec[], afxIndexBuffer ibuf[]);
 
-AFX afxBuffer       AfxGetIndexBuffer(afxIndexBuffer ibuf);
-AFX afxNat          AfxGetIndexBufferUsage(afxIndexBuffer ibuf);
-AFX afxNat32        AfxGetIndexBufferStride(afxIndexBuffer ibuf);
-AFX afxNat          AfxGetIndexBufferCapacity(afxIndexBuffer ibuf);
+AVX afxBuffer       AfxGetIndexBuffer(afxIndexBuffer ibuf);
+AVX afxNat          AfxGetIndexBufferUsage(afxIndexBuffer ibuf);
+AVX afxNat32        AfxGetIndexBufferStride(afxIndexBuffer ibuf);
+AVX afxNat          AfxGetIndexBufferCapacity(afxIndexBuffer ibuf);
 
-AFX afxNat          AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afxNat* baseIdx);
-AFX void            AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt);
+AVX afxNat          AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afxNat* baseIdx);
+AVX void            AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt);
 
 #endif//AFX_DRAW_STREAM_H

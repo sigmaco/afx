@@ -31,9 +31,14 @@ _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 
     for (afxNat i = 0; i < din->base.scripts.cnt; i++)
     {
-        afxDrawScript dscr = *(afxDrawScript*)AfxGetArrayUnit(&din->base.scripts, i);
-        AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-        while (!AfxReleaseObjects(1, (void*[]) { dscr }));
+        afxDrawScript* pdscr = AfxGetArrayUnit(&din->base.scripts, i);
+
+        if (*pdscr)
+        {
+            AfxAssertObjects(1, pdscr, afxFcc_DSCR);
+            AfxReleaseObjects(1, (void**)pdscr);
+            *pdscr = NIL;
+        }
     }
 
     //AfxExitSlockExclusive(&din->scriptChainMutex);
@@ -215,7 +220,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     din->base.procCb = config ? config->proc : NIL;
     
     afxChain *classes = &din->base.classes;
-    AfxTakeChain(classes, (void*)din);
+    AfxSetUpChain(classes, (void*)din);
 
     afxClassConfig tmpClsConf;
 
@@ -227,7 +232,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     tmpClsConf.mmu = mmu;
     AfxMountClass(&din->base.cameras, NIL, classes, &tmpClsConf);
 
-    din->base.cachedClipCfg = ddev->base.clipCfg;
+    din->base.cachedClipCfg = ddev->clipCfg;
 
     return err;
 }

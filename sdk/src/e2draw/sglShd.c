@@ -180,12 +180,12 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     {
         afxString src;
         AfxMakeString(&src, shd->base.code, shd->base.codeLen);
-        afxFixedString128 line;
-        AfxMakeFixedString128(&line, NIL);
-        afxFixedString32 type;
-        AfxMakeFixedString32(&type, NIL);
-        afxFixedString128 name;
-        AfxMakeFixedString128(&name, NIL);
+        afxString128 line;
+        AfxMakeString128(&line, NIL);
+        afxString32 type;
+        AfxMakeString32(&type, NIL);
+        afxString128 name;
+        AfxMakeString128(&name, NIL);
 
         while (1)
         {

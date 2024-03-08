@@ -1,0 +1,5 @@
+[Firmware]
+Service=sim
+Provider=SIGMA
+Version=
+DllFile=e2newton.dll

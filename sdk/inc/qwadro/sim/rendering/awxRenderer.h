@@ -19,7 +19,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "qwadro/sim/anim/awxBody.h"
+#include "qwadro/sim/motion/awxBody.h"
 #include "qwadro/sim/rendering/awxSky.h"
 
 AFX_DEFINE_STRUCT(awxViewConstants) // frame
@@ -28,8 +28,8 @@ AFX_DEFINE_STRUCT(awxViewConstants) // frame
     afxM4d  iv;
     afxM4d  p;
     afxM4d  ip;
-    afxM4d  vp;
-    afxM4d  ivp;
+    afxM4d  pv;
+    afxM4d  ipv;
 
     afxV4d  viewPos; // view point
     afxV2d  viewExtent;
@@ -59,7 +59,6 @@ AFX_DEFINE_STRUCT(afxMaterialConstants)
 
 AFX_DEFINE_STRUCT(awxInstanceConstants)
 {
-    afxNat  boneCnt;
     afxM4d  m;
     afxM4d  w[32];
 };
@@ -139,22 +138,22 @@ for each view {
 }
 #endif
 
-AFX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv);
-AFX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd);
+AKX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv);
+AKX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd);
 
-AFX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
+AKX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AFX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[]);
+AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[]);
 
-AFX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd);
+AKX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError AwxAcquireRenderers(afxSimulation sim, afxNat cnt, awxRenderer rnd[], awxRendererConfig const config[]);
+AKX afxError AwxAcquireRenderers(afxSimulation sim, afxNat cnt, awxRenderer rnd[], awxRendererConfig const config[]);
 
 
-AFX void    AwxCmdRequestModel(afxSimulation sim, afxNat id);
+AKX void    AwxCmdRequestModel(afxSimulation sim, afxNat id);
 
 #endif//RENDERER_H

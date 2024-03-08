@@ -19,7 +19,7 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/draw/afxDrawContext.h"
 
-_AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
+_AVX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(spec);
@@ -41,7 +41,7 @@ _AFX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[])
+_AVX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -52,7 +52,7 @@ _AFX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, 
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)samplers);
 }
 
-_AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[])
+_AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -68,7 +68,7 @@ _AFX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConf
     return err;
 }
 
-AFX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
+AVX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
 {
     afxError err = NIL;
     AfxAssert(config);
@@ -96,7 +96,7 @@ AFX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
     *config = def;
 }
 
-AFX afxSampler AfxAcquireBilinearSampler(afxDrawContext dctx)
+AVX afxSampler AfxAcquireBilinearSampler(afxDrawContext dctx)
 {
     afxError err = NIL;
     afxSamplerConfig config;
@@ -109,7 +109,7 @@ AFX afxSampler AfxAcquireBilinearSampler(afxDrawContext dctx)
     return smp;
 }
 
-AFX afxSampler AfxAcquireTrilinearSampler(afxDrawContext dctx)
+AVX afxSampler AfxAcquireTrilinearSampler(afxDrawContext dctx)
 {
     afxError err = NIL;
     afxSamplerConfig config;

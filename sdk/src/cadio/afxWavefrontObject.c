@@ -96,7 +96,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
     // a entire file should be an afxModel.
     // each object should be an afxMesh, if none at least one afxMesh must pack all groups.
     // each group should be an afxMeshSurface
-    // .obj doesn't contains skeletal info, so must have one single afxMeshPivot bound to all groups.
+    // .obj doesn't contains skeletal info, so must have one single afxMeshBias bound to all groups.
 
     AfxAssert(sim);
     afxMmu mmu = AfxGetSimulationMmu(sim);
@@ -109,8 +109,8 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
         GLUSscene g_wavefrontScene;
 #if !0
         afxUri file2;
-        afxFixedUri2048 uri2;
-        AfxMakeFixedUri2048(&uri2, NIL);
+        afxUri2048 uri2;
+        AfxMakeUri2048(&uri2, NIL);
         AfxExcerptUriPath(&file[i], &file2);
         AfxResolveUri(afxFileFlag_R, &file2, &uri2.uri);
 
@@ -171,7 +171,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 AfxMakeString(&tmp, objectWalker->object.name, 0);
                 AfxBeginMeshBuilding(mshb2, &tmp, vtxCnt, triCnt, surfaceCnt, 1);
                 
-                AfxResetBone(&sklb, meshIdx, &tmp, AFX_INVALID_INDEX, &t, &t);
+                AfxResetBone(&sklb, meshIdx, &tmp, AFX_INVALID_INDEX, &t, &t, -1.0);
                 
                 AfxRenameVertexPivots(mshb2, 0, 1, &tmp);
 
@@ -274,7 +274,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
             mdlb.mshCnt = meshCnt;
             mdlb.meshes = meshes.data;
             mdlb.strc = strc;
-            AfxMakeFixedString32(&mdlb.id, mdlName);
+            AfxMakeString32(&mdlb.id, mdlName);
             AfxAssembleModel(sim, 1, &mdlb, &mdl);
             AfxAssertObjects(1, &mdl, afxFcc_MDL);
 

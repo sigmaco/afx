@@ -21,6 +21,28 @@
 
 #include "qwadro/draw/afxDrawDefs.h"
 
+#ifndef __e2ux__
+#   ifdef _DEBUG
+#       define AUX _AFXIMPORT extern 
+#       define AUXINL _AFXIMPORT extern inline
+#   else
+#       define AUX _AFXIMPORT extern 
+#       define AUXINL _AFXIMPORT extern inline
+#   endif
+#else
+#   ifdef _DEBUG
+#       define _AUX _AFXEXPORT
+#       define AUX _AFXEXPORT extern 
+#       define _AUXINL _AFXEXPORT inline
+#       define AUXINL _AFXEXPORT extern inline
+#   else
+#       define _AUX _AFXEXPORT
+#       define AUX _AFXEXPORT extern 
+#       define _AUXINL _AFXEXPORT inline
+#       define AUXINL _AFXEXPORT extern inline
+#   endif
+#endif//__e2ux__
+
 AFX_DEFINE_HANDLE(afxWidget);
 AFX_DEFINE_HANDLE(afxOverlay);
 

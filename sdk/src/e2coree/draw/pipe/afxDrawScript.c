@@ -28,7 +28,7 @@
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/core/afxSystem.h"
 
-_AFX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
+_AVX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -46,7 +46,7 @@ _AFX afxError AfxRecycleDrawScript(afxDrawScript dscr, afxBool freeRes)
     return err;
 }
 
-_AFX afxError AfxCompileDrawScript(afxDrawScript dscr)
+_AVX afxError AfxCompileDrawScript(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -63,7 +63,7 @@ _AFX afxError AfxCompileDrawScript(afxDrawScript dscr)
     return err;
 }
 
-_AFX afxError AfxRecordDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
+_AVX afxError AfxRecordDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -80,21 +80,21 @@ _AFX afxError AfxRecordDrawScript(afxDrawScript dscr, afxDrawScriptUsage usage)
     return err;
 }
 
-AFX afxDrawScriptState AfxGetDrawScriptState(afxDrawScript dscr)
+AVX afxDrawScriptState AfxGetDrawScriptState(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     return dscr->state;
 }
 
-AFX afxNat AfxGetDrawScriptPort(afxDrawScript dscr)
+AVX afxNat AfxGetDrawScriptPort(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     return dscr->portIdx;
 }
 
-_AFX afxDrawInput AfxGetDrawScriptInput(afxDrawScript dscr)
+_AVX afxDrawInput AfxGetDrawScriptInput(afxDrawScript dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -103,7 +103,7 @@ _AFX afxDrawInput AfxGetDrawScriptInput(afxDrawScript dscr)
     return din;
 }
 
-_AFX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[])
+_AVX afxError AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);

@@ -421,7 +421,7 @@ afxResult AfxUnlockDebugger(void)
             {
                 afxNat unitUnlockerIdx;
                 AfxGetThreadingId(&unitUnlockerIdx);
-                afxError err;
+                //afxError err;
                 //AfxAssert(unitUnlockerIdx == debugger.unitLockerIdx);
             }
         }
@@ -482,7 +482,7 @@ afxResult AfxDetachDebugger(void)
 
         debugger.running = 0;
         AfxReleaseWaitCondition(&(debugger.cond));
-        AfxReleaseMutex(&(debugger.mtx));
+        AfxCleanUpMutex(&(debugger.mtx));
     }
     return 0;
 }
@@ -514,7 +514,7 @@ afxResult AfxAttachDebugger(afxChar const* file)
         }
         else
         {
-            afxChar sys[2048], buf2[2048], exeName[2048];
+            afxChar sys[2048], exeName[2048];
             GetModuleFileNameA(NIL, exeName, sizeof(exeName));
             PathStripPathA(exeName);
             
@@ -546,6 +546,19 @@ afxResult AfxAttachDebugger(afxChar const* file)
             if (!AfxAttachDebugTerminal()) AfxThrowError();
             else
             {
+                short fontSizX = 16, fontSizY = 16;
+                CONSOLE_FONT_INFOEX cfi = { .cbSize = sizeof(cfi), .nFont = 0, .dwFontSize = { fontSizX, fontSizY }, .FontFamily = FF_DONTCARE, .FontWeight = FW_NORMAL };
+                wcscpy(cfi.FaceName, L"Consolas");
+                SetCurrentConsoleFontEx(debugger.conOutHnd, FALSE, &cfi);
+                COORD coord = GetLargestConsoleWindowSize(debugger.conOutHnd);
+                
+                MoveWindow(debugger.conWnd, -4, -4, 80 * fontSizX, coord.Y * fontSizY, TRUE);
+                //ShowScrollBar(debugger.conWnd, SB_BOTH, FALSE);
+
+                coord.X = 80;
+                coord.Y = 5000;
+                SetConsoleScreenBufferSize(debugger.conOutHnd, coord);
+
                 SetConsoleTextAttribute(debugger.conOutHnd, (WORD)(~(MAXUINT16) | FOREGROUND_RED | FOREGROUND_GREEN));
 
                 for (afxNat i = 0; i < 1120; i++)
@@ -567,7 +580,7 @@ afxResult AfxAttachDebugger(afxChar const* file)
         }
 
         AfxReleaseWaitCondition(&(debugger.cond));
-        AfxReleaseMutex(&(debugger.mtx));
+        AfxCleanUpMutex(&(debugger.mtx));
     }
     return FALSE;
 }

@@ -44,6 +44,18 @@ AFX afxBool     AfxIniGetReal(afxIni const* ini, afxString const* page, afxStrin
 AFX afxBool     AfxIniGetReal64(afxIni const* ini, afxString const* page, afxString const* key, afxReal64* value);
 AFX afxBool     AfxIniGetBool(afxIni const* ini, afxString const* page, afxString const* key, afxBool* value);
 AFX afxBool     AfxIniGetString(afxIni const* ini, afxString const* page, afxString const* key, afxString* value);
+AFX afxBool     AfxIniGetUri(afxIni const* ini, afxString const* page, afxString const* key, afxUri* value);
+
+AFX afxNat      AfxIniCountPages(afxIni const* ini);
+AFX afxNat      AfxIniCountKeys(afxIni const* ini, afxNat pagIdx);
+
+AFX afxBool     AfxIniGetStringIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxString* value);
+AFX afxBool     AfxIniGetUriIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxUri* value);
+AFX afxBool     AfxIniGetNatIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxNat* value);
+AFX afxBool     AfxIniGetIntIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxInt* value);
+AFX afxBool     AfxIniGetRealIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxReal* value);
+AFX afxBool     AfxIniGetReal64Indexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxReal64* value);
+AFX afxBool     AfxIniGetBoolIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxBool* value);
 
 AFX afxBool     AfxIniHasKey(afxIni const* ini, afxString const* page, afxString const* key);
 

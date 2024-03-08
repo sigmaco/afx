@@ -46,10 +46,10 @@ AFX_DEFINE_STRUCT(afxShaderBlueprint)
     afxFcc                  fcc;
     afxDrawContext          dctx;
     afxMmu                  mmu;
-    afxFixedUri128               uri; // 128
+    afxUri128               uri; // 128
     afxShaderStage          stage;
 
-    afxFixedString8              entry; // 8
+    afxString8              entry; // 8
     afxArray                codes; // afxByte    
     afxArray                inOuts; // afxShaderBlueprintInOut
     afxArray                resources; // afxShaderBlueprintResource
@@ -122,20 +122,20 @@ AFX_DEFINE_STRUCT(afxShaderBuilder)
     void        (*GetCode)(void* data, afxByte* code);    
 };
 
-AFX afxError                AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shaders[]);
+AVX afxError                AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shaders[]);
 
 /// Builds a shader from a eXtensible Shader Language (.xsh) file, part of Qwadro.
-AFX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
-AFX afxShader               AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri);
+AVX afxShader               AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxShader               AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shaders[]);
+AVX afxError                AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shaders[]);
 
-AFX afxNat                  AfxCountShaderInterfaces(afxShader shd);
-AFX afxResult               AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);
+AVX afxNat                  AfxCountShaderInterfaces(afxShader shd);
+AVX afxResult               AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[]);
 
-AFX afxBool                 AfxShaderIsDummy(afxShader shd);
-AFX afxShaderStage          AfxGetShaderStage(afxShader shd);
-AFX afxError                AfxPrintShader(afxShader shd, afxUri const *uri);
-AFX afxError                AfxSerializeShader(afxShader shd, afxStream ios);
+AVX afxBool                 AfxShaderIsDummy(afxShader shd);
+AVX afxShaderStage          AfxGetShaderStage(afxShader shd);
+AVX afxError                AfxPrintShader(afxShader shd, afxUri const *uri);
+AVX afxError                AfxSerializeShader(afxShader shd, afxStream ios);
 
 #endif//AFX_SHADER_H

@@ -410,7 +410,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
             if (!(inst->watchers = AfxAllocate(NIL, 1, sizeof(*inst->watchers), 0, AfxHint()))) AfxThrowError();
             else
             {
-                AfxTakeChain(inst->watchers, obj);
+                AfxSetUpChain(inst->watchers, obj);
             }
         }
 
@@ -421,7 +421,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
                 if (!(filterInst->watching = AfxAllocate(NIL, 1, sizeof(*filterInst->watching), 0, AfxHint()))) AfxThrowError();
                 else
                 {
-                    AfxTakeChain(filterInst->watching, filter);
+                    AfxSetUpChain(filterInst->watching, filter);
                 }
             }
 

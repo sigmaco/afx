@@ -113,37 +113,37 @@ AFX_OBJECT(afxMeshTopology)
 /// These indices always describe a triangle list - that is, each group of three indices describes a single triangle - the data is not organised into strips or fans in any way. 
 /// You can put these indices into an index buffer like this:
 
-AFX afxNat              AfxCountMeshIndices(afxMeshTopology msht);
+AKX afxNat              AfxCountMeshIndices(afxMeshTopology msht);
 
-AFX afxNat*             AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx);
-AFX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx);
+AKX afxNat*             AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx);
+AKX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx);
 
-AFX afxNat              AfxCountMeshTriangles(afxMeshTopology msht);
+AKX afxNat              AfxCountMeshTriangles(afxMeshTopology msht);
 
-AFX afxNat              AfxCountMeshTriangleEdges(afxMeshTopology msht);
+AKX afxNat              AfxCountMeshTriangleEdges(afxMeshTopology msht);
 
-AFX afxNat              AfxCountMeshSurfaces(afxMeshTopology msht);
-AFX afxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx);
+AKX afxNat              AfxCountMeshSurfaces(afxMeshTopology msht);
+AKX afxMeshSurface*     AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx);
 
-AFX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc);
+AKX afxBool             AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc);
 
 /// By default, Qwadro always write triangle indices in counter-clockwise winding. 
 /// If you need your indices in clockwise order, or if you've manipulated your mesh vertices such that they've been mirrored in some way, 
 /// you can always invert the winding of a afxMeshTopology's indices like this: 
 
-AFX void                AfxInvertMeshWinding(afxMeshTopology msht);
+AKX void                AfxInvertMeshWinding(afxMeshTopology msht);
 
 /// If you are merging multiple topologies, or processing material groups, sometimes it can be useful to remap the material indices in a afxMeshSurface. 
 /// Qwadro can do this for you: 
 
-AFX void                AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[]);
+AKX void                AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[]);
 
 /// For each material index in the afxMeshTopology, it will lookup that index in the remapTable array and replace material index with the value. 
 
 
-AFX afxNat              AfxDetermineMeshIndexSize(afxMeshTopology msht);
+AKX afxNat              AfxDetermineMeshIndexSize(afxMeshTopology msht);
 
-AFX afxError            AfxBufferizeMeshTopology(afxMeshTopology msht);
+AKX afxError            AfxBufferizeMeshTopology(afxMeshTopology msht);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
@@ -162,11 +162,11 @@ AFX_DEFINE_STRUCT(afxMeshTopologySpec)
     void*       udd;
 };
 
-AFX afxError            AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[]);
+AKX afxError            AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[]);
 
-AFX afxMeshTopology     AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder const* mshb, afxNat baseSurfIdx, afxNat surfCnt);
+AKX afxMeshTopology     AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder const* mshb, afxNat baseSurfIdx, afxNat surfCnt);
 
-AFX afxError            AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology topologies[]);
-AFX afxError            AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const topologies[]);
+AKX afxError            AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology topologies[]);
+AKX afxError            AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const topologies[]);
 
 #endif//AFX_MESH_TOPOLOGY_H

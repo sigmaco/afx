@@ -34,6 +34,9 @@ AFX_DEFINE_STRUCT(afxSoundDeviceInfo)
     afxClassConfig const*   sctxClsConfig;
     afxClassConfig const*   soutClsConfig;
     afxClassConfig const*   sinClsConfig;
+    afxSize                 iddSiz;
+    afxError                (*iddCtor)(afxSoundDevice sdev);
+    afxError                (*iddDtor)(afxSoundDevice sdev);
 };
 
 #ifdef _AFX_SOUND_C
@@ -52,26 +55,22 @@ AFX_DEFINE_STRUCT(afxSoundOutputEndpoint)
     
 };
 
-#ifndef _AFX_SOUND_DEVICE_IMPL
 AFX_OBJECT(afxSoundDevice)
-#else
-struct _afxBaseSoundDevice
-#endif
 {
     AFX_OBJECT(afxDevice)   dev;
-    afxChain                classes;
     afxClass                contexts;
     afxClass                outputs;
     afxClass                inputs;
 
-    afxBool                 serving;
+    afxError                (*procCb)(afxSoundDevice, afxSoundThread); // call their sound threads.
+    afxError                (*relinkDin)(afxSoundDevice, afxSoundContext,afxNat, afxSoundInput[]);
+    afxError                (*relinkDout)(afxSoundDevice, afxSoundContext,afxNat, afxSoundOutput[]);
+    afxMutex                ioConMtx;
 
-    afxString               domain;
-    afxString               name;
-
-    afxError(*procCb)(afxSoundDevice, afxSoundThread); // call their sound threads.
-    afxError(*relinkSin)(afxSoundDevice, afxSoundInput, afxSoundContext);
-    afxError(*relinkSout)(afxSoundDevice, afxSoundOutput, afxSoundContext);
+    afxSize                 iddSiz;
+    struct _afxSdevIdd*     idd;
+    afxError                (*iddCtor)(afxSoundDevice sdev);
+    afxError                (*iddDtor)(afxSoundDevice sdev);
 };
 #endif//_AFX_SOUND_DEVICE_C
 #endif//_AFX_SOUND_C
@@ -80,13 +79,12 @@ struct _afxBaseSoundDevice
 #ifdef _AFX_SOUND_SYSTEM_C
 AFX_OBJECT(afxSoundSystem)
 {
-    afxFcc              fcc;
     afxMmu              mmu;
     afxChain            classes;
-    afxClass            sdevices;
-    afxClass            scontexts;
-    afxClass            sthreads;
-    afxIcd              e2sound; // SIGMA A4D is required for minimal operability since core has no more embedded fallback.
+    afxClass            txus;
+    afxClass            threads;
+    afxClass            devices;
+    //afxIcd              e2sound; // SIGMA A4D is required for minimal operability since core has no more embedded fallback.
 };
 #endif//_AFX_SOUND_SYSTEM_C
 #endif//_AFX_SOUND_C
@@ -96,43 +94,45 @@ AFX_DEFINE_STRUCT(afxSoundSystemConfig)
     
 };
 
-AFX void            AfxChooseSoundSystemConfiguration(afxSoundSystemConfig *config, afxNat extendedSiz);
+AAX void            AfxChooseSoundSystemConfiguration(afxSoundSystemConfig *config, afxNat extendedSiz);
 
-AFX afxMmu          AfxGetSoundSystemMmu(void);
+AAX afxMmu          AfxGetSoundSystemMmu(void);
 
-AFX afxClass*       AfxGetSoundThreadClass(void);
-AFX afxClass*       AfxGetSoundDeviceClass(void);
+AAX afxClass*       AfxGetSoundThreadClass(void);
+AAX afxClass*       AfxGetSoundDeviceClass(void);
 
-AFX afxNat          AfxCountSoundThreads(void);
-AFX afxNat          AfxCountSoundDevices(void);
+AAX afxNat          AfxCountSoundThreads(void);
+AAX afxNat          AfxCountSoundDevices(void);
 
-AFX afxSoundDevice  AfxGetSoundDevice(afxNat sdevIdx);
+AAX afxNat          AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[]);
+AAX afxNat          AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sdev[]);
 
-AFX afxNat          AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[]);
-AFX afxNat          AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sdev[]);
+AAX afxNat          AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
+AAX afxNat          AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
 
-AFX afxNat          AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
-AFX afxNat          AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
+AAX afxSoundDevice  AfxGetSoundDevice(afxNat sdevIdx);
+
+AAX afxError        AfxRegisterSoundDevices(afxIcd icd, afxNat cnt, afxSoundDeviceInfo const info[], afxSoundDevice devices[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // SOUND DEVICE                                                               //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxBool         AfxSoundDeviceIsRunning(afxSoundDevice sdev);
+AAX afxBool         AfxSoundDeviceIsRunning(afxSoundDevice sdev);
 
-AFX afxClass*       AfxGetSoundContextClass(afxSoundDevice sdev);
+AAX afxClass*       AfxGetSoundContextClass(afxSoundDevice sdev);
 
-AFX afxNat          AfxCountSoundContexts(afxSoundDevice sdev);
+AAX afxNat          AfxCountSoundContexts(afxSoundDevice sdev);
 
-AFX afxNat          AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext sctx[]);
+AAX afxNat          AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext contexts[]);
 
-AFX afxNat          AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd);
+AAX afxNat          AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd);
 
 AFX_DEFINE_STRUCT(afxSoundContextConfig)
 {
 };
 
-AFX afxError        AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContextConfig const config[], afxSoundContext sctx[]);
+AAX afxError        AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContextConfig const config[], afxSoundContext contexts[]);
 
 
 

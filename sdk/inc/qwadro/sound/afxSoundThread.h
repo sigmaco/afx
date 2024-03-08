@@ -45,13 +45,13 @@ AFX_OBJECT(afxSoundThread)
 #endif
 #endif
 
-AFX afxError            AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[]);
+AAX afxError            AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[]);
 
-AFX afxSoundDevice      AfxGetSoundThreadDevice(afxSoundThread sthr);
-AFX afxThread           AfxGetSoundThreadBase(afxSoundThread sthr);
-AFX void*               AfxGetSoundThreadUdd(afxSoundThread sthr);
+AAX afxSoundDevice      AfxGetSoundThreadDevice(afxSoundThread sthr);
+AAX afxThread           AfxGetSoundThreadBase(afxSoundThread sthr);
+AAX void*               AfxGetSoundThreadUdd(afxSoundThread sthr);
 
-AFX afxBool             AfxGetSoundThreadActiveContext(afxSoundThread sthr, afxSoundContext* sctx);
-AFX afxBool             AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sque);
+AAX afxBool             AfxGetSoundThreadActiveContext(afxSoundThread sthr, afxSoundContext* sctx);
+AAX afxBool             AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sque);
 
 #endif//AFX_SOUND_THREAD_H

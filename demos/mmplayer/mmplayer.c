@@ -34,7 +34,7 @@ afxDrawContext dctx = NIL;
 
 //afxCanvas canv[3][60] = { NIL };
 
-afxFixedUri2048 uri, uri2;
+afxUri2048 uri, uri2;
 
 afxBuffer ubo = NIL;
 afxPipeline dpip[2] = { NIL, NIL };
@@ -243,8 +243,8 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 #if 0
                     if (AfxRandom2(0, 60) == 60)
                     {
-                        afxFixedUri2048 uri;
-                        AfxMakeFixedUri2048(&uri);
+                        afxUri2048 uri;
+                        AfxMakeUri2048(&uri);
                         AfxFormatUri(&uri.uri, "tmp/bink_frame_%u.tga", bnk->set.bink_buffers.FrameNum);
                         AfxPrintRasterToTarga(surf, 0, 0, 1, &uri);
                     }
@@ -335,7 +335,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     afxError err = AFX_ERR_NONE;
 
     AfxEntry("app=%p", app);
-    AfxMakeFixedUri2048(&uri, NIL);
+    AfxMakeUri2048(&uri, NIL);
 
     AfxFormatUri(&uri.uri, "art/world.tga");
     
@@ -520,8 +520,8 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxFixedUri2048 romUri;
-    AfxMakeFixedUri2048(&romUri, NIL);
+    afxUri2048 romUri;
+    AfxMakeUri2048(&romUri, NIL);
     AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     afxBool reboot = 1;

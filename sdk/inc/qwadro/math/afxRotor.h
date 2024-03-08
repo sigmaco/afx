@@ -41,13 +41,13 @@ AFXINL void AfxZeroRotor(afxRotor r);
 
 AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxReal a);
 
-AFXINL void AfxMakeRotor(afxRotor r, afxReal const from[3], afxReal const to[3]);
+AFXINL void AfxMakeRotor(afxRotor r, afxV3d const from, afxV3d const to);
 
 AFXINL void AfxMakeRotorFromBiv3d(afxRotor r, afxV3d const plane, afxReal /*rad*/angle);
 
 AFXINL void AfxMultiplyRotor(afxRotor r, afxRotor const a, afxRotor const b);
 
-AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxReal const x[3]);
+AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxV3d const x);
 
 AFXINL void AfxConjugateRotor(afxRotor r, afxRotor const in);
 

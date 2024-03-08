@@ -207,8 +207,8 @@ _AFXINL afxNat AfxInsertString(afxRestring* str, afxNat at, afxString const* inc
     afxRestring area;
     AfxMakeRestring(&area, str->cap > at ? at - str->cap : 0, AfxGetStringStorage(str, at), str->str.len > at ? at - str->str.len : 0);
     
-    afxFixedString2048 remaining;
-    AfxMakeFixedString2048(&remaining, &area.str);
+    afxString2048 remaining;
+    AfxMakeString2048(&remaining, &area.str);
 
     afxNat ret = AfxFormatString(&area, "%.*s%.*s", AfxPushString(include), AfxPushString(&remaining.str.str));
 
@@ -227,8 +227,8 @@ _AFXINL afxNat AfxEraseString(afxRestring* str, afxNat at, afxNat len)
     afxRestring area;
     AfxMakeRestring(&area, str->cap > at ? at - str->cap: 0, AfxGetStringStorage(str, at), str->str.len > at ? at - str->str.len : 0);
 
-    afxFixedString2048 remaining;
-    AfxMakeFixedString2048(&remaining, &area.str);
+    afxString2048 remaining;
+    AfxMakeString2048(&remaining, &area.str);
 
     return AfxFormatString(&area, "%.*s%c", AfxPushString(&remaining.str.str), '\0');
 }
@@ -340,7 +340,7 @@ _AFXINL afxNat AfxCopyString(afxRestring* str, afxString const* in)
     else
     {
         AfxAssert(in);
-        afxNat len = AfxGetStringLength(in);
+        afxNat len = AfxMin(AfxGetStringLength(in), AfxGetStringCapacity(str));
 
         if (!len) AfxResetRestring(str);
         else if ((clippedRange = AfxCopyStringRange(str, in, 0, len)))

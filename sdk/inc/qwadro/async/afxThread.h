@@ -39,12 +39,24 @@ typedef enum afxThreadOpcode
     AFX_THR_OPCODE_QUIT,
 } afxThreadOpcode;
 
+typedef enum afxThreadPurpose
+{
+    afxThreadPurpose_SYSTEM = 1,
+    afxThreadPurpose_SOUND,
+    afxThreadPurpose_DRAW,
+    afxThreadPurpose_ASIO,
+    afxThreadPurpose_COMM,
+    afxThreadPurpose_SIM,
+    afxThreadPurpose_HID
+} afxThreadPurpose;
+
 AFX_DEFINE_STRUCT(afxThreadConfig)
 {
-    afxNat          baseTxu;
-    afxNat          txuCnt;
-    afxError        (*proc)(afxThread thr, void *udd, afxInt opcode);
-    void            *udd;
+    afxThreadPurpose    purpose;
+    afxNat              baseTxu;
+    afxNat              txuCnt;
+    afxError            (*proc)(afxThread thr, void *udd, afxInt opcode);
+    void*               udd;
 };
 
 #ifdef _AFX_CORE_C
@@ -52,32 +64,32 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
 AFX_OBJECT(afxThread)
 {
     //afxLinkage      procUnit;
-    afxSlock        txuSlock;
+    afxSlock            txuSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     //afxNat          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
-    afxClock        startClock;
-    afxClock        lastClock;
-    afxClock        currClock;
-    afxReal64       currTime;
-    afxReal64       deltaTime;
-    afxNat          iterCnt;
-    afxNat          lastIterCnt;
-    afxClock        iterCntSwapClock;
-    afxError        (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
-    afxBool         started;
-    afxBool         exited;
-    afxBool         running;
-    afxNat          suspendCnt;
-    afxBool         isInFinish;
-    afxBool         finished;
-    afxBool         interruptionRequested;
-    afxInt          exitCode;
+    afxClock            startClock;
+    afxClock            lastClock;
+    afxClock            currClock;
+    afxReal64           currTime;
+    afxReal64           deltaTime;
+    afxNat              iterCnt;
+    afxNat              lastIterCnt;
+    afxClock            iterCntSwapClock;
+    afxError            (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
+    afxBool             started;
+    afxBool             exited;
+    afxBool             running;
+    afxNat              suspendCnt;
+    afxBool             isInFinish;
+    afxBool             finished;
+    afxBool             interruptionRequested;
+    afxInt              exitCode;
 
     // our way of doing CPU affinity actually
-    afxNat          baseTxu;
-    afxNat          txuCnt;
+    afxNat              baseTxu;
+    afxNat              txuCnt;
 
-    void            *udd;
+    void*               udd;
 };
 #endif//_AFX_THREAD_C
 #endif//_AFX_CORE_C

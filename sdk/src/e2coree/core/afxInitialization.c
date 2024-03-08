@@ -24,13 +24,13 @@
 
 AFX_DEFINE_STRUCT(_afxIniRecord)
 {
-    afxFixedString32 key;
-    afxFixedString2048 value;
+    afxString32 key;
+    afxString2048 value;
 };
 
 AFX_DEFINE_STRUCT(_afxIniPage)
 {
-    afxFixedString32 name;
+    afxString32 name;
     afxNat keyCnt;
     _afxIniRecord* keys;
 };
@@ -43,8 +43,8 @@ _AFXINL _afxIniRecord* _AfxIniCreateRecord(_afxIniPage* page, afxString const* k
     else
     {
         _afxIniRecord* entry = &page->keys[page->keyCnt++];
-        AfxMakeFixedString32(&entry->key, key);
-        AfxMakeFixedString2048(&entry->value, value);
+        AfxMakeString32(&entry->key, key);
+        AfxMakeString2048(&entry->value, value);
         return entry;
     }
     return NIL;
@@ -59,7 +59,7 @@ _AFXINL _afxIniPage* _AfxIniCreatePage(afxIni* ini, afxString const* block)
     {
         _afxIniPage* page = &ini->pages[ini->pageCnt++];
         page->keyCnt = 0;
-        AfxMakeFixedString32(&page->name, block);
+        AfxMakeString32(&page->name, block);
 
         if (!(page->keys = AfxAllocate(NIL, 8, sizeof(_afxIniRecord), 0, AfxHint())))
             AfxThrowError();
@@ -67,6 +67,16 @@ _AFXINL _afxIniPage* _AfxIniCreatePage(afxIni* ini, afxString const* block)
         return page;
     }
     return NIL;
+}
+
+_AFXINL afxNat AfxIniCountPages(afxIni const* ini)
+{
+    return ini->pageCnt;
+}
+
+_AFXINL afxNat AfxIniCountKeys(afxIni const* ini, afxNat pagIdx)
+{
+    return ini->pages[pagIdx].keyCnt;
 }
 
 _AFXINL _afxIniPage* _AfxIniFindPage(afxIni const* ini, afxString const* name)
@@ -300,7 +310,7 @@ _AFX afxError AfxIniSetString(afxIni* ini, afxString const* page, afxString cons
         if ((!(record = _AfxIniFindRecord(pag, key))) && (!(record = _AfxIniCreateRecord(pag, key, value))))
             AfxThrowError();
         else
-            AfxMakeFixedString2048(&record->value, value);
+            AfxMakeString2048(&record->value, value);
     }
     return err;
 }
@@ -316,12 +326,60 @@ _AFX afxBool AfxIniGetString(afxIni const* ini, afxString const* page, afxString
     return rslt;
 }
 
-afxBool AfxIniGetNat(afxIni const* ini, afxString const* page, afxString const* key, afxNat* value)
+_AFXINL afxBool AfxIniGetStringIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxString* value)
+{
+    afxBool rslt;
+    _afxIniRecord* entry;
+
+    if ((rslt = ((rslt = !!(entry = _AfxIniFindRecord(&ini->pages[pagIdx], key))) && (!(AfxStringIsEmpty(&entry->value.str.str))))))
+        AfxReflectString(&entry->value.str.str, value);
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetUri(afxIni const* ini, afxString const* page, afxString const* key, afxUri* value)
+{
+    afxBool rslt;
+    _afxIniRecord* entry;
+
+    if ((rslt = ((rslt = !!(entry = _AfxIniGetRecord(ini, page, key))) && (!(AfxStringIsEmpty(&entry->value.str.str))))))
+        AfxMakeUri(value, entry->value.str.str.start, entry->value.str.str.len);
+    else
+        AfxResetUri(value);
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetUriIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxUri* value)
+{
+    afxBool rslt;
+    _afxIniRecord* entry;
+
+    if ((rslt = ((rslt = !!(entry = _AfxIniFindRecord(&ini->pages[pagIdx], key))) && (!(AfxStringIsEmpty(&entry->value.str.str))))))
+        AfxMakeUri(value, entry->value.str.str.start, entry->value.str.str.len);
+    else
+        AfxResetUri(value);
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetNat(afxIni const* ini, afxString const* page, afxString const* key, afxNat* value)
 {
     afxBool rslt;
     afxString val;
     
     if ((rslt = ((rslt = AfxIniGetString(ini, page, key, &val)) && (!(AfxStringIsEmpty(&val))))))
+        *value = (afxNat)atoi(val.start);
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetNatIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxNat* value)
+{
+    afxBool rslt;
+    afxString val;
+
+    if ((rslt = ((rslt = !!_AfxIniFindRecord(&ini->pages[pagIdx], key)) && (!(AfxStringIsEmpty(&val))))))
         *value = (afxNat)atoi(val.start);
 
     return rslt;
@@ -338,12 +396,34 @@ _AFX afxBool AfxIniGetInt(afxIni const* ini, afxString const* page, afxString co
     return rslt;
 }
 
+_AFX afxBool AfxIniGetIntIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxInt* value)
+{
+    afxBool rslt;
+    afxString val;
+
+    if ((rslt = ((rslt = !!_AfxIniFindRecord(&ini->pages[pagIdx], key)) && (!(AfxStringIsEmpty(&val))))))
+        *value = atoi(val.start);
+
+    return rslt;
+}
+
 _AFX afxBool AfxIniGetReal(afxIni const* ini, afxString const* page, afxString const* key, afxReal* value)
 {
     afxBool rslt;
     afxString val;
     
     if ((rslt = ((rslt = AfxIniGetString(ini, page, key, &val)) && (!(AfxStringIsEmpty(&val))))))
+        *value = (afxReal)atof(val.start);
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetRealIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxReal* value)
+{
+    afxBool rslt;
+    afxString val;
+
+    if ((rslt = ((rslt = !!_AfxIniFindRecord(&ini->pages[pagIdx], key)) && (!(AfxStringIsEmpty(&val))))))
         *value = (afxReal)atof(val.start);
 
     return rslt;
@@ -360,6 +440,17 @@ _AFX afxBool AfxIniGetReal64(afxIni const* ini, afxString const* page, afxString
     return rslt;
 }
 
+_AFX afxBool AfxIniGetReal64Indexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxReal64* value)
+{
+    afxBool rslt;
+    afxString val;
+
+    if ((rslt = ((rslt = !!_AfxIniFindRecord(&ini->pages[pagIdx], key)) && (!(AfxStringIsEmpty(&val))))))
+        *value = (afxReal64)atof(val.start);
+
+    return rslt;
+}
+
 _AFX afxBool AfxIniGetBool(afxIni const* ini, afxString const* page, afxString const* key, afxBool* value)
 {
     afxBool rslt;
@@ -367,6 +458,21 @@ _AFX afxBool AfxIniGetBool(afxIni const* ini, afxString const* page, afxString c
     
     if ((rslt = ((rslt = AfxIniGetString(ini, page, key, &val)) && (!(AfxStringIsEmpty(&val))))) && ((0 == AfxCompareStringCil(&val, 0, "false", 0)) || (0 == AfxCompareStringCil(&val, 0, "0", 0))))
         *value = FALSE;
+    else if ((rslt = ((rslt = AfxIniGetString(ini, page, key, &val)) && (!(AfxStringIsEmpty(&val))))) && ((0 == AfxCompareStringCil(&val, 0, "true", 0)) || (0 == AfxCompareStringCil(&val, 0, "1", 0))))
+        *value = TRUE;
+
+    return rslt;
+}
+
+_AFX afxBool AfxIniGetBoolIndexed(afxIni const* ini, afxNat pagIdx, afxString const* key, afxBool* value)
+{
+    afxBool rslt;
+    afxString val;
+
+    if ((rslt = ((rslt = AfxIniGetStringIndexed(ini, pagIdx, key, &val)) && (!(AfxStringIsEmpty(&val))))) && ((0 == AfxCompareStringCil(&val, 0, "false", 0)) || (0 == AfxCompareStringCil(&val, 0, "0", 0))))
+        *value = FALSE;
+    else if ((rslt = ((rslt = AfxIniGetStringIndexed(ini, pagIdx, key, &val)) && (!(AfxStringIsEmpty(&val))))) && ((0 == AfxCompareStringCil(&val, 0, "true", 0)) || (0 == AfxCompareStringCil(&val, 0, "1", 0))))
+        *value = TRUE;
 
     return rslt;
 }

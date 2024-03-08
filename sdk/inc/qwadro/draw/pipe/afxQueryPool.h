@@ -50,9 +50,9 @@ struct _afxBaseQueryPool
 #endif
 #endif
 
-AFX afxDrawContext      AfxGetQueryPoolContext(afxQueryPool qryp);
+AVX afxDrawContext      AfxGetQueryPoolContext(afxQueryPool qryp);
 
-AFX afxResult           AfxGetQueryResults
+AVX afxResult           AfxGetQueryResults
 /// Copy results of queries in a query pool to a host memory region.
 (
     afxQueryPool        pool,
@@ -64,7 +64,7 @@ AFX afxResult           AfxGetQueryResults
     afxQueryResultFlags flags /// how and when results are returned.
 );
 
-AFX void                AfxResetQueries
+AVX void                AfxResetQueries
 /// Reset queries in a query pool. This command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
 (
     afxQueryPool        pool,
@@ -74,7 +74,7 @@ AFX void                AfxResetQueries
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxCmdId            AfxCmdBeginQuery
+AVX afxCmdId            AfxCmdBeginQuery
 /// Begin a query. After beginning a query, that query is considered active within the command buffer it was called in until that same query is ended.
 (
     afxDrawScript       dscr,
@@ -83,7 +83,7 @@ AFX afxCmdId            AfxCmdBeginQuery
     afxBool             precise /// specifies the precision of occlusion queries.
 ); 
 
-AFX afxCmdId            AfxCmdEndQuery
+AVX afxCmdId            AfxCmdEndQuery
 /// Ends a query. After ending a query, that query is marked as available.
 (
     afxDrawScript       dscr,
@@ -91,7 +91,7 @@ AFX afxCmdId            AfxCmdEndQuery
     afxNat              queryIdx /// the index within the query pool where the result is stored.
 );
 
-AFX afxCmdId            AfxCmdCopyQueryResults
+AVX afxCmdId            AfxCmdCopyQueryResults
 /// Copy the results of queries in a query pool to a buffer.
 (
     afxDrawScript       dscr,
@@ -104,7 +104,7 @@ AFX afxCmdId            AfxCmdCopyQueryResults
     afxQueryResultFlags flags
 );
 
-AFX afxCmdId            AfxCmdResetQueries
+AVX afxCmdId            AfxCmdResetQueries
 /// Reset queries in a query pool. When executed on a queue, this command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
 (
     afxDrawScript       dscr,
@@ -113,7 +113,7 @@ AFX afxCmdId            AfxCmdResetQueries
     afxNat              queryCnt /// the number of queries to reset.
 );
 
-AFX afxCmdId            AfxCmdWriteTimestamp
+AVX afxCmdId            AfxCmdWriteTimestamp
 /// Write a device timestamp into a query object. When AfxCmdWriteTimestamp is submitted to a queue, it defines an execution dependency on commands that were submitted before it, and writes a timestamp to a query pool.
 (
     afxDrawScript       dscr,

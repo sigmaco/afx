@@ -74,8 +74,8 @@ AFXINL afxBool  AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const aabb);
 AFXINL afxBool  AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const* other);
 
 // frustrum and matrix must be in same space
-AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxReal const pv[4][4]);
-AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4]);
+AFXINL void     AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv);
+AFXINL void     AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p);
 
 AFXINL void     AfxAabbEncapsulateFrustum(afxAabb aabb, afxFrustum const* f);
 

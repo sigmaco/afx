@@ -170,7 +170,7 @@ AFX_DEFINE_STRUCT(afxCmd)
 
 /// If the nested command buffer feature is enabled it is valid usage for AfxCmdExecuteCommands to also be recorded to a secondary command buffer.
 
-AFX afxCmdId                AfxCmdExecuteCommands
+AVX afxCmdId                AfxCmdExecuteCommands
 (
     afxDrawScript           dscr,
     afxNat                  cnt, /// is the length of the @aux array.
@@ -182,7 +182,7 @@ AFX afxCmdId                AfxCmdExecuteCommands
 /// The primitives are drawn @instCnt times with @instIdx starting with @firstInst and increasing sequentially for each instance.
 /// The assembled primitives execute the bound graphics pipeline.
 
-AFX afxCmdId                AfxCmdDraw
+AVX afxCmdId                AfxCmdDraw
 (
     afxDrawScript           dscr,
     afxNat                  baseInstIdx, /// is the instance ID of the first instance to draw.
@@ -197,7 +197,7 @@ AFX afxCmdId                AfxCmdDraw
 /// The parameters of each draw are encoded in an array of afxDrawIndirectCmd structures.
 /// If @drawCnt is less than or equal to one, @stride is ignored.
 
-AFX afxCmdId                AfxCmdDrawIndirect
+AVX afxCmdId                AfxCmdDrawIndirect
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// is the buffer containing draw parameters.
@@ -210,7 +210,7 @@ AFX afxCmdId                AfxCmdDrawIndirect
 /// AfxCmdDrawIndirectCount behaves similarly to AfxCmdDrawIndirect except that the draw count is read by the device from a buffer during execution.
 /// The command will read an unsigned 32-bit integer from @cntBuf located at @cntBufOff and use this as the draw count.
 
-AFX afxCmdId                AfxCmdDrawIndirectCount
+AVX afxCmdId                AfxCmdDrawIndirectCount
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// is the buffer containing draw parameters.
@@ -232,7 +232,7 @@ AFX afxCmdId                AfxCmdDrawIndirectCount
 /// The primitives are drawn @instCnt times with @instIdx starting with @firstInst and increasing sequentially for each instance.
 /// The assembled primitives execute the bound graphics pipeline.
 
-AFX afxCmdId                AfxCmdDrawIndexed
+AVX afxCmdId                AfxCmdDrawIndexed
 (
     afxDrawScript           dscr,
     afxNat                  vtxOff, /// is the value added to the vertex index before indexing into the vertex buffer.
@@ -247,7 +247,7 @@ AFX afxCmdId                AfxCmdDrawIndexed
 /// @drawCnt draws are executed by the command, with parameters taken from @buf starting at @offset and increasing by @stride bytes for each successive draw.
 /// The parameters of each draw are encoded in an array of afxDrawIndexedIndirectCmd structures. If @drawCnt is less than or equal to one, @stride is ignored.
 
-AFX afxCmdId                AfxCmdDrawIndexedIndirect
+AVX afxCmdId                AfxCmdDrawIndexedIndirect
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// is the buffer containing draw parameters.
@@ -260,7 +260,7 @@ AFX afxCmdId                AfxCmdDrawIndexedIndirect
 /// AfxCmdDrawIndexedIndirectCount behaves similarly to AfxCmdDrawIndexedIndirect except that the draw count is read by the device from a buffer during execution.
 /// The command will read an unsigned 32-bit integer from @cntBuf located at @cntBufOff and use this as the draw count.
 
-AFX afxCmdId                AfxCmdDrawIndexedIndirectCount
+AVX afxCmdId                AfxCmdDrawIndexedIndirectCount
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// is the buffer containing draw parameters.
@@ -271,9 +271,9 @@ AFX afxCmdId                AfxCmdDrawIndexedIndirectCount
     afxNat32                stride /// is the byte stride between successive sets of draw parameters.
 );
 
-AFX afxCmdId            AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-AFX afxCmdId            AfxCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
+AVX afxCmdId            AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
+AVX afxCmdId            AfxCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
 
-AFX afxCmdId            AfxCmdBindFontSIG(afxDrawScript dscr, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[]);
+AVX afxCmdId            AfxCmdBindFontSIG(afxDrawScript dscr, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[]);
 
 #endif//AFX_DRAW_COMMANDS_H

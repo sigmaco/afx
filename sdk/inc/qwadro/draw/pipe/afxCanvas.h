@@ -72,30 +72,30 @@ struct afxBaseCanvas
 
 // An surface is a memory location that can act as a buffer for the canvas. Think of it as an image or renderbuffer.
 
-AFX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd whd);
-AFX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const whd);
+AVX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd whd);
+AVX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const whd);
 
-AFX afxResult       AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask);
+AVX afxResult       AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask);
 
-AFX afxBool         AfxHasCombinedDepthStencilBuffer(afxCanvas canv);
+AVX afxBool         AfxHasCombinedDepthStencilBuffer(afxCanvas canv);
 
-AFX afxNat          AfxCountSurfaces(afxCanvas canv);
-AFX afxNat          AfxCountDrawSurfaces(afxCanvas canv);
-AFX afxBool         AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx);
-AFX afxBool         AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx);
+AVX afxNat          AfxCountSurfaces(afxCanvas canv);
+AVX afxNat          AfxCountDrawSurfaces(afxCanvas canv);
+AVX afxBool         AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx);
+AVX afxBool         AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx);
 
-AFX afxNat          AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
-AFX afxRaster       AfxGetLinkedDepthBuffer(afxCanvas canv);
-AFX afxRaster       AfxGetLinkedStencilBuffer(afxCanvas canv);
+AVX afxNat          AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
+AVX afxRaster       AfxGetLinkedDepthBuffer(afxCanvas canv);
+AVX afxRaster       AfxGetLinkedStencilBuffer(afxCanvas canv);
 
-AFX afxNat          AfxGetSurfaceFormats(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
+AVX afxNat          AfxGetSurfaceFormats(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
 
 // must be compatible with format, have at least sampleCnt, and not be less extent than canvas.
-AFX afxError        AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
-AFX afxError        AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth);
-AFX afxError        AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil);
+AVX afxError        AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
+AVX afxError        AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth);
+AVX afxError        AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil);
 
-AFX afxError        AfxGenerateDrawBuffers(afxCanvas canv);
+AVX afxError        AfxGenerateDrawBuffers(afxCanvas canv);
 
 AFX_DEFINE_STRUCT(afxSurfaceConfig)
 {
@@ -105,6 +105,6 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
     afxRasterFlags      rasFlags;
 };
 
-AFX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
+AVX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
 
 #endif//AFX_CANVAS_H

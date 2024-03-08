@@ -115,13 +115,13 @@ struct afxBaseSampler
 #endif
 #endif
 
-AFX afxSampler      AfxAcquireBilinearSampler(afxDrawContext dctx);
-AFX afxSampler      AfxAcquireTrilinearSampler(afxDrawContext dctx);
+AVX afxSampler      AfxAcquireBilinearSampler(afxDrawContext dctx);
+AVX afxSampler      AfxAcquireTrilinearSampler(afxDrawContext dctx);
 
-AFX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[]);
+AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[]);
 
-AFX void            AfxDescribeSampler(afxSampler samp, afxSamplerConfig* config);
+AVX void            AfxDescribeSampler(afxSampler samp, afxSamplerConfig* config);
 
-AFX void            AfxDescribeDefaultSampler(afxSamplerConfig* config);
+AVX void            AfxDescribeDefaultSampler(afxSamplerConfig* config);
 
 #endif//AFX_SAMPLER_H

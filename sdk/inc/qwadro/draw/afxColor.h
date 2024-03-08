@@ -128,30 +128,30 @@ AFX_DEFINE_STRUCT(afxPixelLayout)
     //afxBool unused5;
 };
 
-AFXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout);
+AVXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout);
 
-AFXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt);
-AFXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt);
-AFXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt);
-AFXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt);
-AFXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt);
-AFXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt);
+AVXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt);
 
 
 
 #define AfxPackColor(x_, y_, z_, w_) (afxColor const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
 #define AfxPackColorConst(x_, y_, z_, w_) (afxColor const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
 
-AFX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
+AVX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
 
-AFXINL void AfxSetColor(afxColor color, afxReal r, afxReal g, afxReal b, afxReal a)
+AVXINL void AfxSetColor(afxColor color, afxReal r, afxReal g, afxReal b, afxReal a)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
     AfxSetV4d(color, r, g, b, a);
 }
 
-AFXINL void AfxCopyColor(afxColor color, afxColor const in)
+AVXINL void AfxCopyColor(afxColor color, afxColor const in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);
@@ -159,7 +159,7 @@ AFXINL void AfxCopyColor(afxColor color, afxColor const in)
     AfxCopyV4d(color, in);
 }
 
-AFXINL void AfxResetColor(afxColor color)
+AVXINL void AfxResetColor(afxColor color)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(color);

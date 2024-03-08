@@ -163,71 +163,71 @@ struct afxBaseRaster
 #endif
 #endif//_AFX_DRAW_C
 
-AFX afxRasterUsage  AfxGetRasterUsage(afxRaster ras);
-AFX afxRasterFlags  AfxGetRasterFlags(afxRaster ras);
+AVX afxRasterUsage  AfxGetRasterUsage(afxRaster ras);
+AVX afxRasterFlags  AfxGetRasterFlags(afxRaster ras);
 
-AFX afxNat          AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset);
-AFX void            AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd);
+AVX afxNat          AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset);
+AVX void            AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd);
 
-AFX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
+AVX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
 
-AFX afxNat          AfxCountRasterLods(afxRaster ras);
-AFX afxNat          AfxCountRasterLayers(afxRaster ras);
-AFX afxNat          AfxCountRasterSamples(afxRaster ras);
+AVX afxNat          AfxCountRasterLods(afxRaster ras);
+AVX afxNat          AfxCountRasterLayers(afxRaster ras);
+AVX afxNat          AfxCountRasterSamples(afxRaster ras);
 
-AFX afxNat          AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx);
-AFX afxNat          AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx);
-AFX afxNat          AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
+AVX afxNat          AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx);
+AVX afxNat          AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx);
+AVX afxNat          AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
 
-AFX afxBool         AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw);
+AVX afxBool         AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw);
 
-AFX afxRasterUsage  AfxTestRasterUsage(afxRaster ras, afxRasterUsage bitmask);
-AFX afxRasterFlags  AfxTestRasterFlags(afxRaster ras, afxRasterFlags bitmask);
+AVX afxRasterUsage  AfxTestRasterUsage(afxRaster ras, afxRasterUsage bitmask);
+AVX afxRasterFlags  AfxTestRasterFlags(afxRaster ras, afxRasterFlags bitmask);
 
-AFX afxError        AfxBufferizeRaster(afxRaster ras);
+AVX afxError        AfxBufferizeRaster(afxRaster ras);
 
-AFX void*           AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat* rgnSiz, afxNat* rowSiz);
-AFX void            AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
+AVX void*           AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat* rgnSiz, afxNat* rowSiz);
+AVX void            AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
 
 // Update texture image data from arbitrary raw allocation. A safe way of copying.
-AFX afxError        AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void const *src);
-AFX afxError        AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void *dst);
+AVX afxError        AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void const *src);
+AVX afxError        AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void *dst);
 
 // Stream in/out texture image data from/to a stream.
-AFX afxError        AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream in);
-AFX afxError        AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream out);
+AVX afxError        AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream in);
+AVX afxError        AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream out);
 
 // Stream in texture image data from a file.
-AFX afxError        AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AFX afxError        AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
+AVX afxError        AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
+AVX afxError        AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
 
-AFX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AFX afxError        AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
+AVX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
+AVX afxError        AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
 
 // Stream out texture image data to a file.
-AFX afxError        AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AFX afxError        AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
+AVX afxError        AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
+AVX afxError        AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
 
-AFX afxError        AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AFX afxError        AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
+AVX afxError        AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
+AVX afxError        AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError        AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[]);
+AVX afxError        AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[]);
 
-AFX afxError        AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[]);
+AVX afxError        AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[]);
 
-AFX afxRaster       AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[]);
-AFX afxError        AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras);
-AFX afxRaster       AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6]);
+AVX afxRaster       AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[]);
+AVX afxError        AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras);
+AVX afxRaster       AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6]);
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-AFX afxCmdId                AfxCmdDownloadRaster
+AVX afxCmdId                AfxCmdDownloadRaster
 /// Store afxRaster data into a afxStream.
 (
     afxDrawScript           dscr,
@@ -238,7 +238,7 @@ AFX afxCmdId                AfxCmdDownloadRaster
     afxCodec                cdc
 );
 
-AFX afxCmdId                AfxCmdDownloadRasterRegion
+AVX afxCmdId                AfxCmdDownloadRasterRegion
 /// Store afxRaster data into a afxStream.
 (
     afxDrawScript           dscr,
@@ -251,7 +251,7 @@ AFX afxCmdId                AfxCmdDownloadRasterRegion
     afxCodec                cdc
 );
 
-AFX afxCmdId                AfxCmdUploadRaster
+AVX afxCmdId                AfxCmdUploadRaster
 /// Load data from a afxStream into an afxRaster.
 (
     afxDrawScript           dscr,
@@ -262,7 +262,7 @@ AFX afxCmdId                AfxCmdUploadRaster
     afxCodec                cdc
 );
 
-AFX afxCmdId                AfxCmdUploadRasterRegion
+AVX afxCmdId                AfxCmdUploadRasterRegion
 /// Load data from a afxStream into an afxRaster.
 (
     afxDrawScript           dscr,
@@ -275,7 +275,7 @@ AFX afxCmdId                AfxCmdUploadRasterRegion
     afxCodec                cdc
 );
 
-AFX afxCmdId                AfxCmdPackRaster
+AVX afxCmdId                AfxCmdPackRaster
 /// Copy afxRaster data into a afxBuffer.
 (
     afxDrawScript           dscr,
@@ -285,7 +285,7 @@ AFX afxCmdId                AfxCmdPackRaster
     afxRasterIoOp const     ops[] /// an array of structures specifying the regions to copy.
 );
 
-AFX afxCmdId                AfxCmdPackRasterRegion
+AVX afxCmdId                AfxCmdPackRasterRegion
 /// Copy afxRaster data into a afxBuffer.
 (
     afxDrawScript           dscr,
@@ -297,7 +297,7 @@ AFX afxCmdId                AfxCmdPackRasterRegion
     afxNat                  bufRowCnt /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
 );
 
-AFX afxCmdId                AfxCmdUnpackRaster
+AVX afxCmdId                AfxCmdUnpackRaster
 /// Copy data from a afxBuffer into an afxRaster.
 (
     afxDrawScript           dscr,
@@ -307,7 +307,7 @@ AFX afxCmdId                AfxCmdUnpackRaster
     afxRasterIoOp const     ops[] /// an array of structures specifying the regions to copy.
 );
 
-AFX afxCmdId                AfxCmdUnpackRasterRegion
+AVX afxCmdId                AfxCmdUnpackRasterRegion
 /// Copy data from a afxBuffer into an afxRaster.
 (
     afxDrawScript           dscr,
@@ -319,7 +319,7 @@ AFX afxCmdId                AfxCmdUnpackRasterRegion
     afxNat                  bufRowCnt /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
 );
 
-AFX afxCmdId                AfxCmdCopyRaster
+AVX afxCmdId                AfxCmdCopyRaster
 /// Copy data between afxRaster's.
 (
     afxDrawScript           dscr,
@@ -329,7 +329,7 @@ AFX afxCmdId                AfxCmdCopyRaster
     afxRasterCopyOp const   ops[] /// an array of structures specifying the regions to copy.
 );
 
-AFX afxCmdId                AfxCmdCopyRasterRegion
+AVX afxCmdId                AfxCmdCopyRasterRegion
 /// Copy data between afxRaster's.
 (
     afxDrawScript           dscr,
@@ -342,7 +342,7 @@ AFX afxCmdId                AfxCmdCopyRasterRegion
     afxRasterRegion const*  dstRgn
 );
 
-AFX afxCmdId                AfxCmdSwizzleRaster
+AVX afxCmdId                AfxCmdSwizzleRaster
 /// Permute color components of a raster.
 (
     afxDrawScript           dscr,
@@ -353,7 +353,7 @@ AFX afxCmdId                AfxCmdSwizzleRaster
     afxRasterRegion const   regions[]
 );
 
-AFX afxCmdId                AfxCmdSwizzleRasterRegion
+AVX afxCmdId                AfxCmdSwizzleRasterRegion
 (
     afxDrawScript           dscr,
     afxRaster               ras,
@@ -362,7 +362,7 @@ AFX afxCmdId                AfxCmdSwizzleRasterRegion
     afxRasterRegion const*  rgn
 );
 
-AFX afxCmdId                AfxCmdTransformRaster
+AVX afxCmdId                AfxCmdTransformRaster
 (
     afxDrawScript           dscr,
     afxRaster               ras,
@@ -371,7 +371,7 @@ AFX afxCmdId                AfxCmdTransformRaster
     afxRasterRegion const   regions[]
 );
 
-AFX afxCmdId                AfxCmdTransformRasterRegion
+AVX afxCmdId                AfxCmdTransformRasterRegion
 (
     afxDrawScript           dscr,
     afxRaster               ras,
@@ -379,7 +379,7 @@ AFX afxCmdId                AfxCmdTransformRasterRegion
     afxRasterRegion const*  rgn
 );
 
-AFX afxCmdId                AfxCmdClearRaster
+AVX afxCmdId                AfxCmdClearRaster
 /// Clear regions of a color afxRaster or fill regions of a combined depth/stencil afxRaster.
 (
     afxDrawScript           dscr,
@@ -389,7 +389,7 @@ AFX afxCmdId                AfxCmdClearRaster
     afxClearValue const*    value /// a structure containing the values that the afxRaster subresource ranges will be cleared to.
 );
 
-AFX afxCmdId                AfxCmdClearRasterRegion
+AVX afxCmdId                AfxCmdClearRasterRegion
 /// Clear regions of a color afxRaster or fill regions of a combined depth/stencil afxRaster.
 (
     afxDrawScript           dscr,
@@ -401,7 +401,7 @@ AFX afxCmdId                AfxCmdClearRasterRegion
     afxClearValue const*    value /// a structure containing the values that the afxRaster subresource ranges will be cleared to.
 );
 
-AFX afxCmdId                AfxCmdSubsampleRaster
+AVX afxCmdId                AfxCmdSubsampleRaster
 /// Generate mipmaps for a afxRaster.
 (
     afxDrawScript           dscr,
@@ -410,7 +410,7 @@ AFX afxCmdId                AfxCmdSubsampleRaster
     afxNat                  lodCnt
 );
 
-AFX afxCmdId                AfxCmdResolveRaster
+AVX afxCmdId                AfxCmdResolveRaster
 /// Resolve regions of an afxRaster.
 (
     afxDrawScript           dscr,
@@ -420,7 +420,7 @@ AFX afxCmdId                AfxCmdResolveRaster
     afxRasterCopyOp const   ops[] /// an array of structures specifying the regions to resolve.
 );
 
-AFX afxCmdId                AfxCmdResolveRasterRegion
+AVX afxCmdId                AfxCmdResolveRasterRegion
 /// Resolve regions of an afxRaster.
 (
     afxDrawScript           dscr,
@@ -433,7 +433,7 @@ AFX afxCmdId                AfxCmdResolveRasterRegion
     afxRasterRegion const*  dstRgn
 );
 
-AFX afxCmdId                AfxCmdBlitRaster
+AVX afxCmdId                AfxCmdBlitRaster
 /// Copy regions of an afxRaster, potentially performing format conversion.
 (
     afxDrawScript           dscr,
@@ -444,7 +444,7 @@ AFX afxCmdId                AfxCmdBlitRaster
     afxTexelFilter          flt /// a afxTexelFilter specifying the filter to apply if the blits require scaling.
 );
 
-AFX afxCmdId                AfxCmdBlitRasterRegion
+AVX afxCmdId                AfxCmdBlitRasterRegion
 /// Copy regions of an afxRaster, potentially performing format conversion.
 (
     afxDrawScript           dscr,

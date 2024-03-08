@@ -20,14 +20,14 @@
 #include "qwadro/draw/pipe/afxFence.h"
 #include "qwadro/core/afxSystem.h"
 
-_AFX afxBool AfxFenceIsSignaled(afxFence fenc)
+_AVX afxBool AfxFenceIsSignaled(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
     return fenc->signaled;
 }
 
-_AFX afxDrawContext AfxGetFenceContext(afxFence fenc)
+_AVX afxDrawContext AfxGetFenceContext(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
@@ -36,7 +36,7 @@ _AFX afxDrawContext AfxGetFenceContext(afxFence fenc)
     return dctx;
 }
 
-_AFX afxError AfxWaitForFences(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[])
+_AVX afxError AfxWaitForFences(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(cnt, fences, afxFcc_FENC);
@@ -51,7 +51,7 @@ _AFX afxError AfxWaitForFences(afxBool waitAll, afxNat64 timeout, afxNat cnt, af
     return err;
 }
 
-_AFX afxError AfxResetFences(afxNat cnt, afxFence const fences[])
+_AVX afxError AfxResetFences(afxNat cnt, afxFence const fences[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(cnt, fences, afxFcc_FENC);
@@ -66,7 +66,7 @@ _AFX afxError AfxResetFences(afxNat cnt, afxFence const fences[])
     return err;
 }
 
-_AFX afxNat AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[])
+_AVX afxNat AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -77,7 +77,7 @@ _AFX afxNat AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, af
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)fences);
 }
 
-_AFX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt, afxFence fences[])
+_AVX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt, afxFence fences[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

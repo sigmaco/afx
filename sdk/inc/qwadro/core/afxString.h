@@ -54,7 +54,7 @@ AFX void                AfxMakeString(afxString* str, void const *start, afxNat 
 AFX void                AfxReflectString(afxString const* str, afxString* reflection); // wraps the same content mapped or buffered by other string as read-only data.
 AFX afxNat              AfxExcerptString(afxString const* src, afxNat offset, afxNat len, afxString* selection); // wraps the same content mapped or buffered by other string as read-only data. Return clamped off range if any.
 
-AFX void const*         AfxGetStringData(afxString const* str, afxNat base);
+AFX afxChar const*      AfxGetStringData(afxString const* str, afxNat base);
 AFX afxNat              AfxGetStringLength(afxString const* str);
 
 AFX afxBool             AfxStringIsEmpty(afxString const* str);

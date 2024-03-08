@@ -21,7 +21,7 @@
 #include "qwadro/draw/pipe/afxDrawScript.h"
 
 
-_AFX afxString const afxDrawCmdStrings[] =
+_AVX afxString const afxDrawCmdStrings[] =
 {
     AFX_STRING("PushPipeline"),
     AFX_STRING("PopPipeline"),
@@ -67,7 +67,7 @@ _AFX afxString const afxDrawCmdStrings[] =
     AFX_STRING("DrawIndexedIndirectCount"),
 };
 
-_AFX afxCmdId AfxCmdBindPipeline(afxDrawScript dscr, afxNat segment, afxPipeline pip)
+_AVX afxCmdId AfxCmdBindPipeline(afxDrawScript dscr, afxNat segment, afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -75,7 +75,7 @@ _AFX afxCmdId AfxCmdBindPipeline(afxDrawScript dscr, afxNat segment, afxPipeline
     return dscr->stdCmds->BindPipeline(dscr, segment, pip);
 }
 
-_AFX afxCmdId AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+_AVX afxCmdId AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -83,7 +83,7 @@ _AFX afxCmdId AfxCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat baseIdx, 
     return dscr->stdCmds->BindBuffers(dscr, set, baseIdx, cnt, buf, offset, range);
 }
 
-_AFX afxCmdId AfxCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[])
+_AVX afxCmdId AfxCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -91,7 +91,7 @@ _AFX afxCmdId AfxCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat baseIdx, 
     return dscr->stdCmds->BindRasters(dscr, set, baseIdx, cnt, smp, tex);
 }
 
-_AFX afxCmdId AfxCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDrawScript aux[])
+_AVX afxCmdId AfxCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDrawScript aux[])
 {
     afxError err = AFX_ERR_NONE;
     return dscr->stdCmds->ExecuteCommands(dscr, cnt, aux);
@@ -99,7 +99,7 @@ _AFX afxCmdId AfxCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDrawScrip
 
 // Draw
 
-_AFX afxCmdId AfxCmdDraw(afxDrawScript dscr, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
+_AVX afxCmdId AfxCmdDraw(afxDrawScript dscr, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -108,7 +108,7 @@ _AFX afxCmdId AfxCmdDraw(afxDrawScript dscr, afxNat baseInstIdx, afxNat instCnt,
     return dscr->stdCmds->Draw(dscr, vtxCnt, instCnt, baseVtxIdx, baseInstIdx);
 }
 
-_AFX afxCmdId AfxCmdDrawIndirect(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
+_AVX afxCmdId AfxCmdDrawIndirect(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -118,7 +118,7 @@ _AFX afxCmdId AfxCmdDrawIndirect(afxDrawScript dscr, afxBuffer buf, afxNat32 off
     return dscr->stdCmds->DrawIndirect(dscr, buf, offset, drawCnt, stride);
 }
 
-_AFX afxCmdId AfxCmdDrawIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
+_AVX afxCmdId AfxCmdDrawIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -130,7 +130,7 @@ _AFX afxCmdId AfxCmdDrawIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat3
     return dscr->stdCmds->DrawIndirectCount(dscr, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
-_AFX afxCmdId AfxCmdDrawIndexed(afxDrawScript dscr, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
+_AVX afxCmdId AfxCmdDrawIndexed(afxDrawScript dscr, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -139,7 +139,7 @@ _AFX afxCmdId AfxCmdDrawIndexed(afxDrawScript dscr, afxNat vtxOff, afxNat baseIn
     return dscr->stdCmds->DrawIndexed(dscr, idxCnt, instCnt, baseIdx, vtxOff, baseInstIdx);
 }
 
-_AFX afxCmdId AfxCmdDrawIndexedIndirect(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
+_AVX afxCmdId AfxCmdDrawIndexedIndirect(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -148,7 +148,7 @@ _AFX afxCmdId AfxCmdDrawIndexedIndirect(afxDrawScript dscr, afxBuffer buf, afxNa
     return dscr->stdCmds->DrawIndexedIndirect(dscr, buf, offset, drawCnt, stride);
 }
 
-_AFX afxCmdId AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
+_AVX afxCmdId AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -169,7 +169,7 @@ _AFX afxCmdId AfxCmdDrawIndexedIndirectCount(afxDrawScript dscr, afxBuffer buf, 
 
 
 
-_AFX afxCmdId AfxCmdBindFontSIG(afxDrawScript dscr, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[])
+_AVX afxCmdId AfxCmdBindFontSIG(afxDrawScript dscr, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
