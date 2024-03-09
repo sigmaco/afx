@@ -64,7 +64,7 @@ _AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxR
 // computa o rotor que rotaciona um unit vector a um outro
 // uses the usual trick to get the half angle
 
-_AFXINL void AfxMakeRotor(afxRotor r, afxReal const from[3], afxReal const to[3])
+_AFXINL void AfxMakeRotor(afxRotor r, afxV3d const from, afxV3d const to)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
@@ -110,7 +110,7 @@ _AFXINL void AfxMultiplyRotor(afxRotor r, afxRotor const a, afxRotor const b)
 /// R x R*
 // non-optimized
 
-_AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxReal const x[3])
+_AFXINL void AfxRotateVectorByRotor(afxV3d v, afxRotor const p, afxV3d const x)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);

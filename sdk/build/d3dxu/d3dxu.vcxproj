@@ -70,19 +70,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)wd\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)w\</OutDir>
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -144,6 +144,14 @@
   <ItemGroup>
     <ClInclude Include="..\..\src\d3dxu\afxDirectDrawSurface.h" />
     <ClInclude Include="..\..\src\d3dxu\DxgiSdkAssetToQwadro.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
+      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\e2draw\e2draw.vcxproj">
+      <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

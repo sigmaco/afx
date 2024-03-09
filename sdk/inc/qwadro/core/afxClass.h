@@ -71,6 +71,14 @@ AFX_DEFINE_STRUCT(afxCookie)
 
 #define AfxGetCookieData(cookie_,_idx_) 
 
+AFX_DEFINE_STRUCT(afxClassSuballocation)
+{
+    afxNat          siz;
+    afxNat          align;
+    afxNat          cntOff;
+    afxNat          ptrOff;
+};
+
 AFX_DEFINE_STRUCT(afxClassConfig)
 {
     afxFcc          fcc;
@@ -85,6 +93,8 @@ AFX_DEFINE_STRUCT(afxClassConfig)
     afxChar const*  name;
     void const*     vmt;
     afxNat          unitsPerPage;
+    afxNat          suballocCnt;
+    afxClassSuballocation const* suballocs;
 };
 
 AFX_DEFINE_STRUCT(afxClass)

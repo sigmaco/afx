@@ -122,7 +122,7 @@ _SGL afxCmdId _SglEncodeCmdRasCopy(afxDrawScript dscr, afxRaster src, afxRaster 
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdCopyRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdCopyRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->src = src;
     cmd->dst = dst;
@@ -196,7 +196,7 @@ _SGL afxCmdId _SglEncodeCmdRasRw(afxDrawScript dscr, afxRaster ras, afxStream io
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdRwRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdRwRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->down = !!down;
     cmd->ras = ras;
@@ -394,7 +394,7 @@ _SGL afxCmdId _SglEncodeCmdRasPack(afxDrawScript dscr, afxRaster ras, afxBuffer 
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdPackRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdPackRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->unpack = !!unpack;
     cmd->ras = ras;
@@ -502,7 +502,7 @@ _SGL afxCmdId _SglEncodeCmdRasSwizzle(afxDrawScript dscr, afxRaster ras, afxColo
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdSwizzleRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdSwizzleRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);
     cmd->ras = ras;
     cmd->a = a;
@@ -615,7 +615,7 @@ _SGL afxCmdId _SglEncodeCmdRasXform(afxDrawScript dscr, afxRaster ras, afxReal c
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdFlipRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdFlipRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);
     cmd->ras = ras;
     AfxCopyM4d(cmd->m, m);

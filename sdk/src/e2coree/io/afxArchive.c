@@ -90,7 +90,7 @@ typedef struct
 typedef struct _afxZipEntry
 {
     //_afxZipSerializedCdEntryHdr hdr;
-    afxFixedUri128   path;
+    afxUri128   path;
     afxSize     offset;
     afxNat32    compressedSize;
     afxNat32    uncompressedSize;
@@ -351,7 +351,7 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxNat idx, _afxZipSeri
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
     _afxZipEntry *e = AfxGetArrayUnit(&arc->entries, idx);
-    AfxMakeFixedUri128(&e->path, NIL);
+    AfxMakeUri128(&e->path, NIL);
     AfxCopyUri(&e->path.uri, path);
 
     afxStream ios = AfxGetFileStream(&arc->file);
@@ -470,7 +470,7 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxNat idx, afxStream *ios)
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream ios2;
 
-    if (!(ios2 = AfxAcquireStream(0, afxIoFlag_RWX, NIL, size))) AfxThrowError();
+    if (!(ios2 = AfxAcquireStream(afxIoFlag_RWX, 0, NIL, size))) AfxThrowError();
     else
     {
         *ios = ios2;
@@ -514,7 +514,7 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxNat idx, afxStream *in)
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream in2;
 
-    if (!(in2 = AfxAcquireStream(0, afxIoFlag_RWX, NIL, size))) AfxThrowError();
+    if (!(in2 = AfxAcquireStream(afxIoFlag_RWX, 0, NIL, size))) AfxThrowError();
     else
     {
         *in = in2;

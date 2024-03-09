@@ -102,7 +102,7 @@ AFX_DEFINE_STRUCT(afxFileInfo)
 #ifdef _AFX_FILE_SYSTEM_C
 AFX_OBJECT(afxFileSystem)
 {
-    afxFixedUri8    name; // name of exchange point // AFX_FS_SYM_LEN // can't have control chars. Actually works like a variable without $().
+    afxUri8    name; // name of exchange point // AFX_FS_SYM_LEN // can't have control chars. Actually works like a variable without $().
     afxUri          path; // path of exchange point
     afxIoFlags      flags;
     afxArchive      arc;
@@ -110,7 +110,13 @@ AFX_OBJECT(afxFileSystem)
 #endif//_AFX_FILE_SYSTEM_C
 #endif//_AFX_CORE_C
 
-AFX afxError            AfxMountFileSystems(afxNat cnt, afxStoragePointSpecification const spec[], afxFileSystem systems[]);
+/*
+    The mount command instructs the Qwadro to make a file system available for use at a specified location (the mount point). 
+    The mount command mounts a file system that is expressed as a directory by using the Node:Directory parameter on the directory specified by the Directory parameter. 
+    After the mount command has finished, the directory that is specified becomes the root directory of the newly mounted file system.
+*/
+
+AFX afxError            AfxMountFileSystem(afxString const* point, afxString const* location, afxIoFlags ioFlags);
 
 AFX afxError            AfxEnableResourceMonitoring(afxResource res, afxBool enable);
 

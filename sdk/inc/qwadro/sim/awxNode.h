@@ -38,7 +38,7 @@
 
 // Handling with awxNodes, the programmer shouldn't care about matrix pre/post-multiplication. RenderWare chose don't do it.
 
-// awxNode defines the base class for all scene objects in QWADRO AFX.
+// awxNode defines the base class for all scene objects in QWADRO AKX.
 
 
 
@@ -56,14 +56,6 @@ enum blend_dag_node_type
     DagNodeType_Node_Crossfade = 0x4,
     DagNodeType_Node_WeightedBlend = 0x5,
     DagNodeType_OnePastLast = 0x6,
-};
-
-enum quaternion_mode
-{
-    BlendQuaternionDirectly = 0x0,
-    BlendQuaternionInverted = 0x1,
-    BlendQuaternionNeighborhooded = 0x2,
-    BlendQuaternionAccumNeighborhooded = 0x3,
 };
 
 AFX_DEFINE_STRUCT(afxDagAnimation)

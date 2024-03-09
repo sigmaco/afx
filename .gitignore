@@ -22,3 +22,5 @@
 /art/object/backpack
 /sdk/build/**/Debug
 /sdk/build/**/Release
+/sdk/src/e2coree/math/afxCurve.c
+/sdk/src/e2coree/sim/motion/**.c

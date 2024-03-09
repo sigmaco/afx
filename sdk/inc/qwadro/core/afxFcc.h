@@ -69,11 +69,11 @@ typedef enum afxFcc
     afxFcc_STR      = (('q'<<8)|'s'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
     afxFcc_STRB     = (('q' << 8) | 'z'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
 #if !0
-    afxFcc_STR0     = AfxPackFcc('s', 't', 'r', '0'), // afxFixedString8
-    afxFcc_STR1     = AfxPackFcc('s', 't', 'r', '1'), // afxFixedString16
-    afxFcc_STR2     = AfxPackFcc('s', 't', 'r', '2'), // afxFixedString32
+    afxFcc_STR0     = AfxPackFcc('s', 't', 'r', '0'), // afxString8
+    afxFcc_STR1     = AfxPackFcc('s', 't', 'r', '1'), // afxString16
+    afxFcc_STR2     = AfxPackFcc('s', 't', 'r', '2'), // afxString32
     afxFcc_STR3     = AfxPackFcc('s', 't', 'r', '3'), // afxString64
-    afxFcc_STR4     = AfxPackFcc('s', 't', 'r', '4'), // afxFixedString128
+    afxFcc_STR4     = AfxPackFcc('s', 't', 'r', '4'), // afxString128
     afxFcc_STR5     = AfxPackFcc('s', 't', 'r', '5'), // afxString256
     afxFcc_STR6     = AfxPackFcc('s', 't', 'r', '6'), // afxString512
     afxFcc_STR7     = AfxPackFcc('s', 't', 'r', '7'), // afxString1024
@@ -164,6 +164,7 @@ typedef enum afxFcc
     afxFcc_DIN      = AfxPackFcc('d', 'i', 'n', '\0'), // afxDrawInput
     afxFcc_DOUT     = AfxPackFcc('d', 'o', 'u', 't'), // afxDrawOutput
     afxFcc_DQUE     = AfxPackFcc('d', 'q', 'u', 'e'), // afxDrawQueue
+    afxFcc_DENG     = AfxPackFcc('d', 'e', 'n', 'g'), // afxTxu
     afxFcc_DTHR     = AfxPackFcc('d', 't', 'h', 'r'), // afxDrawThread
     afxFcc_CANV     = AfxPackFcc('c', 'a', 'n', 'v'), // afxCanvas
     afxFcc_FENC     = AfxPackFcc('f', 'e', 'n', 'c'), // afxFence
@@ -205,6 +206,7 @@ typedef enum afxFcc
     // *** e2sound ***
 
     afxFcc_SSYS     = AfxPackFcc('s', 's', 'y', 's'), // afxSoundSystem
+    afxFcc_SENG     = AfxPackFcc('s', 'e', 'n', 'g'), // afxTxu
     afxFcc_STHR     = AfxPackFcc('s', 't', 'h', 'r'), // afxSoundThread
     afxFcc_SDEV     = AfxPackFcc('s', 'o', 'u', 't'), // afxSoundDevice
     afxFcc_SOUT     = AfxPackFcc('s', 'o', 'u', 't'), // afxSoundOutput
@@ -246,7 +248,7 @@ typedef enum afxFcc
     afxFcc_SKL      = AfxPackFcc('s', 'k', 'l', '\0'), // afxSkeleton
     afxFcc_SKLB     = AfxPackFcc('s', 'k', 'l', 'b'), // afxSkeletonBlueprint
     afxFcc_BONB     = AfxPackFcc('b', 'o', 'n', 'b'), // afxBoneBlueprint
-    afxFcc_MSHV     = AfxPackFcc('m', 's', 'h', 'v'), // afxMeshPivot
+    afxFcc_MSHV     = AfxPackFcc('m', 's', 'h', 'v'), // afxMeshBias
     afxFcc_MSHC     = AfxPackFcc('m', 's', 'h', 'c'), // afxMeshConnection
     afxFcc_MSH      = AfxPackFcc('m', 's', 'h', '\0'), // afxMesh
     afxFcc_MSHB     = AfxPackFcc('m', 's', 'h', 'b'), // afxMeshBlueprint

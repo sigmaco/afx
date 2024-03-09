@@ -16,7 +16,7 @@
 
 #include "qwadro/math/afxTrigonometry.h"
 
-_AFXINL void AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal n[3])
+_AFXINL void AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxV3d n)
 {
     afxV3d t, t2;
     AfxSubV3d(t, b, a);
@@ -27,7 +27,7 @@ _AFXINL void AfxComputeTriangleNormal(afxReal const a[3], afxReal const b[3], af
 
 // BaryCentric
 
-_AFXINL void AfxBarycentricV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal f, afxReal g)
+_AFXINL void AfxBarycentricV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c, afxReal f, afxReal g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // Adapted from DirectXMath. Works?
@@ -49,7 +49,7 @@ _AFXINL void AfxBarycentricV2d(afxReal v[2], afxReal const a[2], afxReal const b
     AfxMadV2d(v, p20, gv, tmp);
 }
 
-_AFXINL void AfxBarycentricV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal f, afxReal g)
+_AFXINL void AfxBarycentricV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxReal f, afxReal g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // From DirectXMath
@@ -72,7 +72,7 @@ _AFXINL void AfxBarycentricV3d(afxReal v[3], afxReal const a[3], afxReal const b
     AfxMadV3d(v, p20, gv, tmp);
 }
 
-_AFXINL void AfxBarycentricV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal f, afxReal g)
+_AFXINL void AfxBarycentricV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxReal f, afxReal g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // From DirectXMath
@@ -97,7 +97,7 @@ _AFXINL void AfxBarycentricV4d(afxReal v[4], afxReal const a[4], afxReal const b
 
 // BaryCentric2
 
-_AFXINL void AfxBarycentricV2d2(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal const f[2], afxReal const g[2])
+_AFXINL void AfxBarycentricV2d2(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c, afxV2d const f, afxV2d const g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // From DirectXMath
@@ -113,7 +113,7 @@ _AFXINL void AfxBarycentricV2d2(afxReal v[2], afxReal const a[2], afxReal const 
     AfxMadV2d(v, p20, g, tmp);
 }
 
-_AFXINL void AfxBarycentricV3d2(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal const f[3], afxReal const g[3])
+_AFXINL void AfxBarycentricV3d2(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxV3d const f, afxV3d const g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // From DirectXMath
@@ -129,7 +129,7 @@ _AFXINL void AfxBarycentricV3d2(afxReal v[3], afxReal const a[3], afxReal const 
     AfxMadV3d(v, p20, g, tmp);
 }
 
-_AFXINL void AfxBarycentricV4d2(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal const f[4], afxReal const g[4])
+_AFXINL void AfxBarycentricV4d2(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxV4d const f, afxV4d const g)
 {
     // Result = Position0 + f * (Position1 - Position0) + g * (Position2 - Position0)
     // From DirectXMath

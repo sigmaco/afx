@@ -26,7 +26,7 @@
 /// Um afxModel completo é feito de um afxSkeleton e um conjunto de afxMesh'es, ambos dos quais podem ser acessados diretamente da estrutura do afxModel.
 
 #ifdef _AFX_MODEL_C
-AFX_DEFINE_STRUCT(awxLinkedMesh)
+AFX_DEFINE_STRUCT(awxRiggedMesh)
 {
     afxMesh             msh;
     afxMaterial         txd;
@@ -39,7 +39,7 @@ AFX_OBJECT(afxModel)
 {
     afxSkeleton         skl;
     afxNat              slotCnt;
-    awxLinkedMesh*      slots;
+    awxRiggedMesh*      slots;
     afxAabb             aabb;
     afxTransform        init;
     afxString           id; // 32
@@ -50,7 +50,7 @@ AFX_OBJECT(afxModel)
 AFX_DEFINE_STRUCT(afxModelBlueprint)
 /// Data needed for model assembly
 {
-    afxFixedString32    id;
+    afxString32    id;
     afxSkeleton         skl;
     afxTransform        init;
     afxNat              mshCnt;
@@ -58,36 +58,36 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
     afxStringCatalog    strc;
 };
 
-AFX afxBool             AfxGetModelId(afxModel mdl, afxString* id);
+AKX afxBool             AfxGetModelId(afxModel mdl, afxString* id);
 
-AFX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
+AKX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
 
-AFX void                AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4]);
-AFX void                AfxResetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
+AKX void                AfxGetModelInitialPlacement(afxModel mdl, afxReal m[4][4]);
+AKX void                AfxResetModelInitialPlacement(afxModel mdl, afxTransform const* xform);
 
-AFX afxNat              AfxGetModelCapacity(afxModel mdl);
-AFX afxNat              AfxCountLinkedMeshes(afxModel mdl);
-AFX afxNat              AfxEnumerateLinkedMeshes(afxModel mdl, afxNat baseSlot, afxNat slotCnt, afxMesh msh[]);
-AFX afxError            AfxRelinkMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseSlot, afxNat slotCnt, afxMesh const meshes[]);
+AKX afxNat              AfxGetModelCapacity(afxModel mdl);
+AKX afxNat              AfxCountRiggedMeshes(afxModel mdl);
+AKX afxNat              AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseSlot, afxNat slotCnt, afxMesh meshes[]);
+AKX afxError            AfxRigMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseSlot, afxNat slotCnt, afxMesh const meshes[]);
 
-AFX afxBool             AfxMeshIsTransplanted(afxModel mdl, afxNat slotIdx);
-AFX afxSkeleton         AfxGetMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
-AFX afxNat const*       AfxGetMeshOriginalBoneMap(afxModel mdl, afxNat slotIdx);
+AKX afxBool             AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat slotIdx);
+AKX afxSkeleton         AfxGetRiggedMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
+AKX afxNat const*       AfxGetRiggedMeshOriginalMapping(afxModel mdl, afxNat slotIdx);
 
-AFX afxMaterial         AfxGetMeshTxd(afxModel mdl, afxNat slotIdx);
-AFX void                AfxSetMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl);
-AFX afxMaterial         AfxFindMeshMaterial(afxModel mdl, afxNat slotIdx, afxString const* id);
+AKX afxMaterial         AfxGetRiggedMeshTxd(afxModel mdl, afxNat slotIdx);
+AKX void                AfxSetRiggedMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl);
+AKX afxMaterial         AfxFindRiggedMeshMaterial(afxModel mdl, afxNat slotIdx, afxString const* id);
 
-AFX afxNat const*       AfxGetMeshBoneMap(afxModel mdl, afxNat slotIdx);
+AKX afxNat const*       AfxGetRiggedMeshMapping(afxModel mdl, afxNat slotIdx);
 
-AFX void                AwxBuildLinkedMeshMatrixArray(afxModel mdl, afxNat slotIdx, awxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxReal xformBuffer[][4][4]);
+AKX void                AwxComputeRiggedMeshMatrixArray(afxModel mdl, afxNat slotIdx, awxWorldPose const* WorldPose, afxNat firstBoneIdx, afxNat boneCnt, afxM4d xformBuffer[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, afxModelBlueprint const blueprints[], afxModel models[]);
+AKX afxError            AfxAssembleModel(afxSimulation sim, afxNat cnt, afxModelBlueprint const blueprints[], afxModel models[]);
 
-AFX void                AfxTransformModels(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[3], afxReal affineTol, afxFlags flags, afxNat cnt, afxModel models[]);
+AKX void                AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol, afxV3d const atv, afxReal atvTol, afxFlags flags, afxNat cnt, afxModel models[]);
 
 #endif//AFX_MODEL_H

@@ -22,28 +22,28 @@
 
  // OpenGL/Vulkan Continuous Integration
 
-_AFX afxPrimTopology AfxGetPrimitiveTopology(afxPipeline pip)
+_AVX afxPrimTopology AfxGetPrimitiveTopology(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->primTop;
 }
 
-_AFX afxBool AfxPrimitiveRestartIsEnabled(afxPipeline pip)
+_AVX afxBool AfxPrimitiveRestartIsEnabled(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->primRestartEnabled;
 }
 
-_AFX afxBool AfxDepthClampIsEnabled(afxPipeline pip)
+_AVX afxBool AfxDepthClampIsEnabled(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->depthClampEnabled;
 }
 
-_AFX afxCullMode AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted) // return the culling mode set.
+_AVX afxCullMode AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted) // return the culling mode set.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -55,7 +55,7 @@ _AFX afxCullMode AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacin
     return cullMode;
 }
 
-_AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[])
+_AVX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -75,7 +75,7 @@ _AFX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
     return hitCnt;
 }
 
-_AFX afxVertexInput AfxGetPipelineVertexInput(afxPipeline pip)
+_AVX afxVertexInput AfxGetPipelineVertexInput(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -84,14 +84,14 @@ _AFX afxVertexInput AfxGetPipelineVertexInput(afxPipeline pip)
     return vin;
 }
 
-_AFX afxNat AfxCountPipelineInputs(afxPipeline pip)
+_AVX afxNat AfxCountPipelineInputs(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->inCnt;
 }
 
-_AFX afxBool AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd)
+_AVX afxBool AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -112,7 +112,7 @@ _AFX afxBool AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* 
     return FALSE;
 }
 
-_AFX afxNat AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[])
+_AVX afxNat AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -129,21 +129,21 @@ _AFX afxNat AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUr
     return hitCnt;
 }
 
-_AFX afxNat AfxCountLinkedShaders(afxPipeline pip)
+_AVX afxNat AfxCountLinkedShaders(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->stageCnt;
 }
 
-AFX afxNat AfxCountPipelineBindSchemas(afxPipeline pip)
+AVX afxNat AfxCountPipelineBindSchemas(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->wiringCnt;
 }
 
-AFX afxError AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[])
+AVX afxError AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -162,7 +162,7 @@ AFX afxError AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt
     return err;
 }
 
-_AFX afxRasterizer AfxGetLinkedRasterizer(afxPipeline pip)
+_AVX afxRasterizer AfxGetLinkedRasterizer(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -173,7 +173,7 @@ _AFX afxRasterizer AfxGetLinkedRasterizer(afxPipeline pip)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[])
+_AVX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -184,7 +184,7 @@ _AFX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt,
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)pipelines);
 }
 
-_AFX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[])
+_AVX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -197,7 +197,7 @@ _AFX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineC
     return err;
 }
 
-_AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AVX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -249,8 +249,8 @@ _AFX afxPipeline AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* u
                     else
                     {
 #if 0
-                        afxFixedString128 tmp;
-                        AfxMakeFixedString128(&tmp);
+                        afxString128 tmp;
+                        AfxMakeString128(&tmp);
                         AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
                         if (!AfxUriIsBlank(&blueprint.uri.uri))

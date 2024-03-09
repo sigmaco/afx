@@ -110,10 +110,10 @@ struct afxBaseDrawQueue
 #endif
 #endif
 
-AFX afxDrawDevice       AfxGetDrawQueueDevice(afxDrawQueue dque);
-AFX afxDrawContext      AfxGetDrawQueueContext(afxDrawQueue dque);
+AVX afxDrawDevice       AfxGetDrawQueueDevice(afxDrawQueue dque);
+AVX afxDrawContext      AfxGetDrawQueueContext(afxDrawQueue dque);
 
-AFX afxError            AfxWaitForIdleDrawQueue
+AVX afxError            AfxWaitForIdleDrawQueue
 /// Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
 (
     afxDrawQueue        dque /// the queue on which to wait.

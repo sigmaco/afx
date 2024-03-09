@@ -19,6 +19,16 @@
 
 #include "qwadro/math/afxTransform.h"
 
+
+typedef enum quaternion_mode
+{
+    BlendQuaternionDirectly = 0x0,
+    BlendQuaternionInverted = 0x1,
+    BlendQuaternionNeighborhooded = 0x2,
+    BlendQuaternionAccumNeighborhooded = 0x3,
+} quaternion_mode;
+
+
 AFX_DEFINE_STRUCT(awxPoseTransform)
 {
     afxReal             weight;
@@ -39,25 +49,27 @@ AFX_DEFINE_STRUCT(awxPose)
 /// Neste contexto, "pose local" significa que cada articulação no afxSkeleton é representada por um afxTransform que é relativo a sua articulação-parente imediata. 
 /// Você pode criar uma afxPostura assim: 
 
-AFX afxError        AfxAcquirePoses(void *sim, afxNat cnt, afxNat const cap[], awxPose *lp[]);
+AKX afxError        AfxAcquirePoses(void *sim, afxNat cnt, afxNat const cap[], awxPose *lp[]);
 
 /// e quando você estiver satisfeito de usá-lo, você deve liberá-lo assim: 
 
-AFX void            AfxReleasePoses(afxNat cnt, awxPose *lp[]);
+AKX void            AfxReleasePoses(afxNat cnt, awxPose *lp[]);
 
 /// Você pode encontrar o número de articulações representadas pelo awxPose assim: 
 
-AFX afxNat          AfxGetPoseCapacity(awxPose const *lp);
+AKX afxNat          AfxGetPoseCapacity(awxPose const *lp);
 
 /// Em qualquer tempo, você pode inspecionar ou modificar o estado alojado de uma articulação na awxPose. Você acessa o estado da articulação como um afxTransform assim: 
 
-AFX afxTransform*   AfxGetPoseTransform(awxPose const *pose, afxNat artIdx);
+AKX afxTransform*   AfxGetPoseTransform(awxPose const *pose, afxNat artIdx);
 
 /// Note que você recebe um ponteiro para o afxTransform alojado para a articulação, assim sendo, modificá-lo modificará a versão permanente alojada na awxPose. 
 /// Portanto, não há uma função "Set" para AfxGetPoseTransform() devido ao fato de que você pode ler de ou escrever para o ponteiro que você recebe.
 
-AFX void            AfxCopyPose(awxPose *pose, awxPose const *from);
+AKX void            AfxCopyPose(awxPose *pose, awxPose const *from);
 
-AFX void            AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3]);
+AKX void            AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3]);
+
+AKX void            AfxAccumulateLocalTransform(awxPose *LocalPose, int LocalPoseBoneIndex, int SkeletonBoneIndex, float Weight, const afxSkeleton ReferenceSkeleton, quaternion_mode Mode, const afxTransform *Transform);
 
 #endif//AFX_POSE_H

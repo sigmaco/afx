@@ -21,35 +21,35 @@
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/awxAsset.h"
 
-_AFX afxNat AfxCountMeshSurfaces(afxMeshTopology msht)
+_AKX afxNat AfxCountMeshSurfaces(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->surfCnt;
 }
 
-_AFX afxNat AfxCountMeshIndices(afxMeshTopology msht)
+_AKX afxNat AfxCountMeshIndices(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt * 3;
 }
 
-_AFX afxNat AfxCountMeshTriangles(afxMeshTopology msht)
+_AKX afxNat AfxCountMeshTriangles(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt;
 }
 
-_AFX afxNat AfxCountMeshTriangleEdges(afxMeshTopology msht)
+_AKX afxNat AfxCountMeshTriangleEdges(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     return msht->triCnt * 3;
 }
 
-_AFX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx)
+_AKX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTriIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -57,7 +57,7 @@ _AFX afxIndexedTriangle* AfxGetMeshTriangles(afxMeshTopology msht, afxNat baseTr
     return &msht->tris[baseTriIdx];
 }
 
-_AFX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
+_AKX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -65,7 +65,7 @@ _AFX afxNat* AfxGetMeshIndices(afxMeshTopology msht, afxNat baseIdx)
     return &msht->tris[baseIdx / 3][baseIdx % 3];
 }
 
-_AFX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
+_AKX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -98,29 +98,29 @@ _AFX afxNat AfxDetermineMeshIndexSize(afxMeshTopology msht)
 #endif
 }
 
-_AFX afxBool AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc)
+_AKX afxBool AfxDescribeMeshCoverage(afxMeshTopology msht, afxNat surIdx, afxMeshSurface* desc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->surfCnt, surIdx, 1);
     afxMeshSurface *mshs = &msht->surfaces[surIdx];
-    AfxAssertType(mshs, afxFcc_MSHS);
+    //AfxAssertType(mshs, afxFcc_MSHS);
     AfxAssert(desc);
     *desc = *mshs;
     return (AFX_INVALID_INDEX != mshs->mtlIdx);
 }
 
-_AFX afxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx)
+_AKX afxMeshSurface* AfxGetMeshSurface(afxMeshTopology msht, afxNat surIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
     AfxAssertRange(msht->surfCnt, surIdx, 1);
     afxMeshSurface *mshs = &msht->surfaces[surIdx];
-    AfxAssertType(mshs, afxFcc_MSHS);
+    //AfxAssertType(mshs, afxFcc_MSHS);
     return mshs;
 }
 
-_AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
+_AKX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -214,7 +214,7 @@ _AFX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
     return err;
 }
 
-_AFX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[])
+_AKX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat const remapTable[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -222,7 +222,7 @@ _AFX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat con
     for (afxNat i = msht->surfCnt; i-- > 0;)
     {
         afxMeshSurface* mshs = &msht->surfaces[i];
-        AfxAssertType(mshs, afxFcc_MSHS);
+        //AfxAssertType(mshs, afxFcc_MSHS);
         afxNat mtlIdx = mshs->mtlIdx;
 
         if (mtlIdx >= remapCnt)
@@ -235,7 +235,7 @@ _AFX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat con
     }
 }
 
-_AFX void AfxInvertMeshWinding(afxMeshTopology msht)
+_AKX void AfxInvertMeshWinding(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -275,7 +275,7 @@ _AFX void AfxInvertMeshWinding(afxMeshTopology msht)
     }
 }
 
-_AFX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxNat triCnt, void const* src, afxNat srcIdxSiz)
+_AKX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxNat triCnt, void const* src, afxNat srcIdxSiz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -332,7 +332,7 @@ _AFX afxError AfxUpdateMeshIndices(afxMeshTopology msht, afxNat baseTriIdx, afxN
     return err;
 }
 
-_AFX afxError _AfxMshtDtor(afxMeshTopology msht)
+_AKX afxError _AfxMshtDtor(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -345,7 +345,7 @@ _AFX afxError _AfxMshtDtor(afxMeshTopology msht)
     for (afxNat i = msht->surfCnt; i-->0;)
     {
         afxMeshSurface* mshs = &(msht->surfaces[i]);
-        AfxAssertType(mshs, afxFcc_MSHS);
+        //AfxAssertType(mshs, afxFcc_MSHS);
 
         //if (mshs->name)
         //AfxDeallocateString(&mshs->name);
@@ -375,7 +375,7 @@ _AFX afxError _AfxMshtDtor(afxMeshTopology msht)
     return err;
 }
 
-_AFX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
+_AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
@@ -479,7 +479,13 @@ _AFX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxMshtClsConfig =
+_AKX afxClassSuballocation mshtSubs[] =
+{
+    { sizeof(AFX_OBJECT(afxMeshTopology)), 0, offsetof(AFX_OBJECT(afxMeshTopology), surfCnt), offsetof(AFX_OBJECT(afxMeshTopology), surfaces) },
+    { sizeof(AFX_OBJECT(afxMeshTopology)), 0, offsetof(AFX_OBJECT(afxMeshTopology), triCnt), offsetof(AFX_OBJECT(afxMeshTopology), tris) },
+};
+
+_AKX afxClassConfig _AfxMshtClsConfig =
 {
     .fcc = afxFcc_MSHT,
     .name = "Mesh Topology",
@@ -494,7 +500,7 @@ _AFX afxClassConfig _AfxMshtClsConfig =
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[])
+_AKX afxError AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopologySpec const specs[], afxMeshTopology topologies[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -508,7 +514,7 @@ _AFX afxError AfxAcquireMeshTopology(afxSimulation sim, afxNat cnt, afxMeshTopol
     return err;
 }
 
-_AFX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder const* mshb, afxNat baseSurfIdx, afxNat surfCnt)
+_AKX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder const* mshb, afxNat baseSurfIdx, afxNat surfCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -544,7 +550,7 @@ _AFX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder cons
         for (afxNat i = 0; i < surfCnt; i++)
         {
             afxMeshSurface* mshs = &msht->surfaces[i];
-            AfxAssignTypeFcc(mshs, afxFcc_MSHS);
+            //AfxAssignTypeFcc(mshs, afxFcc_MSHS);
             mshs->mtlIdx = i;
 
             afxNat surTriCnt = 0;
@@ -576,7 +582,7 @@ _AFX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder cons
 }
 
 
-_AFX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology dst[])
+_AKX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology dst[])
 {
     afxError err = NIL;
     AfxAssertObjects(1, &in, afxFcc_IOS);
@@ -606,7 +612,7 @@ _AFX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxN
     return err;
 }
 
-_AFX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const src[])
+_AKX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const src[])
 {
     afxError err = NIL;
     AfxAssertObjects(1, &out, afxFcc_IOS);

@@ -19,7 +19,7 @@
 #include "qwadro/sim/rendering/awxLight.h"
 #include "qwadro/sim/afxSimulation.h"
 
-_AFX afxError _AfxLitDtor(awxLight lit)
+_AKX afxError _AfxLitDtor(awxLight lit)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lit, afxFcc_LIT);
@@ -27,7 +27,7 @@ _AFX afxError _AfxLitDtor(awxLight lit)
     return err;
 }
 
-_AFX afxError _AfxLitCtor(awxLight lit, afxCookie const* cookie)
+_AKX afxError _AfxLitCtor(awxLight lit, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("lit=%p", lit);
@@ -88,7 +88,7 @@ _AFX afxError _AfxLitCtor(awxLight lit, afxCookie const* cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[])
+_AKX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat uid[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -102,7 +102,7 @@ _AFX afxError AfxAcquireDirectionalLights(afxSimulation sim, afxNat cnt, afxNat 
     return err;
 }
 
-_AFX afxError AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[])
+_AKX afxError AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -116,7 +116,7 @@ _AFX afxError AfxAcquireOmniLights(afxSimulation sim, afxNat cnt, afxNat uid[])
     return err;
 }
 
-_AFX afxError AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[])
+_AKX afxError AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -130,7 +130,7 @@ _AFX afxError AfxAcquireSpotLights(afxSimulation sim, afxNat cnt, afxNat uid[])
     return err;
 }
 
-_AFX afxClassConfig _AfxLitClsConfig =
+_AKX afxClassConfig _AfxLitClsConfig =
 {
     .fcc = afxFcc_LIT,
     .name = "Light",

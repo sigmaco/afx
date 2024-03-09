@@ -19,7 +19,7 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/ux/afxOverlay.h"
 
-_AFX afxError _AfxOvlyCtor(afxOverlay ovly, afxCookie const *cookie)
+_AUX afxError _AfxOvlyCtor(afxOverlay ovly, afxCookie const *cookie)
 {
     AfxEntry("ovly=%p", ovly);
     afxError err = AFX_ERR_NONE;
@@ -31,7 +31,7 @@ _AFX afxError _AfxOvlyCtor(afxOverlay ovly, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxError _AfxOvlyDtor(afxOverlay ovly)
+_AUX afxError _AfxOvlyDtor(afxOverlay ovly)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ovly, afxFcc_OVLY);
@@ -53,7 +53,7 @@ _AFX afxError _AfxOvlyDtor(afxOverlay ovly)
     return err;
 }
 
-_AFX afxClassConfig _AfxOvlyClsConfig =
+_AUX afxClassConfig _AfxOvlyClsConfig =
 {
     .fcc = afxFcc_OVLY,
     .name = "Overlay",

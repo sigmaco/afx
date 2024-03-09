@@ -69,6 +69,8 @@ _AFX afxSystem theSys;
 afxSystem theSys = NIL;
 afxNat mainThreadId;
 
+extern afxError _AfxSysScanForIcds(afxSystem sys, afxUri const* fileMask);
+
 _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie);
 _AFX afxError _AfxSysDtor(afxSystem sys);
 
@@ -92,23 +94,23 @@ _AFX afxSystem AfxGetSystem(void)
     return sys;
 }
 
-_AFXINL afxDrawSystem _AfxGetDsysData(void)
+_AFXINL afxDrawSystem AfxGetDrawSystem(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxDrawSystem dsys = sys->dsys;
-    AfxAssertType(dsys, afxFcc_DSYS);
+    AfxTryAssertObjects(1, &dsys, afxFcc_DSYS);
     return dsys;
 }
 
-_AFXINL afxSoundSystem _AfxGetSsysData(void)
+_AFXINL afxSoundSystem AfxGetSoundSystem(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxSoundSystem ssys = sys->ssys;
-    AfxAssertType(ssys, afxFcc_SSYS);
+    AfxTryAssertObjects(1, &ssys, afxFcc_SSYS);
     return ssys;
 }
 
@@ -163,7 +165,7 @@ _AFX afxClass* AfxGetFileSystemClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->fsystems;
+    afxClass *cls = &sys->fsysCls;
     AfxAssertClass(cls, afxFcc_FSYS);
     return cls;
 }
@@ -176,22 +178,12 @@ _AFX afxNat AfxGetThreadingCapacity(void)
     return sys->hwConcurrencyCap;
 }
 
-_AFX afxClass* AfxGetSimulationClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys = AfxGetSystem();
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->simulations;
-    AfxAssertClass(cls, afxFcc_SIM);
-    return cls;
-}
-
 _AFX afxClass* AfxGetServiceClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->services;
+    afxClass *cls = &sys->svcCls;
     AfxAssertClass(cls, afxFcc_SVC);
     return cls;
 }
@@ -201,17 +193,17 @@ _AFX afxClass* AfxGetThreadClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->threads;
+    afxClass *cls = &sys->thrCls;
     AfxAssertClass(cls, afxFcc_THR);
     return cls;
 }
 
-_AFX afxClass* AfxGetTxuClass(void)
+_AFX afxClass* AfxGetThreadingUnitClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->txus;
+    afxClass *cls = &sys->txuCls;
     AfxAssertClass(cls, afxFcc_TXU);
     return cls;
 }
@@ -221,7 +213,7 @@ _AFX afxClass* AfxGetDeviceClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->devices;
+    afxClass *cls = &sys->devCls;
     AfxAssertClass(cls, afxFcc_DEV);
     return cls;
 }
@@ -231,7 +223,7 @@ _AFX afxClass* AfxGetFileClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->files;
+    afxClass *cls = &sys->fileCls;
     AfxAssertClass(cls, afxFcc_FILE);
     return cls;
 }
@@ -241,7 +233,7 @@ _AFX afxClass* AfxGetStringCatalogClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->strcats;
+    afxClass *cls = &sys->strcCls;
     AfxAssertClass(cls, afxFcc_STRC);
     return cls;
 }
@@ -251,7 +243,7 @@ _AFX afxClass* AfxGetArchiveClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->archives;
+    afxClass *cls = &sys->archCls;
     AfxAssertClass(cls, afxFcc_ARC);
     return cls;
 }
@@ -261,7 +253,7 @@ _AFX afxClass* AfxGetMmuClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->mmus;
+    afxClass *cls = &sys->mmuCls;
     AfxAssertClass(cls, afxFcc_MMU);
     return cls;
 }
@@ -271,7 +263,7 @@ _AFX afxClass* AfxGetStreamClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->streams;
+    afxClass *cls = &sys->iosCls;
     AfxAssertClass(cls, afxFcc_IOS);
     return cls;
 }
@@ -281,7 +273,7 @@ _AFX afxClass* AfxGetHidClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->hids;
+    afxClass *cls = &sys->hidCls;
     AfxAssertClass(cls, afxFcc_HID);
     return cls;
 }
@@ -291,7 +283,7 @@ _AFX afxClass* AfxGetKeyboardClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->keyboards;
+    afxClass *cls = &sys->kbdCls;
     AfxAssertClass(cls, afxFcc_KBD);
     return cls;
 }
@@ -301,7 +293,7 @@ _AFX afxClass* AfxGetMouseClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->mouses;
+    afxClass *cls = &sys->mseCls;
     AfxAssertClass(cls, afxFcc_MSE);
     return cls;
 }
@@ -311,7 +303,7 @@ _AFX afxClass* AfxGetControllerClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->controllers;
+    afxClass *cls = &sys->ctrlCls;
     AfxAssertClass(cls, afxFcc_CTRL);
     return cls;
 }
@@ -321,7 +313,7 @@ _AFX afxClass* AfxGetExecutableClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->executables;
+    afxClass *cls = &sys->exeCls;
     AfxAssertClass(cls, afxFcc_EXE);
     return cls;
 }
@@ -331,18 +323,8 @@ _AFX afxClass* AfxGetIcdClass(void)
     afxError err = AFX_ERR_NONE;
     afxSystem sys = AfxGetSystem();
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->icds;
+    afxClass *cls = &sys->icdCls;
     AfxAssertClass(cls, afxFcc_ICD);
-    return cls;
-}
-
-_AFX afxClass* AfxGetApplicationClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys = AfxGetSystem();
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxClass *cls = &sys->applications;
-    AfxAssertClass(cls, afxFcc_APP);
     return cls;
 }
 
@@ -517,6 +499,8 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
 
     if ((sys = AfxGetSystem()))
     {
+        AfxAdvertise("Shutting down Qwadro...");
+
         do { AfxRequestSystemShutdown(exitCode); } while (AfxSystemIsExecuting());
         while (!AfxReleaseObjects(1, (void*[]) { sys }));
         AfxDismountClass(&_sysClass);
@@ -538,13 +522,131 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
     if ((sys = AfxGetSystem())) AfxThrowError();
     else
     {
+        AfxAdvertise("Booting up Qwadro...");
+
         AfxMountClass(&_sysClass, NIL, NIL, &_AfxSysClsConfig);
 
-        if (AfxAcquireObjects(&_sysClass, 1, (afxObject*)&sys, (void const*[]) { (void*)config })) AfxThrowError();
+        afxIni ini;
+        AfxSetUpIni(&ini);
+        // platform-dependent ctor will load the correct ini file.
+
+        if (AfxAcquireObjects(&_sysClass, 1, (afxObject*)&sys, (void const*[]) { &ini, config })) AfxThrowError();
         else
         {
+            AfxAssertObjects(1, &sys, afxFcc_SYS);
             AfxAssert(sys == AfxGetSystem());
+
+            afxUri uri;
+            afxBool ssysEnabled = FALSE;
+
+            if (AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bEnabled"), &ssysEnabled) && ssysEnabled)
+            {
+                AfxMakeUri(&uri, "e2sound.dll", 0);
+
+                if (AfxLoadExecutables(1, &uri, &sys->e2sound)) AfxThrowError();
+                else
+                {
+                    AfxAssertObjects(1, &sys->e2sound, afxFcc_EXE);
+                    
+                    afxClass*(*_AfxGetSsysClass)(void) = AfxFindExecutableSymbol(sys->e2sound, "_AfxGetSsysClass");
+
+                    if (!_AfxGetSsysClass) AfxThrowError();
+                    else
+                    {
+                        afxClass* cls = _AfxGetSsysClass();
+                        AfxAssertClass(cls, afxFcc_SSYS);
+
+                        if (AfxAcquireObjects(cls, 1, (afxObject*)&sys->ssys, (void const*[]) { sys, &ini, (void*)config->sound })) AfxThrowError();
+                        else
+                        {
+                            AfxAssertObjects(1, &sys->ssys, afxFcc_SSYS);
+                            AfxAssert(sys->ssys == AfxGetSoundSystem());
+                        }
+
+                        if (err)
+                            AfxDismountClass(cls);
+                    }
+
+                    if (err)
+                        AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+                }
+            }
+
+            if (!err)
+            {
+                afxBool dsysEnabled = FALSE;
+
+                if (AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bEnabled"), &dsysEnabled) && dsysEnabled)
+                {
+                    AfxMakeUri(&uri, "e2draw.dll", 0);
+
+                    if (AfxLoadExecutables(1, &uri, &sys->e2draw)) AfxThrowError();
+                    else
+                    {
+                        AfxAssertObjects(1, &sys->e2draw, afxFcc_EXE);
+
+                        afxClass*(*_AfxGetDsysClass)(void) = AfxFindExecutableSymbol(sys->e2draw, "_AfxGetDsysClass");
+
+                        if (!_AfxGetDsysClass) AfxThrowError();
+                        else
+                        {
+                            afxClass* cls = _AfxGetDsysClass();
+                            AfxAssertClass(cls, afxFcc_DSYS);
+
+                            if (AfxAcquireObjects(cls, 1, (afxObject*)&sys->dsys, (void const*[]) { sys, &ini, (void*)config->draw })) AfxThrowError();
+                            else
+                            {
+                                AfxAssertObjects(1, &sys->dsys, afxFcc_DSYS);
+                                AfxAssert(sys->dsys == AfxGetDrawSystem());
+                            }
+
+                            if (err)
+                                AfxDismountClass(cls);
+                        }
+
+                        if (err)
+                            AfxReleaseObjects(1, (void*[]) { sys->e2draw });
+                    }
+                }
+
+                if (!err)
+                {
+                    afxUri uri;
+                    AfxMakeUri(&uri, "system/*.inf", 0);
+                    _AfxSysScanForIcds(sys, &uri);
+
+                    sys->operating = TRUE;
+                    sys->interruptionRequested = FALSE;
+                }
+
+                if (err)
+                {
+                    if (sys->ssys)
+                    {
+                        AfxReleaseObjects(1, (void*[]) { sys->dsys });
+                    }
+
+                    if (sys->e2draw)
+                        AfxReleaseObjects(1, (void*[]) { sys->e2draw });
+
+                }
+            }
+
+            if (err)
+            {
+                if (sys->ssys)
+                {
+                    AfxReleaseObjects(1, (void*[]) { sys->ssys });
+                }
+
+                if (sys->e2sound)
+                    AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+
+                AfxReleaseObjects(1, (void*[]) { sys });
+            }
         }
+
+        AfxCleanUpIni(&ini);
     }
     return err;
 }

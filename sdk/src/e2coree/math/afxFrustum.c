@@ -163,7 +163,7 @@ _AFXINL void AfxAabbEncapsulateFrustum(afxAabb aabb, afxFrustum const* f)
     AfxEncapsulatePoints(aabb, afxCubeCorner_TOTAL, f->corners);
 }
 
-_AFXINL void AfxRecomputeFrustumPlanes(afxFrustum* f, afxReal const pv[4][4])
+_AFXINL void AfxRecomputeFrustumPlanes(afxFrustum* f, afxM4d const pv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -194,7 +194,7 @@ _AFXINL void AfxRecomputeFrustumPlanes(afxFrustum* f, afxReal const pv[4][4])
     AfxResetPlane(f->planes[afxCubeFace_B], wPz, ww + pv[3][2]); // Far
 }
 
-_AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxReal const pv[4][4])
+_AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxM4d const pv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -250,7 +250,7 @@ _AFXINL void AfxRecomputeFrustumCorners(afxFrustum* f, afxReal const pv[4][4])
     AfxCopyV4d(f->corners[afxCubeCorner_LTF], v);
 }
 
-_AFXINL void AfxRecomputeFrustum3(afxFrustum* f, afxReal const pv[4][4])
+_AFXINL void AfxRecomputeFrustum3(afxFrustum* f, afxM4d const pv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -259,7 +259,7 @@ _AFXINL void AfxRecomputeFrustum3(afxFrustum* f, afxReal const pv[4][4])
     AfxRecomputeFrustumCorners(f, pv);
 }
 
-_AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal const p[4][4])
+_AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxM4d const v, afxM4d const p)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -267,7 +267,7 @@ _AFXINL void AfxRecomputeFrustum(afxFrustum* f, afxReal const v[4][4], afxReal c
     AfxAssert(p);
 
     afxM4d pv;
-    AfxMultiplyM4d(pv, v, p);
+    AfxMultiplyM4dTransposed(pv, v, p);
     AfxPostMultiplyV4d(pv, AFX_V4D_ZERO, f->origin);
     AfxRecomputeFrustum3(f, pv);
 }

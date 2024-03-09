@@ -315,6 +315,11 @@ _SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afx
         gl->TexSubImage2D(glTarget, level, xyz[0], xyz[1], whd[0], whd[1], glFmt, glType, (void const*)src); _SglThrowErrorOccuried();
         break;
     }
+    case GL_TEXTURE_CUBE_MAP:
+    {
+        gl->TexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + baseLayer, level, xyz[0], xyz[1], whd[0], whd[1], glFmt, glType, (void const*)src); _SglThrowErrorOccuried();
+        break;
+    }
     case GL_TEXTURE_1D:
     {
         gl->TexSubImage1D(glTarget, level, xyz[0], whd[0], glFmt, glType, (void const*)src); _SglThrowErrorOccuried();
@@ -391,7 +396,7 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
 
                 AfxAssert(data);
                 gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
-                _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP_POSITIVE_X + rgn.baseLayer, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, data);
+                _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, data);
 
                 //if (!isSurface)
                     AfxCloseRasterRegion(ras, &rgn);

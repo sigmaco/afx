@@ -33,6 +33,8 @@
 
 #include "qwadro/draw/pipe/afxShader.h"
 
+AFX_DEFINE_HANDLE(afxLigature);
+
 AFX_DEFINE_STRUCT(afxPipelineRigBlueprintBinding)
 {
     afxNat                  binding;
@@ -100,20 +102,20 @@ struct afxBaseBindSchema
 
 // A afxBindSet defines a set of resources to be bound together in a group and how the resources are used in shader stages.
 
-AFX afxError    AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[]);
+AVX afxError    AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[]);
 
-AFX afxResult   AfxGetBindSchemaEntry(afxBindSchema legt, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[]);
-AFX afxNat32    AfxGetBindSchemaHash(afxBindSchema legt);
+AVX afxResult   AfxGetBindSchemaEntry(afxBindSchema legt, afxNat first, afxNat cnt, afxPipelineRigBindingDecl decl[]);
+AVX afxNat32    AfxGetBindSchemaHash(afxBindSchema legt);
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-AFXINL void     AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat estBindCnt);
-AFXINL void     AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint);
-AFXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBindSchema *legt);
+AVXINL void     AfxLegoBlueprintBegin(afxPipelineRigBlueprint *blueprint, afxNat estBindCnt);
+AVXINL void     AfxLegoBlueprintErase(afxPipelineRigBlueprint *blueprint);
+AVXINL afxError AfxLegoBlueprintEnd(afxPipelineRigBlueprint *blueprint, afxBindSchema *legt);
 
-AFXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name);
-AFXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint *blueprint, afxNat set, afxNat cnt, afxShaderBlueprint shdb[]);
+AVXINL afxError AfxLegoBlueprintAddBinding(afxPipelineRigBlueprint *blueprint, afxNat point, afxFlags visibility, afxShaderResourceType type, afxNat cnt, afxString const *name);
+AVXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint *blueprint, afxNat set, afxNat cnt, afxShaderBlueprint shdb[]);
 
 #endif//AFX_BIND_SCHEMA_H

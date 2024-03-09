@@ -22,10 +22,10 @@
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/sound/afxSoundSystem.h"
 #include "qwadro/core/afxSystem.h"
-AFXINL afxSoundSystem _AfxGetSsysData(void);
+AAXINL afxSoundSystem AfxGetSoundSystem(void);
 
 
-_AFX afxMmu AfxGetSoundContextMmu(afxSoundContext sctx)
+_AAX afxMmu AfxGetSoundContextMmu(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
@@ -34,7 +34,7 @@ _AFX afxMmu AfxGetSoundContextMmu(afxSoundContext sctx)
     return mmu;
 }
 
-_AFX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
+_AAX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
@@ -45,7 +45,7 @@ _AFX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContextConfig const config[], afxSoundContext sctx[])
+_AAX afxError AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContextConfig const config[], afxSoundContext contexts[])
 {
     AfxEntry("cnt=%u,config=%p", cnt, config);
     afxError err = AFX_ERR_NONE;
@@ -58,59 +58,37 @@ _AFX afxError AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContext
         afxClass* cls = AfxGetSoundContextClass(sdev);
         AfxAssertClass(cls, afxFcc_SCTX);
 
-        if (AfxAcquireObjects(cls, cnt, (afxObject*)sctx, (void const*[]) { &sdevId, (void*)config }))
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { &sdevId, (void*)config }))
             AfxThrowError();
 
-        AfxAssertObjects(cnt, sctx, afxFcc_SCTX);
+        AfxAssertObjects(cnt, contexts, afxFcc_SCTX);
     }
     return err;
 }
 
-_AFX afxNat AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd)
+_AAX afxNat AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
+        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls;
-
-    if (sdev)
-    {
-        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-        cls = AfxGetSoundContextClass(sdev);            
-    }
-    else
-    {
-        afxSoundSystem ssys = _AfxGetSsysData();
-        AfxAssertType(ssys, afxFcc_SSYS);
-        cls = &ssys->scontexts;
-    }
+    afxClass* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext sctx[])
+_AAX afxNat AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    AfxAssert(contexts);
     AfxAssert(cnt);
-    AfxAssert(sctx);
-    afxClass* cls;
-
-    if (sdev)
-    {
-        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-        cls = AfxGetSoundContextClass(sdev);            
-    }
-    else
-    {
-        afxSoundSystem ssys = _AfxGetSsysData();
-        AfxAssertType(ssys, afxFcc_SSYS);
-        cls = &ssys->scontexts;
-    }
+    afxClass* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sctx);
+    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)contexts);
 }
 
-_AFX afxNat AfxCountSoundContexts(afxSoundDevice sdev)
+_AAX afxNat AfxCountSoundContexts(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);

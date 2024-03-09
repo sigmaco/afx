@@ -21,6 +21,14 @@
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxPlane.h"
 
+afxClipSpace const  AFX_CLIP_SPACE_QWADRO =
+{
+    .nonRh = FALSE,
+    .boundary = afxClipBoundary_ZERO_TO_ONE,
+    .boundMin = {-1,-1, 0 },
+    .boundMax = { 1, 1, 1 }
+};
+
 afxClipSpace const  AFX_CLIP_SPACE_OPENGL =
 {
     .nonRh = FALSE,
@@ -49,7 +57,7 @@ afxClipSpace const  AFX_CLIP_SPACE_D3D =
 // Projective transformation matrix operations                                //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputeShadowM4d(afxReal m[4][4], afxPlane const p, afxReal const lightPos[3])
+_AFXINL void AfxComputeShadowM4d(afxM4d m, afxPlane const p, afxReal const lightPos[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -98,7 +106,7 @@ _AFXINL void AfxComputeShadowM4d(afxReal m[4][4], afxPlane const p, afxReal cons
 #endif
 }
 
-_AFXINL void AfxCubemapMatrix_Direct3D(afxReal m[4][4], afxNat face)
+_AFXINL void AfxCubemapMatrix_Direct3D(afxM4d m, afxNat face)
 {
     afxError err = NIL;
     AfxAssert(m);
@@ -145,7 +153,7 @@ _AFXINL void AfxCubemapMatrix_Direct3D(afxReal m[4][4], afxNat face)
     };
 }
 
-_AFXINL void AfxCubemapMatrix_OpenGL(afxReal m[4][4], afxNat face)
+_AFXINL void AfxCubemapMatrix_OpenGL(afxM4d m, afxNat face)
 {
     afxError err = NIL;
     AfxAssert(m);
@@ -192,7 +200,7 @@ _AFXINL void AfxCubemapMatrix_OpenGL(afxReal m[4][4], afxNat face)
     }
 }
 
-_AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const dir[3], afxReal const up[3], afxClipSpace const* clip)
+_AFXINL void AfxComputeLookToMatrix(afxM4d m, afxV3d const eye, afxV3d const dir, afxV3d const up, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -218,7 +226,7 @@ _AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
         AfxNegV3d(negEye, eye);
 
         afxV4d const w = { AfxDotV3d(x, negEye), AfxDotV3d(y, negEye), AfxDotV3d(z, negEye), (afxReal)1 };
-        AfxSetTransposedM4d(m, x, y, z, w);
+        AfxSetM4dTransposed(m, x, y, z, w);
     }
     else // OpenGL/Vulkan/Qwadro
     {
@@ -230,7 +238,7 @@ _AFXINL void AfxComputeLookToMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
     }
 }
 
-_AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxReal const target[3], afxReal const up[3], afxClipSpace const* clip)
+_AFXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const target, afxV3d const up, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -264,13 +272,13 @@ _AFXINL void AfxComputeLookAtMatrix(afxReal m[4][4], afxReal const eye[3], afxRe
         u[3] = 0.f;
         f[3] = 0.f;
         afxV4d w = { -AfxDotV3d(s, eye), -AfxDotV3d(u, eye), AfxDotV3d(f, eye), 1.f };
-        AfxSetTransposedM4d(m, s, u, f, w);
+        AfxSetM4dTransposed(m, s, u, f, w);
     }
 }
 
 // ORTHOGRAPHIC ////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxClipSpace const* clip)
+_AFXINL void AfxComputeOrthographicMatrix(afxM4d m, afxV2d const extent, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -315,7 +323,7 @@ _AFXINL void AfxComputeOrthographicMatrix(afxReal m[4][4], afxReal const extent[
     }
 }
 
-_AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
+_AFXINL void AfxComputeOffcenterOrthographicMatrix(afxM4d m, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -378,7 +386,7 @@ _AFXINL void AfxComputeOffcenterOrthographicMatrix(afxReal m[4][4], afxReal left
     }
 }
 
-_AFXINL void AfxComputeBoundingOrthographicMatrix(afxReal m[4][4], afxAabb const aabb, afxClipSpace const* clip)
+_AFXINL void AfxComputeBoundingOrthographicMatrix(afxM4d m, afxAabb const aabb, afxClipSpace const* clip)
 {
     // Computa uma afxM4d de projeção ortográfica desde uma afxAabb.
     afxError err = AFX_ERR_NONE;
@@ -389,7 +397,7 @@ _AFXINL void AfxComputeBoundingOrthographicMatrix(afxReal m[4][4], afxAabb const
     AfxComputeOffcenterOrthographicMatrix(m, aabb[0][0], aabb[1][0], aabb[0][1], aabb[1][1], -aabb[1][2], -aabb[0][2], clip);
 }
 
-_AFXINL void AfxComputeBasicOrthographicMatrix(afxReal m[4][4], afxReal aspectRatio, afxReal scale, afxReal range, afxClipSpace const* clip)
+_AFXINL void AfxComputeBasicOrthographicMatrix(afxM4d m, afxReal aspectRatio, afxReal scale, afxReal range, afxClipSpace const* clip)
 {
     // Computa uma afxM4d de projeção ortográfica genérica.
     afxError err = AFX_ERR_NONE;
@@ -411,7 +419,7 @@ _AFXINL void AfxComputeBasicOrthographicMatrix(afxReal m[4][4], afxReal aspectRa
 
 // PERSPECTIVE /////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2], afxReal near, afxReal far, afxClipSpace const* clip)
+_AFXINL void AfxComputePerspectiveMatrix(afxM4d m, afxV2d const extent, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -461,7 +469,7 @@ _AFXINL void AfxComputePerspectiveMatrix(afxReal m[4][4], afxReal const extent[2
     }
 }
 
-_AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxClipSpace const* clip)
+_AFXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -520,7 +528,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxReal m[4][4], afxReal fovY, afxRe
     }
 }
 
-_AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
+_AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxM4d m, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -590,7 +598,7 @@ _AFXINL void AfxComputeOffcenterPerspectiveMatrix(afxReal m[4][4], afxReal left,
     }
 }
 
-_AFXINL void AfxComputeBasicPerspectiveMatrix(afxReal m[4][4], afxReal aspectRatio, afxReal range, afxClipSpace const* clip)
+_AFXINL void AfxComputeBasicPerspectiveMatrix(afxM4d m, afxReal aspectRatio, afxReal range, afxClipSpace const* clip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -600,39 +608,39 @@ _AFXINL void AfxComputeBasicPerspectiveMatrix(afxReal m[4][4], afxReal aspectRat
 // MakeView
 // Memory layout:
 
-_AFXINL void AfxComputeRenderWareViewM4d(afxReal view[4][4], afxReal const cam[4][4])
+_AFXINL void AfxComputeRenderWareViewM4d(afxM4d m, afxM4d const cam)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(view);
+    AfxAssert(m);
     AfxAssert(cam);
 
     afxM4d inv;
     AfxInvertM4d(cam, inv);
-    view[0][0] = -inv[0][0];
-    view[0][1] = inv[0][1];
-    view[0][2] = inv[0][2];
-    view[0][3] = 0.0f;
-    view[1][0] = -inv[1][0];
-    view[1][1] = inv[1][1];
-    view[1][2] = inv[1][2];
-    view[1][3] = 0.0f;
-    view[2][0] = -inv[2][0];
-    view[2][1] = inv[2][1];
-    view[2][2] = inv[2][2];
-    view[2][3] = 0.0f;
-    view[3][0] = -inv[3][0];
-    view[3][1] = inv[3][1];
-    view[3][2] = inv[3][2];
-    view[3][3] = 1.0f;
+    m[0][0] = -inv[0][0];
+    m[0][1] = inv[0][1];
+    m[0][2] = inv[0][2];
+    m[0][3] = 0.0f;
+    m[1][0] = -inv[1][0];
+    m[1][1] = inv[1][1];
+    m[1][2] = inv[1][2];
+    m[1][3] = 0.0f;
+    m[2][0] = -inv[2][0];
+    m[2][1] = inv[2][1];
+    m[2][2] = inv[2][2];
+    m[2][3] = 0.0f;
+    m[3][0] = -inv[3][0];
+    m[3][1] = inv[3][1];
+    m[3][2] = inv[3][2];
+    m[3][3] = 1.0f;
 }
 
 // MakeProjection
 // Memory layout:
 
-_AFXINL void AfxComputeRenderWareProjectionM4d(afxReal p[4][4], afxViewport const* vp, afxBool perspective)
+_AFXINL void AfxComputeRenderWareProjectionM4d(afxM4d m, afxViewport const* vp, afxBool perspective)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(p);
+    AfxAssert(m);
     AfxAssert(vp);
     AfxAssert(vp->depth[1]);
     AfxAssert(vp->depth[0] < vp->depth[1]);
@@ -643,42 +651,42 @@ _AFXINL void AfxComputeRenderWareProjectionM4d(afxReal p[4][4], afxViewport cons
     afxReal rh = 1.f / vp->extent[1];
     afxReal rd = 1.f / (vp->depth[1] - vp->depth[0]);
 
-    p[0][0] = rw;
-    p[0][1] = 0.f;
-    p[0][2] = 0.f;
-    p[0][3] = 0.f;
+    m[0][0] = rw;
+    m[0][1] = 0.f;
+    m[0][2] = 0.f;
+    m[0][3] = 0.f;
 
-    p[1][0] = 0.f;
-    p[1][1] = rh;
-    p[1][2] = 0.f;
-    p[1][3] = 0.f;
+    m[1][0] = 0.f;
+    m[1][1] = rh;
+    m[1][2] = 0.f;
+    m[1][3] = 0.f;
 
-    p[2][0] = vp->offset[0] * rw;
-    p[2][1] = vp->offset[1] * rh;
-    p[3][0] = -p[2][0];
-    p[3][1] = -p[2][1];
+    m[2][0] = vp->offset[0] * rw;
+    m[2][1] = vp->offset[1] * rh;
+    m[3][0] = -m[2][0];
+    m[3][1] = -m[2][1];
 
     if (perspective)
     {
-        p[2][2] = (vp->depth[1] + vp->depth[0]) * rd;
-        p[2][3] = 1.f;
+        m[2][2] = (vp->depth[1] + vp->depth[0]) * rd;
+        m[2][3] = 1.f;
 
-        p[3][2] = -2.f * vp->depth[0] * vp->depth[1] * rd;
-        p[3][3] = 0.f;
+        m[3][2] = -2.f * vp->depth[0] * vp->depth[1] * rd;
+        m[3][3] = 0.f;
     }
     else
     {
-        p[2][2] = 2.f * rd;
-        p[2][3] = 0.f;
+        m[2][2] = 2.f * rd;
+        m[2][3] = 0.f;
 
-        p[3][2] = -(vp->depth[1] + vp->depth[0]) * rd;
-        p[3][3] = 1.f;
+        m[3][2] = -(vp->depth[1] + vp->depth[0]) * rd;
+        m[3][3] = 1.f;
     }
 }
 
 // DecomposePerspective
 
-_AFXINL void AfxDecomposePerspectiveM4d(afxReal m[4][4], afxReal extent[2], afxReal* near, afxReal* far)
+_AFXINL void AfxDecomposePerspectiveM4d(afxM4d m, afxV2d const extent, afxReal* near, afxReal* far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -689,7 +697,7 @@ _AFXINL void AfxDecomposePerspectiveM4d(afxReal m[4][4], afxReal extent[2], afxR
     *far = m[3][2] / (m[2][2] + 1.f);
 }
 
-_AFXINL void AfxDecomposeFovPerspectiveM4d(afxReal m[4][4], afxReal* fovY, afxReal* aspectRatio, afxReal* near, afxReal* far)
+_AFXINL void AfxDecomposeFovPerspectiveM4d(afxM4d m, afxReal* fovY, afxReal* aspectRatio, afxReal* near, afxReal* far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);
@@ -701,7 +709,7 @@ _AFXINL void AfxDecomposeFovPerspectiveM4d(afxReal m[4][4], afxReal* fovY, afxRe
     *far = m[3][2] / (m[2][2] + 1.f);
 }
 
-_AFXINL void AfxDecomposeOffcenterPerspectiveM4d(afxReal m[4][4], afxReal* left, afxReal* right, afxReal* top, afxReal* bottom, afxReal* near, afxReal* far)
+_AFXINL void AfxDecomposeOffcenterPerspectiveM4d(afxM4d m, afxReal* left, afxReal* right, afxReal* top, afxReal* bottom, afxReal* near, afxReal* far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(m);

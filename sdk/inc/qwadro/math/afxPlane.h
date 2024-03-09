@@ -34,18 +34,18 @@ AFX_DEFINE_STRUCT(afxPlane)
 
 AFXINL void         AfxCopyPlane(afxPlane p, afxPlane const in);
 
-AFXINL void         AfxResetPlane(afxPlane p, afxReal const normal[3], afxReal dist);
+AFXINL void         AfxResetPlane(afxPlane p, afxV3d const normal, afxReal dist);
 
-AFXINL void         AfxPlaneFromTriangle(afxPlane p, afxReal const a[3], afxReal const b[3], afxReal const c[3]);
+AFXINL void         AfxPlaneFromTriangle(afxPlane p, afxV3d const a, afxV3d const b, afxV3d const c);
 
-AFXINL void         AfxGetPlaneNormal(afxPlane p, afxReal normal[3]);
+AFXINL void         AfxGetPlaneNormal(afxPlane p, afxV3d normal);
 
 AFXINL afxReal      AfxGetPlaneOffset(afxPlane const p); // aka GetPlaneDistance
 #define AfxGetPlaneDistance AfxGetPlaneOffset
 
-AFXINL afxReal      AfxFindPlaneDistance(afxPlane const p, afxReal const point[3]);
+AFXINL afxReal      AfxFindPlaneDistance(afxPlane const p, afxV3d const point);
 
-AFXINL afxReal      AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxReal const a[3], afxReal const b[3]);
+AFXINL afxReal      AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3d const a, afxV3d const b);
 
 /// Test this plane with an AABB
 /// <0 if the box is completly on the back side of the plane

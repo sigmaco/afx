@@ -21,21 +21,21 @@
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/io/afxXsh.h"
 
-_AFX afxNat AfxCountVertexInputAttributes(afxVertexInput vin)
+_AVX afxNat AfxCountVertexInputAttributes(afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
     return vin->attrCnt;
 }
 
-_AFX afxNat AfxCountVertexInputStreams(afxVertexInput vin)
+_AVX afxNat AfxCountVertexInputStreams(afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
     return vin->streamCnt;
 }
 
-_AFX afxNat AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx)
+_AVX afxNat AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
@@ -53,7 +53,7 @@ _AFX afxNat AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx)
     return siz;
 }
 
-_AFX afxVertexInput AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[])
+_AVX afxVertexInput AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

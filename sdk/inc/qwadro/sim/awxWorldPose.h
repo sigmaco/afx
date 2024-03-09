@@ -29,27 +29,27 @@ AFX_DEFINE_STRUCT(awxWorldPose)
 /// O objeto awxWorldPose é um buffer usado para manter o estado de um afxSkeleton de afxModel como expressado no "world space". 
 /// Você pode criar uma awxWorldPose assim: 
 
-AFX afxError    AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], awxWorldPose *wp[]);
+AKX afxError    AfxAcquireWorldPoses(void *sim, afxNat cnt, afxNat const artCnt[], afxBool const excludeComposite[], awxWorldPose *wp[]);
 
 /// e quando você estiver satifeito de usá-lo, você deve liberá-lo assim: 
 
-AFX void        AfxReleaseWorldPoses(afxNat cnt, awxWorldPose *wp[]);
+AKX void        AfxReleaseWorldPoses(afxNat cnt, awxWorldPose *wp[]);
 
 /// Você pode encontrar o número de articulações representadas na awxWorldPose assim: 
 
-AFX afxNat      AfxWorldPoseGetArticulationCount(awxWorldPose const *wp);
+AKX afxNat      AfxWorldPoseGetArticulationCount(awxWorldPose const *wp);
 
 /// Em qualquer tempo, você pode inspecionar ou modificar o estado alojado de uma articulação na awxWorldPose. 
 /// Você acessa o estado da articulação como um afxTransform assim:
 
-AFX afxV4d*     AfxWorldPoseGetWorldMatrix(awxWorldPose const *wp, afxNat artIdx);
+AKX afxV4d*     AfxWorldPoseGetWorldMatrix(awxWorldPose const *wp, afxNat artIdx);
 
 /// O transforme para a articulação é uma afxM4d com componentes translacionais em afxReal[3][0], afxReal[3][1] e afxReal[3][2]. 
 /// Desde que nunca há quaisquer componentes projetivos, os componentes afxReal[0][3], afxReal[1][3] e afxReal[2][3] são garantidos a estarem zerados, e o componente afxReal[3][3] é garantido de ser 1.
 
 /// Similarmente, você pode inspecionar ou modificar a afxM4d composta para uma articulação: 
 
-AFX afxV4d*     AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat artIdx);
+AKX afxV4d*     AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat artIdx);
 
 /// A afxM4d composta está no mesmo layout como aquela retornada de GetWorldPose4x4. 
 /// É igual ao "world space" --- afxM4d espacial para a articulação (como dada por GetWorldPose4x4) multiplicada pelo transforme inverso de repouso no world-space --- para a articulação (como alojada no afxSkeleton). 
@@ -57,7 +57,7 @@ AFX afxV4d*     AfxWorldPoseGetCompositeMatrix(awxWorldPose const *wp, afxNat ar
 
 /// As afxM4d de transformação no world-space e compostas são garantida a estarem contíguas, assim sendo, você pode também obter o ponteiro para o início da array e usá-lo para manualmente acessar articulações individuais. 
 
-AFX afxM4d*     AfxWorldPoseGetWorldMatrixArray(awxWorldPose const *wp);
-AFX afxM4d*     AfxWorldPoseGetCompositeMatrixArray(awxWorldPose const *wp);
+AKX afxM4d*     AfxWorldPoseGetWorldMatrixArray(awxWorldPose const *wp);
+AKX afxM4d*     AfxWorldPoseGetCompositeMatrixArray(awxWorldPose const *wp);
 
 #endif//AFX_WORLD_POSE_H

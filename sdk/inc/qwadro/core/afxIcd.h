@@ -19,7 +19,7 @@
 #ifndef AFX_ICD_H
 #define AFX_ICD_H
 
-#include "qwadro/core/afxExecutable.h"
+#include "qwadro/core/afxInitialization.h"
 
 typedef enum afxIcdType
 {
@@ -29,39 +29,36 @@ typedef enum afxIcdType
     afxIcdType_SIM
 } afxIcdType;
 
-#if 0
-AFX_DEFINE_STRUCT(afxIcdInfo)
-{
-    afxExecutable               mdle;
-    afxString const*        name; // driver name: SIGMA GL/2
-    afxString const*        vendor; // author: SIGMA Technology Group (The technology arm of Federação SIGMA)
-    afxString const*        website; // website: sigmaco.org
-    afxString const*        note; // The standard QWADRO draw system implementation.
-    afxNat                  verMajor; // 1
-    afxNat                  verMinor; // 0
-    afxNat                  verPatch; // 0
-    afxClassConfig const*   devExt;
-    afxNat                  devCnt;
-};
-#endif
-
 #ifdef _AFX_CORE_C
 #ifdef _AFX_ICD_C
 AFX_OBJECT(afxIcd)
 {
-    AFX_OBJECT(afxExecutable)exe;
-    afxChain                classes;
-    afxClass                devices;
+    afxUri128           uri;
+    afxIni              ini;
+    afxString           product;
+    afxString           description;
+    afxString           vendor;
+    afxUri              website;
+    afxNat              verMajor; // 1
+    afxNat              verMinor; // 0
+    afxNat              verPatch; // 0
 
-    afxString               name;
-    afxString               vendor;
-    afxString               website;
-    afxString               note;
-    afxNat                  verMajor; // 1
-    afxNat                  verMinor; // 0
-    afxNat                  verPatch; // 0
+    afxChain            devices; // afxDevice
+    afxExecutable       exe;
 };
 #endif//_AFX_ICD_C
 #endif//_AFX_CORE_C
+
+AFX afxError            AfxInstallClientDrivers(afxNat cnt, afxUri const manifest[], afxIcd drivers[]);
+
+AFX afxUri const*       AfxGetIcdIdentifier(afxIcd icd);
+
+AFX afxExecutable       AfxGetIcdExecutable(afxIcd icd);
+
+AFX afxIni const*       AfxGetIcdInitializer(afxIcd icd);
+
+AFX afxChain const*     AfxGetRegisteredDevices(afxIcd icd);
+
+AFX void                AfxGetIcdVersion(afxIcd icd, afxNat* major, afxNat* minor, afxNat* patch);
 
 #endif//AFX_ICD_H

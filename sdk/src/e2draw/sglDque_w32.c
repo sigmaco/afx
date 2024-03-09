@@ -1123,15 +1123,15 @@ _SGL afxError _SglDdevProcDpuCb(afxDrawThread dthr, afxDrawContext dctx, afxNat 
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssertRange(ddev->dpuCnt, basePort, portCnt);
+    AfxAssertRange(ddev->idd->dpuCnt, basePort, portCnt);
 
     afxBool ctxEntered = FALSE;
 
     for (afxNat portIter = 0; portIter < portCnt; portIter++)
     {
         afxNat portIdx = basePort + portIter;
-        AfxAssertRange(ddev->dpuCnt, portIdx, 1);
-        sglDpuIdd *dpu = &ddev->dpus[portIdx];
+        AfxAssertRange(ddev->idd->dpuCnt, portIdx, 1);
+        sglDpuIdd *dpu = &ddev->idd->dpus[portIdx];
         AfxAssertRange(dctx->base.openPortCnt, portIdx, 1);
         //AfxAssertRange(dctx->base.openPorts[portIdx].dqueCnt, baseQue, queCnt);
 
@@ -1310,7 +1310,7 @@ _SGL afxError _SglDqueCtor(afxDrawQueue dque, afxCookie const* cookie)
     sglDrawQueueSpecification const *spec = ((sglDrawQueueSpecification const *)cookie->udd[2]);
     afxDrawQueue dque2;
 
-    if (!AfxGetInstance(&ddev->base.ports[portIdx].queues, AfxIdentifyObject(dque), (afxObject*)&dque2) || dque2 != dque) AfxThrowError();
+    if (!AfxGetInstance(&ddev->ports[portIdx].queues, AfxIdentifyObject(dque), (afxObject*)&dque2) || dque2 != dque) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &dque2, afxFcc_DQUE);
@@ -1328,7 +1328,7 @@ _SGL afxError _SglDqueCtor(afxDrawQueue dque, afxCookie const* cookie)
 
         dque->base.locked = FALSE;
 
-        AfxTakeChain(&dque->base.pendingChain, dque);
+        AfxSetUpChain(&dque->base.pendingChain, dque);
         AfxTakeSlock(&dque->base.pendingChainSlock);
         AfxTakeSlock(&dque->base.reqLock);
 

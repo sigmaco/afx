@@ -155,11 +155,11 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #endif
 
-AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxObject obj[], void const* udd[]);
-AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject obj[]);
-AFX afxBool     AfxReleaseObjects(afxNat cnt, void* obj[]);
+AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxObject handles[], void const* udd[]);
+AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject handles[]);
+AFX afxBool     AfxReleaseObjects(afxNat cnt, void* handles[]);
 
-AFX afxResult   _AfxAssertObjects(afxNat cnt, afxObject const obj[], afxFcc fcc);
+AFX afxResult   _AfxAssertObjects(afxNat cnt, afxObject const handles[], afxFcc fcc);
 #define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_)))
 #define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxObject const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_))))
 

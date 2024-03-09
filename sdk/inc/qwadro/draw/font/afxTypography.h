@@ -52,8 +52,8 @@ AFX_OBJECT(afxTypography)
 #endif//_AFX_TYPOGRAPHY_C
 #endif//_AFX_DRAW_C
 
-AFX afxTypography   AfxAcquireTypography(afxDrawContext dctx);
+AVX afxTypography   AfxAcquireTypography(afxDrawContext dctx);
 
-AFX afxBool         AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph);
+AVX afxBool         AfxGetGlyph(afxTypography typ, afxNat codepoint, afxGlyph* glyph);
 
 #endif//AFX_TYPOGRAPHY_H

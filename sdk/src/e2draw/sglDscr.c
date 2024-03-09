@@ -60,7 +60,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     AfxExhaustArena(&dscr->base.cmdArena);
 #endif
 
-    AfxTakeChain(&dscr->commands, dscr);
+    AfxSetUpChain(&dscr->commands, dscr);
 
     return err;
 }
@@ -152,7 +152,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
     
     dscr->base.stdCmds = NIL;
 
-    AfxTakeChain(&dscr->commands, dscr);
+    AfxSetUpChain(&dscr->commands, dscr);
     
     dscr->base.beginCb = _SglDscrBeginCb;
     dscr->base.endCb = _SglDscrEndCb;

@@ -24,9 +24,9 @@
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/math/afxQuaternion.h"
 
-AFXINL afxDrawSystem _AfxGetDsysData(void);
+AVXINL afxDrawSystem AfxGetDrawSystem(void);
 
-_AFX void AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
+_AVX void AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -38,7 +38,7 @@ _AFX void AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4]
         AfxCopyM4d(iv, cam->iv);
 }
 
-_AFX void AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
+_AVX void AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -50,7 +50,7 @@ _AFX void AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal
         AfxCopyM4d(ip, cam->ip);
 }
 
-_AFX afxReal AfxGetCameraFov(afxCamera cam)
+_AVX afxReal AfxGetCameraFov(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -58,7 +58,7 @@ _AFX afxReal AfxGetCameraFov(afxCamera cam)
     return cam->fovY;
 }
 
-_AFX void AfxSetCameraFov(afxCamera cam, afxReal fov)
+_AVX void AfxSetCameraFov(afxCamera cam, afxReal fov)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -66,7 +66,7 @@ _AFX void AfxSetCameraFov(afxCamera cam, afxReal fov)
     cam->fovY = fov;
 }
 
-_AFX void AfxSetCameraClipPlanes(afxCamera cam, afxReal near, afxReal far)
+_AVX void AfxSetCameraClipPlanes(afxCamera cam, afxReal near, afxReal far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -75,7 +75,7 @@ _AFX void AfxSetCameraClipPlanes(afxCamera cam, afxReal near, afxReal far)
     cam->farClipPlane = far;
 }
 
-_AFX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far)
+_AVX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -84,7 +84,7 @@ _AFX void AfxGetCameraClipPlanes(afxCamera cam, afxReal *near, afxReal *far)
     far[1] = cam->farClipPlane;
 }
 
-_AFX afxClipBoundary AfxGetCameraDepthRange(afxCamera cam)
+_AVX afxClipBoundary AfxGetCameraDepthRange(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -92,7 +92,7 @@ _AFX afxClipBoundary AfxGetCameraDepthRange(afxCamera cam)
     return cam->depthRange;
 }
 
-_AFX void AfxSetCameraDepthRange(afxCamera cam, afxClipBoundary range)
+_AVX void AfxSetCameraDepthRange(afxCamera cam, afxClipBoundary range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -100,7 +100,7 @@ _AFX void AfxSetCameraDepthRange(afxCamera cam, afxClipBoundary range)
     cam->depthRange = range;
 }
 
-_AFX afxReal AfxGetCameraDepthRangeEpsilon(afxCamera cam)
+_AVX afxReal AfxGetCameraDepthRangeEpsilon(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -108,7 +108,7 @@ _AFX afxReal AfxGetCameraDepthRangeEpsilon(afxCamera cam)
     return cam->depthRangeEpsilon;
 }
 
-_AFX void AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal epsilon)
+_AVX void AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal epsilon)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -116,7 +116,7 @@ _AFX void AfxSetCameraDepthRangeEpsilon(afxCamera cam, afxReal epsilon)
     cam->depthRangeEpsilon = epsilon;
 }
 
-_AFX void AfxGetCameraOffset(afxCamera cam, afxReal offset[3])
+_AVX void AfxGetCameraOffset(afxCamera cam, afxReal offset[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -124,7 +124,7 @@ _AFX void AfxGetCameraOffset(afxCamera cam, afxReal offset[3])
     AfxCopyV3d(offset, cam->offset);
 }
 
-_AFX void AfxSetCameraOffset(afxCamera cam, afxReal const offset[3])
+_AVX void AfxSetCameraOffset(afxCamera cam, afxReal const offset[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -132,7 +132,7 @@ _AFX void AfxSetCameraOffset(afxCamera cam, afxReal const offset[3])
     AfxCopyV3d(cam->offset, offset);
 }
 
-_AFX void AfxApplyCameraOffset(afxCamera cam, afxReal const offset[3])
+_AVX void AfxApplyCameraOffset(afxCamera cam, afxReal const offset[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -140,7 +140,7 @@ _AFX void AfxApplyCameraOffset(afxCamera cam, afxReal const offset[3])
     AfxAddV3d(cam->offset, cam->offset, offset);
 }
 
-_AFX afxReal AfxGetCameraDistance(afxCamera cam)
+_AVX afxReal AfxGetCameraDistance(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -148,7 +148,7 @@ _AFX afxReal AfxGetCameraDistance(afxCamera cam)
     return cam->offset[2];
 }
 
-_AFX void AfxSetCameraDistance(afxCamera cam, afxReal distance)
+_AVX void AfxSetCameraDistance(afxCamera cam, afxReal distance)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -156,7 +156,7 @@ _AFX void AfxSetCameraDistance(afxCamera cam, afxReal distance)
     cam->offset[2] = distance;
 }
 
-_AFX void AfxApplyCameraDistance(afxCamera cam, afxReal distance)
+_AVX void AfxApplyCameraDistance(afxCamera cam, afxReal distance)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -164,7 +164,7 @@ _AFX void AfxApplyCameraDistance(afxCamera cam, afxReal distance)
     cam->offset[2] += distance;
 }
 
-_AFX void AfxGetCameraElevAzimRoll(afxCamera cam, afxReal elevAzimRoll[3])
+_AVX void AfxGetCameraElevAzimRoll(afxCamera cam, afxReal elevAzimRoll[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -172,7 +172,7 @@ _AFX void AfxGetCameraElevAzimRoll(afxCamera cam, afxReal elevAzimRoll[3])
     AfxCopyV3d(elevAzimRoll, cam->elevAzimRoll);
 }
 
-_AFX void AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
+_AVX void AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -180,7 +180,7 @@ _AFX void AfxSetCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
     AfxCopyV3d(cam->elevAzimRoll, elevAzimRoll);
 }
 
-_AFX void AfxApplyCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
+_AVX void AfxApplyCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -188,7 +188,7 @@ _AFX void AfxApplyCameraElevAzimRoll(afxCamera cam, afxReal const elevAzimRoll[3
     AfxAddV3d(cam->elevAzimRoll, cam->elevAzimRoll, elevAzimRoll);
 }
 
-_AFX afxReal AfxGetCameraElevation(afxCamera cam)
+_AVX afxReal AfxGetCameraElevation(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -196,7 +196,7 @@ _AFX afxReal AfxGetCameraElevation(afxCamera cam)
     return cam->elevAzimRoll[0];
 }
 
-_AFX void AfxSetCameraElevation(afxCamera cam, afxReal elev)
+_AVX void AfxSetCameraElevation(afxCamera cam, afxReal elev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -204,7 +204,7 @@ _AFX void AfxSetCameraElevation(afxCamera cam, afxReal elev)
     cam->elevAzimRoll[0] = elev;
 }
 
-_AFX void AfxApplyCameraElevation(afxCamera cam, afxReal elev)
+_AVX void AfxApplyCameraElevation(afxCamera cam, afxReal elev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -212,7 +212,7 @@ _AFX void AfxApplyCameraElevation(afxCamera cam, afxReal elev)
     cam->elevAzimRoll[0] += elev;
 }
 
-_AFX afxReal AfxGetCameraAzimuth(afxCamera cam)
+_AVX afxReal AfxGetCameraAzimuth(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -220,7 +220,7 @@ _AFX afxReal AfxGetCameraAzimuth(afxCamera cam)
     return cam->elevAzimRoll[1];
 }
 
-_AFX void AfxSetCameraAzimuth(afxCamera cam, afxReal azim)
+_AVX void AfxSetCameraAzimuth(afxCamera cam, afxReal azim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -228,7 +228,7 @@ _AFX void AfxSetCameraAzimuth(afxCamera cam, afxReal azim)
     cam->elevAzimRoll[1] = azim;
 }
 
-_AFX void AfxApplyCameraAzimuth(afxCamera cam, afxReal azim)
+_AVX void AfxApplyCameraAzimuth(afxCamera cam, afxReal azim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -236,7 +236,7 @@ _AFX void AfxApplyCameraAzimuth(afxCamera cam, afxReal azim)
     cam->elevAzimRoll[1] += azim;
 }
 
-_AFX afxReal AfxGetCameraRoll(afxCamera cam)
+_AVX afxReal AfxGetCameraRoll(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -244,7 +244,7 @@ _AFX afxReal AfxGetCameraRoll(afxCamera cam)
     return cam->elevAzimRoll[2];
 }
 
-_AFX void AfxSetCameraRoll(afxCamera cam, afxReal roll)
+_AVX void AfxSetCameraRoll(afxCamera cam, afxReal roll)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -252,7 +252,7 @@ _AFX void AfxSetCameraRoll(afxCamera cam, afxReal roll)
     cam->elevAzimRoll[2] = roll;
 }
 
-_AFX void AfxApplyCameraRoll(afxCamera cam, afxReal roll)
+_AVX void AfxApplyCameraRoll(afxCamera cam, afxReal roll)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -260,15 +260,15 @@ _AFX void AfxApplyCameraRoll(afxCamera cam, afxReal roll)
     cam->elevAzimRoll[2] += roll;
 }
 
-_AFX void AfxGetCameraPosition(afxCamera cam, afxReal point[4])
+_AVX void AfxGetCameraPosition(afxCamera cam, afxReal point[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(point);
-    AfxAtv4FromAtv3(point, cam->iv[3]);
+    AfxAtv4dFromAtv3d(point, cam->iv[3]);
 }
 
-_AFX void AfxGetCameraLeft(afxCamera cam, afxReal left[3])
+_AVX void AfxGetCameraLeft(afxCamera cam, afxReal left[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -276,7 +276,7 @@ _AFX void AfxGetCameraLeft(afxCamera cam, afxReal left[3])
     AfxNegV3d(left, cam->iv[0]);
 }
 
-_AFX void AfxGetCameraRight(afxCamera cam, afxReal right[3])
+_AVX void AfxGetCameraRight(afxCamera cam, afxReal right[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -284,7 +284,7 @@ _AFX void AfxGetCameraRight(afxCamera cam, afxReal right[3])
     AfxCopyV3d(right, cam->iv[0]);
 }
 
-_AFX void AfxGetCameraUp(afxCamera cam, afxReal up[3])
+_AVX void AfxGetCameraUp(afxCamera cam, afxReal up[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -292,7 +292,7 @@ _AFX void AfxGetCameraUp(afxCamera cam, afxReal up[3])
     AfxCopyV3d(up, cam->iv[1]);
 }
 
-_AFX void AfxGetCameraDown(afxCamera cam, afxReal down[3])
+_AVX void AfxGetCameraDown(afxCamera cam, afxReal down[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -300,7 +300,7 @@ _AFX void AfxGetCameraDown(afxCamera cam, afxReal down[3])
     AfxNegV3d(down, cam->iv[1]);
 }
 
-_AFX void AfxGetCameraForward(afxCamera cam, afxReal fwd[3])
+_AVX void AfxGetCameraForward(afxCamera cam, afxReal fwd[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -308,7 +308,7 @@ _AFX void AfxGetCameraForward(afxCamera cam, afxReal fwd[3])
     AfxNegV3d(fwd, cam->iv[2]);
 }
 
-_AFX void AfxGetCameraBack(afxCamera cam, afxReal back[3])
+_AVX void AfxGetCameraBack(afxCamera cam, afxReal back[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -316,7 +316,7 @@ _AFX void AfxGetCameraBack(afxCamera cam, afxReal back[3])
     AfxCopyV3d(back, cam->iv[2]);
 }
 
-_AFX void AfxResetCamera(afxCamera cam)
+_AVX void AfxResetCamera(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -343,7 +343,7 @@ _AFX void AfxResetCamera(afxCamera cam)
     AfxRecomputeCameraMatrices(cam);
 }
 
-_AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxReal const screenExtent[2], afxReal const windowExtent[2])
+_AVX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxReal const screenExtent[2], afxReal const windowExtent[2])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -354,7 +354,7 @@ _AFX void AfxSetCameraAspectRatios(afxCamera cam, afxReal physAspectRatio, afxRe
     cam->wwOverHw = windowExtent[0] / windowExtent[1];
 }
 
-_AFX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
+_AVX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -373,7 +373,7 @@ _AFX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
     cam->pos[2] = motion[2] * cam->iv[2][2] + cam->pos[2];
 }
 
-_AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
+_AVX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
 {
     afxReal64 h = AfxSin(cam->fovY * 0.5f) / AfxCos(cam->fovY * 0.5f);
     p[0][0] = cam->wrOverHr / (cam->wwOverHw * cam->wpOverHp * h);
@@ -446,7 +446,7 @@ _AFX void AfxComputeCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afx
     ip[3][3] = -(p[2][2] / (p[3][2] * p[2][3]));
 }
 
-_AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
+_AVX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -501,14 +501,14 @@ _AFX void AfxComputeCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal i
     at[2] = -(at[2] + cam->offset[2]);
     at[3] = 1.f;
     AfxM4dFromM3d(v, c, at);
-    AfxCopyTransposedAtm4(iv, v);
-    AfxMakeAffineM4d(iv);
+    AfxCopyAtm4dTransposed(iv, v);
+    AfxEnsureAtm4d(iv);
     AfxPostMultiplyV3d(c, cam->offset, at);
     AfxAddV3d(iv[3], at, cam->pos);
     iv[3][3] = 1.f;
 }
 
-_AFX void AfxRecomputeCameraMatrices(afxCamera cam)
+_AVX void AfxRecomputeCameraMatrices(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -517,7 +517,7 @@ _AFX void AfxRecomputeCameraMatrices(afxCamera cam)
     AfxComputeCameraProjectionMatrices(cam, cam->p, cam->ip);
 }
 
-_AFX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4])
+_AVX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal const screenPoint[3], afxReal worldPoint[4])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -540,7 +540,7 @@ _AFX void AfxFindWorldCoordinates(afxCamera cam, afxReal const wh[2], afxReal co
     worldPoint[3] = 1.f;
 }
 
-_AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3])
+_AVX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal const worldPoint[4], afxReal screenPoint[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -560,7 +560,7 @@ _AFX void AfxFindScreenCoordinates(afxCamera cam, afxReal const wh[2], afxReal c
     AfxSetV3d(screenPoint, (v[0] + 1.0) * wh[0] * 0.5f, (v[1] + 1.0) * wh[1] * 0.5f, v[2]);
 }
 
-_AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal const cursor[2], afxReal origin[4], afxReal normal[3])
+_AVX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal const cursor[2], afxReal origin[4], afxReal normal[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -592,7 +592,7 @@ _AFX void AfxGetCameraPickingRay(afxCamera cam, afxReal const wh[2], afxReal con
         AfxScaleV3d(normal, v, 1.f / len);
 }
 
-_AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3])
+_AVX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrthogonal, afxReal const planeNormal[3], afxReal const pointOnPlane[4], afxReal xBasis[3], afxReal yBasis[3])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -630,7 +630,7 @@ _AFX void AfxComputeCameraRelativePlanarBases(afxCamera cam, afxBool screenOrtho
         AfxScaleV3d(yBasis, yBasis, AfxRecip(len));
 }
 
-_AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
+_AVX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
@@ -638,7 +638,7 @@ _AFX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
     AfxCopyFrustum(frustum, &cam->frustum);
 }
 
-_AFX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev)
+_AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxCamera cam = (void*)obj;
@@ -700,7 +700,7 @@ _AFX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev
     return FALSE;
 }
 
-_AFX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
+_AVX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cam=%p", cam);
@@ -719,7 +719,7 @@ _AFX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxError _AfxCamDtor(afxCamera cam)
+_AVX afxError _AfxCamDtor(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cam=%p", cam);
@@ -727,7 +727,7 @@ _AFX afxError _AfxCamDtor(afxCamera cam)
     return err;
 }
 
-_AFX afxClassConfig const _AfxCamClsConfig =
+_AVX afxClassConfig const _AfxCamClsConfig =
 {
     .fcc = afxFcc_CAM,
     .name = "Camera",
@@ -743,7 +743,7 @@ _AFX afxClassConfig const _AfxCamClsConfig =
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
+_AVX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -759,7 +759,7 @@ _AFX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
     return err;
 }
 
-_AFX afxNat AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[])
+_AVX afxNat AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -768,7 +768,7 @@ _AFX afxNat AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxC
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)cam);
 }
 
-_AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
+_AVX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
 {
     afxReal64 div = (afxReal64)screenWidth / (afxReal64)screenHeight;
 
@@ -781,7 +781,7 @@ _AFX afxReal AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeig
     return 1.78f;
 }
 
-_AFX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam)
+_AVX afxReal AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam)
 {
     return AfxSin(fovY * 0.5f) / AfxCos(fovY * 0.5f) * errInPixels * distanceFromCam / ((afxReal)vpHeightInPixels * 0.5f);
 }

@@ -34,7 +34,9 @@ extern afxClassConfig const _AfxVtdClsConfig;
 extern afxClassConfig const _AfxMshtClsConfig;
 extern afxClassConfig const _AfxMdlClsConfig;
 extern afxClassConfig const _AwxBodClsConfig;
-extern afxClassConfig const _AfxMotClsConfig;
+extern afxClassConfig const _AwxAniClsConfig;
+extern afxClassConfig const _AwxMotClsConfig;
+extern afxClassConfig const _AfxMotoClsConfig;
 extern afxClassConfig const _AfxEntClsConfig;
 extern afxClassConfig const _AfxLitClsConfig;
 extern afxClassConfig const _AfxRndClsConfig;
@@ -42,7 +44,7 @@ extern afxClassConfig const _AfxCadClsConfig;
 
 // SIMULATION API //////////////////////////////////////////////////////////////
 
-_AFX afxMmu AfxGetSimulationMmu(afxSimulation sim)
+_AKX afxMmu AfxGetSimulationMmu(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -51,7 +53,7 @@ _AFX afxMmu AfxGetSimulationMmu(afxSimulation sim)
     return mmu;
 }
 
-_AFX afxClass* AfxGetRendererClass(afxSimulation sim)
+_AKX afxClass* AfxGetRendererClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -60,7 +62,7 @@ _AFX afxClass* AfxGetRendererClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetMaterialClass(afxSimulation sim)
+_AKX afxClass* AfxGetMaterialClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -69,7 +71,7 @@ _AFX afxClass* AfxGetMaterialClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetMeshClass(afxSimulation sim)
+_AKX afxClass* AwxGetMeshClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -78,7 +80,7 @@ _AFX afxClass* AwxGetMeshClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetMeshDataClass(afxSimulation sim)
+_AKX afxClass* AwxGetMeshDataClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -87,7 +89,7 @@ _AFX afxClass* AwxGetMeshDataClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetMeshTopologyClass(afxSimulation sim)
+_AKX afxClass* AwxGetMeshTopologyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -96,7 +98,7 @@ _AFX afxClass* AwxGetMeshTopologyClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetModelClass(afxSimulation sim)
+_AKX afxClass* AwxGetModelClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -105,7 +107,7 @@ _AFX afxClass* AwxGetModelClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetLightClass(afxSimulation sim)
+_AKX afxClass* AfxGetLightClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -114,7 +116,7 @@ _AFX afxClass* AfxGetLightClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetBodyClass(afxSimulation sim)
+_AKX afxClass* AfxGetBodyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -123,7 +125,7 @@ _AFX afxClass* AfxGetBodyClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AwxGetAnimusClass(afxSimulation sim)
+_AKX afxClass* AwxGetMotorClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -132,7 +134,7 @@ _AFX afxClass* AwxGetAnimusClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetEntityClass(afxSimulation sim)
+_AKX afxClass* AfxGetEntityClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -141,7 +143,7 @@ _AFX afxClass* AfxGetEntityClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetSkeletonClass(afxSimulation sim)
+_AKX afxClass* AfxGetSkeletonClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -150,7 +152,7 @@ _AFX afxClass* AfxGetSkeletonClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxClass* AfxGetNodeClass(afxSimulation sim)
+_AKX afxClass* AfxGetNodeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -159,7 +161,7 @@ _AFX afxClass* AfxGetNodeClass(afxSimulation sim)
     return class;
 }
 
-_AFX afxNat AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBody bod[])
+_AKX afxNat AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBody bod[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -169,7 +171,7 @@ _AFX afxNat AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBo
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)bod);
 }
 
-_AFX afxNat AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awxEntity ent[])
+_AKX afxNat AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awxEntity ent[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -179,7 +181,7 @@ _AFX afxNat AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awx
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)ent);
 }
 
-_AFX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[])
+_AKX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -189,7 +191,7 @@ _AFX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, af
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mtl);
 }
 
-_AFX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[])
+_AKX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -199,7 +201,7 @@ _AFX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMe
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)msh);
 }
 
-_AFX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[])
+_AKX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -209,7 +211,7 @@ _AFX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxMo
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mdl);
 }
 
-_AFX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[])
+_AKX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -219,7 +221,7 @@ _AFX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, af
     return AfxEnumerateInstances(cls, base, cnt, (afxObject*)skl);
 }
 
-_AFX void AfxComputeAllowedErrorValues(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
+_AKX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -237,7 +239,7 @@ _AFX void AfxComputeAllowedErrorValues(afxSimulation sim, afxReal allowedErr, af
     }
 }
 
-_AFX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxReal const right[3], afxReal const up[3], afxReal const back[3], afxReal const origin[3], afxReal ltm[3][3], afxReal iltm[3][3], afxReal atv[3])
+_AKX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, afxReal const right[3], afxReal const up[3], afxReal const back[3], afxReal const origin[3], afxReal ltm[3][3], afxReal iltm[3][3], afxReal atv[3])
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -265,7 +267,7 @@ _AFX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, af
     AfxSubV3d(atv, sim->origin, origin);
 }
 
-_AFX afxError AfxCullSimulation(afxSimulation sim, afxCamera cam, afxArray* pvs)
+_AKX afxError AfxCullSimulation(afxSimulation sim, afxCamera cam, afxArray* pvs)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -277,7 +279,7 @@ _AFX afxError AfxCullSimulation(afxSimulation sim, afxCamera cam, afxArray* pvs)
     return err;
 }
 
-_AFX afxError AfxStepSimulation(afxSimulation sim)
+_AKX afxError AfxStepSimulation(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -301,7 +303,7 @@ _AFX afxError AfxStepSimulation(afxSimulation sim)
     return err;
 }
 
-_AFX afxError AfxRenderSimulation(afxSimulation sim, afxArray const* pvs)
+_AKX afxError AfxRenderSimulation(afxSimulation sim, afxArray const* pvs)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -309,7 +311,7 @@ _AFX afxError AfxRenderSimulation(afxSimulation sim, afxArray const* pvs)
     return err;
 }
 
-_AFX afxError _AfxSimulationProcess(afxSimulation sim)
+_AKX afxError _AfxSimulationProcess(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -317,7 +319,7 @@ _AFX afxError _AfxSimulationProcess(afxSimulation sim)
     return err;
 }
 
-_AFX afxError _AfxSimDtor(afxSimulation sim)
+_AKX afxError _AfxSimDtor(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("sim=%p", sim);
@@ -330,7 +332,7 @@ _AFX afxError _AfxSimDtor(afxSimulation sim)
     return err;
 }
 
-_AFX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
+_AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("sim=%p", sim);
@@ -339,7 +341,7 @@ _AFX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
     awxSimulationConfig const *config = ((awxSimulationConfig const*)cookie->udd[0]) + cookie->no;
 
     afxChain *classes = &sim->classes;
-    AfxTakeChain(classes, sim);
+    AfxSetUpChain(classes, sim);
 
     afxAllocationStrategy as;
     as.size = sizeof(afxByte);
@@ -382,7 +384,7 @@ _AFX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
             sim->unitsPerMeter = config->unitsPerMeter;
         }
 
-        AfxSetTransposedM3d(sim->basis, sim->right, sim->up, sim->back);
+        AfxSetM3dTransposed(sim->basis, sim->right, sim->up, sim->back);
 
         {
             
@@ -403,12 +405,15 @@ _AFX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
             AfxMountClass(&sim->skeletons, NIL, classes, &_AfxSklClsConfig);
             AfxMountClass(&sim->models, NIL, classes, &_AfxMdlClsConfig);
             AfxMountClass(&sim->bodies, NIL, classes, &_AwxBodClsConfig);
-            AfxMountClass(&sim->motors, NIL, classes, &_AfxMotClsConfig);
+            AfxMountClass(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
+            AfxMountClass(&sim->motions, NIL, classes, &_AwxMotClsConfig);
+            AfxMountClass(&sim->animations, NIL, classes, &_AwxAniClsConfig);
 
             AfxMountClass(&sim->entities, NIL, classes, &_AfxEntClsConfig);
             AfxMountClass(&sim->lights, NIL, classes, &_AfxLitClsConfig);
 
             AfxMountClass(&sim->renderers, NIL, classes, &_AfxRndClsConfig);
+
 
         }
 
@@ -424,7 +429,7 @@ _AFX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig _AfxSimClsConfig =
+_AKX afxClassConfig _AfxSimClsConfig =
 {
     .fcc = afxFcc_SIM,
     .name = "Simulation",
@@ -437,22 +442,33 @@ _AFX afxClassConfig _AfxSimClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[])
+_AKX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
-
     afxClass* cls = AfxGetSimulationClass();
-    AfxAssertClass(cls, afxFcc_SIM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)simulations, (void const*[]) { (void*)config }))
-        AfxThrowError();
+    static afxBool simClsMounted = FALSE;
 
-    AfxAssertObjects(cnt, simulations, afxFcc_SIM);
+    if (!simClsMounted)
+    {
+        AfxMountClass(cls, NIL, NIL, &_AfxSimClsConfig);
+        simClsMounted = TRUE;
+    }
 
+    if (!simClsMounted) AfxThrowError();
+    else
+    {
+        AfxAssertClass(cls, afxFcc_SIM);
+
+        if (AfxAcquireObjects(cls, cnt, (afxObject*)simulations, (void const*[]) { (void*)config }))
+            AfxThrowError();
+
+        AfxAssertObjects(cnt, simulations, afxFcc_SIM);
+    }
     return err;
 }
 
-_AFX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
+_AKX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -462,7 +478,7 @@ _AFX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimula
     return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
 }
 
-_AFX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[])
+_AKX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -472,10 +488,17 @@ _AFX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simu
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)simulations);
 }
 
-_AFX afxNat AfxCountSimulations(void)
+_AKX afxNat AfxCountSimulations(void)
 {
     afxError err = AFX_ERR_NONE;
     afxClass* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
     return AfxCountInstances(cls);
+}
+
+_AKX afxClass* AfxGetSimulationClass(void)
+{
+    afxError err = AFX_ERR_NONE;
+    static afxClass _simCls = { 0 };
+    return &_simCls;
 }

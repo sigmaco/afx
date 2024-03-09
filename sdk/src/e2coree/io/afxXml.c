@@ -191,8 +191,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
     attributes = AfxCoallocate(mmu, 1, sizeof(afxXmlAttr*), 0, AfxHint());
     attributes[0] = 0;
 
-    afxFixedString128 tmpStr;
-    AfxMakeFixedString128(&tmpStr, tag_open);
+    afxString128 tmpStr;
+    AfxMakeString128(&tmpStr, tag_open);
     tmp = (char*)AfxGetStringStorage(&tmpStr.str,0);
 
     token = xml_strtok_r(tmp, " ", &rest); // skip the first value

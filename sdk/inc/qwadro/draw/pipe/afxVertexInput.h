@@ -55,11 +55,11 @@ struct afxBaseVertexInput
 #endif
 #endif
 
-AFX afxNat              AfxCountVertexInputStreams(afxVertexInput vin);
-AFX afxNat              AfxCountVertexInputAttributes(afxVertexInput vin);
+AVX afxNat              AfxCountVertexInputStreams(afxVertexInput vin);
+AVX afxNat              AfxCountVertexInputAttributes(afxVertexInput vin);
 
-AFX afxNat              AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx);
+AVX afxNat              AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx);
 
-AFX afxVertexInput      AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[]);
+AVX afxVertexInput      AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[]);
 
 #endif//AFX_VERTEX_INPUT_H

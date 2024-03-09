@@ -26,21 +26,21 @@
 // SHADER BLUEPRINT                                                           //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFXINL void AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxUri const *uri)
+_AVXINL void AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
     AfxCopyUri(&blueprint->uri.uri, uri);
 }
 
-_AFXINL void AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry)
+_AVXINL void AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
     AfxCopyString(&blueprint->entry.str, entry);
 }
 
-_AFXINL void AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage)
+_AVXINL void AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -48,7 +48,7 @@ _AFXINL void AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShader
     blueprint->stage = stage;
 }
 
-_AFXINL afxError AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range)
+_AVXINL afxError AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -70,7 +70,7 @@ _AFXINL afxError AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void c
     return err;
 }
 
-_AFXINL afxError AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range)
+_AVXINL afxError AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -103,7 +103,7 @@ _AFXINL afxError AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *bluepri
     return err;
 }
 
-_AFXINL afxError AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri)
+_AVXINL afxError AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -137,7 +137,7 @@ _AFXINL afxError AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *bluep
     return err;
 }
 
-_AFXINL afxError AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name)
+_AVXINL afxError AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -161,7 +161,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint
     return err;
 }
 
-_AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxNat stream, afxString const *semantic)
+_AVXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxNat stream, afxString const *semantic)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -181,7 +181,7 @@ _AFXINL afxError AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, a
     return err;
 }
 
-_AFXINL void AfxShaderBlueprintErase(afxShaderBlueprint *blueprint)
+_AVXINL void AfxShaderBlueprintErase(afxShaderBlueprint *blueprint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -219,7 +219,7 @@ _AFXINL void AfxShaderBlueprintErase(afxShaderBlueprint *blueprint)
     blueprint->topology = NIL;
 }
 
-_AFXINL afxError AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[])
+_AVXINL afxError AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(blueprint, afxFcc_SHDB);
@@ -271,7 +271,7 @@ _AFXINL afxError AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt
     return err;
 }
 
-_AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt)
+_AVXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(blueprint);
@@ -281,14 +281,14 @@ _AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderSta
     //AfxAssertObjects(1, &mmu, afxFcc_MMU);
     blueprint->mmu = mmu;
 
-    AfxMakeFixedUri128(&blueprint->uri, NIL);
+    AfxMakeUri128(&blueprint->uri, NIL);
 
     if (uri)
         AfxCopyUri(&blueprint->uri.uri, uri);
 
     blueprint->stage = stage;
 
-    AfxMakeFixedString8(&blueprint->entry, entry);
+    AfxMakeString8(&blueprint->entry, entry);
 
     AfxAllocateArray(&blueprint->codes, AfxMax(estCodeLen, 2048), sizeof(afxByte), NIL);
     AfxAllocateArray(&blueprint->resources, AfxMax(estResCnt, 16), sizeof(afxShaderBlueprintResource), NIL); // if data is reallocated, autoreference by strings will be broken YYYYYYYYYY
@@ -301,7 +301,7 @@ _AFXINL void AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderSta
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxPrintShader(afxShader shd, afxUri const *uri)
+_AVX afxError AfxPrintShader(afxShader shd, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &shd, afxFcc_SHD);
@@ -323,7 +323,7 @@ _AFX afxError AfxPrintShader(afxShader shd, afxUri const *uri)
     return err;
 }
 
-_AFX afxError AfxSerializeShader(afxShader shd, afxStream ios)
+_AVX afxError AfxSerializeShader(afxShader shd, afxStream ios)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
@@ -334,7 +334,7 @@ _AFX afxError AfxSerializeShader(afxShader shd, afxStream ios)
     return err;
 }
 
-_AFX afxNat AfxCountShaderInterfaces(afxShader shd)
+_AVX afxNat AfxCountShaderInterfaces(afxShader shd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &shd, afxFcc_SHD);
@@ -342,7 +342,7 @@ _AFX afxNat AfxCountShaderInterfaces(afxShader shd)
     return shd->resDeclCnt;
 }
 
-_AFX afxResult AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[])
+_AVX afxResult AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat cnt, afxShaderResource rsrc[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(rsrc);
@@ -366,14 +366,14 @@ _AFX afxResult AfxDescribeShaderInterfaces(afxShader shd, afxNat first, afxNat c
     return rslt;
 }
 
-_AFX afxShaderStage AfxGetShaderStage(afxShader shd)
+_AVX afxShaderStage AfxGetShaderStage(afxShader shd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &shd, afxFcc_SHD);
     return shd->stage;
 }
 
-_AFX afxUri const* AfxShaderGetUri(afxShader shd)
+_AVX afxUri const* AfxShaderGetUri(afxShader shd)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -384,7 +384,7 @@ _AFX afxUri const* AfxShaderGetUri(afxShader shd)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[])
+_AVX afxNat AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
@@ -395,7 +395,7 @@ _AFX afxNat AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, a
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)shaders);
 }
 
-_AFX afxError AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shaders[])
+_AVX afxError AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBlueprint const blueprint[], afxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -412,7 +412,7 @@ _AFX afxError AfxCompileShaders(afxDrawContext dctx, afxNat cnt, afxShaderBluepr
     return err;
 }
 
-_AFX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -426,8 +426,8 @@ _AFX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxX
     else
     {
 #if 0
-        afxFixedString128 tmp;
-        AfxMakeFixedString128(&tmp);
+        afxString128 tmp;
+        AfxMakeString128(&tmp);
         AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
 
         if (!AfxUriIsBlank(&blueprint.uri.uri))
@@ -449,7 +449,7 @@ _AFX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxX
     return shd;
 }
 
-_AFX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AVX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -499,7 +499,7 @@ _AFX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
     return shd;
 }
 
-_AFX afxError AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shaders[])
+_AVX afxError AfxCompileShadersFromXsh(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

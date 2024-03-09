@@ -132,7 +132,7 @@ _AFXINL afxError AfxAllocateArray(afxArray* arr, afxNat cap, afxNat unitSiz, voi
     arr->mem = NIL;
     arr->bytemap = NIL;
 
-    if (initial)
+    if (initial && arr->cap)
     {
         AfxReserveArraySpace(arr, cap);
         AfxFill(cap, unitSiz, initial, arr->bytemap);

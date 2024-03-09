@@ -31,7 +31,7 @@
 #define _AFX_DRAW_C
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AFX_MODULE_C
+//#define _AFX_MODULE_C
 
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_DRAW_DEVICE_IMPL
@@ -382,9 +382,8 @@ typedef struct
     afxRaster       fboOpDstAnnex;
 } sglDpuIdd;
 
-AFX_OBJECT(afxDrawDevice)
+struct _afxDdevIdd
 {
-    struct _afxBaseDrawDevice base;
     WNDCLASSEX     wndClss;
     afxNat          dpuCnt;
     sglDpuIdd*      dpus;
@@ -698,15 +697,15 @@ AFX_DEFINE_STRUCT(_sglCmdDrawPrefab)
 AFX_DEFINE_STRUCT(_sglCmdBeginSynthesis)
 {
     _sglCmd                 cmd;
+    afxBool                 defFbo;
     afxLinkage              canvOpsLnk;
     afxCanvas               canv;
     afxRect                 area;
     afxNat32                layerCnt;
-    afxNat32                rasterCnt;
-    afxDrawTarget           rasters[_SGL_MAX_SURF_PER_CANV];
     afxDrawTarget           depth;
     afxDrawTarget           stencil;
-    afxBool                 defFbo;
+    afxNat32                rasterCnt;
+    afxDrawTarget           rasters[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBindRasters)
@@ -733,29 +732,38 @@ AFX_DEFINE_STRUCT(_sglCmdVertexSources)
     _sglCmd                     cmd;
     afxNat32                        first, cnt;
     //afxVertexInputSource            spec[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
-    afxBuffer           buf[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
-    afxNat32            offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the start of buffer.
-    afxNat32            range[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the size in bytes of vertex data bound from buffer.
-    afxNat32            stride[SGL_MAX_VERTEX_ATTRIB_BINDINGS]; /// the byte stride between consecutive elements within the buffer.
+    struct
+    {
+        afxBuffer       buf;
+        afxNat32        offset;
+        afxNat32        range;
+        afxNat32        stride;
+    }                   sources[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdVertexStreams)
 {
     _sglCmd                     cmd;
     afxNat cnt;
-    afxNat srcIdx[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
-    afxNat stride[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
-    afxBool instance[SGL_MAX_VERTEX_ATTRIB_BINDINGS];
+    struct
+    {
+        afxNat  srcIdx;
+        afxNat  stride;
+        afxBool instance;
+    }           streams[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdVertexAttributes)
 {
     _sglCmd                     cmd;    
     afxNat cnt;
-    afxNat location[SGL_MAX_VERTEX_ATTRIBS];
-    afxVertexFormat fmt[SGL_MAX_VERTEX_ATTRIBS];
-    afxNat srcIdx[SGL_MAX_VERTEX_ATTRIBS];
-    afxNat32 offset[SGL_MAX_VERTEX_ATTRIBS];
+    struct
+    {
+        afxNat location;
+        afxVertexFormat fmt;
+        afxNat srcIdx;
+        afxNat32 offset;
+    }       attrs[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBufferRange)
@@ -817,7 +825,7 @@ AFX_DEFINE_STRUCT(_sglCmdPackRasterRegions)
     afxRaster ras;
     afxBuffer buf;
     afxNat opCnt;
-    afxRasterIoOp ops[8];
+    afxRasterIoOp ops[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdRwRasterRegions)
@@ -826,9 +834,9 @@ AFX_DEFINE_STRUCT(_sglCmdRwRasterRegions)
     afxBool         down;
     afxRaster ras;
     afxStream ios;
-    afxNat opCnt;
-    afxRasterIoOp ops[8];
     afxCodec cdc;
+    afxNat opCnt;
+    afxRasterIoOp ops[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdCopyRasterRegions)
@@ -837,7 +845,7 @@ AFX_DEFINE_STRUCT(_sglCmdCopyRasterRegions)
     afxRaster           src;
     afxRaster           dst;
     afxNat              opCnt;
-    afxRasterCopyOp     ops[8];
+    afxRasterCopyOp     ops[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdRegenerateMipmaps)
@@ -855,7 +863,7 @@ AFX_DEFINE_STRUCT(_sglCmdSwizzleRasterRegions)
     afxColorSwizzle     a;
     afxColorSwizzle     b;
     afxNat              rgnCnt;
-    afxRasterRegion     rgn[8];
+    afxRasterRegion     rgn[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdFlipRasterRegions)
@@ -864,17 +872,17 @@ AFX_DEFINE_STRUCT(_sglCmdFlipRasterRegions)
     afxRaster           ras;
     afxM4d              m;
     afxNat              rgnCnt;
-    afxRasterRegion     rgn[8];
+    afxRasterRegion     rgn[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBufIo)
 {
     _sglCmd         cmd;
     afxBuffer       buf;
-    afxNat          opCnt;
-    afxBufferIoOp   ops[8];
     afxBool         export;
     afxStream       io;
+    afxNat          opCnt;
+    afxBufferIoOp   ops[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBufRw)
@@ -884,8 +892,11 @@ AFX_DEFINE_STRUCT(_sglCmdBufRw)
     afxNat          offset;
     afxNat          range;
     afxBool         toHost;
-    void*           data;
-    void const*     dataConst;
+    union
+    {
+        void*       dst;
+        afxByte     src[];
+    };
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBufCpy)
@@ -894,7 +905,7 @@ AFX_DEFINE_STRUCT(_sglCmdBufCpy)
     afxBuffer src;
     afxBuffer dst;
     afxNat opCnt;
-    afxBufferCopyOp ops[8];
+    afxBufferCopyOp ops[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBufSet)
@@ -923,8 +934,8 @@ AFX_DEFINE_STRUCT(_sglCmdScissor)
 {
     _sglCmd                     cmd;
     afxNat32                        first, cnt;
-    afxRect                         rect[SGL_MAX_VIEWPORTS];
     afxBool                         reset;
+    afxRect                         rect[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdArea)
@@ -932,16 +943,16 @@ AFX_DEFINE_STRUCT(_sglCmdArea)
     _sglCmd                     cmd;
     afxBool                         exclusive;
     afxNat32                        first, cnt;
-    afxRect                         rect[SGL_MAX_VIEWPORTS];
     afxBool                         reset;
+    afxRect                         rect[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdViewport)
 {
     _sglCmd                     cmd;
     afxNat32                        first, cnt;
-    afxViewport                     vp[SGL_MAX_VIEWPORTS];
     afxBool                         reset;
+    afxViewport                     vp[];
 };
 
 AFX_DEFINE_STRUCT(_sglCmdNextPass)

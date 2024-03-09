@@ -48,10 +48,10 @@ AFX_DEFINE_STRUCT(awxSky)
     afxSampler      smp;
 };
 
-AFX afxError    AfxBuildSkybox(awxSky* sky, afxSimulation sim);
+AKX afxError    AfxBuildSkybox(awxSky* sky, afxSimulation sim);
 
-AFX void        AfxStepSky(awxSky* sky, afxReal dt);
+AKX void        AfxStepSky(awxSky* sky, afxReal dt);
 
-AFX afxError    AfxDrawSky(afxDrawScript dscr, awxSky* sky);
+AKX afxError    AfxDrawSky(afxDrawScript dscr, awxSky* sky);
 
 #endif//AFX_SKY_H

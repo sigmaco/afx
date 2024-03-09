@@ -16,7 +16,7 @@
 
 #include "qwadro/math/afxVertex.h"
 
-_AFXINL afxReal AfxGetDistanceBetweenV3d(afxReal const v[3], afxReal const other[3])
+_AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)
 {
     // Contribution to us from Crytek
 
@@ -29,7 +29,7 @@ _AFXINL afxReal AfxGetDistanceBetweenV3d(afxReal const v[3], afxReal const other
     return AfxSqrt(AfxSumV3d(t));
 }
 
-_AFXINL afxReal AfxGetAngleBetweenV3d(afxReal const v[3], afxReal const other[3])
+_AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
 {
     // Contribution to us from Crytek
 
@@ -44,7 +44,7 @@ _AFXINL afxReal AfxGetAngleBetweenV3d(afxReal const v[3], afxReal const other[3]
 
 // ExtractNormalComponent
 
-_AFXINL void AfxExtractNormalV3dComponents(afxReal const v[3], afxReal const normal[3], afxReal parallel[3], afxReal perpendicular[3])
+_AFXINL void AfxExtractNormalV3dComponents(afxV3d const v, afxV3d const normal, afxV3d parallel, afxV3d perpendicular)
 {
     // Should be compatible with void XMVector3ComponentsFromNormal(XMVECTOR* pParallel, XMVECTOR* pPerpendicular, FXMVECTOR  V, FXMVECTOR  Normal)
 
@@ -61,7 +61,7 @@ _AFXINL void AfxExtractNormalV3dComponents(afxReal const v[3], afxReal const nor
 
 // Hermite
 
-_AFXINL void AfxHermiteV2d(afxReal v[2], afxReal const posA[2], afxReal const tanA[2], afxReal const posB[2], afxReal const tanB[2], afxReal t)
+_AFXINL void AfxHermiteV2d(afxV2d v, afxV2d const posA, afxV2d const tanA, afxV2d const posB, afxV2d const tanB, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -85,7 +85,7 @@ _AFXINL void AfxHermiteV2d(afxReal v[2], afxReal const posA[2], afxReal const ta
     AfxMadV2d(v, tb, tb, v);
 }
 
-_AFXINL void AfxHermiteV3d(afxReal v[3], afxReal const posA[3], afxReal const tanA[3], afxReal const posB[3], afxReal const tanB[3], afxReal t)
+_AFXINL void AfxHermiteV3d(afxV3d v, afxV3d const posA, afxV3d const tanA, afxV3d const posB, afxV3d const tanB, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -109,7 +109,7 @@ _AFXINL void AfxHermiteV3d(afxReal v[3], afxReal const posA[3], afxReal const ta
     AfxMadV3d(v, tb, tb, v);
 }
 
-_AFXINL void AfxHermiteV4d(afxReal v[4], afxReal const posA[4], afxReal const tanA[4], afxReal const posB[4], afxReal const tanB[4], afxReal t)
+_AFXINL void AfxHermiteV4d(afxV4d v, afxV4d const posA, afxV4d const tanA, afxV4d const posB, afxV4d const tanB, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -138,7 +138,7 @@ _AFXINL void AfxHermiteV4d(afxReal v[4], afxReal const posA[4], afxReal const ta
 
 // CatmullRom
 
-_AFXINL void AfxCatmullV2d(afxReal v[2], afxReal const a[2], afxReal const b[2], afxReal const c[2], afxReal const d[2], afxReal t)
+_AFXINL void AfxCatmullV2d(afxV2d v, afxV2d const a, afxV2d const b, afxV2d const c, afxV2d const d, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -162,7 +162,7 @@ _AFXINL void AfxCatmullV2d(afxReal v[2], afxReal const a[2], afxReal const b[2],
     AfxMadV2d(v, pd, d, v);
 }
 
-_AFXINL void AfxCatmullV3d(afxReal v[3], afxReal const a[3], afxReal const b[3], afxReal const c[3], afxReal const d[3], afxReal t)
+_AFXINL void AfxCatmullV3d(afxV3d v, afxV3d const a, afxV3d const b, afxV3d const c, afxV3d const d, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -186,7 +186,7 @@ _AFXINL void AfxCatmullV3d(afxReal v[3], afxReal const a[3], afxReal const b[3],
     AfxMadV3d(v, pd, d, v);
 }
 
-_AFXINL void AfxCatmullV4d(afxReal v[4], afxReal const a[4], afxReal const b[4], afxReal const c[4], afxReal const d[4], afxReal t)
+_AFXINL void AfxCatmullV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c, afxV4d const d, afxReal t)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -212,7 +212,7 @@ _AFXINL void AfxCatmullV4d(afxReal v[4], afxReal const a[4], afxReal const b[4],
 
 // Reflect
 
-_AFXINL void AfxReflectV2d(afxReal v[2], afxReal const incident[2], afxReal const normal[2])
+_AFXINL void AfxReflectV2d(afxV2d v, afxV2d const incident, afxV2d const normal)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -226,7 +226,7 @@ _AFXINL void AfxReflectV2d(afxReal v[2], afxReal const incident[2], afxReal cons
     AfxResubV2d(v, v, normal, incident);
 }
 
-_AFXINL void AfxReflectV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3])
+_AFXINL void AfxReflectV3d(afxV3d v, afxV3d const incident, afxV3d const normal)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -240,7 +240,7 @@ _AFXINL void AfxReflectV3d(afxReal v[3], afxReal const incident[3], afxReal cons
     AfxResubV3d(v, v, normal, incident);
 }
 
-_AFXINL void AfxReflectV4d(afxReal v[4], afxReal const incident[3], afxReal const normal[3])
+_AFXINL void AfxReflectV4d(afxV4d v, afxV3d const incident, afxV3d const normal)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -256,7 +256,7 @@ _AFXINL void AfxReflectV4d(afxReal v[4], afxReal const incident[3], afxReal cons
 
 // Refract
 
-_AFXINL void AfxRefractV2d(afxReal v[2], afxReal const incident[2], afxReal const normal[2], afxReal refracIdx)
+_AFXINL void AfxRefractV2d(afxV2d v, afxV2d const incident, afxV2d const normal, afxReal refracIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -294,7 +294,7 @@ _AFXINL void AfxRefractV2d(afxReal v[2], afxReal const incident[2], afxReal cons
     }
 }
 
-_AFXINL void AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal const normal[3], afxReal refracIdx)
+_AFXINL void AfxRefractV3d(afxV3d v, afxV3d const incident, afxV3d const normal, afxReal refracIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
@@ -332,7 +332,7 @@ _AFXINL void AfxRefractV3d(afxReal v[3], afxReal const incident[3], afxReal cons
     }
 }
 
-_AFXINL void AfxRefractV4d(afxReal v[4], afxReal const incident[3], afxReal const normal[3], afxReal refracIdx)
+_AFXINL void AfxRefractV4d(afxV4d v, afxV3d const incident, afxV3d const normal, afxReal refracIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);

@@ -677,7 +677,7 @@ _AFX afxError AfxMountClass(afxClass *cls, afxClass *base, afxChain* provider, a
             cls->mmu = NIL;
     }
 
-    AfxTakeChain(&cls->deriveds, cls);
+    AfxSetUpChain(&cls->deriveds, cls);
     AfxPushLinkage(&cls->provider, provider ? provider : &orphanClassChain);
 
     //AfxExitSlockExclusive(&cls->slock);
@@ -698,12 +698,12 @@ _AFX afxNat AfxIdentifyObject(afxObject obj)
     return idx;
 }
 
-_AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void const* udd[])
+_AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject handles[], void const* udd[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(cls, afxFcc_CLS);
     AfxAssert(cnt);
-    AfxAssert(obj);
+    AfxAssert(handles);
 
     if (cls->maxInstCnt && ((cls->maxInstCnt - cls->pool.totalUsedCnt) == 0)) AfxThrowError();
     else
@@ -741,10 +741,10 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
                     ptr->watchers = NIL;
                     ptr->watching = NIL;
 
-                    obj[i] = ptr + 1;
-                    AfxAssert(AfxIsAligned(obj[i], sizeof(void*)));
-                    AfxAssert(ptr == (((afxHandle*)(obj[i])) - 1));
-                    afxNat idxTmp = AfxIdentifyObject(obj[i]);
+                    handles[i] = ptr + 1;
+                    AfxAssert(AfxIsAligned(handles[i], sizeof(void*)));
+                    AfxAssert(ptr == (((afxHandle*)(handles[i])) - 1));
+                    afxNat idxTmp = AfxIdentifyObject(handles[i]);
                     AfxAssert(idx == idxTmp);
                 }
 
@@ -756,14 +756,14 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
             {
                 for (afxNat j = i; j--> 0;)
                 {
-                    ptr = obj[j];
+                    ptr = handles[j];
                     --ptr;
                     AfxAssertType(ptr, afxFcc_OBJ);
-                    obj[j] = ptr;
+                    handles[j] = ptr;
                 }
                 
                 if (i)
-                    AfxDeallocatePoolUnits(&cls->pool, i, (afxByte**)obj);
+                    AfxDeallocatePoolUnits(&cls->pool, i, (afxByte**)handles);
 
                 break;
             }
@@ -778,17 +778,17 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
             {
                 cookie.no = i;
 
-                AfxAssertObjects(1, &obj[i], cls->objFcc);
+                AfxAssertObjects(1, &handles[i], cls->objFcc);
 
-                if (_AfxClsRunSubsetCtor(cls, obj[i], &cookie))
+                if (_AfxClsRunSubsetCtor(cls, handles[i], &cookie))
                     AfxThrowError();
 
-                AfxAssertObjects(1, &obj[i], cls->objFcc);
+                AfxAssertObjects(1, &handles[i], cls->objFcc);
 
                 if (err)
                 {
                     if (i)
-                        AfxClassDismantleObjects(cls, i, obj);
+                        AfxClassDismantleObjects(cls, i, handles);
 
                     break;
                 }
@@ -798,13 +798,13 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
             {
                 for (afxNat j = cnt; j-- > 0;)
                 {
-                    ptr = obj[j];
+                    ptr = handles[j];
                     --ptr;
                     AfxAssertType(ptr, afxFcc_OBJ);
-                    obj[j] = ptr;
+                    handles[j] = ptr;
                 }
 
-                AfxDeallocatePoolUnits(&cls->pool, cnt, (afxByte**)obj);
+                AfxDeallocatePoolUnits(&cls->pool, cnt, (afxByte**)handles);
             }
         }
 
@@ -814,81 +814,95 @@ _AFX afxError AfxAcquireObjects(afxClass *cls, afxNat cnt, afxObject obj[], void
 
     if (!err)
     {
-        AfxAssertObjects(cnt, obj, cls->objFcc);
+        AfxAssertObjects(cnt, handles, cls->objFcc);
     }
     return err;
 }
 
-_AFX afxError AfxReacquireObjects(afxNat cnt, afxObject obj[])
+_AFX afxError AfxReacquireObjects(afxNat cnt, afxObject handles[])
 {
     afxError err = NIL;
     AfxAssert(cnt);
-    AfxAssert(obj);
+    AfxAssert(handles);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxHandle* inst = (afxHandle*)(obj[i]);
-        --inst;
-        AfxAssertType(inst, afxFcc_OBJ);
-        ++inst->refCnt;
+        afxObject obj = handles[i];
+
+        if (obj)
+        {
+            afxHandle* inst = (afxHandle*)(obj);
+            --inst;
+            AfxAssertType(inst, afxFcc_OBJ);
+            ++inst->refCnt;
+        }
     }
     return err;
 }
 
-_AFX afxBool AfxReleaseObjects(afxNat cnt, void* obj[])
+_AFX afxBool AfxReleaseObjects(afxNat cnt, void* handles[])
 {
     afxError err = NIL;
     AfxAssert(cnt);
-    AfxAssert(obj);
+    AfxAssert(handles);
     afxBool rslt = 0;
 
-    for (afxNat i = cnt; i--> 0;)
+    if (handles)
     {
-        afxHandle* inst = (afxHandle*)(obj[i]);
-        --inst;
-        AfxAssertType(inst, afxFcc_OBJ);
-        
-        if (inst->refCnt && (0 == --inst->refCnt))
+        for (afxNat i = cnt; i-- > 0;)
         {
-            ++rslt;
-            afxClass* cls = inst->cls;
-            AfxAssertType(cls, afxFcc_CLS);
-            AfxClassLockExclusive(cls);
+            afxObject obj = handles[i];
 
-            AfxAssert(inst->instIdx == AfxIdentifyObject(obj[i]));
-
-            // se der erro aqui, é porque você provavelmente está passando uma array como elemento aninhado (ex.: AfxReleaseObjects(n, (void*[]){ array })) ao invés de passar a array diretamente (ex.: AfxReleaseObjects(n, array));
-
-            if (err)
+            if (obj)
             {
-                int a = 0;
+                afxHandle* inst = (afxHandle*)(obj);
+                --inst;
+                AfxAssertType(inst, afxFcc_OBJ);
+
+                if (inst->refCnt && (0 == --inst->refCnt))
+                {
+                    ++rslt;
+                    afxClass* cls = inst->cls;
+                    AfxAssertType(cls, afxFcc_CLS);
+                    AfxClassLockExclusive(cls);
+
+                    AfxAssert(inst->instIdx == AfxIdentifyObject(obj));
+
+                    // se der erro aqui, é porque você provavelmente está passando uma array como elemento aninhado (ex.: AfxReleaseObjects(n, (void*[]){ array })) ao invés de passar a array diretamente (ex.: AfxReleaseObjects(n, array));
+
+                    if (err)
+                    {
+                        int a = 0;
+                    }
+
+
+                    AfxClassDismantleObjects(cls, 1, &obj);
+
+
+                    AfxDeallocatePoolUnit(&cls->pool, (void*)inst);
+                    AfxClassUnlockExclusive(cls);
+                }
             }
-
-
-            AfxClassDismantleObjects(cls, 1, &obj[i]);
-
-
-            AfxDeallocatePoolUnit(&cls->pool, (void*)inst);
-            AfxClassUnlockExclusive(cls);
         }
-    };
-
+    }
     return rslt;
 }
 
-_AFX afxResult _AfxAssertObjects(afxNat cnt, afxObject const obj[], afxFcc fcc)
+_AFX afxResult _AfxAssertObjects(afxNat cnt, afxObject const handles[], afxFcc fcc)
 {
     afxError err = NIL;
     AfxAssert(cnt);
-    AfxAssert(obj);
+    AfxAssert(handles);
     afxResult rslt = 0;
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (!obj[i]) err = -1;
+        afxObject obj = handles[i];
+
+        if (!obj) err = -1;
         else
         {
-            afxHandle* inst = obj[i];
+            afxHandle* inst = obj;
             --inst;
             AfxAssertType(inst, afxFcc_OBJ);
             afxClass* cls = inst->cls;
@@ -898,7 +912,7 @@ _AFX afxResult _AfxAssertObjects(afxNat cnt, afxObject const obj[], afxFcc fcc)
             while ((cls = AfxGetBaseClass(cls)));
 
             AfxAssertClass(cls, fcc);
-            AfxAssert(inst->instIdx == AfxIdentifyObject(obj[i]));
+            AfxAssert(inst->instIdx == AfxIdentifyObject(obj));
 
             if (err)
             {

@@ -15,8 +15,8 @@
  */
 
 #define _AFX_CORE_C
-#define _AFX_EXECUTABLE_C
-#define _AFX_ICD_C
+//#define _AFX_EXECUTABLE_C
+//#define _AFX_ICD_C
 #define _AFX_DRAW_C
 #define _AFX_THREAD_C
 #define _AFX_DRAW_THREAD_C
@@ -27,7 +27,7 @@
 #include "sgl.h"
 #include "sglDdrv.h"
 #include "qwadro/core/afxSystem.h"
- //#pragma comment(lib, "opengl32")
+#pragma comment(lib, "opengl32")
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
@@ -41,7 +41,7 @@ static const char*Ebenezer = "Ebenezer";
 extern afxClassConfig _SglDscrClsConfig;
 extern afxClassConfig _SglDqueClsConfig;
 
-AFXINL afxDrawSystem _AfxGetDsysData(void);
+AFXINL afxDrawSystem AfxGetDrawSystem(void);
 
 static const char *glVmtNames[] =
 {
@@ -768,8 +768,8 @@ static const char *wglNames[] =
 afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, char const *names[], void* vmt[], afxBool echo)
 {
     afxError err = AFX_ERR_NONE;
-    afxFixedString128 tmp;
-    AfxMakeFixedString128(&tmp, 0);
+    afxString128 tmp;
+    AfxMakeString128(&tmp, 0);
     afxString name;
     afxString arbAndExt[2];
     AfxMakeString(&arbAndExt[0], "ARB", 3);
@@ -779,6 +779,13 @@ afxError SglLoadOpenGlVmt(HMODULE opengl32, afxNat base, afxNat cnt, char const 
     AfxAssert(vmt);
     AfxAssert(opengl32);
     PROC(WINAPI *f)(LPCSTR) = (void*)GetProcAddress(opengl32, "wglGetProcAddress");
+    PROC(WINAPI *f2)(LPCSTR) = NIL;
+
+    if (!f)
+        f = (void*)GetProcAddress(opengl32, "DrvGetProcAddress");
+    else
+        if ((f2 = (void*)f("wglGetProcAddress")))
+            f = f2;
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -1056,10 +1063,13 @@ _SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxN
     GLint const sizv[] =
     {
         0,
+
         1,
         2,
         3,
         4,
+
+
     };
 
     //static_assert(afxVertexFormat_V4D == 4, "");
@@ -1067,11 +1077,31 @@ _SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxN
     GLenum const typv[] =
     {
         GL_INVALID_ENUM,
+
         GL_FLOAT,
         GL_FLOAT,
         GL_FLOAT,
         GL_FLOAT,
+
         GL_FLOAT,
+        GL_FLOAT,
+        GL_FLOAT,
+
+        GL_UNSIGNED_BYTE,
+        GL_UNSIGNED_BYTE,
+        GL_UNSIGNED_BYTE,
+        GL_UNSIGNED_BYTE,
+    };
+
+    afxNat32 const stridv[] =
+    {
+        0,
+
+        sizeof(afxReal),
+        sizeof(afxV2d),
+        sizeof(afxV3d),
+        sizeof(afxV4d),
+
     };
 
     if (siz)
@@ -1081,7 +1111,7 @@ _SGL void AfxToGlVertexFormat(afxVertexFormat fmt, GLint* siz, GLenum* typ, afxN
         *typ = typv[fmt];
 
     if (stride)
-        *stride = (sizv[fmt] * (typv[fmt] == GL_FLOAT ? sizeof(afxReal) : 0));
+        *stride = stridv[fmt];
 
     //static_assert(afxVertexFormat_TOTAL == 5, "");
 
@@ -1371,7 +1401,7 @@ _SGL LRESULT WINAPI _SglWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
                 afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
                 afxNat unitIdx;
                 AfxGetThreadingUnit(&unitIdx);
-                sglDpuIdd* dpu = &ddev->dpus[unitIdx];
+                sglDpuIdd* dpu = &ddev->idd->dpus[unitIdx];
 
                 
                 SglSwapBuffers(dpu->dc, dpu);
@@ -1416,7 +1446,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
     int(WINAPI*_wglGetPixelFormat)(HDC hdc);
 
     void* opengl32 = ddev->opengl32;
-    wglVmt* wgl = (wglVmt*)&ddev->dpus[unitIdx].wgl;
+    wglVmt* wgl = (wglVmt*)&ddev->idd->dpus[unitIdx].wgl;
     //SglLoadOpenGlVmt(opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, wgl->ptr, 0);
 
     _wglCreateContext = (void*)GetProcAddress(opengl32, "wglCreateContext");
@@ -1434,7 +1464,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
     HGLRC bkpGlrc = _wglGetCurrentContext();
 
     afxNat32 wndStyles = WS_DISABLED | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
-    HWND tmpHwnd = CreateWindowA(ddev->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, ddev);
+    HWND tmpHwnd = CreateWindowA(ddev->idd->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, ddev);
 
     if (!(tmpHwnd))
         AfxThrowError();
@@ -1480,10 +1510,10 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
                     SglLoadOpenGlVmt(opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, wgl->ptr, 0);
                     AfxAssert(wgl->ChoosePixelFormatARB);
 
-                    if (!(ddev->dpus[unitIdx].wnd = CreateWindowA(ddev->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, &ddev->dpus[unitIdx]))) AfxThrowError();
+                    if (!(ddev->idd->dpus[unitIdx].wnd = CreateWindowA(ddev->idd->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, &ddev->idd->dpus[unitIdx]))) AfxThrowError();
                     else
                     {
-                        if (!(ddev->dpus[unitIdx].dc = GetDC(ddev->dpus[unitIdx].wnd))) AfxThrowError();
+                        if (!(ddev->idd->dpus[unitIdx].dc = GetDC(ddev->idd->dpus[unitIdx].wnd))) AfxThrowError();
                         else
                         {
                             /*
@@ -1508,7 +1538,7 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
                                 { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB },
                                 { WGL_DOUBLE_BUFFER_ARB, GL_TRUE },
                                 { WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB }, // WGL_TYPE_RGBA_FLOAT_ARB
-                                { WGL_COLOR_BITS_ARB, GetDeviceCaps(ddev->dpus[unitIdx].dc, BITSPIXEL) },
+                                { WGL_COLOR_BITS_ARB, GetDeviceCaps(ddev->idd->dpus[unitIdx].dc, BITSPIXEL) },
                                 //{ WGL_ALPHA_BITS_ARB, 8 },
                                 //{ WGL_DEPTH_BITS_ARB, 0 },
                                 //{ WGL_STENCIL_BITS_ARB, 0 },
@@ -1522,18 +1552,18 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
                             };
 
                             UINT formatCount;
-                            ddev->dpus[unitIdx].dcPxlFmt = 0;
+                            ddev->idd->dpus[unitIdx].dcPxlFmt = 0;
 
-                            if (!wgl->ChoosePixelFormatARB(ddev->dpus[unitIdx].dc, &pxlAttrPairs[0][0], 0, 1, &(ddev->dpus[unitIdx].dcPxlFmt), &(formatCount))) AfxThrowError();
+                            if (!wgl->ChoosePixelFormatARB(ddev->idd->dpus[unitIdx].dc, &pxlAttrPairs[0][0], 0, 1, &(ddev->idd->dpus[unitIdx].dcPxlFmt), &(formatCount))) AfxThrowError();
                             else
                             {
-                                AfxAssert(ddev->dpus[unitIdx].dcPxlFmt);
+                                AfxAssert(ddev->idd->dpus[unitIdx].dcPxlFmt);
                                 AfxAssert(formatCount);
 
-                                AFX_ZERO(&ddev->dpus[unitIdx].dcPfd);
-                                SglDescribePixelFormat(ddev->dpus[unitIdx].dc, ddev->dpus[unitIdx].dcPxlFmt, sizeof(pfd), &(ddev->dpus[unitIdx].dcPfd), &wgl);
+                                AFX_ZERO(&ddev->idd->dpus[unitIdx].dcPfd);
+                                SglDescribePixelFormat(ddev->idd->dpus[unitIdx].dc, ddev->idd->dpus[unitIdx].dcPxlFmt, sizeof(pfd), &(ddev->idd->dpus[unitIdx].dcPfd), &wgl);
 
-                                if (!(SglSetPixelFormat(ddev->dpus[unitIdx].dc, ddev->dpus[unitIdx].dcPxlFmt, &(ddev->dpus[unitIdx].dcPfd), &wgl))) AfxThrowError();
+                                if (!(SglSetPixelFormat(ddev->idd->dpus[unitIdx].dc, ddev->idd->dpus[unitIdx].dcPxlFmt, &(ddev->idd->dpus[unitIdx].dcPfd), &wgl))) AfxThrowError();
                                 else
                                 {
                                     int ctxAttrPairs[][2] =
@@ -1549,30 +1579,30 @@ _SGL afxError _SglCreateCombinedDeviceContext(afxDrawDevice ddev, afxNat unitIdx
                                         { NIL, NIL }
                                     };
 
-                                    if (!(ddev->dpus[unitIdx].glrc = wgl->CreateContextAttribsARB(ddev->dpus[unitIdx].dc, unitIdx ? ddev->dpus[unitIdx].glrc : NIL, (void*)ctxAttrPairs))) AfxThrowError();
+                                    if (!(ddev->idd->dpus[unitIdx].glrc = wgl->CreateContextAttribsARB(ddev->idd->dpus[unitIdx].dc, unitIdx ? ddev->idd->dpus[unitIdx].glrc : NIL, (void*)ctxAttrPairs))) AfxThrowError();
                                     else
                                     {
-                                        if (!(wgl->MakeCurrent(ddev->dpus[unitIdx].dc, ddev->dpus[unitIdx].glrc))) AfxThrowError();
+                                        if (!(wgl->MakeCurrent(ddev->idd->dpus[unitIdx].dc, ddev->idd->dpus[unitIdx].glrc))) AfxThrowError();
                                         else
                                         {
                                             SglLoadOpenGlVmt(opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, wgl->ptr, 0 == unitIdx);
-                                            SglLoadOpenGlVmt(ddev->opengl32, 0, sizeof(glVmtNames) / sizeof(glVmtNames[0]), glVmtNames, &ddev->dpus[unitIdx].gl.ptr, 0 == unitIdx);
+                                            SglLoadOpenGlVmt(ddev->opengl32, 0, sizeof(glVmtNames) / sizeof(glVmtNames[0]), glVmtNames, &ddev->idd->dpus[unitIdx].gl.ptr, 0 == unitIdx);
 
                                             wgl->MakeCurrent(tmpHdc, tmpHrc);
                                         }
 
-                                        if (err && ddev->dpus[unitIdx].glrc)
-                                            wgl->DeleteContext(ddev->dpus[unitIdx].glrc);
+                                        if (err && ddev->idd->dpus[unitIdx].glrc)
+                                            wgl->DeleteContext(ddev->idd->dpus[unitIdx].glrc);
                                     }
                                 }
                             }
 
-                            if (err && ddev->dpus[unitIdx].dc)
-                                ReleaseDC(ddev->dpus[unitIdx].wnd, ddev->dpus[unitIdx].dc);
+                            if (err && ddev->idd->dpus[unitIdx].dc)
+                                ReleaseDC(ddev->idd->dpus[unitIdx].wnd, ddev->idd->dpus[unitIdx].dc);
                         }
 
-                        if (err && ddev->dpus[unitIdx].wnd)
-                            DestroyWindow(ddev->dpus[unitIdx].wnd);
+                        if (err && ddev->idd->dpus[unitIdx].wnd)
+                            DestroyWindow(ddev->idd->dpus[unitIdx].wnd);
                     }
                 }
 
@@ -1597,7 +1627,8 @@ _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
-    sglDpuIdd *dpu = &ddev->dpus[unitIdx];
+
+    sglDpuIdd *dpu = &ddev->idd->dpus[unitIdx];
     //wglVmt const* wgl = &dpu->wgl;
     glVmt const *gl = &dpu->gl;
 
@@ -1708,7 +1739,7 @@ _SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle)
     
     afxNat32 unitIdx;
     AfxGetThreadingUnit(&unitIdx);
-    sglDpuIdd*dpu = &ddev->dpus[unitIdx];
+    sglDpuIdd*dpu = &ddev->idd->dpus[unitIdx];
     AfxEnterSlockExclusive(&dpu->deletionLock);
     _sglDeleteGlRes delRes;
     delRes.gpuHandlePtr = gpuHandle;
@@ -1822,7 +1853,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     //afxNat procUnitIdx = AfxGetThreadingUnit();
-    sglDpuIdd *dpu = &ddev->dpus[unitIdx];
+    sglDpuIdd *dpu = &ddev->idd->dpus[unitIdx];
     //wglVmt const* wgl = &dpu->wgl;
     glVmt const* gl = &dpu->gl;
 
@@ -1831,8 +1862,13 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     HDC bkpHdc = NIL;
     HGLRC bkpGlrc = NIL;
     HMODULE opengl32;
+
+    afxIni const* ini = AfxGetIcdInitializer(AfxGetLinker(&ddev->dev.icd));
+
+    afxUri uri;
+    AfxIniGetUri(ini, &AfxString("OpenGL"), &AfxString("ApiFile"), &uri);
     
-    if (!(dpu->opengl32 = (opengl32 = LoadLibraryA("opengl32.dll")))) AfxError("");
+    if (!(dpu->opengl32 = (opengl32 = LoadLibraryA(AfxGetUriData(&uri, 0))))) AfxError("");
     else
     {
         _LoadWglBaseSymbols(opengl32, (wglVmt*)&dpu->wgl);
@@ -1846,7 +1882,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
             HDC tmpHdc;
             HGLRC tmpHrc;
 
-            if (!(tmpHwnd = CreateWindowA(ddev->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, ddev))) AfxThrowError();
+            if (!(tmpHwnd = CreateWindowA(ddev->idd->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, ddev))) AfxThrowError();
             else
             {
                 if (!(tmpHdc = GetDC(tmpHwnd))) AfxThrowError();
@@ -1896,7 +1932,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                             dpu->verMinor = verMinor;
                             dpu->verPatch = verPatch;
 
-                            if (!(dpu->wnd = CreateWindowA(ddev->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->wndClss.hInstance, dpu))) AfxThrowError();
+                            if (!(dpu->wnd = CreateWindowA(ddev->idd->wndClss.lpszClassName, "", wndStyles, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, dpu))) AfxThrowError();
                             else
                             {
                                 if (!(dpu->dc = GetDC(dpu->wnd))) AfxThrowError();
@@ -1925,7 +1961,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                         { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB },
                                         { WGL_DOUBLE_BUFFER_ARB, GL_TRUE },
                                         { WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB }, // WGL_TYPE_RGBA_FLOAT_ARB
-                                        { WGL_COLOR_BITS_ARB, GetDeviceCaps(ddev->dpus[unitIdx].dc, BITSPIXEL) },
+                                        { WGL_COLOR_BITS_ARB, GetDeviceCaps(ddev->idd->dpus[unitIdx].dc, BITSPIXEL) },
                                         { WGL_ALPHA_BITS_ARB, 8 },
                                         //{ WGL_DEPTH_BITS_ARB, 0 },
                                         //{ WGL_STENCIL_BITS_ARB, 0 },
@@ -1967,7 +2003,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                             { WGL_CONTEXT_MAJOR_VERSION_ARB, verMajor },
                                             { WGL_CONTEXT_MINOR_VERSION_ARB, verMinor },
                                             { WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB }, // WGL_CONTEXT_COMPATIBILITY_PROFILE_BIT_ARB
-                                            { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB
+                                            { WGL_CONTEXT_FLAGS_ARB, WGL_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB | WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB
     #ifdef _AFX_DEBUG
                                             | WGL_CONTEXT_DEBUG_BIT_ARB
     #endif
@@ -1981,7 +2017,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                                         dpu->wgl.DeleteContext(tmpHrc); // to avoid a anomalous error in kernel base it is needed to delete the temp context in order to create the definitive one.
                                         tmpHrc = NIL;
 
-                                        if (!(dpu->glrc = tmpWglExt.CreateContextAttribsARB(dpu->dc, unitIdx ? ddev->dpus[0].glrc : NIL, (void*)ctxAttrPairs))) AfxThrowError();
+                                        if (!(dpu->glrc = tmpWglExt.CreateContextAttribsARB(dpu->dc, unitIdx ? ddev->idd->dpus[0].glrc : NIL, (void*)ctxAttrPairs))) AfxThrowError();
                                         else
                                         {
                                             if (!(dpu->wgl.MakeCurrent(dpu->dc, dpu->glrc))) AfxThrowError();
@@ -2264,7 +2300,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         limits.maxBoundDescriptorSets = 4;
         limits.maxPushConstantsSize = 0;
 
-        ddev->base.limits = limits;
+        ddev->limits = limits;
 
         //dthrD->thr.proc = _SglDthrProcCb;
 
@@ -2296,7 +2332,7 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    sglDpuIdd *dpu = &ddev->dpus[unitIdx];
+    sglDpuIdd *dpu = &ddev->idd->dpus[unitIdx];
     glVmt const* gl = &dpu->gl;
 
     afxMmu mmu = AfxGetDrawSystemMmu();
@@ -2305,8 +2341,8 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
     AfxReleaseSlock(&dpu->deletionLock);
     AfxDeallocateQueue(&dpu->deletionQueue);
 
-    AfxDismountClass(&ddev->base.ports[unitIdx].scripts);
-    AfxDismountClass(&ddev->base.ports[unitIdx].queues);
+    AfxDismountClass(&ddev->ports[unitIdx].scripts);
+    AfxDismountClass(&ddev->ports[unitIdx].queues);
 
     gl->DeleteVertexArrays(1, &dpu->emptyVao); _SglThrowErrorOccuried();
 
@@ -2334,7 +2370,7 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNa
     AfxAssert(inputs);
     AfxAssert(cnt);
 
-    AfxLockMutex(&ddev->base.ioConMtx);
+    AfxLockMutex(&ddev->ioConMtx);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -2413,7 +2449,7 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNa
         }
     }
 
-    AfxUnlockMutex(&ddev->base.ioConMtx);
+    AfxUnlockMutex(&ddev->ioConMtx);
 
     return err;
 }
@@ -2426,7 +2462,7 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawContext dctx, afxN
     AfxAssert(outputs);
     AfxAssert(cnt);
 
-    AfxLockMutex(&ddev->base.ioConMtx);
+    AfxLockMutex(&ddev->ioConMtx);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -2506,7 +2542,7 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawContext dctx, afxN
         }
     }
 
-    AfxUnlockMutex(&ddev->base.ioConMtx);
+    AfxUnlockMutex(&ddev->ioConMtx);
 
     return err;
 }
@@ -2579,8 +2615,8 @@ _SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxDrawThread dthr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssertObjects(1, &dthr, afxFcc_DTHR);
-    afxDrawSystem dsys = _AfxGetDsysData();
-    AfxAssertType(dsys, afxFcc_DSYS);
+    afxDrawSystem dsys = AfxGetDrawSystem();
+    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
@@ -2597,7 +2633,7 @@ _SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxDrawThread dthr)
     return err;
 }
 
-_SGL afxError _SglDdevDtor(afxDrawDevice ddev)
+_SGL afxError _SglDdevIddDtor(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
@@ -2605,130 +2641,84 @@ _SGL afxError _SglDdevDtor(afxDrawDevice ddev)
     afxMmu mmu = AfxGetDrawSystemMmu();
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    for (afxNat i = 0; i < ddev->dpuCnt; i++)
+    for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
         if (_SglDestroyDpu(ddev, i))
             AfxThrowError();
 
-    _AfxUninstallChainedClasses(&ddev->base.classes);
+    AfxDeallocate(mmu, ddev->idd->dpus);
 
-    AfxReleaseMutex(&ddev->base.ioConMtx);
+    UnregisterClassA(ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.hInstance);
 
-    AfxDeallocate(mmu, ddev->dpus);
-
-    AfxDeallocate(mmu, ddev->base.ports);
-
-    UnregisterClass(ddev->wndClss.lpszClassName, ddev->wndClss.hInstance);
+    AfxDeallocate(mmu, ddev->idd);
+    ddev->idd = NIL;
 
     return err;
 }
 
-_SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
+_SGL afxError _SglDdevIddCtor(afxDrawDevice ddev)
 {
     AfxEntry("ddev=%p", ddev);
     afxError err = AFX_ERR_NONE;
 
-    afxDrawDeviceInfo const* info = ((afxDrawDeviceInfo const *)cookie->udd[1]) + cookie->no;
-    AfxAssert(info);
-
     afxMmu mmu = AfxGetDrawSystemMmu();
 
-    //SglLoadOpenGlVmt(ddev->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, ddev->p);
-
-    ddev->wndClss.cbSize = sizeof(ddev->wndClss); // only on EX
-    ddev->wndClss.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-    ddev->wndClss.lpfnWndProc = _SglWndHndlngPrcW32Callback;
-    ddev->wndClss.cbClsExtra = sizeof(ddev);
-    ddev->wndClss.cbWndExtra = sizeof((afxDrawOutput)0);
-    ddev->wndClss.hInstance = GetModuleHandleA(NULL);
-    ddev->wndClss.hIcon = NULL;
-    ddev->wndClss.hCursor = NULL;
-    ddev->wndClss.hbrBackground = NULL;
-    ddev->wndClss.lpszMenuName = NULL;
-    ddev->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build";
-    ddev->wndClss.hIconSm = NULL;
-
-    if (!(RegisterClassEx(&(ddev->wndClss)))) AfxThrowError();
+    if (!(ddev->idd = AfxAllocate(mmu, 1, (ddev->iddSiz = sizeof(ddev->idd[0])), 0, AfxHint()))) AfxThrowError();
     else
     {
-        AfxComment("Listing mem available display devices...\n");
+        //SglLoadOpenGlVmt(ddev->opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, ddev->p);
 
-        //HDC hdc = NIL;
-        afxNat idx = 0;
-        while (1)
-        {
-            DISPLAY_DEVICE dispdev = { 0 };
-            dispdev.cb = sizeof(dispdev);
+        ddev->idd->wndClss.cbSize = sizeof(ddev->idd->wndClss); // only on EX
+        ddev->idd->wndClss.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+        ddev->idd->wndClss.lpfnWndProc = _SglWndHndlngPrcW32Callback;
+        ddev->idd->wndClss.cbClsExtra = sizeof(ddev);
+        ddev->idd->wndClss.cbWndExtra = sizeof((afxDrawOutput)0);
+        ddev->idd->wndClss.hInstance = GetModuleHandleA(NULL);
+        ddev->idd->wndClss.hIcon = NULL;
+        ddev->idd->wndClss.hCursor = NULL;
+        ddev->idd->wndClss.hbrBackground = NULL;
+        ddev->idd->wndClss.lpszMenuName = NULL;
+        ddev->idd->wndClss.lpszClassName = "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build";
+        ddev->idd->wndClss.hIconSm = NULL;
 
-            if (!(EnumDisplayDevices(NULL, idx, &dispdev, NIL))) break;
-            else
-            {
-                AfxComment("#%u = %s (%s) %x", idx, dispdev.DeviceString, dispdev.DeviceName, dispdev.StateFlags);
-                idx++;
-            }
-        };
-
-        AfxReflectString(info->domain, &ddev->base.domain);
-        AfxReflectString(info->name, &ddev->base.name);
-
-        afxChain *classes = &ddev->base.classes;
-        AfxTakeChain(classes, ddev);
-
-        ddev->base.caps = info->caps ? *info->caps : (afxDrawDeviceCaps) { 0 };
-        ddev->base.limits = info->limits ? *info->limits : (afxDrawDeviceLimits) { 0 };
-
-        ddev->base.serving = FALSE;
-
-        ddev->base.clipCfg = AFX_CLIP_SPACE_OPENGL;
-
-        ddev->base.procCb = _SglDdevProcCb;
-        ddev->base.relinkDin = _SglDdevRelinkDinCb;
-        ddev->base.relinkDout = _SglDdevRelinkDoutCb;
-        AfxTakeMutex(&ddev->base.ioConMtx, AFX_MTX_PLAIN);
-
-        afxNat portCnt = AfxMax(1, AfxMin(AfxGetThreadingCapacity(), info->portCnt));
-        ddev->base.portCnt = portCnt;
-        AfxAssert(ddev->base.portCnt);
-
-        if (!(ddev->base.ports = AfxAllocate(mmu, portCnt, sizeof(ddev->base.ports[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(RegisterClassExA(&(ddev->idd->wndClss)))) AfxThrowError();
         else
         {
-            for (afxNat i = 0; i < portCnt; i++)
+            AfxComment("Listing mem available display devices...\n");
+
+            //HDC hdc = NIL;
+            afxNat idx = 0;
+            while (1)
             {
-                ddev->base.ports[i].portCaps = info->portCaps[i];
+                DISPLAY_DEVICE dispdev = { 0 };
+                dispdev.cb = sizeof(dispdev);
 
-                afxClassConfig tmpClsCfg;
-                
-                tmpClsCfg = _SglDscrClsConfig;
-                tmpClsCfg.mmu = mmu;
-                AfxMountClass(&ddev->base.ports[i].scripts, NIL, classes, &tmpClsCfg);
+                if (!(EnumDisplayDevices(NULL, idx, &dispdev, NIL))) break;
+                else
+                {
+                    AfxComment("#%u = %s (%s) %x", idx, dispdev.DeviceString, dispdev.DeviceName, dispdev.StateFlags);
+                    idx++;
+                }
+            };
 
-                tmpClsCfg = _SglDqueClsConfig;
-                tmpClsCfg.mmu = mmu;
-                AfxMountClass(&ddev->base.ports[i].queues, NIL, classes, &tmpClsCfg);
-            }
+            ddev->clipCfg = AFX_CLIP_SPACE_OPENGL;
+            ddev->procCb = _SglDdevProcCb;
+            ddev->relinkDin = _SglDdevRelinkDinCb;
+            ddev->relinkDout = _SglDdevRelinkDoutCb;
 
-            afxDrawSystem dsys = _AfxGetDsysData();
-            AfxAssertType(dsys, afxFcc_DSYS);
+            ddev->idd->dpuCnt = ddev->portCnt;
 
-            // dctx must be after dque
-            AfxMountClass(&ddev->base.contexts, &dsys->dcontexts, classes, info->dctxClsConfig);
-            AfxMountClass(&ddev->base.outputs, &dsys->doutputs, classes, info->doutClsConfig);
-            AfxMountClass(&ddev->base.inputs, &dsys->dinputs, classes, info->dinClsConfig);
-
-            ddev->dpuCnt = portCnt;
-
-            if (!(ddev->dpus = AfxAllocate(mmu, ddev->dpuCnt, sizeof(ddev->dpus[0]), 0, AfxHint()))) AfxThrowError();
+            if (!(ddev->idd->dpus = AfxAllocate(mmu, ddev->idd->dpuCnt, sizeof(ddev->idd->dpus[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
-                AfxZero(ddev->dpuCnt, sizeof(ddev->dpus[0]), ddev->dpus);
+                AfxZero(ddev->idd->dpuCnt, sizeof(ddev->idd->dpus[0]), ddev->idd->dpus);
 
-                for (afxNat i = 0; i < ddev->dpuCnt; i++)
+                for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
                 {
                     if (_SglBuildDpu(ddev, i))
                     {
                         AfxThrowError();
 
-                        for (afxNat j = 0; j < i; j++)
+                        for (afxNat j = i; j-- > 0;)
                             if (_SglDestroyDpu(ddev, j))
                                 AfxThrowError();
                     }
@@ -2737,30 +2727,28 @@ _SGL afxError _SglDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
                 afxNat unitIdx;
                 AfxGetThreadingUnit(&unitIdx);
 
-                //wglVmt const* wgl = &ddev->dpus[unitIdx].wgl;
+                //wglVmt const* wgl = &ddev->idd->dpus[unitIdx].wgl;
 
-                if (!ddev->dpus[unitIdx].wgl.MakeCurrent(ddev->dpus[unitIdx].dc, ddev->dpus[unitIdx].glrc))
+                if (!ddev->idd->dpus[unitIdx].wgl.MakeCurrent(ddev->idd->dpus[unitIdx].dc, ddev->idd->dpus[unitIdx].glrc))
                     AfxThrowError();
 
                 afxDrawDevice devInfo;
 
-                //ddev->dpuCnt = 1;
+                //ddev->idd->dpuCnt = 1;
 
-                AfxAssert(ddev->base.procCb);
-                ddev->base.serving = TRUE;
+                AfxAssert(ddev->procCb);
+                ddev->dev.serving = TRUE;
             }
 
             if (err)
-                AfxDeallocate(mmu, ddev->base.ports);
+            {
+                UnregisterClassA(ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.hInstance);
+            }
         }
 
         if (err)
-        {
-            _AfxUninstallChainedClasses(&ddev->base.classes);
-            UnregisterClass(ddev->wndClss.lpszClassName, ddev->wndClss.hInstance);
-        }
+            AfxDeallocate(mmu, ddev->idd);
     }
-
     return err;
 }
 
@@ -2768,86 +2756,45 @@ _SGL afxError AfxIcdHookPoint(afxIcd icd)
 {
     afxError err = AFX_ERR_NONE;
 
-    //afxUri file;
-    //AfxMakeUri(&file, "e2draw.icd", 0);
-    static afxString name, vendor, website, note;
-    AfxMakeString(&icd->name, "OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem", 0);
-    AfxMakeString(&icd->vendor, "SIGMA Technology Group", 0);
-    AfxMakeString(&icd->website, "www.sigmaco.org", 0);
-    AfxMakeString(&icd->note, "Vesa", 0);
-    icd->verMajor = 0;
-    icd->verMinor = 7;
-    icd->verPatch = 2;
-
-    static afxClassConfig const devClsExt =
+    afxDrawDeviceCaps const devCaps = { 0 };
+    afxDrawPortCaps const portCaps[] =
     {
-        .fcc = afxFcc_DDEV,
-        .name = "Draw Device",
-        .unitsPerPage = 1,
-        .size = sizeof(AFX_OBJECT(afxDrawDevice)),
-        .mmu = NIL,
-        .ctor = (void*)_SglDdevCtor,
-        .dtor = (void*)_SglDdevDtor
+        { .queFlags = AFX_DQUE_DRAW | AFX_DQUE_COMPUTE | AFX_DQUE_TRANSFER | AFX_DQUE_VHS, .queCnt = 16 },
+        { .queFlags = AFX_DQUE_COMPUTE | AFX_DQUE_TRANSFER, .queCnt = 2 },
     };
-    
+    static afxString devDomain, devName;
+    AfxMakeString(&devDomain, "targa", 0);
+    AfxMakeString(&devName, "Vesa", 0);
+    afxDrawDeviceInfo const devInfo[] =
+    {
+        {
+            .domain = &devDomain,
+            .name = &devName,
+            .caps = &devCaps,
+            .portCnt = sizeof(portCaps) / sizeof(portCaps[0]),
+            .portCaps = portCaps,
+            .dctxClsConfig = &_SglDctxClsConfig,
+            .doutClsConfig = &_SglDoutClsConfig,
+            .dinClsConfig = &_SglDinClsConfig,
+            .dscrClsConfig = &_SglDscrClsConfig,
+            .dqueClsConfig = &_SglDqueClsConfig,
+            .iddCtor = (void*)_SglDdevIddCtor,
+            .iddDtor = (void*)_SglDdevIddDtor
+        }
+    };
 
-    afxUri file;
-    AfxExcerptUriFile(AfxGetExecutablePath(&icd->exe), &file);
+    afxNat const devCnt = AFX_COUNTOF(devInfo);
+    afxDrawDevice devices[AFX_COUNTOF(devInfo)] = { NIL };
 
-    AfxLogMessageFormatted(0xFFFF0000, "\nInstalling '%.*s' ICD on draw system...\n\t%.*s %u.%u.%u\n\tVendor: %.*s <%.*s>\n\tNote: %.*s", AfxPushString(AfxGetUriString(&file)), AfxPushString(&icd->name), icd->verMajor, icd->verMinor, icd->verPatch, AfxPushString(&icd->vendor), AfxPushString(&icd->website), AfxPushString(&icd->note));
-
-    //ddrv->mdle = info->mdle;
-    //AfxAssertObjects(1, &ddrv->mdle, afxFcc_EXE);
-    //AfxReacquireObjects(1, (void*[]) { ddrv->mdle });
-
-    afxChain *classes = &icd->classes;
-    AfxTakeChain(classes, icd);
-
-    if (AfxMountClass(&icd->devices, AfxGetDrawDeviceClass(), classes, &devClsExt)) AfxThrowError();
+    if (AfxRegisterDrawDevices(icd, devCnt, devInfo, devices)) AfxThrowError();
     else
     {
-        afxDrawDeviceCaps const devCaps = { 0 };
-        afxDrawPortCaps const portCaps[] =
-        {
-            { .queFlags = AFX_DQUE_DRAW | AFX_DQUE_COMPUTE | AFX_DQUE_TRANSFER | AFX_DQUE_VHS, .queCnt = 16 },
-            { .queFlags = AFX_DQUE_COMPUTE | AFX_DQUE_TRANSFER, .queCnt = 2 },
-        };
-        static afxString devDomain, devName;
-        AfxMakeString(&devDomain, "targa", 0);
-        AfxMakeString(&devName, "Vesa", 0);
-        afxDrawDeviceInfo const devInfo[] =
-        {
-            {
-                .domain = &devDomain,
-                .name = &devName,
-                .caps = &devCaps,
-                .portCnt = sizeof(portCaps) / sizeof(portCaps[0]),
-                .portCaps = portCaps,
-                .dctxClsConfig = &_SglDctxClsConfig,
-                .doutClsConfig = &_SglDoutClsConfig,
-                .dinClsConfig = &_SglDinClsConfig
-            }
-        };
-        afxNat const devCnt = AFX_COUNTOF(devInfo);
-        afxDrawDevice ddev[AFX_COUNTOF(devInfo)];
+        AfxAssertObjects(devCnt, devices, afxFcc_DDEV);
 
-        if (AfxAcquireObjects(&icd->devices, devCnt, (afxObject*)ddev, (void const*[]) { NIL, devInfo })) AfxThrowError();
-        else
-        {
-            AfxAssertObjects(devCnt, ddev, afxFcc_DDEV);
 
-            for (afxNat i = 0; i < 1; i++)
-            {
-
-                AfxLogMessageFormatted(0xFFFF0000, "\nDraw device '%.*s' <'%.*s'> registered on draw system", AfxPushString(devInfo[i].name), AfxPushString(devInfo[i].domain));
-            }
-
-            if (err)
-                AfxReleaseObjects(devCnt, (afxObject*)ddev);
-        }
 
         if (err)
-            _AfxUninstallChainedClasses(&icd->classes);
+            AfxReleaseObjects(devCnt, (afxObject*)devices);
     }
     return err;
 }

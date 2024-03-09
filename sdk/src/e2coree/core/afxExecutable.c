@@ -56,8 +56,8 @@ _AFX afxNat AfxFindSymbolAddresses(afxExecutable exe, afxNat cnt, afxString cons
     {
         void* p = NIL;
 
-        afxFixedString128 fs;
-        AfxMakeFixedString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
+        afxString128 fs;
+        AfxMakeString128(&fs, &names[j]); // needed due to zero-terminate string-based shit M$ APIs
 
         if ((p = (void*)GetProcAddress(osHandle, AfxGetStringData(&fs.str.str, 0))))
         {
@@ -157,8 +157,8 @@ _AFX afxError _AfxExeCtor(afxExecutable exe, afxCookie const* cookie)
     afxResult success = FALSE;
     afxResult loaded = FALSE;
     
-    afxFixedUri128 absUri;
-    AfxMakeFixedUri128(&absUri, NIL);
+    afxUri128 absUri;
+    AfxMakeUri128(&absUri, NIL);
 
     AfxResolveUri(afxFileFlag_R, uri, &absUri.uri);
 
@@ -186,7 +186,7 @@ _AFX afxError _AfxExeCtor(afxExecutable exe, afxCookie const* cookie)
     if (osHandle)
     {
         success = TRUE;
-        AfxMakeFixedUri128(&exe->path, uri);
+        AfxMakeUri128(&exe->path, uri);
         exe->osHandle = osHandle;
         exe->hasBeenLoaded = loaded;
         exe->demangle = TRUE;
@@ -228,7 +228,7 @@ _AFX afxError _AfxExeDtor(afxExecutable exe)
 _AFX afxClassConfig const _AfxMdleClsConfig =
 {
     .fcc = afxFcc_EXE,
-    .name = "Executable & Linkable File",
+    .name = "Executable & Linkable Module",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxExecutable)),
     .mmu = NIL,

@@ -1,0 +1,284 @@
+
+ afxDebug_w32.c:360
+  AfxAttachDebugTerminal()
+      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      
+     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     
+     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     
+     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     
+     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     
+     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     
+      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+                   (c) 2017 SIGMA, Engineering In Technology                   
+                                www.sigmaco.org                                
+                                                                               
+ Installing Qwadro Execution Ecosystem at 0fd9d6e8...
+ afxClass<Qwadro Execution Ecosystem>::ConstructObject(00501a20)
+ afxSystem_w32.c:318
+  _AfxSysCtor(sys=00501a20)
+ ERR afxInitialization.c:206?AfxIniLoadFromFile
+  1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.
+ Installing Thread Execution Unit at 00503150 by 00502a58...
+ Entering the Thread Execution Environment 8180
+ afxClass<Thread Execution Unit>::ConstructObject(004d3c40)
+ afxTxu_w32.c:399
+  _AfxTxuCtor(004d3c40)
+ Installing Memory Management Unit at 00502a6c by 00502a58...
+ Installing Thread at 0050308c by 00502a58...
+ Installing Device at 00503214 by 00502a58...
+ Installing Autonomous Service at 005032d8 by 00502a58...
+ Installing File at 00503524 by 00502a58...
+ Installing I/O Stream at 0050339c by 00502a58...
+ Installing Codec at 00503460 by 00502a58...
+ Installing File Archive at 005035e8 by 00502a58 over 00503524...
+ Installing Executable & Linkable File at 00502bf4 by 00502a58...
+ Installing Installable Client Driver at 00502cb8 by 00502a58...
+ Installing File System at 005036ac by 00502a58...
+ Installing Application at 00503834 by 00502a58...
+ Installing Human Input Device at 00502d7c by 00502a58 over 00503214...
+ Installing Keyboard at 00502e40 by 00502a58 over 00502d7c...
+ Installing Mouse at 00502f04 by 00502a58 over 00502d7c...
+ Installing Controller at 00502fc8 by 00502a58 over 00502d7c...
+ Installing String Catalog at 00502b30 by 00502a58...
+ Installing Simulation at 00503770 by 00502a58...
+ [!] afxSystem_w32.c:490?_AfxSysCtor
+  Memory page size: 4096
+ [!] afxSystem_w32.c:491?_AfxSysCtor
+  Logical processor count: 1
+ afxClass<Memory Management Unit>::ConstructObject(004d3d50)
+ afxArena.c:768
+  AfxAllocateArena(aren=00503964)
+ afxArena.c:769
+  AfxAllocateArena(spec=00000000,hint="afxSystem_w32.c:504!_AfxSysCtor")
+ afxClass<File System>::ConstructObject(0051b070)
+ Storage point "." 5 mounted -> "E:\qwadro\afx\\\".
+ afxClass<File System>::ConstructObject(0051b0e8)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system\".
+ afxClass<File System>::ConstructObject(0051b160)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system32\".
+ afxClass<File System>::ConstructObject(0051b1d8)
+ Storage point "system" 5 mounted -> "E:\qwadro\afx\\system32d\".
+ afxClass<File System>::ConstructObject(0051b250)
+ Storage point "code" 5 mounted -> "E:\qwadro\afx\\code\".
+ afxClass<File System>::ConstructObject(0051b2c8)
+ Storage point "sound" 5 mounted -> "E:\qwadro\afx\\sound\".
+ afxClass<File System>::ConstructObject(0051b390)
+ Storage point "data" 5 mounted -> "E:\qwadro\afx\\data\".
+ afxClass<File System>::ConstructObject(0051b408)
+ Storage point "art" 5 mounted -> "E:\qwadro\afx\\art\".
+ afxClass<File System>::ConstructObject(0051b480)
+ Storage point "tmp" 7 mounted -> "E:\qwadro\afx\\tmp\".
+ afxExecutable.c:243
+  AfxLoadExecutables(cnt=1,executables=00503934,uri=0032dbd0)
+ afxClass<Executable & Linkable File>::ConstructObject(0051d870)
+ afxExecutable.c:153
+  _AfxExeCtor(uri:system/e2coree.dll)
+ /qwadro/afx//system32d//e2coree.dll
+ afxKeyboard.c:290
+  AfxAcquireKeyboards(cnt=1,port=0032da34,keyboards=00503938)
+ afxClass<Keyboard, Human Input Device>ConstructingObject(00503c80)
+ afxClass<Human Input Device, Device>ConstructingObject(00503c80)
+ afxClass<Device>::ConstructObject(00503c80)
+ afxClass<Human Input Device>::ConstructObject(00503c80)
+ afxClass<Keyboard>::ConstructObject(00503c80)
+ afxKeyboard.c:241
+  _AfxKbdCtor(kbd=00503c80)
+ afxSoundSystem.c:127
+  _AfxSsysCtor(ssys=0051da90)
+ Installing Sound Device at 0051daac by 0051da98 over 00503214...
+ Installing Sound Context at 0051db70 by 0051da98...
+ Installing Sound Thread at 0051dc34 by 0051da98 over 0050308c...
+ Installing client driver <e2sound.inf>...
+ afxClass<Installable Client Driver>::ConstructObject(005045e0)
+ afxExecutable.c:243
+  AfxLoadExecutables(cnt=1,executables=00504604,uri=0032d284)
+ afxClass<Executable & Linkable File>::ConstructObject(0051d974)
+ afxExecutable.c:153
+  _AfxExeCtor(uri:e2sound.dll)
+Installing 'e2sound.dll' ICD on sound system...
+	A4D --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: 
+       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          
+      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        
+      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       
+      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      
+             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      
+      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      
+       ########    ###########    ########    ###       ###   ###     ###      
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               
+ Installing Sound Device at 0050461c by 00504608 over 0051daac...
+ afxClass<Sound Device, Sound Device>ConstructingObject(00504a20)
+ afxClass<Sound Device, Device>ConstructingObject(00504a20)
+ afxClass<Device>::ConstructObject(00504a20)
+ afxClass<Sound Device>::ConstructObject(00504a20)
+ afxClass<Sound Device>::ConstructObject(00504a20)
+ salSdev.c:419
+  _SalSdevCtor(sdev=00504a20)
+ Installing Sound Context at 00504b0c by 00504af8 over 0051db70...
+ 0  - Generic Software
+ Listing devices available with ALC_ENUMERATE_ALL_EXT
+ 0  - Generic Software on Alto-falantes (2- USB Audio Device)
+ 1  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))
+ 2  - Generic Software on Headphone (VIA HD Audio(Compatible))
+ Listing available capture devices:
+ 0  - Mixagem estéreo (VIA HD Audio(C
+ 1  - Microfone (VIA HD Audio(Compati
+ 2  - Microfone (2- USB Audio Device)
+ 000 alEnable core found.
+ 001 alDisable core found.
+ 002 alIsEnabled core found.
+ 003 alGetString core found.
+ 004 alGetBooleanv core found.
+ 005 alGetIntegerv core found.
+ 006 alGetFloatv core found.
+ 007 alGetDoublev core found.
+ 008 alGetBoolean core found.
+ 009 alGetInteger core found.
+ 010 alGetFloat core found.
+ 011 alGetDouble core found.
+ 012 alGetError core found.
+ 013 alIsExtensionPresent core found.
+ 014 alGetProcAddress core found.
+ 015 alGetEnumValue core found.
+ 016 alListenerf core found.
+ 017 alListener3f core found.
+ 018 alListenerfv core found.
+ 019 alListeneri core found.
+ 020 alListener3i core found.
+ 021 alListeneriv core found.
+ 022 alGetListenerf core found.
+ 023 alGetListener3f core found.
+ 024 alGetListenerfv core found.
+ 025 alGetListeneri core found.
+ 026 alGetListener3i core found.
+ 027 alGetListeneriv core found.
+ 028 alGenSources core found.
+ 029 alDeleteSources core found.
+ 030 alIsSource core found.
+ 031 alSourcef core found.
+ 032 alSource3f core found.
+ 033 alSourcefv core found.
+ 034 alSourcei core found.
+ 035 alSource3i core found.
+ 036 alSourceiv core found.
+ 037 alGetSourcef core found.
+ 038 alGetSource3f core found.
+ 039 alGetSourcefv core found.
+ 040 alGetSourcei core found.
+ 041 alGetSource3i core found.
+ 042 alGetSourceiv core found.
+ 043 alSourcePlayv core found.
+ 044 alSourceStopv core found.
+ 045 alSourceRewindv core found.
+ 046 alSourcePausev core found.
+ 047 alSourcePlay core found.
+ 048 alSourceStop core found.
+ 049 alSourceRewind core found.
+ 050 alSourcePause core found.
+ 051 alSourceQueueBuffers core found.
+ 052 alSourceUnqueueBuffers core found.
+ 053 alGenBuffers core found.
+ 054 alDeleteBuffers core found.
+ 055 alIsBuffer core found.
+ 056 alBufferData core found.
+ 057 alBufferf core found.
+ 058 alBuffer3f core found.
+ 059 alBufferfv core found.
+ 060 alBufferi core found.
+ 061 alBuffer3i core found.
+ 062 alBufferiv core found.
+ 063 alGetBufferf core found.
+ 064 alGetBuffer3f core found.
+ 065 alGetBufferfv core found.
+ 066 alGetBufferi core found.
+ 067 alGetBuffer3i core found.
+ 068 alGetBufferiv core found.
+ afxClass<File>::ConstructObject(00520240)
+ /qwadro/afx//sound//qwadroDeepNote44kHz
+ afxStream.c:1200
+  AfxAcquireStream(cap=0,flags=1,start=00000000,range=0)
+ afxClass<I/O Stream>::ConstructObject(0051f960)
+ ERR afxStream.c:320?AfxMeasureStream
+  
+ ERR afxStream.c:320?AfxMeasureStream
+  (((((afxFlags)(ios->flags)) & ((afxFlags)(afxIoFlag_X))) == (afxFlags)(afxIoFlag_X)))
+    Invalid
+ Dismantling File object (#0) 00520240...
+ Destructing instance 00520240 of File class.
+ Dismantling I/O Stream object (#0) 0051f960...
+ Destructing instance 0051f960 of I/O Stream class.Sound device '
+                         :::           :::       :::::::::                     
+                       :+: :+:        :+:        :+:    :+:                    
+                      +:+   +:+      +:+ +:+     +:+    +:+                    
+                     +#++:++#++:    +#+  +:+     +#+    +:+                    
+                     +#+     +#+   +#+#+#+#+#+   +#+    +#+                    
+                     #+#     #+#         #+#     #+#    #+#                    
+                     ###     ###         ###     #########                     
+                                                                               
+              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              
+                                                                               
+                               Public Test Build                               
+              (c) 2017 SIGMA Technology Group --- Federacao SIGMA              
+                                www.sigmaco.org                                
+                                                                               ' <'a4d'> registered on sound system
+ afxSoundThread.c:171
+  AfxAcquireSoundThreads(cnt=1,config=0032d700,sthr=0032d7f4)
+ afxClass<Sound Thread, Thread>ConstructingObject(00520240)
+ afxClass<Thread>::ConstructObject(00520240)
+ afxThread.c:263
+  _AfxThrCtor(00520240)
+ afxClass<Sound Thread>::ConstructObject(00520240)
+ afxSoundThread.c:128
+  _AfxSthrCtor(sthr=00520240)
+ afxThread.c:204
+  AfxRunThread(thr=00520240)
+ afxDrawSystem.c:233
+  _AfxDsysCtor(dsys=0055a460)
+ Installing Draw Device at 0055a968 by 0055a4bc over 00503214...
+ Installing Draw Context at 0055a594 by 0055a4bc...
+ Installing Draw Output at 0055a71c by 0055a4bc...
+ Installing Draw Input at 0055a8a4 by 0055a4bc...
+ Installing Draw Thread at 0055a4d0 by 0055a4bc over 0050308c...
+ Installing client driver <e2draw.inf>...
+ afxClass<Installable Client Driver>::ConstructObject(0050473c)
+ afxExecutable.c:243
+  AfxLoadExecutables(cnt=1,executables=00504760,uri=0032d214)
+ afxClass<Executable & Linkable File>::ConstructObject(0055aab0)
+ afxExecutable.c:153
+  _AfxExeCtor(uri:e2draw.dll)
+Installing 'e2draw.dll' ICD on draw system...
+	OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem 0.7.2
+	Vendor: SIGMA Technology Group <www.sigmaco.org>
+	Note: Vesa
+ Installing Draw Device at 00504778 by 00504764 over 0055a968...
+ afxClass<Draw Device, Draw Device>ConstructingObject(0055ad00)
+ afxClass<Draw Device, Device>ConstructingObject(0055ad00)
+ afxClass<Device>::ConstructObject(0055ad00)
+ afxClass<Draw Device>::ConstructObject(0055ad00)
+ afxClass<Draw Device>::ConstructObject(0055ad00)
+ sglDdrv_w32.c:2632
+  _SglDdevCtor(ddev=0055ad00)
+ Listing mem available display devices...
+
+ #0 = Intel(R) HD Graphics (\\.\DISPLAY5) 8080005
+ #1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008
+ #2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008
+ #3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008
+ afxMutex.c:24
+  AfxTakeMutex(mtx=0055b324,type=00000000)
+ Created. (mtx)0055b324
+ Installing Draw Script at 0055b4ac by 0055add8...
+ Installing Draw Queue at 0055b3e8 by 0055add8...
+ Installing Draw Context at 0055adec by 0055add8 over 0055a594...
+ Installing Draw Output at 0055aeb0 by 0055add8 over 0055a71c...
+ Installing Draw Input at 0055af74 by 0055add8 over 0055a8a4...

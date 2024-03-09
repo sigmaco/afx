@@ -22,21 +22,21 @@
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawContext.h"
 
-_AFX afxNat AfxGetVertexBufferUsage(afxVertexBuffer vbuf)
+_AVX afxNat AfxGetVertexBufferUsage(afxVertexBuffer vbuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->bufSiz - vbuf->freeSiz;
 }
 
-_AFX afxNat AfxGetVertexBufferCapacity(afxVertexBuffer vbuf)
+_AVX afxNat AfxGetVertexBufferCapacity(afxVertexBuffer vbuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
     return vbuf->bufSiz;
 }
 
-_AFX afxBuffer AfxGetVertexBufferStorage(afxVertexBuffer vbuf)
+_AVX afxBuffer AfxGetVertexBufferStorage(afxVertexBuffer vbuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
@@ -49,7 +49,7 @@ _AFX afxBuffer AfxGetVertexBufferStorage(afxVertexBuffer vbuf)
     return buf;
 }
 
-_AFX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
+_AVX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
@@ -68,7 +68,7 @@ _AFX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
     return err;
 }
 
-_AFX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
+_AVX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 {
     afxResult err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
@@ -97,12 +97,12 @@ _AFX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
         vbuf->bufSiz = spec->bufCap;
         vbuf->freeSiz = vbuf->bufSiz;
 
-        AfxTakeChain(&vbuf->rooms, vbuf);
+        AfxSetUpChain(&vbuf->rooms, vbuf);
     }
     return err;
 }
 
-_AFX afxClassConfig const _AfxVbufClsConfig =
+_AVX afxClassConfig const _AfxVbufClsConfig =
 {
     .fcc = afxFcc_VBUF,
     .name = "Vertex Buffer",
@@ -113,7 +113,7 @@ _AFX afxClassConfig const _AfxVbufClsConfig =
     .dtor = (void*)_AfxVbufDtor
 };
 
-_AFX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[])
+_AVX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -132,28 +132,28 @@ _AFX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBuf
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat32 AfxGetIndexBufferStride(afxIndexBuffer ibuf)
+_AVX afxNat32 AfxGetIndexBufferStride(afxIndexBuffer ibuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     return ibuf->idxSiz;
 }
 
-_AFX afxNat AfxGetIndexBufferUsage(afxIndexBuffer ibuf)
+_AVX afxNat AfxGetIndexBufferUsage(afxIndexBuffer ibuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     return ibuf->bookedIdxCnt;
 }
 
-_AFX afxNat AfxGetIndexBufferCapacity(afxIndexBuffer ibuf)
+_AVX afxNat AfxGetIndexBufferCapacity(afxIndexBuffer ibuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
     return ibuf->idxCap;
 }
 
-_AFX afxBuffer AfxGetIndexBuffer(afxIndexBuffer ibuf)
+_AVX afxBuffer AfxGetIndexBuffer(afxIndexBuffer ibuf)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
@@ -166,7 +166,7 @@ _AFX afxBuffer AfxGetIndexBuffer(afxIndexBuffer ibuf)
     return buf;
 }
 
-_AFX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt)
+_AVX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_VBUF);
@@ -194,7 +194,7 @@ _AFX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxN
     }
 }
 
-_AFX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afxNat* baseIdx)
+_AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afxNat* baseIdx)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_VBUF);
@@ -269,7 +269,7 @@ _AFX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
     return alignedCnt;
 }
 
-_AFX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
+_AVX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
@@ -288,7 +288,7 @@ _AFX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
     return err;
 }
 
-_AFX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
+_AVX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 {
     afxResult err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
@@ -296,7 +296,7 @@ _AFX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     afxDrawContext dctx = cookie->udd[0];
     afxIndexBufferSpecification const *spec = ((afxIndexBufferSpecification const *)cookie->udd[1]) + cookie->no;
 
-    AfxTakeChain(&ibuf->rooms, ibuf);
+    AfxSetUpChain(&ibuf->rooms, ibuf);
 
     afxSize bufSiz = spec->idxSiz * spec->idxCap;
 
@@ -321,7 +321,7 @@ _AFX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxIbufClsConfig =
+_AVX afxClassConfig const _AfxIbufClsConfig =
 {
     .fcc = afxFcc_IBUF,
     .name = "Index Buffer",
@@ -332,7 +332,7 @@ _AFX afxClassConfig const _AfxIbufClsConfig =
     .dtor = (void*)_AfxIbufDtor
 };
 
-_AFX afxError AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferSpecification const spec[], afxIndexBuffer ibuf[])
+_AVX afxError AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferSpecification const spec[], afxIndexBuffer ibuf[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);

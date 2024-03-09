@@ -274,7 +274,7 @@ _AFX afxError AfxSeekStream(afxStream ios, afxInt offset, afxSeekMode origin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     AfxAssertRange(origin, afxSeekMode_ABSOLUTE, afxSeekMode_INVERSE);
     return ios->ioctl.seek(ios, offset, origin);
 }
@@ -283,7 +283,7 @@ _AFX afxError AfxRecedeStream(afxStream ios, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     AfxAssert(range);
     return ios->ioctl.seek(ios, -(range), afxSeekMode_RELATIVE);
 }
@@ -292,7 +292,7 @@ _AFX afxError AfxSkipStream(afxStream ios, afxInt range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     AfxAssert(range);
     return ios->ioctl.seek(ios, range, afxSeekMode_RELATIVE);
 }
@@ -301,7 +301,7 @@ _AFX afxError AfxGoToStreamEnd(afxStream ios, afxInt offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     return ios->ioctl.seek(ios, offset, afxSeekMode_INVERSE);
 }
 
@@ -309,7 +309,7 @@ _AFX afxError AfxGoToStreamBegin(afxStream ios, afxInt offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     return ios->ioctl.seek(ios, offset, afxSeekMode_ABSOLUTE);
 }
 
@@ -317,7 +317,7 @@ _AFX afxSize AfxMeasureStream(afxStream ios)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ios, afxFcc_IOS);
-    AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
+    //AfxAssert(AfxTestFlags(ios->flags, afxIoFlag_X));
     afxSize curr = ios->ioctl.tell(ios);
     ios->ioctl.seek(ios, 0, afxSeekMode_INVERSE);
     afxSize range = ios->ioctl.tell(ios);
@@ -586,7 +586,7 @@ _AFX afxError AfxWrite(afxStream out, afxNat cnt, afxNat siz, void const* src, a
     AfxAssert(src);
     afxNat totalLen = cnt * siz;
     afxNat clampedOffRange = totalLen;
-    afxByte*src2 = src;
+    afxByte const*src2 = src;
     afxNat errSiz = 0;
 
     if (0 == srcStride || siz == srcStride)
@@ -1108,7 +1108,7 @@ _AFX afxStream AfxForkStreamRange(afxStream parent, afxSize offset, afxNat range
     afxSize effectiveRange = range > maxRange ? maxRange : range;
     AfxAssert(effectiveRange == range);
 
-    afxStream ios = AfxAcquireStream(0, parent->flags, AfxGetStreamData(parent, offset), effectiveRange);
+    afxStream ios = AfxAcquireStream(parent->flags, 0, AfxGetStreamData(parent, offset), effectiveRange);
 
     ios->ioctl = parent->ioctl;
     ios->dtor = parent->dtor;
@@ -1194,7 +1194,7 @@ _AFX afxClassConfig const _AfxIosClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxStream AfxAcquireStream(afxNat cap, afxIoFlags flags, void const* start, afxSize range)
+_AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat cap, void const* start, afxSize range)
 {
     afxError err = AFX_ERR_NONE;
     AfxEntry("cap=%u,flags=%x,start=%p,range=%u", cap, flags, start, range);
@@ -1215,7 +1215,7 @@ _AFX afxStream AfxAcquireInputStream(afxNat cap, void const *start, afxSize rang
     AfxEntry("cap=%u,start=%p,range=%u", cap, start, range);
     afxStream in;
 
-    if ((in = AfxAcquireStream(cap, afxIoFlag_RX, start, range)))
+    if ((in = AfxAcquireStream(afxIoFlag_RX, cap, start, range)))
         AfxThrowError();
 
     return in;
@@ -1227,7 +1227,7 @@ _AFX afxStream AfxAcquireOutputStream(afxNat cap, void *start, afxSize range)
     AfxEntry("cap=%u,start=%p,range=%u", cap, start, range);
     afxStream out;
 
-    if ((out = AfxAcquireStream(cap, afxIoFlag_WX, start, range)))
+    if ((out = AfxAcquireStream(afxIoFlag_WX, cap, start, range)))
         AfxThrowError();
 
     return out;

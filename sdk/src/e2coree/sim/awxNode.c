@@ -23,7 +23,7 @@
 #include "qwadro/math/afxVector.h"
 
 
-_AFXINL afxError _AfxNodDtor(awxNode nod)
+_AKXINL afxError _AfxNodDtor(awxNode nod)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &nod, afxFcc_NOD);
@@ -31,7 +31,7 @@ _AFXINL afxError _AfxNodDtor(awxNode nod)
     return err;
 }
 
-_AFXINL afxError _AfxNodCtor(awxNode nod, afxCookie const *cookie)
+_AKXINL afxError _AfxNodCtor(awxNode nod, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertObject(&nod->obj, afxFcc_NOD);
@@ -41,7 +41,7 @@ _AFXINL afxError _AfxNodCtor(awxNode nod, afxCookie const *cookie)
     return err;
 }
 
-_AFXINL afxError AfxAcquireNodes(afxSimulation sim, afxNat cnt, awxNode nod[], afxNat const config[])
+_AKXINL afxError AfxAcquireNodes(afxSimulation sim, afxNat cnt, awxNode nod[], afxNat const config[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -54,7 +54,7 @@ _AFXINL afxError AfxAcquireNodes(afxSimulation sim, afxNat cnt, awxNode nod[], a
     return err;
 }
 
-_AFX afxClassConfig _AfxNodClsConfig =
+_AKX afxClassConfig _AfxNodClsConfig =
 {
     .fcc = afxFcc_NOD,
     .name = "Node",

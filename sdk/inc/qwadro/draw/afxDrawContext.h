@@ -119,46 +119,46 @@ struct afxBaseDrawContext
 #endif
 #endif
 
-AFX afxDrawDevice       AfxGetDrawContextDevice(afxDrawContext dctx);
-AFX afxMmu              AfxGetDrawContextMmu(afxDrawContext dctx);
+AVX afxDrawDevice       AfxGetDrawContextDevice(afxDrawContext dctx);
+AVX afxMmu              AfxGetDrawContextMmu(afxDrawContext dctx);
 
-AFX afxNat              AfxGetDrawQueueCount(afxDrawContext dctx, afxNat portIdx);
-AFX afxDrawQueue        AfxGetDrawQueue(afxDrawContext dctx, afxNat portIdx, afxNat queIdx);
-AFX afxError            AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTime timeout, afxNat *queIdx);
+AVX afxNat              AfxGetDrawQueueCount(afxDrawContext dctx, afxNat portIdx);
+AVX afxDrawQueue        AfxGetDrawQueue(afxDrawContext dctx, afxNat portIdx, afxNat queIdx);
+AVX afxError            AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTime timeout, afxNat *queIdx);
 
-AFX afxNat              AfxCountDrawInputConnections(afxDrawContext dctx);
-AFX afxNat              AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawInput inputs[]);
-AFX afxNat              AfxInvokeConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
-AFX afxDrawInput        AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat no);
-AFX afxError            AfxDisconnectDrawInputs(afxDrawContext dctx);
+AVX afxNat              AfxCountDrawInputConnections(afxDrawContext dctx);
+AVX afxNat              AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawInput inputs[]);
+AVX afxNat              AfxInvokeConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
+AVX afxDrawInput        AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat no);
+AVX afxError            AfxDisconnectDrawInputs(afxDrawContext dctx);
 
-AFX afxNat              AfxCountDrawOutputConnections(afxDrawContext dctx);
-AFX afxNat              AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawOutput outputs[]);
-AFX afxNat              AfxInvokeConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AFX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat no);
-AFX afxError            AfxDisconnectDrawOutputs(afxDrawContext dctx);
+AVX afxNat              AfxCountDrawOutputConnections(afxDrawContext dctx);
+AVX afxNat              AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawOutput outputs[]);
+AVX afxNat              AfxInvokeConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
+AVX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat no);
+AVX afxError            AfxDisconnectDrawOutputs(afxDrawContext dctx);
 
-AFX afxClass*           AfxGetBindSchemaClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetBufferClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetCanvasClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetFenceClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetPipelineClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetQueryPoolClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetRasterClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetRasterizerClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetSamplerClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetSemaphoreClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetShaderClass(afxDrawContext dctx);
-AFX afxClass*           AfxGetVertexInputClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetBindSchemaClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetBufferClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetCanvasClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetFenceClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetPipelineClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetQueryPoolClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetRasterClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetRasterizerClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetSamplerClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetSemaphoreClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetShaderClass(afxDrawContext dctx);
+AVX afxClass*           AfxGetVertexInputClass(afxDrawContext dctx);
 
-AFX afxNat              AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[]);
-AFX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer bufffers[]);
-AFX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[]);
-AFX afxNat              AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[]);
-AFX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[]);
-AFX afxNat              AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[]);
-AFX afxNat              AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[]);
-AFX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[]);
-AFX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[]);
+AVX afxNat              AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[]);
+AVX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer bufffers[]);
+AVX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[]);
+AVX afxNat              AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[]);
+AVX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[]);
+AVX afxNat              AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[]);
+AVX afxNat              AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[]);
+AVX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[]);
+AVX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[]);
 
 #endif//AFX_DRAW_CONTEXT_H

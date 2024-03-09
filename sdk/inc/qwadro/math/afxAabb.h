@@ -38,28 +38,28 @@ AFX_DEFINE_STRUCT(afxAabb)
 AFXINL void         AfxResetAabb(afxAabb aabb); // make identity
 
 /// Automaticallly constructs an AABB from a list of vertex positions only.
-AFXINL void         AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxReal const points[][3]);
+AFXINL void         AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxV3d const points[]);
 
 AFXINL void         AfxCopyAabb(afxAabb aabb, afxAabb const in);
 
 /// Returns the centre point of this AABB and the distance to each side of the box.
-AFXINL void         AfxGetAabbExtents(afxAabb const aabb, afxReal extent[3]);
-AFXINL void         AfxGetAabbCentre(afxAabb const aabb, afxReal centre[4]);
+AFXINL void         AfxGetAabbExtents(afxAabb const aabb, afxV3d extent);
+AFXINL void         AfxGetAabbCentre(afxAabb const aabb, afxV4d centre);
 
 AFXINL void         AfxExtractAabbCorner(afxAabb const aabb, afxNat index, afxV4d corner);
 
 AFXINL void         AfxEncapsulateAabbs(afxAabb aabb, afxNat cnt, afxAabb const other[]);
-AFXINL void         AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxReal const point[][4]);
+AFXINL void         AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxV4d const v[]);
 AFXINL void         AfxEncapsulateSpheres(afxAabb aabb, afxNat cnt, afxSphere const sph[]);
-AFXINL void         AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxReal const point[][3]);
+AFXINL void         AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxV3d const v[]);
 
 AFXINL afxBool      AfxAabbContainsAabbs(afxAabb const aabb, afxNat cnt, afxAabb const other[]);
-AFXINL afxMask      AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxReal const point[32][3]);
+AFXINL afxMask      AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxV3d const v[32]);
 AFXINL afxBool      AfxAabbContainsSpheres(afxAabb const aabb, afxNat cnt, afxSphere const sph[]);
 
 /// Given an AABB in local space, transform to world space
 AFXINL void         AfxTransformAabb(afxAabb const aabb, afxM4d const m, afxAabb to);
 
-AFXINL void         AfxTransformAabbs(afxReal const ltm[3][3], afxReal const atv[4], afxNat cnt, afxAabb const in[], afxAabb out[]);
+AFXINL void         AfxTransformAabbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxAabb const in[], afxAabb out[]);
 
 #endif//AFX_AABB_H

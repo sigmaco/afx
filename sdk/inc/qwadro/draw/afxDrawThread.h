@@ -49,13 +49,13 @@ AFX_OBJECT(afxDrawThread)
 #endif
 #endif
 
-AFX afxError            AfxAcquireDrawThreads(afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[]);
+AVX afxError            AfxAcquireDrawThreads(afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[]);
 
-AFX afxDrawDevice       AfxGetDrawThreadDevice(afxDrawThread dthr);
-AFX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);
-AFX void*               AfxGetDrawThreadUdd(afxDrawThread dthr);
+AVX afxDrawDevice       AfxGetDrawThreadDevice(afxDrawThread dthr);
+AVX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);
+AVX void*               AfxGetDrawThreadUdd(afxDrawThread dthr);
 
-AFX afxBool             AfxGetDrawThreadActiveContext(afxDrawThread dthr, afxDrawContext* dctx);
-AFX afxBool             AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque);
+AVX afxBool             AfxGetDrawThreadActiveContext(afxDrawThread dthr, afxDrawContext* dctx);
+AVX afxBool             AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque);
 
 #endif//AFX_DRAW_THREAD_H

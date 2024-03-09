@@ -38,30 +38,30 @@ AFX_DEFINE_STRUCT(afxUri)
     afxNat8             schem, user, pass, host, port, fext;
     afxNat16            dir, fname;
     afxNat16            query, frag;
-    afxRestring   str;
+    afxRestring         str;
 };
 
-AFX_DEFINE_STRUCT(afxFixedUri8)
+AFX_DEFINE_STRUCT(afxUri8)
 {
     afxUri              uri;
     afxByte             buf[8];
 };
 
-AFX_DEFINE_STRUCT(afxFixedUri128)
+AFX_DEFINE_STRUCT(afxUri128)
 {
     afxUri              uri;
     afxByte             buf[128];
 };
 
-AFX_DEFINE_STRUCT(afxFixedUri2048)
+AFX_DEFINE_STRUCT(afxUri2048)
 {
     afxUri              uri;
     afxByte             buf[2048];
 };
 
-AFXINL afxUri*          AfxMakeFixedUri8(afxFixedUri8 *uri, afxUri const* src);
-AFXINL afxUri*          AfxMakeFixedUri128(afxFixedUri128 *uri, afxUri const* src);
-AFXINL afxUri*          AfxMakeFixedUri2048(afxFixedUri2048 *uri, afxUri const* src);
+AFXINL afxUri*          AfxMakeUri8(afxUri8 *uri, afxUri const* src);
+AFXINL afxUri*          AfxMakeUri128(afxUri128 *uri, afxUri const* src);
+AFXINL afxUri*          AfxMakeUri2048(afxUri2048 *uri, afxUri const* src);
 
 AFXINL void             AfxDeallocateUri(afxUri *uri);
 AFXINL afxError         AfxAllocateUri(afxUri* uri, afxNat cap, void const *start, afxNat range);

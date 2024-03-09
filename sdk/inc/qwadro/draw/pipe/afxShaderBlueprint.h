@@ -19,19 +19,19 @@
 
 #include "afxShader.h"
 
-AFX void                AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt);
-AFX afxError            AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[]);
-AFX void                AfxShaderBlueprintErase(afxShaderBlueprint *blueprint);
+AVX void                AfxShaderBlueprintBegin(afxShaderBlueprint* blueprint, afxShaderStage stage, afxUri const *uri, afxString const *entry, afxNat estCodeLen, afxNat estIoCnt, afxNat estResCnt);
+AVX afxError            AfxShaderBlueprintEnd(afxShaderBlueprint *blueprint, afxNat cnt, afxShader shd[]);
+AVX void                AfxShaderBlueprintErase(afxShaderBlueprint *blueprint);
 
-AFX void                AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxUri const *uri);
-AFX void                AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry);
-AFX void                AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage);
+AVX void                AfxShaderBlueprintRename(afxShaderBlueprint *blueprint, afxUri const *uri);
+AVX void                AfxShaderBlueprintChooseEntryPoint(afxShaderBlueprint *blueprint, afxString const *entry);
+AVX void                AfxShaderBlueprintSetStage(afxShaderBlueprint *blueprint, afxShaderStage stage);
 
-AFX afxError            AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range);
-AFX afxError            AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range);
-AFX afxError            AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri);
+AVX afxError            AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void const *start, afxNat range);
+AVX afxError            AfxShaderBlueprintAddCodeFromStream(afxShaderBlueprint *blueprint, afxStream ios, afxSize offset, afxNat range);
+AVX afxError            AfxShaderBlueprintAddCodeFromResource(afxShaderBlueprint *blueprint, afxUri const *uri);
 
-AFX afxError            AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name);
-AFX afxError            AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxNat stream, afxString const *semantic);
+AVX afxError            AfxShaderBlueprintDeclareResource(afxShaderBlueprint *blueprint, afxNat set, afxNat binding, afxShaderResourceType type, afxNat cnt, afxString const *name);
+AVX afxError            AfxShaderBlueprintDeclareInOut(afxShaderBlueprint *blueprint, afxNat location, afxVertexFormat fmt, afxNat stream, afxString const *semantic);
 
 #endif//AFX_SHADER_BLUEPRINT_H

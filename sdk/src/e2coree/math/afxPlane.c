@@ -27,7 +27,7 @@ _AFXINL void AfxCopyPlane(afxPlane p, afxPlane const in)
     //p->offset = in->offset;
 }
 
-_AFXINL void AfxResetPlane(afxPlane p, afxReal const normal[3], afxReal dist)
+_AFXINL void AfxResetPlane(afxPlane p, afxV3d const normal, afxReal dist)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -39,7 +39,7 @@ _AFXINL void AfxResetPlane(afxPlane p, afxReal const normal[3], afxReal dist)
     p[AFX_PLANE_DIST] = dist * invLen;
 }
 
-_AFXINL void AfxPlaneFromTriangle(afxPlane p, afxReal const a[3], afxReal const b[3], afxReal const c[3])
+_AFXINL void AfxPlaneFromTriangle(afxPlane p, afxV3d const a, afxV3d const b, afxV3d const c)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -55,7 +55,7 @@ _AFXINL void AfxPlaneFromTriangle(afxPlane p, afxReal const a[3], afxReal const 
     p[AFX_PLANE_DIST] = -AfxDotV3d(p, a);
 }
 
-_AFXINL void AfxGetPlaneNormal(afxPlane p, afxReal normal[3])
+_AFXINL void AfxGetPlaneNormal(afxPlane p, afxV3d normal)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -72,7 +72,7 @@ _AFXINL afxReal AfxGetPlaneOffset(afxPlane const p)
     return p[AFX_PLANE_OFFSET];
 }
 
-_AFXINL afxReal AfxFindPlaneDistance(afxPlane const p, afxReal const point[3])
+_AFXINL afxReal AfxFindPlaneDistance(afxPlane const p, afxV3d const point)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -80,7 +80,7 @@ _AFXINL afxReal AfxFindPlaneDistance(afxPlane const p, afxReal const point[3])
     return AfxDotV3d(p, point) + p[AFX_PLANE_OFFSET];
 }
 
-_AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxReal const a[3], afxReal const b[3])
+_AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3d const a, afxV3d const b)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);

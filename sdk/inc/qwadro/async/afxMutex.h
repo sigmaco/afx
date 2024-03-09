@@ -42,7 +42,7 @@ typedef enum afxMutexType
 } afxMutexType;
 
 AFX afxResult       AfxTakeMutex(afxMutex *mtx, afxMutexType type);
-AFX void            AfxReleaseMutex(afxMutex *mtx);
+AFX void            AfxCleanUpMutex(afxMutex *mtx);
 
 AFX afxResult       AfxLockMutex(afxMutex *mtx);
 AFX afxResult       AfxLockMutexTimed(afxMutex *mtx, afxTimeSpec const* ts);

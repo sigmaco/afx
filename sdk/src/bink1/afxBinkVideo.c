@@ -256,8 +256,8 @@ _AFXEXPORT afxError AfxBinkClose(afxBinkVideo *bnk)
 _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
-    afxFixedUri2048 uri2;
-    AfxMakeFixedUri2048(&uri2, NIL);
+    afxUri2048 uri2;
+    AfxMakeUri2048(&uri2, NIL);
 
     AfxAssert(!bnk->bik);
 

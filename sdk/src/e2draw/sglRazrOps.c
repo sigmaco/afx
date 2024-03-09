@@ -985,7 +985,7 @@ _SGL afxCmdId _SglEncodeCmdReadjustScissors(afxDrawScript dscr, afxNat32 first, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdScissor *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -1002,7 +1002,7 @@ _SGL afxCmdId _SglEncodeCmdResetScissors(afxDrawScript dscr, afxNat32 cnt, afxRe
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdScissor *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->first = 0;
     cmd->cnt = cnt;
@@ -1019,7 +1019,7 @@ _SGL afxCmdId _SglEncodeCmdReadjustAreas(afxDrawScript dscr, afxBool exclusive, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdArea *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdArea *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->exclusive = exclusive;
     cmd->first = first;
@@ -1037,7 +1037,7 @@ _SGL afxCmdId _SglEncodeCmdResetAreas(afxDrawScript dscr, afxBool exclusive, afx
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdArea *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdArea *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
     AfxAssert(cmd);
     cmd->exclusive = exclusive;
     cmd->first = 0;
@@ -1232,7 +1232,7 @@ _SGL afxCmdId _SglEncodeCmdBeginSynthesis(afxDrawScript dscr, afxSynthesisConfig
     afxError err = AFX_ERR_NONE;
     AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
 
-    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (state->rasterCnt * sizeof(cmd->rasters[0])));
     AfxAssert(cmd);
 
     AfxRectCopy(&cmd->area, &state->area);

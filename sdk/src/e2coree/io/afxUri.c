@@ -1167,7 +1167,7 @@ _AFXINL void AfxFormatUri(afxUri *uri, afxChar const *fmt, ...)
     AfxFormatStringArg(str, fmt, args);
     va_end(args);
     AfxReparseUri(uri);
-    AfxCanonicalizePath(uri, FALSE);
+    //AfxCanonicalizePath(uri, FALSE);
 }
 
 _AFXINL afxError AfxCopyUri(afxUri *uri, afxUri const *src)
@@ -1438,7 +1438,7 @@ _AFXINL afxError AfxCloneUri(afxUri* uri, afxUri const *in)
     return err;
 }
 
-_AFX afxUri* AfxMakeFixedUri8(afxFixedUri8 *uri, afxUri const* src)
+_AFX afxUri* AfxMakeUri8(afxUri8 *uri, afxUri const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -1451,7 +1451,7 @@ _AFX afxUri* AfxMakeFixedUri8(afxFixedUri8 *uri, afxUri const* src)
     return &uri->uri;
 }
 
-_AFX afxUri* AfxMakeFixedUri128(afxFixedUri128 *uri, afxUri const* src)
+_AFX afxUri* AfxMakeUri128(afxUri128 *uri, afxUri const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
@@ -1464,7 +1464,7 @@ _AFX afxUri* AfxMakeFixedUri128(afxFixedUri128 *uri, afxUri const* src)
     return &uri->uri;
 }
 
-_AFX afxUri* AfxMakeFixedUri2048(afxFixedUri2048 *uri, afxUri const* src)
+_AFX afxUri* AfxMakeUri2048(afxUri2048 *uri, afxUri const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);

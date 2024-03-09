@@ -557,8 +557,8 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
         for (afxNat i = 0; i < stageCnt; i++)
         {
-            AfxMakeFixedUri128(&pip->base.stages[pip->base.stageCnt].shd, &pipb->shdUri[i]);
-            AfxMakeFixedString8(&pip->base.stages[pip->base.stageCnt].fn, NIL/*&pipb->shdFn[i]*/);
+            AfxMakeUri128(&pip->base.stages[pip->base.stageCnt].shd, &pipb->shdUri[i]);
+            AfxMakeString8(&pip->base.stages[pip->base.stageCnt].fn, NIL/*&pipb->shdFn[i]*/);
             pip->base.stages[pip->base.stageCnt].stage = pipb->shdStage[i];
 
 #if 0
@@ -664,6 +664,10 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                             pip->base.ins[pip->base.inCnt].fmt = shdio.fmt;
                             //pip->base.ins[pip->base.inCnt].offset = 0;
                             pip->base.ins[pip->base.inCnt].stream = shdio.stream;
+
+
+                            pip->base.ins[pip->base.inCnt].stream = shdio.location > 2 ? 1 : 0; // DEBUG
+
                             pip->base.inCnt++;
                         }
                         break;
@@ -684,17 +688,19 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 {
                     afxNat srcIdx = pip->base.ins[i].stream;
                     afxNat vinStreamIdx = AFX_INVALID_INDEX;
+                    afxBool streamFound = FALSE;
 
                     for (afxNat j = 0; j < vinStreamCnt; j++)
                     {
                         if (vinStreamMap[j] == srcIdx)
                         {
                             vinStreamIdx = j;
+                            streamFound = TRUE;
                             break;
                         }
                     }
 
-                    if (vinStreamIdx == AFX_INVALID_INDEX)
+                    if (!streamFound)
                     {
                         vinStreamMap[(vinStreamIdx = vinStreamCnt)] = srcIdx;
                         ++vinStreamCnt;
@@ -706,6 +712,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                     afxNat attrSiz = AfxVertexFormatGetSize(pip->base.ins[i].fmt);
                     offset[vinStreamIdx] += attrSiz;
                     vinStreams[vinStreamIdx].stride += attrSiz;
+                    vinStreams[vinStreamIdx].slotIdx = vinStreamMap[vinStreamIdx];
                     vinAttrs[vinAttrCnt].fmt = pip->base.ins[i].fmt;
                     ++vinAttrCnt;
 

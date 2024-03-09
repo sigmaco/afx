@@ -20,7 +20,7 @@
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/pipe/afxQueryPool.h"
 
-AFX afxResult AfxGetQueryResults(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
+AVX afxResult AfxGetQueryResults(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -30,7 +30,7 @@ AFX afxResult AfxGetQueryResults(afxQueryPool pool, afxNat baseQuery, afxNat que
 
 }
 
-AFX void AfxResetQueries(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
+AVX void AfxResetQueries(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -38,7 +38,7 @@ AFX void AfxResetQueries(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
 
 }
 
-_AFX afxDrawContext AfxGetQueryPoolContext(afxQueryPool qryp)
+_AVX afxDrawContext AfxGetQueryPoolContext(afxQueryPool qryp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &qryp, afxFcc_QRYP);
@@ -49,7 +49,7 @@ _AFX afxDrawContext AfxGetQueryPoolContext(afxQueryPool qryp)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[])
+_AVX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
@@ -60,7 +60,7 @@ _AFX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt
     return AfxEnumerateInstances(cls, first, cnt, (afxObject*)pools);
 }
 
-_AFX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNat cap, afxNat cnt, afxQueryPool quer[])
+_AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNat cap, afxNat cnt, afxQueryPool quer[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -75,7 +75,7 @@ _AFX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNa
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxCmdId AfxCmdBeginQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxBool precise)
+AVX afxCmdId AfxCmdBeginQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxBool precise)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -84,7 +84,7 @@ AFX afxCmdId AfxCmdBeginQuery(afxDrawScript dscr, afxQueryPool pool, afxNat quer
 
 }
 
-AFX afxCmdId AfxCmdEndQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx)
+AVX afxCmdId AfxCmdEndQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -93,7 +93,7 @@ AFX afxCmdId AfxCmdEndQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryI
 
 }
 
-AFX afxCmdId AfxCmdCopyQueryResults(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
+AVX afxCmdId AfxCmdCopyQueryResults(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -104,7 +104,7 @@ AFX afxCmdId AfxCmdCopyQueryResults(afxDrawScript dscr, afxQueryPool pool, afxNa
 
 }
 
-AFX afxCmdId AfxCmdResetQueries(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
+AVX afxCmdId AfxCmdResetQueries(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -113,7 +113,7 @@ AFX afxCmdId AfxCmdResetQueries(afxDrawScript dscr, afxQueryPool pool, afxNat ba
 
 }
 
-AFX afxCmdId AfxCmdWriteTimestamp(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage)
+AVX afxCmdId AfxCmdWriteTimestamp(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

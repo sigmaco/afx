@@ -17,69 +17,69 @@
 #include "qwadro/draw/afxDrawDefs.h"
 
 
-_AFX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
-_AFX afxString const g_str_Draw = AFX_STRING("Draw");
-_AFX afxString const g_str_Shader = AFX_STRING("Shader");
-_AFX afxString const g_str_Include = AFX_STRING("Include");
-_AFX afxString const g_str_Resource = AFX_STRING("Resource");
-_AFX afxString const g_str_In = AFX_STRING("In");
-_AFX afxString const g_str_Out = AFX_STRING("Out");
-_AFX afxString const g_str_Stage = AFX_STRING("Stage");
-_AFX afxString const g_str_stage = AFX_STRING("stage");
-_AFX afxString const g_str_id = AFX_STRING("id");
-_AFX afxString const g_str_name = AFX_STRING("name");
-_AFX afxString const g_str_entry = AFX_STRING("entry");
-_AFX afxString const g_str_Entry = AFX_STRING("Entry");
-_AFX afxString const g_str_flag = AFX_STRING("flag");
-_AFX afxString const g_str_Flag = AFX_STRING("Flag");
-_AFX afxString const g_str_uri = AFX_STRING("uri");
-_AFX afxString const g_str_set = AFX_STRING("set");
-_AFX afxString const g_str_binding = AFX_STRING("binding");
-_AFX afxString const g_str_type = AFX_STRING("type");
-_AFX afxString const g_str_count = AFX_STRING("count");
-_AFX afxString const g_str_location = AFX_STRING("location");
-_AFX afxString const g_str_format = AFX_STRING("format");
-_AFX afxString const g_str_topology = AFX_STRING("topology");
-_AFX afxString const g_str_restart = AFX_STRING("restart");
+_AVX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
+_AVX afxString const g_str_Draw = AFX_STRING("Draw");
+_AVX afxString const g_str_Shader = AFX_STRING("Shader");
+_AVX afxString const g_str_Include = AFX_STRING("Include");
+_AVX afxString const g_str_Resource = AFX_STRING("Resource");
+_AVX afxString const g_str_In = AFX_STRING("In");
+_AVX afxString const g_str_Out = AFX_STRING("Out");
+_AVX afxString const g_str_Stage = AFX_STRING("Stage");
+_AVX afxString const g_str_stage = AFX_STRING("stage");
+_AVX afxString const g_str_id = AFX_STRING("id");
+_AVX afxString const g_str_name = AFX_STRING("name");
+_AVX afxString const g_str_entry = AFX_STRING("entry");
+_AVX afxString const g_str_Entry = AFX_STRING("Entry");
+_AVX afxString const g_str_flag = AFX_STRING("flag");
+_AVX afxString const g_str_Flag = AFX_STRING("Flag");
+_AVX afxString const g_str_uri = AFX_STRING("uri");
+_AVX afxString const g_str_set = AFX_STRING("set");
+_AVX afxString const g_str_binding = AFX_STRING("binding");
+_AVX afxString const g_str_type = AFX_STRING("type");
+_AVX afxString const g_str_count = AFX_STRING("count");
+_AVX afxString const g_str_location = AFX_STRING("location");
+_AVX afxString const g_str_format = AFX_STRING("format");
+_AVX afxString const g_str_topology = AFX_STRING("topology");
+_AVX afxString const g_str_restart = AFX_STRING("restart");
 
-_AFX afxString const g_str_DepthClampEnable = AFX_STRING("DepthClampEnable");
-_AFX afxString const g_str_RasterizerDiscardEnable = AFX_STRING("RasterizerDiscardEnable");
-_AFX afxString const g_str_FillMode = AFX_STRING("FillMode");
-_AFX afxString const g_str_CullMode = AFX_STRING("CullMode");
-_AFX afxString const g_str_FrontFace = AFX_STRING("FrontFace");
-_AFX afxString const g_str_DepthBias = AFX_STRING("DepthBias");
-_AFX afxString const g_str_enable = AFX_STRING("enable");
-_AFX afxString const g_str_constant = AFX_STRING("constant");
-_AFX afxString const g_str_slope = AFX_STRING("slope");
-_AFX afxString const g_str_clamp = AFX_STRING("clamp");
-_AFX afxString const g_str_LineWidth = AFX_STRING("LineWidth");
+_AVX afxString const g_str_DepthClampEnable = AFX_STRING("DepthClampEnable");
+_AVX afxString const g_str_RasterizerDiscardEnable = AFX_STRING("RasterizerDiscardEnable");
+_AVX afxString const g_str_FillMode = AFX_STRING("FillMode");
+_AVX afxString const g_str_CullMode = AFX_STRING("CullMode");
+_AVX afxString const g_str_FrontFace = AFX_STRING("FrontFace");
+_AVX afxString const g_str_DepthBias = AFX_STRING("DepthBias");
+_AVX afxString const g_str_enable = AFX_STRING("enable");
+_AVX afxString const g_str_constant = AFX_STRING("constant");
+_AVX afxString const g_str_slope = AFX_STRING("slope");
+_AVX afxString const g_str_clamp = AFX_STRING("clamp");
+_AVX afxString const g_str_LineWidth = AFX_STRING("LineWidth");
 
-_AFX afxString const g_str_DepthTestEnable = AFX_STRING("DepthTestEnable");
-_AFX afxString const g_str_DepthWriteEnable = AFX_STRING("DepthWriteEnable");
-_AFX afxString const g_str_DepthCompareOp = AFX_STRING("DepthCompareOp");
-_AFX afxString const g_str_DepthBoundsTest = AFX_STRING("DepthBoundsTest");
-_AFX afxString const g_str_StencilTest = AFX_STRING("StencilTest");
-_AFX afxString const g_str_Front = AFX_STRING("Front");
-_AFX afxString const g_str_Back = AFX_STRING("Back");
-_AFX afxString const g_str_fail = AFX_STRING("fail");
-_AFX afxString const g_str_pass = AFX_STRING("pass");
-_AFX afxString const g_str_depthFail = AFX_STRING("depthFail");
-_AFX afxString const g_str_compare = AFX_STRING("compare");
-_AFX afxString const g_str_min = AFX_STRING("min");
-_AFX afxString const g_str_max = AFX_STRING("max");
+_AVX afxString const g_str_DepthTestEnable = AFX_STRING("DepthTestEnable");
+_AVX afxString const g_str_DepthWriteEnable = AFX_STRING("DepthWriteEnable");
+_AVX afxString const g_str_DepthCompareOp = AFX_STRING("DepthCompareOp");
+_AVX afxString const g_str_DepthBoundsTest = AFX_STRING("DepthBoundsTest");
+_AVX afxString const g_str_StencilTest = AFX_STRING("StencilTest");
+_AVX afxString const g_str_Front = AFX_STRING("Front");
+_AVX afxString const g_str_Back = AFX_STRING("Back");
+_AVX afxString const g_str_fail = AFX_STRING("fail");
+_AVX afxString const g_str_pass = AFX_STRING("pass");
+_AVX afxString const g_str_depthFail = AFX_STRING("depthFail");
+_AVX afxString const g_str_compare = AFX_STRING("compare");
+_AVX afxString const g_str_min = AFX_STRING("min");
+_AVX afxString const g_str_max = AFX_STRING("max");
 
-_AFX afxString const g_str_true = AFX_STRING("true");
-_AFX afxString const g_str_false = AFX_STRING("false");
+_AVX afxString const g_str_true = AFX_STRING("true");
+_AVX afxString const g_str_false = AFX_STRING("false");
 
-_AFX afxString const g_str_DrawOperation = AFX_STRING("DrawOperation");
-_AFX afxString const g_str_Operation = AFX_STRING("Operation");
-_AFX afxString const g_str_Technique = AFX_STRING("Technique");
-_AFX afxString const g_str_Pipeline = AFX_STRING("Pipeline");
-_AFX afxString const g_str_Pass = AFX_STRING("Pass");
-_AFX afxString const g_str_Rasterization = AFX_STRING("Rasterization");
-_AFX afxString const g_str_DepthHandling = AFX_STRING("DepthHandling");
-_AFX afxString const g_str_Input = AFX_STRING("Input");
-_AFX afxString const g_str_PrimitiveTopology = AFX_STRING("PrimitiveTopology");
+_AVX afxString const g_str_DrawOperation = AFX_STRING("DrawOperation");
+_AVX afxString const g_str_Operation = AFX_STRING("Operation");
+_AVX afxString const g_str_Technique = AFX_STRING("Technique");
+_AVX afxString const g_str_Pipeline = AFX_STRING("Pipeline");
+_AVX afxString const g_str_Pass = AFX_STRING("Pass");
+_AVX afxString const g_str_Rasterization = AFX_STRING("Rasterization");
+_AVX afxString const g_str_DepthHandling = AFX_STRING("DepthHandling");
+_AVX afxString const g_str_Input = AFX_STRING("Input");
+_AVX afxString const g_str_PrimitiveTopology = AFX_STRING("PrimitiveTopology");
 
 afxChar const *shdResTypeNames[] =
 {
@@ -113,7 +113,7 @@ afxChar const *fmtNames[] =
     "V4DI"
 };
 
-_AFX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
+_AVX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
 {
     AFX_STRING(""),
     AFX_STRING("float"),
@@ -128,7 +128,7 @@ _AFX afxString const vtxFmtString[afxVertexFormat_TOTAL] =
     //AFX_STRING("v8B"),
 };
 
-_AFX afxString const shaderStageString[] =
+_AVX afxString const shaderStageString[] =
 {
     AFX_STRING(""),
     AFX_STRING("VERTEX"),
@@ -139,20 +139,20 @@ _AFX afxString const shaderStageString[] =
     AFX_STRING("COMPUTE"),
 };
 
-_AFX afxString const fillModeString[] =
+_AVX afxString const fillModeString[] =
 {
     AFX_STRING("SOLID"),
     AFX_STRING("EDGE"),
     AFX_STRING("POINT")
 };
 
-_AFX afxString const frontFaceString[] =
+_AVX afxString const frontFaceString[] =
 {
     AFX_STRING("CCW"),
     AFX_STRING("CW")
 };
 
-_AFX afxString const cullModeString[] =
+_AVX afxString const cullModeString[] =
 {
     AFX_STRING("NONE"),
     AFX_STRING("FRONT"),
@@ -160,7 +160,7 @@ _AFX afxString const cullModeString[] =
     AFX_STRING("BOTH")
 };
 
-_AFX afxString const compareOpString[] =
+_AVX afxString const compareOpString[] =
 {
     AFX_STRING("NEVER"),
     AFX_STRING("LESS"),
@@ -172,7 +172,7 @@ _AFX afxString const compareOpString[] =
     AFX_STRING("ALWAYS")
 };
 
-_AFX afxString const stencilOpString[] =
+_AVX afxString const stencilOpString[] =
 {
     AFX_STRING("KEEP"),
     AFX_STRING("ZERO"),
@@ -184,7 +184,7 @@ _AFX afxString const stencilOpString[] =
     AFX_STRING("DEC_AND_WRAP")
 };
 
-_AFX afxString const logicOpString[] =
+_AVX afxString const logicOpString[] =
 {
     AFX_STRING("CLEAR"),
     AFX_STRING("AND"),
@@ -204,7 +204,7 @@ _AFX afxString const logicOpString[] =
     AFX_STRING("SET")
 };
 
-_AFX afxString const primTopologyString[] =
+_AVX afxString const primTopologyString[] =
 {
     AFX_STRING("POINT_LIST"),
     AFX_STRING("LINE_LIST"),
@@ -222,13 +222,20 @@ _AFX afxString const primTopologyString[] =
 afxNat const vtxFmtSizes[] =
 {
     0,
+
     sizeof(afxReal),
     sizeof(afxV2d),
     sizeof(afxV3d),
     sizeof(afxV4d),
+    sizeof(afxM2d),
+    sizeof(afxM3d),
+    sizeof(afxM4d),
 
-    sizeof(afxInt8[4]),
-    sizeof(afxInt8[8]),
+    sizeof(afxByte),
+    sizeof(afxNat8[2]),
+    sizeof(afxNat8[3]),
+    sizeof(afxNat8[4]),
+
 
 };
 
@@ -242,14 +249,14 @@ afxChar const * const vtxFmtNames[] =
     "XYZW32Q"
 };
 
-_AFX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt)
+_AVX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange(afxVertexFormat_TOTAL, fmt, 1);
     return vtxFmtSizes[fmt];
 }
 
-_AFX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz)
+_AVX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange(afxVertexFormat_TOTAL, fmt, 1);
@@ -285,7 +292,7 @@ _AFX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
     return 0;
 }
 
-_AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
+_AVX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -299,7 +306,7 @@ _AFX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
     return (afxPrimTopology)-1;
 }
 
-_AFX afxLogicOp AfxFindLogicOp(afxString const *str)
+_AVX afxLogicOp AfxFindLogicOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -313,7 +320,7 @@ _AFX afxLogicOp AfxFindLogicOp(afxString const *str)
     return (afxLogicOp)-1;
 }
 
-_AFX afxStencilOp AfxFindStencilOp(afxString const *str)
+_AVX afxStencilOp AfxFindStencilOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -327,7 +334,7 @@ _AFX afxStencilOp AfxFindStencilOp(afxString const *str)
     return (afxStencilOp)-1;
 }
 
-_AFX afxCompareOp AfxFindCompareOp(afxString const *str)
+_AVX afxCompareOp AfxFindCompareOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -341,7 +348,7 @@ _AFX afxCompareOp AfxFindCompareOp(afxString const *str)
     return (afxCompareOp)-1;
 }
 
-_AFX afxCullMode AfxFindCullMode(afxString const *str)
+_AVX afxCullMode AfxFindCullMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -355,7 +362,7 @@ _AFX afxCullMode AfxFindCullMode(afxString const *str)
     return (afxCullMode)-1;
 }
 
-_AFX afxFrontFace AfxFindFrontFace(afxString const *str)
+_AVX afxFrontFace AfxFindFrontFace(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -369,7 +376,7 @@ _AFX afxFrontFace AfxFindFrontFace(afxString const *str)
     return (afxFrontFace)-1;
 }
 
-_AFX afxFillMode AfxFindFillMode(afxString const *str)
+_AVX afxFillMode AfxFindFillMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -383,7 +390,7 @@ _AFX afxFillMode AfxFindFillMode(afxString const *str)
     return (afxFillMode)-1;
 }
 
-_AFX afxShaderStage AfxFindShaderStage(afxString const *str)
+_AVX afxShaderStage AfxFindShaderStage(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -397,7 +404,7 @@ _AFX afxShaderStage AfxFindShaderStage(afxString const *str)
     return (afxShaderStage)0;
 }
 
-_AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
+_AVX afxVertexFormat AfxFindVertexFormat(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
@@ -411,7 +418,7 @@ _AFX afxVertexFormat AfxFindVertexFormat(afxString const *str)
     return (afxVertexFormat)-1;
 }
 
-_AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxRestring *out)
+_AVX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ss < afxShaderStage_TOTAL);
@@ -419,7 +426,7 @@ _AFX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxRestring *ou
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxRestring *out)
+_AVX afxString const* AfxStringifyFillMode(afxFillMode fm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fm < afxFillMode_TOTAL);
@@ -427,7 +434,7 @@ _AFX afxString const* AfxStringifyFillMode(afxFillMode fm, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out)
+_AVX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ff < afxFrontFace_TOTAL);
@@ -435,7 +442,7 @@ _AFX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxRestring *out)
+_AVX afxString const* AfxStringifyCullMode(afxCullMode cm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cm < afxCullMode_TOTAL);
@@ -443,7 +450,7 @@ _AFX afxString const* AfxStringifyCullMode(afxCullMode cm, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxRestring *out)
+_AVX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(co < afxCompareOp_TOTAL);
@@ -451,7 +458,7 @@ _AFX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxRestring *out)
+_AVX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(so < afxStencilOp_TOTAL);
@@ -459,7 +466,7 @@ _AFX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxRestring *out)
+_AVX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lo < afxLogicOp_TOTAL);
@@ -467,7 +474,7 @@ _AFX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxRestring *out)
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestring *out)
+_AVX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pt < afxPrimTopology_TOTAL);
@@ -475,7 +482,7 @@ _AFX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestr
     return &out->str;
 }
 
-_AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out)
+_AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(fmt < afxVertexFormat_TOTAL);
@@ -483,7 +490,7 @@ _AFX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring 
     return &out->str;
 }
 
-_AFX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint)
+_AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(total_);

@@ -26,8 +26,7 @@
 #include "../dep/al/efx.h"
 
 #define _AFX_CORE_C
-#define _AFX_ICD_C
-#define _AFX_EXECUTABLE_C
+//#define _AFX_EXECUTABLE_C
 #define _AFX_SOUND_C
 #define _AFX_THREAD_C
 #define _AFX_SOUND_THREAD_C
@@ -45,7 +44,7 @@
 #include "qwadro/core/afxClass.h"
 #include "qwadro/core/afxSystem.h"
 
-#ifndef __e2sound__
+#ifndef AFX_SOUND_DRIVER_SRC
 #   ifdef _DEBUG
 #       define A4D _AFXIMPORT extern 
 #       define A4DINL _AFXIMPORT extern inline
@@ -65,7 +64,7 @@
 #       define _A4DINL _AFXEXPORT inline
 #       define A4DINL _AFXEXPORT extern inline
 #   endif
-#endif//__e2sound__
+#endif
 
 AFX_DEFINE_UNION(alVmt)
 {
@@ -218,9 +217,8 @@ AFX_DEFINE_STRUCT(salSpuIdd)
     afxBool eaxEnabled;
 };
 
-AFX_OBJECT(afxSoundDevice)
+struct _afxSdevIdd
 {
-    struct _afxBaseSoundDevice base;
     afxNat      spuCnt;
     salSpuIdd*  spus;
 };

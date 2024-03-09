@@ -104,15 +104,15 @@ struct afxBaseDrawScript
 #endif
 #endif
 
-AFX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[]);
+AVX afxError            AfxAcquireDrawScripts(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawScript dscr[]);
 
-AFX afxDrawInput        AfxGetDrawScriptInput(afxDrawScript dscr);
-AFX afxDrawScriptState  AfxGetDrawScriptState(afxDrawScript dscr);
-AFX afxNat              AfxGetDrawScriptPort(afxDrawScript dscr);
+AVX afxDrawInput        AfxGetDrawScriptInput(afxDrawScript dscr);
+AVX afxDrawScriptState  AfxGetDrawScriptState(afxDrawScript dscr);
+AVX afxNat              AfxGetDrawScriptPort(afxDrawScript dscr);
 
 /// Start recording a command buffer.
 
-AFX afxError            AfxRecordDrawScript
+AVX afxError            AfxRecordDrawScript
 (
     afxDrawScript       dscr, /// is the handle of the command buffer which is to be put in the recording state.
     afxDrawScriptUsage  usage /// Bitmask specifying usage behavior for command buffer.
@@ -123,7 +123,7 @@ AFX afxError            AfxRecordDrawScript
 
 /// If there was an error during recording, the application will be notified by an unsuccessful return code returned by AfxEndCommandBuffer, and the command buffer will be moved to the invalid state.
 
-AFX afxError            AfxCompileDrawScript
+AVX afxError            AfxCompileDrawScript
 (
     afxDrawScript       dscr  /// is the command buffer to complete recording.
 );
@@ -131,7 +131,7 @@ AFX afxError            AfxCompileDrawScript
 /// Reset a command buffer to the initial state.
 /// Any primary command buffer that is in the recording or executable state and has @dscr recorded into it, becomes invalid.
 
-AFX afxError            AfxRecycleDrawScript
+AVX afxError            AfxRecycleDrawScript
 (
     afxDrawScript       dscr, /// is the command buffer to reset. The command buffer can be in any state other than pending, and is moved into the initial state.
     afxBool             freeRes /// specifies that most or all memory resources currently owned by the command buffer should be returned to the parent command pool. If this flag is not set, then the command buffer may hold onto memory resources and reuse them when recording commands. @dscr is moved to the initial state.

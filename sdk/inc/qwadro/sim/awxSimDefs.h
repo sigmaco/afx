@@ -34,6 +34,29 @@
 
 #include "../math/afxMathDefs.h"
 
+#ifndef __e2sim__
+#   ifdef _DEBUG
+#       define AKX _AFXIMPORT extern 
+#       define AKXINL _AFXIMPORT extern inline
+#   else
+#       define AKX _AFXIMPORT extern 
+#       define AKXINL _AFXIMPORT extern inline
+#   endif
+#else
+#   ifdef _DEBUG
+#       define _AKX _AFXEXPORT
+#       define AKX _AFXEXPORT extern 
+#       define _AKXINL _AFXEXPORT inline
+#       define AKXINL _AFXEXPORT extern inline
+#   else
+#       define _AKX _AFXEXPORT
+#       define AKX _AFXEXPORT extern 
+#       define _AKXINL _AFXEXPORT inline
+#       define AKXINL _AFXEXPORT extern inline
+#   endif
+#endif//__e2sim__
+
+
 AFX_DEFINE_HANDLE(afxMaterial);
 
 AFX_DEFINE_HANDLE(afxMesh);
@@ -55,7 +78,16 @@ AFX_DEFINE_HANDLE(awxNode);
 
 AFX_DEFINE_HANDLE(awxBody);
 
+AFX_DEFINE_HANDLE(awxMotor);
+
 AFX_DEFINE_HANDLE(awxMotion);
 AFX_DEFINE_HANDLE(awxAnimation);
+
+AFX_DEFINE_STRUCT(awxTrackMask)
+{
+    afxReal     defWeight;
+    afxNat      boneCnt;
+    afxReal*    boneWeights;
+};
 
 #endif//AFX_CAD_DEFS_H

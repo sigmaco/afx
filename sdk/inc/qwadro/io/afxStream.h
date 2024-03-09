@@ -78,7 +78,7 @@ AFX_OBJECT(afxStream)
 #endif//_AFX_STREAM_C
 #endif//_AFX_CORE_C
 
-AFX afxStream               AfxAcquireStream(afxNat cap, afxIoFlags flags, void const* start, afxSize range);
+AFX afxStream               AfxAcquireStream(afxIoFlags flags, afxNat cap, void const* start, afxSize range);
 AFX afxStream               AfxAcquireInputStream(afxNat cap, void const* start, afxSize range);
 AFX afxStream               AfxAcquireOutputStream(afxNat cap, void* start, afxSize range);
 

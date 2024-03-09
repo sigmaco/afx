@@ -69,7 +69,7 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
     //else
     {
         afxChain *classes = &sctx->base.classes;
-        AfxTakeChain(classes, (void*)sctx);
+        AfxSetUpChain(classes, (void*)sctx);
 
         afxClassConfig tmpClsConf = {0};
 

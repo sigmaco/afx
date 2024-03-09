@@ -112,8 +112,8 @@ AFX_DEFINE_STRUCT(afxPipelineConfig)
 
 AFX_DEFINE_STRUCT(afxPipelineModule)
 {
-    afxFixedUri128          shd;
-    afxFixedString8         fn;
+    afxUri128          shd;
+    afxString8         fn;
     afxShaderStage          stage;
     //constants;
     //                      specId;
@@ -159,35 +159,35 @@ AFX_DEFINE_STRUCT(afxPipelineAssembler)
     int a;
 };
 
-//AFX afxError            AfxAssemblePrimitiveRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AFX afxError            AfxAssemblePrimitiveShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AFX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AFX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AfxAssemblePrimitiveRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AfxAssemblePrimitiveShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
 
-//AFX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AFX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
+//AVX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
 
-AFX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
-AFX afxPipeline         AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri);
+AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
+AVX afxPipeline         AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri);
 
-AFX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
-AFX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);
-AFX afxBool             AfxDepthClampIsEnabled(afxPipeline pip);
+AVX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
+AVX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);
+AVX afxBool             AfxDepthClampIsEnabled(afxPipeline pip);
 
-AFX afxCullMode         AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted); // return the culling mode set if any.
+AVX afxCullMode         AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted); // return the culling mode set if any.
 
-AFX afxNat              AfxCountPipelineBindSchemas(afxPipeline pip);
-AFX afxError            AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[]);
+AVX afxNat              AfxCountPipelineBindSchemas(afxPipeline pip);
+AVX afxError            AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[]);
 
-AFX afxNat              AfxCountPipelineInputs(afxPipeline pip);
-AFX afxNat              AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[]);
-AFX afxVertexInput      AfxGetPipelineVertexInput(afxPipeline pip);
+AVX afxNat              AfxCountPipelineInputs(afxPipeline pip);
+AVX afxNat              AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[]);
+AVX afxVertexInput      AfxGetPipelineVertexInput(afxPipeline pip);
 
-AFX afxNat              AfxCountLinkedShaders(afxPipeline pip);
-AFX afxNat              AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[]);
-AFX afxBool             AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd);
+AVX afxNat              AfxCountLinkedShaders(afxPipeline pip);
+AVX afxNat              AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[]);
+AVX afxBool             AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd);
 
-AFX afxRasterizer       AfxGetLinkedRasterizer(afxPipeline pip);
+AVX afxRasterizer       AfxGetLinkedRasterizer(afxPipeline pip);
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
@@ -197,7 +197,7 @@ AFX afxRasterizer       AfxGetLinkedRasterizer(afxPipeline pip);
 /// Once bound, a pipeline binding affects subsequent commands that interact with the given pipeline type in the command buffer until a different pipeline of the same type is bound to the bind point, or until the pipeline bind point is disturbed by binding a shader object.
 /// Commands that do not interact with the given pipeline type must not be affected by the pipeline state.
 
-AFX afxCmdId                AfxCmdBindPipeline
+AVX afxCmdId                AfxCmdBindPipeline
 (
     afxDrawScript           dscr, /// is the command buffer that the pipeline will be bound to. 
     afxNat                  segment, /// is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.

@@ -19,6 +19,7 @@
 
 #include "qwadro/core/afxString.h"
 #include "qwadro/core/afxFixedString.h"
+#include "qwadro/mem/afxArray.h"
 
 typedef enum afxProcessorType
 {
@@ -47,7 +48,7 @@ typedef enum afxDeviceState
 AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
     afxNat32                    devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
-    afxFixedString128           name; /// The user-friendly name for the device.
+    afxString128           name; /// The user-friendly name for the device.
     afxDeviceState              devStateMask; /// Bitmask used to filter the device based on their state.
     afxBool                     isDefaultDev; /// Identify default device. Always false when not supported.
 };
@@ -56,8 +57,16 @@ AFX_DEFINE_STRUCT(afxDeviceDescription)
 #ifdef _AFX_DEVICE_C
 AFX_OBJECT(afxDevice)
 {
-    afxChain                    classes;
-    afxClass                    buffers;
+    afxChain                classes;
+    afxClass                buffers;
+    afxLinkage              icd;
+    afxString               domain;
+    afxString               name;
+
+    afxBool                 serving;
+    afxArray                threads;
+    afxArray                txus;
+
 };
 #endif//_AFX_DEVICE_C
 #endif//_AFX_CORE_C

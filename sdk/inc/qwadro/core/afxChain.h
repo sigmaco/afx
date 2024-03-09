@@ -50,7 +50,7 @@ struct afxChain
 
 // GRANT CHANGE MONITORING
 
-AFXINL void                 AfxTakeChain(afxChain *ch, void *owner);
+AFXINL void                 AfxSetUpChain(afxChain *ch, void *owner);
 
 AFXINL afxNat               AfxGetChainLength(afxChain const *ch);
 AFXINL void*                AfxGetChainOwner(afxChain const *ch);
@@ -74,10 +74,10 @@ AFXINL afxResult            AfxChainEnumerateLinkages(afxChain *ch, afxBool reve
 
 AFXINL afxNat               AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxNat first, afxNat cnt, afxBool(*f)(afxLinkage *lnk, void *udd), void *udd);
 
-AFXINL void AfxResetLinkage(afxLinkage *lnk);
-AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch);
-AFXINL afxNat AfxPushLinkageAtEnd(afxLinkage *lnk, afxChain *ch);
-AFXINL void AfxPopLinkage(afxLinkage *lnk);
+AFXINL void     AfxResetLinkage(afxLinkage *lnk);
+AFXINL afxNat   AfxPushLinkage(afxLinkage *lnk, afxChain *ch);
+AFXINL afxNat   AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch);
+AFXINL void     AfxPopLinkage(afxLinkage *lnk);
 
 AFXINL void* AfxGetLinker(afxLinkage const *lnk); // linker is the chain owner
 
@@ -90,6 +90,8 @@ AFXINL afxLinkage* AfxGetPrevLinkage(afxLinkage const *lnk);
 #define AfxChainForEveryLinkage2(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk2_ = (afxLinkage*)NIL, *_curr##lnk2_ = (ch_)->anchor.next; _next##lnk2_ = (_curr##lnk2_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk2_, type_, offset_), (_curr##lnk2_) != &(ch_)->anchor; _curr##lnk2_ = _next##lnk2_)
 #define AfxChainForEveryLinkage(ch_, type_, offset_, lnk_) for (afxLinkage const*_next##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.next; _next##lnk_ = (_curr##lnk_)->next, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _next##lnk_)
 #define AfxChainForEveryLinkageB2F(ch_, type_, offset_, lnk_) for (afxLinkage const*_last##lnk_ = (afxLinkage*)NIL, *_curr##lnk_ = (ch_)->anchor.prev; _last##lnk_ = (_curr##lnk_)->prev, lnk_ = (type_*)AFX_REBASE(_curr##lnk_, type_, offset_), (_curr##lnk_) != &(ch_)->anchor; _curr##lnk_ = _last##lnk_)
+
+//#define AfxGetFirstLinked(ch_, t_, m_) AfxRebase((1 * AfxGetFirstLinkage((ch_))), t_, m_)
 
 AFX_DEFINE_STRUCT(afxLink)
 {

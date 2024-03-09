@@ -25,7 +25,7 @@
 #include "qwadro/ux/afxApplication.h"
 
 
-_AFX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
+_AUX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
 {
     AfxEntry("wid=%p", wid);
     afxError err = AFX_ERR_NONE;
@@ -38,7 +38,7 @@ _AFX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxError _AfxWidDtor(afxWidget wid)
+_AUX afxError _AfxWidDtor(afxWidget wid)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wid, afxFcc_WID);
@@ -60,7 +60,7 @@ _AFX afxError _AfxWidDtor(afxWidget wid)
     return err;
 }
 
-_AFX afxClassConfig _AfxWidClsConfig =
+_AUX afxClassConfig _AfxWidClsConfig =
 {
     .fcc = afxFcc_WID,
     .name = "Widget",
@@ -74,7 +74,7 @@ _AFX afxClassConfig _AfxWidClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[])
+_AUX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);

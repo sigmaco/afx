@@ -53,7 +53,7 @@ AFX_DEFINE_STRUCT(afxVertexInputPoint) /// vertex attribute input stream
 /// Set the viewport count and viewports dynamically for a command buffer.
 /// This command sets the viewport count and viewports state for subsequent drawing commands when pipeline is created without viewport set.
 
-AFX afxCmdId                AfxCmdResetViewports
+AVX afxCmdId                AfxCmdResetViewports
 (
     afxDrawScript           dscr,
     afxNat                  cnt, /// specifies the viewport count.
@@ -65,7 +65,7 @@ AFX afxCmdId                AfxCmdResetViewports
 
 /// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
 
-AFX afxCmdId                AfxCmdReadjustViewports
+AVX afxCmdId                AfxCmdReadjustViewports
 (
     afxDrawScript           dscr,
     afxNat                  baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
@@ -84,7 +84,7 @@ AFX afxCmdId                AfxCmdReadjustViewports
 
 /// This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
 
-AFX afxCmdId                AfxCmdBindVertexSources
+AVX afxCmdId                AfxCmdBindVertexSources
 (
     afxDrawScript           dscr,
     afxNat                  baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
@@ -98,7 +98,7 @@ AFX afxCmdId                AfxCmdBindVertexSources
 
 /// Bind an index buffer to a command buffer.
 
-AFX afxCmdId                AfxCmdBindIndexSource
+AVX afxCmdId                AfxCmdBindIndexSource
 (
     afxDrawScript           dscr,
     afxBuffer               buf, /// is the buffer being bound.
@@ -110,29 +110,29 @@ AFX afxCmdId                AfxCmdBindIndexSource
 /// Set primitive topology state dynamically for a command buffer.
 /// This command sets the primitive topology for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without primitive topology set.
 
-AFX afxCmdId                AfxCmdSetPrimitiveTopology
+AVX afxCmdId                AfxCmdSetPrimitiveTopology
 (
     afxDrawScript           dscr,
     afxPrimTopology         topology /// specifies the primitive topology to use for drawing.
 );
 
-AFX afxCmdId                AfxCmdSwitchFrontFace
+AVX afxCmdId                AfxCmdSwitchFrontFace
 (
     afxDrawScript           dscr,
     afxBool                 cw /// is a value specifying the front-facing triangle orientation to be used for culling.
 );
 
-AFX afxCmdId                AfxCmdSetCullMode
+AVX afxCmdId                AfxCmdSetCullMode
 (
     afxDrawScript           dscr,
     afxCullMode             mode /// specifies the cull mode property to use for drawing.
 );
 
-AFX afxCmdId            AfxCmdBindVertexInput(afxDrawScript dscr, afxVertexInput vin);
+AVX afxCmdId            AfxCmdBindVertexInput(afxDrawScript dscr, afxVertexInput vin);
 
 
 //                      TODO Pipeline Gateway
-AFX afxCmdId            AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-AFX afxCmdId            AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
+AVX afxCmdId            AfxCmdResetVertexStreams(afxDrawScript dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
+AVX afxCmdId            AfxCmdResetVertexAttributes(afxDrawScript dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
 
 #endif//AFX_TRANSFORMATION_H

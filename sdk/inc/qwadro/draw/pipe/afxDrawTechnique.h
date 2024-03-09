@@ -41,11 +41,11 @@ AFX_OBJECT(afxDrawTechnique)
     afxDrawPass*                    passes;
 };
 
-AFX afxString const*                AfxGetDrawTechniqueName(afxDrawTechnique dtec);
+AVX afxString const*                AfxGetDrawTechniqueName(afxDrawTechnique dtec);
 
-AFX afxNat                          AfxCountDrawPasses(afxDrawTechnique dtec);
-AFX afxBool                         AfxFindDrawPass(afxDrawTechnique dtec, afxString const *name, afxNat *idx);
-AFX afxString const*                AfxGetDrawPassName(afxDrawTechnique dtec, afxNat passIdx);
-AFX afxPipeline                     AfxGetDrawPipeline(afxDrawTechnique dtec, afxNat passIdx);
+AVX afxNat                          AfxCountDrawPasses(afxDrawTechnique dtec);
+AVX afxBool                         AfxFindDrawPass(afxDrawTechnique dtec, afxString const *name, afxNat *idx);
+AVX afxString const*                AfxGetDrawPassName(afxDrawTechnique dtec, afxNat passIdx);
+AVX afxPipeline                     AfxGetDrawPipeline(afxDrawTechnique dtec, afxNat passIdx);
 
 #endif//AFX_DRAW_TECHNIQUE_H

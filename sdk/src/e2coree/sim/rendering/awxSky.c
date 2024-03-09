@@ -24,14 +24,14 @@
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
 
-_AFX void AfxStepSky(awxSky* sky, afxReal dt)
+_AKX void AfxStepSky(awxSky* sky, afxReal dt)
 {
     sky->currRot += sky->rotSpeed * dt;
     AfxQuatFromAxisAngle(sky->rotQuat, sky->rotPivot, sky->currRot);
     AfxRotationM4dFromQuat(sky->rotMtx, sky->rotQuat);
 }
 
-_AFX afxError AfxDrawSky(afxDrawScript dscr, awxSky* sky)
+_AKX afxError AfxDrawSky(afxDrawScript dscr, awxSky* sky)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -43,11 +43,10 @@ _AFX afxError AfxDrawSky(afxDrawScript dscr, awxSky* sky)
     //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
     //AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
     AfxCmdDraw(dscr, 0, 1, 0, 36);
-    
     return err;
 }
 
-_AFX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
+_AKX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
 {
     afxError err = NIL;
     afxDrawContext dctx = sim->dctx;
@@ -59,21 +58,30 @@ _AFX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
 
     // sky
     afxUri cubeUri[6];
-#if !0    
+#if !0
+#if 0    
     AfxMakeUri(&cubeUri[0], "art/skybox/day/right.tga", 0);
     AfxMakeUri(&cubeUri[1], "art/skybox/day/left.tga", 0);
-    AfxMakeUri(&cubeUri[2], "art/skybox/day/top.tga", 0);
-    AfxMakeUri(&cubeUri[3], "art/skybox/day/bottom.tga", 0);
+    AfxMakeUri(&cubeUri[3], "art/skybox/day/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], "art/skybox/day/bottom.tga", 0);
     AfxMakeUri(&cubeUri[4], "art/skybox/day/front.tga", 0);
     AfxMakeUri(&cubeUri[5], "art/skybox/day/back.tga", 0);
 #else
     AfxMakeUri(&cubeUri[0], "art/skybox/purple/right.tga", 0); // x+
     AfxMakeUri(&cubeUri[1], "art/skybox/purple/left.tga", 0); // x-
-    AfxMakeUri(&cubeUri[2], "art/skybox/purple/top.tga", 0);
-    AfxMakeUri(&cubeUri[3], "art/skybox/purple/bottom.tga", 0); // y-
+    AfxMakeUri(&cubeUri[3], "art/skybox/purple/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], "art/skybox/purple/bottom.tga", 0); // y-
     AfxMakeUri(&cubeUri[4], "art/skybox/purple/front.tga", 0);
     AfxMakeUri(&cubeUri[5], "art/skybox/purple/back.tga", 0);
 
+#endif
+#else
+    AfxMakeUri(&cubeUri[0], "art/skybox/envmap_interstellar/interstellar_rt.tga", 0); // x+
+    AfxMakeUri(&cubeUri[1], "art/skybox/envmap_interstellar/interstellar_lf.tga", 0); // x-
+    AfxMakeUri(&cubeUri[3], "art/skybox/envmap_interstellar/interstellar_up.tga", 0);
+    AfxMakeUri(&cubeUri[2], "art/skybox/envmap_interstellar/interstellar_dn.tga", 0); // y-
+    AfxMakeUri(&cubeUri[4], "art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
+    AfxMakeUri(&cubeUri[5], "art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
 #endif
     sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, cubeUri);
     //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
@@ -82,9 +90,9 @@ _AFX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
     AfxSetColor(sky->ambientColor, 0.1, 0.1, 0.1, 1);
     AfxSetColor(sky->emissiveColor, 0.1, 0.1, 0.1, 1);
 
+    const float SIZE = 500.f;
     afxReal skyboxVertices[] =
     {
-        // positions          
         -1.0f,  1.0f, -1.0f,
         -1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,

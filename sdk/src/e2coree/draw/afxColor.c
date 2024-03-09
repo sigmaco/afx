@@ -16,7 +16,7 @@
 
 #include "qwadro/draw/afxColor.h"
 
-_AFX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING =
+_AVX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING =
 {
     afxColorSwizzle_R,
     afxColorSwizzle_G,
@@ -163,7 +163,7 @@ afxPixelLayout layouts[] =
     { 128, {  0,  0,  0,  0 }, {  0,  0,  0,  0 }, 0, 0, 0, 1, 0, 0, 0 }, // afxPixelFormat_RGBA_DXT5,
 };
 
-_AFXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout)
+_AVXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -172,7 +172,7 @@ _AFXINL void AfxDescribePixelFormat(afxPixelFormat fmt, afxPixelLayout *layout)
     *layout = layouts[fmt];
 }
 
-_AFXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -180,14 +180,14 @@ _AFXINL afxBool AfxPixelFormatIsCombinedDepthStencil(afxPixelFormat fmt)
     return layouts[fmt].depth && layouts[fmt].stencil;
 }
 
-_AFXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
     AfxAssert(afxPixelFormat_TOTAL > fmt);
     return layouts[fmt].depth;
 }
-_AFXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -195,7 +195,7 @@ _AFXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt)
     return layouts[fmt].stencil;
 }
 
-_AFXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -203,7 +203,7 @@ _AFXINL afxBool AfxPixelFormatIsReal(afxPixelFormat fmt)
     return layouts[fmt].real;
 }
 
-_AFXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -211,7 +211,7 @@ _AFXINL afxBool AfxPixelFormatIsSrgb(afxPixelFormat fmt)
     return fmt == afxPixelFormat_RGB8_SRGB || fmt == afxPixelFormat_RGBA8_SRGB ;
 }
 
-_AFXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt)
+_AVXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt)
 {
     afxError err = NIL;
     AfxAssert(fmt);
@@ -219,12 +219,12 @@ _AFXINL afxBool AfxPixelFormatIsCompressed(afxPixelFormat fmt)
     return layouts[fmt].block;
 }
 
-_AFX afxReal AfxLinearToSrgba(afxReal theLinearValue)
+_AVX afxReal AfxLinearToSrgba(afxReal theLinearValue)
 {
     return theLinearValue <= 0.0031308f ? theLinearValue * 12.92f : powf(theLinearValue, 1.0f / 2.4f) * 1.055f - 0.055f;
 }
 
-_AFX afxReal AfxSrgbToLinear(afxReal thesRGBValue)
+_AVX afxReal AfxSrgbToLinear(afxReal thesRGBValue)
 {
     return thesRGBValue <= 0.04045f ? thesRGBValue / 12.92f : powf((thesRGBValue + 0.055f) / 1.055f, 2.4f);
 }

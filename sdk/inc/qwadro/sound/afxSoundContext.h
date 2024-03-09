@@ -59,7 +59,7 @@ struct _afxBaseSoundContext
 #endif//_AFX_SOUND_CONTEXT_C
 #endif//_AFX_SOUND_C
 
-AFX afxSoundDevice      AfxGetSoundContextDevice(afxSoundContext sctx);
-AFX afxMmu              AfxGetSoundContextMmu(afxSoundContext sctx);
+AAX afxSoundDevice      AfxGetSoundContextDevice(afxSoundContext sctx);
+AAX afxMmu              AfxGetSoundContextMmu(afxSoundContext sctx);
 
 #endif//AFX_SOUND_CONTEXT_H

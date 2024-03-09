@@ -22,7 +22,7 @@
 
 // buffer ops
 
-_AFX afxCmdId AfxCmdCopyBuffer(afxDrawScript dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
+_AVX afxCmdId AfxCmdCopyBuffer(afxDrawScript dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -33,7 +33,7 @@ _AFX afxCmdId AfxCmdCopyBuffer(afxDrawScript dscr, afxBuffer src, afxBuffer dst,
     return dscr->stdCmds->buf.cpy(dscr, src, dst, opCnt, ops);
 }
 
-_AFX afxCmdId AfxCmdCopyBufferRegion(afxDrawScript dscr, afxBuffer src, afxNat srcOffset, afxBuffer dst, afxNat dstOffset, afxNat range)
+_AVX afxCmdId AfxCmdCopyBufferRegion(afxDrawScript dscr, afxBuffer src, afxNat srcOffset, afxBuffer dst, afxNat dstOffset, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -54,7 +54,7 @@ _AFX afxCmdId AfxCmdCopyBufferRegion(afxDrawScript dscr, afxBuffer src, afxNat s
     return dscr->stdCmds->buf.cpy(dscr, src, dst, 1, &op);
 }
 
-_AFX afxCmdId AfxCmdFillBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat value)
+_AVX afxCmdId AfxCmdFillBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat value)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -67,7 +67,7 @@ _AFX afxCmdId AfxCmdFillBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset,
     return dscr->stdCmds->buf.set(dscr, buf, offset, range, value);
 }
 
-_AFX afxCmdId AfxCmdClearBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range)
+_AVX afxCmdId AfxCmdClearBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -80,7 +80,7 @@ _AFX afxCmdId AfxCmdClearBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset
     return dscr->stdCmds->buf.set(dscr, buf, offset, range, 0);
 }
 
-_AFX afxCmdId AfxCmdUpdateBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, void const* src)
+_AVX afxCmdId AfxCmdUpdateBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, void const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -94,7 +94,7 @@ _AFX afxCmdId AfxCmdUpdateBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offse
     return dscr->stdCmds->buf.rw(dscr, buf, offset, range, FALSE, (void*)src);
 }
 
-_AFX afxCmdId AfxCmdDumpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, void* dst)
+_AVX afxCmdId AfxCmdDumpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, void* dst)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -108,7 +108,7 @@ _AFX afxCmdId AfxCmdDumpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat offset,
     return dscr->stdCmds->buf.rw(dscr, buf, offset, range, TRUE, dst);
 }
 
-_AFX afxCmdId AfxCmdStreamUpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
+_AVX afxCmdId AfxCmdStreamUpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -117,7 +117,7 @@ _AFX afxCmdId AfxCmdStreamUpBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opC
     return dscr->stdCmds->buf.io(dscr, buf, opCnt, ops, FALSE, in);
 }
 
-_AFX afxCmdId AfxCmdStreamDownBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
+_AVX afxCmdId AfxCmdStreamDownBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -126,7 +126,7 @@ _AFX afxCmdId AfxCmdStreamDownBuffer(afxDrawScript dscr, afxBuffer buf, afxNat o
     return dscr->stdCmds->buf.io(dscr, buf, opCnt, ops, TRUE, out);
 }
 
-_AFX afxCmdId AfxCmdUploadBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
+_AVX afxCmdId AfxCmdUploadBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -135,7 +135,7 @@ _AFX afxCmdId AfxCmdUploadBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt
     return dscr->stdCmds->buf.io(dscr, buf, opCnt, ops, FALSE, in);
 }
 
-_AFX afxCmdId AfxCmdDownloadBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
+_AVX afxCmdId AfxCmdDownloadBuffer(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

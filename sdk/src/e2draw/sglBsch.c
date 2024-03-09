@@ -62,8 +62,8 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawQueue dque, afxNat unit, afxBind
             AfxAssertObject(data->smp, afxFcc_SAMP);
             _SglDqueBindAndSyncSmp(dque, binding, data->smp);
 #if 0
-            afxFixedUri128 uri;
-            AfxMakeFixedUri128(&uri, NIL);
+            afxUri128 uri;
+            AfxMakeUri128(&uri, NIL);
             AfxPrintRaster(point->resource.img.tex, AfxFormatUri(&uri.uri, "system/tex-%u-%u.tga", i, entry->binding));
 #endif
             break;
@@ -132,8 +132,8 @@ _SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat 
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
     AfxAssert(glHandle);
     
-    afxFixedString32 tmp;
-    AfxMakeFixedString32(&tmp, 0);
+    afxString32 tmp;
+    AfxMakeString32(&tmp, 0);
     afxChar const *rawName = (void const *)AfxGetStringData(&tmp.str.str, 0);
 
     for (afxNat j = 0; j < lego->base.entryCnt; j++)

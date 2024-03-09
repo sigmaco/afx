@@ -45,18 +45,22 @@
 #define AFX_PI_OVER2    (AFX_PI / AfxScalar(2))
 #define AFX_EPSILON     AfxScalar(FLT_EPSILON)
 
-typedef afxReal         afxV2d[2];
-typedef afxReal         afxV3d[3];
+typedef afxReal         afxSimd(afxV2d[2]);
+typedef afxReal         afxSimd(afxV3d[3]);
 typedef afxReal         afxSimd(afxV4d[4]);
 static_assert(sizeof(__m128) == sizeof(afxV4d), "");
 
 typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
 typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
 
-typedef afxV2d          afxM2d[2];
-typedef afxV3d          afxM3d[3];
+typedef afxV2d          afxSimd(afxM2d[2]);
+typedef afxV3d          afxSimd(afxM3d[3]);
 typedef afxV4d          afxSimd(afxM4d[4]);
 typedef afxV4d          afxSimd(afxM4d3[3]);
+
+typedef afxV4d          afxSimd(afxVector);
+typedef afxV4d          afxSimd(afxPoint);
+typedef afxM4d          afxSimd(afxMatrix);
 
 #if 0
 static_assert(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");
@@ -106,51 +110,17 @@ AFX_DEFINE_STRUCT(afxSphericalCoord) // spherical coordinates
     afxReal32       phi; // elevation
 };
 
-AFXINL void         AfxRectZero(afxRect *rect) { rect->x = 0; rect->y = 0; rect->w = 1; rect->h = 1; }
-AFXINL void         AfxRectCopy(afxRect *rect, afxRect const *src) { rect->x = src->x; rect->y = src->y; rect->w = src->w; rect->h = src->h; }
+AFXINL void         AfxRectZero(afxRect *rect);
+AFXINL void         AfxRectCopy(afxRect *rect, afxRect const *src);
 
-AFXINL afxReal      AfxToNdc(afxReal x, afxReal total) { return x * (AfxScalar(1) / total); }
-AFXINL afxReal      AfxFromNdc(afxReal x, afxReal total) { afxError err = AFX_ERR_NONE; AfxAssert(AfxScalar(0) <= x); AfxAssert(AfxScalar(1) >= x); return x * total; }
+AFXINL afxReal      AfxToNdc(afxReal x, afxReal total);
+AFXINL afxReal      AfxFromNdc(afxReal x, afxReal total);
 
-AFXINL void AfxExtractV2dInNdc(afxReal v[2], afxReal const b[2], afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(b);
-    AfxAssert(total);
-    v[0] = AfxToNdc(b[0], total[0]);
-    v[1] = AfxToNdc(b[1], total[1]);
-}
+AFXINL void         AfxExtractV2dInNdc(afxV2d v, afxV2d const b, afxV2d const total);
+AFXINL void         AfxExtractV2dOutNdc(afxV2d v, afxV2d const b, afxV2d const total);
 
-AFXINL void AfxExtractV2dOutNdc(afxReal v[2], afxReal const b[2], afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(b);
-    AfxAssert(total);
-    v[0] = AfxFromNdc(b[0], total[0]);
-    v[1] = AfxFromNdc(b[1], total[1]);
-}
-
-AFXINL void AfxMakeV2dNdc(afxReal v[2], afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(total);
-    AfxAssert(v != total);
-    v[0] = AfxToNdc(v[0], total[0]);
-    v[1] = AfxToNdc(v[1], total[1]);
-}
-
-AFXINL void AfxUnmakeV2dNdc(afxReal v[2], afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(total);
-    AfxAssert(v != total);
-    v[0] = AfxFromNdc(v[0], total[0]);
-    v[1] = AfxFromNdc(v[1], total[1]);
-}
+AFXINL void         AfxMakeV2dNdc(afxV2d v, afxV2d const total);
+AFXINL void         AfxUnmakeV2dNdc(afxV2d v, afxV2d const total);
 
 #include "qwadro/mem/afxMmu.h"
 

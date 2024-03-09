@@ -83,7 +83,7 @@ AFX_DEFINE_STRUCT(afxSynthesisConfig)
 /// Set the scissor count and scissor rectangular bounds dynamically for a command buffer.
 /// This command sets the scissor count and scissor rectangular bounds state for subsequent drawing commands when the graphics pipeline is created without scissor set.
 
-AFX afxCmdId                AfxCmdResetScissors
+AVX afxCmdId                AfxCmdResetScissors
 (
     afxDrawScript           dscr,
     afxNat                  cnt, /// specifies the scissor count.
@@ -95,7 +95,7 @@ AFX afxCmdId                AfxCmdResetScissors
 
 /// The scissor rectangles taken from element #i of @rect replace the current state for the scissor index @baseIdx + #i, for #i in [0, @cnt).
 
-AFX afxCmdId                AfxCmdReadjustScissors
+AVX afxCmdId                AfxCmdReadjustScissors
 (
     afxDrawScript           dscr,
     afxNat                  baseIdx, /// is the index of the first scissor whose state is updated by the command.
@@ -108,7 +108,7 @@ AFX afxCmdId                AfxCmdReadjustScissors
 
 /// If flags includes resuming then this render pass is resumed from a render canvas instance that has been suspended earlier in submission order.
 
-AFX afxCmdId                AfxCmdBeginSynthesis
+AVX afxCmdId                AfxCmdBeginSynthesis
 (
     afxDrawScript           dscr,
     afxSynthesisConfig const*state /// is a pointer to a afxSynthesisConfig structure specifying details of the render pass instance to begin.
@@ -117,7 +117,7 @@ AFX afxCmdId                AfxCmdBeginSynthesis
 /// End a dynamic render canvas instance.
 /// If the value of flags used to begin this render pass instance included suspending, then this render canvas is suspended and will be resumed later in submission order.
 
-AFX afxCmdId                AfxCmdFinishSynthesis
+AVX afxCmdId                AfxCmdFinishSynthesis
 (
     afxDrawScript           dscr
 );
@@ -127,25 +127,25 @@ AFX afxCmdId                AfxCmdFinishSynthesis
 
 /// After transitioning to the next pass, the application can record the commands for that pass.
 
-AFX afxCmdId                AfxCmdNextPass
+AVX afxCmdId                AfxCmdNextPass
 (
     afxDrawScript           dscr,
     afxBool                 useAuxScripts /// specifies how the commands in the next subpass will be provided, in the same fashion as the corresponding parameter of vkCmdBeginRenderPass.
 );
 
-AFX afxCmdId                AfxCmdDisableRasterization
+AVX afxCmdId                AfxCmdDisableRasterization
 (
     afxDrawScript           dscr,
     afxBool                 disable /// controls whether primitives are discarded immediately before the rasterization stage.
 );
 
-AFX afxCmdId                AfxCmdEnableDepthBias
+AVX afxCmdId                AfxCmdEnableDepthBias
 (
     afxDrawScript           dscr,
     afxBool                 enable /// controls whether to bias fragment depth values.
 );
 
-AFX afxCmdId                AfxCmdSetDepthBias
+AVX afxCmdId                AfxCmdSetDepthBias
 (
     afxDrawScript           dscr,
     afxReal                 constFactor, /// is a scalar factor controlling the constant depth value added to each fragment.
@@ -153,70 +153,70 @@ AFX afxCmdId                AfxCmdSetDepthBias
     afxReal                 slopeFactor /// is a scalar factor applied to a fragment’s slope in depth bias calculations.
 );
 
-AFX afxCmdId                AfxCmdSetLineWidth
+AVX afxCmdId                AfxCmdSetLineWidth
 (
     afxDrawScript           dscr,
     afxReal                 lineWidth /// is the width of rasterized line segments.
 );
 
-AFX afxCmdId                AfxCmdEnableDepthTest
+AVX afxCmdId                AfxCmdEnableDepthTest
 (
     afxDrawScript           dscr,
     afxBool                 enable /// specifies if the depth test is enabled.
 );
 
-AFX afxCmdId                AfxCmdSetDepthCompareOp
+AVX afxCmdId                AfxCmdSetDepthCompareOp
 (
     afxDrawScript           dscr,
     afxCompareOp            op /// is a afxCompareOp value specifying the comparison operator used for the Depth Comparison step of the depth test.
 );
 
-AFX afxCmdId                AfxCmdDisableDepthWrite
+AVX afxCmdId                AfxCmdDisableDepthWrite
 (
     afxDrawScript           dscr,
     afxBool                 enable /// specifies if depth writes are enabled.
 );
 
-AFX afxCmdId                AfxCmdEnableStencilTest
+AVX afxCmdId                AfxCmdEnableStencilTest
 (
     afxDrawScript           dscr,
     afxBool                 enable /// specifies if the stencil test is enabled.
 );
 
-AFX afxCmdId                AfxCmdSetStencilCompareMask
+AVX afxCmdId                AfxCmdSetStencilCompareMask
 (
     afxDrawScript           dscr,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
     afxNat32                compareMask /// is the new value to use as the stencil compare mask.
 );
 
-AFX afxCmdId                AfxCmdSetStencilWriteMask
+AVX afxCmdId                AfxCmdSetStencilWriteMask
 (
     afxDrawScript           dscr,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
     afxNat32                writeMask /// is the new value to use as the stencil write mask.
 );
 
-AFX afxCmdId                AfxCmdSetStencilReference
+AVX afxCmdId                AfxCmdSetStencilReference
 (
     afxDrawScript           dscr,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
     afxNat32                reference /// is the new value to use as the stencil reference value.
 );
 
-AFX afxCmdId                AfxCmdEnableDepthBoundsTest
+AVX afxCmdId                AfxCmdEnableDepthBoundsTest
 (
     afxDrawScript           dscr,
     afxBool                 enable /// specifies if the depth bounds test is enabled.
 );
 
-AFX afxCmdId                AfxCmdSetDepthBounds
+AVX afxCmdId                AfxCmdSetDepthBounds
 (
     afxDrawScript           dscr,
     afxReal const           bounds[2] /// is the minimum and maximum depth bounds.
 );
 
-AFX afxCmdId                AfxCmdSetBlendConstants
+AVX afxCmdId                AfxCmdSetBlendConstants
 (
     afxDrawScript           dscr,
     afxReal const           blendConstants[4] /// is an array of four values specifying the Rc, Gc, Bc, and Ac components of the blend constant color used in blending, depending on the blend factor.

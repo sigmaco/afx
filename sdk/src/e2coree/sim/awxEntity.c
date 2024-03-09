@@ -18,7 +18,7 @@
 #define _AFX_ENTITY_C
 #include "qwadro/sim/afxSimulation.h"
 
-_AFX afxError _AfxEntDtor(awxEntity ent)
+_AKX afxError _AfxEntDtor(awxEntity ent)
 {
     AfxEntry("ent=%p", ent);
     afxError err = AFX_ERR_NONE;
@@ -27,7 +27,7 @@ _AFX afxError _AfxEntDtor(awxEntity ent)
     return err;
 }
 
-_AFX afxError _AfxEntCtor(awxEntity ent, afxCookie const *cookie)
+_AKX afxError _AfxEntCtor(awxEntity ent, afxCookie const *cookie)
 {
     AfxEntry("ent=%p", ent);
     afxError err = AFX_ERR_NONE;
@@ -43,7 +43,7 @@ _AFX afxError _AfxEntCtor(awxEntity ent, afxCookie const *cookie)
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[], awxBody bod[])
+_AKX afxError AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[], awxBody bod[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -55,7 +55,7 @@ _AFX afxError AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[],
     return err;
 }
 
-_AFX afxClassConfig _AfxEntClsConfig =
+_AKX afxClassConfig _AfxEntClsConfig =
 {
     .fcc = afxFcc_ENT,
     .name = "Entity",

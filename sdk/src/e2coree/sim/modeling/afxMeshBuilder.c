@@ -47,7 +47,7 @@ struct TriWeightData
 ////////////////////////////////////////////////////////////////////////////////
 
 #if 0
-_AFX void _AfxMesh113131(afxMesh msh)
+_AKX void _AfxMesh113131(afxMesh msh)
 {
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
@@ -257,7 +257,7 @@ afxMesh AfxAddCubeToModel(afxModel mdl, afxReal scale)
 }
 #endif//0
 
-_AFXINL void AfxEndMeshBuilding(afxMeshBuilder* mshb)
+_AKXINL void AfxEndMeshBuilding(afxMeshBuilder* mshb)
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -285,7 +285,7 @@ _AFXINL void AfxEndMeshBuilding(afxMeshBuilder* mshb)
     AfxAssignFcc(mshb, NIL);
 }
 
-_AFXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id, afxNat vtxCnt, afxNat triCnt, afxNat surfCnt, afxNat artCnt)
+_AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id, afxNat vtxCnt, afxNat triCnt, afxNat surfCnt, afxNat artCnt)
 {
     afxError err = NIL;
     AfxAssert(mshb);
@@ -305,7 +305,7 @@ _AFXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
         AfxZero(triCnt, sizeof(mshb->faces[0]), mshb->faces);        
     }
 
-    AfxMakeFixedString32(&mshb->id, id);
+    AfxMakeString32(&mshb->id, id);
 
     AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
 
@@ -323,7 +323,7 @@ _AFXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
     return err;
 }
 
-_AFXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxNat const baseBiasIdx[], afxNat const biasCnt[])
+_AKXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxNat const baseBiasIdx[], afxNat const biasCnt[])
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -332,7 +332,7 @@ _AFXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat v
     for (afxNat i = 0; i < vtxCnt; i++)
     {
         afxVertex *v = &mshb->vtx[baseVtxIdx + i];
-        //AfxAtv4FromAtv3(v->posn, posn[i]);
+        //AfxAtv4dFromAtv3d(v->posn, posn[i]);
         v->baseBiasIdx = baseBiasIdx ? baseBiasIdx[i] : 0;
         v->biasCnt = biasCnt ? biasCnt[i] : 1;
         //AfxCopyV2d(v->uv, uv ? uv[i] : AfxSpawnV2d(0, 0));
@@ -341,7 +341,7 @@ _AFXINL void AfxUpdateVertices(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat v
     }
 }
 
-_AFXINL void AfxUpdateVertexPositions(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const posn[][3], afxNat srcStride)
+_AKXINL void AfxUpdateVertexPositions(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const posn[][3], afxNat srcStride)
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -351,18 +351,18 @@ _AFXINL void AfxUpdateVertexPositions(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     if (srcStride == sizeof(posn[0]))
     {
         for (afxNat i = 0; i < vtxCnt; i++)
-            AfxAtv4FromAtv3(mshb->posn[baseVtxIdx + i], posn[i]);
+            AfxAtv4dFromAtv3d(mshb->posn[baseVtxIdx + i], posn[i]);
     }
     else
     {
         afxByte* posnBytemap = (void*)posn;
         
         for (afxNat i = 0; i < vtxCnt; i++)
-            AfxAtv4FromAtv3(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
+            AfxAtv4dFromAtv3d(mshb->posn[baseVtxIdx + i], (void*)(&posnBytemap[i * srcStride]));
     }
 }
 
-_AFXINL void AfxUpdateVertexPositions4(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const posn[][4], afxNat srcStride)
+_AKXINL void AfxUpdateVertexPositions4(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const posn[][4], afxNat srcStride)
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -382,7 +382,7 @@ _AFXINL void AfxUpdateVertexPositions4(afxMeshBuilder* mshb, afxNat baseVtxIdx, 
     }
 }
 
-_AFXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const nrm[][3], afxNat srcStride)
+_AKXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const nrm[][3], afxNat srcStride)
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -409,7 +409,7 @@ _AFXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx,
     return err;
 }
 
-_AFXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const uv[][2], afxNat srcStride)
+_AKXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, afxNat vtxCnt, afxReal const uv[][2], afxNat srcStride)
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -437,7 +437,7 @@ _AFXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     return err;
 }
 
-_AFXINL void AfxEmitTriangles(afxMeshBuilder* mshb, afxNat surfIdx, afxNat baseTriIdx, afxNat triCnt, afxNat const triVtxIdx[][3])
+_AKXINL void AfxEmitTriangles(afxMeshBuilder* mshb, afxNat surfIdx, afxNat baseTriIdx, afxNat triCnt, afxNat const triVtxIdx[][3])
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -457,7 +457,7 @@ _AFXINL void AfxEmitTriangles(afxMeshBuilder* mshb, afxNat surfIdx, afxNat baseT
     }
 }
 
-_AFXINL afxNat AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afxNat const jntIdx[], afxReal const weight[])
+_AKXINL afxNat AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afxNat const jntIdx[], afxReal const weight[])
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -475,7 +475,7 @@ _AFXINL afxNat AfxAddVertexBiases(afxMeshBuilder* mshb, afxNat cnt, afxNat const
     return baseBiasIdx;
 }
 
-_AFXINL void AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, afxNat cnt, afxString const name[])
+_AKXINL void AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, afxNat cnt, afxString const name[])
 {
     afxError err = NIL;
     AfxAssertType(mshb, afxFcc_MSHB);
@@ -488,7 +488,7 @@ _AFXINL void AfxRenameVertexPivots(afxMeshBuilder* mshb, afxNat basePivotIdx, af
     }
 }
 
-_AFX afxMesh AfxBuildCubeMesh(afxSimulation sim, afxReal scale)
+_AKX afxMesh AfxBuildCubeMesh(afxSimulation sim, afxReal scale)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -557,7 +557,7 @@ _AFX afxMesh AfxBuildCubeMesh(afxSimulation sim, afxReal scale)
     return msh;
 }
 
-_AFX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxReal height)
+_AKX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxReal height)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -581,7 +581,7 @@ _AFX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxRea
     AfxResetM4d(m);
     AfxScalingM4d(m, AfxSpawnV4d(width, height, 1.0, 1.0));
 
-    AfxPostMultiplyArrayedAtv4(m, AFX_COUNTOF(vertices), mshb.posn, mshb.posn);
+    AfxPostMultiplyArrayedAtv4d(m, AFX_COUNTOF(vertices), mshb.posn, mshb.posn);
 
     AfxUpdateVertexNormals(&mshb, 0, AFX_COUNTOF(normals), normals, sizeof(normals[0]));
     AfxUpdateVertexWraps(&mshb, 0, AFX_COUNTOF(texCoords), texCoords, sizeof(texCoords[0]));
@@ -594,7 +594,7 @@ _AFX afxMesh AfxBuildParallelepipedMesh(afxSimulation sim, afxReal width, afxRea
     return msh;
 }
 
-_AFX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
+_AKX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);

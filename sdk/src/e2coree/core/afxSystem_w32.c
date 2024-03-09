@@ -66,7 +66,6 @@ extern afxClassConfig const _AfxSysClsConfig;
 
 extern afxNat mainThreadId;
 extern afxResult _AfxDoSystemThreading(afxSystem sys, afxTime timeout);
-extern afxError _AfxSysLoadIcd(afxSystem sys, afxUri const* file, afxIcd *icd);
 
 extern afxClassConfig const _AfxMmuClsConfig;
 extern afxClassConfig const _AfxMdleClsConfig;
@@ -87,11 +86,6 @@ extern afxClassConfig const _AfxFsysClsConfig;
 extern afxClassConfig const _AfxHidClsConfig;
 extern afxClassConfig const _AfxCtrlClsConfig;
 extern afxClassConfig const _AfxStrcClsConfig;
-
-extern afxError _AfxDsysCtor(afxDrawSystem dsys, afxSystem sys, afxDrawSystemConfig const* config);
-extern afxError _AfxDsysDtor(afxDrawSystem dsys);
-extern afxError _AfxSsysCtor(afxSoundSystem ssys, afxSystem sys, afxSoundSystemConfig const* config);
-extern afxError _AfxSsysDtor(afxSoundSystem ssys);
 
 _AFX void Start_us_count(afxNat64* out_count)
 {
@@ -206,11 +200,13 @@ _AFX afxError _AfxSysScanForIcds(afxSystem sys, afxUri const* fileMask)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
+    
     HANDLE fh;
     WIN32_FIND_DATAA wfd;
-    afxFixedUri2048 pathBuf;
-    AfxMakeFixedUri2048(&pathBuf, NIL);
+    afxUri2048 pathBuf;
+    AfxMakeUri2048(&pathBuf, NIL);
     AfxResolveUri(afxFileFlag_RX, fileMask, &pathBuf.uri);
+
     if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
     {
         do
@@ -218,11 +214,11 @@ _AFX afxError _AfxSysScanForIcds(afxSystem sys, afxUri const* fileMask)
             afxUri uri, file;
             AfxMakeUri(&uri, wfd.cFileName, 0);
             AfxExcerptUriFile(&uri, &file);
-            afxIcd icd;
+            afxIcd icd = AfxFindIcd(&file);
 
-            if (!(icd = AfxFindIcd(&file)))
+            if (!(icd))
             {
-                _AfxSysLoadIcd(sys, &file, &icd);
+                AfxInstallClientDrivers(1, &file, &icd);
             }
         } while (FindNextFileA(fh, &wfd));
         FindClose(fh);
@@ -234,81 +230,56 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxNat mpCnt = 0;
-
-    afxUri tmpUriMaps[9];
-    AfxMakeUri(&tmpUriMaps[mpCnt++], ".", 0);
-#ifdef _DEBUG
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "system", 0);
-#endif
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "system", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "system", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "code", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "sound", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "data", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "art", 0);
-    AfxMakeUri(&tmpUriMaps[mpCnt++], "tmp", 0);
-
-    mpCnt = 0;
-
-    afxString tmpHostPaths[9];
-    AfxMakeString(&tmpHostPaths[mpCnt++], "", 0);
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system", 0);
+    if (AfxMountFileSystem(&AfxString("."), &AfxString(""), afxIoFlag_RX)) AfxThrowError();
+    else if (AfxMountFileSystem(&AfxString("system"), &AfxString("system"), afxIoFlag_RX))
+        AfxThrowError();
+    
+    if (!err)
+    {
 #ifdef AFX_PLATFORM_64
 #   ifdef AFX_PLATFORM_WIN
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system64w", 0);
+        if (AfxMountFileSystem(&AfxString("system"), &AfxString("system64"), afxIoFlag_RWX))
+            AfxThrowError();
 #       ifdef _DEBUG
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system64wd", 0);
+        else if (AfxMountFileSystem(&AfxString("system"), &AfxString("system64d"), afxIoFlag_RWX))
+            AfxThrowError();
 #       endif
 #   elif defined(AFX_PLATFORM_LINUX)
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system64x", 0);
+        if (AfxMountFileSystem(&AfxString("system"), &AfxString("system64x"), afxIoFlag_RWX))
+            AfxThrowError();
 #       ifdef _DEBUG
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system64xd", 0);
+        else if (AfxMountFileSystem(&AfxString("system"), &AfxString("system64xd"), afxIoFlag_RWX))
+            AfxThrowError();
 #       endif
 #   endif
 #elif defined(AFX_PLATFORM_32)
 #   ifdef AFX_PLATFORM_WIN
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system32w", 0);
+        if (AfxMountFileSystem(&AfxString("system"), &AfxString("system32"), afxIoFlag_RWX))
+            AfxThrowError();
 #       ifdef _DEBUG
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system32wd", 0);
+        else if (AfxMountFileSystem(&AfxString("system"), &AfxString("system32d"), afxIoFlag_RWX))
+            AfxThrowError();
 #       endif
 #   elif defined(AFX_PLATFORM_LINUX)
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system32x", 0);
+        if (AfxMountFileSystem(&AfxString("system"), &AfxString("system32x"), afxIoFlag_RWX))
+            AfxThrowError();
 #       ifdef _DEBUG
-    AfxMakeString(&tmpHostPaths[mpCnt++], "system32xd", 0);
+        else if (AfxMountFileSystem(&AfxString("system"), &AfxString("system32xd"), afxIoFlag_RWX))
+            AfxThrowError();
 #       endif
 #   endif
 #endif
-    AfxMakeString(&tmpHostPaths[mpCnt++], "code", 0);
-    AfxMakeString(&tmpHostPaths[mpCnt++], "sound", 0);
-    AfxMakeString(&tmpHostPaths[mpCnt++], "data", 0);
-    AfxMakeString(&tmpHostPaths[mpCnt++], "art", 0);
-    AfxMakeString(&tmpHostPaths[mpCnt++], "tmp", 0);
-
-    mpCnt = 0;
-
-    afxStoragePointSpecification mnptSpecs[] =
-    {
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RX, FALSE },
-        { &tmpUriMaps[mpCnt], &tmpHostPaths[mpCnt++], afxIoFlag_RWX, FALSE },
-    };
-
-    mpCnt = AFX_COUNTOF(mnptSpecs);
-    AfxAssert(AFX_COUNTOF(sys->defStops) >= mpCnt);
-
-    if (AfxMountFileSystems(mpCnt, mnptSpecs, sys->defStops)) AfxThrowError();
-    else
-    {
-
     }
 
+    if (!err)
+    {
+        if (AfxMountFileSystem(&AfxString("code"), &AfxString("code"), afxIoFlag_RX)) AfxThrowError();
+        else if (AfxMountFileSystem(&AfxString("sound"), &AfxString("sound"), afxIoFlag_RX)) AfxThrowError();
+        else if (AfxMountFileSystem(&AfxString("data"), &AfxString("data"), afxIoFlag_RX)) AfxThrowError();
+        else if (AfxMountFileSystem(&AfxString("art"), &AfxString("art"), afxIoFlag_RX)) AfxThrowError();
+        else if (AfxMountFileSystem(&AfxString("tmp"), &AfxString("tmp"), afxIoFlag_RWX))
+            AfxThrowError();
+    }
     return err;
 }
 
@@ -318,7 +289,10 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
 
-    afxSystemConfig const *cfg = ((afxSystemConfig const *)cookie->udd[0]) + cookie->no;
+    AfxZero(1, sizeof(AFX_OBJECT(afxSystem)), sys);
+
+    afxIni* ini = cookie->udd[0];
+    afxSystemConfig const *cfg = cookie->udd[1];
 
     // setting the process working directory and the Qwadro/system working directory...
     afxUri uri;
@@ -326,13 +300,13 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     GetModuleFileNameA(NIL, buf, sizeof(buf));
     AfxStrrchr(buf, '\\')[1] = '\0';
     AfxMakeUri(&uri, buf, 0);
-    AfxMakeFixedUri2048(&sys->pwd, &uri);
+    AfxMakeUri2048(&sys->pwd, &uri);
     AfxCanonicalizePath(&sys->pwd.uri, TRUE);
     GetModuleFileNameA(GetModuleHandleA("e2coree.dll"), buf, sizeof(buf));
     AfxStrrchr(buf, '\\')[1] = '\0';
     AfxStrcat(buf, "..\\");
     AfxMakeUri(&uri, buf, 0);
-    AfxMakeFixedUri2048(&sys->qwd, &uri);
+    AfxMakeUri2048(&sys->qwd, &uri);
     AfxCanonicalizePath(&sys->qwd.uri, TRUE);
     SetCurrentDirectoryA(AfxGetUriData(&sys->pwd.uri, 0));
 
@@ -342,33 +316,25 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     GetSystemInfo(&si);
 #endif
 
-    afxIni ini;
-    AfxSetUpIni(&ini);
     AfxMakeUri(&uri, "system.ini", 0);
 
-    if (AfxIniLoadFromFile(&ini, &uri))
+    if (AfxIniLoadFromFile(ini, &uri))
     {
-        afxFixedString2048 tbs;
-        AfxMakeFixedString2048(&tbs, AfxGetUriString(&sys->pwd.uri));
+        afxString2048 tbs;
+        AfxMakeString2048(&tbs, AfxGetUriString(&sys->pwd.uri));
         AfxConcatenateStringL(&tbs.str, "system.ini", 0);
 
         AfxUriFromString(&uri, &tbs.str.str);
-        AfxIniLoadFromFile(&ini, &uri);
+        AfxIniLoadFromFile(ini, &uri);
     }
     
     afxString issSystem = AFX_STRING("System");
-    afxString isHardwareThreadingCapacity = AFX_STRING("HardwareThreadingCapacity");
-    afxString iskMemoryPageSize = AFX_STRING("MemoryPageSize");
-    afxString iskAllocationGranularity = AFX_STRING("AllocationGranularity");
-    afxString iskIoBufferSize = AFX_STRING("IoBufferSize");
-    afxString iskUnitsPerMeter = AFX_STRING("UnitsPerMeter");
-    AfxIniGetNat(&ini, &issSystem, &isHardwareThreadingCapacity, &sys->hwConcurrencyCap);
-    AfxIniGetNat(&ini, &issSystem, &iskMemoryPageSize, &sys->memPageSize);
-    AfxIniGetNat(&ini, &issSystem, &iskAllocationGranularity, &sys->allocGranularity);
-    AfxIniGetNat(&ini, &issSystem, &iskIoBufferSize, &sys->ioBufSiz);
-    AfxIniGetReal(&ini, &issSystem, &iskUnitsPerMeter, &sys->unitsPerMeter);
-    AfxCleanUpIni(&ini);
-
+    AfxIniGetNat(ini, &issSystem, &AfxString("nHardwareThreadingCapacity"), &sys->hwConcurrencyCap);
+    AfxIniGetNat(ini, &issSystem, &AfxString("nMemoryPageSize"), &sys->memPageSize);
+    AfxIniGetNat(ini, &issSystem, &AfxString("nAllocationGranularity"), &sys->allocGranularity);
+    AfxIniGetNat(ini, &issSystem, &AfxString("nIoBufferSize"), &sys->ioBufSiz);
+    AfxIniGetReal(ini, &issSystem, &AfxString("fUnitsPerMeter"), &sys->unitsPerMeter);
+    
     if (0 == sys->hwConcurrencyCap)
     {
         sys->hwConcurrencyCap =
@@ -446,7 +412,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     }
 
     afxChain* classes = &sys->classes;
-    AfxTakeChain(classes, &sys);
+    AfxSetUpChain(classes, &sys);
     afxClassConfig clsCfg;
 
     sys->dsys = NIL;
@@ -457,40 +423,38 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     clsCfg = _AfxTxuClsConfig;
     clsCfg.unitsPerPage = sys->hwConcurrencyCap;
     clsCfg.maxCnt = sys->hwConcurrencyCap;
-    AfxMountClass(&sys->txus, NIL, classes, &clsCfg);
+    AfxMountClass(&sys->txuCls, NIL, classes, &clsCfg);
 
     theSys = sys; // evil trick to get this working at bootstrap
 
     afxTxu txu[32];
-    AfxAcquireObjects(&sys->txus, sys->hwConcurrencyCap, (void**)txu, (void const*[]) { sys });
+    AfxAcquireObjects(&sys->txuCls, sys->hwConcurrencyCap, (void**)txu, (void const*[]) { sys });
 
     if (!err)
     {
         afxMmu mmu = NIL;
         afxClassConfig clsCfg;
 
-        AfxMountClass(&sys->mmus, NIL, classes, &_AfxMmuClsConfig);
-        AfxMountClass(&sys->threads, NIL, classes, &_AfxThrClsConfig);
+        AfxMountClass(&sys->mmuCls, NIL, classes, &_AfxMmuClsConfig);
+        AfxMountClass(&sys->thrCls, NIL, classes, &_AfxThrClsConfig);
         clsCfg = _AfxDevClsConfig;
         clsCfg.mmu = mmu;
-        AfxMountClass(&sys->devices, NIL, classes, &clsCfg);
-        AfxMountClass(&sys->services, NIL, classes, &_AfxSvcClsConfig);
-        AfxMountClass(&sys->files, NIL, classes, &_AfxFileClsConfig);
-        AfxMountClass(&sys->streams, NIL, classes, &_AfxIosClsConfig);
-        AfxMountClass(&sys->codecs, NIL, classes, &_AfxCdcClsConfig);
-        AfxMountClass(&sys->archives, AfxGetFileClass(), classes, &_AfxArcClsConfig);
-        AfxMountClass(&sys->executables, NIL, classes, &_AfxMdleClsConfig);
-        AfxMountClass(&sys->icds, AfxGetExecutableClass(), classes, &_AfxIcdClsConfig);
+        AfxMountClass(&sys->devCls, NIL, classes, &clsCfg);
+        AfxMountClass(&sys->svcCls, NIL, classes, &_AfxSvcClsConfig);
+        AfxMountClass(&sys->fileCls, NIL, classes, &_AfxFileClsConfig);
+        AfxMountClass(&sys->iosCls, NIL, classes, &_AfxIosClsConfig);
+        AfxMountClass(&sys->cdcCls, NIL, classes, &_AfxCdcClsConfig);
+        AfxMountClass(&sys->archCls, AfxGetFileClass(), classes, &_AfxArcClsConfig);
+        AfxMountClass(&sys->exeCls, NIL, classes, &_AfxMdleClsConfig);
+        AfxMountClass(&sys->icdCls, NIL, classes, &_AfxIcdClsConfig);
         clsCfg = _AfxFsysClsConfig;
         clsCfg.mmu = mmu;
-        AfxMountClass(&sys->fsystems, NIL, classes, &clsCfg);
-        AfxMountClass(&sys->applications, NIL, classes, &_AfxAppClsConfig);
-        AfxMountClass(&sys->hids, AfxGetDeviceClass(), classes, &_AfxHidClsConfig);
-        AfxMountClass(&sys->keyboards, AfxGetHidClass(), classes, &_AfxKbdClsConfig);
-        AfxMountClass(&sys->mouses, AfxGetHidClass(), classes, &_AfxMseClsConfig);
-        AfxMountClass(&sys->controllers, AfxGetHidClass(), classes, &_AfxCtrlClsConfig);
-        AfxMountClass(&sys->strcats, NIL, classes, &_AfxStrcClsConfig);
-        AfxMountClass(&sys->simulations, NIL, classes, &_AfxSimClsConfig);
+        AfxMountClass(&sys->fsysCls, NIL, classes, &clsCfg);
+        AfxMountClass(&sys->hidCls, AfxGetDeviceClass(), classes, &_AfxHidClsConfig);
+        AfxMountClass(&sys->kbdCls, AfxGetHidClass(), classes, &_AfxKbdClsConfig);
+        AfxMountClass(&sys->mseCls, AfxGetHidClass(), classes, &_AfxMseClsConfig);
+        AfxMountClass(&sys->ctrlCls, AfxGetHidClass(), classes, &_AfxCtrlClsConfig);
+        AfxMountClass(&sys->strcCls, NIL, classes, &_AfxStrcClsConfig);
 
         AfxAdvertise("Memory page size: %d", sys->memPageSize);
         AfxAdvertise("Logical processor count: %d", sys->hwConcurrencyCap);
@@ -512,8 +476,8 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
                 if (_AfxSysMountDefaultFileStorages(sys)) AfxThrowError();
                 else
                 {
-                    afxFixedUri128 uri2;
-                    AfxMakeFixedUri128(&uri2, NIL);
+                    afxUri128 uri2;
+                    AfxMakeUri128(&uri2, NIL);
                     AfxFormatUri(&uri2.uri, "system/e2coree.dll");
 
                     if (AfxLoadExecutables(1, &uri2.uri, &sys->e2coree)) AfxThrowError();
@@ -527,45 +491,6 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
                         else
                         {
                             AfxAssertObjects(1, &sys->stdKbd, afxFcc_KBD);
-
-                            if (cfg->sound)
-                            {
-                                if (!(sys->ssys = AfxAllocate(sys->mmu, 1, sizeof(*sys->ssys), NIL, AfxHint()))) AfxThrowError();
-                                else
-                                {
-                                    if (_AfxSsysCtor(sys->ssys, sys, cfg->sound))
-                                        AfxThrowError();
-
-                                    if (err)
-                                        AfxDeallocate(sys->mmu, sys->ssys);
-                                }
-                            }
-
-                            if (!err)
-                            {
-                                if (cfg->draw)
-                                {
-                                    if (!(sys->dsys = AfxAllocate(sys->mmu, 1, sizeof(*sys->dsys), NIL, AfxHint()))) AfxThrowError();
-                                    else
-                                    {
-                                        if (_AfxDsysCtor(sys->dsys, sys, cfg->draw))
-                                            AfxThrowError();
-
-                                        if (err)
-                                            AfxDeallocate(sys->mmu, sys->dsys);
-                                    }
-                                }
-
-                                if (!err)
-                                {
-                                    afxUri uri;
-                                    AfxMakeUri(&uri, "system/*.icd", 0);
-                                    _AfxSysScanForIcds(sys, &uri);
-                                }
-
-                                sys->operating = TRUE;
-                                sys->interruptionRequested = FALSE;
-                            }
 
                             if (err)
                                 AfxReleaseObjects(1, (void*[]) { sys->stdKbd });
@@ -585,6 +510,9 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
                 AfxReleaseObjects(1, (void*[]) { sys->mmu });
             }
         }
+
+        if (err)
+            _AfxUninstallChainedClasses(&sys->classes);
     }
 
     if (err)
@@ -606,14 +534,14 @@ _AFX afxError _AfxSysDtor(afxSystem sys)
 
     if (sys->dsys)
     {
-        _AfxDsysDtor(sys->dsys);
-        AfxDeallocate(NIL, sys->dsys);
+        AfxReleaseObjects(1, (void*[]) { sys->dsys });
+        AfxReleaseObjects(1, (void*[]) { sys->e2draw });
     }
 
     if (sys->ssys)
     {
-        //_AfxSsysDtor(sys->ssys);
-        AfxDeallocate(NIL, sys->ssys);
+        AfxReleaseObjects(1, (void*[]) { sys->ssys });
+        AfxReleaseObjects(1, (void*[]) { sys->e2sound });
     }
 
     // will be released at class drop.
