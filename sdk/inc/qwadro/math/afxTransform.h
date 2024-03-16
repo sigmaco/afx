@@ -75,7 +75,7 @@ AFXINL void     AfxTransformArrayedLtv3dTransposed(afxTransform const* t, afxNat
 
 AFXINL void     AfxAssimilateTransforms(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxNat cnt, afxTransform const in[], afxTransform out[]);
 
-AFXINL void     AfxComposeTransformM4d(afxTransform const *t, afxM4d m); // build composite transform 4x4
+AFXINL void     AfxComputeTransformM4d(afxTransform const *t, afxM4d m); // build composite transform 4x4
 AFXINL void     AfxComposeTransformCompactMatrix(afxTransform const *t, afxV3d m[4]); // build composite transform 4x3 (compact matrix)
 
 #endif//AFX_TRANSFORM_H

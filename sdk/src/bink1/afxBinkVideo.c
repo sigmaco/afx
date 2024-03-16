@@ -337,7 +337,7 @@ _AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
 
     afxUri uri;
     AfxMakeUri(&uri, "data/pipeline/video/rgbOutYuv.xsh.xml?yFlipped", 0);
-    bnk->yv12ToRgbaPip = AfxAssemblyPipelineFromXsh(dctx, &uri);
+    bnk->yv12ToRgbaPip = AfxAssemblePipelineFromXsh(dctx, NIL, &uri);
     AfxAssert(bnk->yv12ToRgbaPip);
 
     return err;

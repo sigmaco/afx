@@ -32,6 +32,7 @@
 #include "qwadro/draw/pipe/afxVertexInput.h"
 #include "qwadro/draw/pipe/afxDrawCommands.h"
 #include "qwadro/draw/pipe/afxQueryPool.h"
+#include "qwadro/draw/afxDrawOutput.h"
 
 AFX_DEFINE_STRUCT(afxDrawQueueingConfig)
 {
@@ -115,6 +116,9 @@ struct afxBaseDrawContext
 
     afxError            (*waitFenc)(afxBool,afxNat64,afxNat,afxFence[]);
     afxError            (*resetFenc)(afxNat,afxFence[]);
+    afxError            (*executeCb)(afxDrawContext, afxNat, afxExecutionRequest const[],afxFence);
+    afxError            (*presentCb)(afxDrawContext,afxNat,afxPresentationRequest const[]);
+    afxError            (*stampCb)(afxDrawContext,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
 };
 #endif
 #endif

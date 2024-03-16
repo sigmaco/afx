@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{e079bb88-1f5f-4aad-abba-47ccd6d6b3a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro">
+      <UniqueIdentifier>{b6431235-55fe-4642-8ffd-16a65a827a88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\sound">
+      <UniqueIdentifier>{80d4d20d-a7dd-4576-964a-88b64778dff4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\aaxTracker.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxListener.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\aaxBank.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundBuffer.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundContext.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundDefs.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundInput.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundOutput.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundSystem.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundThread.h">
+      <Filter>qwadro\sound</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2sound.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\qwadro\sound\aaxTracker.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxListener.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\aaxBank.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundBuffer.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundContext.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundInput.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundOutput.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundSystem.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sound\afxSoundThread.c">
+      <Filter>qwadro\sound</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

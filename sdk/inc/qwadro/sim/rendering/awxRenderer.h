@@ -115,7 +115,7 @@ AFX_OBJECT(awxRenderer)
     afxPipeline lighting;
 
     awxPose*      lp;
-    awxWorldPose* wp;
+    awxPoseBuffer* wp;
 };
 
 #if 0

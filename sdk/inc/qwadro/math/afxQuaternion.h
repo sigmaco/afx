@@ -115,11 +115,11 @@ AFXINL afxReal  AfxNormalizeQuat(afxQuat q, afxQuat const in);
 /// Estimates the normalized version of a quaternion.
 /// This estimation offer increased performance at the expense of reduced accuracy. 
 /// So, it is appropriate for non-critical calculations where accuracy can be sacrificed for speed. The exact amount of lost accuracy and speed increase are platform dependent.
-/// This function internally calls the AfxEstimateNormalizedV4d function.
+/// This function internally calls the AfxNormalizeV4dEstimated function.
 /// q = An XMVECTOR union that is the estimate of the normalized version of a quaternion.
 /// in = A quaternion for which to estimate the normalized version.
 
-AFXINL afxReal  AfxEstimateNormalizedQuat(afxQuat q, afxQuat const in);
+AFXINL afxReal  AfxNormalizeQuatEstimated(afxQuat q, afxQuat const in);
 
 ////////////////////////////////////////////////////////////////////////////////
 

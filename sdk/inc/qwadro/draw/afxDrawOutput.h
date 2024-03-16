@@ -84,6 +84,13 @@ typedef enum afxPresentMode
 
 } afxPresentMode;
 
+AFX_DEFINE_STRUCT(afxPresentationRequest)
+{
+    afxSemaphore        wait;
+    afxDrawOutput       dout;
+    afxNat              bufIdx;
+};
+
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
     afxUri const*       endpoint; // window, desktop, etc
@@ -172,10 +179,16 @@ struct afxBaseDrawOutput
 
     afxError            (*reqCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
 
+
     void*               udd; // user-defined data
 };
 #endif
 #endif
+
+AVX afxError            AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig const cfg[], afxDrawOutput outputs[]);
+
+AVX afxError            AfxStampDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* fmt, ...);
+AVX afxError            AfxPresentDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[]);
 
 AVX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 

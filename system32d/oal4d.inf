@@ -1,0 +1,5 @@
+[Firmware]
+Service=audio
+Provider=SIGMA
+Version=
+DllFile=oal4d.dll

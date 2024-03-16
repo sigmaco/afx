@@ -34,7 +34,7 @@ afxCamera cam = NIL;
 awxBody bod = NIL;
 
 awxPose *sharedLocalPose;
-awxWorldPose *sharedWorldPose;
+awxPoseBuffer *sharedPoseBuffer;
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -83,10 +83,24 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                 afxSemaphore dscrCompleteSem = NIL;
 
                 if (AfxCompileDrawScript(dscr)) AfxThrowError();
-                else if (AfxExecuteDrawScripts(din, 1, &dscr, NIL, NIL, &dscrCompleteSem))
-                    AfxThrowError();
+                else
+                {
+                    afxExecutionRequest execReq = { 0 };
+                    execReq.dscr = dscr;
+                    execReq.signal = dscrCompleteSem;
 
-                if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx, &dscrCompleteSem))
+                    if (AfxExecuteDrawScripts(din, 1, &execReq, NIL))
+                        AfxThrowError();
+                }
+
+                afxPresentationRequest req = { 0 };
+                req.dout = dout;
+                req.bufIdx = outBufIdx;
+                req.wait = dscrCompleteSem;
+
+                //AfxStampDrawOutputBuffers(1, &req, AfxV2d(200, 200), &AfxString("Test"), 738);
+
+                if (AfxPresentDrawOutputBuffers(1, &req))
                     AfxThrowError();
             }
         }
@@ -120,12 +134,12 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 
 #if 0
     afxM4d m;
-    AfxGetModelInitialPlacement(bod->mdl, m);
-    AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedWorldPose, 0.0);
+    AfxComputeModelBaseOffset(bod->mdl, m);
+    AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedPoseBuffer, 0.0);
 #if 0
     afxM4d CompositeMatrix;
     AfxEnumerateRiggedMeshes(bod->mdl, i);
-    AfxBuildIndexedCompositeBuffer(bod->cachedSkl, sharedWorldPose, AfxGetRiggedMeshMapping(bod->mdl, i), 1, &CompositeMatrix);
+    AfxBuildIndexedCompositeBuffer(bod->cachedSkl, sharedPoseBuffer, AfxGetRiggedMeshMapping(bod->mdl, i), 1, &CompositeMatrix);
 #endif
 #endif
 }
@@ -309,7 +323,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     LastClock = StartClock;
 
     AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
-    AfxAcquireWorldPoses(sim, 1, (afxNat[]) { 256 }, NIL, &sharedWorldPose);
+    AfxAcquirePoseBuffers(sim, 1, (afxNat[]) { 256 }, NIL, &sharedPoseBuffer);
 
     return AFX_SUCCESS; 
 }

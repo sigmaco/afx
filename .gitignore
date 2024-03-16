@@ -2,7 +2,6 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/sdk/build/.vs
 /art/actor
 /art/scenario
 /art/skybox/red3
@@ -20,7 +19,9 @@
 /art/fmv/ubi.bik
 /art/fmv/disco.bik
 /art/object/backpack
-/sdk/build/**/Debug
-/sdk/build/**/Release
-/sdk/src/e2coree/math/afxCurve.c
-/sdk/src/e2coree/sim/motion/**.c
+
+/sdk/_vs17/.vs
+/sdk/_vs17/**/Debug
+/sdk/_vs17/**/Release
+/sdk/qwadro/math/afxCurve.c
+/sdk/qwadro/sim/motion/**.c

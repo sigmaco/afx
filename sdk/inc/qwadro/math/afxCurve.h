@@ -64,7 +64,7 @@ AFX_DEFINE_STRUCT(afxCurve)
 {
     afxCurveFormat  fmt;
     afxNat          degree;
-    afxNat          dimension;
+    afxNat          dimensionality;
     afxNat          knotCnt;
     afxReal*        knots; // 32f
     afxNat          ctrlCnt;
@@ -81,7 +81,7 @@ AFX_DEFINE_STRUCT(afxCurveBlueprint)
     afxBool         curveBuilderNeedsFreeing;
     afxNat          fmt;
     afxNat          degree;
-    afxNat          dimension;
+    afxNat          dimensionality;
     afxNat          knotCnt;
     afxReal const*  knotArray;
     afxReal const*  ctrlArray;
@@ -93,8 +93,8 @@ AFX_DEFINE_STRUCT(afxCurveBlueprint)
 };
 
 AKX afxInt      AfxGetCurveDegree(afxCurve const* c);
-AKX afxNat      AfxGetCurveDimension(afxCurve const* c);
-AKX afxNat      AfxGetCurveDimensionUnchecked(afxCurve const* c);
+AKX afxNat      AfxGetCurveDimensionality(afxCurve const* c);
+AKX afxNat      AfxGetCurveDimensionalityUnchecked(afxCurve const* c);
 
 AKX afxBool     AfxCurveIsIdentity(afxCurve const* c);
 AKX afxBool     AfxCurveIsKeyframed(afxCurve const* c);

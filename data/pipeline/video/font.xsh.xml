@@ -1,6 +1,6 @@
 <Qwadro>
     <Pipeline id='instanced'>
-        <CullMode_>BACK</CullMode_>
+        <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <VertexShader>data/pipeline/video/font.vsh</VertexShader>
         <VertexInputStream instanceRate='1'>0</VertexInputStream>

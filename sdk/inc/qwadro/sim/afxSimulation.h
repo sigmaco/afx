@@ -70,18 +70,18 @@ AKX smt Smt;
 
 typedef struct mmt
 {
-    void(*BuildSingleCompositeFromWorldPose_Generic)(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite[4][4]);
-    void(*BuildSingleCompositeFromWorldPoseTranspose_Generic)(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite3x4[3][4]);
-    void(*BuildPositionWorldPoseOnly_Generic)(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BuildPositionWorldPoseComposite_Generic)(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BuildPositionOrientationWorldPoseOnly_Generic)(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BuildPositionOrientationWorldPoseComposite_Generic)(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BuildIdentityWorldPoseOnly_Generic)(afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BuildIdentityWorldPoseComposite_Generic)(afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
-    void(*BWP_Dispatch)(afxTransform *t, afxReal const parentW[4][4], afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4]);
+    void(*BuildSingleCompositeFromPoseBuffer_Generic)(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite[4][4]);
+    void(*BuildSingleCompositeFromPoseBufferTranspose_Generic)(const afxReal InverseWorld4x4[4][4], const afxReal WorldMatrix[4][4], afxReal ResultComposite3x4[3][4]);
+    void(*BuildPositionPoseBufferOnly_Generic)(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BuildPositionPoseBufferComposite_Generic)(afxReal const Position[3], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BuildPositionOrientationPoseBufferOnly_Generic)(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BuildPositionOrientationPoseBufferComposite_Generic)(afxReal const Position[3], afxReal const Orientation[4], afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BuildIdentityPoseBufferOnly_Generic)(afxReal const ParentMatrix[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BuildIdentityPoseBufferComposite_Generic)(afxReal const ParentMatrix[4][4], afxReal const InverseWorld4x4[4][4], afxReal ResultComposite[4][4], afxReal ResultWorldMatrix[4][4]);
+    void(*BWP_Dispatch)(afxTransform *t, afxReal const iw[4][4], afxReal composite[4][4], afxReal w[4][4], afxReal const parentW[4][4]);
     void(*BWPNC_Dispatch)(afxTransform *t, afxReal const parentW[4][4], afxReal w[4][4]);
-    void(*BuildFullWorldPoseOnly_Generic)(afxTransform const* t, const afxReal *ParentMatrix, afxReal *ResultWorldMatrix);
-    void(*BuildFullWorldPoseComposite_Generic)(afxTransform const* t, const afxReal *ParentMatrix, const afxReal *InverseWorld4x4, afxReal *ResultComposite, afxReal *ResultWorldMatrix);
+    void(*BuildFullPoseBufferOnly_Generic)(afxTransform const* t, const afxReal *ParentMatrix, afxReal *ResultWorldMatrix);
+    void(*BuildFullPoseBufferComposite_Generic)(afxTransform const* t, const afxReal *ParentMatrix, const afxReal *InverseWorld4x4, afxReal *ResultComposite, afxReal *ResultWorldMatrix);
 } mmt;
 
 AKX mmt Mmt;

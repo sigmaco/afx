@@ -24,7 +24,7 @@
 #include "qwadro/math/afxSphere.h"
 #include "awxSimDefs.h"
 #include "qwadro/sim/awxPose.h"
-#include "qwadro/sim/awxWorldPose.h"
+#include "qwadro/sim/awxPoseBuffer.h"
 
 // Frames define the spatial relationships between the objects to which they are attached.
 // The newly created frame has no parent and is its own root.

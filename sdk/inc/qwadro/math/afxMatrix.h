@@ -74,7 +74,7 @@ yaw, about the vertical axis.
 ///     Em column-major, nós pós-multiplicamos um (column) vector (a direta) para cada columna da matrix (a esquerda), isto é, M[][c] x V[c].
 ///     Em row-major, nós pré-multiplicamos um (row) vector (a esquerda) para cada columna da matrix (a direita), isto é, V[r] x M[r][].
 ///     Uma pós-multiplicação de um (column) vector por uma column-major matrix deve ser igual de uma pré-multiplicação de (row) vector por uma row-major matrix.
-/// "Handedness" refere-se a forma como um sistema de coordenada considera o eixo X.
+/// "Handedness" refere-se a forma como um sistema de coordenada considera a orientação.
 ///     Em left-handed, um valor positivo ao eixo X representa o quão a "esquerda" algo está.
 ///     Em right-handed, um valor positivo ao eixo X representa o quão a "direita" algo está.
 
@@ -103,7 +103,7 @@ AFXINL void     AfxSetM3dTransposed(afxM3d m, afxV3d const x, afxV3d const y, af
 AFXINL void     AfxSetM4dTransposed(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);
 
 AFXINL void     AfxEnsureLtm4d(afxM4d m); // make affine and zero translation.
-AFXINL void     AfxEnsureAtm4d(afxM4d m); // make a matrix affine; zero every W column.
+AFXINL void     AfxEnsureAtm4d(afxM4d m); // make affine.
 
 AFXINL afxBool  AfxM2dIsIdentity(afxM2d const m);
 AFXINL afxBool  AfxM3dIsIdentity(afxM3d const m);
@@ -113,31 +113,31 @@ AFXINL void     AfxCopyM2d(afxM2d m, afxM2d const in);
 AFXINL void     AfxCopyM3d(afxM3d m, afxM3d const in);
 AFXINL void     AfxCopyM4d(afxM4d m, afxM4d const in); // copy every row and column.
 
-AFXINL void     AfxCopyLtm4d(afxM4d m, afxM4d const in); // copy only the 3x3
-AFXINL void     AfxCopyAtm4d(afxM4d m, afxM4d const in); // copy only the 4x3
+AFXINL void     AfxPickM2d(afxM3d const m, afxM2d sub);
+AFXINL void     AfxPickM2d2(afxM4d const m, afxM2d sup, afxM2d inf);
 
-AFXINL void     AfxCopyLtm4dTransposed(afxM4d m, afxM4d const in); // only consider 3x3; ignore W components and the W row.
-AFXINL void     AfxCopyAtm4dTransposed(afxM4d m, afxM4d const in); // only consider 4x3; ignore W components.
+AFXINL void     AfxPickM3d(afxM4d const m, afxM3d sub);
+AFXINL void     AfxPickM3dTransposed(afxM4d const m, afxM3d t);
 
-AFXINL void     AfxM2dFromM3d(afxM2d m, afxM3d const in);
-AFXINL void     AfxM2dFromM4d(afxM2d m, afxM4d const in);
+AFXINL void     AfxPickLtm4d(afxM4d const m, afxM4d ltm); // copy only the 3x3
+AFXINL void     AfxPickLtm4dTransposed(afxM4d const m, afxM4d t); // only consider 3x3; ignore W components and the W row.
 
-AFXINL void     AfxExtractM3d(afxM3d m, afxM4d const in);
-AFXINL void     AfxExtractM3dTransposed(afxM3d m, afxM4d const in);
+AFXINL void     AfxPickAtm4d(afxM4d const m, afxM4d atm); // copy only the 4x3
+AFXINL void     AfxPickAtm4dTransposed(afxM4d const m, afxM4d t); // only consider 4x3; ignore W components.
 
-AFXINL void     AfxM3dFromM2d(afxM3d m, afxM2d const in);
-AFXINL void     AfxM4dFromM2d(afxM4d m, afxM2d const in);
-AFXINL void     AfxM4dFromM3d(afxM4d m, afxM3d const in, afxV4d const translation);
+AFXINL void     AfxMakeM3dFromM2d(afxM3d m, afxM2d const in);
+AFXINL void     AfxMakeM4dFromM2d(afxM4d m, afxM2d const in);
+AFXINL void     AfxMakeM4dFromM3d(afxM4d m, afxM3d const in, afxV4d const translation);
 
 AFXINL void     AfxSwapM2d(afxM2d m, afxM2d other);
 AFXINL void     AfxSwapM3d(afxM3d m, afxM3d other);
 AFXINL void     AfxSwapM4d(afxM4d m, afxM4d other);
 
-AFXINL void     AfxTransposeM2d(afxM2d m, afxM2d const in);
-AFXINL void     AfxTransposeM3d(afxM3d m, afxM3d const in);
-AFXINL void     AfxTransposeM4d(afxM4d m, afxM4d const in);
+AFXINL void     AfxTransposeM2d(afxM2d const m, afxM2d t);
+AFXINL void     AfxTransposeM3d(afxM3d const m, afxM3d t);
+AFXINL void     AfxTransposeM4d(afxM4d const m, afxM4d t);
 
-AFXINL void     AfxM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation);
+AFXINL void     AfxMakeM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation);
 
 AFXINL void     AfxAddM2d(afxM2d m, afxM2d const a, afxM2d const b); // m = a + b
 AFXINL void     AfxAddM3d(afxM3d m, afxM3d const a, afxM3d const b); // m = a + b
@@ -252,13 +252,13 @@ AFXINL void     AfxPostMultiplyArrayedV2d(afxM2d const m, afxNat cnt, afxV2d con
 AFXINL void     AfxPostMultiplyArrayedV3d(afxM3d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxPostMultiplyArrayedV4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxPreMultiplyArrayedV2d(afxM2d const m, afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxPreMultiplyArrayedV3d(afxM3d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxPreMultiplyArrayedV4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
-
 AFXINL void     AfxPostMultiplyArrayedAtv3d(afxM4d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxPostMultiplyArrayedLtv4d(afxM3d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
 AFXINL void     AfxPostMultiplyArrayedAtv4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
+
+AFXINL void     AfxPreMultiplyArrayedV2d(afxM2d const m, afxNat cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxPreMultiplyArrayedV3d(afxM3d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxPreMultiplyArrayedV4d(afxM4d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);
 
 AFXINL void     AfxPreMultiplyArrayedAtv3d(afxM4d const m, afxNat cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxPreMultiplyArrayedLtv4d(afxM3d const m, afxNat cnt, afxV4d const in[], afxV4d out[]);

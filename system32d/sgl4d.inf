@@ -1,0 +1,21 @@
+[Firmware]
+Product=SIGMA GL/2
+Description=SIGMA-engineered continuously integrated OpenGL/Vulkan Video Graphics Infrastructure
+Vendor=SIGMA Technology Group
+Website=www.sigmaco.org
+Version=0.0.0
+Service=video
+DllFile=sgl4d.dll
+
+[OpenGL]
+BaseVerMajor=4
+BaseVerMinor=0
+GlslVer=400 core
+RobustContext=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoWsiSymbols=1
+ApiFile=opengl32.dll

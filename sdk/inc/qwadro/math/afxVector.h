@@ -141,11 +141,11 @@ AFXINL void     AfxCopyArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
 AFXINL void     AfxCopyArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxCopyArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxLtv3dFromLtv2d(afxV3d v, afxV2d const in); // 2D linear transformation vector. Z is 0.
-AFXINL void     AfxV4dFromV2d(afxV4d v, afxV2d const in);
-AFXINL void     AfxV4dFromV3d(afxV4d v, afxV3d const in);
-AFXINL void     AfxAtv3dFromAtv2d(afxV3d v, afxV2d const in); // 2D affine transfomartion vector. Z is 1.
-AFXINL void     AfxAtv4dFromAtv3d(afxV4d v, afxV3d const in); // 3D affine transformation vector. W is 1.
+AFXINL void     AfxCopyV3dFromV2d(afxV3d v, afxV2d const in); // 2D linear transformation vector. Z is 0.
+AFXINL void     AfxCopyLtv4dFromV2d(afxV4d v, afxV2d const in);
+AFXINL void     AfxCopyLtv4d(afxV4d v, afxV3d const in);
+AFXINL void     AfxCopyV3dFromV2d_(afxV3d v, afxV2d const in); // 2D affine transfomartion vector. Z is 1.
+AFXINL void     AfxCopyAtv4d(afxV4d v, afxV3d const in); // 3D affine transformation vector. W is 1.
 
 AFXINL void     AfxSwapV2d(afxV2d v, afxV2d other);
 AFXINL void     AfxSwapV3d(afxV3d v, afxV3d other);
@@ -191,24 +191,24 @@ AFXINL void     AfxRecipV2d(afxV2d v, afxV2d const in); // v = 1 / in
 AFXINL void     AfxRecipV3d(afxV3d v, afxV3d const in); // v = 1 / in
 AFXINL void     AfxRecipV4d(afxV4d v, afxV4d const in); // v = 1 / in
 
-AFXINL afxReal  AfxNormalV2d(afxV2d v, afxV2d const in);
-AFXINL afxReal  AfxNormalV3d(afxV3d v, afxV3d const in);
-AFXINL afxReal  AfxNormalV4d(afxV4d v, afxV4d const in);
+AFXINL afxReal  AfxNormalizeV2d(afxV2d v, afxV2d const in);
+AFXINL afxReal  AfxNormalizeV3d(afxV3d v, afxV3d const in);
+AFXINL afxReal  AfxNormalizeV4d(afxV4d v, afxV4d const in);
 
-AFXINL afxReal  AfxNormalV3dFromV4d(afxV3d v, afxV4d const in);
-AFXINL afxReal  AfxNormalV4dFromV3d(afxV4d v, afxV3d const in);
+AFXINL afxReal  AfxNormalizeV3dFromV4d(afxV3d v, afxV4d const in);
+AFXINL afxReal  AfxNormalizeV4dFromV3d(afxV4d v, afxV3d const in);
 
-AFXINL afxReal  AfxEstimateNormalizedV2d(afxV2d v, afxV2d const in);
-AFXINL afxReal  AfxEstimateNormalizedV3d(afxV3d v, afxV3d const in);
-AFXINL afxReal  AfxEstimateNormalizedV4d(afxV4d v, afxV4d const in);
+AFXINL afxReal  AfxNormalizeV2dEstimated(afxV2d v, afxV2d const in);
+AFXINL afxReal  AfxNormalizeV3dEstimated(afxV3d v, afxV3d const in);
+AFXINL afxReal  AfxNormalizeV4dEstimated(afxV4d v, afxV4d const in);
 
 AFXINL void     AfxNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
 AFXINL void     AfxNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
 AFXINL void     AfxNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
 
-AFXINL void     AfxNormalizeOrZeroArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
-AFXINL void     AfxNormalizeOrZeroArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
-AFXINL void     AfxNormalizeOrZeroArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV2d(afxNat cnt, afxV2d const in[], afxV2d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV3d(afxNat cnt, afxV3d const in[], afxV3d out[]);
+AFXINL void     AfxZeroOrNormalizeArrayedV4d(afxNat cnt, afxV4d const in[], afxV4d out[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Arithmetica                                                                //
@@ -370,15 +370,6 @@ AFXINL afxReal  AfxDotV2d(afxV2d const in, afxV2d const other);
 AFXINL afxReal  AfxDotV3d(afxV3d const in, afxV3d const other);
 AFXINL afxReal  AfxDotV4d(afxV4d const in, afxV4d const other);
 
-// Computes the cross product (a cross b) and stores the result in v
-// The cross product is only defined in 3D space and takes two non-parallel vectors as input and produces a third vector that is orthogonal dst both the input vectors.
-// If both the input vectors are orthogonal dst each other as well, a cross product would result in 3 orthogonal vectors; this will prove useful in the upcoming chapters.
-// The following image shows what this looks like in 3D space:
-
-AFXINL void     AfxCrossV2d(afxV2d v, afxV2d const a, afxV2d const b);
-AFXINL void     AfxCrossV3d(afxV3d v, afxV3d const a, afxV3d const b);
-AFXINL void     AfxCrossV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c);
-
 // Computes the squared magnitude
 
 AFXINL afxReal  AfxSqV2d(afxV2d const in);
@@ -394,6 +385,15 @@ AFXINL afxReal  AfxMagV4d(afxV4d const in);
 AFXINL afxReal  AfxMagV2dRecip(afxV2d const in);
 AFXINL afxReal  AfxMagV3dRecip(afxV3d const in);
 AFXINL afxReal  AfxMagV4dRecip(afxV4d const in);
+
+// Computes the cross product (a cross b) and stores the result in v
+// The cross product is only defined in 3D space and takes two non-parallel vectors as input and produces a third vector that is orthogonal dst both the input vectors.
+// If both the input vectors are orthogonal dst each other as well, a cross product would result in 3 orthogonal vectors; this will prove useful in the upcoming chapters.
+// The following image shows what this looks like in 3D space:
+
+AFXINL void     AfxCrossV2d(afxV2d v, afxV2d const a, afxV2d const b);
+AFXINL void     AfxCrossV3d(afxV3d v, afxV3d const a, afxV3d const b);
+AFXINL void     AfxCrossV4d(afxV4d v, afxV4d const a, afxV4d const b, afxV4d const c);
 
 ////////////////////////////////////////////////////////////////////////////////
 // VECTOR TRANSFORMATION METHODS                                              //
@@ -421,6 +421,8 @@ AFXINL void     AfxPostMultiplyLtv4d(afxM3d const m, afxV4d const in, afxV4d out
 AFXINL void     AfxPostMultiplyAtv2d(afxM4d const m, afxV2d const in, afxV2d out); // m * v
 AFXINL void     AfxPostMultiplyAtv3d(afxM4d const m, afxV3d const in, afxV3d out); // m * v
 AFXINL void     AfxPostMultiplyAtv4d(afxM4d const m, afxV4d const in, afxV4d out); // m * v
+
+AFXINL void     TransposeVectorTransform4x3(afxV3d Dest, float D3, afxM4d const Transform);
 
 AFXINL void     AfxPreMultiplyV2d(afxM2d const m, afxV2d const in, afxV2d out); // v * m
 AFXINL void     AfxPreMultiplyV3d(afxM3d const m, afxV3d const in, afxV3d out); // v * m

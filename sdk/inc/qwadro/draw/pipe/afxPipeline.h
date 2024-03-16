@@ -93,6 +93,7 @@ AFX_DEFINE_STRUCT(afxPipelineConfig)
     afxCullMode                 cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
     afxBool                     invertFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
     
+    afxVertexInput              vin;
     afxNat                      visCnt;
     struct
     {
@@ -168,7 +169,7 @@ AFX_DEFINE_STRUCT(afxPipelineAssembler)
 //AVX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
 
 AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
-AVX afxPipeline         AfxAssemblyPipelineFromXsh(afxDrawContext dctx, afxUri const* uri);
+AVX afxPipeline         AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
 
 AVX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
 AVX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);
