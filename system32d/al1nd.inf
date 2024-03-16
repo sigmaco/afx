@@ -1,5 +1,0 @@
-[Firmware]
-Service=audio
-Provider=SIGMA
-Version=
-DllFile=al1nd.dll

@@ -30,12 +30,13 @@ AFX_DEFINE_STRUCT(afxVertexInputAttr)
     afxNat                  streamIdx;
     afxNat32                offset;
     afxVertexFormat         fmt;
+    afxBool                 normalized;
 };
 
 AFX_DEFINE_STRUCT(afxVertexInputStream)
 {
     afxNat                  slotIdx;
-    afxNat32                stride;
+    //afxNat32                stride;
     afxNat                  instanceRate; // 0
 };
 

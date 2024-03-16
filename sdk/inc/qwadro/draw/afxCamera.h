@@ -184,8 +184,8 @@ AVX void    AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3]);
 
 AVX void    AfxRecomputeCameraMatrices(afxCamera cam);
 
-AVX void    AfxGetCameraViewMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4]);
-AVX void    AfxGetCameraProjectionMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4]);
+AVX void    AfxGetCameraMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4]);
+AVX void    AfxGetCameraProjectiveMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4]);
 
 AVX void    AfxGetCameraPosition(afxCamera cam, afxReal origin[4]);
 AVX void    AfxGetCameraLeft(afxCamera cam, afxReal left[3]);
@@ -201,11 +201,11 @@ AVX void    AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 
 AVX afxError    AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[]);
 
-AVX afxReal     AfxFindAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+AVX afxReal     AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
 
 // If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 // you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AVX afxReal     AfxTryFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
+AVX afxReal     AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 #endif//AFX_CAMERA_H

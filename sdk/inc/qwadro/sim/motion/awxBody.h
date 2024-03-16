@@ -76,7 +76,7 @@ AKX awxMotor            AwxRunAnimation(awxBody bod, afxReal startTime, awxAnima
 
 AKX void                AwxAccumulateBodyAnimationsLODSparse(awxBody bod, afxNat basePivotIdx, afxNat pivotCnt, awxPose* rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
 AKX void                AwxSampleBodyAnimationsLODSparse(awxBody bod, afxNat basePivotIdx, afxNat pivotCnt, awxPose* rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
-AKX void                AwxSampleBodyAnimationsAcceleratedLOD(awxBody bod, afxNat pivotCnt, afxM4d const offset, awxPose* scratch, awxWorldPose* rslt, afxReal allowedErr);
+AKX void                AwxSampleBodyAnimationsAcceleratedLOD(awxBody bod, afxNat pivotCnt, afxM4d const offset, awxPose* scratch, awxPoseBuffer* rslt, afxReal allowedErr);
 AKX afxBool             AwxSampleSingleBodyAnimationLODSparse(awxBody bod, awxMotor moto, afxNat basePivotIdx, afxNat pivotCnt, awxPose* rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
 
 ////////////////////////////////////////////////////////////////////////////////

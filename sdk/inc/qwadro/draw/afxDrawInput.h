@@ -93,9 +93,6 @@ struct afxBaseDrawInput
     afxUri128      txdUris[8];
     afxFile             txdHandles[8];
 
-    afxError            (*submitCb)(afxDrawInput, afxNat, afxDrawScript[], afxSemaphore[], afxPipelineStage const[], afxSemaphore[]);
-    afxError            (*presentCb)(afxDrawInput, afxNat, afxDrawOutput[], afxNat[], afxSemaphore[]);
-
     afxArray            scripts;
     afxNat              minScriptReserve;
 
@@ -124,17 +121,19 @@ AVX afxClass*           AfxGetIndexBufferClass(afxDrawInput din);
 
 AVX afxNat              AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[]);
 
-AVX afxError            AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxDrawScript scripts[], afxSemaphore wait[], afxPipelineStage const waitStage[], afxSemaphore signal[]);
-
-AFX_DEFINE_STRUCT(afxPresentationQueueing)
+AFX_DEFINE_STRUCT(afxExecutionRequest)
 {
-    afxNat          cnt;
-    afxDrawOutput   outputs[4];
-    afxNat          outBufIdx[4];
-    afxSemaphore    wait;
+    afxSemaphore        wait;
+    afxDrawScript       dscr;
+    afxSemaphore        signal;
 };
 
-AVX afxError            AfxPresentDrawBuffers(afxDrawInput din, afxNat cnt, afxDrawOutput outputs[], afxNat outBufIdx[], afxSemaphore wait[]);
+AVX afxError            AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
+
+// Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
+
+AVX afxError            AfxStampDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
+AVX afxError            AfxPresentDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
 
 AVX void*               AfxGetDrawInputUdd(afxDrawInput din);
 

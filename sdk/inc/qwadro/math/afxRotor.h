@@ -57,7 +57,7 @@ AFXINL afxReal afxMagRotor(afxRotor const r);
 
 AFXINL void AfxNormalizeRotor(afxRotor r, afxRotor const in);
 
-AFXINL void AfxM3dFromRotor(afxM3d m, afxRotor const r);
+AFXINL void AfxMakeM3dFromRotor(afxM3d m, afxRotor const r);
 
 AFXINL void AfxRotateRotor(afxRotor r, afxRotor const other);
 

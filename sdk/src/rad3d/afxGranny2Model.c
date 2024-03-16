@@ -236,6 +236,8 @@ afxSkeleton Gr2SkeletonToQwadro(afxSimulation sim, afxStringCatalog strc, granny
 
         afxTransform t;
         AfxSetTransformWithIdentityCheck(&t, Bone->LocalTransform.Position, Bone->LocalTransform.Orientation, Bone->LocalTransform.ScaleShear);
+        AfxAssert(Bone->LocalTransform.Flags == t.flags);
+        Bone->LocalTransform.Flags = t.flags;
         AfxResetBoneWithIw(&sklb, i, &id, Bone->ParentIndex, &t, Bone->InverseWorld4x4, Bone->LODError);
     }
     afxSkeleton skl;
@@ -412,10 +414,11 @@ awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringCatalog strc, granny_tra
 
     for (afxNat i = 0; i < TrackGroup->TransformTrackCount; i++)
     {
-        AfxMakeString(&tid, TrackGroup->TransformTracks[i].Name, 0);
         afxMask flags = TrackGroup->TransformTracks[i].Flags;
 
-        afxCurve o, t, s;
+        afxCurve o, t = { 0 }, s = { 0 };
+        t.fmt = afxCurveFormat_DaIdentity;
+        s.fmt = afxCurveFormat_DaIdentity;
         Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].OrientationCurve, &o);
         Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].PositionCurve, &t);
         Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].ScaleShearCurve, &s);

@@ -41,102 +41,7 @@ afxPipeline dpip[2] = { NIL, NIL };
 afxRaster tex[4] = { NIL, NIL, NIL, NIL };
 
 afxBinkVideo bnk = { 0 };
-afxRaster fontRas = NIL;
-afxRaster fontRas2 = NIL;
-afxSampler fontSmp = NIL;
-afxPipeline fontPip = NIL;
-afxBuffer textVbo = NIL;
 afxBuffer viewConstantsBuffer = NIL;
-afxTypography typ = NIL;
-
-void AfxCmdDrawText(afxDrawScript dscr, afxNat fontIdx, afxWhd origin, afxReal scale, afxString const* text)
-{
-    afxReal x = origin[0];
-    afxReal y = origin[1];
-    afxNat numchar = text->len;
-    afxReal r = 1, g = 1, b = 1;
-    afxReal x2 = x;
-
-    afxReal* verts = AfxMapBufferRange(textVbo, 0, ((16 * 16) * 16), afxBufferAccess_W);
-
-    for (char const *ptr = text->start, i = 0; *ptr != '\0'; ptr++)
-    {
-        // Decrement 'y' for any CR's
-        if (*ptr == '\n')
-        {
-            x = x2;
-            y -= 16;
-            continue;
-        }
-
-#if 0
-        // Just advance spaces instead of rendering empty quads
-        if (*ptr == ' ')
-        {
-            x += 16;
-            numchar--;
-            continue;
-        }
-#endif
-
-        // ANSI color escape codes
-        // I'm sure there's a better way to do this!
-        // But it works, so whatever.
-        if (*ptr == '\x1B')
-        {
-            ptr++;
-            if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '0'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 0.0f;	b = 0.0f; }	// BLACK
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '1'&&*(ptr + 3) == 'm') { r = 0.5f;	g = 0.0f;	b = 0.0f; }	// DARK RED
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '2'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 0.5f;	b = 0.0f; }	// DARK GREEN
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '3'&&*(ptr + 3) == 'm') { r = 0.5f;	g = 0.5f;	b = 0.0f; }	// DARK YELLOW
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '4'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 0.0f;	b = 0.5f; }	// DARK BLUE
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '5'&&*(ptr + 3) == 'm') { r = 0.5f;	g = 0.0f;	b = 0.5f; }	// DARK MAGENTA
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '6'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 0.5f;	b = 0.5f; }	// DARK CYAN
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '3'&&*(ptr + 2) == '7'&&*(ptr + 3) == 'm') { r = 0.5f;	g = 0.5f;	b = 0.5f; }	// GREY
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '0'&&*(ptr + 3) == 'm') { r = 0.5f;	g = 0.5f;	b = 0.5f; }	// GREY
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '1'&&*(ptr + 3) == 'm') { r = 1.0f;	g = 0.0f;	b = 0.0f; }	// RED
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '2'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 1.0f;	b = 0.0f; }	// GREEN
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '3'&&*(ptr + 3) == 'm') { r = 1.0f;	g = 1.0f;	b = 0.0f; }	// YELLOW
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '4'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 0.0f;	b = 1.0f; }	// BLUE
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '5'&&*(ptr + 3) == 'm') { r = 1.0f;	g = 0.0f;	b = 1.0f; }	// MAGENTA
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '6'&&*(ptr + 3) == 'm') { r = 0.0f;	g = 1.0f;	b = 1.0f; }	// CYAN
-            else if (*(ptr + 0) == '['&&*(ptr + 1) == '9'&&*(ptr + 2) == '7'&&*(ptr + 3) == 'm') { r = 1.0f;	g = 1.0f;	b = 1.0f; }	// WHITE
-            ptr += 4;
-        }
-
-        // Emit position, atlas offset, and color for this character
-        *verts++ = x;
-        *verts++ = y;
-        *verts++ = (float)(*ptr % 16)*0.0625f; // *verts++ = (float)(*ptr % 16)*0.0625f;
-        *verts++ = 1.0f - (float)(*ptr / 16)*0.0625f; // *verts++ = 1.0f - (float)(*ptr / 16)*0.0625f;
-        *verts++ = r;
-        *verts++ = g;
-        *verts++ = b;
-        *verts++ = 1.f;
-
-        // Advance one character
-        x += 16;
-    }
-
-    AfxUnmapBufferRange(textVbo);
-
-    AfxCmdBindPipeline(dscr, 0, fontPip);
-
-    AfxCmdBindBuffers(dscr, 0, 0, 1, &viewConstantsBuffer, NIL, NIL);
-    
-    if (fontIdx)
-    {
-        AfxCmdBindRasters(dscr, 0, 1, 1, &fontSmp, &fontRas2);
-    }
-    else
-    {
-        AfxCmdBindRasters(dscr, 0, 1, 1, &fontSmp, &fontRas);
-    }
-
-    //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV4d) * 2 }, (afxBool const[]) { 1 });
-    AfxCmdBindVertexSources(dscr, 0, 1, &textVbo, NIL, NIL, NIL);
-    AfxCmdDraw(dscr, 0, numchar, 0, 4);
-}
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -250,76 +155,27 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     }
 #endif
 
-#if !0
-                    awxViewConstants vc = { 0 };
-
-                    //afxWhd extent;
-                    AfxGetDrawOutputExtent(dout[0], extent);
-
-                    //afxViewport vp = { 0 };
-                    vp.extent[0] = bnk->whd[0];
-                    vp.extent[1] = bnk->whd[1];
-                    vp.depth[1] = 1;
-
-                    vc.viewExtent[0] = vp.extent[0];
-                    vc.viewExtent[1] = vp.extent[1];
-
-                    //AfxComputeRenderWareProjectionM4d(vc.p, &vp, FALSE);
-                    //AfxResetOrthographicMatrix(vc.p, vp.extent[0] / vp.extent[1], 1, FALSE, afxClipBoundary_NEG_ONE_TO_ONE);
-                    //AfxComputeBasicPerspectiveMatrix(vc.p, vp.extent[0] / vp.extent[1], FALSE, afxClipBoundary_NEG_ONE_TO_ONE);
-
-                    // glOrtho( 0, c.right - c.left, c.bottom - c.top, 0, -1.0F, 1.0F );
-                    AfxComputeOffcenterOrthographicMatrices(din, 0, vp.extent[0], 0, vp.extent[1], -1.f, 1.f, vc.p, NIL);
-
-                    AfxResetM4d(vc.v);
-
-                    //afxDrawTarget dpt = { 0 };
-                    dpt.clearValue.color[0] = 0.3;
-                    dpt.clearValue.color[1] = 0.1;
-                    dpt.clearValue.color[2] = 0.3;
-                    dpt.clearValue.color[3] = 1;
-                    dpt.loadOp = afxSurfaceLoadOp_LOAD;
-                    dpt.storeOp = afxSurfaceStoreOp_STORE;
-
-                    //afxSynthesisConfig dps = { 0 };
-                    dps.canv = canv;
-                    dps.layerCnt = 1;
-                    dps.rasterCnt = 1;
-                    dps.rasters = &dpt;
-                    dps.depth = NIL;
-                    dps.stencil = NIL;
-                    dps.area.extent[0] = vp.extent[0];
-                    dps.area.extent[1] = vp.extent[1];
-                    AfxCmdBeginSynthesis(dscr, &dps);
-
-                    AfxCmdResetViewports(dscr, 1, &vp);
-
-                    //AfxCmdBindFontSIG(dscr, 0, 1, &typ, &fontPip, &fontSmp, &fontRas);
-
-                    //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV4d) }, NIL);
-                    AfxCmdBindVertexSources(dscr, 0, 1, &textVbo, NIL, NIL, NIL);
-
-                    AfxUpdateBuffer(viewConstantsBuffer, 0, sizeof(vc), &vc);
-
-                    AfxCmdBindBuffers(dscr, 0, 0, 1, &viewConstantsBuffer, NIL, NIL);
-                    AfxCmdBindRasters(dscr, 0, 1, 1, &fontSmp, &fontRas);
-
-                    AfxCmdDrawText(dscr, AfxKeyIsPressed(0, AFX_KEY_A), (afxNat[]) { 100, 100, 1 }, 1, &AfxString("Qwadro Execution Ecosystem\nSIGMA_GL/2"));
-
-                    //render_text(dscr, "W", 10, 50, 1, 1);
-                    //render_text(dscr, "Qwadro Execution Ecosystem", 10, 50, sx, sy);
-                    //render_text(dscr, "SIGMA Technology Group", 40, 10, sx, sy);
-
-                    AfxCmdFinishSynthesis(dscr);
-#endif
-
                     afxSemaphore dscrCompleteSem = NIL;
 
                     if (AfxCompileDrawScript(dscr)) AfxThrowError();
-                    else if (AfxExecuteDrawScripts(din, 1, &dscr, NIL, NIL, &dscrCompleteSem))
-                        AfxThrowError();
+                    else
+                    {
+                        afxExecutionRequest execReq = { 0 };
+                        execReq.dscr = dscr;
+                        execReq.signal = dscrCompleteSem;
 
-                    if (AfxPresentDrawBuffers(din, 1, &dout[0], &outBufIdx, &dscrCompleteSem))
+                        if (AfxExecuteDrawScripts(din, 1, &execReq, NIL))
+                            AfxThrowError();
+                    }
+
+                    afxPresentationRequest req = { 0 };
+                    req.dout = dout[0];
+                    req.bufIdx = outBufIdx;
+                    req.wait = dscrCompleteSem;
+
+                    //AfxStampDrawOutputBuffers(1, &req, AfxV2d(100, 100), &AfxString("Qwadro Execution Ecosystem\nSIGMA_GL/2"), 738);
+
+                    if (AfxPresentDrawOutputBuffers(1, &req))
                         AfxThrowError();
                 }
             }
@@ -429,43 +285,6 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxAdjustDrawOutput(dout[2], bnk.whd);
 #endif
 
-    afxUri uri2;
-    AfxMakeUri(&uri2, "art/vcr-mono-font-256.tga", 0);
-    AfxLoadRastersFromTarga(dctx, afxRasterUsage_SAMPLING, NIL, 1, &uri2, &fontRas);
-    AfxMakeUri(&uri2, "art/vcr-mono-font-256-left.tga", 0);
-    AfxLoadRastersFromTarga(dctx, afxRasterUsage_SAMPLING, NIL, 1, &uri2, &fontRas2);
-   
-    afxNat visCnt = 1;
-    afxVertexInputStream vis[1];
-    vis[0].instanceRate = 1;
-    vis[0].slotIdx = 0;
-    vis[0].stride = 0;
-    AfxMakeUri(&uri2, "data/pipeline/video/font.xsh.xml?instanced", 0);
-    fontPip = AfxAssemblyPipelineFromXsh(dctx, &uri2);
-
-    afxBufferSpecification vboSpec = { 0 };
-    vboSpec.access = afxBufferAccess_W;
-    vboSpec.usage = afxBufferUsage_VERTEX;
-    vboSpec.src = NIL;
-    vboSpec.siz = ((16 * 16) * 16);
-    AfxAcquireBuffers(dctx, 1, &vboSpec, &textVbo);
-
-    afxSamplerConfig smpCnf;
-    AfxDescribeDefaultSampler(&smpCnf);
-    smpCnf.minFilter = afxTexelFilter_LINEAR;
-    smpCnf.uvw[0] = afxTexelAddress_CLAMP;
-    smpCnf.uvw[1] = afxTexelAddress_CLAMP;
-    smpCnf.uvw[2] = afxTexelAddress_CLAMP;
-    AfxAcquireSamplers(dctx, 1, &smpCnf, &fontSmp);
-    AfxAssertObjects(1, &fontSmp, afxFcc_SAMP);
-
-    afxBufferSpecification bufSpec;
-    bufSpec.siz = sizeof(awxViewConstants);
-    bufSpec.usage = afxBufferUsage_UNIFORM;
-    bufSpec.access = afxBufferAccess_W;
-    bufSpec.src = NIL;
-    AfxAcquireBuffers(dctx, 1, &bufSpec, &viewConstantsBuffer);
-
     bnk.running |= TRUE;
     return AFX_SUCCESS;
 }
@@ -534,7 +353,7 @@ int main(int argc, char const* argv[])
         AfxChooseDrawSystemConfiguration(&dsysCfg);
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
-        sysCfg.sound = TRUE;
+        sysCfg.sound = NIL;
         AfxDoSystemBootUp(&sysCfg);
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 

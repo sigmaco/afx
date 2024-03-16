@@ -808,9 +808,9 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             awxPose *lp;
             AfxAcquirePoses(sim, 1, &skl->jointCnt, &lp);
             AfxComputeRestLocalPose(skl, 0, skl->jointCnt, lp);
-            awxWorldPose *wp;
-            AfxAcquireWorldPoses(sim, 1, &skl->jointCnt, NIL, &wp);
-            AfxComputeRestWorldPose(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
+            awxPoseBuffer *wp;
+            AfxAcquirePoseBuffers(sim, 1, &skl->jointCnt, NIL, &wp);
+            AfxComputeRestPoseBuffer(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
 
             fclose(fp);
         }

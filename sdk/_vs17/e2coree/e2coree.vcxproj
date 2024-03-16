@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\qwadro\afxQwadro.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxClock.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxCondition.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxMutex.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxSlock.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxThread.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxTime.h" />
+    <ClInclude Include="..\..\inc\qwadro\async\afxTxu.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxBitmap.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxClass.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxDevice.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxIcd.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxCoreDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxDatabase.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxDatajack.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxDebug.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxEvent.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxFcc.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxIndexedString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxInitialization.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxIterator.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxChain.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxMap.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxExecutable.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxObject.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxRawString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxResidency.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxService.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxSimd.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxString.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxTerminal.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxVersion.h" />
+    <ClInclude Include="..\..\inc\qwadro\game\agxGameData.h" />
+    <ClInclude Include="..\..\inc\qwadro\game\agxGameDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\game\agxGameObject.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxArchive.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxData.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxFile.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxGamepad.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxHid.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxIoScript.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxKeyboard.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxMouse.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxResource.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxSource.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxFileSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxStream.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxUrd.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxUri.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxXml.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxAabb.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxFrustum.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxMathDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxMatrix.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxPlane.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxOpticalMatrix.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxQuaternion.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxReal.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxRotor.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxSphere.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxTransform.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxTrigonometry.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxVector.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxVertex.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxViewport.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxVolume.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxArena.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxArray.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxMmu.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxPool.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxQueue.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxSlabAllocator.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxStack.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\inc\qwadro\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\inc\qwadro\go-horse.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\qwadro\afxQwadro.c" />
+    <ClCompile Include="..\..\qwadro\afxQwadroCpp.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\async\afxClock_w32.c" />
+    <ClCompile Include="..\..\qwadro\async\afxCondition.c" />
+    <ClCompile Include="..\..\qwadro\async\afxMutex.c" />
+    <ClCompile Include="..\..\qwadro\async\afxSlock_w32.c" />
+    <ClCompile Include="..\..\qwadro\async\afxThread.c" />
+    <ClCompile Include="..\..\qwadro\async\afxTime_w32.c" />
+    <ClCompile Include="..\..\qwadro\async\afxTxu_w32.c" />
+    <ClCompile Include="..\..\qwadro\core\afxBitmap.c" />
+    <ClCompile Include="..\..\qwadro\core\afxRestring.c" />
+    <ClCompile Include="..\..\qwadro\core\afxClass.c" />
+    <ClCompile Include="..\..\qwadro\core\afxDevice.c" />
+    <ClCompile Include="..\..\qwadro\core\afxFixedString.c" />
+    <ClCompile Include="..\..\qwadro\core\afxIcd.c" />
+    <ClCompile Include="..\..\qwadro\core\afxCoreDefs.c" />
+    <ClCompile Include="..\..\qwadro\core\afxChain.c" />
+    <ClCompile Include="..\..\qwadro\core\afxDatabase.c" />
+    <ClCompile Include="..\..\qwadro\core\afxDatajack.c" />
+    <ClCompile Include="..\..\qwadro\core\afxDebug_w32.c" />
+    <ClCompile Include="..\..\qwadro\core\afxIndexedString.c" />
+    <ClCompile Include="..\..\qwadro\core\afxInitialization.c" />
+    <ClCompile Include="..\..\qwadro\core\afxMap.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\core\afxExecutable.c" />
+    <ClCompile Include="..\..\qwadro\core\afxObject.c" />
+    <ClCompile Include="..\..\qwadro\core\afxRawString.c" />
+    <ClCompile Include="..\..\qwadro\core\afxService.c" />
+    <ClCompile Include="..\..\qwadro\core\afxSimd.c" />
+    <ClCompile Include="..\..\qwadro\core\afxString.c" />
+    <ClCompile Include="..\..\qwadro\core\afxSystem.c" />
+    <ClCompile Include="..\..\qwadro\core\afxSystem_w32.c" />
+    <ClCompile Include="..\..\qwadro\core\afxTerminal.c" />
+    <ClCompile Include="..\..\qwadro\core\afxVersion.c" />
+    <ClCompile Include="..\..\qwadro\game\agxGameData.c" />
+    <ClCompile Include="..\..\qwadro\game\agxGameObject.c" />
+    <ClCompile Include="..\..\qwadro\io\afxArchive.c" />
+    <ClCompile Include="..\..\qwadro\io\afxData.c" />
+    <ClCompile Include="..\..\qwadro\io\afxFile.c" />
+    <ClCompile Include="..\..\qwadro\io\afxGamepad.c" />
+    <ClCompile Include="..\..\qwadro\io\afxHid.c" />
+    <ClCompile Include="..\..\qwadro\io\afxIoScript.c" />
+    <ClCompile Include="..\..\qwadro\io\afxKeyboard.c" />
+    <ClCompile Include="..\..\qwadro\io\afxMouse.c" />
+    <ClCompile Include="..\..\qwadro\io\afxResource.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\io\afxSource.c" />
+    <ClCompile Include="..\..\qwadro\io\afxFileSystem.c" />
+    <ClCompile Include="..\..\qwadro\io\afxStream.c" />
+    <ClCompile Include="..\..\qwadro\io\afxUrd.c" />
+    <ClCompile Include="..\..\qwadro\io\afxUri.c" />
+    <ClCompile Include="..\..\qwadro\io\afxXml.c" />
+    <ClCompile Include="..\..\qwadro\math\afxAabb.c" />
+    <ClCompile Include="..\..\qwadro\math\afxFrustum.c" />
+    <ClCompile Include="..\..\qwadro\math\afxMatrix.c" />
+    <ClCompile Include="..\..\qwadro\math\afxPlane.c" />
+    <ClCompile Include="..\..\qwadro\math\afxOpticalMatrix.c" />
+    <ClCompile Include="..\..\qwadro\math\afxQuaternion.c" />
+    <ClCompile Include="..\..\qwadro\math\afxReal.c" />
+    <ClCompile Include="..\..\qwadro\math\afxRotor.c" />
+    <ClCompile Include="..\..\qwadro\math\afxTrigonometry.c" />
+    <ClCompile Include="..\..\qwadro\math\afxVector.c" />
+    <ClCompile Include="..\..\qwadro\math\afxMathOps.c" />
+    <ClCompile Include="..\..\qwadro\math\afxTransform.c" />
+    <ClCompile Include="..\..\qwadro\math\afxVertex.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxArena.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxArray.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxMmu.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxPool.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxQueue.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxSlabAllocator.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxStack.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2coree.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</ProjectGuid>
+    <RootNamespace>e2coree</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClangClAdditionalOptions>-Wincompatible-pointer-types-discards-qualifiers</ClangClAdditionalOptions>
+    <LldLinkAdditionalOptions>
+    </LldLinkAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClangClAdditionalOptions>-Wincompatible-pointer-types-discards-qualifiers</ClangClAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClangClAdditionalOptions>-Wincompatible-pointer-types-discards-qualifiers</ClangClAdditionalOptions>
+    <LldLinkAdditionalOptions>
+    </LldLinkAdditionalOptions>
+  </PropertyGroup>
+  <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClangClAdditionalOptions>-Wincompatible-pointer-types-discards-qualifiers</ClangClAdditionalOptions>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level4</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
+      <FloatingPointExceptions>true</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>__e2coree__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

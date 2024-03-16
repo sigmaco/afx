@@ -33,7 +33,7 @@
 AFX_DECLARE_STRUCT(awxControlledAnimation);
 AFX_DECLARE_STRUCT(awxControlledPose);
 AFX_DECLARE_STRUCT(awxPose);
-AFX_DECLARE_STRUCT(awxWorldPose);
+AFX_DECLARE_STRUCT(awxPoseBuffer);
 
 AFX_DECLARE_STRUCT(awxMotorInterlinkCallbacks);
 
@@ -77,7 +77,7 @@ AFX_DEFINE_STRUCT(awxMotorInterlinkCallbacks)
     struct controlled_pose*(*GetControlledPose)(awxMotive*);
     afxBool(*InitializeBindingState)(awxMotive*, void*);
     void(*AccumulateBindingState)(awxMotive*, afxNat, afxNat, awxPose*, afxReal, afxNat const*);
-    void(*BuildBindingDirect)(awxMotive*, afxNat, afxReal const*, awxWorldPose*, afxReal);
+    void(*BuildBindingDirect)(awxMotive*, afxNat, afxReal const*, awxPoseBuffer*, afxReal);
     void(*AccumulateLoopTransform)(awxMotive*, afxReal, afxReal*, afxReal*, afxReal*, afxBool);
     void(*CleanupBindingState)(awxMotive*);
 };

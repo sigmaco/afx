@@ -366,7 +366,6 @@ AVX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputEndp
 AVX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);
 
 AVX afxError        AfxAcquireDrawContexts(afxNat ddevId, afxNat cnt, afxDrawContextConfig const cfg[], afxDrawContext contexts[]);
-AVX afxError        AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig const cfg[], afxDrawOutput outputs[]);
 AVX afxError        AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig const cfg[], afxDrawInput inputs[]);
 
 #endif//AFX_DRAW_SYSTEM_H

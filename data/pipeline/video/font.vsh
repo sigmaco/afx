@@ -30,5 +30,5 @@ void main()
 {
     gl_Position = p * vec4((pos[gl_VertexID] + in_instPos), 0.0, 1.0);
     sgl_v.uv = uv[gl_VertexID] + in_instUv;
-    sgl_v.rgba = in_instRgba;
+    sgl_v.rgba = vec4(1,1,1,1);//in_instRgba;
 }

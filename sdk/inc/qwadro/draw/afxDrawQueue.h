@@ -28,29 +28,6 @@
 
 // A afxDrawQueue é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
 
-AFX_DEFINE_STRUCT(_afxDqueSubm)
-{
-    afxLinkage              chain;
-    afxNat                  submNo; // this submission number ordinal (B2F)
-    afxNat                  reqSubmNo; // required submission num ordinal (need be executed before this). Usually submissions of resource benefiting of fetch priority.
-    afxTime                 pushTime; // submission (into input) time
-    afxTime                 pullTime; // fecth (by queue) time
-    afxTime                 complTime; // completation time    
-    struct
-    {
-        afxNat              scriptCnt;
-        afxDrawScript       scripts[4];
-        void*               data[4];
-    };
-    struct
-    {
-        afxNat              outputCnt;
-        afxDrawOutput       outputs[4];
-        afxNat              outBufIdx[4];
-    };
-    afxError                (*exec)(afxDrawQueue,_afxDqueSubm*);
-};
-
 AFX_DEFINE_STRUCT(afxDrawCommand)
 {
     afxNat              cmdNo;

@@ -29,7 +29,7 @@ typedef enum quaternion_mode
 } quaternion_mode;
 
 
-AFX_DEFINE_STRUCT(awxPoseTransform)
+AFX_DEFINE_STRUCT(awxArticulation)
 {
     afxReal             weight;
     afxNat              cnt;
@@ -39,8 +39,8 @@ AFX_DEFINE_STRUCT(awxPoseTransform)
 
 AFX_DEFINE_STRUCT(awxPose)
 {
-    afxNat              cap;
-    awxPoseTransform*   xforms;
+    afxNat              artCnt;
+    awxArticulation*    arts;
     afxReal             fillThreshold;
     afxNat              traversalId;
 };
@@ -49,7 +49,7 @@ AFX_DEFINE_STRUCT(awxPose)
 /// Neste contexto, "pose local" significa que cada articulação no afxSkeleton é representada por um afxTransform que é relativo a sua articulação-parente imediata. 
 /// Você pode criar uma afxPostura assim: 
 
-AKX afxError        AfxAcquirePoses(void *sim, afxNat cnt, afxNat const cap[], awxPose *lp[]);
+AKX afxError        AfxAcquirePoses(void *sim, afxNat cnt, afxNat const artCnt[], awxPose *lp[]);
 
 /// e quando você estiver satisfeito de usá-lo, você deve liberá-lo assim: 
 
