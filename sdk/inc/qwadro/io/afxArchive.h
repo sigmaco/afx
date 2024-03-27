@@ -28,8 +28,8 @@
 #ifdef _AFX_ARCHIVE_C
 AFX_OBJECT(afxArchive)
 {
-    AFX_OBJECT(afxFile) file;
-    afxArray            entries;
+    afxStream   file;
+    afxArray    entries;
 };
 #endif//_AFX_ARCHIVE_C
 #endif//_AFX_CORE_C
@@ -65,8 +65,8 @@ AFX afxNat      AfxGetArchivedFileUncompressedSize(afxArchive arc, afxNat idx);
 AFX afxString*  AfxGetArchivedFileName(afxArchive arc, afxNat idx, afxUri *name);
 AFX afxNat32    AfxGetArchivedFileCrc(afxArchive arc, afxNat idx);
 
-//AFX afxBool     _AfxGetArcD(afxArchive arc, struct _afxArcD **arcD, struct _afxSysD* sysD);
+////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError    AfxAcquireArchives(afxNat cnt, afxArchive archives[], afxUri const uri[], afxFileFlags const flags[]);
+AFX afxArchive  AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxError* err);
 
 #endif//AFX_ARCHIVE_H

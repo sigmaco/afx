@@ -16,7 +16,7 @@
 
 #define _AFX_UX_C
 #define _AFX_OVERLAY_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/ux/afxOverlay.h"
 
 _AUX afxError _AfxOvlyCtor(afxOverlay ovly, afxCookie const *cookie)
@@ -41,13 +41,13 @@ _AUX afxError _AfxOvlyDtor(afxOverlay ovly)
 
 #if 0
     if (appD->hoveredWidg == wid)
-        AfxApplicationHoverWidget(app, NIL, NIL);
+        AfxHoverWidget(app, NIL, NIL);
 
     if (appD->focusedWidg == wid)
-        AfxApplicationFocusWidget(app, NIL, NIL);
+        AfxFocusWidget(app, NIL, NIL);
 
     if (appD->grabbedWidg == wid)
-        AfxApplicationGrabWidget(app, NIL, NIL);
+        AfxGrabWidget(app, NIL, NIL);
 #endif
 
     return err;

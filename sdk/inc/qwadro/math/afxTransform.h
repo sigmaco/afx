@@ -14,16 +14,18 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+/// Qwadro performs all bone animation on decomposed transforms, where "decomposed" means that the position, orientation, and scale/shear components have been pulled out into separately animating quantities. 
+/// This allows for fair, efficient animation and interpolation, whereas keeping everything as a tangled 4x4 matrix does not. 
+
+/// The afxTransform is the primary structure used to store these decomposed transforms. Each structure stores a 4-element position vector, a 4-element quaternion orientation, and a 3x3 scale/shear matrix (note that it may also contain mirroring). 
+/// Additionally, each transform stores a set of afxTransformFlags that indicates which, if any, of these values current has a non-identity value. These flags are solely used to speed up computation.
+
 #ifndef AFX_TRANSFORM_H
 #define AFX_TRANSFORM_H
 
-#include "afxMathDefs.h"
-
-// Qwadro performs all bone animation on decomposed transforms, where "decomposed" means that the position, orientation, and scale/shear components have been pulled out into separately animating quantities. 
-// This allows for fair, efficient animation and interpolation, whereas keeping everything as a tangled 4x4 matrix does not. 
-
-// The afxTransform is the primary structure used to store these decomposed transforms. Each structure stores a 4-element position vector, a 4-element quaternion orientation, and a 3x3 scale/shear matrix (note that it may also contain mirroring). 
-// Additionally, each transform stores a set of afxTransformFlags that indicates which, if any, of these values current has a non-identity value. These flags are solely used to speed up computation.
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxQuaternion.h"
 
 typedef enum afxTransformFlags
 {

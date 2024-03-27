@@ -259,7 +259,6 @@ _SGL afxBindSchema _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, 
 
 _SGL afxError _SglBschDtor(afxBindSchema lego)
 {
-    AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
 
@@ -274,7 +273,7 @@ _SGL afxError _SglBschDtor(afxBindSchema lego)
             AfxDeallocateString(&lego->base.entries[i].name);
         }
 
-        AfxDeallocate(mmu, lego->base.entries);
+        AfxDeallocate(lego->base.entries);
     }
 
     return err;
@@ -282,7 +281,6 @@ _SGL afxError _SglBschDtor(afxBindSchema lego)
 
 _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
 {
-    AfxEntry("lego=%p", lego);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
 
@@ -300,7 +298,7 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
     lego->base.entryCnt = 0;
     lego->base.entries = NIL;
 
-    if (bindCnt && !(lego->base.entries = AfxAllocate(mmu, bindCnt, sizeof(lego->base.entries[0]), 0, AfxHint()))) AfxThrowError();
+    if (bindCnt && !(lego->base.entries = AfxAllocate(bindCnt, sizeof(lego->base.entries[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < bindCnt; i++)

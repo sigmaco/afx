@@ -92,9 +92,9 @@ AFX_DEFINE_STRUCT(afxModelAssembler)
 {
     afxSimulation _sim;
 
-    afxStringCatalog pvtCatalog;
-    afxStringCatalog attrCatalog;
-    afxStringCatalog idCatalog;
+    afxStringBase pvtCatalog;
+    afxStringBase attrCatalog;
+    afxStringBase idCatalog;
 
     afxArray        bones;
     afxArray        skeletons;
@@ -104,7 +104,7 @@ AFX_DEFINE_STRUCT(afxModelAssembler)
 
 AKX afxError    AfxAssembleModels(afxModelAssembler mdla, afxNat cnt, afxString const id[], afxNat sklIdx[], afxNat mshCnt[], afxNat mshIdx[][1], afxTransform init[]);
 
-// afxStringCatalog strc, afxMesh const meshes[], afxNat cnt, afxModelBlueprint const blueprints[]
+// afxStringBase strb, afxMesh const meshes[], afxNat cnt, afxModelBlueprint const blueprints[]
 AKX afxError    _AfxAssembleModel(afxSimulation sim, afxModelAssembler* assembler, afxNat cnt, afxNat const blueIndices[], afxModel models[]);
 
 AKX afxError    AfxPushMeshBlueprint(afxModelAssembler mdla, afxString const* id, afxNat* blueIdx);
@@ -126,8 +126,8 @@ AKX void        AfxPushBoneParent(afxModelAssembler mdla, afxNat boneIdx, afxNat
 
 AKX void        AfxPushBoneTransforms(afxModelAssembler mdla, afxNat boneIdx, afxTransform const* lt, afxTransform const* wt, afxReal const iw[4][4]);
 
-AKX void        AfxSetPivotNameCatalog(afxModelAssembler mdla, afxStringCatalog strc);
-AKX void        AfxSetVertexAttributeNameCatalog(afxModelAssembler mdla, afxStringCatalog strc);
+AKX void        AfxSetPivotNameCatalog(afxModelAssembler mdla, afxStringBase strb);
+AKX void        AfxSetVertexAttributeNameCatalog(afxModelAssembler mdla, afxStringBase strb);
 
 AKX void        AfxPushVertexData(afxModelAssembler mdla, awxVertexData vtd);
 AKX void        AddPushMeshTopology(afxModelAssembler mdla, afxMeshTopology msht);

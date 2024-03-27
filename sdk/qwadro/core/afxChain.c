@@ -17,11 +17,11 @@
 #include "qwadro/core/afxChain.h"
 
 
-_AFXINL void AfxSetUpChain(afxChain *ch, void *owner)
+_AFXINL void AfxSetUpChain(afxChain *ch, void *holder)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
-    ch->owner = owner;
+    ch->holder = holder;
     ch->cnt = 0;
     afxLinkage* anchor = &(ch->anchor);
     anchor->next = (anchor->prev = anchor);
@@ -32,9 +32,9 @@ _AFXINL void AfxSwapChains(afxChain *ch, afxChain *other)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
-    void *owner = ch->owner;
-    ch->owner = other->owner;
-    other->owner = owner;
+    void *holder = ch->holder;
+    ch->holder = other->holder;
+    other->holder = holder;
     afxNat cnt = ch->cnt;
     ch->cnt = other->cnt;
     other->cnt = ch->cnt;
@@ -56,11 +56,11 @@ _AFXINL afxNat AfxGetChainLength(afxChain const *ch)
     return ch->cnt;
 }
 
-_AFXINL void* AfxGetChainOwner(afxChain const *ch)
+_AFXINL void* AfxGetChainHolder(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
-    return ch->owner;
+    return ch->holder;
 }
 
 _AFXINL afxLinkage* AfxGetLastLinkage(afxChain const *ch)
@@ -77,14 +77,14 @@ _AFXINL afxLinkage* AfxGetFirstLinkage(afxChain const *ch)
     return ch->anchor.prev != &ch->anchor ? ch->anchor.prev : NIL;
 }
 
-_AFXINL afxLinkage* AfxGetChainAnchor(afxChain *ch)
+_AFXINL afxLinkage* AfxGetAnchor(afxChain *ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
     return &ch->anchor;
 }
 
-_AFXINL afxLinkage const* AfxGetChainAnchorConst(afxChain const *ch)
+_AFXINL afxLinkage const* AfxGetAnchorConst(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
@@ -95,7 +95,7 @@ _AFXINL afxBool AfxChainIsEmpty(afxChain const *ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(ch);
-    return (AfxGetLastLinkage(ch) == AfxGetChainAnchorConst(ch));
+    return (ch->anchor.next == &(ch->anchor));
 }
 
 _AFXINL void AfxResetLinkage(afxLinkage *lnk)
@@ -125,8 +125,7 @@ _AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
         lnk->prev = anchor;
         (anchor)->next->prev = lnk;
         anchor->next = lnk;
-        lnkIdx = ch->cnt;
-        ch->cnt++;
+        lnkIdx = ch->cnt++;
     }
     return lnkIdx;
 }
@@ -181,7 +180,7 @@ _AFXINL afxLinkage* AfxFindLastLinkage(afxChain const *ch, afxNat idx)
     afxLinkage const *lnk = &ch->anchor;
     lnk = lnk->next;
 
-    for (afxNat i = 0; i < ch->cnt; i++)
+    for (afxInt i = 0; i < ch->cnt; i++)
     {
         AfxAssert(lnk);
 
@@ -202,7 +201,7 @@ _AFXINL afxLinkage* AfxFindFirstLinkage(afxChain const *ch, afxNat idx)
     afxLinkage const *lnk = &ch->anchor;
     lnk = lnk->prev;
 
-    for (afxNat i = 0; i < ch->cnt; i++)
+    for (afxInt i = 0; i < ch->cnt; i++)
     {
         AfxAssert(lnk);
 
@@ -221,7 +220,7 @@ _AFXINL afxBool AfxFindChainLinkageIndex(afxChain const *ch, afxLinkage *lnk, af
 
     afxLinkage const *lnk2 = &ch->anchor;
 
-    for (afxNat i = 0; i < ch->cnt; i++)
+    for (afxInt i = 0; i < ch->cnt; i++)
     {
         lnk2 = lnk2->next;
         AfxAssert(lnk2);
@@ -243,7 +242,7 @@ _AFXINL afxBool AfxFindChainLinkageIndexB2F(afxChain const *ch, afxLinkage *lnk,
 
     afxLinkage const *lnk2 = &ch->anchor;
 
-    for (afxNat i = 0; i < ch->cnt; i++)
+    for (afxInt i = 0; i < ch->cnt; i++)
     {
         lnk2 = lnk2->prev;
         AfxAssert(lnk2);
@@ -262,7 +261,7 @@ _AFXINL void* AfxGetLinker(afxLinkage const *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lnk);
-    return lnk->chain ? lnk->chain->owner : NIL;
+    return lnk->chain ? lnk->chain->holder : NIL;
 }
 
 _AFXINL afxChain* AfxGetChain(afxLinkage const *lnk)
@@ -296,14 +295,14 @@ _AFXINL afxNat AfxInvokeLinkages(afxChain *ch, afxBool fromLast, afxNat first, a
 
     afxLinkage *lnk = &ch->anchor;
 
-    for (afxNat i = 0; i < ch->cnt; i++)
+    for (afxInt i = 0; i < ch->cnt; i++)
     {
         lnk = fromLast ? lnk->next : lnk->prev;
         
         if (lnk == &ch->anchor)
             break;
 
-        if (i >= (afxNat)first)
+        if (i >= (afxInt)first)
         {
             ++rslt;
 

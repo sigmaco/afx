@@ -113,7 +113,7 @@ _AFXINL void AfxDeallocateArray(afxArray *arr)
     afxMmu mmu = AfxGetSystemContext();
 
     if (arr->bytemap)
-        AfxDeallocate(mmu, arr->bytemap);
+        AfxDeallocate(arr->bytemap);
 
     arr->bytemap = NIL;
     arr->mem = NIL;
@@ -175,7 +175,7 @@ _AFXINL afxError AfxReserveArraySpace(afxArray *arr, afxNat cap)
 
         afxByte *p;
 
-        if (!(p = AfxReallocate(mmu, arr->bytemap, arr->unitSiz, cap, 0, AfxHint()) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHint())*/)) AfxThrowError();
+        if (!(p = AfxReallocate(arr->bytemap, arr->unitSiz, cap, 0, AfxHint()) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHint())*/)) AfxThrowError();
         else
         {
             arr->cap = cap;

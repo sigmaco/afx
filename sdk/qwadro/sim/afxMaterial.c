@@ -216,7 +216,7 @@ _AKX afxError _AfxMtlDtor(afxMaterial mtl)
                 AfxReleaseObjects(1, (void*[]) { sub });
         }
 
-        AfxDeallocate(mmu, mtl->maps);
+        AfxDeallocate(mtl->maps);
     }
 
     if (mtl->tex)
@@ -253,7 +253,7 @@ _AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
         mtl->mapCnt = 0;
         mtl->maps = NIL;
     }
-    else if (!(mtl->maps = AfxAllocate(mmu, mapCnt, sizeof(mtl->maps[0]), 0, AfxHint()))) AfxThrowError();
+    else if (!(mtl->maps = AfxAllocate(mapCnt, sizeof(mtl->maps[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < mapCnt; i++)
@@ -304,7 +304,7 @@ _AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
             if (mtl->maps[i].sub)
                 AfxReleaseObjects(1, (void*[]) { mtl->maps[i].sub });
 
-        AfxDeallocate(mmu, mtl->maps);
+        AfxDeallocate(mtl->maps);
     }
 
     return err;

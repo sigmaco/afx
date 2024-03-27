@@ -17,7 +17,6 @@
 #include "salSdev.h"
 
 extern afxClassConfig const _SalSctxClsConfig;
-AFX afxSoundSystem AfxGetSoundSystem(void);
 
 _A4D afxChar const sigmaSignature[] =
 {
@@ -307,7 +306,7 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
                 if (!spu->alcMakeContextCurrent(spu->alc)) AfxThrowError();
                 else
                 {
-                    _SalLoadOpenAlVmt(spu, 0, AFX_COUNTOF(alVmtNames), alVmtNames, &spu->al.ptr, unitIdx == 0);
+                    _SalLoadOpenAlVmt(spu, 0, AFX_COUNTOF(alVmtNames), alVmtNames, (void**)&spu->al.ptr, FALSE/*unitIdx == 0*/);
 
                     afxNat uiBuffer;
                     al->GenBuffers(1, &uiBuffer);
@@ -315,14 +314,14 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
                     afxNat uiSource;
                     al->GenSources(1, &uiSource);
 
-                    afxFile fd;
+                    afxStream fd;
                     afxUri uri;
-                    AfxMakeUri(&uri, "sound/qwadroDeepNote44kHz", 0);
-                    AfxOpenFiles(afxFileFlag_R, 1, &uri, &fd);
+                    AfxMakeUri(&uri, "system/qwadroDeepNote", 0);
+                    fd = AfxOpenFile(&uri, afxIoFlag_R);
 
-                    afxNat dataSiz = AfxMeasureStream(AfxGetFileStream(fd));
-                    void *data = AfxAllocate(NIL, dataSiz, 1, 0, AfxHint());
-                    AfxReadStream(AfxGetFileStream(fd), data, dataSiz, 0);
+                    afxNat dataSiz = AfxMeasureStream(fd);
+                    void *data = AfxAllocate(dataSiz, 1, 0, AfxHint());
+                    AfxReadStream(fd, dataSiz, 0, data);
 
                     al->BufferData(uiBuffer, AL_FORMAT_STEREO16, data, dataSiz, 44100);
                     AfxReleaseObjects(1, (void*[]) { fd });
@@ -416,19 +415,18 @@ _A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxSoundThread sthr)
 
 _A4D afxError _SalSdevIddCtor(afxSoundDevice sdev)
 {
-    AfxEntry("sdev=%p", sdev);
     afxError err = AFX_ERR_NONE;
 
     afxMmu mmu = AfxGetSoundSystemMmu();
 
-    if (!(sdev->idd = AfxAllocate(mmu, 1, (sdev->iddSiz = sizeof(sdev->idd[0])), 0, AfxHint()))) AfxThrowError();
+    if (!(sdev->idd = AfxAllocate(1, (sdev->iddSiz = sizeof(sdev->idd[0])), 0, AfxHint()))) AfxThrowError();
     else
     {
         sdev->procCb = _SalSdevProcCb;
 
         sdev->idd->spuCnt = 1;
 
-        if (!(sdev->idd->spus = AfxAllocate(mmu, sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(sdev->idd->spus = AfxAllocate(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             AfxZero(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), sdev->idd->spus);
@@ -462,7 +460,7 @@ _A4D afxError _SalSdevIddCtor(afxSoundDevice sdev)
         }
 
         if (err)
-            AfxDeallocate(mmu, sdev->idd);
+            AfxDeallocate(sdev->idd);
     }
     return err;
 }
@@ -479,8 +477,8 @@ _A4D afxError _SalSdevIddDtor(afxSoundDevice sdev)
         if (_SalDestroySpu(sdev, i))
             AfxThrowError();
 
-    AfxDeallocate(mmu, sdev->idd->spus);
-    AfxDeallocate(mmu, sdev->idd);
+    AfxDeallocate(sdev->idd->spus);
+    AfxDeallocate(sdev->idd);
     sdev->idd = NIL;
 
 
@@ -492,7 +490,7 @@ _A4D afxError AfxIcdHookPoint(afxIcd icd)
     afxError err = AFX_ERR_NONE;
 
     //ddrv->mdle = info->mdle;
-    //AfxAssertObjects(1, &ddrv->mdle, afxFcc_EXE);
+    //AfxAssertObjects(1, &ddrv->mdle, afxFcc_MDLE);
     //AfxReacquireObjects(1, (void*[]) { ddrv->mdle });
 
     static afxString devDomain, devName;

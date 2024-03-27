@@ -90,7 +90,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
 {
     afxBool             running;
     afxDrawContext      dctx;
-    afxExecutable           binkw32;
+    afxModule           binkw32;
     void                *bik;
     afxNat              whd[3];
 
@@ -125,6 +125,6 @@ AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream dscr);
 
 #endif//AFX_BINK_VIDEO_H

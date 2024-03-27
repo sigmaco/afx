@@ -23,7 +23,7 @@
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/sim/modeling/afxMeshTopology.h"
 #include "qwadro/sim/modeling/awxVertexData.h"
-#include "qwadro/core/afxIndexedString.h"
+#include "qwadro/mem/afxMappedString.h"
 
 #define MaxNumWeights 8
 
@@ -51,7 +51,7 @@ _AKX void _AfxMesh113131(afxMesh msh)
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
     afxNat const NumMeshTris = AfxCountMeshTriangles(msh->topology);
-    struct TriWeightData* TriWeights = AfxAllocate(NIL, sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
+    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
     
     for (afxNat triIdx = 0; triIdx < NumMeshTris; ++triIdx)
     {
@@ -94,7 +94,7 @@ _AKX afxBool AfxGetMeshBiasName(afxMesh msh, afxNat biasIdx, afxString* id)
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     AfxAssertRange(msh->biasCnt, biasIdx, 1);
     AfxAssert(id);
-    return AfxResolveStrings2(msh->strc, 1, &msh->biasName[biasIdx], id);
+    return AfxResolveStrings2(msh->strb, 1, &msh->biasName[biasIdx], id);
 }
 
 _AKX afxNat AfxCountMeshBiases(afxMesh msh)
@@ -182,7 +182,7 @@ _AKX afxBool AfxGetMeshId(afxMesh msh, afxString* id)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     AfxAssert(id);
-    return AfxResolveStrings2(msh->strc, 1, &msh->id, id);
+    return AfxResolveStrings2(msh->strb, 1, &msh->id, id);
 }
 
 _AKX afxError _AfxMshDtor(afxMesh msh)
@@ -196,10 +196,10 @@ _AKX afxError _AfxMshDtor(afxMesh msh)
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
     if (msh->biasName)
-        AfxDeallocate(mmu, msh->biasName);
+        AfxDeallocate(msh->biasName);
 
     if (msh->biasData)
-        AfxDeallocate(mmu, msh->biasData);
+        AfxDeallocate(msh->biasData);
 
     if (msh->topology)
     {
@@ -208,15 +208,15 @@ _AKX afxError _AfxMshDtor(afxMesh msh)
     }
 
     if (msh->morphs)
-        AfxDeallocate(mmu, msh->morphs);
+        AfxDeallocate(msh->morphs);
 
     if (msh->vtd)
         AfxReleaseObjects(1, (void*[]) { msh->vtd });
 
     //if (msh->uri)
 
-    if (msh->strc)
-        AfxReleaseObjects(1, (void*[]) { msh->strc });
+    if (msh->strb)
+        AfxReleaseObjects(1, (void*[]) { msh->strb });
 
     return err;
 }
@@ -231,18 +231,18 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMeshBlueprint const* mshb = cookie->udd[1];
 
-    afxStringCatalog strc = mshb->strc;
+    afxStringBase strb = mshb->strb;
     awxVertexData vtd = mshb->vertices;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
     afxMeshTopology msht = mshb->topology;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
 
-    if (!(msh->strc = strc))
+    if (!(msh->strb = strb))
         AfxResetString(&msh->id);
-    else if (!AfxCatalogStrings2(strc, 1, &mshb->id.str.str, &msh->id))
+    else if (!AfxCatalogStrings2(strb, 1, &mshb->id.str.str, &msh->id))
         AfxThrowError();
     else
-        AfxReacquireObjects(1, (void*[]) { strc });
+        AfxReacquireObjects(1, (void*[]) { strb });
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
@@ -282,22 +282,22 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
             msh->biasName = NIL;
             msh->biasData = NIL;
 
-            if (biasCnt && !(msh->biasName = AfxAllocate(mmu, biasCnt, sizeof(msh->biasName[0]), 0, AfxHint()))) AfxThrowError();
+            if (biasCnt && !(msh->biasName = AfxAllocate(biasCnt, sizeof(msh->biasName[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
-                if (!strc || !mshb->pivots)
+                if (!strb || !mshb->pivots)
                 {
                     for (afxNat i = 0; i < biasCnt; i++)
                         AfxResetString(&msh->biasName[i]);
                 }
-                else if (!AfxCatalogStrings2(strc, biasCnt, mshb->pivots, msh->biasName))
+                else if (!AfxCatalogStrings2(strb, biasCnt, mshb->pivots, msh->biasName))
                     AfxThrowError();
             }
 
             msh->extData = NIL;
 
             if (err && msh->biasName)
-                AfxDeallocate(mmu, msh->biasName);
+                AfxDeallocate(msh->biasName);
         }
     }
 
@@ -311,10 +311,10 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
     {
         afxString s;
 
-        if (!msh->strc)
+        if (!msh->strb)
             AfxResetString(&s);
         else
-            AfxResolveStrings2(msh->strc, 1, &msh->id, &s);
+            AfxResolveStrings2(msh->strb, 1, &msh->id, &s);
 
         AfxEcho("%.*s Mesh <%.*s> assembled. %p\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u biases:",
             AfxPushString(msh->biasCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
@@ -323,10 +323,10 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 
         for (afxNat i = 0; i < msh->biasCnt; i++)
         {
-            if (!msh->strc)
+            if (!msh->strb)
                 AfxResetString(&s);
             else
-                AfxResolveStrings2(msh->strc, 1, &(msh->biasName[i]), &s);
+                AfxResolveStrings2(msh->strb, 1, &(msh->biasName[i]), &s);
 
             AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
         }
@@ -361,7 +361,7 @@ _AKX afxError AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint 
     return err;
 }
 
-_AKX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const builders[], afxMesh meshes[])
+_AKX afxError AfxBuildMeshes(afxSimulation sim, afxStringBase strb, afxNat cnt, afxMeshBuilder const builders[], afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -372,7 +372,7 @@ _AKX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cn
     for (afxNat i = 0; i < cnt; i++)
     {
         afxMeshBuilder const* mshb = &builders[i];
-        awxVertexData vtd = AwxBuildVertexData(sim, strc, mshb);
+        awxVertexData vtd = AwxBuildVertexData(sim, strb, mshb);
         afxMeshTopology msht = AfxBuildMeshTopology(sim, mshb, 0, mshb->surfCnt);
 
         afxMeshBlueprint blueprint = { 0 };
@@ -380,7 +380,7 @@ _AKX afxError AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cn
         blueprint.topology = msht;
         blueprint.biasCnt = mshb->artCnt;
         blueprint.pivots = mshb->pivots;
-        blueprint.strc = strc;
+        blueprint.strb = strb;
         AfxMakeString32(&blueprint.id, &mshb->id.str.str);
 
         if (AfxAssembleMeshes(sim, 1, &blueprint, &meshes[i]))

@@ -88,6 +88,7 @@ AFX_DEFINE_STRUCT(afxFileMagicValue)
     afxNat              reserved[2];
 };
 
+#if 0
 #ifdef _AFX_FILE_C
 AFX_OBJECT(afxFile)
 {
@@ -105,28 +106,24 @@ AFX_OBJECT(afxFile)
     afxBool                 byteReserved;
 };
 #endif//_AFX_FILE_C
+#endif
 
-AFX afxError                AfxOpenFiles(afxFileFlags flags, afxNat cnt, afxUri const uri[], afxFile files[]);
-AFX afxFile                 AfxOpenReadableFile(afxUri const *uri);
-AFX afxFile                 AfxOpenWritableFile(afxUri const *uri);
-AFX afxError                AfxReloadFile(afxStream ios, afxFileFlags flags, afxUri const *uri); // will fully load the opened file then close it.
-
-AFX void*                   AfxGetFileHostDescriptor(afxFile file);
+AFX void*                   AfxGetFileDescriptor(afxStream file);
 
 //AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);
 //AFX afxError                AfxReloadFile(afxFile file, afxRwx const rwx, afxUri const *uri);
 
-AFX afxUri const*           AfxGetFilePath(afxFile file);
-AFX afxResult               AfxCopyFilePath(afxFile file, afxUri* uri);
+AFX afxUri const*           AfxGetFilePath(afxStream file);
+AFX afxResult               AfxCopyFilePath(afxStream file, afxUri* uri);
 
-AFX afxString const*        AfxGetFilePathString(afxFile file);
-AFX afxResult               AfxCopyFilePathString(afxFile file, afxRestring *str);
+AFX afxString const*        AfxGetFilePathString(afxStream file);
+AFX afxResult               AfxCopyFilePathString(afxStream file, afxRestring *str);
 
-AFX afxStream               AfxGetFileStream(afxFile file);
-AFX afxError                AfxReadFileString(afxFile file, afxRestring* str);
+AFX afxError                AfxReadFileString(afxStream file, afxRestring* str);
 
-AFX afxResult               AfxFlushFile(afxFile file);
-AFX afxBool                 AfxFileShouldBeFlushed(afxFile file);
+AFX afxResult               AfxFlushFile(afxStream file);
+AFX afxBool                 AfxFileShouldBeFlushed(afxStream file);
+
 AFX afxError                AfxBufferizeFile(afxFile file, afxNat siz);
 
 AFX afxBool                 AfxFileIsVirtual(afxFile file);

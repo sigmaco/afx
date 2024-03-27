@@ -66,9 +66,9 @@ _AFXEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags
     AfxOpenFiles(1, &fp, &file, file, afxFileFlag_R);
     char line[1024];
 
-    while (!feof(AfxGetFileHostDescriptor(fp)))
+    while (!feof(AfxGetFileDescriptor(fp)))
     {
-        fgets(line, sizeof(line), AfxGetFileHostDescriptor(fp));
+        fgets(line, sizeof(line), AfxGetFileDescriptor(fp));
 
         if (strstr(line, "end"))
         {

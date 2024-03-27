@@ -17,7 +17,7 @@
 #ifndef AFX_VECTOR_H
 #define AFX_VECTOR_H
 
-#include "afxReal.h"
+#include "qwadro/math/afxMathDefs.h"
 
 AFX afxV2d const AFX_V2D_X;
 AFX afxV3d const AFX_V3D_X;
@@ -220,6 +220,12 @@ AFXINL void     AfxAddV2d(afxV2d v, afxV2d const a, afxV2d const b);
 AFXINL void     AfxAddV3d(afxV3d v, afxV3d const a, afxV3d const b);
 AFXINL void     AfxAddV4d(afxV4d v, afxV4d const a, afxV4d const b);
 
+// v = a + b * lambda
+
+AFXINL void     AfxAddScaledV2d(afxV2d v, afxV2d const a, afxV2d const b, afxReal lambda);
+AFXINL void     AfxAddScaledV3d(afxV3d v, afxV3d const a, afxV3d const b, afxReal lambda);
+AFXINL void     AfxAddScaledV4d(afxV4d v, afxV4d const a, afxV4d const b, afxReal lambda);
+
 // v = a - b
 
 AFXINL void     AfxSubV2d(afxV2d v, afxV2d const a, afxV2d const b);
@@ -243,12 +249,6 @@ AFXINL void     AfxModV4d(afxV4d v, afxV4d const a, afxV4d const b);
 AFXINL void     AfxScaleV2d(afxV2d v, afxV2d const a, afxReal lambda);
 AFXINL void     AfxScaleV3d(afxV3d v, afxV3d const a, afxReal lambda);
 AFXINL void     AfxScaleV4d(afxV4d v, afxV4d const a, afxReal lambda);
-
-// v += a * lambda
-
-AFXINL void     AfxScadV2d(afxV2d v, afxV2d const a, afxReal lambda);
-AFXINL void     AfxScadV3d(afxV3d v, afxV3d const a, afxReal lambda);
-AFXINL void     AfxScadV4d(afxV4d v, afxV4d const a, afxReal lambda);
 
 // v = in * 0.5
 

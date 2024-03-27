@@ -61,6 +61,8 @@ AVX afxNat              AfxCountVertexInputAttributes(afxVertexInput vin);
 
 AVX afxNat              AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx);
 
+////////////////////////////////////////////////////////////////////////////////
+
 AVX afxVertexInput      AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[]);
 
 #endif//AFX_VERTEX_INPUT_H

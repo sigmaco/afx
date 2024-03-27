@@ -16,12 +16,12 @@
 
 //#define _AFX_SYSTEM_C
 #include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxEvent.h"
 #include "qwadro/core/afxString.h"
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/core/afxDebug.h"
-#include "qwadro/async/afxThread.h"
+#include "qwadro/core/afxThread.h"
 #include "qwadro/core/afxSystem.h"
 
 // SLOTS incorporados diretamente no espaço de array estavam crashando e gerando anomalias de corrupção de leitura/escrita e alocação.
@@ -71,10 +71,10 @@ _AFXINL afxError _AfxConnectionDeploy(afxConnection *objc, afxObject obj, afxObj
     AfxAssertType(obj, afxFcc_OBJ);
     //AfxAssertAbstractObject(holder);
 
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxHandle* holderInst = (afxHandle*)holder;
+    afxObjectBase* holderInst = (afxObjectBase*)holder;
     --holderInst;
     AfxAssertType(holderInst, afxFcc_OBJ);
 
@@ -153,7 +153,7 @@ _AFXINL afxError AfxConnectionDrop(afxConnection *objc)
     afxError err = AFX_ERR_NONE;
     AfxAssert(objc);
 
-    if (objc->fcc == afxFcc_OBJC && objc->obj && AfxObjectGetClass(objc->obj)->fcc == afxFcc_CLS)
+    if (objc->fcc == afxFcc_OBJC && objc->obj && AfxGetClass(objc->obj)->fcc == afxFcc_CLS)
     {
         AfxAssertConnection(objc);
 
@@ -196,14 +196,14 @@ _AFXINL void* AfxConnectionGetHolder(afxConnection const *objc)
     return objc->fcc == afxFcc_OBJC ? objc->holder : NIL;
 }
 
-_AFXINL afxResult _AfxClsTestObjFccRecursive(afxClass const *cls, afxFcc fcc)
+_AFXINL afxResult _AfxClsTestObjFccRecursive(afxManager const *cls, afxFcc fcc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(cls, afxFcc_CLS);
 
     if (cls->objFcc == fcc) return 1;
     else if (cls->base.chain)
-        return _AfxClsTestObjFccRecursive(cls->base.chain->owner, fcc);
+        return _AfxClsTestObjFccRecursive(AfxGetLinker(&cls->base), fcc);
 
     return 0;
 }
@@ -213,7 +213,7 @@ _AFXINL afxResult AfxObjectTestFcc(afxObject obj, afxFcc fcc)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(obj, afxFcc_OBJ);
     AfxAssert(fcc);
-    afxClass* cls = AfxObjectGetClass(obj);
+    afxManager* cls = AfxGetClass(obj);
 
     if (!cls) return 1;
     else
@@ -222,7 +222,7 @@ _AFXINL afxResult AfxObjectTestFcc(afxObject obj, afxFcc fcc)
 
         if (cls->objFcc == fcc) return 1;
         else if (cls->base.chain)
-            return _AfxClsTestObjFccRecursive(cls->base.chain->owner, fcc);
+            return _AfxClsTestObjFccRecursive(AfxGetLinker(&cls->base), fcc);
 
     }
     return 0;
@@ -232,7 +232,7 @@ _AFXINL afxFcc AfxObjectGetFcc(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(obj, afxFcc_OBJ);
-    afxClass* cls = AfxObjectGetClass(obj);
+    afxManager* cls = AfxGetClass(obj);
     AfxAssertType(cls, afxFcc_CLS);
     return cls->objFcc;
 }
@@ -241,7 +241,7 @@ _AFXINL afxChar const* AfxObjectGetFccAsString(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(obj, afxFcc_OBJ);
-    afxClass* cls = AfxObjectGetClass(obj);
+    afxManager* cls = AfxGetClass(obj);
     AfxAssertType(cls, afxFcc_CLS);
     return (afxChar const *)&cls->objFcc;
 }
@@ -249,7 +249,7 @@ _AFXINL afxChar const* AfxObjectGetFccAsString(afxObject obj)
 _AFXINL afxInt32 AfxGetRefCount(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     return inst->refCnt;
@@ -258,32 +258,32 @@ _AFXINL afxInt32 AfxGetRefCount(afxObject obj)
 _AFXINL afxNat32 AfxObjectGetTid(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     return inst->tid;
 }
 
-_AFXINL afxClass* AfxObjectGetClass(afxObject obj)
+_AFXINL afxManager* AfxGetClass(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxClass *cls = inst->cls;
+    afxManager *cls = inst->cls;
     AfxAssertType(cls, afxFcc_CLS);
     return cls;
 }
 
-_AFXINL afxBool AfxObjectInherits(afxObject obj, afxClass const* cls)
+_AFXINL afxBool AfxObjectInherits(afxObject obj, afxManager const* cls)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     AfxAssertType(cls, afxFcc_CLS);
 
-    afxClass* objCls = inst->cls;
+    afxManager* objCls = inst->cls;
     AfxAssertType(objCls, afxFcc_CLS);
 
     while (1)
@@ -304,18 +304,18 @@ _AFXINL afxBool AfxObjectInherits(afxObject obj, afxClass const* cls)
 _AFXINL void* AfxGetObjectProvider(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxClass const *cls = inst->cls;
+    afxManager const *cls = inst->cls;
     AfxAssertType(cls, afxFcc_CLS);
-    return cls->provider.chain->owner;
+    return AfxGetLinker(&cls->provider);
 }
 
 _AFXINL afxBool AfxObjectTestFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     AfxAssert(flags);
@@ -325,7 +325,7 @@ _AFXINL afxBool AfxObjectTestFlags(afxObject obj, afxObjectFlags flags)
 _AFXINL afxError AfxObjectAssert(afxObject obj, afxFcc fcc, afxHint const hint, afxChar const *exp)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     AfxAssert(fcc);
@@ -348,7 +348,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHint const hin
     if (!obj) ((err) = (-((afxError)__LINE__)), AfxLogError(hint, exp));
     else
     {
-        afxHandle* inst = (afxHandle*)obj;
+        afxObjectBase* inst = (afxObjectBase*)obj;
         --inst;
         AfxAssert(inst->fcc == afxFcc_OBJ);
         AfxAssert(fcc);
@@ -362,7 +362,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHint const hin
 _AFXINL afxObjectFlags AfxObjectSetFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     return (inst->flags |= flags);
@@ -371,7 +371,7 @@ _AFXINL afxObjectFlags AfxObjectSetFlags(afxObject obj, afxObjectFlags flags)
 _AFXINL afxObjectFlags AfxObjectClearFlags(afxObject obj, afxObjectFlags flags)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     return (inst->flags &= ~flags);
@@ -380,16 +380,16 @@ _AFXINL afxObjectFlags AfxObjectClearFlags(afxObject obj, afxObjectFlags flags)
 _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxHandle* filterInst = (afxHandle*)filter;
+    afxObjectBase* filterInst = (afxObjectBase*)filter;
     --filterInst;
     AfxAssertType(filterInst, afxFcc_OBJ);
     AfxEcho("afxHandle<%p>::InstallEventFilter(%p)", obj, filter);
     //AfxAssert(fn);
     
-    afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev) = AfxObjectGetClass(filter)->eventFilter;
+    afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev) = AfxGetClass(filter)->eventFilter;
 
     while (fn)
     {
@@ -399,15 +399,15 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
         {
             AfxChainForEveryLinkage(inst->watchers, afxEventFilter, watched, flt)
             {
-                AfxAssert(flt->watched.chain->owner == obj);
+                AfxAssert(AfxGetLinker(&flt->watched) == obj);
 
-                if (flt->holder.chain->owner == filter)
+                if (AfxGetLinker(&flt->holder) == filter)
                     return err;
             }
         }
         else
         {
-            if (!(inst->watchers = AfxAllocate(NIL, 1, sizeof(*inst->watchers), 0, AfxHint()))) AfxThrowError();
+            if (!(inst->watchers = AfxAllocate(1, sizeof(*inst->watchers), 0, AfxHint()))) AfxThrowError();
             else
             {
                 AfxSetUpChain(inst->watchers, obj);
@@ -418,7 +418,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
         {
             if (!filterInst->watching)
             {
-                if (!(filterInst->watching = AfxAllocate(NIL, 1, sizeof(*filterInst->watching), 0, AfxHint()))) AfxThrowError();
+                if (!(filterInst->watching = AfxAllocate(1, sizeof(*filterInst->watching), 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     AfxSetUpChain(filterInst->watching, filter);
@@ -427,7 +427,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
 
             if (!err)
             {
-                if (!(flt = AfxAllocate(NIL, 1, sizeof(*flt), 0, AfxHint()))) AfxThrowError();
+                if (!(flt = AfxAllocate(1, sizeof(*flt), 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     AfxPushLinkage(&flt->holder, filterInst->watching);
@@ -440,13 +440,13 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
         {
             if (inst->watchers && inst->watchers->cnt == 0)
             {
-                AfxDeallocate(NIL, inst->watchers);
+                AfxDeallocate(inst->watchers);
                 inst->watchers = NIL;
             }
 
             if (filterInst->watching && filterInst->watching->cnt == 0)
             {
-                AfxDeallocate(NIL, filterInst->watching);
+                AfxDeallocate(filterInst->watching);
                 filterInst->watching = NIL;
             }
         }
@@ -458,10 +458,10 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
 _AFX afxError AfxObjectRemoveEventFilter(afxObject obj, afxObject filter)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxHandle* filterInst = (afxHandle*)filter;
+    afxObjectBase* filterInst = (afxObjectBase*)filter;
     --filterInst;
     AfxAssertType(filterInst, afxFcc_OBJ);
     AfxEcho("afxHandle<%p>::RemoveEventFilter(%p)", obj, filter);
@@ -471,23 +471,23 @@ _AFX afxError AfxObjectRemoveEventFilter(afxObject obj, afxObject filter)
         afxEventFilter *flt;
         AfxChainForEveryLinkage(inst->watchers, afxEventFilter, watched, flt)
         {
-            AfxAssert(flt->watched.chain->owner == obj);
+            AfxAssert(AfxGetLinker(&flt->watched) == obj);
 
-            if (flt->holder.chain->owner == filter)
+            if (AfxGetLinker(&flt->holder) == filter)
             {
                 AfxPopLinkage(&flt->watched);
                 AfxPopLinkage(&flt->holder);
-                AfxDeallocate(NIL, flt);
+                AfxDeallocate(flt);
 
                 if (inst->watchers && inst->watchers->cnt == 0)
                 {
-                    AfxDeallocate(NIL, inst->watchers);
+                    AfxDeallocate(inst->watchers);
                     inst->watchers = NIL;
                 }
 
                 if (filterInst->watching && filterInst->watching->cnt == 0)
                 {
-                    AfxDeallocate(NIL, filterInst->watching);
+                    AfxDeallocate(filterInst->watching);
                     filterInst->watching = NIL;
                 }
                 break;
@@ -501,7 +501,7 @@ _AFX afxError AfxObjectRemoveEventFilter(afxObject obj, afxObject filter)
 _AFX afxBool AfxObjectEmitEvent(afxObject obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     AfxAssertType(ev, afxFcc_EVNT);
@@ -513,19 +513,19 @@ _AFX afxBool AfxObjectEmitEvent(afxObject obj, afxEvent *ev)
         afxEventFilter *flt;
         AfxChainForEveryLinkage(inst->watchers, afxEventFilter, watched, flt)
         {
-            AfxAssert(flt->watched.chain->owner == obj);
-            afxBool(*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev) = AfxObjectGetClass(flt->holder.chain->owner)->eventFilter;
+            AfxAssert(AfxGetLinker(&flt->watched) == obj);
+            afxBool(*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev) = AfxGetClass(AfxGetLinker(&flt->holder))->eventFilter;
 
             if (eventFilter)
             {
                 AfxAssert(eventFilter);
-                intercept |= eventFilter(flt->holder.chain->owner, obj, ev);
+                intercept |= eventFilter(AfxGetLinker(&flt->holder), obj, ev);
             }
         }
         break;
     }
 
-    afxBool(*event)(afxObject obj, afxEvent *ev) = AfxObjectGetClass(obj)->event;
+    afxBool(*event)(afxObject obj, afxEvent *ev) = AfxGetClass(obj)->event;
 
     if (!intercept && event)
     {
@@ -537,7 +537,7 @@ _AFX afxBool AfxObjectEmitEvent(afxObject obj, afxEvent *ev)
 _AFXINL afxResult AfxObjectSignalConnections(afxObject obj, afxEventId evtype, void *data)
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
     AfxAssert(evtype && evtype < AFX_EVENT_TOTAL);
@@ -566,10 +566,10 @@ _AFXINL afxResult AfxObjectSignalConnections(afxObject obj, afxEventId evtype, v
 _AFXINL afxResult AfxObjectDisconnect(afxObject obj, afxObject holder, void(*handler)(afxObject,afxEvent*)) // if handler is null, any objc held by holder will be dropped.
 {
     afxError err = AFX_ERR_NONE;
-    afxHandle* inst = (afxHandle*)obj;
+    afxObjectBase* inst = (afxObjectBase*)obj;
     --inst;
     AfxAssertType(inst, afxFcc_OBJ);
-    afxHandle* holderInst = (afxHandle*)holder;
+    afxObjectBase* holderInst = (afxObjectBase*)holder;
     --holderInst;
     AfxAssertType(holderInst, afxFcc_OBJ);
 
@@ -605,18 +605,18 @@ _AFXINL afxConnection* AfxObjectConnect(afxObject obj, afxObject holder, void (*
         afxSystem sys;
         afxMmu mmu = AfxGetSystemContext();
 
-        afxBool alloced = (!slot && !!(slot = AfxAllocate(mmu, 1, sizeof(*slot), 0, AfxHint())));
+        afxBool alloced = (!slot && !!(slot = AfxAllocate(1, sizeof(*slot), 0, AfxHint())));
         
         if (!slot) AfxThrowError();
         else
         {
-            afxHandle* inst = (afxHandle*)obj;
+            afxObjectBase* inst = (afxObjectBase*)obj;
             --inst;
             AfxAssertType(inst, afxFcc_OBJ);
             
             if (holder)
             {
-                afxHandle* holderInst = (afxHandle*)holder;
+                afxObjectBase* holderInst = (afxObjectBase*)holder;
                 --holderInst;
                 AfxAssertType(holderInst, afxFcc_OBJ);
             }
@@ -627,7 +627,7 @@ _AFXINL afxConnection* AfxObjectConnect(afxObject obj, afxObject holder, void (*
 
                 if (alloced)
                 {
-                    AfxDeallocate(mmu, slot);
+                    AfxDeallocate(slot);
                 }
                 slot = NIL;
             }

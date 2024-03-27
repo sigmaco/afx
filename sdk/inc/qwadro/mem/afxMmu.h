@@ -31,7 +31,7 @@
 #include "qwadro/core/afxChain.h"
 #include "qwadro/core/afxFcc.h"
 #include "qwadro/core/afxDebug.h"
-#include "qwadro/async/afxSlock.h"
+#include "qwadro/core/afxSlock.h"
 
 //#define _AFX_TRY_ASSERT_ALLOCATION_AREA 1
 
@@ -217,10 +217,10 @@ AFX_OBJECT(afxMmu)
 AFX afxError                AfxMemoryEnableDebugging(afxMmu mmu, afxNat level);
 AFX afxSize                 AfxMemoryGetDefaultAlignment(afxMmu mmu);
 
-AFX void*                   AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHint const hint);
-AFX void*                   AfxCoallocate(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
-AFX void*                   AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
-AFX void                    AfxDeallocate(afxMmu mmu, void *p);
+AFX void*                   AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHint const hint);
+AFX void*                   AfxCoallocate(afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
+AFX void*                   AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint);
+AFX void                    AfxDeallocate(void *p);
 
 #define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
 AFX void                    AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, afxNat dstStride);

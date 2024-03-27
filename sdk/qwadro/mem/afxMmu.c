@@ -22,8 +22,8 @@
 #define _AFX_CORE_C
 #define _AFX_MMU_C
 #include "qwadro/mem/afxMmu.h"
-#include "qwadro/async/afxThread.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxThread.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 
 typedef struct _afxArbitraryChunk
@@ -93,7 +93,7 @@ _AFX void* AfxReallocAligned(void* block, afxSize siz, afxSize align)
 
 _AFX void* AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize align)
 {
-    return _aligned_recalloc(block, cnt, cnt, align);
+    return _aligned_recalloc(block, cnt, siz, align);
 }
 
 _AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHint const hint)
@@ -362,7 +362,7 @@ _AFX afxError AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrate
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AfxGetMmuClass();
+    afxManager* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)mmus, (void const*[]) { strategy, hint }))
@@ -376,9 +376,9 @@ _AFX afxNat AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetMmuClass();
+    afxManager* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[])
@@ -386,17 +386,17 @@ _AFX afxNat AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(mmus);
-    afxClass* cls = AfxGetMmuClass();
+    afxManager* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)mmus);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)mmus);
 }
 
 _AFX afxNat AfxCountMmus(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetMmuClass();
+    afxManager* cls = AfxGetMmuClass();
     AfxAssertClass(cls, afxFcc_MMU);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
 // MEMORY API
@@ -510,7 +510,7 @@ _AFX void AfxZero(afxSize cnt, afxSize siz, void *p)
     AfxMemset(p, 0, cnt * siz);
 }
 
-_AFX void AfxDeallocate(afxMmu mmu, void *p)
+_AFX void AfxDeallocate(void *p)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -518,6 +518,8 @@ _AFX void AfxDeallocate(afxMmu mmu, void *p)
     {
         AfxAssert(p);
         afxSize freedSiz = 0;
+
+        afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
         if (mmu)
         {
@@ -532,7 +534,7 @@ _AFX void AfxDeallocate(afxMmu mmu, void *p)
     }
 }
 
-_AFX void* AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint)
+_AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(siz);
@@ -540,6 +542,8 @@ _AFX void* AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat a
     AfxAssert(hint);
     //AfxEntry("p=%p,siz=%u,hint=\"%s:%i!%s\"", p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     void *out = NIL;
+
+    afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
     if (p)
     {
@@ -583,7 +587,7 @@ _AFX void* AfxReallocate(afxMmu mmu, void *p, afxSize siz, afxSize cnt, afxNat a
     return out;
 }
 
-_AFX void* AfxCoallocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
+_AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
 {
     //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -591,6 +595,8 @@ _AFX void* AfxCoallocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afx
     AfxAssert(siz);
     AfxAssert(hint);
     void *p = NIL;
+
+    afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
 
     if (mmu)
     {
@@ -601,13 +607,13 @@ _AFX void* AfxCoallocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afx
     }
     else
     {
-        if (!(p = AfxRecallocAligned(NIL, 1, (cnt * siz), align ? align : AFX_SIMD_ALIGN)))
+        if (!(p = AfxRecallocAligned(NIL, cnt, siz, align ? align : AFX_SIMD_ALIGN)))
             AfxThrowError();
     }
     return p;
 }
 
-_AFX void* AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
+_AFX void* AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
 {
     //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -618,6 +624,8 @@ _AFX void* AfxAllocate(afxMmu mmu, afxSize cnt, afxSize siz, afxNat align, afxHi
 
     if (cnt * siz)
     {
+        afxMmu mmu = /*AfxGetSystem() ? AfxGetSystemContext() :*/ NIL;
+
         if (mmu)
         {
             AfxAssertObjects(1, &mmu, afxFcc_MMU);

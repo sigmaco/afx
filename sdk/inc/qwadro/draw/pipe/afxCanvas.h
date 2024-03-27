@@ -33,6 +33,14 @@ typedef enum afxCanvasFlags
     AFX_CANV_FLAG_REVALIDATE
 } afxCanvasFlags;
 
+AFX_DEFINE_STRUCT(afxSurfaceConfig)
+{
+    afxPixelFormat  fmt; // layout
+    afxNat          sampleCnt; // layout
+    afxRasterUsage  rasUsage;
+    afxRasterFlags  rasFlags;
+};
+
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_CANVAS_C
 AFX_DEFINE_STRUCT(afxSurface)
@@ -97,13 +105,7 @@ AVX afxError        AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil);
 
 AVX afxError        AfxGenerateDrawBuffers(afxCanvas canv);
 
-AFX_DEFINE_STRUCT(afxSurfaceConfig)
-{
-    afxPixelFormat      fmt; // layout
-    afxNat              sampleCnt; // layout
-    afxRasterUsage      rasUsage;
-    afxRasterFlags      rasFlags;
-};
+////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
 

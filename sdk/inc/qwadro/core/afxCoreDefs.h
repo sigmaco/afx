@@ -49,20 +49,20 @@
 #define AfxGetSuperset(obj_,type_,member_) ((type_)(((afxByte*)obj_) - ((size_t)&(((type_)0)->member_))))
 
 #ifdef _WIN64
-#   define AFX_PLATFORM_64
-#   define AFX_PLATFORM_X86_64
-#   define AFX_PLATFORM_WIN
-#   define AFX_PLATFORM_W64
+#   define AFX_PLATFORM_64 1
+#   define AFX_PLATFORM_X86_64 1
+#   define AFX_PLATFORM_WIN 1
+#   define AFX_PLATFORM_W64 1
 #elif _WIN32
-#   define AFX_PLATFORM_32
-#   define AFX_PLATFORM_X86_32
-#   define AFX_PLATFORM_WIN
-#   define AFX_PLATFORM_W32
+#   define AFX_PLATFORM_32 1
+#   define AFX_PLATFORM_X86_32 1
+#   define AFX_PLATFORM_WIN 1
+#   define AFX_PLATFORM_W32 1
 #else
-#   define AFX_PLATFORM_64
-#   define AFX_PLATFORM_X86_64
-#   define AFX_PLATFORM_LINUX
-#   define AFX_PLATFORM_X64
+#   define AFX_PLATFORM_64 1
+#   define AFX_PLATFORM_X86_64 1
+#   define AFX_PLATFORM_LINUX 1 
+#   define AFX_PLATFORM_X64 1
 #endif//_WIN64
 
 #if !defined(AFX_ENDIANNESS_LITTLE) && !defined(AFX_ENDIANNESS_BIG)
@@ -349,9 +349,9 @@ AFX_DEFINE_HANDLE(afxTxu);
 AFX_DEFINE_HANDLE(afxMmu);
 //typedef afxObject afxMmu;
 AFX_DEFINE_HANDLE(afxDatabase);
-AFX_DEFINE_HANDLE(afxExecutable);
+AFX_DEFINE_HANDLE(afxModule);
 AFX_DEFINE_HANDLE(afxIcd);
-//typedef afxObject afxExecutable;
+//typedef afxObject afxModule;
 AFX_DEFINE_HANDLE(afxUrd);
 AFX_DEFINE_HANDLE(afxArchive);
 //typedef afxObject afxArchive;
@@ -372,12 +372,15 @@ AFX_DEFINE_HANDLE(afxMouse);
 AFX_DEFINE_HANDLE(afxGamepad);
 AFX_DEFINE_HANDLE(afxController);
 AFX_DEFINE_HANDLE(afxResource);
-AFX_DEFINE_HANDLE(afxFileSystem);
+AFX_DEFINE_HANDLE(afxStorage);
+
+AFX_DEFINE_HANDLE(afxEnvironment);
 
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSimulation);
-AFX_DEFINE_HANDLE(afxStringCatalog);
+AFX_DEFINE_HANDLE(afxStringBase);
+
 
 
 

@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_SAMPLER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 
 _AVX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
@@ -47,9 +47,9 @@ _AVX afxNat AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, 
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(samplers);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetSamplerClass(dctx);
+    afxManager* cls = AfxGetSamplerClass(dctx);
     AfxAssertClass(cls, afxFcc_SAMP);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)samplers);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)samplers);
 }
 
 _AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[])
@@ -59,7 +59,7 @@ _AVX afxError AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConf
     AfxAssert(samplers);
     AfxAssert(cnt);
 
-    afxClass* cls = AfxGetSamplerClass(dctx);
+    afxManager* cls = AfxGetSamplerClass(dctx);
     AfxAssertClass(cls, afxFcc_SAMP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)samplers, (void const*[]) { (void*)config }))

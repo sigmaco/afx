@@ -34,12 +34,12 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
 
-    afxDrawScript dscr;
+    afxDrawStream dscr;
 
-    if (AfxAcquireDrawScripts(din, 0, 1, &dscr)) AfxThrowError();
+    if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
     else
     {
-        if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+        if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
         else
         {
             afxNat outBufIdx = 0;
@@ -56,8 +56,8 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
 
             AwxCmdEndSceneRendering(dscr, rnd);
 
-            if (AfxCompileDrawScript(dscr)) AfxThrowError();
-            else if (AfxExecuteDrawScripts(din, 1, &dscr, NIL, NIL, NIL))
+            if (AfxCompileDrawStream(dscr)) AfxThrowError();
+            else if (AfxExecuteDrawStreams(din, 1, &dscr, NIL, NIL, NIL))
                 AfxThrowError();
 
             if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx, NIL))
@@ -104,8 +104,8 @@ _AFXEXPORT void Once(afxApplication app)
     AfxMakeUri(&uriMap, "art", 0);
     mpSpec.namespace = &uriMap;
     mpSpec.perm = afxIoFlag_R;
-    afxFileSystem stop;
-    afxResult rslt = AfxMountFileSystems(1, &mpSpec, &stop);
+    afxStorage stop;
+    afxResult rslt = AfxMountStorages(1, &mpSpec, &stop);
     AfxAssert(rslt == 1);
 #if 0
     afxArchive arc;
@@ -180,7 +180,7 @@ _AFXEXPORT afxError SkyboxProc(afxApplication app, afxThreadOpcode opcode)
     default:
     {
         afxReal64 dt;
-        AfxGetExecutionTime(NIL, &dt);
+        AfxQueryThreadTime(NIL, &dt);
         UpdateFrameMovement(dt);
         break;
     }

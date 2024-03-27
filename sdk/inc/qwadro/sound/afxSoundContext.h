@@ -17,6 +17,7 @@
 #ifndef AFX_SOUND_CONTEXT_H
 #define AFX_SOUND_CONTEXT_H
 
+#include "qwadro/mem/afxArena.h"
 #include "qwadro/sound/afxSoundBuffer.h"
 #include "qwadro/sound/afxListener.h"
 
@@ -45,8 +46,8 @@ struct _afxBaseSoundContext
         //afxChain            recyclSubmChain;
         //afxNat              minRecyclSubmCnt;
         afxNat          lastReqQueIdx;
-        //afxClass        queues;
-        //afxClass        scripts;
+        //afxManager        queues;
+        //afxManager        scripts;
         afxNat          dqueCnt;
         afxSoundQueue*  queues;
     }*openPorts;
@@ -54,7 +55,7 @@ struct _afxBaseSoundContext
     afxChain            inlinks;
     afxChain            outlinks;
 
-    afxClass            buffers;
+    afxManager            buffers;
 };
 #endif//_AFX_SOUND_CONTEXT_C
 #endif//_AFX_SOUND_C

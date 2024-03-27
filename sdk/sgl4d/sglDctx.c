@@ -24,6 +24,7 @@
 #include "sgl.h"
 #include "qwadro/core/afxTerminal.h"
 #include "qwadro/core/afxSystem.h"
+#include "qwadro/sim/afxSimulation.h"
 #include "sgl.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/core/afxSystem.h"
@@ -57,16 +58,15 @@ _SGL void _SglDctxFreeAllQueueSlots(afxDrawContext dctx)
         for (afxNat i = 0; i < dctx->base.openPortCnt; i++)
         {
             AfxReleaseObjects(dctx->base.openPorts[i].dqueCnt, (void**)dctx->base.openPorts[i].queues);
-            AfxDeallocate(dctx->base.mmu, dctx->base.openPorts[i].queues);
+            AfxDeallocate(dctx->base.openPorts[i].queues);
             dctx->base.openPorts[i].queues = NIL;
         }
-        AfxDeallocate(dctx->base.mmu, dctx->base.openPorts);
+        AfxDeallocate(dctx->base.openPorts);
     }
 }
 
 _SGL afxError _SglDctxDtor(afxDrawContext dctx)
 {
-    AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
@@ -85,7 +85,6 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
 
 _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 {
-    AfxEntry("dctx=%p", dctx);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     //AfxAssert(spec);
@@ -119,59 +118,59 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
         tmpClsConf = _SglSemClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.semaphores, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.semaphores, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglFencClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.fences, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.fences, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglQrypClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.queries, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.queries, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglBschClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.schemas, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.schemas, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglSampClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.samplers, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.samplers, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglBufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.buffers, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.buffers, NIL, classes, &tmpClsConf);
         
         tmpClsConf = _SglRasClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.rasters, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.rasters, NIL, classes, &tmpClsConf);
         
         tmpClsConf = _SglCanvClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.canvases, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.canvases, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglVinClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.vinputs, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.vinputs, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglShdClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.shaders, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.shaders, NIL, classes, &tmpClsConf);
 
         tmpClsConf = _SglRazrClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.rasterizers, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.rasterizers, NIL, classes, &tmpClsConf);
         
         tmpClsConf = _SglPipClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.pipelines, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.pipelines, NIL, classes, &tmpClsConf);
         
 #if 0
         tmpClsConf = _AfxVbufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.vbuffers, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.vbuffers, classes, &tmpClsConf);
         tmpClsConf = _AfxIbufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&dctx->base.ibuffers, classes, &tmpClsConf);
+        AfxSetUpManager(&dctx->base.ibuffers, classes, &tmpClsConf);
 #endif
 
         dctx->base.openPortCnt = AfxCountDrawPorts(ddev);
@@ -183,7 +182,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
         dctx->base.openPorts = NIL;
 
-        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(mmu, dctx->base.openPortCnt, sizeof(dctx->base.openPorts[0]), 0, AfxHint()))) AfxThrowError();
+        if (dctx->base.openPortCnt && !(dctx->base.openPorts = AfxAllocate(dctx->base.openPortCnt, sizeof(dctx->base.openPorts[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             AfxZero(dctx->base.openPortCnt, sizeof(dctx->base.openPorts[0]), dctx->base.openPorts);
@@ -197,7 +196,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 //dctx->base.ports[i].minRecyclSubmCnt = 2;
                 dctx->base.openPorts[i].dqueCnt = AfxMax(2, queueing->minQueueCnt);
 
-                if (!(dctx->base.openPorts[i].queues = AfxAllocate(mmu, dctx->base.openPorts[i].dqueCnt, sizeof(dctx->base.openPorts[i].queues[0]), 0, AfxHint()))) AfxThrowError();
+                if (!(dctx->base.openPorts[i].queues = AfxAllocate(dctx->base.openPorts[i].dqueCnt, sizeof(dctx->base.openPorts[i].queues[0]), 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     for (afxNat j = 0; j < queueing->minQueueCnt; j++)
@@ -217,7 +216,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
                     if (err)
                     {
-                        AfxDeallocate(mmu, dctx->base.openPorts[i].queues);
+                        AfxDeallocate(dctx->base.openPorts[i].queues);
                         dctx->base.openPorts[i].queues = NIL;
                     }
                 }
@@ -227,7 +226,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                     for (afxNat j = i; j-- > 0;)
                     {
                         AfxReleaseObjects(dctx->base.openPorts[j].dqueCnt, (void**)dctx->base.openPorts[j].queues);
-                        AfxDeallocate(mmu, dctx->base.openPorts[j].queues);
+                        AfxDeallocate(dctx->base.openPorts[j].queues);
                         dctx->base.openPorts[j].queues = NIL;
                     }
                 }
@@ -238,7 +237,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 dctx->base.clipCfg = ddev->clipCfg;
                 
                 afxUri uri;
-                AfxMakeUri(&uri, "data/pipeline/video/sampleOutRgba.xsh.xml", 0);
+                AfxMakeUri(&uri, "system/video/sampleOutRgba.xsh.xml", 0);
                 //AfxMakeUri(&uri, "data/pipeline/rgbaToRgba.xsh.xml?yFlipped", 0);
                 //AfxMakeUri(&uri, "data/pipeline/rgbaToRgbaYFlippedBrokenLens.pip.xml", 0);
                 //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
@@ -297,7 +296,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 // DEVICE FONT STUFF
 
                 afxUri uri2;
-                AfxMakeUri(&uri2, "art/font-256.tga", 0);
+                AfxMakeUri(&uri2, "system/video/font-256.tga", 0);
                 AfxLoadRastersFromTarga(dctx, afxRasterUsage_SAMPLING, NIL, 1, &uri2, &dctx->fntRas);
 
                 afxVertexInputStream const vinStreams[] =
@@ -334,7 +333,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
                 afxVertexInput vin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams), vinStreams, AFX_COUNTOF(vinAttrs), vinAttrs);
                 AfxAssertObjects(1, &vin, afxFcc_VIN);
 
-                AfxMakeUri(&uri2, "data/pipeline/video/font.xsh.xml?instanced", 0);
+                AfxMakeUri(&uri2, "system/video/font.xsh.xml?instanced", 0);
                 dctx->fntPip = AfxAssemblePipelineFromXsh(dctx, vin, &uri2);
                 AfxAssertObjects(1, &dctx->fntPip, afxFcc_PIP);
                 AfxReleaseObjects(1, (void*[]) { vin });

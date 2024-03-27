@@ -16,13 +16,14 @@
 
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxClassConfig const _AfxDevClsConfig =
 {
     .fcc = afxFcc_DEV,
     .name = "Device",
+    .desc = "Hardware Device Management",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxDevice)),    
 };
@@ -34,9 +35,9 @@ _AFX afxNat AfxInvokeDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, vo
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetDeviceClass();
+    afxManager* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice devices[])
@@ -44,15 +45,15 @@ _AFX afxNat AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice devices[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(devices);
-    afxClass* cls = AfxGetDeviceClass();
+    afxManager* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)devices);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
 }
 
 _AFX afxNat AfxCountDevices(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetDeviceClass();
+    afxManager* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

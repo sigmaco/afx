@@ -396,7 +396,7 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
 
                 AfxAssert(data);
                 gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
-                _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, data);
+                _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, (afxAddress const)data);
 
                 //if (!isSurface)
                     AfxCloseRasterRegion(ras, &rgn);
@@ -427,7 +427,7 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
 
                 AfxAssert(data);
                 gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
-                _SglTexSubImage(gl, glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, data);
+                _SglTexSubImage(gl, glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, (afxAddress const)data);
 
                 //if (!isSurface)
                 AfxCloseRasterRegion(ras, &rgn);
@@ -639,7 +639,6 @@ _SGL afxError _AfxOpenTextureRegion(afxRaster ras, afxRasterRegion const *rgn, a
 _SGL afxError _SglRasDtor(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("ras=%p", ras);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
 
     afxDrawContext dctx = AfxGetObjectProvider(ras);
@@ -654,7 +653,7 @@ _SGL afxError _SglRasDtor(afxRaster ras)
 
     if (ras->base.maps)
     {
-        AfxDeallocate(mmu, ras->base.maps);
+        AfxDeallocate(ras->base.maps);
     }
 
     return err;
@@ -662,8 +661,6 @@ _SGL afxError _SglRasDtor(afxRaster ras)
 
 _SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
 {
-    AfxEntry("ras=%p", ras);
-
     afxError err = AFX_ERR_NONE;
 
     afxRasterInfo const *texi = ((afxRasterInfo const *)cookie->udd[1]) + cookie->no;
@@ -727,7 +724,7 @@ _SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
 
     if (err && ras->base.maps)
     {
-        AfxDeallocate(mmu, ras->base.maps);
+        AfxDeallocate(ras->base.maps);
     }
 
     return err;

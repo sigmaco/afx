@@ -26,7 +26,7 @@
 
 #include "sgl.h"
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/async/afxTxu.h"
+#include "qwadro/core/afxTxu.h"
 #include "qwadro/draw/afxDrawOutput.h"
 #include "qwadro/core/afxString.h"
 #include "qwadro/math/afxVector.h"
@@ -93,7 +93,6 @@ _SGL afxNat _SglDoutResumeFunction(afxDrawOutput dout)
 
 _SGL afxError _SglDoutFreeAllBuffers(afxDrawOutput dout)
 {
-    AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
@@ -200,7 +199,6 @@ _SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout)
 
 _SGL afxError _SglDoutDtor(afxDrawOutput dout)
 {
-    AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
 
     AfxDisconnectDrawOutput(dout);
@@ -253,7 +251,6 @@ _SGL HWND _SglFindShellBackgroundWindowW32(void)
 
 _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
 {
-    AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
 
     afxDrawDevice ddev = cookie->udd[0];
@@ -371,7 +368,7 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxUri name;
 
     if (config->endpoint)
-        AfxExcerptUriName(config->endpoint, &name);
+        AfxPickUriObject(config->endpoint, &name);
     else
         AfxResetUri(&name);
 
@@ -526,14 +523,14 @@ _SGL afxError _SglDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
                         AfxAssert(dout->base.wrOverHr);
                         AfxAssert(dout->base.wwOverHw);
 
-                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(mmu, dout->base.bufCnt, sizeof(dout->base.buffers[0]), 0, AfxHint()))) AfxThrowError();
+                        if (!dout->base.buffers && !(dout->base.buffers = AfxAllocate(dout->base.bufCnt, sizeof(dout->base.buffers[0]), 0, AfxHint()))) AfxThrowError();
                         else for (afxNat i = 0; i < dout->base.bufCnt; i++)
                             /*dout->base.buffers[i].ras = NIL, */dout->base.buffers[i].canv = NIL, dout->base.buffers[i].booked = FALSE, dout->base.buffers[i].readySem = NIL;
 
                         if (err && dout->base.buffers)
                         {
                             _SglDoutFreeAllBuffers(dout);
-                            AfxDeallocate(mmu, dout->base.buffers);
+                            AfxDeallocate(dout->base.buffers);
                         }
                     }
 

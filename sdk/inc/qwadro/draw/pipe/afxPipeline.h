@@ -160,17 +160,6 @@ AFX_DEFINE_STRUCT(afxPipelineAssembler)
     int a;
 };
 
-//AVX afxError            AfxAssemblePrimitiveRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AfxAssemblePrimitiveShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-
-//AVX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
-
-AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
-AVX afxPipeline         AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
-
 AVX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
 AVX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);
 AVX afxBool             AfxDepthClampIsEnabled(afxPipeline pip);
@@ -190,19 +179,17 @@ AVX afxBool             AfxFindLinkedShader(afxPipeline pip, afxShaderStage stag
 
 AVX afxRasterizer       AfxGetLinkedRasterizer(afxPipeline pip);
 
-  //////////////////////////////////////////////////////////////////////////////
- //// COMMANDS                                                             ////
-//////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
-/// Bind a pipeline object to a command buffer.
-/// Once bound, a pipeline binding affects subsequent commands that interact with the given pipeline type in the command buffer until a different pipeline of the same type is bound to the bind point, or until the pipeline bind point is disturbed by binding a shader object.
-/// Commands that do not interact with the given pipeline type must not be affected by the pipeline state.
+//AVX afxError            AfxAssemblePrimitiveRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AfxAssemblePrimitiveShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
 
-AVX afxCmdId                AfxCmdBindPipeline
-(
-    afxDrawScript           dscr, /// is the command buffer that the pipeline will be bound to. 
-    afxNat                  segment, /// is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.
-    afxPipeline             pip /// is the pipeline to be bound.
-);
+//AVX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+//AVX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
+
+AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
+AVX afxPipeline         AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
 
 #endif//AFX_PIPELINE_H

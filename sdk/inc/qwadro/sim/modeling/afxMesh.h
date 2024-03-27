@@ -82,7 +82,7 @@ AFX_OBJECT(afxMesh)
     afxString*          biasName;
 
     afxString           id; // 32
-    afxStringCatalog    strc;
+    afxStringBase       strb;
     void*               extData;
 
     // EXP ---
@@ -106,7 +106,7 @@ AFX_DEFINE_STRUCT(afxMeshBlueprint)
     afxNat              mtlCnt;
     afxNat              biasCnt;
     afxString const*    pivots;
-    afxStringCatalog    strc;
+    afxStringBase       strb;
 };
 
 AKX afxBool             AfxGetMeshId(afxMesh msh, afxString* id);
@@ -132,7 +132,7 @@ AKX afxBool             AfxGetMeshBiasName(afxMesh msh, afxNat biasIdx, afxStrin
 
 AKX afxError            AfxAssembleMeshes(afxSimulation sim, afxNat cnt, afxMeshBlueprint const blueprints[], afxMesh meshes[]);
 
-AKX afxError            AfxBuildMeshes(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
+AKX afxError            AfxBuildMeshes(afxSimulation sim, afxStringBase strb, afxNat cnt, afxMeshBuilder const mshb[], afxMesh meshes[]);
 
 AKX void                AfxTransformMeshes(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxNat cnt, afxMesh meshes[]);
 

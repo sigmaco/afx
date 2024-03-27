@@ -40,60 +40,17 @@
 #define AFX_VER_MINOR(ver_) (((afxNat32)(ver_) >> 12) & 0x3FFU)
 #define AFX_VER_PATCH(ver_) ((afxNat32)(ver_) & 0xFFFU)
 
-
-#define AFX_QWADRO_VER_MAJOR 2
-#define AFX_QWADRO_VER_MINOR 7
-#define AFX_QWADRO_CUSTOMIZATION 0
-#define AFX_QWADRO_BUILD_NUM 30
-#define AFX_QWADRO_VER_STRING AFX_STRINGIFY(AFX_QWADRO_VER_MAJOR.AFX_QWADRO_VER_MINOR.AFX_QWADRO_CUSTOMIZATION.AFX_QWADRO_BUILD_NUM)
-
-#define AfxVersionsMatch AfxVersionsMatch_(AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_CUSTOMIZATION, AFX_QWADRO_BUILD_NUM)
-
-AFX afxBool             AfxVersionsMatch_(afxInt verMajor, afxInt verMinor, afxInt customization, afxInt buildNum);
-
-AFX void                AfxGetVersion(afxInt * MajorVersion, afxInt * MinorVersion, afxInt * Customization, afxInt * BuildNumber);
-
-AFX afxString const *   AfxGetVersionString(void);
-
+#define AFX_QWADRO_VER_MAJOR 0
+#define AFX_QWADRO_VER_MINOR 1
+#define AFX_QWADRO_VER_PATCH 404
 
 /// O Qwadro SDK é atualizado frequentemente, por isso é útil poder sempre garantir que a API e a ABI estejam sincronizadas.
-/// A maneira mais simples de fazer isso é usar o seguinte macro:
+/// A maneira mais simples de fazer isso é usar as seguintes funções.
 
-/*
-    if(AfxVersionsMatch())
-    {
-        // The .h matches the .dll, all is well
-    }
-    else
-    {
-        // The .h does not match the .dll, big trouble's brewing
-    }
-*/
+AFX afxBool             AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat verPatch);
 
-/// Você pode descobrir os componentes numéricos individuais do Qwadro SDK que está usando assim:
+AFX void                AfxGetSystemVersion(afxNat* verMajor, afxNat* verMinor, afxNat* verPatch);
 
-/*
-    // Find out what version of the .h file you're using
-    afxInt verMajor = AFX_QWADRO_VER_MAJOR;
-    afxInt verMinor = AFX_QWADRO_VER_MINOR;
-    afxInt customization = AFX_QWADRO_CUSTOMIZATION;
-    afxInt buildNum = AFX_QWADRO_BUILD_NUM;
-
-    // Find out what version of the .dll you're using
-    AfxGetVersion(&verMajor, &verMinor, &customization, &buildNum);
-*/
-
-/// ou você pode simplesmente obter strings pré-construídas que tenham o número de versão completo:
-
-/*
-    // Find out what version of the .h file you're using
-    char const *verString = AFX_QWADRO_VER_STRING;
-
-    // Find out what version of the .dll you're using
-    char const *verString = AfxGetVersionString();
-
-    // Find out if this is a pre-release or release version of the .h
-    char const *releaseName = AfxReleaseName;
-*/
+AFX afxString const *   AfxGetSystemVersionString(void);
 
 #endif//AFX_VERSION_H

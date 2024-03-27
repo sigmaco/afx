@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_QUERY_POOL_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/pipe/afxQueryPool.h"
 
@@ -27,7 +27,7 @@ AVX afxResult AfxGetQueryResults(afxQueryPool pool, afxNat baseQuery, afxNat que
     AfxAssertRange(pool->cap, baseQuery, queryCnt);
     AfxAssert(dst);
     AfxAssert(cap);
-
+    return 0;
 }
 
 AVX void AfxResetQueries(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
@@ -49,22 +49,11 @@ _AVX afxDrawContext AfxGetQueryPoolContext(afxQueryPool qryp)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(pools);
-    AfxAssert(cnt);
-    afxClass* cls = AfxGetQueryPoolClass(dctx);
-    AfxAssertClass(cls, afxFcc_QRYP);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)pools);
-}
-
 _AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNat cap, afxNat cnt, afxQueryPool quer[])
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AfxGetQueryPoolClass(dctx);
+    afxManager* cls = AfxGetQueryPoolClass(dctx);
     AfxAssertClass(cls, afxFcc_QRYP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)quer, (void const*[]) { dctx, &type, &cap }))
@@ -73,51 +62,13 @@ _AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNa
     return err;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-AVX afxCmdId AfxCmdBeginQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxBool precise)
+_AVX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, queryIdx, 1);
-
-}
-
-AVX afxCmdId AfxCmdEndQuery(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, queryIdx, 1);
-
-}
-
-AVX afxCmdId AfxCmdCopyQueryResults(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, baseQuery, queryCnt);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, stride);
-
-}
-
-AVX afxCmdId AfxCmdResetQueries(afxDrawScript dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, baseQuery, queryCnt);
-
-}
-
-AVX afxCmdId AfxCmdWriteTimestamp(afxDrawScript dscr, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    AfxAssertObjects(1, &pool, afxFcc_QRYP);
-    AfxAssertRange(pool->cap, queryIdx, 1);
-
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(pools);
+    AfxAssert(cnt);
+    afxManager* cls = AfxGetQueryPoolClass(dctx);
+    AfxAssertClass(cls, afxFcc_QRYP);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)pools);
 }

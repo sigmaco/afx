@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_PIPELINE_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/io/afxXsh.h"
 
@@ -179,16 +179,16 @@ _AVX afxNat AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt,
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(pipelines);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetPipelineClass(dctx);
+    afxManager* cls = AfxGetPipelineClass(dctx);
     AfxAssertClass(cls, afxFcc_PIP);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)pipelines);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)pipelines);
 }
 
 _AVX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[])
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AfxGetPipelineClass(dctx);
+    afxManager* cls = AfxGetPipelineClass(dctx);
     AfxAssertClass(cls, afxFcc_PIP);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dctx, (void*)config }))
@@ -212,13 +212,13 @@ _AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput 
     AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxExcerptUriExtension(uri, FALSE, &fext);
+    AfxPickUriExtension(uri, FALSE, &fext);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxExcerptUriPath(uri, &fpath);
+        AfxPickUriPath(uri, &fpath);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -232,7 +232,7 @@ _AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput 
                 AfxAssert(isQwadroXml);
 
                 afxString query;
-                AfxExcerptUriQueryToString(uri, TRUE, &query);
+                AfxPickUriQueryToString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);

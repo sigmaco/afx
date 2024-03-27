@@ -12,7 +12,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/core/afxIndexedString.h"
+#include "qwadro/mem/afxMappedString.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
@@ -24,7 +24,7 @@ void BuildVertexDataFrom(afxSimulation sim, afxMeshBuilder* mshb, granny_vertex_
 
 }
 
-awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, afxNat pivotCnt, granny_vertex_data* VertexData)
+awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNat pivotCnt, granny_vertex_data* VertexData)
 {
     afxError err = NIL;
 
@@ -100,7 +100,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
     ++attrCnt;
 
     awxVertexData vtd;
-    AwxAcquireVertexDatas(sim, strc, attrSpecs, 1, &spec, &vtd);
+    AwxAcquireVertexDatas(sim, strb, attrSpecs, 1, &spec, &vtd);
 
     switch (pivotCnt)
     {
@@ -108,7 +108,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
     case 1:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pnt332_vertex);
-        granny_pnt332_vertex* Vertices = AfxAllocate(NIL, bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pnt332_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPNT332VertexType, Vertices);
 
         afxV4d hcw;
@@ -119,14 +119,14 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
         AwxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
         AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
-        AfxDeallocate(NIL, Vertices);
+        AfxDeallocate(Vertices);
         break;
     }
 #if 0
     case 1:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3132_vertex);
-        granny_pwnt3132_vertex* Vertices = AfxAllocate(NIL, bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3132_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3132VertexType, Vertices);
 
         afxV4d hcw;
@@ -138,14 +138,14 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
         AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
         AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
-        AfxDeallocate(NIL, Vertices);
+        AfxDeallocate(Vertices);
         break;
     }
 #endif
     case 2:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3232_vertex);
-        granny_pwnt3232_vertex* Vertices = AfxAllocate(NIL, bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3232_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3232VertexType, Vertices);
 
         afxV4d hcw;
@@ -158,14 +158,14 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
         AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
         AwxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
-        AfxDeallocate(NIL, Vertices);
+        AfxDeallocate(Vertices);
         break;
     }
     case 3:
     case 4:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3432_vertex);
-        granny_pwnt3432_vertex* Vertices = AfxAllocate(NIL, bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3432_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3432VertexType, Vertices);
 
         afxV4d hcw;
@@ -178,7 +178,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringCatalog strc, af
         AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
         AwxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
-        AfxDeallocate(NIL, Vertices);
+        AfxDeallocate(Vertices);
         break;
     }
     default: AfxThrowError(); break;
@@ -216,7 +216,7 @@ afxMeshTopology Gr2TopologyToQwadro(afxSimulation sim, granny_tri_topology* Topo
     return msht;
 }
 
-afxSkeleton Gr2SkeletonToQwadro(afxSimulation sim, afxStringCatalog strc, granny_skeleton* Skeleton)
+afxSkeleton Gr2SkeletonToQwadro(afxSimulation sim, afxStringBase strb, granny_skeleton* Skeleton)
 {
     afxError err = NIL;
 
@@ -241,16 +241,16 @@ afxSkeleton Gr2SkeletonToQwadro(afxSimulation sim, afxStringCatalog strc, granny
         AfxResetBoneWithIw(&sklb, i, &id, Bone->ParentIndex, &t, Bone->InverseWorld4x4, Bone->LODError);
     }
     afxSkeleton skl;
-    AfxBuildSkeletons(sim, strc, 1, &sklb, &skl);
+    AfxBuildSkeletons(sim, strb, 1, &sklb, &skl);
     AfxEndSkeletonBuilding(&sklb);
     return skl;
 }
 
-afxMesh Gr2MeshToQwadro(afxSimulation sim, afxStringCatalog strc, granny_mesh* Mesh)
+afxMesh Gr2MeshToQwadro(afxSimulation sim, afxStringBase strb, granny_mesh* Mesh)
 {
     afxError err = NIL;
 
-    awxVertexData vtd = Gr2VertexDataToQwadro(sim, strc, Mesh->BoneBindingCount, Mesh->PrimaryVertexData);
+    awxVertexData vtd = Gr2VertexDataToQwadro(sim, strb, Mesh->BoneBindingCount, Mesh->PrimaryVertexData);
     afxMeshTopology msht = Gr2TopologyToQwadro(sim, Mesh->PrimaryTopology);
 
     afxString pivots[256];
@@ -261,7 +261,7 @@ afxMesh Gr2MeshToQwadro(afxSimulation sim, afxStringCatalog strc, granny_mesh* M
     blue.pivots = pivots;
     blue.biasCnt = Mesh->BoneBindingCount;
     blue.mtlCnt = Mesh->MaterialBindingCount;
-    blue.strc = strc;
+    blue.strb = strb;
     afxString tid;
     AfxMakeString(&tid, Mesh->Name, 0);
     AfxMakeString32(&blue.id, &tid);
@@ -277,7 +277,7 @@ afxMesh Gr2MeshToQwadro(afxSimulation sim, afxStringCatalog strc, granny_mesh* M
     return msh;
 }
 
-afxModel Gr2ModelToQwadro(afxSimulation sim, afxStringCatalog strc, granny_model* Model)
+afxModel Gr2ModelToQwadro(afxSimulation sim, afxStringBase strb, granny_model* Model)
 {
     afxError err = NIL;
     
@@ -286,17 +286,17 @@ afxModel Gr2ModelToQwadro(afxSimulation sim, afxStringCatalog strc, granny_model
     afxString tid;
     AfxMakeString(&tid, Model->Name, 0);
     AfxMakeString32(&blue.id, &tid);
-    AfxSetTransformWithIdentityCheck(&blue.init, Model->InitialPlacement.Position, Model->InitialPlacement.Orientation, Model->InitialPlacement.ScaleShear);
+    AfxSetTransformWithIdentityCheck(&blue.displacement, Model->InitialPlacement.Position, Model->InitialPlacement.Orientation, Model->InitialPlacement.ScaleShear);
     blue.mshCnt = Model->MeshBindingCount;
-    blue.skl = Gr2SkeletonToQwadro(sim, strc, Model->Skeleton);
-    blue.strc = strc;
+    blue.skl = Gr2SkeletonToQwadro(sim, strb, Model->Skeleton);
+    blue.strb = strb;
 
     afxModel mdl;
     AfxAssembleModel(sim, 1, &blue, &mdl);
 
     for (afxNat i = 0; i < blue.mshCnt; i++)
     {
-        afxMesh msh = Gr2MeshToQwadro(sim, strc, Model->MeshBindings[i].Mesh);
+        afxMesh msh = Gr2MeshToQwadro(sim, strb, Model->MeshBindings[i].Mesh);
         AfxRigMeshes(mdl, blue.skl, i, 1, &msh);
     }
 
@@ -317,15 +317,15 @@ afxModel AwxLoadModelsFromGrn3d2(afxSimulation sim, afxUri const *uri, afxNat md
     AfxAssert(Info);
     AfxAssertRange((afxNat)Info->ModelCount, mdlIdx, 1);
 
-    afxStringCatalog strc;
-    AfxAcquireStringCatalogs(1, &strc);
+    afxStringBase strb;
+    AfxAcquireStringCatalogs(1, &strb);
 
     afxString id;
     afxTransform t;
 
     granny_model* Model = Info->Models[mdlIdx];
 
-    afxModel mdl = Gr2ModelToQwadro(sim, strc, Model);
+    afxModel mdl = Gr2ModelToQwadro(sim, strb, Model);
 
     GrannyFreeFile(GrannyFile);
 
@@ -385,18 +385,19 @@ void Gr2CurveToQwadro(afxSimulation sim, granny_curve2* Curve, afxCurve *c)
 
 }
 
-awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringCatalog strc, granny_track_group* TrackGroup)
+awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringBase strb, granny_track_group* TrackGroup)
 {
     afxError err = NIL;
 
     afxString pivots[256];
 
     awxMotionBlueprint blue = { 0 };
-    blue.strc = strc;
-    blue.xformId = pivots;
-    blue.xformLodError = TrackGroup->TransformLODErrors;
+    blue.strb = strb;
+    blue.pivotId = pivots;
+    blue.pivotLodError = TrackGroup->TransformLODErrors;
     blue.vecCnt = TrackGroup->VectorTrackCount;
-    blue.xformCnt = TrackGroup->TransformTrackCount;
+    blue.pivotCnt = TrackGroup->TransformTrackCount;
+    AfxSetTransformWithIdentityCheck(&blue.displacement, TrackGroup->InitialPlacement.Position, TrackGroup->InitialPlacement.Orientation, TrackGroup->InitialPlacement.ScaleShear);
 
     afxString tid;
     AfxMakeString(&tid, TrackGroup->Name, 0);
@@ -409,6 +410,8 @@ awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringCatalog strc, granny_tra
 
     awxMotion mot;
     AfxAssembleMotions(sim, 1, &blue, &mot);
+    mot->flags = TrackGroup->Flags;
+    
 
     //mot->flags = TrackGroup->Flags;
 
@@ -416,21 +419,21 @@ awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringCatalog strc, granny_tra
     {
         afxMask flags = TrackGroup->TransformTracks[i].Flags;
 
-        afxCurve o, t = { 0 }, s = { 0 };
-        t.fmt = afxCurveFormat_DaIdentity;
-        s.fmt = afxCurveFormat_DaIdentity;
-        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].OrientationCurve, &o);
-        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].PositionCurve, &t);
-        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].ScaleShearCurve, &s);
+        awxMotionTransform src = { 0 };
 
-        AfxUpdateMotionTransforms(mot, i, 1, &flags, &o, &t, &s, 0);
+        src.flags = flags;
+        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].OrientationCurve, &src.transmission);
+        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].PositionCurve, &src.translation);
+        Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].ScaleShearCurve, &src.transmutation);
+
+        AfxUpdateMotionTransforms(mot, i, 1, &src, 0);
     }
     
     int a = 4;
     return mot;
 }
 
-awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringCatalog strc, granny_animation* Anim)
+awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringBase strb, granny_animation* Anim)
 {
     afxError err = NIL;
 
@@ -440,12 +443,12 @@ awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringCatalog strc, granny_an
     anib.dur = Anim->Duration;
     anib.oversampling = Anim->Oversampling;
     anib.timeStep = Anim->TimeStep;
-    anib.strc = strc;
-    anib.strc2 = strc;
+    anib.strb = strb;
+    anib.strb2 = strb;
 
     afxUri uri, name;
     AfxMakeUri(&uri, Anim->Name, 0);
-    AfxExcerptUriName(&uri, &name);
+    AfxPickUriObject(&uri, &name);
     AfxMakeString32(&anib.id, AfxGetUriString(&name));
 
     awxAnimation ani;
@@ -453,7 +456,7 @@ awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringCatalog strc, granny_an
 
     for (afxNat i = 0; i < anib.motSlotCnt; i++)
     {
-        awxMotion mot = Gr2MotionToQwadro(sim, strc, Anim->TrackGroups[i]);
+        awxMotion mot = Gr2MotionToQwadro(sim, strb, Anim->TrackGroups[i]);
         AwxRelinkMotions(ani, i, 1, &mot);
     }
 
@@ -474,12 +477,12 @@ awxAnimation AwxLoadAnimationsFromGrn3d2(afxSimulation sim, afxUri const *uri, a
     AfxAssert(Info);
     AfxAssertRange((afxNat)Info->AnimationCount, animIdx, 1);
 
-    afxStringCatalog strc;
-    AfxAcquireStringCatalogs(1, &strc);
+    afxStringBase strb;
+    AfxAcquireStringCatalogs(1, &strb);
 
     granny_animation* Anim = Info->Animations[animIdx];
 
-    awxAnimation ani = Gr2AnimToQwadro(sim, strc, Anim);
+    awxAnimation ani = Gr2AnimToQwadro(sim, strb, Anim);
 
     GrannyFreeFile(GrannyFile);
 

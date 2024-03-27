@@ -17,7 +17,7 @@
 #ifndef AFX_ROTOR_H
 #define AFX_ROTOR_H
 
-#include "afxMathDefs.h"
+#include "qwadro/math/afxQuaternion.h"
 
 AFX afxRotor AFX_ROTOR_IDENTITY;
 

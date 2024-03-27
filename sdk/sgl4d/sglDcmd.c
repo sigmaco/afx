@@ -16,9 +16,9 @@
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL afxCmdId _SglEncodeCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _sglCmd *cmd)
+_SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream dscr, afxNat id, afxNat siz, _sglCmd *cmd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -36,10 +36,10 @@ _SGL afxCmdId _SglEncodeCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _s
 
 ///////////////////////////////////////////
 
-_SGL afxCmdId FlushNextCachedPipelineBinding(afxDrawScript dscr, afxNat segment)
+_SGL afxCmdId FlushNextCachedPipelineBinding(afxDrawStream dscr, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
     afxPipeline curr = dscr->levelCaches[segment].pip.curr;
     afxPipeline next = dscr->levelCaches[segment].pip.next;
 
@@ -57,32 +57,32 @@ _SGL afxCmdId FlushNextCachedPipelineBinding(afxDrawScript dscr, afxNat segment)
     return 0;
 }
 
-_SGL afxCmdId FlushCachedDrawStuff(afxDrawScript dscr, afxNat segment)
+_SGL afxCmdId FlushCachedDrawStuff(afxDrawStream dscr, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     return FlushNextCachedPipelineBinding(dscr, segment);
 }
 
-_SGL afxCmdId FlushCachedDrawIndexedStuff(afxDrawScript dscr, afxNat segment)
+_SGL afxCmdId FlushCachedDrawIndexedStuff(afxDrawStream dscr, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
     return FlushCachedDrawStuff(dscr, segment);
 }
 
-_SGL afxCmdId FlushCachedStuff(afxDrawScript dscr, afxNat segment)
+_SGL afxCmdId FlushCachedStuff(afxDrawStream dscr, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
     return FlushCachedDrawIndexedStuff(dscr, segment);
 }
 
-_SGL afxCmdId _SglEncodeCmdBindPipeline(afxDrawScript dscr, afxNat segment, afxPipeline pip)
+_SGL afxCmdId _SglEncodeCmdBindPipeline(afxDrawStream dscr, afxNat segment, afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 #if 0
     afxPipeline next = dscr->levelCaches[line].pip.next;
 
@@ -103,10 +103,10 @@ _SGL afxCmdId _SglEncodeCmdBindPipeline(afxDrawScript dscr, afxNat segment, afxP
     return 0;
 }
 
-_SGL afxCmdId _SglEncodeCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+_SGL afxCmdId _SglEncodeCmdBindBuffers(afxDrawStream dscr, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdBindBuffers *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
@@ -123,10 +123,10 @@ _SGL afxCmdId _SglEncodeCmdBindBuffers(afxDrawScript dscr, afxNat set, afxNat fi
     return _SglEncodeCmdCommand(dscr, offsetof(afxCmd, BindBuffers) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxRaster tex[])
+_SGL afxCmdId _SglEncodeCmdBindRasters(afxDrawStream dscr, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdBindRasters *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
@@ -143,10 +143,10 @@ _SGL afxCmdId _SglEncodeCmdBindRasters(afxDrawScript dscr, afxNat set, afxNat fi
     return _SglEncodeCmdCommand(dscr, offsetof(afxCmd, BindRasters) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDrawScript subsets[])
+_SGL afxCmdId _SglEncodeCmdExecuteCommands(afxDrawStream dscr, afxNat cnt, afxDrawStream subsets[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdExecCmds *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
@@ -160,10 +160,10 @@ _SGL afxCmdId _SglEncodeCmdExecuteCommands(afxDrawScript dscr, afxNat cnt, afxDr
 
 // Draw
 
-_SGL afxCmdId _SglEncodeCmdDraw(afxDrawScript dscr, afxNat32 vtxCnt, afxNat32 instCnt, afxNat32 firstVtx, afxNat32 firstInst)
+_SGL afxCmdId _SglEncodeCmdDraw(afxDrawStream dscr, afxNat32 vtxCnt, afxNat32 instCnt, afxNat32 firstVtx, afxNat32 firstInst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     FlushCachedDrawStuff(dscr, 0);
 
@@ -177,10 +177,10 @@ _SGL afxCmdId _SglEncodeCmdDraw(afxDrawScript dscr, afxNat32 vtxCnt, afxNat32 in
     return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Draw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
+_SGL afxCmdId _SglEncodeCmdDrawIndexed(afxDrawStream dscr, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     FlushCachedDrawIndexedStuff(dscr, 0);
 
@@ -195,7 +195,7 @@ _SGL afxCmdId _SglEncodeCmdDrawIndexed(afxDrawScript dscr, afxNat32 idxCnt, afxN
     return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, DrawIndexed) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxError _SglDscrEndCb(afxDrawScript dscr)
+_SGL afxError _SglDscrEndCb(afxDrawStream dscr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);

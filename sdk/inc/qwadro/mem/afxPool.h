@@ -39,21 +39,21 @@ AFX_DEFINE_STRUCT(afxPool)
     afxMmu      mem;
 };
 
-AFX void        AfxTakePool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage);
-AFX void        AfxReleasePool(afxPool* pool);
+AFX void        AfxSetUpPool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage);
+AFX void        AfxCleanUpPool(afxPool* pool);
 
-AFX afxByte*    AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
-AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[]);
+AFX void*       AfxAllocatePoolUnit(afxPool* pool, afxSize* idx);
+AFX afxError    AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, void* units[]);
 
-AFX void        AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit);
-AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[]);
+AFX void        AfxDeallocatePoolUnit(afxPool* pool, void* unit);
+AFX void        AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, void* units[]);
 
 AFX afxBool     AfxGetPoolItem(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnit(afxPool const* pool, afxSize idx, void **ptr);
 AFX afxBool     AfxGetPoolUnits(afxPool const* pool, afxNat cnt, afxSize const idx[], void *ptr[]);
 AFX afxBool     AfxGetLinearPoolUnits(afxPool const* pool, afxNat first, afxNat cnt, void *ptr[]);
 
-AFX afxBool     AfxFindPoolUnitIndex(afxPool* pool, afxByte* unit, afxNat* idx, afxNat* localIdx);
+AFX afxBool     AfxFindPoolUnitIndex(afxPool* pool, void* unit, afxNat* idx, afxNat* localIdx);
 AFX afxError    AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val);
 
 AFX afxNat      AfxEnumeratePoolItems(afxPool const* pool, afxNat first, afxNat cnt, void *items[]);

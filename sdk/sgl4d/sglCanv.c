@@ -325,7 +325,6 @@ _SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxWhd const whd)
 
 _SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
 {
-	AfxEntry("canv=%p", canv);
 	afxError err = AFX_ERR_NONE;
 	AfxAssertObjects(1, &canv, afxFcc_CANV);
 
@@ -348,7 +347,6 @@ _SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
 
 _SGL afxError _SglCanvDtor(afxCanvas canv)
 {
-    AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
@@ -365,14 +363,13 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
     }
     //AfxAssert(!canv->idd);
 
-    AfxDeallocate(mmu, canv->base.surfaces);
+    AfxDeallocate(canv->base.surfaces);
 
     return err;
 }
 
 _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
 {
-    AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
 
     afxDrawContext dctx = cookie->udd[0];
@@ -441,7 +438,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     canv->base.ownershipMask = NIL;
     canv->base.combinedDs = combinedDs;
 
-    if (!(canv->base.surfaces = AfxAllocate(mmu, surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(canv->base.surfaces = AfxAllocate(surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         afxSurface* surf;

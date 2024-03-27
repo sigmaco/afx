@@ -20,13 +20,14 @@
 #ifndef AFX_DRAW_SYSTEM_H
 #define AFX_DRAW_SYSTEM_H
 
+#include "qwadro/core/afxDevice.h"
 #include "qwadro/draw/afxDrawDefs.h"
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/draw/afxPixel.h"
 // provided classes.
 #include "qwadro/draw/afxDrawQueue.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/afxDrawOutput.h"
 #include "qwadro/draw/afxDrawInput.h"
@@ -261,9 +262,9 @@ AFX_DEFINE_STRUCT(afxDrawOutputEndpoint)
 AFX_OBJECT(afxDrawDevice)
 {
     AFX_OBJECT(afxDevice)   dev;
-    afxClass                contexts;
-    afxClass                outputs;
-    afxClass                inputs;
+    afxManager                contexts;
+    afxManager                outputs;
+    afxManager                inputs;
     
     afxDrawDeviceCaps       caps;
     afxDrawDeviceLimits     limits;
@@ -271,8 +272,8 @@ AFX_OBJECT(afxDrawDevice)
     struct
     {
         afxDrawPortCaps     portCaps;
-        afxClass            queues;
-        afxClass            scripts;
+        afxManager            queues;
+        afxManager            scripts;
     }*                      ports;
     
     afxClipSpace            clipCfg;
@@ -280,8 +281,7 @@ AFX_OBJECT(afxDrawDevice)
     afxError                (*procCb)(afxDrawDevice,afxDrawThread); // call their draw threads.
     afxError                (*relinkDin)(afxDrawDevice,afxDrawContext,afxNat,afxDrawInput[]);
     afxError                (*relinkDout)(afxDrawDevice,afxDrawContext,afxNat,afxDrawOutput[]);
-    afxMutex                ioConMtx;
-
+    
     afxSize                 iddSiz;
     struct _afxDdevIdd*     idd;
     afxError                (*iddCtor)(afxDrawDevice ddev);
@@ -302,11 +302,11 @@ AFX_OBJECT(afxDrawSystem)
     afxMmu              mmu;
     afxArena            aren;
     afxChain            classes;
-    afxClass            txus;
-    afxClass            threads;
-    afxClass            devices;
-    afxClass            oends;
-    afxClass            iends;
+    afxManager            txus;
+    afxManager            threads;
+    afxManager            devices;
+    afxManager            oends;
+    afxManager            iends;
     //afxIcd              e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
 };
 #endif//_AFX_DRAW_SYSTEM_C
@@ -316,8 +316,8 @@ AVX void            AfxChooseDrawSystemConfiguration(afxDrawSystemConfig* cfg);
 
 AVX afxMmu          AfxGetDrawSystemMmu(void);
 
-AVX afxClass*       AfxGetDrawThreadClass(void);
-AVX afxClass*       AfxGetDrawDeviceClass(void);
+AVX afxManager*     AfxGetDrawThreadClass(void);
+AVX afxManager*     AfxGetDrawDeviceClass(void);
 
 AVX afxNat          AfxCountDrawThreads(void);
 AVX afxNat          AfxCountDrawDevices(void);
@@ -346,9 +346,9 @@ AVX void            AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimi
 AVX afxNat          AfxCountDrawPorts(afxDrawDevice ddev);
 AVX void            AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps* caps);
 
-AVX afxClass*       AfxGetDrawContextClass(afxDrawDevice ddev);
-AVX afxClass*       AfxGetDrawOutputClass(afxDrawDevice ddev);
-AVX afxClass*       AfxGetDrawInputClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetDrawContextClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetDrawOutputClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetDrawInputClass(afxDrawDevice ddev);
 
 AVX afxNat          AfxCountDrawContexts(afxDrawDevice ddev);
 AVX afxNat          AfxCountDrawOutputs(afxDrawDevice ddev);
@@ -364,8 +364,5 @@ AVX afxNat          AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat
 
 AVX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputEndpointCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
 AVX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);
-
-AVX afxError        AfxAcquireDrawContexts(afxNat ddevId, afxNat cnt, afxDrawContextConfig const cfg[], afxDrawContext contexts[]);
-AVX afxError        AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig const cfg[], afxDrawInput inputs[]);
 
 #endif//AFX_DRAW_SYSTEM_H

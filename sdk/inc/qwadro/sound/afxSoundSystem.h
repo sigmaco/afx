@@ -21,7 +21,7 @@
 #ifndef AFX_SOUND_SYSTEM_H
 #define AFX_SOUND_SYSTEM_H
 
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/io/afxSource.h"
 #include "qwadro/core/afxDevice.h"
 #include "qwadro/sound/afxSoundThread.h"
@@ -58,9 +58,9 @@ AFX_DEFINE_STRUCT(afxSoundOutputEndpoint)
 AFX_OBJECT(afxSoundDevice)
 {
     AFX_OBJECT(afxDevice)   dev;
-    afxClass                contexts;
-    afxClass                outputs;
-    afxClass                inputs;
+    afxManager                contexts;
+    afxManager                outputs;
+    afxManager                inputs;
 
     afxError                (*procCb)(afxSoundDevice, afxSoundThread); // call their sound threads.
     afxError                (*relinkDin)(afxSoundDevice, afxSoundContext,afxNat, afxSoundInput[]);
@@ -81,9 +81,9 @@ AFX_OBJECT(afxSoundSystem)
 {
     afxMmu              mmu;
     afxChain            classes;
-    afxClass            txus;
-    afxClass            threads;
-    afxClass            devices;
+    afxManager            txus;
+    afxManager            threads;
+    afxManager            devices;
     //afxIcd              e2sound; // SIGMA A4D is required for minimal operability since core has no more embedded fallback.
 };
 #endif//_AFX_SOUND_SYSTEM_C
@@ -98,8 +98,8 @@ AAX void            AfxChooseSoundSystemConfiguration(afxSoundSystemConfig *conf
 
 AAX afxMmu          AfxGetSoundSystemMmu(void);
 
-AAX afxClass*       AfxGetSoundThreadClass(void);
-AAX afxClass*       AfxGetSoundDeviceClass(void);
+AAX afxManager*       AfxGetSoundThreadClass(void);
+AAX afxManager*       AfxGetSoundDeviceClass(void);
 
 AAX afxNat          AfxCountSoundThreads(void);
 AAX afxNat          AfxCountSoundDevices(void);
@@ -120,7 +120,7 @@ AAX afxError        AfxRegisterSoundDevices(afxIcd icd, afxNat cnt, afxSoundDevi
 
 AAX afxBool         AfxSoundDeviceIsRunning(afxSoundDevice sdev);
 
-AAX afxClass*       AfxGetSoundContextClass(afxSoundDevice sdev);
+AAX afxManager*       AfxGetSoundContextClass(afxSoundDevice sdev);
 
 AAX afxNat          AfxCountSoundContexts(afxSoundDevice sdev);
 

@@ -21,10 +21,7 @@
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_DRAW_OUTPUT_C
-#include "qwadro/core/afxClass.h"
-#include "qwadro/core/afxSystem.h"
-
-AVXINL afxDrawSystem AfxGetDrawSystem(void);
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxNat _AfxDoutBuffersAreLocked(afxDrawOutput dout)
 {
@@ -88,7 +85,6 @@ _AVX afxNat _AfxDoutResumeFunction(afxDrawOutput dout)
 
 _AVX afxError _AfxDoutFreeAllBuffers(afxDrawOutput dout)
 {
-    AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
@@ -370,7 +366,6 @@ _AVX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxN
 
 _AVX afxError AfxRegenerateDrawOutputBuffers(afxDrawOutput dout)
 {
-    AfxEntry("dout=%p", dout);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
@@ -604,7 +599,7 @@ _AVX afxError AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig 
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-        afxClass* cls = AfxGetDrawOutputClass(ddev);
+        afxManager* cls = AfxGetDrawOutputClass(ddev);
         AfxAssertClass(cls, afxFcc_DOUT);
 
         if (AfxAcquireObjects(cls, cnt, (afxObject*)outputs, (void const*[]) { ddev, cfg }))
@@ -690,9 +685,9 @@ _AVX afxNat AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, a
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetDrawInputClass(ddev);
+    afxManager* cls = AfxGetDrawInputClass(ddev);
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AVX afxNat AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawOutput outputs[])
@@ -700,16 +695,16 @@ _AVX afxNat AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(outputs);
-    afxClass* cls = AfxGetDrawOutputClass(ddev);
+    afxManager* cls = AfxGetDrawOutputClass(ddev);
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)outputs);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
 }
 
 _AVX afxNat AfxCountDrawOutputs(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    afxClass*cls = AfxGetDrawOutputClass(ddev);
+    afxManager*cls = AfxGetDrawOutputClass(ddev);
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

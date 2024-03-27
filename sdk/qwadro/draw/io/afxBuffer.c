@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_BUFFER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 
 _AVX afxDrawContext AfxGetBufferContext(afxBuffer buf)
@@ -257,9 +257,9 @@ _AVX afxNat AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, a
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(buffers);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetBufferClass(dctx);
+    afxManager* cls = AfxGetBufferClass(dctx);
     AfxAssertClass(cls, afxFcc_BUF);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)buffers);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)buffers);
 }
 
 _AVX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecification const spec[], afxBuffer buffers[])
@@ -270,7 +270,7 @@ _AVX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecif
     AfxAssert(spec);
     AfxAssert(cnt);
 
-    afxClass* cls = AfxGetBufferClass(dctx);
+    afxManager* cls = AfxGetBufferClass(dctx);
     AfxAssertClass(cls, afxFcc_BUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { (void*)spec }))

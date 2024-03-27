@@ -324,7 +324,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
         afxSize diff = (pageIdx + 1) - pool->pageCnt;
         void *pgs;
 
-        if (!(pgs = AfxReallocate(pool->mem, pool->pages, sizeof(pool->pages[0]), (pool->pageCnt + diff), 0, AfxHint()))) AfxThrowError();
+        if (!(pgs = AfxReallocate(pool->pages, sizeof(pool->pages[0]), (pool->pageCnt + diff), 0, AfxHint()))) AfxThrowError();
         else
         {
             pool->pages = pgs;
@@ -347,7 +347,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
 
         if (!pag->data)
         {
-            if (!(pag->data = AfxAllocate(pool->mem, pool->unitsPerPage, pool->unitSiz, 0, AfxHint()))) AfxThrowError();
+            if (!(pag->data = AfxAllocate(pool->unitsPerPage, pool->unitSiz, 0, AfxHint()))) AfxThrowError();
             else
                 AfxZero(pool->unitsPerPage, pool->unitSiz, pag->data);
 
@@ -379,7 +379,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
     return err;
 }
 
-_AFX void AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[])
+_AFX void AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, void* units[])
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -388,11 +388,12 @@ _AFX void AfxDeallocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[])
     for (afxNat i = cnt; i--> 0;)
     {
         AfxDeallocatePoolUnit(pool, units[i]);
+        units[i] = NIL;
     }
     //return err;
 }
 
-_AFX afxBool AfxFindPoolUnitIndex(afxPool* pool, afxByte* unit, afxNat* idx, afxNat* localIdx)
+_AFX afxBool AfxFindPoolUnitIndex(afxPool* pool, void* unit2, afxNat* idx, afxNat* localIdx)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -400,6 +401,7 @@ _AFX afxBool AfxFindPoolUnitIndex(afxPool* pool, afxByte* unit, afxNat* idx, afx
     // 4 (x32) set  --- 128 bits per page
     // 2 // page
 
+    afxByte* unit = unit2;
     afxNat unitSiz = pool->unitSiz;
     afxNat localIdx2;
     afxNat unitsPerPage = pool->unitsPerPage;
@@ -432,7 +434,7 @@ _AFX afxBool AfxFindPoolUnitIndex(afxPool* pool, afxByte* unit, afxNat* idx, afx
     return found;
 }
 
-_AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
+_AFX void AfxDeallocatePoolUnit(afxPool* pool, void* unit2)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -440,6 +442,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
     // 4 (x32) set  --- 128 bits per page
     // 2 // page
 
+    afxByte* unit = unit2;
     afxNat unitSiz = pool->unitSiz;
     afxNat unitsPerPage = pool->unitsPerPage;
     //afxSize pagSiz = unitsPerPage * unitSiz;
@@ -478,7 +481,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
             {
                 AfxAssert(pag->usedCnt == 0);
                 //AfxAdvertise("Deallocate page %p, data %p, usage %p", pag, pag->data, pag->usage);
-                AfxDeallocate(pool->mem, pag->data);
+                AfxDeallocate(pag->data);
                 pag->usage = NIL;
                 pag->data = NIL;
 
@@ -488,7 +491,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
                     {
                         void *pgs;
 
-                        if (!(pgs = AfxReallocate(pool->mem, pool->pages, sizeof(*pag), (pool->pageCnt - 1), 0, AfxHint()))) AfxThrowError();
+                        if (!(pgs = AfxReallocate(pool->pages, sizeof(*pag), (pool->pageCnt - 1), 0, AfxHint()))) AfxThrowError();
                         else
                         {
                             pool->pages = pgs;
@@ -497,7 +500,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
                     }
                     else
                     {
-                        AfxDeallocate(pool->mem, pool->pages);
+                        AfxDeallocate(pool->pages);
                         pool->pages = NIL;
                         --pool->pageCnt;
                     }
@@ -508,7 +511,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, afxByte* unit)
     }
 }
 
-_AFX afxError AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[])
+_AFX afxError AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, void* units[])
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -517,6 +520,7 @@ _AFX afxError AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[])
     for (afxNat i = 0; i < cnt; i++)
     {
         afxSize idx;
+
         if (!(units[i] = AfxAllocatePoolUnit(pool, &idx)))
         {
             AfxThrowError();
@@ -528,7 +532,7 @@ _AFX afxError AfxAllocatePoolUnits(afxPool* pool, afxNat cnt, afxByte* units[])
     return err;
 }
 
-_AFX afxByte* AfxAllocatePoolUnit(afxPool* pool, afxSize* idx)
+_AFX void* AfxAllocatePoolUnit(afxPool* pool, afxSize* idx)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -603,7 +607,7 @@ _AFX afxByte* AfxAllocatePoolUnit(afxPool* pool, afxSize* idx)
     return ptr;
 }
 
-_AFX void AfxTakePool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage)
+_AFX void AfxSetUpPool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage)
 {
     afxError err = NIL;
     AfxAssert(pool);
@@ -618,7 +622,7 @@ _AFX void AfxTakePool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage)
     pool->mem = NIL;
 }
 
-_AFX void AfxReleasePool(afxPool* pool)
+_AFX void AfxCleanUpPool(afxPool* pool)
 {
     afxError err = NIL;
     AfxAssertType(pool, afxFcc_POOL);
@@ -626,12 +630,12 @@ _AFX void AfxReleasePool(afxPool* pool)
     for (afxNat i = 0; i < pool->pageCnt; i++)
     {
         if (pool->pages[i].data)
-            AfxDeallocate(pool->mem, pool->pages[i].data);
+            AfxDeallocate(pool->pages[i].data);
     }
     
     if (pool->pages)
     {
-        AfxDeallocate(pool->mem, pool->pages);
+        AfxDeallocate(pool->pages);
         pool->pages = NIL;
     }
 
@@ -644,7 +648,7 @@ _AFX afxError AfxTestDictionarys(void)
 
 
     afxPool pool;
-    AfxTakePool(&pool, 4, 33);
+    AfxSetUpPool(&pool, 4, 33);
     afxSize idx;
 
     for (afxNat i = 0; i < 3000; i++)
@@ -658,7 +662,7 @@ _AFX afxError AfxTestDictionarys(void)
         AfxAllocatePoolUnit(&pool, &idx);
 
 
-    AfxReleasePool(&pool);
+    AfxCleanUpPool(&pool);
 
     return err;
 }

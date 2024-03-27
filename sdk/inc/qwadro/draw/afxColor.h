@@ -52,12 +52,12 @@ typedef enum afxPixelFormat
     afxPixelFormat_RG8,
     afxPixelFormat_RGB8,
     afxPixelFormat_RGBA8, // 0xAABBGGRR
-    afxPixelFormat_ABGR8 = afxPixelFormat_RGBA8,
+    afxPixelFormat_ABGR8 = afxPixelFormat_RGBA8, // [ R, G, B, A ]
 
     afxPixelFormat_GR8,
     afxPixelFormat_BGR8,
     afxPixelFormat_BGRA8, // 0xAARRGGBB
-    afxPixelFormat_ARGB8 = afxPixelFormat_BGRA8,
+    afxPixelFormat_ARGB8 = afxPixelFormat_BGRA8, // [ B, G, R, A ]
 
     afxPixelFormat_R32F,
     afxPixelFormat_RG32F,
@@ -65,7 +65,7 @@ typedef enum afxPixelFormat
     afxPixelFormat_RGBA32F,
 
     afxPixelFormat_RGB8_SRGB,
-    afxPixelFormat_RGBA8_SRGB, // A is not color, it is always linear.
+    afxPixelFormat_RGBA8_SRGB, // A is not color, so it is always linear.
     afxPixelFormat_RGB9E5,
 
     afxPixelFormat_RGBA4,

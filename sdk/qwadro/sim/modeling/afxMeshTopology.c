@@ -352,25 +352,25 @@ _AKX afxError _AfxMshtDtor(afxMeshTopology msht)
     }
 
     if (msht->jointsForTriMap)
-        AfxDeallocate(mmu, msht->jointsForTriMap);
+        AfxDeallocate(msht->jointsForTriMap);
 
     if (msht->triToJointMap)
-        AfxDeallocate(mmu, msht->triToJointMap);
+        AfxDeallocate(msht->triToJointMap);
 
     if (msht->sideToNeighborMap)
-        AfxDeallocate(mmu, msht->sideToNeighborMap);
+        AfxDeallocate(msht->sideToNeighborMap);
 
     if (msht->vtxToTriMap)
-        AfxDeallocate(mmu, msht->vtxToTriMap);
+        AfxDeallocate(msht->vtxToTriMap);
 
     if (msht->vtxToVtxMap)
-        AfxDeallocate(mmu, msht->vtxToVtxMap);
+        AfxDeallocate(msht->vtxToVtxMap);
 
     if (msht->tris)
-        AfxDeallocate(mmu, msht->tris);
+        AfxDeallocate(msht->tris);
 
     if (msht->surfaces)
-        AfxDeallocate(mmu, msht->surfaces);
+        AfxDeallocate(msht->surfaces);
 
     return err;
 }
@@ -399,12 +399,12 @@ _AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
 
     afxIndexedTriangle* tris;
 
-    if (!(tris = AfxAllocate(mmu, triCnt, sizeof(tris[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(tris = AfxAllocate(triCnt, sizeof(tris[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         afxMeshSurface* surfaces;
 
-        if (!(surfaces = AfxAllocate(mmu, surfCnt, sizeof(surfaces[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(surfaces = AfxAllocate(surfCnt, sizeof(surfaces[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             msht->triCnt = triCnt;
@@ -456,21 +456,21 @@ _AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
             if (err)
             {
                 if (msht->sideToNeighborMap)
-                    AfxDeallocate(mmu, msht->sideToNeighborMap);
+                    AfxDeallocate(msht->sideToNeighborMap);
 
                 if (msht->vtxToTriMap)
-                    AfxDeallocate(mmu, msht->vtxToTriMap);
+                    AfxDeallocate(msht->vtxToTriMap);
 
                 if (msht->vtxToVtxMap)
-                    AfxDeallocate(mmu, msht->vtxToVtxMap);
+                    AfxDeallocate(msht->vtxToVtxMap);
             }
 
             if (err && surfaces)
-                AfxDeallocate(mmu, surfaces);
+                AfxDeallocate(surfaces);
         }
 
         if (err && tris)
-            AfxDeallocate(mmu, tris);
+            AfxDeallocate(tris);
     }
     
     if (!err)
@@ -585,7 +585,7 @@ _AKX afxMeshTopology AfxBuildMeshTopology(afxSimulation sim, afxMeshBuilder cons
 _AKX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxNat cnt, afxMeshTopology dst[])
 {
     afxError err = NIL;
-    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssertObjects(1, &in, afxFcc_IOB);
     AfxAssert(dst);
     AfxAssert(cnt);
 
@@ -615,7 +615,7 @@ _AKX afxError AfxDeserializeMeshTopologies(afxStream in, afxSimulation sim, afxN
 _AKX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopology const src[])
 {
     afxError err = NIL;
-    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssertObjects(1, &out, afxFcc_IOB);
     AfxAssert(src);
     AfxAssert(cnt);
 
@@ -624,9 +624,9 @@ _AKX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopol
         _afxSerializedChunk chnkHdr;
         chnkHdr.fcc = afxFcc_MSHT;
         chnkHdr.len = 0;
-        afxSize chnkHdrPos = AfxAskStreamPosn(out);
+        afxSize chnkHdrPos = AfxGetStreamPosn(out);
         AfxWrite(out, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
-        afxSize chnkStartPos = AfxAskStreamPosn(out);
+        afxSize chnkStartPos = AfxGetStreamPosn(out);
 
         afxMeshTopology msht = src[i];
         _afxSerializedMsht chnk = { 0 };
@@ -638,9 +638,9 @@ _AKX afxError AfxSerializeMeshTopologies(afxStream out, afxNat cnt, afxMeshTopol
 
         AfxWrite(out, chnk.triCnt, sizeof(msht->tris[0]), msht->tris, sizeof(msht->tris[0]));
 
-        chnkHdr.len = AfxAskStreamPosn(out) - chnkStartPos;
+        chnkHdr.len = AfxGetStreamPosn(out) - chnkStartPos;
         AfxWriteAt(out, chnkHdrPos, 1, sizeof(chnkHdr), &chnkHdr, sizeof(chnkHdr));
-        AfxSkipStream(out, (afxInt)chnkHdr.len);
+        AfxAdvanceStream(out, (afxInt)chnkHdr.len);
     }
 
     return err;

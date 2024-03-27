@@ -190,7 +190,8 @@ _AFXINL afxResult AfxTestHidFlags(afxHid hid, afxHidFlag flags)
 _AFX afxClassConfig const _AfxHidClsConfig =
 {
     .fcc = afxFcc_HID,
-    .name = "Human Input Device",
+    .name = "HID",
+    .desc = "Human Input Device",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxHid)),
 };
@@ -202,9 +203,9 @@ _AFX afxNat AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidClass();
     AfxAssertClass(cls, afxFcc_HID);
-    return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
 }
 
 _AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[])
@@ -212,15 +213,15 @@ _AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(hids);
-    afxClass* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidClass();
     AfxAssertClass(cls, afxFcc_HID);
-    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)hids) : 0;
+    return cnt ? AfxEnumerateObjects(cls, first, cnt, (afxObject*)hids) : 0;
 }
 
 _AFX afxNat AfxCountHids(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidClass();
     AfxAssertClass(cls, afxFcc_HID);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

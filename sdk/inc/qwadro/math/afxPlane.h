@@ -18,7 +18,7 @@
 #define AFX_PLANE_H
 
 #include "qwadro/math/afxVector.h"
-#include "afxAabb.h"
+#include "qwadro/math/afxAabb.h"
 
 typedef afxV4d afxSimd(afxPlane);
 

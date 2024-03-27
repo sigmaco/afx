@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_CANVAS_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 
 _AVX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
@@ -244,9 +244,9 @@ _AVX afxNat AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, 
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(canvases);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetCanvasClass(dctx);
+    afxManager* cls = AfxGetCanvasClass(dctx);
     AfxAssertClass(cls, afxFcc_CANV);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)canvases);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)canvases);
 }
 
 _AVX afxError AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[])
@@ -259,9 +259,8 @@ _AVX afxError AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat l
     AfxAssert(whd);
     AfxAssert(whd[0]);
     AfxAssert(whd[1]);
-    AfxEntry("dctx=%p,wh=[%u,%u],layerCnt=%u,surCnt=%p", dctx, whd[0], whd[1], layerCnt, surCnt);
 
-    afxClass* cls = AfxGetCanvasClass(dctx);
+    afxManager* cls = AfxGetCanvasClass(dctx);
     AfxAssertClass(cls, afxFcc_CANV);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)canvases, (void const*[]) { dctx, whd, &layerCnt, &surCnt, surCfg }))

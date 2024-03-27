@@ -1,8 +1,7 @@
 #ifndef AFX_VIEWPORT_H
 #define AFX_VIEWPORT_H
 
-#include "afxMathDefs.h"
-#include "../math/afxVector.h"
+#include "qwadro/math/afxVector.h"
 
 AFX_DEFINE_STRUCT(afxViewport)
 /// Structure specifying a viewport

@@ -27,9 +27,9 @@
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/core/afxString.h"
-#include "qwadro/async/afxThread.h"
+#include "qwadro/core/afxThread.h"
 #include "qwadro/io/afxArchive.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 
 
 typedef struct zip zip;
@@ -123,29 +123,27 @@ _AFX afxBool _AfxGetArcD(afxArchive arc, struct _afxArcD **arc, struct _afxSysD*
 }
 #endif
 
-_AFX afxError _AfxZipFindAndReadCdHdr(afxArchive arc, _afxZipSerializedCdHdr *endRecord)
+_AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *endRecord)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
+    AfxAssertObjects(1, &file, afxFcc_FILE);
 
-    afxStream ios = AfxGetFileStream(&arc->file);
-
-    if (AfxGoToStreamEnd(ios, 0)) AfxThrowError();
+    if (AfxSeekStreamFromEnd(file, 0)) AfxThrowError();
     else
     {
         afxNat fileSize;
         _afxZipSerializedCdHdr *er;
 
-        if ((fileSize = AfxAskStreamPosn(ios)) <= sizeof(*er)) AfxThrowError();
+        if ((fileSize = AfxGetStreamPosn(file)) <= sizeof(*er)) AfxThrowError();
         else
         {
             unsigned char buffer[_AFX_Z_BUFSIZ]; // maximum zip descriptor size
             afxNat readBytes = (fileSize < sizeof(buffer)) ? fileSize : sizeof(buffer);
 
-            if (AfxGoToStreamBegin(ios, fileSize - readBytes)) AfxThrowError();
+            if (AfxSeekStreamFromBegin(file, fileSize - readBytes)) AfxThrowError();
             else
             {
-                if (AfxReadStream(ios, buffer, readBytes, 0)) AfxThrowError();
+                if (AfxReadStream(file, readBytes, 0, buffer)) AfxThrowError();
                 else
                 {
                     // Naively assume signature can only be found in one place...
@@ -194,17 +192,17 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
-    afxStream ios = AfxGetFileStream(&arc->file);
+    afxStream ios = arc->file;
 
-    if (AfxGoToStreamBegin(ios, endRecord->centralDirectoryOffset)) AfxThrowError();
+    if (AfxSeekStreamFromBegin(ios, endRecord->centralDirectoryOffset)) AfxThrowError();
     else
     {
         for (afxInt i = 0; i < endRecord->numEntries; i++)
         {
-            long offset = AfxAskStreamPosn(ios); // store current position
+            long offset = AfxGetStreamPosn(ios); // store current position
             AfxComment("Archived item %u -> %lu %#lx", i, (unsigned long)offset, (unsigned long)offset);
             
-            if (AfxReadStream(ios, &fileHdr, sizeof(fileHdr), 0)) AfxThrowError();
+            if (AfxReadStream(ios, sizeof(fileHdr), 0, &fileHdr)) AfxThrowError();
             else
             {
                 _afxZipSerializedCdEntryHdr *g = &fileHdr;
@@ -237,7 +235,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                         // filename
                         char filename[_AFX_Z_BUFSIZ / 3];
 
-                        if (AfxReadStream(ios, filename, fileHdr.fileNameLength, 0)) AfxThrowError();
+                        if (AfxReadStream(ios, fileHdr.fileNameLength, 0, filename)) AfxThrowError();
                         else
                         {
                             filename[fileHdr.fileNameLength] = '\0'; // NULL terminate
@@ -250,7 +248,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 
                             if (fileHdr.extraFieldLength)
                             {
-                                if (AfxReadStream(ios, extra, fileHdr.extraFieldLength, 0))
+                                if (AfxReadStream(ios, fileHdr.extraFieldLength, 0, extra))
                                     AfxThrowError();
 
                                 extra[fileHdr.extraFieldLength] = '\0';
@@ -263,7 +261,7 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 
                                 if (fileHdr.fileCommentLength)
                                 {
-                                    if (AfxReadStream(ios, comment, fileHdr.fileCommentLength, 0))
+                                    if (AfxReadStream(ios, fileHdr.fileCommentLength, 0, comment))
                                         AfxThrowError();
 
                                     comment[fileHdr.fileCommentLength] = '\0'; // NULL terminate
@@ -274,26 +272,26 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
                                     // seek to local file header, then skip file header + filename + extra field length
                                     afxNat16 localFileNameLength, localExtraFieldLength;
 
-                                    if (AfxGoToStreamBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) - sizeof(localFileNameLength) - sizeof(localExtraFieldLength))) AfxThrowError();
+                                    if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) - sizeof(localFileNameLength) - sizeof(localExtraFieldLength))) AfxThrowError();
                                     else
                                     {
-                                        if (AfxReadStream(ios, &localFileNameLength, sizeof(localFileNameLength), 0)) AfxThrowError();
+                                        if (AfxReadStream(ios, sizeof(localFileNameLength), 0, &localFileNameLength)) AfxThrowError();
                                         else
                                         {
-                                            if (AfxReadStream(ios, &localExtraFieldLength, sizeof(localExtraFieldLength), 0)) AfxThrowError();
+                                            if (AfxReadStream(ios, sizeof(localExtraFieldLength), 0, &localExtraFieldLength)) AfxThrowError();
                                             else
                                             {
-                                                if (AfxGoToStreamBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) + localFileNameLength + localExtraFieldLength)) AfxThrowError();
+                                                if (AfxSeekStreamFromBegin(ios, fileHdr.relativeOffsetOflocalHeader + sizeof(_afxZipSerializedLocalEntryHdr) + localFileNameLength + localExtraFieldLength)) AfxThrowError();
                                                 else
                                                 {
-                                                    AfxComment("Archived item %u, %lu %#lx", i, (unsigned long)AfxAskStreamPosn(ios), (unsigned long)AfxAskStreamPosn(ios));
+                                                    AfxComment("Archived item %u, %lu %#lx", i, (unsigned long)AfxGetStreamPosn(ios), (unsigned long)AfxGetStreamPosn(ios));
 
                                                     if (callback(arc, i, &fileHdr, &path, extra, comment, user_data))
                                                         break; // keep going while callback returns ok
 
-                                                    AfxGoToStreamBegin(ios, offset); // return to position
-                                                    AfxSkipStream(ios, sizeof(_afxZipSerializedCdEntryHdr) + g->fileNameLength); // skip entry
-                                                    AfxSkipStream(ios, g->extraFieldLength + g->fileCommentLength); // skip entry
+                                                    AfxSeekStreamFromBegin(ios, offset); // return to position
+                                                    AfxAdvanceStream(ios, sizeof(_afxZipSerializedCdEntryHdr) + g->fileNameLength); // skip entry
+                                                    AfxAdvanceStream(ios, g->extraFieldLength + g->fileCommentLength); // skip entry
                                                 }
                                             }
                                         }
@@ -311,16 +309,14 @@ _AFX afxError _AfxZipReadWholeCd(afxArchive arc, _afxZipSerializedCdHdr *endReco
 
 // Read data from file stream, described by header, to preallocated buffer.
 
-_AFX afxError _AfxZipReadEntryData(afxArchive arc, _afxZipSerializedCdEntryHdr *header, void *out)
+_AFX afxError _AfxZipReadEntryData(afxStream file, _afxZipSerializedCdEntryHdr *header, void *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &arc, afxFcc_ARC);
-
-    afxStream ios = AfxGetFileStream(&arc->file);
+    AfxAssertObjects(1, &file, afxFcc_FILE);
 
     if (header->compressionMethod == 0) // Store
     {
-        if (AfxReadStream(ios, &out, header->uncompressedSize, 0))
+        if (AfxReadStream(file, header->uncompressedSize, 0, &out))
             AfxThrowError();
     }
     else
@@ -354,9 +350,9 @@ _AFX afxError _AfxZipReadCdEntryCallback(afxArchive arc, afxNat idx, _afxZipSeri
     AfxMakeUri128(&e->path, NIL);
     AfxCopyUri(&e->path.uri, path);
 
-    afxStream ios = AfxGetFileStream(&arc->file);
+    afxStream ios = arc->file;
 
-    e->offset = AfxAskStreamPosn(ios);
+    e->offset = AfxGetStreamPosn(ios);
     e->uncompressedSize = header->uncompressedSize;
     e->compressedSize = header->compressedSize;
     e->codec = header->compressionMethod;
@@ -446,12 +442,12 @@ _AFX afxError AfxDumpArchivedFile(afxArchive arc, afxNat idx, afxNat bufSiz, voi
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     AfxAssert(bufSiz >= size);
 
-    afxStream ios = AfxGetFileStream(&arc->file);
+    afxStream ios = arc->file;
     
-    if (AfxGoToStreamBegin(ios, e->offset)) AfxThrowError();
+    if (AfxSeekStreamFromBegin(ios, e->offset)) AfxThrowError();
     else
     {
-        if (AfxReadStream(ios, buf, size > bufSiz ? bufSiz : size, 0))
+        if (AfxReadStream(ios, size > bufSiz ? bufSiz : size, 0, buf))
             AfxThrowError();
     }
     return err;
@@ -463,20 +459,20 @@ _AFX afxError AfxForkArchivedFile(afxArchive arc, afxNat idx, afxStream *ios)
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
     AfxAssert(idx < AfxCountArrayElements(&arc->entries));
-    AfxAssertObjects(1, &ios, afxFcc_IOS);
+    AfxAssertObjects(1, &ios, afxFcc_IOB);
 
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
     AfxAssert(e);
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream ios2;
 
-    if (!(ios2 = AfxAcquireStream(afxIoFlag_RWX, 0, NIL, size))) AfxThrowError();
+    if (!(ios2 = AfxAcquireStream(afxIoFlag_RWX, size))) AfxThrowError();
     else
     {
         *ios = ios2;
-        AfxAssertObjects(1, &ios2, afxFcc_IOS);
+        AfxAssertObjects(1, &ios2, afxFcc_IOB);
 
-        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), e->offset, size, 0, ios2))
+        if (AfxCopyStreamRange(arc->file, e->offset, size, 0, ios2))
             AfxThrowError();
 
         if (err)
@@ -514,13 +510,13 @@ _AFX afxError AfxOpenArchivedFile(afxArchive arc, afxNat idx, afxStream *in)
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     afxStream in2;
 
-    if (!(in2 = AfxAcquireStream(afxIoFlag_RWX, 0, NIL, size))) AfxThrowError();
+    if (!(in2 = AfxAcquireStream(afxIoFlag_RWX, size))) AfxThrowError();
     else
     {
         *in = in2;
-        AfxAssertType(in2, afxFcc_IOS);
+        AfxAssertType(in2, afxFcc_IOB);
 
-        if (AfxCopyStreamRange(AfxGetFileStream(&arc->file), e->offset, size, 0, in2))
+        if (AfxCopyStreamRange(arc->file, e->offset, size, 0, in2))
             AfxThrowError();
 
         if (err)
@@ -545,16 +541,16 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxNat idx, afxUri const *u
     AfxAssert(e);
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
     
-    afxStream ios = AfxGetFileStream(&arc->file);
-    //AfxGoToStreamBegin(ios, e->offset);
-    afxFile file;
+    afxStream ios = arc->file;
+    //AfxSeekStreamFromBegin(ios, e->offset);
+    afxStream file;
 
-    if (AfxOpenFiles(afxFileFlag_W, 1, uri, &file)) AfxThrowError();
+    if (!(file = AfxOpenFile(uri, afxIoFlag_W))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
-        if (AfxCopyStreamRange(ios, e->offset, size, 0, AfxGetFileStream(file)))
+        if (AfxCopyStreamRange(ios, e->offset, size, 0, file))
             AfxThrowError();
 
         AfxReleaseObjects(1, (void*[]) { file });
@@ -607,26 +603,13 @@ _AFX afxString* AfxGetArchivedFileName(afxArchive arc, afxNat idx, afxUri *name)
 
 _AFX afxError _AfxArcCtor(afxArchive arc, afxCookie const *cookie)
 {
-    AfxEntry("arc=%p", arc);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &arc, afxFcc_ARC);
 
-    _afxZipSerializedCdHdr cdHdr = { 0 };
+    arc->file = cookie->udd[0];
 
-    if (_AfxZipFindAndReadCdHdr(arc, &cdHdr)) AfxThrowError();
-    else
-    {
-        AfxAllocateArray(&arc->entries, cdHdr.numEntries, sizeof(_afxZipEntry), NIL);
-        
-        AfxReserveArraySpace(&arc->entries, cdHdr.numEntries);
-        arc->entries.cnt = cdHdr.numEntries;
+    AfxAllocateArray(&arc->entries, 1, sizeof(_afxZipEntry), NIL);
 
-        if (_AfxZipReadWholeCd(arc, &cdHdr, _AfxZipReadCdEntryCallback, NIL)) AfxThrowError();
-        else
-        {
-
-        }
-    }
     return err;
 }
 
@@ -643,8 +626,9 @@ _AFX afxError _AfxArcDtor(afxArchive arc)
 _AFX afxClassConfig const _AfxArcClsConfig =
 {
     .fcc = afxFcc_ARC,
-    .name = "File Archive",
-    .unitsPerPage = 1,
+    .name = "Archive",
+    .desc = "Archiving",
+    .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxArchive)),
     .mmu = NIL,
     .ctor = (void*)_AfxArcCtor,
@@ -653,18 +637,44 @@ _AFX afxClassConfig const _AfxArcClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireArchives(afxNat cnt, afxArchive archives[], afxUri const uri[], afxFileFlags const flags[])
+_AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxError* error)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
+    afxArchive arc = NIL;
 
-    afxClass* cls = AfxGetArchiveClass();
+    afxManager* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
+    
+    afxStream file = AfxOpenFile(uri, (flags & afxIoFlag_RWX));
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)archives, (void const*[]) { flags, uri }))
-        AfxThrowError();
+    if (!file) AfxThrowError();
+    else
+{
+        _afxZipSerializedCdHdr cdHdr = { 0 };
 
-    return err;
+        if (_AfxZipFindAndReadCdHdr(file, &cdHdr)) AfxThrowError();
+        else
+        {
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&arc, (void const*[]) { file, &flags })) AfxThrowError();
+            else
+            {
+                AfxReserveArraySpace(&arc->entries, cdHdr.numEntries);
+                arc->entries.cnt = cdHdr.numEntries;
+
+                if (_AfxZipReadWholeCd(arc, &cdHdr, _AfxZipReadCdEntryCallback, NIL)) AfxThrowError();
+                else
+                {
+
+                }
+            }
+        }
+    }
+
+    if (error)
+        *error = err;
+
+    return arc;
 }
 
 _AFX afxNat AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd)
@@ -672,9 +682,9 @@ _AFX afxNat AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetArchiveClass();
+    afxManager* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[])
@@ -682,15 +692,15 @@ _AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[]
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(archives);
-    afxClass* cls = AfxGetArchiveClass();
+    afxManager* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)archives);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)archives);
 }
 
 _AFX afxNat AfxCountArchives(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetArchiveClass();
+    afxManager* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

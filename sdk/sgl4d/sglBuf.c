@@ -292,7 +292,6 @@ _SGL afxError _SglUnmapBufferRange(afxBuffer buf)
 _SGL afxError _SglBufDtor(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("buf=%p", buf);
 
     afxDrawContext dctx = AfxGetObjectProvider(buf);
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
@@ -306,14 +305,13 @@ _SGL afxError _SglBufDtor(afxBuffer buf)
 
     if (buf->base.bytemap)
     {
-        AfxDeallocate(mmu, buf->base.bytemap);
+        AfxDeallocate(buf->base.bytemap);
     }
     return err;
 }
 
 _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
 {
-    AfxEntry("buf=%p", buf);
     afxResult err = NIL;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
 
@@ -329,7 +327,7 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    if (!(buf->base.bytemap = AfxAllocate(mmu, buf->base.siz, sizeof(afxByte), 64, AfxHint()))) AfxThrowError();
+    if (!(buf->base.bytemap = AfxAllocate(buf->base.siz, sizeof(afxByte), 64, AfxHint()))) AfxThrowError();
     else
     {
         if (spec->src)
@@ -361,7 +359,7 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
         buf->base.unmap = _SglUnmapBufferRange;
 
         if (err)
-            AfxDeallocate(mmu, buf->base.bytemap);
+            AfxDeallocate(buf->base.bytemap);
     }
     return err;
 }

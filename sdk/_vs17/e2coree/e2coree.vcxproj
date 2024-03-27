@@ -20,40 +20,35 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\afxQwadro.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxClock.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxCondition.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxMutex.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxSlock.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxThread.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxTime.h" />
-    <ClInclude Include="..\..\inc\qwadro\async\afxTxu.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxBitmap.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxClock.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxWaitCondition.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxMutex.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxClass.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxManager.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxDevice.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxIcd.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxCoreDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxDatabase.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxDatajack.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxDebug.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxEvent.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxFcc.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxIndexedString.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxInitialization.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxConfig.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxIterator.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxChain.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxMap.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxExecutable.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxModule.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxObject.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxRawString.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxResidency.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxService.h" />
-    <ClInclude Include="..\..\inc\qwadro\core\afxSimd.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxSlock.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxString.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxSystem.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxTerminal.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxThread.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxTime.h" />
+    <ClInclude Include="..\..\inc\qwadro\core\afxTxu.h" />
     <ClInclude Include="..\..\inc\qwadro\core\afxVersion.h" />
+    <ClInclude Include="..\..\inc\qwadro\env\afxEnvironment.h" />
     <ClInclude Include="..\..\inc\qwadro\game\agxGameData.h" />
     <ClInclude Include="..\..\inc\qwadro\game\agxGameDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\game\agxGameObject.h" />
@@ -62,12 +57,11 @@
     <ClInclude Include="..\..\inc\qwadro\io\afxFile.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxGamepad.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxHid.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxIoScript.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxKeyboard.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxMouse.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxResource.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxSource.h" />
-    <ClInclude Include="..\..\inc\qwadro\io\afxFileSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\io\afxStorage.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxStream.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxUrd.h" />
     <ClInclude Include="..\..\inc\qwadro\io\afxUri.h" />
@@ -79,8 +73,8 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxPlane.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxOpticalMatrix.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxQuaternion.h" />
-    <ClInclude Include="..\..\inc\qwadro\math\afxReal.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxRotor.h" />
+    <ClInclude Include="..\..\inc\qwadro\math\afxSimd.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxSphere.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxTransform.h" />
     <ClInclude Include="..\..\inc\qwadro\math\afxTrigonometry.h" />
@@ -90,20 +84,42 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxVolume.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxArena.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxArray.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxMappedString.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxMmu.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxPool.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxQueue.h" />
+    <ClInclude Include="..\..\inc\qwadro\mem\afxResidency.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxSlabAllocator.h" />
     <ClInclude Include="..\..\inc\qwadro\mem\afxStack.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_common.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_compiler.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_core.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_debug.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_math.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_opcodes.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_opt_meta.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_opt_random.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_primitive.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_utils.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_value.h" />
+    <ClInclude Include="..\..\qwadro\env\_dep\luna_vm.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\inc\qwadro\README.md" />
+    <None Include="..\..\qwadro\env\_dep\luna_core.luna" />
+    <None Include="..\..\qwadro\env\_dep\luna_core.luna.inc" />
+    <None Include="..\..\qwadro\env\_dep\luna_opt_meta.luna" />
+    <None Include="..\..\qwadro\env\_dep\luna_opt_meta.luna.inc" />
+    <None Include="..\..\qwadro\env\_dep\luna_opt_random.luna" />
+    <None Include="..\..\qwadro\env\_dep\luna_opt_random.luna.inc" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\inc\qwadro\go-horse.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\dep\tinycthread\tinycthread.c" />
     <ClCompile Include="..\..\qwadro\afxQwadro.c" />
     <ClCompile Include="..\..\qwadro\afxQwadroCpp.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -111,42 +127,43 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\async\afxClock_w32.c" />
-    <ClCompile Include="..\..\qwadro\async\afxCondition.c" />
-    <ClCompile Include="..\..\qwadro\async\afxMutex.c" />
-    <ClCompile Include="..\..\qwadro\async\afxSlock_w32.c" />
-    <ClCompile Include="..\..\qwadro\async\afxThread.c" />
-    <ClCompile Include="..\..\qwadro\async\afxTime_w32.c" />
-    <ClCompile Include="..\..\qwadro\async\afxTxu_w32.c" />
-    <ClCompile Include="..\..\qwadro\core\afxBitmap.c" />
+    <ClCompile Include="..\..\qwadro\core\afxChain.c" />
+    <ClCompile Include="..\..\qwadro\core\afxClock_w32.c" />
+    <ClCompile Include="..\..\qwadro\core\afxWaitCondition.c" />
+    <ClCompile Include="..\..\qwadro\core\afxMutex.c" />
     <ClCompile Include="..\..\qwadro\core\afxRestring.c" />
-    <ClCompile Include="..\..\qwadro\core\afxClass.c" />
+    <ClCompile Include="..\..\qwadro\core\afxManager.c" />
     <ClCompile Include="..\..\qwadro\core\afxDevice.c" />
     <ClCompile Include="..\..\qwadro\core\afxFixedString.c" />
     <ClCompile Include="..\..\qwadro\core\afxIcd.c" />
     <ClCompile Include="..\..\qwadro\core\afxCoreDefs.c" />
-    <ClCompile Include="..\..\qwadro\core\afxChain.c" />
     <ClCompile Include="..\..\qwadro\core\afxDatabase.c" />
-    <ClCompile Include="..\..\qwadro\core\afxDatajack.c" />
     <ClCompile Include="..\..\qwadro\core\afxDebug_w32.c" />
-    <ClCompile Include="..\..\qwadro\core\afxIndexedString.c" />
-    <ClCompile Include="..\..\qwadro\core\afxInitialization.c" />
-    <ClCompile Include="..\..\qwadro\core\afxMap.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\core\afxExecutable.c" />
+    <ClCompile Include="..\..\qwadro\core\afxConfig.c" />
+    <ClCompile Include="..\..\qwadro\core\afxModule.c" />
     <ClCompile Include="..\..\qwadro\core\afxObject.c" />
     <ClCompile Include="..\..\qwadro\core\afxRawString.c" />
     <ClCompile Include="..\..\qwadro\core\afxService.c" />
-    <ClCompile Include="..\..\qwadro\core\afxSimd.c" />
+    <ClCompile Include="..\..\qwadro\core\afxSlock_w32.c" />
     <ClCompile Include="..\..\qwadro\core\afxString.c" />
     <ClCompile Include="..\..\qwadro\core\afxSystem.c" />
     <ClCompile Include="..\..\qwadro\core\afxSystem_w32.c" />
     <ClCompile Include="..\..\qwadro\core\afxTerminal.c" />
+    <ClCompile Include="..\..\qwadro\core\afxThread.c" />
+    <ClCompile Include="..\..\qwadro\core\afxTime_w32.c" />
+    <ClCompile Include="..\..\qwadro\core\afxTxu_w32.c" />
     <ClCompile Include="..\..\qwadro\core\afxVersion.c" />
+    <ClCompile Include="..\..\qwadro\env\afxEnvironment.c" />
+    <ClCompile Include="..\..\qwadro\env\xssIo.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_compiler.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_core.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_debug.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_opt_meta.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_opt_random.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_primitive.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_utils.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_value.c" />
+    <ClCompile Include="..\..\qwadro\env\_dep\luna_vm.c" />
     <ClCompile Include="..\..\qwadro\game\agxGameData.c" />
     <ClCompile Include="..\..\qwadro\game\agxGameObject.c" />
     <ClCompile Include="..\..\qwadro\io\afxArchive.c" />
@@ -154,7 +171,6 @@
     <ClCompile Include="..\..\qwadro\io\afxFile.c" />
     <ClCompile Include="..\..\qwadro\io\afxGamepad.c" />
     <ClCompile Include="..\..\qwadro\io\afxHid.c" />
-    <ClCompile Include="..\..\qwadro\io\afxIoScript.c" />
     <ClCompile Include="..\..\qwadro\io\afxKeyboard.c" />
     <ClCompile Include="..\..\qwadro\io\afxMouse.c" />
     <ClCompile Include="..\..\qwadro\io\afxResource.c">
@@ -164,7 +180,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\io\afxSource.c" />
-    <ClCompile Include="..\..\qwadro\io\afxFileSystem.c" />
+    <ClCompile Include="..\..\qwadro\io\afxStorage.c" />
     <ClCompile Include="..\..\qwadro\io\afxStream.c" />
     <ClCompile Include="..\..\qwadro\io\afxUrd.c" />
     <ClCompile Include="..\..\qwadro\io\afxUri.c" />
@@ -175,8 +191,8 @@
     <ClCompile Include="..\..\qwadro\math\afxPlane.c" />
     <ClCompile Include="..\..\qwadro\math\afxOpticalMatrix.c" />
     <ClCompile Include="..\..\qwadro\math\afxQuaternion.c" />
-    <ClCompile Include="..\..\qwadro\math\afxReal.c" />
     <ClCompile Include="..\..\qwadro\math\afxRotor.c" />
+    <ClCompile Include="..\..\qwadro\math\afxSimd.c" />
     <ClCompile Include="..\..\qwadro\math\afxTrigonometry.c" />
     <ClCompile Include="..\..\qwadro\math\afxVector.c" />
     <ClCompile Include="..\..\qwadro\math\afxMathOps.c" />
@@ -184,6 +200,7 @@
     <ClCompile Include="..\..\qwadro\math\afxVertex.c" />
     <ClCompile Include="..\..\qwadro\mem\afxArena.c" />
     <ClCompile Include="..\..\qwadro\mem\afxArray.c" />
+    <ClCompile Include="..\..\qwadro\mem\afxMappedString.c" />
     <ClCompile Include="..\..\qwadro\mem\afxMmu.c" />
     <ClCompile Include="..\..\qwadro\mem\afxPool.c" />
     <ClCompile Include="..\..\qwadro\mem\afxQueue.c" />

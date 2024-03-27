@@ -22,7 +22,7 @@
 #include <string.h>
 
 #define _AFX_URD_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
@@ -130,7 +130,7 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
         else
         {
             //use Section->InternalAlignment
-            Result = AfxAllocate(NIL, 1, alignedSiz, 0, AfxHint());
+            Result = AfxAllocate(1, alignedSiz, 0, AfxHint());
             result = Result;
         }
 
@@ -139,25 +139,25 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
             if (Section->fmt)
             {
                 afxNat v8 = AfxGetCompressionPaddingSize(Section->fmt);
-                void *v9 = AfxAllocate(NIL, 1, Section->dataSiz + v8, 0, AfxHint());
+                void *v9 = AfxAllocate(1, Section->dataSiz + v8, 0, AfxHint());
 
                 if (v9)
                 {
-                    AfxReadStreamAt(Reader, Section->dataOffset, v9, Section->dataSiz, 0);
+                    AfxReadStreamAt(Reader, Section->dataOffset, Section->dataSiz, 0, v9);
 
                     if (!AfxDecompressData(Section->fmt, fileIsByteReversed, Section->dataSiz, v9, /*Section->first16Bit*/0, /*Section->first8Bit*/0, Section->expandedDataSiz, Result))
                     {
-                        AfxDeallocate(NIL, Result);
+                        AfxDeallocate(Result);
                         Result = 0;
                     }
                 }
 
-                AfxDeallocate(NIL, v9);
+                AfxDeallocate(v9);
                 result = Result;
             }
             else
             {
-                AfxReadStreamAt(Reader, Section->dataOffset, result, Section->dataSiz, 0);
+                AfxReadStreamAt(Reader, Section->dataOffset, Section->dataSiz, 0, result);
                 result = Result;
             }
         }
@@ -238,7 +238,7 @@ _AFX void AfxCloseUrdSections(afxUrd urd, afxNat baseIdx, afxNat secCnt)
         if (urd->sections[baseIdx + i])
         {
             if (!urd->isUserMem[baseIdx + i])
-                AfxDeallocate(mmu, urd->sections[baseIdx + i]);
+                AfxDeallocate(urd->sections[baseIdx + i]);
 
             urd->isUserMem[baseIdx + i] = FALSE;
             urd->marshalled[baseIdx + i] = FALSE;
@@ -268,9 +268,9 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
     afxUrd urd = NIL;
 
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
-    afxFile file;
+    afxStream file;
 
-    if (AfxOpenFiles(afxFileFlag_R, 1, path, &file)) AfxThrowError();
+    if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
@@ -291,9 +291,9 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
     afxUrd urd = NIL;
 
     AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
-    afxFile file;
+    afxStream file;
 
-    if (AfxOpenFiles(afxFileFlag_R, 1, path, &file)) AfxThrowError();
+    if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
@@ -318,16 +318,16 @@ _AFX afxError _AfxUrdDtor(afxUrd urd)
     AfxCloseAllUrdSections(urd);
 
     if (urd->sections)
-        AfxDeallocate(mmu, urd->sections);
+        AfxDeallocate(urd->sections);
     
     if (urd->conversionBuf)
-        AfxDeallocate(mmu, urd->conversionBuf);
+        AfxDeallocate(urd->conversionBuf);
 
     if (urd->hdr)
-        AfxDeallocate(mmu, urd->hdr);
+        AfxDeallocate(urd->hdr);
 
     if (urd->srcMagicVal)
-        AfxDeallocate(mmu, urd->srcMagicVal);
+        AfxDeallocate(urd->srcMagicVal);
 
     return err;
 }

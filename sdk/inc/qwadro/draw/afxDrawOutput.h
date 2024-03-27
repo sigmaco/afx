@@ -26,7 +26,7 @@
 #ifndef AFX_DRAW_OUTPUT_H
 #define AFX_DRAW_OUTPUT_H
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxDrawQueue.h"
 
 typedef enum afxEventDout
 {
@@ -84,13 +84,6 @@ typedef enum afxPresentMode
 
 } afxPresentMode;
 
-AFX_DEFINE_STRUCT(afxPresentationRequest)
-{
-    afxSemaphore        wait;
-    afxDrawOutput       dout;
-    afxNat              bufIdx;
-};
-
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
     afxUri const*       endpoint; // window, desktop, etc
@@ -112,10 +105,6 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
     afxRasterFlags      auxDsFlags[2];
     void*               udd;
 };
-
-AFX_DECLARE_STRUCT(_afxDoutVmt);
-
-//typedef afxObject afxDrawOutput;
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_OUTPUT_C
@@ -185,11 +174,6 @@ struct afxBaseDrawOutput
 #endif
 #endif
 
-AVX afxError            AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig const cfg[], afxDrawOutput outputs[]);
-
-AVX afxError            AfxStampDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* fmt, ...);
-AVX afxError            AfxPresentDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[]);
-
 AVX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
@@ -220,5 +204,12 @@ AVX afxError            AfxRegenerateDrawOutputBuffers(afxDrawOutput dout);
 
 //AVX afxError            AfxResetDrawOutputAuxiliarBuffers(afxDrawOutput dout, afxPixelFormat depth, afxPixelFormat stencil);
 //AVX afxError            AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, afxNat auxSurfCnt, afxSurfaceConfig const auxSurfs[], afxCanvas canv[]);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxError            AfxOpenDrawOutputs(afxNat ddevId, afxNat cnt, afxDrawOutputConfig const cfg[], afxDrawOutput outputs[]);
+
+AVX afxError            AfxStampDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* fmt, ...);
+AVX afxError            AfxPresentDrawOutputBuffers(afxNat cnt, afxPresentationRequest const req[]);
 
 #endif//AFX_DRAW_OUTPUT_H

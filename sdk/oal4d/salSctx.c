@@ -29,7 +29,6 @@ _A4D afxError _SalSctxProcCb(afxSoundContext sctx, afxSoundThread sthr)
 
 _A4D afxError _SalSctxDtor(afxSoundContext sctx)
 {
-    AfxEntry("sctx=%p", sctx);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
 
@@ -43,7 +42,6 @@ _A4D afxError _SalSctxDtor(afxSoundContext sctx)
 
 _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
 {
-    AfxEntry("sctx=%p", sctx);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
     //AfxAssert(spec);
@@ -75,15 +73,15 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
 
         //tmpClsConf = _SalBufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&sctx->base.buffers, NIL, classes, &tmpClsConf);
+        AfxSetUpManager(&sctx->base.buffers, NIL, classes, &tmpClsConf);
 
 #if 0
         tmpClsConf = _AfxVbufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&sctx->base.vbuffers, classes, &tmpClsConf);
+        AfxSetUpManager(&sctx->base.vbuffers, classes, &tmpClsConf);
         tmpClsConf = _AfxIbufClsConfig;
         tmpClsConf.mmu = mmu;
-        AfxMountClass(&sctx->base.ibuffers, classes, &tmpClsConf);
+        AfxSetUpManager(&sctx->base.ibuffers, classes, &tmpClsConf);
 #endif
         {
             {

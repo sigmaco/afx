@@ -94,7 +94,7 @@ static void AfxXmlNodeAttrDelete(afxXml* xml, afxXmlAttr* attribute)
     afxMmu mmu = AfxGetIoContext();
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    AfxDeallocate(mmu, attribute);
+    AfxDeallocate(attribute);
 }
 
 static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
@@ -112,7 +112,7 @@ static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
         ++at;
     }
 
-    AfxDeallocate(mmu, node->attributes);
+    AfxDeallocate(node->attributes);
 
     afxXmlNode** it = node->children;
 
@@ -122,9 +122,9 @@ static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
         ++it;
     }
 
-    AfxDeallocate(mmu, node->children);
+    AfxDeallocate(node->children);
 
-    AfxDeallocate(mmu, node);
+    AfxDeallocate(node);
 }
 
 static uint8_t _AfxXmlParsePeek(struct xml_parser* parser, size_t n) {
@@ -188,7 +188,7 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
     afxMmu mmu = AfxGetIoContext();
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    attributes = AfxCoallocate(mmu, 1, sizeof(afxXmlAttr*), 0, AfxHint());
+    attributes = AfxCoallocate(1, sizeof(afxXmlAttr*), 0, AfxHint());
     attributes[0] = 0;
 
     afxString128 tmpStr;
@@ -206,15 +206,15 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 
         for (token = xml_strtok_r(NULL, " ", &rest); token != NULL; token = xml_strtok_r(NULL, " ", &rest))
         {
-            str_name = AfxAllocate(mmu, 1, strlen(token) + 1, 0, AfxHint());
-            str_content = AfxAllocate(mmu, 1, strlen(token) + 1, 0, AfxHint());
+            str_name = AfxAllocate(1, strlen(token) + 1, 0, AfxHint());
+            str_content = AfxAllocate(1, strlen(token) + 1, 0, AfxHint());
             // %s=\"%s\" wasn't working for some reason, ugly hack to make it work
             if (sscanf(token, "%[^=]=\"%[^\"]", str_name, str_content) != 2)
             {
                 if (sscanf(token, "%[^=]=\'%[^\']", str_name, str_content) != 2)
                 {
-                    AfxDeallocate(mmu, str_name);
-                    AfxDeallocate(mmu, str_content);
+                    AfxDeallocate(str_name);
+                    AfxDeallocate(str_content);
                     continue;
                 }
             }
@@ -222,13 +222,13 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             start_name = &tag_open->start[position];
             start_content = &tag_open->start[position + strlen(str_name) + 2];
 
-            new_attribute = AfxAllocate(mmu, 1, sizeof(afxXmlAttr), 0, AfxHint());
+            new_attribute = AfxAllocate(1, sizeof(afxXmlAttr), 0, AfxHint());
             AfxMakeString(&new_attribute->name, start_name, strlen(str_name));
             AfxMakeString(&new_attribute->content, start_content, strlen(str_content));
 
             old_elements = get_zero_terminated_array_attributes(attributes);
             new_elements = old_elements + 1;
-            attributes = AfxReallocate(mmu, attributes, sizeof(struct xml_attributes*), (new_elements + 1), 0, AfxHint());
+            attributes = AfxReallocate(attributes, sizeof(struct xml_attributes*), (new_elements + 1), 0, AfxHint());
 
             attributes[new_elements - 1] = new_attribute;
             attributes[new_elements] = 0;
@@ -241,8 +241,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             ++tagCnt2;
             
 
-            AfxDeallocate(mmu, str_name);
-            AfxDeallocate(mmu, str_content);
+            AfxDeallocate(str_name);
+            AfxDeallocate(str_content);
         }
         
         tag_open->len = trimRange;
@@ -307,7 +307,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
     size_t original_length;
     afxXmlAttr** attributes;
 
-    afxXmlNode** children = AfxCoallocate(mmu, 1, sizeof(afxXmlNode*), 0, AfxHint());
+    afxXmlNode** children = AfxCoallocate(1, sizeof(afxXmlNode*), 0, AfxHint());
     children[0] = 0;
 
     // Parse open tag
@@ -500,7 +500,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
 
                         size_t old_elements = get_zero_terminated_array_nodes(children);
                         size_t new_elements = old_elements + 1;
-                        children = AfxReallocate(mmu, children, sizeof(afxXmlNode*), (new_elements + 1), 0, AfxHint());
+                        children = AfxReallocate(children, sizeof(afxXmlNode*), (new_elements + 1), 0, AfxHint());
 
                         // Save child
 
@@ -585,7 +585,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                 int a = 0;
             }
 
-            afxXmlNode* node = AfxAllocate(mmu, 1, sizeof(afxXmlNode), 0, AfxHint());
+            afxXmlNode* node = AfxAllocate(1, sizeof(afxXmlNode), 0, AfxHint());
             AfxMakeString(&node->name, tag_open.start, tag_open.len);
             AfxMakeString(&node->content, content.start, content.len);
             node->attributes = attributes;
@@ -621,7 +621,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
             AfxXmlNodeDelete(xml, *it);
             ++it;
         }
-        AfxDeallocate(mmu, children);
+        AfxDeallocate(children);
     }
     return 0;
 }
@@ -666,8 +666,6 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             /* Return parsed document
              */
 
-            xml->buffer.buffer = buffer;
-            xml->buffer.length = length;
             xml->root = root;
             
             xml->elemCnt = xml->tempElemArr.cnt;
@@ -687,7 +685,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             AfxAllocateArray(&sorted, elemCnt, sizeof(afxXmlElement), NIL);
             AfxReserveArraySpace(&sorted, elemCnt);
 
-            afxNat* indicesMap = AfxAllocate(NIL, elemCnt, sizeof(indicesMap[0]), 0, AfxHint());
+            afxNat* indicesMap = AfxAllocate(elemCnt, sizeof(indicesMap[0]), 0, AfxHint());
 
             afxNat activeParentIdx = AFX_INVALID_INDEX;
             afxNat remaningCnt = elemCnt;
@@ -732,7 +730,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
                 neo->baseChildIdx = indicesMap[old->baseChildIdx];
             }
 
-            AfxDeallocate(NIL, indicesMap);
+            AfxDeallocate(indicesMap);
 
             xml->elemCnt = sorted.cnt;
             xml->elems = sorted.data;
@@ -751,39 +749,13 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
     return err;
 }
 
-afxError _AfxXmlOpen(afxXml* xml, void* source)
+afxError _AfxXmlOpen(afxXml* xml, afxStream file)
 {
     afxError err = AFX_ERR_NONE;
 
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
-    size_t const read_chunk = 1; // TODO 4096;
-
-    size_t document_length = 0;
-    size_t buffer_size = 512;	// TODO 4069
-    uint8_t* buffer = AfxAllocate(mmu, buffer_size, sizeof(afxByte), 0, AfxHint());
-
-    while (!feof(source))
-    {
-        if (buffer_size - document_length < read_chunk)
-        {
-            buffer = AfxReallocate(mmu, buffer, buffer_size + 2, read_chunk, 0, AfxHint());
-            buffer_size += 2 * read_chunk;
-        }
-
-        size_t read = fread( &buffer[document_length], sizeof(afxByte), read_chunk, source);
-
-        document_length += read;
-    }
-
-    if (AfxParseXml(xml, buffer, document_length))
+    if (AfxParseXml(xml, AfxGetStreamBuffer(file, 0), AfxGetStreamLength(file)))
         AfxThrowError();
 
-    if (err)
-    {
-        AfxDeallocate(mmu, buffer);
-    }
     return err;
 }
 
@@ -1268,13 +1240,6 @@ _AFX void AfxCleanUpXml(afxXml* xml)
     AfxAssertType(xml, afxFcc_XML);
 
     AfxXmlNodeDelete(xml, xml->root);
-
-    if (xml->buffer.buffer)
-    {
-        afxMmu mmu = AfxGetIoContext();
-        AfxAssertObjects(1, &mmu, afxFcc_MMU);
-        AfxDeallocate(mmu, xml->buffer.buffer);
-    }
 }
 
 _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
@@ -1282,19 +1247,19 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
     afxError err = AFX_ERR_NONE;
 
     AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
-    afxFile file;
+    afxStream file;
 
-    if (AfxOpenFiles(afxFileFlag_R, 1, uri, &file)) AfxThrowError();
+    if (!(file = AfxLoadFile(uri))) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &file, afxFcc_FILE);
+        AfxAssertObjects(1, &file, afxFcc_IOB);
 
         AfxAssignTypeFcc(xml, afxFcc_XML);
 
-        if (_AfxXmlOpen(xml, AfxGetFileHostDescriptor(file)))
+        if (_AfxXmlOpen(xml, file))
             AfxThrowError();
 
-        AfxReleaseObjects(1, (void*[]) { file });
+        AfxCloseStream(file);
     }
     return err;
 }

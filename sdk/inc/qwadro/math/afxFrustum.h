@@ -17,10 +17,10 @@
 #ifndef AFX_FRUSTUM_H
 #define AFX_FRUSTUM_H
 
-#include "afxAabb.h"
-#include "afxPlane.h"
-#include "afxSphere.h"
-#include "qwadro/math/afxMathDefs.h"
+#include "qwadro/math/afxAabb.h"
+#include "qwadro/math/afxSphere.h"
+#include "qwadro/math/afxMatrix.h"
+#include "qwadro/math/afxPlane.h"
 
 typedef enum afxCubeFace
 {

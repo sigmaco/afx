@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, GLint level, GLuint baseLayer, GLuint layerCnt, afxWhd const off, afxWhd const whd, afxWhd const origin)
 {
@@ -117,10 +117,10 @@ _SGL void _SglDpuRasCopy(sglDpuIdd* dpu, _sglCmdCopyRasterRegions const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdRasCopy(afxDrawScript dscr, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[])
+_SGL afxCmdId _SglEncodeCmdRasCopy(afxDrawStream dscr, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdCopyRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
@@ -142,7 +142,7 @@ _SGL void _SglDpuRasRw(sglDpuIdd* dpu, _sglCmdRwRasterRegions const* cmd)
     afxRaster ras = cmd->ras;
     afxStream ios = cmd->ios;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &ios, afxFcc_IOS);
+    AfxAssertObjects(1, &ios, afxFcc_IOB);
     afxNat opCnt = cmd->opCnt;
     AfxAssert(opCnt);
     afxRasterIoOp const* ops = cmd->ops;
@@ -187,12 +187,12 @@ _SGL void _SglDpuRasRw(sglDpuIdd* dpu, _sglCmdRwRasterRegions const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdRasRw(afxDrawScript dscr, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc)
+_SGL afxCmdId _SglEncodeCmdRasRw(afxDrawStream dscr, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &ios, afxFcc_IOS);
+    AfxAssertObjects(1, &ios, afxFcc_IOB);
     AfxAssert(opCnt);
     AfxAssert(ops);
 
@@ -385,7 +385,7 @@ _SGL void _SglDpuRasPack(sglDpuIdd* dpu, _sglCmdPackRasterRegions const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdRasPack(afxDrawScript dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack)
+_SGL afxCmdId _SglEncodeCmdRasPack(afxDrawStream dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -432,10 +432,10 @@ _SGL void _SglDpuRasSubsample(sglDpuIdd* dpu, _sglCmdRegenerateMipmaps const* cm
     AfxThrowError();
 }
 
-_SGL afxCmdId _SglEncodeCmdRasSubsample(afxDrawScript dscr, afxRaster ras, afxNat baseLod, afxNat lodCnt)
+_SGL afxCmdId _SglEncodeCmdRasSubsample(afxDrawStream dscr, afxRaster ras, afxNat baseLod, afxNat lodCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdRegenerateMipmaps *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
@@ -497,10 +497,10 @@ _SGL void _SglDpuRasSwizzle(sglDpuIdd* dpu, _sglCmdSwizzleRasterRegions const* c
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdRasSwizzle(afxDrawScript dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const rgn[])
+_SGL afxCmdId _SglEncodeCmdRasSwizzle(afxDrawStream dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const rgn[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdSwizzleRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);
@@ -610,10 +610,10 @@ _SGL void _SglDpuRasXform(sglDpuIdd* dpu, _sglCmdFlipRasterRegions const* cmd)
 #endif
 }
 
-_SGL afxCmdId _SglEncodeCmdRasXform(afxDrawScript dscr, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const rgn[])
+_SGL afxCmdId _SglEncodeCmdRasXform(afxDrawStream dscr, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const rgn[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawScriptState_RECORDING);
+    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
 
     _sglCmdFlipRasterRegions *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (rgnCnt * sizeof(cmd->rgn[0])));
     AfxAssert(cmd);

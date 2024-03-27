@@ -16,11 +16,11 @@
 
 #include "sgl.h"
 
-#include "qwadro/draw/pipe/afxShader.h"
+#include "qwadro/draw/io/afxShader.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/pipe/afxShaderBlueprint.h"
+#include "qwadro/draw/io/afxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER                                                                     //
@@ -120,7 +120,7 @@ _SGL afxError _SglShdDtor(afxShader shd)
             AfxDeallocateString(&shd->base.resDecls[j].name);
         }
 
-        AfxDeallocate(mmu, shd->base.resDecls);
+        AfxDeallocate(shd->base.resDecls);
     }
 
     if (shd->base.ioDecls)
@@ -130,12 +130,12 @@ _SGL afxError _SglShdDtor(afxShader shd)
             AfxDeallocateString(&shd->base.ioDecls[j].semantic);
         }
 
-        AfxDeallocate(mmu, shd->base.ioDecls);
+        AfxDeallocate(shd->base.ioDecls);
     }
 
     if (shd->base.code)
     {
-        AfxDeallocate(mmu, shd->base.code);
+        AfxDeallocate(shd->base.code);
     }
 
     AfxDeallocateUri(&shd->base.uri);
@@ -145,7 +145,6 @@ _SGL afxError _SglShdDtor(afxShader shd)
 
 _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 {
-    AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &shd, afxFcc_SHD);
 
@@ -155,7 +154,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-     AfxCloneUri(&shd->base.uri, &blueprint->uri.uri);
+     AfxDuplicateUri(&shd->base.uri, &blueprint->uri.uri);
 
     shd->base.stage = blueprint->stage;
 
@@ -164,7 +163,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.code = NIL;
     afxNat codeLen = AfxCountArrayElements(&blueprint->codes);
 
-    if (codeLen && !(shd->base.code = AfxAllocate(mmu, codeLen, sizeof(afxChar), 0, AfxHint()))) AfxThrowError();
+    if (codeLen && !(shd->base.code = AfxAllocate(codeLen, sizeof(afxChar), 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxAssertType(&blueprint->codes, afxFcc_ARR);
@@ -215,7 +214,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
         afxNat resDeclCnt = AfxCountArrayElements(&blueprint->resources);
 
-        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(mmu, resDeclCnt, sizeof(shd->base.resDecls[0]), 0, AfxHint()))) AfxThrowError();
+        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(resDeclCnt, sizeof(shd->base.resDecls[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat j = 0; j < resDeclCnt; j++)
@@ -240,7 +239,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             shd->base.ioDeclCnt = 0;
             shd->base.ioDecls = NIL;
 
-            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(mmu, ioCnt, sizeof(shd->base.ioDecls[0]), 0, AfxHint()))) AfxThrowError();
+            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ioCnt, sizeof(shd->base.ioDecls[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < ioCnt; i++)
@@ -260,15 +259,15 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             shd->compiled = FALSE;
 
             if (err && shd->base.ioDecls)
-                AfxDeallocate(mmu, shd->base.ioDecls);
+                AfxDeallocate(shd->base.ioDecls);
         }
 
         if (err && shd->base.resDecls)
-            AfxDeallocate(mmu, shd->base.resDecls);
+            AfxDeallocate(shd->base.resDecls);
     }
 
     if (err && shd->base.code)
-        AfxDeallocate(mmu, shd->base.code);
+        AfxDeallocate(shd->base.code);
 
     AfxAssertObjects(1, &shd, afxFcc_SHD);
     return err;

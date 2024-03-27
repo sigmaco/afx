@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_RASTER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/io/afxFile.h"
 
@@ -247,7 +247,7 @@ _AVX afxError AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &in, afxFcc_IOS);
+    AfxAssertObjects(1, &in, afxFcc_IOB);
     AfxAssert(opCnt);
     AfxAssert(ops);
     
@@ -280,7 +280,7 @@ _AVX afxError AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
             afxNat dataSiz = rowSiz * rowCnt * rgn.whd[2] * rgn.layerCnt;
             AfxAssert(rgnSiz >= dataSiz);
 
-            if (AfxReadStreamAt(in, op->bufOffset, dstData, dataSiz, 0))
+            if (AfxReadStreamAt(in, op->bufOffset, dataSiz, 0, dstData))
                 AfxThrowError();
 
             AfxCloseRasterRegion(ras, &rgn);
@@ -293,7 +293,7 @@ _AVX afxError AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &out, afxFcc_IOS);
+    AfxAssertObjects(1, &out, afxFcc_IOB);
     AfxAssert(opCnt);
     AfxAssert(ops);
 
@@ -326,7 +326,7 @@ _AVX afxError AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp 
             afxNat dataSiz = rowSiz * rowCnt * rgn.whd[2] * rgn.layerCnt;
             AfxAssert(rgnSiz >= dataSiz);
 
-            if (AfxWriteStreamAt(out, op->bufOffset, srcData, dataSiz, 0))
+            if (AfxWriteStreamAt(out, op->bufOffset, dataSiz, 0, srcData))
                 AfxThrowError();
 
             AfxCloseRasterRegion(ras, &rgn);
@@ -345,14 +345,12 @@ _AVX afxError AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        afxFile file;
+        afxStream file;
 
-        if (AfxOpenFiles(afxFileFlag_R, 1, &uri[i], &file)) AfxThrowError();
+        if (!(file = AfxOpenFile(&uri[i], afxIoFlag_R))) AfxThrowError();
         else
         {
-            afxStream stream = AfxGetFileStream(file);
-
-            if (AfxInputRasterRegions(ras, 1, &ops[i], stream))
+            if (AfxInputRasterRegions(ras, 1, &ops[i], file))
                 AfxThrowError();
 
             AfxReleaseObjects(1, (void*[]) { file });
@@ -397,14 +395,12 @@ _AVX afxError AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp c
 
     for (afxNat i = 0; i < opCnt; i++)
     {
-        afxFile file;
+        afxStream file;
 
-        if (AfxOpenFiles(afxFileFlag_W, 1, &uri[i], &file)) AfxThrowError();
+        if (!(file = AfxOpenFile(&uri[i], afxIoFlag_W))) AfxThrowError();
         else
         {
-            afxStream stream = AfxGetFileStream(file);
-
-            if (AfxOutputRasterRegions(ras, 1, &ops[i], stream))
+            if (AfxOutputRasterRegions(ras, 1, &ops[i], file))
                 AfxThrowError();
 
             AfxReleaseObjects(1, (void*[]) { file });
@@ -599,7 +595,7 @@ _AVX afxError AfxBufferizeRaster(afxRaster ras)
 
     void *maps = NIL;
 
-    if (siz && !(maps = AfxReallocate(mmu, ras->maps, AFX_ALIGN(siz, AFX_SIMD_ALIGN), 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+    if (siz && !(maps = AfxReallocate(ras->maps, AFX_ALIGN(siz, AFX_SIMD_ALIGN), 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
     else
         ras->maps = maps;
 
@@ -614,9 +610,9 @@ _AVX afxNat AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, a
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(rasters);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetRasterClass(dctx);
+    afxManager* cls = AfxGetRasterClass(dctx);
     AfxAssertClass(cls, afxFcc_RAS);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)rasters);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)rasters);
 }
 
 _AVX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo const info[], afxRaster rasters[])
@@ -627,7 +623,7 @@ _AVX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo c
     AfxAssert(info);
     AfxAssert(cnt);
 
-    afxClass* cls = AfxGetRasterClass(dctx);
+    afxManager* cls = AfxGetRasterClass(dctx);
     AfxAssertClass(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dctx, info }))

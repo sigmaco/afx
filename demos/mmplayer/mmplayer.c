@@ -13,7 +13,6 @@
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/font/afxTypography.h"
 #include "qwadro/draw/io/afxVertexStream.h"
-#include "qwadro/core/afxBitmap.h"
 #include "qwadro/math/afxOpticalMatrix.h"
 
 #define ENABLE_DIN1 // 
@@ -60,12 +59,12 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
             afxNat unitIdx;
             AfxGetThreadingUnit(&unitIdx);
 
-            afxDrawScript dscr;
+            afxDrawStream dscr;
 
-            if (AfxAcquireDrawScripts(din, 0, 1, &dscr)) AfxThrowError();
+            if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
             else
             {
-                if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+                if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
                 else
                 {
                     afxNat outBufIdx = 0;
@@ -157,14 +156,14 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
                     afxSemaphore dscrCompleteSem = NIL;
 
-                    if (AfxCompileDrawScript(dscr)) AfxThrowError();
+                    if (AfxCompileDrawStream(dscr)) AfxThrowError();
                     else
                     {
                         afxExecutionRequest execReq = { 0 };
                         execReq.dscr = dscr;
                         execReq.signal = dscrCompleteSem;
 
-                        if (AfxExecuteDrawScripts(din, 1, &execReq, NIL))
+                        if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
                             AfxThrowError();
                     }
 
@@ -375,7 +374,10 @@ int main(int argc, char const* argv[])
         appCfg.proc = AppProc;
         AfxAcquireApplications(1, &appCfg, &TheApp);
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
-        AfxRunApplication(TheApp);
+
+        afxUri uri;
+        AfxMakeUri(&uri, "system/mmplayer.xs", 0);
+        AfxRunApplication(TheApp, &uri);
 
         while (AfxSystemIsExecuting())
             AfxDoSystemExecution(0);

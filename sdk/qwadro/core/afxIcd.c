@@ -18,9 +18,8 @@
 #define _AFX_EXECUTABLE_C
 #define _AFX_ICD_C
 #define _AFX_DEVICE_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/afxDrawSystem.h"
 
 _AFX afxUri const* AfxGetIcdIdentifier(afxIcd icd)
 {
@@ -36,7 +35,7 @@ _AFX afxIni const* AfxGetIcdInitializer(afxIcd icd)
     return &icd->ini;
 }
 
-_AFX afxExecutable AfxGetIcdExecutable(afxIcd icd)
+_AFX afxModule AfxGetIcdExecutable(afxIcd icd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &icd, afxFcc_ICD);
@@ -65,7 +64,7 @@ _AFX afxError _AfxIcdDtorFreeDevices(afxIcd icd)
     AfxAssertObjects(1, &icd, afxFcc_ICD);
 
     afxDevice dev;
-    AfxChainForEveryLinkage(&icd->devices, AFX_OBJECT(afxDevice), icd, dev)
+    AfxIterateLinkage(AFX_OBJECT(afxDevice), dev, &icd->devices, icd)
     {
         AfxAssertObjects(1, &dev, afxFcc_DEV);
         while (!AfxReleaseObjects(1, (void*[]) { dev }));
@@ -133,10 +132,10 @@ _AFX afxError _AfxIcdCtor(afxIcd icd, afxCookie const* cookie)
     {
         AfxAdvertise("Loading ICD <%.*s> executable and linkable file <%.*s>...", AfxPushString(AfxGetUriString(&icd->uri.uri)), AfxPushString(AfxGetUriString(&uri2)));
 
-        if (AfxLoadExecutables(1, &uri2, &icd->exe)) AfxThrowError();
+        if (!(icd->exe = AfxLoadModule(&uri2, NIL))) AfxThrowError();
         else
         {
-            afxError(*IcdHookPoint)(afxIcd icd) = AfxFindExecutableSymbol(icd->exe, "AfxIcdHookPoint");
+            afxError(*IcdHookPoint)(afxIcd icd) = AfxFindModuleSymbol(icd->exe, "AfxIcdHookPoint");
 
             if (IcdHookPoint && IcdHookPoint(icd)) AfxThrowError();
             else
@@ -158,7 +157,8 @@ _AFX afxError _AfxIcdCtor(afxIcd icd, afxCookie const* cookie)
 _AFX afxClassConfig _AfxIcdClsConfig =
 {
     .fcc = afxFcc_ICD,
-    .name = "Installable Client Driver",
+    .name = "ICD",
+    .desc = "Installable Client Driver",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxIcd)),
     .mmu = NIL,
@@ -177,7 +177,7 @@ _AFX afxError AfxInstallClientDrivers(afxNat cnt, afxUri const manifest[], afxIc
         afxIcd icd;
         afxUri file;
 
-        if (!AfxExcerptUriFile(&manifest[i], &file)) AfxThrowError();
+        if (!AfxPickUriFile(&manifest[i], &file)) AfxThrowError();
         else
         {
             if ((icd = AfxFindIcd(&file)))
@@ -193,7 +193,7 @@ _AFX afxError AfxInstallClientDrivers(afxNat cnt, afxUri const manifest[], afxIc
 
                 if (AfxIniGetString(&ini, &AfxString("Firmware"), &AfxString("Service"), &svc))
                 {
-                    afxClass* cls = AfxGetIcdClass();
+                    afxManager* cls = AfxGetIcdClass();
                     AfxAssertClass(cls, afxFcc_ICD);
 
                     if (AfxAcquireObjects(cls, 1, (afxObject*)&icd, (void const*[]) { AfxGetSystem(), &file, &ini })) AfxThrowError();
@@ -225,9 +225,9 @@ _AFX afxNat AfxInvokeIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetIcdClass();
+    afxManager* cls = AfxGetIcdClass();
     AfxAssertClass(cls, afxFcc_ICD);
-    return cnt ? AfxInvokeInstances(cls, first, cnt, (void*)f, udd) : 0;
+    return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
 }
 
 _AFX afxNat AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icds[])
@@ -235,17 +235,17 @@ _AFX afxNat AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icds[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(icds);
-    afxClass* cls = AfxGetIcdClass();
+    afxManager* cls = AfxGetIcdClass();
     AfxAssertClass(cls, afxFcc_ICD);
-    return cnt ? AfxEnumerateInstances(cls, first, cnt, (afxObject*)icds) : 0;
+    return cnt ? AfxEnumerateObjects(cls, first, cnt, (afxObject*)icds) : 0;
 }
 
 _AFX afxNat AfxCountIcds(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetIcdClass();
+    afxManager* cls = AfxGetIcdClass();
     AfxAssertClass(cls, afxFcc_ICD);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
 _AFX afxIcd AfxFindIcd(afxUri const *manifest)
@@ -254,7 +254,7 @@ _AFX afxIcd AfxFindIcd(afxUri const *manifest)
 
     afxUri target;
     AfxAssert(manifest);
-    AfxExcerptUriFile(manifest, &target);
+    AfxPickUriFile(manifest, &target);
 
     afxIcd icd;
     afxNat i = 0;
@@ -263,7 +263,7 @@ _AFX afxIcd AfxFindIcd(afxUri const *manifest)
         AfxAssertObjects(1, &icd, afxFcc_ICD);
 
         afxUri tmp;
-        AfxExcerptUriFile(&icd->uri.uri, &tmp);
+        AfxPickUriFile(&icd->uri.uri, &tmp);
 
         if (0 == AfxCompareUri(&target, &tmp))
             return icd;

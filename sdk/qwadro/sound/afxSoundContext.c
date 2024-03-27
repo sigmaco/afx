@@ -18,12 +18,10 @@
 #define _AFX_SOUND_CONTEXT_C
 #define _AFX_SOUND_SYSTEM_C
 #include "qwadro/mem/afxArena.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/sound/afxSoundSystem.h"
 #include "qwadro/core/afxSystem.h"
-AAXINL afxSoundSystem AfxGetSoundSystem(void);
-
 
 _AAX afxMmu AfxGetSoundContextMmu(afxSoundContext sctx)
 {
@@ -55,7 +53,7 @@ _AAX afxError AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContext
     else
     {
         AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-        afxClass* cls = AfxGetSoundContextClass(sdev);
+        afxManager* cls = AfxGetSoundContextClass(sdev);
         AfxAssertClass(cls, afxFcc_SCTX);
 
         if (AfxAcquireObjects(cls, cnt, (afxObject*)contexts, (void const*[]) { &sdevId, (void*)config }))
@@ -72,9 +70,9 @@ _AAX afxNat AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt
         AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetSoundContextClass(sdev);
+    afxManager* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AAX afxNat AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext contexts[])
@@ -83,16 +81,16 @@ _AAX afxNat AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat 
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     AfxAssert(contexts);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetSoundContextClass(sdev);
+    afxManager* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)contexts);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)contexts);
 }
 
 _AAX afxNat AfxCountSoundContexts(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    afxClass* cls = AfxGetSoundContextClass(sdev);
+    afxManager* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

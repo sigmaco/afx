@@ -28,7 +28,7 @@
 
 #include <windows.h>
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
 
 #ifndef AFX_DRAW_DRIVER_SRC
 #   ifdef _DEBUG

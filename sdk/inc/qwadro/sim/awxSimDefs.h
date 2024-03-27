@@ -90,4 +90,11 @@ AFX_DEFINE_STRUCT(awxTrackMask)
     afxReal*    boneWeights;
 };
 
+typedef enum accumulation_mode
+{
+    NoAccumulation = 0x0,
+    ConstantExtractionAccumulation = 0x1,
+    VariableDeltaAccumulation = 0x2,
+} accumulation_mode;
+
 #endif//AFX_CAD_DEFS_H

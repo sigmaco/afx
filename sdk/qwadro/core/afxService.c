@@ -16,7 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SERVICE_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/core/afxService.h"
 
@@ -54,7 +54,7 @@ _AFX afxClassConfig const _AfxSvcClsConfig =
 _AFX afxError AfxAcquireServices(afxNat cnt, afxServiceConfig const config[], afxService services[])
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetServiceClass();
+    afxManager* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)services, (void const*[]) { (void*)config }))
@@ -70,9 +70,9 @@ _AFX afxNat AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetServiceClass();
+    afxManager* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[])
@@ -80,15 +80,15 @@ _AFX afxNat AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[]
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(services);
-    afxClass* cls = AfxGetServiceClass();
+    afxManager* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)services);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)services);
 }
 
 _AFX afxNat AfxCountServices(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetServiceClass();
+    afxManager* cls = AfxGetServiceClass();
     AfxAssertClass(cls, afxFcc_SVC);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

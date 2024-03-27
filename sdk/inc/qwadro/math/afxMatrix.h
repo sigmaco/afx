@@ -14,57 +14,42 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_MATRIX_H
-#define AFX_MATRIX_H
-
-#include "afxPlane.h"
-#include "afxViewport.h"
-
- // The "Right vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'x' axis in a right-handed, xyz coordinate system. 
- // The "Up vector" is one of the vectors in a RenderWare Graphics matrix. The up vector corresponds to the 'y' axis in a right-handed, xyz coordinate system. 
- // The "at vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'z' axis in a right-handed, xyz coordinate system. 
- // RenderWare Graphics uses a right-handed co-ordinate system. Therefore with z increasing into the display screen, and y increasing upwards, the x co-ordinate system increases towards the left.
-
- // This object defines a RenderWare Matrix object.
- // The Matrix is heavily used throughout the API and a full range of functions are provided, including: rotation, multiplication, concatenation, scaling, translation, creation, destruction, stream read/write functions and a number of access functions to access particular vector data within the matrix.
- // RenderWare uses 4x3, row-major affine matrices.
-
-// afxM4d is a row-major right-handled matrix. Qwadro inherits matrix from RenderWare.
-// RenderWare, such as DirectX, uses row vectors and ends up with the much more natural: result = input * local_to_object * object_to_world. Your input is in local space, it gets transformed into object space before finally ending up in world space. Clean, clear, and readable. If you instead multiply the two matrices together on their own, you get the clear local_to_world = local_to_object * object_to_world instead of the awkward local_to_world = object_to_world * local_to_object you would get with OpenGL shaders and column vectors.
+/// RenderWare uses 4x3, row-major affine matrices.
+/// This object defines a RenderWare Matrix object.
+/// The Matrix is heavily used throughout the API and a full range of functions are provided, including: rotation, multiplication, concatenation, scaling, translation, creation, destruction, stream read/write functions and a number of access functions to access particular vector data within the matrix.
+/// The "Right vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'x' axis in a right-handed, xyz coordinate system. 
+/// The "Up vector" is one of the vectors in a RenderWare Graphics matrix. The up vector corresponds to the 'y' axis in a right-handed, xyz coordinate system. 
+/// The "at vector" is one of the vectors in a RenderWare Graphics matrix. It corresponds to the 'z' axis in a right-handed, xyz coordinate system. 
+/// RenderWare Graphics uses a right-handed co-ordinate system. Therefore with z increasing into the display screen, and y increasing upwards, the x co-ordinate system increases towards the left.
+/// RenderWare, such as DirectX, uses row vectors and ends up with the much more natural: result = input * local_to_object * object_to_world. Your input is in local space, it gets transformed into object space before finally ending up in world space. Clean, clear, and readable. If you instead multiply the two matrices together on their own, you get the clear local_to_world = local_to_object * object_to_world instead of the awkward local_to_world = object_to_world * local_to_object you would get with OpenGL shaders and column vectors.
 
 /*
-These translations are often called:
+    These translations are often called:
 
-Surge, translation along the longitudinal axis (forward or backwards)
-Sway, translation along the transverse axis (from side to side)
-Heave, translation along the vertical axis (to move up or down).
+    Surge, translation along the longitudinal axis (forward or backwards)
+    Sway, translation along the transverse axis (from side to side)
+    Heave, translation along the vertical axis (to move up or down).
 
-The corresponding rotations are often called:
+    The corresponding rotations are often called:
 
-roll, about the longitudinal axis
-pitch, about the transverse axis
-yaw, about the vertical axis.
-
+    roll, about the longitudinal axis
+    pitch, about the transverse axis
+    yaw, about the vertical axis.
 */
 
-//#define MFX_USE_COLUMN_MAJOR_MATRIX
-//#define MFX_USE_LEFT_HANDED_MATRIX
-
-
-
-// Affine matrix (RenderWare matrix) significa que somente o conjunto 4x3 é considerado. (aka. não é uma projective matrix). [0][3] = [1][3] = [2][3] = 0; [3][3] = 1;
-// Linear matrix significa que somente o conjunto 3x3 é considerado. (aka. não é uma translation matrix).
-// atm  = affine transformation matrix;
-// ltm  = linear transformation matrix;
-// iltm = inverse linear transformation matrix;
-// atv  = affine transformation vector; positions and points
-// ltv  = linear transformation vector; normals, directions and axis
-// iwm  = inverse world matrix;
-// wm   = world matrix;
-// m    = matrix;
-// mm   = model matrix;
-// ptm  = projective transformation matrix;
-// v    = vector
+/// Affine matrix (RenderWare matrix) significa que somente o conjunto 4x3 é considerado. (aka. não é uma projective matrix). [0][3] = [1][3] = [2][3] = 0; [3][3] = 1;
+/// Linear matrix significa que somente o conjunto 3x3 é considerado. (aka. não é uma translation matrix).
+/// atm  = affine transformation matrix;
+/// ltm  = linear transformation matrix;
+/// iltm = inverse linear transformation matrix;
+/// atv  = affine transformation vector; positions and points
+/// ltv  = linear transformation vector; normals, directions and axis
+/// iwm  = inverse world matrix;
+/// wm   = world matrix;
+/// m    = matrix;
+/// mm   = model matrix;
+/// ptm  = projective transformation matrix;
+/// v    = vector
 
 /// Entendendo um pouco da natureza das matrices.
 /// Row-major and column major refere-se a forma como os valores de uma matrix são arranjados, onde:
@@ -77,6 +62,14 @@ yaw, about the vertical axis.
 /// "Handedness" refere-se a forma como um sistema de coordenada considera a orientação.
 ///     Em left-handed, um valor positivo ao eixo X representa o quão a "esquerda" algo está.
 ///     Em right-handed, um valor positivo ao eixo X representa o quão a "direita" algo está.
+
+#ifndef AFX_MATRIX_H
+#define AFX_MATRIX_H
+
+#include "qwadro/math/afxVector.h"
+#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/math/afxPlane.h"
+#include "qwadro/math/afxViewport.h"
 
 AFX afxM2d const AFX_M2D_ZERO;
 AFX afxM3d const AFX_M3D_ZERO;
@@ -97,10 +90,12 @@ AFXINL void     AfxResetM4d(afxM4d m);
 AFXINL void     AfxSetM2d(afxM2d m, afxV2d const x, afxV2d const y);
 AFXINL void     AfxSetM3d(afxM3d m, afxV3d const x, afxV3d const y, afxV3d const z);
 AFXINL void     AfxSetM4d(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);
+AFXINL void     AfxSetLtm4d(afxM4d m, afxV3d const x, afxV3d const y, afxV3d const z, afxV3d const w);
+AFXINL void     AfxSetAtm4d(afxM4d m, afxV3d const x, afxV3d const y, afxV3d const z, afxV3d const w);
 
-AFXINL void     AfxSetM2dTransposed(afxM2d m, afxV2d const x, afxV2d const y);
-AFXINL void     AfxSetM3dTransposed(afxM3d m, afxV3d const x, afxV3d const y, afxV3d const z);
-AFXINL void     AfxSetM4dTransposed(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);
+AFXINL void     AfxSetM2dTransposed(afxM2d m, afxV2d const x, afxV2d const y); // Be carefull using it in Qwadro
+AFXINL void     AfxSetM3dTransposed(afxM3d m, afxV3d const x, afxV3d const y, afxV3d const z); // Be carefull using it in Qwadro
+AFXINL void     AfxSetM4dTransposed(afxM4d m, afxV4d const x, afxV4d const y, afxV4d const z, afxV4d const w);  // Be carefull using it in Qwadro
 
 AFXINL void     AfxEnsureLtm4d(afxM4d m); // make affine and zero translation.
 AFXINL void     AfxEnsureAtm4d(afxM4d m); // make affine.
@@ -151,9 +146,9 @@ AFXINL void     AfxScaleM2d(afxReal scale, afxM2d const in, afxM2d m);
 AFXINL void     AfxScaleM3d(afxReal scale, afxM3d const in, afxM3d m);
 AFXINL void     AfxScaleM4d(afxReal scale, afxM4d const in, afxM4d m);
 
-AFXINL void     AfxScadM2d(afxM2d m, afxM2d const in, afxReal scale);
-AFXINL void     AfxScadM3d(afxM3d m, afxM3d const in, afxReal scale);
-AFXINL void     AfxScadM4d(afxM4d m, afxM4d const in, afxReal scale);
+AFXINL void     AfxAddScaledM2d(afxM2d m, afxM2d const a, afxM2d const b, afxReal scale);
+AFXINL void     AfxAddScaledM3d(afxM3d m, afxM3d const a, afxM3d const b, afxReal scale);
+AFXINL void     AfxAddScaledM4d(afxM4d m, afxM4d const a, afxM4d const b, afxReal scale);
 
 AFXINL void     AfxCombineM2d(afxM2d m, afxReal lambda1, afxM2d const a, afxReal lambda2, afxM2d const b);
 AFXINL void     AfxCombineM3d(afxM3d m, afxReal lambda1, afxM3d const a, afxReal lambda2, afxM3d const b);
@@ -228,21 +223,25 @@ AFXINL void     AfxComposeAtm4d(afxM4d m, afxV3d const scale, afxV3d const rotAx
 //  in[2][0] * by[0][n],  in[2][1] * by[1][n],  in[2][2] * by[2][n],  in[2][3] * by[3][n]
 //  in[3][0] * by[0][n],  in[3][1] * by[1][n],  in[3][2] * by[2][n],  in[3][3] * by[3][n]
 
+// Computes the product of two matrices.
+
 AFXINL void     AfxMultiplyM2d(afxM2d m, afxM2d const in, afxM2d const by);
 AFXINL void     AfxMultiplyM3d(afxM3d m, afxM3d const in, afxM3d const by);
 AFXINL void     AfxMultiplyM4d(afxM4d m, afxM4d const in, afxM4d const by);
 
-AFXINL void     AfxMultiplyPlanarM3d(afxM3d m, afxM3d const in, afxM3d const by); // 2x2 subset only
+AFXINL void     AfxMultiplyAtm3d(afxM3d m, afxM3d const in, afxM3d const by); // 2x2 subset only
 AFXINL void     AfxMultiplyLtm4d(afxM4d m, afxM4d const in, afxM4d const by); // 3x3 subset only
 AFXINL void     AfxMultiplyAtm4d(afxM4d m, afxM4d const in, afxM4d const by); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
 
 AFXINL void     TransposeMatrixMultiply3x3(afxM3d IntoMatrix, afxM3d const TransposedMatrix, afxM3d const ByMatrix);
 
+// Computes the transpose of the product of two matrices.
+
 AFXINL void     AfxMultiplyM2dTransposed(afxM2d m, afxM2d const in, afxM2d const by);
 AFXINL void     AfxMultiplyM3dTransposed(afxM3d m, afxM3d const in, afxM3d const by);
 AFXINL void     AfxMultiplyM4dTransposed(afxM4d m, afxM4d const in, afxM4d const by);
 
-AFXINL void     AfxMultiplyPlanarM3dTransposed(afxM3d m, afxM3d const in, afxM3d const by); // 2x2 subset only
+AFXINL void     AfxMultiplyAtm3dTransposed(afxM3d m, afxM3d const in, afxM3d const by); // 2x2 subset only
 AFXINL void     AfxMultiplyLtm4dTransposed(afxM4d m, afxM4d const in, afxM4d const by); // 3x3 subset only of an affine transformation matrix
 AFXINL void     AfxMultiplyAtm4dTransposed(afxM4d m, afxM4d const in, afxM4d const by); // 4x3 subset only (aka RenderWare (RwMatrix) matrix)
 

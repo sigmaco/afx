@@ -19,3 +19,7 @@ HwAccelerationRequired=1
 EchoSymbols=1
 EchoWsiSymbols=1
 ApiFile=opengl32.dll
+DragTxuBase=0
+DragTxuCount=1
+ProcTxuBase=1
+ProcTxuCount=1

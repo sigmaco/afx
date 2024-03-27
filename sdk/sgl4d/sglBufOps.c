@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 _SGL void _SglDpuBufCpy(sglDpuIdd* dpu, _sglCmdBufCpy const* cmd)
 {
@@ -33,7 +33,7 @@ _SGL void _SglDpuBufCpy(sglDpuIdd* dpu, _sglCmdBufCpy const* cmd)
     AfxThrowError();
 }
 
-_SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawScript dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
+_SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawStream dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -72,7 +72,7 @@ _SGL void _SglDpuBufSet(sglDpuIdd* dpu, _sglCmdBufSet const* cmd)
     gl->FlushMappedBufferRange(glTarget, cmd->offset, cmd->range); _SglThrowErrorOccuried();
 }
 
-_SGL afxCmdId _SglEncodeCmdBufSet(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat data)
+_SGL afxCmdId _SglEncodeCmdBufSet(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -116,7 +116,7 @@ _SGL void _SglDpuBufRw(sglDpuIdd* dpu, _sglCmdBufRw const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdBufRw(afxDrawScript dscr, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data)
+_SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -196,12 +196,12 @@ _SGL void _SglDpuBufIo(sglDpuIdd* dpu, _sglCmdBufIo const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdBufIo(afxDrawScript dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool export, afxStream io)
+_SGL afxCmdId _SglEncodeCmdBufIo(afxDrawStream dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool export, afxStream io)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertObjects(1, &io, afxFcc_IOS);
+    AfxAssertObjects(1, &io, afxFcc_IOB);
     AfxAssert(opCnt);
     AfxAssert(ops);
 

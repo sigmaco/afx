@@ -32,24 +32,24 @@ _AKX afxM4d* AfxPoseBufferGetCompositeMatrixArray(awxPoseBuffer const *wp)
     return wp->composite;
 }
 
-_AKX afxV4d* AfxPoseBufferGetCompositeMatrix(awxPoseBuffer const *wp, afxNat artIdx)
+_AKX afxM4d* AfxGetCompositeMatrices(awxPoseBuffer const *wp, afxNat baseArtIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
-    AfxAssert(artIdx < wp->matCnt);
-    return wp->composite[artIdx];
+    AfxAssertRange(wp->matCnt, baseArtIdx, 1);
+    return &wp->composite[baseArtIdx];
 }
 
-_AKX afxV4d* AfxPoseBufferGetWorldMatrix(awxPoseBuffer const *wp, afxNat artIdx)
+_AKX afxM4d* AfxGetWorldMatrices(awxPoseBuffer const *wp, afxNat baseArtIdx)
 {
     //float (*__cdecl GetPoseBuffer4x4(const world_pose *PoseBuffer, int BoneIndex))[4]
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
-    AfxAssert(artIdx < wp->matCnt);
-    return wp->world[artIdx];
+    AfxAssertRange(wp->matCnt, baseArtIdx, 1);
+    return &wp->world[baseArtIdx];
 }
 
-_AKX afxNat AfxPoseBufferGetArticulationCount(awxPoseBuffer const *wp)
+_AKX afxNat AfxGetPoseBufferCapacity(awxPoseBuffer const *wp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(wp);
@@ -63,12 +63,12 @@ _AKX void AfxReleasePoseBuffers(afxNat cnt, awxPoseBuffer *wp[])
     for (afxNat i = 0; i < cnt; i++)
     {
         if (wp[i]->composite)
-            AfxDeallocate(NIL, wp[i]->composite);
+            AfxDeallocate(wp[i]->composite);
 
         if (wp[i]->world)
-            AfxDeallocate(NIL, wp[i]->world);
+            AfxDeallocate(wp[i]->world);
 
-        AfxDeallocate(NIL, wp[i]);
+        AfxDeallocate(wp[i]);
     }
 }
 
@@ -78,11 +78,11 @@ _AKX afxError AfxAcquirePoseBuffers(void *sim, afxNat cnt, afxNat const artCnt[]
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        wp[i] = AfxAllocate(NIL, 1, sizeof(*wp[0]), 0, AfxHint());
+        wp[i] = AfxAllocate(1, sizeof(*wp[0]), 0, AfxHint());
         AfxAssert(wp[i]);
         wp[i]->matCnt = artCnt[i];
-        wp[i]->world = wp[i]->matCnt ? AfxAllocate(NIL, wp[i]->matCnt, sizeof(wp[i]->world[0]), 0, AfxHint()) : NIL;
-        wp[i]->composite = (excludeComposite && !excludeComposite[i]) && wp[i]->matCnt ? AfxAllocate(NIL, wp[i]->matCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
+        wp[i]->world = wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->world[0]), 0, AfxHint()) : NIL;
+        wp[i]->composite = (excludeComposite && !excludeComposite[i]) && wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
     }
     return err;
 }

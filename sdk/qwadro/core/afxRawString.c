@@ -1297,6 +1297,11 @@ _AFXINL afxInt32 utf8uprcodepoint(afxInt32 cp)
     return cp;
 }
 
+_AFXINL afxChar* AfxStrdup(afxChar const* src)
+{
+    return _strdup(src);
+}
+
 _AFXINL afxResult AfxStrncmp(afxChar const* str, afxChar const* str2, afxNat len)
 {
     return strncmp(str, str2, len);

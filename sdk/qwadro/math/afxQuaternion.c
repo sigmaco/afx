@@ -16,7 +16,6 @@
 
 #include "qwadro/math/afxMathDefs.h"
 #include "qwadro/math/afxQuaternion.h"
-#include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 
@@ -63,7 +62,7 @@ _AFXINL void AfxQuatFromV3d(afxQuat q, afxV3d const in)
     q[3] = t < 0.f ? 0.f : -AfxSqrt(t);
 }
 
-_AFXINL void AfxQuatFromM3d(afxQuat q, afxM3d const m)
+_AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
 {
     // Should be compatible with XMVECTOR XMQuaternionRotationMatrix(FXMMATRIX M)
 
@@ -128,7 +127,7 @@ _AFXINL void AfxQuatFromM3d(afxQuat q, afxM3d const m)
     }
 }
 
-_AFXINL void AfxQuatFromLtm4d(afxQuat q, afxM4d const m)
+_AFXINL void AfxMakeQuatFromRotationLtm4d(afxQuat q, afxM4d const m)
 {
     // Should be compatible with XMVECTOR XMQuaternionRotationMatrix(FXMMATRIX M)
 
@@ -193,7 +192,7 @@ _AFXINL void AfxQuatFromLtm4d(afxQuat q, afxM4d const m)
     }
 }
 
-_AFXINL void AfxQuatFromAxisAngle(afxQuat q, afxV3d const axis, afxReal phi)
+_AFXINL void AfxMakeQuatFromAxialRotation(afxQuat q, afxV3d const axis, afxReal phi)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
@@ -206,7 +205,7 @@ _AFXINL void AfxQuatFromAxisAngle(afxQuat q, afxV3d const axis, afxReal phi)
     AfxNormalizeQuat(q, q); // reduz erros causados por AfxSin() e AfxCos().
 }
 
-_AFXINL void AfxQuatFromEuler(afxQuat q, afxV3d const pitchYawRoll)
+_AFXINL void AfxMakeQuatFromEulerRotation(afxQuat q, afxV3d const pitchYawRoll)
 {
     // Should be compatible with XMVECTOR XMQuaternionRotationRollPitchYawFromVector(FXMVECTOR Angles)
 
@@ -355,10 +354,10 @@ _AFXINL void AfxMultiplyQuat(afxQuat q, afxQuat const a, afxQuat const b)
     // Compatible with QuaternionMultiply4(q, a, b)
 
     afxQuat const t = { b[0], b[1], b[2], b[3] };
-    q[0] = t[3] * a[0] + (a[3] * t[0] +  a[1] * t[2] - a[2] * t[1]);
-    q[1] =                a[3] * t[1] +                a[2] * t[0] -  t[2] * a[0] + t[3] * a[1];
-    q[2] = t[3] * a[2] + (a[3] * t[2] + (a[0] * t[1] - a[1] * t[0]));
-    q[3] = t[3] * a[3] - (a[2] * t[2] +  a[1] * t[1] + a[0] * t[0]);
+    q[0] = (t[3] * a[0]) + ((t[0] * a[3]) +  (t[2] * a[1]) - (t[1] * a[2]));
+    q[1] =                  (t[1] * a[3]) +                  (t[0] * a[2]) -  (t[2] * a[0]) + (t[3] * a[1]);
+    q[2] = (t[3] * a[2]) + ((t[2] * a[3]) + ((t[1] * a[0]) - (t[0] * a[1])));
+    q[3] = (t[3] * a[3]) - ((t[2] * a[2]) +  (t[1] * a[1]) + (t[0] * a[0]));
 #endif
 }
 
@@ -537,13 +536,13 @@ _AFXINL void AfxAssimilateQuat(afxM3d const ltm, afxM3d const iltm, afxNat cnt, 
         AfxRotationM3dFromQuat(rm, out[i]);
         AfxMultiplyM3d(tmp, ltm, rm);
         AfxMultiplyM3d(rm, tmp, iltm);
-        AfxQuatFromM3d(out[i], rm);
+        AfxMakeQuatFromRotationM3d(out[i], rm);
 
         AfxScaleQuat(out[i], out[i], len);
     }
 }
 
-_AFXINL void AfxRotateV3d(afxQuat const q, afxNat cnt, afxV3d const in[], afxV3d out[])
+_AFXINL void AfxRotateV3dArray(afxQuat const q, afxNat cnt, afxV3d const in[], afxV3d out[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
@@ -634,13 +633,13 @@ _AFXINL void AfxBarycentricQuat(afxQuat q, afxQuat const a, afxQuat const b, afx
     }
 }
 
-_AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxM3d const tbn)
+_AFXINL void AfxMakeQuatFromTangentM3d(afxQuat q, afxM3d const tbn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
     AfxAssert(tbn);
 
-    AfxQuatFromM3d(q, tbn);
+    AfxMakeQuatFromRotationM3d(q, tbn);
     AfxNormalizeQuat(q, q);
 
     // Make sure QTangent is always positive
@@ -678,7 +677,7 @@ _AFXINL void AfxQuatFromTangentM3d(afxQuat q, afxM3d const tbn)
         AfxNegQuat(q, q);
 }
 
-_AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d const tangent, afxV3d const bitangent)
+_AFXINL void AfxMakeQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d const tangent, afxV3d const bitangent)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
@@ -688,10 +687,10 @@ _AFXINL void AfxQuatFromTangentFrame(afxQuat q, afxV3d const normal, afxV3d cons
 
     afxM3d tbn;
     AfxSetM3d(tbn, normal, tangent, bitangent);
-    AfxQuatFromTangentM3d(q, tbn);
+    AfxMakeQuatFromTangentM3d(q, tbn);
 }
 
-_AFXINL void AfxQuatFromHeading(afxQuat q, afxV3d const from, afxV3d const to)
+_AFXINL void AfxMakeHeadingQuat(afxQuat q, afxV3d const from, afxV3d const to)
 {
     /// Should be compatible with physicsforgames.blogspot.com/2010/03/quaternion-tricks.html
     
@@ -705,21 +704,18 @@ _AFXINL void AfxQuatFromHeading(afxQuat q, afxV3d const from, afxV3d const to)
     q[2] = from[0] * h[1] - from[1] * h[0];
 }
 
-_AFXINL void AfxQuatFromAngularVelocity(afxQuat q, afxV3d const rot)
+_AFXINL void AfxMakeQuatFromAngularVelocity(afxQuat q, afxV3d const rot)
 {
     afxError err = NIL;
     AfxAssert(rot);
     AfxAssert(q);
 
-    afxReal sq = AfxSqV3d(rot);
-    afxV4d const n =
-    {
-        1.f / sq * rot[0],
-        1.f / sq * rot[1],
-        1.f / sq * rot[2],
-        0.f
-    };
-    afxReal halfSq = sq * 0.5f;
+    // Compatible with AngularVelocityToQuaternion(q, rot)
+
+    afxV4d n;
+    afxReal mag = AfxMagV3d(rot);
+    AfxScaleV3d(n, rot, 1.0 / mag);
+    afxReal halfSq = mag * 0.5f;
     AfxScaleV3d(q, n, AfxSin(halfSq));
     q[3] = AfxCos(halfSq);
 }

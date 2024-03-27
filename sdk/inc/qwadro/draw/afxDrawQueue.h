@@ -16,17 +16,26 @@
 
 // This section is part of SIGMA GL/2.
 
+/// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
+/// Ao criar um afxDrawContext, necessariamente ao menos uma afxDrawQueue foi criada consequentemente e associado ao mesmo.
+/// Isto porque, no QWADRO, você executa as operações de desenho. Ao invés, você submete elas a serem processadas através de um afxDrawInput.
+/// Uma afxDrawQueue livre, por sua vez, e que pode realizar determinada operação submetida, então puxará a submissão.
+
+/// A afxDrawQueue é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
+
 #ifndef AFX_DRAW_QUEUE_H
 #define AFX_DRAW_QUEUE_H
 
 #include "qwadro/draw/pipe/afxPipeline.h"
 
-// No QWADRO, uma fila é dividida em duas partes, afxDrawInput na vanguarda e afxDrawQueue na retaguarda.
-// Ao criar um afxDrawContext, necessariamente ao menos uma afxDrawQueue foi criada consequentemente e associado ao mesmo.
-// Isto porque, no QWADRO, você executa as operações de desenho. Ao invés, você submete elas a serem processadas através de um afxDrawInput.
-// Uma afxDrawQueue livre, por sua vez, e que pode realizar determinada operação submetida, então puxará a submissão.
-
-// A afxDrawQueue é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
+typedef enum afxDrawQueueFlags
+{
+    AFX_DQUE_DRAW = AfxGetBitOffset(0), // supports draw ops
+    //AFX_DQUE_DRAW_AUX       = AfxGetBitOffset(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
+    AFX_DQUE_COMPUTE = AfxGetBitOffset(2), // supports compute ops
+    AFX_DQUE_TRANSFER = AfxGetBitOffset(3), // supports transfer ops
+    AFX_DQUE_VHS = AfxGetBitOffset(4), // supports VHS enc/dec
+} afxDrawQueueFlags;
 
 AFX_DEFINE_STRUCT(afxDrawCommand)
 {
@@ -43,7 +52,7 @@ AFX_DEFINE_STRUCT(afxDrawCommand)
 AFX_DEFINE_STRUCT(afxDrawSubmissionSpecification)
 {
     afxNat              scriptCnt;
-    afxDrawScript*      scripts;
+    afxDrawStream*      scripts;
     afxNat              outputCnt;
     afxDrawOutput*      outputs;
     afxNat*             outBufIdx;
@@ -53,14 +62,19 @@ AFX_DEFINE_STRUCT(afxDrawSubmissionSpecification)
     void*               data;
 };
 
-typedef enum afxDrawQueueFlags
+AFX_DEFINE_STRUCT(afxExecutionRequest)
 {
-    AFX_DQUE_DRAW           = AfxGetBitOffset(0), // supports draw ops
-    //AFX_DQUE_DRAW_AUX       = AfxGetBitOffset(1), // supports auxiliary draw ops (but can't perform a entire draw pipeline execution)
-    AFX_DQUE_COMPUTE        = AfxGetBitOffset(2), // supports compute ops
-    AFX_DQUE_TRANSFER       = AfxGetBitOffset(3), // supports transfer ops
-    AFX_DQUE_VHS            = AfxGetBitOffset(4), // supports VHS enc/dec
-} afxDrawQueueFlags;
+    afxSemaphore        wait;
+    afxDrawStream       dscr;
+    afxSemaphore        signal;
+};
+
+AFX_DEFINE_STRUCT(afxPresentationRequest)
+{
+    afxSemaphore        wait;
+    afxDrawOutput       dout;
+    afxNat              bufIdx;
+};
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_QUEUE_C

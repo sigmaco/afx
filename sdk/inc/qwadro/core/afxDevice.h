@@ -48,7 +48,7 @@ typedef enum afxDeviceState
 AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
     afxNat32                    devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
-    afxString128           name; /// The user-friendly name for the device.
+    afxString128                name; /// The user-friendly name for the device.
     afxDeviceState              devStateMask; /// Bitmask used to filter the device based on their state.
     afxBool                     isDefaultDev; /// Identify default device. Always false when not supported.
 };
@@ -58,17 +58,24 @@ AFX_DEFINE_STRUCT(afxDeviceDescription)
 AFX_OBJECT(afxDevice)
 {
     afxChain                classes;
-    afxClass                buffers;
     afxLinkage              icd;
     afxString               domain;
     afxString               name;
 
+    afxDeviceState          state;
+
     afxBool                 serving;
     afxArray                threads;
-    afxArray                txus;
 
 };
 #endif//_AFX_DEVICE_C
 #endif//_AFX_CORE_C
+
+AFX afxError                AfxUninstallDevice(afxDevice dev);
+
+AFX afxError                AfxEnableDevice(afxDevice dev);
+AFX afxError                AfxDisableDevice(afxDevice dev);
+
+AFX afxError                AfxUpdateDeviceDriver(afxDevice dev);
 
 #endif//AFX_DEVICE_H

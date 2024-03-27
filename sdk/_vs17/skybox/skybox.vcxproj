@@ -154,6 +154,12 @@
     <ProjectReference Include="..\e2sim\e2sim.vcxproj">
       <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\oal4d\oal4d.vcxproj">
+      <Project>{8db6b4eb-2027-4aa2-90c4-1c5937167746}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\sgl4d\sgl4d.vcxproj">
+      <Project>{1bafd2ad-9548-4fa9-b268-6afe5087845d}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

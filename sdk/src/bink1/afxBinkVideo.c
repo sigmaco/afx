@@ -24,8 +24,8 @@
 #include "afxBinkProxy.h"
 #include "afxBinkVideo.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 static void Start_us_count(afxNat64* out_count)
 {
@@ -171,7 +171,7 @@ void UnlockBinkTextures(afxBinkVideo *bnk)
     }
 }
 
-_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawScript dscr)
+_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream dscr)
 {
     afxError err = AFX_ERR_NONE;
     Start_timer();

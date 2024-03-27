@@ -54,7 +54,7 @@ typedef enum afxFcc
     afxFcc_OBJC     = AfxPackFcc('o', 'b', 'j', 'c'), // afxInstanceConnection
     afxFcc_SLOT     = AfxPackFcc('s', 'l', 'o', 't'), // afxSlot
     afxFcc_HNDL     = AfxPackFcc('h', 'n', 'd', 'l'), // 
-    afxFcc_CLS      = AfxPackFcc('o', 'b', 'j', 't'), // afxClass
+    afxFcc_CLS      = AfxPackFcc('o', 'b', 'j', 't'), // afxManager
     afxFcc_OBJK     = AfxPackFcc('o', 'b', 'j', 'k'), // afxObjack
     
     afxFcc_DBG      = AfxPackFcc('d', 'b', 'g', '\0'), // afxDebugger
@@ -67,7 +67,7 @@ typedef enum afxFcc
     afxFcc_ARR      = AfxPackFcc('a', 'r', 'r', '\0'), // afxArray
     afxFcc_QUE      = AfxPackFcc('q', 'u', 'e', '\0'), // afxQueue
     afxFcc_STR      = (('q'<<8)|'s'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
-    afxFcc_STRB     = (('q' << 8) | 'z'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
+    afxFcc_STRsB     = (('q' << 8) | 'z'),//AfxPackFcc('s', 't', 'r', '\0'), // afxString
 #if !0
     afxFcc_STR0     = AfxPackFcc('s', 't', 'r', '0'), // afxString8
     afxFcc_STR1     = AfxPackFcc('s', 't', 'r', '1'), // afxString16
@@ -79,7 +79,7 @@ typedef enum afxFcc
     afxFcc_STR7     = AfxPackFcc('s', 't', 'r', '7'), // afxString1024
     afxFcc_STR8     = AfxPackFcc('s', 't', 'r', '8'), // afxString2048
     afxFcc_STR9     = AfxPackFcc('s', 't', 'r', '9'), // afxString4096
-    afxFcc_STRC     = AfxPackFcc('s', 't', 'r', 'c'),
+    afxFcc_STRB     = AfxPackFcc('s', 't', 'r', 'b'), // afxStringBase
     afxFcc_STRE     = AfxPackFcc('s', 't', 'r', 'e'),
     afxFcc_STRF     = AfxPackFcc('s', 't', 'r', 'f'),
 #endif
@@ -99,6 +99,7 @@ typedef enum afxFcc
     afxFcc_CHNK     = AfxPackFcc('c', 'h', 'n', 'k'),
     afxFcc_BLCK     = AfxPackFcc('b', 'l', 'c', 'k'),
     afxFcc_BLOB     = AfxPackFcc('b', 'l', 'o', 'b'), // afxBlob
+    afxFcc_IOB      = AfxPackFcc('i', 'o', 'b', '\0'), // afxStream
     afxFcc_IOS      = AfxPackFcc('i', 'o', 's', '\0'), // afxStream
     afxFcc_CDC      = AfxPackFcc('c', 'd', 'c', '\0'), // afxCodec
     afxFcc_FSSP     = AfxPackFcc('f', 's', 's', 'p'), // afxStoragePoint
@@ -144,6 +145,8 @@ typedef enum afxFcc
     afxFcc_ICD      = AfxPackFcc('i', 'c', 'd', '\0'), // afxIcd
     afxFcc_AUTR     = AfxPackFcc('a', 'u', 't', 'r'), // afxAutomator
 
+    afxFcc_ENV      = AfxPackFcc('e', 'n', 'v', '\0'), // afxEnvironment
+
     // *** e2math ***
 
     afxFcc_V2D      = AfxPackFcc('v', '2', 'd', '\0'), // afxV2d
@@ -181,7 +184,7 @@ typedef enum afxFcc
     afxFcc_SHDB     = AfxPackFcc('s', 'h', 'd', 'b'), // afxShaderBlueprint
     afxFcc_PIPB     = AfxPackFcc('p', 'i', 'p', 'b'), // afxPipelineBlueprint
     afxFcc_DRES     = AfxPackFcc('d', 'r', 'e', 's'), // afxDrawResourceSet
-    afxFcc_DSCR     = AfxPackFcc('d', 's', 'c', 'r'), // afxDrawScript
+    afxFcc_DSCR     = AfxPackFcc('d', 's', 'c', 'r'), // afxDrawStream
     afxFcc_DDBG     = AfxPackFcc('d', 'd', 'b', 'g'), // afxDrawDebugger
     afxFcc_DOP      = AfxPackFcc('d', 'o', 'p', '\0'), // afxDrawOperation
     afxFcc_DOPB     = AfxPackFcc('d', 'o', 'p', 'b'), // afxDrawOperationBlueprint

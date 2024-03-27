@@ -17,7 +17,7 @@
 #define _AFX_CORE_C
 #define _AFX_CODEC_C
 #include "qwadro/io/afxData.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 
 _AFX afxNat AfxGetCompressionPaddingSize(afxCompressionType type)
 {
@@ -69,14 +69,14 @@ _AFX void _AfxDecodeRle(afxStream stream, afxNat len, afxNat byteCnt, afxByte *d
     while (currByte < siz)
     {
         afxByte hdr;
-        AfxReadStream(stream, &hdr, sizeof(hdr), 0);
+        AfxReadStream(stream, sizeof(hdr), 0, &hdr);
 
         afxNat i, runLen = (hdr & 0x7F) + 1;
 
         if (hdr & 0x80)
         {
             afxByte buf[4];
-            AfxReadStream(stream, buf, sizeof(afxByte) * byteCnt, 0);
+            AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, buf);
 
             for (i = 0; i < runLen; i++)
             {
@@ -88,7 +88,7 @@ _AFX void _AfxDecodeRle(afxStream stream, afxNat len, afxNat byteCnt, afxByte *d
         {
             for (i = 0; i < runLen; i++)
             {
-                AfxReadStream(stream, &dst[currByte], sizeof(afxByte) * byteCnt, 0);
+                AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, &dst[currByte]);
                 currByte += byteCnt;
             }
         }
