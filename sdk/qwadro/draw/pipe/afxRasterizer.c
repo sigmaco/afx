@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_RASTERIZER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/pipe/afxRasterizer.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/io/afxXsh.h"
@@ -247,7 +247,7 @@ _AVX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasteriz
     AfxAssert(razr);
     AfxAssert(cnt);
 
-    afxClass* cls = AfxGetRasterizerClass(dctx);
+    afxManager* cls = AfxGetRasterizerClass(dctx);
     AfxAssertClass(cls, afxFcc_RAZR);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)razr, (void const*[]) { dctx, (void*)config }))
@@ -271,13 +271,13 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
     AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxExcerptUriExtension(uri, FALSE, &fext);
+    AfxPickUriExtension(uri, FALSE, &fext);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxExcerptUriPath(uri, &fpath);
+        AfxPickUriPath(uri, &fpath);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -291,7 +291,7 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
                 AfxAssert(isQwadroXml);
 
                 afxString query;
-                AfxExcerptUriQueryToString(uri, TRUE, &query);
+                AfxPickUriQueryToString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Rasterizer"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);

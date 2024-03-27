@@ -218,6 +218,6 @@ AFX afxError    AfxEmulateKeysAction(afxNat port, afxNat cnt, afxKey const key[]
 
 AFX afxKeyboard AfxGetKeyboard(afxNat port);
 
-AFX afxError    AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard keyboards[]);
+AFX afxKeyboard AfxAcquireKeyboard(afxNat port);
 
 #endif//AFX_KEYBOARD_H

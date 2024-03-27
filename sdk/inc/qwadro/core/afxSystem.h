@@ -19,31 +19,31 @@
 
 #include "qwadro/io/afxUri.h"
 #include "qwadro/mem/afxArena.h"
-#include "qwadro/core/afxClass.h"
-#include "qwadro/async/afxTime.h"
+#include "qwadro/core/afxManager.h"
+#include "qwadro/core/afxTime.h"
 #include "qwadro/io/afxResource.h"
 #include "qwadro/mem/afxPool.h"
-#include "qwadro/core/afxMap.h"
 // provided classes
 #include "qwadro/mem/afxMmu.h"
-#include "qwadro/core/afxIndexedString.h"
-//#include "qwadro/core/afxExecutable.h"
+#include "qwadro/mem/afxMappedString.h"
+//#include "qwadro/core/afxModule.h"
 #include "qwadro/core/afxIcd.h"
 #include "qwadro/io/afxKeyboard.h"
 #include "qwadro/io/afxMouse.h"
-#include "qwadro/async/afxThread.h"
-#include "qwadro/async/afxTxu.h"
+#include "qwadro/core/afxThread.h"
+#include "qwadro/core/afxTxu.h"
 #include "qwadro/core/afxDevice.h"
 #include "qwadro/core/afxService.h"
-#include "qwadro/io/afxFileSystem.h"
+#include "qwadro/io/afxStorage.h"
 //#include "qwadro/io/afxStream.h"
 //#include "qwadro/io/afxFile.h"
 #include "qwadro/io/afxArchive.h"
-#include "qwadro/sim/afxSimulation.h"
-#include "qwadro/ux/afxApplication.h"
+//#include "qwadro/sim/afxSimulation.h"
+//#include "qwadro/ux/afxApplication.h"
 // system extension
-#include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/sound/afxSoundSystem.h"
+//#include "qwadro/draw/afxDrawSystem.h"
+//#include "qwadro/sound/afxSoundSystem.h"
+#include "qwadro/env/afxEnvironment.h"
 
 enum // opcodes used for primitive communication bethween engine and executables.
 {
@@ -111,42 +111,43 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
 #ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
 {
-    afxUri2048             pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
-    afxUri2048             qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
+    afxUri2048              pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
+    afxUri2048              qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
 
-    afxChain                    classes;
-    afxClass                    mmuCls;
-    afxClass                    strcCls;
-    afxClass                    exeCls;
-    afxClass                    icdCls;
-    afxClass                    hidCls;
-    afxClass                    kbdCls;
-    afxClass                    mseCls;
-    afxClass                    ctrlCls;
-    afxClass                    thrCls;
-    afxClass                    txuCls;
-    afxClass                    devCls;
-    afxClass                    svcCls;
-    afxClass                    iosCls;
-    afxClass                    cdcCls;
-    afxClass                    fileCls;
-    afxClass                    archCls;
-    afxClass                    fsysCls;
+    afxChain                classes;
+    afxManager              mmuCls;
+    afxManager              strbCls;
+    afxManager              exeCls;
+    afxManager              icdCls;
+    afxManager              hidCls;
+    afxManager              kbdCls;
+    afxManager              mseCls;
+    afxManager              ctrlCls;
+    afxManager              thrCls;
+    afxManager              txuCls;
+    afxManager              devCls;
+    afxManager              svcCls;
+    afxManager              iosCls;
+    afxManager              cdcCls;
+    afxManager              fileCls;
+    afxManager              archCls;
+    afxManager              fsysCls;
+    afxManager              envCls;
 
-    afxMmu                      mmu;
-    afxNat                      memPageSize; // The page size and the granularity of page protection and commitment.
-    afxNat                      allocGranularity;
-    afxNat                      hwConcurrencyCap; // # of logical proc units (hardware threads)
-    afxNat                      ptrSiz;
-    afxBool                     nonLe;
+    afxMmu                  mmu;
+    afxNat                  memPageSize; // The page size and the granularity of page protection and commitment.
+    afxNat                  allocGranularity;
+    afxNat                  hwConcurrencyCap; // # of logical proc units (hardware threads)
+    afxNat                  ptrSiz;
+    afxBool                 nonLe;
     
-    afxFileSystem               defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
+    afxStorage              defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
 
-    afxExecutable               e2coree;
-    afxExecutable               e2sound;
-    afxExecutable               e2draw;
-    afxExecutable               e2sim;
-    afxExecutable               e2ux;
+    afxModule               e2coree;
+    afxModule               e2sound;
+    afxModule               e2draw;
+    afxModule               e2sim;
+    afxModule               e2ux;
     afxKeyboard                 stdKbd;
 
     afxSize                     maxMemUsage;
@@ -177,6 +178,7 @@ AFX_OBJECT(afxSystem)
 
     afxDrawSystem               dsys;
     afxSoundSystem              ssys;
+    afxEnvironment              env;
 };
 #endif//_AFX_SYSTEM_C
 #endif//_AFX_CORE_C
@@ -194,6 +196,10 @@ AFX afxMmu              AfxGetIoContext(void);
 AFX afxArena*           AfxGetIoArena(void);
 AFX afxNat              AfxGetIoBufferSize(void);
 
+AFX afxEnvironment      AfxGetEnvironment(void);
+
+AFX afxDrawSystem       AfxGetDrawSystem(void);
+AFX afxSoundSystem      AfxGetSoundSystem(void);
 
 AFX afxNat              AfxGetMemoryPageSize(void);
 
@@ -211,29 +217,30 @@ AFX afxUri const*       AfxGetPwd(afxUri *dst);
 AFX afxString const*    AfxGetPwdString(afxRestring *dst);
 
 // Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
-AFX afxBool             AfxEmitEvent(afxHandle *receiver, afxEvent *ev);
-AFX afxBool             AfxEmitEvents(afxNat cnt, afxHandle *receiver[], afxEvent ev[]);
-AFX afxBool             AfxReemitEvent(afxNat cnt, afxHandle *receiver[], afxEvent *ev);
+AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent *ev);
+AFX afxBool             AfxEmitEvents(afxNat cnt, afxObject receiver[], afxEvent ev[]);
+AFX afxBool             AfxReemitEvent(afxNat cnt, afxObject receiver[], afxEvent *ev);
 
-AFX afxError            AfxPostEvent(afxHandle *receiver, afxEvent *ev);
-AFX afxError            AfxPostEvents(afxNat cnt, afxHandle *receiver[], afxEvent ev[]);
+AFX afxError            AfxPostEvent(afxObject receiver, afxEvent *ev);
+AFX afxError            AfxPostEvents(afxNat cnt, afxObject receiver[], afxEvent ev[]);
 
-AFX afxClass*           AfxGetArchiveClass(void);
-AFX afxClass*           AfxGetControllerClass(void);
-AFX afxClass*           AfxGetDeviceClass(void);
-AFX afxClass*           AfxGetFileClass(void);
-AFX afxClass*           AfxGetFileSystemClass(void);
-AFX afxClass*           AfxGetIcdClass(void);
-AFX afxClass*           AfxGetHidClass(void);
-AFX afxClass*           AfxGetKeyboardClass(void);
-AFX afxClass*           AfxGetMmuClass(void);
-AFX afxClass*           AfxGetExecutableClass(void);
-AFX afxClass*           AfxGetMouseClass(void);
-AFX afxClass*           AfxGetServiceClass(void);
-AFX afxClass*           AfxGetStreamClass(void);
-AFX afxClass*           AfxGetStringCatalogClass(void);
-AFX afxClass*           AfxGetThreadClass(void);
-AFX afxClass*           AfxGetThreadingUnitClass(void);
+AFX afxManager*           AfxGetArchiveClass(void);
+AFX afxManager*           AfxGetControllerClass(void);
+AFX afxManager*           AfxGetDeviceClass(void);
+AFX afxManager*           AfxGetEnvironmentClass(void);
+AFX afxManager*           AfxGetFileClass(void);
+AFX afxManager*           AfxGetStorageClass(void);
+AFX afxManager*           AfxGetIcdClass(void);
+AFX afxManager*           AfxGetHidClass(void);
+AFX afxManager*           AfxGetKeyboardClass(void);
+AFX afxManager*           AfxGetMmuClass(void);
+AFX afxManager*           AfxGetModuleClass(void);
+AFX afxManager*           AfxGetMouseClass(void);
+AFX afxManager*           AfxGetServiceClass(void);
+AFX afxManager*           AfxGetStreamClass(void);
+AFX afxManager*           AfxGetStringBaseClass(void);
+AFX afxManager*           AfxGetThreadClass(void);
+AFX afxManager*           AfxGetTxuClass(void);
 
 AFX afxNat              AfxCountArchives(void);
 AFX afxNat              AfxCountControllers(void);
@@ -243,47 +250,47 @@ AFX afxNat              AfxCountHids(void);
 AFX afxNat              AfxCountIcds(void);
 AFX afxNat              AfxCountKeyboards(void);
 AFX afxNat              AfxCountMmus(void);
-AFX afxNat              AfxCountExecutables(void);
+AFX afxNat              AfxCountModules(void);
 AFX afxNat              AfxCountMouses(void);
 AFX afxNat              AfxCountServices(void);
-AFX afxNat              AfxCountFileSystems(void);
+AFX afxNat              AfxCountStorages(void);
 AFX afxNat              AfxCountStreams(void);
 AFX afxNat              AfxCountThreads(void);
-AFX afxNat              AfxCountThreadingUnits(void);
+AFX afxNat              AfxCountTxus(void);
 
 AFX afxNat              AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[]);
 AFX afxNat              AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[]);
 AFX afxNat              AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice devices[]);
 AFX afxNat              AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[]);
-AFX afxNat              AfxEnumerateFileSystems(afxNat first, afxNat cnt, afxFileSystem systems[]);
+AFX afxNat              AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[]);
 AFX afxNat              AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icds[]);
 AFX afxNat              AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[]);
 AFX afxNat              AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboards[]);
 AFX afxNat              AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[]);
-AFX afxNat              AfxEnumerateExecutables(afxNat first, afxNat cnt, afxExecutable executables[]);
+AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule executables[]);
 AFX afxNat              AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mouses[]);
 AFX afxNat              AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[]);
 AFX afxNat              AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream streams[]);
 AFX afxNat              AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread threads[]);
-AFX afxNat              AfxEnumerateThreadingUnits(afxNat first, afxNat cnt, afxTxu txus[]);
+AFX afxNat              AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txus[]);
 
 AFX afxNat              AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd);
 AFX afxNat              AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxController, void*), void *udd);
 AFX afxNat              AfxInvokeDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
 AFX afxNat              AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd);
-AFX afxNat              AfxInvokeFileSystems(afxNat first, afxNat cnt, afxBool(*f)(afxFileSystem, void*), void *udd);
+AFX afxNat              AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd);
 AFX afxNat              AfxInvokeIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), void *udd);
 AFX afxNat              AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd);
 AFX afxNat              AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd);
 AFX afxNat              AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd);
-AFX afxNat              AfxInvokeExecutables(afxNat first, afxNat cnt, afxBool(*f)(afxExecutable, void*), void *udd);
+AFX afxNat              AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd);
 AFX afxNat              AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void*), void *udd);
 AFX afxNat              AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, void*), void *udd);
 AFX afxNat              AfxInvokeStreams(afxNat first, afxNat cnt, afxBool(*f)(afxStream, void*), void *udd);
 AFX afxNat              AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
-AFX afxNat              AfxInvokeThreadingUnits(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd);
+AFX afxNat              AfxInvokeTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd);
 
-AFX afxExecutable           AfxFindExecutable(afxUri const *uri);
+AFX afxModule           AfxFindModule(afxUri const *uri);
 AFX afxIcd              AfxFindIcd(afxUri const *manifest);
 
 #if 0

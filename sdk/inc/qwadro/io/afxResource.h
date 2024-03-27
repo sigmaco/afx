@@ -19,8 +19,8 @@
 
 #include "qwadro/io/afxUri.h"
 #include "qwadro/io/afxXml.h"
-#include "qwadro/async/afxTime.h"
-#include "qwadro/core/afxExecutable.h"
+#include "qwadro/core/afxTime.h"
+#include "qwadro/core/afxModule.h"
 
 // Base class for all resources.
 // Resource is the base class for all resource types.
@@ -58,7 +58,7 @@ AFX afxError        AfxUnloadResource(afxResource res);
 
 AFX_OBJECT(afxResource)
 {
-    afxHandle           obj;
+    afxObject           obj;
     afxUri*             uri; // 128 // resource path
     afxResourceState    state;
     afxChain            instances;

@@ -348,7 +348,7 @@ _AFXINL void AfxTransformArrayedAtv3d(afxTransform const* t, afxNat cnt, afxV3d 
     AfxAssert(out);
 
     AfxPostMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
-    AfxRotateV3d(t->orientation, cnt, out, out);
+    AfxRotateV3dArray(t->orientation, cnt, out, out);
 
     for (afxNat i = 0; i < cnt; i++)
         AfxAddV3d(out[i], t->position, out[i]);
@@ -363,7 +363,7 @@ _AFXINL void AfxTransformArrayedLtv3d(afxTransform const* t, afxNat cnt, afxV3d 
     AfxAssert(out);
 
     AfxPostMultiplyArrayedV3d(t->scaleShear, cnt, in, out);
-    AfxRotateV3d(t->orientation, cnt, out, out);
+    AfxRotateV3dArray(t->orientation, cnt, out, out);
 }
 
 _AFXINL void AfxTransformArrayedLtv3dTransposed(afxTransform const* t, afxNat cnt, afxV3d const in[], afxV3d out[])
@@ -378,7 +378,7 @@ _AFXINL void AfxTransformArrayedLtv3dTransposed(afxTransform const* t, afxNat cn
 
     afxQuat iq;
     AfxConjugateQuat(iq, t->orientation);
-    AfxRotateV3d(iq, cnt, in, out);
+    AfxRotateV3dArray(iq, cnt, in, out);
     AfxPreMultiplyArrayedV3d(t->scaleShear, cnt, out, out);
 }
 

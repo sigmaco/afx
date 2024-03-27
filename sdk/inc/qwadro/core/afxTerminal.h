@@ -14,11 +14,19 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// TTY --- Our teletypewriter
+
 #ifndef AFX_TERMINAL_H
 #define AFX_TERMINAL_H
 
 #include "qwadro/core/afxCoreDefs.h"
 
-AFX afxResult AfxRequestIntervention(afxString *str);
+AFX afxResult AfxPrompt(afxRestring* str, afxString const* ret);
+
+AFX afxBool     AfxAcquireTerminal(void);
+AFX afxBool     AfxReleaseTerminal(void);
+
+AFX afxResult   AfxPrint(afxNat32 color, afxChar const* msg);
+AFX afxResult   AfxPrintf(afxNat32 color, afxChar const* msg, ...);
 
 #endif//AFX_TERMINAL_H

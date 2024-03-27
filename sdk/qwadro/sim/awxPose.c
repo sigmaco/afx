@@ -32,7 +32,7 @@ _AKX afxTransform* AfxGetPoseTransform(awxPose const *lp, afxNat artIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lp);
-    AfxAssert(artIdx < lp->artCnt);
+    AfxAssertRange(lp->artCnt, artIdx, 1);
     return &lp->arts[artIdx].xform;
 }
 
@@ -48,17 +48,16 @@ _AKX void AfxCopyPose(awxPose *pose, awxPose const *from)
         pose->arts[i].cnt = from->arts[i].cnt;
         pose->arts[i].traversalId = from->arts[i].traversalId;
         AfxCopyTransform(&pose->arts[i].xform, &from->arts[i].xform);
-        AfxThrowError(); // incompleto por causa da loucura que estava no IDA.
     }
 }
 
-_AKX void AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3])
+_AKX void AfxApplyRootMotionVectorsToPose(awxPose *pose, afxV3d const translation, afxV3d const rotation)
 {
     afxTransform* t = AfxGetPoseTransform(pose, 0);
     AfxAddV3d(t->position, t->position, translation);
 
     afxQuat rot;
-    AfxQuatFromAngularVelocity(rot, rotation);
+    AfxMakeQuatFromAngularVelocity(rot, rotation);
     AfxMultiplyQuat(t->orientation, rot, t->orientation);
 }
 
@@ -122,7 +121,7 @@ LABEL_13:
         v8->xform.orientation[1] = f * Transform->orientation[1] + v8->xform.orientation[1];
         v8->xform.orientation[2] = f * Transform->orientation[2] + v8->xform.orientation[2];
         v8->xform.orientation[3] = f * Transform->orientation[3] + v8->xform.orientation[3];
-        AfxScadM3d(v8->xform.scaleShear, Transform->scaleShear, Weight);
+        AfxAddScaledM3d(v8->xform.scaleShear, v8->xform.scaleShear, Transform->scaleShear, Weight);
         v12 = v8->cnt + 1;
         v8->weight = Weight + v8->weight;
         v8->cnt = v12;
@@ -160,9 +159,9 @@ _AKX void AfxReleasePoses(afxNat cnt, awxPose *lp[])
     for (afxNat i = 0; i < cnt; i++)
     {
         if (lp[i]->arts)
-            AfxDeallocate(NIL, lp[i]->arts);
+            AfxDeallocate(lp[i]->arts);
 
-        AfxDeallocate(NIL, lp[i]);
+        AfxDeallocate(lp[i]);
     }
 }
 
@@ -172,12 +171,12 @@ _AKX afxError AfxAcquirePoses(void *sim, afxNat cnt, afxNat const artCnt[], awxP
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        lp[i] = AfxAllocate(NIL, 1, sizeof(*lp[0]), 0, AfxHint());
+        lp[i] = AfxAllocate(1, sizeof(*lp[0]), 0, AfxHint());
         AfxAssert(lp[i]);
         lp[i]->artCnt = artCnt[i];
         lp[i]->fillThreshold = 0.2;
         lp[i]->traversalId = 0;
-        lp[i]->arts = lp[i]->artCnt ? AfxAllocate(NIL, lp[i]->artCnt, sizeof(lp[i]->arts[0]), 0, AfxHint()) : NIL;
+        lp[i]->arts = lp[i]->artCnt ? AfxAllocate(lp[i]->artCnt, sizeof(lp[i]->arts[0]), 0, AfxHint()) : NIL;
         AfxAssert(lp[i]->arts);
         AfxZero(lp[i]->artCnt, sizeof(lp[i]->arts[0]), lp[i]->arts);
     }

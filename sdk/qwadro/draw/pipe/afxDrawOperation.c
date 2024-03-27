@@ -178,7 +178,7 @@ _AVXINL afxError AfxDrawOperationBlueprintAddShaders(afxDrawOperationBlueprint *
             if (!(reqShdUri = AfxInsertArrayUnit(&pass->shaders, &foundIdx))) AfxThrowError();
             else
             {
-                *reqShdUri = AfxCloneUri(&uri[i]);
+                *reqShdUri = AfxDuplicateUri(&uri[i]);
             }
         }
     }
@@ -482,14 +482,14 @@ _AVX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
         AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
         
         afxUri fext;
-        AfxExcerptUriExtension(&fext, &uri[i], FALSE);
+        AfxPickUriExtension(&fext, &uri[i], FALSE);
         
         if (AfxUriIsBlank(&fext)) AfxThrowError();
         else
         {
             afxUri fpath, query;
-            AfxExcerptUriPath(&fpath, &uri[i]);
-            AfxExcerptUriQuery(&query, &uri[i], TRUE);
+            AfxPickUriPath(&fpath, &uri[i]);
+            AfxPickUriQuery(&query, &uri[i], TRUE);
 
             if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
             {
@@ -583,7 +583,7 @@ _AVX afxError AfxAcquireDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri c
     {
         afxUri name;
         AfxAssert(!(AfxUriIsBlank(&uri[i])));
-        AfxExcerptUriName(&name, &uri[i]);
+        AfxPickUriObject(&name, &uri[i]);
         AfxAssert(!(AfxUriIsBlank(&name)));
 
         if (1 == AfxFindDrawOperations(dctx, 1, &name, &dop[i]))
@@ -704,7 +704,7 @@ _AVX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    dop->uri = AfxUriIsBlank(&blueprint->uri.uri) ? NIL : AfxCloneUri(&blueprint->uri.uri);
+    dop->uri = AfxUriIsBlank(&blueprint->uri.uri) ? NIL : AfxDuplicateUri(&blueprint->uri.uri);
     
     dop->techCnt = 0;
 

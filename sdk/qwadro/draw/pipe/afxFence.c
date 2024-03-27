@@ -18,7 +18,7 @@
 #define _AFX_FENCE_C
 #define _AFX_DRAW_CONTEXT_C
 #include "qwadro/draw/pipe/afxFence.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxBool AfxFenceIsSignaled(afxFence fenc)
 {
@@ -72,9 +72,9 @@ _AVX afxNat AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, af
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(fences);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetFenceClass(dctx);
+    afxManager* cls = AfxGetFenceClass(dctx);
     AfxAssertClass(cls, afxFcc_FENC);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)fences);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)fences);
 }
 
 _AVX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt, afxFence fences[])
@@ -84,7 +84,7 @@ _AVX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt
     AfxAssert(cnt);
     AfxAssert(fences);
 
-    afxClass* cls = AfxGetFenceClass(dctx);
+    afxManager* cls = AfxGetFenceClass(dctx);
     AfxAssertClass(cls, afxFcc_FENC);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dctx, &signaled }))

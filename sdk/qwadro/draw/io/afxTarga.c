@@ -110,14 +110,14 @@ void DecompressRleChunk(afxStream stream, afxNat width, afxNat height, afxNat bp
     while (currByte < siz)
     {
         afxByte hdr;
-        AfxReadStream(stream, &hdr, sizeof(afxByte) * 1, 0);
+        AfxReadStream(stream, sizeof(afxByte) * 1, 0, &hdr);
 
         afxNat i, runLen = (hdr & 0x7F) + 1;
 
         if (hdr & 0x80)
         {
             afxByte buf[4];
-            AfxReadStream(stream, buf, sizeof(afxByte) * byteCnt, 0);
+            AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, buf);
 
             for (i = 0; i < runLen; i++)
             {
@@ -129,22 +129,21 @@ void DecompressRleChunk(afxStream stream, afxNat width, afxNat height, afxNat bp
         {
             for (i = 0; i < runLen; i++)
             {
-                AfxReadStream(stream, &dst[currByte], sizeof(afxByte) * byteCnt, 0);
+                AfxReadStream(stream, sizeof(afxByte) * byteCnt, 0, &dst[currByte]);
                 currByte += byteCnt;
             }
         }
     }
 }
 
-int TGA_Load(const char *Filename, _afxTgaImg *img)
+afxError TGA_Load(afxStream stream, _afxTgaImg *img)
 {
     afxError err = NIL;    
     int i;
 
-    afxStream stream;
     _afxStreamTgaHdr hdr;
-    AfxReadStream(stream, &hdr, sizeof(hdr), 0);
-    AfxSeekStream(stream, hdr.idLen, afxSeekMode_RELATIVE);
+    AfxReadStream(stream, sizeof(hdr), 0, &hdr);
+    //AfxAdvanceStream(stream, hdr.idLen);
 
     switch (hdr.imgType)
     {
@@ -163,26 +162,26 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
         {
         case 32:
         {
-            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, img->data);
                 else
-                    if (AfxReadStream(stream, img->data, hdr.width * hdr.height * sizeof(afxNat32), 0))
+                    if (AfxReadStream(stream, hdr.width * hdr.height * sizeof(afxNat32), 0, img->data))
                         AfxThrowError();
             }
             break;
         }
         case 24:
         {
-            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, img->data);
                 else
-                    if (AfxReadStream(stream, img->data, hdr.width * hdr.height * 3, 0))
+                    if (AfxReadStream(stream, hdr.width * hdr.height * 3, 0, img->data))
                         AfxThrowError();
             }
             break;
@@ -190,13 +189,13 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
         case 16:
         case 15:
         {
-            if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
             else
             {
                 if (hdr.imgType == 10)
                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, img->data);
                 else
-                    if (AfxReadStream(stream, img->data, sizeof(afxNat16) * hdr.width * hdr.height, 0))
+                    if (AfxReadStream(stream, sizeof(afxNat16) * hdr.width * hdr.height, 0, img->data))
                         AfxThrowError();
 
                 hdr.bpp = 16;
@@ -214,22 +213,22 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 {
                 case 32:
                 {
-                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(hdr.paletteLen, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
-                        if (AfxReadStream(stream, palette, hdr.paletteLen * sizeof(afxNat32), 0)) AfxThrowError();
+                        if (AfxReadStream(stream, hdr.paletteLen * sizeof(afxNat32), 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
                                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, buf);
                                 else
-                                    if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
+                                    if (AfxReadStream(stream, hdr.width * hdr.height, 0, buf))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat32), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -248,22 +247,22 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 }
                 case 24:
                 {
-                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(hdr.paletteLen, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
-                        if (AfxReadStream(stream, palette, hdr.paletteLen * 3, 0)) AfxThrowError();
+                        if (AfxReadStream(stream, hdr.paletteLen * 3, 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
                                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, buf);
                                 else
-                                    if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
+                                    if (AfxReadStream(stream, hdr.width * hdr.height, 0, buf))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(hdr.width * hdr.height, 3 * sizeof(afxByte), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -282,22 +281,22 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 case 16:
                 case 15:
                 {
-                    if (!(palette = AfxAllocate(NIL, hdr.paletteLen, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(palette = AfxAllocate(hdr.paletteLen, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                     else
                     {
-                        if (AfxReadStream(stream, palette, hdr.paletteLen * sizeof(afxNat16), 0)) AfxThrowError();
+                        if (AfxReadStream(stream, hdr.paletteLen * sizeof(afxNat16), 0, palette)) AfxThrowError();
                         else
                         {
-                            if (!(buf = AfxAllocate(NIL, hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                            if (!(buf = AfxAllocate(hdr.width * hdr.height, 1, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (hdr.imgType == 9)
                                     DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, buf);
                                 else
-                                    if (AfxReadStream(stream, buf, hdr.width * hdr.height, 0))
+                                    if (AfxReadStream(stream, hdr.width * hdr.height, 0, buf))
                                         AfxThrowError();
 
-                                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                                if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat16), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                                 else
                                 {
                                     for (i = 0; i < hdr.width * hdr.height; i++)
@@ -314,20 +313,20 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
                 }
                 
                 if (buf)
-                    AfxDeallocate(NIL, buf);
+                    AfxDeallocate(buf);
 
                 if (palette)
-                    AfxDeallocate(NIL, palette);
+                    AfxDeallocate(palette);
             }
             else
             {
-                if (!(img->data = AfxAllocate(NIL, hdr.width * hdr.height, sizeof(afxNat8), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(img->data = AfxAllocate(hdr.width * hdr.height, sizeof(afxNat8), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                 else
                 {
                     if (hdr.imgType == 11)
                         DecompressRleChunk(stream, hdr.width, hdr.height, hdr.bpp, img->data);
                     else
-                        if (AfxReadStream(stream, img->data, hdr.width * hdr.height * sizeof(afxNat8), 0))
+                        if (AfxReadStream(stream, hdr.width * hdr.height * sizeof(afxNat8), 0, img->data))
                             AfxThrowError();
                 }
             }
@@ -338,13 +337,18 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
 
         if (!err)
         {
+#if 0
+            /*
+                These bits are used to indicate the order in which pixel data is transferred from the file to the screen.
+                Bit 4 (0x16) is for left-to-right ordering and bit 5 (0x32) is for top-to-bottom ordering as shown below.
+            */
             if (!(hdr.descriptor & 0x20))
             {
                 afxNat scanline = hdr.width * (hdr.bpp >> 3);
                 afxNat siz = scanline * hdr.height;
                 afxByte *buf;
 
-                if (!(buf = AfxAllocate(NIL, 1, siz, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(buf = AfxAllocate(1, siz, AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
                 else
                 {
                     for (i = 0; i < hdr.height; i++)
@@ -352,18 +356,18 @@ int TGA_Load(const char *Filename, _afxTgaImg *img)
 
                     AfxCopy(1, siz, buf, img->data);
 
-                    AfxDeallocate(NIL, buf);
+                    AfxDeallocate(buf);
                 }
             }
+#endif
 
             img->whd[0] = hdr.width;
             img->whd[1] = hdr.height;
+            img->whd[2] = 1;
             img->bpp = hdr.bpp;
         }
     }
-
-    AfxReleaseObjects(1, (void*[]) { stream });
-    return 1;
+    return err;
 }
 
 #if 0
@@ -751,7 +755,7 @@ _AVX void _AfxTgaDestroy(afxMmu mmu, _afxTga* tga)
 {
     if (tga->data)
     {
-        AfxDeallocate(mmu, tga->data);
+        AfxDeallocate(tga->data);
         tga->data = 0;
     }
 
@@ -799,11 +803,11 @@ _AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
     header.imageSpec.pixelDepth = bitsPerPixel;
     header.imageSpec.descriptor = 0;
 
-    AfxWriteStream(stream, &header, sizeof(header), 0);
+    AfxWriteStream(stream, sizeof(header), 0, &header);
 
     afxNat pixelSiz = bitsPerPixel / AFX_BYTE_SIZE;
 
-    if (!(data = AfxAllocate(mmu, tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
+    if (!(data = AfxAllocate(tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxCopy(tga->width * tga->height, pixelSiz, tga->data, data);
@@ -811,10 +815,10 @@ _AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
         if (!((tga->fmt == afxPixelFormat_GR8) || (tga->fmt == afxPixelFormat_BGR8) || (tga->fmt == afxPixelFormat_BGRA8)))
             _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, data);
 
-        if (AfxWriteStream(stream, data, tga->width * tga->height * pixelSiz, 0))
+        if (AfxWriteStream(stream, tga->width * tga->height * pixelSiz, 0, data))
             AfxThrowError();
 
-        AfxDeallocate(mmu, data);
+        AfxDeallocate(data);
     }
     return err;
 }
@@ -823,12 +827,12 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
-    AfxAssertType(stream, afxFcc_IOS);
+    //AfxAssertType(stream, afxFcc_IOB);
     AfxAssert(tga);
 
     _afxSerializedTargaHdr header = { 0 };
     
-    if (AfxReadStream(stream, &header, sizeof(header), 0)) AfxThrowError();
+    if (AfxReadStream(stream, sizeof(header), 0, &header)) AfxThrowError();
     else
     {
         afxBool hasColorMap = FALSE;
@@ -894,10 +898,10 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                 {
                     afxInt bytesPerPixel = header.colorMapSpec.entrySiz / AFX_BYTE_SIZE;
 
-                    if (!(colorMap = AfxAllocate(mmu, header.colorMapSpec.entrySiz, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
+                    if (!(colorMap = AfxAllocate(header.colorMapSpec.entrySiz, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
                     else
                     {
-                        if (AfxReadStream(stream, colorMap, header.colorMapSpec.nofEntries * bytesPerPixel, 0)) AfxThrowError();
+                        if (AfxReadStream(stream, header.colorMapSpec.nofEntries * bytesPerPixel, 0, colorMap)) AfxThrowError();
                         else
                         {
                             if (header.colorMapSpec.entrySiz == 24 || header.colorMapSpec.entrySiz == 32)
@@ -909,7 +913,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                         if (err)
                         {
-                            AfxDeallocate(mmu, colorMap);
+                            AfxDeallocate(colorMap);
                             colorMap = NIL;
                         }
                     }
@@ -917,7 +921,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                 afxNat pixelSiz = header.imageSpec.pixelDepth / AFX_BYTE_SIZE;
 
-                if (!(tga->data = AfxAllocate(mmu, (size_t)tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
+                if (!(tga->data = AfxAllocate((size_t)tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
                 else
                 {
                     afxNat i, k;
@@ -928,7 +932,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                     case 2:
                     case 3:
                     {
-                        if (AfxReadStream(stream, tga->data, tga->width * tga->height * pixelSiz, 0))
+                        if (AfxReadStream(stream, tga->width * tga->height * pixelSiz, 0, tga->data))
                             AfxThrowError();
 
                         break;
@@ -943,7 +947,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                         {
                             afxByte amount;
 
-                            if (AfxReadStream(stream, &amount, sizeof(amount), 0)) AfxThrowError();
+                            if (AfxReadStream(stream, sizeof(amount), 0, &amount)) AfxThrowError();
                             else
                             {
                                 if (amount & 0x80)
@@ -952,7 +956,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                                     amount++;
 
                                     // read in the rle data
-                                    if (AfxReadStream(stream, &tga->data[pixelsRead * pixelSiz], pixelSiz, 0)) AfxThrowError();
+                                    if (AfxReadStream(stream, pixelSiz, 0, &tga->data[pixelsRead * pixelSiz])) AfxThrowError();
                                     else
                                     {
                                         for (i = 1; i < amount; i++)
@@ -967,7 +971,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                                     // read in the raw data
 
-                                    if (AfxReadStream(stream, &tga->data[pixelsRead * pixelSiz], amount * pixelSiz, 0))
+                                    if (AfxReadStream(stream, amount * pixelSiz, 0, &tga->data[pixelsRead * pixelSiz]))
                                         AfxThrowError();
                                 }
                                 pixelsRead += amount;
@@ -994,7 +998,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                             // Allocating new memory, as current memory is a look up table index and not a color.
 
-                            if (!(tga->data = AfxAllocate(mmu, tga->width * tga->height, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
+                            if (!(tga->data = AfxAllocate(tga->width * tga->height, bytesPerPixel, 0, AfxHint()))) AfxThrowError();
                             else
                             {
                                 if (header.colorMapSpec.entrySiz == 32)
@@ -1011,7 +1015,7 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
                                         tga->data[i * bytesPerPixel + k] = colorMap[(header.colorMapSpec.firstEntryIdx + data[i]) * bytesPerPixel + k];
 
                                 // Freeing old data.
-                                AfxDeallocate(mmu, data);
+                                AfxDeallocate(data);
                                 data = 0;
                                 //AfxDeallocate(mmu, colorMap);
                                 //colorMap = NIL;
@@ -1021,14 +1025,14 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
 
                     if (err)
                     {
-                        AfxDeallocate(mmu, tga->data);
+                        AfxDeallocate(tga->data);
                         tga->data = NIL;
                     }
                 }
 
                 if (colorMap)
                 {
-                    AfxDeallocate(mmu, colorMap);
+                    AfxDeallocate(colorMap);
                     colorMap = NIL;
                 }
             }
@@ -1063,7 +1067,7 @@ _AVX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height,
         return FALSE;
     }
 
-    if (!(tga->data = AfxAllocate(mmu, width * height * depth, stride * sizeof(afxByte), 0, AfxHint())))
+    if (!(tga->data = AfxAllocate(width * height * depth, stride * sizeof(afxByte), 0, AfxHint())))
     {
         return FALSE;
     }
@@ -1089,9 +1093,9 @@ _AVX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
         afxRasterIoOp const op = ops[i];
 
         
-        afxFile file;
+        afxStream file;
 
-        if (AfxOpenFiles(afxFileFlag_W, 1, &uri[i], &file)) AfxThrowError();
+        if (!(file = AfxOpenFile(&uri[i], afxIoFlag_W))) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1108,7 +1112,7 @@ _AVX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
             {
                 AfxDumpRasterRegions(ras, 1, &op, im.data);
 
-                if (_AfxTgaSave(mmu, AfxGetFileStream(file), &im)) AfxThrowError();
+                if (_AfxTgaSave(mmu, file, &im)) AfxThrowError();
                 else
                 {
 
@@ -1158,14 +1162,14 @@ _AVX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
 
     for (afxNat i = 0; i < opCnt; i++)
     {
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
-        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
+        if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1232,14 +1236,14 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
-        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
+        if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
         else
         {
             _afxTga im;
@@ -1306,16 +1310,81 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    afxStream ios = AfxAcquireStream(afxIoFlag_RWX, 0, 0, 0);
+    afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
     
     for (afxNat i = 0; i < cnt; i++)
     {
         //afxFile file;
 
         //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
-        if (AfxReloadFile(ios, afxFileFlag_RX, &uri[i])) AfxThrowError();
+        if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
         else
         {
+            AfxRewindStream(ios);
+            _afxTgaImg tga = { 0 };
+            
+            if (TGA_Load(ios, &tga)) AfxThrowError();
+            else
+            {
+                afxPixelFormat fmt;
+
+                if (tga.bpp == 32)
+                    fmt = afxPixelFormat_BGRA8;
+                else if (tga.bpp == 24)
+                    fmt = afxPixelFormat_BGR8;
+                else
+                    fmt = afxPixelFormat_R8;
+
+
+                if (i == 0)
+                {
+                    afxRasterInfo texi = { 0 };
+                    texi.fmt = fmt;
+                    texi.lodCnt = 1;
+                    texi.sampleCnt = 1;
+                    texi.usage = usage;
+                    texi.flags = flags;
+                    texi.layerCnt = cnt;
+                    texi.whd[0] = tga.whd[0];
+                    texi.whd[1] = tga.whd[1];
+                    texi.whd[2] = tga.whd[2];
+
+                    if (AfxAcquireRasters(dctx, 1, &texi, ras))
+                    {
+                        AfxThrowError();
+                        //AfxReleaseObjects(i, (void**)ras);
+                    }
+                }
+
+                if (!err)
+                {
+                    afxPixelLayout pfd;
+                    AfxDescribePixelFormat(fmt, &pfd);
+
+                    afxRasterIoOp op = { 0 };
+                    op.rgn.lodIdx = 0;
+                    op.rgn.baseLayer = i;
+                    op.rgn.layerCnt = 1;
+                    op.rgn.offset[0] = 0;
+                    op.rgn.offset[1] = 0;
+                    op.rgn.offset[2] = 0;
+                    op.rgn.whd[0] = tga.whd[0];
+                    op.rgn.whd[1] = tga.whd[1];
+                    op.rgn.whd[2] = tga.whd[2];
+                    op.bufOffset = 0;
+                    op.bufRowCnt = 0;
+                    op.bufRowSiz = 0;
+
+                    if (AfxUpdateRasterRegions(*ras, 1, &op, tga.data))
+                        AfxThrowError();
+                }
+            //if (tga.data)
+                //AfxDeallocate(tga.data);
+            }
+
+
+#if 0
+
             _afxTga im;
             AfxZero(1, sizeof(im), &im);
 
@@ -1370,6 +1439,7 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
             }
             _AfxTgaDestroy(mmu, &im);
             //AfxReleaseObjects(1, (void*[]) { file });            
+#endif
         }
     }
 

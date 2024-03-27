@@ -166,7 +166,7 @@ _SGL afxError _SglQrypCtor(afxQueryPool qryp, afxCookie const* cookie)
     afxQueryType type = *(afxQueryType const*)cookie->udd[1];
     afxNat cap = *(afxNat const*)cookie->udd[2];
 
-    qryp->glHandle = AfxAllocate(AfxGetDrawContextMmu(dctx), qryp->base.cap, sizeof(qryp->glHandle[0]), 0, AfxHint());
+    qryp->glHandle = AfxAllocate(qryp->base.cap, sizeof(qryp->glHandle[0]), 0, AfxHint());
     qryp->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     qryp->base.type = type;
     qryp->base.cap = cap;

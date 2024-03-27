@@ -52,7 +52,7 @@ _AKX void _AfxMesh113131(afxMesh msh)
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
     afxNat const NumMeshTris = AfxCountMeshTriangles(msh->topology);
-    struct TriWeightData* TriWeights = AfxAllocate(NIL, sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
+    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
     
     for (afxNat triIdx = 0; triIdx < NumMeshTris; ++triIdx)
     {
@@ -265,22 +265,22 @@ _AKXINL void AfxEndMeshBuilding(afxMeshBuilder* mshb)
     AfxDeallocateArray(&mshb->biases);
 
     if (mshb->faces)
-        AfxDeallocate(NIL, mshb->faces);
+        AfxDeallocate(mshb->faces);
 
     if (mshb->vtx)
-        AfxDeallocate(NIL, mshb->vtx);
+        AfxDeallocate(mshb->vtx);
 
     if (mshb->posn)
-        AfxDeallocate(NIL, mshb->posn);
+        AfxDeallocate(mshb->posn);
 
     if (mshb->nrm)
-        AfxDeallocate(NIL, mshb->nrm);
+        AfxDeallocate(mshb->nrm);
 
     if (mshb->uv)
-        AfxDeallocate(NIL, mshb->uv);
+        AfxDeallocate(mshb->uv);
 
     if (mshb->pivots)
-        AfxDeallocate(NIL, mshb->pivots);
+        AfxDeallocate(mshb->pivots);
 
     AfxAssignFcc(mshb, NIL);
 }
@@ -299,7 +299,7 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
     mshb->surfCnt = surfCnt;
     mshb->faces = NIL;
 
-    if (surfCnt && !(mshb->faces = AfxAllocate(NIL, triCnt, sizeof(mshb->faces[0]), 0, AfxHint()))) AfxThrowError();
+    if (surfCnt && !(mshb->faces = AfxAllocate(triCnt, sizeof(mshb->faces[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxZero(triCnt, sizeof(mshb->faces[0]), mshb->faces);        
@@ -309,12 +309,12 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
 
     AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
 
-    mshb->vtx = AfxAllocate(NIL, vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHint());
+    mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHint());
     AfxZero(vtxCnt, sizeof(mshb->vtx[0]), mshb->vtx);
 
-    mshb->pivots = AfxAllocate(NIL, artCnt, sizeof(mshb->pivots[0]), NIL, AfxHint());
+    mshb->pivots = AfxAllocate(artCnt, sizeof(mshb->pivots[0]), NIL, AfxHint());
 
-    mshb->posn = AfxAllocate(NIL, vtxCnt, sizeof(mshb->posn[0]), AFX_SIMD_ALIGN, AfxHint());
+    mshb->posn = AfxAllocate(vtxCnt, sizeof(mshb->posn[0]), AFX_SIMD_ALIGN, AfxHint());
     mshb->nrm = NIL;
     mshb->uv = NIL;
 
@@ -389,7 +389,7 @@ _AKXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx,
     AfxAssertRange(mshb->vtxCnt, baseVtxIdx, vtxCnt);
     AfxAssert(nrm);
 
-    if (!mshb->nrm && !(mshb->nrm = AfxAllocate(NIL, mshb->vtxCnt, sizeof(mshb->nrm[0]), AFX_SIMD_ALIGN, AfxHint())))
+    if (!mshb->nrm && !(mshb->nrm = AfxAllocate(mshb->vtxCnt, sizeof(mshb->nrm[0]), AFX_SIMD_ALIGN, AfxHint())))
         AfxThrowError();
 
     if (!err)
@@ -416,7 +416,7 @@ _AKXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     AfxAssertRange(mshb->vtxCnt, baseVtxIdx, vtxCnt);
     AfxAssert(uv);
 
-    if (!mshb->uv && !(mshb->uv = AfxAllocate(NIL, mshb->vtxCnt, sizeof(mshb->uv[0]), AFX_SIMD_ALIGN, AfxHint())))
+    if (!mshb->uv && !(mshb->uv = AfxAllocate(mshb->vtxCnt, sizeof(mshb->uv[0]), AFX_SIMD_ALIGN, AfxHint())))
         AfxThrowError();
 
     if (!err)
@@ -650,7 +650,7 @@ _AKX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
             texCoords[texCoordsIndex][1] = 1.0f - (afxReal)i / (afxReal)numberParallels;
 
             // use quaternion to get the tangent vector
-            AfxQuatFromAxisAngle(helpQuaternion, AfxSpawnV3d(0, 1, 0), 360.0f * texCoords[texCoordsIndex][0]);
+            AfxMakeQuatFromAxialRotation(helpQuaternion, AfxSpawnV3d(0, 1, 0), 360.0f * texCoords[texCoordsIndex][0]);
             AfxRotationM4dFromQuat(helpMatrix, helpQuaternion);
             //AfxPostMultiplyV3d(&tangents[tangentIndex], helpMatrix, AFX_V3D_X);
         }

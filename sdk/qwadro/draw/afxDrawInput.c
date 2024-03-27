@@ -21,11 +21,10 @@
 #define _AFX_DRAW_DEVICE_C
 #define _AFX_DRAW_CONTEXT_C
 #define _AFX_DRAW_INPUT_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/math/afxOpticalMatrix.h"
-
-AVXINL afxDrawSystem AfxGetDrawSystem(void);
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX void* AfxGetDrawInputUdd(afxDrawInput din)
 {
@@ -43,29 +42,29 @@ _AVX afxDrawDevice AfxGetDrawInputDevice(afxDrawInput din)
     return ddev;
 }
 
-_AVX afxClass* AfxGetCameraClass(afxDrawInput din)
+_AVX afxManager* AfxGetCameraClass(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxClass *cls = &din->cameras;
+    afxManager *cls = &din->cameras;
     AfxAssertClass(cls, afxFcc_CAM);
     return cls;
 }
 
-_AVX afxClass* AfxGetVertexBufferClass(afxDrawInput din)
+_AVX afxManager* AfxGetVertexBufferClass(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxClass *cls = &din->vbuffers;
+    afxManager *cls = &din->vbuffers;
     AfxAssertClass(cls, afxFcc_VBUF);
     return cls;
 }
 
-_AVX afxClass* AfxGetIndexBufferClass(afxDrawInput din)
+_AVX afxManager* AfxGetIndexBufferClass(afxDrawInput din)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxClass *cls = &din->ibuffers;
+    afxManager *cls = &din->ibuffers;
     AfxAssertClass(cls, afxFcc_IBUF);
     return cls;
 }
@@ -275,7 +274,7 @@ _AVX void AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRat
         AfxInvertM4d(p, ip);
 }
 
-_AVX afxError AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc)
+_AVX afxError AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -336,7 +335,7 @@ _AVX afxError AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig co
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-        afxClass* cls = AfxGetDrawInputClass(ddev);
+        afxManager* cls = AfxGetDrawInputClass(ddev);
         AfxAssertClass(cls, afxFcc_DIN);
 
         if (AfxAcquireObjects(cls, cnt, (afxObject*)inputs, (void const*[]) { ddev, cfg }))
@@ -353,9 +352,9 @@ _AVX afxNat AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, af
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetDrawInputClass(ddev);
+    afxManager* cls = AfxGetDrawInputClass(ddev);
     AfxAssertClass(cls, afxFcc_DIN);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AVX afxNat AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawInput inputs[])
@@ -364,16 +363,16 @@ _AVX afxNat AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt,
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(inputs);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetDrawInputClass(ddev);
+    afxManager* cls = AfxGetDrawInputClass(ddev);
     AfxAssertClass(cls, afxFcc_DIN);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)inputs);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)inputs);
 }
 
 _AVX afxNat AfxCountDrawInputs(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    afxClass*cls = AfxGetDrawInputClass(ddev);
+    afxManager*cls = AfxGetDrawInputClass(ddev);
     AfxAssertClass(cls, afxFcc_DIN);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

@@ -28,11 +28,15 @@
 #include "qwadro/draw/pipe/afxPipeline.h"
 #include "qwadro/draw/pipe/afxRasterizer.h"
 #include "qwadro/draw/pipe/afxSampler.h"
-#include "qwadro/draw/pipe/afxShader.h"
+#include "qwadro/draw/io/afxShader.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/pipe/afxQueryPool.h"
 #include "qwadro/draw/afxDrawOutput.h"
+#include "qwadro/draw/afxDrawInput.h"
+#include "qwadro/math/afxOpticalMatrix.h"
+#include "qwadro/core/afxManager.h"
+#include "qwadro/mem/afxArena.h"
 
 AFX_DEFINE_STRUCT(afxDrawQueueingConfig)
 {
@@ -77,8 +81,8 @@ struct afxBaseDrawContext
         //afxChain            recyclSubmChain;
         //afxNat              minRecyclSubmCnt;
         afxNat          lastReqQueIdx;
-        //afxClass        queues;
-        //afxClass        scripts;
+        //afxManager        queues;
+        //afxManager        scripts;
         afxNat          dqueCnt;
         afxDrawQueue*   queues;
     }*                  openPorts;
@@ -97,25 +101,25 @@ struct afxBaseDrawContext
     afxNat              dinSlotCnt;
 
     afxChain            classes;
-    afxClass            rasters;
-    afxClass            buffers;
-    afxClass            shaders;
-    afxClass            fences;
-    afxClass            semaphores;
-    afxClass            rasterizers;
-    afxClass            pipelines;
-    afxClass            schemas;
-    afxClass            queries;
-    afxClass            canvases;
-    afxClass            samplers;
-    afxClass            vinputs;
+    afxManager            rasters;
+    afxManager            buffers;
+    afxManager            shaders;
+    afxManager            fences;
+    afxManager            semaphores;
+    afxManager            rasterizers;
+    afxManager            pipelines;
+    afxManager            schemas;
+    afxManager            queries;
+    afxManager            canvases;
+    afxManager            samplers;
+    afxManager            vinputs;
 
     afxCmd const*       stdCmds;
 
     afxClipSpace        clipCfg;
 
-    afxError            (*waitFenc)(afxBool,afxNat64,afxNat,afxFence[]);
-    afxError            (*resetFenc)(afxNat,afxFence[]);
+    afxError            (*waitFenc)(afxBool,afxNat64,afxNat,const afxFence[]);
+    afxError            (*resetFenc)(afxNat,afxFence const[]);
     afxError            (*executeCb)(afxDrawContext, afxNat, afxExecutionRequest const[],afxFence);
     afxError            (*presentCb)(afxDrawContext,afxNat,afxPresentationRequest const[]);
     afxError            (*stampCb)(afxDrawContext,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
@@ -142,18 +146,18 @@ AVX afxNat              AfxInvokeConnectedDrawOutputs(afxDrawContext dctx, afxNa
 AVX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat no);
 AVX afxError            AfxDisconnectDrawOutputs(afxDrawContext dctx);
 
-AVX afxClass*           AfxGetBindSchemaClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetBufferClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetCanvasClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetFenceClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetPipelineClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetQueryPoolClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetRasterClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetRasterizerClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetSamplerClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetSemaphoreClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetShaderClass(afxDrawContext dctx);
-AVX afxClass*           AfxGetVertexInputClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetBindSchemaClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetBufferClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetCanvasClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetFenceClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetPipelineClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetQueryPoolClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetRasterClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetRasterizerClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetSamplerClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetSemaphoreClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetShaderClass(afxDrawContext dctx);
+AVX afxManager*         AfxGetVertexInputClass(afxDrawContext dctx);
 
 AVX afxNat              AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[]);
 AVX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer bufffers[]);
@@ -164,5 +168,10 @@ AVX afxNat              AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first
 AVX afxNat              AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[]);
 AVX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[]);
 AVX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[]);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxError            AfxAcquireDrawContexts(afxNat ddevId, afxNat cnt, afxDrawContextConfig const cfg[], afxDrawContext contexts[]);
+
 
 #endif//AFX_DRAW_CONTEXT_H

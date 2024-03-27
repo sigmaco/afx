@@ -18,8 +18,8 @@
 #define _AFX_SIMULATION_C
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/rendering/awxSky.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
@@ -27,11 +27,11 @@
 _AKX void AfxStepSky(awxSky* sky, afxReal dt)
 {
     sky->currRot += sky->rotSpeed * dt;
-    AfxQuatFromAxisAngle(sky->rotQuat, sky->rotPivot, sky->currRot);
+    AfxMakeQuatFromAxialRotation(sky->rotQuat, sky->rotPivot, sky->currRot);
     AfxRotationM4dFromQuat(sky->rotMtx, sky->rotQuat);
 }
 
-_AKX afxError AfxDrawSky(afxDrawScript dscr, awxSky* sky)
+_AKX afxError AfxDrawSky(afxDrawStream dscr, awxSky* sky)
 {
     afxError err = AFX_ERR_NONE;
 

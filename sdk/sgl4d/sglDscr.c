@@ -17,10 +17,10 @@
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
 
-_SGL afxError _SglDscrResetCb(afxDrawScript dscr)
+_SGL afxError _SglDscrResetCb(afxDrawStream dscr)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state != afxDrawScriptState_PENDING);
+    AfxAssert(dscr->base.state != afxDrawStreamState_PENDING);
 
     _sglCmd const* cmdHdr;
     AfxChainForEveryLinkageB2F(&dscr->commands, _sglCmd, script, cmdHdr)
@@ -40,7 +40,7 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     while (1)
     {
         afxChain *commands = &idd->commands;
-        afxLinkage *first = AfxGetLastLinkage(commands), *dummy = AfxGetChainAnchor(commands);
+        afxLinkage *first = AfxGetLastLinkage(commands), *dummy = AfxGetAnchor(commands);
 
         if (first == dummy) break;
         else
@@ -65,9 +65,9 @@ _SGL afxError _SglDscrResetCb(afxDrawScript dscr)
     return err;
 }
 
-SGL afxError _SglDscrEndCb(afxDrawScript dscr); // no sglDrawCommands.c
+SGL afxError _SglDscrEndCb(afxDrawStream dscr); // no sglDrawCommands.c
 
-_SGL afxError _SglDscrBeginCb(afxDrawScript dscr, afxBool permanent)
+_SGL afxError _SglDscrBeginCb(afxDrawStream dscr, afxBool permanent)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
@@ -75,15 +75,14 @@ _SGL afxError _SglDscrBeginCb(afxDrawScript dscr, afxBool permanent)
     return err;
 }
 
-_SGL afxError _SglDscrDtor(afxDrawScript dscr)
+_SGL afxError _SglDscrDtor(afxDrawStream dscr)
 {
-    AfxEntry("dscr=%p", dscr);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
     while (1)
     {
-        if (dscr->base.state != afxDrawScriptState_PENDING) break;
+        if (dscr->base.state != afxDrawStreamState_PENDING) break;
         else
         {
             // AfxPopLinkage(&dscr->base.queue); // we can't do it here. We need wait for draw context to liberate it.
@@ -101,15 +100,15 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
 
     for (afxNat i = 0; i < din->base.scripts.cnt; i++)
     {
-        afxDrawScript dscr2 = *(afxDrawScript*)AfxGetArrayUnit(&din->base.scripts, i);
+        afxDrawStream dscr2 = *(afxDrawStream*)AfxGetArrayUnit(&din->base.scripts, i);
 
         if (dscr2 == dscr)
         {
-            *((afxDrawScript*)&din->base.scripts.bytemap[din->base.scripts.unitSiz * i]) = NIL;
+            *((afxDrawStream*)&din->base.scripts.bytemap[din->base.scripts.unitSiz * i]) = NIL;
         }
     }
 
-    AfxRecycleDrawScript(dscr, TRUE);
+    AfxRecycleDrawStream(dscr, TRUE);
 
     //if (dscr->base.vmt->dtor && dscr->base.vmt->dtor(dscr))
         //AfxThrowError();
@@ -121,9 +120,8 @@ _SGL afxError _SglDscrDtor(afxDrawScript dscr)
     return err;
 }
 
-_SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
+_SGL afxError _SglDscrCtor(afxDrawStream dscr, afxCookie const* cookie)
 {
-    AfxEntry("dscr=%p", dscr);
     afxError err = AFX_ERR_NONE;
     //AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
@@ -148,7 +146,7 @@ _SGL afxError _SglDscrCtor(afxDrawScript dscr, afxCookie const* cookie)
 
     dscr->base.disposable = TRUE;
 
-    dscr->base.state = afxDrawScriptState_INITIAL;
+    dscr->base.state = afxDrawStreamState_INITIAL;
     
     dscr->base.stdCmds = NIL;
 
@@ -182,7 +180,7 @@ _SGL afxClassConfig _SglDscrClsConfig =
     .fcc = afxFcc_DSCR,
     .name = "Draw Script",
     .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxDrawScript)),
+    .size = sizeof(AFX_OBJECT(afxDrawStream)),
     .mmu = NIL,
     .ctor = (void*)_SglDscrCtor,
     .dtor = (void*)_SglDscrDtor

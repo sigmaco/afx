@@ -1,0 +1,14 @@
+<Qwadro>
+    <Pipeline id='instanced'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
+        <VertexShader>system/video/font.vsh</VertexShader>
+        <VertexInputStream instanceRate='1'>0</VertexInputStream>
+        <Rasterizer>system/video/font.xsh.xml?instanced</Rasterizer>
+    </Pipeline>
+    <Rasterizer id='instanced'>
+        <FillMode>SOLID</FillMode>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <FragmentShader>system/video/font.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

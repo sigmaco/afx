@@ -22,8 +22,6 @@
 #define _AFX_THREAD_C
 #include "qwadro/sound/afxSoundSystem.h"
 
-AAXINL afxSoundSystem AfxGetSoundSystem(void);
-
 _AAX afxBool AfxGetSoundThreadActiveQueue(afxSoundThread sthr, afxSoundQueue* sque)
 {
     afxError err = AFX_ERR_NONE;
@@ -101,7 +99,7 @@ _AAX afxBool _AfxProcessSdevCb(afxSoundDevice sdev, void *udd)
         if (sdev->procCb(sdev, sthr))
             AfxThrowError();
 
-        sthr->sdev = NIL;
+        //sthr->sdev = NIL;
         sthr->sctx = NIL;
         sthr->sque = NIL;
     }
@@ -118,14 +116,15 @@ _AAX afxError _AfxThrProcSthrCb(afxThread thr, void *udd, afxThreadOpcode opcode
 
     //AfxAssert(sthr == (afxSoundThread)AfxGetThreadUdd(&sthr->thr));
 
-    AfxInvokeSoundDevices(0, AFX_N32_MAX, _AfxProcessSdevCb, sthr);
+    //AfxInvokeSoundDevices(0, AFX_N32_MAX, _AfxProcessSdevCb, sthr);
+
+    _AfxProcessSdevCb(sthr->sdev, sthr);
 
     return err;
 }
 
 _AAX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
 {
-    AfxEntry("sthr=%p", sthr);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
 
@@ -133,7 +132,7 @@ _AAX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
 
     sthr->thr.proc = _AfxThrProcSthrCb;
 
-    sthr->sdev = NIL;
+    sthr->sdev = config->sdev;
     sthr->sctx = NIL;
     sthr->sque = NIL;
     sthr->queueIdx = 0;
@@ -145,7 +144,6 @@ _AAX afxError _AfxSthrCtor(afxSoundThread sthr, afxCookie const* cookie)
 
 _AAX afxError _AfxSthrDtor(afxSoundThread sthr)
 {
-    AfxEntry("sthr=%p", sthr);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sthr, afxFcc_STHR);
 
@@ -165,16 +163,14 @@ _AAX afxClassConfig const _sthrClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AAX afxError AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[])
+_AAX afxError AfxAcquireSoundThreads(afxSoundThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxSoundThread sthr[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("cnt=%u,config=%p,sthr=%p", cnt, config, sthr);
     
-    afxClass* cls = AfxGetSoundThreadClass();
+    afxManager* cls = AfxGetSoundThreadClass();
     AfxAssertClass(cls, afxFcc_STHR);
 
-
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)sthr, (void const*[]) { config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)sthr, (void const*[]) { cfg, hint }))
         AfxThrowError();
 
     AfxAssertObjects(cnt, sthr, afxFcc_STHR);
@@ -187,9 +183,9 @@ _AAX afxNat AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSound
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetSoundThreadClass();
+    afxManager* cls = AfxGetSoundThreadClass();
     AfxAssertClass(cls, afxFcc_STHR);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AAX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[])
@@ -197,15 +193,15 @@ _AAX afxNat AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread st
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(sthr);
-    afxClass* cls = AfxGetSoundThreadClass();
+    afxManager* cls = AfxGetSoundThreadClass();
     AfxAssertClass(cls, afxFcc_STHR);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sthr);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)sthr);
 }
 
 _AAX afxNat AfxCountSoundThreads(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetSoundThreadClass();
+    afxManager* cls = AfxGetSoundThreadClass();
     AfxAssertClass(cls, afxFcc_STHR);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }

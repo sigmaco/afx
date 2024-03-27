@@ -19,7 +19,7 @@
 #ifndef AFX_SOUND_THREAD_H
 #define AFX_SOUND_THREAD_H
 
-#include "qwadro/async/afxThread.h"
+#include "qwadro/core/afxThread.h"
 #include "qwadro/sound/afxSoundDefs.h"
 
 AFX_DEFINE_STRUCT(afxSoundThreadConfig)
@@ -45,7 +45,7 @@ AFX_OBJECT(afxSoundThread)
 #endif
 #endif
 
-AAX afxError            AfxAcquireSoundThreads(afxNat cnt, afxSoundThreadConfig const config[], afxSoundThread sthr[]);
+AAX afxError            AfxAcquireSoundThreads(afxSoundThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxSoundThread sthr[]);
 
 AAX afxSoundDevice      AfxGetSoundThreadDevice(afxSoundThread sthr);
 AAX afxThread           AfxGetSoundThreadBase(afxSoundThread sthr);

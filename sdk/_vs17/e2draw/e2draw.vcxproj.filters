@@ -19,6 +19,9 @@
     <Filter Include="qwadro\draw\io">
       <UniqueIdentifier>{744bf3d2-a0ce-4ec1-bc14-63223fd1dc4f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\env">
+      <UniqueIdentifier>{1f40247d-52e0-418d-8bf9-b5d5bdeb986d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -63,13 +66,7 @@
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxCanvas.h">
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawCommands.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOperation.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawScript.h">
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawTechnique.h">
@@ -84,9 +81,6 @@
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryPool.h">
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterization.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterizer.h">
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
@@ -94,15 +88,6 @@
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxSemaphore.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxShader.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxShaderBlueprint.h">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxTransformation.h">
       <Filter>qwadro\draw\pipe</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxVertexInput.h">
@@ -118,6 +103,33 @@
       <Filter>qwadro\draw\io</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxXsh.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawStream.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxBufferOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxImagingOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxTransformOps.h">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxShader.h">
+      <Filter>qwadro\draw\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxShaderBlueprint.h">
       <Filter>qwadro\draw\io</Filter>
     </ClInclude>
   </ItemGroup>
@@ -169,13 +181,7 @@
     <ClCompile Include="..\..\qwadro\draw\pipe\afxCanvas.c">
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawCommands.c">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawOperation.c">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawScript.c">
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawTechnique.c">
@@ -193,9 +199,6 @@
     <ClCompile Include="..\..\qwadro\draw\pipe\afxRasterOps.c">
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxRasterization.c">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxRasterizer.c">
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
@@ -203,12 +206,6 @@
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxSemaphore.c">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxShader.c">
-      <Filter>qwadro\draw\pipe</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxTransformation.c">
       <Filter>qwadro\draw\pipe</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxVertexInput.c">
@@ -227,6 +224,30 @@
       <Filter>qwadro\draw\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\io\afxXsh.c">
+      <Filter>qwadro\draw\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\env\xssCamera.c">
+      <Filter>qwadro\env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\env\xssDraw.c">
+      <Filter>qwadro\env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawStream.c">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawOps.c">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\pipe\afxQueryOps.c">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\pipe\afxImagingOps.c">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\pipe\afxTransformOps.c">
+      <Filter>qwadro\draw\pipe</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\draw\io\afxShader.c">
       <Filter>qwadro\draw\io</Filter>
     </ClCompile>
   </ItemGroup>

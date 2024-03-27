@@ -19,7 +19,7 @@
 #ifndef AFX_ICD_H
 #define AFX_ICD_H
 
-#include "qwadro/core/afxInitialization.h"
+#include "qwadro/core/afxConfig.h"
 
 typedef enum afxIcdType
 {
@@ -44,20 +44,20 @@ AFX_OBJECT(afxIcd)
     afxNat              verPatch; // 0
 
     afxChain            devices; // afxDevice
-    afxExecutable       exe;
+    afxModule           exe;
 };
 #endif//_AFX_ICD_C
 #endif//_AFX_CORE_C
+
+AFX afxChain const*     AfxGetRegisteredDevices(afxIcd icd);
 
 AFX afxError            AfxInstallClientDrivers(afxNat cnt, afxUri const manifest[], afxIcd drivers[]);
 
 AFX afxUri const*       AfxGetIcdIdentifier(afxIcd icd);
 
-AFX afxExecutable       AfxGetIcdExecutable(afxIcd icd);
+AFX afxModule           AfxGetIcdExecutable(afxIcd icd);
 
 AFX afxIni const*       AfxGetIcdInitializer(afxIcd icd);
-
-AFX afxChain const*     AfxGetRegisteredDevices(afxIcd icd);
 
 AFX void                AfxGetIcdVersion(afxIcd icd, afxNat* major, afxNat* minor, afxNat* patch);
 

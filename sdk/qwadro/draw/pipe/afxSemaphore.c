@@ -18,7 +18,7 @@
 #define _AFX_SEMAPHORE_C
 #define _AFX_DRAW_CONTEXT_C
 #include "qwadro/draw/pipe/afxSemaphore.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxDrawContext AfxGetSemaphoreContext(afxSemaphore sem)
 {
@@ -36,7 +36,7 @@ _AVX afxError AfxAcquireSemaphores(afxDrawContext dctx, afxNat cnt, afxSemaphore
     AfxAssert(cnt);
     AfxAssert(semaphores);
 
-    afxClass* cls = AfxGetSemaphoreClass(dctx);
+    afxManager* cls = AfxGetSemaphoreClass(dctx);
     AfxAssertClass(cls, afxFcc_SEM);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)semaphores, (void const*[]) { dctx }))

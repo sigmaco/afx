@@ -118,7 +118,7 @@ AFX_OBJECT(awxVertexData)
     afxUri              urd;
     afxNat              urdEntryIdx;
 
-    afxStringCatalog    strc;
+    afxStringBase    strb;
 };
 
 #endif
@@ -162,15 +162,15 @@ AKX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, a
 AKX afxError            AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
 
 AKX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
-AKX afxError            AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd);
+AKX afxError            AwxCmdBindVertexDataCache(afxDrawStream dscr, afxNat slotIdx, awxVertexData vtd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AKX afxError            AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[]);
+AKX afxError            AwxAcquireVertexDatas(afxSimulation sim, afxStringBase strb, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[]);
 
-AKX awxVertexData       AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, afxMeshBuilder const* mshb);
+AKX awxVertexData       AwxBuildVertexData(afxSimulation sim, afxStringBase strb, afxMeshBuilder const* mshb);
 
 AKX void                AwxTransformVertexDatas(afxM3d const ltm, afxM3d const iltm, afxV4d const atv, afxBool renormalize, afxNat cnt, awxVertexData vtd[]);
 

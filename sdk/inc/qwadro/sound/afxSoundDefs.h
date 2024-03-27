@@ -18,7 +18,7 @@
 #define AFX_SOUND_DEFS_H
 
 #include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxSimd.h"
+#include "qwadro/math/afxSimd.h"
 #include "qwadro/math/afxTransform.h"
 
 #ifndef __e2sound__

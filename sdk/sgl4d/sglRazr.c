@@ -63,7 +63,6 @@ _SGL afxError _SglDpuBindAndSyncRazr(sglDpuIdd* dpu, afxRasterizer razr)
 
 _SGL afxError _SglRazrDtor(afxRasterizer razr)
 {
-    AfxEntry("razr=%p", razr);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
@@ -72,17 +71,16 @@ _SGL afxError _SglRazrDtor(afxRasterizer razr)
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     if (razr->base.sampleMasks)
-        AfxDeallocate(mmu, razr->base.sampleMasks);
+        AfxDeallocate(razr->base.sampleMasks);
 
     if (razr->base.outs)
-        AfxDeallocate(mmu, razr->base.outs);
+        AfxDeallocate(razr->base.outs);
 
     return err;
 }
 
 _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
 {
-    AfxEntry("razr=%p", razr);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
@@ -114,7 +112,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
     razr->base.sampleCnt = rasc->sampleCnt;
     razr->base.sampleMasks = NIL;
 
-    if (razr->base.sampleCnt && !(razr->base.sampleMasks = AfxAllocate(mmu, razr->base.sampleCnt, sizeof(razr->base.sampleMasks[0]), 0, AfxHint()))) AfxThrowError();
+    if (razr->base.sampleCnt && !(razr->base.sampleMasks = AfxAllocate(razr->base.sampleCnt, sizeof(razr->base.sampleMasks[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < razr->base.sampleCnt; i++)
@@ -145,7 +143,7 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
         razr->base.outCnt = rasc->colorOutCnt;
         razr->base.outs = NIL;
 
-        if (razr->base.outCnt && !(razr->base.outs = AfxAllocate(mmu, razr->base.outCnt, sizeof(razr->base.outs[0]), 0, AfxHint()))) AfxThrowError();
+        if (razr->base.outCnt && !(razr->base.outs = AfxAllocate(razr->base.outCnt, sizeof(razr->base.outs[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < razr->base.outCnt; i++)
@@ -169,14 +167,14 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
             if (err)
             {
                 if (razr->base.outs)
-                    AfxDeallocate(mmu, razr->base.outs);
+                    AfxDeallocate(razr->base.outs);
             }
         }
 
         if (err)
         {
             if (razr->base.sampleMasks)
-                AfxDeallocate(mmu, razr->base.sampleMasks);
+                AfxDeallocate(razr->base.sampleMasks);
         }
     }
     AfxAssertObjects(1, &razr, afxFcc_RAZR);

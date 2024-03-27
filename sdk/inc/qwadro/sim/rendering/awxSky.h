@@ -52,6 +52,6 @@ AKX afxError    AfxBuildSkybox(awxSky* sky, afxSimulation sim);
 
 AKX void        AfxStepSky(awxSky* sky, afxReal dt);
 
-AKX afxError    AfxDrawSky(afxDrawScript dscr, awxSky* sky);
+AKX afxError    AfxDrawSky(afxDrawStream dscr, awxSky* sky);
 
 #endif//AFX_SKY_H

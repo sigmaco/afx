@@ -37,13 +37,6 @@ AFX_DECLARE_STRUCT(awxPoseBuffer);
 
 AFX_DECLARE_STRUCT(awxMotorInterlinkCallbacks);
 
-typedef enum accumulation_mode
-{
-    NoAccumulation = 0x0,
-    ConstantExtractionAccumulation = 0x1,
-    VariableDeltaAccumulation = 0x2,
-} accumulation_mode;
-
 typedef struct controlled_pose
 {
     const awxPose *Pose; // 0
@@ -153,14 +146,14 @@ AKX void        AwxAdjustMotorIterations(awxMotor moto, afxInt iterCnt); // Make
 AKX afxInt      AwxQueryMotorIteration(awxMotor moto); // Find out what loop the control is on
 AKX void        AwxSelectMotorIteration(awxMotor moto, afxInt currIterIdx); // Make the control think it's done X loops already
 
-// Since the awxMotor object gives you a lot of control over how its animations are played, 
-// it can be difficult for you to determine how long an animation might take to play back given a certain control state. 
-// To make this easy, Qwadro supplies two helper functions that do the calculations for you:
+// Desde o objecto awxMotor dar lhe muito controle sobre como suas animações são reproduzidas, 
+// isto pode ser difícil para você em determinar quão longo uma animação deveria tomar para reproduzir dado um certo estado de controle.
+// Para facilitar isto, Qwadro suple duas funções ajudantes que fazem as calculações para você:
 
-AKX afxReal     AwxGetMotorDuration(awxMotor moto); // Find out how long this control plays for, total
-AKX afxReal     AwxGetMotorRemainingDuration(awxMotor moto); // Find out how long this control will continue to play for, accounting for however much time has already elapsed
+AKX afxReal     AwxDetermineMotorDuration(awxMotor moto); // Find out how long this control plays for, total
+AKX afxReal     AwxDetermineMotorRemainingDuration(awxMotor moto); // Find out how long this control will continue to play for, accounting for however much time has already elapsed
 
-// Often times, you will want to pair a awxBody or a awxMotor in Qwadro with some application-specific structure of your own.
+// Por vezes, um author vai querer parear um afxBody ou uma afxMotor no Qwadro com some application-specific structure of your own.
 // This does not pose a problem for most Qwadro APIs, since you will always have your application specific structure handy.
 // But, for the model and control iteration APIs, you have no way of recovering this pairing for the elements you iterate over.
 
@@ -219,7 +212,7 @@ AKX void        AwxSetMotorEaseOutCurve(awxMotor moto, afxReal startSeconds, afx
 // The animation sampling code needs this information so it can determine whether to wrap or clamp the b-spline information should it read beyond either end of the animation data. 
 // While it is rare for an application to need this information as well, you can always get it like this: 
 
-AKX void        AwxGetMotorLoopState(awxMotor moto, afxBool *underflowLoop, afxBool *overflowLoop); // Figure out what looping state the control is in
+AKX void        AwxQueryMotorIterationState(awxMotor moto, afxBool *underflowLoop, afxBool *overflowLoop); // Figure out what looping state the control is in
 
 // Very occasionally(see warning below!), you want to have a single awxMotor controling an animation playing on multiple objects. 
 // One example is playing a marching animation on a group of soldiers - sometimes it is more convenient to have a single awxMotor for all of them than to manipulate a list of controls, one per soldier.
@@ -253,8 +246,6 @@ AKX afxBool     AfxMotorHasTerminated(awxMotor moto);
 AKX afxReal     AwxGetMotorWeight(awxMotor moto);
 AKX void        AwxSetMotorWeight(awxMotor moto, afxReal weight);
 
-//AKX afxAnimTrackMask const* AwxGetMotorTrackGroupModelMask(awxMotor moto, awxBody const* bod);
-//AKX afxAnimTrackMask const* AwxGetMotorTrackGroupTrackMask(awxMotor moto, awxAnimation const* anim, afxNat trackGrpIdx);
 AKX afxBool     AfxMotorIsActive(awxMotor moto);
 AKX void        AwxActivateMotor(awxMotor moto, afxBool active); // deveria ser suspend, já que o motor já começa ativo
 
@@ -268,9 +259,6 @@ AKX void        AwxRecenterMotorClocks(awxMotor moto, afxReal currClock);
 AKX void        AwxEnableMotorIterationClamping(awxMotor moto, afxBool clamp);
 
 AKX afxBool     AfxMotorHasEffect(awxMotor moto);
-
-AKX awxMotive*  _AwxMotorInterlinkCreate(afxSimulation sim, awxMotorInterlinkCallbacks const *callbacks, awxMotor moto, awxBody bod, afxBool active, void *InitData);
-AKX void        _AwxMotorInterlinkFree(awxMotive *intk);
 
 ////////////////////////////////////////////////////////////////////////////////
 

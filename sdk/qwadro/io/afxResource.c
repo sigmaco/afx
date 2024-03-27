@@ -67,7 +67,7 @@ _AFXINL afxNat AfxExcerptResourceName(afxResource res, afxUri *name)
     afxError err = AFX_ERR_NONE;
     AfxAssertObject(res, afxFcc_RES);
     AfxAssert(name);
-    return AfxExcerptUriName(name, res->uri);
+    return AfxPickUriObject(name, res->uri);
 }
 
 _AFXINL afxUri const* AfxGetResourceUri(afxResource res)
@@ -77,7 +77,7 @@ _AFXINL afxUri const* AfxGetResourceUri(afxResource res)
     return res->uri;
 }
 
-_AFX afxBool _AfxResEventHandler(afxHandle *obj, afxEvent *ev)
+_AFX afxBool _AfxResEventHandler(afxObject obj, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxResource res = (void*)obj;
@@ -86,7 +86,7 @@ _AFX afxBool _AfxResEventHandler(afxHandle *obj, afxEvent *ev)
     return FALSE;
 }
 
-_AFX afxBool _AfxResEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev)
+_AFX afxBool _AfxResEventFilter(afxObject obj, afxObject watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxResource res = (void*)obj;
@@ -117,7 +117,7 @@ _AFX afxError _AfxResCtor(void *cache, afxNat idx, afxResource res, afxResourceP
     
     if (paradigm->spec)
     {
-        res->uri = AfxCloneUri(paradigm->spec->uri);
+        res->uri = AfxDuplicateUri(paradigm->spec->uri);
         res->load = paradigm->spec->load;
         res->unload = paradigm->spec->unload;
     }

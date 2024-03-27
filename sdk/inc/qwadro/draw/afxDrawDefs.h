@@ -21,8 +21,7 @@
 
 #include "qwadro/mem/afxArray.h"
 #include "qwadro/math/afxFrustum.h"
-#include "qwadro/async/afxThread.h"
-#include "qwadro/async/afxCondition.h"
+#include "qwadro/core/afxThread.h"
 #include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxRestring.h"
 
@@ -59,8 +58,8 @@ AFX_DEFINE_HANDLE(afxDrawQueue);
 //typedef afxObject afxDrawQueue;
 AFX_DEFINE_HANDLE(afxDrawInput);
 //typedef afxObject afxDrawInput;
-AFX_DEFINE_HANDLE(afxDrawScript);
-//typedef afxObject afxDrawScript;
+AFX_DEFINE_HANDLE(afxDrawStream);
+//typedef afxObject afxDrawStream;
 AFX_DEFINE_HANDLE(afxDrawOutput);
 //typedef afxObject afxDrawOutput;
 

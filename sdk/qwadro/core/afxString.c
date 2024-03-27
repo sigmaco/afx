@@ -73,43 +73,43 @@ _AFXINL afxBool AfxStringIsEmpty(afxString const* str)
     return (0 == str->len);
 }
 
-_AFXINL afxNat AfxFindFirstChar(afxString const* str, afxNat base, afxInt ch)
+_AFXINL afxNat AfxFindFirstChar(afxString const* str, afxNat from, afxInt ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     afxNat posn = AFX_INVALID_INDEX;
     afxNat strLen = str->len;
-    AfxAssertRange(strLen, base, 1);
+    AfxAssertRange(strLen, from, 1);
 
-    if (strLen > base)
+    if (strLen > from)
     {
-        afxChar const *src = AfxGetStringData(str, base);
+        afxChar const *src = AfxGetStringData(str, from);
 
         if (src)
         {
-            afxChar* p = (afxChar*)memchr(src, ch, str->len - base);
+            afxChar* p = (afxChar*)memchr(src, ch, str->len - from);
             posn = p ? (p - (afxChar*)AfxGetStringData(str, 0)) : AFX_INVALID_INDEX;
         }
     }
     return posn;
 }
 
-_AFXINL afxNat AfxFindLastChar(afxString const* str, afxNat base, afxInt ch)
+_AFXINL afxNat AfxFindLastChar(afxString const* str, afxNat from, afxInt ch)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
     afxNat posn = AFX_INVALID_INDEX;
 
     afxNat strLen = str->len;
-    AfxAssertRange(strLen, base, 1);
+    AfxAssertRange(strLen, from, 1);
 
-    if (strLen > base)
+    if (strLen > from)
     {
         afxChar const *src = AfxGetStringData(str, 0);
         
         if (src)
         {
-            for (afxNat i = strLen - base; i-- > 0;)
+            for (afxNat i = strLen - from; i-- > 0;)
             {
                 if (ch == src[i])
                 {
@@ -397,30 +397,6 @@ _AFXINL afxBool WildCardMatch(afxString const* str, const char *Wildcard, char *
         result = 1;
     }
     return result;
-}
-
-_AFXINL afxError AfxReadStrings(afxStream in, afxNat cnt, afxString dst[], afxNat dstStride)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &in, afxFcc_IOS);
-    AfxAssert(dst);
-    AfxAssert(cnt);
-
-    AfxReadStream2(in, cnt * sizeof(dst[0]), sizeof(dst[0]), dst, dstStride);
-
-    return err;
-}
-
-_AFXINL afxError AfxWriteStrings(afxStream out, afxNat cnt, afxString const src[], afxNat srcStride)
-{
-    afxError err = NIL;
-    AfxAssertObjects(1, &out, afxFcc_IOS);
-    AfxAssert(src);
-    AfxAssert(cnt);
-
-    AfxWriteStream2(out, cnt * sizeof(src[0]), sizeof(src[0]), src, srcStride);
-
-    return err;
 }
 
 _AFXINL afxNat AfxExcerptString(afxString const* src, afxNat offset, afxNat len, afxString* selection)

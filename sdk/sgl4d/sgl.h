@@ -51,8 +51,8 @@
 #define _AFX_RASTERIZER_IMPL
 #define _AFX_VERTEX_INPUT_C
 #define _AFX_VERTEX_INPUT_IMPL
-#define _AFX_DRAW_SCRIPT_C
-#define _AFX_DRAW_SCRIPT_IMPL
+#define _AFX_DRAW_STREAM_C
+#define _AFX_DRAW_STREAM_IMPL
 #define _AFX_SAMPLER_C
 #define _AFX_SAMPLER_IMPL
 #define _AFX_SHADER_C
@@ -72,16 +72,16 @@
 #define _AFX_QUERY_POOL_C
 #define _AFX_QUERY_POOL_IMPL
 
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/mem/afxArena.h"
 #include "qwadro/mem/afxQueue.h"
 #include "qwadro/draw/pipe/afxRasterizer.h"
 #include "qwadro/draw/pipe/afxCanvas.h"
 #include "qwadro/draw/afxDrawInput.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/pipe/afxSampler.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
 #include "qwadro/core/afxSystem.h"
 #include "sglDdrv.h"
@@ -303,6 +303,7 @@ typedef struct
     afxString               subsysName;
     afxString               subsysVer;
 
+    afxNat                  assignedTxuUniqueId;
     afxNat                  portIdx;
     afxSlock                deletionLock;
     afxQueue                deletionQueue;
@@ -387,6 +388,8 @@ struct _afxDdevIdd
     WNDCLASSEX     wndClss;
     afxNat          dpuCnt;
     sglDpuIdd*      dpus;
+    afxMutex        ioConMtx;
+
 };
 
 AFX_OBJECT(afxDrawContext)
@@ -594,9 +597,9 @@ AFX_OBJECT(afxCanvas)
     afxMask         storeBitmask;
 };
 
-AFX_OBJECT(afxDrawScript)
+AFX_OBJECT(afxDrawStream)
 {
-    struct afxBaseDrawScript    base;
+    struct afxBaseDrawStream    base;
     afxChain                    commands;
     afxChain                    echoes;
     afxChain                    canvOps;
@@ -1034,7 +1037,7 @@ AFX_DEFINE_STRUCT(_sglCmdExecCmds)
 {
     _sglCmd                     cmd;
     afxNat                          cnt;
-    afxDrawScript                   afxSimd(subsets[8]);
+    afxDrawStream                   afxSimd(subsets[8]);
 };
 
 AFX_DEFINE_STRUCT(_sglCmdCopyTex)
@@ -1077,7 +1080,7 @@ typedef enum sglBindFlags
     sglBindFlag_KEEP,
 }sglBindFlags;
 
-_SGL afxError AfxRegisterDrawDrivers(afxExecutable mdle, afxDrawSystem dsys);
+_SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
 SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp);
 SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
@@ -1124,6 +1127,6 @@ SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttach
 SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[]);
 SGL afxError _SglResetFenc(afxNat cnt, afxFence const fences[]);
 
-SGL afxCmdId _SglEncodeCmdCommand(afxDrawScript dscr, afxNat id, afxNat siz, _sglCmd *cmd);
+SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream dscr, afxNat id, afxNat siz, _sglCmd *cmd);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

@@ -27,7 +27,7 @@ AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap)
 
     afxMmu mmu = AfxGetSystemContext();
 
-    if (!(que->bytemap = AfxAllocate(mmu, cap, unitSiz, 0, AfxHint()))) AfxThrowError();
+    if (!(que->bytemap = AfxAllocate(cap, unitSiz, 0, AfxHint()))) AfxThrowError();
     else
     {
         AfxAssignTypeFcc(que, afxFcc_QUE);
@@ -51,7 +51,7 @@ AFXINL afxError AfxDeallocateQueue(afxQueue *que)
     {
         afxMmu mmu = AfxGetSystemContext();
 
-        AfxDeallocate(mmu, que->bytemap);
+        AfxDeallocate(que->bytemap);
     }
     return err;
 }

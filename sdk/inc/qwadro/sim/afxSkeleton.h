@@ -55,7 +55,7 @@ AFX_OBJECT(afxSkeleton)
     afxReal             allowedLodErrFadingFactor;
     afxNat              lodType;
     afxString           id; // 32
-    afxStringCatalog    strc;
+    afxStringBase    strb;
 };
 #endif//_AFX_SKELETON_C
 
@@ -95,11 +95,11 @@ AKX afxBool             AfxGetSkeletonId(afxSkeleton skl, afxString* id);
 AKX afxNat              AfxCountSkeletonJoints(afxSkeleton skl, afxReal allowedErr);
 
 AKX afxNat              AfxFindSkeletonJoint(afxSkeleton skl, afxString const* id);
-AKX afxNat              AfxFindSkeletonJoints(afxSkeleton skl, afxStringCatalog strc, afxNat cnt, afxString const ids[], afxNat indices[]);
+AKX afxNat              AfxFindSkeletonJoints(afxSkeleton skl, afxStringBase strb, afxNat cnt, afxString const ids[], afxNat indices[]);
 
 AKX afxBool             AfxGetSkeletonJointTag(afxSkeleton skl, afxNat jointIdx, afxString* id);
 
-AKX afxM4d*             AfxGetSkeletonIwm(afxSkeleton skl, afxNat jointIdx);
+AKX afxM4d*             AfxGetSkeletonIwMatrices(afxSkeleton skl, afxNat baseJointIdx);
 
 AKX void                AfxDetermineSkeletonErrorTolerance(afxSkeleton skl, afxReal allowedErr, afxReal* allowedErrEnd, afxReal* allowedErrScaler);
 
@@ -122,9 +122,9 @@ AKX void                AfxComputePoseBufferNoCompositeLod(afxSkeleton skl, afxN
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
-AKX afxError            AfxAcquireSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBlueprint const sklb[], afxSkeleton skeletons[]);
+AKX afxError            AfxAcquireSkeletons(afxSimulation sim, afxStringBase strb, afxNat cnt, afxSkeletonBlueprint const sklb[], afxSkeleton skeletons[]);
 
-AKX afxError            AfxBuildSkeletons(afxSimulation sim, afxStringCatalog strc, afxNat cnt, afxSkeletonBuilder const sklb[], afxSkeleton skeletons[]);
+AKX afxError            AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cnt, afxSkeletonBuilder const sklb[], afxSkeleton skeletons[]);
 
 AKX void                AfxTransformSkeletons(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxNat cnt, afxSkeleton skeletons[]);
 

@@ -22,7 +22,7 @@
 #include "qwadro/core/afxChain.h"
 #include "qwadro/core/afxString.h"
 #include "qwadro/core/afxEvent.h"
-#include "qwadro/async/afxTime.h"
+#include "qwadro/core/afxTime.h"
 //#include "qwadro/core/afxObjack.h"
 
 // HANDLES AND OBJECTS
@@ -37,8 +37,8 @@
 #define AFX_OBJ_NAME_LEN 32
 #define AFX_OBJ_EVENT_LAYER 0
 
-AFX_DECLARE_STRUCT(afxHandle);
-AFX_DECLARE_STRUCT(afxClass);
+//AFX_DECLARE_STRUCT(afxHandle);
+AFX_DECLARE_STRUCT(afxManager);
 
 //#include "../mem/afxArray.h"
 
@@ -50,14 +50,14 @@ typedef enum afxObjectFlag
     afxObjectFlag_
 } afxObjectFlags;
 
-typedef afxBool (*afxEventFilterFn)(afxHandle *obj, afxHandle *watched, afxEvent *ev);
+typedef afxBool (*afxEventFilterFn)(afxObject obj, afxObject watched, afxEvent *ev);
 
-AFX_DEFINE_STRUCT(afxHandle)
+AFX_DEFINE_STRUCT(afxObjectBase)
 {
     afxFcc              fcc; // OBJ
-    afxClass*           cls;
-    afxNat              instIdx;
+    afxManager*           cls;
     afxAtomic           refCnt;
+    afxNat      instIdx;
     afxList             signaling; // slot holders
     afxList             handling; // slot helds
     
@@ -102,11 +102,11 @@ AFX afxResult           AfxObjectTestFcc(afxObject obj, afxFcc fcc);
 AFX afxFcc              AfxObjectGetFcc(afxObject obj);
 AFX afxChar const*      AfxObjectGetFccAsString(afxObject obj);
 
-AFX afxClass*           AfxObjectGetClass(afxObject obj);
+AFX afxManager*           AfxGetClass(afxObject obj);
 AFX void*               AfxGetObjectProvider(afxObject obj);
 AFX afxNat              AfxObjectGetIndex(afxObject obj, afxBool b2f);
 AFX void const*         AfxObjectGetVmt(afxObject obj);
-AFXINL afxBool          AfxObjectInherits(afxObject obj, afxClass const* cls);
+AFXINL afxBool          AfxObjectInherits(afxObject obj, afxManager const* cls);
 
 AFX afxInt32            AfxGetRefCount(afxObject obj);
 
@@ -155,7 +155,7 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #endif
 
-AFX afxError    AfxAcquireObjects(afxClass* cls, afxNat cnt, afxObject handles[], void const* udd[]);
+AFX afxError    AfxAcquireObjects(afxManager* cls, afxNat cnt, afxObject handles[], void const* udd[]);
 AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject handles[]);
 AFX afxBool     AfxReleaseObjects(afxNat cnt, void* handles[]);
 

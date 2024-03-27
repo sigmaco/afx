@@ -24,62 +24,64 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/math/afxMatrix.h"
-#include "qwadro/core/afxIndexedString.h"
+#include "qwadro/mem/afxMappedString.h"
 
-_AKX afxBool AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat slotIdx)
+_AKX afxBool AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat rigIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-    return mdl->rigs[slotIdx].sklOrig != mdl->skl;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+    afxSkeleton sklOrig = mdl->rigs[rigIdx].sklOrig;
+    AfxTryAssertObjects(1, &sklOrig, afxFcc_SKL);
+    return (sklOrig && sklOrig != mdl->skl);
 }
 
-_AKX afxSkeleton AfxGetRiggedMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx)
+_AKX afxSkeleton AfxGetRiggedMeshDonor(afxModel mdl, afxNat rigIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-    return mdl->rigs[slotIdx].sklOrig;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+    return mdl->rigs[rigIdx].sklOrig;
 }
 
-_AKX afxNat const* AfxGetRiggedMeshMapping(afxModel mdl, afxNat slotIdx)
+_AKX afxNat const* AfxGetRiggedMeshBiasToJointMapping(afxModel mdl, afxNat rigIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-    return mdl->rigs[slotIdx].jointMap;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+    return mdl->rigs[rigIdx].biasToJointMap;
 }
 
-_AKX afxNat const* AfxGetRiggedMeshOriginalMapping(afxModel mdl, afxNat slotIdx)
+_AKX afxNat const* AfxGetRiggedMeshBiasFromJointMapping(afxModel mdl, afxNat rigIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-    return mdl->rigs[slotIdx].jointMapOrig;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+    return mdl->rigs[rigIdx].biasFromJointMap;
 }
 
-_AKX afxMaterial AfxGetRiggedMeshTxd(afxModel mdl, afxNat slotIdx)
+_AKX afxMaterial AfxGetRiggedMeshTxd(afxModel mdl, afxNat rigIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
     afxMaterial txd;
 
-    if ((txd = mdl->rigs[slotIdx].txd))
+    if ((txd = mdl->rigs[rigIdx].txd))
     {
         AfxAssertObjects(1, &txd, afxFcc_MTL);
     }
     return txd;
 }
 
-_AKX void AfxSetRiggedMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl)
+_AKX void AfxSetRiggedMeshTxd(afxModel mdl, afxNat rigIdx, afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
     afxMaterial curr;
 
-    if (mtl != (curr = mdl->rigs[slotIdx].txd))
+    if (mtl != (curr = mdl->rigs[rigIdx].txd))
     {
         if (mtl)
         {
@@ -87,7 +89,7 @@ _AKX void AfxSetRiggedMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl)
             AfxReacquireObjects(1, (void*[]) { mtl });
         }
 
-        mdl->rigs[slotIdx].txd = mtl;
+        mdl->rigs[rigIdx].txd = mtl;
 
         if (curr)
         {
@@ -97,12 +99,12 @@ _AKX void AfxSetRiggedMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl)
     }
 }
 
-_AKX afxMaterial AfxFindRiggedMeshMaterial(afxModel mdl, afxNat slotIdx, afxString const* id)
+_AKX afxMaterial AfxFindRiggedMeshMaterial(afxModel mdl, afxNat rigIdx, afxString const* id)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);    
-    afxMaterial txd = mdl->rigs[slotIdx].txd;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);    
+    afxMaterial txd = mdl->rigs[rigIdx].txd;
     afxMaterial mtl = NIL;
 
     if (txd)
@@ -118,18 +120,18 @@ _AKX afxMaterial AfxFindRiggedMeshMaterial(afxModel mdl, afxNat slotIdx, afxStri
     return mtl;
 }
 
-_AKX afxNat AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseSlot, afxNat rigCnt, afxMesh meshes[])
+_AKX afxNat AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseRig, afxNat rigCnt, afxMesh meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, baseSlot, rigCnt);
+    AfxAssertRange(mdl->rigCnt, baseRig, rigCnt);
     afxNat rslt = 0;
 
     for (afxNat i = 0; i < rigCnt; i++)
     {
-        afxNat slotIdx = baseSlot + i;
-        AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-        afxMesh msh2 = mdl->rigs[slotIdx].msh;
+        afxNat rigIdx = baseRig + i;
+        AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+        afxMesh msh2 = mdl->rigs[rigIdx].msh;
 
         if (msh2)
         {
@@ -141,35 +143,35 @@ _AKX afxNat AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseSlot, afxNat rigCn
     return rslt;
 }
 
-_AKX void AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat slotIdx, awxPoseBuffer const* posb, afxNat baseJoint, afxNat jointCnt, afxM4d m[])
+_AKX void AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx, awxPoseBuffer const* posb, afxNat baseBias, afxNat biasCnt, afxM4d m[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-    afxMesh msh = mdl->rigs[slotIdx].msh;
+    AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+    afxMesh msh = mdl->rigs[rigIdx].msh;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
     afxNat totalBiasCnt = msh->biasCnt;
 
-    AfxAssertRange(totalBiasCnt, baseJoint, jointCnt);
-    afxNat chosenBoneCnt = baseJoint + jointCnt;
-    AfxAssert(totalBiasCnt >= chosenBoneCnt);
+    AfxAssertRange(totalBiasCnt, baseBias, biasCnt);
+    afxNat chosenBiasCnt = baseBias + biasCnt;
+    AfxAssert(totalBiasCnt >= chosenBiasCnt);
 
-    afxV4d* w = AfxPoseBufferGetWorldMatrix(posb, 0);
-    afxM4d* iw = AfxGetSkeletonIwm(mdl->rigs[slotIdx].sklOrig, 0);
-    afxNat const* mapping = AfxGetRiggedMeshMapping(mdl, slotIdx);
-    afxNat const* mappingOrig = AfxGetRiggedMeshOriginalMapping(mdl, slotIdx);
+    afxM4d* w = AfxGetWorldMatrices(posb, 0);
+    afxM4d* iw = AfxGetSkeletonIwMatrices(mdl->rigs[rigIdx].sklOrig, 0);
+    afxNat const* mapping = AfxGetRiggedMeshBiasToJointMapping(mdl, rigIdx);
+    afxNat const* mappingOrig = AfxGetRiggedMeshBiasFromJointMapping(mdl, rigIdx);
 
-    for (afxNat i = 0, artIdx = baseJoint; artIdx < chosenBoneCnt; artIdx++)
+    for (afxNat i = 0, artIdx = baseBias; artIdx < chosenBiasCnt; artIdx++)
     {
         AfxMultiplyAtm4d(m[i], iw[mappingOrig[i]], w[mapping[i]]);
     }
 }
 
-_AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, afxNat rigCnt, afxMesh const meshes[])
+_AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, afxNat rigCnt, afxMesh const meshes[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
-    AfxAssertRange(mdl->rigCnt, baseSlot, rigCnt);
+    AfxAssertRange(mdl->rigCnt, baseRig, rigCnt);
 
     afxSkeleton skl = mdl->skl;
     AfxTryAssertObjects(1, &skl, afxFcc_SKL);
@@ -181,30 +183,30 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, a
 
     for (afxNat i = 0; i < rigCnt; i++)
     {
-        afxNat slotIdx = baseSlot + i;
-        AfxAssertRange(mdl->rigCnt, slotIdx, 1);
-        afxMeshRig* slot = &mdl->rigs[slotIdx];
-        afxMesh mshCurr = slot->msh;
+        afxNat rigIdx = baseRig + i;
+        AfxAssertRange(mdl->rigCnt, rigIdx, 1);
+        afxMeshRig* rig = &mdl->rigs[rigIdx];
+        afxMesh mshCurr = rig->msh;
         afxMesh msh = meshes ? meshes[i] : NIL;
 
         if (mshCurr != msh)
         {
-            afxNat* jointMapOrig = NIL;
-            afxNat* dstBoneIndices = NIL;
+            afxNat* biasFromJointMap = NIL;
+            afxNat* biasToJointMap = NIL;
 
             if (msh) // attach operation
             {
                 AfxAssertObjects(1, &msh, afxFcc_MSH);
-                afxStringCatalog strc = msh->strc;
+                afxStringBase strb = msh->strb;
 
                 afxNat biasCnt = msh->biasCnt;
 
-                if (biasCnt && !(dstBoneIndices = AfxAllocate(mmu, biasCnt, sizeof(dstBoneIndices[0]), 0, AfxHint())))
+                if (biasCnt && !(biasToJointMap = AfxAllocate(biasCnt, sizeof(biasToJointMap[0]), 0, AfxHint())))
                     AfxThrowError();
                 else
                 {
-                    if (!transplanted) jointMapOrig = dstBoneIndices;
-                    else if (biasCnt && !(jointMapOrig = AfxAllocate(mmu, biasCnt, sizeof(jointMapOrig[0]), 0, AfxHint())))
+                    if (!transplanted) biasFromJointMap = biasToJointMap;
+                    else if (biasCnt && !(biasFromJointMap = AfxAllocate(biasCnt, sizeof(biasFromJointMap[0]), 0, AfxHint())))
                         AfxThrowError();
 
                     if (!err)
@@ -216,16 +218,16 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, a
 
                             if (1)
                             {
-                                if (AFX_INVALID_INDEX != (dstBoneIndices[j] = AfxFindSkeletonJoint(skl, &biasId)))
+                                if (AFX_INVALID_INDEX == (biasToJointMap[j] = AfxFindSkeletonJoint(skl, &biasId)))
                                 {
                                     AfxError("Pivot '%.*s' not found in the destination skeleton.", AfxPushString(&biasId));
-                                    AfxAssert(dstBoneIndices[j] == AFX_INVALID_INDEX);
+                                    AfxAssert(biasToJointMap[j] == AFX_INVALID_INDEX);
                                 }
 
-                                if (transplanted && (AFX_INVALID_INDEX != (jointMapOrig[j] = AfxFindSkeletonJoint(sklOrig, &biasId))))
+                                if (transplanted && (AFX_INVALID_INDEX == (biasFromJointMap[j] = AfxFindSkeletonJoint(sklOrig, &biasId))))
                                 {
                                     AfxError("Pivot '%.*s' not found in the source skeleton.", AfxPushString(&biasId));
-                                    AfxAssert(jointMapOrig[j] == AFX_INVALID_INDEX);
+                                    AfxAssert(biasFromJointMap[j] == AFX_INVALID_INDEX);
                                 }
                             }
                         }
@@ -238,8 +240,8 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, a
                             AfxReacquireObjects(1, (void*[]) { sklOrig });
                     }
 
-                    if (err && dstBoneIndices)
-                        AfxDeallocate(mmu, dstBoneIndices);
+                    if (err && biasToJointMap)
+                        AfxDeallocate(biasToJointMap);
                 }
             }
 
@@ -247,33 +249,37 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, a
             {
                 if (mshCurr) // detach operation
                 {
-                    if (slot->jointMap)
-                        AfxDeallocate(mmu, slot->jointMap);
-
-                    slot->jointMap = NIL;
-
-                    if (slot->jointMapOrig && (slot->jointMapOrig != slot->jointMap))
-                        AfxDeallocate(mmu, slot->jointMapOrig);
-
-                    slot->jointMapOrig = NIL;
-
-                    if (slot->sklOrig && (slot->sklOrig != mdl->skl))
+                    if (rig->biasToJointMap)
                     {
-                        AfxReleaseObjects(1, (void*[]) { slot->sklOrig });
-                        slot->sklOrig = NIL;
+                        AfxDeallocate(rig->biasToJointMap);
+                        rig->biasToJointMap = NIL;
+                    }
+
+                    if (rig->biasFromJointMap && (rig->biasFromJointMap != rig->biasToJointMap))
+                    {
+                        AfxDeallocate(rig->biasFromJointMap);
+                        rig->biasFromJointMap = NIL;
+                    }
+
+                    if (AfxRiggedMeshIsTransplanted(mdl, rigIdx))
+                    {
+                        afxSkeleton sklOrig = mdl->rigs[rigIdx].sklOrig;
+                        AfxTryAssertObjects(1, &sklOrig, afxFcc_SKL);
+                        AfxReleaseObjects(1, (void*[]) { sklOrig });
+                        rig->sklOrig = NIL;
                     }
 
                     AfxAssertObjects(1, &mshCurr, afxFcc_MSH);
                     AfxReleaseObjects(1, (void*[]) { mshCurr });
-                    slot->msh = NIL;
+                    rig->msh = NIL;
                 }
 
                 if (msh)
                 {
-                    slot->msh = msh;
-                    slot->sklOrig = sklOrig;
-                    slot->jointMapOrig = jointMapOrig;
-                    slot->jointMap = dstBoneIndices;
+                    rig->msh = msh;
+                    rig->sklOrig = sklOrig;
+                    rig->biasFromJointMap = biasFromJointMap;
+                    rig->biasToJointMap = biasToJointMap;
                 }
             }
         }
@@ -281,20 +287,20 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseSlot, a
     return err;
 }
 
-_AKX void AfxComputeModelBaseOffset(afxModel mdl, afxM4d m)
+_AKX void AfxComputeModelDisplacement(afxModel mdl, afxM4d m)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
     AfxAssert(m);
-    AfxComputeTransformM4d(&mdl->init, m);
+    AfxComputeTransformM4d(&mdl->displacement, m);
 }
 
-_AKX void AfxUpdateModelBaseOffset(afxModel mdl, afxTransform const* xform)
+_AKX void AfxUpdateModelDisplacement(afxModel mdl, afxTransform const* xform)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
     AfxAssert(xform);
-    AfxCopyTransform(&mdl->init, xform);
+    AfxCopyTransform(&mdl->displacement, xform);
 }
 
 _AKX afxSkeleton AfxGetModelSkeleton(afxModel mdl)
@@ -311,7 +317,7 @@ _AKX afxBool AfxGetModelId(afxModel mdl, afxString* id)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
     AfxAssert(id);
-    return AfxResolveStrings2(mdl->strc, 1, &mdl->id, id);
+    return AfxResolveStrings2(mdl->strb, 1, &mdl->id, id);
 }
 
 _AKX afxNat AfxCountModelRigs(afxModel mdl)
@@ -355,7 +361,7 @@ _AKX afxError _AfxMdlDtor(afxModel mdl)
         AfxRigMeshes(mdl, NIL, i, 1, NIL);
 
     if (mdl->rigs)
-        AfxDeallocate(mmu, mdl->rigs);
+        AfxDeallocate(mdl->rigs);
 
     afxSkeleton skl;
 
@@ -366,8 +372,8 @@ _AKX afxError _AfxMdlDtor(afxModel mdl)
     }
     //if (mdl->uri)
 
-    if (mdl->strc)
-        AfxReleaseObjects(1, (void*[]) { mdl->strc });
+    if (mdl->strb)
+        AfxReleaseObjects(1, (void*[]) { mdl->strb });
 
     return err;
 }
@@ -380,20 +386,20 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     afxSimulation sim = cookie->udd[0];
     afxModelBlueprint const*mdlb = cookie->udd[1];
     afxMesh* meshes = mdlb->meshes;
-    afxStringCatalog strc = mdlb->strc;
+    afxStringBase strb = mdlb->strb;
     mdlb += cookie->no;
 
-    if (!(mdl->strc = strc))
+    if (!(mdl->strb = strb))
         AfxResetString(&mdl->id);
-    else if (!AfxCatalogStrings2(strc, 1, &mdlb->id.str.str, &mdl->id))
+    else if (!AfxCatalogStrings2(strb, 1, &mdlb->id.str.str, &mdl->id))
         AfxThrowError();
     else
-        AfxReacquireObjects(1, (void*[]) { strc });
+        AfxReacquireObjects(1, (void*[]) { strb });
 
     if (!err)
     {
         afxSkeleton skl = mdlb->skl;
-        afxTransform const* init = &mdlb->init;
+        afxTransform const* displacement = &mdlb->displacement;
         afxNat meshCnt = mdlb->mshCnt;
         afxNat baseMshIdx = 0;
 
@@ -403,17 +409,17 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
             AfxReacquireObjects(1, (void*[]) { skl });
         }
 
-        if (init)
-            AfxCopyTransform(&mdl->init, init);
+        if (displacement)
+            AfxCopyTransform(&mdl->displacement, displacement);
         else
-            AfxResetTransform(&mdl->init);
+            AfxResetTransform(&mdl->displacement);
 
         AfxResetAabb(mdl->aabb);
 
         mdl->rigCnt = 0;
         mdl->rigs = NIL;
 
-        if (meshCnt && !(mdl->rigs = AfxAllocate(NIL, meshCnt, sizeof(mdl->rigs[0]), 0, AfxHint()))) AfxThrowError();
+        if (meshCnt && !(mdl->rigs = AfxAllocate(meshCnt, sizeof(mdl->rigs[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             if (meshCnt)
@@ -438,10 +444,10 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
         {
             afxString s;
 
-            if (!mdl->strc)
+            if (!mdl->strb)
                 AfxResetString(&s);
             else
-                AfxResolveStrings2(mdl->strc, 1, &mdl->id, &s);
+                AfxResolveStrings2(mdl->strb, 1, &mdl->id, &s);
 
             AfxEcho("Model <%.*s> assembled. %p\n    %u joints for %u rigged meshes.\n", AfxPushString(&s), mdl, mdl->skl->jointCnt, mdl->rigCnt);
         }
@@ -524,7 +530,7 @@ _AKX void AfxTransformModels(afxM3d const ltm, afxM3d const iltm, afxReal ltmTol
                 AfxTransformMeshes(ltm, iltm, ltmTol, atv, atvTol, flags, mshCnt, meshes);
             }
 
-            AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl2->init, &mdl2->init);
+            AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl2->displacement, &mdl2->displacement);
         }
     }
 }

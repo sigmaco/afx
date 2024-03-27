@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_BIND_SCHEMA_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxDrawContext.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,16 +216,16 @@ _AVX afxNat AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cn
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     AfxAssert(schemas);
     AfxAssert(cnt);
-    afxClass* cls = AfxGetBindSchemaClass(dctx);
+    afxManager* cls = AfxGetBindSchemaClass(dctx);
     AfxAssertClass(cls, afxFcc_BSCH);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)schemas);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)schemas);
 }
 
 _AVX afxError AfxAcquireBindSchemas(afxDrawContext dctx, afxNat cnt, afxBindSchema schemas[], afxPipelineRigBlueprint const blueprint[])
 {
     afxError err = AFX_ERR_NONE;
 
-    afxClass* cls = AfxGetBindSchemaClass(dctx);
+    afxManager* cls = AfxGetBindSchemaClass(dctx);
     AfxAssertClass(cls, afxFcc_BSCH);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)schemas, (void const*[]) { (void*)blueprint }))

@@ -30,8 +30,8 @@ AFX_DEFINE_STRUCT(afxMeshRig)
 {
     afxMesh             msh;
     afxMaterial         txd;
-    afxNat*             jointMap;
-    afxNat*             jointMapOrig;
+    afxNat*             biasToJointMap; // to assembled skeleton.
+    afxNat*             biasFromJointMap; // from original skeleton.
     afxSkeleton         sklOrig;
 };
 
@@ -41,9 +41,9 @@ AFX_OBJECT(afxModel)
     afxNat              rigCnt;
     afxMeshRig*         rigs;
     afxAabb             aabb;
-    afxTransform        init;
+    afxTransform        displacement;
     afxString           id; // 32
-    afxStringCatalog    strc;
+    afxStringBase       strb;
 };
 #endif
 
@@ -52,35 +52,35 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
 {
     afxString32         id;
     afxSkeleton         skl;
-    afxTransform        init;
+    afxTransform        displacement;
     afxNat              mshCnt;
     afxMesh*            meshes;
-    afxStringCatalog    strc;
+    afxStringBase       strb;
 };
 
 AKX afxBool             AfxGetModelId(afxModel mdl, afxString* id);
 
 AKX afxSkeleton         AfxGetModelSkeleton(afxModel mdl);
 
-AKX void                AfxComputeModelBaseOffset(afxModel mdl, afxM4d m);
-AKX void                AfxUpdateModelBaseOffset(afxModel mdl, afxTransform const* xform);
+AKX void                AfxComputeModelDisplacement(afxModel mdl, afxM4d m);
+AKX void                AfxUpdateModelDisplacement(afxModel mdl, afxTransform const* xform);
 
 AKX afxNat              AfxCountModelRigs(afxModel mdl);
 AKX afxNat              AfxCountRiggedMeshes(afxModel mdl);
-AKX afxNat              AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseSlot, afxNat slotCnt, afxMesh meshes[]);
-AKX afxError            AfxRigMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseSlot, afxNat slotCnt, afxMesh const meshes[]);
+AKX afxNat              AfxEnumerateRiggedMeshes(afxModel mdl, afxNat baseRig, afxNat rigCnt, afxMesh meshes[]);
+AKX afxError            AfxRigMeshes(afxModel mdl, afxSkeleton origSkl, afxNat baseRig, afxNat rigCnt, afxMesh const meshes[]);
 
-AKX afxBool             AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat slotIdx);
-AKX afxSkeleton         AfxGetRiggedMeshOriginalSkeleton(afxModel mdl, afxNat slotIdx);
-AKX afxNat const*       AfxGetRiggedMeshOriginalMapping(afxModel mdl, afxNat slotIdx);
+AKX afxBool             AfxRiggedMeshIsTransplanted(afxModel mdl, afxNat rigIdx);
+AKX afxSkeleton         AfxGetRiggedMeshDonor(afxModel mdl, afxNat rigIdx);
 
-AKX afxMaterial         AfxGetRiggedMeshTxd(afxModel mdl, afxNat slotIdx);
-AKX void                AfxSetRiggedMeshTxd(afxModel mdl, afxNat slotIdx, afxMaterial mtl);
-AKX afxMaterial         AfxFindRiggedMeshMaterial(afxModel mdl, afxNat slotIdx, afxString const* id);
+AKX afxMaterial         AfxGetRiggedMeshTxd(afxModel mdl, afxNat rigIdx);
+AKX void                AfxSetRiggedMeshTxd(afxModel mdl, afxNat rigIdx, afxMaterial mtl);
+AKX afxMaterial         AfxFindRiggedMeshMaterial(afxModel mdl, afxNat rigIdx, afxString const* id);
 
-AKX afxNat const*       AfxGetRiggedMeshMapping(afxModel mdl, afxNat slotIdx);
+AKX afxNat const*       AfxGetRiggedMeshBiasToJointMapping(afxModel mdl, afxNat rigIdx);
+AKX afxNat const*       AfxGetRiggedMeshBiasFromJointMapping(afxModel mdl, afxNat rigIdx);
 
-AKX void                AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat slotIdx, awxPoseBuffer const* posb, afxNat baseJoint, afxNat jointCnt, afxM4d m[]);
+AKX void                AfxComputeRiggedMeshMatrices(afxModel mdl, afxNat rigIdx, awxPoseBuffer const* posb, afxNat baseBias, afxNat jointCnt, afxM4d m[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 

@@ -22,9 +22,9 @@
 #define _AFX_VERTEX_BUFFER_C
 #define _AFX_VERTEX_DATA_C
 #define _AFX_MESH_TOPOLOGY_C
-#include "qwadro/afxQwadro.h"
+#include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/rendering/awxRenderer.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxOpticalMatrix.h"
@@ -32,7 +32,7 @@
 #include "qwadro/sim/modeling/afxMeshTopology.h"
 #include "qwadro/sim/modeling/awxVertexData.h"
 
-_AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, awxBody bodies[])
+_AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, afxNat cnt, awxBody bodies[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -49,17 +49,20 @@ _AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
         AfxTryAssertObjects(1, &skl, afxFcc_SKL);
 
         afxM4d m, m2;
-        AfxComputeModelBaseOffset(bod->mdl, m);
-        AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, rnd->lp, rnd->wp, 0.0);
+        //AfxComputeModelDisplacement(bod->mdl, m);
+        //afxReal64 ct, dt;
+        //AfxQueryThreadTime(&ct, &dt);
+        //AwxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
+        AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, bod->placement, rnd->lp, rnd->wp, 0.0);
         //AwxSampleBodyAnimationsLODSparse(bod, 0, bod->cachedBoneCnt, rnd->lp, 0.0, NIL);
         //AfxComputePoseBuffer(skl, 0, bod->cachedBoneCnt, rnd->lp, m, rnd->wp);
         //AfxComputeRestPoseBuffer(skl, 0, bod->cachedBoneCnt, m, rnd->wp);
 
 
-        for (afxNat mshIdx = 0; mshIdx < mdl->slotCnt; mshIdx++)
+        for (afxNat mshIdx = 0; mshIdx < mdl->rigCnt; mshIdx++)
         {
             
-            afxMesh msh = mdl->slots[mshIdx].msh;
+            afxMesh msh = mdl->rigs[mshIdx].msh;
 
             if (msh)
             {
@@ -95,8 +98,9 @@ _AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
                 afxNat zeros[] = { 0, 0, 0 };
                 AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
 
-                afxNat const *ToBoneIndices = AfxGetRiggedMeshMapping(mdl, mshIdx);
-                AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, ToBoneIndices, 1, m);
+                afxNat const *ToBoneIndices = AfxGetRiggedMeshBiasToJointMapping(mdl, mshIdx);
+                AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, ToBoneIndices, 1, &m);
+                
                 AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(m), m);
                 AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 64, sizeof(m), m);
                 AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
@@ -158,7 +162,7 @@ _AKX afxError AwxCmdDrawBodies(afxDrawScript dscr, awxRenderer rnd, afxNat cnt, 
     return err;
 }
 
-_AKX afxError AwxCmdDrawTestIndexed(afxDrawScript dscr, awxRenderer rnd)
+_AKX afxError AwxCmdDrawTestIndexed(afxDrawStream dscr, awxRenderer rnd)
 {
     AfxCmdBindPipeline(dscr, 0, rnd->testPip);
 
@@ -185,7 +189,7 @@ _AKX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const
     return err;
 }
 
-_AKX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd)
+_AKX afxError AwxCmdEndSceneRendering(afxDrawStream dscr, awxRenderer rnd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -195,7 +199,7 @@ _AKX afxError AwxCmdEndSceneRendering(afxDrawScript dscr, awxRenderer rnd)
     return err;
 }
 
-_AKX afxError AwxCmdBeginSceneRendering(afxDrawScript dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
+_AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);

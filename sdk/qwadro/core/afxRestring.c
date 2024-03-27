@@ -56,7 +56,7 @@ _AFXINL void AfxDeallocateString(afxRestring *str)
     if (str->flags & _AFX_STR_FLAG_ALLOCED)
     {
         if (str->str.buf)
-            AfxDeallocate(NIL, str->str.buf);
+            AfxDeallocate(str->str.buf);
 
         str->str.buf = NIL;
         AfxResetRestring(str);
@@ -80,7 +80,7 @@ _AFXINL afxError AfxAllocateString(afxRestring* str, afxNat cap, void const *sta
 
     void *buf = NIL;
     
-    if (effectiveCap && !(buf = AfxAllocate(NIL, 1, effectiveCap, 0, AfxHint())))
+    if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHint())))
         AfxThrowError();
 
     AfxMakeRestring(str, effectiveCap, buf, 0);

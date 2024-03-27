@@ -23,11 +23,11 @@
 #include "afxBinkVideo.h"
 #include "afxBinkProxy.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawScript.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 static afxBool bootstrapped = FALSE;
-static afxExecutable binkw32 = NIL;
+static afxModule binkw32 = NIL;
 
 static afxString const symNames[] =
 {
@@ -131,7 +131,7 @@ static void LoadLibNow(void)
 #endif
 #endif
 
-        if (AfxLoadExecutables(1, &uri, &binkw32)) AfxThrowError();
+        if (!(binkw32 = AfxLoadModule(&uri, NIL))) AfxThrowError();
         else
         {
             afxNat foundCnt = AfxFindSymbolAddresses(binkw32, AFX_COUNTOF(symNames), symNames, symVmt.v);

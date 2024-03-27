@@ -17,27 +17,26 @@
 #include "qwadro/core/afxVersion.h"
 #include "qwadro/core/afxDebug.h"
 
-_AFX afxBool AfxVersionsMatch_(afxInt verMajor, afxInt verMinor, afxInt customization, afxInt buildNum)
+_AFX afxBool AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat verPatch)
 {
-    afxBool rslt = (verMajor == AFX_QWADRO_VER_MAJOR && verMinor == AFX_QWADRO_VER_MINOR && (customization == AFX_QWADRO_CUSTOMIZATION) && buildNum == AFX_QWADRO_BUILD_NUM);
+    afxBool rslt = (verMajor == AFX_QWADRO_VER_MAJOR && verMinor == AFX_QWADRO_VER_MINOR && (verPatch == AFX_QWADRO_VER_PATCH));
 
     if (!rslt)
     {
-        AfxLogAdvertence(AfxHint(), "ABI version (%d.%d.%d.%d) doesn't match API version (%d.%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_CUSTOMIZATION, AFX_QWADRO_BUILD_NUM, verMajor, verMinor, customization, buildNum);
+        AfxLogAdvertence(AfxHint(), "ABI version (%d.%d.%d) doesn't match API version (%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_VER_PATCH, verMajor, verMinor, verPatch);
     }
     return 0;
 }
 
-_AFX void AfxGetVersion(afxInt *verMajor, afxInt *verMinor, afxInt *customization, afxInt *buildNum)
+_AFX void AfxGetSystemVersion(afxNat* verMajor, afxNat* verMinor, afxNat* verPatch)
 {
     *verMajor = AFX_QWADRO_VER_MAJOR;
     *verMinor = AFX_QWADRO_VER_MINOR;
-    *customization = AFX_QWADRO_CUSTOMIZATION;
-    *buildNum = AFX_QWADRO_BUILD_NUM;
+    *verPatch = AFX_QWADRO_VER_PATCH;
 }
 
-_AFX afxString const* AfxGetVersionString(void)
+_AFX afxString const* AfxGetSystemVersionString(void)
 {
-    static afxString const str = AFX_STRING(AFX_QWADRO_VER_STRING);
+    static afxString const str = AFX_STRING(AFX_STRINGIFY(AFX_QWADRO_VER_MAJOR.AFX_QWADRO_VER_MINOR.AFX_QWADRO_VER_PATCH));
     return &str;
 }

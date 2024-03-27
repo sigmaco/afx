@@ -26,7 +26,7 @@
 #define AFX_DRAW_INPUT_H
 
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/afxDrawQueue.h"
 // provided classes.
 #include "qwadro/draw/afxCamera.h"
 
@@ -61,7 +61,11 @@ typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxDrawEvent const* ev);
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
     afxUri const*       endpoint;
+
     afxDrawInputProc    proc;
+    afxNat              dragTxuBase;
+    afxNat              dragTxuCnt;
+
     afxNat              cmdPoolMemStock;
     afxNat              estimatedSubmissionCnt;
     afxNat              minVtxBufCap;
@@ -84,13 +88,13 @@ struct afxBaseDrawInput
     afxMmu              mmu;
 
     afxChain            classes;
-    afxClass            cameras;
-    afxClass            ibuffers;
-    afxClass            vbuffers;
+    afxManager          cameras;
+    afxManager          ibuffers;
+    afxManager          vbuffers;
 
     afxClipSpace        cachedClipCfg;
 
-    afxUri128      txdUris[8];
+    afxUri128           txdUris[8];
     afxFile             txdHandles[8];
 
     afxArray            scripts;
@@ -107,37 +111,23 @@ struct afxBaseDrawInput
 #endif
 #endif
 
-AVX afxDrawDevice       AfxGetDrawInputDevice(afxDrawInput din);
+AVX afxDrawDevice   AfxGetDrawInputDevice(afxDrawInput din);
 
 // Connection
-AVX afxBool             AfxDrawInputIsOnline(afxDrawInput din);
-AVX afxDrawContext      AfxGetDrawInputContext(afxDrawInput din);
-AVX afxError            AfxDisconnectDrawInput(afxDrawInput din);
-AVX afxBool             AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AVX afxBool         AfxDrawInputIsOnline(afxDrawInput din);
+AVX afxDrawContext  AfxGetDrawInputContext(afxDrawInput din);
+AVX afxError        AfxDisconnectDrawInput(afxDrawInput din);
+AVX afxBool         AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
 
-AVX afxClass*           AfxGetCameraClass(afxDrawInput din);
-AVX afxClass*           AfxGetVertexBufferClass(afxDrawInput din);
-AVX afxClass*           AfxGetIndexBufferClass(afxDrawInput din);
+AVX afxManager*     AfxGetCameraClass(afxDrawInput din);
+AVX afxManager*     AfxGetVertexBufferClass(afxDrawInput din);
+AVX afxManager*     AfxGetIndexBufferClass(afxDrawInput din);
 
-AVX afxNat              AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[]);
+AVX afxNat          AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[]);
 
-AFX_DEFINE_STRUCT(afxExecutionRequest)
-{
-    afxSemaphore        wait;
-    afxDrawScript       dscr;
-    afxSemaphore        signal;
-};
+AVX afxError        AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
 
-AVX afxError            AfxExecuteDrawScripts(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
-
-// Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
-
-AVX afxError            AfxStampDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
-AVX afxError            AfxPresentDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
-
-AVX void*               AfxGetDrawInputUdd(afxDrawInput din);
-
-////////////////////////////////////////////////////////////////////////////////
+AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
 
 AVX void            AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip);
 
@@ -155,5 +145,14 @@ AVX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal
 AVX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
 
 AVX afxError        AfxUplinkTextureDictionaries(afxDrawInput din, afxNat baseSlotIdx, afxNat slotCnt, afxUri const uris[]);
+
+// Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
+
+AVX afxError        AfxStampDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
+AVX afxError        AfxPresentDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxError        AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig const cfg[], afxDrawInput inputs[]);
 
 #endif//AFX_DRAW_INPUT_H

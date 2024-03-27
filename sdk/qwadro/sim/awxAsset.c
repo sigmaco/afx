@@ -190,10 +190,10 @@ _AKX afxError _AfxCadDtor(awxAsset cad)
     AfxAssertObjects(1, &cad, afxFcc_CAD);
 
     if (cad->exporterInfo)
-        AfxDeallocate(NIL, cad->exporterInfo);
+        AfxDeallocate(cad->exporterInfo);
 
     if (cad->toolInfo)
-        AfxDeallocate(NIL, cad->toolInfo);
+        AfxDeallocate(cad->toolInfo);
 
     for (afxNat i = 0; i < cad->nestCnt; i++)
     {
@@ -239,7 +239,7 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
     AfxAssert(typeCnt);
     AfxAssert(totalResCnt);
 
-    if (typeCnt && !(cad->nests = AfxAllocate(NIL, typeCnt, sizeof(cad->nests[0]), 0, AfxHint()))) AfxThrowError();
+    if (typeCnt && !(cad->nests = AfxAllocate(typeCnt, sizeof(cad->nests[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         if (typeCnt)
@@ -247,7 +247,7 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
 
         cad->nestCnt = typeCnt;
 
-        if (totalResCnt && !(cad->resSlots = AfxAllocate(NIL, totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHint()))) AfxThrowError();
+        if (totalResCnt && !(cad->resSlots = AfxAllocate(totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             if (totalResCnt)
@@ -279,7 +279,7 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
 
                     AfxMakeString32(&cad->resSlots[baseResIdx + j].id, 0);
 
-                    AfxCloneUri(&cad->resSlots[baseResIdx + j].uri, &name2);
+                    AfxDuplicateUri(&cad->resSlots[baseResIdx + j].uri, &name2);
                     AfxCopyString(&cad->resSlots[baseResIdx + j].id.str, AfxGetUriString(&cad->resSlots[baseResIdx + j].uri));
                 }
                 baseResIdx += resCnt;
@@ -382,7 +382,7 @@ _AKX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
             for (afxNat j = 0; j < resCnt; j++)
             {
                 afxModel mdl = cad2->resSlots[baseResIdx + j].obj;
-                AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl->init, &mdl->init);
+                AfxAssimilateTransforms(ltm, iltm, atv, 1, &mdl->displacement, &mdl->displacement);
             }
         }
 

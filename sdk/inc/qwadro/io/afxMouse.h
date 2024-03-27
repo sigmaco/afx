@@ -68,8 +68,8 @@ AFX afxBool     AfxXmbIs2Pressed(afxNat port);
 AFX afxBool     AfxXmbWas2Pressed(afxNat port);
 AFX afxBool     AfxXmbWas2Released(afxNat port);
 
-AFX void        AfxGetLastMouseMotion(afxNat port, afxReal motion[2]);
-AFX afxReal     AfxGetLastMouseWheelData(afxNat port);
+AFX void        AfxGetMouseMotion(afxNat port, afxReal motion[2]);
+AFX afxReal     AfxGetMouseWheelDelta(afxNat port);
 
 AFX afxBool     AfxMouseHasHorizontalChanged(afxNat port, afxInt tolerance);
 AFX afxBool     AfxMouseHasVerticalChanged(afxNat port, afxInt tolerance);
@@ -80,6 +80,6 @@ AFX afxError    AfxEmulateMouseButtonActions(afxNat port, afxNat cnt, afxMouseBu
 
 AFX afxMouse    AfxGetMouse(afxNat port);
 
-AFX afxError    AfxAcquireMouses(afxNat cnt, afxNat const port[], afxMouse mouses[]);
+AFX afxMouse    AfxAcquireMouse(afxNat port);
 
 #endif//AFX_MOUSE_H

@@ -40,8 +40,7 @@
 #define _AFX_SOUND_BUFFER_C
 #define _AFX_SOUND_BUFFER_IMPL
 #define _AFX_SOUND_IMPL
-#include "qwadro/mem/afxArena.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/sound/afxSoundSystem.h"
 #include "qwadro/core/afxSystem.h"
 
 #ifndef AFX_SOUND_DRIVER_SRC

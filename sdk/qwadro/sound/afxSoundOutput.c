@@ -5,4 +5,3 @@
 #include "qwadro/sound/afxSoundSystem.h"
 #include "qwadro/core/afxString.h"
 #include "qwadro/io/afxStream.h"
-#include "qwadro/ux/afxApplication.h"

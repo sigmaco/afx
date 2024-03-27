@@ -16,7 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_VERTEX_INPUT_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/io/afxXsh.h"
@@ -53,6 +53,8 @@ _AVX afxNat AfxMeasureVertexInputStream(afxVertexInput vin, afxNat streamIdx)
     return siz;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
 _AVX afxVertexInput AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt, afxVertexInputStream const streams[], afxNat attrCnt, afxVertexInputAttr const attrs[])
 {
     afxError err = AFX_ERR_NONE;
@@ -64,7 +66,7 @@ _AVX afxVertexInput AfxAcquireVertexInput(afxDrawContext dctx, afxNat streamCnt,
 
     afxVertexInput vsup = NIL;
 
-    afxClass* cls = AfxGetVertexInputClass(dctx);
+    afxManager* cls = AfxGetVertexInputClass(dctx);
     AfxAssertClass(cls, afxFcc_VIN);
 
     if (AfxAcquireObjects(cls, 1, (afxObject*)&vsup, (void const*[]) { dctx, &streamCnt, streams, &attrCnt, attrs }))

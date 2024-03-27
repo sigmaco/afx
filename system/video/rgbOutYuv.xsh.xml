@@ -1,0 +1,19 @@
+<Qwadro>
+    <Pipeline>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
+        <VertexShader>system/video/uvOutTristripQuad.vsh</VertexShader>
+        <Rasterizer>system/video/rgbOutYuv.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Pipeline id='yFlipped'>
+        <CullMode>BACK</CullMode>
+        <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
+        <VertexShader>system/video/uvOutTristripQuadInvY.vsh</VertexShader>        
+        <Rasterizer>system/video/rgbOutYuv.xsh.xml</Rasterizer>
+    </Pipeline>
+    <Rasterizer>
+        <FillMode>SOLID</FillMode>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <FragmentShader>system/video/rgbOutYuvSigma.fsh</FragmentShader>
+    </Rasterizer>
+</Qwadro>

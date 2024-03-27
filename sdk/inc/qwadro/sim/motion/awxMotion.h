@@ -36,7 +36,7 @@ AFX_DEFINE_STRUCT(awxPeriodicLoop)
 
 AFX_DEFINE_STRUCT(awxMotionVector)
 {
-    afxString           id;
+    //afxString           id;
     afxNat              seqKey;
     afxInt              dimension;
     afxCurve            value;
@@ -46,29 +46,31 @@ AFX_DEFINE_STRUCT(awxMotionTransform)
 {
     //afxString           id;
     afxMask             flags;
-    afxCurve            orientation;
+    afxCurve            transmission;
     afxCurve            translation;
-    afxCurve            deformation;
+    afxCurve            transmutation;
 };
 
 #ifdef _AFX_MOTION_C
 AFX_OBJECT(awxMotion)
 {
     afxString           id;
-    afxStringCatalog    strc;
+    afxStringBase       strb;
     afxMask             flags;
-    afxNat              xformSeqCnt; // circuit count
-    awxMotionTransform* xformSeqs; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
-    afxString*          xformId; // circuit id compatible with skeleton joints.
-    afxNat              xformLodErrorCnt;
-    afxReal*            xformLodErrors;
-    afxNat              vecSeqCnt;
-    awxMotionVector*    vecSeqs;
-    afxTransform        init;
+    afxNat              pivotCnt; // circuit count
+    awxMotionTransform* pivotCurve; // uma arranjo de registros da moção de junta de afxSkeleton do correspondente afxModel.
+    afxString*          pivotId; // circuit id compatible with skeleton joints.
+    //afxNat              pivotLodErrorCnt;
+    afxReal*            pivotLodError;
+    afxNat              vecCnt;
+    awxMotionVector*    vecCurve;
+    afxString*          vecId;
+    afxTransform        displacement;
     awxMotionTransform* root;
     afxV3d              loopTranslation;
     awxPeriodicLoop*    periodicLoop;    
 
+#if 0
     afxNat              curveCnt;
     afxCurve*           curves;
     struct
@@ -81,28 +83,34 @@ AFX_OBJECT(awxMotion)
     afxCurve*           translation;
     afxCurve*           transmission;
     afxString*          articulation;
+#endif
 };
 #endif
 
 AFX_DEFINE_STRUCT(awxMotionBlueprint)
 {
     afxString32         id;
-    afxStringCatalog    strc;
+    afxStringBase       strb;
     afxNat              vecCnt;
-    afxNat              xformCnt;
-    afxString const*    xformId;
-    afxReal const*      xformLodError;
+    afxString const*    vecId;
+    afxNat              pivotCnt;
+    afxString const*    pivotId;
+    afxReal const*      pivotLodError;
+    afxBool             incPivotLodError;
+    afxTransform        displacement;
 };
 
 AKX afxBool             AfxGetMotionId(awxMotion mot, afxString* id);
 
-AKX void                AfxGetMotionInitialPlacement(awxMotion mot, afxReal m[4][4]);
+AKX void                AfxComputeMotionDisplacement(awxMotion mot, afxM4d m);
 
 AKX afxBool             AfxFindMotionVector(awxMotion mot, afxString const* seqId, afxNat *seqIdx);
 AKX afxBool             AfxFindMotionTransform(awxMotion mot, afxString const* seqId, afxNat *seqIdx);
 
-AKX void                AfxUpdateMotionVectors(awxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, afxString const id[], afxNat const keys[], afxInt const dimensions[], afxCurve const values[], afxNat fetchRate);
-AKX void                AfxUpdateMotionTransforms(awxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, afxNat const flags[], afxCurve const orient[], afxCurve const pos[], afxCurve const scale[], afxNat fetchRate);
+AKX void                AfxUpdateMotionVectors(awxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, awxMotionVector const vectors[], afxNat fetchRate);
+AKX void                AfxUpdateMotionTransforms(awxMotion mot, afxNat baseSeqIdx, afxNat seqCnt, awxMotionTransform const transforms[], afxNat fetchRate);
+
+////////////////////////////////////////////////////////////////////////////////
 
 AKX afxError            AfxAssembleMotions(afxSimulation sim, afxNat cnt, awxMotionBlueprint const blueprints[], awxMotion motions[]);
 

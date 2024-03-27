@@ -19,7 +19,7 @@
 #ifndef AFX_DRAW_THREAD_H
 #define AFX_DRAW_THREAD_H
 
-#include "qwadro/async/afxThread.h"
+#include "qwadro/core/afxThread.h"
 #include "qwadro/draw/afxDrawDefs.h"
 
 AFX_DEFINE_STRUCT(afxDrawThreadConfig)
@@ -49,7 +49,7 @@ AFX_OBJECT(afxDrawThread)
 #endif
 #endif
 
-AVX afxError            AfxAcquireDrawThreads(afxNat cnt, afxDrawThreadConfig const config[], afxDrawThread dthr[]);
+AVX afxError            AfxAcquireDrawThreads(afxDrawThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxDrawThread dthr[]);
 
 AVX afxDrawDevice       AfxGetDrawThreadDevice(afxDrawThread dthr);
 AVX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);

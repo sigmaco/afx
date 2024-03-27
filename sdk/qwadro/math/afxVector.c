@@ -15,7 +15,6 @@
  */
 
 #include "qwadro/math/afxMathDefs.h"
-#include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxMatrix.h"
 
@@ -1069,6 +1068,38 @@ _AFXINL void AfxAddV4d(afxV4d v, afxV4d const a, afxV4d const b)
     v[3] = a[3] + b[3];
 }
 
+// AddScaled
+
+_AFXINL void AfxAddScaledV2d(afxV2d v, afxV2d const a, afxV2d const b, afxReal lambda)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(a);
+    v[0] = a[0] + b[0] * lambda;
+    v[1] = a[1] + b[1] * lambda;
+}
+
+_AFXINL void AfxAddScaledV3d(afxV3d v, afxV3d const a, afxV3d const b, afxReal lambda)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(a);
+    v[0] = a[0] + b[0] * lambda;
+    v[1] = a[1] + b[1] * lambda;
+    v[2] = a[2] + b[2] * lambda;
+}
+
+_AFXINL void AfxAddScaledV4d(afxV4d v, afxV4d const a, afxV4d const b, afxReal lambda)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(v);
+    AfxAssert(a);
+    v[0] = a[0] + b[0] * lambda;
+    v[1] = a[1] + b[1] * lambda;
+    v[2] = a[2] + b[2] * lambda;
+    v[3] = a[3] + b[3] * lambda;
+}
+
 // Sub
 
 _AFXINL void AfxSubV2d(afxV2d v, afxV2d const a, afxV2d const b)
@@ -1207,38 +1238,6 @@ _AFXINL void AfxScaleV4d(afxV4d v, afxV4d const a, afxReal lambda)
     v[1] = a[1] * lambda;
     v[2] = a[2] * lambda;
     v[3] = a[3] * lambda;
-}
-
-// Scad
-
-_AFXINL void AfxScadV2d(afxV2d v, afxV2d const a, afxReal lambda)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(a);
-    v[0] += a[0] * lambda;
-    v[1] += a[1] * lambda;
-}
-
-_AFXINL void AfxScadV3d(afxV3d v, afxV3d const a, afxReal lambda)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(a);
-    v[0] += a[0] * lambda;
-    v[1] += a[1] * lambda;
-    v[2] += a[2] * lambda;
-}
-
-_AFXINL void AfxScadV4d(afxV4d v, afxV4d const a, afxReal lambda)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(a);
-    v[0] += a[0] * lambda;
-    v[1] += a[1] * lambda;
-    v[2] += a[2] * lambda;
-    v[3] += a[3] * lambda;
 }
 
 // Half

@@ -73,17 +73,14 @@ AFX afxResult           AfxCompareStringL(afxString const* str, afxNat base, afx
 AFX afxResult           AfxCompareStringCil(afxString const* str, afxNat base, afxChar const *start, afxNat len);
 
 // return the position of found char/substring, in else case, it should be AFX_INVALID_INDEX.
-AFXINL afxNat           AfxFindFirstChar(afxString const* str, afxNat base, afxInt ch);
-AFXINL afxNat           AfxFindLastChar(afxString const* str, afxNat base, afxInt ch);
+AFXINL afxNat           AfxFindFirstChar(afxString const* str, afxNat from, afxInt ch);
+AFXINL afxNat           AfxFindLastChar(afxString const* str, afxNat from, afxInt ch);
 AFXINL afxNat           AfxFindSubstring(afxString const* str, afxString const* excerpt);
 
     // TODO GetAs(str, szScheme, pvData) -> GetAs(str, "%x", data)
     // TODO GetAsMeasured(str, szScheme, nLen, pvData) -> GetAs(str, "%.*s", data)
 AFX afxError            AfxGetStringAsHex(afxString const* str, afxNat32 *value);
 AFX afxError            AfxGetStringAsReal(afxString const* str, afxReal *value);
-
-AFX afxError            AfxReadStrings(afxStream in, afxNat cnt, afxString dst[], afxNat dstStride);
-AFX afxError            AfxWriteStrings(afxStream out, afxNat cnt, afxString const src[], afxNat srcStride);
 
 AFX afxString const     AFX_STR_EMPTY;
 

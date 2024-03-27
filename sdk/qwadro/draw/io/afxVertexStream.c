@@ -17,7 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_VERTEX_BUFFER_C
 #define _AFX_INDEX_BUFFER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/io/afxVertexStream.h"
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawContext.h"
@@ -121,7 +121,7 @@ _AVX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBuf
     AfxAssert(spec);
     AfxAssert(vbuf);
 
-    afxClass* cls = AfxGetVertexBufferClass(din);
+    afxManager* cls = AfxGetVertexBufferClass(din);
     AfxAssertClass(cls, afxFcc_VBUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)vbuf, (void const*[]) { din, spec }))
@@ -184,7 +184,7 @@ _AVX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxN
 
     if (!err)
     {
-        if (!(room = AfxAllocate(NIL, 1, sizeof(*room), 0, AfxHint()))) AfxThrowError();
+        if (!(room = AfxAllocate(1, sizeof(*room), 0, AfxHint()))) AfxThrowError();
         else
         {
             room->baseIdx = baseIdx;
@@ -245,7 +245,7 @@ _AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
             else
             {
                 AfxPopLinkage(&room2->ibuf);
-                AfxDeallocate(NIL, room2);
+                AfxDeallocate(room2);
             }
 
             ibuf->bookedIdxCnt += alignedCnt;
@@ -340,7 +340,7 @@ _AVX afxError AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBu
     AfxAssert(spec);
     AfxAssert(ibuf);
 
-    afxClass* cls = AfxGetIndexBufferClass(dctx);
+    afxManager* cls = 0;// AfxGetIndexBufferClass(dctx);
     AfxAssertClass(cls, afxFcc_IBUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)ibuf, (void const*[]) { dctx, spec }))

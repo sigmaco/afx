@@ -32,15 +32,14 @@
 #define _AFX_SOUND_CONTEXT_C
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/mem/afxArena.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/ux/afxApplication.h"
-#include "qwadro/async/afxThread.h"
+#include "qwadro/core/afxThread.h"
+#include "qwadro/sound/afxSoundSystem.h"
+
+//extern afxChain* _AfxGetSystemClassChain(void);
 
 AAX afxClassConfig const _sthrClsConfig;
-AAX afxSoundSystem AfxGetSoundSystem(void);
-
-AAX afxError _AfxSysLoadIcd(afxSystem sys, afxUri const* file, afxIcd *icd);
 
 _AAX afxBool AfxSoundDeviceIsRunning(afxSoundDevice sdev)
 {
@@ -49,29 +48,29 @@ _AAX afxBool AfxSoundDeviceIsRunning(afxSoundDevice sdev)
     return sdev->dev.serving;
 }
 
-_AAX afxClass* AfxGetSoundContextClass(afxSoundDevice sdev)
+_AAX afxManager* AfxGetSoundContextClass(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     return &sdev->contexts;
 }
 
-_AAX afxClass* AfxGetSoundDeviceClass(void)
+_AAX afxManager* AfxGetSoundDeviceClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSoundSystem ssys = AfxGetSoundSystem();
     AfxAssertObjects(1, &ssys, afxFcc_SSYS);
-    afxClass* cls = &ssys->devices;
+    afxManager* cls = &ssys->devices;
     AfxAssertClass(cls, afxFcc_SDEV);
     return cls;
 }
 
-_AAX afxClass* AfxGetSoundThreadClass(void)
+_AAX afxManager* AfxGetSoundThreadClass(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSoundSystem ssys = AfxGetSoundSystem();
     AfxAssertObjects(1, &ssys, afxFcc_SSYS);
-    afxClass* cls = &ssys->threads;
+    afxManager* cls = &ssys->threads;
     AfxAssertClass(cls, afxFcc_STHR);
     return cls;
 }
@@ -79,9 +78,9 @@ _AAX afxClass* AfxGetSoundThreadClass(void)
 _AAX afxNat AfxCountSoundDevices(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetSoundDeviceClass();
+    afxManager* cls = AfxGetSoundDeviceClass();
     AfxAssertClass(cls, afxFcc_SDEV);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
 _AAX afxNat AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sdev[])
@@ -89,9 +88,9 @@ _AAX afxNat AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sd
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(sdev);
-    afxClass* cls = AfxGetSoundDeviceClass();
+    afxManager* cls = AfxGetSoundDeviceClass();
     AfxAssertClass(cls, afxFcc_SDEV);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)sdev);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)sdev);
 }
 
 _AAX afxNat AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd)
@@ -99,9 +98,9 @@ _AAX afxNat AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSound
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetSoundDeviceClass();
+    afxManager* cls = AfxGetSoundDeviceClass();
     AfxAssertClass(cls, afxFcc_SDEV);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AAX afxSoundDevice AfxGetSoundDevice(afxNat sdevIdx)
@@ -124,20 +123,6 @@ _AAX afxMmu AfxGetSoundSystemMmu(void)
     afxMmu mmu = ssys->mmu;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     return mmu;
-}
-
-_AAX afxError _AfxSdevDtorFreeTxus(afxSoundDevice sdev)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-
-    for (afxNat i = sdev->dev.txus.cnt; i-- > 0;)
-    {
-        afxTxu txu = *(afxTxu*)AfxGetArrayUnit(&sdev->dev.txus, i);
-        AfxAssertObjects(1, &txu, afxFcc_TXU);
-        while (!AfxReleaseObjects(1, (void*[]) { txu }));
-    }
-    return err;
 }
 
 _AAX afxError _AfxSdevDtorFreeThreads(afxSoundDevice sdev)
@@ -166,14 +151,12 @@ _AAX afxError _AfxSdevDtor(afxSoundDevice sdev)
         AfxThrowError();
 
     if (sdev->idd)
-        AfxDeallocate(NIL, sdev->idd);
+        AfxDeallocate(sdev->idd);
 
     _AfxUninstallChainedClasses(&sdev->dev.classes);
 
     _AfxSdevDtorFreeThreads(sdev);
-    _AfxSdevDtorFreeTxus(sdev);
     AfxDeallocateArray(&sdev->dev.threads);
-    AfxDeallocateArray(&sdev->dev.txus);
 
     AfxPopLinkage(&sdev->dev.icd);
 
@@ -188,7 +171,7 @@ _AAX afxError AfxRegisterSoundDevices(afxIcd icd, afxNat cnt, afxSoundDeviceInfo
     AfxAssert(info);
     AfxAssert(cnt);
 
-    afxClass* cls = AfxGetSoundDeviceClass();
+    afxManager* cls = AfxGetSoundDeviceClass();
     AfxAssertClass(cls, afxFcc_SDEV);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)devices, (void const*[]) { icd, info })) AfxThrowError();
@@ -205,7 +188,6 @@ _AAX afxError AfxRegisterSoundDevices(afxIcd icd, afxNat cnt, afxSoundDeviceInfo
 
 _AAX afxError _AfxSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
 {
-    AfxEntry("sdev=%p", sdev);
     afxError err = AFX_ERR_NONE;
 
     afxIcd icd = cookie->udd[0];
@@ -221,102 +203,103 @@ _AAX afxError _AfxSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
     AfxReflectString(info->domain, &sdev->dev.domain);
     AfxReflectString(info->name, &sdev->dev.name);
 
-    if (AfxAllocateArray(&sdev->dev.txus, 0, sizeof(afxTxu), (afxTxu[]) { 0 })) AfxThrowError();
+    if (AfxAllocateArray(&sdev->dev.threads, 0, sizeof(afxSoundThread), (afxSoundThread[]) { 0 })) AfxThrowError();
     else
     {
-        if (AfxAllocateArray(&sdev->dev.threads, 0, sizeof(afxSoundThread), (afxSoundThread[]) { 0 })) AfxThrowError();
-        else
+        AfxPushLinkage(&sdev->dev.icd, (afxChain*)AfxGetRegisteredDevices(icd));
+
+        sdev->dev.serving = FALSE;
+
+        sdev->procCb = NIL;
+        sdev->relinkDin = NIL;
+        sdev->relinkDout = NIL;
+        AfxSetUpMutex(&sdev->ioConMtx, AFX_MTX_PLAIN);
+
+        afxChain *classes = &sdev->dev.classes;
+        AfxSetUpChain(classes, sdev);
+
+        afxClassConfig const sctxClsConfig =
         {
-            AfxPushLinkage(&sdev->dev.icd, (afxChain*)AfxGetRegisteredDevices(icd));
-
-            sdev->dev.serving = FALSE;
-
-            sdev->procCb = NIL;
-            sdev->relinkDin = NIL;
-            sdev->relinkDout = NIL;
-            AfxTakeMutex(&sdev->ioConMtx, AFX_MTX_PLAIN);
-
-            afxChain *classes = &sdev->dev.classes;
-            AfxSetUpChain(classes, sdev);
-
-            afxClassConfig const sctxClsConfig =
-            {
-                .fcc = afxFcc_SCTX,
-                .name = "Sound Context",
-                .unitsPerPage = 1,
-                .size = sizeof(AFX_OBJECT(afxSoundContext)),
-                .mmu = mmu,
-                .ctor = (void*)NIL,
-                .dtor = (void*)NIL
-            };
+            .fcc = afxFcc_SCTX,
+            .name = "Sound Context",
+            .unitsPerPage = 1,
+            .size = sizeof(AFX_OBJECT(afxSoundContext)),
+            .mmu = mmu,
+            .ctor = (void*)NIL,
+            .dtor = (void*)NIL
+        };
 
 #if 0
-            afxClassConfig const soutClsConfig =
-            {
-                .fcc = afxFcc_SOUT,
-                .name = "Sound Output",
-                .unitsPerPage = 1,
-                .size = sizeof(AFX_OBJECT(afxSoundOutput)),
-                .mmu = mmu,
-                .ctor = (void*)NIL,
-                .dtor = (void*)NIL
-            };
+        afxClassConfig const soutClsConfig =
+        {
+            .fcc = afxFcc_SOUT,
+            .name = "Sound Output",
+            .unitsPerPage = 1,
+            .size = sizeof(AFX_OBJECT(afxSoundOutput)),
+            .mmu = mmu,
+            .ctor = (void*)NIL,
+            .dtor = (void*)NIL
+        };
 
-            afxClassConfig const sinClsConfig =
-            {
-                .fcc = afxFcc_SIN,
-                .name = "Sound Input",
-                .unitsPerPage = 1,
-                .size = sizeof(AFX_OBJECT(afxSoundInput)),
-                .mmu = mmu,
-                .ctor = (void*)NIL,
-                .dtor = (void*)NIL
-            };
+        afxClassConfig const sinClsConfig =
+        {
+            .fcc = afxFcc_SIN,
+            .name = "Sound Input",
+            .unitsPerPage = 1,
+            .size = sizeof(AFX_OBJECT(afxSoundInput)),
+            .mmu = mmu,
+            .ctor = (void*)NIL,
+            .dtor = (void*)NIL
+        };
 #endif
-            // dctx must be after dque
-            AfxMountClass(&sdev->contexts, NIL, classes, info->sctxClsConfig);
-            //AfxMountClass(&sdev->outputs, NIL, classes, info->soutClsConfig);
-            //AfxMountClass(&sdev->inputs, NIL, classes, info->sinClsConfig);
+        // dctx must be after dque
+        AfxSetUpManager(&sdev->contexts, NIL, classes, info->sctxClsConfig);
+        //AfxSetUpManager(&sdev->outputs, NIL, classes, info->soutClsConfig);
+        //AfxSetUpManager(&sdev->inputs, NIL, classes, info->sinClsConfig);
 
-            sdev->procCb = NIL;
-            sdev->relinkDin = NIL;
-            sdev->relinkDout = NIL;
+        sdev->procCb = NIL;
+        sdev->relinkDin = NIL;
+        sdev->relinkDout = NIL;
 
-            sdev->iddSiz = info->iddSiz;
-            sdev->idd = NIL;
+        sdev->iddSiz = info->iddSiz;
+        sdev->idd = NIL;
 
-            sdev->iddCtor = info->iddCtor;
-            sdev->iddDtor = info->iddDtor;
+        sdev->iddCtor = info->iddCtor;
+        sdev->iddDtor = info->iddDtor;
 
-            if (sdev->iddCtor && sdev->iddCtor(sdev)) AfxThrowError();
+        if (sdev->iddCtor && sdev->iddCtor(sdev)) AfxThrowError();
+        else
+        {
+            AfxAssert(sdev->procCb);
+
+            afxSoundThread sthr[2];
+            afxSoundThreadConfig stCfg[2] = { {0},{0} };
+            stCfg[0].sdev = sdev;
+            stCfg[0].base.txuCnt = AfxGetThreadingCapacity();
+            stCfg[1].sdev = sdev;
+            stCfg[1].base.txuCnt = stCfg[0].base.txuCnt;
+
+            if (AfxAcquireSoundThreads(stCfg, AfxHint(), 2, sthr)) AfxThrowError();
             else
             {
-                afxNat unitIdx;
-                AfxGetThreadingUnit(&unitIdx);
-
-                AfxAssert(sdev->procCb);
                 sdev->dev.serving = TRUE;
 
                 AfxAdvertise("The audience is listening");
-            }
 
-            if (err)
-                _AfxUninstallChainedClasses(&sdev->dev.classes);
-
-            if (err)
-                AfxPopLinkage(&sdev->dev.icd);
-
-            if (err)
-            {
-                _AfxSdevDtorFreeThreads(sdev);
-                AfxDeallocateArray(&sdev->dev.threads);
+                AfxRunThreads(2, (afxThread*)sthr);
             }
         }
 
         if (err)
+            _AfxUninstallChainedClasses(&sdev->dev.classes);
+
+        if (err)
+            AfxPopLinkage(&sdev->dev.icd);
+
+        if (err)
         {
-            _AfxSdevDtorFreeTxus(sdev);
-            AfxDeallocateArray(&sdev->dev.txus);
+            _AfxSdevDtorFreeThreads(sdev);
+            AfxDeallocateArray(&sdev->dev.threads);
         }
     }
 
@@ -325,7 +308,6 @@ _AAX afxError _AfxSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
 
 _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
 {
-    AfxEntry("ssys=%p", ssys);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ssys, afxFcc_SSYS);
 
@@ -355,14 +337,14 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
                 .mmu = mmu,
                 .unitsPerPage = AfxGetThreadingCapacity()
             };
-            AfxMountClass(&ssys->txus, AfxGetThreadingUnitClass(), classes, &stxuClsCfg);
+            AfxSetUpManager(&ssys->txus, AfxGetTxuClass(), classes, &stxuClsCfg);
 
             afxClassConfig clsCfg;
 
             clsCfg = _sthrClsConfig;
             clsCfg.unitsPerPage = AfxGetThreadingCapacity();
             clsCfg.mmu = mmu;
-            AfxMountClass(&ssys->threads, AfxGetThreadClass(), classes, &clsCfg);
+            AfxSetUpManager(&ssys->threads, AfxGetThreadClass(), classes, &clsCfg);
 
             afxClassConfig const sdevClsConfig =
             {
@@ -374,7 +356,7 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
                 .ctor = (void*)_AfxSdevCtor,
                 .dtor = (void*)_AfxSdevDtor
             };
-            AfxMountClass(&ssys->devices, AfxGetDeviceClass(), classes, &sdevClsConfig);
+            AfxSetUpManager(&ssys->devices, AfxGetDeviceClass(), classes, &sdevClsConfig);
 
 
             afxUri uri;
@@ -385,6 +367,7 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
             else
 #endif
             {
+#if 0
                 afxSoundThread sthr[16];
                 afxNat threadCnt = AfxMin(AfxGetThreadingCapacity(), 1);
                 afxSoundThreadConfig sthrConfig = { 0 };
@@ -395,7 +378,7 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
                     sthrConfig.base.baseTxu = i;
                     sthrConfig.base.txuCnt = 1;
 
-                    if (AfxAcquireSoundThreads(1, &sthrConfig, sthr)) AfxThrowError();
+                    if (AfxAcquireSoundThreads(&sthrConfig, 1, sthr)) AfxThrowError();
                     else
                     {
                         AfxAssertObjects(1, &sthr[i], afxFcc_STHR);
@@ -403,6 +386,7 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
                         AfxRunThread(thr);
                     }
                 }
+#endif
 
 #if 0
                 if (err)
@@ -412,11 +396,11 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
 
             if (err)
             {
-                //AfxDismountClass(&ssys->inputs);
-                //AfxDismountClass(&ssys->outputs);
-                //AfxDismountClass(&ssys->scontexts);
-                //AfxDismountClass(&ssys->sdevices);
-                //AfxDismountClass(&ssys->sthreads);
+                //AfxCleanUpManager(&ssys->inputs);
+                //AfxCleanUpManager(&ssys->outputs);
+                //AfxCleanUpManager(&ssys->scontexts);
+                //AfxCleanUpManager(&ssys->sdevices);
+                //AfxCleanUpManager(&ssys->sthreads);
                 _AfxUninstallChainedClasses(classes);
             }
         }
@@ -430,21 +414,20 @@ _AAX afxError _AfxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
 
 _AAX afxError _AfxSsysDtor(afxSoundSystem ssys)
 {
-    AfxEntry("ssys=%p", ssys);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ssys, afxFcc_SSYS);
 
     //AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
 
-    //AfxDismountClass(&ssys->inputs);
-    //AfxDismountClass(&ssys->outputs);
-    //AfxDismountClass(&ssys->scontexts);
-    //AfxDismountClass(&ssys->sdevices);
-    //AfxDismountClass(&ssys->sthreads);
+    //AfxCleanUpManager(&ssys->inputs);
+    //AfxCleanUpManager(&ssys->outputs);
+    //AfxCleanUpManager(&ssys->scontexts);
+    //AfxCleanUpManager(&ssys->sdevices);
+    //AfxCleanUpManager(&ssys->sthreads);
     
     _AfxUninstallChainedClasses(&ssys->classes);
 
-    AfxReleaseObjects(1, (void*[]) { ssys->mmu });
+    //AfxReleaseObjects(1, (void*[]) { ssys->mmu });
 
     return err;
 }
@@ -452,7 +435,7 @@ _AAX afxError _AfxSsysDtor(afxSoundSystem ssys)
 _AAX afxClassConfig const _AfxSsysClsConfig =
 {
     .fcc = afxFcc_SSYS,
-    .name = "SIGMA Sound System",
+    .name = "Unified Accoustics Experience Infrastructure",
     .maxCnt = 1,
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxSoundSystem)),
@@ -461,15 +444,15 @@ _AAX afxClassConfig const _AfxSsysClsConfig =
     .dtor = (void*)_AfxSsysDtor
 };
 
-_AAX afxClass* _AfxGetSsysClass(void)
+_AAX afxManager* _AfxGetSsysClass(void)
 {
     afxError err = AFX_ERR_NONE;
-    static afxClass _ssysCls = { 0 };
+    static afxManager _ssysCls = { 0 };
     static afxBool ssysClsMounted = FALSE;
 
-    if (!ssysClsMounted)
+    if (_ssysCls.fcc != afxFcc_CLS)
     {
-        AfxMountClass(&_ssysCls, NIL, NIL, &_AfxSsysClsConfig);
+        AfxSetUpManager(&_ssysCls, NIL, /*_AfxGetSystemClassChain()*/NIL, &_AfxSsysClsConfig);
         ssysClsMounted = TRUE;
     }
     return &_ssysCls;

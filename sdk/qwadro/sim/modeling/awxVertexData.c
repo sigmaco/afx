@@ -24,10 +24,10 @@
 #include "qwadro/sim/modeling/awxVertexData.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/math/afxMatrix.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
-#include "qwadro/core/afxIndexedString.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/mem/afxMappedString.h"
 
-_AKX afxError AwxCmdBindVertexDataCache(afxDrawScript dscr, afxNat slotIdx, awxVertexData vtd)
+_AKX afxError AwxCmdBindVertexDataCache(afxDrawStream dscr, afxNat slotIdx, awxVertexData vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
@@ -76,7 +76,7 @@ _AKX afxError AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd)
         afxNat cacheIdx;
 
         afxString str;
-        AfxResolveStrings2(vtd->strc, 1, &attr->id, &str);
+        AfxResolveStrings2(vtd->strb, 1, &attr->id, &str);
 
         if (AFX_INVALID_INDEX != AfxStringsAreEqual(&str, 3, positionals))
         {
@@ -176,7 +176,7 @@ _AKX afxNat AwxFindVertexAttributes(awxVertexData vtd, afxNat cnt, afxString con
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
         afxString str;
-        AfxResolveStrings2(vtd->strc, 1, &vtd->attrs[i].id, &str);
+        AfxResolveStrings2(vtd->strb, 1, &vtd->attrs[i].id, &str);
 
         if (0 == AfxCompareString(&id[rslt], &str))
             attrIdx[rslt++] = i;
@@ -260,7 +260,7 @@ _AKX afxError AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat base
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
-    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(NIL, vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
         AfxThrowError();
 
     if (!err)
@@ -302,7 +302,7 @@ _AKX afxError AwxFillVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVt
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(NIL, vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
             AfxThrowError();
 
     if (!err)
@@ -325,7 +325,7 @@ _AKX afxError AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat b
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(NIL, vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
             AfxThrowError();
 
     if (!err)
@@ -379,14 +379,14 @@ _AKX afxError _AfxVtdDtor(awxVertexData vtd)
     for (afxNat i = 0; i < vtd->attrCnt; i++)
     {
         if (vtd->attrs[i].data)
-            AfxDeallocate(mmu, vtd->attrs[i].data);
+            AfxDeallocate(vtd->attrs[i].data);
     }
 
     if (vtd->attrs)
-        AfxDeallocate(mmu, vtd->attrs);
+        AfxDeallocate(vtd->attrs);
 
-    if (vtd->strc)
-        AfxReleaseObjects(1, (void*[]) { vtd->strc });
+    if (vtd->strb)
+        AfxReleaseObjects(1, (void*[]) { vtd->strb });
 
     return err;
 }
@@ -399,13 +399,13 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
 
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxStringCatalog strc = cookie->udd[1];
+    afxStringBase strb = cookie->udd[1];
     awxVertexAttrSpec const* attrSpecs = cookie->udd[2];
     awxVertexDataSpec const* spec = cookie->udd[3];
     spec += cookie->no;
 
-    if ((vtd->strc = strc))
-        AfxReacquireObjects(1, (void*[]) { strc });
+    if ((vtd->strb = strb))
+        AfxReacquireObjects(1, (void*[]) { strb });
 
     afxMmu mmu = AfxGetSimulationMmu(sim);
 
@@ -418,7 +418,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
     afxNat attrCnt = spec->attrCnt;
     awxVertexDataAttr* attrs;
 
-    if (!(attrs = AfxAllocate(mmu, attrCnt, sizeof(attrs[0]), NIL, AfxHint()))) AfxThrowError();
+    if (!(attrs = AfxAllocate(attrCnt, sizeof(attrs[0]), NIL, AfxHint()))) AfxThrowError();
     else
     {
         vtd->attrCnt = attrCnt;
@@ -433,9 +433,9 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
             afxString tmp;
             AfxMakeString(&tmp, attrSpec->id, 0);
 
-            if (!strc)
+            if (!strb)
                 AfxResetString(&attrs[i].id);
-            else if (!AfxCatalogStrings2(strc, 1, &tmp, &attrs[i].id))
+            else if (!AfxCatalogStrings2(strb, 1, &tmp, &attrs[i].id))
                 AfxThrowError();
 
             attrs[i].usage = attrSpec->usage;
@@ -476,7 +476,7 @@ _AKX afxClassConfig _AfxVtdClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AKX afxError AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[])
+_AKX afxError AwxAcquireVertexDatas(afxSimulation sim, afxStringBase strb, awxVertexAttrSpec const attrSpec[], afxNat cnt, awxVertexDataSpec const specs[], awxVertexData datas[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -484,13 +484,13 @@ _AKX afxError AwxAcquireVertexDatas(afxSimulation sim, afxStringCatalog strc, aw
     AfxAssert(specs);
     AfxAssert(cnt);
 
-    if (AfxAcquireObjects(AwxGetMeshDataClass(sim), cnt, (afxObject*)datas, (void const*[]) { sim, strc, attrSpec, specs }))
+    if (AfxAcquireObjects(AwxGetMeshDataClass(sim), cnt, (afxObject*)datas, (void const*[]) { sim, strb, attrSpec, specs }))
         AfxThrowError();
 
     return err;
 }
 
-_AKX awxVertexData AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, afxMeshBuilder const* mshb)
+_AKX awxVertexData AwxBuildVertexData(afxSimulation sim, afxStringBase strb, afxMeshBuilder const* mshb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -537,7 +537,7 @@ _AKX awxVertexData AwxBuildVertexData(afxSimulation sim, afxStringCatalog strc, 
     attrSpecs[2].src = mshb->uv;
     attrSpecs[2].srcStride = sizeof(mshb->uv[0]);
 
-    if (AwxAcquireVertexDatas(sim, strc, attrSpecs, 1, &spec, &vtd))
+    if (AwxAcquireVertexDatas(sim, strb, attrSpecs, 1, &spec, &vtd))
         AfxThrowError();
 
     return vtd;

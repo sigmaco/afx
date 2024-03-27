@@ -248,7 +248,7 @@ static void* alloc_region_base(afxArena* result, afxSize initial_cleanupCnt)
     AfxAssert(initial_cleanupCnt > 0);
     result->maxCleanupCnt = initial_cleanupCnt;
     result->cleanupCnt = 0;
-    result->cleanups = (afxArenaCleanup *)AfxAllocate(result->mmu, result->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
+    result->cleanups = (afxArenaCleanup *)AfxAllocate(result->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
     
     if (!result->cleanups)
     {
@@ -268,11 +268,11 @@ _AFX void* AfxArenaCtor(afxArena* result)
     if (!result)
         return NIL;
 
-    result->data = (char *)AfxAllocate(result->mmu, 1, result->chunkSiz, 0, AfxHint());
+    result->data = (char *)AfxAllocate(1, result->chunkSiz, 0, AfxHint());
 
     if (!result->data)
     {
-        AfxDeallocate(result->mmu, result->cleanups);
+        AfxDeallocate(result->cleanups);
         //deallocator(result);
         return NIL;
     }
@@ -295,11 +295,11 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
 
     if (result->chunkSiz > 0)
     {
-        result->data = (char *)AfxAllocate(result->mmu, 1, result->chunkSiz, 0, AfxHint());
+        result->data = (char *)AfxAllocate(1, result->chunkSiz, 0, AfxHint());
 
         if (!result->data)
         {
-            AfxDeallocate(result->mmu, result->cleanups);
+            AfxDeallocate(result->cleanups);
             //AfxDeallocate(result->mem, result);
             return NIL;
         }
@@ -308,7 +308,7 @@ _AFX void* AfxArenaCtor2(afxArena* result, afxSize chunkSiz, afxSize largeItemSi
 
     if (recycle)
     {
-        result->recycleBin = AfxAllocate(result->mmu, result->largeItemSiz, sizeof(afxArenaRecycleItem*), 0, AfxHint());
+        result->recycleBin = AfxAllocate(result->largeItemSiz, sizeof(afxArenaRecycleItem*), 0, AfxHint());
 
         if (!result->recycleBin)
         {
@@ -330,11 +330,11 @@ _AFX void AfxArenaDtor(afxArena* aren)
     afxMmu mmu = aren->mmu;
 
     AfxExhaustArena(aren);
-    AfxDeallocate(mmu, aren->cleanups);
-    AfxDeallocate(mmu, aren->initialData);
+    AfxDeallocate(aren->cleanups);
+    AfxDeallocate(aren->initialData);
 
     if (aren->recycleBin)
-        AfxDeallocate(mmu, aren->recycleBin);
+        AfxDeallocate(aren->recycleBin);
 
     if (aren->largeList)
     {
@@ -343,7 +343,7 @@ _AFX void AfxArenaDtor(afxArena* aren)
         while (p)
         {
             np = p->next;
-            AfxDeallocate(mmu, p);
+            AfxDeallocate(p);
             p = np;
         }
     }
@@ -358,13 +358,13 @@ _AFX afxSize AfxAddArenaCleanup(afxArena* aren, void(*action)(void *data, void*e
 
     if (aren->cleanupCnt >= aren->maxCleanupCnt)
     {
-        cleanups = (afxArenaCleanup *)AfxAllocate(aren->mmu, 2 * aren->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
+        cleanups = (afxArenaCleanup *)AfxAllocate(2 * aren->maxCleanupCnt, sizeof(afxArenaCleanup), 0, AfxHint());
 
         if (!cleanups)
             return 0;
 
         AfxCopy(aren->cleanupCnt, sizeof(afxArenaCleanup), aren->cleanups, cleanups);
-        AfxDeallocate(aren->mmu, aren->cleanups);
+        AfxDeallocate(aren->cleanups);
 
         aren->cleanups = cleanups;
         aren->maxCleanupCnt *= 2;
@@ -398,7 +398,7 @@ _AFX void AfxRemoveArenaCleanup(afxArena* aren, void(*action)(void *,void*), voi
 
 _AFX void _AfxArenDeallocBlockCleanupAction(void *data, void*extra)
 {
-    AfxDeallocate(((afxArena*)extra)->mmu, data);
+    AfxDeallocate(data);
 }
 
 _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
@@ -415,7 +415,7 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
 
     if (aligned_size >= aren->largeItemSiz)
     {
-        result = AfxAllocate(aren->mmu, 1, sizeof(afxArenaLargeItem) + size, 0, AfxHint());
+        result = AfxAllocate(1, sizeof(afxArenaLargeItem) + size, 0, AfxHint());
 
         if (!result)
             return NIL;
@@ -450,7 +450,7 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
 
     if (aren->allocated + aligned_size > aren->chunkSiz)
     {
-        void *chunk = AfxAllocate(aren->mmu, 1, aren->chunkSiz, 0, AfxHint());
+        void *chunk = AfxAllocate(1, aren->chunkSiz, 0, AfxHint());
         afxSize wasted;
 
         if (!chunk)
@@ -478,7 +478,7 @@ _AFX void* AfxRequestArenaUnit(afxArena* aren, afxSize size)
 
         if (!AfxAddArenaCleanup(aren, _AfxArenDeallocBlockCleanupAction, chunk, aren))
         {
-            AfxDeallocate(aren->mmu, chunk);
+            AfxDeallocate(chunk);
             aren->chunkCnt--;
             aren->unusedSpace -= aren->chunkSiz - aren->allocated;
             return NIL;
@@ -580,7 +580,7 @@ _AFX void AfxExhaustArena(afxArena* aren)
         while (p)
         {
             np = p->next;
-            AfxDeallocate(aren->mmu, p);
+            AfxDeallocate(p);
             p = np;
         }
         aren->largeList = NIL;
@@ -658,7 +658,7 @@ _AFX void AfxRecycleArenaUnit(afxArena* aren, void *block, afxSize size)
         if (l->next)
             l->next->prev = l->prev;
 
-        AfxDeallocate(aren->mmu, l);
+        AfxDeallocate(l);
     }
 }
 
@@ -675,7 +675,7 @@ _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
         (unsigned long)aren->chunkCnt,
         (unsigned long)aren->cleanupCnt,
         (unsigned long)aren->recycleSiz);
-    AfxWriteStream(out, AfxGetStringData(&str.str.str, 0), AfxGetStringLength(&str.str.str), 0);
+    AfxWriteStream(out, AfxGetStringLength(&str.str.str), 0, AfxGetStringData(&str.str.str, 0));
 
     if (aren->recycleBin)
     {
@@ -694,7 +694,7 @@ _AFX void AfxDumpArenaStats(afxArena* aren, afxStream out)
             if (i%ALIGNMENT == 0 && i != 0)
             {
                 AfxFormatString(&str.str, " %lu", (unsigned long)count);
-                AfxWriteStream(out, AfxGetStringData(&str.str.str, 0), AfxGetStringLength(&str.str.str), 0);
+                AfxWriteStream(out, AfxGetStringLength(&str.str.str), 0, AfxGetStringData(&str.str.str, 0));
             }
         }
     }
@@ -756,7 +756,6 @@ _AFX void AfxLogArenaStats(afxArena* aren)
 
 _AFX void AfxDeallocateArena(afxArena* aren)
 {
-    AfxEntry("aren=%p", aren);
     afxError err = AFX_ERR_NONE;
     AfxAssertType(aren, afxFcc_AREN);
     AfxExhaustArena(aren);
@@ -765,8 +764,6 @@ _AFX void AfxDeallocateArena(afxArena* aren)
 
 _AFX afxError AfxAllocateArena(afxMmu mmu, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint)
 {
-    AfxEntry("aren=%p", aren);
-    AfxEntry("spec=%p,hint=\"%s:%i!%s\"", spec, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
     //AfxAssert(spec);
 

@@ -31,6 +31,7 @@ AFXINL afxResult    AfxStrnicmp(afxChar const* str, afxChar const* str2, afxSize
 AFXINL afxResult    AfxStricmp(afxChar const* str, afxChar const* str2);
 
 AFXINL void         AfxStrcat(afxChar* str, afxChar const* str2);
+AFXINL afxChar*     AfxStrdup(afxChar const* src);
 
 AFXINL void         AfxStrcpy(afxChar* str, afxChar const* from);
 AFXINL afxResult    AfxStrncpy(afxChar const* str, afxSize len, afxChar* to);

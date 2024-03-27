@@ -171,6 +171,9 @@
     <ProjectReference Include="..\e2ux\e2ux.vcxproj">
       <Project>{b86a5b24-69ef-42ad-86d9-e3ac4405a9ce}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\oal4d\oal4d.vcxproj">
+      <Project>{8db6b4eb-2027-4aa2-90c4-1c5937167746}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\rad3d\rad3d.vcxproj">
       <Project>{ada2daf6-6f68-4d16-9ea5-25faf07fe8ed}</Project>
     </ProjectReference>

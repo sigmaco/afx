@@ -18,7 +18,7 @@
 #include "sgl.h"
 
 #include "qwadro/draw/pipe/afxPipeline.h"
-#include "qwadro/draw/pipe/afxShaderBlueprint.h"
+#include "qwadro/draw/io/afxShaderBlueprint.h"
 #include "qwadro/draw/io/afxXsh.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/io/afxUri.h"
@@ -160,13 +160,13 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
 {
     afxError err = AFX_ERR_NONE;
     afxUri fext;
-    AfxExcerptUriExtension(uri, FALSE, &fext);
+    AfxPickUriExtension(uri, FALSE, &fext);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxExcerptUriPath(uri, &fpath);
+        AfxPickUriPath(uri, &fpath);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -178,7 +178,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
                 AfxAssertType(&xml, afxFcc_XML);
 
                 afxString query;
-                AfxExcerptUriQueryToString(uri, TRUE, &query);
+                AfxPickUriQueryToString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Shader"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
@@ -469,7 +469,6 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
 
 _SGL afxError _SglPipDtor(afxPipeline pip)
 {
-    AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
@@ -478,14 +477,14 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     AfxAssert(pip->base.stages);
-    AfxDeallocate(mmu, pip->base.stages);
+    AfxDeallocate(pip->base.stages);
 
     if (pip->base.wiring)
     {
         for (afxNat i = 0; i < pip->base.wiringCnt; i++)
             AfxReleaseObjects(1, (void*[]) { pip->base.wiring[i].legt });
 
-        AfxDeallocate(mmu, pip->base.wiring);
+        AfxDeallocate(pip->base.wiring);
     }
 
     if (pip->base.razr)
@@ -509,7 +508,6 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
 
 _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 {
-    AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
@@ -549,7 +547,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssert(stageCnt);
     pip->base.stageCnt = 0;
 
-    if (!(pip->base.stages = AfxAllocate(mmu, stageCnt, sizeof(pip->base.stages[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(pip->base.stages = AfxAllocate(stageCnt, sizeof(pip->base.stages[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         afxNat shaderCnt = 0;
@@ -618,7 +616,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             pip->base.wiringCnt = 0;
 
-            if (setCnt && !(pip->base.wiring = AfxAllocate(mmu, setCnt, sizeof(pip->base.wiring[0]), 0, AfxHint()))) AfxThrowError();
+            if (setCnt && !(pip->base.wiring = AfxAllocate(setCnt, sizeof(pip->base.wiring[0]), 0, AfxHint()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
@@ -747,14 +745,14 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
                 for (afxNat i = 0; i < pip->base.wiringCnt; i++)
                     AfxReleaseObjects(1, (void*[]) { pip->base.wiring[i].legt });
 
-                AfxDeallocate(mmu, pip->base.wiring);
+                AfxDeallocate(pip->base.wiring);
             }
         }
 
         if (err)
         {
             AfxAssert(pip->base.stages);
-            AfxDeallocate(mmu, pip->base.stages);
+            AfxDeallocate(pip->base.stages);
         }
     }
     AfxAssertObjects(1, &pip, afxFcc_PIP);

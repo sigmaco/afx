@@ -24,7 +24,7 @@
 #define _AFX_DEVICE_C
 #define _AFX_HID_C
 #define _AFX_KEYBOARD_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/io/afxKeyboard.h"
 #include "qwadro/io/afxMouse.h"
@@ -238,7 +238,6 @@ _AFX afxError _AfxKbdDtor(afxKeyboard kbd)
 
 _AFX afxResult _AfxKbdCtor(afxKeyboard kbd, afxCookie const *cookie)
 {
-    AfxEntry("kbd=%p", kbd);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &kbd, afxFcc_KBD);
 
@@ -285,38 +284,29 @@ _AFX afxClassConfig const _AfxKbdClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireKeyboards(afxNat cnt, afxNat const port[], afxKeyboard keyboards[])
+_AFX afxKeyboard AfxAcquireKeyboard(afxNat port)
 {
-    AfxEntry("cnt=%u,port=%p,keyboards=%p", cnt, port, keyboards);
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetKeyboardClass();
+    afxKeyboard kbd = NIL;
+
+    afxManager* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
 
-    for (afxNat i = 0; i < cnt; i++)
+    if ((kbd = AfxGetKeyboard(port)))
     {
-        afxKeyboard tmp;
-        
-        if ((tmp = AfxGetKeyboard(port ? port[i] : 0)))
-        {
-            if (AfxReacquireObjects(1, (afxObject*)&tmp)) AfxThrowError();
-            else
-            {
-                keyboards[i] = tmp;
-            }
-        }
-        else
-        {
-            if (AfxAcquireObjects(cls, 1, (afxObject*)&keyboards[i], (void const*[]) { port ? (void*)&port[i] : 0 }))
-                AfxThrowError();
-        }
+        AfxEcho("Reacquiring keyboard at port %u", port);
 
-        if (err)
-        {
-            AfxReleaseObjects(i, (afxObject*)keyboards);
-            break;
-        }
+        if (AfxReacquireObjects(1, (void*[]) { kbd }))
+            AfxThrowError();
     }
-    return err;
+    else
+    {
+        AfxEcho("Acquiring keyboard at port %u", port);
+
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&kbd, (void const*[]) { &port }))
+            AfxThrowError();
+    }
+    return kbd;
 }
 
 _AFX afxNat AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd)
@@ -324,9 +314,9 @@ _AFX afxNat AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboards[])
@@ -334,17 +324,17 @@ _AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboard
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(keyboards);
-    afxClass* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)keyboards);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)keyboards);
 }
 
 _AFX afxNat AfxCountKeyboards(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardClass();
     AfxAssertClass(cls, afxFcc_KBD);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
 _AFX afxKeyboard AfxGetKeyboard(afxNat port)

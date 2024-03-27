@@ -68,7 +68,7 @@ AKX afxTransform*   AfxGetPoseTransform(awxPose const *pose, afxNat artIdx);
 
 AKX void            AfxCopyPose(awxPose *pose, awxPose const *from);
 
-AKX void            AfxApplyRootMotionVectorsToPose(awxPose *pose, afxReal const translation[3], afxReal const rotation[3]);
+AKX void            AfxApplyRootMotionVectorsToPose(awxPose *pose, afxV3d const translation, afxV3d const rotation);
 
 AKX void            AfxAccumulateLocalTransform(awxPose *LocalPose, int LocalPoseBoneIndex, int SkeletonBoneIndex, float Weight, const afxSkeleton ReferenceSkeleton, quaternion_mode Mode, const afxTransform *Transform);
 

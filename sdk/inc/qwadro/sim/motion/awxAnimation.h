@@ -24,6 +24,7 @@
 #include "qwadro/math/afxCurve.h"
 #include "qwadro/core/afxFixedString.h"
 #include "qwadro/sim/motion/awxMotion.h"
+#include "qwadro/sim/awxPose.h"
 
 /// Qwadro armazena animações em partes baseadas em quão muitos modelos estão envolvidos numa animação.
 /// Assim sendo, uma awxAnimation é a moção de um conjunto de afxModel's animando sobre tempo.
@@ -40,18 +41,39 @@
 
 typedef struct sample_context
 {
-    float LocalClock;
-    float LocalDuration;
+    afxReal LocalClock;
+    afxReal LocalDuration;
     afxBool UnderflowLoop;
     afxBool OverflowLoop;
-    int FrameIndex;
+    afxInt FrameIndex;
 } sample_context;
+
+typedef enum awxBoundMotionTransformFlag
+{
+    awxBoundMotionTransformFlag_TranslationIsIdentity = 0x0,
+    awxBoundMotionTransformFlag_TranslationIsConstant = 0x1,
+    awxBoundMotionTransformFlag_TranslationIsKeyframed = 0x2,
+    awxBoundMotionTransformFlag_TranslationIsGeneral = 0x3,
+    awxBoundMotionTransformFlag_TranslationMask = 0x3,
+    
+    awxBoundMotionTransformFlag_TransmissionIsIdentity = 0x0,
+    awxBoundMotionTransformFlag_TransmissionIsConstant = 0x4,
+    awxBoundMotionTransformFlag_TransmissionIsKeyframed = 0x8,
+    awxBoundMotionTransformFlag_TransmissionIsGeneral = 0xC,
+    awxBoundMotionTransformFlag_TransmissionMask = 0xC,
+
+    awxBoundMotionTransformFlag_TransmutationIsIdentity = 0x0,
+    awxBoundMotionTransformFlag_TransmutationIsConstant = 0x10,
+    awxBoundMotionTransformFlag_TransmutationIsKeyframed = 0x20,
+    awxBoundMotionTransformFlag_TransmutationIsGeneral = 0x30,
+    awxBoundMotionTransformFlag_TransmutationMask = 0x30,
+} awxBoundMotionTransformFlags;
 
 AFX_DEFINE_STRUCT(awxBoundMotionTransform)
 {
-    afxNat          srcTrackIdx; // awxMotionTransform
-    char            quatMode;
-    afxMask         flags;
+    afxNat          srcTrackIdx; // short awxMotionTransform
+    quaternion_mode quatMode; // char 0x02
+    awxBoundMotionTransformFlags flags; // char 0x03
     awxMotionTransform const* srcTrack;
     void(*sampler)(const sample_context *, const awxMotionTransform *, awxBoundMotionTransform *, const afxTransform *, const float *, const float *, float *, float *);
     afxReal         lodErr;
@@ -61,7 +83,7 @@ AFX_DEFINE_STRUCT(awxBoundMotionTransform)
 struct animation_binding_identifier
 {
     awxAnimation Animation;
-    int SourceTrackGroupIndex;
+    int motIdx;
     const char *TrackPattern;
     const char *BonePattern;
     afxModel OnModel;
@@ -88,7 +110,7 @@ struct track_target // draft
     struct animation_binding *Binding;
     struct animation_binding_identifier BindingID; // size = 28
     awxBody OnInstance; // 32
-    enum accumulation_mode AccumulationMode; // 36
+    accumulation_mode AccumulationMode; // 36
     float LODCopyScaler; // 40
     awxTrackMask *TrackMask; // 44
     awxTrackMask *ModelMask; // 48
@@ -133,7 +155,7 @@ AFX_OBJECT(awxAnimation)
     afxReal             oversampling; /// 1.f
 
     afxString           id;
-    afxStringCatalog    strc;
+    afxStringBase       strb;
 };
 #endif
 
@@ -144,8 +166,8 @@ AFX_DEFINE_STRUCT(awxAnimationBlueprint)
     afxReal             oversampling;
     afxNat              motSlotCnt;
     awxMotion*          motions;
-    afxStringCatalog    strc;
-    afxStringCatalog    strc2;
+    afxStringBase       strb;
+    afxStringBase       strb2;
     afxString32         id;
 };
 
@@ -155,8 +177,10 @@ AKX afxBool     AfxFindMotion(awxAnimation ani, afxString const* id, afxNat *mot
 
 AKX afxError    AwxRelinkMotions(awxAnimation ani, afxNat baseSlot, afxNat slotCnt, awxMotion motions[]);
 
+////////////////////////////////////////////////////////////////////////////////
+
 AKX afxError    AwxAssembleAnimations(afxSimulation sim, afxNat cnt, awxAnimationBlueprint const blueprints[], awxAnimation animations[]);
 
-AKX void        AwxTransformAnimations(afxReal const ltm[3][3], afxReal const iltm[3][3], afxReal linearTol, afxReal const atv[4], afxReal affineTol, afxFlags flags, afxNat cnt, awxAnimation ani[]);
+AKX void        AwxTransformAnimations(afxM3d const ltm, afxM3d const iltm, afxReal linearTol, afxV4d const atv, afxReal affineTol, afxFlags flags, afxNat cnt, awxAnimation ani[]);
 
 #endif//AFX_ANIMATION_H

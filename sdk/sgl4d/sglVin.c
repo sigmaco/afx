@@ -193,7 +193,6 @@ _SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVerte
 
 _SGL afxError _SglVinDtor(afxVertexInput vin)
 {
-    AfxEntry("vin=%p", vin);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
     afxDrawContext dctx = AfxGetObjectProvider(vin);
@@ -208,7 +207,6 @@ _SGL afxError _SglVinDtor(afxVertexInput vin)
 
 _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
 {
-    AfxEntry("vin=%p", vin);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
 
@@ -221,7 +219,7 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
     afxMmu mmu = AfxGetDrawContextMmu(dctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    if (attrCnt && !(vin->base.attrs = AfxAllocate(mmu, attrCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
+    if (attrCnt && !(vin->base.attrs = AfxAllocate(attrCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < attrCnt; i++)
@@ -235,7 +233,7 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
         }
         vin->base.attrCnt = attrCnt;
 
-        if (streamCnt && !(vin->base.streams = AfxAllocate(mmu, streamCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
+        if (streamCnt && !(vin->base.streams = AfxAllocate(streamCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < streamCnt; i++)

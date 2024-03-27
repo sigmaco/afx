@@ -53,24 +53,25 @@ AFX_OBJECT(awxBody)
     afxReal             linearDamping;
     afxReal             angularDamping;
     awxPose             pose;
+    afxM4d              placement;
 };
 
 AKX afxModel            AwxGetBodyModel(awxBody bod);
 AKX afxSkeleton         AwxGetBodySkeleton(awxBody bod);
     
 AKX void                AwxResetBodyClock(awxBody bod);
-AKX void                AwxUpdateBodyMatrix(awxBody bod, afxReal secsElapsed, afxBool inverse, afxReal const mm[4][4], afxReal m[4][4]);
+AKX void                AwxUpdateBodyMatrix(awxBody bod, afxReal secsElapsed, afxBool inverse, afxM4d const mm, afxM4d m);
 
 AKX void                AwxRecenterLinkedMotorClocks(awxBody bod, afxReal currClock);
 
 /// Update all the motors affecting a particular puppet.
-AKX void                AwxReclockLinkedMotors(awxBody bod, afxReal newClock);
+AKX void                AwxReclockMotives(awxBody bod, afxReal newClock);
 
-AKX void                AwxUnlinkCompletedMotors(awxBody bod);
+AKX void                AwxPurgeTerminatedMotives(awxBody bod);
 
-AKX void                AwxGetBodyRootMotionVectors(awxBody bod, afxReal secsElapsed, afxBool inverse, afxReal translation[3], afxReal rotation[3]);
+AKX void                AwxGetBodyRootMotionVectors(awxBody bod, afxReal secsElapsed, afxBool inverse, afxV3d translation, afxV3d rotation);
 
-AKX awxMotor            AwxRunManipulatedPose(awxBody pup, afxReal currClock, afxReal duration, awxPose const* pose, awxTrackMask *ModelMask);
+AKX awxMotor            AwxRunManipulatedPose(awxBody bod, afxReal currClock, afxReal duration, awxPose const* pose, awxTrackMask *ModelMask);
 AKX awxMotor            AwxRunAnimationBinding(awxBody bod, afxReal startTime, awxAnimation ani, struct animation_binding *binding);
 AKX awxMotor            AwxRunAnimation(awxBody bod, afxReal startTime, awxAnimation ani);
 
@@ -79,8 +80,6 @@ AKX void                AwxSampleBodyAnimationsLODSparse(awxBody bod, afxNat bas
 AKX void                AwxSampleBodyAnimationsAcceleratedLOD(awxBody bod, afxNat pivotCnt, afxM4d const offset, awxPose* scratch, awxPoseBuffer* rslt, afxReal allowedErr);
 AKX afxBool             AwxSampleSingleBodyAnimationLODSparse(awxBody bod, awxMotor moto, afxNat basePivotIdx, afxNat pivotCnt, awxPose* rslt, afxReal allowedErr, afxNat const* sparseBoneArray);
 
-////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
 AKX afxError            AwxEmbodyModel(afxModel mdl, afxNat cnt, awxBody bod[]);

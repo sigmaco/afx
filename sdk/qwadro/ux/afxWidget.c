@@ -48,13 +48,13 @@ _AUX afxError _AfxWidDtor(afxWidget wid)
 
 #if 0
     if (appD->hoveredWidg == wid)
-        AfxApplicationHoverWidget(app, NIL, NIL);
+        AfxHoverWidget(app, NIL, NIL);
 
     if (appD->focusedWidg == wid)
-        AfxApplicationFocusWidget(app, NIL, NIL);
+        AfxFocusWidget(app, NIL, NIL);
 
     if (appD->grabbedWidg == wid)
-        AfxApplicationGrabWidget(app, NIL, NIL);
+        AfxGrabWidget(app, NIL, NIL);
 #endif
 
     return err;
@@ -74,15 +74,15 @@ _AUX afxClassConfig _AfxWidClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidget wid[], afxWidgetConfig config[])
+_AUX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
 
-    afxClass* cls = AfxGetWidgetClass(app);
+    afxManager* cls = AfxGetWidgetClass(app);
     AfxAssertClass(cls, afxFcc_WID);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)wid, (void const*[]) { app, config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)widgets, (void const*[]) { app, config }))
         AfxThrowError();
 
     return err;

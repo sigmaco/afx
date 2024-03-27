@@ -63,11 +63,6 @@ AFX_DEFINE_STRUCT(afxXmlElement)
 AFX_DEFINE_STRUCT(afxXml)
 {
     _AFX_DBG_FCC; // afxFcc_XML
-    struct
-    {
-        afxByte*    buffer;
-        afxSize     length;
-    }               buffer;
     afxXmlNode      *root;
 
     afxNat          elemCnt;

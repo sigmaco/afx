@@ -103,7 +103,6 @@ _SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afx
 _SGL afxError _SglSampDtor(afxSampler samp)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("samp=%p", samp);
     AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
     if (samp->glHandle)
@@ -119,7 +118,6 @@ _SGL afxError _SglSampDtor(afxSampler samp)
 _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("samp=%p", samp);
     AfxAssertObjects(1, &samp, afxFcc_SAMP);
 
     afxSamplerConfig const *config = ((afxSamplerConfig const *)cookie->udd[0]) + cookie->no;

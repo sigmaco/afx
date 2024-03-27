@@ -1,0 +1,26 @@
+require "core" for Storage
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    //System.print("update game")
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")

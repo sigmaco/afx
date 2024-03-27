@@ -42,6 +42,8 @@ extern afxClassConfig const _AfxLitClsConfig;
 extern afxClassConfig const _AfxRndClsConfig;
 extern afxClassConfig const _AfxCadClsConfig;
 
+//extern afxChain* _AfxGetSystemClassChain(void);
+
 // SIMULATION API //////////////////////////////////////////////////////////////
 
 _AKX afxMmu AfxGetSimulationMmu(afxSimulation sim)
@@ -53,110 +55,110 @@ _AKX afxMmu AfxGetSimulationMmu(afxSimulation sim)
     return mmu;
 }
 
-_AKX afxClass* AfxGetRendererClass(afxSimulation sim)
+_AKX afxManager* AfxGetRendererClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->renderers;
+    afxManager *class = &sim->renderers;
     AfxAssertClass(class, afxFcc_RND);
     return class;
 }
 
-_AKX afxClass* AfxGetMaterialClass(afxSimulation sim)
+_AKX afxManager* AfxGetMaterialClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->materials;
+    afxManager *class = &sim->materials;
     AfxAssertClass(class, afxFcc_MTL);
     return class;
 }
 
-_AKX afxClass* AwxGetMeshClass(afxSimulation sim)
+_AKX afxManager* AwxGetMeshClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->meshes;
+    afxManager *class = &sim->meshes;
     AfxAssertClass(class, afxFcc_MSH);
     return class;
 }
 
-_AKX afxClass* AwxGetMeshDataClass(afxSimulation sim)
+_AKX afxManager* AwxGetMeshDataClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->meshDatas;
+    afxManager *class = &sim->meshDatas;
     AfxAssertClass(class, afxFcc_VTD);
     return class;
 }
 
-_AKX afxClass* AwxGetMeshTopologyClass(afxSimulation sim)
+_AKX afxManager* AwxGetMeshTopologyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->topologies;
+    afxManager *class = &sim->topologies;
     AfxAssertClass(class, afxFcc_MSHT);
     return class;
 }
 
-_AKX afxClass* AwxGetModelClass(afxSimulation sim)
+_AKX afxManager* AwxGetModelClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->models;
+    afxManager *class = &sim->models;
     AfxAssertClass(class, afxFcc_MDL);
     return class;
 }
 
-_AKX afxClass* AfxGetLightClass(afxSimulation sim)
+_AKX afxManager* AfxGetLightClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->lights;
+    afxManager *class = &sim->lights;
     AfxAssertClass(class, afxFcc_LIT);
     return class;
 }
 
-_AKX afxClass* AfxGetBodyClass(afxSimulation sim)
+_AKX afxManager* AfxGetBodyClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->bodies;
+    afxManager *class = &sim->bodies;
     AfxAssertClass(class, afxFcc_BOD);
     return class;
 }
 
-_AKX afxClass* AwxGetMotorClass(afxSimulation sim)
+_AKX afxManager* AwxGetMotorClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->motors;
+    afxManager *class = &sim->motors;
     AfxAssertClass(class, afxFcc_MOT);
     return class;
 }
 
-_AKX afxClass* AfxGetEntityClass(afxSimulation sim)
+_AKX afxManager* AfxGetEntityClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->entities;
+    afxManager *class = &sim->entities;
     AfxAssertClass(class, afxFcc_ENT);
     return class;
 }
 
-_AKX afxClass* AfxGetSkeletonClass(afxSimulation sim)
+_AKX afxManager* AfxGetSkeletonClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->skeletons;
+    afxManager *class = &sim->skeletons;
     AfxAssertClass(class, afxFcc_SKL);
     return class;
 }
 
-_AKX afxClass* AfxGetNodeClass(afxSimulation sim)
+_AKX afxManager* AfxGetNodeClass(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *class = &sim->nodes;
+    afxManager *class = &sim->nodes;
     AfxAssertClass(class, afxFcc_NOD);
     return class;
 }
@@ -165,60 +167,60 @@ _AKX afxNat AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBo
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AfxGetBodyClass(sim);
+    afxManager *cls = AfxGetBodyClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)bod);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)bod);
 }
 
 _AKX afxNat AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awxEntity ent[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AfxGetEntityClass(sim);
+    afxManager *cls = AfxGetEntityClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)ent);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)ent);
 }
 
 _AKX afxNat AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AfxGetMaterialClass(sim);
+    afxManager *cls = AfxGetMaterialClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mtl);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)mtl);
 }
 
 _AKX afxNat AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AwxGetMeshClass(sim);
+    afxManager *cls = AwxGetMeshClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)msh);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)msh);
 }
 
 _AKX afxNat AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AwxGetModelClass(sim);
+    afxManager *cls = AwxGetModelClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)mdl);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)mdl);
 }
 
 _AKX afxNat AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat cnt, afxSkeleton skl[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
-    afxClass *cls = AfxGetSkeletonClass(sim);
+    afxManager *cls = AfxGetSkeletonClass(sim);
     AfxAssertType(cls, afxFcc_CLS);
-    //AfxAssert(AfxCountInstances(cls) >= base + cnt);
-    return AfxEnumerateInstances(cls, base, cnt, (afxObject*)skl);
+    //AfxAssert(AfxCountObjects(cls) >= base + cnt);
+    return AfxEnumerateObjects(cls, base, cnt, (afxObject*)skl);
 }
 
 _AKX void AfxQuerySimulationErrorTolerance(afxSimulation sim, afxReal allowedErr, afxReal *allowedErrEnd, afxReal *allowedErrScaler)
@@ -253,7 +255,7 @@ _AKX void AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPerMeter, af
     AfxAssert(atv);
 
     afxM3d srcAxisSys;
-    AfxSetM3d(srcAxisSys, right, up, back);
+    AfxSetM3dTransposed(srcAxisSys, right, up, back);
 
     AfxMultiplyM3d(ltm, sim->basis, srcAxisSys);
 
@@ -322,7 +324,6 @@ _AKX afxError _AfxSimulationProcess(afxSimulation sim)
 _AKX afxError _AfxSimDtor(afxSimulation sim)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("sim=%p", sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     _AfxUninstallChainedClasses(&sim->classes);
@@ -335,7 +336,6 @@ _AKX afxError _AfxSimDtor(afxSimulation sim)
 _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("sim=%p", sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
     awxSimulationConfig const *config = ((awxSimulationConfig const*)cookie->udd[0]) + cookie->no;
@@ -384,7 +384,7 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
             sim->unitsPerMeter = config->unitsPerMeter;
         }
 
-        AfxSetM3dTransposed(sim->basis, sim->right, sim->up, sim->back);
+        AfxSetM3d(sim->basis, sim->right, sim->up, sim->back);
 
         {
             
@@ -395,24 +395,24 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 
             //afxClassConfig tmp;
 
-            AfxMountClass(&sim->assets, NIL, classes, &_AfxCadClsConfig);
+            AfxSetUpManager(&sim->assets, NIL, classes, &_AfxCadClsConfig);
 
-            AfxMountClass(&sim->materials, NIL, classes, &_AfxMtlClsConfig);
-            AfxMountClass(&sim->meshes, NIL, classes, &_AfxMshClsConfig);
-            AfxMountClass(&sim->topologies, NIL, classes, &_AfxMshtClsConfig);
-            AfxMountClass(&sim->meshDatas, NIL, classes, &_AfxVtdClsConfig);
-            AfxMountClass(&sim->nodes, NIL, classes, &_AfxNodClsConfig);
-            AfxMountClass(&sim->skeletons, NIL, classes, &_AfxSklClsConfig);
-            AfxMountClass(&sim->models, NIL, classes, &_AfxMdlClsConfig);
-            AfxMountClass(&sim->bodies, NIL, classes, &_AwxBodClsConfig);
-            AfxMountClass(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
-            AfxMountClass(&sim->motions, NIL, classes, &_AwxMotClsConfig);
-            AfxMountClass(&sim->animations, NIL, classes, &_AwxAniClsConfig);
+            AfxSetUpManager(&sim->materials, NIL, classes, &_AfxMtlClsConfig);
+            AfxSetUpManager(&sim->meshes, NIL, classes, &_AfxMshClsConfig);
+            AfxSetUpManager(&sim->topologies, NIL, classes, &_AfxMshtClsConfig);
+            AfxSetUpManager(&sim->meshDatas, NIL, classes, &_AfxVtdClsConfig);
+            //AfxSetUpManager(&sim->nodes, NIL, classes, &_AfxNodClsConfig);
+            AfxSetUpManager(&sim->skeletons, NIL, classes, &_AfxSklClsConfig);
+            AfxSetUpManager(&sim->models, NIL, classes, &_AfxMdlClsConfig);
+            AfxSetUpManager(&sim->bodies, NIL, classes, &_AwxBodClsConfig);
+            AfxSetUpManager(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
+            AfxSetUpManager(&sim->motions, NIL, classes, &_AwxMotClsConfig);
+            AfxSetUpManager(&sim->animations, NIL, classes, &_AwxAniClsConfig);
 
-            AfxMountClass(&sim->entities, NIL, classes, &_AfxEntClsConfig);
-            AfxMountClass(&sim->lights, NIL, classes, &_AfxLitClsConfig);
+            AfxSetUpManager(&sim->entities, NIL, classes, &_AfxEntClsConfig);
+            AfxSetUpManager(&sim->lights, NIL, classes, &_AfxLitClsConfig);
 
-            AfxMountClass(&sim->renderers, NIL, classes, &_AfxRndClsConfig);
+            AfxSetUpManager(&sim->renderers, NIL, classes, &_AfxRndClsConfig);
 
 
         }
@@ -445,26 +445,14 @@ _AKX afxClassConfig _AfxSimClsConfig =
 _AKX afxError AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[])
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetSimulationClass();
+    afxManager* cls = AfxGetSimulationClass();
+    AfxAssertClass(cls, afxFcc_SIM);
 
-    static afxBool simClsMounted = FALSE;
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)simulations, (void const*[]) { (void*)config }))
+        AfxThrowError();
 
-    if (!simClsMounted)
-    {
-        AfxMountClass(cls, NIL, NIL, &_AfxSimClsConfig);
-        simClsMounted = TRUE;
-    }
-
-    if (!simClsMounted) AfxThrowError();
-    else
-    {
-        AfxAssertClass(cls, afxFcc_SIM);
-
-        if (AfxAcquireObjects(cls, cnt, (afxObject*)simulations, (void const*[]) { (void*)config }))
-            AfxThrowError();
-
-        AfxAssertObjects(cnt, simulations, afxFcc_SIM);
-    }
+    AfxAssertObjects(cnt, simulations, afxFcc_SIM);
+    
     return err;
 }
 
@@ -473,9 +461,9 @@ _AKX afxNat AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimula
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetSimulationClass();
+    afxManager* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AKX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[])
@@ -483,22 +471,29 @@ _AKX afxNat AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simu
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(simulations);
-    afxClass* cls = AfxGetSimulationClass();
+    afxManager* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)simulations);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)simulations);
 }
 
 _AKX afxNat AfxCountSimulations(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetSimulationClass();
+    afxManager* cls = AfxGetSimulationClass();
     AfxAssertClass(cls, afxFcc_SIM);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
-_AKX afxClass* AfxGetSimulationClass(void)
+_AKX afxManager* AfxGetSimulationClass(void)
 {
     afxError err = AFX_ERR_NONE;
-    static afxClass _simCls = { 0 };
+    static afxManager _simCls = { 0 };
+    static afxBool simClsMounted = FALSE;
+
+    if (_simCls.fcc != afxFcc_CLS)
+    {
+        AfxSetUpManager(&_simCls, NIL, /*_AfxGetSystemClassChain()*/NIL, &_AfxSimClsConfig);
+        simClsMounted = TRUE;
+    }
     return &_simCls;
 }

@@ -30,8 +30,8 @@ _AVX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
     {
         AfxAssertObject(subm->scripts[i], afxFcc_DSCR);
 
-        if (subm->scripts[i]->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
-            subm->scripts[i]->state = afxDrawScriptState_EXECUTABLE;
+        if (subm->scripts[i]->state == afxDrawStreamState_PENDING) // preserve state if modified by draw queue.
+            subm->scripts[i]->state = afxDrawStreamState_EXECUTABLE;
 
         AfxReleaseObject(&subm->scripts[i]->obj);
     }
@@ -42,7 +42,7 @@ _AVX afxError _AfxDqueDiscardSubm(afxDrawQueue dque, afxDrawSubmission *subm)
         AfxAssertRange(AfxGetDrawOutputCapacity(subm->outputs[i]), subm->outputBufIdx[i], 1);
         afxSurface surf = AfxGetDrawOutputBuffer(subm->outputs[i], subm->outputBufIdx[i]);
 
-        if (surf->state == afxDrawScriptState_PENDING) // preserve state if modified by draw queue.
+        if (surf->state == afxDrawStreamState_PENDING) // preserve state if modified by draw queue.
             surf->state = AFX_SURF_STATE_PRESENTABLE;
 
         AfxReleaseObject(&surf->tex.obj);
@@ -224,18 +224,18 @@ _AVX afxError _AfxSubmitDrawQueueWorkloads(afxDrawQueue dque, afxDrawSubmissionS
         {
             AfxAssertObject(spec->scripts[i], afxFcc_DSCR);
 
-            if (AfxGetDrawScriptState(spec->scripts[i]) != afxDrawScriptState_EXECUTABLE)
+            if (AfxGetDrawStreamState(spec->scripts[i]) != afxDrawStreamState_EXECUTABLE)
             {
                 AfxThrowError();
 
                 for (afxNat j = 0; j < i; ++j)
                 {
-                    spec->scripts[j]->state = afxDrawScriptState_EXECUTABLE;
+                    spec->scripts[j]->state = afxDrawStreamState_EXECUTABLE;
                 }
                 break;
             }
 
-            spec->scripts[i]->state = afxDrawScriptState_PENDQUEG;
+            spec->scripts[i]->state = afxDrawStreamState_PENDQUEG;
             AfxObjectReacquire(&spec->scripts[i]->obj, &dque->obj, NIL, 0, NIL);
             dwrkScript->scripts[i] = spec->scripts[i];
             ++dwrkScript->scriptCnt;

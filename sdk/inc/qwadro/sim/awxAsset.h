@@ -17,7 +17,7 @@
 #ifndef AFX_ASSET_H
 #define AFX_ASSET_H
 
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/sim/awxEntity.h"
 #include "qwadro/io/afxSource.h"
 #include "qwadro/sim/rendering/awxLight.h"

@@ -21,7 +21,8 @@
 #include "sgl.h"
 
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawCommands.h"
+#include "qwadro/sim/afxSimulation.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
@@ -439,7 +440,8 @@ _SGL void _SglDpuUpdateUniformMatrix(sglDpuIdd* dpu, _sglCmdUniformMatrixEXT con
     glVmt const* gl = &dpu->gl;
 
     GLuint loc = gl->GetUniformLocation(dpu->activePip->glHandle, cmd->name);
-    gl->UniformMatrix4fv(loc, cmd->cnt, GL_FALSE, cmd->m);
+    //gl->UniformMatrix4fv(loc, cmd->cnt, GL_FALSE, cmd->m);
+    AfxThrowError();
 }
 
 // DO WORK
@@ -796,11 +798,11 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _sglCmdExecCmds const* cmd)
 
     for (afxNat i = 0; i < cmd->cnt; i++)
     {
-        afxDrawScript dscr = cmd->subsets[i];
+        afxDrawStream dscr = cmd->subsets[i];
         AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-        AfxAssert(dscr->base.state == afxDrawScriptState_PENDING);
+        AfxAssert(dscr->base.state == afxDrawStreamState_PENDING);
 
-        if (dscr->base.state == afxDrawScriptState_PENDING)
+        if (dscr->base.state == afxDrawStreamState_PENDING)
         {
             _sglCmd *cmdHdr;
             AfxChainForEveryLinkageB2F(&dscr->commands, _sglCmd, script, cmdHdr)
@@ -808,7 +810,7 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _sglCmdExecCmds const* cmd)
                 if (cmdHdr->id == NIL/*SGL_CMD_END*/)
                     break;
 
-                if (dscr->base.state != afxDrawScriptState_PENDING)
+                if (dscr->base.state != afxDrawStreamState_PENDING)
                 {
                     AfxThrowError();
                     break;
@@ -819,13 +821,13 @@ _SGL void _SglDpuExecuteCommands(sglDpuIdd* dpu, _sglCmdExecCmds const* cmd)
 
             if (!err)
             {
-                dscr->base.state = afxDrawScriptState_EXECUTABLE;
+                dscr->base.state = afxDrawStreamState_EXECUTABLE;
             }
 
             if (err || dscr->base.disposable)
             {
                 AfxAssert(dscr->base.portIdx == dpu->portIdx);
-                dscr->base.state = afxDrawScriptState_INVALID;
+                dscr->base.state = afxDrawStreamState_INVALID;
             }
         }
     }
@@ -841,13 +843,13 @@ _SGL afxError _SglDpuExecute(sglDpuIdd* dpu, _sglQueueingExecute* subm)
 
     for (afxNat i = 0; i < subm->itemCnt; i++)
     {
-        afxDrawScript dscr = subm->items[i].dscr;
+        afxDrawStream dscr = subm->items[i].dscr;
         AfxAssertObjects(1, &dscr, afxFcc_DSCR);
         AfxAssertObjects(1, &dpu->activeDctx, afxFcc_DCTX);
 
-        if (dscr->base.state == afxDrawScriptState_PENDING)
+        if (dscr->base.state == afxDrawStreamState_PENDING)
         {
-            AfxAssert(dscr->base.state == afxDrawScriptState_PENDING);
+            AfxAssert(dscr->base.state == afxDrawStreamState_PENDING);
 
             _sglCmd * cmdHdr;
             AfxChainForEveryLinkageB2F(&dscr->commands, _sglCmd, script, cmdHdr)
@@ -855,7 +857,7 @@ _SGL afxError _SglDpuExecute(sglDpuIdd* dpu, _sglQueueingExecute* subm)
                 if (cmdHdr->id == NIL/*SGL_CMD_END*/)
                     break;
 
-                if (dscr->base.state != afxDrawScriptState_PENDING)
+                if (dscr->base.state != afxDrawStreamState_PENDING)
                 {
                     AfxThrowError();
                     break;
@@ -875,13 +877,13 @@ _SGL afxError _SglDpuExecute(sglDpuIdd* dpu, _sglQueueingExecute* subm)
 
             if (!err)
             {
-                dscr->base.state = afxDrawScriptState_EXECUTABLE;
+                dscr->base.state = afxDrawStreamState_EXECUTABLE;
             }
 
             if (err || dscr->base.disposable)
             {
                 AfxAssert(dscr->base.portIdx == dpu->portIdx);
-                dscr->base.state = afxDrawScriptState_INVALID;
+                dscr->base.state = afxDrawStreamState_INVALID;
             }
         }
     }
@@ -1067,12 +1069,12 @@ _SGL afxError _SglDpuPresent(sglDpuIdd* dpu, _sglQueueingPresent* subm)
             //gl->ClipControl(GL_LOWER_LEFT, GL_NEGATIVE_ONE_TO_ONE); _SglThrowErrorOccuried(); // reset GL default
 
             afxNat currIter, lastFreq;
-            AfxGetExecutionCounter(&currIter, &lastFreq);
+            AfxGetThreadCounter(&currIter, &lastFreq);
 
             if (0 == currIter)
             {
                 afxReal64 currTime, deltaTime;
-                AfxGetExecutionTime(&currTime, &deltaTime);
+                AfxQueryThreadTime(&currTime, &deltaTime);
                 AfxFormatString(&dout->base.caption, "Delta time %0f, IPS %u --- OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq);
                 SetWindowTextA(dout->wnd, AfxGetStringData(&dout->base.caption.str, 0));
             }
@@ -1379,11 +1381,11 @@ _SGL afxError _SglDctxExecute(afxDrawContext dctx, afxNat cnt, afxExecutionReque
 
         for (afxNat i = 0; i < cnt; i++)
         {
-            afxDrawScript dscr = req[i].dscr;
+            afxDrawStream dscr = req[i].dscr;
             AfxAssertObjects(1, &dscr, afxFcc_DSCR);
 
             subm->items[i] = req[i];
-            subm->items[i].dscr->base.state = afxDrawScriptState_PENDING;
+            subm->items[i].dscr->base.state = afxDrawStreamState_PENDING;
         }
 
         AfxEnterSlockExclusive(&dque->base.pendingChainSlock);
@@ -1484,7 +1486,6 @@ _SGL afxError _SglDqueWaitCb(afxDrawQueue dque)
 
 _SGL afxError _SglDqueDtor(afxDrawQueue dque)
 {
-    AfxEntry("dque=%p", dque);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
 
@@ -1503,7 +1504,6 @@ _SGL afxError _SglDqueDtor(afxDrawQueue dque)
 
 _SGL afxError _SglDqueCtor(afxDrawQueue dque, afxCookie const* cookie)
 {
-    AfxEntry("dque=%p", dque);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dque, afxFcc_DQUE);
 
@@ -1515,7 +1515,7 @@ _SGL afxError _SglDqueCtor(afxDrawQueue dque, afxCookie const* cookie)
     sglDrawQueueSpecification const *spec = ((sglDrawQueueSpecification const *)cookie->udd[2]);
     afxDrawQueue dque2;
 
-    if (!AfxGetInstance(&ddev->ports[portIdx].queues, AfxIdentifyObject(dque), (afxObject*)&dque2) || dque2 != dque) AfxThrowError();
+    if (!(dque2 = AfxGetObjectAt(&ddev->ports[portIdx].queues, AfxIdentifyObject(dque))) || dque2 != dque) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &dque2, afxFcc_DQUE);

@@ -75,18 +75,6 @@
     <ClCompile Include="..\..\qwadro\sim\motion\afxCurve2.c">
       <Filter>qwadro\sim\motion</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\sim\motion\Vmt.c">
-      <Filter>qwadro\sim\motion</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\sim\motion\SampleTrackVmt.c">
-      <Filter>qwadro\sim\motion</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\sim\motion\SampleTrackVmt - Cópia (2).c">
-      <Filter>qwadro\sim\motion</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\sim\motion\BuildGenericVmt.c">
-      <Filter>qwadro\sim\motion</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\sim\rendering\awxLight.c">
       <Filter>qwadro\sim\rendering</Filter>
     </ClCompile>
@@ -101,6 +89,18 @@
     </ClCompile>
     <ClCompile Include="..\..\qwadro\sim\awxPoseBuffer.c">
       <Filter>qwadro\sim</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sim\motion\_BuildGenericVmt.c">
+      <Filter>qwadro\sim\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sim\motion\_SampleTrackVmt.c">
+      <Filter>qwadro\sim\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sim\motion\_Vmt.c">
+      <Filter>qwadro\sim\motion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\sim\motion\_MotiveVmt.c">
+      <Filter>qwadro\sim\motion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

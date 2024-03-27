@@ -31,7 +31,7 @@
 // The descriptor set number 2 will be used for material resources, and the number 3 will be used for per-object resources.
 // This way, the inner render loops will only be binding descriptor sets 2 and 3, and performance will be high.
 
-#include "qwadro/draw/pipe/afxShader.h"
+#include "qwadro/draw/io/afxShader.h"
 
 AFX_DEFINE_HANDLE(afxLigature);
 

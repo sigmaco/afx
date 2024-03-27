@@ -15,7 +15,7 @@
  */
 
 #include "qwadro/draw/io/afxXsh.h"
-#include "qwadro/draw/pipe/afxShaderBlueprint.h"
+#include "qwadro/draw/io/afxShaderBlueprint.h"
 #include "qwadro/io/afxFile.h"
 
 AVX afxChar const *shdResTypeNames[];
@@ -24,9 +24,9 @@ _AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
 {
     afxError err = NIL;
 
-    afxFile file;
+    afxStream file;
 
-    if (AfxOpenFiles(afxFileFlag_R, 1, path, &file)) AfxThrowError();
+    if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
     else
     {
         afxUri inc;
@@ -1082,14 +1082,14 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
     afxDrawSystem dsys = AfxDrawContextGetDrawSystem(dctx);
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    afxIoSystem fsys = AfxGetDrawFileSystem(dsys);
+    afxIoSystem fsys = AfxGetDrawStorage(dsys);
     AfxAssertObject(fsys, afxFcc_FSYS);
 
     for (afxNat i = 0; i < cnt; i++)
     {
         afxXml xml;
 
-        if (!(xml = AfxFileSystemLoadXml(fsys, &uri[i]))) AfxThrowError();
+        if (!(xml = AfxStorageLoadXml(fsys, &uri[i]))) AfxThrowError();
         else
         {
             AfxAssertObject(xml, afxFcc_XML);

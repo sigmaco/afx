@@ -25,7 +25,7 @@
 #define _AFX_HID_C
 #define _AFX_GAMEPAD_C
 #define _AFX_CONTROLLER_C
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/io/afxGamepad.h"
 #include "qwadro/io/afxMouse.h"
@@ -73,7 +73,7 @@ _AFX afxError AfxAcquireControllers(afxNat cnt, afxNat const port[], afxControll
 {
     AfxEntry("cnt=%u,port=%p,controllers=%p", cnt, port, controllers);
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetControllerClass();
+    afxManager* cls = AfxGetControllerClass();
     AfxAssertClass(cls, afxFcc_CTRL);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -108,9 +108,9 @@ _AFX afxNat AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxContro
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxClass* cls = AfxGetControllerClass();
+    afxManager* cls = AfxGetControllerClass();
     AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxInvokeInstances(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[])
@@ -118,17 +118,17 @@ _AFX afxNat AfxEnumerateControllers(afxNat first, afxNat cnt, afxController cont
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(controllers);
-    afxClass* cls = AfxGetControllerClass();
+    afxManager* cls = AfxGetControllerClass();
     AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)controllers);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)controllers);
 }
 
 _AFX afxNat AfxCountControllers(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxClass* cls = AfxGetControllerClass();
+    afxManager* cls = AfxGetControllerClass();
     AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxCountInstances(cls);
+    return AfxCountObjects(cls);
 }
 
 _AFX afxController AfxGetController(afxNat port)

@@ -16,15 +16,14 @@
 
 #define _AFX_CAMERA_C
 #define _AFX_DRAW_C
-#include "qwadro/math/afxMatrix.h"
+#include "qwadro/draw/afxDrawInput.h"
+#include "qwadro/math/afxOpticalMatrix.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxFrustum.h"
-#include "qwadro/core/afxClass.h"
+#include "qwadro/core/afxManager.h"
 #include "qwadro/draw/afxCamera.h"
 #include "qwadro/core/afxSystem.h"
 #include "qwadro/math/afxQuaternion.h"
-
-AVXINL afxDrawSystem AfxGetDrawSystem(void);
 
 _AVX void AfxGetCameraMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
@@ -659,7 +658,7 @@ _AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev
         {
             afxV2d delta;
             afxV3d deltaEar;
-            AfxGetLastMouseMotion(0, delta);
+            AfxGetMouseMotion(0, delta);
             deltaEar[1] = -((afxReal)(delta[0] * AFX_PI / 180.f));
             deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.f));
             deltaEar[2] = 0.f;
@@ -673,7 +672,7 @@ _AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev
         {
             afxV2d delta;
             afxV3d off;
-            AfxGetLastMouseMotion(0, delta);
+            AfxGetMouseMotion(0, delta);
             off[0] = -((afxReal)(delta[0] * AFX_PI / 180.f));
             off[1] = -((afxReal)(delta[1] * AFX_PI / 180.f));
             off[2] = 0.f;
@@ -684,7 +683,7 @@ _AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev
     }
     case AFX_EVENT_MSE_WHEEL_UPDATED:
     {
-        afxReal w = AfxGetLastMouseWheelData(0);
+        afxReal w = AfxGetMouseWheelDelta(0);
         w = w / 120.f; // WHEEL_DELTA
         AfxApplyCameraDistance(cam, w);
         break;
@@ -748,7 +747,7 @@ _AVX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
 
-    afxClass* cls = AfxGetCameraClass(din);
+    afxManager* cls = AfxGetCameraClass(din);
     AfxAssertClass(cls, afxFcc_CAM);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)cam, (void const*[]) { (void*)NIL }))
@@ -763,9 +762,9 @@ _AVX afxNat AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxC
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxClass *cls = AfxGetCameraClass(din);
+    afxManager *cls = AfxGetCameraClass(din);
     AfxAssertClass(cls, afxFcc_CAM);
-    return AfxEnumerateInstances(cls, first, cnt, (afxObject*)cam);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)cam);
 }
 
 _AVX afxReal AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)

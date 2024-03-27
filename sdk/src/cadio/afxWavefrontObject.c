@@ -16,7 +16,7 @@
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
 
-//afxExecutable* e2object = NIL;
+//afxModule* e2object = NIL;
 
 struct cadbData
 {
@@ -50,7 +50,7 @@ _AFXEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afx
         *resCnt = data->meshCnt + 1 + 1;
 
     if (name && data->name)
-        AfxExcerptUriPath(data->name, name);
+        AfxPickUriPath(data->name, name);
 
 }
 
@@ -72,9 +72,9 @@ _AFXEXPORT void* CadbGetResourceInfoObj(void* data2, afxFcc type, afxNat resIdx,
     if (name)
     {
         if (type != afxFcc_MSH)
-            AfxExcerptUriName(data->name, name);
+            AfxPickUriObject(data->name, name);
         else
-            AfxResetUri(name);//AfxExcerptUriName(name, &data->meshNames[resIdx]);
+            AfxResetUri(name);//AfxPickUriObject(name, &data->meshNames[resIdx]);
     }
 
     if (type == afxFcc_MSH)
@@ -100,8 +100,8 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 
     AfxAssert(sim);
     afxMmu mmu = AfxGetSimulationMmu(sim);
-    afxStringCatalog strc;
-    AfxAcquireStringCatalogs(1, &strc);
+    afxStringBase strb;
+    AfxAcquireStringCatalogs(1, &strb);
 
     for (afxNat i = 0; i < cnt; i++)
     {
@@ -111,14 +111,14 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
         afxUri file2;
         afxUri2048 uri2;
         AfxMakeUri2048(&uri2, NIL);
-        AfxExcerptUriPath(&file[i], &file2);
+        AfxPickUriPath(&file[i], &file2);
         AfxResolveUri(afxFileFlag_R, &file2, &uri2.uri);
 
         if (!_ldrWavefrontLoadScene(AfxGetUriStorage(&uri2.uri, 0), &g_wavefrontScene, NIL)) AfxThrowError();
         else
         {
             afxUri mdlNameUri;
-            AfxExcerptUriName(&file2, &mdlNameUri);
+            AfxPickUriObject(&file2, &mdlNameUri);
             afxString const*mdlName = AfxGetUriString(&mdlNameUri);
 
             afxNat meshCnt = 0, totalArtCnt = 0;
@@ -247,7 +247,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
             AfxAllocateArray(&meshes, meshCnt, sizeof(afxMesh), NIL);
             AfxReserveArraySpace(&meshes, meshCnt);
 
-            if (AfxBuildMeshes(sim, strc, meshCnt, builders.data, meshes.data))
+            if (AfxBuildMeshes(sim, strb, meshCnt, builders.data, meshes.data))
                 AfxThrowError();
 
             //AfxRenormalizeMeshes(meshCnt, meshes.data);
@@ -259,7 +259,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 
             afxSkeleton skl = NIL;
             
-            if (AfxBuildSkeletons(sim, strc, 1, &sklb, &skl))
+            if (AfxBuildSkeletons(sim, strb, 1, &sklb, &skl))
                 AfxThrowError();
 
             AfxAssertObjects(1, &skl, afxFcc_SKL);
@@ -269,11 +269,11 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
 
             afxModel mdl;
             afxModelBlueprint mdlb = { 0 };
-            AfxResetTransform(&mdlb.init);
+            AfxResetTransform(&mdlb.displacement);
             mdlb.skl = skl;
             mdlb.mshCnt = meshCnt;
             mdlb.meshes = meshes.data;
-            mdlb.strc = strc;
+            mdlb.strb = strb;
             AfxMakeString32(&mdlb.id, mdlName);
             AfxAssembleModel(sim, 1, &mdlb, &mdl);
             AfxAssertObjects(1, &mdl, afxFcc_MDL);

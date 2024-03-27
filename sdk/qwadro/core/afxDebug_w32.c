@@ -34,17 +34,18 @@
 
 #include "qwadro/core//afxSystem.h"
 #include "qwadro/core/afxDebug.h"
-#include "qwadro/async/afxThread.h"
-#include "qwadro/async/afxCondition.h"
+#include "qwadro/core/afxThread.h"
+#include "qwadro/core/afxWaitCondition.h"
 #include "qwadro/core/afxObject.h"
 #include "qwadro/core/afxString.h"
+#include "qwadro/core/afxTerminal.h"
 
 extern afxString const qwadroSignature;
 
 AFX_DEFINE_STRUCT(afxDebugger)
 {
     afxMutex        mtx;
-    AfxCondition         cond;
+    afxWaitCondition         cond;
     afxBool         isLocked;
 
     afxNat          unitLockerIdx;
@@ -86,16 +87,11 @@ AFXINL afxResult _AfxLogFn(afxNat32 color, afxChar const* msg)
     if (color & 0xFF000000)
         tattr |= FOREGROUND_RED;
 
-    if (debugger.output)
-    {
-        SetConsoleTextAttribute(debugger.conOutHnd, tattr);
-        fprintf(debugger.output, "%s", msg);
-        fflush(debugger.output);
-    }
+    AfxPrint(color, msg);
 
     if (debugger.dump)
     {
-        fprintf(debugger.dump, "%s", msg);
+        fputs(msg, debugger.dump);
         fflush(debugger.dump);
     }
     return 1;
@@ -109,9 +105,9 @@ void AfxLogCall(afxHint const hint, afxChar const* args, ...)
         int len;
 
 #ifdef AFX_PLATFORM_64
-        len = stbsp_sprintf(msg, "\n %s:%lli\n  %s(", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
 #else
-        len = stbsp_sprintf(msg, "\n %s:%i\n  %s(",  AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
 #endif
 
         va_list args2;
@@ -119,7 +115,8 @@ void AfxLogCall(afxHint const hint, afxChar const* args, ...)
         int len2 = stbsp_vsprintf(&msg[len], args, args2);
         va_end(args2);
         msg[len + len2] = ')';
-        msg[len + len2 + 1] = '\0';
+        msg[len + len2 + 1] = '\n';
+        msg[len + len2 + 2] = '\0';
 
         _AfxLogFn(0x000000FF, msg);
         AfxUnlockDebugger();
@@ -135,14 +132,14 @@ void AfxLogComment(afxHint const hint, afxChar const* msg, ...)
 
         if (msg && msg[0])
         {
-            len = stbsp_sprintf(msg2, "\n ");
+            len = 0;// stbsp_sprintf(msg2, "\n ");
     }
         else
         {
 #ifdef AFX_PLATFORM_64
-            len = stbsp_sprintf(msg2, "\n ... %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
+            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
-            len = stbsp_sprintf(msg2, "\n ... %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
 #endif
         }
 
@@ -157,6 +154,7 @@ void AfxLogComment(afxHint const hint, afxChar const* msg, ...)
             va_end(args);
         }
 
+        msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFFFFFFFF, msg2);
@@ -173,14 +171,14 @@ void AfxLogEcho(afxHint const hint, afxChar const* msg, ...)
 
         if (msg && msg[0])
         {
-            len = stbsp_sprintf(msg2, "\n ");
+            len = 0;// stbsp_sprintf(msg2, "");
         }
         else
         {
 #ifdef AFX_PLATFORM_64
-            len = stbsp_sprintf(msg2, "\n SUC %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
+            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
-            len = stbsp_sprintf(msg2, "\n SUC %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
 #endif
         }
 
@@ -195,6 +193,7 @@ void AfxLogEcho(afxHint const hint, afxChar const* msg, ...)
             va_end(args);
         }
 
+        msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0x00FF0000, msg2);
@@ -210,9 +209,9 @@ void AfxLogAssistence(afxHint const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_PLATFORM_64
-        len = stbsp_sprintf(msg2, "\n [$] %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "\n [$] %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -226,6 +225,7 @@ void AfxLogAssistence(afxHint const hint, afxChar const* msg, ...)
             va_end(args);
         }
 
+        msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFF00FF00, msg2);
@@ -241,9 +241,9 @@ void AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_PLATFORM_64
-        len = stbsp_sprintf(msg2, "\n [!] %s:%lli?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "\n [!] %s:%i?%s\n  ", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -257,6 +257,7 @@ void AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...)
             va_end(args);
         }
 
+        msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFFFF0000, msg2);
@@ -272,9 +273,9 @@ void AfxLogError(afxHint const hint, afxChar const* msg, ...)
         int len;
 
 #ifdef AFX_PLATFORM_64
-        len = stbsp_sprintf(msg2, "\n ERR %s:%lli?%s\n  ", AfxFindPathTarget((char const * const)hint[0]), hint[1], (char const * const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
 #else
-        len = stbsp_sprintf(msg2, "\n ERR %s:%i?%s\n  ", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1], (char const * const)hint[2]);
+        len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
 #endif
 
         int len2;
@@ -288,6 +289,7 @@ void AfxLogError(afxHint const hint, afxChar const* msg, ...)
             va_end(args);
         }
 
+        msg2[len + len2] = '\n';
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFF000000, msg2);
@@ -325,83 +327,6 @@ afxResult AfxLogMessage(afxNat32 color, afxChar const* msg)
     return 0;
 }
 
-_AFXEXPORT afxResult AfxDetachDebugTerminal(void)
-{
-    AfxEntry("");
-
-    if (AfxLockDebugger())
-    {
-        if (debugger.conOutHnd != INVALID_HANDLE_VALUE)
-        {
-            //CloseHandle(debugger.conOutHnd);
-            debugger.conOutHnd = INVALID_HANDLE_VALUE;
-        }
-
-        if (debugger.conWnd)
-        {
-            //CloseHandle(debugger.conWnd);
-            debugger.conWnd = NIL;
-            //FreeConsole();
-        }
-
-        if (debugger.output)
-        {
-            //fclose(debugger.output);
-            debugger.output = NIL;
-        }
-
-        AfxUnlockDebugger();
-    }
-    return 0;
-}
-
-_AFXEXPORT afxResult AfxAttachDebugTerminal(void)
-{
-    AfxEntry("");
-    afxResult rslt = 0;
-    afxError err = AFX_ERR_NONE;
-
-    if (AfxLockDebugger())
-    {
-        //FreeConsole();
-
-        debugger.conWnd = GetConsoleWindow();
-
-        if (INVALID_HANDLE_VALUE == debugger.conWnd || NULL == debugger.conWnd)
-            if (!AllocConsole())
-                AfxThrowError();
-
-        debugger.conWnd = GetConsoleWindow();
-
-        if (!debugger.conWnd) AfxThrowError();
-        else
-        {
-#if 0
-            DWM_BLURBEHIND bb = { 0 };
-            bb.dwFlags = DWM_BB_ENABLE;
-            bb.fEnable = TRUE;
-            bb.hRgnBlur = NULL;
-            DwmEnableBlurBehindWindow(debugger.conWnd, &(bb));
-#endif
-            debugger.output = freopen("CONOUT$", "w", stdout);
-
-            if (!debugger.output) AfxThrowError();
-            else
-            {
-                //setbuf(debugger.output);
-                debugger.conOutHnd = GetStdHandle(STD_OUTPUT_HANDLE);
-
-                afxChar buf[1024];
-                stbsp_sprintf(buf, "Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build");
-                SetConsoleTitleA(buf);
-                rslt = 1;
-            }
-        }
-        AfxUnlockDebugger();
-    }
-    return rslt;
-}
-
 afxResult AfxUnlockDebugger(void)
 {
     afxResult rslt;
@@ -436,7 +361,7 @@ afxResult AfxLockDebugger(void)
     if (!debugger.running) rslt = 0;
     else
     {
-        if (!(rslt = AfxLockMutex(&(debugger.mtx)))) printf("couldn't lock mutex");
+        if (!(rslt = !AfxLockMutex(&(debugger.mtx)))) printf("couldn't lock mutex");
         else
         {
             afxNat oldUnitIdx = debugger.unitLockerIdx;
@@ -449,7 +374,7 @@ afxResult AfxLockDebugger(void)
                 if (oldUnitIdx != debugger.unitLockerIdx)
                 {
                     afxChar msg2[512];
-                    stbsp_sprintf(msg2, "\n Entering the Thread Execution Environment %2u", debugger.unitLockerIdx);
+                    stbsp_sprintf(msg2, "Entering the Thread Execution Environment %2u\n", debugger.unitLockerIdx);
                     _AfxLogFn(0xFFFF0000, msg2);
                 }
             }
@@ -472,7 +397,7 @@ afxResult AfxDetachDebugger(void)
 
     if (AfxLockDebugger())
     {
-        AfxDetachDebugTerminal();
+        AfxReleaseTerminal();
 
         if (debugger.dump)
         {
@@ -481,7 +406,7 @@ afxResult AfxDetachDebugger(void)
         }
 
         debugger.running = 0;
-        AfxReleaseWaitCondition(&(debugger.cond));
+        AfxCleanUpWaitCondition(&(debugger.cond));
         AfxCleanUpMutex(&(debugger.mtx));
     }
     return 0;
@@ -495,8 +420,8 @@ afxResult AfxAttachDebugger(afxChar const* file)
     if (debugger.running) AfxThrowError();
     else
     {
-        AfxTakeMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
-        AfxTakeWaitCondition(&(debugger.cond));
+        AfxSetUpMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
+        AfxSetUpWaitCondition(&(debugger.cond));
         debugger.isLocked = TRUE;
 
         afxChar path[1024];
@@ -543,6 +468,7 @@ afxResult AfxAttachDebugger(afxChar const* file)
             //setbuf(debugger.dump);
             debugger.running = 1;
 
+#if 0
             if (!AfxAttachDebugTerminal()) AfxThrowError();
             else
             {
@@ -570,6 +496,14 @@ afxResult AfxAttachDebugger(afxChar const* file)
                 AfxUnlockDebugger();
                 return TRUE;
             }
+#else
+            if (AfxAcquireTerminal())
+            {
+                AfxUnlockDebugger();
+                return TRUE;
+            }
+#endif
+
             debugger.running = 0;
 
             if (debugger.dump)
@@ -579,7 +513,7 @@ afxResult AfxAttachDebugger(afxChar const* file)
             }
         }
 
-        AfxReleaseWaitCondition(&(debugger.cond));
+        AfxCleanUpWaitCondition(&(debugger.cond));
         AfxCleanUpMutex(&(debugger.mtx));
     }
     return FALSE;

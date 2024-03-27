@@ -17,7 +17,6 @@
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxOpticalMatrix.h"
 #include "qwadro/math/afxMathDefs.h"
-#include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxPlane.h"
 
@@ -226,7 +225,7 @@ _AFXINL void AfxComputeLookToMatrix(afxM4d m, afxV3d const eye, afxV3d const dir
         AfxNegV3d(negEye, eye);
 
         afxV4d const w = { AfxDotV3d(x, negEye), AfxDotV3d(y, negEye), AfxDotV3d(z, negEye), (afxReal)1 };
-        AfxSetM4dTransposed(m, x, y, z, w);
+        AfxSetM4d(m, x, y, z, w);
     }
     else // OpenGL/Vulkan/Qwadro
     {
@@ -272,7 +271,7 @@ _AFXINL void AfxComputeLookAtMatrix(afxM4d m, afxV3d const eye, afxV3d const tar
         u[3] = 0.f;
         f[3] = 0.f;
         afxV4d w = { -AfxDotV3d(s, eye), -AfxDotV3d(u, eye), AfxDotV3d(f, eye), 1.f };
-        AfxSetM4dTransposed(m, s, u, f, w);
+        AfxSetM4d(m, s, u, f, w);
     }
 }
 

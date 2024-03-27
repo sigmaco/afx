@@ -16,7 +16,6 @@
 
 #include "qwadro/math/afxRotor.h"
 #include "qwadro/math/afxQuaternion.h"
-#include "qwadro/math/afxReal.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 
@@ -37,28 +36,28 @@ _AFXINL void AfxWedgeBiv3d(afxV3d biv, afxV3d const u, afxV3d const v)
 }
 
 
-
+_AFX afxRotor AFX_ROTOR_ZERO = { 0, 0, 0, 0 };
 _AFX afxRotor AFX_ROTOR_IDENTITY = { 0, 0, 0, 1 };
 
 _AFXINL void AfxResetRotor(afxRotor r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxCopyQuat(r, AFX_ROTOR_IDENTITY);
+    AfxCopyV4d(r, AFX_ROTOR_IDENTITY);
 }
 
 _AFXINL void AfxZeroRotor(afxRotor r)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxCopyQuat(r, AFX_QUAT_ZERO);
+    AfxCopyV4d(r, AFX_ROTOR_ZERO);
 }
 
 _AFXINL void AfxSetRotor(afxRotor r, afxReal b01, afxReal b02, afxReal b12, afxReal a)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
-    AfxSetQuat(r, b01, b02, b12, a);
+    AfxSetV4d(r, b01, b02, b12, a);
 }
 
 // computa o rotor que rotaciona um unit vector a um outro
@@ -137,7 +136,7 @@ _AFXINL void AfxConjugateRotor(afxRotor r, afxRotor const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
     AfxAssert(in);
-    AfxConjugateQuat(r, in);
+    AfxNegAtv4d(r, in);
 }
 
 _AFXINL afxReal afxMagRotorSq(afxRotor const r)

@@ -18,9 +18,7 @@
 #include "qwadro/sim/rendering/awxRenderer.h"
 #endif
 
-afxClock StartClock;
-afxClock LastClock;
-
+afxApplication TheApp;
 awxBody cubeBod = NIL;
 afxModel cubeMdl = NIL;
 afxMesh cube = NIL;
@@ -48,12 +46,12 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
         awxRenderer rnd = AfxGetDrawInputUdd(din);
         afxDrawContext dctx = AfxGetDrawInputContext(din);
         
-        afxDrawScript dscr;
+        afxDrawStream dscr;
 
-        if (AfxAcquireDrawScripts(din, 0, 1, &dscr)) AfxThrowError();
+        if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
         else
         {
-            if (AfxRecordDrawScript(dscr, afxDrawScriptUsage_ONCE)) AfxThrowError();
+            if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
             else
             {
 
@@ -69,7 +67,11 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
 
                 if (bod)
-                    AwxCmdDrawBodies(dscr, rnd, 1, &bod);
+                {
+                    afxReal64 ct, dt;
+                    AfxQueryApplicationTimer(TheApp, &ct, &dt);
+                    AwxCmdDrawBodies(dscr, rnd, dt, 1, &bod);
+                }
 
                 //if (cubeBod)
                     //AwxCmdDrawBodies(dscr, rnd, 1, &cubeBod);
@@ -82,14 +84,14 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
                 afxSemaphore dscrCompleteSem = NIL;
 
-                if (AfxCompileDrawScript(dscr)) AfxThrowError();
+                if (AfxCompileDrawStream(dscr)) AfxThrowError();
                 else
                 {
                     afxExecutionRequest execReq = { 0 };
                     execReq.dscr = dscr;
                     execReq.signal = dscrCompleteSem;
 
-                    if (AfxExecuteDrawScripts(din, 1, &execReq, NIL))
+                    if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
                         AfxThrowError();
                 }
 
@@ -129,17 +131,17 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
     AfxApplyCameraMotion(cam, v);
     
     afxReal64 curTime;
-    AfxGetExecutionTime(&curTime, NIL);
-    AwxReclockLinkedMotors(bod, curTime);
+    AfxQueryThreadTime(&curTime, NIL);
+    AwxReclockMotives(bod, curTime);
 
 #if 0
     afxM4d m;
-    AfxComputeModelBaseOffset(bod->mdl, m);
+    AfxComputeModelDisplacement(bod->mdl, m);
     AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedPoseBuffer, 0.0);
 #if 0
     afxM4d CompositeMatrix;
     AfxEnumerateRiggedMeshes(bod->mdl, i);
-    AfxBuildIndexedCompositeBuffer(bod->cachedSkl, sharedPoseBuffer, AfxGetRiggedMeshMapping(bod->mdl, i), 1, &CompositeMatrix);
+    AfxBuildIndexedCompositeBuffer(bod->cachedSkl, sharedPoseBuffer, AfxGetRiggedMeshBiasToJointMapping(bod->mdl, i), 1, &CompositeMatrix);
 #endif
 #endif
 }
@@ -217,7 +219,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     //AfxTransformAssets(ltm, iltm, atv, 1e-5f, 1e-5f, 3, 1, &cad); // renormalize e reordene triângulos
     //AfxTransformModels(ltm, iltm, 1e-5f, atv, 1e-5f, 3, 1, &mdl);
 
-    AfxExcerptUriName(&uriMap, &uriMap2);
+    AfxPickUriObject(&uriMap, &uriMap2);
     //AfxFindResources(cad, afxFcc_MDL, 1, AfxGetUriString(&uriMap2), &mdl);
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
@@ -243,15 +245,15 @@ _AFXEXPORT afxResult Once(afxApplication app)
     //cube = AfxBuildParallelepipedMesh(sim, AfxSpawnV3d(100, 100, 10));
     //cube = AfxBuildDomeMesh(sim, 100.0, 4);
     
-    afxStringCatalog strc;
-    AfxAcquireStringCatalogs(1, &strc);
+    afxStringBase strb;
+    AfxAcquireStringCatalogs(1, &strb);
 
     afxModelBlueprint mdlb = { 0 };
     mdlb.meshes = &cube;
     mdlb.mshCnt = 1;
     AfxMakeString32(&mdlb.id, &AfxStaticString("cube"));
     mdlb.skl = AfxGetModelSkeleton(mdl);
-    mdlb.strc = strc;
+    mdlb.strb = strb;
     AfxAssembleModel(sim, 1, &mdlb, &cubeMdl);
     AwxEmbodyModel(cubeMdl, 1, &cubeBod);
 #if 0
@@ -265,46 +267,43 @@ _AFXEXPORT afxResult Once(afxApplication app)
     //AfxAssert(body2);
 
     AfxMakeUri(&uriMap, "tmp/test.skl", 0);
-    afxFile f;
-    AfxOpenFiles(afxFileFlag_W, 1, &uriMap, &f);
-    afxStream fs = AfxGetFileStream(f);
+    afxStream fs = AfxOpenFile(&uriMap, afxIoFlag_W);
     _afxMddFileData hdr = { 0 };
 #if 0
-    afxSize firstSklOffset = AfxAskStreamPosn(fs);
+    afxSize firstSklOffset = AfxGetStreamPosn(fs);
     AfxSerializeSkeletons(fs, 1, (void*[]) { AfxGetModelSkeleton(mdl) });
     hdr.sklCnt = 1;
     hdr.sklDirBaseOffset = firstSklOffset;
 #endif
 
 #if !0
-    afxSize firstMshtOffset = AfxAskStreamPosn(fs);
+    afxSize firstMshtOffset = AfxGetStreamPosn(fs);
     AfxSerializeMeshTopologies(fs, 1, (void*[]) { AfxGetMeshTopology(cube) });
     hdr.mshtCnt = 1;
     hdr.mshtDirBaseOffset = firstMshtOffset;
 #endif
 
-    AfxWriteStream(fs, &hdr, sizeof(hdr), 0);
-    AfxReleaseObjects(1, &f);
+    AfxWriteStream(fs, sizeof(hdr), 0, &hdr);
+    AfxReleaseObjects(1, &fs);
 
-    AfxOpenFiles(afxFileFlag_R, 1, &uriMap, &f);
-    fs = AfxGetFileStream(f);
-    AfxGoToStreamEnd(fs, sizeof(hdr));
-    AfxReadStream(fs, &hdr, sizeof(hdr), 1);
+    fs = AfxOpenFile(&uriMap, afxIoFlag_R);
+    AfxSeekStreamFromEnd(fs, sizeof(hdr));
+    AfxReadStream(fs, sizeof(hdr), 1, &hdr);
     
 #if 0
     AfxAssert(hdr.sklCnt);
-    AfxGoToStreamBegin(fs, hdr.sklDirBaseOffset);
+    AfxSeekStreamFromBegin(fs, hdr.sklDirBaseOffset);
     afxSkeleton skl;
     AfxDeserializeSkeletons(fs, sim, 1, &skl);
 #endif
 
 #if 0
-    AfxGoToStreamBegin(fs, hdr.mshtDirBaseOffset);
+    AfxSeekStreamFromBegin(fs, hdr.mshtDirBaseOffset);
     afxMeshTopology msht;
     AfxDeserializeMeshTopologies(fs, sim, 1, &msht);
 #endif
 
-    AfxReleaseObjects(1, &f);
+    AfxReleaseObjects(1, &fs);
     
     AfxAcquireCameras(rnd->din, 1, &cam);
     AfxAssert(cam);
@@ -319,9 +318,6 @@ _AFXEXPORT afxResult Once(afxApplication app)
     afxMouse mse = AfxGetMouse(0);
     AfxObjectInstallEventFilter(mse, cam);
     
-    AfxGetClock(&StartClock);
-    LastClock = StartClock;
-
     AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
     AfxAcquirePoseBuffers(sim, 1, (afxNat[]) { 256 }, NIL, &sharedPoseBuffer);
 
@@ -350,18 +346,9 @@ _AFXEXPORT afxError SandboxProc(afxApplication app, afxThreadOpcode opcode)
     }
     default:
     {
-        afxReal64 CurrentTime, DeltaTime;
-        afxClock CurrClock;
-        AfxGetClock(&CurrClock);
-
-        // Ignore clock recentering issues for this example
-        CurrentTime = AfxGetSecondsElapsed(&StartClock, &CurrClock);
-        DeltaTime = AfxGetSecondsElapsed(&LastClock, &CurrClock);
-        LastClock = CurrClock;
-
-        afxReal64 dt;
-        AfxGetExecutionTime(NIL, &dt);
-        UpdateFrameMovement(DeltaTime);
+        afxReal64 ct, dt;
+        AfxQueryApplicationTimer(app, &ct, &dt);
+        UpdateFrameMovement(dt);
 
         break;
     }
@@ -395,7 +382,6 @@ int main(int argc, char const* argv[])
         AfxAcquireDrawContexts(0, 1, &dctxCfg, &dctx);
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-        afxApplication TheApp;
         afxApplicationConfig appConfig = { 0 };
         appConfig.argc = argc;
         appConfig.argv = argv;
@@ -403,7 +389,10 @@ int main(int argc, char const* argv[])
         appConfig.proc = SandboxProc;
         AfxAcquireApplications(1, &appConfig, &TheApp);
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
-        AfxRunApplication(TheApp);
+
+        afxUri uri;
+        AfxMakeUri(&uri, "system/sandbox.xss", 0);
+        AfxRunApplication(TheApp, &uri);
 
         while (AfxSystemIsExecuting())
             AfxDoSystemExecution(0);

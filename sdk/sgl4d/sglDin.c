@@ -31,7 +31,7 @@ _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 
     for (afxNat i = 0; i < din->base.scripts.cnt; i++)
     {
-        afxDrawScript* pdscr = AfxGetArrayUnit(&din->base.scripts, i);
+        afxDrawStream* pdscr = AfxGetArrayUnit(&din->base.scripts, i);
 
         if (*pdscr)
         {
@@ -92,7 +92,6 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
 
 _SGL afxError _SglDinDtor(afxDrawInput din)
 {
-    AfxEntry("din=%p", din);
     afxError err = AFX_ERR_NONE;
 
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -127,7 +126,7 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
     din->base.mmu = mmu;
 
     din->base.scripts;
-    AfxAllocateArray(&din->base.scripts, 32, sizeof(afxDrawScript), NIL);
+    AfxAllocateArray(&din->base.scripts, 32, sizeof(afxDrawStream), NIL);
     din->base.minScriptReserve = 2;
 
     afxNat defStreamSiz = 32000000; // 32MB (I think it is the total of RAM in PlayStation 2)
@@ -149,11 +148,11 @@ _SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
 
     tmpClsConf = _AfxVbufClsConfig;
     tmpClsConf.mmu = mmu;
-    AfxMountClass(&din->base.vbuffers, NIL, classes, &tmpClsConf);
+    AfxSetUpManager(&din->base.vbuffers, NIL, classes, &tmpClsConf);
 
     tmpClsConf = _AfxCamClsConfig;
     tmpClsConf.mmu = mmu;
-    AfxMountClass(&din->base.cameras, NIL, classes, &tmpClsConf);
+    AfxSetUpManager(&din->base.cameras, NIL, classes, &tmpClsConf);
 
     din->base.cachedClipCfg = ddev->clipCfg;
 

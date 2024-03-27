@@ -43,10 +43,10 @@
     <ClCompile Include="..\..\qwadro\sim\motion\awxBody.c" />
     <ClCompile Include="..\..\qwadro\sim\motion\awxMotion.c" />
     <ClCompile Include="..\..\qwadro\sim\motion\awxMotor.c" />
-    <ClCompile Include="..\..\qwadro\sim\motion\BuildGenericVmt.c" />
-    <ClCompile Include="..\..\qwadro\sim\motion\SampleTrackVmt - Cópia (2).c" />
-    <ClCompile Include="..\..\qwadro\sim\motion\SampleTrackVmt.c" />
-    <ClCompile Include="..\..\qwadro\sim\motion\Vmt.c" />
+    <ClCompile Include="..\..\qwadro\sim\motion\_BuildGenericVmt.c" />
+    <ClCompile Include="..\..\qwadro\sim\motion\_MotiveVmt.c" />
+    <ClCompile Include="..\..\qwadro\sim\motion\_SampleTrackVmt.c" />
+    <ClCompile Include="..\..\qwadro\sim\motion\_Vmt.c" />
     <ClCompile Include="..\..\qwadro\sim\rendering\awxLight.c" />
     <ClCompile Include="..\..\qwadro\sim\rendering\awxRenderer.c" />
     <ClCompile Include="..\..\qwadro\sim\rendering\awxSky.c" />
