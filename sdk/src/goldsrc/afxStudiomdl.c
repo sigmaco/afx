@@ -83,7 +83,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags
             {
                 if (version != 1)
                 {
-                    AfxError("Don't know how to load version %i\n", version);
+                    AfxLogError("Don't know how to load version %i\n", version);
                 }
             }
 
@@ -109,7 +109,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags
 
                 if (num_links == 0)
                 {
-                    AfxAdvertise("Vertex has no direct bone links");
+                    AfxLogY("Vertex has no direct bone links");
                     num_links = 1;
                     l1_id = id;
                 }
@@ -161,7 +161,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags
                         vw.bone_weights[2] = 0;
                         break;
                     default:
-                        AfxAdvertise(" Unrigged vertex!");
+                        AfxLogY(" Unrigged vertex!");
                         vw.bone_ids[0] = 0;
                         vw.bone_ids[1] = 0;
                         vw.bone_ids[2] = 0;

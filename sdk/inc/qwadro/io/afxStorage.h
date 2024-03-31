@@ -19,7 +19,10 @@
 #ifndef AFX_STORAGE_H
 #define AFX_STORAGE_H
 
+#include "qwadro/io/afxArchive.h"
 #include "qwadro/io/afxFile.h"
+#include "qwadro/io/afxStream.h"
+#include "qwadro/io/afxUri.h"
 
 #if 0
 A implentação atual de sistema de arquivos é mentalizada de forma simples.
@@ -63,12 +66,12 @@ typedef struct afxResourceInfo
 
 typedef enum afxStorageUsage
 {
-    afxStorageUsage_SYSTEM  = AfxGetBitOffset(0),
-    afxStorageUsage_SOUND   = AfxGetBitOffset(1),
-    afxStorageUsage_CODE    = AfxGetBitOffset(2),
-    afxStorageUsage_DATA    = AfxGetBitOffset(3),
-    afxStorageUsage_TEMP    = AfxGetBitOffset(4),
-    afxStorageUsage_ART     = AfxGetBitOffset(5),
+    afxStorageUsage_SYSTEM  = AFX_BIT_OFFSET(0),
+    afxStorageUsage_SOUND   = AFX_BIT_OFFSET(1),
+    afxStorageUsage_CODE    = AFX_BIT_OFFSET(2),
+    afxStorageUsage_DATA    = AFX_BIT_OFFSET(3),
+    afxStorageUsage_TEMP    = AFX_BIT_OFFSET(4),
+    afxStorageUsage_ART     = AFX_BIT_OFFSET(5),
 }
 afxStorageUsage;
 
@@ -128,8 +131,6 @@ AFX afxError            AfxMountStorageUnit(afxUri const* point, afxUri const* e
 AFX afxError            AfxDismountStorageUnit(afxUri const* point, afxUri const* endpoint, afxFileFlags ioFlags);
 
 AFX afxNat              AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags);
-
-AFX afxError            AfxEnableResourceMonitoring(afxResource res, afxBool enable);
 
 AFX afxError            AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *out);
 AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri const in[], afxUri out[]);

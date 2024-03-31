@@ -66,7 +66,7 @@ _SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage
                     AfxThrowError();
                     afxChar str[1024];
                     gl->GetShaderInfoLog(shd->glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
-                    AfxError(str);
+                    AfxLogError(str);
                     gl->DeleteShader(shd->glHandle); _SglThrowErrorOccuried();
                     shd->glHandle = NIL;
                 }
@@ -75,7 +75,7 @@ _SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage
                     shd->glProgHandle = 0;
                     shd->compiled = TRUE;
                     shd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
-                    AfxEcho("afxShader %p hardware-side data instanced.", shd);
+                    AfxLogEcho("afxShader %p hardware-side data instanced.", shd);
                 }
             }
         }
@@ -173,7 +173,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.codeLen = codeLen;
     //shd->code[shd->codeLen] = '\0';
 
-    AfxComment("%.*s", shd->base.codeLen, shd->base.code);
+    AfxLogComment("%.*s", shd->base.codeLen, shd->base.code);
 
     if (!err)
     {
@@ -202,7 +202,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             AfxMakeRestring(&type.str, sizeof(type.buf), type.buf, 0);
             AfxMakeRestring(&name.str, sizeof(name.buf), name.buf, 0);
 
-            AfxEcho("layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", location, type.buf, name.buf);
+            AfxLogEcho("layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", location, type.buf, name.buf);
             break;
         }
 
@@ -277,6 +277,7 @@ _SGL afxClassConfig const _SglShdClsConfig =
 {
     .fcc = afxFcc_SHD,
     .name = "Shader",
+    .desc = "Shader Management",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxShader)),
     .mmu = NIL,

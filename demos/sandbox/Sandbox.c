@@ -5,7 +5,7 @@
 #include "qwadro/ux/afxApplication.h"
 #include "qwadro/core/afxDebug.h"
 #include "qwadro/math/afxMathDefs.h"
-#include "qwadro/io/afxMouse.h"
+#include "qwadro/ux/afxMouse.h"
 #include "../src/techid/afxMD5Model.h"
 #include "../src/cadio/afxWavefrontObject.h"
 #include "../src/rad3d/afxGranny2Model.h"
@@ -44,51 +44,52 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     default:
     {
         awxRenderer rnd = AfxGetDrawInputUdd(din);
-        afxDrawContext dctx = AfxGetDrawInputContext(din);
+        afxDrawContext dctx;
+        AfxGetDrawInputContext(din, &dctx);
         
-        afxDrawStream dscr;
+        afxDrawStream diob;
 
-        if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
+        if (AfxAcquireDrawStreams(dctx, 0, 1, &diob)) AfxThrowError();
         else
         {
-            if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
+            if (AfxRecordDrawStream(diob, afxDrawStreamUsage_ONCE)) AfxThrowError();
             else
             {
 
                 afxNat outBufIdx = 0;
-                AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
+                AfxLockDrawOutputBuffer(dout, 0, &outBufIdx);
                 afxRaster surf;
-                AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
+                AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
                 afxCanvas canv;
-                AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
+                AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
                 AfxAssertObjects(1, &surf, afxFcc_RAS);
 
-                AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
+                AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
 
 
                 if (bod)
                 {
                     afxReal64 ct, dt;
                     AfxQueryApplicationTimer(TheApp, &ct, &dt);
-                    AwxCmdDrawBodies(dscr, rnd, dt, 1, &bod);
+                    AwxCmdDrawBodies(diob, rnd, dt, 1, &bod);
                 }
 
                 //if (cubeBod)
-                    //AwxCmdDrawBodies(dscr, rnd, 1, &cubeBod);
+                    //AwxCmdDrawBodies(diob, rnd, 1, &cubeBod);
 
-                AwxCmdDrawTestIndexed(dscr, rnd);
+                AwxCmdDrawTestIndexed(diob, rnd);
 
-                AfxDrawSky(dscr, &rnd->sky);
+                AfxDrawSky(diob, &rnd->sky);
 
-                AwxCmdEndSceneRendering(dscr, rnd);
+                AwxCmdEndSceneRendering(diob, rnd);
 
                 afxSemaphore dscrCompleteSem = NIL;
 
-                if (AfxCompileDrawStream(dscr)) AfxThrowError();
+                if (AfxCompileDrawStream(diob)) AfxThrowError();
                 else
                 {
                     afxExecutionRequest execReq = { 0 };
-                    execReq.dscr = dscr;
+                    execReq.diob = diob;
                     execReq.signal = dscrCompleteSem;
 
                     if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
@@ -115,13 +116,13 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 void UpdateFrameMovement(afxReal64 DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
-
+#if 0
     afxReal64 MovementThisFrame = DeltaTime * CameraSpeed;
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally think about the 'W' or 'S' key's action.
-    afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
-    afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
-    afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxReal64 ForwardSpeed = (AfxGetKeyPressure(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_S) ? 1 : 0.0f);
+    afxReal64 RightSpeed = (AfxGetKeyPressure(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_D) ? 1 : 0.0f);
+    afxReal64 UpSpeed = (AfxGetKeyPressure(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_E) ? 1 : 0.0f);
     afxV3d v =
     {
         MovementThisFrame * RightSpeed,
@@ -129,7 +130,8 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
         MovementThisFrame * ForwardSpeed
     };
     AfxApplyCameraMotion(cam, v);
-    
+#endif
+
     afxReal64 curTime;
     AfxQueryThreadTime(&curTime, NIL);
     AwxReclockMotives(bod, curTime);
@@ -149,7 +151,6 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 _AFXEXPORT afxResult Once(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("app=%p", app);
 
     awxSimulationConfig simSpec = { 0 };
     AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
@@ -165,7 +166,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
     
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.auxDsFmt[0] = afxPixelFormat_D24;
-    AfxOpenDrawOutputs(0, 1, &doutConfig, &dout);
+    AfxAcquireDrawOutput(0, &doutConfig, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -250,7 +251,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     afxModelBlueprint mdlb = { 0 };
     mdlb.meshes = &cube;
-    mdlb.mshCnt = 1;
+    mdlb.rigCnt = 1;
     AfxMakeString32(&mdlb.id, &AfxStaticString("cube"));
     mdlb.skl = AfxGetModelSkeleton(mdl);
     mdlb.strb = strb;
@@ -315,7 +316,8 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     rnd->activeCam = cam;
 
-    afxMouse mse = AfxGetMouse(0);
+    afxMouse mse;
+    AfxGetMouse(0, &mse);
     AfxObjectInstallEventFilter(mse, cam);
     
     AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
@@ -338,9 +340,8 @@ _AFXEXPORT afxError SandboxProc(afxApplication app, afxThreadOpcode opcode)
     }
     case AFX_THR_OPCODE_QUIT:
     {
-        AfxEntry("app=%p", app);
         //AfxReleaseObject(&dinD->obj);
-        AfxEcho("aaaaaaaaaaaa");
+        AfxLogEcho("aaaaaaaaaaaa");
 
         break;
     }

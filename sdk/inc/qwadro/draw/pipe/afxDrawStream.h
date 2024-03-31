@@ -32,7 +32,7 @@ Instead, dynamic state canv be modified at any time and persists for the lifetim
 #ifndef AFX_DRAW_STREAM_H
 #define AFX_DRAW_STREAM_H
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/pipe/afxDrawOps.h"
 
 typedef enum afxDrawStreamUsage
 {
@@ -96,21 +96,19 @@ struct afxBaseDrawStream
     afxArena            cmdArena; // owned by dctx data for specific port
     afxBool             disposable; // if true, at execution end, it is moved to invalid state and considered in recycle chain.
 
-    afxDrawInput        din;
     afxCmd const*       stdCmds;
 };
 #endif
 #endif
 
-AVX afxDrawInput        AfxGetDrawStreamInput(afxDrawStream dscr);
-AVX afxDrawStreamState  AfxGetDrawStreamState(afxDrawStream dscr);
-AVX afxNat              AfxGetDrawStreamPort(afxDrawStream dscr);
+AVX afxDrawStreamState  AfxGetDrawStreamState(afxDrawStream diob);
+AVX afxNat              AfxGetDrawStreamPort(afxDrawStream diob);
 
 /// Start recording a command buffer.
 
 AVX afxError            AfxRecordDrawStream
 (
-    afxDrawStream       dscr, /// is the handle of the command buffer which is to be put in the recording state.
+    afxDrawStream       diob, /// is the handle of the command buffer which is to be put in the recording state.
     afxDrawStreamUsage  usage /// Bitmask specifying usage behavior for command buffer.
 );
 
@@ -121,20 +119,20 @@ AVX afxError            AfxRecordDrawStream
 
 AVX afxError            AfxCompileDrawStream
 (
-    afxDrawStream       dscr  /// is the command buffer to complete recording.
+    afxDrawStream       diob  /// is the command buffer to complete recording.
 );
 
 /// Reset a command buffer to the initial state.
-/// Any primary command buffer that is in the recording or executable state and has @dscr recorded into it, becomes invalid.
+/// Any primary command buffer that is in the recording or executable state and has @diob recorded into it, becomes invalid.
 
 AVX afxError            AfxRecycleDrawStream
 (
-    afxDrawStream       dscr, /// is the command buffer to reset. The command buffer can be in any state other than pending, and is moved into the initial state.
-    afxBool             freeRes /// specifies that most or all memory resources currently owned by the command buffer should be returned to the parent command pool. If this flag is not set, then the command buffer may hold onto memory resources and reuse them when recording commands. @dscr is moved to the initial state.
+    afxDrawStream       diob, /// is the command buffer to reset. The command buffer can be in any state other than pending, and is moved into the initial state.
+    afxBool             freeRes /// specifies that most or all memory resources currently owned by the command buffer should be returned to the parent command pool. If this flag is not set, then the command buffer may hold onto memory resources and reuse them when recording commands. @diob is moved to the initial state.
 );
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAcquireDrawStreams(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawStream dscr[]);
+AVX afxError            AfxAcquireDrawStreams(afxDrawContext dctx, afxNat portIdx, afxNat cnt, afxDrawStream diob[]);
 
 #endif//AFX_DRAW_STREAM_H

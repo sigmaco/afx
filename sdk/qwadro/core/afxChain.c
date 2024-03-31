@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxChain.h"
+#include "qwadro/core/afxSystem.h"
 
 
 _AFXINL void AfxSetUpChain(afxChain *ch, void *holder)
@@ -380,7 +380,7 @@ _AFXINL afxLink* AfxGetPrevLink(afxLink const *lnk) { afxError err = AFX_ERR_NON
 
 _AFXINL void AfxDeployLink(afxLink *lnk) { afxError err = AFX_ERR_NONE; AfxAssert(lnk); lnk->next = (afxLink*)NIL; lnk->prev = (afxLink*)NIL; }
 
-_AFXINL afxBool AfxIsLinkUnused(afxLink const *lnk) { afxError err = AFX_ERR_NONE; AfxAssert(lnk); afxBool b = (NIL == AfxGetNextLink(lnk)); if (b && !(b = (NIL == AfxGetPrevLink(lnk)))) AfxError("Object chain broken."); return b; }
+_AFXINL afxBool AfxIsLinkUnused(afxLink const *lnk) { afxError err = AFX_ERR_NONE; AfxAssert(lnk); afxBool b = (NIL == AfxGetNextLink(lnk)); if (b && !(b = (NIL == AfxGetPrevLink(lnk)))) AfxLogError("Object chain broken."); return b; }
 
 
 _AFXINL void AfxPrependLink(afxLink *lnk, afxList *lst)

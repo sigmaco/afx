@@ -58,99 +58,99 @@ AFX_DEFINE_STRUCT(afxDrawIndexedIndirectCmd)
 
 AFX_DEFINE_STRUCT(afxCmdBuffer)
 {
-    afxCmdId(*cpy)(afxDrawStream dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[]);
-    afxCmdId(*set)(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat data);
-    afxCmdId(*rw)(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data);
-    afxCmdId(*io)(afxDrawStream dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool toHost, afxStream io);
+    afxCmdId(*cpy)(afxDrawStream diob, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[]);
+    afxCmdId(*set)(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxNat data);
+    afxCmdId(*rw)(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data);
+    afxCmdId(*io)(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool toHost, afxStream io);
 };
 
 AFX_DEFINE_STRUCT(afxCmdRaster)
 {
-    afxCmdId(*rw)(afxDrawStream dscr, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc);
-    afxCmdId(*pak)(afxDrawStream dscr, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack);
-    afxCmdId(*cpy)(afxDrawStream dscr, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[]);
-    afxCmdId(*mip)(afxDrawStream dscr, afxRaster ras, afxNat baseLod, afxNat lodCnt);
-    afxCmdId(*xform)(afxDrawStream dscr, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const rgn[]);
-    afxCmdId(*swizzle)(afxDrawStream dscr, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const rgn[]);
+    afxCmdId(*rw)(afxDrawStream diob, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc);
+    afxCmdId(*pak)(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack);
+    afxCmdId(*cpy)(afxDrawStream diob, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[]);
+    afxCmdId(*mip)(afxDrawStream diob, afxRaster ras, afxNat baseLod, afxNat lodCnt);
+    afxCmdId(*xform)(afxDrawStream diob, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const rgn[]);
+    afxCmdId(*swizzle)(afxDrawStream diob, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const rgn[]);
 };
 
 AFX_DEFINE_STRUCT(afxCmdQuery)
 {
-    afxCmdId(*Begin)(afxDrawStream dscr, afxQueryPool pool, afxNat queryIdx, afxBool precise);
-    afxCmdId(*End)(afxDrawStream dscr, afxQueryPool pool, afxNat queryIdx);
-    afxCmdId(*CopyResults)(afxDrawStream dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags);
-    afxCmdId(*Reset)(afxDrawStream dscr, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt);
-    afxCmdId(*WriteTimestamp)(afxDrawStream dscr, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage);
+    afxCmdId(*Begin)(afxDrawStream diob, afxQueryPool pool, afxNat queryIdx, afxBool precise);
+    afxCmdId(*End)(afxDrawStream diob, afxQueryPool pool, afxNat queryIdx);
+    afxCmdId(*CopyResults)(afxDrawStream diob, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags);
+    afxCmdId(*Reset)(afxDrawStream diob, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt);
+    afxCmdId(*WriteTimestamp)(afxDrawStream diob, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage);
 };
 
 AFX_DEFINE_STRUCT(afxCmdRasterization)
 {
-    afxCmdId(*DisableRasterization)(afxDrawStream dscr, afxBool disable);
+    afxCmdId(*DisableRasterization)(afxDrawStream diob, afxBool disable);
 
-    afxCmdId(*EnableDepthBias)(afxDrawStream dscr, afxBool enable);
-    afxCmdId(*SetDepthBias)(afxDrawStream dscr, afxReal constFactor, afxReal clamp, afxReal slopeFactor);
+    afxCmdId(*EnableDepthBias)(afxDrawStream diob, afxBool enable);
+    afxCmdId(*SetDepthBias)(afxDrawStream diob, afxReal constFactor, afxReal clamp, afxReal slopeFactor);
 
-    afxCmdId(*SetLineWidth)(afxDrawStream dscr, afxReal lineWidth);
+    afxCmdId(*SetLineWidth)(afxDrawStream diob, afxReal lineWidth);
 
-    afxCmdId(*ResetScissors)(afxDrawStream dscr, afxNat cnt, afxRect const rc[]);
-    afxCmdId(*ReadjustScissors)(afxDrawStream dscr, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
+    afxCmdId(*ResetScissors)(afxDrawStream diob, afxNat cnt, afxRect const rc[]);
+    afxCmdId(*ReadjustScissors)(afxDrawStream diob, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
 
-    afxCmdId(*ResetAreas)(afxDrawStream dscr, afxBool exclusive, afxNat cnt, afxRect const rc[]);
-    afxCmdId(*ReadjustAreas)(afxDrawStream dscr, afxBool exclusive, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
+    afxCmdId(*ResetAreas)(afxDrawStream diob, afxBool exclusive, afxNat cnt, afxRect const rc[]);
+    afxCmdId(*ReadjustAreas)(afxDrawStream diob, afxBool exclusive, afxNat baseIdx, afxNat cnt, afxRect const rect[]);
 
-    afxCmdId(*EnableDepthBoundsTest)(afxDrawStream dscr, afxBool enable);
-    afxCmdId(*SetDepthBounds)(afxDrawStream dscr, afxReal const bounds[2]);
+    afxCmdId(*EnableDepthBoundsTest)(afxDrawStream diob, afxBool enable);
+    afxCmdId(*SetDepthBounds)(afxDrawStream diob, afxReal const bounds[2]);
 
-    afxCmdId(*EnableStencilTest)(afxDrawStream dscr, afxBool enable);
-    afxCmdId(*SetStencilCompareMask)(afxDrawStream dscr, afxMask faceMask, afxNat32 compareMask);
-    afxCmdId(*SetStencilWriteMask)(afxDrawStream dscr, afxMask faceMask, afxNat32 writeMask);
-    afxCmdId(*SetStencilReference)(afxDrawStream dscr, afxMask faceMask, afxNat32 reference);
+    afxCmdId(*EnableStencilTest)(afxDrawStream diob, afxBool enable);
+    afxCmdId(*SetStencilCompareMask)(afxDrawStream diob, afxMask faceMask, afxNat32 compareMask);
+    afxCmdId(*SetStencilWriteMask)(afxDrawStream diob, afxMask faceMask, afxNat32 writeMask);
+    afxCmdId(*SetStencilReference)(afxDrawStream diob, afxMask faceMask, afxNat32 reference);
 
-    afxCmdId(*EnableDepthTest)(afxDrawStream dscr, afxBool enable);
-    afxCmdId(*SetDepthCompareOp)(afxDrawStream dscr, afxCompareOp op);
-    afxCmdId(*DisableDepthWrite)(afxDrawStream dscr, afxBool enable);
+    afxCmdId(*EnableDepthTest)(afxDrawStream diob, afxBool enable);
+    afxCmdId(*SetDepthCompareOp)(afxDrawStream diob, afxCompareOp op);
+    afxCmdId(*DisableDepthWrite)(afxDrawStream diob, afxBool enable);
 
-    afxCmdId(*SetBlendConstants)(afxDrawStream dscr, afxReal const blendConstants[4]);
+    afxCmdId(*SetBlendConstants)(afxDrawStream diob, afxReal const blendConstants[4]);
 
-    afxCmdId(*BeginSynthesis)(afxDrawStream dscr, afxSynthesisConfig const*state);
-    afxCmdId(*FinishSynthesis)(afxDrawStream dscr);
-    afxCmdId(*NextPass)(afxDrawStream dscr, afxBool useAuxScripts);
+    afxCmdId(*BeginSynthesis)(afxDrawStream diob, afxSynthesisConfig const*state);
+    afxCmdId(*FinishSynthesis)(afxDrawStream diob);
+    afxCmdId(*NextPass)(afxDrawStream diob, afxBool useAuxScripts);
 };
 
 AFX_DEFINE_STRUCT(afxCmdTransformation)
 {
-    afxCmdId(*BindVertexInput)(afxDrawStream dscr, afxVertexInput vin);
+    afxCmdId(*BindVertexInput)(afxDrawStream diob, afxVertexInput vin);
 
-    afxCmdId(*BindVertexSources)(afxDrawStream dscr, afxNat baseSlotIdx, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[]);
-    //afxCmdId(*ResetVertexStreams)(afxDrawStream dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-    //afxCmdId(*ResetVertexAttributes)(afxDrawStream dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
-    afxCmdId(*BindIndexSource)(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz);
-    afxCmdId(*SetPrimitiveTopology)(afxDrawStream dscr, afxPrimTopology topology);
+    afxCmdId(*BindVertexSources)(afxDrawStream diob, afxNat baseSlotIdx, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[]);
+    //afxCmdId(*ResetVertexStreams)(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
+    //afxCmdId(*ResetVertexAttributes)(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
+    afxCmdId(*BindIndexSource)(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz);
+    afxCmdId(*SetPrimitiveTopology)(afxDrawStream diob, afxPrimTopology topology);
 
-    afxCmdId(*ResetViewports)(afxDrawStream dscr, afxNat cnt, afxViewport const vp[]);
-    afxCmdId(*ReadjustViewports)(afxDrawStream dscr, afxNat baseIdx, afxNat cnt, afxViewport const vp[]);
+    afxCmdId(*ResetViewports)(afxDrawStream diob, afxNat cnt, afxViewport const vp[]);
+    afxCmdId(*ReadjustViewports)(afxDrawStream diob, afxNat baseIdx, afxNat cnt, afxViewport const vp[]);
 
-    afxCmdId(*SwitchFrontFace)(afxDrawStream dscr, afxBool cw);
-    afxCmdId(*SetCullMode)(afxDrawStream dscr, afxCullMode mode);
+    afxCmdId(*SwitchFrontFace)(afxDrawStream diob, afxBool cw);
+    afxCmdId(*SetCullMode)(afxDrawStream diob, afxCullMode mode);
 };
 
 AFX_DEFINE_STRUCT(afxCmd)
 {
     void*EndOfScript;
 
-    afxCmdId(*ExecuteCommands)(afxDrawStream dscr, afxNat cnt, afxDrawStream aux[]);
+    afxCmdId(*ExecuteCommands)(afxDrawStream diob, afxNat cnt, afxDrawStream aux[]);
 
-    afxCmdId(*BindPipeline)(afxDrawStream dscr, afxNat segment, afxPipeline pip);
-    afxCmdId(*BindBuffers)(afxDrawStream dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-    afxCmdId(*BindRasters)(afxDrawStream dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster ras[]);
+    afxCmdId(*BindPipeline)(afxDrawStream diob, afxNat segment, afxPipeline pip);
+    afxCmdId(*BindBuffers)(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
+    afxCmdId(*BindRasters)(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster ras[]);
 
     // draw
-    afxCmdId(*Draw)(afxDrawStream dscr, afxNat vtxCnt, afxNat instCnt, afxNat baseVtxIdx, afxNat baseInstIdx);
-    afxCmdId(*DrawIndirect)(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
-    afxCmdId(*DrawIndirectCount)(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
-    afxCmdId(*DrawIndexed)(afxDrawStream dscr, afxNat idxCnt, afxNat instCnt, afxNat baseIdx, afxNat vtxOff, afxNat baseInstIdx);
-    afxCmdId(*DrawIndexedIndirect)(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
-    afxCmdId(*DrawIndexedIndirectCount)(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
+    afxCmdId(*Draw)(afxDrawStream diob, afxNat vtxCnt, afxNat instCnt, afxNat baseVtxIdx, afxNat baseInstIdx);
+    afxCmdId(*DrawIndirect)(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
+    afxCmdId(*DrawIndirectCount)(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
+    afxCmdId(*DrawIndexed)(afxDrawStream diob, afxNat idxCnt, afxNat instCnt, afxNat baseIdx, afxNat vtxOff, afxNat baseInstIdx);
+    afxCmdId(*DrawIndexedIndirect)(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
+    afxCmdId(*DrawIndexedIndirectCount)(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
     
     afxCmdRaster            ras;
     afxCmdBuffer            buf;
@@ -171,7 +171,7 @@ AFX_DEFINE_STRUCT(afxCmd)
 
 AVX afxCmdId                AfxCmdBindPipeline
 (
-    afxDrawStream           dscr, /// is the command buffer that the pipeline will be bound to. 
+    afxDrawStream           diob, /// is the command buffer that the pipeline will be bound to. 
     afxNat                  segment, /// is a value specifying to which level the pipeline is bound. Binding one does not disturb the others.
     afxPipeline             pip /// is the pipeline to be bound.
 );
@@ -183,7 +183,7 @@ AVX afxCmdId                AfxCmdBindPipeline
 
 AVX afxCmdId                AfxCmdExecuteCommands
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxNat                  cnt, /// is the length of the @aux array.
     afxDrawStream           aux[] /// is a pointer to an array of @cnt secondary command buffer handles, which are recorded to execute in the primary command buffer in the order they are listed in the array.
 );
@@ -195,7 +195,7 @@ AVX afxCmdId                AfxCmdExecuteCommands
 
 AVX afxCmdId                AfxCmdDraw
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxNat                  baseInstIdx, /// is the instance ID of the first instance to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
     afxNat                  baseVtxIdx, /// is the index of the first vertex to draw.
@@ -210,7 +210,7 @@ AVX afxCmdId                AfxCmdDraw
 
 AVX afxCmdId                AfxCmdDrawIndirect
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// is the buffer containing draw parameters.
     afxNat32                offset, /// is the byte offset into @buf where parameters begin.
     afxNat32                drawCnt, /// is the number of draws to execute, and can be zero.
@@ -223,7 +223,7 @@ AVX afxCmdId                AfxCmdDrawIndirect
 
 AVX afxCmdId                AfxCmdDrawIndirectCount
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// is the buffer containing draw parameters.
     afxNat32                offset, /// is the byte offset into buffer where parameters begin.
     afxBuffer               cntBuf, /// is the buffer containing the draw count.
@@ -245,7 +245,7 @@ AVX afxCmdId                AfxCmdDrawIndirectCount
 
 AVX afxCmdId                AfxCmdDrawIndexed
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxNat                  vtxOff, /// is the value added to the vertex index before indexing into the vertex buffer.
     afxNat                  baseInstIdx, /// is the instance ID of the first instance to draw.
     afxNat                  instCnt, /// is the number of instances to draw.
@@ -260,7 +260,7 @@ AVX afxCmdId                AfxCmdDrawIndexed
 
 AVX afxCmdId                AfxCmdDrawIndexedIndirect
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// is the buffer containing draw parameters.
     afxNat32                offset, /// is the byte offset into buffer where parameters begin.
     afxNat32                drawCnt, /// is the number of draws to execute, and can be zero.
@@ -273,7 +273,7 @@ AVX afxCmdId                AfxCmdDrawIndexedIndirect
 
 AVX afxCmdId                AfxCmdDrawIndexedIndirectCount
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// is the buffer containing draw parameters.
     afxNat32                offset, /// is the byte offset into @buf where parameters begin.
     afxBuffer               cntBuf, /// is the buffer containing the draw count.
@@ -282,9 +282,9 @@ AVX afxCmdId                AfxCmdDrawIndexedIndirectCount
     afxNat32                stride /// is the byte stride between successive sets of draw parameters.
 );
 
-AVX afxCmdId            AfxCmdBindBuffers(afxDrawStream dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
-AVX afxCmdId            AfxCmdBindRasters(afxDrawStream dscr, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
+AVX afxCmdId            AfxCmdBindBuffers(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[]);
+AVX afxCmdId            AfxCmdBindRasters(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[]);
 
-AVX afxCmdId            AfxCmdBindFontSIG(afxDrawStream dscr, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[]);
+AVX afxCmdId            AfxCmdBindFontSIG(afxDrawStream diob, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[]);
 
 #endif//AFX_DRAW_OPS_H

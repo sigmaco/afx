@@ -121,7 +121,7 @@ void DecompressRleChunk(afxStream stream, afxNat width, afxNat height, afxNat bp
 
             for (i = 0; i < runLen; i++)
             {
-                AfxCopy(byteCnt, sizeof(afxByte), buf, &dst[currByte]);
+                AfxCopy2(byteCnt, sizeof(afxByte), buf, &dst[currByte]);
                 currByte += byteCnt;
             }
         }
@@ -352,9 +352,9 @@ afxError TGA_Load(afxStream stream, _afxTgaImg *img)
                 else
                 {
                     for (i = 0; i < hdr.height; i++)
-                        AfxCopy(1, scanline, img->data + i * scanline, buf + (siz - (i + 1) * scanline));
+                        AfxCopy2(1, scanline, img->data + i * scanline, buf + (siz - (i + 1) * scanline));
 
-                    AfxCopy(1, siz, buf, img->data);
+                    AfxCopy2(1, siz, buf, img->data);
 
                     AfxDeallocate(buf);
                 }
@@ -391,7 +391,7 @@ _AVX afxError AfxDownloadRasterRegionsToTarga(afxDrawInput din, afxRaster ras, a
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             //afxWhd extent;
             //AfxGetRasterExtent(tex, 0, extent);
@@ -465,7 +465,7 @@ _AVX afxError AfxUploadRasterRegionsFromTarga(afxDrawInput din, afxRaster ras, a
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/ios, &im)) AfxThrowError();
             else
@@ -541,7 +541,7 @@ _AVX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags,
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/ios, &im))
             {
@@ -616,7 +616,7 @@ _AVX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags 
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mem, TRUE, /*AfxGetFileStream(file)*/ios, &im))
             {
@@ -810,7 +810,7 @@ _AVX afxError _AfxTgaSave(afxMmu mmu, afxStream stream, const _afxTga* tga)
     if (!(data = AfxAllocate(tga->width * tga->height, pixelSiz, 0, AfxHint()))) AfxThrowError();
     else
     {
-        AfxCopy(tga->width * tga->height, pixelSiz, tga->data, data);
+        AfxCopy2(tga->width * tga->height, pixelSiz, tga->data, data);
 
         if (!((tga->fmt == afxPixelFormat_GR8) || (tga->fmt == afxPixelFormat_BGR8) || (tga->fmt == afxPixelFormat_BGRA8)))
             _AfxTgaSwapColorChannel(tga->width, tga->height, tga->fmt, data);
@@ -1099,7 +1099,7 @@ _AVX afxError AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRaste
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             //afxWhd extent;
             //AfxGetRasterExtent(tex, 0, extent);
@@ -1173,7 +1173,7 @@ _AVX afxError AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRas
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mmu, TRUE, /*AfxGetFileStream(file)*/ios, &im)) AfxThrowError();
             else
@@ -1247,7 +1247,7 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
         else
         {
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mmu, TRUE, /*AfxGetFileStream(file)*/ios, &im))
             {
@@ -1378,15 +1378,15 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
                     if (AfxUpdateRasterRegions(*ras, 1, &op, tga.data))
                         AfxThrowError();
                 }
-            //if (tga.data)
-                //AfxDeallocate(tga.data);
+            if (tga.data)
+                AfxDeallocate(tga.data);
             }
 
 
 #if 0
 
             _afxTga im;
-            AfxZero(1, sizeof(im), &im);
+            AfxZero2(1, sizeof(im), &im);
 
             if (_AfxTgaLoad(mmu, TRUE, /*AfxGetFileStream(file)*/ios, &im))
             {

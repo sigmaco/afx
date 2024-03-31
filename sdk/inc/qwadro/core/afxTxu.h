@@ -17,7 +17,11 @@
 #ifndef AFX_TXU_H
 #define AFX_TXU_H
 
+#include "qwadro/core/afxClock.h"
+#include "qwadro/core/afxMutex.h"
+#include "qwadro/core/afxSlock.h"
 #include "qwadro/core/afxThread.h"
+#include "qwadro/core/afxCondition.h"
 #include "qwadro/mem/afxArray.h"
 
 #ifdef _AFX_CORE_C

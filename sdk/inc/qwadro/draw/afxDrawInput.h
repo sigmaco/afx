@@ -25,10 +25,10 @@
 #ifndef AFX_DRAW_INPUT_H
 #define AFX_DRAW_INPUT_H
 
+#include "qwadro/core/afxManager.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/afxDrawQueue.h"
-// provided classes.
-#include "qwadro/draw/afxCamera.h"
+#include "qwadro/draw/afxDrawBridge.h"
+#include "qwadro/draw/io/afxVertexStream.h"
 
 typedef enum afxDrawEventId
 {
@@ -60,8 +60,6 @@ typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxDrawEvent const* ev);
 
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
-    afxUri const*       endpoint;
-
     afxDrawInputProc    proc;
     afxNat              dragTxuBase;
     afxNat              dragTxuCnt;
@@ -77,18 +75,12 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_INPUT_C
-#ifndef _AFX_DRAW_INPUT_IMPL
 AFX_OBJECT(afxDrawInput)
-#else
-struct afxBaseDrawInput
-#endif
 {
-    afxLinkage          endpoint;
-    afxDrawContext      dctx; // bound context
-    afxMmu              mmu;
-
+    afxLinkage          ddev;
+    afxLinkage          dctx; // bound context
+    
     afxChain            classes;
-    afxManager          cameras;
     afxManager          ibuffers;
     afxManager          vbuffers;
 
@@ -106,53 +98,49 @@ struct afxBaseDrawInput
     afxNat              maxIdxBufSiz; // 13500000
 
     afxDrawInputProc    procCb;
-    void*               udd;
+
+    struct _afxDinIdd*  idd;
+    void*               udd; // user-defined data
 };
 #endif
 #endif
 
 AVX afxDrawDevice   AfxGetDrawInputDevice(afxDrawInput din);
 
-// Connection
-AVX afxBool         AfxDrawInputIsOnline(afxDrawInput din);
-AVX afxDrawContext  AfxGetDrawInputContext(afxDrawInput din);
-AVX afxError        AfxDisconnectDrawInput(afxDrawInput din);
-AVX afxBool         AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
 
-AVX afxManager*     AfxGetCameraClass(afxDrawInput din);
+// Connection
+AVX afxBool         AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* dctx);
+AVX afxBool         AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AVX afxError        AfxDisconnectDrawInput(afxDrawInput din);
+AVX afxBool         AfxDrawInputIsOnline(afxDrawInput din);
+
 AVX afxManager*     AfxGetVertexBufferClass(afxDrawInput din);
 AVX afxManager*     AfxGetIndexBufferClass(afxDrawInput din);
 
-AVX afxNat          AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[]);
-
-AVX afxError        AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
-
-AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
-
 AVX void            AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip);
 
-AVX void            AfxComputeLookToMatrices(afxDrawInput din, afxReal const eye[3], afxReal const dir[3], afxReal v[4][4], afxReal iv[4][4]);
-AVX void            AfxComputeLookAtMatrices(afxDrawInput din, afxReal const eye[3], afxReal const target[3], afxReal v[4][4], afxReal iv[4][4]);
+AVX void            AfxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
+AVX void            AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
 
-AVX void            AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputeOrthographicMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxAabb const aabb, afxReal p[4][4], afxReal ip[4][4]);
+AVX void            AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
+AVX void            AfxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxAabb const aabb, afxM4d p, afxM4d ip);
 
-AVX void            AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxReal p[4][4], afxReal ip[4][4]);
-AVX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxReal const extent[2], afxReal near, afxReal far, afxReal p[4][4], afxReal ip[4][4]);
+AVX void            AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
+AVX void            AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRatio, afxReal range, afxM4d p, afxM4d ip);
+AVX void            AfxComputePerspectiveMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 
 AVX afxError        AfxUplinkTextureDictionaries(afxDrawInput din, afxNat baseSlotIdx, afxNat slotCnt, afxUri const uris[]);
 
-// Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
-
-AVX afxError        AfxStampDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
-AVX afxError        AfxPresentDrawBuffer(afxDrawOutput dout, afxNat bufIdx, afxSemaphore wait);
+AVX afxError        AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxOpenDrawInputs(afxNat ddevId, afxNat cnt, afxDrawInputConfig const cfg[], afxDrawInput inputs[]);
+AVX afxError        AfxAcquireDrawInput(afxNat ddevNo, afxDrawInputConfig const* cfg, afxDrawInput* din);
+
+AVX afxError        AfxOpenDrawInput(afxNat ddevNo, afxDrawInputConfig const* cfg, afxUri const* endpoint, afxDrawInput* din);
 
 #endif//AFX_DRAW_INPUT_H

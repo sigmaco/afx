@@ -18,7 +18,6 @@
 #define AFX_THREAD_H
 
 #include "qwadro/core/afxClock.h"
-#include "qwadro/core/afxSlock.h"
 
 // The afxThread class provides a platform-independent way to manage threads.
 
@@ -69,15 +68,11 @@ AFX_DEFINE_STRUCT(afxThreadLinkage)
 
 AFX_OBJECT(afxThread)
 {
-    //afxLinkage      procUnit;
     afxSlock            txuSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     //afxNat          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
     afxClock            startClock;
     afxClock            lastClock;
-    //afxClock            currClock;
-    //afxReal64           currTime;
-    //afxReal64           deltaTime;
     afxNat              iterNo;
     afxNat              lastIterCnt;
     afxClock            iterCntSwapClock;
@@ -134,6 +129,8 @@ AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
 // functions affection the currrent caller thread.
 
 AFX void        AfxRunThreads(afxNat cnt, afxThread threads[]);
+
+////////////////////////////////////////////////////////////////////////////////
 
 AFX afxError    AfxAcquireThreads(afxThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxThread threads[]);
 

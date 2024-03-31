@@ -59,7 +59,7 @@ _AFXINL void AfxQuatFromV3d(afxQuat q, afxV3d const in)
 
     afxReal t = 1.f - AfxDotV3d(in, in);
     AfxCopyV3d(q, in);
-    q[3] = t < 0.f ? 0.f : -AfxSqrt(t);
+    q[3] = t < 0.f ? 0.f : -AfxSqrtf(t);
 }
 
 _AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
@@ -81,7 +81,7 @@ _AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
         if (dif10 <= 0.f)  // x^2 >= y^2
         {
             afxReal fourXSqr = omr22 - dif10;
-            afxReal inv4x = 0.5f / AfxSqrt(fourXSqr);
+            afxReal inv4x = 0.5f / AfxSqrtf(fourXSqr);
 
             q[0] = fourXSqr * inv4x;
             q[1] = (m[0][1] + m[1][0]) * inv4x;
@@ -91,7 +91,7 @@ _AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
         else  // y^2 >= x^2
         {
             afxReal fourYSqr = omr22 + dif10;
-            afxReal inv4y = 0.5f / AfxSqrt(fourYSqr);
+            afxReal inv4y = 0.5f / AfxSqrtf(fourYSqr);
 
             q[0] = (m[0][1] + m[1][0]) * inv4y;
             q[1] = fourYSqr * inv4y;
@@ -107,7 +107,7 @@ _AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
         if (sum10 <= 0.f)  // z^2 >= w^2
         {
             afxReal fourZSqr = opr22 - sum10;
-            afxReal inv4z = 0.5f / AfxSqrt(fourZSqr);
+            afxReal inv4z = 0.5f / AfxSqrtf(fourZSqr);
 
             q[0] = (m[0][2] + m[2][0]) * inv4z;
             q[1] = (m[1][2] + m[2][1]) * inv4z;
@@ -117,7 +117,7 @@ _AFXINL void AfxMakeQuatFromRotationM3d(afxQuat q, afxM3d const m)
         else  // w^2 >= z^2
         {
             afxReal fourWSqr = opr22 + sum10;
-            afxReal inv4w = 0.5f / AfxSqrt(fourWSqr);
+            afxReal inv4w = 0.5f / AfxSqrtf(fourWSqr);
 
             q[0] = (m[1][2] - m[2][1]) * inv4w;
             q[1] = (m[2][0] - m[0][2]) * inv4w;
@@ -146,7 +146,7 @@ _AFXINL void AfxMakeQuatFromRotationLtm4d(afxQuat q, afxM4d const m)
         if (dif10 <= 0.f)  // x^2 >= y^2
         {
             afxReal fourXSqr = omr22 - dif10;
-            afxReal inv4x = 0.5f / AfxSqrt(fourXSqr);
+            afxReal inv4x = 0.5f / AfxSqrtf(fourXSqr);
 
             q[0] = fourXSqr * inv4x;
             q[1] = (m[0][1] + m[1][0]) * inv4x;
@@ -156,7 +156,7 @@ _AFXINL void AfxMakeQuatFromRotationLtm4d(afxQuat q, afxM4d const m)
         else  // y^2 >= x^2
         {
             afxReal fourYSqr = omr22 + dif10;
-            afxReal inv4y = 0.5f / AfxSqrt(fourYSqr);
+            afxReal inv4y = 0.5f / AfxSqrtf(fourYSqr);
 
             q[0] = (m[0][1] + m[1][0]) * inv4y;
             q[1] = fourYSqr * inv4y;
@@ -172,7 +172,7 @@ _AFXINL void AfxMakeQuatFromRotationLtm4d(afxQuat q, afxM4d const m)
         if (sum10 <= 0.f)  // z^2 >= w^2
         {
             afxReal fourZSqr = opr22 - sum10;
-            afxReal inv4z = 0.5f / AfxSqrt(fourZSqr);
+            afxReal inv4z = 0.5f / AfxSqrtf(fourZSqr);
 
             q[0] = (m[0][2] + m[2][0]) * inv4z;
             q[1] = (m[1][2] + m[2][1]) * inv4z;
@@ -182,7 +182,7 @@ _AFXINL void AfxMakeQuatFromRotationLtm4d(afxQuat q, afxM4d const m)
         else  // w^2 >= z^2
         {
             afxReal fourWSqr = opr22 + sum10;
-            afxReal inv4w = 0.5f / AfxSqrt(fourWSqr);
+            afxReal inv4w = 0.5f / AfxSqrtf(fourWSqr);
 
             q[0] = (m[1][2] - m[2][1]) * inv4w;
             q[1] = (m[2][0] - m[0][2]) * inv4w;
@@ -197,12 +197,12 @@ _AFXINL void AfxMakeQuatFromAxialRotation(afxQuat q, afxV3d const axis, afxReal 
     afxError err = AFX_ERR_NONE;
     AfxAssert(q);
     AfxAssert(axis); // radians
-    afxReal s = AfxSin(phi * AfxScalar(0.5));
+    afxReal s = AfxSinf(phi * AfxScalar(0.5));
     q[0] = axis[0] * s;
     q[1] = axis[1] * s;
     q[2] = axis[2] * s;
-    q[3] = AfxCos(phi * AfxScalar(0.5));
-    AfxNormalizeQuat(q, q); // reduz erros causados por AfxSin() e AfxCos().
+    q[3] = AfxCosf(phi * AfxScalar(0.5));
+    AfxNormalizeQuat(q, q); // reduz erros causados por AfxSinf() e AfxCosf().
 }
 
 _AFXINL void AfxMakeQuatFromEulerRotation(afxQuat q, afxV3d const pitchYawRoll)
@@ -214,14 +214,14 @@ _AFXINL void AfxMakeQuatFromEulerRotation(afxQuat q, afxV3d const pitchYawRoll)
     AfxAssert(pitchYawRoll);
 
     afxReal const halfpitch = pitchYawRoll[0] * 0.5f;
-    afxReal cp = AfxCos(halfpitch);
-    afxReal sp = AfxSin(halfpitch);
+    afxReal cp = AfxCosf(halfpitch);
+    afxReal sp = AfxSinf(halfpitch);
     afxReal const halfyaw = pitchYawRoll[1] * 0.5f;
-    afxReal cy = AfxCos(halfyaw);
-    afxReal sy = AfxSin(halfyaw);
+    afxReal cy = AfxCosf(halfyaw);
+    afxReal sy = AfxSinf(halfyaw);
     afxReal const halfroll = pitchYawRoll[2] * 0.5f;
-    afxReal cr = AfxCos(halfroll);
-    afxReal sr = AfxSin(halfroll);
+    afxReal cr = AfxCosf(halfroll);
+    afxReal sr = AfxSinf(halfroll);
 
     q[0] = cr * sp * cy + sr * cp * sy;
     q[1] = cr * cp * sy - sr * sp * cy;
@@ -498,8 +498,8 @@ _AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
                 {
                     // keep the dot product in the range that acos canv handle (shouldn't get here)
                     dot = AfxClamp(dot, AfxScalar(-1), AfxScalar(1));
-                    afxReal theta = AfxAcos(dot); // the angle between start a end in radians
-                    afxReal s = AfxSin(theta), f1 = AfxSin((AfxScalar(1) - percent) * theta) / s, f2 = AfxSin(percent * theta) / s; // compute negative a positive
+                    afxReal theta = AfxAcosf(dot); // the angle between start a end in radians
+                    afxReal s = AfxSinf(theta), f1 = AfxSinf((AfxScalar(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
 
                     // mul & add
                     q[3] = f1 * a[3] + f2 * b[3];
@@ -604,7 +604,7 @@ _AFXINL void AfxExtractAxialRotation(afxQuat const q, afxV3d axis, afxReal *radi
     AfxAssert(q);
     AfxAssert(axis);
     AfxCopyV3d(axis, q);
-    *radians = 2.f * AfxAcos(q[3]);
+    *radians = 2.f * AfxAcosf(q[3]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -663,7 +663,7 @@ _AFXINL void AfxMakeQuatFromTangentM3d(afxQuat q, afxM3d const tbn)
 
     if (q[3] < bias)
     {
-        afxReal normFactor = AfxSqrt(1.f - bias * bias);
+        afxReal normFactor = AfxSqrtf(1.f - bias * bias);
         AfxScaleV3d(q, q, normFactor);
         q[3] = bias;
     }
@@ -716,8 +716,8 @@ _AFXINL void AfxMakeQuatFromAngularVelocity(afxQuat q, afxV3d const rot)
     afxReal mag = AfxMagV3d(rot);
     AfxScaleV3d(n, rot, 1.0 / mag);
     afxReal halfSq = mag * 0.5f;
-    AfxScaleV3d(q, n, AfxSin(halfSq));
-    q[3] = AfxCos(halfSq);
+    AfxScaleV3d(q, n, AfxSinf(halfSq));
+    q[3] = AfxCosf(halfSq);
 }
 
 _AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxV3d const omega, afxReal dt)
@@ -745,7 +745,7 @@ _AFXINL void AfxIntegrateQuat(afxQuat q, afxQuat const in, afxV3d const omega, a
     {
         afxReal thetaMag = sqrt(thetaMagSq);
         deltaQ[3] = cos(thetaMag);
-        s = AfxSin(thetaMag) / thetaMag;
+        s = AfxSinf(thetaMag) / thetaMag;
     }
 
     AfxScaleV3d(deltaQ, theta, s);

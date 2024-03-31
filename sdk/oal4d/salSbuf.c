@@ -61,7 +61,7 @@ _A4D afxError _SalSbufCtor(afxSoundBuffer sbuf, afxCookie const* cookie)
     else
     {
         if (spec->src)
-            AfxCopy(1, sbuf->base.siz, spec->src, sbuf->base.bytemap);
+            AfxCopy2(1, sbuf->base.siz, spec->src, sbuf->base.bytemap);
 
         sbuf->lastUpdOffset = 0;
         sbuf->lastUpdRange = sbuf->base.siz;

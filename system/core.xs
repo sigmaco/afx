@@ -2,9 +2,9 @@
 
 ffi class Stream {
     ffi firm Acquire(mode, siz)
-    ffi firm Open(mode, cap, src, len)
-    ffi firm OpenInput(cap, src, len)
-    ffi firm OpenOutput(cap, dst, len)
+    ffi firm Open(mode, start, siz)
+    ffi firm OpenInput(src, len)
+    ffi firm OpenOutput(dst, cap)
     ffi firm OpenFile(uri, mode)
     ffi firm LoadFile(uri)
     
@@ -25,7 +25,8 @@ ffi class Keyboard {
     ffi firm Reacquire(port)
     ffi firm Release(port)
     
-    ffi firm KeyIsPressed(port, code)
+    ffi firm GetKeyPressure(port, code)
+    ffi firm GetKeyCombo(port, neg, pos)
 }
 
 ffi class Mouse {

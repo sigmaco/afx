@@ -85,7 +85,7 @@ AFX_DEFINE_STRUCT(afxSynthesisConfig)
 
 AVX afxCmdId                AfxCmdResetScissors
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxNat                  cnt, /// specifies the scissor count.
     afxRect const           rc[] /// specifies the scissors to use for drawing.
 );
@@ -97,7 +97,7 @@ AVX afxCmdId                AfxCmdResetScissors
 
 AVX afxCmdId                AfxCmdReadjustScissors
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxNat                  baseIdx, /// is the index of the first scissor whose state is updated by the command.
     afxNat                  cnt, /// is the number of scissors whose rectangles are updated by the command.
     afxRect const           rect[] /// is a pointer to an array of afxRect structures defining scissor rectangles.
@@ -110,7 +110,7 @@ AVX afxCmdId                AfxCmdReadjustScissors
 
 AVX afxCmdId                AfxCmdBeginSynthesis
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxSynthesisConfig const*state /// is a pointer to a afxSynthesisConfig structure specifying details of the render pass instance to begin.
 );
 
@@ -119,7 +119,7 @@ AVX afxCmdId                AfxCmdBeginSynthesis
 
 AVX afxCmdId                AfxCmdFinishSynthesis
 (
-    afxDrawStream           dscr
+    afxDrawStream           diob
 );
 
 /// Transition to the next pass of a render canvas.
@@ -129,25 +129,25 @@ AVX afxCmdId                AfxCmdFinishSynthesis
 
 AVX afxCmdId                AfxCmdNextPass
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 useAuxScripts /// specifies how the commands in the next subpass will be provided, in the same fashion as the corresponding parameter of vkCmdBeginRenderPass.
 );
 
 AVX afxCmdId                AfxCmdDisableRasterization
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 disable /// controls whether primitives are discarded immediately before the rasterization stage.
 );
 
 AVX afxCmdId                AfxCmdEnableDepthBias
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 enable /// controls whether to bias fragment depth values.
 );
 
 AVX afxCmdId                AfxCmdSetDepthBias
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxReal                 constFactor, /// is a scalar factor controlling the constant depth value added to each fragment.
     afxReal                 clamp, /// is the maximum (or minimum) depth bias of a fragment.
     afxReal                 slopeFactor /// is a scalar factor applied to a fragment’s slope in depth bias calculations.
@@ -155,70 +155,70 @@ AVX afxCmdId                AfxCmdSetDepthBias
 
 AVX afxCmdId                AfxCmdSetLineWidth
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxReal                 lineWidth /// is the width of rasterized line segments.
 );
 
 AVX afxCmdId                AfxCmdEnableDepthTest
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 enable /// specifies if the depth test is enabled.
 );
 
 AVX afxCmdId                AfxCmdSetDepthCompareOp
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxCompareOp            op /// is a afxCompareOp value specifying the comparison operator used for the Depth Comparison step of the depth test.
 );
 
 AVX afxCmdId                AfxCmdDisableDepthWrite
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 enable /// specifies if depth writes are enabled.
 );
 
 AVX afxCmdId                AfxCmdEnableStencilTest
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 enable /// specifies if the stencil test is enabled.
 );
 
 AVX afxCmdId                AfxCmdSetStencilCompareMask
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the compare mask.
     afxNat32                compareMask /// is the new value to use as the stencil compare mask.
 );
 
 AVX afxCmdId                AfxCmdSetStencilWriteMask
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to update the write mask, as described above for vkCmdSetStencilCompareMask.
     afxNat32                writeMask /// is the new value to use as the stencil write mask.
 );
 
 AVX afxCmdId                AfxCmdSetStencilReference
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxMask                 faceMask, /// is a bitmask of (0/FRONT, 1/BACK, 2/BOTH) bits specifying the set of stencil state for which to
     afxNat32                reference /// is the new value to use as the stencil reference value.
 );
 
 AVX afxCmdId                AfxCmdEnableDepthBoundsTest
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBool                 enable /// specifies if the depth bounds test is enabled.
 );
 
 AVX afxCmdId                AfxCmdSetDepthBounds
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxReal const           bounds[2] /// is the minimum and maximum depth bounds.
 );
 
 AVX afxCmdId                AfxCmdSetBlendConstants
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxReal const           blendConstants[4] /// is an array of four values specifying the Rc, Gc, Bc, and Ac components of the blend constant color used in blending, depending on the blend factor.
 );
 

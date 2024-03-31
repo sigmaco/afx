@@ -17,14 +17,13 @@
 #define _AFX_DRAW_C
 #define _AFX_SEMAPHORE_C
 #define _AFX_DRAW_CONTEXT_C
-#include "qwadro/draw/pipe/afxSemaphore.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxDrawContext AfxGetSemaphoreContext(afxSemaphore sem)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sem, afxFcc_SEM);
-    afxDrawContext dctx = AfxGetObjectProvider(sem);
+    afxDrawContext dctx = AfxGetLinker(&sem->dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
@@ -36,10 +35,12 @@ _AVX afxError AfxAcquireSemaphores(afxDrawContext dctx, afxNat cnt, afxSemaphore
     AfxAssert(cnt);
     AfxAssert(semaphores);
 
-    afxManager* cls = AfxGetSemaphoreClass(dctx);
+    afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    afxManager* cls = AfxGetSemaphoreClass(ddev);
     AfxAssertClass(cls, afxFcc_SEM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)semaphores, (void const*[]) { dctx }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)semaphores, (void const*[]) { ddev, dctx }))
         AfxThrowError();
 
     return err;

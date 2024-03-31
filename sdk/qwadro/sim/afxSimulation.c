@@ -395,24 +395,28 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 
             //afxClassConfig tmp;
 
-            AfxSetUpManager(&sim->assets, NIL, classes, &_AfxCadClsConfig);
-
-            AfxSetUpManager(&sim->materials, NIL, classes, &_AfxMtlClsConfig);
-            AfxSetUpManager(&sim->meshes, NIL, classes, &_AfxMshClsConfig);
+            AfxSetUpManager(&sim->materials, NIL, classes, &_AfxMtlClsConfig); // require tex
+            
             AfxSetUpManager(&sim->topologies, NIL, classes, &_AfxMshtClsConfig);
             AfxSetUpManager(&sim->meshDatas, NIL, classes, &_AfxVtdClsConfig);
+            AfxSetUpManager(&sim->meshes, NIL, classes, &_AfxMshClsConfig); // require msht, vtd
+
             //AfxSetUpManager(&sim->nodes, NIL, classes, &_AfxNodClsConfig);
             AfxSetUpManager(&sim->skeletons, NIL, classes, &_AfxSklClsConfig);
-            AfxSetUpManager(&sim->models, NIL, classes, &_AfxMdlClsConfig);
-            AfxSetUpManager(&sim->bodies, NIL, classes, &_AwxBodClsConfig);
-            AfxSetUpManager(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
+            AfxSetUpManager(&sim->models, NIL, classes, &_AfxMdlClsConfig); // require skl, msh
+            
             AfxSetUpManager(&sim->motions, NIL, classes, &_AwxMotClsConfig);
-            AfxSetUpManager(&sim->animations, NIL, classes, &_AwxAniClsConfig);
+            AfxSetUpManager(&sim->animations, NIL, classes, &_AwxAniClsConfig); // require mot
 
+            AfxSetUpManager(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
+            AfxSetUpManager(&sim->bodies, NIL, classes, &_AwxBodClsConfig); // require moto
+            
             AfxSetUpManager(&sim->entities, NIL, classes, &_AfxEntClsConfig);
             AfxSetUpManager(&sim->lights, NIL, classes, &_AfxLitClsConfig);
 
-            AfxSetUpManager(&sim->renderers, NIL, classes, &_AfxRndClsConfig);
+            AfxSetUpManager(&sim->assets, NIL, classes, &_AfxCadClsConfig); // require all
+
+            AfxSetUpManager(&sim->renderers, NIL, classes, &_AfxRndClsConfig); // require all
 
 
         }

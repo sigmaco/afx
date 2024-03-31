@@ -900,7 +900,7 @@ SGL void SglToGlColorSwizzling(afxColorSwizzling const *swizzling, GLenum *array
 SGL void SglDetermineGlTargetInternalFormatType(afxRaster tex, GLenum *target, GLint *intFmt, GLenum *fmt, GLenum *type);
 
 #ifdef _AFX_DEBUG
-#   define _SglThrowErrorOccuried() { GLenum err = gl->GetError(); switch (err) { case GL_NO_ERROR: break; case 1280: AfxError("GL: INVAL_PARAM"); break; case 1281: AfxError("GL: INVAL_VALUE"); break; case 1282: AfxError("GL: INVAL_OP"); break; case 1283: AfxError("GL: STACK_OVERFLOW"); break; case 1284: AfxError("GL: STACK_UNDERFLOW"); break; case 1285: AfxError("GL: OUT_OF_MEM"); break; default: AfxError("GL: %d", err); break; }}
+#   define _SglThrowErrorOccuried() { GLenum err = gl->GetError(); switch (err) { case GL_NO_ERROR: break; case 1280: AfxLogError("GL: INVAL_PARAM"); break; case 1281: AfxLogError("GL: INVAL_VALUE"); break; case 1282: AfxLogError("GL: INVAL_OP"); break; case 1283: AfxLogError("GL: STACK_OVERFLOW"); break; case 1284: AfxLogError("GL: STACK_UNDERFLOW"); break; case 1285: AfxLogError("GL: OUT_OF_MEM"); break; default: AfxLogError("GL: %d", err); break; }}
 #else
 #   define _SglThrowErrorOccuried()
 #endif//AFX_DONT_DEBUG

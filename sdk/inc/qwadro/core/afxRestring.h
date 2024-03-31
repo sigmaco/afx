@@ -23,7 +23,7 @@
 
 enum
 {
-    _AFX_STR_FLAG_ALLOCED = AfxGetBitOffset(0)
+    _AFX_STR_FLAG_ALLOCED = AFX_BIT_OFFSET(0)
 };
 
 AFX_DEFINE_STRUCT(afxRestring)

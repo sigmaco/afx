@@ -35,19 +35,10 @@
     <ClCompile Include="..\..\sgl4d\sglDctx.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDdrv_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglDin.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglDout_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDque_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDscr.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglFenc.c">
@@ -84,6 +75,15 @@
       <Filter>sgl4d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglBsch.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDiob.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDxge_w32.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDdev_w32.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
   </ItemGroup>

@@ -236,7 +236,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 GLUSwavefront*ptr = &objectWalker->object;
                 AfxInsertArrayUnits(&meshRes, 1, &idx, &ptr);
                 AfxMakeUri(AfxInsertArrayUnit(&meshNames, &idx), objectWalker->object.name, 0);
-                AfxAdvertise("%.*s", AfxPushString(AfxGetUriString(AfxGetArrayUnit(&meshNames, idx))));
+                AfxLogAdvertence("%.*s", AfxPushString(AfxGetUriString(AfxGetArrayUnit(&meshNames, idx))));
                 objectWalker = objectWalker->next;
             }
 #endif
@@ -271,7 +271,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
             afxModelBlueprint mdlb = { 0 };
             AfxResetTransform(&mdlb.displacement);
             mdlb.skl = skl;
-            mdlb.mshCnt = meshCnt;
+            mdlb.rigCnt = meshCnt;
             mdlb.meshes = meshes.data;
             mdlb.strb = strb;
             AfxMakeString32(&mdlb.id, mdlName);

@@ -15,9 +15,6 @@
  */
 
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/draw/afxDrawOperation.h"
-#include "qwadro/draw/afxXsh.h"
-#include "../_classified/afxDrawClassified.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW OPERATION BLUEPRINT                                                   //
@@ -479,7 +476,7 @@ _AVX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
     {
         AfxAssert(!AfxUriIsBlank(&uri[i]));
         
-        AfxEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
+        AfxLogEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
         
         afxUri fext;
         AfxPickUriExtension(&fext, &uri[i], FALSE);
@@ -544,7 +541,7 @@ _AVX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
             }
             else
             {
-                AfxError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
+                AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
                 AfxThrowError();
             }
         }

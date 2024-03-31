@@ -194,7 +194,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
     fp = fopen(filename, "rb");
     if (!fp)
     {
-        AfxError("Error: couldn't open \"%s\"!\n", filename);
+        AfxLogError("Error: couldn't open \"%s\"!\n", filename);
         return 0;
     }
 
@@ -208,7 +208,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
             if (version != 10)
             {
                 /* Bad version */
-                AfxError("Error: bad model version\n");
+                AfxLogError("Error: bad model version\n");
                 fclose(fp);
                 return 0;
             }
@@ -526,7 +526,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
 
             while (!feof(fp) && !err)
             {
-                //AfxEcho(buff);
+                //AfxLogEcho(buff);
                 /* Read whole line */
                 fgets(buff, sizeof(buff), fp);
 
@@ -535,7 +535,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                     if (version != 10)
                     {
                         /* Bad version */
-                        AfxError("Error: bad model version\n");
+                        AfxLogError("Error: bad model version\n");
                         fclose(fp);
                         return 0;
                     }
@@ -769,7 +769,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             afxModelBlueprint mdlb = { 0 };
             mdlb.meshes = meshes.data;
             mdlb.skl = skl;
-            mdlb.mshCnt = md5.num_meshes;
+            mdlb.rigCnt = md5.num_meshes;
             AfxResetTransform(&mdlb.displacement);
             AfxMakeString32(&mdlb.id, AfxGetUriString(&nameUri));
             mdlb.strb = strb;

@@ -287,14 +287,14 @@ afxModel Gr2ModelToQwadro(afxSimulation sim, afxStringBase strb, granny_model* M
     AfxMakeString(&tid, Model->Name, 0);
     AfxMakeString32(&blue.id, &tid);
     AfxSetTransformWithIdentityCheck(&blue.displacement, Model->InitialPlacement.Position, Model->InitialPlacement.Orientation, Model->InitialPlacement.ScaleShear);
-    blue.mshCnt = Model->MeshBindingCount;
+    blue.rigCnt = Model->MeshBindingCount;
     blue.skl = Gr2SkeletonToQwadro(sim, strb, Model->Skeleton);
     blue.strb = strb;
 
     afxModel mdl;
     AfxAssembleModel(sim, 1, &blue, &mdl);
 
-    for (afxNat i = 0; i < blue.mshCnt; i++)
+    for (afxNat i = 0; i < blue.rigCnt; i++)
     {
         afxMesh msh = Gr2MeshToQwadro(sim, strb, Model->MeshBindings[i].Mesh);
         AfxRigMeshes(mdl, blue.skl, i, 1, &msh);

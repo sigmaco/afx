@@ -16,9 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_RASTERIZER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/pipe/afxRasterizer.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxXsh.h"
 
  // OpenGL/Vulkan Continuous Integration
@@ -44,7 +42,7 @@ _AVX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
     config->msEnabled = razr->msEnabled;
     
     if ((config->sampleCnt = razr->sampleCnt))
-        AfxCopy(razr->sampleCnt, sizeof(razr->sampleMasks[0]), razr->sampleMasks, config->sampleMasks);
+        AfxCopy2(razr->sampleCnt, sizeof(razr->sampleMasks[0]), razr->sampleMasks, config->sampleMasks);
 
     config->alphaToOneEnabled = razr->alphaToOneEnabled;
     config->alphaToCoverageEnabled = razr->alphaToCoverageEnabled;
@@ -66,7 +64,7 @@ _AVX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
         AfxCopyV2d(config->depthBounds, razr->depthBounds);
 
     if ((config->colorOutCnt = razr->outCnt))
-        AfxCopy(razr->outCnt, sizeof(razr->outs[0]), razr->outs, config->colorOuts);
+        AfxCopy2(razr->outCnt, sizeof(razr->outs[0]), razr->outs, config->colorOuts);
 
     AfxCopyColor(config->blendConstants, razr->blendConstants);
     config->pixelLogicOpEnabled = razr->logicOpEnabled;
@@ -268,7 +266,7 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
-    AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
+    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
     AfxPickUriExtension(uri, FALSE, &fext);
@@ -335,7 +333,7 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
         }
         else
         {
-            AfxError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
+            AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
             AfxThrowError();
         }
     }

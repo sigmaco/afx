@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 
 _AVX afxString const g_str_Qwadro = AFX_STRING("Qwadro");
@@ -501,7 +501,7 @@ _AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint 
     {
         if ((err |= (!(total_[i] > base_[i] + range_[i]))))
         {
-            AfxLogError(hint, "[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
+            AfxLogError("[%i] %s(%f) + %s(%f) is out of range [0, %f]", AFX_STRINGIFY((base_)), (base_), AFX_STRINGIFY((range_)), (range_), AFX_STRINGIFY((total_)), (total_));
         }
     }
     return err;

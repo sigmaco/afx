@@ -14,10 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxManager.h"
-#include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxTxu.h"
-#include "qwadro/mem/afxMmu.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX afxBool metaObjectMgrInited = FALSE;
 _AFX afxChain orphanClassChain =
@@ -34,6 +31,24 @@ _AFX afxChain orphanClassChain =
 _AFX afxChain* _AfxGetOrphanClasses(void)
 {
     return &orphanClassChain;
+}
+
+_AFX afxResult _AfxExhaustChainedClasses(afxChain *provisions)
+{
+    afxError err = AFX_ERR_NONE;
+    afxResult cnt = 0;
+
+    afxManager* cls;
+    AfxIterateLinkage(afxManager, cls, provisions, provider)
+    {
+        AfxAssertType(cls, afxFcc_CLS);
+        
+        if (cls->objFcc == afxFcc_SYS)
+            break; // We can't drop it, it would fuck the entire platform. Break.
+            
+        cnt += AfxExhaustManager(cls);
+    }
+    return cnt;
 }
 
 _AFX afxResult _AfxUninstallChainedClasses(afxChain *provisions)
@@ -373,7 +388,7 @@ _AFX afxError _AfxObjDtor(afxManager *cls, afxObject obj)
 
     if (err)
     {
-        AfxEcho("Destructing instance %p of %s class.", obj, cls->name);
+        AfxLogEcho("Destructing instance %p of %s class.", obj, cls->name);
     }
 
     afxManager* base = AfxGetBaseClass(cls);
@@ -382,7 +397,7 @@ _AFX afxError _AfxObjDtor(afxManager *cls, afxObject obj)
     {
         if (err)
         {
-            AfxEcho("Destructing instance %p of %s : %s class.", obj, cls->name, base->name);
+            AfxLogEcho("Destructing instance %p of %s : %s class.", obj, cls->name, base->name);
         }
 
         if (_AfxObjDtor(base, obj))
@@ -403,7 +418,7 @@ _AFX afxError _AfxDestructObjects(afxManager *cls, afxNat cnt, afxObject objects
     for (afxNat i = cnt; i-- > 0;)
     {
         afxObject item = objects[i];
-        //AfxEcho("Dismantling %s object (#%d) %p...", cls->name, i, obj[i]);
+        //AfxLogEcho("Dismantling %s object (#%d) %p...", cls->name, i, obj[i]);
         afxObjectBase *itemD = (afxObjectBase *)item;
         --itemD;
         AfxAssertType(itemD, afxFcc_OBJ);
@@ -411,7 +426,7 @@ _AFX afxError _AfxDestructObjects(afxManager *cls, afxNat cnt, afxObject objects
 
         //afxFcc fcc = AfxObjectGetFcc(item);
         //afxNat refCnt = AfxGetRefCount(item);
-        //AfxEcho("Destroying %s... %p[%.4s]^%i", cls->name, item, (afxChar*)&fcc, item->refCnt);
+        //AfxLogEcho("Destroying %s... %p[%.4s]^%i", cls->name, item, (afxChar*)&fcc, item->refCnt);
 
         {
             AfxObjectSignalConnections(item, AFX_EVENT_OBJ_DESTROYED, NIL);
@@ -495,11 +510,11 @@ _AFX afxError _AfxDestructObjects(afxManager *cls, afxNat cnt, afxObject objects
         if (_AfxObjDtor(cls, item))
             AfxThrowError();
 
-        AfxZero(1, sizeof(*itemD), itemD);
+        AfxZero2(1, sizeof(*itemD), itemD);
         objects[i] = itemD;
         //AfxDeallocate(cls->all, item);
 
-        //AfxEcho("Instance %p[%.4s]^%i destroyed.", item, (afxChar const*)&(fcc), refCnt);
+        //AfxLogEcho("Instance %p[%.4s]^%i destroyed.", item, (afxChar const*)&(fcc), refCnt);
     }
     return err;
 }
@@ -519,13 +534,13 @@ _AFX afxError _AfxObjCtor(afxManager *cls, afxObject obj, afxCookie const* cooki
 
         if (err)
         {
-            AfxEcho("afxManager<%s, %s>ConstructingObject(%p)", cls->name, base->name, obj);
+            AfxLogEcho("afxManager<%s, %s>ConstructingObject(%p)", cls->name, base->name, obj);
         }
     }
 
     if (err)
     {
-        AfxEcho("afxManager<%s>::ConstructObject(%p)", cls->name, obj);
+        AfxLogEcho("afxManager<%s>::ConstructObject(%p)", cls->name, obj);
     }
 
     if (!err)
@@ -595,19 +610,36 @@ _AFX afxError _AfxConstructObjects(afxManager *cls, afxNat cnt, afxObject object
     return err;
 }
 
+_AFX afxNat AfxExhaustManager(afxManager *cls)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cls);
+    AfxAssertType(cls, afxFcc_CLS);
+    afxNat rslt = 0;
+
+    afxObject obj;
+    while (_AfxClsEnumerateObjects(cls, TRUE, 0, 1, &obj))
+    {
+        while (TRUE != AfxReleaseObjects(1, &obj));
+        ++rslt;
+    }
+    return rslt;
+}
+
 _AFX afxError AfxCleanUpManager(afxManager *cls)
 {
     afxError err = AFX_ERR_NONE;
-
     AfxAssert(cls);
     AfxAssertType(cls, afxFcc_CLS);
+
+    afxNat objCnt = AfxCountObjects(cls);
 
     afxManager* base = AfxGetBaseClass(cls);
 
     if (base)
-        AfxEcho("Cleaning up %s[%s]", cls->name, base->name);
+        AfxLogEcho(objCnt ? "Cleaning up %s[%s]. %u lost objects." : "Cleaning up %s[%s].", cls->name, base->name, objCnt);
     else
-        AfxEcho("Cleaning up %s", cls->name);
+        AfxLogEcho(objCnt ? "Cleaning up %s. %u lost objects." : "Cleaning up %s.", cls->name, objCnt);
 
     //AfxEnterSlockExclusive(&cls->slock);
 
@@ -615,11 +647,7 @@ _AFX afxError AfxCleanUpManager(afxManager *cls)
 
     AfxAssert(0 == AfxGetChainLength(&cls->deriveds));
 
-    afxObject obj;
-    while (_AfxClsEnumerateObjects(cls, TRUE, 0, 1, &obj))
-    {
-        while (TRUE != AfxReleaseObjects(1, &obj));
-    }
+    AfxExhaustManager(cls);
 
     AfxAssert(0 == cls->pool.totalUsedCnt);
     AfxCleanUpPool(&cls->pool);
@@ -634,7 +662,7 @@ _AFX afxError AfxCleanUpManager(afxManager *cls)
         AfxReleaseObjects(1, (void*[]) { cls->mmu });
 
     //AfxExitSlockExclusive(&cls->slock);
-    //AfxReleaseSlock(&cls->slock);
+    //AfxCleanUpSlock(&cls->slock);
     
     cls->fcc = NIL;
 
@@ -664,26 +692,26 @@ _AFX afxError AfxSetUpManager(afxManager *cls, afxManager *base, afxChain* provi
     {
         if (base)
         {
-            AfxEcho("Setting up %s[%s]", config->name, base->name);
+            AfxLogEcho("Setting up %s[%s]", config->name, base->name);
         }
         else
         {
-            AfxEcho("Setting up %s", config->name);
+            AfxLogEcho("Setting up %s", config->name);
         }
     }
     else
     {
         if (base)
         {
-            AfxEcho("Setting up %s[%s]", config->name, base->name);
+            AfxLogEcho("Setting up %s[%s]", config->name, base->name);
         }
         else
         {
-            AfxEcho("Setting up %s", config->name);
+            AfxLogEcho("Setting up %s", config->name);
         }
     }
 
-    //AfxTakeSlock(&cls->slock);
+    //AfxSetUpSlock(&cls->slock);
     //AfxEnterSlockExclusive(&cls->slock);
 
     cls->fcc = afxFcc_CLS;
@@ -866,6 +894,7 @@ _AFX afxResult _AfxAssertObjects(afxNat cnt, afxObject const objects[], afxFcc f
             while ((cls = AfxGetBaseClass(cls)));
 
             AfxAssertClass(cls, fcc);
+            AfxCatchError(err);
 
             if (err)
             {

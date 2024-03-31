@@ -87,7 +87,7 @@ _SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afx
             gl->SamplerParameteri(glHandle, GL_TEXTURE_COMPARE_FUNC, cop); _SglThrowErrorOccuried();
             gl->SamplerParameterfv(glHandle, GL_TEXTURE_BORDER_COLOR, (void*)samp->base.borderColor); _SglThrowErrorOccuried();
 
-            AfxEcho("afxSampler %p hardware-side data instanced.", samp);
+            AfxLogEcho("afxSampler %p hardware-side data instanced.", samp);
 
             if (bound && !(bindFlags & sglBindFlag_KEEP))
             {

@@ -19,11 +19,7 @@
 #ifndef AFX_DRAW_DEFS_H
 #define AFX_DRAW_DEFS_H
 
-#include "qwadro/mem/afxArray.h"
-#include "qwadro/math/afxFrustum.h"
-#include "qwadro/core/afxThread.h"
-#include "qwadro/io/afxStream.h"
-#include "qwadro/core/afxRestring.h"
+#include "qwadro/core/afxSystem.h"
 
 #ifndef __e2draw__
 #   ifdef _DEBUG
@@ -54,8 +50,8 @@ AFX_DEFINE_HANDLE(afxDrawThread);
 //typedef afxObject afxDrawThread;
 AFX_DEFINE_HANDLE(afxDrawContext);
 //typedef afxObject afxDrawContext;
-AFX_DEFINE_HANDLE(afxDrawQueue);
-//typedef afxObject afxDrawQueue;
+AFX_DEFINE_HANDLE(afxDrawBridge);
+//typedef afxObject afxDrawBridge;
 AFX_DEFINE_HANDLE(afxDrawInput);
 //typedef afxObject afxDrawInput;
 AFX_DEFINE_HANDLE(afxDrawStream);
@@ -194,8 +190,8 @@ typedef enum afxLogicOp
 typedef enum afxCullMode
 {
     // NIL = DISABLED
-    afxCullMode_FRONT = AfxGetBitOffset(0),
-    afxCullMode_BACK  = AfxGetBitOffset(1),
+    afxCullMode_FRONT = AFX_BIT_OFFSET(0),
+    afxCullMode_BACK  = AFX_BIT_OFFSET(1),
     afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, // sum to cull both faces --- who would use it?
     
     afxCullMode_TOTAL

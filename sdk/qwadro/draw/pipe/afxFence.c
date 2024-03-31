@@ -17,7 +17,6 @@
 #define _AFX_DRAW_C
 #define _AFX_FENCE_C
 #define _AFX_DRAW_CONTEXT_C
-#include "qwadro/draw/pipe/afxFence.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxBool AfxFenceIsSignaled(afxFence fenc)
@@ -31,7 +30,7 @@ _AVX afxDrawContext AfxGetFenceContext(afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
-    afxDrawContext dctx = AfxGetObjectProvider(fenc);
+    afxDrawContext dctx = AfxGetLinker(&fenc->dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
@@ -66,17 +65,6 @@ _AVX afxError AfxResetFences(afxNat cnt, afxFence const fences[])
     return err;
 }
 
-_AVX afxNat AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(fences);
-    AfxAssert(cnt);
-    afxManager* cls = AfxGetFenceClass(dctx);
-    AfxAssertClass(cls, afxFcc_FENC);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)fences);
-}
-
 _AVX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt, afxFence fences[])
 {
     afxError err = AFX_ERR_NONE;
@@ -84,10 +72,12 @@ _AVX afxError AfxAcquireFences(afxDrawContext dctx, afxBool signaled, afxNat cnt
     AfxAssert(cnt);
     AfxAssert(fences);
 
-    afxManager* cls = AfxGetFenceClass(dctx);
+    afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    afxManager* cls = AfxGetFenceClass(ddev);
     AfxAssertClass(cls, afxFcc_FENC);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { dctx, &signaled }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)fences, (void const*[]) { ddev, dctx, &signaled }))
         AfxThrowError();
 
     return err;

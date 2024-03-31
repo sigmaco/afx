@@ -21,7 +21,7 @@
 #include "qwadro/sound/afxSoundInput.h"
 #include "qwadro/ux/afxWidget.h"
 #include "qwadro/ux/afxOverlay.h"
-#include "qwadro/io/afxMouse.h"
+#include "qwadro/ux/afxMouse.h"
 #include "qwadro/core/afxThread.h"
 #include "qwadro/env/afxEnvironment.h"
 #include "qwadro/core/afxManager.h"
@@ -78,7 +78,6 @@ AFX_OBJECT(afxApplication)
 
     afxClock                startClock;
     afxClock                lastClock;
-    afxReal64               ct, dt;
 
     afxHandle               xssInitFn;
     afxHandle               xssQuitFn;

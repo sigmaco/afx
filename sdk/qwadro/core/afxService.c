@@ -16,9 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_SERVICE_C
-#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/core/afxService.h"
 
 _AFX afxError _AfxSvcDtor(afxService svc)
 {

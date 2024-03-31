@@ -16,9 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_RASTER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/io/afxFile.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -115,7 +113,7 @@ _AVXINL void AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd)
     }
 }
 
-_AVXINL afxNat AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx)
+_AVXINL void AfxDetermineRasterStride(afxRaster ras, afxNat lodIdx, afxNat* bytesPerRow, afxNat* bytesPerLayer)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -129,20 +127,16 @@ _AVXINL afxNat AfxMeasureRasterRow(afxRaster ras, afxNat lodIdx)
     AfxDescribePixelFormat(ras->fmt, &pfd);
     afxNat bpr = (w * AFX_ALIGN(pfd.bpp, AFX_BYTE_SIZE)) / AFX_BYTE_SIZE;
     AfxAssert(bpr); // bytes per row
-    return bpr;
-}
-
-_AVXINL afxNat AfxMeasureRasterLayer(afxRaster ras, afxNat lodIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertRange(ras->lodCnt, lodIdx, 1);
-    afxNat bpl = AfxMeasureRasterRow(ras, lodIdx) * ras->whd[1] * ras->whd[2];
+    afxNat bpl = bpr * ras->whd[1] * ras->whd[2];
     AfxAssert(bpl); // bytes per layer
-    return bpl;
+    
+    AfxAssert(bytesPerRow);
+    *bytesPerRow = bpr;
+    AfxAssert(bytesPerLayer);
+    *bytesPerLayer = bpl;
 }
 
-_AVX afxNat AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset)
+_AVX afxNat AfxDetermineRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -154,7 +148,8 @@ _AVX afxNat AfxGetRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, af
     
     afxPixelLayout pfd;
     AfxDescribePixelFormat(ras->fmt, &pfd);
-    afxNat rowSiz = AfxMeasureRasterRow(ras, lodIdx);
+    afxNat rowSiz, layerSiz;
+    AfxDetermineRasterStride(ras, lodIdx, &rowSiz, &layerSiz);
 
     afxWhd whd;
     AfxGetRasterExtent(ras, lodIdx, whd);
@@ -197,7 +192,8 @@ _AVX afxNat AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *srcRgn)
     AfxDescribePixelFormat(ras->fmt, &pfd);
 
     afxNat lodIdx = srcRgn->lodIdx;
-    afxNat rowSiz = AfxMeasureRasterRow(ras, lodIdx);
+    afxNat rowSiz, layerSiz;
+    AfxDetermineRasterStride(ras, lodIdx, &rowSiz, &layerSiz);
 
     afxWhd offset2 = { srcRgn->offset[0], srcRgn->offset[1], srcRgn->offset[2] };
     afxWhd extent2 = { srcRgn->whd[0], srcRgn->whd[1], srcRgn->whd[2] };
@@ -478,7 +474,7 @@ _AVX afxError AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp 
             AfxAssert(rgnSiz >= dataSiz);
 
             afxByte const* src2 = src;
-            AfxCopy(rowCnt * rgn.whd[2], rowSiz, &src2[op->bufOffset], dstData);
+            AfxCopy2(rowCnt * rgn.whd[2], rowSiz, &src2[op->bufOffset], dstData);
 
             AfxCloseRasterRegion(ras, &rgn);
         }
@@ -524,7 +520,7 @@ _AVX afxError AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp co
             AfxAssert(rgnSiz >= dataSiz);
 
             afxByte* dst2 = dst;
-            AfxCopy(rowCnt * rgn.whd[2], rowSiz, srcData, &dst2[op->bufOffset]);
+            AfxCopy2(rowCnt * rgn.whd[2], rowSiz, srcData, &dst2[op->bufOffset]);
 
             AfxCloseRasterRegion(ras, &rgn);
         }
@@ -560,10 +556,18 @@ _AVX void* AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRas
     AfxAssertRange(ras->whd[1], rgn->offset[1], rgn->whd[1]);
     AfxAssertRange(ras->whd[2], rgn->offset[2], rgn->whd[2]);
     
+    AfxAssert(rgnSiz);
+    AfxAssert(rowSiz);
+
+    afxNat rowSiz2;
+
     void *ptr = NIL;
 
-    if (ras->map(ras, rgn, flags, rgnSiz, rowSiz, &ptr))
+    if (ras->map(ras, rgn, flags, rgnSiz, &rowSiz2, &ptr))
         AfxThrowError();
+
+    if (rowSiz)
+        *rowSiz = rowSiz2;
 
     return ptr;
 }

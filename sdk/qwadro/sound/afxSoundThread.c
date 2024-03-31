@@ -96,7 +96,7 @@ _AAX afxBool _AfxProcessSdevCb(afxSoundDevice sdev, void *udd)
         sthr->sctx = NIL;
         sthr->sque = NIL;
 
-        if (sdev->procCb(sdev, sthr))
+        if (sdev->dev.proc(&sdev->dev, &sthr->thr))
             AfxThrowError();
 
         //sthr->sdev = NIL;

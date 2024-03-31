@@ -23,36 +23,36 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
         awxRenderer rnd = AfxGetDrawInputUdd(din);
         afxDrawContext dctx = AfxGetDrawInputContext(din);
 
-        afxDrawStream dscr;
+        afxDrawStream diob;
 
-        if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
+        if (AfxAcquireDrawStreams(din, 0, 1, &diob)) AfxThrowError();
         else
         {
-            if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
+            if (AfxRecordDrawStream(diob, afxDrawStreamUsage_ONCE)) AfxThrowError();
             else
             {
 
                 afxNat outBufIdx = 0;
-                AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
+                AfxLockDrawOutputBuffer(dout, 0, &outBufIdx);
                 afxRaster surf;
-                AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
+                AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
                 afxCanvas canv;
-                AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
+                AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
                 AfxAssertObjects(1, &surf, afxFcc_RAS);
 
-                //AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
+                //AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
 
 
 
-                //AwxCmdEndSceneRendering(dscr, rnd);
+                //AwxCmdEndSceneRendering(diob, rnd);
 
                 afxSemaphore dscrCompleteSem = NIL;
 
-                if (AfxCompileDrawStream(dscr)) AfxThrowError();
+                if (AfxCompileDrawStream(diob)) AfxThrowError();
                 else
                 {
                     afxExecutionRequest execReq = { 0 };
-                    execReq.dscr = dscr;
+                    execReq.diob = diob;
                     execReq.signal = dscrCompleteSem;
 
                     if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))

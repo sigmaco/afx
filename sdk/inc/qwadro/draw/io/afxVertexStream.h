@@ -16,8 +16,8 @@
 
 // This section is part of SIGMA GL/2.
 
-#ifndef AFX_DRAW_STREAM_H
-#define AFX_DRAW_STREAM_H
+#ifndef AFX_VERTEX_BUFFER_H
+#define AFX_VERTEX_BUFFER_H
 
 #include "qwadro/draw/io/afxBuffer.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
@@ -118,4 +118,4 @@ AVX afxNat          AfxGetIndexBufferCapacity(afxIndexBuffer ibuf);
 AVX afxNat          AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afxNat* baseIdx);
 AVX void            AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxNat idxCnt);
 
-#endif//AFX_DRAW_STREAM_H
+#endif//AFX_VERTEX_BUFFER_H

@@ -122,12 +122,12 @@ AFX_DEFINE_HANDLE(afxMemory);
 
 typedef enum afxMemFlags
 {
-    afxMemFlag_ZEROED       = AfxGetBitOffset(0),
-    afxMemFlag_RESIZABLE    = AfxGetBitOffset(1),
+    afxMemFlag_ZEROED       = AFX_BIT_OFFSET(0),
+    afxMemFlag_RESIZABLE    = AFX_BIT_OFFSET(1),
 
-    afxMemFlag_TEMPORARY    = AfxGetBitOffset(8), // to be used just inside "this" function.
-    afxMemFlag_TRANSIENT    = AfxGetBitOffset(9), // to be used across functions, as example signaling objects about an event occurance.
-    afxMemFlag_PERMANENT    = AfxGetBitOffset(10), // to be used across the entire system and or subsystem, 
+    afxMemFlag_TEMPORARY    = AFX_BIT_OFFSET(8), // to be used just inside "this" function.
+    afxMemFlag_TRANSIENT    = AFX_BIT_OFFSET(9), // to be used across functions, as example signaling objects about an event occurance.
+    afxMemFlag_PERMANENT    = AFX_BIT_OFFSET(10), // to be used across the entire system and or subsystem, 
     afxMemFlag_DURATION_MASK= afxMemFlag_TEMPORARY | afxMemFlag_TRANSIENT | afxMemFlag_PERMANENT,
 
     AFX_MEM_PROP_DEVICE_LOCAL, // specifies that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the VK_MEMORY_HEAP_DEVICE_LOCAL_BIT set.
@@ -224,15 +224,21 @@ AFX void                    AfxDeallocate(void *p);
 
 #define                     AfxStream(cnt_,srcStride_,dstStride_,src_,dst_) AfxStream2(cnt_,src_,srcStride_,dst_,dstStride_)
 AFX void                    AfxStream2(afxNat cnt, void const* src, afxSize srcStride, void* dst, afxNat dstStride);
-AFX void                    AfxCopy(afxSize cnt, afxSize siz, void const *src, void *dst);
-AFX void                    AfxFill(afxSize cnt, afxSize siz, void const* value, void *p);
-AFX void                    AfxZero(afxSize cnt, afxSize siz, void *p);
+
+AFX void                    AfxCopy(void* dst, void const* src, afxSize siz);
+AFX void                    AfxCopy2(afxSize cnt, afxSize siz, void const *src, void *dst);
+
+AFX void                    AfxFill(void* p, void const* value, afxSize siz, afxSize cnt);
+AFX void                    AfxFill2(afxSize cnt, afxSize siz, void const* value, void *p);
+
+AFX void                    AfxZero(void* p, afxSize siz);
+AFX void                    AfxZero2(afxSize cnt, afxSize siz, void *p);
 
 #define AFX_ALIGN(operand_,alignment_) ((operand_ + (alignment_ - 1)) & ~(alignment_ - 1))
 
-//#define AFX_ZERO(chnk_) AfxZero((chnk_), sizeof(*(chnk_)))
-//#define AFX_FILL(chnk_, val_) AfxFill((chnk_), sizeof(*(chnk_)), (val_))
-//#define AFX_COPY(chnkDst_, chnkSrc_) AfxCopy((chnkDst_), (chnkSrc_), sizeof(*(chnkDst_)))
+//#define AFX_ZERO(chnk_) AfxZero2((chnk_), sizeof(*(chnk_)))
+//#define AFX_FILL(chnk_, val_) AfxFill2((chnk_), sizeof(*(chnk_)), (val_))
+//#define AFX_COPY(chnkDst_, chnkSrc_) AfxCopy2((chnkDst_), (chnkSrc_), sizeof(*(chnkDst_)))
 
 //AFX afxBool             _AfxGetMemD(afxMmu mmu, struct _afxCtxD **memD, struct _afxSysD* sysD);
 

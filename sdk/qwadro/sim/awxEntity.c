@@ -20,7 +20,6 @@
 
 _AKX afxError _AfxEntDtor(awxEntity ent)
 {
-    AfxEntry("ent=%p", ent);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ent, afxFcc_ENT);
 
@@ -29,7 +28,6 @@ _AKX afxError _AfxEntDtor(awxEntity ent)
 
 _AKX afxError _AfxEntCtor(awxEntity ent, afxCookie const *cookie)
 {
-    AfxEntry("ent=%p", ent);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ent, afxFcc_ENT);
 

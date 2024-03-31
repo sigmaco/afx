@@ -484,7 +484,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspe
 
         // Should be compatible with XMMATRIX XMMatrixPerspectiveFovLH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 
-        afxReal h = AfxCos(0.5f * fovY) / AfxSin(0.5f * fovY);
+        afxReal h = AfxCosf(0.5f * fovY) / AfxSinf(0.5f * fovY);
         afxReal w = h / aspectRatio;
         afxReal range = far / (far - near);
         m[0][0] = w;
@@ -499,7 +499,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspe
         {
             // Should be compatible with XMMATRIX XMMatrixPerspectiveFovRH(float FovAngleY, float AspectRatio, float NearZ, float FarZ)
 
-            afxReal h = AfxCos(0.5f * fovY) / AfxSin(0.5f * fovY);
+            afxReal h = AfxCosf(0.5f * fovY) / AfxSinf(0.5f * fovY);
             afxReal w = h / aspectRatio;
             afxReal range = far / (near - far);
             m[0][0] = w;
@@ -512,7 +512,7 @@ _AFXINL void AfxComputeFovPerspectiveMatrix(afxM4d m, afxReal fovY, afxReal aspe
         {
             // Should be compatible with glPerspective
 
-            afxReal f = 1.f / AfxTan(fovY * 0.5f);
+            afxReal f = 1.f / AfxTanf(fovY * 0.5f);
             afxReal range = 1.f / (near - far);
             m[0][0] = f / aspectRatio;
             m[1][1] = f;
@@ -702,7 +702,7 @@ _AFXINL void AfxDecomposeFovPerspectiveM4d(afxM4d m, afxReal* fovY, afxReal* asp
     AfxAssert(m);
 
     // OpenGL
-    *fovY = 2.f * AfxAtan(1.f / m[1][1]);
+    *fovY = 2.f * AfxAtanf(1.f / m[1][1]);
     *aspectRatio = m[1][1] / m[0][0];
     *near = m[3][2] / (m[2][2] - 1.f);
     *far = m[3][2] / (m[2][2] + 1.f);

@@ -46,8 +46,7 @@ void _XsCamApplyDistance(afxEnvironment env)
 void _XsCamGet(afxEnvironment env)
 {
     afxNat id = XssPullNat(env, 1);
-    afxDrawInput din = XssPullInstance(env, 1);
-    afxCamera cam = AfxGetObjectAt(AfxGetCameraClass(din), id);
+    afxCamera cam = AfxGetObjectAt(AfxGetCameraClass(), id);
     XssPushInstance(env, 0, cam);
 }
 

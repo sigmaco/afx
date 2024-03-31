@@ -25,13 +25,15 @@
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/draw/afxPixel.h"
 // provided classes.
-#include "qwadro/draw/afxDrawQueue.h"
+#include "qwadro/draw/afxDrawBridge.h"
 #include "qwadro/draw/pipe/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/afxDrawOutput.h"
 #include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/afxDrawThread.h"
+// provided classes.
+#include "qwadro/draw/afxCamera.h"
 
 AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
 {
@@ -202,90 +204,72 @@ AFX_DEFINE_STRUCT(afxDrawDeviceCaps)
     afxBool inheritedQueries;
 };
 
-AFX_DEFINE_STRUCT(afxDrawOutputEndpointCaps)
-{
-    afxNat              minBufCnt;
-    afxNat              maxBufCnt;
-    afxNat              currExtent[2];
-    afxWhd              minWhd;
-    afxWhd              maxWhd;
-    afxNat              maxLayerCnt;
-    afxPresentTransform supportedTransforms;
-    afxPresentTransform currTransform;
-    afxPresentAlpha     supportedCompositeAlpha;
-    afxRasterFlags      supportedUsageFlags;
-    afxPresentScaling   supportedScaling;
-    afxNat              supportedModeCnt;
-    afxPresentMode      supportedModes;
-};
-
 AFX_DEFINE_STRUCT(afxDrawPortCaps)
 {
-    afxDrawQueueFlags       queFlags;
+    afxDrawBridgeFlags       queFlags;
     afxNat                  queCnt;
 };
 
 AFX_DEFINE_STRUCT(afxDrawDeviceInfo)
 {
-    afxString const*        domain;
-    afxString const*        name;
-    afxDrawDeviceCaps const*caps;
-    afxDrawDeviceLimits const*limits;
-    afxNat                  portCnt;
-    afxDrawPortCaps const*  portCaps;
-    afxClassConfig const*   dqueClsConfig;
-    afxClassConfig const*   dscrClsConfig;
-    afxClassConfig const*   dctxClsConfig;
-    afxClassConfig const*   doutClsConfig;
-    afxClassConfig const*   dinClsConfig;
-    afxSize                 iddSiz;
-    afxError                (*iddCtor)(afxDrawDevice ddev);
-    afxError                (*iddDtor)(afxDrawDevice ddev);
+    afxDeviceInfo   dev;
 };
+
+typedef enum _ddevReqCode
+{
+    _ddevReqCode_0,
+    _ddevReqCode_1,
+    _ddevReqCode_DIN_DTOR,
+    _ddevReqCode_DIN_CTOR,
+    _ddevReqCode_DIN_RLNK,
+    _ddevReqCode_DOUT_RLNK,
+    _ddevReqCode_DOUT_DTOR,
+    _ddevReqCode_DOUT_CTOR,
+    _ddevReqCode_DCTX_DTOR,
+    _ddevReqCode_DCTX_CTOR,
+}
+_ddevReqCode;
 
 #ifdef _AFX_DRAW_C
 #ifdef _AFX_DRAW_DEVICE_C
 
 AFX_DEFINE_STRUCT(afxDrawInputEndpoint)
 {
-    afxLinkage              ddev;
-    afxChain                mechanisms;
-};
-
-AFX_DEFINE_STRUCT(afxDrawOutputEndpoint)
-{
     afxLinkage                  ddev;
-    afxChain                    mechanisms;
-    afxDrawOutputEndpointCaps   caps;
+    afxChain                    instances;
+    afxMutex                    mtx;
+    afxCondition                cnd;
+    afxString                   name;
 };
 
 AFX_OBJECT(afxDrawDevice)
 {
     AFX_OBJECT(afxDevice)   dev;
-    afxManager                contexts;
-    afxManager                outputs;
-    afxManager                inputs;
-    
+
+    afxManager              contexts;
+    afxManager              semaphores;
+    afxManager              fences;
+    afxManager              queries;
+
+    afxChain                outputs;
+    afxChain                inputs;
+
+    afxChain                ineps;
+
     afxDrawDeviceCaps       caps;
     afxDrawDeviceLimits     limits;
     afxNat                  portCnt;
     struct
     {
         afxDrawPortCaps     portCaps;
-        afxManager            queues;
-        afxManager            scripts;
+        afxManager          queues;
     }*                      ports;
     
     afxClipSpace            clipCfg;
 
     afxError                (*procCb)(afxDrawDevice,afxDrawThread); // call their draw threads.
-    afxError                (*relinkDin)(afxDrawDevice,afxDrawContext,afxNat,afxDrawInput[]);
-    afxError                (*relinkDout)(afxDrawDevice,afxDrawContext,afxNat,afxDrawOutput[]);
-    
-    afxSize                 iddSiz;
+
     struct _afxDdevIdd*     idd;
-    afxError                (*iddCtor)(afxDrawDevice ddev);
-    afxError                (*iddDtor)(afxDrawDevice ddev);
 };
 #endif//_AFX_DRAW_DEVICE_C
 #endif//_AFX_DRAW_C
@@ -301,13 +285,17 @@ AFX_OBJECT(afxDrawSystem)
 {
     afxMmu              mmu;
     afxArena            aren;
+
     afxChain            classes;
-    afxManager            txus;
-    afxManager            threads;
-    afxManager            devices;
-    afxManager            oends;
-    afxManager            iends;
-    //afxIcd              e2draw; // SIGMA GL/2 is required for minimal operability since core has no more embedded fallback.
+    afxManager          txus;
+    afxManager          threads;
+    afxManager          devices;
+    afxManager          outputs;
+    afxManager          inputs;
+    afxManager          cameras;
+
+    afxManager          oends;
+    afxManager          iends;
 };
 #endif//_AFX_DRAW_SYSTEM_C
 #endif//_AFX_DRAW_C
@@ -318,37 +306,49 @@ AVX afxMmu          AfxGetDrawSystemMmu(void);
 
 AVX afxManager*     AfxGetDrawThreadClass(void);
 AVX afxManager*     AfxGetDrawDeviceClass(void);
+AVX afxManager*     AfxGetDrawOutputClass(void);
+AVX afxManager*     AfxGetDrawInputClass(void);
+AVX afxManager*     AfxGetCameraClass(void);
 
 AVX afxNat          AfxCountDrawThreads(void);
 AVX afxNat          AfxCountDrawDevices(void);
+AVX afxNat          AfxCountCameras(void);
 
-AVX afxNat          AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread dthr[]);
-AVX afxNat          AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice ddev[]);
+AVX afxNat          AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread threads[]);
+AVX afxNat          AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice devices[]);
+AVX afxNat          AfxEnumerateCameras(afxNat first, afxNat cnt, afxCamera cameras[]);
 
-AVX afxNat          AfxInvokeDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void *udd);
-AVX afxNat          AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void *udd);
-
-AVX afxDrawDevice   AfxGetDrawDevice(afxNat ddevIdx);
+AVX afxNat          AfxInvokeDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void* udd);
+AVX afxNat          AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void* udd);
+AVX afxNat          AfxInvokeCameras(afxNat first, afxNat cnt, afxBool(*f)(afxCamera, void*), void* udd);
 
 AVX afxNat          AfxChooseDrawDevice(afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxDrawDevice ddevIdx[]); // return count of found devices
 
-AVX afxError        AfxRegisterDrawDevices(afxIcd icd, afxNat cnt, afxDrawDeviceInfo const info[], afxDrawDevice devices[]);
+AVX afxReal         AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+
+// If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
+// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
+
+AVX afxReal         AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW DEVICE                                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
+AVX afxBool         AfxGetDrawDevice(afxNat ddevNo, afxDrawDevice* ddev);
+
 AVX afxBool         AfxDrawDeviceIsRunning(afxDrawDevice ddev);
 
-AVX void            AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps);
+AVX afxManager*     AfxGetDrawContextClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetSemaphoreClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetQueryPoolClass(afxDrawDevice ddev);
+AVX afxManager*     AfxGetFenceClass(afxDrawDevice ddev);
+
 AVX void            AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits);
+AVX void            AfxGetDrawDeviceCaps(afxDrawDevice ddev, afxDrawDeviceCaps* caps);
 
 AVX afxNat          AfxCountDrawPorts(afxDrawDevice ddev);
 AVX void            AfxGetDrawPortCaps(afxDrawDevice ddev, afxNat portIdx, afxDrawPortCaps* caps);
-
-AVX afxManager*     AfxGetDrawContextClass(afxDrawDevice ddev);
-AVX afxManager*     AfxGetDrawOutputClass(afxDrawDevice ddev);
-AVX afxManager*     AfxGetDrawInputClass(afxDrawDevice ddev);
 
 AVX afxNat          AfxCountDrawContexts(afxDrawDevice ddev);
 AVX afxNat          AfxCountDrawOutputs(afxDrawDevice ddev);
@@ -362,7 +362,7 @@ AVX afxNat          AfxInvokeDrawContexts(afxDrawDevice ddev, afxNat first, afxN
 AVX afxNat          AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
 AVX afxNat          AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 
-AVX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputEndpointCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
+AVX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
 AVX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);
 
 #endif//AFX_DRAW_SYSTEM_H

@@ -14,8 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxVersion.h"
-#include "qwadro/core/afxDebug.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX afxBool AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat verPatch)
 {
@@ -23,7 +22,7 @@ _AFX afxBool AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat
 
     if (!rslt)
     {
-        AfxLogAdvertence(AfxHint(), "ABI version (%d.%d.%d) doesn't match API version (%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_VER_PATCH, verMajor, verMinor, verPatch);
+        AfxLogAdvertence("ABI version (%d.%d.%d) doesn't match API version (%d.%d.%d).", AFX_QWADRO_VER_MAJOR, AFX_QWADRO_VER_MINOR, AFX_QWADRO_VER_PATCH, verMajor, verMinor, verPatch);
     }
     return 0;
 }

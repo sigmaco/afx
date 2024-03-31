@@ -20,10 +20,6 @@
 #define _AFX_THREAD_C
 #define _AFX_TXU_C
 #define _AFX_SYSTEM_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/core/afxWaitCondition.h"
-#include "qwadro/core/afxTxu.h"
-#include "qwadro/core/afxDebug.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX void AfxGetThreadingId(afxNat32 *tid)
@@ -362,14 +358,14 @@ _AFX int __stdcall startCbOnSysProcUnit(afxTxu txu)
     
     AfxYieldThreading();
 
-    AfxEntry("Starting Thread Execution Unit %u", txu->unitIdx);
+    AfxDbgLogf(6, NIL, "Starting Thread Execution Unit %u", txu->unitIdx);
     
     while (AfxSystemIsExecuting())
     {
         AfxDoSystemExecution(0);
     }
 
-    AfxEntry("Stopping Thread Execution Unit %u", txu->unitIdx);
+    AfxDbgLogf(6, NIL, "Stopping Thread Execution Unit %u", txu->unitIdx);
     
     txu->activeThr = NIL;
     txu->osHandle = NIL;

@@ -14,8 +14,6 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/mem/afxQueue.h"
-#include "qwadro/mem/afxMmu.h"
 #include "qwadro/core/afxSystem.h"
 
 AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap)
@@ -60,7 +58,7 @@ AFXINL afxError AfxPushQueueUnit(afxQueue *que, void const *data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(que, afxFcc_QUE);
-    AfxCopy(1, que->unitSiz, data, &que->bytemap[que->unitSiz * que->tail]);
+    AfxCopy2(1, que->unitSiz, data, &que->bytemap[que->unitSiz * que->tail]);
     que->tail = (que->tail + 1) % que->cap;
     return err;
 }

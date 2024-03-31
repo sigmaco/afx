@@ -14,9 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/draw/io/afxXsh.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxShaderBlueprint.h"
-#include "qwadro/io/afxFile.h"
 
 AVX afxChar const *shdResTypeNames[];
 
@@ -229,7 +228,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
+                    AfxLogAdvertence("Attribute '%.*s' not handled.", AfxPushString(name));
                 }
             }
 #endif
@@ -288,7 +287,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
 #endif
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
 
@@ -325,7 +324,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
 
@@ -336,7 +335,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("Flag")))
         {
-            AfxAdvertise("%.*s : flag = %.*s", AfxPushString(&name), AfxPushString(&content));
+            AfxLogY("%.*s : flag = %.*s", AfxPushString(&name), AfxPushString(&content));
         }
     }
 
@@ -430,7 +429,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
 
@@ -441,19 +440,19 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 if (!clampSet)
                 {
                     config->depthBiasClamp = identity->depthBiasClamp;
-                    AfxAdvertise("");
+                    AfxLogY("");
                 }
 
                 if (!constantSet)
                 {
                     config->depthBiasConstFactor = identity->depthBiasConstFactor;
-                    AfxAdvertise("");
+                    AfxLogY("");
                 }
 
                 if (!slopeSet)
                 {
                     config->depthBiasSlopeScale = identity->depthBiasSlopeScale;
-                    AfxAdvertise("");
+                    AfxLogY("");
                 }
             }
         }
@@ -516,7 +515,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
 
@@ -527,13 +526,13 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 if (!boundsMinSet)
                 {
                     config->depthBounds[0] = identity->depthBounds[0];
-                    AfxAdvertise("");
+                    AfxLogY("");
                 }
 
                 if (!boundsMaxSet)
                 {
                     config->depthBounds[1] = identity->depthBounds[1];
-                    AfxAdvertise("");
+                    AfxLogY("");
                 }
             }
         }
@@ -567,7 +566,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                             }
                             else
                             {
-                                AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
+                                AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
                             }
                         }
 #endif
@@ -575,7 +574,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
         }
@@ -585,7 +584,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->fragShd);
                 AfxReplicateUri(&config->fragShd, &tempUri);
@@ -598,7 +597,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
         }
         else
         {
-            AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
+        AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
             hasUnhandledNodes = TRUE;
         }
     }
@@ -625,12 +624,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.failOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(7);
+                *foundMask |= AFX_BIT_OFFSET(7);
             }
             else
             {
                 ds->stencilBack.failOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(11);
+                *foundMask |= AFX_BIT_OFFSET(11);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_pass))
@@ -638,12 +637,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.passOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(8);
+                *foundMask |= AFX_BIT_OFFSET(8);
             }
             else
             {
                 ds->stencilBack.passOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(12);
+                *foundMask |= AFX_BIT_OFFSET(12);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_depthFail))
@@ -651,12 +650,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(9);
+                *foundMask |= AFX_BIT_OFFSET(9);
             }
             else
             {
                 ds->stencilBack.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AfxGetBitOffset(13);
+                *foundMask |= AFX_BIT_OFFSET(13);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_compare))
@@ -664,17 +663,17 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AfxGetBitOffset(10);
+                *foundMask |= AFX_BIT_OFFSET(10);
             }
             else
             {
                 ds->stencilBack.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AfxGetBitOffset(14);
+                *foundMask |= AFX_BIT_OFFSET(14);
             }
         }
         else
         {
-            AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(name));
+            AfxLogAdvertence("Attribute '%.*s' not handled.", AfxPushString(name));
         }
     }
     return err;
@@ -745,7 +744,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
@@ -789,7 +788,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 }
                 else
                 {
-                    AfxAdvertise("Attribute '%.*s' not handled.", AfxPushString(&name));
+                    AfxLogY("Attribute '%.*s' not handled.", AfxPushString(&name));
                 }
             }
 
@@ -803,7 +802,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
@@ -821,7 +820,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
@@ -839,7 +838,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
@@ -857,7 +856,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 afxUri tempUri;
                 AfxUriFromString(&tempUri, &content);
-                AfxEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 config->razr = NIL;
                 AfxResetUri(&config->razrUri);
@@ -871,7 +870,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
         }
         else
         {
-            AfxAdvertise("Node '%.*s' not handled.", AfxPushString(&name));
+        AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
         }
     }
 
@@ -910,7 +909,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             }
             else
             {
-                //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                //AfxLogAdvertence("Attribute '%.*s' not handled yet.", AfxPushString(name));
             }
         }
 
@@ -940,7 +939,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                         }
                         else
                         {
-                            //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                            //AfxLogAdvertence("Attribute '%.*s' not handled yet.", AfxPushString(name));
                         }
                     }
 
@@ -970,7 +969,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                     }
                                     else
                                     {
-                                        //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                                        //AfxLogAdvertence("Attribute '%.*s' not handled yet.", AfxPushString(name));
                                     }
                                 }
 
@@ -1008,7 +1007,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
 #endif
                                             else
                                             {
-                                                //AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                                                //AfxLogAdvertence("Attribute '%.*s' not handled yet.", AfxPushString(name));
                                             }
                                         }
 
@@ -1152,7 +1151,7 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                                 }
                                                 else
                                                 {
-                                                    AfxAdvertise("Attribute '%.*s' not handled yet.", AfxPushString(name));
+                                                    AfxLogAdvertence("Attribute '%.*s' not handled yet.", AfxPushString(name));
                                                 }
                                             }
 

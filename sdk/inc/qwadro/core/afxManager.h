@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AfxGetBitOffset(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT_OFFSET(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)
@@ -134,6 +134,7 @@ AFX_DEFINE_STRUCT(afxManager)
 
 AFX afxError        AfxSetUpManager(afxManager *cls, afxManager *base, afxChain* provider, afxClassConfig const *spec);
 AFX afxError        AfxCleanUpManager(afxManager *cls);
+AFX afxNat          AfxExhaustManager(afxManager *cls);
 
 AFXINL afxNat       AfxCountObjects(afxManager const* cls);
 AFXINL afxNat       AfxGetObjectSize(afxManager const* cls);
@@ -162,13 +163,14 @@ AFX afxBool AfxClassTryLockInclusive(afxManager *cls);
 AFX afxBool AfxClassTryLockExclusive(afxManager *cls);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxHint(), "%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
+#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
 #else
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif
 
 AFX afxResult _AfxShutdownOrphanClasses(void);
 AFX afxResult _AfxUninstallChainedClasses(afxChain *ch);
+AFX afxResult _AfxExhaustChainedClasses(afxChain *provisions);
 AFX afxChain* _AfxGetOrphanClasses(void);
 
 #endif//AFX_CLASS_H

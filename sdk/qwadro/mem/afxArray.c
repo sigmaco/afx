@@ -14,7 +14,6 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/mem/afxArray.h"
 #include "qwadro/core/afxSystem.h"
 
 #if !0
@@ -76,7 +75,7 @@ _AFXINL void AfxFillArrayRange(afxArray *arr, afxNat first, afxNat cnt, void* va
     AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, first, cnt);
     AfxReserveArraySpace(arr, first + cnt);
-    AfxFill(cnt, arr->unitSiz, val, &arr->bytemap[first * arr->unitSiz]);
+    AfxFill2(cnt, arr->unitSiz, val, &arr->bytemap[first * arr->unitSiz]);
 }
 
 _AFXINL void AfxFillArray(afxArray *arr, void* val)
@@ -93,7 +92,7 @@ _AFXINL void AfxZeroArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt)
     AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, firstUnit, unitCnt);
     AfxReserveArraySpace(arr, firstUnit + unitCnt);
-    AfxZero(unitCnt, arr->unitSiz, &arr->bytemap[firstUnit * arr->unitSiz]);
+    AfxZero2(unitCnt, arr->unitSiz, &arr->bytemap[firstUnit * arr->unitSiz]);
 }
 
 _AFXINL void AfxZeroArray(afxArray *arr)
@@ -135,7 +134,7 @@ _AFXINL afxError AfxAllocateArray(afxArray* arr, afxNat cap, afxNat unitSiz, voi
     if (initial && arr->cap)
     {
         AfxReserveArraySpace(arr, cap);
-        AfxFill(cap, unitSiz, initial, arr->bytemap);
+        AfxFill2(cap, unitSiz, initial, arr->bytemap);
     }
     return err;
 }
@@ -151,7 +150,7 @@ _AFXINL afxError AfxOptimizeArray(afxArray *arr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(arr, afxFcc_ARR);
-    AfxError("To be implemented. Should release unused reserved memory.");
+    AfxLogError("To be implemented. Should release unused reserved memory.");
     AfxThrowError();
     return err;
 }
@@ -207,7 +206,7 @@ _AFXINL void AfxUpdateArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt
     AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, firstUnit, unitCnt);
     AfxAssert(src);
-    AfxCopy(unitCnt, arr->unitSiz, src, &(arr->bytemap[firstUnit * arr->unitSiz]));
+    AfxCopy2(unitCnt, arr->unitSiz, src, &(arr->bytemap[firstUnit * arr->unitSiz]));
 }
 
 _AFXINL void AfxUpdateArray(afxArray *arr, void const* src)
@@ -224,7 +223,7 @@ _AFXINL void AfxDumpArrayRange(afxArray const* arr, afxNat firstUnit, afxNat uni
     AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, firstUnit, unitCnt);
     AfxAssert(dst);
-    AfxCopy(unitCnt, arr->unitSiz, &arr->bytemap[firstUnit * arr->unitSiz], dst);
+    AfxCopy2(unitCnt, arr->unitSiz, &arr->bytemap[firstUnit * arr->unitSiz], dst);
 }
 
 _AFXINL void AfxDumpArray(afxArray const* arr, void *dst)
@@ -264,9 +263,9 @@ _AFXINL void* AfxInsertArrayUnits(afxArray *arr, afxNat cnt, afxNat *firstIdx, v
         first = AfxGetArrayUnit(arr, baseIdx);
 
         if (!initialVal)
-            AfxZero(cnt, arr->unitSiz, first);
+            AfxZero2(cnt, arr->unitSiz, first);
         else
-            AfxFill(cnt, arr->unitSiz, initialVal, first);
+            AfxFill2(cnt, arr->unitSiz, initialVal, first);
     }
     return first;
 }
@@ -302,7 +301,7 @@ _AFXINL afxError AfxAddArrayUnits(afxArray *arr, afxNat cnt, void const* src, af
 
         if (!src)
         {
-            AfxZero(cnt, arr->unitSiz, map);
+            AfxZero2(cnt, arr->unitSiz, map);
         }
         else
         {
@@ -310,7 +309,7 @@ _AFXINL afxError AfxAddArrayUnits(afxArray *arr, afxNat cnt, void const* src, af
 
             if (srcStride == arr->unitSiz)
             {
-                AfxCopy(cnt, arr->unitSiz, src, map);
+                AfxCopy2(cnt, arr->unitSiz, src, map);
             }
             else
             {
@@ -318,7 +317,7 @@ _AFXINL afxError AfxAddArrayUnits(afxArray *arr, afxNat cnt, void const* src, af
 
                 for (afxNat i = 0; i < cnt; i++)
                 {
-                    AfxCopy(1, arr->unitSiz, &(src2[i * srcStride]), &(map[i * arr->unitSiz]));
+                    AfxCopy2(1, arr->unitSiz, &(src2[i * srcStride]), &(map[i * arr->unitSiz]));
                 }
             }
         }
@@ -337,7 +336,7 @@ _AFXINL afxError AfxUpdateArrayUnits(afxArray *arr, afxNat base, afxNat cnt, voi
 
     if (srcStride == arr->unitSiz)
     {
-        AfxCopy(cnt, arr->unitSiz, src, map);
+        AfxCopy2(cnt, arr->unitSiz, src, map);
     }
     else
     {
@@ -345,7 +344,7 @@ _AFXINL afxError AfxUpdateArrayUnits(afxArray *arr, afxNat base, afxNat cnt, voi
 
         for (afxNat i = 0; i < cnt; i++)
         {
-            AfxCopy(1, arr->unitSiz, &(src2[i * srcStride]), &(map[i * arr->unitSiz]));
+            AfxCopy2(1, arr->unitSiz, &(src2[i * srcStride]), &(map[i * arr->unitSiz]));
         }
     }
 

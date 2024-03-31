@@ -16,8 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_CANVAS_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxResult AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask)
 {
@@ -54,46 +53,41 @@ _AVX void AfxGetCanvasExtent(afxCanvas canv, afxWhd whd)
     AfxAssert(whd);
     whd[0] = canv->wh[0];
     whd[1] = canv->wh[1];
-    whd[2] = 1;
-    //wh[2] = canv->layerCnt;
+    whd[2] = 1; //canv->layerCnt;
 }
 
 _AVX afxBool AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxBool rslt = (AFX_INVALID_INDEX != canv->dsIdx[0]);
-
-    if (surfIdx)
-        *surfIdx = canv->dsIdx[0];
-    
-    return rslt;
+    afxNat surfIdx2 = canv->dsIdx[0];
+    AfxAssert(surfIdx);
+    *surfIdx = surfIdx2;
+    return (surfIdx2 != AFX_INVALID_INDEX);
 }
 
 _AVX afxBool AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
-    afxBool rslt = (AFX_INVALID_INDEX != canv->dsIdx[1]);
-
-    if (surfIdx)
-        *surfIdx = canv->dsIdx[1];
-
-    return rslt;
+    afxNat surfIdx2 = canv->dsIdx[1];
+    AfxAssert(surfIdx);
+    *surfIdx = surfIdx2;
+    return (surfIdx2 != AFX_INVALID_INDEX);
 }
 
-_AVX afxNat AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
+_AVX afxNat AfxEnumerateDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
     AfxAssertRange(canv->surfaceCnt, baseSurf, surfCnt);
     AfxAssert(rasters);
     afxNat rslt = 0;
-
+    
     for (afxNat i = 0; i < surfCnt; i++)
     {
-        afxNat slotIdx = baseSurf + i;
-        afxRaster ras = canv->surfaces[slotIdx].ras;
+        afxNat surfIdx = baseSurf + i;
+        afxRaster ras = canv->surfaces[surfIdx].ras;
 
         if (ras)
         {
@@ -105,7 +99,7 @@ _AVX afxNat AfxGetDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, a
     return rslt;
 }
 
-_AVX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
+_AVX afxRaster AfxGetDepthBuffer(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -114,7 +108,7 @@ _AVX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
 
     if (AfxGetDepthSurface(canv, &surfIdx))
     {
-        if (AfxGetDrawBuffers(canv, surfIdx, 1, &ras))
+        if (AfxEnumerateDrawBuffers(canv, surfIdx, 1, &ras))
         {
             AfxAssertObjects(1, &ras, afxFcc_RAS);
         }
@@ -122,7 +116,7 @@ _AVX afxRaster AfxGetLinkedDepthBuffer(afxCanvas canv)
     return ras;
 }
 
-_AVX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
+_AVX afxRaster AfxGetStencilBuffer(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -131,7 +125,7 @@ _AVX afxRaster AfxGetLinkedStencilBuffer(afxCanvas canv)
 
     if (AfxGetStencilSurface(canv, &surfIdx))
     {
-        if (AfxGetDrawBuffers(canv, surfIdx, 1, &ras))
+        if (AfxEnumerateDrawBuffers(canv, surfIdx, 1, &ras))
         {
             AfxAssertObjects(1, &ras, afxFcc_RAS);
         }
@@ -197,31 +191,33 @@ _AVX afxError AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil)
     return err;
 }
 
-_AVX afxError AfxGenerateDrawBuffers(afxCanvas canv)
+_AVX afxError AfxRevalidateDrawBuffers(afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
+
     afxDrawContext dctx = AfxGetObjectProvider(canv);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     
+    afxRasterInfo texi = { 0 };
+    texi.lodCnt = 1;
+    texi.layerCnt = canv->layerCnt;
+    texi.whd[0] = canv->wh[0];
+    texi.whd[1] = canv->wh[1];
+    texi.whd[2] = 1;
+
     for (afxNat i = 0; i < canv->surfaceCnt; i++)
     {
-        afxSurface* sur = &canv->surfaces[i];
+        afxSurface* surf = &canv->surfaces[i];
 
-        if (sur->managed)
+        if (surf->managed)
         {
-            if (sur->ras)
+            if (surf->ras)
                 AfxRelinkDrawBuffers(canv, i, 1, NIL);
 
-            afxRasterInfo texi = { 0 };
-            texi.whd[0] = canv->wh[0];
-            texi.whd[1] = canv->wh[1];
-            texi.whd[2] = 1;
-            texi.fmt = sur->fmt;
-            texi.lodCnt = 1;
-            texi.sampleCnt = sur->sampleCnt;
-            texi.usage = sur->usage | afxRasterUsage_DRAW;
-            texi.layerCnt = canv->layerCnt;
+            texi.fmt = surf->fmt;
+            texi.sampleCnt = surf->sampleCnt;
+            texi.usage = surf->usage | afxRasterUsage_DRAW;
             afxRaster ras;
 
             if (AfxAcquireRasters(dctx, 1, &texi, &ras)) AfxThrowError();

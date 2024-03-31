@@ -111,8 +111,8 @@ AFX_DEFINE_STRUCT(afxSphericalCoord) // spherical coordinates
 };
 
 
-AFXINL afxReal16 AfxReal32To16(afxReal f);
-AFXINL afxReal32 AfxReal16To32(afxReal16 hf);
+AFXINL afxReal16 AfxPackReal16(afxReal f);
+AFXINL afxReal32 AfxUnpackReal16(afxReal16 hf);
 
 AFXINL afxInt16 AfxReal32ToSnorm(afxReal v);
 AFXINL afxReal AfxSnorm16ToReal32(afxInt16 v);
@@ -161,69 +161,69 @@ AFXINL afxReal AfxDeg(afxReal radians);
 
 // The standard trigonometric sine function.
 
-AFXINL afxReal AfxSin(afxReal radians);
+AFXINL afxReal AfxSinf(afxReal radians);
 
 // The standard trigonometric cosine function.
 
-AFXINL afxReal AfxCos(afxReal radians);
+AFXINL afxReal AfxCosf(afxReal radians);
 
 // Combined cosine and sine
 
-AFXINL void AfxCosSin(afxReal radians, afxReal* cos, afxReal* sin);
+AFXINL void AfxCosSinf(afxReal radians, afxReal* cos, afxReal* sin);
 
 // The standard trigonometric tangent function.
 
-AFXINL afxReal AfxTan(afxReal radians);
+AFXINL afxReal AfxTanf(afxReal radians);
 
 // Arc sine. Returns an angle whose sine is x.
 // The range of values returned by this function is [-pi / 2, pi / 2].
 // Results are undefined if |x| > 1.
 
-AFXINL afxReal AfxAsin(afxReal x);
+AFXINL afxReal AfxAsinf(afxReal x);
 
 // Arc cosine. Returns an angle whose cosine is x.
 // The range of values returned by this function is [0, pi].
 // Results are undefined if |x| > 1.
 
-AFXINL afxReal AfxAcos(afxReal x);
+AFXINL afxReal AfxAcosf(afxReal x);
 
 // Arc tangent. Returns an angle whose tangent is y_over_x.
 // The range of values returned by this function is [-pi / 2, pi / 2].
 
-AFXINL afxReal AfxAtan(afxReal y_over_x);
+AFXINL afxReal AfxAtanf(afxReal y_over_x);
 
 // Arc tangent. Returns an angle whose tangent is y / x.
 // The signs of x and y are used to determine what quadrant the angle is in.
 // The range of values returned by this function is [-pi, pi].
 // Results are undefined if xand y are both 0.
 
-AFXINL afxReal AfxAtan2(afxReal y, afxReal x);
+AFXINL afxReal AfxAtan2f(afxReal y, afxReal x);
 
 // Returns the hyperbolic sine function; (e^x - e^(-x)) / 2.
 
-AFXINL afxReal AfxSinh(afxReal x);
+AFXINL afxReal AfxSinhf(afxReal x);
 
 // Returns the hyperbolic cosine function; (e^x + e^(-x)) / 2.
 
-AFXINL afxReal AfxCosh(afxReal x);
+AFXINL afxReal AfxCoshf(afxReal x);
 
 // Returns the hyperbolic tangent function; sinh(x) / cosh(x).
 
-AFXINL afxReal AfxTanh(afxReal x);
+AFXINL afxReal AfxTanhf(afxReal x);
 
 // Arc hyperbolic sine; returns the inverse of sinh.
 
-AFXINL afxReal AfxAsinh(afxReal x);
+AFXINL afxReal AfxAsinhf(afxReal x);
 
 // Arc hyperbolic cosine; returns the non-negative inverse of cosh.
 // Results are undefined if x < 1.
 
-AFXINL afxReal AfxAcosh(afxReal x);
+AFXINL afxReal AfxAcoshf(afxReal x);
 
 // Arc hyperbolic tangent; returns the inverse of tanh.
 // Results are undefined if x >= 1.
 
-AFXINL afxReal AfxAtanh(afxReal y_over_x);
+AFXINL afxReal AfxAtanhf(afxReal y_over_x);
 
 
 /***********************************************************************
@@ -235,52 +235,49 @@ AFXINL afxReal AfxAtanh(afxReal y_over_x);
  // Returns the natural logarithm of x; returns the value y which satisfies the equation x = e^y.
  // Results are undefined if x <= 0.
 
-AFXINL afxReal AfxLog(afxReal s);
+AFXINL afxReal AfxLogf(afxReal s);
 
 // Returns the base 2 logarithm of x; returns the value y which satisfies the equation x = 2^y.
 // Results are undefined if x <= 0.
 
-AFXINL afxReal AfxLog2(afxReal s);
+AFXINL afxReal AfxLog2f(afxReal s);
 
-AFXINL afxReal AfxLog10(afxReal s);
+AFXINL afxReal AfxLog10f(afxReal s);
 
 // Returns the natural exponentiation of x; e^x.
 
-AFXINL afxReal AfxExp(afxReal s);
+AFXINL afxReal AfxExpf(afxReal s);
 
 // Returns 2 raised to the x power; 2^x.
 
-AFXINL afxReal AfxExp2(afxReal s);
+AFXINL afxReal AfxExp2f(afxReal s);
 
 // Returns x raised to the y power; x^y.
 // Results are undefined if x < 0 or if x = 0 and y <= 0.
 
-AFXINL afxReal AfxPow(afxReal base, afxReal exp);
+AFXINL afxReal AfxPowf(afxReal base, afxReal exp);
 
 AFXINL afxReal AfxExp10(afxReal s);
 
 // Returns sqrt(x).
 // Results are undefined if x < 0.
 
-AFXINL afxReal AfxSqrt(afxReal s);
+AFXINL afxReal AfxSqrtf(afxReal s);
 
 // Returns 1 / sqrt(x).
 // Results are undefined if x <= 0.
 
-AFXINL afxReal AfxRsqrt(afxReal s);
+AFXINL afxReal AfxRsqrtf(afxReal s);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AFXINL void         AfxRectZero(afxRect *rect);
 AFXINL void         AfxRectCopy(afxRect *rect, afxRect const *src);
 
-AFXINL afxReal      AfxToNdc(afxReal x, afxReal total);
-AFXINL afxReal      AfxFromNdc(afxReal x, afxReal total);
+AFXINL afxReal      AfxNdcf(afxReal x, afxReal total);
+AFXINL afxReal      AfxUnndcf(afxReal x, afxReal total);
 
-AFXINL void         AfxExtractV2dInNdc(afxV2d v, afxV2d const b, afxV2d const total);
-AFXINL void         AfxExtractV2dOutNdc(afxV2d v, afxV2d const b, afxV2d const total);
-
-AFXINL void         AfxMakeV2dNdc(afxV2d v, afxV2d const total);
-AFXINL void         AfxUnmakeV2dNdc(afxV2d v, afxV2d const total);
+AFXINL void         AfxNdcV2d(afxV2d v, afxV2d const b, afxV2d const total);
+AFXINL void         AfxUnndcV2d(afxV2d v, afxV2d const b, afxV2d const total);
 
 #endif//AFX_MATH_DEFS_H

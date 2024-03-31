@@ -27,7 +27,6 @@
 
 _AUX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
 {
-    AfxEntry("wid=%p", wid);
     afxError err = AFX_ERR_NONE;
 
     afxApplication app = cookie->udd[0];

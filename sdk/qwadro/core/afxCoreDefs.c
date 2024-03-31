@@ -19,8 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "qwadro/core/afxChain.h"
-#include "qwadro/core/afxObject.h"
+#include "qwadro/core/afxSystem.h"
 
 afxChar const* errorMsg[] =
 {

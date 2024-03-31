@@ -44,7 +44,7 @@ AFX_DEFINE_STRUCT(afxString)
 //#define AfxAssertString(str_) AfxAssert3(((afxChar*)&((str_)->fcc))[0] == 's', ((afxChar*)&((str_)->fcc))[1] == 't', ((afxChar*)&((str_)->fcc))[2] == 'r')
 
 // used for formatted string input with %.*s specifier. // %.*s
-#define AfxPushString(str_) (str_) ? AfxGetStringLength((str_)) : 1, (str_) ? AfxGetStringData((str_), 0) : ""
+#define AfxPushString(str_) ((str_) ? AfxGetStringLength((str_)) : 0), ((str_) ? AfxGetStringData((str_), 0) : "")
 
 AFX void                AfxResetString(afxString* str);
 

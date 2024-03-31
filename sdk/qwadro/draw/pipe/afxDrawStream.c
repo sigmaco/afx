@@ -20,132 +20,110 @@
 //#define _AFX_DRAW_CONTEXT_C
 #define _AFX_DRAW_INPUT_C
 #define _AFX_DRAW_DEVICE_C
+#define _AFX_DRAW_BRIDGE_C
 #define _AFX_DRAW_STREAM_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/mem/afxArena.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
-#include "qwadro/draw/afxDrawInput.h"
-#include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
-_AVX afxError AfxRecycleDrawStream(afxDrawStream dscr, afxBool freeRes)
+_AVX afxError AfxRecycleDrawStream(afxDrawStream diob, afxBool freeRes)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
     (void)freeRes;
 
-    if (dscr->state == afxDrawStreamState_PENDING) AfxThrowError();
+    if (diob->state == afxDrawStreamState_PENDING) AfxThrowError();
     else
     {
-        if (dscr->resetCb(dscr)) AfxThrowError();
+        if (diob->resetCb(diob)) AfxThrowError();
         else
         {
-            dscr->state = afxDrawStreamState_INITIAL;
+            diob->state = afxDrawStreamState_INITIAL;
         }
     }
     return err;
 }
 
-_AVX afxError AfxCompileDrawStream(afxDrawStream dscr)
+_AVX afxError AfxCompileDrawStream(afxDrawStream diob)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
 
-    if (dscr->state != afxDrawStreamState_RECORDING) AfxThrowError();
+    if (diob->state != afxDrawStreamState_RECORDING) AfxThrowError();
     else
     {
-        if (dscr->endCb(dscr)) AfxThrowError();
+        if (diob->endCb(diob)) AfxThrowError();
         else
         {
-            dscr->state = afxDrawStreamState_EXECUTABLE;
+            diob->state = afxDrawStreamState_EXECUTABLE;
         }
     }
     return err;
 }
 
-_AVX afxError AfxRecordDrawStream(afxDrawStream dscr, afxDrawStreamUsage usage)
+_AVX afxError AfxRecordDrawStream(afxDrawStream diob, afxDrawStreamUsage usage)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
 
-    if (!(dscr->state == afxDrawStreamState_INITIAL || dscr->state == afxDrawStreamState_EXECUTABLE)) AfxThrowError();
+    if (!(diob->state == afxDrawStreamState_INITIAL || diob->state == afxDrawStreamState_EXECUTABLE)) AfxThrowError();
     else
     {
-        if (dscr->beginCb(dscr, usage)) AfxThrowError();
+        if (diob->beginCb(diob, usage)) AfxThrowError();
         else
         {
-            dscr->state = afxDrawStreamState_RECORDING;
+            diob->state = afxDrawStreamState_RECORDING;
         }
     }
     return err;
 }
 
-AVX afxDrawStreamState AfxGetDrawStreamState(afxDrawStream dscr)
+AVX afxDrawStreamState AfxGetDrawStreamState(afxDrawStream diob)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    return dscr->state;
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    return diob->state;
 }
 
-AVX afxNat AfxGetDrawStreamPort(afxDrawStream dscr)
+AVX afxNat AfxGetDrawStreamPort(afxDrawStream diob)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    return dscr->portIdx;
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    return diob->portIdx;
 }
 
-_AVX afxDrawInput AfxGetDrawStreamInput(afxDrawStream dscr)
+_AVX afxError AfxAcquireDrawStreams(afxDrawContext dctx, afxNat portIdx, afxNat cnt, afxDrawStream scripts[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
-    afxDrawInput din = dscr->din;
-    //AfxAssertType(din, afxFcc_DIN);
-    return din;
-}
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxNat cnt2 = 0;
+#if 0
 
-_AVX afxError AfxAcquireDrawStreams(afxDrawInput din, afxNat portIdx, afxNat cnt, afxDrawStream dscr[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxDrawContext dctx;
-
-    if (!(dctx = AfxGetDrawInputContext(din))) AfxThrowError();
-    else
+    for (afxNat i = 0; i < din->scripts.cnt; i++)
     {
-        //AfxAssertType(dctxD, afxFcc_DCTX);
-        afxNat cnt2 = 0;
+        afxDrawStream dscr2 = *(afxDrawStream*)AfxGetArrayUnit(&din->scripts, i);
+        AfxAssertObjects(1, &dscr2, afxFcc_DIOB);
 
-        for (afxNat i = 0; i < din->scripts.cnt; i++)
+        if (afxDrawStreamState_INVALID == AfxGetDrawStreamState(dscr2))
         {
-            afxDrawStream dscr2 = *(afxDrawStream*)AfxGetArrayUnit(&din->scripts, i);
-            AfxAssertObjects(1, &dscr2, afxFcc_DSCR);
-
-            if (afxDrawStreamState_INVALID == AfxGetDrawStreamState(dscr2))
+            if (AfxRecycleDrawStream(dscr2, TRUE)) AfxThrowError();
+            else
             {
-                if (AfxRecycleDrawStream(dscr2, TRUE)) AfxThrowError();
-                else
-                {
-                    dscr[cnt2] = dscr2;
-                    ++cnt2;
-                }
+                scripts[cnt2] = dscr2;
+                ++cnt2;
             }
-
-            if (cnt2 >= cnt)
-                break;
         }
 
-        if (cnt2 < cnt)
-        {
-            afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
-
-            if (AfxAcquireObjects(&ddev->ports[portIdx].scripts, cnt - cnt2, (afxObject*)&dscr[cnt2], (void const*[]) { dctx, (void*)&portIdx, &din }))
-                AfxThrowError();
-        }
+        if (cnt2 >= cnt)
+            break;
     }
+#endif
 
-    if (err)
-        for (afxNat i = 0; i < cnt; i++)
-            dscr[i] = NIL;
+    if (cnt2 < cnt)
+    {
+        afxDrawBridge dxge = AfxGetDrawBridge(dctx, portIdx);
+
+        if (AfxAcquireObjects(&dxge->scripts, cnt - cnt2, (afxObject*)&scripts[cnt2], (void const*[]) { dxge }))
+            AfxThrowError();
+    }
 
     return err;
 }

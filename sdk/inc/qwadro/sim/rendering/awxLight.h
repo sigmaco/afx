@@ -41,10 +41,10 @@ typedef enum
 
 typedef enum awxLightFlag
 {
-    awxLightFlag_FADE_ENABLED   = AfxGetBitOffset(0), // false
-    awxLightFlag_NEGATIVE       = AfxGetBitOffset(1), // false
-    awxLightFlag_SHADOW_ENABLED = AfxGetBitOffset(2), // false
-    awxLightFlag_REV_CULL_FACE  = AfxGetBitOffset(3), // false
+    awxLightFlag_FADE_ENABLED   = AFX_BIT_OFFSET(0), // false
+    awxLightFlag_NEGATIVE       = AFX_BIT_OFFSET(1), // false
+    awxLightFlag_SHADOW_ENABLED = AFX_BIT_OFFSET(2), // false
+    awxLightFlag_REV_CULL_FACE  = AFX_BIT_OFFSET(3), // false
 } awxLightFlags;
 
 #ifdef _AFX_LIGHT_C

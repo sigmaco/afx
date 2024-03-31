@@ -302,7 +302,7 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
     if (surfCnt && !(mshb->faces = AfxAllocate(triCnt, sizeof(mshb->faces[0]), 0, AfxHint()))) AfxThrowError();
     else
     {
-        AfxZero(triCnt, sizeof(mshb->faces[0]), mshb->faces);        
+        AfxZero2(triCnt, sizeof(mshb->faces[0]), mshb->faces);        
     }
 
     AfxMakeString32(&mshb->id, id);
@@ -310,7 +310,7 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
     AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
 
     mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHint());
-    AfxZero(vtxCnt, sizeof(mshb->vtx[0]), mshb->vtx);
+    AfxZero2(vtxCnt, sizeof(mshb->vtx[0]), mshb->vtx);
 
     mshb->pivots = AfxAllocate(artCnt, sizeof(mshb->pivots[0]), NIL, AfxHint());
 
@@ -637,9 +637,9 @@ _AKX afxMesh AfxBuildDomeMesh(afxSimulation sim, afxReal radius, afxNat slices)
             afxNat tangentIndex = (i * (slices + 1) + j) * 3;
             afxNat texCoordsIndex = (i * (slices + 1) + j) * 2;
 
-            vertices[vertexIndex][0] = radius * AfxSin(angleStep * (afxReal)i) * AfxSin(angleStep * (afxReal)j);
-            vertices[vertexIndex][1] = radius * AfxCos(angleStep * (afxReal)i);
-            vertices[vertexIndex][2] = radius * AfxSin(angleStep * (afxReal)i) * AfxCos(angleStep * (afxReal)j);
+            vertices[vertexIndex][0] = radius * AfxSinf(angleStep * (afxReal)i) * AfxSinf(angleStep * (afxReal)j);
+            vertices[vertexIndex][1] = radius * AfxCosf(angleStep * (afxReal)i);
+            vertices[vertexIndex][2] = radius * AfxSinf(angleStep * (afxReal)i) * AfxCosf(angleStep * (afxReal)j);
             vertices[vertexIndex][3] = 1.0f;
 
             normals[normalIndex][0] = vertices[vertexIndex][0] / radius;

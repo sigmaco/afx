@@ -22,11 +22,8 @@
 #include <string.h>
 
 #define _AFX_URD_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/io/afxUrd.h"
-#include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/io/afxData.h"
+#include "qwadro/io/afxUrd.h"
 
 #define LOWORD(l) ((afxNat16)(l))
 #define HIWORD(l) ((afxNat16)(((afxNat32)(l) >> 16) & 0xFFFF))
@@ -263,11 +260,10 @@ _AFX void AfxCloseAllUrdSections(afxUrd urd)
 
 _AFX afxUrd AfxBuildUrd(afxUri const *path)
 {
-    AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
     afxError err = AFX_ERR_NONE;
     afxUrd urd = NIL;
 
-    AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
+    //AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxStream file;
 
     if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
@@ -286,11 +282,11 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
 
 _AFX afxUrd AfxAcquireUrd(afxUri const *path)
 {
-    AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
+    //AfxEntry("uri=%.*s", AfxPushString(AfxGetUriString(path)));
     afxError err = AFX_ERR_NONE;
     afxUrd urd = NIL;
 
-    AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
+    //AfxEntry("uri:%.*s", AfxPushString(path ? AfxGetUriString(path) : &AFX_STR_EMPTY));
     afxStream file;
 
     if (!(file = AfxOpenFile(path, afxIoFlag_R))) AfxThrowError();
@@ -309,7 +305,6 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
 
 _AFX afxError _AfxUrdDtor(afxUrd urd)
 {
-    AfxEntry("urd=%p", urd);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
     afxMmu mmu = AfxGetIoContext();

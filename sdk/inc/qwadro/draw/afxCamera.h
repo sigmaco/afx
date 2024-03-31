@@ -72,6 +72,9 @@ AFX_OBJECT(afxCamera)
     afxM4d              p;
     afxM4d              ip; // inverse projection
 
+
+
+
     afxBool     perspective; // is projection perspective or orthographic.
     afxFrustum  frustum;
 };
@@ -200,12 +203,5 @@ AVX void            AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 ////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError        AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[]);
-
-AVX afxReal         AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
-
-// If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
-// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
-
-AVX afxReal         AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 #endif//AFX_CAMERA_H

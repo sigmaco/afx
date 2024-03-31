@@ -138,14 +138,14 @@ for each view {
 }
 #endif
 
-AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv);
-AKX afxError AwxCmdEndSceneRendering(afxDrawStream dscr, awxRenderer rnd);
+AKX afxError AwxCmdBeginSceneRendering(afxDrawStream diob, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv);
+AKX afxError AwxCmdEndSceneRendering(afxDrawStream diob, awxRenderer rnd);
 
 AKX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);
 
-AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, afxNat cnt, awxBody bodies[]);
+AKX afxError AwxCmdDrawBodies(afxDrawStream diob, awxRenderer rnd, afxReal dt, afxNat cnt, awxBody bodies[]);
 
-AKX afxError AwxCmdDrawTestIndexed(afxDrawStream dscr, awxRenderer rnd);
+AKX afxError AwxCmdDrawTestIndexed(afxDrawStream diob, awxRenderer rnd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

@@ -19,7 +19,8 @@
 #ifndef AFX_SAMPLER_H
 #define AFX_SAMPLER_H
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxPixel.h"
+#include "qwadro/draw/afxColor.h"
 
 typedef enum afxTexelAddress
 {
@@ -115,12 +116,14 @@ struct afxBaseSampler
 #endif
 #endif
 
-AVX afxSampler      AfxAcquireBilinearSampler(afxDrawContext dctx);
-AVX afxSampler      AfxAcquireTrilinearSampler(afxDrawContext dctx);
+AVX void            AfxDescribeSampler(afxSampler samp, afxSamplerConfig* config);
+
+////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[]);
 
-AVX void            AfxDescribeSampler(afxSampler samp, afxSamplerConfig* config);
+AVX afxSampler      AfxAcquireBilinearSampler(afxDrawContext dctx);
+AVX afxSampler      AfxAcquireTrilinearSampler(afxDrawContext dctx);
 
 AVX void            AfxDescribeDefaultSampler(afxSamplerConfig* config);
 

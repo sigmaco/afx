@@ -26,7 +26,7 @@ _AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)
     afxV3d t;
     AfxSubV3d(t, v, other);
     AfxSqrtV3d(t, t);
-    return AfxSqrt(AfxSumV3d(t));
+    return AfxSqrtf(AfxSumV3d(t));
 }
 
 _AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
@@ -39,7 +39,7 @@ _AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
 
     afxReal cosAngle = AfxDotV3d(v, other) * (AfxMagV3dRecip(v) * AfxMagV3dRecip(other));
     AfxClamp(cosAngle, -1.0, 1.0);
-    return AfxAcos(cosAngle);
+    return AfxAcosf(cosAngle);
 }
 
 // ExtractNormalComponent

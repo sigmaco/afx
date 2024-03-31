@@ -16,9 +16,6 @@
 
 #define _AFX_CORE_C
 #define _AFX_THREAD_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/core/afxThread.h"
-#include "qwadro/core/afxTxu.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxResult AfxWaitForThread(afxThread thr, afxResult* exitCode)
@@ -40,7 +37,7 @@ _AFX afxResult AfxWaitForThread(afxThread thr, afxResult* exitCode)
         }
         return TRUE;
     }
-  AfxEcho("Joined. (thr)%p", thr);
+  AfxLogEcho("Joined. (thr)%p", thr);
   return 0;
 }
 
@@ -242,7 +239,7 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
 
     afxThreadConfig const *config = ((afxThreadConfig const *)cookie->udd[0]) + cookie->no;
     
-    if (AfxTakeSlock(&thr->txuSlock)) AfxThrowError();
+    if (AfxSetUpSlock(&thr->txuSlock)) AfxThrowError();
     else
     {
         //thr->affineProcUnitIdx = spec ? spec->affineProcUnitIdx : AFX_INVALID_INDEX; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
@@ -287,7 +284,7 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
             AfxDeallocateQueue(&thr->events);
 #endif
         if (err)
-            AfxReleaseSlock(&thr->txuSlock);
+            AfxCleanUpSlock(&thr->txuSlock);
     }
     return err;
 }
@@ -314,7 +311,7 @@ _AFX afxError AfxAcquireThreads(afxThreadConfig const* cfg, afxHint const hint, 
     AfxAssert(cfg);
     AfxAssert(cnt);
 
-    AfxEcho("Acquiring %u threads...  [%u, %u] \"%s:%i\"", cnt, cfg->baseTxu, cfg->txuCnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
+    AfxLogEcho("Acquiring %u threads...  [%u, %u] \"%s:%i\"", cnt, cfg->baseTxu, cfg->txuCnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
 
     // Creates a new Thread object that will execute the function f with the arguments args.
     // The new thread is not started -- it must be started by an explicit call to start(). This allows you to connect to its signals, move Objects to the thread, choose the new thread's priority and so on. The function f will be called in the new thread.

@@ -34,7 +34,7 @@
 #include "qwadro/core/afxThread.h"
 #include "qwadro/core/afxTime.h"
 #include "qwadro/core/afxTxu.h"
-#include "qwadro/core/afxWaitCondition.h"
+#include "qwadro/core/afxCondition.h"
 
 #include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxObject.h"

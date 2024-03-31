@@ -31,18 +31,18 @@ _AKX void AfxStepSky(awxSky* sky, afxReal dt)
     AfxRotationM4dFromQuat(sky->rotMtx, sky->rotQuat);
 }
 
-_AKX afxError AfxDrawSky(afxDrawStream dscr, awxSky* sky)
+_AKX afxError AfxDrawSky(afxDrawStream diob, awxSky* sky)
 {
     afxError err = AFX_ERR_NONE;
 
-    AfxCmdBindPipeline(dscr, 0, sky->skyPip);
-    AfxCmdBindVertexInput(dscr, sky->skyVin);
-    AfxCmdBindRasters(dscr, 0, 1, 1, &sky->smp, &sky->cubemap);
+    AfxCmdBindPipeline(diob, 0, sky->skyPip);
+    AfxCmdBindVertexInput(diob, sky->skyVin);
+    AfxCmdBindRasters(diob, 0, 1, 1, &sky->smp, &sky->cubemap);
 
-    AfxCmdBindVertexSources(dscr, 0, 1, (afxBuffer[]) { sky->cube }, NIL, NIL, (afxNat32[]) {sizeof(afxV3d)});
-    //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
-    //AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
-    AfxCmdDraw(dscr, 0, 1, 0, 36);
+    AfxCmdBindVertexSources(diob, 0, 1, (afxBuffer[]) { sky->cube }, NIL, NIL, (afxNat32[]) {sizeof(afxV3d)});
+    //AfxCmdResetVertexStreams(diob, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
+    //AfxCmdResetVertexAttributes(diob, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
+    AfxCmdDraw(diob, 0, 1, 0, 36);
     return err;
 }
 

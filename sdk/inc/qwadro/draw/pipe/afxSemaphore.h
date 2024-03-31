@@ -35,6 +35,7 @@ AFX_OBJECT(afxSemaphore)
 struct _afxBaseSemaphore
 #endif
 {
+    afxLinkage          dctx;
     afxNat64            value;
 };
 #endif

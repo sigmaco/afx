@@ -16,9 +16,8 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "qwadro/env/afxEnvironment.h"
-#include "qwadro/core/afxSystem.h"
 #include "qwadro/../_dep/luna.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX void GenAcqObj(afxEnvironment env)
 {
@@ -236,7 +235,8 @@ _AFX afxError AfxAcquireScript(afxString const* domain, afxString const* code)
 {
     afxError err = 0;
 
-    afxEnvironment env = AfxGetSystem()->env;
+    afxEnvironment env;
+    AfxGetEnvironment(&env);
 
     afxResult r;
 
@@ -310,12 +310,13 @@ _AFX afxResult AfxInjectScript(afxString const* domain, afxString const* code)
 {
     afxError err = 0;
 
-    afxEnvironment env = AfxGetSystem()->env;
+    afxEnvironment env;
+    AfxGetEnvironment(&env);
 
     afxString32 dom;
     AfxMakeString32(&dom, domain);
 
-    AfxLogMessage(0xFFFFFFFF, code->start);
+    AfxDbgLogf(0, NIL, code->start);
     afxResult xRslt = lunaInterpret(env, dom.buf, code->start);
     
     return xRslt;

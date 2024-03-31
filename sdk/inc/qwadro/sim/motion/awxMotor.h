@@ -77,12 +77,12 @@ AFX_DEFINE_STRUCT(awxMotorInterlinkCallbacks)
 
 typedef enum awxMotorFlags
 {
-    awxMotorFlags_ACTIVE = AfxGetBitOffset(0),
-    awxMotorFlags_KILL_ONCE_COMPLETE = AfxGetBitOffset(1),
-    awxMotorFlags_KILL_ONCE_UNUSED = AfxGetBitOffset(2),
-    awxMotorFlags_EASE_IN = AfxGetBitOffset(3),
-    awxMotorFlags_EASE_OUT = AfxGetBitOffset(4),
-    awxMotorFlags_FORCE_CLAMPLED_LOOPS = AfxGetBitOffset(5)
+    awxMotorFlags_ACTIVE = AFX_BIT_OFFSET(0),
+    awxMotorFlags_KILL_ONCE_COMPLETE = AFX_BIT_OFFSET(1),
+    awxMotorFlags_KILL_ONCE_UNUSED = AFX_BIT_OFFSET(2),
+    awxMotorFlags_EASE_IN = AFX_BIT_OFFSET(3),
+    awxMotorFlags_EASE_OUT = AFX_BIT_OFFSET(4),
+    awxMotorFlags_FORCE_CLAMPLED_LOOPS = AFX_BIT_OFFSET(5)
 } awxMotorFlags;
 
 AFX_OBJECT(awxMotor)

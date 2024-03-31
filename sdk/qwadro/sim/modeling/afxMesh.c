@@ -189,8 +189,7 @@ _AKX afxError _AfxMshDtor(afxMesh msh)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxEntry("msh=%p", msh);
-
+    
     afxSimulation sim = AfxGetObjectProvider(msh);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMmu mmu = AfxGetSimulationMmu(sim);
@@ -225,7 +224,6 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msh, afxFcc_MSH);
-    AfxEntry("msh=%p", msh);
 
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -316,7 +314,7 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
         else
             AfxResolveStrings2(msh->strb, 1, &msh->id, &s);
 
-        AfxEcho("%.*s Mesh <%.*s> assembled. %p\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u biases:",
+        AfxLogEcho("%.*s Mesh <%.*s> assembled. %p\n    %u vertices with %u attributes.\n    %u triangles (%u bytes per index) arranged in %u surfaces.\n    Listing %u biases:",
             AfxPushString(msh->biasCnt > 1 ? &AfxStaticString("Skinned") : &AfxStaticString("Rigid")),
             AfxPushString(&s), msh, vtd->vtxCnt, vtd->attrCnt, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt, msh->biasCnt
         );
@@ -328,7 +326,7 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
             else
                 AfxResolveStrings2(msh->strb, 1, &(msh->biasName[i]), &s);
 
-            AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
+            AfxDbgLogf(0xFF, AfxHint(), "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
         }
     }
     return err;

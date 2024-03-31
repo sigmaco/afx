@@ -34,30 +34,30 @@ afxError DrawInputProc(afxDrawInput din, afxNat thrUnitIdx) // called by draw th
     afxNat unitIdx;
     AfxGetThreadingUnit(&unitIdx);
 
-    afxDrawStream dscr;
+    afxDrawStream diob;
 
-    if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
+    if (AfxAcquireDrawStreams(din, 0, 1, &diob)) AfxThrowError();
     else
     {
-        if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
+        if (AfxRecordDrawStream(diob, afxDrawStreamUsage_ONCE)) AfxThrowError();
         else
         {
             afxNat outBufIdx = 0;
-            AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
+            AfxLockDrawOutputBuffer(dout, 0, &outBufIdx);
             afxRaster surf;
-            AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
+            AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
             afxCanvas canv;
-            AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
+            AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
             AfxAssertObjects(1, &surf, afxFcc_RAS);
 
-            AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
+            AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
             
-            AfxDrawSky(dscr, &rnd->sky);
+            AfxDrawSky(diob, &rnd->sky);
 
-            AwxCmdEndSceneRendering(dscr, rnd);
+            AwxCmdEndSceneRendering(diob, rnd);
 
-            if (AfxCompileDrawStream(dscr)) AfxThrowError();
-            else if (AfxExecuteDrawStreams(din, 1, &dscr, NIL, NIL, NIL))
+            if (AfxCompileDrawStream(diob)) AfxThrowError();
+            else if (AfxExecuteDrawStreams(din, 1, &diob, NIL, NIL, NIL))
                 AfxThrowError();
 
             if (AfxPresentDrawBuffers(din, 1, &dout, &outBufIdx, NIL))
@@ -76,9 +76,9 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.
-    afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
-    afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
-    afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxReal64 ForwardSpeed = (AfxGetKeyPressure(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_S) ? 1 : 0.0f);
+    afxReal64 RightSpeed = (AfxGetKeyPressure(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_D) ? 1 : 0.0f);
+    afxReal64 UpSpeed = (AfxGetKeyPressure(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_E) ? 1 : 0.0f);
     afxV3d v =
     {
         MovementThisFrame * RightSpeed,

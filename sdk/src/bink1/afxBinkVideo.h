@@ -125,6 +125,6 @@ AFXBINK afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream dscr);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob);
 
 #endif//AFX_BINK_VIDEO_H

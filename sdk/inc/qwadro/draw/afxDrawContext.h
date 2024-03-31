@@ -38,18 +38,12 @@
 #include "qwadro/core/afxManager.h"
 #include "qwadro/mem/afxArena.h"
 
-AFX_DEFINE_STRUCT(afxDrawQueueingConfig)
-{
-    afxNat                  portIdx;
-    afxNat                  minQueueCnt;
-};
-
 AFX_DEFINE_STRUCT(afxDrawContextConfig)
 {
     void const*    enabledFeatures;
 
-    afxNat                      queueingCnt;
-    afxDrawQueueingConfig const*queueings;
+    afxNat                      queueCnt;
+    afxDrawBridgeConfig const*   queues;
 
     afxNat                      maxBufCnt;
     afxNat                      maxSmpCnt;
@@ -74,45 +68,24 @@ struct afxBaseDrawContext
     afxMmu              mmu;
     afxArena            aren;
     
-    struct
-    {
-        
-        //afxSlock            recyclSubmChainSlock;
-        //afxChain            recyclSubmChain;
-        //afxNat              minRecyclSubmCnt;
-        afxNat          lastReqQueIdx;
-        //afxManager        queues;
-        //afxManager        scripts;
-        afxNat          dqueCnt;
-        afxDrawQueue*   queues;
-    }*                  openPorts;
-    afxNat              openPortCnt;
-    afxNat              lastReqPortIdx;
-
-    struct
-    {
-        afxDrawOutput   dout;
-    }*                  doutSlots;
-    afxNat              doutSlotCnt;
-    struct
-    {
-        afxDrawInput    din;
-    }*                  dinSlots;
-    afxNat              dinSlotCnt;
+    afxChain            ownedBridges;
+    afxChain            ownedSemaphores;
+    afxChain            ownedFences;
+    afxChain            ownedQueries;
+    afxChain            inputs;
+    afxChain            outputs;
 
     afxChain            classes;
-    afxManager            rasters;
-    afxManager            buffers;
-    afxManager            shaders;
-    afxManager            fences;
-    afxManager            semaphores;
-    afxManager            rasterizers;
-    afxManager            pipelines;
-    afxManager            schemas;
-    afxManager            queries;
-    afxManager            canvases;
-    afxManager            samplers;
-    afxManager            vinputs;
+    afxManager          buffers;
+    afxManager          rasters;
+    afxManager          shaders;
+
+    afxManager          rasterizers;
+    afxManager          pipelines;
+    afxManager          schemas;
+    afxManager          canvases;
+    afxManager          samplers;
+    afxManager          vinputs;
 
     afxCmd const*       stdCmds;
 
@@ -123,6 +96,9 @@ struct afxBaseDrawContext
     afxError            (*executeCb)(afxDrawContext, afxNat, afxExecutionRequest const[],afxFence);
     afxError            (*presentCb)(afxDrawContext,afxNat,afxPresentationRequest const[]);
     afxError            (*stampCb)(afxDrawContext,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
+
+    struct _afxDctxIdd* idd;
+    void*               udd; // user-defined data
 };
 #endif
 #endif
@@ -130,41 +106,36 @@ struct afxBaseDrawContext
 AVX afxDrawDevice       AfxGetDrawContextDevice(afxDrawContext dctx);
 AVX afxMmu              AfxGetDrawContextMmu(afxDrawContext dctx);
 
-AVX afxNat              AfxGetDrawQueueCount(afxDrawContext dctx, afxNat portIdx);
-AVX afxDrawQueue        AfxGetDrawQueue(afxDrawContext dctx, afxNat portIdx, afxNat queIdx);
 AVX afxError            AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTime timeout, afxNat *queIdx);
+AVX afxNat              AfxCountDrawBridges(afxDrawContext dctx);
+AVX afxDrawBridge       AfxGetDrawBridge(afxDrawContext dctx, afxNat queIdx);
 
+AVX afxNat              AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat baseCon, afxNat conCnt, afxDrawInput inputs[]);
+AVX afxNat              AfxInvokeConnectedDrawInputs(afxDrawContext dctx, afxNat baseCon, afxNat conCnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 AVX afxNat              AfxCountDrawInputConnections(afxDrawContext dctx);
-AVX afxNat              AfxEnumerateConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawInput inputs[]);
-AVX afxNat              AfxInvokeConnectedDrawInputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
-AVX afxDrawInput        AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat no);
+AVX afxDrawInput        AfxGetConnectedDrawInput(afxDrawContext dctx, afxNat conNo);
 AVX afxError            AfxDisconnectDrawInputs(afxDrawContext dctx);
 
+AVX afxNat              AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, afxNat baseCon, afxNat conCnt, afxDrawOutput outputs[]);
+AVX afxNat              AfxInvokeConnectedDrawOutputs(afxDrawContext dctx, afxNat baseCon, afxNat conCnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
 AVX afxNat              AfxCountDrawOutputConnections(afxDrawContext dctx);
-AVX afxNat              AfxEnumerateConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxDrawOutput outputs[]);
-AVX afxNat              AfxInvokeConnectedDrawOutputs(afxDrawContext dctx, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd);
-AVX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat no);
+AVX afxDrawOutput       AfxGetConnectedDrawOutput(afxDrawContext dctx, afxNat conNo);
 AVX afxError            AfxDisconnectDrawOutputs(afxDrawContext dctx);
 
 AVX afxManager*         AfxGetBindSchemaClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetBufferClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetCanvasClass(afxDrawContext dctx);
-AVX afxManager*         AfxGetFenceClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetPipelineClass(afxDrawContext dctx);
-AVX afxManager*         AfxGetQueryPoolClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetRasterClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetRasterizerClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetSamplerClass(afxDrawContext dctx);
-AVX afxManager*         AfxGetSemaphoreClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetShaderClass(afxDrawContext dctx);
 AVX afxManager*         AfxGetVertexInputClass(afxDrawContext dctx);
 
 AVX afxNat              AfxEnumerateBindSchemas(afxDrawContext dctx, afxNat first, afxNat cnt, afxBindSchema schemas[]);
 AVX afxNat              AfxEnumerateBuffers(afxDrawContext dctx, afxNat first, afxNat cnt, afxBuffer bufffers[]);
 AVX afxNat              AfxEnumerateCanvases(afxDrawContext dctx, afxNat first, afxNat cnt, afxCanvas canvases[]);
-AVX afxNat              AfxEnumerateFences(afxDrawContext dctx, afxNat first, afxNat cnt, afxFence fences[]);
 AVX afxNat              AfxEnumeratePipelines(afxDrawContext dctx, afxNat first, afxNat cnt, afxPipeline pipelines[]);
-AVX afxNat              AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[]);
 AVX afxNat              AfxEnumerateRasters(afxDrawContext dctx, afxNat first, afxNat cnt, afxRaster rasters[]);
 AVX afxNat              AfxEnumerateSamplers(afxDrawContext dctx, afxNat first, afxNat cnt, afxSampler samplers[]);
 AVX afxNat              AfxEnumerateShaders(afxDrawContext dctx, afxNat first, afxNat cnt, afxShader shaders[]);

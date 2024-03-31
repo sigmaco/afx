@@ -63,8 +63,8 @@
 #define _AFX_CANVAS_IMPL
 #define _AFX_BIND_SCHEMA_C
 #define _AFX_BIND_SCHEMA_IMPL
-#define _AFX_DRAW_QUEUE_C
-#define _AFX_DRAW_QUEUE_IMPL
+#define _AFX_DRAW_BRIDGE_C
+#define _AFX_DRAW_BRIDGE_IMPL
 #define _AFX_FENCE_C
 #define _AFX_FENCE_IMPL
 #define _AFX_SEMAPHORE_C
@@ -126,10 +126,10 @@
 
 typedef enum sglUpdateFlags
 {
-    SGL_UPD_FLAG_DEVICE_FLUSH   = AfxGetBitOffset(0), // flush from host to device
-    SGL_UPD_FLAG_HOST_FLUSH     = AfxGetBitOffset(1), // flush from device to host
-    SGL_UPD_FLAG_DEVICE_INST    = AfxGetBitOffset(2), // (re)instantiate on device
-    SGL_UPD_FLAG_HOST_INST      = AfxGetBitOffset(3), // (re)instantiate on host
+    SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_BIT_OFFSET(0), // flush from host to device
+    SGL_UPD_FLAG_HOST_FLUSH     = AFX_BIT_OFFSET(1), // flush from device to host
+    SGL_UPD_FLAG_DEVICE_INST    = AFX_BIT_OFFSET(2), // (re)instantiate on device
+    SGL_UPD_FLAG_HOST_INST      = AFX_BIT_OFFSET(3), // (re)instantiate on host
     
     SGL_UPD_FLAG_HOST           = (SGL_UPD_FLAG_HOST_INST | SGL_UPD_FLAG_HOST_FLUSH),
     SGL_UPD_FLAG_DEVICE         = (SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH),
@@ -410,14 +410,9 @@ AFX_OBJECT(afxDrawContext)
     //afxBuffer tristrippedQuad2dPosBuf;
 };
 
-AFX_DEFINE_STRUCT(sglDrawQueueSpecification)
+AFX_OBJECT(afxDrawBridge)
 {
-    //afxDrawQueueFlags       caps;
-};
-
-AFX_OBJECT(afxDrawQueue)
-{
-    struct afxBaseDrawQueue base;
+    struct afxBaseDrawBridge base;
 };
 
 AFX_DEFINE_STRUCT(_sglQueueing)
@@ -465,9 +460,8 @@ AFX_DEFINE_STRUCT(_sglDeleteGlRes)
     GLuint  type; // 0 buf, 1 tex, 2 surf, 3 canv, 4 smp, 5 pip, 6 shd, 7 shd (separate) program
 };
 
-AFX_OBJECT(afxDrawOutput)
+typedef struct _afxDoutIdd
 {
-    struct afxBaseDrawOutput base;
     afxFcc      fcc;
     afxBool     instanced;
 
@@ -477,13 +471,7 @@ AFX_OBJECT(afxDrawOutput)
     
     HDC         dcDeskBkp;
     int         dcPxlFmtDeskBkp;
-};
-
-AFX_OBJECT(afxDrawInput)
-{
-    struct afxBaseDrawInput base;
-    int a;
-};
+} _afxDoutIdd;
 
 AFX_DEFINE_STRUCT(_sglCmd)
 {
@@ -1106,15 +1094,15 @@ SGL int SglGetPixelFormat(HDC hdc, sglDpuIdd const *dpu);
 
 SGL afxBindSchema _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
 
-SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawQueue dque, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
-SGL afxError _SglDdevProcDpuCb(afxDrawThread dthr, afxDrawContext dctx, afxNat basePort, afxNat portCnt, afxNat baseQue, afxNat queCnt);
+SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawBridge dxge, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
+SGL afxError _SglDdevProcDpuCb(afxDrawThread dthr, afxDrawContext dctx);
 
-SGL afxClassConfig _SglDctxClsConfig;
-SGL afxClassConfig _SglDoutClsConfig;
-SGL afxClassConfig _SglDinClsConfig;
+SGL afxClassConfig const _SglDctxClsConfig;
 
 SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout);
 
+SGL afxError _SglDdevDeinitDout(afxDrawDevice ddev, afxDrawOutput dout);
+SGL afxError _SglDdevInitDout(afxDrawDevice ddev, afxDrawOutput dout, afxDrawOutputConfig const* config, afxUri const* endpoint);
 SGL afxError _SglDinFreeAllBuffers(afxDrawInput din);
 
 SGL afxCmd _SglEncodeCmdVmt;
@@ -1127,6 +1115,12 @@ SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttach
 SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[]);
 SGL afxError _SglResetFenc(afxNat cnt, afxFence const fences[]);
 
-SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream dscr, afxNat id, afxNat siz, _sglCmd *cmd);
+SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream diob, afxNat id, afxNat siz, _sglCmd *cmd);
+
+SGL afxClassConfig const _SglFencClsConfig;
+SGL afxClassConfig const _SglSemClsConfig;
+SGL afxClassConfig const _SglQrypClsConfig;
+
+SGL afxResult _SglDdevIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

@@ -59,19 +59,19 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
             afxNat unitIdx;
             AfxGetThreadingUnit(&unitIdx);
 
-            afxDrawStream dscr;
+            afxDrawStream diob;
 
-            if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
+            if (AfxAcquireDrawStreams(din, 0, 1, &diob)) AfxThrowError();
             else
             {
-                if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
+                if (AfxRecordDrawStream(diob, afxDrawStreamUsage_ONCE)) AfxThrowError();
                 else
                 {
                     afxNat outBufIdx = 0;
-                    AfxRequestDrawOutputBuffer(dout[0], 0, &outBufIdx);
+                    AfxLockDrawOutputBuffer(dout[0], 0, &outBufIdx);
                     afxCanvas canv;
-                    AfxGetDrawOutputCanvas(dout[0], outBufIdx, 1, &canv);
-                    //afxRaster surf = AfxGetDrawOutputBuffer(dout[0], outBufIdx);
+                    AfxEnumerateDrawOutputCanvases(dout[0], outBufIdx, 1, &canv);
+                    //afxRaster surf = AfxEnumerateDrawOutputBuffers(dout[0], outBufIdx);
                     AfxAssertObjects(1, &canv, afxFcc_CANV);
                     //AfxAssertObjects(1, &surf, afxFcc_RAS);
 
@@ -117,14 +117,14 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     dps.stencil = NIL;
                     dps.area.extent[0] = extent[0];
                     dps.area.extent[1] = extent[1];
-                    AfxCmdBeginSynthesis(dscr, &dps);
+                    AfxCmdBeginSynthesis(diob, &dps);
 
                     afxViewport vp = { 0 };
                     vp.extent[0] = extent[0];
                     vp.extent[1] = extent[1];
                     vp.depth[0] = (afxReal)0;
                     vp.depth[1] = (afxReal)1;
-                    AfxCmdResetViewports(dscr, 1, &vp);
+                    AfxCmdResetViewports(diob, 1, &vp);
 
 #if 0
                     afxPipelineRasterizerState ras = { 0 };
@@ -132,17 +132,17 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     ras.fillMode = afxFillMode_SOLID;
                     ras.frontFace = afxFrontFace_CCW;
                     ras.lineWidth = 1.f;
-                    AfxCmdSetRasterizerState(dscr, &ras);
+                    AfxCmdSetRasterizerState(diob, &ras);
 #endif
                     // turn off Z buffering, culling, and projection (since we are drawing orthographically)
                     //afxPipelineDepthState const depth = { 0 };
-                    //AfxCmdSetDepthState(dscr, &depth);
+                    //AfxCmdSetDepthState(diob, &depth);
 
-                    //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, dscr, canv, NIL);
+                    //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, diob, canv, NIL);
                     //AfxBinkDoFrame(bnk, TRUE, TRUE);
-                    //AfxBinkBlitFrame(bnk2, dscr, canv[0][outBufIdx], NIL);
+                    //AfxBinkBlitFrame(bnk2, diob, canv[0][outBufIdx], NIL);
                     //AfxBinkDoFrame(bnk, TRUE, TRUE, 0, 0, NIL);
-                    AfxBinkBlitFrame(bnk, dscr);
+                    AfxBinkBlitFrame(bnk, diob);
 
 #if 0
                     if (AfxRandom2(0, 60) == 60)
@@ -156,11 +156,11 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
                     afxSemaphore dscrCompleteSem = NIL;
 
-                    if (AfxCompileDrawStream(dscr)) AfxThrowError();
+                    if (AfxCompileDrawStream(diob)) AfxThrowError();
                     else
                     {
                         afxExecutionRequest execReq = { 0 };
-                        execReq.dscr = dscr;
+                        execReq.diob = diob;
                         execReq.signal = dscrCompleteSem;
 
                         if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
@@ -303,7 +303,7 @@ _AFXEXPORT afxError AppProc(afxApplication app, afxThreadOpcode opcode)
     {
         AfxEntry("app=%p", app);
 
-        AfxEcho("aaaaaaaaaaaa");
+        AfxLogEcho("aaaaaaaaaaaa");
 
 #ifdef ENABLE_DIN1
         AfxReleaseObjects(1, (void*[]) { din[0] });
@@ -376,7 +376,7 @@ int main(int argc, char const* argv[])
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
 
         afxUri uri;
-        AfxMakeUri(&uri, "system/mmplayer.xs", 0);
+        AfxMakeUri(&uri, "system/mmplayer.xss", 0);
         AfxRunApplication(TheApp, &uri);
 
         while (AfxSystemIsExecuting())

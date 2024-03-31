@@ -41,7 +41,7 @@ AFX_OBJECT(afxDrawThread)
     afxDrawDevice           ddev;
     afxDrawContext          dctx;
     afxNat                  portIdx;
-    afxDrawQueue            dque;
+    afxDrawBridge           dxge;
     afxNat                  queueIdx;
 
     void*                   udd;
@@ -49,13 +49,13 @@ AFX_OBJECT(afxDrawThread)
 #endif
 #endif
 
-AVX afxError            AfxAcquireDrawThreads(afxDrawThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxDrawThread dthr[]);
+AVX afxError            AfxAcquireDrawThreads(afxDrawThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxDrawThread threads[]);
 
 AVX afxDrawDevice       AfxGetDrawThreadDevice(afxDrawThread dthr);
 AVX afxThread           AfxGetDrawThreadBase(afxDrawThread dthr);
 AVX void*               AfxGetDrawThreadUdd(afxDrawThread dthr);
 
 AVX afxBool             AfxGetDrawThreadActiveContext(afxDrawThread dthr, afxDrawContext* dctx);
-AVX afxBool             AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque);
+AVX afxBool             AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawBridge* dxge);
 
 #endif//AFX_DRAW_THREAD_H

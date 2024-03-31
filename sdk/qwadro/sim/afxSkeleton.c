@@ -896,7 +896,7 @@ _AKX void AfxLocalPoseFromPoseBuffer(afxSkeleton skl, awxPose* pos, awxPoseBuffe
         afxM3d Q, Scale;
 
         if (!AfxPolarDecomposeM3d(Linear, 0.0000099999997, Q, Scale))
-            AfxError("Can't accurately decompose MAX transform Q");
+            AfxLogError("Can't accurately decompose MAX transform Q");
 
         afxV3d Position;
         AfxCopyV3d(Position, Local[3]);
@@ -1143,7 +1143,7 @@ _AKXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
 
     if (idx == (afxNat)-2)
     {
-        AfxError("Circular parenting chain detected at bone %d", inBoneIdx);
+        AfxLogError("Circular parenting chain detected at bone %d", inBoneIdx);
         AfxThrowError();
     }
     else if (idx == AFX_INVALID_INDEX)
@@ -1189,7 +1189,6 @@ _AKXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
 
 _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 {
-    AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
 
@@ -1342,7 +1341,6 @@ _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 
 _AKX afxError _AfxSklDtor(afxSkeleton skl)
 {
-    AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
 
@@ -1459,7 +1457,7 @@ _AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cn
         else
             AfxResolveStrings2(skl->strb, 1, &skl->id, &s);
 
-        AfxEcho("Skeleton <%.*s> assembled. %p\n    Listing %u joints:", AfxPushString(&s), skl, skl->jointCnt);
+        AfxLogEcho("Skeleton <%.*s> assembled. %p\n    Listing %u joints:", AfxPushString(&s), skl, skl->jointCnt);
 
         for (afxNat i = 0; i < skl->jointCnt; i++)
         {
@@ -1468,7 +1466,7 @@ _AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cn
             else
                 AfxResolveStrings2(skl->strb, 1, &skl->joint[i], &s);
 
-            AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %i", i, AfxPushString(&s), skl->parentIdx[i]);
+            AfxLogEcho("\t%u <%.*s> %i", i, AfxPushString(&s), skl->parentIdx[i]);
         }
 
     }

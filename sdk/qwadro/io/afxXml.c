@@ -22,8 +22,6 @@
 #include <string.h>
 
 #define _AFX_XML_C
-#include "qwadro/io/afxXml.h"
-#include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
 
 static char* xml_strtok_r(char *str, const char *delim, char **nextp) {
@@ -318,7 +316,8 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
     /* Consume `<'
         */
 
-    if (!('<' == _AfxXmlParsePeek(parser, CURRENT_CHARACTER))) AfxThrowError();
+    if (!('<' == _AfxXmlParsePeek(parser, CURRENT_CHARACTER)))
+        AfxThrowError();
     else
     {
         _AfxXmlParseConsume(parser, 1); // skip '<'
@@ -570,7 +569,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                     if (0 != AfxCompareString(&tag_open, &tag_close))
                     {
                         AfxThrowError();
-                        AfxError(" %.*s %.*s", AfxPushString(&tag_open), AfxPushString(&tag_close));
+                        AfxLogError(" %.*s %.*s", AfxPushString(&tag_open), AfxPushString(&tag_close));
                     }
                 }
             }
@@ -602,7 +601,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
             AfxMakeString(&elem->name, tag_open.start, tag_open.len);
             AfxMakeString(&elem->content, content.start, content.len);
 
-            //AfxComment("%u/%u; %u/%u; %u/%u; %.*s : %.8s;", elemIdx, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
+            //AfxLogComment("%u/%u; %u/%u; %u/%u; %.*s : %.8s;", elemIdx, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
 
             
             AfxAssert(!tagCnt || baseTagIdx == elem->baseTagIdx);
@@ -677,7 +676,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             for (afxNat i = 0; i < elemCnt; i++)
             {
                 afxXmlElement*elem = &xml->elems[i];//AfxGetArrayUnit(&xml->tempElemArr, i);
-                //AfxComment("%u/%u; %u/%u; %u/%u; %.*s : %.8s;", i, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
+                //AfxLogComment("%u/%u; %u/%u; %u/%u; %.*s : %.8s;", i, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
             }
             int a = 1;
 
@@ -739,7 +738,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             for (afxNat i = 0; i < elemCnt; i++)
             {
                 afxXmlElement*elem = &xml->elems[i];//AfxGetArrayUnit(&xml->tempElemArr, i);
-                AfxEcho("# %u, @ %u, [ %u, %u ], [ %u, %u ], %.*s : %.8s;", i, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
+                AfxLogEcho("# %u, @ %u, [ %u, %u ], [ %u, %u ], %.*s : %.8s;", i, elem->parentIdx, elem->baseTagIdx, elem->tagCnt, elem->baseChildIdx, elem->childCnt, AfxPushString(&elem->name), 0);
             }
 #endif
 
@@ -1246,7 +1245,7 @@ _AFX afxError AfxLoadXml(afxXml* xml, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
 
-    AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
+    //AfxEntry("uri:%.*s", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
     afxStream file;
 
     if (!(file = AfxLoadFile(uri))) AfxThrowError();

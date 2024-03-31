@@ -30,7 +30,6 @@ _AKX afxError _AfxLitDtor(awxLight lit)
 _AKX afxError _AfxLitCtor(awxLight lit, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("lit=%p", lit);
     AfxAssertObjects(1, &lit, afxFcc_LIT);
 
     afxSimulation sim = cookie->udd[0];

@@ -115,7 +115,7 @@ _AFXINL afxMask AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxV3d con
             (!(aabb[AFX_AABB_INF][0] > point[i][0])) && (!(aabb[AFX_AABB_INF][1] > point[i][1])) && (!(aabb[AFX_AABB_INF][2] > point[i][2]))
         )
         {
-            rslt |= AfxGetBitOffset(i);
+            rslt |= AFX_BIT_OFFSET(i);
         }
     }
     return rslt;

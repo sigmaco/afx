@@ -227,7 +227,7 @@ _AKX void AfxRemapMeshCoverage(afxMeshTopology msht, afxNat remapCnt, afxNat con
 
         if (mtlIdx >= remapCnt)
         {
-            AfxError("Mesh section had out-of-range index %u during remapping.", mtlIdx);
+            AfxLogError("Mesh section had out-of-range index %u during remapping.", mtlIdx);
             AfxThrowError();
         }
         else
@@ -336,8 +336,7 @@ _AKX afxError _AfxMshtDtor(afxMeshTopology msht)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
-    AfxEntry("msht=%p", msht);
-
+    
     afxSimulation sim = AfxGetObjectProvider(msht);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMmu mmu = AfxGetSimulationMmu(sim);
@@ -379,8 +378,7 @@ _AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &msht, afxFcc_MSHT);
-    AfxEntry("msht=%p", msht);
-
+    
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMeshTopologySpec const* spec = cookie->udd[1];
@@ -474,7 +472,7 @@ _AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
     }
     
     if (!err)
-        AfxEcho("Mesh topology %p built. With %u triangles (%u bytes per index) arranged in %u surfaces.", msht, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt);
+        AfxLogEcho("Mesh topology %p built. With %u triangles (%u bytes per index) arranged in %u surfaces.", msht, msht->triCnt, AfxDetermineMeshIndexSize(msht), msht->surfCnt);
 
     return err;
 }

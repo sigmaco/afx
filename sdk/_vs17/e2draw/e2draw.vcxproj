@@ -157,7 +157,7 @@
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawInput.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOutput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawQueue.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawBridge.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawSystem.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawThread.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxPixel.h" />
@@ -203,7 +203,7 @@
     <ClCompile Include="..\..\qwadro\draw\afxDrawDefs.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawInput.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawOutput.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawQueue.c" />
+    <ClCompile Include="..\..\qwadro\draw\afxDrawBridge.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawSystem.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawThread.c" />
     <ClCompile Include="..\..\qwadro\draw\afxPixel.c" />

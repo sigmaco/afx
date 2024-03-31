@@ -53,11 +53,7 @@
 #define _AFX_SOUND_SYSTEM_C
 #define _AFX_STRING_CATALOG_C
 #define _AFX_CONTROLLER_C
-#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
-//#include "qwadro/draw/afxDrawSystem.h"
-//#include "qwadro/sound/afxSoundSystem.h"
-#include "qwadro/core/afxConfig.h"
 
 _AFXEXPORT afxReal const defRenderWareUnitsPerMeter = 1.f;
 
@@ -140,19 +136,19 @@ _AFX afxResult _AfxProcessHostPlatformEvents(void)
 
                 if (AfxKeyWasPressed(0, AFX_KEY_F1))
                 {
-                    AfxAssist("User input requested support.");
-                    AfxAssist("Get help at https://sigmaco.org/");
+                    AfxLogAssistence("User input requested support.");
+                    AfxLogAssistence("Get help at https://sigmaco.org/");
                     system("start https://sigmaco.org");
                 }
                 else if (AfxKeyWasPressed(0, AFX_KEY_F4))
                 {
                     //AfxRequestThreadInterruption(thr);
-                    AfxAdvertise("User input requested application break.");
+                    AfxLogAdvertence("User input requested application break.");
                     AfxRequestSystemShutdown(0);
                 }
                 else if (AfxKeyWasPressed(0, AFX_KEY_F5))
                 {
-                    AfxAdvertise("User input requested application reboot.");
+                    AfxLogAdvertence("User input requested application reboot.");
                     //_AfxInterruptionAllApplications();
                     //opcode = AFX_OPCODE_REBOOT;
                 }
@@ -172,7 +168,7 @@ _AFX afxResult AfxDoSystemExecution(afxTime timeout)
     afxSystem sys;
     (void)timeout;
 
-    if (!(sys = AfxGetSystem())) AfxThrowError();
+    if (!AfxGetSystem(&sys)) AfxThrowError();
     else
     {
         AfxAssertObjects(1, &sys, afxFcc_SYS);
@@ -194,37 +190,7 @@ _AFX void AfxStdAssertHookCallback(char const* exp, char const* file, int line)
     assert(exp);
     assert(file);
     assert(line);
-    AfxLogMessageFormatted(0xFF000000, "\n %s:%i\n\t     %s", file, line, exp);
-}
-
-_AFX afxError _AfxSysScanForIcds(afxSystem sys, afxUri const* fileMask)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    
-    HANDLE fh;
-    WIN32_FIND_DATAA wfd;
-    afxUri2048 pathBuf;
-    AfxMakeUri2048(&pathBuf, NIL);
-    AfxResolveUri(afxFileFlag_RX, fileMask, &pathBuf.uri);
-
-    if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
-    {
-        do
-        {
-            afxUri uri, file;
-            AfxMakeUri(&uri, wfd.cFileName, 0);
-            AfxPickUriFile(&uri, &file);
-            afxIcd icd = AfxFindIcd(&file);
-
-            if (!(icd))
-            {
-                AfxInstallClientDrivers(1, &file, &icd);
-            }
-        } while (FindNextFileA(fh, &wfd));
-        FindClose(fh);
-    }
-    return err;
+    AfxDbgLogf(8, NIL, "\n %s:%i\n\t     %s", file, line, exp);
 }
 
 _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
@@ -349,9 +315,9 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
 
-    AfxZero(1, sizeof(AFX_OBJECT(afxSystem)), sys);
+    AfxZero2(1, sizeof(AFX_OBJECT(afxSystem)), sys);
 
-    afxIni* ini = cookie->udd[0];
+    afxManifest* ini = cookie->udd[0];
     afxSystemConfig const *cfg = cookie->udd[1];
 
     // setting the process working directory and the Qwadro/system working directory...
@@ -496,29 +462,33 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
         afxClassConfig clsCfg;
 
         AfxSetUpManager(&sys->mmuCls, NIL, classes, &_AfxMmuClsConfig);
-        AfxSetUpManager(&sys->thrCls, NIL, classes, &_AfxThrClsConfig);
-        clsCfg = _AfxDevClsConfig;
-        clsCfg.mmu = mmu;
-        AfxSetUpManager(&sys->devCls, NIL, classes, &clsCfg);
+        
+        AfxSetUpManager(&sys->thrCls, NIL, classes, &_AfxThrClsConfig); // require txu
+
         AfxSetUpManager(&sys->svcCls, NIL, classes, &_AfxSvcClsConfig);
         //AfxSetUpManager(&sys->fileCls, NIL, classes, &_AfxFileClsConfig);
         AfxSetUpManager(&sys->cdcCls, NIL, classes, &_AfxCdcClsConfig);
         AfxSetUpManager(&sys->strbCls, NIL, classes, &_AfxStrbClsConfig);
-        clsCfg = _AfxFsysClsConfig;
-        clsCfg.mmu = mmu;
-        AfxSetUpManager(&sys->fsysCls, NIL, classes, &clsCfg);
-        AfxSetUpManager(&sys->iosCls, NIL, classes, &_AfxIosClsConfig);
-        AfxSetUpManager(&sys->archCls, NIL, classes, &_AfxArcClsConfig);
-        AfxSetUpManager(&sys->exeCls, NIL, classes, &_AfxMdleClsConfig);
-        AfxSetUpManager(&sys->icdCls, NIL, classes, &_AfxIcdClsConfig);
-        AfxSetUpManager(&sys->hidCls, AfxGetDeviceClass(), classes, &_AfxHidClsConfig);
-        AfxSetUpManager(&sys->kbdCls, AfxGetHidClass(), classes, &_AfxKbdClsConfig);
-        AfxSetUpManager(&sys->mseCls, AfxGetHidClass(), classes, &_AfxMseClsConfig);
-        AfxSetUpManager(&sys->ctrlCls, AfxGetHidClass(), classes, &_AfxCtrlClsConfig);
-        AfxSetUpManager(&sys->envCls, NIL, classes, &_AfxEnvClsConfig);
+        
 
-        AfxAdvertise("Memory page size: %d", sys->memPageSize);
-        AfxAdvertise("Logical processor count: %d", sys->hwConcurrencyCap);
+        AfxSetUpManager(&sys->iosCls, NIL, classes, &_AfxIosClsConfig);
+        AfxSetUpManager(&sys->archCls, NIL, classes, &_AfxArcClsConfig); // require iob
+        AfxSetUpManager(&sys->fsysCls, NIL, classes, &_AfxFsysClsConfig); // require iob, arch
+
+
+        AfxSetUpManager(&sys->exeCls, NIL, classes, &_AfxMdleClsConfig);
+        AfxSetUpManager(&sys->devCls, NIL, classes, &_AfxDevClsConfig); // require mdle
+
+
+        AfxSetUpManager(&sys->hidCls, /*AfxGetDeviceClass()*/NIL, classes, &_AfxHidClsConfig);
+        AfxSetUpManager(&sys->kbdCls, AfxGetHidClass(), classes, &_AfxKbdClsConfig); // require hid
+        AfxSetUpManager(&sys->mseCls, AfxGetHidClass(), classes, &_AfxMseClsConfig); // require hid
+        AfxSetUpManager(&sys->ctrlCls, AfxGetHidClass(), classes, &_AfxCtrlClsConfig); // require hid
+        
+        AfxSetUpManager(&sys->envCls, NIL, classes, &_AfxEnvClsConfig); // require iob
+
+        AfxLogY("Memory page size: %d", sys->memPageSize);
+        AfxLogY("Logical processor count: %d", sys->hwConcurrencyCap);
 
         afxAllocationStrategy as = { 0 };
         as.size = sizeof(afxByte);
@@ -541,12 +511,12 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
                     AfxMakeUri128(&uri2, NIL);
                     AfxFormatUri(&uri2.uri, "system/e2coree.dll");
 
-                    if (!(sys->e2coree = AfxLoadModule(&uri2.uri, NIL))) AfxThrowError();
+                    if (AfxLoadModule(&uri2.uri, NIL, &sys->e2coree)) AfxThrowError();
                     else
                     {
                         AfxAssertObjects(1, &sys->e2coree, afxFcc_MDLE);
 
-                        if (!(sys->stdKbd = AfxAcquireKeyboard(0))) AfxThrowError();
+                        if (AfxAcquireKeyboard(0, &sys->stdKbd)) AfxThrowError();
                         else
                         {
                             AfxAssertObjects(1, &sys->stdKbd, afxFcc_KBD);
@@ -607,7 +577,7 @@ _AFX void AfxChooseSystemConfiguration(afxSystemConfig* cfg, afxPlatformConfig* 
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cfg);
-    AfxZero(1, sizeof(*cfg), cfg);
+    AfxZero2(1, sizeof(*cfg), cfg);
 
     cfg->assertHook = AfxStdAssertHookCallback;
     
@@ -619,7 +589,7 @@ _AFX void AfxChooseSystemConfiguration(afxSystemConfig* cfg, afxPlatformConfig* 
     if (platform)
     {
 #ifdef AFX_PLATFORM_W32
-        AfxZero(1, sizeof(*platform), platform);
+        AfxZero2(1, sizeof(*platform), platform);
         platform->instance = GetModuleHandle(NULL);
         platform->hWnd = GetActiveWindow();        
 #endif

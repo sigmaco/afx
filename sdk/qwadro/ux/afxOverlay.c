@@ -21,7 +21,6 @@
 
 _AUX afxError _AfxOvlyCtor(afxOverlay ovly, afxCookie const *cookie)
 {
-    AfxEntry("ovly=%p", ovly);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ovly, afxFcc_OVLY);
 

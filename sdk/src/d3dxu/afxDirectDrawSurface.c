@@ -174,7 +174,7 @@ void align_memory(afxMmu mmu, DdsData *dds, DdsImage *surface)
 
         for (int i = 0; i < surface->data.height; i++)
         {
-            AfxCopy(1, lnsize, curline, newline);
+            AfxCopy2(1, lnsize, curline, newline);
             newline += linesize;
             curline += lnsize;
         }
@@ -188,9 +188,9 @@ void align_memory(afxMmu mmu, DdsData *dds, DdsImage *surface)
 void swap(afxMmu mmu, void *byte1, void *byte2, int size)
 {
     unsigned char *tmp = AfxAllocate(mmu, size, sizeof(afxByte), 0, AfxHint());
-    AfxCopy(1, size, byte1, tmp);
-    AfxCopy(1, size, byte2, byte1);
-    AfxCopy(1, size, tmp, byte2);
+    AfxCopy2(1, size, byte1, tmp);
+    AfxCopy2(1, size, byte2, byte1);
+    AfxCopy2(1, size, tmp, byte2);
     AfxDeallocate(mmu, tmp);
 }
 
@@ -237,7 +237,7 @@ void flip_dxt5_alpha(DXT5AlphaBlock *block)
 
     const unsigned long mask = 0x00000007;		    // bits = 00 00 01 11
     unsigned long bits = 0;
-    AfxCopy(1, sizeof(unsigned char), &block->row[0], &bits);
+    AfxCopy2(1, sizeof(unsigned char), &block->row[0], &bits);
 
     gBits[0][0] = (unsigned char)(bits & mask);
     bits >>= 3;
@@ -256,7 +256,7 @@ void flip_dxt5_alpha(DXT5AlphaBlock *block)
     gBits[1][3] = (unsigned char)(bits & mask);
 
     bits = 0;
-    AfxCopy(3, sizeof(unsigned char), &block->row[3], &bits);
+    AfxCopy2(3, sizeof(unsigned char), &block->row[3], &bits);
 
     gBits[2][0] = (unsigned char)(bits & mask);
     bits >>= 3;

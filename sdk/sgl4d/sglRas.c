@@ -538,7 +538,7 @@ _SGL afxError _SglBindAndSyncRas(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat 
             }
             default: AfxThrowError(); break;
             }
-            AfxEcho("afxRaster %p hardware-side data instanced. Target %x, format %x, whd [%u,%u,%u]", ras, glTarget, glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2]);
+            AfxLogEcho("afxRaster %p hardware-side data instanced. Target %x, format %x, whd [%u,%u,%u]", ras, glTarget, glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2]);
         }
 
         if ((devUpdReq & SGL_UPD_FLAG_DEVICE_FLUSH))
@@ -600,10 +600,11 @@ _SGL afxError _AfxOpenTextureRegion(afxRaster ras, afxRasterRegion const *rgn, a
 
     void *map = NIL;
 
-    afxNat offset = AfxGetRasterOffset(ras, rgn->lodIdx, rgn->baseLayer, rgn->offset);
+    afxNat offset = AfxDetermineRasterOffset(ras, rgn->lodIdx, rgn->baseLayer, rgn->offset);
 
-    if (rowLen)
-        *rowLen = AfxMeasureRasterRow(ras, rgn->lodIdx);
+    afxNat layerSiz;
+    AfxAssert(rowLen);
+    AfxDetermineRasterStride(ras, rgn->lodIdx, rowLen, &layerSiz);
 
     if (size)
         *size = AfxMeasureRasterRegion(ras, rgn);

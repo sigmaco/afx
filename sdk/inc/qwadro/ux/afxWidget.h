@@ -31,17 +31,17 @@
 typedef enum afxWidgetType
 {
     //NIL
-    AFX_WIDG_PANEL          = AfxPackFcc('w', 'p', 'a', 'n'),
-    AFX_WIDG_LABEL          = AfxPackFcc('w', 'l', 'a', 'b'),
-    AFX_WIDG_BUTTON         = AfxPackFcc('w', 'b', 'u', 't'),
-    AFX_WIDG_CHECKBOX       = AfxPackFcc('w', 'c', 'h', 'k'),
-    AFX_WIDG_EDITBOX        = AfxPackFcc('w', 'e', 'd', 't'),
-    AFX_WIDG_SLIDER         = AfxPackFcc('w', 's', 'l', 'd'),
-    AFX_WIDG_DROPDOWN       = AfxPackFcc('w', 'd', 'r', 'p'),
-    AFX_WIDG_PROGRESSBAR    = AfxPackFcc('w', 'p', 'r', 'o'),
-    AFX_WIDG_PICTURE        = AfxPackFcc('w', 'p', 'i', 'c'),
-    AFX_WIDG_VIDEO          = AfxPackFcc('w', 'v', 'i', 'd'),
-    AFX_WIDG_GROUP          = AfxPackFcc('w', 'g', 'r', 'p'),
+    AFX_WIDG_PANEL          = AFX_MAKE_FCC('w', 'p', 'a', 'n'),
+    AFX_WIDG_LABEL          = AFX_MAKE_FCC('w', 'l', 'a', 'b'),
+    AFX_WIDG_BUTTON         = AFX_MAKE_FCC('w', 'b', 'u', 't'),
+    AFX_WIDG_CHECKBOX       = AFX_MAKE_FCC('w', 'c', 'h', 'k'),
+    AFX_WIDG_EDITBOX        = AFX_MAKE_FCC('w', 'e', 'd', 't'),
+    AFX_WIDG_SLIDER         = AFX_MAKE_FCC('w', 's', 'l', 'd'),
+    AFX_WIDG_DROPDOWN       = AFX_MAKE_FCC('w', 'd', 'r', 'p'),
+    AFX_WIDG_PROGRESSBAR    = AFX_MAKE_FCC('w', 'p', 'r', 'o'),
+    AFX_WIDG_PICTURE        = AFX_MAKE_FCC('w', 'p', 'i', 'c'),
+    AFX_WIDG_VIDEO          = AFX_MAKE_FCC('w', 'v', 'i', 'd'),
+    AFX_WIDG_GROUP          = AFX_MAKE_FCC('w', 'g', 'r', 'p'),
 
     AFX_WIDG_TYPE_TOTAL
 } afxWidgetType;

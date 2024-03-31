@@ -21,7 +21,7 @@
 #include <time.h>
 #pragma comment (lib, "winmm")
 
-#include "qwadro/core/afxTime.h"
+#include "qwadro/core/afxSystem.h"
 
 afxTime AfxGetTime(afxTime *t)
 {

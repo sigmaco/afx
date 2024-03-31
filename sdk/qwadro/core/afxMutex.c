@@ -15,8 +15,7 @@
  */
 
 #include "../dep/tinycthread/tinycthread.h"
-#include "qwadro/core/afxMutex.h"
-#include "qwadro/core/afxDebug.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX void AfxCleanUpMutex(afxMutex* mtx)
 {

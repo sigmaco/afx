@@ -15,13 +15,6 @@
  */
 
 //#define _AFX_SYSTEM_C
-#include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxManager.h"
-#include "qwadro/core/afxEvent.h"
-#include "qwadro/core/afxString.h"
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxThread.h"
 #include "qwadro/core/afxSystem.h"
 
 // SLOTS incorporados diretamente no espaço de array estavam crashando e gerando anomalias de corrupção de leitura/escrita e alocação.
@@ -35,7 +28,7 @@ _AFX void _AfxInitObjRefCntSlck(void)
 {
     if (!refCntSlockInited)
     {
-        AfxTakeSlock(&refCntSlock);
+        AfxSetUpSlock(&refCntSlock);
         refCntSlockInited = TRUE;
     }
 }
@@ -96,7 +89,7 @@ _AFXINL afxError _AfxConnectionDeploy(afxConnection *objc, afxObject obj, afxObj
     objc->alloced = FALSE;
     objc->tenacity = 1;
 
-    AfxEcho("Taking connection %p connecting %p?%.4s#%i to holder %p?%.4s#%i.", objc, AfxPushObject(objc->obj), AfxPushObject(objc->holder));
+    AfxLogEcho("Taking connection %p connecting %p?%.4s#%i to holder %p?%.4s#%i.", objc, AfxPushObject(objc->obj), AfxPushObject(objc->holder));
 
     return err;
 }
@@ -157,7 +150,7 @@ _AFXINL afxError AfxConnectionDrop(afxConnection *objc)
     {
         AfxAssertConnection(objc);
 
-        AfxEcho("Dropping connection %p from %p?%.4s#%i to holder %p?%.4s#%i.", objc, AfxPushObject(objc->obj), AfxPushObject(objc->holder));
+        AfxLogEcho("Dropping connection %p from %p?%.4s#%i to holder %p?%.4s#%i.", objc, AfxPushObject(objc->obj), AfxPushObject(objc->holder));
 
         AfxDropLink(&objc->objLink);
 
@@ -334,7 +327,7 @@ _AFXINL afxError AfxObjectAssert(afxObject obj, afxFcc fcc, afxHint const hint, 
     
     if (!AfxObjectTestFcc(obj, fcc))
     {
-        ((err) = (-((afxError)__LINE__)), AfxLogError(hint, exp));
+        ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
     }
     return err;
 }
@@ -345,7 +338,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHint const hin
     AfxAssert(hint);
     AfxAssert(exp);
 
-    if (!obj) ((err) = (-((afxError)__LINE__)), AfxLogError(hint, exp));
+    if (!obj) ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
     else
     {
         afxObjectBase* inst = (afxObjectBase*)obj;
@@ -354,7 +347,7 @@ _AFXINL afxError AfxObjectTryAssert(afxObject obj, afxFcc fcc, afxHint const hin
         AfxAssert(fcc);
 
         if (!AfxObjectTestFcc(obj, fcc))
-            ((err) = (-((afxError)__LINE__)), AfxLogError(hint, exp));
+            ((err) = (-((afxError)__LINE__)), AfxLogError(exp));
     }
     return err;
 }
@@ -386,7 +379,7 @@ _AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter)
     afxObjectBase* filterInst = (afxObjectBase*)filter;
     --filterInst;
     AfxAssertType(filterInst, afxFcc_OBJ);
-    AfxEcho("afxHandle<%p>::InstallEventFilter(%p)", obj, filter);
+    AfxLogEcho("afxHandle<%p>::InstallEventFilter(%p)", obj, filter);
     //AfxAssert(fn);
     
     afxBool(*fn)(afxObject obj, afxObject watched, afxEvent *ev) = AfxGetClass(filter)->eventFilter;
@@ -464,7 +457,7 @@ _AFX afxError AfxObjectRemoveEventFilter(afxObject obj, afxObject filter)
     afxObjectBase* filterInst = (afxObjectBase*)filter;
     --filterInst;
     AfxAssertType(filterInst, afxFcc_OBJ);
-    AfxEcho("afxHandle<%p>::RemoveEventFilter(%p)", obj, filter);
+    AfxLogEcho("afxHandle<%p>::RemoveEventFilter(%p)", obj, filter);
 
     while (inst->watchers)
     {

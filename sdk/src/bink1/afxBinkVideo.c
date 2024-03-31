@@ -171,20 +171,20 @@ void UnlockBinkTextures(afxBinkVideo *bnk)
     }
 }
 
-_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream dscr)
+_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob)
 {
     afxError err = AFX_ERR_NONE;
     Start_timer();
     ++bnk->Frame_count;
 
     AfxAssertObjects(1, &bnk->yv12ToRgbaPip, afxFcc_PIP);
-    AfxCmdBindPipeline(dscr, 0, bnk->yv12ToRgbaPip);
+    AfxCmdBindPipeline(diob, 0, bnk->yv12ToRgbaPip);
 
     // Set the textures.
-    //AvxCmdBindLegos(dscr, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
-    AfxCmdBindRasters(dscr, 0, 0, 3, bnk->samplers, bnk->rasters[bnk->buffers.FrameNum]);
+    //AvxCmdBindLegos(diob, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
+    AfxCmdBindRasters(diob, 0, 0, 3, bnk->samplers, bnk->rasters[bnk->buffers.FrameNum]);
 
-    AfxCmdDraw(dscr, 0, 0, 0, 4); // tristripped quad in shader
+    AfxCmdDraw(diob, 0, 0, 0, 4); // tristripped quad in shader
 
     End_timer(bnk->Render_microseconds);
     return err;
@@ -276,7 +276,7 @@ _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
     bnk->whd[1] = bnk->summary.Height;
     bnk->whd[2] = 1;
 
-    AfxZero(1, sizeof(bnk->buffers), &bnk->buffers);
+    AfxZero2(1, sizeof(bnk->buffers), &bnk->buffers);
     BinkGetFrameBuffersInfo(bnk->bik, &bnk->buffers);
     CreateBinkTextures(bnk);
     // Register our locked texture pointers with Bink
@@ -336,7 +336,7 @@ _AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
     bnk->samplers[3] = bnk->samplers[0];
 
     afxUri uri;
-    AfxMakeUri(&uri, "data/pipeline/video/rgbOutYuv.xsh.xml?yFlipped", 0);
+    AfxMakeUri(&uri, "system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
     bnk->yv12ToRgbaPip = AfxAssemblePipelineFromXsh(dctx, NIL, &uri);
     AfxAssert(bnk->yv12ToRgbaPip);
 

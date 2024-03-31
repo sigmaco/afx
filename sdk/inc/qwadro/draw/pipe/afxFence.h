@@ -39,6 +39,7 @@ AFX_OBJECT(afxFence)
 struct _afxBaseFence
 #endif
 {
+    afxLinkage      dctx;
     afxBool         signaled;
 };
 #endif

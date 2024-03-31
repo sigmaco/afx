@@ -26,47 +26,47 @@
 
 typedef enum awxVertexUsage
 {
-    awxVertexUsage_POS          = AfxGetBitOffset(0),
-    awxVertexUsage_JNT          = AfxGetBitOffset(1),
-    awxVertexUsage_WGT          = AfxGetBitOffset(2),
+    awxVertexUsage_POS          = AFX_BIT_OFFSET(0),
+    awxVertexUsage_JNT          = AFX_BIT_OFFSET(1),
+    awxVertexUsage_WGT          = AFX_BIT_OFFSET(2),
     awxVertexUsage_BLENDING     = awxVertexUsage_JNT | awxVertexUsage_WGT,
     awxVertexUsage_POSITIONAL   = awxVertexUsage_POS | awxVertexUsage_BLENDING,
 
-    awxVertexUsage_NRM          = AfxGetBitOffset(3),
-    awxVertexUsage_TAN          = AfxGetBitOffset(4),
-    awxVertexUsage_BIT          = AfxGetBitOffset(5),
-    awxVertexUsage_TBC          = AfxGetBitOffset(10), // tangent-binormal cross
-    awxVertexUsage_UVN          = AfxGetBitOffset(11),
+    awxVertexUsage_NRM          = AFX_BIT_OFFSET(3),
+    awxVertexUsage_TAN          = AFX_BIT_OFFSET(4),
+    awxVertexUsage_BIT          = AFX_BIT_OFFSET(5),
+    awxVertexUsage_TBC          = AFX_BIT_OFFSET(10), // tangent-binormal cross
+    awxVertexUsage_UVN          = AFX_BIT_OFFSET(11),
     awxVertexUsage_TANGENT      = awxVertexUsage_NRM | awxVertexUsage_TAN | awxVertexUsage_BIT | awxVertexUsage_TBC | awxVertexUsage_UVN,
     awxVertexUsage_SPATIAL      = awxVertexUsage_POSITIONAL | awxVertexUsage_TANGENT,
 
-    awxVertexUsage_UV           = AfxGetBitOffset(6),
+    awxVertexUsage_UV           = AFX_BIT_OFFSET(6),
     awxVertexUsage_VISUAL       = awxVertexUsage_UV,
 } awxVertexUsage;
 
 typedef enum awxVertexFlag
 {
-    awxVertexFlag_DYNAMIC = AfxGetBitOffset(0), // The data store contents will be modified repeatedly and used many times.
-    awxVertexFlag_STREAM = AfxGetBitOffset(1), // The data store contents will be modified once and used at most a few times.
+    awxVertexFlag_DYNAMIC = AFX_BIT_OFFSET(0), // The data store contents will be modified repeatedly and used many times.
+    awxVertexFlag_STREAM = AFX_BIT_OFFSET(1), // The data store contents will be modified once and used at most a few times.
     
-    awxVertexFlag_POSITIONAL = AfxGetBitOffset(2),
-    awxVertexFlag_SPATIAL = AfxGetBitOffset(3),
+    awxVertexFlag_POSITIONAL = AFX_BIT_OFFSET(2),
+    awxVertexFlag_SPATIAL = AFX_BIT_OFFSET(3),
 
-    awxVertexFlag_NORMALIZED = AfxGetBitOffset(4),
-    awxVertexFlag_RASTERIZATION = AfxGetBitOffset(5),
+    awxVertexFlag_NORMALIZED = AFX_BIT_OFFSET(4),
+    awxVertexFlag_RASTERIZATION = AFX_BIT_OFFSET(5),
 
-    awxVertexFlag_AFFINE = AfxGetBitOffset(10),
+    awxVertexFlag_AFFINE = AFX_BIT_OFFSET(10),
     /// affected by affine transformations (ex.: position). Non-delta spatial attributes should receive affine transformations.
 
-    awxVertexFlag_LINEAR = AfxGetBitOffset(11),
+    awxVertexFlag_LINEAR = AFX_BIT_OFFSET(11),
     /// affected by linear transformations (ex.: tangent, binormal). Delta spatial attributes should receive linear transformations (ex.: normal, tangent/binormal cross).
 
-    awxVertexFlag_LINEAR_INV = AfxGetBitOffset(12),
+    awxVertexFlag_LINEAR_INV = AFX_BIT_OFFSET(12),
     /// affected by inverse linear transformations. Non-delta spatial attributes should receive inverse linear transformations (ex.: normal, tangent/binormal cross).
 
-    awxVertexFlag_DELTA = AfxGetBitOffset(13), // treat as delta
+    awxVertexFlag_DELTA = AFX_BIT_OFFSET(13), // treat as delta
 
-    awxVertexFlag_RESIDENT = AfxGetBitOffset(14) // allocation for data is resident
+    awxVertexFlag_RESIDENT = AFX_BIT_OFFSET(14) // allocation for data is resident
 } awxVertexFlags;
 
 AFX_DEFINE_STRUCT(afxVertexBias)
@@ -162,7 +162,7 @@ AKX afxError            AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, a
 AKX afxError            AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVtx, afxNat vtxCnt);
 
 AKX afxError            AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd);
-AKX afxError            AwxCmdBindVertexDataCache(afxDrawStream dscr, afxNat slotIdx, awxVertexData vtd);
+AKX afxError            AwxCmdBindVertexDataCache(afxDrawStream diob, afxNat slotIdx, awxVertexData vtd);
 
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //

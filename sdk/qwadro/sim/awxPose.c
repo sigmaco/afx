@@ -178,7 +178,7 @@ _AKX afxError AfxAcquirePoses(void *sim, afxNat cnt, afxNat const artCnt[], awxP
         lp[i]->traversalId = 0;
         lp[i]->arts = lp[i]->artCnt ? AfxAllocate(lp[i]->artCnt, sizeof(lp[i]->arts[0]), 0, AfxHint()) : NIL;
         AfxAssert(lp[i]->arts);
-        AfxZero(lp[i]->artCnt, sizeof(lp[i]->arts[0]), lp[i]->arts);
+        AfxZero2(lp[i]->artCnt, sizeof(lp[i]->arts[0]), lp[i]->arts);
     }
     return err;
 }

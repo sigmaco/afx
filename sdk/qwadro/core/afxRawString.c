@@ -24,9 +24,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 
-#include "qwadro/core/afxRawString.h"
-#include "qwadro/core/afxString.h"
-#include "qwadro/core/afxDebug.h"
+#include "qwadro/core/afxSystem.h"
 
 #if !0
 

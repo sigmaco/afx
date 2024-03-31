@@ -17,10 +17,7 @@
 #define _AFX_DRAW_C
 #define _AFX_VERTEX_BUFFER_C
 #define _AFX_INDEX_BUFFER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/io/afxVertexStream.h"
-#include "qwadro/draw/afxDrawInput.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxNat AfxGetVertexBufferUsage(afxVertexBuffer vbuf)
 {
@@ -49,14 +46,14 @@ _AVX afxBuffer AfxGetVertexBufferStorage(afxVertexBuffer vbuf)
     return buf;
 }
 
-_AVX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
+_AVX afxError _AvxVbufDtor(afxVertexBuffer vbuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
 
-    afxDrawContext dctx = AfxGetObjectProvider(vbuf);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
+    //afxDrawContext dctx = AfxGetObjectProvider(vbuf);
+    //afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    //AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     afxBuffer buf;
 
@@ -68,7 +65,7 @@ _AVX afxError _AfxVbufDtor(afxVertexBuffer vbuf)
     return err;
 }
 
-_AVX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
+_AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
 {
     afxResult err = NIL;
     AfxAssertObjects(1, &vbuf, afxFcc_VBUF);
@@ -76,7 +73,8 @@ _AVX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     afxDrawInput din = cookie->udd[0];
     afxVertexBufferSpecification const *spec = ((afxVertexBufferSpecification const *)cookie->udd[1]) + cookie->no;
 
-    afxDrawContext dctx = AfxGetDrawInputContext(din);
+    afxDrawContext dctx;
+    AfxGetDrawInputContext(din, &dctx);
 
     afxSize bufSiz = spec->bufCap;
 
@@ -102,15 +100,15 @@ _AVX afxError _AfxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     return err;
 }
 
-_AVX afxClassConfig const _AfxVbufClsConfig =
+_AVX afxClassConfig const _AvxVbufClsConfig =
 {
     .fcc = afxFcc_VBUF,
     .name = "Vertex Buffer",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxVertexBuffer)),
     .mmu = NIL,
-    .ctor = (void*)_AfxVbufCtor,
-    .dtor = (void*)_AfxVbufDtor
+    .ctor = (void*)_AvxVbufCtor,
+    .dtor = (void*)_AvxVbufDtor
 };
 
 _AVX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBufferSpecification const spec[], afxVertexBuffer vbuf[])
@@ -269,7 +267,7 @@ _AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
     return alignedCnt;
 }
 
-_AVX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
+_AVX afxError _AvxIbufDtor(afxIndexBuffer ibuf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
@@ -288,7 +286,7 @@ _AVX afxError _AfxIbufDtor(afxIndexBuffer ibuf)
     return err;
 }
 
-_AVX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
+_AVX afxError _AvxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
 {
     afxResult err = NIL;
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
@@ -321,15 +319,15 @@ _AVX afxError _AfxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     return err;
 }
 
-_AVX afxClassConfig const _AfxIbufClsConfig =
+_AVX afxClassConfig const _AvxIbufClsConfig =
 {
     .fcc = afxFcc_IBUF,
     .name = "Index Buffer",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxIndexBuffer)),
     .mmu = NIL,
-    .ctor = (void*)_AfxIbufCtor,
-    .dtor = (void*)_AfxIbufDtor
+    .ctor = (void*)_AvxIbufCtor,
+    .dtor = (void*)_AvxIbufDtor
 };
 
 _AVX afxError AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBufferSpecification const spec[], afxIndexBuffer ibuf[])

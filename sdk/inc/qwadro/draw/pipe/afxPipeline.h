@@ -42,23 +42,23 @@
 typedef enum afxPipelineStage
 {
     // NIL,
-    afxPipelineStage_TOP            = AfxGetBitOffset(0),
-    afxPipelineStage_DRAW_INDIRECT  = AfxGetBitOffset(1), /// where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
-    afxPipelineStage_VERTEX_INPUT   = AfxGetBitOffset(2), /// where vertex and index buffers are consumed.
-    afxPipelineStage_VERTEX         = AfxGetBitOffset(3), /// the vertex shader stage.
-    afxPipelineStage_DOMAIN         = AfxGetBitOffset(4), /// the tessellation control shader stage.
-    afxPipelineStage_HULL           = AfxGetBitOffset(5), /// the tessellation evaluation shader stage.
-    afxPipelineStage_PRIM           = AfxGetBitOffset(6), /// the primitive (aka geometry) shader stage.
-    afxPipelineStage_FRAGMENT       = AfxGetBitOffset(7), /// the fragment shader stage.
-    afxPipelineStage_EARLY_TESTS    = AfxGetBitOffset(8), /// where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes render pass load operations for framebuffer attachments with a depth/stencil format.
-    afxPipelineStage_LATE_TESTS     = AfxGetBitOffset(9), /// where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes render pass store operations for framebuffer attachments with a depth/stencil format.
-    afxPipelineStage_COLOR_OUTPUT   = AfxGetBitOffset(10), /// where the final color values are output from the pipeline. This stage includes blending, logic operations, render pass load and store operations for color attachments, render pass multisample resolve operations, and AfxCmdClearAttachments.
-    afxPipelineStage_COMPUTE        = AfxGetBitOffset(11), /// the execution of a compute shader.
-    afxPipelineStage_TRANSFER       = AfxGetBitOffset(12), /// the following commands: copies, blits, resolves, clears.
-    afxPipelineStage_BOTTOM         = AfxGetBitOffset(13), 
-    afxPipelineStage_HOST           = AfxGetBitOffset(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
-    afxPipelineStage_GRAPHICS       = AfxGetBitOffset(15), /// the execution of all graphics pipeline stages.
-    afxPipelineStage_COMMANDS       = AfxGetBitOffset(16), /// all operations performed by all commands supported on the queue it is used with.
+    afxPipelineStage_TOP            = AFX_BIT_OFFSET(0),
+    afxPipelineStage_DRAW_INDIRECT  = AFX_BIT_OFFSET(1), /// where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
+    afxPipelineStage_VERTEX_INPUT   = AFX_BIT_OFFSET(2), /// where vertex and index buffers are consumed.
+    afxPipelineStage_VERTEX         = AFX_BIT_OFFSET(3), /// the vertex shader stage.
+    afxPipelineStage_DOMAIN         = AFX_BIT_OFFSET(4), /// the tessellation control shader stage.
+    afxPipelineStage_HULL           = AFX_BIT_OFFSET(5), /// the tessellation evaluation shader stage.
+    afxPipelineStage_PRIM           = AFX_BIT_OFFSET(6), /// the primitive (aka geometry) shader stage.
+    afxPipelineStage_FRAGMENT       = AFX_BIT_OFFSET(7), /// the fragment shader stage.
+    afxPipelineStage_EARLY_TESTS    = AFX_BIT_OFFSET(8), /// where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes render pass load operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_LATE_TESTS     = AFX_BIT_OFFSET(9), /// where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes render pass store operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_COLOR_OUTPUT   = AFX_BIT_OFFSET(10), /// where the final color values are output from the pipeline. This stage includes blending, logic operations, render pass load and store operations for color attachments, render pass multisample resolve operations, and AfxCmdClearAttachments.
+    afxPipelineStage_COMPUTE        = AFX_BIT_OFFSET(11), /// the execution of a compute shader.
+    afxPipelineStage_TRANSFER       = AFX_BIT_OFFSET(12), /// the following commands: copies, blits, resolves, clears.
+    afxPipelineStage_BOTTOM         = AFX_BIT_OFFSET(13), 
+    afxPipelineStage_HOST           = AFX_BIT_OFFSET(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
+    afxPipelineStage_GRAPHICS       = AFX_BIT_OFFSET(15), /// the execution of all graphics pipeline stages.
+    afxPipelineStage_COMMANDS       = AFX_BIT_OFFSET(16), /// all operations performed by all commands supported on the queue it is used with.
 } afxPipelineStage;
 
 AFX_DEFINE_STRUCT(afxPipelineInputLocation)
@@ -73,13 +73,13 @@ AFX_DEFINE_STRUCT(afxPipelineInputLocation)
 
 typedef enum afxPipelinePrimitiveFlag
 {
-    afxPipelinePrimitiveFlag_TOPOLOGY       = AfxGetBitOffset(0),
-    afxPipelinePrimitiveFlag_RESTART        = AfxGetBitOffset(1),
-    afxPipelinePrimitiveFlag_VIEWPORT       = AfxGetBitOffset(2),
-    afxPipelinePrimitiveFlag_DEPTH_CLAMP    = AfxGetBitOffset(3),
-    afxPipelinePrimitiveFlag_CULL_MODE      = AfxGetBitOffset(4),
-    afxPipelinePrimitiveFlag_FRONT_FACE_INV = AfxGetBitOffset(5),
-    afxPipelinePrimitiveFlag_CTRL_POINTS    = AfxGetBitOffset(6)
+    afxPipelinePrimitiveFlag_TOPOLOGY       = AFX_BIT_OFFSET(0),
+    afxPipelinePrimitiveFlag_RESTART        = AFX_BIT_OFFSET(1),
+    afxPipelinePrimitiveFlag_VIEWPORT       = AFX_BIT_OFFSET(2),
+    afxPipelinePrimitiveFlag_DEPTH_CLAMP    = AFX_BIT_OFFSET(3),
+    afxPipelinePrimitiveFlag_CULL_MODE      = AFX_BIT_OFFSET(4),
+    afxPipelinePrimitiveFlag_FRONT_FACE_INV = AFX_BIT_OFFSET(5),
+    afxPipelinePrimitiveFlag_CTRL_POINTS    = AFX_BIT_OFFSET(6)
 } afxPipelinePrimitiveFlags;
 
 AFX_DEFINE_STRUCT(afxPipelineConfig)

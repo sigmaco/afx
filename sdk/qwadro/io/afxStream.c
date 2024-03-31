@@ -16,12 +16,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_STREAM_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/core/afxString.h"
-#include "qwadro/core/afxThread.h"
 
 // AUXILIAR FUNCTIONS /////////////////////////////////////////////////////////
 
@@ -29,7 +24,7 @@ _AFX afxBool _AfxStdStreamEosCb(afxStream iob)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
-    afxBool b = (iob->posn == iob->idd.src.len);
+    afxBool b = (iob->idd.m.posn == iob->idd.m.bufCap);
     return b;
 }
 
@@ -41,31 +36,31 @@ _AFX afxError _AfxStdStreamSeekCb(afxStream iob, afxInt offset, afxSeekMode orig
     if (origin == afxSeekMode_ABSOLUTE)
     {
         AfxAssert(offset >= 0);
-        AfxAssertRange(iob->idd.src.len, (afxNat)offset, 1);
+        AfxAssertRange(iob->idd.m.bufCap, (afxNat)offset, 1);
 
-        if (iob->idd.src.len <= (afxNat)offset)
-            iob->posn = iob->idd.src.len;
+        if (iob->idd.m.bufCap <= (afxNat)offset)
+            iob->idd.m.posn = iob->idd.m.bufCap;
         else
-            iob->posn = (afxNat)offset;
+            iob->idd.m.posn = (afxNat)offset;
     }
     else if (origin == afxSeekMode_RELATIVE)
     {
-        AfxAssertRange(iob->idd.src.len, iob->posn + offset, 1);
+        AfxAssertRange(iob->idd.m.bufCap, iob->idd.m.posn + offset, 1);
 
-        if (iob->posn + offset > iob->idd.src.len)
-            iob->posn = iob->idd.src.len;
+        if (iob->idd.m.posn + offset > iob->idd.m.bufCap)
+            iob->idd.m.posn = iob->idd.m.bufCap;
         else
-            iob->posn += offset;
+            iob->idd.m.posn += offset;
     }
     else if (origin == afxSeekMode_INVERSE)
     {
         AfxAssert(offset >= 0);
-        AfxAssertRange(iob->idd.src.len, (afxNat)offset, 1);
+        AfxAssertRange(iob->idd.m.bufCap, (afxNat)offset, 1);
 
-        if (iob->idd.src.len <= (afxNat)offset)
-            iob->posn = iob->idd.src.len;
+        if (iob->idd.m.bufCap <= (afxNat)offset)
+            iob->idd.m.posn = iob->idd.m.bufCap;
         else
-            iob->posn = iob->idd.src.len - offset;
+            iob->idd.m.posn = iob->idd.m.bufCap - offset;
     }
     else AfxThrowError();
     
@@ -76,7 +71,7 @@ _AFX afxNat _AfxStdStreamTellCb(afxStream iob)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
-    return iob->posn;
+    return iob->idd.m.posn;
 }
 
 _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat siz)
@@ -87,13 +82,13 @@ _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat 
     AfxAssert(src);
     afxNat clampedOffRange = siz;
 
-    if ((siz > (iob->idd.src.len - iob->posn)) && !iob->idd.src.isUserBuf) // if it is not a forked or user-buffered stream, we will try to enlarge it.
+    if ((siz > (iob->idd.m.bufCap - iob->idd.m.posn)) && !iob->idd.m.isUserBuf) // if it is not a forked or user-buffered stream, we will try to enlarge it.
     {
         afxNat bufCap = AfxGetStreamBufferCap(iob);
 
-        if (siz > (bufCap - iob->posn))
+        if (siz > (bufCap - iob->idd.m.posn))
         {
-            afxNat scaledSiz = bufCap + (siz - (bufCap - iob->posn));
+            afxNat scaledSiz = bufCap + (siz - (bufCap - iob->idd.m.posn));
 
             if (AfxAdjustStreamBuffer(iob, scaledSiz))
                 AfxThrowError();
@@ -102,15 +97,15 @@ _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat 
 
     afxNat writeLen = siz;
 
-    if (siz > (iob->idd.src.len - iob->posn))
+    if (siz > (iob->idd.m.bufCap - iob->idd.m.posn))
     {
-        writeLen = iob->idd.src.len - iob->posn;
+        writeLen = iob->idd.m.bufCap - iob->idd.m.posn;
         AfxThrowError();
     }
 
-    AfxCopy(1, writeLen, src, (void*)AfxGetStreamBuffer(iob, iob->posn));
+    AfxCopy2(1, writeLen, src, (void*)AfxGetStreamBuffer(iob, iob->idd.m.posn));
     clampedOffRange -= writeLen;
-    iob->posn += writeLen;
+    iob->idd.m.posn += writeLen;
 
     return clampedOffRange;
 }
@@ -125,20 +120,20 @@ _AFX afxError _AfxStdStreamReadCb(afxStream iob, void *dst, afxNat siz)
 
     afxNat readLen = siz;
 
-    if (siz > iob->idd.src.len - iob->posn)
+    if (siz > iob->idd.m.bufCap - iob->idd.m.posn)
     {
-        readLen = iob->idd.src.len - iob->posn;
+        readLen = iob->idd.m.bufCap - iob->idd.m.posn;
         AfxThrowError();
     }
 
-    AfxCopy(1, readLen, AfxGetStreamBuffer(iob, iob->posn), dst);
+    AfxCopy2(1, readLen, AfxGetStreamBuffer(iob, iob->idd.m.posn), dst);
     clampedOffRange -= readLen;
-    iob->posn += readLen;
+    iob->idd.m.posn += readLen;
 
     return clampedOffRange;
 }
 
-_AFX afxStreamImpl const stdStreamImpl = 
+_AFX _afxIobImpl const stdStreamImpl = 
 {
     .read = _AfxStdStreamReadCb,
     .write = _AfxStdStreamWriteCb,
@@ -167,27 +162,27 @@ _AFXINL void const* AfxGetStreamBuffer(afxStream const iob, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
-    AfxAssertRange(iob->idd.src.len, offset, 1);
+    AfxAssertRange(iob->idd.m.bufCap, offset, 1);
 
-    if (!iob->idd.src.start)
-        if (AfxAdjustStreamBuffer((afxStream)iob, iob->idd.src.cap))
+    if (!iob->idd.m.buf)
+        if (AfxAdjustStreamBuffer((afxStream)iob, iob->idd.m.bufCap))
             AfxThrowError();
 
-    return &(iob->idd.src.start[offset]);
+    return &(iob->idd.m.buf[offset]);
 }
 
 _AFXINL afxSize AfxGetStreamLength(afxStream const iob)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
-    return iob->idd.src.len;
+    return iob->idd.m.bufCap;
 }
 
 _AFXINL afxNat AfxGetStreamBufferCap(afxStream const iob)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
-    return iob->idd.src.cap;
+    return iob->idd.m.bufCap;
 }
 
 _AFXINL afxBool AfxStreamIsReadOnly(afxStream const iob)
@@ -230,16 +225,16 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
 
-    AfxAssert(!iob->idd.src.isUserBuf);
+    AfxAssert(!iob->idd.m.isUserBuf);
 
-    if (iob->idd.src.isUserBuf) AfxThrowError();
+    if (iob->idd.m.isUserBuf) AfxThrowError();
     else
     {
-        if ((siz > iob->idd.src.cap) || (!iob->idd.src.start))
+        if ((siz > iob->idd.m.bufCap) || (!iob->idd.m.buf))
         {
             afxArena* aren = AfxGetIoArena();
             AfxAssertType(aren, afxFcc_AREN);
-            void const *oldData = iob->idd.src.start;
+            void const *oldData = iob->idd.m.buf;
             afxByte *start;
             afxNat alignedSiz;
 
@@ -257,21 +252,21 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
                 else
                 {
                     if (oldData)
-                        AfxCopy(1, AfxGetStreamLength(iob), oldData, start);
+                        AfxCopy2(1, AfxGetStreamLength(iob), oldData, start);
                 }
             }
 
             if (!err)
             {
                 if (oldData)
-                    AfxRecycleArenaUnit(aren, (void*)oldData, iob->idd.src.cap);
+                    AfxRecycleArenaUnit(aren, (void*)oldData, iob->idd.m.bufCap);
 
-                iob->idd.src.cap = alignedSiz;
-                iob->idd.src.len = iob->idd.src.cap;
-                iob->idd.src.start = start;
+                iob->idd.m.bufCap = alignedSiz;
+                iob->idd.m.bufCap = iob->idd.m.bufCap;
+                iob->idd.m.buf = start;
 
-                if (iob->posn >= alignedSiz)
-                    iob->posn = alignedSiz - 1;
+                if (iob->idd.m.posn >= alignedSiz)
+                    iob->idd.m.posn = alignedSiz - 1;
             }
         }
     }
@@ -349,7 +344,7 @@ _AFXINL afxSize AfxGetStreamPosn(afxStream iob)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
     afxSize cur = iob->pimpl->tell(iob);
-    AfxAssert(cur == iob->posn);
+    AfxAssert(cur == iob->idd.m.posn);
     return cur;
 }
 
@@ -895,7 +890,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxNat range, afxNat stride, void* ds
                 }
 
                 clampedOffRange -= stride;
-                AfxCopy(1, AfxMin(unitSiz, stride), tmpBuf, dst2);
+                AfxCopy2(1, AfxMin(unitSiz, stride), tmpBuf, dst2);
                 dst2 += dstStride;
 
                 if (in->pimpl->readFeedback)
@@ -914,7 +909,7 @@ _AFX afxError AfxReadStream2(afxStream in, afxNat range, afxNat stride, void* ds
                 }
 
                 clampedOffRange -= stride;
-                AfxCopy(1, AfxMin(unitSiz, stride), tmpBuf, dst2);
+                AfxCopy2(1, AfxMin(unitSiz, stride), tmpBuf, dst2);
 
                 if (in->pimpl->readFeedback)
                     in->pimpl->readFeedback(in, stride, &in->idd);
@@ -1120,13 +1115,13 @@ _AFX afxStream AfxForkStreamRange(afxStream parent, afxSize offset, afxNat range
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &parent, afxFcc_IOB);
-    AfxAssertRange(parent->idd.src.len, offset, range);
+    AfxAssertRange(parent->idd.m.bufCap, offset, range);
 
-    afxSize maxRange = parent->idd.src.len;
+    afxSize maxRange = parent->idd.m.bufCap;
     afxSize effectiveRange = range > maxRange ? maxRange : range;
     AfxAssert(effectiveRange == range);
 
-    afxStream iob = AfxOpenStream(parent->flags, 0, AfxGetStreamBuffer(parent, offset), effectiveRange);
+    afxStream iob = AfxOpenStream(parent->flags, AfxGetStreamBuffer(parent, offset), effectiveRange);
 
     iob->pimpl = parent->pimpl;
     iob->idd = parent->idd;
@@ -1141,7 +1136,7 @@ _AFX afxStream AfxForkStream(afxStream parent)
     //afxError clampedOffLen = 0;
     afxStream sub;
 
-    if ((sub = AfxForkStreamRange(parent, 0, parent->idd.src.len)))
+    if ((sub = AfxForkStreamRange(parent, 0, parent->idd.m.bufCap)))
         AfxThrowError();
 
     return sub;
@@ -1162,7 +1157,7 @@ _AFX afxResult _AfxIosDtor(afxStream iob)
     if (iob->pimpl->dtor)
         iob->pimpl->dtor(iob);
 
-    if (!iob->idd.src.isUserBuf && iob->idd.src.start)
+    if (!iob->idd.m.isUserBuf && iob->idd.m.buf)
     {
         AfxAdjustStreamBuffer(iob, 0);
     }
@@ -1175,21 +1170,33 @@ _AFX afxError _AfxIosCtor(afxStream iob, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
 
     afxIoFlags flags = *((afxIoFlags const*)cookie->udd[0]);
-    afxStreamImpl const* pimpl = cookie->udd[1];
-    afxStreamIdd const* idd = cookie->udd[2];
+    _afxIobImpl const* pimpl = cookie->udd[1];
+    _afxIobIdd const* idd = cookie->udd[2];
 
     afxArena* aren = AfxGetIoArena();
     AfxAssertType(aren, afxFcc_AREN);
 
     AfxAssignTypeFcc(iob, afxFcc_IOB);
     iob->flags = flags ? flags : afxIoFlag_RWX;
-    iob->posn = 0;
+    iob->idd.m.posn = 0;
     
     iob->idd = *idd;
+    iob->idd.m.isUserBuf = !!iob->idd.m.buf;
 
     if (&stdStreamImpl == (iob->pimpl = pimpl))
     {
-        
+
+        afxNat bufSiz;
+
+        if ((flags & afxIoFlag_R) && !(bufSiz = iob->idd.m.bufCap)) AfxThrowError();
+        else if ((flags & afxIoFlag_W) && !(bufSiz = iob->idd.m.bufCap))
+            AfxThrowError();
+        else
+        {
+            if (!iob->idd.m.isUserBuf)
+                if (AfxAdjustStreamBuffer(iob, bufSiz))
+                    AfxThrowError();
+        }
     }
     return err;
 }
@@ -1198,7 +1205,7 @@ _AFX afxClassConfig const _AfxIosClsConfig =
 {
     .fcc = afxFcc_IOB,
     .name = "Stream",
-    .desc = "I/O Stream",
+    .desc = "I/O Bufferization",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxStream)),
     .mmu = NIL,
@@ -1208,7 +1215,7 @@ _AFX afxClassConfig const _AfxIosClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxStream AfxAcquireImplementedStream(afxIoFlags flags, afxStreamImpl const* pimpl, afxStreamIdd const* idd)
+_AFX afxStream AfxAcquireImplementedStream(afxIoFlags flags, _afxIobImpl const* pimpl, _afxIobIdd const* idd)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -1222,16 +1229,15 @@ _AFX afxStream AfxAcquireImplementedStream(afxIoFlags flags, afxStreamImpl const
     return iob;
 }
 
-_AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat siz)
+_AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat bufCap)
 {
     afxError err = AFX_ERR_NONE;
     afxStream iob;
 
-    afxStreamIdd idd = { 0 };
-    idd.src.cap = flags & afxIoFlag_W ? siz : 0;
-    idd.src.start = NIL;
-    idd.src.isUserBuf = FALSE;
-    idd.src.len = flags & afxIoFlag_R ? siz : 0;
+    _afxIobIdd idd = { 0 };
+    idd.m.bufCap = bufCap ? bufCap : 512;
+    idd.m.buf = NIL;
+    idd.m.isUserBuf = FALSE;
 
     if (!(iob = AfxAcquireImplementedStream(flags, &stdStreamImpl, &idd)))
         AfxThrowError();
@@ -1239,40 +1245,46 @@ _AFX afxStream AfxAcquireStream(afxIoFlags flags, afxNat siz)
     return iob;
 }
 
-_AFX afxStream AfxOpenStream(afxIoFlags flags, afxNat cap, void const* start, afxSize length)
+_AFX afxStream AfxOpenStream(afxIoFlags flags, void const* start, afxSize siz)
 {
     afxError err = AFX_ERR_NONE;
-    afxStream iob;
+    afxStream iob = NIL;
+    AfxAssert(flags);
 
-    afxStreamIdd idd = { 0 };
-    idd.src.cap = cap;
-    idd.src.start = (afxByte*)start;
-    idd.src.isUserBuf = TRUE;
-    idd.src.len = length;
+    _afxIobIdd idd = { 0 };
+    idd.m.bufCap = siz;
+    idd.m.buf = (afxByte*)start;
+    idd.m.isUserBuf = TRUE;
 
-    if (!(iob = AfxAcquireImplementedStream(flags, &stdStreamImpl, &idd)))
+    if (!siz) AfxThrowError();
+    else if (!start) AfxThrowError();
+    else if (!(iob = AfxAcquireImplementedStream(flags, &stdStreamImpl, &idd)))
         AfxThrowError();
 
     return iob;
 }
 
-_AFX afxStream AfxOpenInputStream(afxNat cap, void const *start, afxSize length)
+_AFX afxStream AfxOpenInputStream(void const *start, afxSize len)
 {
     afxError err = AFX_ERR_NONE;
-    afxStream in;
+    afxStream in = NIL;
 
-    if (!(in = AfxOpenStream(afxIoFlag_R, cap, start, length)))
+    if (!start) AfxThrowError();
+    else if(!len) AfxThrowError();
+    else if (!(in = AfxOpenStream(afxIoFlag_R, start, len)))
         AfxThrowError();
 
     return in;
 }
 
-_AFX afxStream AfxOpenOutputStream(afxNat cap, void *start, afxSize length)
+_AFX afxStream AfxOpenOutputStream(void* buf, afxNat bufCap)
 {
     afxError err = AFX_ERR_NONE;
-    afxStream out;
+    afxStream out = NIL;
 
-    if (!(out = AfxOpenStream(afxIoFlag_W, cap, start, length)))
+    if (!bufCap) AfxThrowError();
+    else if (!buf) AfxThrowError();
+    else if (!(out = AfxOpenStream(afxIoFlag_W, buf, bufCap)))
         AfxThrowError();
 
     return out;

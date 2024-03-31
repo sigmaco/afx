@@ -47,6 +47,12 @@ AFX_DEFINE_STRUCT(afxUri8)
     afxByte             buf[8];
 };
 
+AFX_DEFINE_STRUCT(afxUri32)
+{
+    afxUri              uri;
+    afxByte             buf[32];
+};
+
 AFX_DEFINE_STRUCT(afxUri128)
 {
     afxUri              uri;
@@ -60,6 +66,7 @@ AFX_DEFINE_STRUCT(afxUri2048)
 };
 
 AFXINL afxUri*          AfxMakeUri8(afxUri8 *uri, afxUri const* src);
+AFXINL afxUri*          AfxMakeUri32(afxUri32 *uri, afxUri const* src);
 AFXINL afxUri*          AfxMakeUri128(afxUri128 *uri, afxUri const* src);
 AFXINL afxUri*          AfxMakeUri2048(afxUri2048 *uri, afxUri const* src);
 

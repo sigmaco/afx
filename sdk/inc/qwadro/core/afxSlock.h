@@ -30,8 +30,8 @@
 
 typedef struct { _AFX_DBG_FCC; void *srwl; afxNat tidEx; } afxSlock;
 
-AFX afxError AfxTakeSlock(afxSlock *slck);
-AFX afxError AfxReleaseSlock(afxSlock *slck);
+AFX afxError AfxSetUpSlock(afxSlock *slck);
+AFX afxError AfxCleanUpSlock(afxSlock *slck);
 
 AFX void    AfxEnterSlockShared(afxSlock *slck);
 AFX void    AfxEnterSlockExclusive(afxSlock *slck);

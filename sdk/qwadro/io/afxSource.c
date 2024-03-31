@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/io/afxSource.h"
+#include "qwadro/core/afxSystem.h"
 
 
 _AFXINL void AfxMakeSource(afxSource *src)

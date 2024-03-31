@@ -16,11 +16,8 @@
 
 #define _AFX_DRAW_C
 #define _AFX_SHADER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/io/afxFile.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxXsh.h"
-#include "qwadro/draw/io/afxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER BLUEPRINT                                                           //
@@ -65,7 +62,7 @@ _AVXINL afxError AfxShaderBlueprintAddCode(afxShaderBlueprint *blueprint, void c
     if (!(bytecode = AfxInsertArrayUnits(&blueprint->codes, range, &idx, &iniVal))) AfxThrowError();
     else
     {
-        AfxCopy(1, range, start, bytecode);
+        AfxCopy2(1, range, start, bytecode);
     }
     return err;
 }
@@ -456,7 +453,7 @@ _AVX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
     AfxAssert(!AfxUriIsBlank(uri));
     afxShader shd = NIL;
 
-    AfxEcho("Uploading shader '%.*s'", AfxPushString(&uri->str.str));
+    AfxLogEcho("Uploading shader '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
     AfxPickUriExtension(uri, FALSE, &fext);

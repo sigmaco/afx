@@ -2,9 +2,8 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "qwadro/env/afxEnvironment.h"
-#include "qwadro/core/afxSystem.h"
 #include "qwadro/../_dep/luna.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFXINL void AfxGetSlots(afxNat first, afxNat cnt, ...)
 {
@@ -106,7 +105,7 @@ void _XsIobRead(afxEnvironment env)
 {
     int dstCap;
     afxStream in = XssPullInstance(env, 0);
-    void* dst = lunaGetSlotBytes(env, 1, &dstCap);
+    void* dst = (void*)lunaGetSlotBytes(env, 1, &dstCap);
     afxNat range = XssPullNat(env, 2);
     afxNat rate = XssPullNat(env, 3);
     afxError err = AfxReadStream(in, range, rate, dst);
@@ -221,10 +220,9 @@ void _XsIobOpen(afxEnvironment env)
 {
     afxString mode;
     XssPullString(env, 1, &mode);
-    afxSize cap = XssPullSize(env, 2);
     int dataLen;
-    void* data = lunaGetSlotBytes(env, 3, &dataLen);
-    afxSize len = XssPullSize(env, 4);
+    void* start = (void*)lunaGetSlotBytes(env, 2, &dataLen);
+    afxSize siz = XssPullSize(env, 3);
 
     afxIoFlags ioFlags = NIL;
     if (AfxFindFirstChar(&mode, 0, 'r'))
@@ -246,18 +244,17 @@ void _XsIobOpen(afxEnvironment env)
         //*modePtr++ = 'x';
     }
 
-    afxStream file = AfxOpenStream(ioFlags, cap, data, len);
+    afxStream file = AfxOpenStream(ioFlags, start, siz);
     XssPushInstance(env, 0, file);
 }
 
 void _XsIobOpenInput(afxEnvironment env)
 {
-    afxSize cap = XssPullSize(env, 1);
     int dataLen;
-    void* data = lunaGetSlotBytes(env, 2, &dataLen);
-    afxSize len = XssPullSize(env, 3);
+    void* data = (void*)lunaGetSlotBytes(env, 1, &dataLen);
+    afxSize len = XssPullSize(env, 2);
 
-    afxStream file = AfxOpenInputStream(cap, data, len);
+    afxStream file = AfxOpenInputStream(data, len);
     XssPushInstance(env, 0, file);
 }
 
@@ -265,19 +262,18 @@ void _XsIobOpenOutput(afxEnvironment env)
 {
     afxSize cap = XssPullSize(env, 1);
     int dataLen;
-    void* data = lunaGetSlotBytes(env, 2, &dataLen);
-    afxSize len = XssPullSize(env, 3);
+    void* data = (void*)lunaGetSlotBytes(env, 2, &dataLen);
 
-    afxStream file = AfxOpenOutputStream(cap, data, len);
+    afxStream file = AfxOpenOutputStream(data, cap);
     XssPushInstance(env, 0, file);
 }
 
 afxString const iobVmtNames[] =
 {
     AFX_STRING("Acquire(_,_)"),
-    AFX_STRING("Open(_,_,_,_)"),
-    AFX_STRING("OpenInput(_,_,_)"),
-    AFX_STRING("OpenOutput(_,_,_)"),
+    AFX_STRING("Open(_,_,_)"),
+    AFX_STRING("OpenInput(_,_)"),
+    AFX_STRING("OpenOutput(_,_)"),
     AFX_STRING("OpenFile(_,_)"),
     AFX_STRING("LoadFile(_)"),
 
@@ -311,14 +307,16 @@ void* const iobVmtPtrs[] =
 void _XsMseReacquire(afxEnvironment env)
 {
     afxNat port = XssPullNat(env, 1);
-    afxMouse mse = AfxGetMouse(port);
+    afxMouse mse;
+    AfxGetMouse(port, &mse);
     AfxReacquireObjects(1, (void*[]) { mse });
 }
 
 void _XsMseRelease(afxEnvironment env)
 {
     afxNat port = XssPullNat(env, 1);
-    afxMouse mse = AfxGetMouse(port);
+    afxMouse mse;
+    AfxGetMouse(port, &mse);
     AfxReleaseObjects(1, (void*[]) { mse });
 }
 
@@ -388,21 +386,32 @@ void* const mseVmtPtrs[] =
 void _XsKbdReacquire(afxEnvironment env)
 {
     afxNat port = XssPullNat(env, 1);
-    afxKeyboard kbd = AfxGetKeyboard(port);
+    afxKeyboard kbd;
+    AfxGetKeyboard(port, &kbd);
     AfxReacquireObjects(1, (void*[]) { kbd });
 }
 
 void _XsKbdRelease(afxEnvironment env)
 {
     afxNat port = XssPullNat(env, 1);
-    afxKeyboard kbd = AfxGetKeyboard(port);
+    afxKeyboard kbd;
+    AfxGetKeyboard(port, &kbd);
     AfxReleaseObjects(1, (void*[]) { kbd });
 }
 
-void _XsKbdIsPressed(afxEnvironment env)
+void _XsKbdGetKeyPressure(afxEnvironment env)
 {
     afxNat port = XssPullNat(env, 1);
-    XssPushBool(env, 0, AfxLmbIsPressed(port));
+    afxNat code = XssPullNat(env, 2);
+    XssPushReal64(env, 0, AfxGetKeyPressure(port, code));
+}
+
+void _XsKbdGetKeyCombo(afxEnvironment env)
+{
+    afxNat port = XssPullNat(env, 1);
+    afxNat code = XssPullNat(env, 2);
+    afxNat codeB = XssPullNat(env, 3);
+    XssPushReal64(env, 0, AfxGetCombinedKeyPressure(port, code, codeB));
 }
 
 afxString const kbdVmtNames[] =
@@ -410,7 +419,8 @@ afxString const kbdVmtNames[] =
     AFX_STRING("Release(_)"),
     AFX_STRING("Reacquire(_)"),
 
-    AFX_STRING("KeyIsPressed(_,_)")
+    AFX_STRING("GetKeyPressure(_,_)"),
+    AFX_STRING("GetKeyCombo(_,_,_)")
 };
 
 void* const kbdVmtPtrs[] =
@@ -418,7 +428,8 @@ void* const kbdVmtPtrs[] =
     _XsKbdRelease,
     _XsKbdReacquire,
 
-    _XsKbdIsPressed
+    _XsKbdGetKeyPressure,
+    _XsKbdGetKeyCombo
 };
 
 afxString const ffiClasses[] =

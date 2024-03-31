@@ -22,19 +22,19 @@
 #define _AFX_THREAD_C
 #include "qwadro/draw/afxDrawSystem.h"
 
-_AVX afxBool AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawQueue* dque)
+_AVX afxBool AfxGetDrawThreadActiveQueue(afxDrawThread dthr, afxDrawBridge* dxge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dthr, afxFcc_DTHR);
-    afxDrawQueue dque2;
+    afxDrawBridge dxge2;
     afxBool rslt;
 
-    if ((rslt = !!(dque2 = dthr->dque)))
+    if ((rslt = !!(dxge2 = dthr->dxge)))
     {
-        AfxAssertObjects(1, &dque2, afxFcc_DQUE);
+        AfxAssertObjects(1, &dxge2, afxFcc_DXGE);
 
-        if (dque)
-            *dque = dque2;
+        if (dxge)
+            *dxge = dxge2;
     }
     return rslt;
 }
@@ -94,14 +94,14 @@ _AVX afxBool _AfxProcessDdevCb(afxDrawDevice ddev, void *udd)
     {
         dthr->ddev = ddev;
         dthr->dctx = NIL;
-        dthr->dque = NIL;
+        dthr->dxge = NIL;
 
         if (ddev->procCb(ddev, dthr))
             AfxThrowError();
 
         //dthr->ddev = NIL;
         dthr->dctx = NIL;
-        dthr->dque = NIL;
+        dthr->dxge = NIL;
     }
     return FALSE; // dont interrupt curation
 }
@@ -134,7 +134,7 @@ _AVX afxError _AfxDthrCtor(afxDrawThread dthr, afxCookie const* cookie)
 
     dthr->ddev = config->ddev;
     dthr->dctx = NIL;
-    dthr->dque = NIL;
+    dthr->dxge = NIL;
     dthr->queueIdx = 0;
 
     dthr->udd = NIL;
@@ -153,7 +153,8 @@ _AVX afxError _AfxDthrDtor(afxDrawThread dthr)
 _AVX afxClassConfig const _dthrClsConfig =
 {
     .fcc = afxFcc_DTHR,
-    .name = "Draw Thread",
+    .name = "DrawThread",
+    .desc = "Draw Threading",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxDrawThread)),
     .mmu = NIL,
@@ -163,17 +164,17 @@ _AVX afxClassConfig const _dthrClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireDrawThreads(afxDrawThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxDrawThread dthr[])
+_AVX afxError AfxAcquireDrawThreads(afxDrawThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxDrawThread threads[])
 {
     afxError err = AFX_ERR_NONE;
     
     afxManager* cls = AfxGetDrawThreadClass();
     AfxAssertClass(cls, afxFcc_DTHR);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)dthr, (void const*[]) { cfg, hint }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)threads, (void const*[]) { cfg, hint }))
         AfxThrowError();
 
-    AfxAssertObjects(cnt, dthr, afxFcc_DTHR);
+    AfxAssertObjects(cnt, threads, afxFcc_DTHR);
 
     return err;
 };
@@ -188,14 +189,14 @@ _AVX afxNat AfxInvokeDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawTh
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
-_AVX afxNat AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread dthr[])
+_AVX afxNat AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread threads[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
-    AfxAssert(dthr);
+    AfxAssert(threads);
     afxManager* cls = AfxGetDrawThreadClass();
     AfxAssertClass(cls, afxFcc_DTHR);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)dthr);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)threads);
 }
 
 _AVX afxNat AfxCountDrawThreads(void)

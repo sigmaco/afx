@@ -26,7 +26,6 @@
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
 #define _AFX_TXU_C
-#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 
 #if 0

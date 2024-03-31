@@ -49,6 +49,19 @@ _AFXINL afxReal AfxRecip(afxReal value)
     return (afxReal)1.f / value;
 }
 
+_AFXINL afxReal AfxNdcf(afxReal x, afxReal total)
+{
+    return x * (AfxScalar(1) / total);
+}
+
+_AFXINL afxReal AfxUnndcf(afxReal x, afxReal total)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(AfxScalar(0) <= x);
+    AfxAssert(AfxScalar(1) >= x);
+    return x * total;
+}
+
 _AFXINL afxReal AfxLerp(afxReal a, afxReal b, afxReal time)
 {
     return  a * ((afxReal)1.f - time) + time * b;
@@ -102,29 +115,29 @@ _AFXINL afxReal AfxDeg(afxReal radians)
 
 // The standard trigonometric sine function.
 
-_AFXINL afxReal AfxSin(afxReal radians)
+_AFXINL afxReal AfxSinf(afxReal radians)
 {
     return sinf(radians);
 }
 
 // The standard trigonometric cosine function.
 
-_AFXINL afxReal AfxCos(afxReal radians)
+_AFXINL afxReal AfxCosf(afxReal radians)
 {
     return cosf(radians);
 }
 
 // A combined cosine and sine function
 
-_AFXINL void AfxCosSin(afxReal radians, afxReal* cos, afxReal* sin)
+_AFXINL void AfxCosSinf(afxReal radians, afxReal* cos, afxReal* sin)
 {
-    *cos = AfxCos(radians);
-    *sin = AfxSin(radians);
+    *cos = AfxCosf(radians);
+    *sin = AfxSinf(radians);
 }
 
 // The standard trigonometric tangent function.
 
-_AFXINL afxReal AfxTan(afxReal radians)
+_AFXINL afxReal AfxTanf(afxReal radians)
 {
     return tanf(radians);
 }
@@ -133,7 +146,7 @@ _AFXINL afxReal AfxTan(afxReal radians)
 // The range of values returned by this function is [-pi / 2, pi / 2].
 // Results are undefined if |x| > 1.
 
-_AFXINL afxReal AfxAsin(afxReal x)
+_AFXINL afxReal AfxAsinf(afxReal x)
 {
     return asinf(x);
 }
@@ -142,7 +155,7 @@ _AFXINL afxReal AfxAsin(afxReal x)
 // The range of values returned by this function is [0, pi].
 // Results are undefined if |x| > 1.
 
-_AFXINL afxReal AfxAcos(afxReal x)
+_AFXINL afxReal AfxAcosf(afxReal x)
 {
     return acosf(x);
 }
@@ -150,7 +163,7 @@ _AFXINL afxReal AfxAcos(afxReal x)
 // Arc tangent. Returns an angle whose tangent is y_over_x.
 // The range of values returned by this function is [-pi / 2, pi / 2].
 
-_AFXINL afxReal AfxAtan(afxReal y_over_x)
+_AFXINL afxReal AfxAtanf(afxReal y_over_x)
 {
     return atanf(y_over_x);
 }
@@ -160,35 +173,35 @@ _AFXINL afxReal AfxAtan(afxReal y_over_x)
 // The range of values returned by this function is [-pi, pi].
 // Results are undefined if xand y are both 0.
 
-_AFXINL afxReal AfxAtan2(afxReal y, afxReal x)
+_AFXINL afxReal AfxAtan2f(afxReal y, afxReal x)
 {
     return atan2f(y, x);
 }
 
 // Returns the hyperbolic sine function; (e^x - e^(-x)) / 2.
 
-_AFXINL afxReal AfxSinh(afxReal x)
+_AFXINL afxReal AfxSinhf(afxReal x)
 {
     return sinhf(x);
 }
 
 // Returns the hyperbolic cosine function; (e^x + e^(-x)) / 2.
 
-_AFXINL afxReal AfxCosh(afxReal x)
+_AFXINL afxReal AfxCoshf(afxReal x)
 {
     return coshf(x);
 }
 
 // Returns the hyperbolic tangent function; sinh(x) / cosh(x).
 
-_AFXINL afxReal AfxTanh(afxReal x)
+_AFXINL afxReal AfxTanhf(afxReal x)
 {
     return tanhf(x);
 }
 
 // Arc hyperbolic sine; returns the inverse of sinh.
 
-_AFXINL afxReal AfxAsinh(afxReal x)
+_AFXINL afxReal AfxAsinhf(afxReal x)
 {
     return asinhf(x);
 }
@@ -196,7 +209,7 @@ _AFXINL afxReal AfxAsinh(afxReal x)
 // Arc hyperbolic cosine; returns the non-negative inverse of cosh.
 // Results are undefined if x < 1.
 
-_AFXINL afxReal AfxAcosh(afxReal x)
+_AFXINL afxReal AfxAcoshf(afxReal x)
 {
     return acoshf(x);
 }
@@ -204,7 +217,7 @@ _AFXINL afxReal AfxAcosh(afxReal x)
 // Arc hyperbolic tangent; returns the inverse of tanh.
 // Results are undefined if x >= 1.
 
-_AFXINL afxReal AfxAtanh(afxReal y_over_x)
+_AFXINL afxReal AfxAtanhf(afxReal y_over_x)
 {
     return atanhf(y_over_x);
 }
@@ -219,7 +232,7 @@ _AFXINL afxReal AfxAtanh(afxReal y_over_x)
  // Returns the natural logarithm of x; returns the value y which satisfies the equation x = e^y.
  // Results are undefined if x <= 0.
 
-_AFXINL afxReal AfxLog(afxReal s)
+_AFXINL afxReal AfxLogf(afxReal s)
 {
     return logf(s);
 }
@@ -227,26 +240,26 @@ _AFXINL afxReal AfxLog(afxReal s)
 // Returns the base 2 logarithm of x; returns the value y which satisfies the equation x = 2^y.
 // Results are undefined if x <= 0.
 
-_AFXINL afxReal AfxLog2(afxReal s)
+_AFXINL afxReal AfxLog2f(afxReal s)
 {
     return log2f(s);
 }
 
-_AFXINL afxReal AfxLog10(afxReal s)
+_AFXINL afxReal AfxLog10f(afxReal s)
 {
     return log10f(s);
 }
 
 // Returns the natural exponentiation of x; e^x.
 
-_AFXINL afxReal AfxExp(afxReal s)
+_AFXINL afxReal AfxExpf(afxReal s)
 {
     return expf(s);
 }
 
 // Returns 2 raised to the x power; 2^x.
 
-_AFXINL afxReal AfxExp2(afxReal s)
+_AFXINL afxReal AfxExp2f(afxReal s)
 {
     return exp2f(s);
 }
@@ -254,20 +267,20 @@ _AFXINL afxReal AfxExp2(afxReal s)
 // Returns x raised to the y power; x^y.
 // Results are undefined if x < 0 or if x = 0 and y <= 0.
 
-_AFXINL afxReal AfxPow(afxReal base, afxReal exp)
+_AFXINL afxReal AfxPowf(afxReal base, afxReal exp)
 {
-    return AfxExp(exp * AfxLog(base));
+    return AfxExpf(exp * AfxLogf(base));
 }
 
 _AFXINL afxReal AfxExp10(afxReal s)
 {
-    return AfxPow(10.f, s);
+    return AfxPowf(10.f, s);
 }
 
 // Returns sqrt(x).
 // Results are undefined if x < 0.
 
-_AFXINL afxReal AfxSqrt(afxReal s)
+_AFXINL afxReal AfxSqrtf(afxReal s)
 {
 #ifdef MFX_USE_SIMD
     __m128 simd = _mm_set_ss(s);
@@ -281,7 +294,7 @@ _AFXINL afxReal AfxSqrt(afxReal s)
 // Returns 1 / sqrt(x).
 // Results are undefined if x <= 0.
 
-_AFXINL afxReal AfxRsqrt(afxReal s)
+_AFXINL afxReal AfxRsqrtf(afxReal s)
 {
 #ifdef MFX_USE_SIMD
     __m128 simd = _mm_set_ss(s);
@@ -297,7 +310,7 @@ _AFXINL afxReal AfxRsqrt(afxReal s)
     s = *(afxReal *)&i;
     return s * (1.5f - v_half * s * s);
 #else
-    return 1.0 / AfxSqrt(s);
+    return 1.0 / AfxSqrtf(s);
 #endif
 #endif
 }
@@ -314,7 +327,7 @@ afxNat32 const REAL16_MAX_BIASED_EXP_AS_SINGLE_FP_EXP = 0x47800000;
 afxNat32 const FLOAT_MAX_BIASED_EXP = (0x1F << 23);
 afxNat32 const REAL16_MAX_BIASED_EXP = (0x1F << 10);
 
-_AFXINL afxReal16 AfxReal32To16(afxReal f)
+_AFXINL afxReal16 AfxPackReal16(afxReal f)
 {
     afxNat32 x = *(afxNat32*)&f;
     afxNat32 sign = (afxNat16)(x >> 31);
@@ -357,7 +370,7 @@ _AFXINL afxReal16 AfxReal32To16(afxReal f)
     return hf;
 }
 
-_AFXINL afxReal32 AfxReal16To32(afxReal16 hf)
+_AFXINL afxReal32 AfxUnpackReal16(afxReal16 hf)
 {
     afxNat32 mantissa = (afxNat32)(hf & ((1 << 10) - 1));
     afxNat32 exp = (afxNat32)(hf & REAL16_MAX_BIASED_EXP);
@@ -438,55 +451,22 @@ _AFXINL void AfxRectCopy(afxRect *rect, afxRect const *src)
     rect->h = src->h;
 }
 
-_AFXINL afxReal AfxToNdc(afxReal x, afxReal total)
-{
-    return x * (AfxScalar(1) / total);
-}
-
-_AFXINL afxReal AfxFromNdc(afxReal x, afxReal total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(AfxScalar(0) <= x);
-    AfxAssert(AfxScalar(1) >= x);
-    return x * total;
-}
-
-_AFXINL void AfxExtractV2dInNdc(afxV2d v, afxV2d const b, afxV2d const total)
+_AFXINL void AfxNdcV2d(afxV2d v, afxV2d const from, afxV2d const total)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(b);
+    AfxAssert(from);
     AfxAssert(total);
-    v[0] = AfxToNdc(b[0], total[0]);
-    v[1] = AfxToNdc(b[1], total[1]);
+    v[0] = AfxNdcf(from[0], total[0]);
+    v[1] = AfxNdcf(from[1], total[1]);
 }
 
-_AFXINL void AfxExtractV2dOutNdc(afxV2d v, afxV2d const b, afxV2d const total)
+_AFXINL void AfxUnndcV2d(afxV2d v, afxV2d const from, afxV2d const total)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
-    AfxAssert(b);
+    AfxAssert(from);
     AfxAssert(total);
-    v[0] = AfxFromNdc(b[0], total[0]);
-    v[1] = AfxFromNdc(b[1], total[1]);
-}
-
-_AFXINL void AfxMakeV2dNdc(afxV2d v, afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(total);
-    AfxAssert(v != total);
-    v[0] = AfxToNdc(v[0], total[0]);
-    v[1] = AfxToNdc(v[1], total[1]);
-}
-
-_AFXINL void AfxUnmakeV2dNdc(afxV2d v, afxV2d const total)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(v);
-    AfxAssert(total);
-    AfxAssert(v != total);
-    v[0] = AfxFromNdc(v[0], total[0]);
-    v[1] = AfxFromNdc(v[1], total[1]);
+    v[0] = AfxUnndcf(from[0], total[0]);
+    v[1] = AfxUnndcf(from[1], total[1]);
 }

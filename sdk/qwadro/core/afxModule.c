@@ -30,7 +30,6 @@
 
 #define _AFX_CORE_C
 #define _AFX_EXECUTABLE_C
-#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxNat AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const names[], void* addresses[])
@@ -120,7 +119,7 @@ _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar const *n
         else
         {
             syms[i] = NIL;
-            //AfxError("Symbol %s not found.", name[i]);
+            //AfxLogError("Symbol %s not found.", name[i]);
         }
     }
     return hitCnt;
@@ -349,27 +348,30 @@ _AFX afxClassConfig const _AfxMdleClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxModule AfxLoadModule(afxUri const* uri, afxFlags flags)
+_AFX afxError AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* mdle)
 {
     afxError err = AFX_ERR_NONE;
-    afxModule mdle = NIL;
+    afxModule mdle2 = NIL;
 
-    AfxEcho("Loading module... <%.*s>", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
+    AfxLogEcho("Loading module... <%.*s>", AfxPushString(uri ? AfxGetUriString(uri) : &AFX_STR_EMPTY));
 
-    afxManager* cls = AfxGetModuleClass();
-    AfxAssertClass(cls, afxFcc_MDLE);
-
-    if ((mdle = AfxFindModule(uri)))
+    if (AfxFindModule(uri, &mdle2))
     {
-        if (AfxReacquireObjects(1, (void*[]) { mdle }))
+        if (AfxReacquireObjects(1, (void*[]) { mdle2 }))
             AfxThrowError();
     }
     else
     {
-        if (AfxAcquireObjects(cls, 1, (afxObject*)&mdle, (void const*[]) { NIL, uri }))
+        afxManager* cls = AfxGetModuleClass();
+        AfxAssertClass(cls, afxFcc_MDLE);
+
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&mdle2, (void const*[]) { NIL, uri }))
             AfxThrowError();
     }
-    return mdle;
+
+    AfxAssert(mdle);
+    *mdle = mdle2;
+    return err;
 }
 
 _AFX afxNat AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd)
@@ -400,34 +402,43 @@ _AFX afxNat AfxCountModules(void)
     return AfxCountObjects(cls);
 }
 
-_AFX afxModule AfxFindModule(afxUri const *uri)
+_AFX afxBool AfxFindModule(afxUri const *uri, afxModule* mdle)
 {
     afxError err = AFX_ERR_NONE;
+    afxBool found = FALSE;
     AfxAssert(uri);
 
     afxNat i = 0;
-    afxModule mdle;
-    while (AfxEnumerateModules(i, 1, &mdle))
+    afxModule mdle2;
+    while (AfxEnumerateModules(i, 1, &mdle2))
     {
-        AfxAssertObjects(1, &mdle, afxFcc_MDLE);
+        AfxAssertObjects(1, &mdle2, afxFcc_MDLE);
 
         afxUri exeFile;
 
         if (uri->fext)
         {
-            AfxPickUriFile(&mdle->path.uri, &exeFile);
+            AfxPickUriFile(&mdle2->path.uri, &exeFile);
 
             if (0 == AfxCompareUri(&exeFile, uri))
-                return mdle;
+            {
+                found = TRUE;
+                break;
+            }
         }
         else
         {
-            AfxClipUriObject(&exeFile, &mdle->path.uri);
+            AfxClipUriObject(&exeFile, &mdle2->path.uri);
 
             if (0 == AfxCompareUri(&exeFile, uri))
-                return mdle;
+            {
+                found = TRUE;
+                break;
+            }
         }
         ++i;
     }
-    return NIL;
+    AfxAssert(mdle);
+    *mdle = found ? mdle2 : NIL;
+    return found;
 }

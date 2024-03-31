@@ -15,9 +15,8 @@
  */
 
 
-#include "qwadro/io/afxResource.h"
-#include "qwadro/core/afxSystem.h"
 #include <sys/stat.h>
+#include "qwadro/core/afxSystem.h"
 
 _AFXINL afxError AfxUnloadResource(afxResource res)
 {
@@ -152,7 +151,7 @@ _AFXINL afxResource AfxAcquireResource(afxResourceSpecification const *spec)
         AfxThrowError();
     else
     {
-        AfxEcho("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
+        AfxLogEcho("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
     }
     return res;
 }

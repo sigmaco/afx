@@ -23,6 +23,7 @@
 #define AFX_ARCHIVE_H
 
 #include "qwadro/io/afxFile.h"
+#include "qwadro/mem/afxArray.h"
 
 #ifdef _AFX_CORE_C
 #ifdef _AFX_ARCHIVE_C

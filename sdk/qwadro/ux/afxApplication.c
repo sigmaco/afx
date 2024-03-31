@@ -170,7 +170,8 @@ _AUX afxResult AfxRunApplication(afxApplication app, afxUri const* uri)
         if (AfxLoadScript(&domain, uri)) AfxThrowError();
         else
         {
-            afxEnvironment env = AfxGetEnvironment();
+            afxEnvironment env;
+            AfxGetEnvironment(&env);
 
             afxHandle fn[4];
             afxString fns[4];
@@ -252,8 +253,6 @@ _AUX void AfxQueryApplicationTimer(afxApplication app, afxReal64* ct, afxReal64*
     ct2 = AfxGetSecondsElapsed(&app->startClock, &currClock);
     dt2 = AfxGetSecondsElapsed(&app->lastClock, &currClock);
     app->lastClock = currClock;
-    app->ct = ct2;
-    app->dt = dt2;
     *ct = ct2;
     *dt = dt2;
 }
@@ -295,7 +294,8 @@ _AUX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
     {
         if (app->xssInitFn)
         {
-            afxEnvironment env = AfxGetEnvironment();
+            afxEnvironment env;
+            AfxGetEnvironment(&env);
             XssPushHandle(env, 0, app->xssMainVar);
             XssCall(env, app->xssInitFn);
         }
@@ -305,7 +305,8 @@ _AUX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
     {
         if (app->xssQuitFn)
         {
-            afxEnvironment env = AfxGetEnvironment();
+            afxEnvironment env;
+            AfxGetEnvironment(&env);
             XssPushHandle(env, 0, app->xssMainVar);
             XssCall(env, app->xssQuitFn);
         }
@@ -318,9 +319,10 @@ _AUX afxError _AfxThrProcAppCb(afxThread thr, void *udd, afxThreadOpcode opcode)
             afxReal64 ct, dt;
             AfxQueryApplicationTimer(app, &ct, &dt);
 
-            afxEnvironment env = AfxGetEnvironment();
+            afxEnvironment env;
+            AfxGetEnvironment(&env);
             XssPushHandle(env, 0, app->xssMainVar);
-            XssPushReal64(env, 1, dt);
+            XssPushReal(env, 1, dt);
             XssCall(env, app->xssStepFn);
         }
         break;
@@ -363,7 +365,7 @@ _AUX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
         {
             afxNat msePorts[] = { 0 };
 
-            if (!(app->stdMse = AfxAcquireMouse(0))) AfxThrowError();
+            if (AfxAcquireMouse(0, &app->stdMse)) AfxThrowError();
             else
             {
                 AfxAssertObjects(1, &app->stdMse, afxFcc_MSE);
@@ -380,7 +382,7 @@ _AUX afxError _AfxAppCtor(afxApplication app, afxCookie const* cookie)
                         dinConfig.estimatedSubmissionCnt = 2;
                         dinConfig.proc = NIL;
 
-                        if (AfxOpenDrawInputs(0, 1, &dinConfig, &app->din))
+                        if (AfxAcquireDrawInput(0, &dinConfig, &app->din))
                             AfxThrowError();
                     }
                     else

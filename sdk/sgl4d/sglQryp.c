@@ -130,7 +130,7 @@ _SGL afxError _SglDpuBindAndSyncQryp(sglDpuIdd* dpu, afxBool syncOnly, afxQueryP
                 }
                 gl->GenQueries(qryp->base.cap, glHandle); _SglThrowErrorOccuried();
                 qryp->glHandle = glHandle;
-                AfxEcho("Query pool inited. %u", qryp->base.cap);
+                AfxLogEcho("Query pool inited. %u", qryp->base.cap);
             }
 
             qryp->updFlags |= ~SGL_UPD_FLAG_DEVICE;
@@ -154,6 +154,10 @@ _SGL afxError _SglQrypDtor(afxQueryPool qryp)
         }
         qryp->glHandle = 0;
     }
+
+
+    AfxPopLinkage(&qryp->base.dctx);
+
     return err;
 }
 
@@ -162,9 +166,9 @@ _SGL afxError _SglQrypCtor(afxQueryPool qryp, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &qryp, afxFcc_QRYP);
 
-    afxDrawContext dctx = cookie->udd[0];
-    afxQueryType type = *(afxQueryType const*)cookie->udd[1];
-    afxNat cap = *(afxNat const*)cookie->udd[2];
+    afxDrawContext dctx = cookie->udd[1];
+    afxQueryType type = *(afxQueryType const*)cookie->udd[2];
+    afxNat cap = *(afxNat const*)cookie->udd[3];
 
     qryp->glHandle = AfxAllocate(qryp->base.cap, sizeof(qryp->glHandle[0]), 0, AfxHint());
     qryp->updFlags = SGL_UPD_FLAG_DEVICE_INST;
@@ -184,6 +188,10 @@ _SGL afxError _SglQrypCtor(afxQueryPool qryp, afxCookie const* cookie)
         qryp->glTarget = GL_TIME_ELAPSED;
     }
     else AfxThrowError();
+
+
+
+    AfxPushLinkage(&qryp->base.dctx, &dctx->base.ownedQueries);
 
     return err;
 }

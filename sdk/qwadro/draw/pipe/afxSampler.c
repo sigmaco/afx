@@ -16,8 +16,7 @@
 
 #define _AFX_DRAW_C
 #define _AFX_SAMPLER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 {

@@ -123,7 +123,7 @@ _SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVerte
             afxBuffer buf = nextVinBindings->sources[streamIdx].buf;
             afxBool rebind = FALSE;
 
-            //if (updMask & AfxGetBitOffset(streamIdx))
+            //if (updMask & AFX_BIT_OFFSET(streamIdx))
             {
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, streamIdx, 1);
 

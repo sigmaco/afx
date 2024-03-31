@@ -55,7 +55,7 @@ AFX_DEFINE_STRUCT(afxVertexInputPoint) /// vertex attribute input stream
 
 AVX afxCmdId            AfxCmdResetViewports
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxNat              cnt, /// specifies the viewport count.
     afxViewport const   vp[] /// specifies the viewports to use for drawing.
 );
@@ -67,7 +67,7 @@ AVX afxCmdId            AfxCmdResetViewports
 
 AVX afxCmdId            AfxCmdReadjustViewports
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxNat              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
     afxNat              cnt, /// is the number of viewports whose parameters are updated by the command.
     afxViewport const   vp[] /// is a pointer to an array of afxViewport structures specifying viewport parameters.
@@ -86,7 +86,7 @@ AVX afxCmdId            AfxCmdReadjustViewports
 
 AVX afxCmdId            AfxCmdBindVertexSources
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxNat              baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
     afxNat              slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
     afxBuffer           buf[], /// is an array of buffer handles.
@@ -100,7 +100,7 @@ AVX afxCmdId            AfxCmdBindVertexSources
 
 AVX afxCmdId            AfxCmdBindIndexSource
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxBuffer           buf, /// is the buffer being bound.
     afxNat32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
     afxNat32            range, /// is the size in bytes of index data bound from buffer.
@@ -112,27 +112,27 @@ AVX afxCmdId            AfxCmdBindIndexSource
 
 AVX afxCmdId            AfxCmdSetPrimitiveTopology
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxPrimTopology     topology /// specifies the primitive topology to use for drawing.
 );
 
 AVX afxCmdId            AfxCmdSwitchFrontFace
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxBool             cw /// is a value specifying the front-facing triangle orientation to be used for culling.
 );
 
 AVX afxCmdId            AfxCmdSetCullMode
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxCullMode         mode /// specifies the cull mode property to use for drawing.
 );
 
-AVX afxCmdId            AfxCmdBindVertexInput(afxDrawStream dscr, afxVertexInput vin);
+AVX afxCmdId            AfxCmdBindVertexInput(afxDrawStream diob, afxVertexInput vin);
 
 
 //                      TODO Pipeline Gateway
-AVX afxCmdId            AfxCmdResetVertexStreams(afxDrawStream dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-AVX afxCmdId            AfxCmdResetVertexAttributes(afxDrawStream dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
+AVX afxCmdId            AfxCmdResetVertexStreams(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
+AVX afxCmdId            AfxCmdResetVertexAttributes(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
 
 #endif//AFX_TRANSFORM_OPS_H

@@ -27,16 +27,15 @@
 #include "qwadro/sound/afxSoundThread.h"
 #include "qwadro/sound/afxSoundContext.h"
 
+typedef enum _sdevReqCode
+{
+    _sdevReqCode_0,
+    _sdevReqCode_1,
+} _sdevReqCode;
+
 AFX_DEFINE_STRUCT(afxSoundDeviceInfo)
 {
-    afxString const*        domain;
-    afxString const*        name;
-    afxClassConfig const*   sctxClsConfig;
-    afxClassConfig const*   soutClsConfig;
-    afxClassConfig const*   sinClsConfig;
-    afxSize                 iddSiz;
-    afxError                (*iddCtor)(afxSoundDevice sdev);
-    afxError                (*iddDtor)(afxSoundDevice sdev);
+    afxDeviceInfo           dev;
 };
 
 #ifdef _AFX_SOUND_C
@@ -58,19 +57,11 @@ AFX_DEFINE_STRUCT(afxSoundOutputEndpoint)
 AFX_OBJECT(afxSoundDevice)
 {
     AFX_OBJECT(afxDevice)   dev;
-    afxManager                contexts;
-    afxManager                outputs;
-    afxManager                inputs;
+    afxManager              contexts;
+    afxManager              outputs;
+    afxManager              inputs;
 
-    afxError                (*procCb)(afxSoundDevice, afxSoundThread); // call their sound threads.
-    afxError                (*relinkDin)(afxSoundDevice, afxSoundContext,afxNat, afxSoundInput[]);
-    afxError                (*relinkDout)(afxSoundDevice, afxSoundContext,afxNat, afxSoundOutput[]);
-    afxMutex                ioConMtx;
-
-    afxSize                 iddSiz;
     struct _afxSdevIdd*     idd;
-    afxError                (*iddCtor)(afxSoundDevice sdev);
-    afxError                (*iddDtor)(afxSoundDevice sdev);
 };
 #endif//_AFX_SOUND_DEVICE_C
 #endif//_AFX_SOUND_C
@@ -110,13 +101,11 @@ AAX afxNat          AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundD
 AAX afxNat          AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
 AAX afxNat          AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
 
-AAX afxSoundDevice  AfxGetSoundDevice(afxNat sdevIdx);
-
-AAX afxError        AfxRegisterSoundDevices(afxIcd icd, afxNat cnt, afxSoundDeviceInfo const info[], afxSoundDevice devices[]);
-
 ////////////////////////////////////////////////////////////////////////////////
 // SOUND DEVICE                                                               //
 ////////////////////////////////////////////////////////////////////////////////
+
+AAX afxSoundDevice  AfxGetSoundDevice(afxNat sdevIdx);
 
 AAX afxBool         AfxSoundDeviceIsRunning(afxSoundDevice sdev);
 
