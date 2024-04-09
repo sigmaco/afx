@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_QUERY_OPS_H
 #define AFX_QUERY_OPS_H
@@ -24,7 +24,7 @@
 AVX afxCmdId            AfxCmdBeginQuery
 /// Begin a query. After beginning a query, that query is considered active within the command buffer it was called in until that same query is ended.
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxQueryPool        pool, /// the query pool that will manage the results of the query.
     afxNat              queryIdx, /// the index within the query pool that will contain the results.
     afxBool             precise /// specifies the precision of occlusion queries.
@@ -33,7 +33,7 @@ AVX afxCmdId            AfxCmdBeginQuery
 AVX afxCmdId            AfxCmdEndQuery
 /// Ends a query. After ending a query, that query is marked as available.
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxQueryPool        pool, /// the pool that is managing the results of the query.
     afxNat              queryIdx /// the index within the query pool where the result is stored.
 );
@@ -41,7 +41,7 @@ AVX afxCmdId            AfxCmdEndQuery
 AVX afxCmdId            AfxCmdCopyQueryResults
 /// Copy the results of queries in a query pool to a buffer.
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxQueryPool        pool, /// the query pool managing the queries containing the desired results.
     afxNat              baseQuery, /// the initial query index.
     afxNat              queryCnt, /// the number of queries. @baseQuery and @queryCnt together define a range of queries.
@@ -54,7 +54,7 @@ AVX afxCmdId            AfxCmdCopyQueryResults
 AVX afxCmdId            AfxCmdResetQueries
 /// Reset queries in a query pool. When executed on a queue, this command sets the status of query indices [baseQuery, baseQuery + queryCnt - 1] to unavailable.
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxQueryPool        pool, /// the pool managing the queries being reset.
     afxNat              baseQuery, /// the initial query index to reset.
     afxNat              queryCnt /// the number of queries to reset.
@@ -63,7 +63,7 @@ AVX afxCmdId            AfxCmdResetQueries
 AVX afxCmdId            AfxCmdWriteTimestamp
 /// Write a device timestamp into a query object. When AfxCmdWriteTimestamp is submitted to a queue, it defines an execution dependency on commands that were submitted before it, and writes a timestamp to a query pool.
 (
-    afxDrawStream       dscr,
+    afxDrawStream       diob,
     afxQueryPool        pool,
     afxNat              queryIdx, /// the query that will contain the timestamp.
     afxPipelineStage    stage /// the stage of the pipeline.

@@ -89,7 +89,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
         afxResult j = AfxPipeline.RegisterResource(pip, &res);
         AfxPipeline.GetResource(pip, j, &res);
         AfxAssert(i == j);
-        AfxEcho("%d %d %d %d", res.loc, res.binding, i, j);
+        AfxLogEcho("%d %d %d %d", res.loc, res.binding, i, j);
     }
 
     gl->GetProgramiv(gpuHandle, GL_ACTIVE_UNIFORMS, &cnt);
@@ -130,7 +130,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
                 valid = TRUE;
                 break;
             default:
-                AfxError("%X is a unhandled type", type);
+                AfxLogError("%X is a unhandled type", type);
                 valid = FALSE;
                 break;
             }
@@ -147,7 +147,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
                 {
                     AfxAssert(i == j);
                     gl->BindUniform(gpuHandle, );
-                    AfxEcho("%d %d %d %d", res.location, res.binding, i, j);
+                    AfxLogEcho("%d %d %d %d", res.location, res.binding, i, j);
                 }
             }
         }
@@ -202,7 +202,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
     return err;
 }
 
-_SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, afxPipeline pip)
+_SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPipeline pip)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -265,13 +265,13 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
                         gl->CompileShader(shader); _SglThrowErrorOccuried();
                         gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
 
-                        AfxComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
+                        AfxLogComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
 
                         if (compiled == GL_FALSE)
                         {
                             AfxThrowError();
                             gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxError(errStr);
+                            AfxLogError(errStr);
                         }
                         else
                         {
@@ -316,13 +316,13 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
                         gl->CompileShader(shader); _SglThrowErrorOccuried();
                         gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
 
-                        AfxComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
+                        AfxLogComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
 
                         if (compiled == GL_FALSE)
                         {
                             AfxThrowError();
                             gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxError(errStr);
+                            AfxLogError(errStr);
                         }
                         else
                         {
@@ -359,7 +359,7 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
                         {
                             AfxThrowError();
                             gl->GetProgramInfoLog(glHandle, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxError(errStr);
+                            AfxLogError(errStr);
                         }
 
                         // required bind due to issue with Intel Graphics Drivers no allowing retrieve of uniform locations after assembling.
@@ -368,7 +368,7 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
                         bound = TRUE;
 
                         for (afxNat i = 0; i < pip->base.wiringCnt; i++)
-                            if (_SglDpuBindAndResolveLego(dpu, glHandle, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl))
+                            if (_DpuBindAndResolveLego(dpu, glHandle, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl))
                                 AfxThrowError();
 
                         gl->DetachShader(glHandle, tmpShdGlHandles[4]); _SglThrowErrorOccuried();
@@ -397,7 +397,7 @@ _SGL afxError _SglDpuBindAndSyncPip(sglDpuIdd* dpu, afxBool bind, afxBool sync, 
 
                 if (!err)
                 {
-                    AfxEcho("afxPipeline %p hardware-side data instanced.", pip);
+                    AfxLogEcho("afxPipeline %p hardware-side data instanced.", pip);
                     pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
 
 #if 0
@@ -473,8 +473,6 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     afxDrawContext dctx = AfxGetObjectProvider(pip);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     AfxAssert(pip->base.stages);
     AfxDeallocate(pip->base.stages);
@@ -515,9 +513,6 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
     //AfxAssertType(pipb, afxFcc_PIPB);
 
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
     // GRAPHICS STATE SETTING
 
     afxPipelinePrimitiveFlags primFlags = pipb->primFlags;
@@ -547,7 +542,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssert(stageCnt);
     pip->base.stageCnt = 0;
 
-    if (!(pip->base.stages = AfxAllocate(stageCnt, sizeof(pip->base.stages[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(pip->base.stages = AfxAllocate(stageCnt, sizeof(pip->base.stages[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         afxNat shaderCnt = 0;
@@ -581,7 +576,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
             AfxShaderBlueprintBegin(&shdb[shaderCnt], afxShaderStage_FRAGMENT, NIL, NIL, 0, 0, 0);
             AfxLoadGlScript(&shdb[shaderCnt], &pip->base.razr->base.fragShd.uri);
 
-            AfxEcho("%s", &shdb[shaderCnt].codes.bytemap);
+            AfxLogEcho("%s", &shdb[shaderCnt].codes.bytemap);
 
             int a = 1;
 #endif
@@ -616,7 +611,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
 
             pip->base.wiringCnt = 0;
 
-            if (setCnt && !(pip->base.wiring = AfxAllocate(setCnt, sizeof(pip->base.wiring[0]), 0, AfxHint()))) AfxThrowError();
+            if (setCnt && !(pip->base.wiring = AfxAllocate(setCnt, sizeof(pip->base.wiring[0]), 0, AfxHere()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
@@ -759,7 +754,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglPipClsConfig =
+_SGL afxClassConfig const _SglPipMgrCfg =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",

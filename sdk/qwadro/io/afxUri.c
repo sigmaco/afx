@@ -14,13 +14,14 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
 
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/io/afxUri.h"
+#include "qwadro/core/afxSystem.h"
 
 typedef enum
 {
@@ -1506,6 +1507,19 @@ _AFXINL afxError AfxDuplicateUri(afxUri* uri, afxUri const *in)
 }
 
 _AFX afxUri* AfxMakeUri8(afxUri8 *uri, afxUri const* src)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    uri->buf[0] = '\0';
+    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+
+    if (src)
+        AfxCopyUri(&uri->uri, src);
+
+    return &uri->uri;
+}
+
+_AFX afxUri* AfxMakeUri32(afxUri32 *uri, afxUri const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);

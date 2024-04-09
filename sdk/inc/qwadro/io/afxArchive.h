@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 // afxArchive allows you to save a complex network of objects in a permanent
 // binary form (usually disk storage) that persists after those objects are deleted.
@@ -23,6 +23,7 @@
 #define AFX_ARCHIVE_H
 
 #include "qwadro/io/afxFile.h"
+#include "qwadro/mem/afxArray.h"
 
 #ifdef _AFX_CORE_C
 #ifdef _AFX_ARCHIVE_C

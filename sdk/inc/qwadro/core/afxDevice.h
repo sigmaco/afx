@@ -20,62 +20,101 @@
 #include "qwadro/core/afxString.h"
 #include "qwadro/core/afxFixedString.h"
 #include "qwadro/mem/afxArray.h"
+#include "qwadro/io/afxUri.h"
+#include "qwadro/core/afxManifest.h"
 
-typedef enum afxProcessorType
+typedef enum afxDeviceType
 {
-    afxProcessorType_CPU, // CPU with no graphic support --- ex.: Ryzen 7
-    afxProcessorType_GPU, // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
-    afxProcessorType_APU, // combined CPU-GPU --- ex.: AMD A-series
-    afxProcessorType_IGPU, // integrated GPU --- ex.: Intel HD Graphics
-    afxProcessorType_VGPU, // virtual GPU --- ex.: VM/sandboxed instantiation.
-    afxProcessorType_PPU, // physics processing unit --- ex.: Ageia PhysX card
-    afxProcessorType_SPU, // synergistic processing unit
-    afxProcessorType_DSP,
-    afxProcessorType_TOTAL
-} afxProcessorType;
+    afxDeviceType_HID = 1,
+    afxDeviceType_SIM,
+    afxDeviceType_DRAW,
+    afxDeviceType_SOUND,
+    afxDeviceType_TELECOM
+} afxDeviceType;
+
+typedef enum afxDeviceAcceleration
+{
+    afxDeviceAcceleration_CPU   = AFX_BIT_OFFSET(0), // CPU with no graphic support --- ex.: Ryzen 7
+    afxDeviceAcceleration_GPU   = AFX_BIT_OFFSET(1), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
+    afxDeviceAcceleration_APU   = AFX_BIT_OFFSET(2), // combined CPU-GPU --- ex.: AMD A-series
+    afxDeviceAcceleration_IGPU  = AFX_BIT_OFFSET(3), // integrated GPU --- ex.: Intel HD Graphics
+    afxDeviceAcceleration_VGPU  = AFX_BIT_OFFSET(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
+    afxDeviceAcceleration_PPU   = AFX_BIT_OFFSET(5), // physics processing unit --- ex.: Ageia PhysX card
+    afxDeviceAcceleration_SPU   = AFX_BIT_OFFSET(6), // synergistic processing unit
+    afxDeviceAcceleration_DSP   = AFX_BIT_OFFSET(7),
+    afxDeviceAcceleration_TOTAL
+} afxDeviceAcceleration;
 
 typedef enum afxDeviceState
 {
-    // NIL /// The audio device state is unknown or invalid.
-    afxDeviceState_ACTIVE       = AfxGetBitOffset(0), /// The device is active That is, the adapter that connects to the endpoint device is present and enabled.
-    afxDeviceState_DISABLED     = AfxGetBitOffset(1), /// The device is disabled.
-    afxDeviceState_AUSENT       = AfxGetBitOffset(2), /// The device is not present because the adapter that connects to the endpoint device has been removed from the system.
-    afxDeviceState_UNPLUGGED    = AfxGetBitOffset(3), /// The device is unplugged.
+    // NIL /// The device state is unknown or invalid.
+    afxDeviceState_ACTIVE       = AFX_BIT_OFFSET(0), /// The device is active That is, the adapter that connects to the endpoint device is present and enabled.
+    afxDeviceState_DISABLED     = AFX_BIT_OFFSET(1), /// The device is disabled.
+    afxDeviceState_AUSENT       = AFX_BIT_OFFSET(2), /// The device is not present because the adapter that connects to the endpoint device has been removed from the system.
+    afxDeviceState_UNPLUGGED    = AFX_BIT_OFFSET(3), /// The device is unplugged.
     
     afxDeviceState_ALL          = afxDeviceState_ACTIVE | afxDeviceState_DISABLED | afxDeviceState_AUSENT | afxDeviceState_UNPLUGGED, /// Includes devices in all states.
 } afxDeviceState;
 
+AFX_DEFINE_STRUCT(afxDeviceInfo)
+{
+    afxDeviceType       type;
+    afxUri              uri;
+    afxManifest*        manifest;
+    afxResult           (*ioctl)(afxDevice dev, afxNat reqCode, va_list args);
+};
+
 AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
-    afxNat32                    devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
-    afxString128                name; /// The user-friendly name for the device.
-    afxDeviceState              devStateMask; /// Bitmask used to filter the device based on their state.
-    afxBool                     isDefaultDev; /// Identify default device. Always false when not supported.
+    afxNat32            devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
+    afxString128        name; /// The user-friendly name for the device.
+    afxDeviceState      stateMask; /// Bitmask used to filter the device based on their state.
+    afxBool             isDefault; /// Identify default device. Always false when not supported.
 };
 
 #ifdef _AFX_CORE_C
 #ifdef _AFX_DEVICE_C
 AFX_OBJECT(afxDevice)
 {
-    afxChain                classes;
-    afxLinkage              icd;
-    afxString               domain;
-    afxString               name;
+    afxChain            classes;
 
-    afxDeviceState          state;
+    afxString           domain;
+    afxString           name;
 
-    afxBool                 serving;
-    afxArray                threads;
+    afxDeviceType       type;
+  afxDeviceAcceleration accel;
+    afxDeviceState      state;
 
+    afxError            (*proc)(afxDevice,afxThread);
+    afxResult           (*ioctl)(afxDevice,afxNat,va_list);
+
+    afxBool             serving;
+    
+    afxUri32            uri;
+    afxManifest         manifest;
+    afxModule           mdle;
 };
 #endif//_AFX_DEVICE_C
 #endif//_AFX_CORE_C
 
-AFX afxError                AfxUninstallDevice(afxDevice dev);
 
-AFX afxError                AfxEnableDevice(afxDevice dev);
-AFX afxError                AfxDisableDevice(afxDevice dev);
+AFX afxModule           AfxGetDeviceModule(afxDevice dev);
+AFX afxManifest const*  AfxGetDeviceManifest(afxDevice dev);
+AFX afxUri const*       AfxGetDeviceManifestUri(afxDevice dev);
 
-AFX afxError                AfxUpdateDeviceDriver(afxDevice dev);
+AFX void                AfxGetDeviceDriverInfo(afxDevice dev, afxString* name, afxString* desc, afxString* vendor, afxString* website);
+AFX void                AfxGetDeviceDriverVersion(afxDevice dev, afxNat* major, afxNat* minor, afxNat* patch);
+
+AFX afxResult           AfxCallDevice(afxDevice dev, afxNat reqCode, ...);
+
+AFX afxError            AfxDoDeviceService(afxDevice dev);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxDevice           AfxOpenDevice(afxUri const* manifest, ...);
+
+AFX afxBool             AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* device);
+
+AFX afxError            AfxInstallClientDriver(afxDeviceType type, afxUri const* manifest, afxDevice* device);
 
 #endif//AFX_DEVICE_H

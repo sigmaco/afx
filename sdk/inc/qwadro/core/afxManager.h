@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AfxGetBitOffset(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT_OFFSET(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)
@@ -85,7 +85,7 @@ AFX_DEFINE_STRUCT(afxClassConfig)
     afxMmu          mmu;
     afxNat          maxCnt;
     afxNat          size;
-    afxManager*     base;
+    afxManager*     subset;
     afxError        (*ctor)(afxObject obj, afxCookie const* cookie);
     afxError        (*dtor)(afxObject obj);
     afxBool         (*event)(afxObject obj, afxEvent *ev);
@@ -102,14 +102,18 @@ AFX_DEFINE_STRUCT(afxManager)
 {
     afxFcc          fcc; // afxFcc_CLS
     afxFcc          objFcc;
-    afxLinkage      base; // inherit this object.
-    afxChain        deriveds;
+    afxChar         name[32];
+    afxLinkage      host; // the object that installed this type on Qwadro. Usually a system and/or module.
+    afxLinkage      subset; // inherit this object.
+    afxChain        supersets;
     afxNat          level;
     afxNat          levelMask;
 
-    afxLinkage      provider; // the object that installed this type on Qwadro. Usually a system and/or module.
-    afxMmu          mmu; // afxMmu
-    afxNat          siz;
+    afxNat          instCnt; // constructed, not allocated as from pool. We can't rely on pool due to it not being used for static instances.
+    afxNat          maxInstCnt; // 1 == singleton
+    afxPool         pool;
+    afxSlock        poolLock;
+    afxNat          unitsPerPage; // when pool gets empty, the class will try to resizes storage pages to this value.
 
     afxError        (*ctor)(afxObject obj, afxCookie const* cookie); // void to avoid warnings
     afxError        (*dtor)(afxObject obj);
@@ -119,56 +123,43 @@ AFX_DEFINE_STRUCT(afxManager)
     afxBool         (*event)(afxObject obj, afxEvent *ev);
     afxBool         (*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     
-    afxSlock        slock;
-    afxPool         pool;
-    afxNat          nextPreallocCnt; // when pool gets empty, the class will try to resizes storage pages to this value.
+    afxMmu          mmu; // afxMmu
+    afxNat          siz;
 
-    afxChar         name[32];
-
-    afxNat          maxInstCnt;
     afxNat          instBaseSiz;
     void const**    vmt;
     afxString const*vmtNames;
     void*           userData[4];
 };
 
-AFX afxError        AfxSetUpManager(afxManager *cls, afxManager *base, afxChain* provider, afxClassConfig const *spec);
-AFX afxError        AfxCleanUpManager(afxManager *cls);
+AFX afxError        AfxEstablishManager(afxManager* mgr, afxManager *base, afxChain* provider, afxClassConfig const *spec);
+AFX afxError        AfxAbolishManager(afxManager* mgr);
+AFX afxNat          AfxExhaustManager(afxManager* mgr);
 
-AFXINL afxNat       AfxCountObjects(afxManager const* cls);
-AFXINL afxNat       AfxGetObjectSize(afxManager const* cls);
-AFXINL afxNat       AfxGetObjectStrictSize(afxManager const* cls);
+AFXINL afxNat       AfxCountObjects(afxManager const* mgr);
+AFXINL afxNat       AfxGetObjectSize(afxManager const* mgr);
+AFXINL afxNat       AfxGetObjectStrictSize(afxManager const* mgr);
 
-AFXINL afxManager*    AfxGetBaseClass(afxManager const* cls);
-AFXINL void const*  AfxClassGetVmt(afxManager const* cls);
-AFXINL afxObject    AfxGetObjectAt(afxManager const* cls, afxNat32 uniqueId);
+AFXINL afxManager*  AfxGetSubmanager(afxManager const* mgr);
+AFXINL afxObject    AfxGetObject(afxManager const* mgr, afxNat32 uniqueId);
 
-AFXINL afxNat       AfxEnumerateObjects(afxManager const* cls, afxNat first, afxNat cnt, afxObject objects[]);
-AFXINL afxNat       AfxInvokeObjects(afxManager const* cls, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
+AFXINL afxNat       AfxEnumerateObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxObject objects[]);
+AFXINL afxNat       AfxInvokeObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
 
-AFX afxError        _AfxDeallocateObjects(afxManager *cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxAllocateObjects(afxManager *cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxAllocateObjectsAt(afxManager *cls, afxNat base, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxDestructObjects(afxManager *cls, afxNat cnt, afxObject objects[]);
-AFX afxError        _AfxConstructObjects(afxManager *cls, afxNat cnt, afxObject objects[], void** udd);
+AFX afxError        _AfxDeallocateObjects(afxManager* mgr, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxAllocateObjects(afxManager* mgr, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxAllocateObjectsAt(afxManager* mgr, afxNat base, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxDestructObjects(afxManager* mgr, afxNat cnt, afxObject objects[]);
+AFX afxError        _AfxConstructObjects(afxManager* mgr, afxNat cnt, afxObject objects[], void** udd);
 
-AFX void    AfxClassLockInclusive(afxManager *cls);
-AFX void    AfxClassLockExclusive(afxManager *cls);
-
-AFX void    AfxClassUnlockInclusive(afxManager *cls);
-AFX void    AfxClassUnlockExclusive(afxManager *cls);
-
-AFX afxBool AfxClassTryLockInclusive(afxManager *cls);
-AFX afxBool AfxClassTryLockExclusive(afxManager *cls);
+AFX afxResult       AfxCleanUpChainedManagers(afxChain* ch);
+AFX afxResult       AfxExhaustChainedManagers(afxChain* ch);
+AFX afxChain*       _AfxGetOrphanClasses(void);
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
-#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError(AfxHint(), "%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
+#   define AfxAssertClass(cls_, objFcc_)    ((!!((cls_) && ((cls_)->fcc == afxFcc_CLS) && ((cls_)->objFcc == (objFcc_)))) || (AfxThrowError(), AfxLogError("%s\n    %s", AFX_STRINGIFY((var_)), errorMsg[AFXERR_INVALID]), 0))
 #else
 #   define AfxAssertClass(cls_, fcc_) ((void)(err))
 #endif
-
-AFX afxResult _AfxShutdownOrphanClasses(void);
-AFX afxResult _AfxUninstallChainedClasses(afxChain *ch);
-AFX afxChain* _AfxGetOrphanClasses(void);
 
 #endif//AFX_CLASS_H

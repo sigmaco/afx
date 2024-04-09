@@ -21,25 +21,25 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglDpuSwitchFrontFace(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.cwFrontFacing = cmd->value;
 }
 
-_SGL void _SglDpuSetCullMode(sglDpuIdd* dpu, _sglCmdNat const *cmd)
+_SGL void _DpuSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.cullMode = cmd->value;
 }
 
-_SGL void _SglDpuSetPrimitiveTopology(sglDpuIdd* dpu, _sglCmdNat const *cmd)
+_SGL void _DpuSetPrimitiveTopology(sglDpu* dpu, _sglCmdNat const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.primTop = cmd->value;
 }
 
-_SGL void _SglDpuSetViewports(sglDpuIdd* dpu, _sglCmdViewport const *cmd)
+_SGL void _DpuSetViewports(sglDpu* dpu, _sglCmdViewport const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     afxNat first = cmd->first;
@@ -50,7 +50,7 @@ _SGL void _SglDpuSetViewports(sglDpuIdd* dpu, _sglCmdViewport const *cmd)
     {
         afxViewport const* pvp = i ? &cmd->vp_[i] : &cmd->vp0;
         dpu->nextXformState.vps[first + i] = *pvp;
-        dpu->nextViewportUpdMask |= AfxGetBitOffset(first + i);
+        dpu->nextViewportUpdMask |= AFX_BIT_OFFSET(first + i);
     }
 
     dpu->nextViewportUpdCnt = AfxMax(dpu->nextViewportUpdCnt, cnt);
@@ -59,7 +59,7 @@ _SGL void _SglDpuSetViewports(sglDpuIdd* dpu, _sglCmdViewport const *cmd)
         dpu->nextXformState.vpCnt = cnt;
 }
 
-_SGL void _SglDpuBindVertexSources(sglDpuIdd* dpu, _sglCmdVertexSources const *cmd)
+_SGL void _DpuBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cmd)
 {
     /*
         The values taken from elements i of pBuffers and pOffsets replace the current state for the vertex input binding firstBinding + i, for i in[0, bindingCount).
@@ -111,13 +111,13 @@ _SGL void _SglDpuBindVertexSources(sglDpuIdd* dpu, _sglCmdVertexSources const *c
         dpu->nextVinBindings.sources[bindingIdx].offset = offset;
         dpu->nextVinBindings.sources[bindingIdx].range = range;
         dpu->nextVinBindings.sources[bindingIdx].stride = stride;
-        dpu->nextVinBindingsMask |= AfxGetBitOffset(bindingIdx);
+        dpu->nextVinBindingsMask |= AFX_BIT_OFFSET(bindingIdx);
     }
     dpu->nextVinBindingsCnt = AfxMax(dpu->nextVinBindingsCnt, cnt);
 }
 
 #if 0
-_SGL void _SglDpuResetVertexStreams(sglDpuIdd* dpu, _sglCmdVertexStreams const *cmd)
+_SGL void _DpuResetVertexStreams(sglDpu* dpu, _sglCmdVertexStreams const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -137,12 +137,12 @@ _SGL void _SglDpuResetVertexStreams(sglDpuIdd* dpu, _sglCmdVertexStreams const *
         dpu->nextVertexInput.streams[srcIdx].srcIdx = srcIdx;
         dpu->nextVertexInput.streams[srcIdx].stride = stride;
         dpu->nextVertexInput.streams[srcIdx].instance = instance;
-        dpu->nextVtxInStreamUpdMask |= AfxGetBitOffset(srcIdx);
+        dpu->nextVtxInStreamUpdMask |= AFX_BIT_OFFSET(srcIdx);
     }
     dpu->nextVtxInStreamUpdCnt = AfxMax(dpu->nextVtxInStreamUpdCnt, cnt);
 }
 
-_SGL void _SglDpuResetVertexAttributes(sglDpuIdd* dpu, _sglCmdVertexAttributes const *cmd)
+_SGL void _DpuResetVertexAttributes(sglDpu* dpu, _sglCmdVertexAttributes const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -163,13 +163,13 @@ _SGL void _SglDpuResetVertexAttributes(sglDpuIdd* dpu, _sglCmdVertexAttributes c
         dpu->nextVertexInput.attrs[attrIdx].fmt = fmt;
         dpu->nextVertexInput.attrs[attrIdx].srcIdx = srcIdx;
         dpu->nextVertexInput.attrs[attrIdx].offset = offset;
-        dpu->nextVtxInAttribUpdMask |= AfxGetBitOffset(attrIdx);
+        dpu->nextVtxInAttribUpdMask |= AFX_BIT_OFFSET(attrIdx);
     }
     dpu->nextVtxInAttribUpdCnt = AfxMax(dpu->nextVtxInAttribUpdCnt, cnt);
 }
 #endif
 
-_SGL void _SglDpuBindIndexSource(sglDpuIdd* dpu, _sglCmdBufferRange const *cmd)
+_SGL void _DpuBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextVinBindings.idxSrcBuf = cmd->buf;
@@ -179,7 +179,7 @@ _SGL void _SglDpuBindIndexSource(sglDpuIdd* dpu, _sglCmdBufferRange const *cmd)
     dpu->nextVinBindings.iboUpdReq = TRUE;
 }
 
-_SGL void _SglDpuBindVertexInput(sglDpuIdd* dpu, _sglCmdVertexInput *cmd)
+_SGL void _DpuBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextVin = cmd->vin;
@@ -191,7 +191,7 @@ _SGL void _SglDpuBindVertexInput(sglDpuIdd* dpu, _sglCmdVertexInput *cmd)
     }
 }
 
-_SGL void SglFlushXformStateChanges(sglDpuIdd* dpu)
+_SGL void SglFlushXformStateChanges(sglDpu* dpu)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -406,28 +406,28 @@ _SGL void SglFlushXformStateChanges(sglDpuIdd* dpu)
 #endif
 }
 
-_SGL afxCmdId _SglEncodeCmdBindVertexInput(afxDrawStream dscr, afxVertexInput vin)
+_SGL afxCmdId _SglEncodeCmdBindVertexInput(afxDrawStream diob, afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
     
-    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->vin = vin;
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdBindVertexSources(afxDrawStream dscr, afxNat baseSlot, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
+_SGL afxCmdId _SglEncodeCmdBindVertexSources(afxDrawStream diob, afxNat baseSlot, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
     afxNat extraVisCnt = slotCnt;
 
     if (extraVisCnt)
         --extraVisCnt;
 
-    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (extraVisCnt * sizeof(cmd->source_[0])));
+    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVisCnt * sizeof(cmd->source_[0])));
     AfxAssert(cmd);
     cmd->first = baseSlot;
     cmd->cnt = slotCnt;
@@ -456,16 +456,16 @@ _SGL afxCmdId _SglEncodeCmdBindVertexSources(afxDrawStream dscr, afxNat baseSlot
         }
     }
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.BindVertexSources) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindVertexSources) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 #if 0
-_SGL afxCmdId _SglEncodeCmdResetVertexStreams(afxDrawStream dscr, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[])
+_SGL afxCmdId _SglEncodeCmdResetVertexStreams(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdVertexStreams *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdVertexStreams *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->cnt = cnt;
 
@@ -476,15 +476,15 @@ _SGL afxCmdId _SglEncodeCmdResetVertexStreams(afxDrawStream dscr, afxNat cnt, af
         cmd->instance[i] = instance ? instance[i] : FALSE;
     }
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.ResetVertexStreams) / sizeof(void*), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetVertexStreams) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdResetVertexAttributes(afxDrawStream dscr, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[])
+_SGL afxCmdId _SglEncodeCmdResetVertexAttributes(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdVertexAttributes *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdVertexAttributes *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->cnt = cnt;
 
@@ -497,16 +497,16 @@ _SGL afxCmdId _SglEncodeCmdResetVertexAttributes(afxDrawStream dscr, afxNat cnt,
         cmd->offset[i] = offset ? offset[i] : 0;
     }
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.ResetVertexAttributes) / sizeof(void*), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetVertexAttributes) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 #endif
 
-_SGL afxCmdId _SglEncodeCmdBindIndexSource(afxDrawStream dscr, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
+_SGL afxCmdId _SglEncodeCmdBindIndexSource(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
 
     cmd->offset = offset;
@@ -519,60 +519,60 @@ _SGL afxCmdId _SglEncodeCmdBindIndexSource(afxDrawStream dscr, afxBuffer buf, af
         AfxAssertRange(AfxGetBufferCapacity(cmd->buf), cmd->offset, cmd->range);
     }
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.BindIndexSource) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindIndexSource) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 // Fixed-function vertex post-processing
 
-_SGL afxCmdId _SglEncodeCmdSetPrimitiveTopology(afxDrawStream dscr, afxPrimTopology topology)
+_SGL afxCmdId _SglEncodeCmdSetPrimitiveTopology(afxDrawStream diob, afxPrimTopology topology)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdNat *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = topology;
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdSwitchFrontFace(afxDrawStream dscr, afxBool cw)
+_SGL afxCmdId _SglEncodeCmdSwitchFrontFace(afxDrawStream diob, afxBool cw)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = cw;
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdSetCullMode(afxDrawStream dscr, afxCullMode mode)
+_SGL afxCmdId _SglEncodeCmdSetCullMode(afxDrawStream diob, afxCullMode mode)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdNat *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->value = mode;
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 // Viewports, synthesis areas and scissors.
 
-_SGL afxCmdId _SglEncodeCmdReadjustViewports(afxDrawStream dscr, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
+_SGL afxCmdId _SglEncodeCmdReadjustViewports(afxDrawStream diob, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
     afxNat extraVpCnt = cnt;
 
     if (extraVpCnt)
         --extraVpCnt;
 
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
+    _sglCmdViewport *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
@@ -582,20 +582,20 @@ _SGL afxCmdId _SglEncodeCmdReadjustViewports(afxDrawStream dscr, afxNat32 first,
     for (afxNat i = 0; i < extraVpCnt; i++)
         cmd->vp_[i] = vp[1 + i];
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.ReadjustViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ReadjustViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdResetViewports(afxDrawStream dscr, afxNat32 cnt, afxViewport const vp[])
+_SGL afxCmdId _SglEncodeCmdResetViewports(afxDrawStream diob, afxNat32 cnt, afxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(dscr->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
     afxNat extraVpCnt = cnt;
 
     if (extraVpCnt)
         --extraVpCnt;
 
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
+    _sglCmdViewport *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
     AfxAssert(cmd);
     cmd->first = 0;
     cmd->cnt = cnt;
@@ -605,7 +605,7 @@ _SGL afxCmdId _SglEncodeCmdResetViewports(afxDrawStream dscr, afxNat32 cnt, afxV
     for (afxNat i = 0; i < extraVpCnt; i++)
         cmd->vp_[i] = vp[1 + i];
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, Transformation.ResetViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 _SGL afxCmdTransformation const _SglEncodeCmdTransformationVmt =

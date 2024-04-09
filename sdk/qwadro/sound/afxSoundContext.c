@@ -45,7 +45,6 @@ _AAX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
 
 _AAX afxError AfxAcquireSoundContexts(afxNat sdevId, afxNat cnt, afxSoundContextConfig const config[], afxSoundContext contexts[])
 {
-    AfxEntry("cnt=%u,config=%p", cnt, config);
     afxError err = AFX_ERR_NONE;
     afxSoundDevice sdev;
 

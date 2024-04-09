@@ -32,7 +32,8 @@
 
 // Shape is the form of an object or its external boundary, outline, or external surface, as opposed to other properties such as color, texture or material type.
 
-#include "../math/afxMathDefs.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/sound/afxSoundSystem.h"
 
 #ifndef __e2sim__
 #   ifdef _DEBUG

@@ -78,11 +78,11 @@ _AKX afxError AfxAcquirePoseBuffers(void *sim, afxNat cnt, afxNat const artCnt[]
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        wp[i] = AfxAllocate(1, sizeof(*wp[0]), 0, AfxHint());
+        wp[i] = AfxAllocate(1, sizeof(*wp[0]), 0, AfxHere());
         AfxAssert(wp[i]);
         wp[i]->matCnt = artCnt[i];
-        wp[i]->world = wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->world[0]), 0, AfxHint()) : NIL;
-        wp[i]->composite = (excludeComposite && !excludeComposite[i]) && wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->composite[0]), 0, AfxHint()) : NIL;
+        wp[i]->world = wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->world[0]), 0, AfxHere()) : NIL;
+        wp[i]->composite = (excludeComposite && !excludeComposite[i]) && wp[i]->matCnt ? AfxAllocate(wp[i]->matCnt, sizeof(wp[i]->composite[0]), 0, AfxHere()) : NIL;
     }
     return err;
 }

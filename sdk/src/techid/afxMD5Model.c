@@ -194,7 +194,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
     fp = fopen(filename, "rb");
     if (!fp)
     {
-        AfxError("Error: couldn't open \"%s\"!\n", filename);
+        AfxLogError("Error: couldn't open \"%s\"!\n", filename);
         return 0;
     }
 
@@ -208,7 +208,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
             if (version != 10)
             {
                 /* Bad version */
-                AfxError("Error: bad model version\n");
+                AfxLogError("Error: bad model version\n");
                 fclose(fp);
                 return 0;
             }
@@ -218,7 +218,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
             if (mdl->num_joints > 0)
             {
                 /* Allocate memory for base skeleton joints */
-                mdl->baseSkel = AfxAllocate(mdl->num_joints, sizeof(struct md5_joint_t), 0, AfxHint());
+                mdl->baseSkel = AfxAllocate(mdl->num_joints, sizeof(struct md5_joint_t), 0, AfxHere());
             }
         }
         else if (sscanf(buff, " numMeshes %d", &mdl->num_meshes) == 1)
@@ -226,7 +226,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
             if (mdl->num_meshes > 0)
             {
                 /* Allocate memory for meshes */
-                mdl->meshes = AfxAllocate(mdl->num_meshes, sizeof(struct md5_mesh_t), 0, AfxHint());
+                mdl->meshes = AfxAllocate(mdl->num_meshes, sizeof(struct md5_mesh_t), 0, AfxHere());
             }
         }
         else if (strncmp(buff, "joints {", 8) == 0)
@@ -285,7 +285,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
                     if (mesh->num_verts > 0)
                     {
                         /* Allocate memory for vertices */
-                        mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(struct md5_vertex_t), 0, AfxHint());
+                        mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(struct md5_vertex_t), 0, AfxHere());
                     }
 
                     //if (mesh->num_verts > max_verts)
@@ -296,7 +296,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
                     if (mesh->num_tris > 0)
                     {
                         /* Allocate memory for triangles */
-                        mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(struct md5_triangle_t), 0, AfxHint());
+                        mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(struct md5_triangle_t), 0, AfxHere());
                     }
 
                     //if (mesh->num_tris > max_tris)
@@ -307,7 +307,7 @@ int ReadMD5Model(const char *filename, struct md5_model_t *mdl)
                     if (mesh->num_weights > 0)
                     {
                         /* Allocate memory for vertex weights */
-                        mesh->weights = AfxAllocate(mesh->num_weights, sizeof(struct md5_weight_t), 0, AfxHint());
+                        mesh->weights = AfxAllocate(mesh->num_weights, sizeof(struct md5_weight_t), 0, AfxHere());
                     }
                 }
                 else if (sscanf(buff, " vert %d ( %f %f ) %d %d", &vert_index,
@@ -526,7 +526,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
 
             while (!feof(fp) && !err)
             {
-                //AfxEcho(buff);
+                //AfxLogEcho(buff);
                 /* Read whole line */
                 fgets(buff, sizeof(buff), fp);
 
@@ -535,7 +535,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                     if (version != 10)
                     {
                         /* Bad version */
-                        AfxError("Error: bad model version\n");
+                        AfxLogError("Error: bad model version\n");
                         fclose(fp);
                         return 0;
                     }
@@ -545,7 +545,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                     if (md5.num_joints > 0)
                     {
                         /* Allocate memory for base skeleton joints */
-                        md5.baseSkel = AfxAllocate(md5.num_joints, sizeof(struct md5_joint_t), 0, AfxHint());
+                        md5.baseSkel = AfxAllocate(md5.num_joints, sizeof(struct md5_joint_t), 0, AfxHere());
                     }
                 }
                 else if (sscanf(buff, " numMeshes %d", &md5.num_meshes) == 1)
@@ -553,7 +553,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                     if (md5.num_meshes > 0)
                     {
                         /* Allocate memory for meshes */
-                        md5.meshes = AfxAllocate(md5.num_meshes, sizeof(struct md5_mesh_t), 0, AfxHint());
+                        md5.meshes = AfxAllocate(md5.num_meshes, sizeof(struct md5_mesh_t), 0, AfxHere());
                     }
                 }
                 else if (strncmp(buff, "joints {", 8) == 0)
@@ -612,7 +612,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                             if (mesh->num_verts > 0)
                             {
                                 /* Allocate memory for vertices */
-                                mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(mesh->vertices[0]), 0, AfxHint());
+                                mesh->vertices = AfxAllocate(mesh->num_verts, sizeof(mesh->vertices[0]), 0, AfxHere());
                             }
 
                             //if (mesh->num_verts > max_verts)
@@ -623,7 +623,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                             if (mesh->num_tris > 0)
                             {
                                 /* Allocate memory for triangles */
-                                mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(mesh->triangles[0]), 0, AfxHint());
+                                mesh->triangles = AfxAllocate(mesh->num_tris, sizeof(mesh->triangles[0]), 0, AfxHere());
                             }
 
                             //if (mesh->num_tris > max_tris)
@@ -634,7 +634,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                             if (mesh->num_weights > 0)
                             {
                                 /* Allocate memory for vertex weights */
-                                mesh->weights = AfxAllocate(mesh->num_weights, sizeof(mesh->weights[0]), 0, AfxHint());
+                                mesh->weights = AfxAllocate(mesh->num_weights, sizeof(mesh->weights[0]), 0, AfxHere());
                             }
                         }
                         else if (sscanf(buff, " vert %d ( %f %f ) %d %d", &vert_index,
@@ -769,7 +769,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             afxModelBlueprint mdlb = { 0 };
             mdlb.meshes = meshes.data;
             mdlb.skl = skl;
-            mdlb.mshCnt = md5.num_meshes;
+            mdlb.rigCnt = md5.num_meshes;
             AfxResetTransform(&mdlb.displacement);
             AfxMakeString32(&mdlb.id, AfxGetUriString(&nameUri));
             mdlb.strb = strb;

@@ -16,11 +16,8 @@
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/afxDrawInput.h"
+#include "qwadro/draw/dev/afxDrawInput.h"
 
-AFX afxClassConfig const _AfxCamClsConfig;
-AFX afxClassConfig const _AfxVbufClsConfig;
-//AFX afxClassConfig const _AfxIbufClsConfig;
 
 _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 {
@@ -29,13 +26,13 @@ _SGL afxError _SglDinFreeAllBuffers(afxDrawInput din)
 
     //AfxEnterSlockExclusive(&din->scriptChainMutex);
 
-    for (afxNat i = 0; i < din->base.scripts.cnt; i++)
+    for (afxNat i = 0; i < din->scripts.cnt; i++)
     {
-        afxDrawStream* pdscr = AfxGetArrayUnit(&din->base.scripts, i);
+        afxDrawStream* pdscr = AfxGetArrayUnit(&din->scripts, i);
 
         if (*pdscr)
         {
-            AfxAssertObjects(1, pdscr, afxFcc_DSCR);
+            AfxAssertObjects(1, pdscr, afxFcc_DIOB);
             AfxReleaseObjects(1, (void**)pdscr);
             *pdscr = NIL;
         }
@@ -64,11 +61,11 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
     for (;;)
     {
         idx = (idx + 1) % dctx->base.openPorts[portIdx].queueCnt;
-        afxDrawQueue dque = dctx->base.openPorts[portIdx].queues[idx];
+        afxDrawBridge ddge = dctx->base.openPorts[portIdx].queues[idx];
 
-        if (dque)
+        if (ddge)
         {
-            AfxAssertObjects(1, &dque, afxFcc_DQUE);
+            AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
             //AfxAssert(!surf->swapchain.chain);
             *queIdx = idx;
@@ -90,82 +87,56 @@ _SGL afxError AfxRequestNextDrawQueue(afxDrawContext dctx, afxNat portIdx, afxTi
 }
 #endif
 
-_SGL afxError _SglDinDtor(afxDrawInput din)
+_SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNat cnt, afxDrawInput inputs[])
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(inputs);
+    AfxAssert(cnt);
 
-    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxLockMutex(&ddev->idd->ioConMtx);
 
-    AfxDisconnectDrawInput(din);
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxDrawInput din = inputs[i];
+        AfxAssertObjects(1, &din, afxFcc_DIN);
+        afxDrawContext from;
 
-    // avoid draw thread entrance
+        if (AfxGetDrawInputContext(din, &from))
+        {
+            AfxAssertObjects(1, &from, afxFcc_DCTX);
+            AfxAssert(ddev == AfxGetDrawContextDevice(from));
 
-    //AfxDiscardAllDrawInputSubmissions(din);
-    //AfxYieldThreading();
-    //while (!AfxTryEnterSlockExclusive(&din->prefetchSlock)) AfxYieldThreading();
+            afxDrawInput din2;
+            AfxIterateLinkageB2F(AFX_OBJECT(afxDrawInput), din2, &from->base.inputs, dctx)
+            {
+                AfxAssertObjects(1, &din2, afxFcc_DIN);
 
-    //AfxReleaseSlock(&din->prefetchSlock);
+                if (din2 == din)
+                {
+                    AfxPopLinkage(&din->dctx);
+                    _SglDinFreeAllBuffers(din);
+                    AfxReleaseObjects(1, (void*[]) { from });
+                    break;
+                }
+            }
+        }
 
-    _AfxUninstallChainedClasses(&din->base.classes);
+        if (dctx)
+        {
+            AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+            AfxAssert(ddev == AfxGetDrawContextDevice(dctx));
+
+            AfxReacquireObjects(1, (void*[]) { dctx });
+            AfxPushLinkage(&din->dctx, &dctx->base.inputs);
+
+
+            din->cachedClipCfg = dctx->base.clipCfg;
+        }
+    }
+
+    AfxUnlockMutex(&ddev->idd->ioConMtx);
 
     return err;
 }
-
-_SGL afxError _SglDinCtor(afxDrawInput din, afxCookie const *cookie)
-{
-    //AfxEntry("din=%p,uri=%.*s", din, endpoint ? AfxPushString(AfxGetUriString(endpoint)) : &AFX_STR_EMPTY);
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-
-    afxDrawDevice ddev = cookie->udd[0];
-    afxDrawInputConfig const *config = ((afxDrawInputConfig const *)cookie->udd[1]) + cookie->no;
-
-    din->base.dctx = NIL;
-
-    afxMmu mmu = AfxGetDrawSystemMmu();
-    din->base.mmu = mmu;
-
-    din->base.scripts;
-    AfxAllocateArray(&din->base.scripts, 32, sizeof(afxDrawStream), NIL);
-    din->base.minScriptReserve = 2;
-
-    afxNat defStreamSiz = 32000000; // 32MB (I think it is the total of RAM in PlayStation 2)
-
-    din->base.minIdxBufSiz = defStreamSiz / 4;
-    din->base.maxIdxBufSiz = 0;
-    din->base.minVtxBufSiz = defStreamSiz - din->base.minIdxBufSiz;
-    din->base.maxVtxBufSiz = 0;
-
-    if (config && config->udd)
-        din->base.udd = config->udd;
-
-    din->base.procCb = config ? config->proc : NIL;
-    
-    afxChain *classes = &din->base.classes;
-    AfxSetUpChain(classes, (void*)din);
-
-    afxClassConfig tmpClsConf;
-
-    tmpClsConf = _AfxVbufClsConfig;
-    tmpClsConf.mmu = mmu;
-    AfxSetUpManager(&din->base.vbuffers, NIL, classes, &tmpClsConf);
-
-    tmpClsConf = _AfxCamClsConfig;
-    tmpClsConf.mmu = mmu;
-    AfxSetUpManager(&din->base.cameras, NIL, classes, &tmpClsConf);
-
-    din->base.cachedClipCfg = ddev->clipCfg;
-
-    return err;
-}
-
-_SGL afxClassConfig _SglDinClsConfig =
-{
-    .fcc = afxFcc_DIN,
-    .name = "Draw Input",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxDrawInput)),
-    .mmu = NIL,
-    .ctor = (void*)_SglDinCtor,
-    .dtor = (void*)_SglDinDtor
-};

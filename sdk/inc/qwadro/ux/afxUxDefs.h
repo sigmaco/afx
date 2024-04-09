@@ -19,7 +19,8 @@
 #ifndef AFX_UX_DEFS_H
 #define AFX_UX_DEFS_H
 
-#include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/sound/afxSoundSystem.h"
 
 #ifndef __e2ux__
 #   ifdef _DEBUG

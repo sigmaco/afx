@@ -23,6 +23,9 @@ typedef enum afxEventId
 {
     AFX_EVENT_NONE,
 
+    afxThreadEvent_RUN = 1,
+    afxThreadEvent_QUIT,
+
     AFX_EVENT_OBJ_DESTROYED, // before deletion
     AFX_EVENT_OBJ_RENAMED, // after rename
 
@@ -61,49 +64,21 @@ typedef enum afxEventId
 } afxEventId;
 
 AFX_DECLARE_STRUCT(afxEvent);
-//AFX_DECLARE_STRUCT(afxHandle);
 
 AFX_DEFINE_STRUCT(afxEvent)
 {
     _AFX_DBG_FCC;
     afxEventId      id;
     afxBool         posted, accepted;
-    union
-    {
-        void   *receiver;
-        void   *obj;
-    };
-    void            *udd[4];
+    void*           udd[4];
 };
 
-AFXINL void AfxEventDeploy(afxEvent* ev, afxEventId type, void *receiver, void *udd)
+AFX_DEFINE_STRUCT(afxPostedEvent)
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(ev);
-#if _AFX_DEBUG
-    ev->fcc = afxFcc_EVNT;
-#endif
-    ev->id = type;
-    ev->posted = FALSE;
-    ev->accepted = FALSE;
-    ev->receiver = receiver;
-    ev->udd[0] = udd;
-    
-}
-
-// Sets the accept flag of the event object, the equivalent of calling setAccepted(true).
-// Setting the accept parameter indicates that the event receiver wants the event. Unwanted events might be propagated to the parent widget.
-
-AFXINL void AfxAcceptEvent(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, afxFcc_EVNT); ev->accepted = TRUE; }
-
-// Clears the accept flag parameter of the event object, the equivalent of calling setAccepted(false).
-// Clearing the accept parameter indicates that the event receiver does not want the event. Unwanted events might be propagated to the parent widget.
-
-AFXINL void AfxIgnoreEvent(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, afxFcc_EVNT); ev->accepted = FALSE; }
-
-// This property holds the accept flag of the event object.
-// Setting the accept parameter indicates that the event receiver wants the event. Unwanted events might be propagated to the parent widget. By default, isAccepted() is set to true, but don't rely on this as subclasses may choose to clear it in their constructor.
-
-AFXINL afxBool AfxEventIsAccepted(afxEvent* ev) { afxError err = AFX_ERR_NONE; AfxAssertType(ev, afxFcc_EVNT); return ev->accepted; }
+    afxObject       receiver;
+    afxNat          priority;
+    afxEvent        ev;
+    afxByte         data[];
+};
 
 #endif//AFX_EVENT_H

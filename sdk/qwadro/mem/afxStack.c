@@ -14,14 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/mem/afxStack.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxAllocationBlock* _AfxStackAllocateBlock(afxStack *stck)
 {
     afxNat v1 = stck->unitSiz * stck->unitsPerBlock;
-    afxAllocationBlock *block = AfxAllocate(1, sizeof(*block), 0, AfxHint());
-    block->base = AfxAllocate(1, v1, 0, AfxHint());
+    afxAllocationBlock *block = AfxAllocate(1, sizeof(*block), 0, AfxHere());
+    block->base = AfxAllocate(1, v1, 0, AfxHere());
 
     {
         block->usedUnitCnt = 0;
@@ -80,7 +79,7 @@ _AFX char AfxPushStackUnits(afxStack *stck, afxNat cnt, afxNat *firstIdx, void c
     if (initialVal)
     {
         void *v8 = AfxGetStackUnit(stck, cnt);
-        AfxCopy(1, stck->unitSiz, v7, v8);
+        AfxCopy2(1, stck->unitSiz, v7, v8);
     }
 
     afxNat v9 = v4 - 1;
@@ -98,7 +97,7 @@ _AFX char AfxPushStackUnits(afxStack *stck, afxNat cnt, afxNat *firstIdx, void c
         if (!v10)
             break;
 
-        AfxCopy(1, stck->unitSiz, v7, v10);
+        AfxCopy2(1, stck->unitSiz, v7, v10);
 
         if (!v9)
             return 1;
@@ -160,7 +159,7 @@ _AFX void AfxDumpStackElement(afxStack *stck, afxNat idx, void *dst)
     if (v2)
     {
         v3 = v2[idx / stck->unitsPerBlock];
-        AfxCopy(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
+        AfxCopy2(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
         return;
     }
 
@@ -168,14 +167,14 @@ _AFX void AfxDumpStackElement(afxStack *stck, afxNat idx, void *dst)
 
     if (v3->firstIdx <= idx)
     {
-        AfxCopy(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
+        AfxCopy2(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
         return;
     }
 
     do v3 = v3->prev;
     while (v3->firstIdx > idx);
 
-    AfxCopy(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
+    AfxCopy2(1, stck->unitSiz, &v3->base[stck->unitSiz * (idx - v3->firstIdx)], dst);
 }
 
 _AFX void AfxDumpStackElements(afxStack *stck, afxNat first, afxNat cnt, void *dst)
@@ -186,7 +185,7 @@ _AFX void AfxDumpStackElements(afxStack *stck, afxNat first, afxNat cnt, void *d
     if (v2)
     {
         v3 = v2[first / stck->unitsPerBlock];
-        AfxCopy(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
+        AfxCopy2(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
         return;
     }
 
@@ -194,7 +193,7 @@ _AFX void AfxDumpStackElements(afxStack *stck, afxNat first, afxNat cnt, void *d
 
     if (v3->firstIdx <= first)
     {
-        AfxCopy(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
+        AfxCopy2(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
         return;
     }
 
@@ -202,7 +201,7 @@ _AFX void AfxDumpStackElements(afxStack *stck, afxNat first, afxNat cnt, void *d
         v3 = v3->prev;
     while (v3->firstIdx > first);
 
-    AfxCopy(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
+    AfxCopy2(cnt, stck->unitSiz, &v3->base[stck->unitSiz * (first - v3->firstIdx)], dst);
 }
 
 _AFX void AfxUpdateStackElement(afxStack *stck, afxNat idx, void const* src)
@@ -213,7 +212,7 @@ _AFX void AfxUpdateStackElement(afxStack *stck, afxNat idx, void const* src)
     if (v2)
     {
         v3 = v2[idx / stck->unitsPerBlock];
-        AfxCopy(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
+        AfxCopy2(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
         return;
     }
 
@@ -221,7 +220,7 @@ _AFX void AfxUpdateStackElement(afxStack *stck, afxNat idx, void const* src)
 
     if (v3->firstIdx <= idx)
     {
-        AfxCopy(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
+        AfxCopy2(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
         return;
     }
 
@@ -229,7 +228,7 @@ _AFX void AfxUpdateStackElement(afxStack *stck, afxNat idx, void const* src)
         v3 = v3->prev;
     while (v3->firstIdx > idx);
 
-    AfxCopy(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
+    AfxCopy2(1, stck->unitSiz, src, &v3->base[stck->unitSiz * (idx - v3->firstIdx)]);
 }
 
 _AFX void AfxUpdateStackElements(afxStack *stck, afxNat first, afxNat cnt, void const* src)
@@ -240,7 +239,7 @@ _AFX void AfxUpdateStackElements(afxStack *stck, afxNat first, afxNat cnt, void 
     if (v2)
     {
         v3 = v2[first / stck->unitsPerBlock];
-        AfxCopy(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
+        AfxCopy2(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
         return;
     }
 
@@ -248,7 +247,7 @@ _AFX void AfxUpdateStackElements(afxStack *stck, afxNat first, afxNat cnt, void 
 
     if (v3->firstIdx <= first)
     {
-        AfxCopy(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
+        AfxCopy2(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
         return;
     }
 
@@ -256,7 +255,7 @@ _AFX void AfxUpdateStackElements(afxStack *stck, afxNat first, afxNat cnt, void 
         v3 = v3->prev;
     while (v3->firstIdx > first);
 
-    AfxCopy(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
+    AfxCopy2(cnt, stck->unitSiz, src, &v3->base[stck->unitSiz * (first - v3->firstIdx)]);
 }
 
 _AFX void AfxPopStackUnits(afxStack *stck, afxNat cnt)
@@ -338,8 +337,8 @@ _AFX void AfxAllocatePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerB
     stck->lastBlock = NIL;
     stck->activeBlocks = 0;
     stck->maxActiveBlocks = v4;
-    afxAllocationBlock**v5 = AfxAllocate(v4, sizeof(afxAllocationBlock*), 0, AfxHint());
+    afxAllocationBlock**v5 = AfxAllocate(v4, sizeof(afxAllocationBlock*), 0, AfxHere());
     afxNat v6 = sizeof(afxAllocationBlock*) * stck->maxActiveBlocks;
     stck->blockDir = v5;
-    AfxZero(1, v6, v5);
+    AfxZero2(1, v6, v5);
 }

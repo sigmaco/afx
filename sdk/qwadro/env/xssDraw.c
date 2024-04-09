@@ -1,66 +1,65 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#include "qwadro/env/afxEnvironment.h"
+#include "qwadro/env/afxShell.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/../_dep/luna.h"
 
 // CAM /////////////////////////////////////////////////////////////////////////
 
-void _XsCamReset(afxEnvironment env)
+void _XsCamReset(afxShell sh)
 {
-    afxCamera cam = XssPullInstance(env, 0);
+    afxCamera cam = XssPullInstance(sh, 0);
     AfxResetCamera(cam);
 }
 
-void _XsCamApplyMotion(afxEnvironment env)
+void _XsCamApplyMotion(afxShell sh)
 {
-    afxCamera cam = XssPullInstance(env, 0);
+    afxCamera cam = XssPullInstance(sh, 0);
     afxV3d v;
-    XssPullReal3(env, 1, v);
+    XssPullReal3(sh, 1, v);
     AfxApplyCameraMotion(cam, v);
 }
 
-void _XsCamApplyOrientation(afxEnvironment env)
+void _XsCamApplyOrientation(afxShell sh)
 {
-    afxCamera cam = XssPullInstance(env, 0);
+    afxCamera cam = XssPullInstance(sh, 0);
     afxV3d v;
-    XssPullReal3(env, 1, v);
+    XssPullReal3(sh, 1, v);
     AfxApplyCameraElevAzimRoll(cam, v);
 }
 
-void _XsCamApplyOffset(afxEnvironment env)
+void _XsCamApplyOffset(afxShell sh)
 {
-    afxCamera cam = XssPullInstance(env, 0);
+    afxCamera cam = XssPullInstance(sh, 0);
     afxV3d v;
-    XssPullReal3(env, 1, v);
+    XssPullReal3(sh, 1, v);
     AfxApplyCameraOffset(cam, v);
 }
 
-void _XsCamApplyDistance(afxEnvironment env)
+void _XsCamApplyDistance(afxShell sh)
 {
-    afxCamera cam = XssPullInstance(env, 0);
-    AfxApplyCameraDistance(cam, XssPullReal(env, 1));
+    afxCamera cam = XssPullInstance(sh, 0);
+    AfxApplyCameraDistance(cam, XssPullReal(sh, 1));
 }
 
-void _XsCamGet(afxEnvironment env)
+void _XsCamGet(afxShell sh)
 {
-    afxNat id = XssPullNat(env, 1);
-    afxDrawInput din = XssPullInstance(env, 1);
-    afxCamera cam = AfxGetObjectAt(AfxGetCameraClass(din), id);
-    XssPushInstance(env, 0, cam);
+    afxNat id = XssPullNat(sh, 1);
+    afxCamera cam = AfxGetObject(AfxGetCameraClass(), id);
+    XssPushInstance(sh, 0, cam);
 }
 
-void _XsCamAcquire(afxEnvironment env)
+void _XsCamAcquire(afxShell sh)
 {
     afxUri uri;
-    afxDrawInput din = XssPullInstance(env, 1);
+    afxDrawInput din = XssPullInstance(sh, 1);
     afxV3d v;
-    XssPullReal3(env, 2, v);
+    XssPullReal3(sh, 2, v);
     afxCamera cam;
     AfxAcquireCameras(din, 1, &cam);
     AfxApplyCameraMotion(cam, v);
-    XssPushInstance(env, 0, cam);
+    XssPushInstance(sh, 0, cam);
 }
 
 afxString const camVmtNames[] =
@@ -111,7 +110,7 @@ const ffiSym[] =
     }
 };
 
-_AVX afxBool GetFfiClass(afxEnvironment env, afxString const* class, LunaForeignClassMethods* methods)
+_AVX afxBool GetFfiClass(afxShell sh, afxString const* class, LunaForeignClassMethods* methods)
 {
     afxBool rslt = FALSE;
     afxNat clsCnt = AFX_COUNTOF(ffiClasses);
@@ -129,7 +128,7 @@ _AVX afxBool GetFfiClass(afxEnvironment env, afxString const* class, LunaForeign
     return rslt;
 }
 
-_AVX void* GetFfiMethod(afxEnvironment env, afxString const* class, afxString const* signature, afxBool firm)
+_AVX void* GetFfiMethod(afxShell sh, afxString const* class, afxString const* signature, afxBool firm)
 {
     void* sym = NIL;
     afxNat clsCnt = AFX_COUNTOF(ffiClasses);

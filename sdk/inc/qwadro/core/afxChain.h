@@ -45,7 +45,7 @@ struct afxChain
         void*       holder;
         afxFcc*     holderFcc;
     };
-    afxAtomic       cnt;
+    /*afxAtomic*/afxInt      cnt;
 };
 
 // GRANT CHANGE MONITORING

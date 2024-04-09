@@ -23,7 +23,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/core/afxSystem.h"
 
-_SGL void _SglDpuBeginQuery(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryIdx, afxBool precise)
+_SGL void _DpuBeginQuery(sglDpu* dpu, afxQueryPool pool, afxNat queryIdx, afxBool precise)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -33,7 +33,7 @@ _SGL void _SglDpuBeginQuery(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryIdx, 
     gl->BeginQuery(pool->glTarget, pool->glHandle[queryIdx]);
 }
 
-_SGL void _SglDpuEndQuery(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryIdx)
+_SGL void _DpuEndQuery(sglDpu* dpu, afxQueryPool pool, afxNat queryIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -43,7 +43,7 @@ _SGL void _SglDpuEndQuery(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryIdx)
     gl->EndQuery(pool->glTarget);
 }
 
-_SGL void _SglDpuCopyQueryResults(sglDpuIdd* dpu, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
+_SGL void _DpuCopyQueryResults(sglDpu* dpu, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, afxBuffer buf, afxSize offset, afxSize stride, afxQueryResultFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -83,7 +83,7 @@ _SGL void _SglDpuCopyQueryResults(sglDpuIdd* dpu, afxQueryPool pool, afxNat base
     }
 }
 
-_SGL void _SglDpuResetQueries(sglDpuIdd* dpu, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
+_SGL void _DpuResetQueries(sglDpu* dpu, afxQueryPool pool, afxNat baseQuery, afxNat queryCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -93,7 +93,7 @@ _SGL void _SglDpuResetQueries(sglDpuIdd* dpu, afxQueryPool pool, afxNat baseQuer
 
 }
 
-_SGL void _SglDpuWriteTimestamp(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage)
+_SGL void _DpuWriteTimestamp(sglDpu* dpu, afxQueryPool pool, afxNat queryIdx, afxPipelineStage stage)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pool, afxFcc_QRYP);
@@ -103,7 +103,7 @@ _SGL void _SglDpuWriteTimestamp(sglDpuIdd* dpu, afxQueryPool pool, afxNat queryI
     gl->QueryCounter(pool->glHandle[queryIdx], pool->glTarget);
 }
 
-_SGL afxError _SglDpuBindAndSyncQryp(sglDpuIdd* dpu, afxBool syncOnly, afxQueryPool qryp)
+_SGL afxError _DpuBindAndSyncQryp(sglDpu* dpu, afxBool syncOnly, afxQueryPool qryp)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -130,7 +130,7 @@ _SGL afxError _SglDpuBindAndSyncQryp(sglDpuIdd* dpu, afxBool syncOnly, afxQueryP
                 }
                 gl->GenQueries(qryp->base.cap, glHandle); _SglThrowErrorOccuried();
                 qryp->glHandle = glHandle;
-                AfxEcho("Query pool inited. %u", qryp->base.cap);
+                AfxLogEcho("Query pool inited. %u", qryp->base.cap);
             }
 
             qryp->updFlags |= ~SGL_UPD_FLAG_DEVICE;
@@ -154,6 +154,10 @@ _SGL afxError _SglQrypDtor(afxQueryPool qryp)
         }
         qryp->glHandle = 0;
     }
+
+
+    AfxPopLinkage(&qryp->base.dctx);
+
     return err;
 }
 
@@ -162,11 +166,11 @@ _SGL afxError _SglQrypCtor(afxQueryPool qryp, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &qryp, afxFcc_QRYP);
 
-    afxDrawContext dctx = cookie->udd[0];
-    afxQueryType type = *(afxQueryType const*)cookie->udd[1];
-    afxNat cap = *(afxNat const*)cookie->udd[2];
+    afxDrawContext dctx = cookie->udd[1];
+    afxQueryType type = *(afxQueryType const*)cookie->udd[2];
+    afxNat cap = *(afxNat const*)cookie->udd[3];
 
-    qryp->glHandle = AfxAllocate(qryp->base.cap, sizeof(qryp->glHandle[0]), 0, AfxHint());
+    qryp->glHandle = AfxAllocate(qryp->base.cap, sizeof(qryp->glHandle[0]), 0, AfxHere());
     qryp->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     qryp->base.type = type;
     qryp->base.cap = cap;
@@ -185,10 +189,14 @@ _SGL afxError _SglQrypCtor(afxQueryPool qryp, afxCookie const* cookie)
     }
     else AfxThrowError();
 
+
+
+    AfxPushLinkage(&qryp->base.dctx, &dctx->base.ownedQueries);
+
     return err;
 }
 
-_SGL afxClassConfig const _SglQrypClsConfig =
+_SGL afxClassConfig const _SglQrypMgrCfg =
 {
     .fcc = afxFcc_QRYP,
     .name = "Query Pool",

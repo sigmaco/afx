@@ -41,7 +41,7 @@ AFX_DEFINE_STRUCT(afxArena)
 {
     _AFX_DBG_FCC; // AREN
     afxMmu      mmu;
-    afxHint     hint;
+    afxHere     hint;
     afxNat      totalAllocated;
     afxNat      smallItems;
     afxNat      largeItems;
@@ -63,7 +63,7 @@ AFX_DEFINE_STRUCT(afxArena)
     afxNat      recycleSiz;
 };
 
-AFX afxError    AfxAllocateArena(afxMmu mmu, afxArena* aren, afxArenaSpecification const *spec, afxHint const hint);
+AFX afxError    AfxAllocateArena(afxMmu mmu, afxArena* aren, afxArenaSpecification const *spec, afxHere const hint);
 AFX void        AfxDeallocateArena(afxArena* aren);
 
 

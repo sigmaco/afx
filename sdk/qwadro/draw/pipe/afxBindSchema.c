@@ -14,10 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_BIND_SCHEMA_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // BLUEPRINT                                                                  //
@@ -150,7 +151,7 @@ _AVXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
                         if ((incompatible |= ((rsrc.type != binding->type) || (rsrc.cnt != binding->cnt)))) AfxThrowError();
                         else
                         {
-                            binding->visibility |= /*entry->visibility |*/ AfxGetBitOffset(shdb->stage);
+                            binding->visibility |= /*entry->visibility |*/ AFX_BIT_OFFSET(shdb->stage);
                         }
                         break;
                     }
@@ -158,7 +159,7 @@ _AVXINL afxError AfxLegoBlueprintAddShaderContributions(afxPipelineRigBlueprint 
 
                 if (!err && !entryExisting)
                 {
-                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AfxGetBitOffset(shdb->stage), rsrc.type, rsrc.cnt, &rsrc.name.str))
+                    if (AfxLegoBlueprintAddBinding(blueprint, rsrc.binding, AFX_BIT_OFFSET(shdb->stage), rsrc.type, rsrc.cnt, &rsrc.name.str))
                     {
                         AfxThrowError();
                     }

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX afxRestring* AfxMakeString4(afxString4 *str, afxString const* src)
 {

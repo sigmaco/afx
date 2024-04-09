@@ -20,9 +20,6 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "qwadro/mem/afxMappedString.h"
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/io/afxStream.h"
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxNat AfxResolveStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[])
@@ -65,7 +62,7 @@ _AFX afxNat AfxCatalogStrings2(afxStringBase strc, afxNat cnt, afxString const i
                 if (!(dataStart = AfxInsertArrayUnits(&strc->buf, srcLen, &firstCh, NIL))) AfxThrowError();
                 else
                 {
-                    AfxCopy(srcLen, sizeof(afxChar), src->start, (void*)dataStart);
+                    AfxCopy2(srcLen, sizeof(afxChar), src->start, (void*)dataStart);
                 }
             }
 
@@ -107,7 +104,7 @@ _AFX afxError _AfxStrcDtor(afxStringBase strc)
     return err;
 }
 
-_AFX afxClassConfig _AfxStrbClsConfig =
+_AFX afxClassConfig _AfxStrbMgrCfg =
 {
     .fcc = afxFcc_STRB,
     .name = "String Base",

@@ -14,10 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_BUFFER_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxDrawContext AfxGetBufferContext(afxBuffer buf)
 {
@@ -99,7 +100,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
     {
         if (!dstStride || dstStride == stride)
         {
-            AfxCopy(cnt, stride, map, dst);
+            AfxCopy2(cnt, stride, map, dst);
         }
         else
         {
@@ -107,7 +108,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
 
             for (afxNat i = 0; i < cnt; i++)
             {
-                AfxCopy(1, stride, &(map[i * stride]), &(dst2[i * dstStride]));
+                AfxCopy2(1, stride, &(map[i * stride]), &(dst2[i * dstStride]));
             }
         }
 
@@ -133,7 +134,7 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(1, range, map, dst);
+        AfxCopy2(1, range, map, dst);
 
         AfxUnmapBufferRange(buf);
     }
@@ -160,7 +161,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
     {
         if ((srcStride == rgn->stride) && rgn->stride)
         {
-            AfxCopy(rgn->range, 1, src, map);
+            AfxCopy2(rgn->range, 1, src, map);
         }
         else
         {
@@ -174,7 +175,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
             for (afxNat i = 0; i < cnt; i++)
             {
                 AfxAssertRange(bufSiz, (i * rgn->stride) + rgn->offset, rgn->unitSiz);
-                AfxCopy(1, rgn->unitSiz, &(src2[i * srcStride]), &(map[(i * rgn->stride) + rgn->offset]));
+                AfxCopy2(1, rgn->unitSiz, &(src2[i * srcStride]), &(map[(i * rgn->stride) + rgn->offset]));
             }
         }
 
@@ -202,7 +203,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
     {
         if ((srcStride == stride) && stride)
         {
-            AfxCopy(1, range, src, map);
+            AfxCopy2(1, range, src, map);
         }
         else
         {
@@ -218,7 +219,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
                 AfxAssert(stride != 2 || (stride == 2 && AFX_N16_MAX >= (afxNat16)(src2[i * srcStride])));
                 AfxAssert(stride != 4 || (stride == 4 && AFX_N32_MAX >= (afxNat32)(src2[i * srcStride])));
 
-                AfxCopy(1, unitSiz, &(src2[i * srcStride]), &(map[i * stride]));
+                AfxCopy2(1, unitSiz, &(src2[i * srcStride]), &(map[i * stride]));
             }
         }
 
@@ -242,7 +243,7 @@ _AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
     if (!map) AfxThrowError();
     else
     {
-        AfxCopy(1, range, src, map);
+        AfxCopy2(1, range, src, map);
 
         AfxUnmapBufferRange(buf);
     }

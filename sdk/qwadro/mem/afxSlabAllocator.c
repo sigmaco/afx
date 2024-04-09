@@ -14,4 +14,4 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/mem/afxSlabAllocator.h"
+#include "qwadro/core/afxSystem.h"

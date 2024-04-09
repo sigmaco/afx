@@ -14,9 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxRestring.h"
-#include "qwadro/core/afxFixedString.h"
-#include "qwadro/mem/afxMmu.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFXINL void* AfxGetStringStorage(afxRestring const* str, afxNat base)
 {
@@ -80,7 +78,7 @@ _AFXINL afxError AfxAllocateString(afxRestring* str, afxNat cap, void const *sta
 
     void *buf = NIL;
     
-    if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHint())))
+    if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHere())))
         AfxThrowError();
 
     AfxMakeRestring(str, effectiveCap, buf, 0);
@@ -115,14 +113,14 @@ _AFXINL afxError AfxReallocateString(afxRestring* str, afxNat cap, void const *s
         afxNat effectiveRange = len > effectiveCap ? effectiveCap : len; // truncate to capacity when string has space.
         AfxAssert(effectiveRange);
 
-        if (!(buf = AfxReallocate(NIL, str->startRW, effectiveCap, 0, AfxHint()))) AfxThrowError();
+        if (!(buf = AfxReallocate(NIL, str->startRW, effectiveCap, 0, AfxHere()))) AfxThrowError();
         else
         {
             str->len = effectiveRange;
             str->cap = effectiveCap;
             str->startRW = buf;
 
-            AfxCopy(str->startRW, start, str->len);
+            AfxCopy2(str->startRW, start, str->len);
 
             if (str->cap > str->len)
                 str->startRW[str->len] = '\0';
@@ -154,7 +152,7 @@ _AFXINL afxNat _AfxWriteString(afxRestring* str, afxNat base, void const *src, a
 
     afxChar *start = AfxGetStringStorage(str, base);
     AfxAssert(start);
-    AfxCopy(1, effectiveRange, src, start);
+    AfxCopy2(1, effectiveRange, src, start);
 
 
     if (base + effectiveRange > str->str.len)
@@ -315,7 +313,7 @@ _AFXINL afxNat AfxCopyStringRange(afxRestring* str, afxString const* in, afxNat 
                 afxChar const *src = AfxGetStringData(in, 0);
                 AfxAssert(src); // if it has len it must have data.
                 AfxAssert(start); // if it is writeable it must have data.
-                AfxCopy(1, effectiveRange, src, start);
+                AfxCopy2(1, effectiveRange, src, start);
             }
 
             if (cap > effectiveRange) // opportunistic attempt to use left space to zero-terminate string.

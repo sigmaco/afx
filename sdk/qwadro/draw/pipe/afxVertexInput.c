@@ -14,12 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_VERTEX_INPUT_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/pipe/afxVertexInput.h"
-#include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/draw/io/afxXsh.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxNat AfxCountVertexInputAttributes(afxVertexInput vin)
 {

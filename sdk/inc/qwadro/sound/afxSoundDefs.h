@@ -17,9 +17,7 @@
 #ifndef AFX_SOUND_DEFS_H
 #define AFX_SOUND_DEFS_H
 
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/math/afxSimd.h"
-#include "qwadro/math/afxTransform.h"
+#include "qwadro/core/afxSystem.h"
 
 #ifndef __e2sound__
 #   ifdef _DEBUG
@@ -44,7 +42,6 @@
 #endif//__e2sound__
 
 //AFX_DEFINE_HANDLE(afxSoundSystem);
-AFX_DEFINE_HANDLE(afxSoundThread);
 AFX_DEFINE_HANDLE(afxSoundDevice);
 AFX_DEFINE_HANDLE(afxSoundContext);
 AFX_DEFINE_HANDLE(afxSoundOutput);

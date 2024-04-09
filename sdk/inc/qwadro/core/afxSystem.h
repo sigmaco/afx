@@ -27,23 +27,30 @@
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/mem/afxMappedString.h"
 //#include "qwadro/core/afxModule.h"
-#include "qwadro/core/afxIcd.h"
-#include "qwadro/io/afxKeyboard.h"
-#include "qwadro/io/afxMouse.h"
-#include "qwadro/core/afxThread.h"
-#include "qwadro/core/afxTxu.h"
-#include "qwadro/core/afxDevice.h"
+
+// core
 #include "qwadro/core/afxService.h"
+#include "qwadro/core/afxTerminal.h"
+#include "qwadro/core/afxThread.h"
+#include "qwadro/core/afxVersion.h"
+// env
+#include "qwadro/env/afxShell.h"
+// io
+#include "qwadro/io/afxData.h"
+#include "qwadro/io/afxSource.h"
 #include "qwadro/io/afxStorage.h"
-//#include "qwadro/io/afxStream.h"
-//#include "qwadro/io/afxFile.h"
-#include "qwadro/io/afxArchive.h"
-//#include "qwadro/sim/afxSimulation.h"
-//#include "qwadro/ux/afxApplication.h"
-// system extension
-//#include "qwadro/draw/afxDrawSystem.h"
-//#include "qwadro/sound/afxSoundSystem.h"
-#include "qwadro/env/afxEnvironment.h"
+// math
+#include "qwadro/math/afxOpticalMatrix.h"
+#include "qwadro/math/afxTransform.h"
+// mem
+#include "qwadro/mem/afxArena.h"
+#include "qwadro/mem/afxFifo.h"
+#include "qwadro/mem/afxQueue.h"
+#include "qwadro/mem/afxStack.h"
+// ux
+#include "qwadro/ux/afxKeyboard.h"
+#include "qwadro/ux/afxMouse.h"
+
 
 enum // opcodes used for primitive communication bethween engine and executables.
 {
@@ -56,9 +63,9 @@ enum // opcodes used for primitive communication bethween engine and executables
     AFX_OPCODE_ATTACH, // informa a um módulo que ele será acoplado ao sistema, dando-lhe uma chance de realizar sua devida initialização de recursos e operações.
 };
 
-AFX_CALLBACK(void, afxProfilerPushTimerFunc)(aaxPluginId in_uPluginID, const char* in_pszZoneName);
-AFX_CALLBACK(void, afxProfilerPopTimerFunc)(void);
-AFX_CALLBACK(void, afxProfilerPostMarkerFunc)(aaxPluginId in_uPluginID, const char* in_pszMarkerName );
+AFX_CALLBACK(void, afxProfilerPushTimerFn)(aaxPluginId in_uPluginID, const char* in_pszZoneName);
+AFX_CALLBACK(void, afxProfilerPopTimerFn)(void);
+AFX_CALLBACK(void, afxProfilerPostMarkerFn)(aaxPluginId in_uPluginID, const char* in_pszMarkerName );
 
 typedef struct afxDrawSystemConfig afxDrawSystemConfig;
 typedef struct afxSoundSystemConfig afxSoundSystemConfig;
@@ -90,9 +97,9 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
 
     afxAssertHook               assertHook; // external assertion handling function (optional)
 
-    afxProfilerPushTimerFunc    profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPopTimerFunc     profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPostMarkerFunc   profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPushTimerFn      profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPopTimerFn       profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPostMarkerFn     profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
 
     afxSize const*              attrs[2];
     
@@ -111,74 +118,74 @@ AFX_DEFINE_STRUCT(afxSystemConfig)
 #ifdef _AFX_SYSTEM_C
 AFX_OBJECT(afxSystem)
 {
-    afxUri2048              pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
-    afxUri2048              qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
-
-    afxChain                classes;
-    afxManager              mmuCls;
-    afxManager              strbCls;
-    afxManager              exeCls;
-    afxManager              icdCls;
-    afxManager              hidCls;
-    afxManager              kbdCls;
-    afxManager              mseCls;
-    afxManager              ctrlCls;
-    afxManager              thrCls;
-    afxManager              txuCls;
-    afxManager              devCls;
-    afxManager              svcCls;
-    afxManager              iosCls;
-    afxManager              cdcCls;
-    afxManager              fileCls;
-    afxManager              archCls;
-    afxManager              fsysCls;
-    afxManager              envCls;
-
-    afxMmu                  mmu;
+    afxNat                  ptrSiz;
+    afxBool                 bigEndian;
     afxNat                  memPageSize; // The page size and the granularity of page protection and commitment.
     afxNat                  allocGranularity;
     afxNat                  hwConcurrencyCap; // # of logical proc units (hardware threads)
-    afxNat                  ptrSiz;
-    afxBool                 nonLe;
-    
+    afxReal                 unitsPerMeter; // the number of units in a meter.
+    afxNat                  ioBufSiz;
+    afxNat                  primeTid;
+    afxThread               primeThr;
+
+    afxUri2048              pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
+    afxUri2048              qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
+
+    afxChain                mgrChn;
+    afxManager              mmuMgr;
+    afxManager              strbMgr;
+    afxManager              exeMgr;
+    afxManager              hidMgr;
+    afxManager              kbdMgr;
+    afxManager              mseMgr;
+    afxManager              ctrlMgr;
+    afxManager              thrMgr;
+    afxManager              devMgr;
+    afxManager              svcMgr;
+    afxManager              iosMgr;
+    afxManager              cdcMgr;
+    afxManager              fileMgr;
+    afxManager              archMgr;
+    afxManager              fsysMgr;
+    afxManager              envMgr;
+
     afxStorage              defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
 
     afxModule               e2coree;
     afxModule               e2sound;
+    afxResult               (*ssysctl)(afxSystem,afxInt,...);
     afxModule               e2draw;
+    afxResult               (*dsysctl)(afxSystem,afxInt,...);
     afxModule               e2sim;
     afxModule               e2ux;
-    afxKeyboard                 stdKbd;
+    afxKeyboard             stdKbd;
+    afxMouse                stdMse;
 
-    afxSize                     maxMemUsage;
+
+    afxSize                 maxMemUsage;
     
-    afxAssertHook               assertHook; // external assertion handling function (optional)
-    afxReal                     unitsPerMeter; // the number of units in a meter.
+    afxAssertHook           assertHook; // external assertion handling function (optional)
 
-    afxProfilerPushTimerFunc    profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPopTimerFunc     profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
-    afxProfilerPostMarkerFunc   profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPushTimerFn  profilerPushTimer; // external (optional) function for tracking performance of the system that is called when a timer starts. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPopTimerFn   profilerPopTimer; // external (optional) function for tracking performance of the system that is called when a timer stops. (only called in Debug and Profile binaries; this is not called in Release)
+    afxProfilerPostMarkerFn profilerPostMarker; // external (optional) function for tracking significant events in the system, to act as a marker or bookmark. (only called in Debug and Profile binaries; this is not called in Release)
 
-    afxBool                     isInBootUp;
-    afxBool                     isInShutdown;
-    afxBool                     operating;
-    afxBool                     interruptionRequested;
+    afxBool                 isInBootUp;
+    afxBool                 isInShutdown;
+    afxBool                 operating;
+    afxBool                 interruptionRequested;
 
-    afxArena                    ioArena;
-    afxNat                      ioBufSiz;    
     struct
     {
         struct
         {
-            afxFcc              type;
-            afxChain            resources;
-        }                       supplyChain[1];
-    }                           resourcing;
-    afxInt                      exitCode;
+            afxFcc          type;
+            afxChain        resources;
+        }                   supplyChain[1];
+    }                       resourcing;
+    afxInt                  exitCode;
 
-    afxDrawSystem               dsys;
-    afxSoundSystem              ssys;
-    afxEnvironment              env;
+    afxShell          env;
 };
 #endif//_AFX_SYSTEM_C
 #endif//_AFX_CORE_C
@@ -186,20 +193,15 @@ AFX_OBJECT(afxSystem)
 AFX void                AfxChooseSystemConfiguration(afxSystemConfig* cfg, afxPlatformConfig* plaf);
 AFX afxError            AfxDoSystemBootUp(afxSystemConfig const *config);
 AFX void                AfxDoSystemShutdown(afxInt exitCode);
-AFX afxSystem           AfxGetSystem(void);
+AFX afxBool             AfxGetSystem(afxSystem* system);
 
 AFX afxBool             AfxSystemIsExecuting(void);
 AFX afxResult           AfxDoSystemExecution(afxTime timeout);
 AFX void                AfxRequestSystemShutdown(afxInt exitCode);
 
-AFX afxMmu              AfxGetIoContext(void);
-AFX afxArena*           AfxGetIoArena(void);
 AFX afxNat              AfxGetIoBufferSize(void);
 
-AFX afxEnvironment      AfxGetEnvironment(void);
-
-AFX afxDrawSystem       AfxGetDrawSystem(void);
-AFX afxSoundSystem      AfxGetSoundSystem(void);
+AFX afxBool             AfxGetShell(afxShell* shell);
 
 AFX afxNat              AfxGetMemoryPageSize(void);
 
@@ -208,8 +210,6 @@ AFX afxNat              AfxGetMemoryPageSize(void);
 /// This function returns 1 if neither value could be determined.
 AFX afxNat              AfxGetThreadingCapacity(void);
 
-AFX afxMmu              AfxGetSystemContext(void);
-
 AFX afxUri const*       AfxGetSystemDirectory(afxUri *dst);
 AFX afxString const*    AfxGetSystemDirectoryString(afxRestring *dst);
 
@@ -217,37 +217,32 @@ AFX afxUri const*       AfxGetPwd(afxUri *dst);
 AFX afxString const*    AfxGetPwdString(afxRestring *dst);
 
 // Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
-AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent *ev);
-AFX afxBool             AfxEmitEvents(afxNat cnt, afxObject receiver[], afxEvent ev[]);
-AFX afxBool             AfxReemitEvent(afxNat cnt, afxObject receiver[], afxEvent *ev);
+// Adds the event event, with the object receiver as the receiver of the event, to an event queue and returns immediately.
 
-AFX afxError            AfxPostEvent(afxObject receiver, afxEvent *ev);
-AFX afxError            AfxPostEvents(afxNat cnt, afxObject receiver[], afxEvent ev[]);
+AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
 
-AFX afxManager*           AfxGetArchiveClass(void);
-AFX afxManager*           AfxGetControllerClass(void);
-AFX afxManager*           AfxGetDeviceClass(void);
-AFX afxManager*           AfxGetEnvironmentClass(void);
-AFX afxManager*           AfxGetFileClass(void);
-AFX afxManager*           AfxGetStorageClass(void);
-AFX afxManager*           AfxGetIcdClass(void);
-AFX afxManager*           AfxGetHidClass(void);
-AFX afxManager*           AfxGetKeyboardClass(void);
-AFX afxManager*           AfxGetMmuClass(void);
-AFX afxManager*           AfxGetModuleClass(void);
-AFX afxManager*           AfxGetMouseClass(void);
-AFX afxManager*           AfxGetServiceClass(void);
-AFX afxManager*           AfxGetStreamClass(void);
-AFX afxManager*           AfxGetStringBaseClass(void);
-AFX afxManager*           AfxGetThreadClass(void);
-AFX afxManager*           AfxGetTxuClass(void);
+
+AFX afxManager*         AfxGetArchiveClass(void);
+AFX afxManager*         AfxGetControllerClass(void);
+AFX afxManager*         AfxGetDeviceClass(void);
+AFX afxManager*         AfxGetEnvironmentClass(void);
+AFX afxManager*         AfxGetFileClass(void);
+AFX afxManager*         AfxGetStorageClass(void);
+AFX afxManager*         AfxGetHidClass(void);
+AFX afxManager*         AfxGetKeyboardClass(void);
+AFX afxManager*         AfxGetMmuClass(void);
+AFX afxManager*         AfxGetModuleClass(void);
+AFX afxManager*         AfxGetMouseClass(void);
+AFX afxManager*         AfxGetServiceClass(void);
+AFX afxManager*         AfxGetStreamClass(void);
+AFX afxManager*         AfxGetStringBaseClass(void);
+AFX afxManager*         AfxGetThreadClass(void);
 
 AFX afxNat              AfxCountArchives(void);
 AFX afxNat              AfxCountControllers(void);
-AFX afxNat              AfxCountDevices(void);
+AFX afxNat              AfxCountDevices(afxDeviceType type);
 AFX afxNat              AfxCountFiles(void);
 AFX afxNat              AfxCountHids(void);
-AFX afxNat              AfxCountIcds(void);
 AFX afxNat              AfxCountKeyboards(void);
 AFX afxNat              AfxCountMmus(void);
 AFX afxNat              AfxCountModules(void);
@@ -256,14 +251,12 @@ AFX afxNat              AfxCountServices(void);
 AFX afxNat              AfxCountStorages(void);
 AFX afxNat              AfxCountStreams(void);
 AFX afxNat              AfxCountThreads(void);
-AFX afxNat              AfxCountTxus(void);
 
 AFX afxNat              AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[]);
 AFX afxNat              AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[]);
-AFX afxNat              AfxEnumerateDevices(afxNat first, afxNat cnt, afxDevice devices[]);
+AFX afxNat              AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, afxDevice devices[]);
 AFX afxNat              AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[]);
 AFX afxNat              AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[]);
-AFX afxNat              AfxEnumerateIcds(afxNat first, afxNat cnt, afxIcd icds[]);
 AFX afxNat              AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[]);
 AFX afxNat              AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboards[]);
 AFX afxNat              AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[]);
@@ -272,14 +265,12 @@ AFX afxNat              AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mo
 AFX afxNat              AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[]);
 AFX afxNat              AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream streams[]);
 AFX afxNat              AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread threads[]);
-AFX afxNat              AfxEnumerateTxus(afxNat first, afxNat cnt, afxTxu txus[]);
 
 AFX afxNat              AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd);
 AFX afxNat              AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxController, void*), void *udd);
-AFX afxNat              AfxInvokeDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
+AFX afxNat              AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
 AFX afxNat              AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd);
 AFX afxNat              AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd);
-AFX afxNat              AfxInvokeIcds(afxNat first, afxNat cnt, afxBool(*f)(afxIcd, void*), void *udd);
 AFX afxNat              AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd);
 AFX afxNat              AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd);
 AFX afxNat              AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd);
@@ -288,10 +279,6 @@ AFX afxNat              AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(af
 AFX afxNat              AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, void*), void *udd);
 AFX afxNat              AfxInvokeStreams(afxNat first, afxNat cnt, afxBool(*f)(afxStream, void*), void *udd);
 AFX afxNat              AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
-AFX afxNat              AfxInvokeTxus(afxNat first, afxNat cnt, afxBool(*f)(afxTxu, void*), void *udd);
-
-AFX afxModule           AfxFindModule(afxUri const *uri);
-AFX afxIcd              AfxFindIcd(afxUri const *manifest);
 
 #if 0
 ////////////////////////////////////////////////////////////////////////////////

@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 /// Qwadro performs all bone animation on decomposed transforms, where "decomposed" means that the position, orientation, and scale/shear components have been pulled out into separately animating quantities. 
 /// This allows for fair, efficient animation and interpolation, whereas keeping everything as a tangled 4x4 matrix does not. 
 
@@ -29,10 +31,10 @@
 
 typedef enum afxTransformFlags
 {
-    afxTransformFlags_TRANSLATED    = AfxGetBitOffset(0), // has non-identity position
-    afxTransformFlags_ROTATED       = AfxGetBitOffset(1), // has non-identity orientation
+    afxTransformFlags_TRANSLATED    = AFX_BIT_OFFSET(0), // has non-identity position
+    afxTransformFlags_ROTATED       = AFX_BIT_OFFSET(1), // has non-identity orientation
     afxTrasnformFlags_RIGID         = afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED,
-    afxTransformFlags_DEFORMED      = AfxGetBitOffset(2), // has non-identity scale/shear
+    afxTransformFlags_DEFORMED      = AFX_BIT_OFFSET(2), // has non-identity scale/shear
     afxTransformFlags_ALL =         (afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED | afxTransformFlags_DEFORMED)
 } afxTransformFlags;
 

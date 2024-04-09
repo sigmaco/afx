@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 // Desde que surgiu as mesh shaders, somado as experiências com rasterização com CUDA, aparentemente o processo de transformação geométrica das pipelines tende a mudar.
 // Assim sendo, a SIGMA decideu quebrar o objeto de estado da pipeline em módulos, e assembleá-los, para evitar lidar com alocação de espaço para coisas pouco utilizadas.
@@ -25,6 +25,7 @@
 
 #include "qwadro/io/afxUri.h"
 #include "qwadro/draw/afxDrawDefs.h"
+#include "qwadro/draw/afxPixel.h"
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/core/afxFixedString.h"
 
@@ -59,10 +60,10 @@ typedef enum afxRgbaMask
 /// The color write mask operation is applied regardless of whether blending is enabled.
 /// The color write mask operation is applied only if Color Write Enable is enabled for the respective attachment. Otherwise the color write mask is ignored and writes to all components of the attachment are disabled.
 {
-    afxRgbaMask_R           = AfxGetBitOffset(0), /// specifies that the R value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_G           = AfxGetBitOffset(1), /// specifies that the G value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_B           = AfxGetBitOffset(2), /// specifies that the B value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_A           = AfxGetBitOffset(3), /// specifies that the A value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_R           = AFX_BIT_OFFSET(0), /// specifies that the R value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_G           = AFX_BIT_OFFSET(1), /// specifies that the G value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_B           = AFX_BIT_OFFSET(2), /// specifies that the B value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_A           = AFX_BIT_OFFSET(3), /// specifies that the A value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
     afxRgbaMask_RG          = afxRgbaMask_R | afxRgbaMask_G,
     afxRgbaMask_RGB         = afxRgbaMask_RG | afxRgbaMask_B,
     afxRgbaMask_RGBA        = afxRgbaMask_RGB | afxRgbaMask_A
@@ -89,50 +90,50 @@ AFX_DEFINE_STRUCT(afxColorOutputChannel)
 
 typedef enum afxDepthStencilFlag
 {
-    afxDepthStencilFlag_TEST            = AfxGetBitOffset(0),
-    afxDepthStencilFlag_COMPARE         = AfxGetBitOffset(1),
-    afxDepthStencilFlag_DONT_WRITE      = AfxGetBitOffset(2),
+    afxDepthStencilFlag_TEST            = AFX_BIT_OFFSET(0),
+    afxDepthStencilFlag_COMPARE         = AFX_BIT_OFFSET(1),
+    afxDepthStencilFlag_DONT_WRITE      = AFX_BIT_OFFSET(2),
     
-    afxDepthStencilFlag_STENCIL_OP_F    = AfxGetBitOffset(4),
-    afxDepthStencilFlag_STENCIL_TEST_F  = AfxGetBitOffset(5),
-    afxDepthStencilFlag_STENCIL_WRITE_F = AfxGetBitOffset(6),
-    afxDepthStencilFlag_STENCIL_REF_F   = AfxGetBitOffset(7),
-    afxDepthStencilFlag_STENCIL_FAIL_F  = AfxGetBitOffset(8),
-    afxDepthStencilFlag_STENCIL_DFAIL_F = AfxGetBitOffset(9),
-    afxDepthStencilFlag_STENCIL_PASS_F  = AfxGetBitOffset(10),
+    afxDepthStencilFlag_STENCIL_OP_F    = AFX_BIT_OFFSET(4),
+    afxDepthStencilFlag_STENCIL_TEST_F  = AFX_BIT_OFFSET(5),
+    afxDepthStencilFlag_STENCIL_WRITE_F = AFX_BIT_OFFSET(6),
+    afxDepthStencilFlag_STENCIL_REF_F   = AFX_BIT_OFFSET(7),
+    afxDepthStencilFlag_STENCIL_FAIL_F  = AFX_BIT_OFFSET(8),
+    afxDepthStencilFlag_STENCIL_DFAIL_F = AFX_BIT_OFFSET(9),
+    afxDepthStencilFlag_STENCIL_PASS_F  = AFX_BIT_OFFSET(10),
 
-    afxDepthStencilFlag_STENCIL_OP_B    = AfxGetBitOffset(11),
-    afxDepthStencilFlag_STENCIL_TEST_B  = AfxGetBitOffset(12),
-    afxDepthStencilFlag_STENCIL_WRITE_B = AfxGetBitOffset(13),
-    afxDepthStencilFlag_STENCIL_REF_B   = AfxGetBitOffset(14),
-    afxDepthStencilFlag_STENCIL_FAIL_B  = AfxGetBitOffset(15),
-    afxDepthStencilFlag_STENCIL_DFAIL_B = AfxGetBitOffset(16),
-    afxDepthStencilFlag_STENCIL_PASS_B  = AfxGetBitOffset(17),
+    afxDepthStencilFlag_STENCIL_OP_B    = AFX_BIT_OFFSET(11),
+    afxDepthStencilFlag_STENCIL_TEST_B  = AFX_BIT_OFFSET(12),
+    afxDepthStencilFlag_STENCIL_WRITE_B = AFX_BIT_OFFSET(13),
+    afxDepthStencilFlag_STENCIL_REF_B   = AFX_BIT_OFFSET(14),
+    afxDepthStencilFlag_STENCIL_FAIL_B  = AFX_BIT_OFFSET(15),
+    afxDepthStencilFlag_STENCIL_DFAIL_B = AFX_BIT_OFFSET(16),
+    afxDepthStencilFlag_STENCIL_PASS_B  = AFX_BIT_OFFSET(17),
 
     afxDepthStencilFlag_STENCIL_TEST    = afxDepthStencilFlag_STENCIL_TEST_F | afxDepthStencilFlag_STENCIL_TEST_B,
 
-    afxDepthStencilFlag_BOUNDS_TEST     = AfxGetBitOffset(31) // it is here because it only works with a depth buffer
+    afxDepthStencilFlag_BOUNDS_TEST     = AFX_BIT_OFFSET(31) // it is here because it only works with a depth buffer
 } afxDepthStencilFlags;
 
 typedef enum afxMultisamplingFlag
 {
-    afxMultisamplingFlag_SHADING        = AfxGetBitOffset(0),
-    afxMultisamplingFlag_ALPHA_TO_COVERAGE  = AfxGetBitOffset(1),
-    afxMultisamplingFlag_ALPHA_TO_ONE   = AfxGetBitOffset(2),
+    afxMultisamplingFlag_SHADING        = AFX_BIT_OFFSET(0),
+    afxMultisamplingFlag_ALPHA_TO_COVERAGE  = AFX_BIT_OFFSET(1),
+    afxMultisamplingFlag_ALPHA_TO_ONE   = AFX_BIT_OFFSET(2),
 } afxMultisamplingFlags;
 
 typedef enum afxRasterizationFlag
 {
-    afxRasterizationFlag_FILL_MODE      = AfxGetBitOffset(0),
-    afxRasterizationFlag_LINE_WIDTH     = AfxGetBitOffset(1),
-    afxRasterizationFlag_DEPTH_BIAS     = AfxGetBitOffset(2)
+    afxRasterizationFlag_FILL_MODE      = AFX_BIT_OFFSET(0),
+    afxRasterizationFlag_LINE_WIDTH     = AFX_BIT_OFFSET(1),
+    afxRasterizationFlag_DEPTH_BIAS     = AFX_BIT_OFFSET(2)
 } afxRasterizationFlags;
 
 typedef enum afxColorOutputFlag
 {
-    afxColorOutputFlag_SCISSOR          = AfxGetBitOffset(0),
-    afxColorOutputFlag_BLEND_CONSTANTS  = AfxGetBitOffset(1),
-    afxColorOutputFlag_LOGIC_OP         = AfxGetBitOffset(2)
+    afxColorOutputFlag_SCISSOR          = AFX_BIT_OFFSET(0),
+    afxColorOutputFlag_BLEND_CONSTANTS  = AFX_BIT_OFFSET(1),
+    afxColorOutputFlag_LOGIC_OP         = AFX_BIT_OFFSET(2)
 } afxColorOutputFlags;
 
 AFX_DEFINE_STRUCT(afxRasterizationConfig)

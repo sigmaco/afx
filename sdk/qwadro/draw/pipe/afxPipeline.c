@@ -14,10 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_PIPELINE_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxXsh.h"
 
  // OpenGL/Vulkan Continuous Integration
@@ -69,7 +70,7 @@ _AVX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxP
 
     for (afxNat i = 0; i < cnt2; i++)
     {
-        AfxCopy(1, sizeof(streams[0]), &ins[first + i], &streams[i]);
+        AfxCopy2(1, sizeof(streams[0]), &ins[first + i], &streams[i]);
         hitCnt++;
     }
     return hitCnt;
@@ -203,13 +204,10 @@ _AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput 
 
     afxPipeline pip = NIL;
 
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
-    AfxEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
+    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
     AfxPickUriExtension(uri, FALSE, &fext);
@@ -294,7 +292,7 @@ _AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput 
         }
         else
         {
-            AfxError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
+            AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
             AfxThrowError();
         }
     }

@@ -157,7 +157,6 @@
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundInput.h" />
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundOutput.h" />
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundSystem.h" />
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundThread.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -177,7 +176,6 @@
     <ClCompile Include="..\..\qwadro\sound\afxSoundInput.c" />
     <ClCompile Include="..\..\qwadro\sound\afxSoundOutput.c" />
     <ClCompile Include="..\..\qwadro\sound\afxSoundSystem.c" />
-    <ClCompile Include="..\..\qwadro\sound\afxSoundThread.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

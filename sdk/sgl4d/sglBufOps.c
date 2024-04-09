@@ -18,7 +18,7 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglDpuBufCpy(sglDpuIdd* dpu, _sglCmdBufCpy const* cmd)
+_SGL void _DpuBufCpy(sglDpu* dpu, _sglCmdBufCpy const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -33,16 +33,16 @@ _SGL void _SglDpuBufCpy(sglDpuIdd* dpu, _sglCmdBufCpy const* cmd)
     AfxThrowError();
 }
 
-_SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawStream dscr, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
+_SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawStream diob, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
     AfxAssertObjects(1, &src, afxFcc_BUF);
     AfxAssertObjects(1, &dst, afxFcc_BUF);
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdBufCpy *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
+    _sglCmdBufCpy *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->src = src;
     cmd->dst = dst;
@@ -53,10 +53,10 @@ _SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawStream dscr, afxBuffer src, afxBuffer d
     for (afxNat i = 0; i < opCnt; i++)
         cmd->ops[i] = ops[i];
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.cpy) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.cpy) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuBufSet(sglDpuIdd* dpu, _sglCmdBufSet const* cmd)
+_SGL void _DpuBufSet(sglDpu* dpu, _sglCmdBufSet const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -72,24 +72,24 @@ _SGL void _SglDpuBufSet(sglDpuIdd* dpu, _sglCmdBufSet const* cmd)
     gl->FlushMappedBufferRange(glTarget, cmd->offset, cmd->range); _SglThrowErrorOccuried();
 }
 
-_SGL afxCmdId _SglEncodeCmdBufSet(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxNat data)
+_SGL afxCmdId _SglEncodeCmdBufSet(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxNat data)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(range);
 
-    _sglCmdBufSet *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+    _sglCmdBufSet *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->buf = buf;
     cmd->offset = offset;
     cmd->range = range;
     cmd->data = data;
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.set) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.set) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuBufRw(sglDpuIdd* dpu, _sglCmdBufRw const* cmd)
+_SGL void _DpuBufRw(sglDpu* dpu, _sglCmdBufRw const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -116,10 +116,10 @@ _SGL void _SglDpuBufRw(sglDpuIdd* dpu, _sglCmdBufRw const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream dscr, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data)
+_SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(range);
     AfxAssert(data);
@@ -128,20 +128,20 @@ _SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream dscr, afxBuffer buf, afxNat offse
 
     if (!toHost)
     {
-        cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + range);
+        cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + range);
         AfxAssert(cmd);
         cmd->toHost = !!toHost;
         cmd->buf = buf;
         cmd->offset = offset;
         cmd->range = range;
 
-        AfxCopy(range, 1, data, cmd->src);
+        AfxCopy2(range, 1, data, cmd->src);
 
-        rslt = _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+        rslt = _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
     }
     else
     {
-        cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd));
+        cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
         AfxAssert(cmd);
         cmd->toHost = !!toHost;
         cmd->buf = buf;
@@ -149,12 +149,12 @@ _SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream dscr, afxBuffer buf, afxNat offse
         cmd->range = range;
         cmd->dst = data;
 
-        rslt = _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+        rslt = _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
     }
     return rslt;
 }
 
-_SGL void _SglDpuBufIo(sglDpuIdd* dpu, _sglCmdBufIo const* cmd)
+_SGL void _DpuBufIo(sglDpu* dpu, _sglCmdBufIo const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -196,16 +196,16 @@ _SGL void _SglDpuBufIo(sglDpuIdd* dpu, _sglCmdBufIo const* cmd)
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdBufIo(afxDrawStream dscr, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool export, afxStream io)
+_SGL afxCmdId _SglEncodeCmdBufIo(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool export, afxStream io)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssertObjects(1, &io, afxFcc_IOB);
     AfxAssert(opCnt);
     AfxAssert(ops);
 
-    _sglCmdBufIo *cmd = AfxRequestArenaUnit(&dscr->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
+    _sglCmdBufIo *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
     AfxAssert(cmd);
     cmd->export = !!export;
     cmd->io = io;
@@ -216,7 +216,7 @@ _SGL afxCmdId _SglEncodeCmdBufIo(afxDrawStream dscr, afxBuffer buf, afxNat opCnt
     for (afxNat i = 0; i < opCnt; i++)
         cmd->ops[i] = ops[i];
 
-    return _SglEncodeCmdCommand(dscr, (offsetof(afxCmd, buf.io) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.io) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 _SGL afxCmdBuffer const _SglEncodeCmdBufferVmt =

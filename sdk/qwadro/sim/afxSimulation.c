@@ -26,21 +26,21 @@
 
 #include "qwadro/sim/modeling/afxMesh.h"
 
-extern afxClassConfig const _AfxNodClsConfig;
-extern afxClassConfig const _AfxSklClsConfig;
-extern afxClassConfig const _AfxMtlClsConfig;
-extern afxClassConfig const _AfxMshClsConfig;
-extern afxClassConfig const _AfxVtdClsConfig;
-extern afxClassConfig const _AfxMshtClsConfig;
-extern afxClassConfig const _AfxMdlClsConfig;
-extern afxClassConfig const _AwxBodClsConfig;
-extern afxClassConfig const _AwxAniClsConfig;
-extern afxClassConfig const _AwxMotClsConfig;
-extern afxClassConfig const _AfxMotoClsConfig;
-extern afxClassConfig const _AfxEntClsConfig;
-extern afxClassConfig const _AfxLitClsConfig;
-extern afxClassConfig const _AfxRndClsConfig;
-extern afxClassConfig const _AfxCadClsConfig;
+extern afxClassConfig const _AfxNodMgrCfg;
+extern afxClassConfig const _AfxSklMgrCfg;
+extern afxClassConfig const _AfxMtlMgrCfg;
+extern afxClassConfig const _AfxMshMgrCfg;
+extern afxClassConfig const _AfxVtdMgrCfg;
+extern afxClassConfig const _AfxMshtMgrCfg;
+extern afxClassConfig const _AfxMdlMgrCfg;
+extern afxClassConfig const _AwxBodMgrCfg;
+extern afxClassConfig const _AwxAniMgrCfg;
+extern afxClassConfig const _AwxMotMgrCfg;
+extern afxClassConfig const _AfxMotoMgrCfg;
+extern afxClassConfig const _AfxEntMgrCfg;
+extern afxClassConfig const _AfxLitMgrCfg;
+extern afxClassConfig const _AfxRndMgrCfg;
+extern afxClassConfig const _AfxCadMgrCfg;
 
 //extern afxChain* _AfxGetSystemClassChain(void);
 
@@ -326,7 +326,7 @@ _AKX afxError _AfxSimDtor(afxSimulation sim)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    _AfxUninstallChainedClasses(&sim->classes);
+    AfxCleanUpChainedManagers(&sim->classes);
 
     AfxReleaseObjects(1, (void*[]) { sim->genrlMem });
 
@@ -351,7 +351,7 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
     as.resizable = TRUE;
     as.stock = 4096000;
 
-    if (AfxAcquireMmus(1, AfxHint(), &as, &sim->genrlMem)) AfxThrowError();
+    if (AfxAcquireMmus(1, AfxHere(), &as, &sim->genrlMem)) AfxThrowError();
     else
     {
         sim->dctx = config->dctx;
@@ -395,24 +395,28 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 
             //afxClassConfig tmp;
 
-            AfxSetUpManager(&sim->assets, NIL, classes, &_AfxCadClsConfig);
+            AfxEstablishManager(&sim->materials, NIL, classes, &_AfxMtlMgrCfg); // require tex
+            
+            AfxEstablishManager(&sim->topologies, NIL, classes, &_AfxMshtMgrCfg);
+            AfxEstablishManager(&sim->meshDatas, NIL, classes, &_AfxVtdMgrCfg);
+            AfxEstablishManager(&sim->meshes, NIL, classes, &_AfxMshMgrCfg); // require msht, vtd
 
-            AfxSetUpManager(&sim->materials, NIL, classes, &_AfxMtlClsConfig);
-            AfxSetUpManager(&sim->meshes, NIL, classes, &_AfxMshClsConfig);
-            AfxSetUpManager(&sim->topologies, NIL, classes, &_AfxMshtClsConfig);
-            AfxSetUpManager(&sim->meshDatas, NIL, classes, &_AfxVtdClsConfig);
-            //AfxSetUpManager(&sim->nodes, NIL, classes, &_AfxNodClsConfig);
-            AfxSetUpManager(&sim->skeletons, NIL, classes, &_AfxSklClsConfig);
-            AfxSetUpManager(&sim->models, NIL, classes, &_AfxMdlClsConfig);
-            AfxSetUpManager(&sim->bodies, NIL, classes, &_AwxBodClsConfig);
-            AfxSetUpManager(&sim->motors, NIL, classes, &_AfxMotoClsConfig);
-            AfxSetUpManager(&sim->motions, NIL, classes, &_AwxMotClsConfig);
-            AfxSetUpManager(&sim->animations, NIL, classes, &_AwxAniClsConfig);
+            //AfxEstablishManager(&sim->nodes, NIL, classes, &_AfxNodMgrCfg);
+            AfxEstablishManager(&sim->skeletons, NIL, classes, &_AfxSklMgrCfg);
+            AfxEstablishManager(&sim->models, NIL, classes, &_AfxMdlMgrCfg); // require skl, msh
+            
+            AfxEstablishManager(&sim->motions, NIL, classes, &_AwxMotMgrCfg);
+            AfxEstablishManager(&sim->animations, NIL, classes, &_AwxAniMgrCfg); // require mot
 
-            AfxSetUpManager(&sim->entities, NIL, classes, &_AfxEntClsConfig);
-            AfxSetUpManager(&sim->lights, NIL, classes, &_AfxLitClsConfig);
+            AfxEstablishManager(&sim->motors, NIL, classes, &_AfxMotoMgrCfg);
+            AfxEstablishManager(&sim->bodies, NIL, classes, &_AwxBodMgrCfg); // require moto
+            
+            AfxEstablishManager(&sim->entities, NIL, classes, &_AfxEntMgrCfg);
+            AfxEstablishManager(&sim->lights, NIL, classes, &_AfxLitMgrCfg);
 
-            AfxSetUpManager(&sim->renderers, NIL, classes, &_AfxRndClsConfig);
+            AfxEstablishManager(&sim->assets, NIL, classes, &_AfxCadMgrCfg); // require all
+
+            AfxEstablishManager(&sim->renderers, NIL, classes, &_AfxRndMgrCfg); // require all
 
 
         }
@@ -420,7 +424,7 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
 
         if (err)
         {
-            _AfxUninstallChainedClasses(&sim->classes);
+            AfxCleanUpChainedManagers(&sim->classes);
 
 
             AfxReleaseObjects(1, (void*[]) { sim->genrlMem });
@@ -429,7 +433,7 @@ _AKX afxError _AfxSimCtor(afxSimulation sim, afxCookie const *cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxSimClsConfig =
+_AKX afxClassConfig _AfxSimMgrCfg =
 {
     .fcc = afxFcc_SIM,
     .name = "Simulation",
@@ -492,7 +496,7 @@ _AKX afxManager* AfxGetSimulationClass(void)
 
     if (_simCls.fcc != afxFcc_CLS)
     {
-        AfxSetUpManager(&_simCls, NIL, /*_AfxGetSystemClassChain()*/NIL, &_AfxSimClsConfig);
+        AfxEstablishManager(&_simCls, NIL, /*_AfxGetSystemClassChain()*/NIL, &_AfxSimMgrCfg);
         simClsMounted = TRUE;
     }
     return &_simCls;

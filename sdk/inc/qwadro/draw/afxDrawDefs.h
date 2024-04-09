@@ -14,16 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_DRAW_DEFS_H
 #define AFX_DRAW_DEFS_H
 
-#include "qwadro/mem/afxArray.h"
-#include "qwadro/math/afxFrustum.h"
-#include "qwadro/core/afxThread.h"
-#include "qwadro/io/afxStream.h"
-#include "qwadro/core/afxRestring.h"
+#include "qwadro/core/afxSystem.h"
 
 #ifndef __e2draw__
 #   ifdef _DEBUG
@@ -50,53 +46,29 @@
 // Object handles defined by SIGMA Draw System
 
 AFX_DEFINE_HANDLE(afxDrawDevice);
-AFX_DEFINE_HANDLE(afxDrawThread);
-//typedef afxObject afxDrawThread;
 AFX_DEFINE_HANDLE(afxDrawContext);
-//typedef afxObject afxDrawContext;
-AFX_DEFINE_HANDLE(afxDrawQueue);
-//typedef afxObject afxDrawQueue;
+AFX_DEFINE_HANDLE(afxDrawBridge);
 AFX_DEFINE_HANDLE(afxDrawInput);
-//typedef afxObject afxDrawInput;
 AFX_DEFINE_HANDLE(afxDrawStream);
-//typedef afxObject afxDrawStream;
 AFX_DEFINE_HANDLE(afxDrawOutput);
-//typedef afxObject afxDrawOutput;
-
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxDrawTechnique);
 AFX_DEFINE_HANDLE(afxPipeline);
 AFX_DEFINE_HANDLE(afxRasterizer);
 AFX_DEFINE_HANDLE(afxVertexInput);
-//typedef afxObject afxPipeline;
 AFX_DEFINE_HANDLE(afxShader);
-//typedef afxObject afxShader;
 AFX_DEFINE_HANDLE(afxBindSchema);
-//typedef afxObject afxBindSchema;
 AFX_DEFINE_HANDLE(afxSampler);
-//typedef afxObject afxSampler;
-
 AFX_DEFINE_HANDLE(afxQueryPool);
-
 AFX_DEFINE_HANDLE(afxBuffer);
-//typedef afxObject afxBuffer;
-
 AFX_DEFINE_HANDLE(afxVertexStream);
-
 AFX_DEFINE_HANDLE(afxVertexBuffer);
 AFX_DEFINE_HANDLE(afxIndexBuffer);
-
 AFX_DEFINE_HANDLE(afxRaster);
-//typedef afxObject afxRaster;
-//typedef afxObject afxSurface;
 AFX_DEFINE_HANDLE(afxCanvas);
-//typedef afxObject afxCanvas;
-
 AFX_DEFINE_HANDLE(afxFence);
 AFX_DEFINE_HANDLE(afxSemaphore);
-
 AFX_DEFINE_HANDLE(afxCamera);
-
 AFX_DEFINE_HANDLE(afxTypography);
 
 typedef afxNat afxSimd(afxWhd[3]);
@@ -194,8 +166,8 @@ typedef enum afxLogicOp
 typedef enum afxCullMode
 {
     // NIL = DISABLED
-    afxCullMode_FRONT = AfxGetBitOffset(0),
-    afxCullMode_BACK  = AfxGetBitOffset(1),
+    afxCullMode_FRONT = AFX_BIT_OFFSET(0),
+    afxCullMode_BACK  = AFX_BIT_OFFSET(1),
     afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, // sum to cull both faces --- who would use it?
     
     afxCullMode_TOTAL
@@ -474,7 +446,7 @@ AVX afxNat AfxVertexFormatGetSize(afxVertexFormat fmt);
 
 AVX afxResult       AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSiz, afxSize *vecSiz, afxSize *siz);
 
-AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint);
+AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHere const hint);
 //#define                     AfxAssertWhd(max_,base_,range_) _AfxAssertWhd((max_),(base_),(range_))
 
 AVXINL void AfxMinWhd(afxNat whd[3], afxNat const a[3], afxNat const b[3])

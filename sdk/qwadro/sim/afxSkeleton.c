@@ -896,7 +896,7 @@ _AKX void AfxLocalPoseFromPoseBuffer(afxSkeleton skl, awxPose* pos, awxPoseBuffe
         afxM3d Q, Scale;
 
         if (!AfxPolarDecomposeM3d(Linear, 0.0000099999997, Q, Scale))
-            AfxError("Can't accurately decompose MAX transform Q");
+            AfxLogError("Can't accurately decompose MAX transform Q");
 
         afxV3d Position;
         AfxCopyV3d(Position, Local[3]);
@@ -984,7 +984,7 @@ _AKXINL void _AfxSklCtorBubbleSortOnLod(afxSkeletonBlueprint *Builder, afxSkelet
     afxSkeletonBone Temp;
 
     afxArena SortArena;
-    AfxAllocateArena(NIL, &SortArena, NIL, AfxHint());
+    AfxAllocateArena(NIL, &SortArena, NIL, AfxHere());
     afxNat *OldToNewMap = AfxRequestArenaUnit(&SortArena, sizeof(afxNat) * Builder->bones.cnt);
     afxNat *NewToOldMap = AfxRequestArenaUnit(&SortArena, sizeof(afxNat) * Builder->bones.cnt);
     afxNat v9 = 0;
@@ -1143,7 +1143,7 @@ _AKXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
 
     if (idx == (afxNat)-2)
     {
-        AfxError("Circular parenting chain detected at bone %d", inBoneIdx);
+        AfxLogError("Circular parenting chain detected at bone %d", inBoneIdx);
         AfxThrowError();
     }
     else if (idx == AFX_INVALID_INDEX)
@@ -1189,7 +1189,6 @@ _AKXINL void _AfxSklCtorWriteBone(afxSkeletonBuilder const* sklb, afxSkeleton sk
 
 _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 {
-    AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
 
@@ -1219,25 +1218,25 @@ _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
         skl->jointCnt = jointCnt;
         skl->lodType = lodType;
 
-        if (!(skl->parentIdx = AfxAllocate(jointCnt, sizeof(skl->parentIdx[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(skl->parentIdx = AfxAllocate(jointCnt, sizeof(skl->parentIdx[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < jointCnt; i++)
                 skl->parentIdx[i] = AFX_INVALID_INDEX; // to avoid crashes we must set it.
 
-            if (!(skl->local = AfxAllocate(jointCnt, sizeof(skl->local[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+            if (!(skl->local = AfxAllocate(jointCnt, sizeof(skl->local[0]), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < jointCnt; i++)
                     AfxResetTransform(&skl->local[i]);
 
-                if (!(skl->iw = AfxAllocate(jointCnt, sizeof(skl->iw[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                if (!(skl->iw = AfxAllocate(jointCnt, sizeof(skl->iw[0]), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                 else
                 {
                     for (afxNat i = 0; i < jointCnt; i++)
                         AfxResetM4d(skl->iw[i]);
 
-                    if (!(skl->lodError = AfxAllocate(jointCnt, sizeof(skl->lodError[0]), AFX_SIMD_ALIGN, AfxHint()))) AfxThrowError();
+                    if (!(skl->lodError = AfxAllocate(jointCnt, sizeof(skl->lodError[0]), AFX_SIMD_ALIGN, AfxHere()))) AfxThrowError();
                     else
                     {
                         for (afxNat i = 0; i < jointCnt; i++)
@@ -1245,7 +1244,7 @@ _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 
                         skl->joint = NIL;
 
-                        if (strb && !(skl->joint = AfxAllocate(jointCnt, sizeof(skl->joint[0]), 0, AfxHint()))) AfxThrowError();
+                        if (strb && !(skl->joint = AfxAllocate(jointCnt, sizeof(skl->joint[0]), 0, AfxHere()))) AfxThrowError();
                         else
                         {
                             if (!bluep->joints)
@@ -1285,11 +1284,11 @@ _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
         AfxAssert(jointCnt);
         //skl->bones = NIL;
 
-        //if (!(skl->bones = AfxAllocate(mmu, jointCnt, sizeof(skl->bones[0]), 0, AfxHint()))) AfxThrowError();
+        //if (!(skl->bones = AfxAllocate(mmu, jointCnt, sizeof(skl->bones[0]), 0, AfxHere()))) AfxThrowError();
         //else
         {
 #if 0
-            afxNat *boneWrittenMap = AfxAllocate(mmu, jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
+            afxNat *boneWrittenMap = AfxAllocate(mmu, jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHere());
             AfxAssert(boneWrittenMap);
 
             for (afxNat i = 0; i < jointCnt; ++i)
@@ -1342,7 +1341,6 @@ _AKX afxError _AfxSklCtor(afxSkeleton skl, afxCookie const *cookie)
 
 _AKX afxError _AfxSklDtor(afxSkeleton skl)
 {
-    AfxEntry("skl=%p", skl);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &skl, afxFcc_SKL);
 
@@ -1376,7 +1374,7 @@ _AKX afxError _AfxSklDtor(afxSkeleton skl)
     return err;
 }
 
-_AKX afxClassConfig _AfxSklClsConfig =
+_AKX afxClassConfig _AfxSklMgrCfg =
 {
     .fcc = afxFcc_SKL,
     .name = "Skeleton",
@@ -1428,7 +1426,7 @@ _AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cn
 
         afxSkeleton skl = skeletons[i];
 
-        afxNat *boneWrittenMap = AfxAllocate(skl->jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHint());
+        afxNat *boneWrittenMap = AfxAllocate(skl->jointCnt, sizeof(boneWrittenMap[0]), 0, AfxHere());
         AfxAssert(boneWrittenMap);
 
         for (afxNat i = 0; i < skl->jointCnt; ++i)
@@ -1459,7 +1457,7 @@ _AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cn
         else
             AfxResolveStrings2(skl->strb, 1, &skl->id, &s);
 
-        AfxEcho("Skeleton <%.*s> assembled. %p\n    Listing %u joints:", AfxPushString(&s), skl, skl->jointCnt);
+        AfxLogEcho("Skeleton <%.*s> assembled. %p\n    Listing %u joints:", AfxPushString(&s), skl, skl->jointCnt);
 
         for (afxNat i = 0; i < skl->jointCnt; i++)
         {
@@ -1468,7 +1466,7 @@ _AKX afxError AfxBuildSkeletons(afxSimulation sim, afxStringBase strb, afxNat cn
             else
                 AfxResolveStrings2(skl->strb, 1, &skl->joint[i], &s);
 
-            AfxLogMessageFormatted(0xFF, "\n    %u <%.*s> %i", i, AfxPushString(&s), skl->parentIdx[i]);
+            AfxLogEcho("\t%u <%.*s> %i", i, AfxPushString(&s), skl->parentIdx[i]);
         }
 
     }
@@ -1511,7 +1509,7 @@ _AKXINL afxError AfxBeginSkeletonBuilding(afxSkeletonBuilder* sklb, afxNat joint
     AfxAssignFcc(sklb, afxFcc_SKLB);
     AfxAssert(jointCnt);
     sklb->jointCnt = jointCnt;
-    sklb->bones = AfxAllocate(jointCnt, sizeof(sklb->bones[0]), 0, AfxHint());
+    sklb->bones = AfxAllocate(jointCnt, sizeof(sklb->bones[0]), 0, AfxHere());
 
     for (afxNat i = 0; i < jointCnt; i++)
     {

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /// When the vertex stage is present in a pipeline, the vertex shader input variables form an interface with the vertex input attributes.
 /// All vertex shader inputs declared must have a corresponding attribute and binding in the pipeline.

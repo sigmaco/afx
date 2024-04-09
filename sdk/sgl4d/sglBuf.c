@@ -30,7 +30,7 @@
 #if 0
 _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
 {
-    if (!buf->base.mapped) AfxError("");
+    if (!buf->base.mapped) AfxLogError("");
     else
     {
         afxBuffer base = AfxBuffer.GetBase(buf);
@@ -61,7 +61,7 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
                 target = GL_COPY_READ_BUFFER;
             else if (usage == afxBufferUsage_DST)
                 target = GL_COPY_WRITE_BUFFER;
-            else AfxError("");
+            else AfxLogError("");
 
             GLint glaccess;
 
@@ -81,7 +81,7 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
             else
             {
                 glaccess = NIL;
-                AfxError("");
+                AfxLogError("");
             }
 
             AfxAssert(gl->IsBuffer(base->gpuHandle));
@@ -100,7 +100,7 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 {
     void *ptr = NIL;
 
-    if (buf->base.mapped) AfxError("");
+    if (buf->base.mapped) AfxLogError("");
     else
     {
         buf->base.mappedOff = off;
@@ -111,7 +111,7 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 }
 #endif//0
 
-_SGL afxError _SglBindAndSyncBuf(sglDpuIdd* dpu, sglBindFlags bindFlags, GLenum glTarget, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage)
+_SGL afxError _SglBindAndSyncBuf(sglDpu* dpu, sglBindFlags bindFlags, GLenum glTarget, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage)
 {
     //AfxEntry("buf=%p", buf);
     afxError err = AFX_ERR_NONE;
@@ -194,7 +194,7 @@ _SGL afxError _SglBindAndSyncBuf(sglDpuIdd* dpu, sglBindFlags bindFlags, GLenum 
             AfxAssert(gl->BufferStorage);
             gl->BufferStorage(buf->glTarget, buf->base.siz, buf->base.bytemap, glAccess); _SglThrowErrorOccuried();
             //gl->BufferData(glTarget, buf->base.siz, buf->base.bytemap, buf->glUsage); _SglThrowErrorOccuried();
-            AfxEcho("afxBuffer %p hardware-side data instanced. glTarget %u, glHandle %u, offset %u, range %u, stride %u, usage %x", buf, buf->glTarget, glHandle, offset, range, stride, usage);
+            AfxLogEcho("afxBuffer %p hardware-side data instanced. glTarget %u, glHandle %u, offset %u, range %u, stride %u, usage %x", buf, buf->glTarget, glHandle, offset, range, stride, usage);
 
             if (glTarget != buf->glTarget)
             {
@@ -294,8 +294,6 @@ _SGL afxError _SglBufDtor(afxBuffer buf)
     afxError err = AFX_ERR_NONE;
 
     afxDrawContext dctx = AfxGetObjectProvider(buf);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     if (buf->glHandle)
     {
@@ -324,14 +322,12 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
     buf->base.access = spec->access;
 
     afxDrawContext dctx = AfxGetObjectProvider(buf);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    if (!(buf->base.bytemap = AfxAllocate(buf->base.siz, sizeof(afxByte), 64, AfxHint()))) AfxThrowError();
+    if (!(buf->base.bytemap = AfxAllocate(buf->base.siz, sizeof(afxByte), 64, AfxHere()))) AfxThrowError();
     else
     {
         if (spec->src)
-            AfxCopy(1, buf->base.siz, spec->src, buf->base.bytemap);
+            AfxCopy2(1, buf->base.siz, spec->src, buf->base.bytemap);
 
         buf->lastUpdOffset = 0;
         buf->lastUpdRange = buf->base.siz;
@@ -364,7 +360,7 @@ _SGL afxError _SglBufCtor(afxBuffer buf, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglBufClsConfig =
+_SGL afxClassConfig const _SglBufMgrCfg =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",

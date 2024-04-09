@@ -165,14 +165,16 @@
     <ClCompile Include="..\..\sgl4d\sglCanv.c" />
     <ClCompile Include="..\..\sgl4d\sglDcmd.c" />
     <ClCompile Include="..\..\sgl4d\sglDctx.c" />
-    <ClCompile Include="..\..\sgl4d\sglDdrv_w32.c" />
+    <ClCompile Include="..\..\sgl4d\sglDdev_w32.c" />
     <ClCompile Include="..\..\sgl4d\sglDin.c" />
     <ClCompile Include="..\..\sgl4d\sglDout_w32.c" />
-    <ClCompile Include="..\..\sgl4d\sglDque_w32.c" />
-    <ClCompile Include="..\..\sgl4d\sglDscr.c" />
+    <ClCompile Include="..\..\sgl4d\sglDxge_w32.c" />
+    <ClCompile Include="..\..\sgl4d\sglDiob.c" />
     <ClCompile Include="..\..\sgl4d\sglFenc.c" />
+    <ClCompile Include="..\..\sgl4d\sglLoader.c" />
     <ClCompile Include="..\..\sgl4d\sglPip.c" />
     <ClCompile Include="..\..\sgl4d\sglQryp.c" />
+    <ClCompile Include="..\..\sgl4d\sglQwadroToGpu.c" />
     <ClCompile Include="..\..\sgl4d\sglRas.c" />
     <ClCompile Include="..\..\sgl4d\sglRasOps.c" />
     <ClCompile Include="..\..\sgl4d\sglRazr.c" />
@@ -189,6 +191,9 @@
     <ProjectReference Include="..\e2draw\e2draw.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\sgl4d\sglWrapper.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

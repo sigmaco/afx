@@ -17,7 +17,7 @@
 #ifndef AFX_CLOCK_H
 #define AFX_CLOCK_H
 
-#include "qwadro/core/afxCoreDefs.h"
+#include "qwadro/core/afxDebug.h"
 
 AFX_DEFINE_STRUCT(afxClock)
 {

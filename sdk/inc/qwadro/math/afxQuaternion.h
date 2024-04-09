@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 /// The Qwadro quaternion functions use an 4D vector to represent quaternions, where the X, Y, and Z components are the vector part and the W component is the scalar part.
 
 /// afxQuat: A 4-dimensional vector representing a rotation.

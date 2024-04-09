@@ -23,7 +23,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/core/afxSystem.h"
 
-_SGL afxError _SglDpuBindAndSyncFenc(sglDpuIdd* dpu, afxBool syncOnly, afxFence fenc)
+_SGL afxError _DpuBindAndSyncFenc(sglDpu* dpu, afxBool syncOnly, afxFence fenc)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -40,8 +40,7 @@ _SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFen
     AfxAssertObjects(cnt, fences, afxFcc_FENC);
     afxDrawContext dctx = AfxGetFenceContext(fences[0]);
     afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
-    afxNat txuIdx;
-    AfxGetThreadingUnit(&txuIdx);
+    afxNat txuIdx = 0;
     glVmt const* gl = &ddev->idd->dpus[txuIdx].gl;
 
     afxClock startClock, currClock;
@@ -146,6 +145,9 @@ _SGL afxError _SglFencDtor(afxFence fenc)
         _SglDctxDeleteGlRes(dctx, 9, fenc->glHandle);
         fenc->glHandle = 0;
     }
+
+    AfxPopLinkage(&fenc->base.dctx);
+
     return err;
 }
 
@@ -154,17 +156,19 @@ _SGL afxError _SglFencCtor(afxFence fenc, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &fenc, afxFcc_FENC);
 
-    afxDrawContext dctx = cookie->udd[0];
-    afxBool signaled = *(afxBool const*)cookie->udd[1];
+    afxDrawContext dctx = cookie->udd[1];
+    afxBool signaled = *(afxBool const*)cookie->udd[2];
 
     fenc->glHandle = 0;
     fenc->updFlags = SGL_UPD_FLAG_DEVICE_INST;
     fenc->base.signaled = !!signaled;
 
+    AfxPushLinkage(&fenc->base.dctx, &dctx->base.ownedFences);
+
     return err;
 }
 
-_SGL afxClassConfig const _SglFencClsConfig =
+_SGL afxClassConfig const _SglFencMgrCfg =
 {
     .fcc = afxFcc_FENC,
     .name = "GPU Synchronization Fence",
@@ -181,6 +185,8 @@ _SGL afxError _SglSemDtor(afxSemaphore sem)
     AfxAssertObjects(1, &sem, afxFcc_SEM);
     afxDrawContext dctx = AfxGetSemaphoreContext(sem);
     
+    AfxPopLinkage(&sem->base.dctx);
+
     sem->base.value = NIL;
 
     return err;
@@ -191,14 +197,16 @@ _SGL afxError _SglSemCtor(afxSemaphore sem, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sem, afxFcc_SEM);
 
-    afxDrawContext dctx = cookie->udd[0];
+    afxDrawContext dctx = cookie->udd[1];
 
     sem->base.value = NIL;
+
+    AfxPushLinkage(&sem->base.dctx, &dctx->base.ownedSemaphores);
 
     return err;
 }
 
-_SGL afxClassConfig const _SglSemClsConfig =
+_SGL afxClassConfig const _SglSemMgrCfg =
 {
     .fcc = afxFcc_SEM,
     .name = "GPU Synchronization Semaphore",

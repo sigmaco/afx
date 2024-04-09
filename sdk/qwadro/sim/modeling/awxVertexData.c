@@ -27,11 +27,11 @@
 #include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/mem/afxMappedString.h"
 
-_AKX afxError AwxCmdBindVertexDataCache(afxDrawStream dscr, afxNat slotIdx, awxVertexData vtd)
+_AKX afxError AwxCmdBindVertexDataCache(afxDrawStream diob, afxNat slotIdx, awxVertexData vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
-    AfxAssertObjects(1, &dscr, afxFcc_DSCR);
+    AfxAssertObjects(1, &diob, afxFcc_DIOB);
 
     for (afxNat i = 0; i < 2; i++)
     {
@@ -40,7 +40,7 @@ _AKX afxError AwxCmdBindVertexDataCache(afxDrawStream dscr, afxNat slotIdx, awxV
 
         if (vbuf)
         {
-            AfxCmdBindVertexSources(dscr, i, 1, (afxBuffer[]) { AfxGetVertexBufferStorage(vbuf) }, &cache->base, &cache->range, &cache->stride);
+            AfxCmdBindVertexSources(diob, i, 1, (afxBuffer[]) { AfxGetVertexBufferStorage(vbuf) }, &cache->base, &cache->range, &cache->stride);
         }
     }
     return err;
@@ -260,7 +260,7 @@ _AKX afxError AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat base
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
-    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
         AfxThrowError();
 
     if (!err)
@@ -302,7 +302,7 @@ _AKX afxError AwxFillVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVt
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
             AfxThrowError();
 
     if (!err)
@@ -325,7 +325,7 @@ _AKX afxError AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat b
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
             AfxThrowError();
 
     if (!err)
@@ -370,8 +370,7 @@ _AKX afxError _AfxVtdDtor(awxVertexData vtd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
-    AfxEntry("vtd=%p", vtd);
-
+    
     afxSimulation sim = AfxGetObjectProvider(vtd);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxMmu mmu = AfxGetSimulationMmu(sim);
@@ -395,8 +394,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vtd, afxFcc_VTD);
-    AfxEntry("vtd=%p", vtd);
-
+    
     afxSimulation sim = cookie->udd[0];
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     afxStringBase strb = cookie->udd[1];
@@ -418,7 +416,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
     afxNat attrCnt = spec->attrCnt;
     awxVertexDataAttr* attrs;
 
-    if (!(attrs = AfxAllocate(attrCnt, sizeof(attrs[0]), NIL, AfxHint()))) AfxThrowError();
+    if (!(attrs = AfxAllocate(attrCnt, sizeof(attrs[0]), NIL, AfxHere()))) AfxThrowError();
     else
     {
         vtd->attrCnt = attrCnt;
@@ -463,7 +461,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxVtdClsConfig =
+_AKX afxClassConfig _AfxVtdMgrCfg =
 {
     .fcc = afxFcc_VTD,
     .name = "Vertex Data",

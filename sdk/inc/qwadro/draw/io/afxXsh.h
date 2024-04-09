@@ -14,12 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 #define AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/dev/afxDrawContext.h"
 
 #if 0
 AVX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], afxDrawContext dctx, afxDrawOperation dop[]);

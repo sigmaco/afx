@@ -186,7 +186,6 @@ _AKX afxNat AfxFindAnimations(awxAsset cad, afxNat cnt, afxString const id[], aw
 _AKX afxError _AfxCadDtor(awxAsset cad)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("sim=%p", cad);
     AfxAssertObjects(1, &cad, afxFcc_CAD);
 
     if (cad->exporterInfo)
@@ -216,7 +215,6 @@ _AKX afxError _AfxCadDtor(awxAsset cad)
 _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("sim=%p", cad);
     AfxAssertObjects(1, &cad, afxFcc_CAD);
 
     afxSimulation sim = cookie->udd[0];
@@ -239,19 +237,19 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
     AfxAssert(typeCnt);
     AfxAssert(totalResCnt);
 
-    if (typeCnt && !(cad->nests = AfxAllocate(typeCnt, sizeof(cad->nests[0]), 0, AfxHint()))) AfxThrowError();
+    if (typeCnt && !(cad->nests = AfxAllocate(typeCnt, sizeof(cad->nests[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         if (typeCnt)
-            AfxZero(typeCnt, sizeof(cad->nests[0]), cad->nests);
+            AfxZero2(typeCnt, sizeof(cad->nests[0]), cad->nests);
 
         cad->nestCnt = typeCnt;
 
-        if (totalResCnt && !(cad->resSlots = AfxAllocate(totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHint()))) AfxThrowError();
+        if (totalResCnt && !(cad->resSlots = AfxAllocate(totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             if (totalResCnt)
-                AfxZero(totalResCnt, sizeof(cad->resSlots[0]), cad->resSlots);
+                AfxZero2(totalResCnt, sizeof(cad->resSlots[0]), cad->resSlots);
 
             cad->resCap = totalResCnt;
 
@@ -397,7 +395,7 @@ _AKX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
     }
 }
 
-_AKX afxClassConfig _AfxCadClsConfig =
+_AKX afxClassConfig _AfxCadMgrCfg =
 {
     .fcc = afxFcc_CAD,
     .name = "CAD Asset",

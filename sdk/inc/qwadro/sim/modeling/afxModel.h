@@ -53,7 +53,7 @@ AFX_DEFINE_STRUCT(afxModelBlueprint)
     afxString32         id;
     afxSkeleton         skl;
     afxTransform        displacement;
-    afxNat              mshCnt;
+    afxNat              rigCnt;
     afxMesh*            meshes;
     afxStringBase       strb;
 };

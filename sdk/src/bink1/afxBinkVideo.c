@@ -24,7 +24,7 @@
 #include "afxBinkProxy.h"
 #include "afxBinkVideo.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/dev/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
 static void Start_us_count(afxNat64* out_count)
@@ -135,14 +135,14 @@ void LockBinkTextures(afxBinkVideo *bnk)
 
     for (afxInt i = 0; i < bnk->buffers.TotalFrames; ++i)
     {
-        afxNat rowLen;
+        afxNat rowLen, rgnSiz;
         afxNat rasCnt = (bnk->hasAlphaPlane) ? 4 : 3;
 
         for (afxNat j = 0; j < rasCnt; j++)
         {
             AfxGetRasterExtent(bnk->rasters[i][j], 0, rgn.whd);
 
-            if ((bnk->buffers.Frames[i][j].Buffer = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, NIL, &rowLen))) // = lr.pBits;
+            if ((bnk->buffers.Frames[i][j].Buffer = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, &rgnSiz, &rowLen))) // = lr.pBits;
                 bnk->buffers.Frames[i][j].BufferPitch = rowLen;// = lr.Pitch;
         }
     }
@@ -171,20 +171,20 @@ void UnlockBinkTextures(afxBinkVideo *bnk)
     }
 }
 
-_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream dscr)
+_AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob)
 {
     afxError err = AFX_ERR_NONE;
     Start_timer();
     ++bnk->Frame_count;
 
     AfxAssertObjects(1, &bnk->yv12ToRgbaPip, afxFcc_PIP);
-    AfxCmdBindPipeline(dscr, 0, bnk->yv12ToRgbaPip);
+    AfxCmdBindPipeline(diob, 0, bnk->yv12ToRgbaPip);
 
     // Set the textures.
-    //AvxCmdBindLegos(dscr, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
-    AfxCmdBindRasters(dscr, 0, 0, 3, bnk->samplers, bnk->rasters[bnk->buffers.FrameNum]);
+    //AvxCmdBindLegos(diob, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
+    AfxCmdBindRasters(diob, 0, 0, 3, bnk->samplers, bnk->rasters[bnk->buffers.FrameNum]);
 
-    AfxCmdDraw(dscr, 0, 0, 0, 4); // tristripped quad in shader
+    AfxCmdDraw(diob, 0, 0, 0, 4); // tristripped quad in shader
 
     End_timer(bnk->Render_microseconds);
     return err;
@@ -253,7 +253,7 @@ _AFXEXPORT afxError AfxBinkClose(afxBinkVideo *bnk)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
+_AFXEXPORT afxError AfxOpenVideoBink(afxBinkVideo *bnk, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     afxUri2048 uri2;
@@ -276,7 +276,7 @@ _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
     bnk->whd[1] = bnk->summary.Height;
     bnk->whd[2] = 1;
 
-    AfxZero(1, sizeof(bnk->buffers), &bnk->buffers);
+    AfxZero2(1, sizeof(bnk->buffers), &bnk->buffers);
     BinkGetFrameBuffersInfo(bnk->bik, &bnk->buffers);
     CreateBinkTextures(bnk);
     // Register our locked texture pointers with Bink
@@ -287,7 +287,7 @@ _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkDrop(afxBinkVideo *bnk)
+_AFXEXPORT afxError AfxDropVideoBink(afxBinkVideo *bnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxBinkClose(bnk);
@@ -303,7 +303,7 @@ _AFXEXPORT afxError AfxBinkDrop(afxBinkVideo *bnk)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
+_AFXEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     bnk->running = FALSE;
@@ -336,7 +336,7 @@ _AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
     bnk->samplers[3] = bnk->samplers[0];
 
     afxUri uri;
-    AfxMakeUri(&uri, "data/pipeline/video/rgbOutYuv.xsh.xml?yFlipped", 0);
+    AfxMakeUri(&uri, "system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
     bnk->yv12ToRgbaPip = AfxAssemblePipelineFromXsh(dctx, NIL, &uri);
     AfxAssert(bnk->yv12ToRgbaPip);
 

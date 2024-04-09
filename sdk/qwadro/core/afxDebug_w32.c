@@ -32,12 +32,8 @@
 #pragma comment (lib, "dwmapi")
 #endif
 
-#include "qwadro/core//afxSystem.h"
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxThread.h"
-#include "qwadro/core/afxWaitCondition.h"
-#include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxString.h"
+#include "qwadro/core/afxSystem.h"
+#include "qwadro/core/afxCondition.h"
 #include "qwadro/core/afxTerminal.h"
 
 extern afxString const qwadroSignature;
@@ -45,7 +41,7 @@ extern afxString const qwadroSignature;
 AFX_DEFINE_STRUCT(afxDebugger)
 {
     afxMutex        mtx;
-    afxWaitCondition         cond;
+    afxCondition cond;
     afxBool         isLocked;
 
     afxNat          unitLockerIdx;
@@ -71,9 +67,26 @@ AFX_DEFINE_STRUCT(afxDebugger)
     .conOutHnd = INVALID_HANDLE_VALUE
 };
 
-AFXINL afxResult _AfxLogFn(afxNat32 color, afxChar const* msg)
+AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
 {
     WORD tattr = 0;
+    afxNat color = 0;
+
+    switch (ch % 10)
+    {
+    case 0: color = 0x000000FF; break; // grey : comment
+    case 1: color = 0xFFFFFFFF; break; // white : highlight
+    case 2: color = 0x00ff0000; break; // green : regular
+    case 3: color = 0xFF00FF00; break; // blue : assistence
+    case 4: color = 0x00FFFF00; break; // turquish
+    case 5: color = 0xFF00FF00; break; // purple
+
+    case 6: color = 0xFFFF0000; break; // yellow
+    case 7: color = 0xFFFF00FF; break; // yellow : advertence (aka warning)
+    case 8: color = 0xFF000000; break; // red dark : assertion
+    case 9: color = 0xFF0000FF; break; // red : critical error
+    default:break;
+    }
 
     if (color & 0x000000FF)
         tattr |= FOREGROUND_INTENSITY;
@@ -91,15 +104,63 @@ AFXINL afxResult _AfxLogFn(afxNat32 color, afxChar const* msg)
 
     if (debugger.dump)
     {
-        fputs(msg, debugger.dump);
+        //fputs(msg, debugger.dump);
+        fwrite(msg, 1, len, debugger.dump);
         fflush(debugger.dump);
     }
     return 1;
 }
 
-void AfxLogCall(afxHint const hint, afxChar const* args, ...)
+afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
+    {
+        afxChar msg2[8192];
+        int len = 0;
+
+        if ((ch % 10) >= 7)
+        {
+#ifdef AFX_PLATFORM_64
+            len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
+#else
+            len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
+#endif
+        }
+
+        int len2;
+
+        if (!(msg && msg[0])) msg2[len] = '\0', len2 = 0;
+        else
+        {
+            va_list args;
+            va_start(args, msg);
+            len2 = stbsp_vsprintf(&msg2[len], msg, args);
+            va_end(args);
+        }
+
+        msg2[len + len2] = '\n';
+        msg2[len + len2 + 1] = '\0';
+
+        _AfxDbgLogFn(ch, msg2, len + len2);
+        _AfxDbgUnlock();
+    }
+    return 0;
+}
+
+afxResult AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len)
+{
+    if (_AfxDbgLock())
+    {
+        _AfxDbgLogFn(ch, msg, len);
+        _AfxDbgUnlock();
+    }
+    return 0;
+}
+
+#if 0
+void AfxLogCall_(afxHere const hint, afxChar const* args, ...)
+{
+    if (_AfxDbgLock())
     {
         afxChar msg[8192];
         int len;
@@ -119,13 +180,13 @@ void AfxLogCall(afxHint const hint, afxChar const* args, ...)
         msg[len + len2 + 2] = '\0';
 
         _AfxLogFn(0x000000FF, msg);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
 
-void AfxLogComment(afxHint const hint, afxChar const* msg, ...)
+void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         afxChar msg2[8192];
         int len;
@@ -158,13 +219,13 @@ void AfxLogComment(afxHint const hint, afxChar const* msg, ...)
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFFFFFFFF, msg2);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
 
-void AfxLogEcho(afxHint const hint, afxChar const* msg, ...)
+void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         afxChar msg2[8192];
         int len;
@@ -197,13 +258,13 @@ void AfxLogEcho(afxHint const hint, afxChar const* msg, ...)
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0x00FF0000, msg2);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
 
-void AfxLogAssistence(afxHint const hint, afxChar const* msg, ...)
+void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         afxChar msg2[8192];
         int len;
@@ -229,13 +290,13 @@ void AfxLogAssistence(afxHint const hint, afxChar const* msg, ...)
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFF00FF00, msg2);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
 
-void AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...)
+void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         afxChar msg2[8192];
         int len;
@@ -261,13 +322,13 @@ void AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...)
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFFFF0000, msg2);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
 
-void AfxLogError(afxHint const hint, afxChar const* msg, ...)
+void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
 {
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         afxChar msg2[8192];
         int len;
@@ -293,41 +354,12 @@ void AfxLogError(afxHint const hint, afxChar const* msg, ...)
         msg2[len + len2 + 1] = '\0';
 
         _AfxLogFn(0xFF000000, msg2);
-        AfxUnlockDebugger();
+        _AfxDbgUnlock();
     }
 }
+#endif
 
-afxResult AfxLogMessageFormatted(afxNat32 color, afxChar const* msg, ...)
-{
-    if (AfxLockDebugger())
-    {
-        va_list args;
-        va_start(args, msg);
-        afxChar msg2[4096];
-        stbsp_vsprintf(msg2, msg, args);
-        va_end(args);
-
-        _AfxLogFn(color, msg2);
-        AfxUnlockDebugger();
-    }
-    return 0;
-}
-
-afxResult AfxLogMessage(afxNat32 color, afxChar const* msg)
-{
-    if (AfxLockDebugger())
-    {
-        if (!color)
-            color = 0x000000FF;
-
-        _AfxLogFn(color, msg);
-        AfxUnlockDebugger();
-        return 1;
-    }
-    return 0;
-}
-
-afxResult AfxUnlockDebugger(void)
+afxResult _AfxDbgUnlock(void)
 {
     afxResult rslt;
 
@@ -339,13 +371,13 @@ afxResult AfxUnlockDebugger(void)
         {
             debugger.isLocked = FALSE;
             rslt = AfxUnlockMutex(&(debugger.mtx));
-            AfxSignalSingleCondition(&debugger.cond);
+            AfxSignalCondition(&debugger.cond);
             afxSystem sys;
 
-            if ((sys = AfxGetSystem()))
+            if (AfxGetSystem(&sys))
             {
                 afxNat unitUnlockerIdx;
-                AfxGetThreadingId(&unitUnlockerIdx);
+                AfxGetTid(&unitUnlockerIdx);
                 //afxError err;
                 //AfxAssert(unitUnlockerIdx == debugger.unitLockerIdx);
             }
@@ -354,7 +386,7 @@ afxResult AfxUnlockDebugger(void)
     return rslt;
 }
 
-afxResult AfxLockDebugger(void)
+afxResult _AfxDbgLock(void)
 {
     afxResult rslt;
 
@@ -367,15 +399,15 @@ afxResult AfxLockDebugger(void)
             afxNat oldUnitIdx = debugger.unitLockerIdx;
             afxSystem sys;
             
-            if ((sys = AfxGetSystem()))
+            if (AfxGetSystem(&sys))
             {
-                AfxGetThreadingId(&debugger.unitLockerIdx);
+                AfxGetTid(&debugger.unitLockerIdx);
 
                 if (oldUnitIdx != debugger.unitLockerIdx)
                 {
                     afxChar msg2[512];
                     stbsp_sprintf(msg2, "Entering the Thread Execution Environment %2u\n", debugger.unitLockerIdx);
-                    _AfxLogFn(0xFFFF0000, msg2);
+                    AfxDbgLogf(6, NIL, msg2);
                 }
             }
 
@@ -386,16 +418,14 @@ afxResult AfxLockDebugger(void)
     return rslt;
 }
 
-afxBool AfxDebuggerIsAttached(void)
+afxBool _AfxDbgIsAttached(void)
 {
     return debugger.running;
 }
 
-afxResult AfxDetachDebugger(void)
+afxResult _AfxDbgDetach(void)
 {
-    AfxEntry("");
-
-    if (AfxLockDebugger())
+    if (_AfxDbgLock())
     {
         AfxReleaseTerminal();
 
@@ -406,22 +436,21 @@ afxResult AfxDetachDebugger(void)
         }
 
         debugger.running = 0;
-        AfxCleanUpWaitCondition(&(debugger.cond));
+        AfxCleanUpCondition(&(debugger.cond));
         AfxCleanUpMutex(&(debugger.mtx));
     }
     return 0;
 }
 
-afxResult AfxAttachDebugger(afxChar const* file)
+afxResult _AfxDbgAttach(afxChar const* file)
 {
-    AfxEntry("");
     (void)file;
     afxError err = AFX_ERR_NONE;
     if (debugger.running) AfxThrowError();
     else
     {
         AfxSetUpMutex(&(debugger.mtx), AFX_MTX_RECURSIVE);
-        AfxSetUpWaitCondition(&(debugger.cond));
+        AfxSetUpCondition(&(debugger.cond));
         debugger.isLocked = TRUE;
 
         afxChar path[1024];
@@ -488,18 +517,18 @@ afxResult AfxAttachDebugger(afxChar const* file)
                 SetConsoleTextAttribute(debugger.conOutHnd, (WORD)(~(MAXUINT16) | FOREGROUND_RED | FOREGROUND_GREEN));
 
                 for (afxNat i = 0; i < 1120; i++)
-                    AfxLogMessageFormatted(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
+                    AfxDbgLogf(0xFFFF0000, "%.*s", 1, &qwadroSignature.start[i * 1]);
 
                 Sleep(1000);
 
                 SetConsoleTextAttribute(debugger.conOutHnd, (WORD)(~(MAXUINT16) | FOREGROUND_INTENSITY));
-                AfxUnlockDebugger();
+                _AfxDbgUnlock();
                 return TRUE;
             }
 #else
             if (AfxAcquireTerminal())
             {
-                AfxUnlockDebugger();
+                _AfxDbgUnlock();
                 return TRUE;
             }
 #endif
@@ -513,13 +542,13 @@ afxResult AfxAttachDebugger(afxChar const* file)
             }
         }
 
-        AfxCleanUpWaitCondition(&(debugger.cond));
+        AfxCleanUpCondition(&(debugger.cond));
         AfxCleanUpMutex(&(debugger.mtx));
     }
     return FALSE;
 }
 
-_AFX void AfxCatchError_(afxError err_, afxHint const hint)
+_AFX void AfxCatchError_(afxError err_, afxHere const hint)
 {
     afxError err = NIL;
     AfxAssert(err_);
@@ -527,7 +556,7 @@ _AFX void AfxCatchError_(afxError err_, afxHint const hint)
 
     if (err_)
     {
-        AfxLogError(hint, "");
+        AfxLogError("");
         afxInt a = 0;
     }
 }

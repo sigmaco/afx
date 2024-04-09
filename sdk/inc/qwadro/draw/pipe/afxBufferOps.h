@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_BUFFER_OPS_H
 #define AFX_BUFFER_OPS_H
@@ -44,7 +44,7 @@ AFX_DEFINE_STRUCT(afxBufferIoOp)
 AVX afxCmdId                AfxCmdCopyBuffer
 /// Copy data between afxBuffer regions.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               src, /// the source buffer.
     afxBuffer               dst, /// the destination buffer.
     afxNat                  opCnt, /// the number of regions to copy.
@@ -54,7 +54,7 @@ AVX afxCmdId                AfxCmdCopyBuffer
 AVX afxCmdId                AfxCmdCopyBufferRegion
 /// Copy data between afxBuffer regions.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               src, /// the source buffer.
     afxNat                  srcOffset, /// the starting offset in bytes from the start of srcBuffer.
     afxBuffer               dst, /// the destination buffer.
@@ -65,7 +65,7 @@ AVX afxCmdId                AfxCmdCopyBufferRegion
 AVX afxCmdId                AfxCmdFillBuffer
 /// Fill a region of a afxBuffer with a fixed value.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// the buffer to be filled.
     afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
     afxNat                  range, /// the number of bytes to fill, and must be either a multiple of 4, or 0 to fill the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.
@@ -75,7 +75,7 @@ AVX afxCmdId                AfxCmdFillBuffer
 AVX afxCmdId                AfxCmdClearBuffer
 /// Fill a region of a afxBuffer with zeroes.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// the buffer to be zeroed.
     afxNat                  offset, /// the byte offset into the buffer at which to start filling, and must be a multiple of 4.
     afxNat                  range /// the number of bytes to zero, and must be either a multiple of 4, or 0 to zero the range from offset to the end of the buffer. If 0 is used and the remaining size of the buffer is not a multiple of 4, then the nearest smaller multiple is used.    
@@ -84,7 +84,7 @@ AVX afxCmdId                AfxCmdClearBuffer
 AVX afxCmdId                AfxCmdUpdateBuffer
 /// Update a afxBuffer's contents from host memory.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// the buffer to be updated.
     afxNat                  offset, /// the byte offset into the buffer to start updating, and must be a multiple of 4.
     afxNat                  range, /// the number of bytes to update, and must be a multiple of 4.
@@ -94,7 +94,7 @@ AVX afxCmdId                AfxCmdUpdateBuffer
 AVX afxCmdId                AfxCmdDumpBuffer
 /// Dump a afxBuffer's contents to host memory.
 (
-    afxDrawStream           dscr,
+    afxDrawStream           diob,
     afxBuffer               buf, /// the buffer to be dumped.
     afxNat                  offset, /// the byte offset into the buffer to start dumping, and must be a multiple of 4.
     afxNat                  range, /// the number of bytes to dump, and must be a multiple of 4.

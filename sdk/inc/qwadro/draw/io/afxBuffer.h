@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_BUFFER_H
 #define AFX_BUFFER_H
@@ -23,21 +23,21 @@
 
 typedef enum afxBufferAccess
 {
-    afxBufferAccess_R       = AfxGetBitOffset(0), // Mapped range is readable by CPU.
-    afxBufferAccess_W       = AfxGetBitOffset(1), // Mapped range is writeable by CPU.
+    afxBufferAccess_R       = AFX_BIT_OFFSET(0), // Mapped range is readable by CPU.
+    afxBufferAccess_W       = AFX_BIT_OFFSET(1), // Mapped range is writeable by CPU.
     afxBufferAccess_RW      = (afxBufferAccess_R | afxBufferAccess_W), // Mapped range is readable and writeable by CPU.
-    afxBufferAccess_X       = AfxGetBitOffset(2), // Mapped range will be executable by GPU while being read and/or write by CPU.
-    afxBufferAccess_COHERENT= (afxBufferAccess_X | AfxGetBitOffset(3)), // Data written in mapped range will be immediately visible by GPU and CPU.
+    afxBufferAccess_X       = AFX_BIT_OFFSET(2), // Mapped range will be executable by GPU while being read and/or write by CPU.
+    afxBufferAccess_COHERENT= (afxBufferAccess_X | AFX_BIT_OFFSET(3)), // Data written in mapped range will be immediately visible by GPU and CPU.
 } afxBufferAccess;
 
 typedef enum afxBufferUsage
 {
-    afxBufferUsage_VERTEX   = AfxGetBitOffset(0), // The buffer can be used as a vertex buffer.
-    afxBufferUsage_INDEX    = AfxGetBitOffset(1), // The buffer can be used as an index buffer.
-    afxBufferUsage_UNIFORM  = AfxGetBitOffset(2), // The buffer can be used as a uniform buffer.
-    afxBufferUsage_STORAGE  = AfxGetBitOffset(3), // The buffer can be used as a storage buffer.
-    afxBufferUsage_INDIRECT = AfxGetBitOffset(4), // The buffer can be used as to store indirect command arguments.
-    afxBufferUsage_QUERY    = AfxGetBitOffset(5), // The buffer can be used to capture query results.
+    afxBufferUsage_VERTEX   = AFX_BIT_OFFSET(0), // The buffer can be used as a vertex buffer.
+    afxBufferUsage_INDEX    = AFX_BIT_OFFSET(1), // The buffer can be used as an index buffer.
+    afxBufferUsage_UNIFORM  = AFX_BIT_OFFSET(2), // The buffer can be used as a uniform buffer.
+    afxBufferUsage_STORAGE  = AFX_BIT_OFFSET(3), // The buffer can be used as a storage buffer.
+    afxBufferUsage_INDIRECT = AFX_BIT_OFFSET(4), // The buffer can be used as to store indirect command arguments.
+    afxBufferUsage_QUERY    = AFX_BIT_OFFSET(5), // The buffer can be used to capture query results.
 } afxBufferUsage;
 
 AFX_DEFINE_STRUCT(afxBufferSpecification)

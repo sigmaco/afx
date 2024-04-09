@@ -42,9 +42,6 @@
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundSystem.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\sound\afxSoundThread.h">
-      <Filter>qwadro\sound</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2sound.rc">
@@ -74,9 +71,6 @@
       <Filter>qwadro\sound</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\sound\afxSoundSystem.c">
-      <Filter>qwadro\sound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\sound\afxSoundThread.c">
       <Filter>qwadro\sound</Filter>
     </ClCompile>
   </ItemGroup>

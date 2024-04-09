@@ -14,10 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
-#include "qwadro/io/afxResource.h"
-#include "qwadro/core/afxSystem.h"
+
 #include <sys/stat.h>
+#include "qwadro/core/afxSystem.h"
 
 _AFXINL afxError AfxUnloadResource(afxResource res)
 {
@@ -148,11 +149,11 @@ _AFXINL afxResource AfxAcquireResource(afxResourceSpecification const *spec)
         spec
     };
 
-    if (AfxClassAcquireObjects(AfxGetResourceClass(), NIL, 1, &paradigm, (afxHandle**)&res, AfxHint()))
+    if (AfxClassAcquireObjects(AfxGetResourceClass(), NIL, 1, &paradigm, (afxHandle**)&res, AfxHere()))
         AfxThrowError();
     else
     {
-        AfxEcho("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
+        AfxLogEcho("Resource %p[%.4s]^%i acquired.", res, (afxChar const*)&(res->superset), res->obj.refCnt);
     }
     return res;
 }

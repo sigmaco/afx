@@ -1,11 +1,16 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
+
+
+#define _AFX_UX_C
+#define _AFX_OVERLAY_C
+
 #include "qwadro/afxQwadro.h"
 #include "qwadro/ux/afxApplication.h"
 #include "qwadro/core/afxDebug.h"
 #include "qwadro/math/afxMathDefs.h"
-#include "qwadro/io/afxMouse.h"
+#include "qwadro/ux/afxMouse.h"
 #include "../src/techid/afxMD5Model.h"
 #include "../src/cadio/afxWavefrontObject.h"
 #include "../src/rad3d/afxGranny2Model.h"
@@ -18,6 +23,7 @@
 #include "qwadro/sim/rendering/awxRenderer.h"
 #endif
 
+afxBool readyToRender = FALSE;
 afxApplication TheApp;
 awxBody cubeBod = NIL;
 afxModel cubeMdl = NIL;
@@ -44,66 +50,76 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     default:
     {
         awxRenderer rnd = AfxGetDrawInputUdd(din);
-        afxDrawContext dctx = AfxGetDrawInputContext(din);
+        afxDrawContext dctx;
+        AfxGetDrawInputContext(din, &dctx);
         
-        afxDrawStream dscr;
-
-        if (AfxAcquireDrawStreams(din, 0, 1, &dscr)) AfxThrowError();
-        else
+        if (readyToRender)
         {
-            if (AfxRecordDrawStream(dscr, afxDrawStreamUsage_ONCE)) AfxThrowError();
-            else
+            afxNat outBufIdx = 0;
+
+            if (!AfxLockDrawOutputBuffer(dout, 0, &outBufIdx))
             {
+                afxDrawStream diob;
+                afxNat queIdx = AFX_INVALID_INDEX;
+                afxNat portIdx = 0;
 
-                afxNat outBufIdx = 0;
-                AfxRequestDrawOutputBuffer(dout, 0, &outBufIdx);
-                afxRaster surf;
-                AfxGetDrawOutputBuffer(dout, outBufIdx, 1, &surf);
-                afxCanvas canv;
-                AfxGetDrawOutputCanvas(dout, outBufIdx, 1, &canv);
-                AfxAssertObjects(1, &surf, afxFcc_RAS);
-
-                AwxCmdBeginSceneRendering(dscr, rnd, rnd->activeCam, NIL, canv);
-
-
-                if (bod)
+                if (AfxAcquireDrawStreams(dctx, portIdx, &queIdx, 1, &diob)) AfxThrowError();
+                else
                 {
-                    afxReal64 ct, dt;
-                    AfxQueryApplicationTimer(TheApp, &ct, &dt);
-                    AwxCmdDrawBodies(dscr, rnd, dt, 1, &bod);
+                    if (AfxRecordDrawStreams(afxDrawStreamUsage_ONCE, 1, &diob)) AfxThrowError();
+                    else
+                    {
+                        afxRaster surf;
+                        AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
+                        afxCanvas canv;
+                        AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
+                        AfxAssertObjects(1, &surf, afxFcc_RAS);
+
+                        AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
+
+
+                        if (bod)
+                        {
+                            afxReal64 ct, dt;
+                            AfxGetApplicationTime(TheApp, &ct, &dt);
+                            AwxCmdDrawBodies(diob, rnd, dt, 1, &bod);
+                        }
+
+                        //if (cubeBod)
+                            //AwxCmdDrawBodies(diob, rnd, 1, &cubeBod);
+
+                        AwxCmdDrawTestIndexed(diob, rnd);
+
+                        AfxDrawSky(diob, &rnd->sky);
+
+                        AwxCmdEndSceneRendering(diob, rnd);
+
+                        afxSemaphore dscrCompleteSem = NIL;
+
+                        if (AfxCompileDrawStreams(1, &diob)) AfxThrowError();
+                        else
+                        {
+                            afxExecutionRequest execReq = { 0 };
+                            execReq.diob = diob;
+                            execReq.signal = dscrCompleteSem;
+
+                            if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
+                                AfxThrowError();
+                        }
+
+                        void* ddge = AfxGetDrawBridge(dctx, portIdx);
+                        AfxWaitForIdleDrawQueue(ddge, queIdx);
+                    }
                 }
 
-                //if (cubeBod)
-                    //AwxCmdDrawBodies(dscr, rnd, 1, &cubeBod);
-
-                AwxCmdDrawTestIndexed(dscr, rnd);
-
-                AfxDrawSky(dscr, &rnd->sky);
-
-                AwxCmdEndSceneRendering(dscr, rnd);
 
                 afxSemaphore dscrCompleteSem = NIL;
 
-                if (AfxCompileDrawStream(dscr)) AfxThrowError();
-                else
-                {
-                    afxExecutionRequest execReq = { 0 };
-                    execReq.dscr = dscr;
-                    execReq.signal = dscrCompleteSem;
-
-                    if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
-                        AfxThrowError();
-                }
-
-                afxPresentationRequest req = { 0 };
-                req.dout = dout;
-                req.bufIdx = outBufIdx;
-                req.wait = dscrCompleteSem;
-
                 //AfxStampDrawOutputBuffers(1, &req, AfxV2d(200, 200), &AfxString("Test"), 738);
 
-                if (AfxPresentDrawOutputBuffers(1, &req))
+                if (AfxPresentDrawOutputBuffer(dout, outBufIdx, portIdx, dscrCompleteSem))
                     AfxThrowError();
+
             }
         }
         break;
@@ -115,23 +131,26 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 void UpdateFrameMovement(afxReal64 DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
-
+#if !0
     afxReal64 MovementThisFrame = DeltaTime * CameraSpeed;
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally think about the 'W' or 'S' key's action.
-    afxReal64 ForwardSpeed = (AfxKeyIsPressed(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_S) ? 1 : 0.0f);
-    afxReal64 RightSpeed = (AfxKeyIsPressed(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_D) ? 1 : 0.0f);
-    afxReal64 UpSpeed = (AfxKeyIsPressed(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxKeyIsPressed(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxReal64 ForwardSpeed = (AfxGetKeyPressure(0, afxKey_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_S) ? 1 : 0.0f);
+    afxReal64 RightSpeed = (AfxGetKeyPressure(0, afxKey_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_D) ? 1 : 0.0f);
+    afxReal64 UpSpeed = (AfxGetKeyPressure(0, afxKey_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_E) ? 1 : 0.0f);
     afxV3d v =
     {
         MovementThisFrame * RightSpeed,
         MovementThisFrame * UpSpeed,
         MovementThisFrame * ForwardSpeed
     };
-    AfxApplyCameraMotion(cam, v);
-    
-    afxReal64 curTime;
-    AfxQueryThreadTime(&curTime, NIL);
+
+    if (AfxSumV3d(v))
+        AfxApplyCameraMotion(cam, v);
+#endif
+
+    afxReal64 curTime, lastTime;
+    AfxGetThreadTime(&curTime, &lastTime);
     AwxReclockMotives(bod, curTime);
 
 #if 0
@@ -149,7 +168,6 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 _AFXEXPORT afxResult Once(afxApplication app)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("app=%p", app);
 
     awxSimulationConfig simSpec = { 0 };
     AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
@@ -163,9 +181,15 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxAcquireSimulations(1, &simSpec, &sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     
+    afxOverlay ovly;
+    AfxAcquireOverlay(dctx, NIL, &ovly);
+    AfxAdjustOverlayNdc(ovly, AfxSpawnV3d(0.5, 0.5, 1));
+#if 0
     afxDrawOutputConfig doutConfig = {0};
-    doutConfig.auxDsFmt[0] = afxPixelFormat_D24;
-    AfxOpenDrawOutputs(0, 1, &doutConfig, &dout);
+    doutConfig.pixelFmtDs[0] = afxPixelFormat_D24;
+    AfxAcquireDrawOutput(0, &doutConfig, &dout);
+#endif
+    dout = ovly->dout;
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -250,7 +274,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     afxModelBlueprint mdlb = { 0 };
     mdlb.meshes = &cube;
-    mdlb.mshCnt = 1;
+    mdlb.rigCnt = 1;
     AfxMakeString32(&mdlb.id, &AfxStaticString("cube"));
     mdlb.skl = AfxGetModelSkeleton(mdl);
     mdlb.strb = strb;
@@ -315,39 +339,40 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     rnd->activeCam = cam;
 
-    afxMouse mse = AfxGetMouse(0);
+    afxMouse mse;
+    AfxGetMouse(0, &mse);
     AfxObjectInstallEventFilter(mse, cam);
     
     AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
     AfxAcquirePoseBuffers(sim, 1, (afxNat[]) { 256 }, NIL, &sharedPoseBuffer);
 
+    readyToRender = TRUE;
     return AFX_SUCCESS; 
 }
 
-_AFXEXPORT afxError SandboxProc(afxApplication app, afxThreadOpcode opcode)
+_AFXEXPORT afxResult SandboxProc(afxApplication app, afxUxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
 
-    switch (opcode)
+    switch (ev->id)
     {
         //case 0: break;
-    case AFX_THR_OPCODE_RUN:
+    case afxUxEvent_RUN:
     {
         Once(app);
         break;
     }
-    case AFX_THR_OPCODE_QUIT:
+    case afxUxEvent_QUIT:
     {
-        AfxEntry("app=%p", app);
         //AfxReleaseObject(&dinD->obj);
-        AfxEcho("aaaaaaaaaaaa");
+        AfxLogEcho("aaaaaaaaaaaa");
 
         break;
     }
     default:
     {
         afxReal64 ct, dt;
-        AfxQueryApplicationTimer(app, &ct, &dt);
+        AfxGetApplicationTime(app, &ct, &dt);
         UpdateFrameMovement(dt);
 
         break;
@@ -386,7 +411,7 @@ int main(int argc, char const* argv[])
         appConfig.argc = argc;
         appConfig.argv = argv;
         appConfig.dctx = dctx;
-        appConfig.proc = SandboxProc;
+        appConfig.procCb = SandboxProc;
         AfxAcquireApplications(1, &appConfig, &TheApp);
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
 
@@ -394,9 +419,14 @@ int main(int argc, char const* argv[])
         AfxMakeUri(&uri, "system/sandbox.xss", 0);
         AfxRunApplication(TheApp, &uri);
 
-        while (AfxSystemIsExecuting())
-            AfxDoSystemExecution(0);
+        Once(TheApp);
 
+        while (AfxSystemIsExecuting())
+        {
+            DrawInputProc(rnd->din, NIL);
+            SandboxProc(TheApp, (afxEvent[]) {0});
+            AfxDoSystemExecution(0);
+        }
         AfxReleaseObjects(1, (void*[]) { TheApp });
 
         AfxReleaseObjects(1, (void*[]) { dctx });

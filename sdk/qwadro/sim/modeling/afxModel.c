@@ -201,12 +201,12 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, af
 
                 afxNat biasCnt = msh->biasCnt;
 
-                if (biasCnt && !(biasToJointMap = AfxAllocate(biasCnt, sizeof(biasToJointMap[0]), 0, AfxHint())))
+                if (biasCnt && !(biasToJointMap = AfxAllocate(biasCnt, sizeof(biasToJointMap[0]), 0, AfxHere())))
                     AfxThrowError();
                 else
                 {
                     if (!transplanted) biasFromJointMap = biasToJointMap;
-                    else if (biasCnt && !(biasFromJointMap = AfxAllocate(biasCnt, sizeof(biasFromJointMap[0]), 0, AfxHint())))
+                    else if (biasCnt && !(biasFromJointMap = AfxAllocate(biasCnt, sizeof(biasFromJointMap[0]), 0, AfxHere())))
                         AfxThrowError();
 
                     if (!err)
@@ -220,13 +220,13 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, af
                             {
                                 if (AFX_INVALID_INDEX == (biasToJointMap[j] = AfxFindSkeletonJoint(skl, &biasId)))
                                 {
-                                    AfxError("Pivot '%.*s' not found in the destination skeleton.", AfxPushString(&biasId));
+                                    AfxLogError("Pivot '%.*s' not found in the destination skeleton.", AfxPushString(&biasId));
                                     AfxAssert(biasToJointMap[j] == AFX_INVALID_INDEX);
                                 }
 
                                 if (transplanted && (AFX_INVALID_INDEX == (biasFromJointMap[j] = AfxFindSkeletonJoint(sklOrig, &biasId))))
                                 {
-                                    AfxError("Pivot '%.*s' not found in the source skeleton.", AfxPushString(&biasId));
+                                    AfxLogError("Pivot '%.*s' not found in the source skeleton.", AfxPushString(&biasId));
                                     AfxAssert(biasFromJointMap[j] == AFX_INVALID_INDEX);
                                 }
                             }
@@ -349,14 +349,9 @@ _AKX afxNat AfxCountRiggedMeshes(afxModel mdl)
 
 _AKX afxError _AfxMdlDtor(afxModel mdl)
 {
-    AfxEntry("mdl=%p", mdl);
-
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
-    afxSimulation sim = AfxGetObjectProvider(mdl);
-    afxMmu mmu = AfxGetSimulationMmu(sim);
-    
     for (afxNat i = 0; i < mdl->rigCnt; i++)
         AfxRigMeshes(mdl, NIL, i, 1, NIL);
 
@@ -400,7 +395,7 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     {
         afxSkeleton skl = mdlb->skl;
         afxTransform const* displacement = &mdlb->displacement;
-        afxNat meshCnt = mdlb->mshCnt;
+        afxNat rigCnt = mdlb->rigCnt;
         afxNat baseMshIdx = 0;
 
         if ((mdl->skl = skl))
@@ -419,20 +414,20 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
         mdl->rigCnt = 0;
         mdl->rigs = NIL;
 
-        if (meshCnt && !(mdl->rigs = AfxAllocate(meshCnt, sizeof(mdl->rigs[0]), 0, AfxHint()))) AfxThrowError();
+        if (rigCnt && !(mdl->rigs = AfxAllocate(rigCnt, sizeof(mdl->rigs[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
-            if (meshCnt)
+            if (rigCnt)
             {
-                mdl->rigCnt = meshCnt;
+                mdl->rigCnt = rigCnt;
 
-                AfxZero(meshCnt, sizeof(mdl->rigs[0]), mdl->rigs);
+                AfxZero(mdl->rigs, rigCnt * sizeof(mdl->rigs[0]));
 
-                if (AfxRigMeshes(mdl, NIL, 0, meshCnt, &meshes[baseMshIdx]))
+                if (AfxRigMeshes(mdl, NIL, 0, rigCnt, &meshes[baseMshIdx]))
                     AfxThrowError();
             }
 
-            AfxAssert(mdl->rigCnt == meshCnt);
+            AfxAssert(mdl->rigCnt == rigCnt);
         }
 
         if (err)
@@ -449,13 +444,13 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
             else
                 AfxResolveStrings2(mdl->strb, 1, &mdl->id, &s);
 
-            AfxEcho("Model <%.*s> assembled. %p\n    %u joints for %u rigged meshes.\n", AfxPushString(&s), mdl, mdl->skl->jointCnt, mdl->rigCnt);
+            AfxLogEcho("Model <%.*s> assembled. %p\n    %u joints for %u rigged meshes.\n", AfxPushString(&s), mdl, mdl->skl->jointCnt, mdl->rigCnt);
         }
     }
     return err;
 }
 
-_AKX afxClassConfig _AfxMdlClsConfig =
+_AKX afxClassConfig _AfxMdlMgrCfg =
 {
     .fcc = afxFcc_MDL,
     .name = "Model",

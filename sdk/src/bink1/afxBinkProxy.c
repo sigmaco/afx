@@ -23,7 +23,7 @@
 #include "afxBinkVideo.h"
 #include "afxBinkProxy.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/dev/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
 static afxBool bootstrapped = FALSE;
@@ -112,7 +112,9 @@ static void LoadLibNow(void)
 
     if (!binkw32)
     {
-        if (!AfxGetSystem())
+        afxSystem system;
+
+        if (!AfxGetSystem(&system))
         {
             if (AfxDoSystemBootUp(NIL))
                 AfxThrowError();
@@ -131,7 +133,7 @@ static void LoadLibNow(void)
 #endif
 #endif
 
-        if (!(binkw32 = AfxLoadModule(&uri, NIL))) AfxThrowError();
+        if (AfxLoadModule(&uri, NIL, &binkw32)) AfxThrowError();
         else
         {
             afxNat foundCnt = AfxFindSymbolAddresses(binkw32, AFX_COUNTOF(symNames), symNames, symVmt.v);

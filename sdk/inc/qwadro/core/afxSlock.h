@@ -28,10 +28,10 @@
 /// When multiple threads are reading and writing using a shared resource, 
 /// exclusive locks such as a critical section or mutex can become a bottleneck if the reader threads run continuously but write operations are rare.
 
-typedef struct { _AFX_DBG_FCC; void *srwl; afxNat tidEx; } afxSlock;
+typedef struct { _AFX_DBG_FCC; void *srwl; afxAtomic tidEx; } afxSlock;
 
-AFX afxError AfxTakeSlock(afxSlock *slck);
-AFX afxError AfxReleaseSlock(afxSlock *slck);
+AFX afxError AfxSetUpSlock(afxSlock *slck);
+AFX afxError AfxCleanUpSlock(afxSlock *slck);
 
 AFX void    AfxEnterSlockShared(afxSlock *slck);
 AFX void    AfxEnterSlockExclusive(afxSlock *slck);

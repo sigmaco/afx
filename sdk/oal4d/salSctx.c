@@ -17,22 +17,12 @@
 #include "salSdev.h"
 
 
-_A4D afxError _SalSctxProcCb(afxSoundContext sctx, afxSoundThread sthr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-    AfxAssertObjects(1, &sthr, afxFcc_STHR);
-
-
-    return err;
-}
-
 _A4D afxError _SalSctxDtor(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
 
-    _AfxUninstallChainedClasses(&sctx->base.classes);
+    AfxCleanUpChainedManagers(&sctx->base.classes);
 
     AfxDeallocateArena(&sctx->base.aren);
     AfxReleaseObjects(1, (void*[]) { sctx->base.mmu });
@@ -52,16 +42,9 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
     afxSoundDevice sdev = AfxGetObjectProvider(sctx);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
 
-    sctx->base.running = FALSE;
-
-    sctx->base.mmu = AfxGetSoundSystemMmu();
-
-
-    AfxAssertObjects(1, &sctx->base.mmu, afxFcc_MMU);
-
     afxMmu mmu = sctx->base.mmu;
 
-    AfxAllocateArena(mmu, &sctx->base.aren, NIL, AfxHint());
+    AfxAllocateArena(mmu, &sctx->base.aren, NIL, AfxHere());
 
     //if (!(AfxObjectReacquire(&sctx->base.memD->obj, &sctx->base.obj, NIL, NIL, NIL))) AfxThrowError();
     //else
@@ -71,21 +54,20 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
 
         afxClassConfig tmpClsConf = {0};
 
-        //tmpClsConf = _SalBufClsConfig;
+        //tmpClsConf = _SalBufMgrCfg;
         tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&sctx->base.buffers, NIL, classes, &tmpClsConf);
+        AfxEstablishManager(&sctx->base.buffers, NIL, classes, &tmpClsConf);
 
 #if 0
-        tmpClsConf = _AfxVbufClsConfig;
+        tmpClsConf = _AfxVbufMgrCfg;
         tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&sctx->base.vbuffers, classes, &tmpClsConf);
-        tmpClsConf = _AfxIbufClsConfig;
+        AfxEstablishManager(&sctx->base.vbuffers, classes, &tmpClsConf);
+        tmpClsConf = _AfxIbufMgrCfg;
         tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&sctx->base.ibuffers, classes, &tmpClsConf);
+        AfxEstablishManager(&sctx->base.ibuffers, classes, &tmpClsConf);
 #endif
         {
             {
-                sctx->base.procCb = _SalSctxProcCb;
 
                 if (!err)
                 {
@@ -97,7 +79,7 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
 
         if (err)
         {
-            _AfxUninstallChainedClasses(&sctx->base.classes);
+            AfxCleanUpChainedManagers(&sctx->base.classes);
 
             AfxReleaseObjects(1, (void*[]) { sctx->base.mmu });
         }
@@ -106,7 +88,7 @@ _A4D afxError _SalSctxCtor(afxSoundContext sctx, afxCookie const* cookie)
     return err;
 }
 
-_A4D afxClassConfig const _SalSctxClsConfig =
+_A4D afxClassConfig const _SalSctxMgrCfg =
 {
     .fcc = afxFcc_SCTX,
     .name = "Sound Context",

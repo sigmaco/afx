@@ -65,6 +65,10 @@ AFX afxNat              AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxSt
 AFX void                AfxGetModuleVendor(afxModule mdle, afxString const* name);
 AFX void                AfxGetModuleVersion(afxModule mdle, afxNat *major, afxNat *minor, afxNat *patch);
 
-AFX afxModule           AfxLoadModule(afxUri const* uri, afxFlags flags);
+////////////////////////////////////////////////////////////////////////////////
+
+AFX afxBool             AfxFindModule(afxUri const *uri, afxModule* mdle);
+
+AFX afxError            AfxLoadModule(afxUri const* uri, afxFlags flags, afxModule* mdle);
 
 #endif//AFX_MODULE_H

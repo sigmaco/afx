@@ -25,9 +25,8 @@
 #include "qwadro/ux/afxApplication.h"
 
 
-_AUX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
+_AUX afxError _AuxWidCtor(afxWidget wid, afxCookie const *cookie)
 {
-    AfxEntry("wid=%p", wid);
     afxError err = AFX_ERR_NONE;
 
     afxApplication app = cookie->udd[0];
@@ -38,7 +37,7 @@ _AUX afxError _AfxWidCtor(afxWidget wid, afxCookie const *cookie)
     return err;
 }
 
-_AUX afxError _AfxWidDtor(afxWidget wid)
+_AUX afxError _AuxWidDtor(afxWidget wid)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wid, afxFcc_WID);
@@ -46,21 +45,10 @@ _AUX afxError _AfxWidDtor(afxWidget wid)
     afxApplication app = AfxGetObjectProvider(wid);
     AfxAssertObjects(1, &app, afxFcc_APP);
 
-#if 0
-    if (appD->hoveredWidg == wid)
-        AfxHoverWidget(app, NIL, NIL);
-
-    if (appD->focusedWidg == wid)
-        AfxFocusWidget(app, NIL, NIL);
-
-    if (appD->grabbedWidg == wid)
-        AfxGrabWidget(app, NIL, NIL);
-#endif
-
     return err;
 }
 
-_AUX afxClassConfig _AfxWidClsConfig =
+_AUX afxClassConfig _AuxWidMgrCfg =
 {
     .fcc = afxFcc_WID,
     .name = "Widget",
@@ -68,8 +56,8 @@ _AUX afxClassConfig _AfxWidClsConfig =
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxWidget)),
     .mmu = NIL,
-    .ctor = (void*)_AfxWidCtor,
-    .dtor = (void*)_AfxWidDtor
+    .ctor = (void*)_AuxWidCtor,
+    .dtor = (void*)_AuxWidDtor
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -82,8 +70,17 @@ _AUX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidgetConfig 
     afxManager* cls = AfxGetWidgetClass(app);
     AfxAssertClass(cls, afxFcc_WID);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)widgets, (void const*[]) { app, config }))
+    if (AfxAcquireObjects(cls, cnt, AfxObjects(widgets), (void const*[]) { app, config }))
         AfxThrowError();
 
     return err;
+}
+
+_AUX afxNat AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget widgets[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &app, afxFcc_APP);
+    afxManager *cls = AfxGetWidgetClass(app);
+    AfxAssertClass(cls, afxFcc_DCTX);
+    return AfxEnumerateObjects(cls, first, cnt, AfxObjects(widgets));
 }

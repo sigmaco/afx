@@ -26,7 +26,7 @@
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl)
+_SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl)
 {
     //AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
@@ -66,7 +66,7 @@ _SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage
                     AfxThrowError();
                     afxChar str[1024];
                     gl->GetShaderInfoLog(shd->glHandle, sizeof(str), NIL, (GLchar*)str); _SglThrowErrorOccuried();
-                    AfxError(str);
+                    AfxLogError(str);
                     gl->DeleteShader(shd->glHandle); _SglThrowErrorOccuried();
                     shd->glHandle = NIL;
                 }
@@ -75,7 +75,7 @@ _SGL afxError _SglDpuSyncShd(sglDpuIdd* dpu, afxShader shd, afxShaderStage stage
                     shd->glProgHandle = 0;
                     shd->compiled = TRUE;
                     shd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
-                    AfxEcho("afxShader %p hardware-side data instanced.", shd);
+                    AfxLogEcho("afxShader %p hardware-side data instanced.", shd);
                 }
             }
         }
@@ -94,7 +94,6 @@ _SGL afxError _SglShdDtor(afxShader shd)
     afxError err = AFX_ERR_NONE;
 
     afxDrawContext dctx = AfxGetObjectProvider(shd);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
     
     if (shd->glHandle)
     {
@@ -151,8 +150,6 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     afxShaderBlueprint const *blueprint = ((afxShaderBlueprint const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(shd);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
      AfxDuplicateUri(&shd->base.uri, &blueprint->uri.uri);
 
@@ -163,7 +160,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.code = NIL;
     afxNat codeLen = AfxCountArrayElements(&blueprint->codes);
 
-    if (codeLen && !(shd->base.code = AfxAllocate(codeLen, sizeof(afxChar), 0, AfxHint()))) AfxThrowError();
+    if (codeLen && !(shd->base.code = AfxAllocate(codeLen, sizeof(afxChar), 0, AfxHere()))) AfxThrowError();
     else
     {
         AfxAssertType(&blueprint->codes, afxFcc_ARR);
@@ -173,7 +170,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     shd->base.codeLen = codeLen;
     //shd->code[shd->codeLen] = '\0';
 
-    AfxComment("%.*s", shd->base.codeLen, shd->base.code);
+    AfxLogComment("%.*s", shd->base.codeLen, shd->base.code);
 
     if (!err)
     {
@@ -202,7 +199,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             AfxMakeRestring(&type.str, sizeof(type.buf), type.buf, 0);
             AfxMakeRestring(&name.str, sizeof(name.buf), name.buf, 0);
 
-            AfxEcho("layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", location, type.buf, name.buf);
+            AfxLogEcho("layout ( location = %u ) out %[A-Za-z0-9] %[A-Za-z0-9]", location, type.buf, name.buf);
             break;
         }
 
@@ -214,7 +211,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
 
         afxNat resDeclCnt = AfxCountArrayElements(&blueprint->resources);
 
-        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(resDeclCnt, sizeof(shd->base.resDecls[0]), 0, AfxHint()))) AfxThrowError();
+        if (resDeclCnt && !(shd->base.resDecls = AfxAllocate(resDeclCnt, sizeof(shd->base.resDecls[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             for (afxNat j = 0; j < resDeclCnt; j++)
@@ -239,7 +236,7 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
             shd->base.ioDeclCnt = 0;
             shd->base.ioDecls = NIL;
 
-            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ioCnt, sizeof(shd->base.ioDecls[0]), 0, AfxHint()))) AfxThrowError();
+            if (ioCnt && !(shd->base.ioDecls = AfxAllocate(ioCnt, sizeof(shd->base.ioDecls[0]), 0, AfxHere()))) AfxThrowError();
             else
             {
                 for (afxNat i = 0; i < ioCnt; i++)
@@ -273,10 +270,11 @@ _SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglShdClsConfig =
+_SGL afxClassConfig const _SglShdMgrCfg =
 {
     .fcc = afxFcc_SHD,
     .name = "Shader",
+    .desc = "Shader Management",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxShader)),
     .mmu = NIL,

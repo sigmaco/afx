@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #include "qwadro/math/afxRotor.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
@@ -83,10 +85,10 @@ _AFXINL void AfxMakeRotorFromBiv3d(afxRotor r, afxV3d const plane, afxReal /*rad
     afxError err = AFX_ERR_NONE;
     AfxAssert(r);
     AfxAssert(plane);
-    afxReal sina = AfxSin(angle / 2.f);
+    afxReal sina = AfxSinf(angle / 2.f);
     // O lado esquerdo dos produtos têm b a, não a b
     AfxScaleV3d(r, plane, -sina);
-    r[3] = AfxCos(angle / 2.f);
+    r[3] = AfxCosf(angle / 2.f);
 }
 
 // Rotor3-Rotor3 product

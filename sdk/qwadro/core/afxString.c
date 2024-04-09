@@ -19,9 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "qwadro/core/afxString.h"
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/io/afxStream.h"
+#include "qwadro/core/afxSystem.h"
 
 _AFX afxString strEmptyData = AFX_STRING("");
 _AFX afxString const AFX_STR_EMPTY = AFX_STRING("");
@@ -294,7 +292,7 @@ _AFXINL afxResult AfxDumpString(afxString const* str, afxNat base, afxNat len, v
     AfxAssert(src);
     AfxAssert(len);
     AfxAssert(dst);
-    AfxCopy(1, len > maxRange - base ? maxRange - base : len, src, dst);
+    AfxCopy2(1, len > maxRange - base ? maxRange - base : len, src, dst);
     return 0;
 }
 

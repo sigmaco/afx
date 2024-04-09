@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_QUERY_POOL_H
 #define AFX_QUERY_POOL_H
@@ -23,10 +23,10 @@
 
 typedef enum afxQueryResultFlag
 {
-    afxQueryResultFlag_64 = AfxGetBitOffset(0), /// the results will be written as an array of 64-bit unsigned integer values. If this bit is not set, the results will be written as an array of 32-bit unsigned integer values.
-    afxQueryResultFlag_WAIT = AfxGetBitOffset(1), /// will wait for each query’s status to become available before retrieving its results.
-    afxQueryResultFlag_WITH_AVAIL = AfxGetBitOffset(2), /// the availability status accompanies the results.
-    afxQueryResultFlag_PARTIAL = AfxGetBitOffset(3) /// returning partial results is acceptable.
+    afxQueryResultFlag_64 = AFX_BIT_OFFSET(0), /// the results will be written as an array of 64-bit unsigned integer values. If this bit is not set, the results will be written as an array of 32-bit unsigned integer values.
+    afxQueryResultFlag_WAIT = AFX_BIT_OFFSET(1), /// will wait for each query’s status to become available before retrieving its results.
+    afxQueryResultFlag_WITH_AVAIL = AFX_BIT_OFFSET(2), /// the availability status accompanies the results.
+    afxQueryResultFlag_PARTIAL = AFX_BIT_OFFSET(3) /// returning partial results is acceptable.
 } afxQueryResultFlags;
 
 typedef enum afxQueryType
@@ -44,6 +44,7 @@ AFX_OBJECT(afxQueryPool)
 struct _afxBaseQueryPool
 #endif
 {
+    afxLinkage      dctx;
     afxQueryType    type;
     afxNat          cap;
 };

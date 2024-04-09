@@ -35,19 +35,10 @@
     <ClCompile Include="..\..\sgl4d\sglDctx.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDdrv_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglDin.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglDout_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDque_w32.c">
-      <Filter>sgl4d</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\sgl4d\sglDscr.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
     <ClCompile Include="..\..\sgl4d\sglFenc.c">
@@ -86,10 +77,30 @@
     <ClCompile Include="..\..\sgl4d\sglBsch.c">
       <Filter>sgl4d</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDiob.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDxge_w32.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglDdev_w32.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglLoader.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sgl4d\sglQwadroToGpu.c">
+      <Filter>sgl4d</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="sgl4d.rc">
       <Filter>_nfo</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\sgl4d\sglWrapper.inl">
+      <Filter>sgl4d</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -14,16 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_CAMERA_C
 #define _AFX_DRAW_C
-#include "qwadro/draw/afxDrawInput.h"
-#include "qwadro/math/afxOpticalMatrix.h"
-#include "qwadro/math/afxVector.h"
-#include "qwadro/math/afxFrustum.h"
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxCamera.h"
-#include "qwadro/core/afxSystem.h"
-#include "qwadro/math/afxQuaternion.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX void AfxGetCameraMatrices(afxCamera cam, afxReal v[4][4], afxReal iv[4][4])
 {
@@ -320,18 +315,13 @@ _AVX void AfxResetCamera(afxCamera cam)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
 
-    afxDrawInput din = AfxGetObjectProvider(cam);
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxClipSpace clip;
-    AfxDescribeClipSpace(din, &clip);
-
     cam->wpOverHp = 1.33f;
     cam->wrOverHr = 1.33f;
     cam->wwOverHw = 1.f;
     cam->fovY = 1.0471976f;
     cam->nearClipPlane = 0.0001f;// 0.4;
     cam->farClipPlane = 1000.f;
-    cam->depthRange = clip.boundary; //afxClipBoundary_NEG_ONE_TO_ONE;
+    cam->depthRange = afxClipBoundary_NEG_ONE_TO_ONE;
     cam->useQuatOrient = TRUE;
     cam->depthRangeEpsilon = 0.f;
     AfxZeroV3d(cam->pos);
@@ -359,6 +349,8 @@ _AVX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     AfxAssert(motion);
 
+    // AfxPreMultiplyAtv3d();
+
     cam->pos[0] = motion[0] * cam->iv[0][0] + cam->pos[0];
     cam->pos[1] = motion[0] * cam->iv[0][1] + cam->pos[1];
     cam->pos[2] = motion[0] * cam->iv[0][2] + cam->pos[2];
@@ -374,7 +366,7 @@ _AVX void AfxApplyCameraMotion(afxCamera cam, afxReal const motion[3])
 
 _AVX void AfxComputeCameraProjectiveMatrices(afxCamera cam, afxReal p[4][4], afxReal ip[4][4])
 {
-    afxReal64 h = AfxSin(cam->fovY * 0.5f) / AfxCos(cam->fovY * 0.5f);
+    afxReal64 h = AfxSinf(cam->fovY * 0.5f) / AfxCosf(cam->fovY * 0.5f);
     p[0][0] = cam->wrOverHr / (cam->wwOverHw * cam->wpOverHp * h);
     p[0][1] = 0.f;
     p[0][2] = 0.f;
@@ -637,7 +629,7 @@ _AVX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
     AfxCopyFrustum(frustum, &cam->frustum);
 }
 
-_AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev)
+_AVX afxBool _AvxCamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     afxCamera cam = (void*)obj;
@@ -699,10 +691,9 @@ _AVX afxBool _AfxCamEventFilter(afxHandle *obj, afxHandle *watched, afxEvent *ev
     return FALSE;
 }
 
-_AVX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
+_AVX afxError _AvxCamCtor(afxCamera cam, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("cam=%p", cam);
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     (void)cookie;
 
@@ -718,28 +709,26 @@ _AVX afxError _AfxCamCtor(afxCamera cam, afxCookie const *cookie)
     return err;
 }
 
-_AVX afxError _AfxCamDtor(afxCamera cam)
+_AVX afxError _AvxCamDtor(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("cam=%p", cam);
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     return err;
 }
 
-_AVX afxClassConfig const _AfxCamClsConfig =
+_AVX afxClassConfig const _AvxCamMgrCfg =
 {
     .fcc = afxFcc_CAM,
     .name = "Camera",
+    .desc = "Camera",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxCamera)),
     .mmu = NIL,
-    .ctor = (void*)_AfxCamCtor,
-    .dtor = (void*)_AfxCamDtor,
-    .eventFilter = (void*)_AfxCamEventFilter
+    .ctor = (void*)_AvxCamCtor,
+    .dtor = (void*)_AvxCamDtor,
+    .eventFilter = (void*)_AvxCamEventFilter
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////
 
 _AVX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
@@ -747,40 +736,47 @@ _AVX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
 
-    afxManager* cls = AfxGetCameraClass(din);
+    afxManager* cls = AfxGetCameraClass();
     AfxAssertClass(cls, afxFcc_CAM);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)cam, (void const*[]) { (void*)NIL }))
         AfxThrowError();
+    else
+    {
+        afxClipSpace clip;
+        AfxDescribeClipSpace(din, &clip);
+
+        for (afxNat i = 0; i < cnt; i++)
+            AfxSetCameraDepthRange(cam[i], clip.boundary);
+    }
 
     AfxAssertObjects(cnt, cam, afxFcc_CAM);
 
     return err;
 }
 
-_AVX afxNat AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, afxCamera cam[])
+_AVX afxNat AfxInvokeCameras(afxNat first, afxNat cnt, afxBool(*f)(afxCamera, void*), void *udd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxManager *cls = AfxGetCameraClass(din);
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxManager* cls = AfxGetCameraClass();
     AfxAssertClass(cls, afxFcc_CAM);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)cam);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
 
-_AVX afxReal AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
+_AVX afxNat AfxEnumerateCameras(afxNat first, afxNat cnt, afxCamera cameras[])
 {
-    afxReal64 div = (afxReal64)screenWidth / (afxReal64)screenHeight;
-
-    if (div <= 1.4)
-        return 1.33f;
-
-    if (div <= 1.6)
-        return 1.5599999f;
-
-    return 1.78f;
+    afxError err = AFX_ERR_NONE;
+    afxManager *cls = AfxGetCameraClass();
+    AfxAssertClass(cls, afxFcc_CAM);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)cameras);
 }
 
-_AVX afxReal AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam)
+_AVX afxNat AfxCountCameras(void)
 {
-    return AfxSin(fovY * 0.5f) / AfxCos(fovY * 0.5f) * errInPixels * distanceFromCam / ((afxReal)vpHeightInPixels * 0.5f);
+    afxError err = AFX_ERR_NONE;
+    afxManager* cls = AfxGetCameraClass();
+    AfxAssertClass(cls, afxFcc_CAM);
+    return AfxCountObjects(cls);
 }

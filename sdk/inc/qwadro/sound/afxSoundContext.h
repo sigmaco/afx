@@ -29,7 +29,6 @@ AFX_OBJECT(afxSoundContext)
 struct _afxBaseSoundContext
 #endif
 {
-    afxError            (*procCb)(afxSoundContext, afxSoundThread);
     afxBool             running;
 
     afxChain            classes;

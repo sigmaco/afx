@@ -54,7 +54,7 @@ _AKXINL afxError AfxAcquireNodes(afxSimulation sim, afxNat cnt, awxNode nod[], a
     return err;
 }
 
-_AKX afxClassConfig _AfxNodClsConfig =
+_AKX afxClassConfig _AfxNodMgrCfg =
 {
     .fcc = afxFcc_NOD,
     .name = "Node",

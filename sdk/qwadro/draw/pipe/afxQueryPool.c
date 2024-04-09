@@ -14,11 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_QUERY_POOL_C
-#include "qwadro/core/afxManager.h"
-#include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/draw/pipe/afxQueryPool.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 AVX afxResult AfxGetQueryResults(afxQueryPool pool, afxNat baseQuery, afxNat queryCnt, void* dst, afxSize cap, afxSize stride, afxQueryResultFlags flags)
 {
@@ -42,7 +42,7 @@ _AVX afxDrawContext AfxGetQueryPoolContext(afxQueryPool qryp)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &qryp, afxFcc_QRYP);
-    afxDrawContext dctx = AfxGetObjectProvider(qryp);
+    afxDrawContext dctx = AfxGetLinker(&qryp->dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     return dctx;
 }
@@ -53,22 +53,13 @@ _AVX afxError AfxAcquireQueryPools(afxDrawContext dctx, afxQueryType type, afxNa
 {
     afxError err = AFX_ERR_NONE;
 
-    afxManager* cls = AfxGetQueryPoolClass(dctx);
+    afxDrawDevice ddev = AfxGetDrawContextDevice(dctx);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    afxManager* cls = AfxGetQueryPoolClass(ddev);
     AfxAssertClass(cls, afxFcc_QRYP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)quer, (void const*[]) { dctx, &type, &cap }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)quer, (void const*[]) { ddev, dctx, &type, &cap }))
         AfxThrowError();
 
     return err;
-}
-
-_AVX afxNat AfxEnumerateQueryPools(afxDrawContext dctx, afxNat first, afxNat cnt, afxQueryPool pools[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(pools);
-    AfxAssert(cnt);
-    afxManager* cls = AfxGetQueryPoolClass(dctx);
-    AfxAssertClass(cls, afxFcc_QRYP);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)pools);
 }

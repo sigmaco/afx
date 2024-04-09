@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "qwadro/draw/pipe/afxCanvas.h"
-#include "qwadro/draw/afxDrawOutput.h"
+#include "qwadro/draw/dev/afxDrawOutput.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ _SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttac
     };
 }
 
-_SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
+_SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
@@ -106,7 +106,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync,
                 if (surCnt)
                 {
                     AfxAssert(_SGL_MAX_SURF_PER_CANV >= surCnt);
-                    AfxGetDrawBuffers(canv, 0, surCnt, surfaces);
+                    AfxEnumerateDrawBuffers(canv, 0, surCnt, surfaces);
 
                     afxNat dsSurIdx[2];
                     AfxGetDepthSurface(canv, &dsSurIdx[0]);
@@ -159,34 +159,34 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync,
                 {
                 case GL_FRAMEBUFFER_COMPLETE:
                     canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                    AfxEcho("afxCanvas %p hardware-side data instanced.", canv);
+                    AfxLogEcho("afxCanvas %p hardware-side data instanced.", canv);
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-                    AfxError("Not all framebuffer attachment points are framebuffer attachment complete.");
+                    AfxLogError("Not all framebuffer attachment points are framebuffer attachment complete.");
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-                    AfxError("No images are attached to the framebuffer.");
+                    AfxLogError("No images are attached to the framebuffer.");
                     break;
                 case GL_FRAMEBUFFER_UNSUPPORTED:
-                    AfxError("The combination of internal formats of the attached images violates an implementation-dependent set of restrictions.");
+                    AfxLogError("The combination of internal formats of the attached images violates an implementation-dependent set of restrictions.");
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-                    AfxError("Incomplete draw frame buffer.");
+                    AfxLogError("Incomplete draw frame buffer.");
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-                    AfxError("Incomplete read frame buffer.");
+                    AfxLogError("Incomplete read frame buffer.");
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
-                    AfxError("Incomplete multisample.");
+                    AfxLogError("Incomplete multisample.");
                     break;
                 case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
-                    AfxError("Incomplete layer targets.");
+                    AfxLogError("Incomplete layer targets.");
                     break;
                 case GL_FRAMEBUFFER_UNDEFINED:
-                    AfxError("Default framebuffer does not exist");
+                    AfxLogError("Default framebuffer does not exist");
                     break;
                 default:
-                    AfxError("UNKNOWN");
+                    AfxLogError("UNKNOWN");
                     _SglThrowErrorOccuried();
                     break;
                 }
@@ -213,7 +213,7 @@ _SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync,
                     if (surCnt)
                     {
                         AfxAssert(_SGL_MAX_SURF_PER_CANV >= surCnt);
-                        AfxGetDrawBuffers(canv, 0, surCnt, surfaces);
+                        AfxEnumerateDrawBuffers(canv, 0, surCnt, surfaces);
 
                         for (afxNat i = 0; i < surCnt; i++)
                         {
@@ -351,8 +351,6 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
     afxDrawContext dctx = AfxGetObjectProvider(canv);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     _AfxCanvDropAllSurfaces(canv);
 
@@ -378,9 +376,6 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     afxNat layerCnt = *(afxNat const*)cookie->udd[2];
     afxNat surCnt = *(afxNat const *)cookie->udd[3];
     afxSurfaceConfig const* surCfgs = cookie->udd[4];
-
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     canv->base.wh[0] = wh[0];
     canv->base.wh[1] = wh[1];
@@ -438,7 +433,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     canv->base.ownershipMask = NIL;
     canv->base.combinedDs = combinedDs;
 
-    if (!(canv->base.surfaces = AfxAllocate(surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(canv->base.surfaces = AfxAllocate(surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         afxSurface* surf;
@@ -495,7 +490,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglCanvClsConfig =
+_SGL afxClassConfig const _SglCanvMgrCfg =
 {
     .fcc = afxFcc_CANV,
     .name = "Canvas",

@@ -32,7 +32,7 @@
 #include "qwadro/sim/modeling/afxMeshTopology.h"
 #include "qwadro/sim/modeling/awxVertexData.h"
 
-_AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, afxNat cnt, awxBody bodies[])
+_AKX afxError AwxCmdDrawBodies(afxDrawStream diob, awxRenderer rnd, afxReal dt, afxNat cnt, awxBody bodies[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -51,7 +51,7 @@ _AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, 
         afxM4d m, m2;
         //AfxComputeModelDisplacement(bod->mdl, m);
         //afxReal64 ct, dt;
-        //AfxQueryThreadTime(&ct, &dt);
+        //AfxGetThreadTime(&ct, &dt);
         //AwxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
         AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, bod->placement, rnd->lp, rnd->wp, 0.0);
         //AwxSampleBodyAnimationsLODSparse(bod, 0, bod->cachedBoneCnt, rnd->lp, 0.0, NIL);
@@ -68,11 +68,11 @@ _AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, 
             {
                 AfxAssertObjects(1, &msh, afxFcc_MSH);
 
-                //AfxCmdBindPipeline(dscr, 0, rnd->lighting);
-                //AfxCmdBindPipeline(dscr, 0, rnd->tutCamUtil);
-                AfxCmdBindPipeline(dscr, 0, rnd->blinnTestPip);
-                //AfxCmdBindPipeline(dscr, 0, rnd->rigidBodyPip);                
-                //AfxCmdBindPipeline(dscr, 0, rnd->testPip);
+                //AfxCmdBindPipeline(diob, 0, rnd->lighting);
+                //AfxCmdBindPipeline(diob, 0, rnd->tutCamUtil);
+                AfxCmdBindPipeline(diob, 0, rnd->blinnTestPip);
+                //AfxCmdBindPipeline(diob, 0, rnd->rigidBodyPip);                
+                //AfxCmdBindPipeline(diob, 0, rnd->testPip);
 
                 afxNat baseVtxIdx = 0, vtxCnt = 0;
                 awxVertexData vtd = AfxGetMeshVertices(msh);
@@ -80,30 +80,30 @@ _AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, 
                 vtxCnt = AwxCountVertices(vtd);
 
                 AwxBufferizeVertexData(rnd->din, vtd);
-                AwxCmdBindVertexDataCache(dscr, 0, vtd);
+                AwxCmdBindVertexDataCache(diob, 0, vtd);
 
                 afxMeshTopology msht = AfxGetMeshTopology(msh);
 
                 AfxBufferizeMeshTopology(msht);
-                AfxCmdBindIndexSource(dscr, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
+                AfxCmdBindIndexSource(diob, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
                 
-                //AfxCmdSetPrimitiveTopology(dscr, afxPrimTopology_TRI_LIST);
-                //AfxCmdSetCullMode(dscr, NIL);
-                //AfxCmdSwitchFrontFace(dscr, AfxRandom2(0, 1));
+                //AfxCmdSetPrimitiveTopology(diob, afxPrimTopology_TRI_LIST);
+                //AfxCmdSetCullMode(diob, NIL);
+                //AfxCmdSwitchFrontFace(diob, AfxRandom2(0, 1));
 
 
-                //AfxCmdEnableDepthTest(dscr, TRUE);
-                //AfxCmdEnableDepthWrite(dscr, TRUE);
+                //AfxCmdEnableDepthTest(diob, TRUE);
+                //AfxCmdEnableDepthWrite(diob, TRUE);
 
                 afxNat zeros[] = { 0, 0, 0 };
-                AfxCmdBindBuffers(dscr, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
+                AfxCmdBindBuffers(diob, 3, 0, 1, &rnd->framesets[rnd->frameIdx].objConstantsBuffer, zeros, zeros);
 
                 afxNat const *ToBoneIndices = AfxGetRiggedMeshBiasToJointMapping(mdl, mshIdx);
                 AfxBuildIndexedCompositeBuffer(bod->cachedSkl, rnd->wp, ToBoneIndices, 1, &m);
                 
-                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(m), m);
-                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 64, sizeof(m), m);
-                AfxCmdUpdateBuffer(dscr, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
+                AfxCmdUpdateBuffer(diob, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 0, sizeof(m), m);
+                AfxCmdUpdateBuffer(diob, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 64, sizeof(m), m);
+                AfxCmdUpdateBuffer(diob, rnd->framesets[rnd->frameIdx].objConstantsBuffer, 128, sizeof(m), m);
 
                 afxNat surfCnt = AfxCountMeshSurfaces(msht);
 
@@ -150,28 +150,28 @@ _AKX afxError AwxCmdDrawBodies(afxDrawStream dscr, awxRenderer rnd, afxReal dt, 
 
                     afxNat idxCnt = (sec->triCnt * 3);
                     afxNat firstIdx = (sec->baseTriIdx * 3);
-                    AfxCmdDrawIndexed(dscr, baseVtxIdx, 0, 1, firstIdx, idxCnt);
-                    //AfxCmdDraw(dscr, 0, 1, 0, vtxCnt);
+                    AfxCmdDrawIndexed(diob, baseVtxIdx, 0, 1, firstIdx, idxCnt);
+                    //AfxCmdDraw(diob, 0, 1, 0, vtxCnt);
                 }
-                //AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
+                //AfxCmdDrawIndexed(diob, 0, 0, 1, 0, msht->triCnt * 3);
 
-                //AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, msht->triCnt * 3);
+                //AfxCmdDrawIndexed(diob, 0, 0, 1, 0, msht->triCnt * 3);
             }
         }
     }
     return err;
 }
 
-_AKX afxError AwxCmdDrawTestIndexed(afxDrawStream dscr, awxRenderer rnd)
+_AKX afxError AwxCmdDrawTestIndexed(afxDrawStream diob, awxRenderer rnd)
 {
-    AfxCmdBindPipeline(dscr, 0, rnd->testPip);
+    AfxCmdBindPipeline(diob, 0, rnd->testPip);
 
-    AfxCmdBindVertexSources(dscr, 0, 1, (afxBuffer[]) { rnd->testVbo }, NIL, NIL, (afxNat32[]) { sizeof(afxV3d) });
-    //AfxCmdResetVertexStreams(dscr, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
-    //AfxCmdResetVertexAttributes(dscr, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
-    AfxCmdBindIndexSource(dscr, rnd->testIbo, 0, sizeof(afxNat32) * 6, sizeof(afxNat32));
-    AfxCmdDrawIndexed(dscr, 0, 0, 1, 0, 6);
-    //AfxCmdDraw(dscr, 6, 1, 0, 0);
+    AfxCmdBindVertexSources(diob, 0, 1, (afxBuffer[]) { rnd->testVbo }, NIL, NIL, (afxNat32[]) { sizeof(afxV3d) });
+    //AfxCmdResetVertexStreams(diob, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
+    //AfxCmdResetVertexAttributes(diob, 1, NIL, (afxVertexFormat[]) { afxVertexFormat_V3D }, NIL, NIL);
+    AfxCmdBindIndexSource(diob, rnd->testIbo, 0, sizeof(afxNat32) * 6, sizeof(afxNat32));
+    AfxCmdDrawIndexed(diob, 0, 0, 1, 0, 6);
+    //AfxCmdDraw(diob, 6, 1, 0, 0);
     return 0;
 }
 
@@ -189,17 +189,17 @@ _AKX afxError AfxRendererSetStar(awxRenderer rnd, afxV4d const pos, afxV3d const
     return err;
 }
 
-_AKX afxError AwxCmdEndSceneRendering(afxDrawStream dscr, awxRenderer rnd)
+_AKX afxError AwxCmdEndSceneRendering(afxDrawStream diob, awxRenderer rnd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
 
-    AfxCmdFinishSynthesis(dscr);
+    AfxCmdFinishSynthesis(diob);
 
     return err;
 }
 
-_AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
+_AKX afxError AwxCmdBeginSceneRendering(afxDrawStream diob, awxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -208,7 +208,7 @@ _AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afx
     rnd->frameIdx = frameIdx;
 
     //afxCanvas canv;
-    //AfxGetDrawOutputCanvas(rnd->dout, outBufIdx, &canv);
+    //AfxEnumerateDrawOutputCanvases(rnd->dout, outBufIdx, &canv);
     //rnd->canv = canv;
 
     if (drawArea)
@@ -274,7 +274,7 @@ _AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afx
     dps.rasters = &rdt;
     dps.depth = &ddt;
     dps.stencil = NIL;
-    AfxCmdBeginSynthesis(dscr, &dps);
+    AfxCmdBeginSynthesis(diob, &dps);
 
     //afxWhd extent;
     //AfxGetCanvasExtent(canv, extent);
@@ -283,7 +283,7 @@ _AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afx
     vp.extent[1] = rnd->drawArea.extent[1];
     vp.depth[0] = (afxReal)0;
     vp.depth[1] = (afxReal)1;
-    AfxCmdResetViewports(dscr, 1, &vp);
+    AfxCmdResetViewports(diob, 1, &vp);
 
     awxViewConstants *viewConstants = &rnd->framesets[frameIdx].viewConstants;
 
@@ -317,26 +317,15 @@ _AKX afxError AwxCmdBeginSceneRendering(afxDrawStream dscr, awxRenderer rnd, afx
 
     AfxUpdateBuffer(rnd->framesets[frameIdx].viewConstantsBuffer, 0, sizeof(*viewConstants), viewConstants);
     afxNat zeros[] = { 0 };
-    AfxCmdBindBuffers(dscr, 0, 0, 1, &rnd->framesets[frameIdx].viewConstantsBuffer, zeros, zeros);
+    AfxCmdBindBuffers(diob, 0, 0, 1, &rnd->framesets[frameIdx].viewConstantsBuffer, zeros, zeros);
     return err;
 }
 
 _AKX afxError _AfxRndDtor(awxRenderer rnd)
 {
-    AfxEntry("rnd=%p", rnd);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
 
-    afxDrawInput din = rnd->din;
-
-    AfxReleaseObjects(1, (void*[]) { din });
-#if 0
-    for (afxNat i = 0; i < rnd->frameCnt; i++)
-    {
-        if (rnd->canv[i])
-            AfxReleaseObject(&rnd->canv[i]->obj);
-    }
-#endif
     for (afxNat i = 0; i < rnd->frameCnt; i++)
     {
         AfxReleaseObjects(1, (void*[]) { rnd->framesets[i].viewConstantsBuffer });
@@ -355,12 +344,21 @@ _AKX afxError _AfxRndDtor(awxRenderer rnd)
     AfxReleaseObjects(1, (void*[]) { rnd->rigidBodyPip });
     AfxReleaseObjects(1, (void*[]) { rnd->skinnedBodyPip });
 
+    afxDrawInput din = rnd->din;
+
+    AfxReleaseObjects(1, (void*[]) { din });
+#if 0
+    for (afxNat i = 0; i < rnd->frameCnt; i++)
+    {
+        if (rnd->canv[i])
+            AfxReleaseObject(&rnd->canv[i]->obj);
+    }
+#endif
     return err;
 }
 
 _AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
 {
-    AfxEntry("rnd=%p", rnd);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
 
@@ -376,8 +374,8 @@ _AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     rnd->frameCnt = 2;
     rnd->frameIdx = 0;
 
-    //AfxZero(rnd->canv, sizeof(rnd->canv));
-    AfxZero(1, sizeof(rnd->framesets), rnd->framesets);
+    //AfxZero2(rnd->canv, sizeof(rnd->canv));
+    AfxZero2(1, sizeof(rnd->framesets), rnd->framesets);
 
     // acquire and set up our dedicated draw input device.
     {
@@ -387,7 +385,7 @@ _AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
         dinConfig.cmdPoolMemStock = 4096;
         dinConfig.estimatedSubmissionCnt = 3;
 
-        AfxOpenDrawInputs(0, 1, &dinConfig, &rnd->din);
+        AfxAcquireDrawInput(0, &dinConfig, &rnd->din);
         AfxAssert(rnd->din);
         AfxReconnectDrawInput(rnd->din, dctx);
     }
@@ -598,7 +596,7 @@ _AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxRndClsConfig =
+_AKX afxClassConfig _AfxRndMgrCfg =
 {
     .fcc = afxFcc_RND,
     .name = "Renderer",

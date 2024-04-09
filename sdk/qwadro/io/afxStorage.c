@@ -14,14 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 #include <sys/stat.h>
 #include <stdio.h>
 
 #define _AFX_CORE_C
 #define _AFX_STORAGE_C
-#include "qwadro/core/afxManager.h"
 #include "qwadro/core/afxSystem.h"
 
 /******************************************************************************
@@ -56,7 +55,8 @@
 _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri const in[], afxUri out[])
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys = AfxGetSystem();
+    afxSystem sys;
+    AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
 
     AfxAssert(in);
@@ -177,7 +177,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
                         {
                             AfxFormatUri(&out[i], "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), pointEndRange, pointEnd);
                             AfxCanonicalizePath(&out[i], AFX_PLATFORM_WIN);
-                            //AfxEcho(dstData);
+                            //AfxLogEcho(dstData);
 
                             if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
                             {
@@ -195,7 +195,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
                     AfxThrowError(); // unresolved.
             }
 
-            //AfxAdvertise("%x %x %x %x %x", st.st_mode & _S_IFREG, st.st_mode & _S_IFDIR, st.st_mode & _S_IREAD, st.st_mode & _S_IWRITE, st.st_mode & _S_IEXEC);
+            //AfxLogAdvertence("%x %x %x %x %x", st.st_mode & _S_IFREG, st.st_mode & _S_IFDIR, st.st_mode & _S_IREAD, st.st_mode & _S_IWRITE, st.st_mode & _S_IEXEC);
         }
 
   //      if (!resolved)
@@ -248,7 +248,7 @@ _AFX afxError _DismountStorageUnit(afxStorage fsys, afxStorageUnit* fsto)
     afxError err = AFX_ERR_NONE;
     AfxAssert(fsto);
 
-    //AfxEcho("Dismounting storage unit #u... <%.*s>('%.*s'),%x", AfxIdentifyObject(fsys), 2,"  "/*AfxPushString(AfxGetUriString(&fsys->point.uri))*/, 2, "  "/*AfxPushString(AfxGetUriString(&fsto->rootPath))*/, fsto->flags);
+    //AfxLogEcho("Dismounting storage unit #u... <%.*s>('%.*s'),%x", AfxGetObjectId(fsys), 2,"  "/*AfxPushString(AfxGetUriString(&fsys->point.uri))*/, 2, "  "/*AfxPushString(AfxGetUriString(&fsto->rootPath))*/, fsto->flags);
 
     AfxPopLinkage(&fsto->fsys);
 
@@ -347,9 +347,9 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 
     if (!err)
     {
-        AfxEcho("Mounting storage unit... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
+        AfxLogEcho("Mounting storage unit... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
 
-        afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHint());
+        afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHere());
 
         if (!fsto) AfxThrowError();
         else
@@ -415,11 +415,11 @@ _AFX afxError _AfxFsysDtor(afxStorage fsys)
     return err;
 }
 
-_AFX afxClassConfig const _AfxFsysClsConfig =
+_AFX afxClassConfig const _AfxFsysMgrCfg =
 {
     .fcc = afxFcc_FSYS,
     .name = "Storage",
-    .desc = "Storage Management",
+    .desc = "I/O Storage System",
     .unitsPerPage = 6,
     .size = sizeof(AFX_OBJECT(afxStorage)),
     .ctor = (void*)_AfxFsysCtor,

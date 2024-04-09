@@ -135,8 +135,6 @@ _AKX afxMaterial AfxGetSubmaterial(afxMaterial mtl, afxNat mapIdx)
 _AKX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("mtl=%p,mapIdx=%u,subMtl=%p", mtl, mapIdx, subMtl);
-
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     AfxAssert(mapIdx < mtl->mapCnt);
     afxMaterialMap* map = &mtl->maps[mapIdx];
@@ -163,8 +161,6 @@ _AKX void AfxRebindSubmaterial(afxMaterial mtl, afxNat mapIdx, afxMaterial subMt
 _AKX void AfxResetMaterialMap(afxMaterial mtl, afxNat mapIdx, afxString const* usage, afxMaterial subMtl)
 {
     afxError err = AFX_ERR_NONE;
-    AfxEntry("mtl=%p,mapIdx=%u,subMtl=%p", mtl, mapIdx, subMtl);
-
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
     AfxAssertRange(mtl->mapCnt, mapIdx, 1);
     afxMaterialMap* map = &mtl->maps[mapIdx];
@@ -202,7 +198,6 @@ _AKX afxError _AfxMtlDtor(afxMaterial mtl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
-    AfxEntry("mtl=%p", mtl);
 
     if (mtl->maps)
     {
@@ -231,7 +226,6 @@ _AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mtl, afxFcc_MTL);
-    AfxEntry("mtl=%p", mtl);
 
     afxSimulation sim = cookie->udd[0];
     AfxAssert(sim == AfxGetObjectProvider(mtl));
@@ -253,7 +247,7 @@ _AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
         mtl->mapCnt = 0;
         mtl->maps = NIL;
     }
-    else if (!(mtl->maps = AfxAllocate(mapCnt, sizeof(mtl->maps[0]), 0, AfxHint()))) AfxThrowError();
+    else if (!(mtl->maps = AfxAllocate(mapCnt, sizeof(mtl->maps[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < mapCnt; i++)
@@ -328,7 +322,7 @@ _AKX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRast
     return err;
 }
 
-_AKX afxClassConfig _AfxMtlClsConfig =
+_AKX afxClassConfig _AfxMtlMgrCfg =
 {
     .fcc = afxFcc_MTL,
     .name = "Material",

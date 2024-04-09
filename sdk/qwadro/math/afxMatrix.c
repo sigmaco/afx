@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxMathDefs.h"
 #include "qwadro/math/afxVector.h"
@@ -1273,9 +1275,9 @@ _AFXINL void AfxRotationM4dFromEuler(afxM4d m, afxV3d const pitchYawRoll)
     AfxAssert(pitchYawRoll);
 
     afxReal pc, ps, yc, ys, rc, rs;
-    AfxCosSin(pitchYawRoll[0], &pc, &ps);
-    AfxCosSin(pitchYawRoll[1], &yc, &ys);
-    AfxCosSin(pitchYawRoll[2], &rc, &rs);
+    AfxCosSinf(pitchYawRoll[0], &pc, &ps);
+    AfxCosSinf(pitchYawRoll[1], &yc, &ys);
+    AfxCosSinf(pitchYawRoll[2], &rc, &rs);
 
     m[0][0] = rc * yc + rs * ps * ys;
     m[0][1] = rs * pc;
@@ -1312,7 +1314,7 @@ _AFXINL void AfxRotationM3dFromAxis(afxM3d m, afxV3d const axis, afxReal /*theta
     AfxAssert(!AfxV3dIsInfinite(axis));
 
     afxReal cosTheta, sinTheta;
-    AfxCosSin(radians, &cosTheta, &sinTheta);
+    AfxCosSinf(radians, &cosTheta, &sinTheta);
     afxReal cosValue = 1.0f - cosTheta;
     afxV3d axis2;
     AfxNormalizeV3d(axis2, axis);
@@ -1339,7 +1341,7 @@ _AFXINL void AfxRotationM4dFromAxis(afxM4d m, afxV3d const axis, afxReal /*theta
     AfxAssert(!AfxV3dIsInfinite(axis));
 
     afxReal cosTheta, sinTheta;
-    AfxCosSin(radians, &cosTheta, &sinTheta);
+    AfxCosSinf(radians, &cosTheta, &sinTheta);
     afxReal cosValue = 1.0f - cosTheta;
     afxV3d axis2;
     AfxNormalizeV3d(axis2, axis);
@@ -1370,7 +1372,7 @@ _AFXINL void AfxRotationM4dFromX(afxM4d m, afxReal angle)
     // Should be compatible with XMMATRIX XMMatrixRotationX(float Angle)
 
     afxReal co, si;
-    AfxCosSin(angle, &co, &si);
+    AfxCosSinf(angle, &co, &si);
 
     AfxResetM4d(m);
     m[1][1] = co;
@@ -1384,7 +1386,7 @@ _AFXINL void AfxRotationM4dFromY(afxM4d m, afxReal angle)
     // Should be compatible with XMMATRIX XMMatrixRotationY(float Angle)
 
     afxReal co, si;
-    AfxCosSin(angle, &co, &si);
+    AfxCosSinf(angle, &co, &si);
 
     AfxResetM4d(m);
 
@@ -1399,7 +1401,7 @@ _AFXINL void AfxRotationM4dFromZ(afxM4d m, afxReal angle)
     // Should be compatible with XMMATRIX XMMatrixRotationZ(float Angle)
 
     afxReal co, si;
-    AfxCosSin(angle, &co, &si);
+    AfxCosSinf(angle, &co, &si);
 
     AfxResetM4d(m);
 
