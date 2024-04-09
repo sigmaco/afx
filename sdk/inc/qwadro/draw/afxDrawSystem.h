@@ -14,8 +14,9 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 // The Unified Qwadro Video Graphics Infrastructure
-// This section is part of SIGMA GL/2.
 
 #ifndef AFX_DRAW_SYSTEM_H
 #define AFX_DRAW_SYSTEM_H
@@ -25,13 +26,12 @@
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/draw/afxPixel.h"
 // provided classes.
-#include "qwadro/draw/afxDrawBridge.h"
-#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/dev/afxDrawBridge.h"
+#include "qwadro/draw/dev/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
-#include "qwadro/draw/afxDrawContext.h"
-#include "qwadro/draw/afxDrawOutput.h"
-#include "qwadro/draw/afxDrawInput.h"
-#include "qwadro/draw/afxDrawThread.h"
+#include "qwadro/draw/dev/afxDrawContext.h"
+#include "qwadro/draw/dev/afxDrawOutput.h"
+#include "qwadro/draw/dev/afxDrawInput.h"
 // provided classes.
 #include "qwadro/draw/afxCamera.h"
 
@@ -267,7 +267,7 @@ AFX_OBJECT(afxDrawDevice)
     
     afxClipSpace            clipCfg;
 
-    afxError                (*procCb)(afxDrawDevice,afxDrawThread); // call their draw threads.
+    afxError                (*procCb)(afxDrawDevice,afxThread); // call their draw threads.
 
     struct _afxDdevIdd*     idd;
 };
@@ -283,12 +283,7 @@ AFX_DEFINE_STRUCT(afxDrawSystemConfig)
 #ifdef _AFX_DRAW_SYSTEM_C
 AFX_OBJECT(afxDrawSystem)
 {
-    afxMmu              mmu;
-    afxArena            aren;
-
-    afxChain            classes;
-    afxManager          txus;
-    afxManager          threads;
+    afxChain            mgrChn;
     afxManager          devices;
     afxManager          outputs;
     afxManager          inputs;
@@ -302,40 +297,36 @@ AFX_OBJECT(afxDrawSystem)
 
 AVX void            AfxChooseDrawSystemConfiguration(afxDrawSystemConfig* cfg);
 
-AVX afxMmu          AfxGetDrawSystemMmu(void);
+AVX afxBool         AfxGetDrawSystem(afxDrawSystem* dsys);
 
-AVX afxManager*     AfxGetDrawThreadClass(void);
 AVX afxManager*     AfxGetDrawDeviceClass(void);
 AVX afxManager*     AfxGetDrawOutputClass(void);
 AVX afxManager*     AfxGetDrawInputClass(void);
 AVX afxManager*     AfxGetCameraClass(void);
 
-AVX afxNat          AfxCountDrawThreads(void);
 AVX afxNat          AfxCountDrawDevices(void);
 AVX afxNat          AfxCountCameras(void);
 
-AVX afxNat          AfxEnumerateDrawThreads(afxNat first, afxNat cnt, afxDrawThread threads[]);
 AVX afxNat          AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice devices[]);
 AVX afxNat          AfxEnumerateCameras(afxNat first, afxNat cnt, afxCamera cameras[]);
 
-AVX afxNat          AfxInvokeDrawThreads(afxNat first, afxNat cnt, afxBool(*f)(afxDrawThread, void*), void* udd);
 AVX afxNat          AfxInvokeDrawDevices(afxNat first, afxNat cnt, afxBool(*f)(afxDrawDevice, void*), void* udd);
 AVX afxNat          AfxInvokeCameras(afxNat first, afxNat cnt, afxBool(*f)(afxCamera, void*), void* udd);
 
 AVX afxNat          AfxChooseDrawDevice(afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxDrawDevice ddevIdx[]); // return count of found devices
 
-AVX afxReal         AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam);
+AVX afxReal64       AfxDetermineAllowedCameraLodError(afxReal64 errInPixels, afxInt vpHeightInPixels, afxReal64 fovY, afxReal64 distanceFromCam);
 
 // If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
 // you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
 
-AVX afxReal         AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
+AVX afxReal64       AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 ////////////////////////////////////////////////////////////////////////////////
 // DRAW DEVICE                                                                //
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxBool         AfxGetDrawDevice(afxNat ddevNo, afxDrawDevice* ddev);
+AVX afxBool         AfxGetDrawDevice(afxNat ddevId, afxDrawDevice* ddev);
 
 AVX afxBool         AfxDrawDeviceIsRunning(afxDrawDevice ddev);
 

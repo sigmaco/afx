@@ -186,8 +186,8 @@ typedef enum afxProfileFlag
 
 // Object handles defined by Core Execution System
 
-//typedef void* afxHandle;
 typedef void* afxObject;
+#define AfxObjects(_objets_) ((afxObject*)_objets_)
 
 AFX_DEFINE_HANDLE(afxSystem);
 AFX_DEFINE_HANDLE(afxIoSystem);
@@ -214,7 +214,7 @@ AFX_DEFINE_HANDLE(afxController);
 AFX_DEFINE_HANDLE(afxResource);
 AFX_DEFINE_HANDLE(afxStorage);
 
-AFX_DEFINE_HANDLE(afxEnvironment);
+AFX_DEFINE_HANDLE(afxShell);
 
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
@@ -231,7 +231,7 @@ AFX void const* _AfxFind(void const* first, void const* last, afxSize unitSiz, v
 AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 
-#define AFX_FUNC( _type, _name ) _type AKSOUNDENGINE_CALL _name // Declare a function
+#define AFX_FUNC( _type, _name ) _type _CALL _name // Declare a function
 #define AFX_EXTERN_FUNC( _type, _name ) extern _type  _name // // Declare an extern function
 #define AFX_EXTERN_API_FUNC( _type, _name ) extern _AFXIMPORT _type  _name // Declare an extern function that is exported/imported
 #define AFX_CALLBACK( _type, _name ) typedef _type (*_name ) // Declare a callback function type
@@ -239,7 +239,7 @@ AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 typedef afxNat aaxGameObjectId;
 
-AFX_DEFINE_STRUCT(afxCallbackInfo) // Callback information structure used as base for all notifications handled by \ref AkCallbackFunc.
+AFX_DEFINE_STRUCT(afxCallbackInfo) // Callback information structure used as base for all notifications handled by CallbackFunc.
 {
     void*           pCookie;        ///< User data, passed to PostEvent()
     aaxGameObjectId gameObjID;      ///< Game object ID
@@ -253,40 +253,18 @@ AFX_CALLBACK(void, afxCallbackFunc) // Function called on completion of an event
 
 #ifndef AFX_ASSERT_HOOK // Function called on assert handling, optional
 
-AFX_CALLBACK(void, afxAssertHook)(const char * in_pszExpression, const char * in_pszFileName, int in_lineNumber);
+AFX_CALLBACK(void, afxAssertHook)(afxChar const* expr, afxChar const* file, afxInt line);
 #define AFX_ASSERT_HOOK
 #endif
 
-typedef afxNat afxJobType;
 #define AFX_NUM_JOB_TYPES 1
 
 // Function that the host runtime must call to allow for jobs to execute.
-// in_jobType is the type originally provided by JobMgrSettings::FuncRequestJobWorker.
+// in_jobType is the type originally provided by FuncRequestJobWorker.
 // in_uExecutionTimeUsec is the number of microseconds that the function should execute for before terminating.
 // Note that the deadline is only checked after each individual job completes execution, so the function may run slightly
 // longer than intended. The "in_uExecutionTimeUsec" should be considered a suggestion or guideline, not a strict rule.
 // A value of 0 means that the function will run until there are no more jobs ready to be immediately executed.
-
-AFX_CALLBACK(void, afxJobWorkerFunc)(afxJobType in_jobType, afxNat32 in_uExecutionTimeUsec);
-
-/// Settings for the Sound Engine's internal job manager
-
-AFX_CALLBACK(void, FuncRequestJobWorker)(
-afxJobWorkerFunc in_fnJobWorker, ///< Function passed to host runtime that should be executed. Note that the function provided will exist for as long as the soundengine code is loaded, and will always be the same.
-afxJobType in_jobType,           ///< The type of job worker that has been requested. This should be passed forward to in_fnJobWorker
-afxNat32 in_uNumWorkers,        ///< Number of workers requested
-void * in_pClientData           ///< Data provided by client in AkJobMgrSettings
-);
-
-AFX_DEFINE_STRUCT(afxJobMgrSettings)
-{ // Callback function prototype definition used for handling requests from JobMgr for new workers to perform work.
-
-FuncRequestJobWorker fnRequestJobWorker; ///< Function called by the job manager when a new worker needs to be requested. When null, all jobs will be executed on the same thread that calls RenderAudio().
-afxNat32 uMaxActiveWorkers[AFX_NUM_JOB_TYPES]; ///< The maximum number of concurrent workers that will be requested. Must be >= 1 for each jobType.
-afxNat32 uNumMemorySlabs; ///< Number of memory slabs to pre-allocate for job manager memory. At least one slab per worker thread should be pre-allocated. Default is 1.
-afxNat32 uMemorySlabSize; ///< Size of each memory slab used for job manager memory. Must be a power of two. Default is 8K.
-    void* pClientData; ///< Arbitrary data that will be passed back to the client when calling FuncRequestJobWorker
-};
 
 typedef afxNat aaxPluginId;
 typedef afxNat aaxPlayingId;

@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _AFX_CORE_C
 #define _AFX_CODEC_C
 #include "qwadro/core/afxSystem.h"
@@ -116,7 +118,7 @@ _AFX afxError _AfxCdcDtor(afxCodec cdc)
     return err;
 }
 
-_AFX afxClassConfig _AfxCdcClsConfig =
+_AFX afxClassConfig _AfxCdcMgrCfg =
 {
     .fcc = afxFcc_CDC,
     .name = "Codec",

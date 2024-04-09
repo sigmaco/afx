@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #ifndef AFX_SHADER_BLUEPRINT_H
 #define AFX_SHADER_BLUEPRINT_H
 

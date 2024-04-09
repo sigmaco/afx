@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #include "qwadro/draw/afxDrawSystem.h"
 
 
@@ -490,7 +492,7 @@ _AVX afxString const* AfxStringifyVertexFormat(afxVertexFormat fmt, afxRestring 
     return &out->str;
 }
 
-_AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHint const hint)
+_AVX afxError _AfxAssertWhd(afxWhd total_, afxWhd base_, afxWhd range_, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(total_);

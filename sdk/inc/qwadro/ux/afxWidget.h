@@ -26,7 +26,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/math/afxTransform.h"
 //#include "afxViewport.h"
-//#include "qwadro/draw/afxDrawInput.h"
+//#include "qwadro/draw/dev/afxDrawInput.h"
 
 typedef enum afxWidgetType
 {
@@ -118,5 +118,8 @@ AFX_OBJECT(afxWidget)
 #endif
 #endif
 
+AUX afxError AfxAcquireWidget(afxApplication app, afxViewport const* vp);
+
+AUX afxError            AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[]);
 
 #endif//AFX_WIDGET_H

@@ -14,7 +14,11 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+  //////////////////////////////////////////////////////////////////////////////
+ //// SIGMA GL/2                                                           ////
+//////////////////////////////////////////////////////////////////////////////
+
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /// Textures in Qwadro are stored in as straightforward a manner as possible.
 /// Each texture says what kind it is (such as color map or cube map), what encoding it is (such as raw pixels or S3TC), and how many images it has (1 for a color map, 6 for a cube map, etc.).
@@ -139,6 +143,8 @@ AVX afxNat          AfxCountRasterSamples(afxRaster ras);
 AVX afxNat          AfxDetermineRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset);
 AVX void            AfxDetermineRasterStride(afxRaster ras, afxNat lodIdx, afxNat* bytesPerRow, afxNat* bytesPerLayer);
 
+AVX void            AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc);
+
 AVX afxNat          AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
 
 AVX afxBool         AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw);
@@ -152,26 +158,16 @@ AVX void*           AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rg
 AVX void            AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
 
 // Update texture image data from arbitrary raw allocation. A safe way of copying.
-AVX afxError        AfxUpdateRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void const *src);
-AVX afxError        AfxDumpRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], void *dst);
+AVX afxError        AfxUpdateRaster(afxRaster ras, afxRasterIoOp const* op, void const* src);
+AVX afxError        AfxDumpRaster(afxRaster ras, afxRasterIoOp const* op, void* dst);
 
 // Stream in/out texture image data from/to a stream.
-AVX afxError        AfxInputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream in);
-AVX afxError        AfxOutputRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxStream out);
+AVX afxError        AfxUploadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream in);
+AVX afxError        AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream out);
 
-// Stream in texture image data from a file.
-AVX afxError        AfxFetchRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AVX afxError        AfxFetchRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
-
-AVX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AVX afxError        AfxFetchRasterRegionsFromTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
-
-// Stream out texture image data to a file.
-AVX afxError        AfxPrintRaster(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AVX afxError        AfxPrintRasterRegions(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
-
-AVX afxError        AfxPrintRasterToTarga(afxRaster ras, afxNat lodIdx, afxNat baseLayer, afxNat layerCnt, afxUri const *uri);
-AVX afxError        AfxPrintRasterRegionsToTarga(afxRaster ras, afxNat opCnt, afxRasterIoOp const ops[], afxUri const uri[]);
+// Stream in/out texture image data from/to a file.
+AVX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri);
+AVX afxError        AfxPrintRasterToTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -182,7 +178,5 @@ AVX afxError        AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage 
 AVX afxRaster       AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[]);
 AVX afxError        AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras);
 AVX afxRaster       AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6]);
-
-AVX afxRaster       AfxLoadRaster(afxDrawInput din, afxUri const* uri);
 
 #endif//AFX_RASTER_H

@@ -51,7 +51,7 @@ _AFX afxResult _AfxCtrlCtor(afxController ctrl, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxCtrlClsConfig =
+_AFX afxClassConfig const _AfxCtrlMgrCfg =
 {
     .fcc = afxFcc_CTRL,
     .name = "Controller",

@@ -18,7 +18,7 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, GLint level, GLuint baseLayer, GLuint layerCnt, afxWhd const off, afxWhd const whd, afxWhd const origin)
+_SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, afxRasterRegion const* dstRgn, afxWhd const origin)
 {
     afxError err = AFX_ERR_NONE;
     
@@ -26,58 +26,58 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, GLint
     {
     case GL_TEXTURE_2D:
     {
-        gl->CopyTexSubImage2D(glTarget, level, off[0], off[1], origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         break;
     }
     case GL_TEXTURE_1D_ARRAY:
     {
-        for (afxNat i = 0; i < layerCnt; i++)
+        for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage2D(glTarget, level, off[0], baseLayer + i, origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_1D:
     {
-        gl->CopyTexSubImage1D(glTarget, level, off[0], origin[0], origin[1], whd[0]);
+        gl->CopyTexSubImage1D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], origin[0], origin[1], dstRgn->whd[0]);
         break;
     }
     case GL_TEXTURE_3D:
     {
-        for (afxNat i = 0; i < whd[2]; i++)
+        for (afxNat i = 0; i < dstRgn->whd[2]; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, level, off[0], off[1], off[2] + i, origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->offset[2] + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_2D_ARRAY:
     {
-        for (afxNat i = 0; i < layerCnt; i++)
+        for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, level, off[0], off[1], baseLayer + i, origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_CUBE_MAP_ARRAY:
     {
-        for (afxNat i = 0; i < layerCnt; i++)
+        for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, level, off[0], off[1], baseLayer + i, origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_CUBE_MAP:
     {
-        for (afxNat i = 0; i < layerCnt; i++)
+        for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, level, off[0], off[1], origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_RECTANGLE:
     {
-        AfxAssert(level == 0);
-        gl->CopyTexSubImage2D(glTarget, level, off[0], off[1], origin[0], origin[1], whd[0], whd[1]); _SglThrowErrorOccuried();
+        AfxAssert(dstRgn->lodIdx == 0);
+        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
     };
     default:
         AfxThrowError();
@@ -85,7 +85,7 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, GLint
     }
 }
 
-_SGL void _SglDpuRasCopy(sglDpuIdd* dpu, _sglCmdCopyRasterRegions const* cmd)
+_SGL void _DpuRasCopy(sglDpu* dpu, _sglCmdCopyRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -98,13 +98,9 @@ _SGL void _SglDpuRasCopy(sglDpuIdd* dpu, _sglCmdCopyRasterRegions const* cmd)
     afxRasterCopyOp const* ops = cmd->ops;
     AfxAssert(ops);
 
-    afxWhd srcMaxWhd, dstMaxWhd;
-    AfxGetRasterExtent(src, 0, srcMaxWhd);
-    AfxGetRasterExtent(dst, 0, dstMaxWhd);
-    afxNat srcMaxLayerCnt = AfxCountRasterLayers(src);
-    afxNat dstMaxLayerCnt = AfxCountRasterLayers(dst);
-    afxNat srcMaxLodCnt = AfxCountRasterLods(src);
-    afxNat dstMaxLodCnt = AfxCountRasterLods(dst);
+    afxRasterInfo srcCap, dstCap;
+    AfxDescribeRaster(src, &srcCap);
+    AfxDescribeRaster(src, &dstCap);
 
     for (afxNat i = 0; i < opCnt; i++)
     {
@@ -113,7 +109,7 @@ _SGL void _SglDpuRasCopy(sglDpuIdd* dpu, _sglCmdCopyRasterRegions const* cmd)
         gl->BindFramebuffer(GL_READ_FRAMEBUFFER, dpu->fboOpSrc);
         _SglBindFboAttachment(gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, src->glTarget, src->glHandle, op->srcLodIdx, op->srcBaseLayer, op->srcOffset[2]);
         gl->ReadBuffer(GL_COLOR_ATTACHMENT0);
-        _SglCopyTexImageFromFboReadBuf(gl, dst->glTarget, dstRgn.lodIdx, dstRgn.baseLayer, dstRgn.layerCnt, dstRgn.offset, dstRgn.whd, op->srcOffset);
+        _SglCopyTexImageFromFboReadBuf(gl, dst->glTarget, &dstRgn, op->srcOffset);
     }
 }
 
@@ -135,7 +131,7 @@ _SGL afxCmdId _SglEncodeCmdRasCopy(afxDrawStream diob, afxRaster src, afxRaster 
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.cpy) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuRasRw(sglDpuIdd* dpu, _sglCmdRwRasterRegions const* cmd)
+_SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -148,26 +144,25 @@ _SGL void _SglDpuRasRw(sglDpuIdd* dpu, _sglCmdRwRasterRegions const* cmd)
     afxRasterIoOp const* ops = cmd->ops;
     AfxAssert(ops);
 
+    afxRasterInfo rasCap;
+    AfxDescribeRaster(ras, &rasCap);
+
     afxPixelLayout pdf;
-    AfxDescribePixelFormat(AfxGetRasterFormat(ras), &pdf);
+    AfxDescribePixelFormat(rasCap.fmt, &pdf);
     afxNat bpp = pdf.bpp;
-    afxWhd rasMaxWhd;
-    AfxGetRasterExtent(ras, 0, rasMaxWhd);
-    afxNat rasMaxLayerCnt = AfxCountRasterLayers(ras);
-    afxNat rasMaxLodCnt = AfxCountRasterLods(ras);
     afxNat rasMaxRowSiz, rasMaxLayerSiz;
     AfxDetermineRasterStride(ras, 0, &rasMaxRowSiz, &rasMaxLayerSiz);
-    afxNat rasMaxRowCnt = rasMaxWhd[1];
+    afxNat rasMaxRowCnt = rasCap.whd[1];
 
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxRasterIoOp const *op = &ops[i];
         afxRasterRegion rgn = op->rgn;
-        AfxAssertRange(rasMaxLodCnt, rgn.lodIdx, 1);
-        AfxAssertRange(rasMaxLayerCnt, rgn.baseLayer, rgn.layerCnt);
-        AfxAssertRange(rasMaxWhd[0], rgn.offset[0], rgn.whd[0]);
-        AfxAssertRange(rasMaxWhd[1], rgn.offset[1], rgn.whd[1]);
-        AfxAssertRange(rasMaxWhd[2], rgn.offset[2], rgn.whd[2]);
+        AfxAssertRange(rasCap.lodCnt, rgn.lodIdx, 1);
+        AfxAssertRange(rasCap.layerCnt, rgn.baseLayer, rgn.layerCnt);
+        AfxAssertRange(rasCap.whd[0], rgn.offset[0], rgn.whd[0]);
+        AfxAssertRange(rasCap.whd[1], rgn.offset[1], rgn.whd[1]);
+        AfxAssertRange(rasCap.whd[2], rgn.offset[2], rgn.whd[2]);
 
         afxNat rasRowCnt = rgn.whd[1];
         afxNat bufOffset = op->bufOffset;
@@ -179,16 +174,45 @@ _SGL void _SglDpuRasRw(sglDpuIdd* dpu, _sglCmdRwRasterRegions const* cmd)
 
         if (cmd->down)
         {
+            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
+            afxNat bufSiz = AfxMeasureRasterRegion(ras, &rgn);
+            
+            GLuint pbo;
+            gl->GenBuffers(1, &pbo); _SglThrowErrorOccuried();
+            gl->BindBuffer(GL_PIXEL_PACK_BUFFER, pbo); _SglThrowErrorOccuried();
+            gl->BufferStorage(GL_PIXEL_PACK_BUFFER, bufSiz, NIL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT); _SglThrowErrorOccuried();
+            gl->BindFramebuffer(GL_READ_FRAMEBUFFER, dpu->fboOpSrc); _SglThrowErrorOccuried();
+            _SglBindFboAttachment(&dpu->gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ras->glTarget, ras->glHandle, rgn.lodIdx, rgn.baseLayer, rgn.offset[2]);
+            gl->ReadBuffer(GL_COLOR_ATTACHMENT0); _SglThrowErrorOccuried();
+            gl->ReadPixels(rgn.offset[0], rgn.offset[1], rgn.whd[0], rgn.whd[1], ras->glFmt, ras->glType, NIL); _SglThrowErrorOccuried();
+            afxByte* bytemap = gl->MapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY); _SglThrowErrorOccuried();
+            AfxSeekStreamFromBegin(ios, bufOffset);
+            AfxWriteStream(ios, bufSiz, 0, bytemap);
+            gl->UnmapBuffer(GL_PIXEL_PACK_BUFFER); _SglThrowErrorOccuried();
+            gl->DeleteBuffers(1, &pbo); _SglThrowErrorOccuried();
         }
         else
         {
+            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
+            afxNat bufSiz = AfxMeasureRasterRegion(ras, &rgn);
+            
+            GLuint pbo;
+            gl->GenBuffers(1, &pbo); _SglThrowErrorOccuried();
+            gl->BindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo); _SglThrowErrorOccuried();
+            gl->BufferStorage(GL_PIXEL_UNPACK_BUFFER, bufSiz, NIL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT); _SglThrowErrorOccuried();
+            _SglTexSubImage(gl, ras->glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, NIL);
+            afxByte* bytemap = gl->MapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY); _SglThrowErrorOccuried();
+            AfxSeekStreamFromBegin(ios, bufOffset);
+            AfxReadStream(ios, bufSiz, 0, bytemap);
+            gl->UnmapBuffer(GL_PIXEL_UNPACK_BUFFER); _SglThrowErrorOccuried();
+            gl->DeleteBuffers(1, &pbo); _SglThrowErrorOccuried();
         }
     }
 }
 
-_SGL afxCmdId _SglEncodeCmdRasRw(afxDrawStream diob, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc)
+_SGL afxCmdId _SglEncodeCmdRasIo(afxDrawStream diob, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -209,10 +233,10 @@ _SGL afxCmdId _SglEncodeCmdRasRw(afxDrawStream diob, afxRaster ras, afxStream io
     for (afxNat i = 0; i < opCnt; i++)
         cmd->ops[i] = ops[i];
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.rw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.io) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuRasPack(sglDpuIdd* dpu, _sglCmdPackRasterRegions const* cmd)
+_SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -225,26 +249,25 @@ _SGL void _SglDpuRasPack(sglDpuIdd* dpu, _sglCmdPackRasterRegions const* cmd)
     afxRasterIoOp const* ops = cmd->ops;
     AfxAssert(ops);
 
+    afxRasterInfo rasCap;
+    AfxDescribeRaster(ras, &rasCap);
+
     afxPixelLayout pdf;
-    AfxDescribePixelFormat(AfxGetRasterFormat(ras), &pdf);
+    AfxDescribePixelFormat(rasCap.fmt, &pdf);
     afxNat bpp = pdf.bpp;
-    afxWhd rasMaxWhd;
-    AfxGetRasterExtent(ras, 0, rasMaxWhd);
-    afxNat rasMaxLayerCnt = AfxCountRasterLayers(ras);
-    afxNat rasMaxLodCnt = AfxCountRasterLods(ras);
     afxNat rasMaxRowSiz, rasMaxLayerSiz;
     AfxDetermineRasterStride(ras, 0, &rasMaxRowSiz, &rasMaxLayerSiz);
-    afxNat rasMaxRowCnt = rasMaxWhd[1];
+    afxNat rasMaxRowCnt = rasCap.whd[1];
 
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxRasterIoOp const *op = &ops[i];
         afxRasterRegion rgn = op->rgn;
-        AfxAssertRange(rasMaxLodCnt, rgn.lodIdx, 1);
-        AfxAssertRange(rasMaxLayerCnt, rgn.baseLayer, rgn.layerCnt);
-        AfxAssertRange(rasMaxWhd[0], rgn.offset[0], rgn.whd[0]);
-        AfxAssertRange(rasMaxWhd[1], rgn.offset[1], rgn.whd[1]);
-        AfxAssertRange(rasMaxWhd[2], rgn.offset[2], rgn.whd[2]);
+        AfxAssertRange(rasCap.lodCnt, rgn.lodIdx, 1);
+        AfxAssertRange(rasCap.layerCnt, rgn.baseLayer, rgn.layerCnt);
+        AfxAssertRange(rasCap.whd[0], rgn.offset[0], rgn.whd[0]);
+        AfxAssertRange(rasCap.whd[1], rgn.offset[1], rgn.whd[1]);
+        AfxAssertRange(rasCap.whd[2], rgn.offset[2], rgn.whd[2]);
 
         afxNat rasRowCnt = rgn.whd[1];
         afxNat bufOffset = op->bufOffset;
@@ -410,7 +433,7 @@ _SGL afxCmdId _SglEncodeCmdRasPack(afxDrawStream diob, afxRaster ras, afxBuffer 
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.pak) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuRasSubsample(sglDpuIdd* dpu, _sglCmdRegenerateMipmaps const* cmd)
+_SGL void _DpuRasSubsample(sglDpu* dpu, _sglCmdRegenerateMipmaps const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -448,7 +471,7 @@ _SGL afxCmdId _SglEncodeCmdRasSubsample(afxDrawStream diob, afxRaster ras, afxNa
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.mip) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuRasSwizzle(sglDpuIdd* dpu, _sglCmdSwizzleRasterRegions const* cmd)
+_SGL void _DpuRasSwizzle(sglDpu* dpu, _sglCmdSwizzleRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     afxRaster ras = cmd->ras;
@@ -518,7 +541,7 @@ _SGL afxCmdId _SglEncodeCmdRasSwizzle(afxDrawStream diob, afxRaster ras, afxColo
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.swizzle) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuRasXform(sglDpuIdd* dpu, _sglCmdFlipRasterRegions const* cmd)
+_SGL void _DpuRasXform(sglDpu* dpu, _sglCmdFlipRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -613,7 +636,7 @@ _SGL void _SglDpuRasXform(sglDpuIdd* dpu, _sglCmdFlipRasterRegions const* cmd)
 #endif
 }
 
-_SGL afxCmdId _SglEncodeCmdRasXform(afxDrawStream diob, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const rgn[])
+_SGL afxCmdId _SglEncodeCmdRasXform(afxDrawStream diob, afxRaster ras, afxM4d const m, afxNat rgnCnt, afxRasterRegion const rgn[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
@@ -638,5 +661,5 @@ _SGL afxCmdRaster const _SglEncodeCmdRasterVmt =
     .mip = _SglEncodeCmdRasSubsample,
     .cpy = _SglEncodeCmdRasCopy,
     .pak = _SglEncodeCmdRasPack,
-    .rw = _SglEncodeCmdRasRw
+    .io = _SglEncodeCmdRasIo
 };

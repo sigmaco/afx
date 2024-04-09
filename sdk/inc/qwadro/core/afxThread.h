@@ -14,29 +14,23 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+/// The afxThread class provides a platform-independent way to manage threads.
+
+/// A afxThread object manages one thread of control within the program.
+/// afxThreads begin executing in run().
+/// By default, run() starts the event loop by calling exec() and runs a event loop inside the thread.
+
 #ifndef AFX_THREAD_H
 #define AFX_THREAD_H
 
 #include "qwadro/core/afxClock.h"
+#include "qwadro/core/afxCondition.h"
+#include "qwadro/core/afxMutex.h"
+#include "qwadro/mem/afxQueue.h"
+#include "qwadro/core/afxEvent.h"
+#include "qwadro/core/afxAtomic.h"
 
-// The afxThread class provides a platform-independent way to manage threads.
-
-// A afxThread object manages one thread of control within the program. afxThreads begin executing in run(). By default, run() starts the event loop by calling exec() and runs a Qt event loop inside the thread.
-
-typedef enum afxThreadEvent
-{
-    AFX_EVENT_THR_EXIT,
-    AFX_EVENT_THR_QUIT,
-    AFX_EVENT_THR_START,
-    AFX_EVENT_THR_TERMINATE,
-} afxThreadEvent;
-
-typedef enum afxThreadOpcode
-{
-    //AFX_THR_OPCODE_NOP = 0,
-    AFX_THR_OPCODE_RUN = 1,
-    AFX_THR_OPCODE_QUIT,
-} afxThreadOpcode;
+#define AFX_THR_MIN_EVENT_CAP 32
 
 typedef enum afxThreadPurpose
 {
@@ -49,34 +43,29 @@ typedef enum afxThreadPurpose
     afxThreadPurpose_HID
 } afxThreadPurpose;
 
+typedef afxResult(*afxThreadProc)(afxThread thr, afxEvent* ev);
+
 AFX_DEFINE_STRUCT(afxThreadConfig)
 {
-    afxError            (*proc)(afxThread thr, void *udd, afxInt opcode);
-    void*               udd;
-    afxNat              baseTxu;
-    afxNat              txuCnt;
+    afxNat              minEventCap;
     afxThreadPurpose    purpose;
+    afxThreadProc       procCb;
+    afxNat              tid;
+    void*               udd;
 };
 
 #ifdef _AFX_CORE_C
 #ifdef _AFX_THREAD_C
-AFX_DEFINE_STRUCT(afxThreadLinkage)
-{
-    afxLinkage          thr;
-    afxLinkage          txu;
-};
-
 AFX_OBJECT(afxThread)
 {
-    afxSlock            txuSlock;
     //afxNat          affineProcUnitIdx; // if not equal to AFX_INVALID_INDEX, this thread can be ran by any system processor unit, else case, will only be ran by the unit specified by this index.
     //afxNat          affineThrUnitIdx; // if set bit set, only such processor will can run this thread.
     afxClock            startClock;
     afxClock            lastClock;
-    afxNat              iterNo;
-    afxNat              lastIterCnt;
-    afxClock            iterCntSwapClock;
-    afxError            (*proc)(afxThread thr, void *udd, afxThreadOpcode opcode);
+    afxNat              execNo;
+    afxNat              lastExecCnt;
+    afxClock            execCntSwapClock;
+    afxThreadProc       procCb;
     afxBool             started;
     afxBool             exited;
     afxBool             running;
@@ -86,18 +75,62 @@ AFX_OBJECT(afxThread)
     afxBool             interruptionRequested;
     afxInt              exitCode;
 
-    // our way of doing CPU affinity actually
-    afxNat              baseTxu;
-    afxNat              txuCnt;
-    
-    afxChain            txus;
+    afxSlock            evSlock;
+    afxArena            evArena;
+    afxQueue            events;
+
+    afxChar const*      _file_;
+    afxSize             _line_;
+    afxChar const*      _func_;
 
     void*               udd;
+
+    afxNat              unitIdx;
+    afxNat32            tid;
+    void*               osHandle;
 };
 #endif//_AFX_THREAD_C
 #endif//_AFX_CORE_C
 
+////////////////////////////////////////////////////////////////////////////////
+
+/// functions affection the currrent caller thread.
+
+AFX void        AfxGetTid(afxNat32* tid);
+
+AFX afxBool     AfxFindThread(afxNat32 tid, afxThread* thread);
+
+AFX afxBool     AfxGetThread(afxThread* thread);
+
+/// Return true if the task running on this thread should be stopped. An interruption can be requested by RequestThreadInterruption().
+AFX afxBool     AfxThreadShouldBeInterrupted(void);
+
+/// Tells the thread's event loop to exit with a return code.
+/// After calling this function, the thread leaves the event loop and returns from the call to event loop exec(). The event loop exec() function returns returnCode.
+/// By convention, a returnCode of 0 means success, any non - zero value indicates an error.
+/// Note that unlike the C library function of the same name, this function does return to the caller – it is event processing that stops.
+/// No event loops will be started anymore in this thread until thread exec() has been called again.If the eventloop in thread exec() is not running then the next call to thread exec() will also return immediately.
+
+AFX void        AfxExitThread(afxInt code);
+
+/// Tells the thread's event loop to exit with return code 0 (success). Equivalent to calling AfxExitThread(0).
+/// This function does nothing if the thread does not have an event loop.
+
+AFX void        AfxQuitThread(void);
+
+/// Yields execution of the current thread to another runnable thread, if any. Note that the operating system decides to which thread to switch.
+AFX void        AfxYieldThread(void);
+
+AFX void        AfxGetThreadFrequency(afxNat* iterNo, afxNat* lastFreq);
+AFX void        AfxGetThreadTime(afxReal64* ct, afxReal64* dt);
+AFX void        AfxGetThreadClock(afxClock* curr, afxClock* last);
+
+////////////////////////////////////////////////////////////////////////////////
+
 AFX void*       AfxGetThreadUdd(afxThread thr);
+
+/// Begins execution of the thread by calling run(). The operating system will schedule the thread according to the priority parameter. If the thread is already running, this function does nothing.
+/// The effect of the priority parameter is dependent on the operating system's scheduling policy. In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).
 
 AFX void        AfxRunThread(afxThread thr);
 
@@ -126,12 +159,12 @@ AFX afxBool     AfxGetThreadExitCode(afxThread thr, afxInt *exitCode);
 
 AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
 
-// functions affection the currrent caller thread.
-
-AFX void        AfxRunThreads(afxNat cnt, afxThread threads[]);
-
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxError    AfxAcquireThreads(afxThreadConfig const* cfg, afxHint const hint, afxNat cnt, afxThread threads[]);
+AFX afxBool     AfxIsPrimeThread(void);
+
+AFX afxBool     AfxGetPrimeThread(afxThread* thread);
+
+AFX afxError    AfxAcquireThread(afxHere const hint, afxThreadConfig const* cfg, afxThread* thread);
 
 #endif//AFX_THREAD_H

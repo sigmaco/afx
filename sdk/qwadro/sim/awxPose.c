@@ -171,12 +171,12 @@ _AKX afxError AfxAcquirePoses(void *sim, afxNat cnt, afxNat const artCnt[], awxP
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        lp[i] = AfxAllocate(1, sizeof(*lp[0]), 0, AfxHint());
+        lp[i] = AfxAllocate(1, sizeof(*lp[0]), 0, AfxHere());
         AfxAssert(lp[i]);
         lp[i]->artCnt = artCnt[i];
         lp[i]->fillThreshold = 0.2;
         lp[i]->traversalId = 0;
-        lp[i]->arts = lp[i]->artCnt ? AfxAllocate(lp[i]->artCnt, sizeof(lp[i]->arts[0]), 0, AfxHint()) : NIL;
+        lp[i]->arts = lp[i]->artCnt ? AfxAllocate(lp[i]->artCnt, sizeof(lp[i]->arts[0]), 0, AfxHere()) : NIL;
         AfxAssert(lp[i]->arts);
         AfxZero2(lp[i]->artCnt, sizeof(lp[i]->arts[0]), lp[i]->arts);
     }

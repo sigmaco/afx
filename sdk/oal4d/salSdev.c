@@ -16,7 +16,7 @@
 
 #include "salSdev.h"
 
-extern afxClassConfig const _SalSctxClsConfig;
+extern afxClassConfig const _SalSctxMgrCfg;
 
 _A4D afxChar const sigmaSignature[] =
 {
@@ -320,7 +320,7 @@ _A4D afxError _SalBuildSpu(afxSoundDevice sdev, afxNat unitIdx)
                     fd = AfxOpenFile(&uri, afxIoFlag_R);
 
                     afxNat dataSiz = AfxMeasureStream(fd);
-                    void *data = AfxAllocate(dataSiz, 1, 0, AfxHint());
+                    void *data = AfxAllocate(dataSiz, 1, 0, AfxHere());
                     AfxReadStream(fd, dataSiz, 0, data);
 
                     al->BufferData(uiBuffer, AL_FORMAT_STEREO16, data, dataSiz, 44100);
@@ -360,8 +360,6 @@ _A4D afxError _SalDestroySpu(afxSoundDevice sdev, afxNat unitIdx)
     salSpuIdd *spu = &sdev->idd->spus[unitIdx];
     alVmt const* al = &spu->al;
 
-    afxMmu mmu = AfxGetSoundSystemMmu();
-
     ALCcontext* dc = spu->alcGetCurrentContext();
 
     if (dc == spu->alc)
@@ -373,180 +371,178 @@ _A4D afxError _SalDestroySpu(afxSoundDevice sdev, afxNat unitIdx)
     return err;
 }
 
+_A4D afxError _SalSctxProcCb(afxSoundContext sctx, afxThread sthr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    AfxAssertObjects(1, &sthr, afxFcc_STHR);
+
+
+    return err;
+}
+
 _A4D afxBool _SalProcessSctxCb(afxSoundContext sctx, void *udd)
 {
     afxError err = AFX_ERR_NONE;
 
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-    afxSoundThread sthr = (afxSoundThread)udd;
-    AfxAssertObjects(1, &sthr, afxFcc_STHR);
+    afxThread sthr = (afxThread)udd;
+    AfxAssertObjects(1, &sthr, afxFcc_THR);
 
-    if (sthr->sdev != AfxGetObjectProvider(sctx)) AfxThrowError();
-    else
-    {
-        sthr->sctx = sctx;
+    if (_SalSctxProcCb(sctx, sthr))
+        AfxThrowError();
 
-        if (sctx->base.procCb(sctx, sthr))
-            AfxThrowError();
-    }
     return FALSE; // don't interrupt curation;
 }
 
-_A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxSoundThread sthr)
+_A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    AfxAssertObjects(1, &sthr, afxFcc_STHR);
-    afxSoundSystem ssys;
-    AfxGetSoundSystem(&ssys);
-    AfxAssertObjects(1, &ssys, afxFcc_SSYS);
+    AfxAssertObjects(1, &thr, afxFcc_THR);
 
-    afxNat unitIdx;
-    AfxGetThreadingUnit(&unitIdx);
-
-    if (unitIdx > 0)
-        return err;
-
-    sthr->portIdx = unitIdx;
-
-    AfxInvokeSoundContexts(sdev, 0, AFX_N32_MAX, _SalProcessSctxCb, (void*)sthr);
+    AfxInvokeSoundContexts(sdev, 0, AFX_N32_MAX, _SalProcessSctxCb, (void*)thr);
 
     return err;
 }
 
+_A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    afxSoundDevice sdev = AfxGetThreadUdd(thr);
+
+    switch (ev->id)
+    {
+    case afxThreadEvent_RUN:
+    {
+        if (_SalBuildSpu(sdev, 0))
+        {
+            AfxThrowError();
+            AfxExitThread(err);
+        }
+        break;
+    }
+    case afxThreadEvent_QUIT:
+    {
+        if (_SalDestroySpu(sdev, 0))
+            AfxThrowError();
+
+        break;
+    }
+    default:
+    {
+        break;
+    }
+    }
+
+    return 0;
+}
 _A4D afxError _SalSdevIddCtor(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
-
-    afxMmu mmu = AfxGetSoundSystemMmu();
 
     static afxString devDomain, devName;
     AfxMakeString(&sdev->dev.domain, "a4d", 0);
     AfxMakeString(&sdev->dev.name, a4dSignature, 0);
 
-    if (AfxAllocateArray(&sdev->dev.threads, 0, sizeof(afxSoundThread), (afxSoundThread[]) { 0 })) AfxThrowError();
-    else
+    sdev->dev.serving = FALSE;
+
+    afxChain *classes = &sdev->dev.classes;
+    AfxSetUpChain(classes, sdev);
+
+    afxClassConfig const sctxMgrCfg =
     {
-        sdev->dev.serving = FALSE;
-
-        afxChain *classes = &sdev->dev.classes;
-        AfxSetUpChain(classes, sdev);
-
-        afxClassConfig const sctxClsConfig =
-        {
-            .fcc = afxFcc_SCTX,
-            .name = "Sound Context",
-            .unitsPerPage = 1,
-            .size = sizeof(AFX_OBJECT(afxSoundContext)),
-            .mmu = mmu,
-            .ctor = (void*)NIL,
-            .dtor = (void*)NIL
-        };
+        .fcc = afxFcc_SCTX,
+        .name = "Sound Context",
+        .unitsPerPage = 1,
+        .size = sizeof(AFX_OBJECT(afxSoundContext)),
+        .ctor = (void*)NIL,
+        .dtor = (void*)NIL
+    };
 
 #if 0
-        afxClassConfig const soutClsConfig =
-        {
-            .fcc = afxFcc_SOUT,
-            .name = "Sound Output",
-            .unitsPerPage = 1,
-            .size = sizeof(AFX_OBJECT(afxSoundOutput)),
-            .mmu = mmu,
-            .ctor = (void*)NIL,
-            .dtor = (void*)NIL
-        };
+    afxClassConfig const soutMgrCfg =
+    {
+        .fcc = afxFcc_SOUT,
+        .name = "Sound Output",
+        .unitsPerPage = 1,
+        .size = sizeof(AFX_OBJECT(afxSoundOutput)),
+        .ctor = (void*)NIL,
+        .dtor = (void*)NIL
+    };
 
-        afxClassConfig const sinClsConfig =
-        {
-            .fcc = afxFcc_SIN,
-            .name = "Sound Input",
-            .unitsPerPage = 1,
-            .size = sizeof(AFX_OBJECT(afxSoundInput)),
-            .mmu = mmu,
-            .ctor = (void*)NIL,
-            .dtor = (void*)NIL
-        };
+    afxClassConfig const sinMgrCfg =
+    {
+        .fcc = afxFcc_SIN,
+        .name = "Sound Input",
+        .unitsPerPage = 1,
+        .size = sizeof(AFX_OBJECT(afxSoundInput)),
+        .ctor = (void*)NIL,
+        .dtor = (void*)NIL
+    };
 #endif
-        // dctx must be after dxge
-        AfxSetUpManager(&sdev->contexts, NIL, classes, &_SalSctxClsConfig);
-        //AfxSetUpManager(&sdev->outputs, NIL, classes, info->soutClsConfig);
-        //AfxSetUpManager(&sdev->inputs, NIL, classes, info->sinClsConfig);
+    // dctx must be after dxge
+    AfxEstablishManager(&sdev->contexts, NIL, classes, &_SalSctxMgrCfg);
+    //AfxEstablishManager(&sdev->outputs, NIL, classes, info->soutMgrCfg);
+    //AfxEstablishManager(&sdev->inputs, NIL, classes, info->sinMgrCfg);
 
-        sdev->idd = NIL;
+    sdev->idd = NIL;
 
-        if (!(sdev->idd = AfxAllocate(1, sizeof(sdev->idd[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(sdev->idd = AfxAllocate(1, sizeof(sdev->idd[0]), 0, AfxHere()))) AfxThrowError();
+    else
+    {
+        sdev->dev.proc = (void*)_SalSdevProcCb;
+
+        sdev->idd->spuCnt = 1;
+
+        if (!(sdev->idd->spus = AfxAllocate(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
-            sdev->dev.proc = (void*)_SalSdevProcCb;
+            AfxZero2(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), sdev->idd->spus);
 
-            sdev->idd->spuCnt = 1;
-
-            if (!(sdev->idd->spus = AfxAllocate(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), 0, AfxHint()))) AfxThrowError();
-            else
+            for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
             {
-                AfxZero2(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), sdev->idd->spus);
-
-                for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
-                {
-                    if (_SalBuildSpu(sdev, i))
-                    {
-                        AfxThrowError();
-
-                        for (afxNat j = 0; j < i; j++)
-                            if (_SalDestroySpu(sdev, j))
-                                AfxThrowError();
-                    }
-                }
-
-                afxNat unitIdx;
-                AfxGetThreadingUnit(&unitIdx);
-
-                //wglVmt const* wgl = &ddev->dpus[unitIdx].wgl;
-
-                if (!sdev->idd->spus[unitIdx].alcMakeContextCurrent(sdev->idd->spus[unitIdx].alc))
-                    AfxThrowError();
-
-                afxSoundDevice devInfo;
-
-                //ddev->dpuCnt = 1;
-
-                AfxAssert(sdev->dev.proc);
-                sdev->dev.serving = TRUE;
+                
             }
 
-            if (err)
-                AfxDeallocate(sdev->idd);
-        }
-            
-        AfxAssert(sdev->dev.proc);
+            afxNat unitIdx = 0;
+            //wglVmt const* wgl = &ddev->dpus[unitIdx].wgl;
+#if 0
+            if (!sdev->idd->spus[unitIdx].alcMakeContextCurrent(sdev->idd->spus[unitIdx].alc))
+                AfxThrowError();
+#endif
+            afxSoundDevice devInfo;
 
-        afxSoundThread sthr[2];
-        afxSoundThreadConfig stCfg[2] = { {0},{0} };
-        stCfg[0].sdev = sdev;
-        stCfg[0].base.txuCnt = AfxGetThreadingCapacity();
-        stCfg[1].sdev = sdev;
-        stCfg[1].base.txuCnt = stCfg[0].base.txuCnt;
+            //ddev->dpuCnt = 1;
 
-        if (AfxAcquireSoundThreads(stCfg, AfxHint(), 2, sthr)) AfxThrowError();
-        else
-        {
+            AfxAssert(sdev->dev.proc);
             sdev->dev.serving = TRUE;
-
-            AfxLogY("The audience is listening");
-
-            AfxRunThreads(2, (afxThread*)sthr);
         }
 
         if (err)
-            _AfxUninstallChainedClasses(&sdev->dev.classes);
+            AfxDeallocate(sdev->idd);
+    }
+            
+    AfxAssert(sdev->dev.proc);
 
+    afxThread sthr;
+    afxThreadConfig stCfg = {0};
+    stCfg.procCb = SoundThreadProc;
+    stCfg.udd = sdev;
 
-        if (err)
-        {
-            //_AfxSdevDtorFreeThreads(sdev);
-            AfxDeallocateArray(&sdev->dev.threads);
-        }
+    if (AfxAcquireThread(AfxHere(), &stCfg, &sthr)) AfxThrowError();
+    else
+    {
+        sdev->dev.serving = TRUE;
+
+        AfxLogY("The audience is listening");
+
+        AfxRunThread(sthr);
     }
 
+    if (err)
+        AfxCleanUpChainedManagers(&sdev->dev.classes);
 
     return err;
 }
@@ -555,9 +551,6 @@ _A4D afxError _SalSdevIddDtor(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-
-    afxMmu mmu = AfxGetSoundSystemMmu();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
         if (_SalDestroySpu(sdev, i))

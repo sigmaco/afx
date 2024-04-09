@@ -52,7 +52,7 @@ _AKX void _AfxMesh113131(afxMesh msh)
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
     afxNat const NumMeshTris = AfxCountMeshTriangles(msh->topology);
-    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
+    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHere());
     
     for (afxNat triIdx = 0; triIdx < NumMeshTris; ++triIdx)
     {
@@ -299,7 +299,7 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
     mshb->surfCnt = surfCnt;
     mshb->faces = NIL;
 
-    if (surfCnt && !(mshb->faces = AfxAllocate(triCnt, sizeof(mshb->faces[0]), 0, AfxHint()))) AfxThrowError();
+    if (surfCnt && !(mshb->faces = AfxAllocate(triCnt, sizeof(mshb->faces[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         AfxZero2(triCnt, sizeof(mshb->faces[0]), mshb->faces);        
@@ -309,12 +309,12 @@ _AKXINL afxError AfxBeginMeshBuilding(afxMeshBuilder* mshb, afxString const* id,
 
     AfxAllocateArray(&mshb->biases, artCnt, sizeof(afxVertexBias), (afxVertexBias[]) { 0 });
 
-    mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHint());
+    mshb->vtx = AfxAllocate(vtxCnt, sizeof(mshb->vtx[0]), NIL, AfxHere());
     AfxZero2(vtxCnt, sizeof(mshb->vtx[0]), mshb->vtx);
 
-    mshb->pivots = AfxAllocate(artCnt, sizeof(mshb->pivots[0]), NIL, AfxHint());
+    mshb->pivots = AfxAllocate(artCnt, sizeof(mshb->pivots[0]), NIL, AfxHere());
 
-    mshb->posn = AfxAllocate(vtxCnt, sizeof(mshb->posn[0]), AFX_SIMD_ALIGN, AfxHint());
+    mshb->posn = AfxAllocate(vtxCnt, sizeof(mshb->posn[0]), AFX_SIMD_ALIGN, AfxHere());
     mshb->nrm = NIL;
     mshb->uv = NIL;
 
@@ -389,7 +389,7 @@ _AKXINL afxError AfxUpdateVertexNormals(afxMeshBuilder* mshb, afxNat baseVtxIdx,
     AfxAssertRange(mshb->vtxCnt, baseVtxIdx, vtxCnt);
     AfxAssert(nrm);
 
-    if (!mshb->nrm && !(mshb->nrm = AfxAllocate(mshb->vtxCnt, sizeof(mshb->nrm[0]), AFX_SIMD_ALIGN, AfxHint())))
+    if (!mshb->nrm && !(mshb->nrm = AfxAllocate(mshb->vtxCnt, sizeof(mshb->nrm[0]), AFX_SIMD_ALIGN, AfxHere())))
         AfxThrowError();
 
     if (!err)
@@ -416,7 +416,7 @@ _AKXINL afxError AfxUpdateVertexWraps(afxMeshBuilder* mshb, afxNat baseVtxIdx, a
     AfxAssertRange(mshb->vtxCnt, baseVtxIdx, vtxCnt);
     AfxAssert(uv);
 
-    if (!mshb->uv && !(mshb->uv = AfxAllocate(mshb->vtxCnt, sizeof(mshb->uv[0]), AFX_SIMD_ALIGN, AfxHint())))
+    if (!mshb->uv && !(mshb->uv = AfxAllocate(mshb->vtxCnt, sizeof(mshb->uv[0]), AFX_SIMD_ALIGN, AfxHere())))
         AfxThrowError();
 
     if (!err)

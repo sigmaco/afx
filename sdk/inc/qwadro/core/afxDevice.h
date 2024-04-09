@@ -68,8 +68,8 @@ AFX_DEFINE_STRUCT(afxDeviceDescription)
 {
     afxNat32            devId; /// Device ID for Qwadro. This is the same as what is returned from GetDeviceId and GetDeviceIdFromName.
     afxString128        name; /// The user-friendly name for the device.
-    afxDeviceState      devStateMask; /// Bitmask used to filter the device based on their state.
-    afxBool             isDefaultDev; /// Identify default device. Always false when not supported.
+    afxDeviceState      stateMask; /// Bitmask used to filter the device based on their state.
+    afxBool             isDefault; /// Identify default device. Always false when not supported.
 };
 
 #ifdef _AFX_CORE_C
@@ -89,7 +89,6 @@ AFX_OBJECT(afxDevice)
     afxResult           (*ioctl)(afxDevice,afxNat,va_list);
 
     afxBool             serving;
-    afxArray            threads;
     
     afxUri32            uri;
     afxManifest         manifest;
@@ -108,13 +107,14 @@ AFX void                AfxGetDeviceDriverVersion(afxDevice dev, afxNat* major, 
 
 AFX afxResult           AfxCallDevice(afxDevice dev, afxNat reqCode, ...);
 
+AFX afxError            AfxDoDeviceService(afxDevice dev);
 
 ////////////////////////////////////////////////////////////////////////////////
 
 AFX afxDevice           AfxOpenDevice(afxUri const* manifest, ...);
 
-AFX afxBool             AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* dev);
+AFX afxBool             AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* device);
 
-AFX afxError            AfxInstallClientDriver(afxDeviceType type, afxUri const* manifest, afxDevice* dev);
+AFX afxError            AfxInstallClientDriver(afxDeviceType type, afxUri const* manifest, afxDevice* device);
 
 #endif//AFX_DEVICE_H

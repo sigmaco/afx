@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <assert.h>
 #include <ctype.h>
@@ -89,9 +91,6 @@ static void AfxXmlNodeAttrDelete(afxXml* xml, afxXmlAttr* attribute)
     afxError err = AFX_ERR_NONE;
     AfxAssert(attribute);
 
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
     AfxDeallocate(attribute);
 }
 
@@ -99,9 +98,6 @@ static void AfxXmlNodeDelete(afxXml* xml, afxXmlNode *node)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(node);
-
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     afxXmlAttr** at = node->attributes;
     while (*at)
@@ -183,10 +179,7 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
     afxXmlAttr** attributes;
     int position;
 
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
-    attributes = AfxCoallocate(1, sizeof(afxXmlAttr*), 0, AfxHint());
+    attributes = AfxCoallocate(1, sizeof(afxXmlAttr*), 0, AfxHere());
     attributes[0] = 0;
 
     afxString128 tmpStr;
@@ -204,8 +197,8 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 
         for (token = xml_strtok_r(NULL, " ", &rest); token != NULL; token = xml_strtok_r(NULL, " ", &rest))
         {
-            str_name = AfxAllocate(1, strlen(token) + 1, 0, AfxHint());
-            str_content = AfxAllocate(1, strlen(token) + 1, 0, AfxHint());
+            str_name = AfxAllocate(1, strlen(token) + 1, 0, AfxHere());
+            str_content = AfxAllocate(1, strlen(token) + 1, 0, AfxHere());
             // %s=\"%s\" wasn't working for some reason, ugly hack to make it work
             if (sscanf(token, "%[^=]=\"%[^\"]", str_name, str_content) != 2)
             {
@@ -220,13 +213,13 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
             start_name = &tag_open->start[position];
             start_content = &tag_open->start[position + strlen(str_name) + 2];
 
-            new_attribute = AfxAllocate(1, sizeof(afxXmlAttr), 0, AfxHint());
+            new_attribute = AfxAllocate(1, sizeof(afxXmlAttr), 0, AfxHere());
             AfxMakeString(&new_attribute->name, start_name, strlen(str_name));
             AfxMakeString(&new_attribute->content, start_content, strlen(str_content));
 
             old_elements = get_zero_terminated_array_attributes(attributes);
             new_elements = old_elements + 1;
-            attributes = AfxReallocate(attributes, sizeof(struct xml_attributes*), (new_elements + 1), 0, AfxHint());
+            attributes = AfxReallocate(attributes, sizeof(struct xml_attributes*), (new_elements + 1), 0, AfxHere());
 
             attributes[new_elements - 1] = new_attribute;
             attributes[new_elements] = 0;
@@ -259,9 +252,6 @@ static afxXmlAttr** _AfxXmlParseAttribs(afxXml* xml, struct xml_parser* parser, 
 static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_parser* parser)
 {
     afxError err = AFX_ERR_NONE;
-
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     // NEW
 
@@ -305,7 +295,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
     size_t original_length;
     afxXmlAttr** attributes;
 
-    afxXmlNode** children = AfxCoallocate(1, sizeof(afxXmlNode*), 0, AfxHint());
+    afxXmlNode** children = AfxCoallocate(1, sizeof(afxXmlNode*), 0, AfxHere());
     children[0] = 0;
 
     // Parse open tag
@@ -499,7 +489,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
 
                         size_t old_elements = get_zero_terminated_array_nodes(children);
                         size_t new_elements = old_elements + 1;
-                        children = AfxReallocate(children, sizeof(afxXmlNode*), (new_elements + 1), 0, AfxHint());
+                        children = AfxReallocate(children, sizeof(afxXmlNode*), (new_elements + 1), 0, AfxHere());
 
                         // Save child
 
@@ -584,7 +574,7 @@ static afxXmlNode* _AfxXmlParseNode(afxXml* xml, afxNat parentIdx, struct xml_pa
                 int a = 0;
             }
 
-            afxXmlNode* node = AfxAllocate(1, sizeof(afxXmlNode), 0, AfxHint());
+            afxXmlNode* node = AfxAllocate(1, sizeof(afxXmlNode), 0, AfxHere());
             AfxMakeString(&node->name, tag_open.start, tag_open.len);
             AfxMakeString(&node->content, content.start, content.len);
             node->attributes = attributes;
@@ -684,7 +674,7 @@ _AFX afxError AfxParseXml(afxXml* xml, void* buffer, afxNat length)
             AfxAllocateArray(&sorted, elemCnt, sizeof(afxXmlElement), NIL);
             AfxReserveArraySpace(&sorted, elemCnt);
 
-            afxNat* indicesMap = AfxAllocate(elemCnt, sizeof(indicesMap[0]), 0, AfxHint());
+            afxNat* indicesMap = AfxAllocate(elemCnt, sizeof(indicesMap[0]), 0, AfxHere());
 
             afxNat activeParentIdx = AFX_INVALID_INDEX;
             afxNat remaningCnt = elemCnt;

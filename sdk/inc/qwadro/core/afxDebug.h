@@ -18,6 +18,7 @@
 #define AFX_DEBUG_H
 
 #include "qwadro/core/afxCoreDefs.h"
+#include "qwadro/core/afxString.h"
 #include "qwadro/core/afxFcc.h"
 
 #if _DEBUG
@@ -36,9 +37,17 @@ typedef enum
     AFX_HINT_FUNC,
 } afxHintAttr;
 
-typedef afxSize afxHint[3];
+AFX_DEFINE_STRUCT(afxHere2)
+{
+    afxString   file;
+    afxNat      line;
+    afxString   func;
+};
 
-#define AfxHint() ((afxHint const){ (afxSize)(__FILE__), (afxSize)(__LINE__), (afxSize)(__func__) })
+typedef afxSize afxHere[3];
+
+#define AfxHere() ((afxHere const){ (afxSize)(__FILE__), (afxSize)(__LINE__), (afxSize)(__func__) })
+//#define AfxHint2() (){ AFX_STRINGIFY(), }
 
 AFX afxResult       _AfxDbgAttach(afxChar const* file);
 AFX afxResult       _AfxDbgDetach(void);
@@ -48,15 +57,15 @@ AFX afxResult       _AfxDbgLock(void);
 AFX afxResult       _AfxDbgUnlock(void);
 
 AFX afxResult       AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len);
-AFX afxResult       AfxDbgLogf(afxNat ch, afxHint const hint, afxChar const* msg, ...);
+AFX afxResult       AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...);
 
 #if 0
-AFX void            AfxLogCall(afxHint const hint, afxChar const* args, ...); // green
-AFX void            AfxLogEcho(afxHint const hint, afxChar const* msg, ...); // green
-AFX void            AfxLogError(afxHint const hint, afxChar const* msg, ...); // red
-AFX void            AfxLogComment(afxHint const hint, afxChar const* msg, ...); // grey
-AFX void            AfxLogAdvertence(afxHint const hint, afxChar const* msg, ...); // yellow
-AFX void            AfxLogAssistence(afxHint const hint, afxChar const* msg, ...); // purple
+AFX void            AfxLogCall(afxHere const hint, afxChar const* args, ...); // green
+AFX void            AfxLogEcho(afxHere const hint, afxChar const* msg, ...); // green
+AFX void            AfxLogError(afxHere const hint, afxChar const* msg, ...); // red
+AFX void            AfxLogComment(afxHere const hint, afxChar const* msg, ...); // grey
+AFX void            AfxLogAdvertence(afxHere const hint, afxChar const* msg, ...); // yellow
+AFX void            AfxLogAssistence(afxHere const hint, afxChar const* msg, ...); // purple
 #endif
 
 AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
@@ -71,13 +80,13 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 
 #ifdef TRUE// ((defined(_AFX_DEBUG)))
 
-#   define AfxLogEcho(msg_, ...)         AfxDbgLogf(2,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogError(msg_, ...)        AfxDbgLogf(9,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogAssertionFailure(msg_, ...)        AfxDbgLogf(8,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogComment(msg_, ...)      AfxDbgLogf(0,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogAssistence(msg_, ...)   AfxDbgLogf(4,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogAdvertence(msg_, ...)   AfxDbgLogf(7,(AfxHint()),(msg_),__VA_ARGS__)
-#   define AfxLogY(msg_, ...)   AfxDbgLogf(6,(AfxHint()),(msg_),__VA_ARGS__)
+#   define AfxLogEcho(msg_, ...)         AfxDbgLogf(2,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogError(msg_, ...)        AfxDbgLogf(9,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogAssertionFailure(msg_, ...)        AfxDbgLogf(8,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogComment(msg_, ...)      AfxDbgLogf(0,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogAssistence(msg_, ...)   AfxDbgLogf(4,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogAdvertence(msg_, ...)   AfxDbgLogf(7,(AfxHere()),(msg_),__VA_ARGS__)
+#   define AfxLogY(msg_, ...)   AfxDbgLogf(6,(AfxHere()),(msg_),__VA_ARGS__)
 
 #else
 
@@ -96,9 +105,9 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_EXPECT)))
 
-//#   define AfxAssertRange(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHint(),"%s(%u) + %s(%u) is out of range [0, %s(%u)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
-//#   define AfxAssertRangei(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHint(),"%s(%i) + %s(%i) is out of range [0, %s(%i)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
-//#   define AfxAssertRangef(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHint(),"%s(%f) + %s(%f) is out of range [0, %s(%f)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
+//#   define AfxAssertRange(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%u) + %s(%u) is out of range [0, %s(%u)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
+//#   define AfxAssertRangei(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%i) + %s(%i) is out of range [0, %s(%i)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
+//#   define AfxAssertRangef(total_, base_, range_) ((!!((total_ >= base_ + range_)))||(AfxThrowError(),AfxLogError(AfxHere(),"%s(%f) + %s(%f) is out of range [0, %s(%f)]",AFX_STRINGIFY(base_),(base_),AFX_STRINGIFY(range_),(range_),AFX_STRINGIFY(total_),(total_)),0))
 
 // TODO override old ones
 #   define AfxAssertRange(capacity_, first_, count_)  ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u + <%s>%u is out of capacity <%s>%u.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
@@ -169,7 +178,7 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #endif
 
 #if ((defined(_AFX_DEBUG) || defined(_AFX_TRACE)))
-#   define AfxEntry(args, ...) AfxLogCall(AfxHint(),args,__VA_ARGS__)
+#   define AfxEntry(args, ...) AfxLogCall(AfxHere(),args,__VA_ARGS__)
 #else
 #   define AfxEntry(args, ...)
 #endif
@@ -183,7 +192,7 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #   define _AFX_DBG_FCC16 
 #endif
 
-AFX void AfxCatchError_(afxError err, afxHint const hint);
-#define AfxCatchError(err_) ((!((err_)))||(AfxCatchError_((err_), AfxHint()),0))
+AFX void AfxCatchError_(afxError err, afxHere const hint);
+#define AfxCatchError(err_) ((!((err_)))||(AfxCatchError_((err_), AfxHere()),0))
 
 #endif//AFX_DEBUG_H

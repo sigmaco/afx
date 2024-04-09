@@ -23,7 +23,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/core/afxSystem.h"
 
-_SGL afxError _SglDpuBindAndSyncVin(sglDpuIdd* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings)
+_SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -216,10 +216,7 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
     afxNat attrCnt = *(afxNat const*)cookie->udd[3];
     afxVertexInputAttr const* attrs = cookie->udd[4];
 
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
-    if (attrCnt && !(vin->base.attrs = AfxAllocate(attrCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
+    if (attrCnt && !(vin->base.attrs = AfxAllocate(attrCnt, sizeof(vin->base.attrs[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < attrCnt; i++)
@@ -233,7 +230,7 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
         }
         vin->base.attrCnt = attrCnt;
 
-        if (streamCnt && !(vin->base.streams = AfxAllocate(streamCnt, sizeof(vin->base.attrs[0]), 0, AfxHint()))) AfxThrowError();
+        if (streamCnt && !(vin->base.streams = AfxAllocate(streamCnt, sizeof(vin->base.attrs[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             for (afxNat i = 0; i < streamCnt; i++)
@@ -252,7 +249,7 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglVinClsConfig =
+_SGL afxClassConfig const _SglVinMgrCfg =
 {
     .fcc = afxFcc_VIN,
     .name = "Vertex Input",

@@ -1,0 +1,4 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemafxManifest.c:215
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadEntering the Thread Execution Environment 8900
+Acquiring thread...  8900 "afxSystem_w32.c:464"

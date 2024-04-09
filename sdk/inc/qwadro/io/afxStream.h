@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 // afxStream, data I/O stream, is the base object for objects representing files in Qwadro.
 
@@ -73,6 +73,15 @@ AFX_DEFINE_STRUCT(_afxIobIdd)
         afxSize         posn;
         afxBool         isUserBuf; // when buffered
     }                   m;
+    struct
+    {
+        afxByte*        buf;
+        afxNat32        bufCap;
+        afxNat32        itemSiz;
+        afxNat32        wPosn;
+        afxNat32        rPosn;
+        afxAtom32       rItemCnt;
+    }                   m2;
     struct
     {
         void*           fd;

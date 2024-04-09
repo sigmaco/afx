@@ -31,19 +31,19 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglDpuDisableRasterization(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuDisableRasterization(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.rasterizationDisabled = cmd->value;
 }
 
-_SGL void _SglDpuEnableDepthBias(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuEnableDepthBias(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.depthBiasEnabled = cmd->value;
 }
 
-_SGL void _SglDpuSetDepthBias(sglDpuIdd* dpu, _sglCmdReal3 const *cmd)
+_SGL void _DpuSetDepthBias(sglDpu* dpu, _sglCmdReal3 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.depthBiasConstFactor = cmd->value[0];
@@ -51,19 +51,19 @@ _SGL void _SglDpuSetDepthBias(sglDpuIdd* dpu, _sglCmdReal3 const *cmd)
     dpu->nextRasterState.depthBiasSlopeScale = cmd->value[2];
 }
 
-_SGL void _SglDpuSetLineWidth(sglDpuIdd* dpu, _sglCmdReal const *cmd)
+_SGL void _DpuSetLineWidth(sglDpu* dpu, _sglCmdReal const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.lineWidth = cmd->value;
 }
 
-_SGL void _SglDpuEnableStencilTest(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuEnableStencilTest(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.stencilTestEnabled = cmd->value;
 }
 
-_SGL void _SglDpuSetStencilCompareMask(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const *cmd)
+_SGL void _DpuSetStencilCompareMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
@@ -75,7 +75,7 @@ _SGL void _SglDpuSetStencilCompareMask(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const
         dpu->nextRasterState.stencilBack.compareMask = cmd->value;
 }
 
-_SGL void _SglDpuSetStencilWriteMask(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const *cmd)
+_SGL void _DpuSetStencilWriteMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
@@ -87,7 +87,7 @@ _SGL void _SglDpuSetStencilWriteMask(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const *
         dpu->nextRasterState.stencilBack.writeMask = cmd->value;
 }
 
-_SGL void _SglDpuSetStencilReference(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const *cmd)
+_SGL void _DpuSetStencilReference(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
@@ -99,32 +99,32 @@ _SGL void _SglDpuSetStencilReference(sglDpuIdd* dpu, _sglCmdBitmaskNat32 const *
         dpu->nextRasterState.stencilBack.reference = cmd->value;
 }
 
-_SGL void _SglDpuEnableDepthTest(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuEnableDepthTest(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.depthTestEnabled = cmd->value;
 }
 
-_SGL void _SglDpuSetDepthCompareOp(sglDpuIdd* dpu, _sglCmdNat const *cmd)
+_SGL void _DpuSetDepthCompareOp(sglDpu* dpu, _sglCmdNat const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.depthCompareOp = cmd->value;
 }
 
-_SGL void _SglDpuDisableDepthWrite(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuDisableDepthWrite(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextRasterState.depthWriteDisabled = cmd->value;
 }
 
-_SGL void _SglDpuSetBlendConstants(sglDpuIdd* dpu, _sglCmdReal4 const *cmd)
+_SGL void _DpuSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     AfxCopyV4d(dpu->nextRasterState.blendConstants, cmd->value);
     dpu->nextBlendConstUpd = TRUE;
 }
 
-_SGL void _SglDpuSetScissors(sglDpuIdd* dpu, _sglCmdScissor const *cmd)
+_SGL void _DpuSetScissors(sglDpu* dpu, _sglCmdScissor const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     afxNat first = cmd->first;
@@ -140,7 +140,7 @@ _SGL void _SglDpuSetScissors(sglDpuIdd* dpu, _sglCmdScissor const *cmd)
         dpu->nextRasterState.scisCnt = cnt;
 }
 
-_SGL void _SglDpuSetAreas(sglDpuIdd* dpu, _sglCmdArea const *cmd)
+_SGL void _DpuSetAreas(sglDpu* dpu, _sglCmdArea const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     afxNat first = cmd->first;
@@ -156,7 +156,7 @@ _SGL void _SglDpuSetAreas(sglDpuIdd* dpu, _sglCmdArea const *cmd)
         dpu->nextRasterState.areaCnt = cnt;
 }
 
-_SGL void SglFlushRasterizationStateChanges(sglDpuIdd* dpu)
+_SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;

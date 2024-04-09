@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 /// Qwadro performs all bone animation on decomposed transforms, where "decomposed" means that the position, orientation, and scale/shear components have been pulled out into separately animating quantities. 
 /// This allows for fair, efficient animation and interpolation, whereas keeping everything as a tangled 4x4 matrix does not. 
 

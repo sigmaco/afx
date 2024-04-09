@@ -19,8 +19,8 @@
 _AFX afxAllocationBlock* _AfxStackAllocateBlock(afxStack *stck)
 {
     afxNat v1 = stck->unitSiz * stck->unitsPerBlock;
-    afxAllocationBlock *block = AfxAllocate(1, sizeof(*block), 0, AfxHint());
-    block->base = AfxAllocate(1, v1, 0, AfxHint());
+    afxAllocationBlock *block = AfxAllocate(1, sizeof(*block), 0, AfxHere());
+    block->base = AfxAllocate(1, v1, 0, AfxHere());
 
     {
         block->usedUnitCnt = 0;
@@ -337,7 +337,7 @@ _AFX void AfxAllocatePagedStack(afxStack *stck, afxNat unitSiz, afxNat unitsPerB
     stck->lastBlock = NIL;
     stck->activeBlocks = 0;
     stck->maxActiveBlocks = v4;
-    afxAllocationBlock**v5 = AfxAllocate(v4, sizeof(afxAllocationBlock*), 0, AfxHint());
+    afxAllocationBlock**v5 = AfxAllocate(v4, sizeof(afxAllocationBlock*), 0, AfxHere());
     afxNat v6 = sizeof(afxAllocationBlock*) * stck->maxActiveBlocks;
     stck->blockDir = v5;
     AfxZero2(1, v6, v5);

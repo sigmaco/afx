@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxShaderBlueprint.h"
 

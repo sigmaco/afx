@@ -93,7 +93,7 @@ _AFX void* AfxRecallocAligned(void* block, afxSize cnt, afxSize siz, afxSize ali
     return _aligned_recalloc(block, cnt, siz, align);
 }
 
-_AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHint const hint)
+_AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxPopLinkage(&mem->mmu);
@@ -111,7 +111,7 @@ _AFX afxError _AfxDeallocCallback2(afxMemory mem, afxHint const hint)
     return err;
 }
 
-_AFX afxError _AfxResizeCallback2(afxMemory mem, afxSize cnt, afxSize siz, afxHint const hint)
+_AFX afxError _AfxResizeCallback2(afxMemory mem, afxSize cnt, afxSize siz, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -137,7 +137,7 @@ _AFX afxError _AfxResizeCallback2(afxMemory mem, afxSize cnt, afxSize siz, afxHi
     return err;
 }
 
-_AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxMemFlags flags, afxHint const hint)
+_AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxMemFlags flags, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
@@ -191,7 +191,7 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
     return mem;
 }
 
-_AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHint const hint)
+_AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -202,7 +202,7 @@ _AFX void _AfxMemAllocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHint const
     AfxAssert(hint);
 }
 
-_AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHint const hint)
+_AFX void _AfxMemDeallocNotStd(afxMmu mmu, afxSize cnt, afxSize siz, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -223,10 +223,10 @@ _AFX void _AfxMemDeallocStd(afxMmu mmu, void *p)
     AfxFreeAligned(p);
 
     if (mmu->deallocNotCb)
-        mmu->deallocNotCb(mmu, 0, 0, AfxHint());
+        mmu->deallocNotCb(mmu, 0, 0, AfxHere());
 }
 
-_AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxSize align, afxHint const hint)
+_AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,p=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, p, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -243,7 +243,7 @@ _AFX void* _AfxMemReallocStd(afxMmu mmu, void* p, afxSize cnt, afxSize siz, afxS
     return neo;
 }
 
-_AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxHint const hint)
+_AFX void* _AfxMemAllocStd(afxMmu mmu, afxSize cnt, afxSize siz, afxSize align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,siz=%u,hint=\"%s:%i!%s\"", ctx, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -334,7 +334,7 @@ _AFX afxError _AfxMmuDtor(afxMmu mmu)
     afxMemory mem;
     AfxChainForEveryLinkage(&mmu->memChain, struct afxMemory_T, mmu, mem)
     {
-        AfxDeallocateMemory(mem, AfxHint());
+        AfxDeallocateMemory(mem, AfxHere());
     }
 
     AfxCleanUpSlock(&mmu->memSlock);
@@ -342,7 +342,7 @@ _AFX afxError _AfxMmuDtor(afxMmu mmu)
     return err;
 }
 
-_AFX afxClassConfig const _AfxMmuClsConfig =
+_AFX afxClassConfig const _AfxMmuMgrCfg =
 {
     .fcc = afxFcc_MMU,
     .name = "Memory Management Unit",
@@ -355,7 +355,7 @@ _AFX afxClassConfig const _AfxMmuClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMmus(afxNat cnt, afxHint const hint, afxAllocationStrategy const strategy[], afxMmu mmus[])
+_AFX afxError AfxAcquireMmus(afxNat cnt, afxHere const hint, afxAllocationStrategy const strategy[], afxMmu mmus[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -559,7 +559,7 @@ _AFX void AfxDeallocate(void *p)
     }
 }
 
-_AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHint const hint)
+_AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHere const hint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(siz);
@@ -612,7 +612,7 @@ _AFX void* AfxReallocate(void *p, afxSize siz, afxSize cnt, afxNat align, afxHin
     return out;
 }
 
-_AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
+_AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,cnt=%u,siz=%u,hint=\"%s:%i!%s\"", ctx, cnt, siz, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -638,7 +638,7 @@ _AFX void* AfxCoallocate(afxSize cnt, afxSize siz, afxNat align, afxHint const h
     return p;
 }
 
-_AFX void* AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHint const hint)
+_AFX void* AfxAllocate(afxSize cnt, afxSize siz, afxNat align, afxHere const hint)
 {
     //AfxEntry("ctx=%p,siz=%u,cnt=%u,hint=\"%s:%i!%s\"", ctx, siz, cnt, AfxFindPathTarget((char const *const)hint[0]), (int)hint[1], (char const *const)hint[2]);
     afxError err = AFX_ERR_NONE;
@@ -697,7 +697,7 @@ _AFX void AfxUnmapMemory(afxMemory mem) // Unmap a previously mapped memory obje
     AfxAssert(mem);
 }
 
-_AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxMemFlags flags, afxHint const hint) // Allocate memory
+_AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat align, afxMemFlags flags, afxHere const hint) // Allocate memory
 {
     afxError err = NIL;
     afxMemory mem = NIL;
@@ -769,7 +769,7 @@ _AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat al
     return mem;
 }
 
-_AFX afxError AfxResizeMemory(afxMemory mem, afxSize siz, afxSize cnt, afxHint const hint)
+_AFX afxError AfxResizeMemory(afxMemory mem, afxSize siz, afxSize cnt, afxHere const hint)
 {
     afxError err = NIL;
     AfxAssert(mem);
@@ -824,7 +824,7 @@ _AFX afxError AfxResizeMemory(afxMemory mem, afxSize siz, afxSize cnt, afxHint c
     return err;
 }
 
-_AFX void AfxDeallocateMemory(afxMemory mem, afxHint const hint) // Free memory
+_AFX void AfxDeallocateMemory(afxMemory mem, afxHere const hint) // Free memory
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mem, afxFcc_MEM);

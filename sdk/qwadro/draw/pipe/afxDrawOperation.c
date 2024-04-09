@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #include "qwadro/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +138,7 @@ _AVX void AfxDrawOperationBlueprintBegin(afxDrawOperationBlueprint* blueprint, a
     if (uri)
         AfxCopyUri(&blueprint->uri.uri, uri);
 
-    AfxAllocateArray(&blueprint->techniques, sizeof(afxDrawOperationBlueprintTechnique), estTechCnt, AfxHint());
+    AfxAllocateArray(&blueprint->techniques, sizeof(afxDrawOperationBlueprintTechnique), estTechCnt, AfxHere());
 }
 
 _AVXINL void AfxDrawOperationBlueprintRename(afxDrawOperationBlueprint *blueprint, afxUri const *uri)
@@ -193,7 +195,7 @@ _AVXINL afxError AfxDrawOperationBlueprintAddTechnique(afxDrawOperationBlueprint
     else
     {
         tec->name = name && !AfxStringIsEmpty(name) ? AfxCloneString(name) : NIL;
-        AfxAllocateArray(&tec->passes, sizeof(afxDrawOperationBlueprintTechniquePass), 1, AfxHint()); // at least one passes
+        AfxAllocateArray(&tec->passes, sizeof(afxDrawOperationBlueprintTechniquePass), 1, AfxHere()); // at least one passes
     }
     return err;
 }
@@ -233,7 +235,7 @@ _AVXINL afxError AfxDrawOperationBlueprintAddPass(afxDrawOperationBlueprint *blu
         pass->rasterization = (afxPipelineRasterizerState) { 0 };
         pass->depthHandling = (afxPipelineDepthState) { 0 };
         
-        AfxAllocateArray(&pass->shaders, sizeof(afxUri*), 2, AfxHint()); // at least vertex and fragment shaders
+        AfxAllocateArray(&pass->shaders, sizeof(afxUri*), 2, AfxHere()); // at least vertex and fragment shaders
     }
     return err;
 }
@@ -414,7 +416,7 @@ _AVX afxError AfxBuildDrawOperations(afxDrawContext dctx, afxNat cnt, afxDrawOpe
     AfxAssert(blueprint);
     AfxAssert(dop);
     
-    if (AfxClassAcquireObjects(AfxGetDrawOperationClass(dctx), NIL, cnt, blueprint, (afxHandle**)dop, AfxHint()))
+    if (AfxClassAcquireObjects(AfxGetDrawOperationClass(dctx), NIL, cnt, blueprint, (afxHandle**)dop, AfxHere()))
         AfxThrowError();
 
     return err;
@@ -709,7 +711,7 @@ _AVX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
     afxNat techCnt = AfxCountArrayElements(techniques);
     AfxAssert(techCnt);
 
-    if (!(dop->techniques = AfxAllocate(mmu, techCnt, sizeof(dop->techniques[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(dop->techniques = AfxAllocate(mmu, techCnt, sizeof(dop->techniques[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < techCnt; i++)
@@ -724,7 +726,7 @@ _AVX afxError _AfxDopCtor(void *cache, afxNat idx, afxDrawOperation dop, afxDraw
             afxNat passCnt = AfxCountArrayElements(passes);
             AfxAssert(passCnt);
 
-            if (!(dop->techniques[dop->techCnt].passes = AfxAllocate(mmu, sizeof(dop->techniques[dop->techCnt].passes[0]) * passCnt, 0, AfxHint()))) AfxThrowError();
+            if (!(dop->techniques[dop->techCnt].passes = AfxAllocate(mmu, sizeof(dop->techniques[dop->techCnt].passes[0]) * passCnt, 0, AfxHere()))) AfxThrowError();
             else
             {
                 for (afxNat j = 0; j < passCnt; j++)

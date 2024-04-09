@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_DRAW_OPS_H
 #define AFX_DRAW_OPS_H
@@ -66,7 +66,7 @@ AFX_DEFINE_STRUCT(afxCmdBuffer)
 
 AFX_DEFINE_STRUCT(afxCmdRaster)
 {
-    afxCmdId(*rw)(afxDrawStream diob, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc);
+    afxCmdId(*io)(afxDrawStream diob, afxRaster ras, afxStream iob, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc);
     afxCmdId(*pak)(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack);
     afxCmdId(*cpy)(afxDrawStream diob, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[]);
     afxCmdId(*mip)(afxDrawStream diob, afxRaster ras, afxNat baseLod, afxNat lodCnt);

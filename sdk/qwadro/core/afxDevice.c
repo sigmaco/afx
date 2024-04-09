@@ -41,6 +41,19 @@ afxString devAccelString[] =
     AFX_STRING("DSP")
 };
 
+_AFX afxError AfxDoDeviceService(afxDevice dev)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dev, afxFcc_DEV);
+
+    afxThread thr;
+    if (AfxGetThread(&thr))
+    {
+        err = dev->proc(dev, thr);
+    }
+    return err;
+}
+
 _AFX afxResult AfxCallDevice(afxDevice dev, afxNat reqCode, ...)
 {
     afxError err = AFX_ERR_NONE;
@@ -182,7 +195,7 @@ _AFX afxError _AfxDevCtor(afxDevice dev, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxDevClsConfig =
+_AFX afxClassConfig const _AfxDevMgrCfg =
 {
     .fcc = afxFcc_DEV,
     .name = "Device",
@@ -200,12 +213,14 @@ _AFX afxNat AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBo
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetDeviceClass();
-    AfxAssertClass(cls, afxFcc_DEV);
     afxResult rslt = 0;
 
     if (!type)
+    {
+        afxManager* cls = AfxGetDeviceClass();
+        AfxAssertClass(cls, afxFcc_DEV);
         rslt = AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    }
     else
     {
         afxDevice dev;
@@ -219,10 +234,7 @@ _AFX afxNat AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBo
 
             if (f(dev, udd))
                 break;
-
-            ++i;
-
-            if (i == cnt)
+            else if (++i == cnt)
                 break;
         }
     }
@@ -234,9 +246,9 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(devices);
+    afxResult rslt = 0;
     afxManager* cls = AfxGetDeviceClass();
     AfxAssertClass(cls, afxFcc_DEV);
-    afxResult rslt = 0;
 
     if (!type)
         rslt = AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
@@ -254,9 +266,7 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
                 ++rslt;
             }
 
-            ++i;
-
-            if (i == cnt)
+            if (++i == cnt)
                 break;
         }
     }
@@ -266,12 +276,14 @@ _AFX afxNat AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, af
 _AFX afxNat AfxCountDevices(afxDeviceType type)
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetDeviceClass();
-    AfxAssertClass(cls, afxFcc_DEV);
     afxNat rslt = 0;
-    
+
     if (!type)
+    {
+        afxManager* cls = AfxGetDeviceClass();
+        AfxAssertClass(cls, afxFcc_DEV);
         rslt = AfxCountObjects(cls);
+    }
     else
     {
         afxNat i = 0;
@@ -287,29 +299,29 @@ _AFX afxNat AfxCountDevices(afxDeviceType type)
     return rslt;
 }
 
-_AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* dev)
+_AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice* device)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert2(manifest, dev);
+    AfxAssert2(manifest, device);
     afxResult rslt = FALSE;
 
     afxUri target;
     AfxPickUriFile(manifest, &target);
 
     afxNat i = 0;
-    afxDevice dev2;
-    while (AfxEnumerateDevices(type, i, 1, &dev2))
+    afxDevice dev;
+    while (AfxEnumerateDevices(type, i, 1, &dev))
     {
-        AfxAssertObjects(1, &dev2, afxFcc_DEV);
-        AfxAssert(!type || (dev2->type == type));
+        AfxAssertObjects(1, &dev, afxFcc_DEV);
+        AfxAssert(!type || (dev->type == type));
 
         afxUri tmp;
-        AfxPickUriFile(&dev2->uri.uri, &tmp);
-
+        AfxPickUriFile(&dev->uri.uri, &tmp);
         if (0 == AfxCompareUri(&target, &tmp))
         {
-            *dev = dev2;
+            *device = dev;
             rslt = TRUE;
+            break;
         }
         ++i;
     }

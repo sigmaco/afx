@@ -120,12 +120,12 @@ _AFXEXPORT afxError AppProc(afxApplication app, afxThreadOpcode opcode)
 
     switch (opcode)
     {
-    case AFX_THR_OPCODE_RUN:
+    case afxThreadEvent_RUN:
     {
         Once(app);
         break;
     }
-    case AFX_THR_OPCODE_QUIT:
+    case afxThreadEvent_QUIT:
     {
         AfxEntry("app=%p", app);
         break;

@@ -237,7 +237,7 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
     AfxAssert(typeCnt);
     AfxAssert(totalResCnt);
 
-    if (typeCnt && !(cad->nests = AfxAllocate(typeCnt, sizeof(cad->nests[0]), 0, AfxHint()))) AfxThrowError();
+    if (typeCnt && !(cad->nests = AfxAllocate(typeCnt, sizeof(cad->nests[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         if (typeCnt)
@@ -245,7 +245,7 @@ _AKX afxError _AfxCadCtor(awxAsset cad, afxCookie const *cookie)
 
         cad->nestCnt = typeCnt;
 
-        if (totalResCnt && !(cad->resSlots = AfxAllocate(totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHint()))) AfxThrowError();
+        if (totalResCnt && !(cad->resSlots = AfxAllocate(totalResCnt, sizeof(cad->resSlots[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             if (totalResCnt)
@@ -395,7 +395,7 @@ _AKX void AfxTransformAssets(afxReal const ltm[3][3], afxReal const iltm[3][3], 
     }
 }
 
-_AKX afxClassConfig _AfxCadClsConfig =
+_AKX afxClassConfig _AfxCadMgrCfg =
 {
     .fcc = afxFcc_CAD,
     .name = "CAD Asset",

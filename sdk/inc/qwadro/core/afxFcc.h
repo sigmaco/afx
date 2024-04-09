@@ -66,6 +66,7 @@ typedef enum afxFcc
     //afxFcc_BUF     = AFX_MAKE_FCC('b', 'u', 'f'), // afxBuffer
     afxFcc_ARR      = AFX_MAKE_FCC('a', 'r', 'r', '\0'), // afxArray
     afxFcc_QUE      = AFX_MAKE_FCC('q', 'u', 'e', '\0'), // afxQueue
+    afxFcc_FIFO     = AFX_MAKE_FCC('f', 'i', 'f', 'o'), // afxFifo
     afxFcc_STR      = (('q'<<8)|'s'),//AFX_MAKE_FCC('s', 't', 'r', '\0'), // afxString
     afxFcc_STRsB     = (('q' << 8) | 'z'),//AFX_MAKE_FCC('s', 't', 'r', '\0'), // afxString
 #if !0
@@ -145,7 +146,7 @@ typedef enum afxFcc
     afxFcc_ICD      = AFX_MAKE_FCC('i', 'c', 'd', '\0'), // afxIcd
     afxFcc_AUTR     = AFX_MAKE_FCC('a', 'u', 't', 'r'), // afxAutomator
 
-    afxFcc_ENV      = AFX_MAKE_FCC('e', 'n', 'v', '\0'), // afxEnvironment
+    afxFcc_ENV      = AFX_MAKE_FCC('e', 'n', 'v', '\0'), // afxShell
 
     // *** e2math ***
 
@@ -167,7 +168,7 @@ typedef enum afxFcc
     afxFcc_DIN      = AFX_MAKE_FCC('d', 'i', 'n', '\0'), // afxDrawInput
     afxFcc_DOUT     = AFX_MAKE_FCC('d', 'o', 'u', 't'), // afxDrawOutput
     afxFcc_DQUE     = AFX_MAKE_FCC('d', 'q', 'u', 'e'), // afxDrawQueue
-    afxFcc_DXGE     = AFX_MAKE_FCC('d', 'x', 'g', 'e'), // afxDrawBridge
+    afxFcc_DDGE     = AFX_MAKE_FCC('d', 'd', 'g', 'e'), // afxDrawBridge
     afxFcc_DENG     = AFX_MAKE_FCC('d', 'e', 'n', 'g'), // afxTxu
     afxFcc_DTHR     = AFX_MAKE_FCC('d', 't', 'h', 'r'), // afxDrawThread
     afxFcc_CANV     = AFX_MAKE_FCC('c', 'a', 'n', 'v'), // afxCanvas
@@ -192,7 +193,7 @@ typedef enum afxFcc
     afxFcc_DTEC     = AFX_MAKE_FCC('d', 't', 'e', 'c'), // afxDrawTechnique
     afxFcc_DPAS     = AFX_MAKE_FCC('d', 'p', 'a', 's'), // afxDrawPass
     afxFcc_VPNT     = AFX_MAKE_FCC('v', 'p', 'n', 't'), // afxViewpoint
-    afxFcc_OVLY     = AFX_MAKE_FCC('o', 'v', 'l', 'y'), // afxOverlay
+    afxFcc_OVY      = AFX_MAKE_FCC('o', 'v', 'y', '\0'), // afxOverlay
     afxFcc_WID      = AFX_MAKE_FCC('w', 'i', 'd', '\0'), // afxWidget
     afxFcc_WND      = AFX_MAKE_FCC('w', 'n', 'd', '\0'), // afxWindow
     afxFcc_WPP      = AFX_MAKE_FCC('w', 'p', 'p', '\0'), // afxWallpaper

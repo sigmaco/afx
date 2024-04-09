@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "qwadro/draw/pipe/afxCanvas.h"
-#include "qwadro/draw/afxDrawOutput.h"
+#include "qwadro/draw/dev/afxDrawOutput.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +61,7 @@ _SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttac
     };
 }
 
-_SGL afxError _SglDpuBindAndSyncCanv(sglDpuIdd* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
+_SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
@@ -351,8 +351,6 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
     afxDrawContext dctx = AfxGetObjectProvider(canv);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     _AfxCanvDropAllSurfaces(canv);
 
@@ -378,9 +376,6 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     afxNat layerCnt = *(afxNat const*)cookie->udd[2];
     afxNat surCnt = *(afxNat const *)cookie->udd[3];
     afxSurfaceConfig const* surCfgs = cookie->udd[4];
-
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     canv->base.wh[0] = wh[0];
     canv->base.wh[1] = wh[1];
@@ -438,7 +433,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     canv->base.ownershipMask = NIL;
     canv->base.combinedDs = combinedDs;
 
-    if (!(canv->base.surfaces = AfxAllocate(surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(canv->base.surfaces = AfxAllocate(surfaceCnt, sizeof(canv->base.surfaces[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         afxSurface* surf;
@@ -495,7 +490,7 @@ _SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglCanvClsConfig =
+_SGL afxClassConfig const _SglCanvMgrCfg =
 {
     .fcc = afxFcc_CANV,
     .name = "Canvas",

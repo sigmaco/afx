@@ -14,10 +14,12 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 //#define _AFX_DRAW_CONTEXT_C
 #define _AFX_TYPOGRAPHY_C
-#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/dev/afxDrawContext.h"
 #include "qwadro/draw/font/afxTypography.h"
 
 static afxByte const utf8d[] =
@@ -68,7 +70,7 @@ _AVX afxTypography AfxAcquireTypography(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxTypography typ = AfxAllocate(1, sizeof(*typ), 0, AfxHint());
+    afxTypography typ = AfxAllocate(1, sizeof(*typ), 0, AfxHere());
 
     return typ;
 }

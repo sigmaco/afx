@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _AFX_CORE_C
 #define _AFX_STREAM_C
 #include "qwadro/core/afxSystem.h"
@@ -232,8 +234,6 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
     {
         if ((siz > iob->idd.m.bufCap) || (!iob->idd.m.buf))
         {
-            afxArena* aren = AfxGetIoArena();
-            AfxAssertType(aren, afxFcc_AREN);
             void const *oldData = iob->idd.m.buf;
             afxByte *start;
             afxNat alignedSiz;
@@ -248,7 +248,7 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
                 alignedSiz = AFX_ALIGN(siz, AfxGetIoBufferSize());                
                 //void *start;
 
-                if (!(start = AfxRequestArenaUnit(aren, alignedSiz))) AfxThrowError();
+                if (!(start = AfxAllocate(1, alignedSiz, 0, AfxHere()))) AfxThrowError();
                 else
                 {
                     if (oldData)
@@ -259,7 +259,7 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
             if (!err)
             {
                 if (oldData)
-                    AfxRecycleArenaUnit(aren, (void*)oldData, iob->idd.m.bufCap);
+                    AfxDeallocate((void*)oldData);
 
                 iob->idd.m.bufCap = alignedSiz;
                 iob->idd.m.bufCap = iob->idd.m.bufCap;
@@ -355,9 +355,8 @@ _AFX afxError AfxCopyStreamRange(afxStream in, afxSize base, afxNat range, afxNa
     AfxAssert(AfxStreamIsWriteable(out));
     AfxAssertObjects(1, &in, afxFcc_IOB);
     AfxAssert(AfxStreamIsReadable(in));
-    afxArena *aren = AfxGetIoArena();
-    AfxAssertType(aren, afxFcc_AREN);
-    void *space = AfxRequestArenaUnit(aren, range);
+
+    void *space = AfxAllocate(1, range, 0, AfxHere());
     afxNat clampedOffRange = range;
 
     if (!space) AfxThrowError();
@@ -420,7 +419,7 @@ _AFX afxError AfxCopyStreamRange(afxStream in, afxSize base, afxNat range, afxNa
                 clampedOffRange -= nextSizW;
             }
         }
-        AfxRecycleArenaUnit(aren, space, range);
+        AfxDeallocate(space);
     }
     return clampedOffRange;
 }
@@ -1173,9 +1172,6 @@ _AFX afxError _AfxIosCtor(afxStream iob, afxCookie const* cookie)
     _afxIobImpl const* pimpl = cookie->udd[1];
     _afxIobIdd const* idd = cookie->udd[2];
 
-    afxArena* aren = AfxGetIoArena();
-    AfxAssertType(aren, afxFcc_AREN);
-
     AfxAssignTypeFcc(iob, afxFcc_IOB);
     iob->flags = flags ? flags : afxIoFlag_RWX;
     iob->idd.m.posn = 0;
@@ -1201,7 +1197,7 @@ _AFX afxError _AfxIosCtor(afxStream iob, afxCookie const* cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxIosClsConfig =
+_AFX afxClassConfig const _AfxIosMgrCfg =
 {
     .fcc = afxFcc_IOB,
     .name = "Stream",

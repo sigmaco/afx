@@ -38,7 +38,7 @@ _AFXINL _afxIniRecord* _AfxIniCreateRecord(_afxIniPage* page, afxString const* k
 {
     afxError err;
 
-    if ((!(page->keyCnt % 8)) && !(page->keys = AfxReallocate(page->keys, sizeof(_afxIniRecord), (8 + page->keyCnt), NIL, AfxHint()))) AfxThrowError();
+    if ((!(page->keyCnt % 8)) && !(page->keys = AfxReallocate(page->keys, sizeof(_afxIniRecord), (8 + page->keyCnt), NIL, AfxHere()))) AfxThrowError();
     else
     {
         _afxIniRecord* entry = &page->keys[page->keyCnt++];
@@ -53,14 +53,14 @@ _AFXINL _afxIniPage* _AfxIniCreatePage(afxManifest* ini, afxString const* block)
 {
     afxError err;
 
-    if ((!(ini->pageCnt % 8)) && !(ini->pages = AfxReallocate(ini->pages, sizeof(_afxIniPage), (8 + ini->pageCnt), NIL, AfxHint()))) AfxThrowError();
+    if ((!(ini->pageCnt % 8)) && !(ini->pages = AfxReallocate(ini->pages, sizeof(_afxIniPage), (8 + ini->pageCnt), NIL, AfxHere()))) AfxThrowError();
     else
     {
         _afxIniPage* page = &ini->pages[ini->pageCnt++];
         page->keyCnt = 0;
         AfxMakeString32(&page->name, block);
 
-        if (!(page->keys = AfxAllocate(8, sizeof(_afxIniRecord), 0, AfxHint())))
+        if (!(page->keys = AfxAllocate(8, sizeof(_afxIniRecord), 0, AfxHere())))
             AfxThrowError();
 
         return page;
@@ -110,7 +110,7 @@ _AFX afxError AfxSetUpIni(afxManifest* ini)
     afxError err = NIL;
     ini->pageCnt = 0;
     
-    if (!(ini->pages = AfxAllocate(8, sizeof(_afxIniPage), 0, AfxHint())))
+    if (!(ini->pages = AfxAllocate(8, sizeof(_afxIniPage), 0, AfxHere())))
         AfxThrowError();
 
     return err;

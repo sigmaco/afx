@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #include "qwadro/math/afxTrigonometry.h"
 
 _AFXINL void AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxV3d n)

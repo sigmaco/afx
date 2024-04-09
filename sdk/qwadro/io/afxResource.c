@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 
 #include <sys/stat.h>
 #include "qwadro/core/afxSystem.h"
@@ -147,7 +149,7 @@ _AFXINL afxResource AfxAcquireResource(afxResourceSpecification const *spec)
         spec
     };
 
-    if (AfxClassAcquireObjects(AfxGetResourceClass(), NIL, 1, &paradigm, (afxHandle**)&res, AfxHint()))
+    if (AfxClassAcquireObjects(AfxGetResourceClass(), NIL, 1, &paradigm, (afxHandle**)&res, AfxHere()))
         AfxThrowError();
     else
     {

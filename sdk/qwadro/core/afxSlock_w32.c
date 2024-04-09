@@ -37,7 +37,7 @@ AFX afxBool AfxTryEnterSlockShared(afxSlock *slck)
     AfxAssertType(slck, afxFcc_SLCK);
 
     afxNat tid;
-    AfxGetThreadingId(&tid);
+    AfxGetTid(&tid);
     //AfxLogEcho("%p try rdlocked by %u", slck, tid);
 
     return TryAcquireSRWLockShared((PSRWLOCK)&slck->srwl);
@@ -52,10 +52,10 @@ AFX afxBool AfxTryEnterSlockExclusive(afxSlock *slck)
     if (rslt)
     {
         afxNat tid;
-        AfxGetThreadingId(&tid);
+        AfxGetTid(&tid);
         //AfxLogEcho("%p try wdlocked by %u", slck, tid);
 
-        AfxGetThreadingId(&slck->tidEx);
+        AfxGetTid((afxNat32*)&slck->tidEx);
     }
     return rslt;
 }
@@ -65,7 +65,7 @@ AFX void AfxEnterSlockShared(afxSlock *slck)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
     afxNat tid;
-    AfxGetThreadingId(&tid);
+    AfxGetTid(&tid);
     //AfxLogEcho("%p rdlocked by %u", slck, tid);
     AcquireSRWLockShared((PSRWLOCK)&slck->srwl);
 }
@@ -75,10 +75,10 @@ AFX void AfxEnterSlockExclusive(afxSlock *slck)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
     afxNat tid;
-    AfxGetThreadingId(&tid);
+    AfxGetTid(&tid);
     //AfxLogEcho("%p wdlocked by %u", slck, tid);
     AcquireSRWLockExclusive((PSRWLOCK)&slck->srwl);
-    AfxGetThreadingId(&slck->tidEx);
+    AfxGetTid((afxNat32*)&slck->tidEx);
 }
 
 AFX void AfxExitSlockShared(afxSlock *slck)
@@ -86,7 +86,7 @@ AFX void AfxExitSlockShared(afxSlock *slck)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
     afxNat tid;
-    AfxGetThreadingId(&tid);
+    AfxGetTid(&tid);
     //AfxLogEcho("%p rdunlocked by %u", slck, tid);
     ReleaseSRWLockShared((PSRWLOCK)&slck->srwl);
 }
@@ -96,8 +96,8 @@ AFX void AfxExitSlockExclusive(afxSlock *slck)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
     afxNat32 tid;
-    AfxGetThreadingId(&tid);
-    AfxAssert(slck->tidEx == tid);
+    AfxGetTid(&tid);
+    AfxAssert(tid == (afxNat32)slck->tidEx);
     //AfxLogEcho("%p wdunlocked by %u", slck, tid);
     ReleaseSRWLockExclusive((PSRWLOCK)&slck->srwl);
     slck->tidEx = 0;
@@ -120,5 +120,7 @@ AFX afxError AfxSetUpSlock(afxSlock *slck)
     AfxAssignTypeFcc(slck, afxFcc_SLCK);
     InitializeSRWLock((PSRWLOCK)&slck->srwl);
     slck->tidEx = 0;
+    AfxEnterSlockShared(slck);
+    AfxExitSlockShared(slck);
     return err;
 }

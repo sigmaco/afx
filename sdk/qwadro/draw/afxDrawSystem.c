@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
@@ -37,21 +39,41 @@
 #define _AFX_DRAW_OUTPUT_C
 #include "qwadro/draw/afxDrawSystem.h"
 
-//extern afxChain* _AfxGetSystemClassChain(void);
-extern afxClassConfig const _dthrClsConfig;
-extern afxClassConfig const _AvxCamClsConfig;
-extern afxClassConfig const _AvxDoutClsConfig;
-extern afxClassConfig const _AvxDinClsConfig;
+_AVX afxBool dsysReady = FALSE;
+_AVX afxByte theDsysData[AFX_ALIGN(sizeof(afxObjectBase), 16) + AFX_ALIGN(sizeof(AFX_OBJECT(afxDrawSystem)), 16)] = { 0 };
+_AVX afxDrawSystem TheDrawSystem = (void*)&theDsysData;
+static_assert(sizeof(theDsysData) >= (sizeof(afxObjectBase) + sizeof(TheDrawSystem[0])), "");
 
-_AVX afxMmu AfxGetDrawSystemMmu(void)
+//extern afxChain* _AfxGetSystemClassChain(void);
+extern afxClassConfig const _dthrMgrCfg;
+extern afxClassConfig const _AvxCamMgrCfg;
+extern afxClassConfig const _AvxDoutMgrCfg;
+extern afxClassConfig const _AvxDinMgrCfg;
+
+_AVX afxString const sgl2Signature = AFX_STRING(
+    "           :::     :::::::::   ::::::::  :::              :::  ::::::::        \n"
+    "          :+:      :+:    :+: :+:    :+: :+:             :+:  :+:    :+:       \n"
+    "         +:+ +:+   +:+    +:+ +:+        +:+            +:+         +:+        \n"
+    "        +#+  +:+   +#+    +:+ :#:        +#+           +#+        +#+          \n"
+    "       +#+#+#+#+#+ +#+    +#+ +#+   +#+# +#+          +#+       +#+            \n"
+    "             #+#   #+#    #+# #+#    #+# #+#         #+#       #+#             \n"
+    "             ###   #########   ########  ########## ###       ##########       \n"
+    "                                                                               \n"
+    "              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              \n"
+    "                                                                               \n"
+    "                               Public Test Build                               \n"
+    "                   (c) 2017 SIGMA, Engineering In Technology                   \n"
+    "                                www.sigmaco.org                                \n"
+    "                                                                               \n"
+);
+
+_AVX afxBool AfxGetDrawSystem(afxDrawSystem* dsys)
 {
     afxError err = AFX_ERR_NONE;
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    afxMmu mmu = dsys->mmu;
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-    return mmu;
+    //AfxTryAssertObjects(1, &TheDrawSystem, afxFcc_DSYS);
+    AfxAssert(dsys);
+    *dsys = TheDrawSystem;
+    return dsysReady;
 }
 
 _AVX afxManager* AfxGetCameraClass(void)
@@ -73,17 +95,6 @@ _AVX afxManager* AfxGetDrawDeviceClass(void)
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
     afxManager* cls = &dsys->devices;
     AfxAssertClass(cls, afxFcc_DDEV);
-    return cls;
-}
-
-_AVX afxManager* AfxGetDrawThreadClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-    afxManager* cls = &dsys->threads;
-    AfxAssertClass(cls, afxFcc_DTHR);
     return cls;
 }
 
@@ -232,45 +243,29 @@ _AVX void AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits
     *limits = ddev->limits;
 }
 
-_AVX afxReal AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
+_AVX afxReal64 AfxDeterminePhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
 {
-    afxReal64 div = (afxReal64)screenWidth / (afxReal64)screenHeight;
-
+    afxReal64 ratio, div = (afxReal64)screenWidth / (afxReal64)screenHeight;
+    
     if (div <= 1.4)
-        return 1.33f;
+        ratio = 1.33;
+    else if (div <= 1.6)
+        ratio = 1.5599999;
+    else
+        ratio = 1.78;
 
-    if (div <= 1.6)
-        return 1.5599999f;
-
-    return 1.78f;
+    return ratio;
 }
 
-_AVX afxReal AfxDetermineAllowedCameraLodError(afxReal errInPixels, afxInt vpHeightInPixels, afxReal fovY, afxReal distanceFromCam)
+_AVX afxReal64 AfxDetermineAllowedCameraLodError(afxReal64 errInPixels, afxInt vpHeightInPixels, afxReal64 fovY, afxReal64 distanceFromCam)
 {
-    return AfxSinf(fovY * 0.5f) / AfxCosf(fovY * 0.5f) * errInPixels * distanceFromCam / ((afxReal)vpHeightInPixels * 0.5f);
-}
-
-_AVX afxError _AvxDdevDtorFreeThreads(afxDrawDevice ddev)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-
-    for (afxNat i = ddev->dev.threads.cnt; i-- > 0;)
-    {
-        afxDrawThread dthr = *(afxDrawThread*)AfxGetArrayUnit(&ddev->dev.threads, i);
-        AfxAssertObjects(1, &dthr, afxFcc_DTHR);
-        while (!AfxReleaseObjects(1, (void*[]) { dthr }));
-    }
-    return err;
+    return AfxSin(fovY * 0.5) / AfxCos(fovY * 0.5) * errInPixels * distanceFromCam / ((afxReal64)vpHeightInPixels * 0.5);
 }
 
 _AVX afxError _AvxDdevDtor(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-
-    afxMmu mmu = AfxGetDrawSystemMmu();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     if (!ddev->dev.ioctl) AfxThrowError();
     else if (ddev->dev.ioctl(&ddev->dev, _ddevReqCode_0, NIL))
@@ -323,11 +318,11 @@ _AVX afxNat AfxEnumerateDrawDevices(afxNat first, afxNat cnt, afxDrawDevice devi
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)devices);
 }
 
-_AVX afxBool AfxGetDrawDevice(afxNat ddevNo, afxDrawDevice* ddev)
+_AVX afxBool AfxGetDrawDevice(afxNat ddevId, afxDrawDevice* ddev)
 {
     afxError err = AFX_ERR_NONE;
     afxDrawDevice ddev2 = NIL;
-    while (AfxEnumerateDrawDevices(ddevNo, 1, &ddev2))
+    while (AfxEnumerateDrawDevices(ddevId, 1, &ddev2))
     {
         AfxAssertObjects(1, &ddev2, afxFcc_DDEV);
         AfxAssert(ddev);
@@ -337,7 +332,7 @@ _AVX afxBool AfxGetDrawDevice(afxNat ddevNo, afxDrawDevice* ddev)
     return !!ddev2;
 }
 
-_AVX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const *cookie)
+_AVX afxError _AvxDsysCtor(afxDrawSystem dsys, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
@@ -347,187 +342,224 @@ _AVX afxError _AfxDsysCtor(afxDrawSystem dsys, afxCookie const *cookie)
     afxManifest const* ini = cookie->udd[1];
     afxDrawSystemConfig const* config = cookie->udd[2];
 
-    afxChain *classes = &dsys->classes;
-    AfxSetUpChain(classes, sys);
+    afxChain* mgrChn = &dsys->mgrChn;
+    AfxSetUpChain(mgrChn, dsys);
+    afxClassConfig clsCfg;
 
-    dsys->mmu = AfxGetSystemContext();
+    clsCfg = _AvxCamMgrCfg;
+    AfxEstablishManager(&dsys->cameras, NIL, mgrChn, &clsCfg);
 
-    afxMmu mmu = dsys->mmu;
-
-    AfxAssertObjects(1, &dsys->mmu, afxFcc_MMU);
-
-    if (AfxReacquireObjects(1, (void*[]) { dsys->mmu })) AfxThrowError();
-    else
+    afxClassConfig const ddevMgrCfg =
     {
+        .fcc = afxFcc_DDEV,
+        .name = "DrawDevice",
+        .desc = "Draw Device Management",
+        .size = sizeof(AFX_OBJECT(afxDrawDevice)),
+        .ctor = (void*)_AvxDdevCtor,
+        .dtor = (void*)_AvxDdevDtor
+    };
+    AfxEstablishManager(&dsys->devices, AfxGetDeviceClass(), mgrChn, &ddevMgrCfg); // require dtxu, dthr
+
+    clsCfg = _AvxDoutMgrCfg;
+    AfxEstablishManager(&dsys->outputs, NIL, mgrChn, &clsCfg); // require ddev, dout
+
+    clsCfg = _AvxDinMgrCfg;
+    AfxEstablishManager(&dsys->inputs, NIL, mgrChn, &clsCfg); // require ddev, din
+
+    // scan for device drivers
+    {
+        HANDLE fh;
+        WIN32_FIND_DATAA wfd;
+        afxUri2048 pathBuf;
+        AfxMakeUri2048(&pathBuf, NIL);
+        afxUri fileMask;
+        AfxMakeUri(&fileMask, "system/*.inf", 0);
+        AfxResolveUri(afxFileFlag_RX, &fileMask, &pathBuf.uri);
+
+        afxDeviceType devType = afxDeviceType_DRAW;
+
+        if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
         {
-            afxClassConfig clsCfg;
-
-            clsCfg = _AvxCamClsConfig;
-            clsCfg.unitsPerPage = 2;
-            clsCfg.mmu = mmu;
-            AfxSetUpManager(&dsys->cameras, NIL, classes, &clsCfg);
-
-            clsCfg = _dthrClsConfig;
-            clsCfg.unitsPerPage = AfxGetThreadingCapacity();
-            clsCfg.mmu = mmu;
-            AfxSetUpManager(&dsys->threads, AfxGetThreadClass(), classes, &clsCfg);
-
-            afxClassConfig const dtxuClsCfg =
+            do
             {
-                .fcc = afxFcc_DENG,
-                .name = "DrawBridge",
-                .desc = "Draw Execution Unit",
-                .size = sizeof(AFX_OBJECT(afxTxu)),
-                .mmu = mmu,
-                .unitsPerPage = AfxGetThreadingCapacity()
-            };
-            AfxSetUpManager(&dsys->txus, AfxGetTxuClass(), classes, &dtxuClsCfg);
+                afxUri manifestUri, manifestFile;
+                AfxMakeUri(&manifestUri, wfd.cFileName, 0);
+                AfxPickUriFile(&manifestUri, &manifestFile);
 
-            afxClassConfig const ddevClsConfig =
-            {
-                .fcc = afxFcc_DDEV,
-                .name = "DrawDevice",
-                .desc = "Draw Device Management",
-                .unitsPerPage = 2,
-                .size = sizeof(AFX_OBJECT(afxDrawDevice)),
-                .mmu = mmu,
-                .ctor = (void*)_AvxDdevCtor,
-                .dtor = (void*)_AvxDdevDtor
-            };
-            AfxSetUpManager(&dsys->devices, AfxGetDeviceClass(), classes, &ddevClsConfig); // require dtxu, dthr
+                afxDrawDevice ddev;
 
-            clsCfg = _AvxDoutClsConfig;
-            AfxSetUpManager(&dsys->outputs, NIL, classes, &clsCfg); // require ddev, dout
-
-            clsCfg = _AvxDinClsConfig;
-            AfxSetUpManager(&dsys->inputs, NIL, classes, &clsCfg); // require ddev, din
-
-            // scan for device drivers
-            {
-                HANDLE fh;
-                WIN32_FIND_DATAA wfd;
-                afxUri2048 pathBuf;
-                AfxMakeUri2048(&pathBuf, NIL);
-                afxUri fileMask;
-                AfxMakeUri(&fileMask, "system/*.inf", 0);
-                AfxResolveUri(afxFileFlag_RX, &fileMask, &pathBuf.uri);
-
-                afxDeviceType devType = afxDeviceType_DRAW;
-
-                if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
+                if (AfxFindDevice(devType, &manifestFile, (afxDevice*)&ddev))
                 {
-                    do
-                    {
-                        afxUri manifestUri, manifestFile;
-                        AfxMakeUri(&manifestUri, wfd.cFileName, 0);
-                        AfxPickUriFile(&manifestUri, &manifestFile);
-
-                        afxDrawDevice ddev;
-
-                        if (AfxFindDevice(devType, &manifestFile, (afxDevice*)&ddev))
-                        {
-                            AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-                            AfxReacquireObjects(1, (void*[]) { ddev });
-                        }
-                        else
-                        {
-                            AfxLogComment("Installing client driver <%.*s>...", AfxPushString(AfxGetUriString(&manifestFile)));
-
-                            afxBool clearIni = TRUE;
-                            afxManifest ini;
-                            AfxSetUpIni(&ini);
-                            AfxIniLoadFromFile(&ini, &manifestFile);
-                            afxString s;
-
-                            if (AfxIniGetString(&ini, &AfxString("Device"), &AfxString("Type"), &s))
-                            {
-                                if (0 == AfxCompareString(&s, &AfxString("DRAW")))
-                                {
-                                    afxManager* cls = AfxGetDrawDeviceClass();
-                                    AfxAssertClass(cls, afxFcc_DDEV);
-
-                                    afxDeviceInfo info = { 0 };
-                                    info.manifest = &ini;
-                                    info.type = devType;
-                                    info.uri = manifestFile;
-
-                                    if (AfxAcquireObjects(cls, 1, (afxObject*)&ddev, (void const*[]) { NIL, &info })) AfxThrowError();
-                                    else
-                                    {
-                                        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-
-                                        clearIni = FALSE;
-
-                                        if (err)
-                                            AfxReleaseObjects(1, (void*[]) { ddev }), ddev = NIL;
-                                    }
-                                }
-                            }
-
-                            if (clearIni)
-                                AfxCleanUpIni(&ini);
-                        }
-                    } while (FindNextFileA(fh, &wfd));
-                    FindClose(fh);
+                    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+                    AfxReacquireObjects(1, (void*[]) { ddev });
                 }
-            }
+                else
+                {
+                    AfxLogComment("Installing client driver <%.*s>...", AfxPushString(AfxGetUriString(&manifestFile)));
 
-            if (err)
-            {
-                _AfxUninstallChainedClasses(classes);
-            }
+                    afxBool clearIni = TRUE;
+                    afxManifest ini;
+                    AfxSetUpIni(&ini);
+                    AfxIniLoadFromFile(&ini, &manifestFile);
+                    afxString s;
+
+                    if (AfxIniGetString(&ini, &AfxString("Device"), &AfxString("Type"), &s))
+                    {
+                        if (0 == AfxCompareString(&s, &AfxString("DRAW")))
+                        {
+                            afxManager* cls = AfxGetDrawDeviceClass();
+                            AfxAssertClass(cls, afxFcc_DDEV);
+
+                            afxDeviceInfo info = { 0 };
+                            info.manifest = &ini;
+                            info.type = devType;
+                            info.uri = manifestFile;
+
+                            if (AfxAcquireObjects(cls, 1, (afxObject*)&ddev, (void const*[]) { NIL, &info })) AfxThrowError();
+                            else
+                            {
+                                AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+
+                                clearIni = FALSE;
+
+                                if (err)
+                                    AfxReleaseObjects(1, (void*[]) { ddev }), ddev = NIL;
+                            }
+                        }
+                    }
+
+                    if (clearIni)
+                        AfxCleanUpIni(&ini);
+                }
+            } while (FindNextFileA(fh, &wfd));
+            FindClose(fh);
         }
-
-        if (err)
-            AfxReleaseObjects(1, (void*[]) { dsys->mmu });
     }
 
+    if (err)
+    {
+        AfxCleanUpChainedManagers(mgrChn);
+    }
     return err;
 }
 
-_AVX afxError _AfxDsysDtor(afxDrawSystem dsys)
+_AVX afxError _AvxDsysDtor(afxDrawSystem dsys)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
     //AfxReleaseObjects(1, (void*[]) { dsys->e2draw });
 
-    //AfxCleanUpManager(&dsys->dinputs);
-    //AfxCleanUpManager(&dsys->doutputs);
-    //AfxCleanUpManager(&dsys->dcontexts);
-    //AfxCleanUpManager(&dsys->ddevices);
-    //AfxCleanUpManager(&dsys->dthreads);
-    _AfxUninstallChainedClasses(&dsys->classes);
-
-    AfxReleaseObjects(1, (void*[]) { dsys->mmu });
+    //AfxAbolishManager(&dsys->dinputs);
+    //AfxAbolishManager(&dsys->doutputs);
+    //AfxAbolishManager(&dsys->dcontexts);
+    //AfxAbolishManager(&dsys->ddevices);
+    //AfxAbolishManager(&dsys->dthreads);
+    AfxCleanUpChainedManagers(&dsys->mgrChn);
 
     return err;
 }
 
-_AVX afxClassConfig const _AfxDsysClsConfig =
-{
-    .fcc = afxFcc_DSYS,
-    .name = "Unified Video Graphics Infrastructure",
-    .maxCnt = 1,
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxDrawSystem)),
-    .mmu = NIL,
-    .ctor = (void*)_AfxDsysCtor,
-    .dtor = (void*)_AfxDsysDtor
-};
-
-_AVX afxManager* _AfxGetDsysClass(void)
+_AVX afxManager* _AfxGetDsysMgr(void)
 {
     //afxError err = AFX_ERR_NONE;
-    static afxManager _dsysCls = { 0 };
-    static afxBool dsysClsMounted = FALSE;
-
-    if (_dsysCls.fcc != afxFcc_CLS)
+    static afxManager dsysMgr = { 0 };
+    static afxBool dsysMgrReady = FALSE;
+    static afxClassConfig const dsysMgrCfg =
     {
-        AfxSetUpManager(&_dsysCls, NIL, /*_AfxGetSystemClassChain()*/NIL, &_AfxDsysClsConfig);
-        dsysClsMounted = TRUE;
+        .fcc = afxFcc_DSYS,
+        .name = "Unified Video Graphics Infrastructure",
+        .maxCnt = 1,
+        //.size = sizeof(AFX_OBJECT(afxDrawSystem)),
+        .ctor = (void*)_AvxDsysCtor,
+        .dtor = (void*)_AvxDsysDtor
+    };
+
+    if (dsysMgr.fcc != afxFcc_CLS)
+    {
+        AfxEstablishManager(&dsysMgr, NIL, /*_AfxGetSystemClassChain()*/NIL, &dsysMgrCfg);
+        dsysMgrReady = TRUE;
     }
-    return &_dsysCls;
+    return &dsysMgr;
+}
+
+_AVX afxResult _AvxDsysctl(afxSystem sys, afxInt reqCode, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+
+    switch (reqCode)
+    {
+    case 0:
+    {
+
+        break;
+    }
+    case 2:
+    {
+        afxDrawSystem dsys;
+
+        if (AfxGetDrawSystem(&dsys)) AfxThrowError();
+        else
+        {
+            dsysReady = FALSE;
+
+            afxManager* mgr = _AfxGetDsysMgr();
+            AfxAssertClass(mgr, afxFcc_DSYS);
+
+            AfxAssert(TheDrawSystem == dsys);
+
+            if (_AfxDestructObjects(mgr, 1, (void**)&TheDrawSystem))
+                AfxThrowError();
+
+            AfxAssert(TheDrawSystem != dsys); // Attention! Dtor moves the object pointer to expose the object base.
+            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
+        }
+        break;
+    }
+    case 1:
+    {
+        afxDrawSystem dsys;
+
+        if (AfxGetDrawSystem(&dsys)) AfxThrowError();
+        else
+        {
+            AfxAssert(TheDrawSystem == dsys);
+            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
+
+            afxManager* mgr = _AfxGetDsysMgr();
+            AfxAssertClass(mgr, afxFcc_DSYS);
+
+            va_list va;
+            va_start(va, reqCode);
+
+            if (_AfxConstructObjects(mgr, 1, (void**)&TheDrawSystem, (void*[]) { sys, va_arg(va, afxManifest*), va_arg(va, afxDrawSystemConfig*) })) AfxThrowError();
+            else
+            {
+                AfxAssert(TheDrawSystem != dsys); // Attention! Ctor moves the object pointer to hide out the object base.
+                dsys = TheDrawSystem;
+                AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+                
+                AfxPrintf(0xFF00FF00, "\n");
+
+                for (afxNat i = 0; i < 1120; i++)
+                    AfxPrintf(0xFF00FF00, "%.*s", 1, &sgl2Signature.start[i * 1]);
+                
+                Sleep(1000);
+
+                dsysReady = TRUE;
+            }
+            va_end(va);
+        }
+        break;
+    }
+    default:
+    {
+        AfxThrowError();
+        break;
+    }
+    }
+    return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

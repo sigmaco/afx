@@ -109,8 +109,6 @@ _AFXINL void AfxDeallocateArray(afxArray *arr)
     AfxAssertType(arr, afxFcc_ARR);
     AfxAssignTypeFcc(arr, 0);
 
-    afxMmu mmu = AfxGetSystemContext();
-
     if (arr->bytemap)
         AfxDeallocate(arr->bytemap);
 
@@ -170,11 +168,9 @@ _AFXINL afxError AfxReserveArraySpace(afxArray *arr, afxNat cap)
 
     if ((cap > arr->cap) || !arr->bytemap)
     {
-        afxMmu mmu = AfxGetSystemContext();
-
         afxByte *p;
 
-        if (!(p = AfxReallocate(arr->bytemap, arr->unitSiz, cap, 0, AfxHint()) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHint())*/)) AfxThrowError();
+        if (!(p = AfxReallocate(arr->bytemap, arr->unitSiz, cap, 0, AfxHere()) /*AfxReallocate(&((afxSize *)(*arr))[-2], (siz), AfxHere())*/)) AfxThrowError();
         else
         {
             arr->cap = cap;

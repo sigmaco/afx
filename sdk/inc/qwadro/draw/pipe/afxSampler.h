@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_SAMPLER_H
 #define AFX_SAMPLER_H

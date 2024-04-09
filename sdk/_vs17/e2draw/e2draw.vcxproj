@@ -153,19 +153,22 @@
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\draw\afxCamera.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxColor.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawContext.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawInput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOutput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawBridge.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawSystem.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawThread.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxPixel.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawBridge.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawContext.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawOutput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawStream.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxFence.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxSemaphore.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\font\afxTypography.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxBuffer.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxRaster.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxShader.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxShaderBlueprint.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxTxd.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxVertexStream.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxXsh.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxBindSchema.h" />
@@ -173,9 +176,7 @@
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxCanvas.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOps.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOperation.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawStream.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawTechnique.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxFence.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxPipeline.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryOps.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryPool.h" />
@@ -183,7 +184,6 @@
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterizer.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterOps.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxSampler.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxSemaphore.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxTransformOps.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxVertexInput.h" />
     <ClInclude Include="resource.h" />
@@ -199,19 +199,22 @@
   <ItemGroup>
     <ClCompile Include="..\..\qwadro\draw\afxCamera.c" />
     <ClCompile Include="..\..\qwadro\draw\afxColor.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawDefs.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawInput.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawOutput.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawBridge.c" />
     <ClCompile Include="..\..\qwadro\draw\afxDrawSystem.c" />
-    <ClCompile Include="..\..\qwadro\draw\afxDrawThread.c" />
     <ClCompile Include="..\..\qwadro\draw\afxPixel.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxDrawBridge.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxDrawContext.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxDrawInput.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxDrawOutput.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxDrawStream.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxFence.c" />
+    <ClCompile Include="..\..\qwadro\draw\dev\afxSemaphore.c" />
     <ClCompile Include="..\..\qwadro\draw\font\afxTypography.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxBuffer.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxRaster.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxShader.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxTarga.c" />
+    <ClCompile Include="..\..\qwadro\draw\io\afxTxd.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxVertexStream.c" />
     <ClCompile Include="..\..\qwadro\draw\io\afxXsh.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxBindSchema.c" />
@@ -224,14 +227,12 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawStream.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawTechnique.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxFence.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxPipeline.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxQueryOps.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxQueryPool.c" />
@@ -239,7 +240,6 @@
     <ClCompile Include="..\..\qwadro\draw\pipe\afxRasterizer.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxRasterOps.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxSampler.c" />
-    <ClCompile Include="..\..\qwadro\draw\pipe\afxSemaphore.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxTransformOps.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxVertexInput.c" />
     <ClCompile Include="..\..\qwadro\env\xssCamera.c" />

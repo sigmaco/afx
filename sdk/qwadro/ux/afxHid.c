@@ -29,22 +29,22 @@
 #define _AFX_HID_C
 #include "qwadro/core/afxSystem.h"
 
-_AFX afxKey const vkDereferenceMap[AFX_KEY_TOTAL];
+_AFX afxKey const vkDereferenceMap[afxKey_TOTAL];
 
-afxKey const vkDereferenceMap[AFX_KEY_TOTAL] =
+afxKey const vkDereferenceMap[afxKey_TOTAL] =
 {
     /*      0               1               2               3               4               5               6               7               8               9               A               B               C               D               E               F*/
-    /* 0 */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           AFX_KEY_TAB,    0x00,           0x00,           0x00,           AFX_KEY_RET,    0x00,           0x00,
-    /* 1 */ 0x00,           0x00,           0x00,           AFX_KEY_PAUSE,  0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           AFX_KEY_ESC,    0x00,           0x00,           0x00,           0x00,
-    /* 2 */ AFX_KEY_SPACE,  0x00,           0x00,           0x00,           0x00,           AFX_KEY_LEFT,   AFX_KEY_UP,     AFX_KEY_RIGHT,  AFX_KEY_DOWN,   0x00,           0x00,           0x00,           AFX_KEY_PRINT,  AFX_KEY_INSERT, AFX_KEY_DELETE, 0x00,
-    /* 3 */ AFX_KEY_0,      AFX_KEY_1,      AFX_KEY_2,      AFX_KEY_3,      AFX_KEY_4,      AFX_KEY_5,      AFX_KEY_6,      AFX_KEY_7,      AFX_KEY_8,      AFX_KEY_9,      0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
-    /* 4 */ 0x00,           AFX_KEY_A,      AFX_KEY_B,      AFX_KEY_C,      AFX_KEY_D,      AFX_KEY_E,      AFX_KEY_F,      AFX_KEY_G,      AFX_KEY_H,      AFX_KEY_I,      AFX_KEY_J,      AFX_KEY_K,      AFX_KEY_L,      AFX_KEY_M,      AFX_KEY_N,      AFX_KEY_O,
-    /* 5 */ AFX_KEY_P,      AFX_KEY_Q,      AFX_KEY_R,      AFX_KEY_S,      AFX_KEY_T,      AFX_KEY_U,      AFX_KEY_V,      AFX_KEY_W,      AFX_KEY_X,      AFX_KEY_Y,      AFX_KEY_Z,      AFX_KEY_LMETA,  AFX_KEY_RMETA,  AFX_KEY_APP,    0x00,           0x00,
-    /* 6 */ AFX_KEY_NUM0,   AFX_KEY_NUM1,   AFX_KEY_NUM2,   AFX_KEY_NUM3,   AFX_KEY_NUM4,   AFX_KEY_NUM5,   AFX_KEY_NUM6,   AFX_KEY_NUM7,   AFX_KEY_NUM8,   AFX_KEY_NUM9,   0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
-    /* 7 */ AFX_KEY_F1,     AFX_KEY_F2,     AFX_KEY_F3,     AFX_KEY_F4,     AFX_KEY_F5,     AFX_KEY_F6,     AFX_KEY_F7,     AFX_KEY_F8,     AFX_KEY_F9,     AFX_KEY_F10,    AFX_KEY_F11,    AFX_KEY_F12,    0x00,           0x00,           0x00,           0x00,
+    /* 0 */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           afxKey_TAB,    0x00,           0x00,           0x00,           afxKey_RET,    0x00,           0x00,
+    /* 1 */ 0x00,           0x00,           0x00,           afxKey_PAUSE,  0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           afxKey_ESC,    0x00,           0x00,           0x00,           0x00,
+    /* 2 */ afxKey_SPACE,  0x00,           0x00,           0x00,           0x00,           afxKey_LEFT,   afxKey_UP,     afxKey_RIGHT,  afxKey_DOWN,   0x00,           0x00,           0x00,           afxKey_PRINT,  afxKey_INSERT, afxKey_DELETE, 0x00,
+    /* 3 */ afxKey_0,      afxKey_1,      afxKey_2,      afxKey_3,      afxKey_4,      afxKey_5,      afxKey_6,      afxKey_7,      afxKey_8,      afxKey_9,      0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
+    /* 4 */ 0x00,           afxKey_A,      afxKey_B,      afxKey_C,      afxKey_D,      afxKey_E,      afxKey_F,      afxKey_G,      afxKey_H,      afxKey_I,      afxKey_J,      afxKey_K,      afxKey_L,      afxKey_M,      afxKey_N,      afxKey_O,
+    /* 5 */ afxKey_P,      afxKey_Q,      afxKey_R,      afxKey_S,      afxKey_T,      afxKey_U,      afxKey_V,      afxKey_W,      afxKey_X,      afxKey_Y,      afxKey_Z,      afxKey_LMETA,  afxKey_RMETA,  afxKey_APP,    0x00,           0x00,
+    /* 6 */ afxKey_NUM0,   afxKey_NUM1,   afxKey_NUM2,   afxKey_NUM3,   afxKey_NUM4,   afxKey_NUM5,   afxKey_NUM6,   afxKey_NUM7,   afxKey_NUM8,   afxKey_NUM9,   0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
+    /* 7 */ afxKey_F1,     afxKey_F2,     afxKey_F3,     afxKey_F4,     afxKey_F5,     afxKey_F6,     afxKey_F7,     afxKey_F8,     afxKey_F9,     afxKey_F10,    afxKey_F11,    afxKey_F12,    0x00,           0x00,           0x00,           0x00,
     /* 8 */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
     /* 9 */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
-    /* A */ AFX_KEY_LSHIFT, AFX_KEY_RSHIFT, AFX_KEY_LCTRL,  AFX_KEY_RCTRL,  AFX_KEY_LALT,   AFX_KEY_RALT,   0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
+    /* A */ afxKey_LSHIFT, afxKey_RSHIFT, afxKey_LCTRL,  afxKey_RCTRL,  afxKey_LALT,   afxKey_RALT,   0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
     /* B */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
     /* C */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
     /* D */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,
@@ -52,15 +52,15 @@ afxKey const vkDereferenceMap[AFX_KEY_TOTAL] =
     /* F */ 0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00,           0x00
 };
 
-_AFX afxKey const Scan1MakeToQwadroDereferenceMap[AFX_KEY_TOTAL] =
+_AFX afxKey const Scan1MakeToQwadroDereferenceMap[afxKey_TOTAL] =
 {
     /*      0       1       2       3       4       5       6       7       8       9       A       B       C       D       E       F*/
-    /* 0 */ 0x00,   AFX_KEY_ESC,   AFX_KEY_1,   AFX_KEY_2,   AFX_KEY_3,   AFX_KEY_4,   AFX_KEY_5,   AFX_KEY_6,   AFX_KEY_7,   AFX_KEY_8,   AFX_KEY_9,   AFX_KEY_0,   AFX_KEY_MINUS,   AFX_KEY_EQUAL,   AFX_KEY_BACK,   AFX_KEY_TAB,
-    /* 1 */ AFX_KEY_Q,   AFX_KEY_W,   AFX_KEY_E,   AFX_KEY_R,   AFX_KEY_T,   AFX_KEY_Y,   AFX_KEY_U,   AFX_KEY_I,   AFX_KEY_O,   AFX_KEY_P,   AFX_KEY_LBRACE,   AFX_KEY_RBRACE,   AFX_KEY_RET,   0x00,   AFX_KEY_A,   AFX_KEY_S,
-    /* 2 */ AFX_KEY_D,   AFX_KEY_F,   AFX_KEY_G,   AFX_KEY_H,   AFX_KEY_J,   AFX_KEY_K,   AFX_KEY_L,   AFX_KEY_SEMICOL,   AFX_KEY_QUOTE,   AFX_KEY_TILDE,   AFX_KEY_LSHIFT,   AFX_KEY_BACKSLASH,   AFX_KEY_Z,   AFX_KEY_X,   AFX_KEY_C,   AFX_KEY_V,
-    /* 3 */ AFX_KEY_B,   AFX_KEY_N,   AFX_KEY_M,   AFX_KEY_COMMA,   AFX_KEY_PERIOD,   AFX_KEY_SLASH,   0x00,   0x00,   0x00,   AFX_KEY_SPACE,   AFX_KEY_CAPSLOCK,   AFX_KEY_F1,   AFX_KEY_F2,   AFX_KEY_F3,   AFX_KEY_F4,   AFX_KEY_F5,
-    /* 4 */ AFX_KEY_F6,   AFX_KEY_F7,   AFX_KEY_F8,   AFX_KEY_F9,   AFX_KEY_F10,   AFX_KEY_PAUSE,   AFX_KEY_SCROLLOCK,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
-    /* 5 */ 0x00,   0x00,   0x00,   0x00,   AFX_KEY_PRINT,   0x00,   0x00,   AFX_KEY_F11,   AFX_KEY_F12,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
+    /* 0 */ 0x00,   afxKey_ESC,   afxKey_1,   afxKey_2,   afxKey_3,   afxKey_4,   afxKey_5,   afxKey_6,   afxKey_7,   afxKey_8,   afxKey_9,   afxKey_0,   afxKey_MINUS,   afxKey_EQUAL,   afxKey_BACK,   afxKey_TAB,
+    /* 1 */ afxKey_Q,   afxKey_W,   afxKey_E,   afxKey_R,   afxKey_T,   afxKey_Y,   afxKey_U,   afxKey_I,   afxKey_O,   afxKey_P,   afxKey_LBRACE,   afxKey_RBRACE,   afxKey_RET,   0x00,   afxKey_A,   afxKey_S,
+    /* 2 */ afxKey_D,   afxKey_F,   afxKey_G,   afxKey_H,   afxKey_J,   afxKey_K,   afxKey_L,   afxKey_SEMICOL,   afxKey_QUOTE,   afxKey_TILDE,   afxKey_LSHIFT,   afxKey_BACKSLASH,   afxKey_Z,   afxKey_X,   afxKey_C,   afxKey_V,
+    /* 3 */ afxKey_B,   afxKey_N,   afxKey_M,   afxKey_COMMA,   afxKey_PERIOD,   afxKey_SLASH,   0x00,   0x00,   0x00,   afxKey_SPACE,   afxKey_CAPSLOCK,   afxKey_F1,   afxKey_F2,   afxKey_F3,   afxKey_F4,   afxKey_F5,
+    /* 4 */ afxKey_F6,   afxKey_F7,   afxKey_F8,   afxKey_F9,   afxKey_F10,   afxKey_PAUSE,   afxKey_SCROLLOCK,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
+    /* 5 */ 0x00,   0x00,   0x00,   0x00,   afxKey_PRINT,   0x00,   0x00,   afxKey_F11,   afxKey_F12,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
     /* 6 */ 0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
     /* 7 */ 0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
     /* 8 */ 0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,   0x00,
@@ -186,7 +186,7 @@ _AFXINL afxResult AfxTestHidFlags(afxHid hid, afxHidFlag flags)
     return (hid->flags & flags);
 }
 
-_AFX afxClassConfig const _AfxHidClsConfig =
+_AFX afxClassConfig const _AfxHidMgrCfg =
 {
     .fcc = afxFcc_HID,
     .name = "HID",

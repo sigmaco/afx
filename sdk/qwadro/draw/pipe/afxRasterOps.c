@@ -14,11 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_DRAW_STREAM_C
 #include "qwadro/draw/afxDrawSystem.h"
 
-_AVX afxCmdId AfxCmdDownloadRaster(afxDrawStream diob, afxRaster ras, afxStream dst, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
+_AVX afxCmdId AfxCmdOutputRaster(afxDrawStream diob, afxRaster ras, afxStream dst, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -38,10 +40,10 @@ _AVX afxCmdId AfxCmdDownloadRaster(afxDrawStream diob, afxRaster ras, afxStream 
         AfxAssert(op->bufRowSiz);
         AfxAssert(op->bufRowCnt);
     }
-    return diob->stdCmds->ras.rw(diob, ras, dst, opCnt, ops, TRUE, cdc);
+    return diob->stdCmds->ras.io(diob, ras, dst, opCnt, ops, TRUE, cdc);
 }
 
-_AVX afxCmdId AfxCmdDownloadRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream dst, afxNat dstOffset, afxNat dstRowSiz, afxNat dstRowCnt, afxCodec cdc)
+_AVX afxCmdId AfxCmdOutputRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream dst, afxNat dstOffset, afxNat dstRowSiz, afxNat dstRowCnt, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -53,10 +55,10 @@ _AVX afxCmdId AfxCmdDownloadRasterRegion(afxDrawStream diob, afxRaster ras, afxR
     op.bufOffset = dstOffset;
     op.bufRowSiz = dstRowSiz;
     op.bufRowCnt = dstRowCnt;
-    return AfxCmdDownloadRaster(diob, ras, dst, 1, &op, cdc);
+    return AfxCmdOutputRaster(diob, ras, dst, 1, &op, cdc);
 }
 
-_AVX afxCmdId AfxCmdUploadRaster(afxDrawStream diob, afxRaster ras, afxStream src, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
+_AVX afxCmdId AfxCmdInputRaster(afxDrawStream diob, afxRaster ras, afxStream src, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -76,10 +78,10 @@ _AVX afxCmdId AfxCmdUploadRaster(afxDrawStream diob, afxRaster ras, afxStream sr
         AfxAssert(op->bufRowSiz);
         AfxAssert(op->bufRowCnt);
     }
-    return diob->stdCmds->ras.rw(diob, ras, src, opCnt, ops, FALSE, cdc);
+    return diob->stdCmds->ras.io(diob, ras, src, opCnt, ops, FALSE, cdc);
 }
 
-_AVX afxCmdId AfxCmdUploadRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream src, afxNat srcOffset, afxNat srcRowSiz, afxNat srcRowCnt, afxCodec cdc)
+_AVX afxCmdId AfxCmdInputRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream src, afxNat srcOffset, afxNat srcRowSiz, afxNat srcRowCnt, afxCodec cdc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -91,7 +93,7 @@ _AVX afxCmdId AfxCmdUploadRasterRegion(afxDrawStream diob, afxRaster ras, afxRas
     op.bufOffset = srcOffset;
     op.bufRowSiz = srcRowSiz;
     op.bufRowCnt = srcRowCnt;
-    return AfxCmdUploadRaster(diob, ras, src, 1, &op, cdc);
+    return AfxCmdInputRaster(diob, ras, src, 1, &op, cdc);
 }
 
 _AVX afxCmdId AfxCmdPackRaster(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
@@ -222,7 +224,7 @@ AVX afxCmdId AfxCmdSubsampleRaster(afxDrawStream diob, afxRaster ras, afxNat bas
     return diob->stdCmds->ras.mip(diob, ras, baseLod, lodCnt);
 }
 
-_AVX afxCmdId AfxCmdTransformRaster(afxDrawStream diob, afxRaster ras, afxReal const m[4][4], afxNat rgnCnt, afxRasterRegion const regions[])
+_AVX afxCmdId AfxCmdTransformRaster(afxDrawStream diob, afxRaster ras, afxM4d const m, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
@@ -244,7 +246,7 @@ _AVX afxCmdId AfxCmdTransformRaster(afxDrawStream diob, afxRaster ras, afxReal c
     return diob->stdCmds->ras.xform(diob, ras, m, rgnCnt, regions);
 }
 
-_AVX afxCmdId AfxCmdTransformRasterRegion(afxDrawStream diob, afxRaster ras, afxReal const m[4][4], afxRasterRegion const* rgn)
+_AVX afxCmdId AfxCmdTransformRasterRegion(afxDrawStream diob, afxRaster ras, afxM4d const m, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);

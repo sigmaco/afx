@@ -14,10 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
-
-#ifndef AFX_BIND_SCHEMA_H
-#define AFX_BIND_SCHEMA_H
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 // A afxBindSchema defines the interface between a set of resources bound in a afxBindSet and their accessibility in shader stages.
 
@@ -30,6 +27,9 @@
 // The descriptor set number 1 will be used for per-pass resources, and bound once per pass.
 // The descriptor set number 2 will be used for material resources, and the number 3 will be used for per-object resources.
 // This way, the inner render loops will only be binding descriptor sets 2 and 3, and performance will be high.
+
+#ifndef AFX_BIND_SCHEMA_H
+#define AFX_BIND_SCHEMA_H
 
 #include "qwadro/draw/io/afxShader.h"
 

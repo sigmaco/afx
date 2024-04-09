@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\qwadro\ux\afxApplication.c" />
+    <ClCompile Include="..\..\qwadro\ux\afxApplication_w32.c" />
     <ClCompile Include="..\..\qwadro\ux\afxBrush.c" />
     <ClCompile Include="..\..\qwadro\ux\afxOverlay.c" />
     <ClCompile Include="..\..\qwadro\ux\afxWidget.c" />

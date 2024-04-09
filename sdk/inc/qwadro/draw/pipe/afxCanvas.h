@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 /// No Qwadro, afxCanvas é um recurso que combina operações de framebuffer e render pass em outras APIs.
 
@@ -22,11 +22,6 @@
 #define AFX_CANVAS_H
 
 #include "qwadro/draw/io/afxRaster.h"
-
-typedef enum afxEventCanvas
-{
-    AFX_EVENT_CANV_RESIZ
-} afxEventCanvas;
 
 typedef enum afxCanvasFlags
 {
@@ -96,18 +91,21 @@ AVX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const whd);
 AVX afxNat          AfxCountSurfaces(afxCanvas canv);
 AVX afxNat          AfxCountDrawSurfaces(afxCanvas canv);
 
-AVX afxBool         AfxGetDepthSurface(afxCanvas canv, afxNat* surfIdx);
-AVX afxBool         AfxGetStencilSurface(afxCanvas canv, afxNat* surfIdx);
+AVX afxBool         AfxGetDepthSurface(afxCanvas canv, afxNat* surIdx);
+AVX afxBool         AfxGetStencilSurface(afxCanvas canv, afxNat* surIdx);
 AVX afxBool         AfxHasCombinedDepthStencilBuffer(afxCanvas canv);
 
-AVX afxRaster       AfxGetDepthBuffer(afxCanvas canv);
-AVX afxRaster       AfxGetStencilBuffer(afxCanvas canv);
-AVX afxNat          AfxEnumerateDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
+AVX afxBool         AfxEnumerateDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
+AVX afxBool         AfxGetColorBuffer(afxCanvas canv, afxNat surIdx, afxRaster* buf);
+AVX afxBool         AfxGetDepthBuffer(afxCanvas canv, afxRaster* buf);
+AVX afxBool         AfxGetStencilBuffer(afxCanvas canv, afxRaster* buf);
 
 // must be compatible with format, have at least sampleCnt, and not be less extent than canvas.
 AVX afxError        AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
 AVX afxError        AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth);
 AVX afxError        AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil);
+
+AVX afxError        AfxPrintDrawBuffer(afxCanvas canv, afxNat surIdx, afxUri const* uri);
 
 AVX afxError        AfxRevalidateDrawBuffers(afxCanvas canv);
 

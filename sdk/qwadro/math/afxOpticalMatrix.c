@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxOpticalMatrix.h"
 #include "qwadro/math/afxMathDefs.h"

@@ -36,16 +36,19 @@
 #endif
 
 #ifdef _WIN64
+#   define AFX_ISA_X64
 #   define AFX_PLATFORM_64 1
 #   define AFX_PLATFORM_X86_64 1
 #   define AFX_PLATFORM_WIN 1
 #   define AFX_PLATFORM_W64 1
 #elif _WIN32
+#   define AFX_ISA_X86
 #   define AFX_PLATFORM_32 1
 #   define AFX_PLATFORM_X86_32 1
 #   define AFX_PLATFORM_WIN 1
 #   define AFX_PLATFORM_W32 1
 #else
+#   define AFX_ISA_X64
 #   define AFX_PLATFORM_64 1
 #   define AFX_PLATFORM_X86_64 1
 #   define AFX_PLATFORM_LINUX 1 

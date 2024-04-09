@@ -324,7 +324,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
         afxSize diff = (pageIdx + 1) - pool->pageCnt;
         void *pgs;
 
-        if (!(pgs = AfxReallocate(pool->pages, sizeof(pool->pages[0]), (pool->pageCnt + diff), 0, AfxHint()))) AfxThrowError();
+        if (!(pgs = AfxReallocate(pool->pages, sizeof(pool->pages[0]), (pool->pageCnt + diff), 0, AfxHere()))) AfxThrowError();
         else
         {
             pool->pages = pgs;
@@ -347,7 +347,7 @@ _AFX afxError AfxOccupyPoolUnit(afxPool* pool, afxSize idx, void *val)
 
         if (!pag->data)
         {
-            if (!(pag->data = AfxAllocate(pool->unitsPerPage, pool->unitSiz, 0, AfxHint()))) AfxThrowError();
+            if (!(pag->data = AfxAllocate(pool->unitsPerPage, pool->unitSiz, 0, AfxHere()))) AfxThrowError();
             else
                 AfxZero2(pool->unitsPerPage, pool->unitSiz, pag->data);
 
@@ -491,7 +491,7 @@ _AFX void AfxDeallocatePoolUnit(afxPool* pool, void* unit2)
                     {
                         void *pgs;
 
-                        if (!(pgs = AfxReallocate(pool->pages, sizeof(*pag), (pool->pageCnt - 1), 0, AfxHint()))) AfxThrowError();
+                        if (!(pgs = AfxReallocate(pool->pages, sizeof(*pag), (pool->pageCnt - 1), 0, AfxHere()))) AfxThrowError();
                         else
                         {
                             pool->pages = pgs;

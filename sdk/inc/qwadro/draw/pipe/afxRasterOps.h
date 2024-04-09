@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_RASTER_OPS_H
 #define AFX_RASTER_OPS_H
@@ -67,31 +67,7 @@ AFX_DEFINE_STRUCT(afxRasterSubset)
  //// COMMANDOS                                                            ////
 //////////////////////////////////////////////////////////////////////////////
 
-AVX afxCmdId                AfxCmdDownloadRaster
-/// Store afxRaster data into a afxStream.
-(
-    afxDrawStream           diob,
-    afxRaster               ras, /// the source afxRaster.
-    afxStream               dst, /// the destination afxStream.
-    afxNat                  opCnt, /// the number of regions to store.
-    afxRasterIoOp const     ops[], /// an array of structures specifying the regions to store.
-    afxCodec                cdc
-);
-
-AVX afxCmdId                AfxCmdDownloadRasterRegion
-/// Store afxRaster data into a afxStream.
-(
-    afxDrawStream           diob,
-    afxRaster               ras, /// the source afxRaster.
-    afxRasterRegion const*  rgn,
-    afxStream               dst, /// the destination afxStream.
-    afxNat                  dstOffset, /// is the offset in bytes from the start of the stream object where the afxRaster data is stored to.
-    afxNat                  dstRowSiz, /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
-    afxNat                  dstRowCnt, /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
-    afxCodec                cdc
-);
-
-AVX afxCmdId                AfxCmdUploadRaster
+AVX afxCmdId                AfxCmdInputRaster
 /// Load data from a afxStream into an afxRaster.
 (
     afxDrawStream           diob,
@@ -102,7 +78,7 @@ AVX afxCmdId                AfxCmdUploadRaster
     afxCodec                cdc
 );
 
-AVX afxCmdId                AfxCmdUploadRasterRegion
+AVX afxCmdId                AfxCmdInputRasterRegion
 /// Load data from a afxStream into an afxRaster.
 (
     afxDrawStream           diob,
@@ -112,6 +88,30 @@ AVX afxCmdId                AfxCmdUploadRasterRegion
     afxNat                  srcOffset, /// is the offset in bytes from the start of the stream object where the afxRaster data is loaded from.
     afxNat                  srcRowSiz, /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
     afxNat                  srcRowCnt, /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
+    afxCodec                cdc
+);
+
+AVX afxCmdId                AfxCmdOutputRaster
+/// Store afxRaster data into a afxStream.
+(
+    afxDrawStream           diob,
+    afxRaster               ras, /// the source afxRaster.
+    afxStream               dst, /// the destination afxStream.
+    afxNat                  opCnt, /// the number of regions to store.
+    afxRasterIoOp const     ops[], /// an array of structures specifying the regions to store.
+    afxCodec                cdc
+);
+
+AVX afxCmdId                AfxCmdOutputRasterRegion
+/// Store afxRaster data into a afxStream.
+(
+    afxDrawStream           diob,
+    afxRaster               ras, /// the source afxRaster.
+    afxRasterRegion const*  rgn,
+    afxStream               dst, /// the destination afxStream.
+    afxNat                  dstOffset, /// is the offset in bytes from the start of the stream object where the afxRaster data is stored to.
+    afxNat                  dstRowSiz, /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
+    afxNat                  dstRowCnt, /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in stream memory, and control the addressing calculations. If either of these values is zero, that aspect of the stream memory is considered to be tightly packed according to the imageExtent.
     afxCodec                cdc
 );
 
@@ -206,7 +206,7 @@ AVX afxCmdId                AfxCmdTransformRaster
 (
     afxDrawStream           diob,
     afxRaster               ras,
-    afxReal const           m[4][4],
+    afxM4d const            m,
     afxNat                  rgnCnt,
     afxRasterRegion const   regions[]
 );
@@ -215,7 +215,7 @@ AVX afxCmdId                AfxCmdTransformRasterRegion
 (
     afxDrawStream           diob,
     afxRaster               ras,
-    afxReal const           m[4][4],
+    afxM4d const            m,
     afxRasterRegion const*  rgn
 );
 

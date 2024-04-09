@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_VERTEX_BUFFER_C
 #define _AFX_INDEX_BUFFER_C
@@ -100,7 +102,7 @@ _AVX afxError _AvxVbufCtor(afxVertexBuffer vbuf, afxCookie const* cookie)
     return err;
 }
 
-_AVX afxClassConfig const _AvxVbufClsConfig =
+_AVX afxClassConfig const _AvxVbufMgrCfg =
 {
     .fcc = afxFcc_VBUF,
     .name = "Vertex Buffer",
@@ -182,7 +184,7 @@ _AVX void AfxDisposeIndexBufferSegment(afxIndexBuffer ibuf, afxNat baseIdx, afxN
 
     if (!err)
     {
-        if (!(room = AfxAllocate(1, sizeof(*room), 0, AfxHint()))) AfxThrowError();
+        if (!(room = AfxAllocate(1, sizeof(*room), 0, AfxHere()))) AfxThrowError();
         else
         {
             room->baseIdx = baseIdx;
@@ -273,8 +275,6 @@ _AVX afxError _AvxIbufDtor(afxIndexBuffer ibuf)
     AfxAssertObjects(1, &ibuf, afxFcc_IBUF);
 
     afxDrawContext dctx = AfxGetObjectProvider(ibuf);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     afxBuffer buf;
 
@@ -319,7 +319,7 @@ _AVX afxError _AvxIbufCtor(afxIndexBuffer ibuf, afxCookie const* cookie)
     return err;
 }
 
-_AVX afxClassConfig const _AvxIbufClsConfig =
+_AVX afxClassConfig const _AvxIbufMgrCfg =
 {
     .fcc = afxFcc_IBUF,
     .name = "Index Buffer",

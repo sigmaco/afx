@@ -323,9 +323,10 @@ _AFX afxError AfxEmulateMouseMotion(afxNat port, afxReal const motion[2])
         mse->lastMotion[0] = motion[0];
         mse->lastMotion[1] = motion[1];
 
-        afxEvent ev;
-        AfxEventDeploy(&ev, AFX_EVENT_MSE_AXIS_UPDATED, (void*)mse, mse->lastMotion);
-        AfxObjectEmitEvent(mse, &ev);
+        afxEvent ev = { 0 };
+        ev.id = AFX_EVENT_MSE_AXIS_UPDATED;
+        ev.udd[0] = mse->lastMotion;
+        AfxNotifyObject(mse, &ev);
     }
     return err;
 }
@@ -343,8 +344,9 @@ _AFX afxError AfxEmulateMouseWheelAction(afxNat port, afxReal delta)
         mse->lastWheelDelta = delta;
 
         afxEvent ev;
-        AfxEventDeploy(&ev, AFX_EVENT_MSE_WHEEL_UPDATED, (void*)mse, &mse->lastWheelDelta);
-        AfxObjectEmitEvent(mse, &ev);
+        ev.id = AFX_EVENT_MSE_WHEEL_UPDATED;
+        ev.udd[0] = &mse->lastWheelDelta;
+        AfxNotifyObject(mse, &ev);
     }
     return err;
 }
@@ -405,9 +407,10 @@ _AFX afxError AfxEmulateMouseButtonActions(afxNat port, afxNat cnt, afxMouseButt
                 mse->prevState[butt[i]] = mse->currState[butt[i]];
                 mse->currState[butt[i]] = !!pressed[i];
 
-                afxEvent ev;
-                AfxEventDeploy(&ev, evtype, (void*)mse, (void*)&butt[i]);
-                AfxObjectEmitEvent(mse, &ev);
+                afxEvent ev = { 0 };
+                ev.id = evtype;
+                ev.udd[0] = (void*)&butt[i];
+                AfxNotifyObject(mse, &ev);
             }
         }
     }
@@ -461,7 +464,7 @@ _AFX afxError _AfxMseCtor(afxMouse mse, afxCookie const *cookie)
     return err;
 }
 
-_AFX afxClassConfig const _AfxMseClsConfig =
+_AFX afxClassConfig const _AfxMseMgrCfg =
 {
     .fcc = afxFcc_MSE,
     .name = "Mouse",
@@ -475,16 +478,16 @@ _AFX afxClassConfig const _AfxMseClsConfig =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AFX afxError AfxAcquireMouse(afxNat port, afxMouse* mse)
+_AFX afxError AfxAcquireMouse(afxNat port, afxMouse* mouse)
 {
     afxError err = AFX_ERR_NONE;
-    afxMouse mse2 = NIL;
+    afxMouse mse = NIL;
 
-    if (AfxGetMouse(port, &mse2))
+    if (AfxGetMouse(port, &mse))
     {
         AfxLogEcho("Reacquiring mouse at port %u", port);
 
-        if (AfxReacquireObjects(1, (void*[]) { mse2 }))
+        if (AfxReacquireObjects(1, (void*[]) { mse }))
             AfxThrowError();
     }
     else
@@ -494,13 +497,35 @@ _AFX afxError AfxAcquireMouse(afxNat port, afxMouse* mse)
         afxManager* cls = AfxGetMouseClass();
         AfxAssertClass(cls, afxFcc_MSE);
 
-        if (AfxAcquireObjects(cls, 1, (afxObject*)&mse2, (void const*[]) { &port }))
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&mse, (void const*[]) { &port }))
             AfxThrowError();
     }
 
-    AfxAssert(mse);
-    *mse = mse2;
+    AfxAssert(mouse);
+    *mouse = mse;
     return err;
+}
+
+_AFX afxBool AfxGetMouse(afxNat port, afxMouse* mouse)
+{
+    afxError err = AFX_ERR_NONE;
+    afxBool found = FALSE;
+    afxNat i = 0;
+    afxMouse mse;
+    while (AfxEnumerateMouses(i, 1, &mse))
+    {
+        AfxAssertObjects(1, &mse, afxFcc_MSE);
+
+        if (mse->hid.port == port)
+        {
+            found = TRUE;
+            break;
+        }
+        ++i;
+    }
+    AfxAssert(mouse);
+    *mouse = found ? mse : NIL;
+    return found;
 }
 
 _AFX afxNat AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void*), void *udd)
@@ -529,26 +554,4 @@ _AFX afxNat AfxCountMouses(void)
     afxManager* cls = AfxGetMouseClass();
     AfxAssertClass(cls, afxFcc_MSE);
     return AfxCountObjects(cls);
-}
-
-_AFX afxBool AfxGetMouse(afxNat port, afxMouse* mse)
-{
-    afxError err = AFX_ERR_NONE;
-    afxBool found = FALSE;
-    afxNat i = 0;
-    afxMouse mse2;
-    while (AfxEnumerateMouses(i, 1, &mse2))
-    {
-        AfxAssertObjects(1, &mse2, afxFcc_MSE);
-        
-        if (mse2->hid.port == port)
-        {
-            found = TRUE;
-            break;
-        }
-        ++i;
-    }
-    AfxAssert(mse);
-    *mse = found ? mse2 : NIL;
-    return found;
 }

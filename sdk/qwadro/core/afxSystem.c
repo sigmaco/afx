@@ -21,118 +21,68 @@
 #define _AFX_SYSTEM_C
 #include "qwadro/core/afxSystem.h"
 
-_AFX afxString const sigmaSignature = AFX_STRING(
-"\n       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          "
-"\n      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        "
-"\n      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       "
-"\n      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      "
-"\n             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      "
-"\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
-"\n       ########    ###########    ########    ###       ###   ###     ###      "
-"\n                                                                               "
-"\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
-"\n                                                                               "
-"\n                               Public Test Build                               "
-"\n                   (c) 2017 SIGMA, Engineering In Technology                   "
-"\n                                www.sigmaco.org                                "
-"\n                                                                               "
-);
-
-_AFX afxString const qwadroSignature = AFX_STRING(
-"      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
-"     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
-"     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
-"     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
-"     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
-"     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
-"      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
-"                                                                               \n"
-"              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              \n"
-"                                                                               \n"
-"                               Public Test Build                               \n"
-"                   (c) 2017 SIGMA, Engineering In Technology                   \n"
-"                                www.sigmaco.org                                \n"
-"                                                                               \n"
-);
-
-_AFX afxManager _sysClass;
-afxManager _sysClass;
-_AFX afxBool _sysClassInited = FALSE;
 _AFX afxChar const _rwBuildDateTime[];
 static afxChar const  _rwBuildDateTime[] = "\nCore built at " __DATE__ " " __TIME__ "\n";
 static afxChar const _Ebenezer[] = "Ebenezer";
 
-_AFX afxSystem theSys;
-afxSystem theSys = NIL;
-afxNat mainThreadId;
+extern afxSystem TheSystem;
+extern afxBool sysReady;
+
+_AFX afxReal64 const renderWareUnitsPerMeter = 1.f;
+extern afxChain orphanClassChain;
 
 _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie);
 _AFX afxError _AfxSysDtor(afxSystem sys);
 
-_AFX afxClassConfig const _AfxSysClsConfig =
+_AFX afxManager* _AfxGetSysMgr(void)
 {
-    .fcc = afxFcc_SYS,
-    .name = "System",
-    .desc = "Basic I/O System",
-    .maxCnt = 1,
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxSystem)),
-    .mmu = NIL,
-    .ctor = (void*)_AfxSysCtor,
-    .dtor = (void*)_AfxSysDtor
-};
+    //afxError err = AFX_ERR_NONE;
+    static afxManager sysMgr = { 0 };
+    static afxBool sysMgrReady = FALSE;
+    static afxClassConfig const sysMgrCfg =
+    {
+        .fcc = afxFcc_SYS,
+        .name = "System",
+        .desc = "Basic I/O System",
+        .maxCnt = 1,
+        //.unitsPerPage = 1,
+        //.size = sizeof(AFX_OBJECT(afxSystem)),
+        .ctor = (void*)_AfxSysCtor,
+        .dtor = (void*)_AfxSysDtor
+    };
+    
+    if (sysMgr.fcc != afxFcc_CLS)
+    {
+        AfxEstablishManager(&sysMgr, NIL, NIL, &sysMgrCfg);
+        sysMgrReady = TRUE;
+    }
+    return &sysMgr;
+}
 
-_AFX afxBool AfxGetSystem(afxSystem* sys)
+_AFX afxBool AfxGetSystem(afxSystem* system)
 {
     afxError err = AFX_ERR_NONE;
-    afxSystem sys2 = theSys;
-    AfxTryAssertObjects(1, &sys2, afxFcc_SYS);
-    AfxAssert(sys);
-    *sys = sys2;
-    return !!sys2;
+    //AfxTryAssertObjects(1, &TheSystem, afxFcc_SYS);
+    AfxAssert(system);
+    *system = TheSystem;
+    return sysReady;
 }
 
 _AFX afxChain* _AfxGetSystemClassChain(void)
 {
     afxSystem sys;
     AfxGetSystem(&sys);
-    return &sys->classes;
+    return &sys->mgrChn;
 }
 
-_AFX afxBool AfxGetDrawSystem(afxDrawSystem* dsys)
+_AFX afxBool AfxGetShell(afxShell* shell)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxDrawSystem dsys2 = sys->dsys;
-    AfxTryAssertObjects(1, &dsys2, afxFcc_DSYS);
-    AfxAssert(dsys);
-    *dsys = dsys2;
-    return !!dsys2;
-}
-
-_AFX afxBool AfxGetSoundSystem(afxSoundSystem* ssys)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxSoundSystem ssys2 = sys->ssys;
-    AfxTryAssertObjects(1, &ssys2, afxFcc_SSYS);
-    AfxAssert(ssys);
-    *ssys = ssys2;
-    return !!ssys2;
-}
-
-_AFX afxBool AfxGetEnvironment(afxEnvironment* env)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    AfxAssert(env);
-    *env = sys->env;
+    AfxAssert(shell);
+    *shell = sys->env;
     return !!sys->env;
 }
 
@@ -143,39 +93,6 @@ _AFX afxNat AfxGetIoBufferSize(void)
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     return sys->ioBufSiz;
-}
-
-_AFX afxArena* AfxGetIoArena(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxArena *aren = &sys->ioArena;
-    AfxAssertType(aren, afxFcc_AREN);
-    return aren;
-}
-
-_AFX afxMmu AfxGetIoContext(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxMmu mmu = sys->mmu;
-    AfxTryAssertObjects(1, &mmu, afxFcc_MMU);
-    return mmu;
-}
-
-_AFX afxMmu AfxGetSystemContext(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxMmu mmu = sys->mmu;
-    AfxTryAssertObjects(1, &mmu, afxFcc_MMU);
-    return mmu;
 }
 
 _AFX afxNat AfxGetMemoryPageSize(void)
@@ -193,7 +110,7 @@ _AFX afxManager* AfxGetStorageClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->fsysCls;
+    afxManager *cls = &sys->fsysMgr;
     AfxAssertClass(cls, afxFcc_FSYS);
     return cls;
 }
@@ -213,7 +130,7 @@ _AFX afxManager* AfxGetServiceClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->svcCls;
+    afxManager *cls = &sys->svcMgr;
     AfxAssertClass(cls, afxFcc_SVC);
     return cls;
 }
@@ -224,19 +141,8 @@ _AFX afxManager* AfxGetThreadClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->thrCls;
+    afxManager *cls = &sys->thrMgr;
     AfxAssertClass(cls, afxFcc_THR);
-    return cls;
-}
-
-_AFX afxManager* AfxGetTxuClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->txuCls;
-    AfxAssertClass(cls, afxFcc_TXU);
     return cls;
 }
 
@@ -246,7 +152,7 @@ _AFX afxManager* AfxGetDeviceClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->devCls;
+    afxManager *cls = &sys->devMgr;
     AfxAssertClass(cls, afxFcc_DEV);
     return cls;
 }
@@ -257,7 +163,7 @@ _AFX afxManager* AfxGetEnvironmentClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->envCls;
+    afxManager *cls = &sys->envMgr;
     AfxAssertClass(cls, afxFcc_ENV);
     return cls;
 }
@@ -268,7 +174,7 @@ _AFX afxManager* AfxGetFileClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->fileCls;
+    afxManager *cls = &sys->fileMgr;
     AfxAssertClass(cls, afxFcc_FILE);
     return cls;
 }
@@ -279,7 +185,7 @@ _AFX afxManager* AfxGetStringBaseClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->strbCls;
+    afxManager *cls = &sys->strbMgr;
     AfxAssertClass(cls, afxFcc_STRB);
     return cls;
 }
@@ -290,7 +196,7 @@ _AFX afxManager* AfxGetArchiveClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->archCls;
+    afxManager *cls = &sys->archMgr;
     AfxAssertClass(cls, afxFcc_ARC);
     return cls;
 }
@@ -301,7 +207,7 @@ _AFX afxManager* AfxGetMmuClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->mmuCls;
+    afxManager *cls = &sys->mmuMgr;
     AfxAssertClass(cls, afxFcc_MMU);
     return cls;
 }
@@ -312,7 +218,7 @@ _AFX afxManager* AfxGetStreamClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->iosCls;
+    afxManager *cls = &sys->iosMgr;
     AfxAssertClass(cls, afxFcc_IOB);
     return cls;
 }
@@ -323,7 +229,7 @@ _AFX afxManager* AfxGetHidClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->hidCls;
+    afxManager *cls = &sys->hidMgr;
     AfxAssertClass(cls, afxFcc_HID);
     return cls;
 }
@@ -334,7 +240,7 @@ _AFX afxManager* AfxGetKeyboardClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->kbdCls;
+    afxManager *cls = &sys->kbdMgr;
     AfxAssertClass(cls, afxFcc_KBD);
     return cls;
 }
@@ -345,7 +251,7 @@ _AFX afxManager* AfxGetMouseClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->mseCls;
+    afxManager *cls = &sys->mseMgr;
     AfxAssertClass(cls, afxFcc_MSE);
     return cls;
 }
@@ -356,7 +262,7 @@ _AFX afxManager* AfxGetControllerClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->ctrlCls;
+    afxManager *cls = &sys->ctrlMgr;
     AfxAssertClass(cls, afxFcc_CTRL);
     return cls;
 }
@@ -367,7 +273,7 @@ _AFX afxManager* AfxGetModuleClass(void)
     afxSystem sys;
     AfxGetSystem(&sys);
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->exeCls;
+    afxManager *cls = &sys->exeMgr;
     AfxAssertClass(cls, afxFcc_MDLE);
     return cls;
 }
@@ -456,107 +362,58 @@ _AFX afxBool AfxSystemIsExecuting(void)
     return FALSE;
 }
 
-_AFXINL afxBool _AfxNotifyObject(afxObject receiver, afxEvent *ev)
-{
-    // Sends event to receiver: receiver->event(event). 
-    // Returns the value that is returned from the receiver's event handler. 
-    // Note that this function is called for all events sent to any object in any thread.
-
-    afxError err = AFX_ERR_NONE;    
-    AfxAssertType(receiver, afxFcc_OBJ);
-    AfxAssertType(ev, afxFcc_EVNT);
-    afxBool rslt = AfxObjectEmitEvent(receiver, ev);
-
-    return rslt;
-}
-
-_AFX afxBool AfxEmitEvents(afxNat cnt, afxObject receiver[], afxEvent ev[])
+_AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(receiver);
-    AfxAssert(ev);
-    afxBool res = 0;
+    AfxAssertType(receiver, afxFcc_OBJ);
+    AfxAssertType(ev, afxFcc_EVNT);
+
+    afxNat32 tid;
+    AfxGetTid(&tid);
     
-    for (afxNat i = 0; i < cnt; i++)
+    if (tid == AfxGetObjectTid(receiver))
     {
-        afxObject obj = receiver[i];
-        AfxAssertType(obj, afxFcc_OBJ);
-        afxEvent *e = &ev[i];
-        AfxAssertType(e, afxFcc_EVNT);
-        _AfxNotifyObject(obj, e);
+        // Sends event event directly to receiver receiver, using the notify() function. Returns the value that was returned from the event handler.
+
+        AfxNotifyObject(receiver, ev);
     }
-    return res;
-}
-
-_AFX afxBool AfxReemitEvent(afxNat cnt, afxObject receiver[], afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(receiver);
-    AfxAssertType(ev, afxFcc_EVNT);
-
-    for (afxNat i = 0; i < cnt; i++)
+    else
     {
-        afxObject obj = receiver[i];
-        AfxAssertType(obj, afxFcc_OBJ);
-        _AfxNotifyObject(obj, ev);
-    }
-    return err;
-}
+        // Adds the event event, with the object receiver as the receiver of the event, to an event queue and returns immediately.
 
-_AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent *ev)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertType(receiver, afxFcc_OBJ);
-    AfxAssertType(ev, afxFcc_EVNT);
-    return _AfxNotifyObject(receiver, ev);
-}
-
-_AFX afxError AfxPostEvents(afxNat cnt, afxObject receiver[], afxEvent ev[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(receiver);
-    AfxAssertType(ev, afxFcc_EVNT);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxObject obj = receiver[i];
-        AfxAssertType(obj, afxFcc_OBJ);
-        _AfxNotifyObject(obj, ev);
         AfxThrowError();
-        // Not implemented yet.
     }
-    return err;
 }
 
-_AFX afxError AfxPostEvent(afxObject receiver, afxEvent *ev)
+_AFX afxError _SysCleanUpEnv(afxSystem sys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(receiver, afxFcc_OBJ);
-    AfxAssertType(ev, afxFcc_EVNT);
-    
-    if (AfxPostEvents(1, &receiver, ev))
-        AfxThrowError();
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    afxShell env;
+    AfxGetShell(&env);
 
-    return err;
-}
-
-_AFX void AfxDoSystemShutdown(afxInt exitCode)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-
-    if (AfxGetSystem(&sys))
+    if (env)
     {
-        AfxDbgLogf(6, NIL, "Shutting down Qwadro Execution Ecosystem...\n");
+        AfxAssertObjects(1, &env, afxFcc_ENV);
 
-        do { AfxRequestSystemShutdown(exitCode); } while (AfxSystemIsExecuting());
-        while (!AfxReleaseObjects(1, (void*[]) { sys }));
-        AfxCleanUpManager(&_sysClass);
-    };
-#ifndef _AFX_DISABLE_DEBUGGER
-    _AfxDbgDetach();
-#endif
-    AfxReleaseTerminal();
+        if (!AfxReleaseObjects(1, (void*[]) { env }))
+            AfxThrowError();
+
+        sys->env = NIL;
+
+        afxUri point, location;
+        AfxMakeUri(&point, "code", 0);
+        AfxMakeUri(&location, "system", 0);
+        AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+    }
+
+    if (sys->stdKbd)
+    {
+        AfxReleaseObjects(1, (void*[]) { sys->stdKbd });
+        sys->stdKbd = NIL;
+    }
+
+    return err;
 }
 
 _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
@@ -574,162 +431,214 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
         if (AfxGetSystem(&sys)) AfxThrowError();
         else
         {
-            AfxDbgLogf(6, NIL, "Booting up Qwadro Execution Ecosystem...\n");
-
-            AfxSetUpManager(&_sysClass, NIL, NIL, &_AfxSysClsConfig);
+            AfxDbgLogf(6, NIL, "Booting up the Qwadro Execution Ecosystem...\n");
 
             afxManifest ini;
             AfxSetUpIni(&ini);
             // platform-dependent ctor will load the correct ini file.
 
-            if (AfxAcquireObjects(&_sysClass, 1, (afxObject*)&sys, (void const*[]) { &ini, config })) AfxThrowError();
+            AfxAssert(TheSystem == sys);
+            AfxZero(TheSystem, sizeof(afxObjectBase));
+
+            afxManager* mgr = _AfxGetSysMgr();
+            AfxAssertClass(mgr, afxFcc_SYS);
+
+            if (_AfxConstructObjects(mgr, 1, (void**)&TheSystem, (void*[]) { &ini, (void*)config })) AfxThrowError();
             else
             {
+                AfxAssert(TheSystem != sys); // Attention! Ctor moves the object pointer to hide out the object base.
+                sys = TheSystem;
                 AfxAssertObjects(1, &sys, afxFcc_SYS);
-                
-                afxUri uri;
-                afxBool ssysEnabled = FALSE;
 
-                if (AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bEnabled"), &ssysEnabled) && ssysEnabled)
+                AfxLogY("Memory page size: %d", sys->memPageSize);
+                AfxLogY("Logical processor count: %d", sys->hwConcurrencyCap);
+
+                // Start the subsystems
+
+                afxBool ssysDisabled = FALSE;
+
+                if (!(AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &ssysDisabled) && ssysDisabled))
                 {
-                    AfxDbgLogf(6, NIL, "Setting up the Qwadro Sound System...\n");
+                    AfxDbgLogf(6, NIL, "Setting up the Qwadro Sound System...");
 
+                    afxUri uri;
                     AfxMakeUri(&uri, "e2sound.dll", 0);
+                    afxModule e2sound;
 
-                    if (AfxLoadModule(&uri, NIL, &sys->e2sound)) AfxThrowError();
+                    if (AfxLoadModule(&uri, NIL, &e2sound)) AfxThrowError();
                     else
                     {
-                        AfxAssertObjects(1, &sys->e2sound, afxFcc_MDLE);
+                        AfxAssertObjects(1, &e2sound, afxFcc_MDLE);
 
-                        afxManager*(*_AfxGetSsysClass)(void) = AfxFindModuleSymbol(sys->e2sound, "_AfxGetSsysClass");
+                        afxResult(*ssysctl)(afxSystem, afxInt, ...) = AfxFindModuleSymbol(e2sound, "_AaxSsysctl");
 
-                        if (!_AfxGetSsysClass) AfxThrowError();
+                        if (!ssysctl) AfxThrowError();
                         else
                         {
-                            afxManager* cls = _AfxGetSsysClass();
-                            AfxAssertClass(cls, afxFcc_SSYS);
+                            afxSoundSystem ssys;
 
-                            if (AfxAcquireObjects(cls, 1, (afxObject*)&sys->ssys, (void const*[]) { sys, &ini, (void*)config ? config->sound : NIL })) AfxThrowError();
+                            if (ssysctl(sys, 1, ini, config ? config->sound : NIL)) AfxThrowError();
                             else
                             {
-                                AfxAssertObjects(1, &sys->ssys, afxFcc_SSYS);
-                                afxSoundSystem ssys;
-                                AfxGetSoundSystem(&ssys);
-                                AfxAssert(sys->ssys == ssys);
+                                sys->ssysctl = ssysctl;
+                                sys->e2sound = e2sound;
                             }
-
-                            if (err)
-                                AfxCleanUpManager(cls);
                         }
 
                         if (err)
-                            AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+                            AfxReleaseObjects(1, (void*[]) { e2sound });
                     }
                 }
 
                 if (!err)
                 {
-                    afxBool dsysEnabled = FALSE;
+                    afxBool dsysDisabled = FALSE;
 
-                    if (AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bEnabled"), &dsysEnabled) && dsysEnabled)
+                    if (!(AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &dsysDisabled) && dsysDisabled))
                     {
-                        AfxDbgLogf(6, NIL, "Setting up the Qwadro Draw System...\n");
+                        AfxDbgLogf(6, NIL, "Setting up the Qwadro Draw System...");
 
+                        afxUri uri;
                         AfxMakeUri(&uri, "e2draw.dll", 0);
+                        afxModule e2draw;
 
-                        if (AfxLoadModule(&uri, NIL, &sys->e2draw)) AfxThrowError();
+                        if (AfxLoadModule(&uri, NIL, &e2draw)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &sys->e2draw, afxFcc_MDLE);
+                            AfxAssertObjects(1, &e2draw, afxFcc_MDLE);
 
-                            afxManager*(*_AfxGetDsysClass)(void) = AfxFindModuleSymbol(sys->e2draw, "_AfxGetDsysClass");
+                            afxResult(*dsysctl)(afxSystem, afxInt, ...) = AfxFindModuleSymbol(e2draw, "_AvxDsysctl");
 
-                            if (!_AfxGetDsysClass) AfxThrowError();
+                            if (!dsysctl) AfxThrowError();
                             else
                             {
-                                afxManager* cls = _AfxGetDsysClass();
-                                AfxAssertClass(cls, afxFcc_DSYS);
+                                afxDrawSystem dsys;
 
-                                if (AfxAcquireObjects(cls, 1, (afxObject*)&sys->dsys, (void const*[]) { sys, &ini, (void*)config ? config->draw : NIL })) AfxThrowError();
+                                if (dsysctl(sys, 1, ini, config ? config->draw : NIL)) AfxThrowError();
                                 else
                                 {
-                                    AfxAssertObjects(1, &sys->dsys, afxFcc_DSYS);
-                                    afxDrawSystem dsys;
-                                    AfxGetDrawSystem(&dsys);
-                                    AfxAssert(sys->dsys == dsys);
+                                    sys->dsysctl = dsysctl;
+                                    sys->e2draw = e2draw;
                                 }
-
-                                if (err)
-                                    AfxCleanUpManager(cls);
                             }
 
                             if (err)
-                                AfxReleaseObjects(1, (void*[]) { sys->e2draw });
+                                AfxReleaseObjects(1, (void*[]) { e2draw });
                         }
                     }
+                }
+
+                if (!err)
+                {
+                    afxError err = AFX_ERR_NONE;
+                    AfxAssertObjects(1, &sys, afxFcc_SYS);
+                    AfxDbgLogf(6, NIL, "Setting up the Environment...");
+
+                    afxKeyboard kbd;
+
+                    if (AfxAcquireKeyboard(0, &kbd)) AfxThrowError();
+                    else
+                    {
+                        AfxAssertObjects(1, &kbd, afxFcc_KBD);
+                        sys->stdKbd = kbd;
+                        afxMouse mse;
+
+                        if (AfxAcquireMouse(0, &mse)) AfxThrowError();
+                        else
+                        {
+                            AfxAssertObjects(1, &mse, afxFcc_MSE);
+                            sys->stdMse = mse;
+
+                            afxUri point, location;
+                            AfxMakeUri(&point, "code", 0);
+                            AfxMakeUri(&location, "system", 0);
+
+                            if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
+                            else
+                            {
+                                if (AfxAcquireShell(&sys->env)) AfxThrowError();
+                                else
+                                {
+                                    afxUri uri;
+                                    AfxMakeUri(&uri, "system/qwadro.xss", 0);
+
+                                    afxString s;
+                                    AfxMakeString(&s, "qwadro", 0);
+                                    AfxLoadScript(&s, &uri);
+                                }
+
+                                if (err)
+                                    AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+                            }
+
+                            if (err)
+                                AfxReleaseObjects(1, (void*[]) { mse });
+                        }
+
+                        if (err)
+                        {
+                            AfxReleaseObjects(1, (void*[]) { kbd });
+                        }
+                    }
+                }
+
+                if (!err)
+                {
+                    afxShell env;
+                    AfxGetShell(&env);
+                    AfxAssert(sys->env == env);
+
+#if 0
+                    if (sys->e2sound)
+                    {
+
+                        AfxMakeString(&s, "sound", 0);
+                        AfxMakeUri(&uri, "system/sound.xs", 0);
+                        AfxLoadScript(&s, &uri);
+                    }
+
+                    if (sys->e2draw)
+                    {
+                        AfxMakeString(&s, "draw", 0);
+                        AfxMakeUri(&uri, "system/draw.xs", 0);
+                        AfxLoadScript(&s, &uri);
+                    }
+#endif
 
                     if (!err)
                     {
-                        afxUri uri;
-
-                        afxUri point, location;
-                        AfxMakeUri(&point, "code", 0);
-                        AfxMakeUri(&location, "system", 0);
-                        AfxMountStorageUnit(&point, &location, afxFileFlag_RWX);
-
-                        if (!(sys->env = AfxAcquireEnvironment()))
-                            AfxThrowError();
-
-                        AfxMakeUri(&uri, "system/qwadro.xss", 0);
-
-                        afxString s;
-                        AfxMakeString(&s, "qwadro", 0);
-                        AfxLoadScript(&s, &uri);
-#if 0
-                        if (sys->e2sound)
-                        {
-
-                            AfxMakeString(&s, "sound", 0);
-                            AfxMakeUri(&uri, "system/sound.xs", 0);
-                            AfxLoadScript(&s, &uri);
-                        }
-
-                        if (sys->e2draw)
-                        {
-                            AfxMakeString(&s, "draw", 0);
-                            AfxMakeUri(&uri, "system/draw.xs", 0);
-                            AfxLoadScript(&s, &uri);
-                        }
-#endif
 
                         sys->operating = TRUE;
                         sys->interruptionRequested = FALSE;
+                        sysReady = TRUE;
                     }
 
                     if (err)
-                    {
-                        if (sys->ssys)
-                        {
-                            AfxReleaseObjects(1, (void*[]) { sys->dsys });
-                        }
-
-                        if (sys->e2draw)
-                            AfxReleaseObjects(1, (void*[]) { sys->e2draw });
-
-                    }
+                        _SysCleanUpEnv(sys);
                 }
 
                 if (err)
                 {
-                    if (sys->ssys)
+                    if (_AfxDestructObjects(mgr, 1, (void*[]) { sys }))
+                        AfxThrowError();
+
+                    if (sys->dsysctl)
                     {
-                        AfxReleaseObjects(1, (void*[]) { sys->ssys });
+                        if (sys->dsysctl(sys, 0))
+                            AfxThrowError();
+
+                        AfxAssertObjects(1, &sys->e2draw, afxFcc_MDLE);
+                        AfxReleaseObjects(1, (void*[]) { sys->e2draw });
                     }
 
-                    if (sys->e2sound)
-                        AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+                    if (sys->ssysctl)
+                    {
+                        if (sys->ssysctl(sys, 0))
+                            AfxThrowError();
 
-                    AfxReleaseObjects(1, (void*[]) { sys });
+                        AfxAssertObjects(1, &sys->e2sound, afxFcc_MDLE);
+                        AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+                    }
                 }
             }
 
@@ -737,4 +646,57 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
         }
     }
     return err;
+}
+
+_AFX void AfxDoSystemShutdown(afxInt exitCode)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys;
+
+    if (AfxGetSystem(&sys))
+    {
+        AfxDbgLogf(6, NIL, "Shutting down the Qwadro Execution Ecosystem...\n");
+
+        do
+        {
+            AfxRequestSystemShutdown(exitCode);
+            AfxDoSystemExecution(0);
+        } while (AfxSystemIsExecuting());
+
+        sysReady = FALSE;
+        AfxCleanUpChainedManagers(&orphanClassChain);
+
+        if (sys->dsysctl)
+        {
+            if (sys->dsysctl(sys, 2))
+                AfxThrowError();
+
+            AfxAssertObjects(1, &sys->e2draw, afxFcc_MDLE);
+            AfxReleaseObjects(1, (void*[]) { sys->e2draw });
+        }
+
+        if (sys->ssysctl)
+        {
+            if (sys->ssysctl(sys, 2))
+                AfxThrowError();
+
+            AfxAssertObjects(1, &sys->e2sound, afxFcc_MDLE);
+            AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+        }
+
+        afxManager* mgr = _AfxGetSysMgr();
+        AfxAssertClass(mgr, afxFcc_SYS);
+
+        AfxAssert(TheSystem == sys);
+
+        if (_AfxDestructObjects(mgr, 1, (void**)&TheSystem))
+            AfxThrowError();
+
+        AfxAssert(TheSystem != sys); // Attention! Dtor moves the object pointer to expose the object base.
+        AfxZero(TheSystem, sizeof(afxObjectBase));
+    }
+#ifndef _AFX_DISABLE_DEBUGGER
+    _AfxDbgDetach();
+#endif
+    AfxReleaseTerminal();
 }

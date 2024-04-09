@@ -53,7 +53,7 @@ _AKX afxError AfxAcquireEntities(afxSimulation sim, afxNat cnt, awxEntity ent[],
     return err;
 }
 
-_AKX afxClassConfig _AfxEntClsConfig =
+_AKX afxClassConfig _AfxEntMgrCfg =
 {
     .fcc = afxFcc_ENT,
     .name = "Entity",

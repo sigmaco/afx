@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_CAMERA_C
 #define _AFX_DRAW_C
 #include "qwadro/draw/afxDrawSystem.h"
@@ -714,10 +716,11 @@ _AVX afxError _AvxCamDtor(afxCamera cam)
     return err;
 }
 
-_AVX afxClassConfig const _AvxCamClsConfig =
+_AVX afxClassConfig const _AvxCamMgrCfg =
 {
     .fcc = afxFcc_CAM,
     .name = "Camera",
+    .desc = "Camera",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxCamera)),
     .mmu = NIL,

@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_RASTERIZER_C
 #include "qwadro/draw/afxDrawSystem.h"
@@ -259,9 +261,6 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
     afxError err = AFX_ERR_NONE;
 
     afxRasterizer razr = NIL;
-
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));

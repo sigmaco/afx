@@ -24,7 +24,6 @@
 #include "qwadro/core/afxManager.h"
 #include "qwadro/io/afxSource.h"
 #include "qwadro/core/afxDevice.h"
-#include "qwadro/sound/afxSoundThread.h"
 #include "qwadro/sound/afxSoundContext.h"
 
 typedef enum _sdevReqCode
@@ -66,39 +65,32 @@ AFX_OBJECT(afxSoundDevice)
 #endif//_AFX_SOUND_DEVICE_C
 #endif//_AFX_SOUND_C
 
+AFX_DEFINE_STRUCT(afxSoundSystemConfig)
+{
+
+};
+
 #ifdef _AFX_SOUND_C
 #ifdef _AFX_SOUND_SYSTEM_C
 AFX_OBJECT(afxSoundSystem)
 {
-    afxMmu              mmu;
-    afxChain            classes;
-    afxManager            txus;
-    afxManager            threads;
-    afxManager            devices;
-    //afxIcd              e2sound; // SIGMA A4D is required for minimal operability since core has no more embedded fallback.
+    afxChain            mgrChn;
+    afxManager          devices;
+    //afxIcd            e2sound; // SIGMA A4D is required for minimal operability since core has no more embedded fallback.
 };
 #endif//_AFX_SOUND_SYSTEM_C
 #endif//_AFX_SOUND_C
 
-AFX_DEFINE_STRUCT(afxSoundSystemConfig)
-{
-    
-};
-
 AAX void            AfxChooseSoundSystemConfiguration(afxSoundSystemConfig *config, afxNat extendedSiz);
 
-AAX afxMmu          AfxGetSoundSystemMmu(void);
+AAX afxBool         AfxGetSoundSystem(afxSoundSystem* ssys);
 
-AAX afxManager*       AfxGetSoundThreadClass(void);
-AAX afxManager*       AfxGetSoundDeviceClass(void);
+AAX afxManager*     AfxGetSoundDeviceClass(void);
 
-AAX afxNat          AfxCountSoundThreads(void);
 AAX afxNat          AfxCountSoundDevices(void);
 
-AAX afxNat          AfxEnumerateSoundThreads(afxNat first, afxNat cnt, afxSoundThread sthr[]);
 AAX afxNat          AfxEnumerateSoundDevices(afxNat first, afxNat cnt, afxSoundDevice sdev[]);
 
-AAX afxNat          AfxInvokeSoundThreads(afxNat first, afxNat cnt, afxBool(*f)(afxSoundThread, void*), void *udd);
 AAX afxNat          AfxInvokeSoundDevices(afxNat first, afxNat cnt, afxBool(*f)(afxSoundDevice, void*), void *udd);
 
 ////////////////////////////////////////////////////////////////////////////////

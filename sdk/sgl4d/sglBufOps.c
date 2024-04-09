@@ -18,7 +18,7 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglDpuBufCpy(sglDpuIdd* dpu, _sglCmdBufCpy const* cmd)
+_SGL void _DpuBufCpy(sglDpu* dpu, _sglCmdBufCpy const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -56,7 +56,7 @@ _SGL afxCmdId _SglEncodeCmdBufCpy(afxDrawStream diob, afxBuffer src, afxBuffer d
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.cpy) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuBufSet(sglDpuIdd* dpu, _sglCmdBufSet const* cmd)
+_SGL void _DpuBufSet(sglDpu* dpu, _sglCmdBufSet const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -89,7 +89,7 @@ _SGL afxCmdId _SglEncodeCmdBufSet(afxDrawStream diob, afxBuffer buf, afxNat offs
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, buf.set) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL void _SglDpuBufRw(sglDpuIdd* dpu, _sglCmdBufRw const* cmd)
+_SGL void _DpuBufRw(sglDpu* dpu, _sglCmdBufRw const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -154,7 +154,7 @@ _SGL afxCmdId _SglEncodeCmdBufRw(afxDrawStream diob, afxBuffer buf, afxNat offse
     return rslt;
 }
 
-_SGL void _SglDpuBufIo(sglDpuIdd* dpu, _sglCmdBufIo const* cmd)
+_SGL void _DpuBufIo(sglDpu* dpu, _sglCmdBufIo const* cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;

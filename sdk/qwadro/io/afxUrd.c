@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <assert.h>
 #include <ctype.h>
@@ -127,7 +129,7 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
         else
         {
             //use Section->InternalAlignment
-            Result = AfxAllocate(1, alignedSiz, 0, AfxHint());
+            Result = AfxAllocate(1, alignedSiz, 0, AfxHere());
             result = Result;
         }
 
@@ -136,7 +138,7 @@ _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemor
             if (Section->fmt)
             {
                 afxNat v8 = AfxGetCompressionPaddingSize(Section->fmt);
-                void *v9 = AfxAllocate(1, Section->dataSiz + v8, 0, AfxHint());
+                void *v9 = AfxAllocate(1, Section->dataSiz + v8, 0, AfxHere());
 
                 if (v9)
                 {
@@ -225,9 +227,7 @@ _AFX void AfxCloseUrdSections(afxUrd urd, afxNat baseIdx, afxNat secCnt)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-    
+
     AfxAssertRange(urd->secCnt, baseIdx, secCnt);
 
     for (afxNat i = 0; i < secCnt; i++)
@@ -271,7 +271,7 @@ _AFX afxUrd AfxBuildUrd(afxUri const *path)
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
-        //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHint()))
+        //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHere()))
             AfxThrowError();
 
         AfxReleaseObjects(1, (void*) { file });
@@ -294,7 +294,7 @@ _AFX afxUrd AfxAcquireUrd(afxUri const *path)
     {
         AfxAssertObjects(1, &file, afxFcc_FILE);
 
-        //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHint()))
+        //if (AfxAcquireObjects(AfxGetUrdClass(), NIL, 1, NIL, (afxHandle**)&urd, AfxHere()))
             AfxThrowError();
 
         AfxReleaseObjects(1, (void*) { file });
@@ -307,8 +307,6 @@ _AFX afxError _AfxUrdDtor(afxUrd urd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &urd, afxFcc_URD);
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     AfxCloseAllUrdSections(urd);
 
@@ -334,7 +332,7 @@ _AFX afxError _AfxUrdCtor(void *cache, afxNat idx, afxUrd urd, void const *parad
     return err;
 }
 
-_AFX afxClassConfig _AfxUrdClsConfig =
+_AFX afxClassConfig _AfxUrdMgrCfg =
 {
     .fcc = afxFcc_URD,
     .name = "Uniform Resource Dictionary",

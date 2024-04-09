@@ -16,16 +16,14 @@
 
 #include "qwadro/core/afxSystem.h"
 
-AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap)
+AFXINL afxError AfxAllocateQueue(afxQueue* que, afxNat unitSiz, afxNat cap)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(que);
     AfxAssert(unitSiz);
     AfxAssert(cap);
 
-    afxMmu mmu = AfxGetSystemContext();
-
-    if (!(que->bytemap = AfxAllocate(cap, unitSiz, 0, AfxHint()))) AfxThrowError();
+    if (!(que->bytemap = AfxAllocate(cap, unitSiz, 0, AfxHere()))) AfxThrowError();
     else
     {
         AfxAssignTypeFcc(que, afxFcc_QUE);
@@ -36,7 +34,7 @@ AFXINL afxError AfxAllocateQueue(afxQueue *que, afxNat unitSiz, afxNat cap)
     return err;
 }
 
-AFXINL afxError AfxDeallocateQueue(afxQueue *que)
+AFXINL afxError AfxDeallocateQueue(afxQueue* que)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(que, afxFcc_QUE);
@@ -47,9 +45,8 @@ AFXINL afxError AfxDeallocateQueue(afxQueue *que)
 
     if (que->bytemap)
     {
-        afxMmu mmu = AfxGetSystemContext();
-
         AfxDeallocate(que->bytemap);
+        que->bytemap = NIL;
     }
     return err;
 }
@@ -58,19 +55,19 @@ AFXINL afxError AfxPushQueueUnit(afxQueue *que, void const *data)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(que, afxFcc_QUE);
-    AfxCopy2(1, que->unitSiz, data, &que->bytemap[que->unitSiz * que->tail]);
+    AfxCopy(&que->bytemap[que->unitSiz * que->tail], data, que->unitSiz);
     que->tail = (que->tail + 1) % que->cap;
     return err;
 }
 
-AFXINL void* AfxPullNextQueueUnit(afxQueue const *que)
+AFXINL void* AfxPullNextQueueUnit(afxQueue const* que)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(que, afxFcc_QUE);
     return (que->head == que->tail ? NIL : &que->bytemap[que->head * que->unitSiz]);
 }
 
-AFXINL afxBool AfxQueueIsEmpty(afxQueue const *que)
+AFXINL afxBool AfxQueueIsEmpty(afxQueue const* que)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(que, afxFcc_QUE);

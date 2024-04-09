@@ -18,7 +18,7 @@
 #define _AFX_SIMULATION_C
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/rendering/awxSky.h"
-#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/dev/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 #include "qwadro/draw/pipe/afxVertexInput.h"
 #include "qwadro/math/afxQuaternion.h"

@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <stdint.h>
@@ -529,9 +531,6 @@ _AFX afxError AfxExtractArchivedFile(afxArchive arc, afxNat idx, afxUri const *u
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));
 
-    afxMmu mmu = AfxGetIoContext();
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
     _afxZipEntry const *e = AfxGetArrayUnit(&arc->entries, idx);
     AfxAssert(e);
     afxNat size = e->codec == 0 ? e->uncompressedSize : e->compressedSize;
@@ -618,7 +617,7 @@ _AFX afxError _AfxArcDtor(afxArchive arc)
     return err;
 }
 
-_AFX afxClassConfig const _AfxArcClsConfig =
+_AFX afxClassConfig const _AfxArcMgrCfg =
 {
     .fcc = afxFcc_ARC,
     .name = "Archive",

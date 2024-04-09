@@ -32,6 +32,8 @@ _AFX afxError AfxSetUpMutex(afxMutex* mtx, afxMutexType type)
     if (thrd_success != mtx_init((mtx_t*)mtx, (int)type))
         AfxThrowError();
 
+    AfxLockMutex(mtx);
+    AfxUnlockMutex(mtx);
     return err;
 }
 
@@ -57,15 +59,11 @@ _AFX afxError AfxLockMutexTimed(afxMutex* mtx, afxTimeSpec const* ts)
     return err;
 }
 
-_AFX afxResult AfxTryLockMutex(afxMutex* mtx)
+_AFX afxBool AfxTryLockMutex(afxMutex* mtx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(sizeof(mtx_t) <= sizeof(afxMutex));
-
-    if (thrd_success != mtx_trylock((mtx_t*)mtx))
-        AfxThrowError();
-
-    return err;
+    return (thrd_success == mtx_trylock((mtx_t*)mtx));
 }
 
 _AFX afxError AfxUnlockMutex(afxMutex* mtx)

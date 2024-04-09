@@ -21,25 +21,25 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _SglDpuSwitchFrontFace(sglDpuIdd* dpu, _sglCmdBool const *cmd)
+_SGL void _DpuSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.cwFrontFacing = cmd->value;
 }
 
-_SGL void _SglDpuSetCullMode(sglDpuIdd* dpu, _sglCmdNat const *cmd)
+_SGL void _DpuSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.cullMode = cmd->value;
 }
 
-_SGL void _SglDpuSetPrimitiveTopology(sglDpuIdd* dpu, _sglCmdNat const *cmd)
+_SGL void _DpuSetPrimitiveTopology(sglDpu* dpu, _sglCmdNat const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextXformState.primTop = cmd->value;
 }
 
-_SGL void _SglDpuSetViewports(sglDpuIdd* dpu, _sglCmdViewport const *cmd)
+_SGL void _DpuSetViewports(sglDpu* dpu, _sglCmdViewport const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     afxNat first = cmd->first;
@@ -59,7 +59,7 @@ _SGL void _SglDpuSetViewports(sglDpuIdd* dpu, _sglCmdViewport const *cmd)
         dpu->nextXformState.vpCnt = cnt;
 }
 
-_SGL void _SglDpuBindVertexSources(sglDpuIdd* dpu, _sglCmdVertexSources const *cmd)
+_SGL void _DpuBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cmd)
 {
     /*
         The values taken from elements i of pBuffers and pOffsets replace the current state for the vertex input binding firstBinding + i, for i in[0, bindingCount).
@@ -117,7 +117,7 @@ _SGL void _SglDpuBindVertexSources(sglDpuIdd* dpu, _sglCmdVertexSources const *c
 }
 
 #if 0
-_SGL void _SglDpuResetVertexStreams(sglDpuIdd* dpu, _sglCmdVertexStreams const *cmd)
+_SGL void _DpuResetVertexStreams(sglDpu* dpu, _sglCmdVertexStreams const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -142,7 +142,7 @@ _SGL void _SglDpuResetVertexStreams(sglDpuIdd* dpu, _sglCmdVertexStreams const *
     dpu->nextVtxInStreamUpdCnt = AfxMax(dpu->nextVtxInStreamUpdCnt, cnt);
 }
 
-_SGL void _SglDpuResetVertexAttributes(sglDpuIdd* dpu, _sglCmdVertexAttributes const *cmd)
+_SGL void _DpuResetVertexAttributes(sglDpu* dpu, _sglCmdVertexAttributes const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -169,7 +169,7 @@ _SGL void _SglDpuResetVertexAttributes(sglDpuIdd* dpu, _sglCmdVertexAttributes c
 }
 #endif
 
-_SGL void _SglDpuBindIndexSource(sglDpuIdd* dpu, _sglCmdBufferRange const *cmd)
+_SGL void _DpuBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextVinBindings.idxSrcBuf = cmd->buf;
@@ -179,7 +179,7 @@ _SGL void _SglDpuBindIndexSource(sglDpuIdd* dpu, _sglCmdBufferRange const *cmd)
     dpu->nextVinBindings.iboUpdReq = TRUE;
 }
 
-_SGL void _SglDpuBindVertexInput(sglDpuIdd* dpu, _sglCmdVertexInput *cmd)
+_SGL void _DpuBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextVin = cmd->vin;
@@ -191,7 +191,7 @@ _SGL void _SglDpuBindVertexInput(sglDpuIdd* dpu, _sglCmdVertexInput *cmd)
     }
 }
 
-_SGL void SglFlushXformStateChanges(sglDpuIdd* dpu)
+_SGL void SglFlushXformStateChanges(sglDpu* dpu)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;

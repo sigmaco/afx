@@ -90,12 +90,12 @@ _SGL afxError _SglDiobDtor(afxDrawStream diob)
             //afxDrawContext dctx = AfxGetObjectProvider(&diob->base.obj);
             //AfxAssertType(dctxD, afxFcc_DCTX);
             //AfxDrawContextProcess(dctx); // process until draw context ends its works and unlock this script.
-            //AfxYieldThreading();
+            //AfxYieldThread();
         }
         break;
     }
 
-    AfxRecycleDrawStream(diob, TRUE);
+    AfxRecycleDrawStreams(TRUE, 1, &diob);
 
     //if (diob->base.vmt->dtor && diob->base.vmt->dtor(diob))
         //AfxThrowError();
@@ -112,15 +112,16 @@ _SGL afxError _SglDiobCtor(afxDrawStream diob, afxCookie const* cookie)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &diob, afxFcc_DIOB);
 
-    afxDrawBridge dxge = cookie->udd[0];
-    AfxAssertObjects(1, &dxge, afxFcc_DXGE);
+    afxDrawBridge ddge = cookie->udd[0];
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    afxNat queIdx = *(afxNat*)cookie->udd[1];
 
-    afxDrawContext dctx = AfxGetLinker(&dxge->base.dctx);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
+    afxDrawContext dctx = AfxGetLinker(&ddge->base.dctx);
 
     diob->base.submRefCnt = 0;
-    diob->base.portIdx = dxge->base.portIdx;
-    AfxAllocateArena(mmu, &diob->base.cmdArena, NIL, AfxHint());
+    diob->base.portIdx = ddge->base.portIdx;
+    diob->base.queIdx = queIdx;
+    AfxAllocateArena(NIL, &diob->base.cmdArena, NIL, AfxHere());
 
     diob->base.disposable = TRUE;
 
@@ -153,7 +154,7 @@ _SGL afxError _SglDiobCtor(afxDrawStream diob, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig _SglDiobClsConfig =
+_SGL afxClassConfig _SglDiobMgrCfg =
 {
     .fcc = afxFcc_DIOB,
     .name = "DrawStream",

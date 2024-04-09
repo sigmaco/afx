@@ -334,7 +334,7 @@ _AFX afxError _AfxMdleDtor(afxModule mdle)
     return err;
 }
 
-_AFX afxClassConfig const _AfxMdleClsConfig =
+_AFX afxClassConfig const _AfxMdleMgrCfg =
 {
     .fcc = afxFcc_MDLE,
     .name = "Module",

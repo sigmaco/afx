@@ -195,9 +195,6 @@
     <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h">
       <Filter>qwadro\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\env\afxEnvironment.h">
-      <Filter>qwadro\env</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\mem\afxResidency.h">
       <Filter>qwadro\mem</Filter>
     </ClInclude>
@@ -220,9 +217,6 @@
       <Filter>qwadro\core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxTime.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxTxu.h">
       <Filter>qwadro\core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxModule.h">
@@ -293,6 +287,15 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h">
       <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\env\afxShell.h">
+      <Filter>qwadro\env</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\core\afxAtomic.h">
+      <Filter>qwadro\core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\mem\afxFifo.h">
+      <Filter>qwadro\mem</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -462,9 +465,6 @@
     <ClCompile Include="..\..\qwadro\core\afxRestring.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\afxEnvironment.c">
-      <Filter>qwadro\env</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\math\afxSimd.c">
       <Filter>qwadro\math</Filter>
     </ClCompile>
@@ -480,13 +480,7 @@
     <ClCompile Include="..\..\qwadro\core\afxSlock_w32.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\core\afxThread.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxTime_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\core\afxTxu_w32.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxChain.c">
@@ -551,6 +545,21 @@
     </ClCompile>
     <ClCompile Include="..\..\qwadro\ux\afxKeyboard.c">
       <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\core\afxThread_w32.c">
+      <Filter>qwadro\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\env\afxShell.c">
+      <Filter>qwadro\env</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\mem\afxFifo.c">
+      <Filter>qwadro\mem</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\core\afxAtomic_x32.c">
+      <Filter>qwadro\core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\core\afxAtomic_w32.c">
+      <Filter>qwadro\core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

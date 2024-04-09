@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 #ifndef AFX_FILE_H
 #define AFX_FILE_H

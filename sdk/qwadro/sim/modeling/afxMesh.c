@@ -51,7 +51,7 @@ _AKX void _AfxMesh113131(afxMesh msh)
     afxNat* OriginalIndices = msh->topology->vtxIdx;
     
     afxNat const NumMeshTris = AfxCountMeshTriangles(msh->topology);
-    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHint());
+    struct TriWeightData* TriWeights = AfxAllocate(sizeof(TriWeights[0]), NumMeshTris, 0, AfxHere());
     
     for (afxNat triIdx = 0; triIdx < NumMeshTris; ++triIdx)
     {
@@ -280,7 +280,7 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
             msh->biasName = NIL;
             msh->biasData = NIL;
 
-            if (biasCnt && !(msh->biasName = AfxAllocate(biasCnt, sizeof(msh->biasName[0]), 0, AfxHint()))) AfxThrowError();
+            if (biasCnt && !(msh->biasName = AfxAllocate(biasCnt, sizeof(msh->biasName[0]), 0, AfxHere()))) AfxThrowError();
             else
             {
                 if (!strb || !mshb->pivots)
@@ -326,13 +326,13 @@ _AKX afxError _AfxMshCtor(afxMesh msh, afxCookie const* cookie)
             else
                 AfxResolveStrings2(msh->strb, 1, &(msh->biasName[i]), &s);
 
-            AfxDbgLogf(0xFF, AfxHint(), "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
+            AfxDbgLogf(0xFF, AfxHere(), "\n    %u <%.*s> %u", i, AfxPushString(&s), msh->biasData ? msh->biasData[i].triCnt : 0);
         }
     }
     return err;
 }
 
-_AKX afxClassConfig _AfxMshClsConfig =
+_AKX afxClassConfig _AfxMshMgrCfg =
 {
     .fcc = afxFcc_MSH,
     .name = "Mesh",

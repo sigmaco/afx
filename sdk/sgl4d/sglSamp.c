@@ -23,7 +23,7 @@
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _SglDpuBindAndSyncSamp(sglDpuIdd* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp)
+_SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = AFX_ERR_NONE;
@@ -155,7 +155,7 @@ _SGL afxError _SglSampCtor(afxSampler samp, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglSampClsConfig =
+_SGL afxClassConfig const _SglSampMgrCfg =
 {
     .fcc = afxFcc_SAMP,
     .name = "Sampler",

@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This section is part of SIGMA GL/2.
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #ifndef AFX_COLOR_H
 #define AFX_COLOR_H
@@ -29,8 +29,8 @@ typedef afxNat8     afxSimd(afxRgba8[4]);
 
 typedef enum afxColorSpace
 {
-    afxColorSpace_LINEAR = AFX_BIT_OFFSET(0),
-    afxColorSpace_SRGB = AFX_BIT_OFFSET(1)
+    afxColorSpace_LINEAR = 1,
+    afxColorSpace_SRGB
 } afxColorSpace;
 
 typedef enum afxColorSwizzle

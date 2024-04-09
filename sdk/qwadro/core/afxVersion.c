@@ -16,6 +16,40 @@
 
 #include "qwadro/core/afxSystem.h"
 
+_AFX afxString const qwadroSignature = AFX_STRING(
+    "      ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::      \n"
+    "     :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:     \n"
+    "     +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+     \n"
+    "     +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+     \n"
+    "     +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+     \n"
+    "     #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#     \n"
+    "      ###### ###  ###   ###   ###     ### #########  ###    ###  ########      \n"
+    "                                                                               \n"
+    "              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              \n"
+    "                                                                               \n"
+    "                               Public Test Build                               \n"
+    "                   (c) 2017 SIGMA, Engineering In Technology                   \n"
+    "                                www.sigmaco.org                                \n"
+    "                                                                               \n"
+);
+
+_AFX afxString const sigmaSignature = AFX_STRING(
+    "\n       ::::::::    :::::::::::    ::::::::    ::::     ::::       :::          "
+    "\n      :+:    :+:       :+:       :+:    :+:   +:+:+: :+:+:+     :+: :+:        "
+    "\n      +:+              +:+       +:+          +:+ +:+:+ +:+    +:+   +:+       "
+    "\n      +#++:++#++       +#+       :#:          +#+  +:+  +#+   +#++:++#++:      "
+    "\n             +#+       +#+       +#+   +#+#   +#+       +#+   +#+     +#+      "
+    "\n      #+#    #+#       #+#       #+#    #+#   #+#       #+#   #+#     #+#      "
+    "\n       ########    ###########    ########    ###       ###   ###     ###      "
+    "\n                                                                               "
+    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
+    "\n                                                                               "
+    "\n                               Public Test Build                               "
+    "\n                   (c) 2017 SIGMA, Engineering In Technology                   "
+    "\n                                www.sigmaco.org                                "
+    "\n                                                                               "
+);
+
 _AFX afxBool AfxTestSystemCompatibility(afxNat verMajor, afxNat verMinor, afxNat verPatch)
 {
     afxBool rslt = (verMajor == AFX_QWADRO_VER_MAJOR && verMinor == AFX_QWADRO_VER_MINOR && (verPatch == AFX_QWADRO_VER_PATCH));

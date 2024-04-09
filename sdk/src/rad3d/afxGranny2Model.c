@@ -108,7 +108,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     case 1:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pnt332_vertex);
-        granny_pnt332_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pnt332_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHere());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPNT332VertexType, Vertices);
 
         afxV4d hcw;
@@ -126,7 +126,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     case 1:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3132_vertex);
-        granny_pwnt3132_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3132_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHere());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3132VertexType, Vertices);
 
         afxV4d hcw;
@@ -145,7 +145,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     case 2:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3232_vertex);
-        granny_pwnt3232_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3232_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHere());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3232VertexType, Vertices);
 
         afxV4d hcw;
@@ -165,7 +165,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     case 4:
     {
         afxNat bufferSize = spec.vtxCnt * sizeof(granny_pwnt3432_vertex);
-        granny_pwnt3432_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHint());
+        granny_pwnt3432_vertex* Vertices = AfxAllocate(bufferSize, 1, AFX_SIMD_ALIGN, AfxHere());
         GrannyConvertVertexLayouts(spec.vtxCnt, VertexData->VertexType, VertexData->Vertices, GrannyPWNT3432VertexType, Vertices);
 
         afxV4d hcw;

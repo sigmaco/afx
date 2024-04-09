@@ -31,31 +31,27 @@
 #include "qwadro/core/afxString.h"
 #include "qwadro/draw/io/afxVertexStream.h"
 
-extern afxClassConfig const _SglBufClsConfig;
-extern afxClassConfig const _SglSampClsConfig;
-extern afxClassConfig const _SglPipClsConfig;
-extern afxClassConfig const _SglVinClsConfig;
-extern afxClassConfig const _SglRazrClsConfig;
-extern afxClassConfig const _SglShdClsConfig;
-extern afxClassConfig const _SglBschClsConfig;
-extern afxClassConfig const _SglCanvClsConfig;
-extern afxClassConfig const _SglRasClsConfig;
-
-extern afxError _SglDctxExecute(afxDrawContext dctx, afxNat cnt, afxExecutionRequest const req[],afxFence);
-extern afxError _SglDctxPresent(afxDrawContext dctx, afxNat cnt, afxPresentationRequest const req[]);
-extern afxError _SglDctxStamp(afxDrawContext dctx, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption);
+extern afxClassConfig const _SglBufMgrCfg;
+extern afxClassConfig const _SglSampMgrCfg;
+extern afxClassConfig const _SglPipMgrCfg;
+extern afxClassConfig const _SglVinMgrCfg;
+extern afxClassConfig const _SglRazrMgrCfg;
+extern afxClassConfig const _SglShdMgrCfg;
+extern afxClassConfig const _SglBschMgrCfg;
+extern afxClassConfig const _SglCanvMgrCfg;
+extern afxClassConfig const _SglRasMgrCfg;
 
 _SGL void _SglDctxFreeAllQueueSlots(afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
-    afxDrawBridge dxge;
-    AfxIterateLinkage(AFX_OBJECT(afxDrawBridge), dxge, &dctx->base.ownedBridges, base.dctx)
+    afxDrawBridge ddge;
+    AfxIterateLinkage(AFX_OBJECT(afxDrawBridge), ddge, &dctx->base.ownedBridges, base.dctx)
     {
-        AfxAssertObjects(1, &dxge, afxFcc_DXGE);
+        AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-        AfxReleaseObjects(1, (void*[]) { dxge });
+        AfxReleaseObjects(1, (void*[]) { ddge });
     }
 }
 
@@ -109,7 +105,7 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
     AfxDisconnectDrawInputs(dctx);
     AfxDisconnectDrawOutputs(dctx);
 
-    _AfxUninstallChainedClasses(&dctx->base.classes);
+    AfxCleanUpChainedManagers(&dctx->base.classes);
 
     _SglDctxFreeAllQueueSlots(dctx);
     _SglDctxFreeAllOwnedQueries(dctx);
@@ -117,7 +113,6 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
     _SglDctxFreeAllOwnedSemaphores(dctx);
     
     AfxDeallocateArena(&dctx->base.aren);
-    AfxReleaseObjects(1, (void*[]) { dctx->base.mmu });
 
     return err;
 }
@@ -135,18 +130,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
     dctx->base.running = FALSE;
 
-    dctx->base.mmu = AfxGetDrawSystemMmu();
-    
-
-    AfxAssertObjects(1, &dctx->base.mmu, afxFcc_MMU);
-
-    afxMmu mmu = dctx->base.mmu;
-
-    dctx->base.executeCb = _SglDctxExecute;
-    dctx->base.presentCb = _SglDctxPresent;
-    dctx->base.stampCb = _SglDctxStamp;
-
-    AfxAllocateArena(mmu, &dctx->base.aren, NIL, AfxHint());
+    AfxAllocateArena(NIL, &dctx->base.aren, NIL, AfxHere());
 
     dctx->base.clipCfg = AFX_CLIP_SPACE_QWADRO;
 
@@ -165,66 +149,55 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         AfxSetUpChain(classes, (void*)dctx);
         afxClassConfig tmpClsConf;
 
-        tmpClsConf = _SglBschClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.schemas, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglBschMgrCfg;
+        AfxEstablishManager(&dctx->base.schemas, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglSampClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.samplers, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglSampMgrCfg;
+        AfxEstablishManager(&dctx->base.samplers, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglBufClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.buffers, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglBufMgrCfg;
+        AfxEstablishManager(&dctx->base.buffers, NIL, classes, &tmpClsConf);
         
-        tmpClsConf = _SglRasClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.rasters, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglRasMgrCfg;
+        AfxEstablishManager(&dctx->base.rasters, NIL, classes, &tmpClsConf);
         
-        tmpClsConf = _SglCanvClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.canvases, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglCanvMgrCfg;
+        AfxEstablishManager(&dctx->base.canvases, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglVinClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.vinputs, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglVinMgrCfg;
+        AfxEstablishManager(&dctx->base.vinputs, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglShdClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.shaders, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglShdMgrCfg;
+        AfxEstablishManager(&dctx->base.shaders, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglRazrClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.rasterizers, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglRazrMgrCfg;
+        AfxEstablishManager(&dctx->base.rasterizers, NIL, classes, &tmpClsConf);
         
-        tmpClsConf = _SglPipClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.pipelines, NIL, classes, &tmpClsConf);
+        tmpClsConf = _SglPipMgrCfg;
+        AfxEstablishManager(&dctx->base.pipelines, NIL, classes, &tmpClsConf);
         
 #if 0
-        tmpClsConf = _AfxVbufClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.vbuffers, classes, &tmpClsConf);
-        tmpClsConf = _AfxIbufClsConfig;
-        tmpClsConf.mmu = mmu;
-        AfxSetUpManager(&dctx->base.ibuffers, classes, &tmpClsConf);
+        tmpClsConf = _AfxVbufMgrCfg;
+        AfxEstablishManager(&dctx->base.vbuffers, classes, &tmpClsConf);
+        tmpClsConf = _AfxIbufMgrCfg;
+        AfxEstablishManager(&dctx->base.ibuffers, classes, &tmpClsConf);
 #endif
 
         afxNat queCnt = AfxCountDrawPorts(ddev);
 
         for (afxNat j = 0; j < queCnt; j++)
         {
-            afxDrawBridge dxge;
+            afxDrawBridge ddge;
             afxDrawBridgeConfig dqueSpec = { 0 };
 
-            if (AfxAcquireObjects(&ddev->ports[j].queues, 1, (afxObject*)&dxge, (void const*[]) { ddev, dctx, &j, &dqueSpec }))
+            if (AfxAcquireObjects(&ddev->ports[j].queues, 1, (afxObject*)&ddge, (void const*[]) { ddev, dctx, &j, &dqueSpec }))
             {
                 AfxThrowError();
                 _SglDctxFreeAllQueueSlots(dctx);
             }
             else
             {
-                AfxAssertObjects(1, &dxge, afxFcc_DXGE);
+                AfxAssertObjects(1, &ddge, afxFcc_DDGE);
             }
         }
 
@@ -372,16 +345,14 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
         if (err)
         {
-            _AfxUninstallChainedClasses(&dctx->base.classes);
-
-            AfxReleaseObjects(1, (void*[]) { dctx->base.mmu });
+            AfxCleanUpChainedManagers(&dctx->base.classes);
         }
     }
 
     return err;
 }
 
-_SGL afxClassConfig const _SglDctxClsConfig =
+_SGL afxClassConfig const _SglDctxMgrCfg =
 {
     .fcc = afxFcc_DCTX,
     .name = "DrawContext",

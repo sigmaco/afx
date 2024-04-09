@@ -20,7 +20,7 @@
 #include "qwadro/draw/afxDrawSystem.h"
 
 #if 0
-_SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge dxge, afxNat unit, afxBindSchema lego, afxBindSchema legt2)
+_SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge ddge, afxNat unit, afxBindSchema lego, afxBindSchema legt2)
 {
     afxError err = AFX_ERR_NONE;
     afxBindSchema legt = AfxLegoGetTemplate(lego);
@@ -45,22 +45,22 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge dxge, afxNat unit, afxBin
         case AFX_SHD_RES_TYPE_SAMPLER:
         {
             AfxAssertObject(data->smp, afxFcc_SAMP);
-            _SglDqueBindAndSyncSmp(dxge, binding, data->smp);
+            _SglDqueBindAndSyncSmp(ddge, binding, data->smp);
             break;
         }
         case AFX_SHD_RES_TYPE_SAMPLED_IMAGE:
         {
             AfxAssertObject(data->tex, afxFcc_RAS);
-            _SglDqueBindAndSyncTex(dxge, binding, data->tex);
+            _SglDqueBindAndSyncTex(ddge, binding, data->tex);
             break;
         }
         case AFX_SHD_RES_TYPE_COMBINED_IMAGE_SAMPLER:
         {
             AfxAssertObject(data->tex, afxFcc_RAS);
-            _SglDqueBindAndSyncTex(dxge, binding, data->tex);
+            _SglDqueBindAndSyncTex(ddge, binding, data->tex);
 
             AfxAssertObject(data->smp, afxFcc_SAMP);
-            _SglDqueBindAndSyncSmp(dxge, binding, data->smp);
+            _SglDqueBindAndSyncSmp(ddge, binding, data->smp);
 #if 0
             afxUri128 uri;
             AfxMakeUri128(&uri, NIL);
@@ -74,9 +74,9 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge dxge, afxNat unit, afxBin
 
             // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
 
-            //loc = gl->GetUniformBlockIndex(dxge->state.pip->gpuHandle[dxge->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
-            //gl->UniformBlockBinding(dxge->state.pip->gpuHandle[dxge->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
-            _SglDqueBindAndSyncBuf(dxge, binding, data->buf, data->offset, data->range, GL_UNIFORM_BUFFER, GL_DYNAMIC_DRAW);
+            //loc = gl->GetUniformBlockIndex(ddge->state.pip->gpuHandle[ddge->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
+            //gl->UniformBlockBinding(ddge->state.pip->gpuHandle[ddge->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
+            _SglDqueBindAndSyncBuf(ddge, binding, data->buf, data->offset, data->range, GL_UNIFORM_BUFFER, GL_DYNAMIC_DRAW);
             //gl->BindBufferRange(GL_UNIFORM_BUFFER, binding, point->resource.data.buf->gpuHandle, point->resource.data.base, point->resource.data.range); _SglThrowErrorOccuried();
 
             break;
@@ -90,35 +90,35 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge dxge, afxNat unit, afxBin
     return err;
 }
 
-_SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge dxge, afxNat unit, afxBindSchema lego)
+_SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge ddge, afxNat unit, afxBindSchema lego)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
     afxBindSchema legt = AfxLegoGetTemplate(lego);
     AfxAssertObject(legt, afxFcc_BSCH);
-    glVmt const* gl = &dxge->wglVmt;
+    glVmt const* gl = &ddge->wglVmt;
     
-    if (dxge->state.pip)
+    if (ddge->state.pip)
     {
         afxBindSchema legt2;
-        AfxPipelineRigEnumerateTemplates(AfxPipelineGetRig(dxge->state.pip), unit, 1, &legt2);
+        AfxPipelineRigEnumerateTemplates(AfxPipelineGetRig(ddge->state.pip), unit, 1, &legt2);
 
-        if (_SglDqueBindAndSyncLegoSub(dxge, unit, lego, legt2))
+        if (_SglDqueBindAndSyncLegoSub(ddge, unit, lego, legt2))
             AfxThrowError();
     }
     else
     {
         afxNat shdCnt;
         afxShader shd;
-        shdCnt = dxge->state.shdCnt;
+        shdCnt = ddge->state.shdCnt;
 
         for (afxNat i = 0; i < shdCnt; i++)
         {
-            shd = dxge->state.shd[i];
+            shd = ddge->state.shd[i];
             afxBindSchema legt2 = shd->legt[unit];
 
-            if (_SglDqueBindAndSyncLegoSub(dxge, unit, lego, legt2))
+            if (_SglDqueBindAndSyncLegoSub(ddge, unit, lego, legt2))
                 AfxThrowError();
         }
     }
@@ -126,7 +126,7 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge dxge, afxNat unit, afxBindSc
 }
 #endif 
 
-_SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat unit, afxBindSchema lego, glVmt const* gl)
+_SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, GLuint glHandle, afxNat unit, afxBindSchema lego, glVmt const* gl)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
@@ -185,8 +185,8 @@ _SGL afxError _SglDpuBindAndResolveLego(sglDpuIdd* dpu, GLuint glHandle, afxNat 
         {
             // https://stackoverflow.com/questions/44629165/bind-multiple-uniform-buffer-objects
 
-            //loc = gl->GetUniformBlockIndex(dxge->state.pip->gpuHandle[dxge->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
-            //gl->UniformBlockBinding(dxge->state.pip->gpuHandle[dxge->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
+            //loc = gl->GetUniformBlockIndex(ddge->state.pip->gpuHandle[ddge->queueIdx], entry->name.buf); _SglThrowErrorOccuried();
+            //gl->UniformBlockBinding(ddge->state.pip->gpuHandle[ddge->queueIdx], loc, ((i * _SGL_MAX_ENTRY_PER_LEGO) + entry->binding));
 
             GLuint unifBlckIdx = gl->GetUniformBlockIndex(glHandle, rawName); _SglThrowErrorOccuried();
 
@@ -263,8 +263,6 @@ _SGL afxError _SglBschDtor(afxBindSchema lego)
     AfxAssertObjects(1, &lego, afxFcc_BSCH);
 
     afxDrawContext dctx = AfxGetObjectProvider(lego);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     if (lego->base.entries)
     {
@@ -287,9 +285,6 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
     afxPipelineRigBlueprint const *blueprint = ((afxPipelineRigBlueprint const *)cookie->udd[0]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(lego);
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
-
     AfxAssert(blueprint);
 
     afxNat bindCnt = AfxCountArrayElements(&blueprint->bindings);
@@ -298,7 +293,7 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
     lego->base.entryCnt = 0;
     lego->base.entries = NIL;
 
-    if (bindCnt && !(lego->base.entries = AfxAllocate(bindCnt, sizeof(lego->base.entries[0]), 0, AfxHint()))) AfxThrowError();
+    if (bindCnt && !(lego->base.entries = AfxAllocate(bindCnt, sizeof(lego->base.entries[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < bindCnt; i++)
@@ -342,7 +337,7 @@ _SGL afxError _SglBschCtor(afxBindSchema lego, afxCookie const* cookie)
     return err;
 }
 
-_SGL afxClassConfig const _SglBschClsConfig =
+_SGL afxClassConfig const _SglBschMgrCfg =
 {
     .fcc = afxFcc_BSCH,
     .name = "Lego",

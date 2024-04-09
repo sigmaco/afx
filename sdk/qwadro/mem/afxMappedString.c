@@ -104,7 +104,7 @@ _AFX afxError _AfxStrcDtor(afxStringBase strc)
     return err;
 }
 
-_AFX afxClassConfig _AfxStrbClsConfig =
+_AFX afxClassConfig _AfxStrbMgrCfg =
 {
     .fcc = afxFcc_STRB,
     .name = "String Base",

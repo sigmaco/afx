@@ -79,7 +79,7 @@ AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
     case 2: color = 0x00ff0000; break; // green : regular
     case 3: color = 0xFF00FF00; break; // blue : assistence
     case 4: color = 0x00FFFF00; break; // turquish
-    case 5: color = 0xFF00FF00; break; // turquish
+    case 5: color = 0xFF00FF00; break; // purple
 
     case 6: color = 0xFFFF0000; break; // yellow
     case 7: color = 0xFFFF00FF; break; // yellow : advertence (aka warning)
@@ -111,7 +111,7 @@ AFXINL afxResult _AfxDbgLogFn(afxNat ch, afxChar const* msg, afxNat len)
     return 1;
 }
 
-afxResult AfxDbgLogf(afxNat ch, afxHint const hint, afxChar const* msg, ...)
+afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -158,7 +158,7 @@ afxResult AfxDbgLog(afxNat ch, afxChar const* msg, afxNat len)
 }
 
 #if 0
-void AfxLogCall_(afxHint const hint, afxChar const* args, ...)
+void AfxLogCall_(afxHere const hint, afxChar const* args, ...)
 {
     if (_AfxDbgLock())
     {
@@ -184,7 +184,7 @@ void AfxLogCall_(afxHint const hint, afxChar const* args, ...)
     }
 }
 
-void AfxLogComment_(afxHint const hint, afxChar const* msg, ...)
+void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -223,7 +223,7 @@ void AfxLogComment_(afxHint const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogEcho_(afxHint const hint, afxChar const* msg, ...)
+void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -262,7 +262,7 @@ void AfxLogEcho_(afxHint const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogAssistence_(afxHint const hint, afxChar const* msg, ...)
+void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -294,7 +294,7 @@ void AfxLogAssistence_(afxHint const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogAdvertence_(afxHint const hint, afxChar const* msg, ...)
+void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -326,7 +326,7 @@ void AfxLogAdvertence_(afxHint const hint, afxChar const* msg, ...)
     }
 }
 
-void AfxLogError_(afxHint const hint, afxChar const* msg, ...)
+void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
 {
     if (_AfxDbgLock())
     {
@@ -377,7 +377,7 @@ afxResult _AfxDbgUnlock(void)
             if (AfxGetSystem(&sys))
             {
                 afxNat unitUnlockerIdx;
-                AfxGetThreadingId(&unitUnlockerIdx);
+                AfxGetTid(&unitUnlockerIdx);
                 //afxError err;
                 //AfxAssert(unitUnlockerIdx == debugger.unitLockerIdx);
             }
@@ -401,7 +401,7 @@ afxResult _AfxDbgLock(void)
             
             if (AfxGetSystem(&sys))
             {
-                AfxGetThreadingId(&debugger.unitLockerIdx);
+                AfxGetTid(&debugger.unitLockerIdx);
 
                 if (oldUnitIdx != debugger.unitLockerIdx)
                 {
@@ -548,7 +548,7 @@ afxResult _AfxDbgAttach(afxChar const* file)
     return FALSE;
 }
 
-_AFX void AfxCatchError_(afxError err_, afxHint const hint)
+_AFX void AfxCatchError_(afxError err_, afxHere const hint)
 {
     afxError err = NIL;
     AfxAssert(err_);

@@ -120,12 +120,14 @@ _AFXINL afxNat AfxPushLinkage(afxLinkage *lnk, afxChain *ch)
     }
     else
     {
+        afxInt cnt = ++ch->cnt;
+        ch->cnt = 0;
         afxLinkage *anchor = &(ch)->anchor;
         lnk->next = (anchor)->next;
         lnk->prev = anchor;
         (anchor)->next->prev = lnk;
         anchor->next = lnk;
-        lnkIdx = ch->cnt++;
+        lnkIdx = (ch->cnt = cnt);
     }
     return lnkIdx;
 }
@@ -143,13 +145,14 @@ _AFXINL afxNat AfxPushBackLinkage(afxLinkage *lnk, afxChain *ch)
     }
     else
     {
+        afxInt cnt = ++ch->cnt;
+        ch->cnt = 0;
         afxLinkage *anchor = &(ch)->anchor;
         lnk->prev = (anchor)->prev;
         lnk->next = anchor;
         (anchor)->prev->next = lnk;
         anchor->prev = lnk;
-        lnkIdx = ch->cnt;
-        ch->cnt++;
+        lnkIdx = (ch->cnt = cnt);
     }
     return lnkIdx;
 }
@@ -158,15 +161,19 @@ _AFXINL void AfxPopLinkage(afxLinkage *lnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(lnk);
+
+    afxChain* ch = lnk->chain;
+    afxInt cnt = ch ? cnt = --ch->cnt, ch->cnt = 0 : 0;
+
     afxLinkage* prev = (lnk)->prev;
     afxLinkage* next = (lnk)->next;
     prev->next = next;
     next->prev = prev;
     lnk->next = (lnk->prev = lnk);
 
-    if (lnk->chain)
+    if (ch)
     {
-        --lnk->chain->cnt;
+        ch->cnt = cnt;
         lnk->chain = NIL;
     }
 }

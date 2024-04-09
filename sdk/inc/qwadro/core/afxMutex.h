@@ -46,7 +46,7 @@ AFX void            AfxCleanUpMutex(afxMutex* mtx);
 
 AFX afxError        AfxLockMutex(afxMutex* mtx);
 AFX afxError        AfxLockMutexTimed(afxMutex* mtx, afxTimeSpec const* ts);
-AFX afxResult       AfxTryLockMutex(afxMutex* mtx);
+AFX afxBool         AfxTryLockMutex(afxMutex* mtx);
 AFX afxError        AfxUnlockMutex(afxMutex* mtx);
 
 #endif//AFX_MUTEX_H

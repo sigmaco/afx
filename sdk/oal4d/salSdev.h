@@ -220,6 +220,7 @@ struct _afxSdevIdd
 {
     afxNat      spuCnt;
     salSpuIdd*  spus;
+    afxThread   dedThread;
 };
 
 AFX_OBJECT(afxSoundContext)

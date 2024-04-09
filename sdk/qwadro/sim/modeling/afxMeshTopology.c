@@ -397,12 +397,12 @@ _AKX afxError _AfxMshtCtor(afxMeshTopology msht, afxCookie const* cookie)
 
     afxIndexedTriangle* tris;
 
-    if (!(tris = AfxAllocate(triCnt, sizeof(tris[0]), 0, AfxHint()))) AfxThrowError();
+    if (!(tris = AfxAllocate(triCnt, sizeof(tris[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         afxMeshSurface* surfaces;
 
-        if (!(surfaces = AfxAllocate(surfCnt, sizeof(surfaces[0]), 0, AfxHint()))) AfxThrowError();
+        if (!(surfaces = AfxAllocate(surfCnt, sizeof(surfaces[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             msht->triCnt = triCnt;
@@ -483,7 +483,7 @@ _AKX afxClassSuballocation mshtSubs[] =
     { sizeof(AFX_OBJECT(afxMeshTopology)), 0, offsetof(AFX_OBJECT(afxMeshTopology), triCnt), offsetof(AFX_OBJECT(afxMeshTopology), tris) },
 };
 
-_AKX afxClassConfig _AfxMshtClsConfig =
+_AKX afxClassConfig _AfxMshtMgrCfg =
 {
     .fcc = afxFcc_MSHT,
     .name = "Mesh Topology",

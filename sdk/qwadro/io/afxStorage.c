@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// This content is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
 #include <sys/stat.h>
 #include <stdio.h>
@@ -248,7 +248,7 @@ _AFX afxError _DismountStorageUnit(afxStorage fsys, afxStorageUnit* fsto)
     afxError err = AFX_ERR_NONE;
     AfxAssert(fsto);
 
-    //AfxLogEcho("Dismounting storage unit #u... <%.*s>('%.*s'),%x", AfxIdentifyObject(fsys), 2,"  "/*AfxPushString(AfxGetUriString(&fsys->point.uri))*/, 2, "  "/*AfxPushString(AfxGetUriString(&fsto->rootPath))*/, fsto->flags);
+    //AfxLogEcho("Dismounting storage unit #u... <%.*s>('%.*s'),%x", AfxGetObjectId(fsys), 2,"  "/*AfxPushString(AfxGetUriString(&fsys->point.uri))*/, 2, "  "/*AfxPushString(AfxGetUriString(&fsto->rootPath))*/, fsto->flags);
 
     AfxPopLinkage(&fsto->fsys);
 
@@ -349,7 +349,7 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
     {
         AfxLogEcho("Mounting storage unit... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
 
-        afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHint());
+        afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHere());
 
         if (!fsto) AfxThrowError();
         else
@@ -415,7 +415,7 @@ _AFX afxError _AfxFsysDtor(afxStorage fsys)
     return err;
 }
 
-_AFX afxClassConfig const _AfxFsysClsConfig =
+_AFX afxClassConfig const _AfxFsysMgrCfg =
 {
     .fcc = afxFcc_FSYS,
     .name = "Storage",

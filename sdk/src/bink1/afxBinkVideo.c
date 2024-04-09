@@ -24,7 +24,7 @@
 #include "afxBinkProxy.h"
 #include "afxBinkVideo.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/pipe/afxDrawStream.h"
+#include "qwadro/draw/dev/afxDrawStream.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
 static void Start_us_count(afxNat64* out_count)
@@ -135,14 +135,14 @@ void LockBinkTextures(afxBinkVideo *bnk)
 
     for (afxInt i = 0; i < bnk->buffers.TotalFrames; ++i)
     {
-        afxNat rowLen;
+        afxNat rowLen, rgnSiz;
         afxNat rasCnt = (bnk->hasAlphaPlane) ? 4 : 3;
 
         for (afxNat j = 0; j < rasCnt; j++)
         {
             AfxGetRasterExtent(bnk->rasters[i][j], 0, rgn.whd);
 
-            if ((bnk->buffers.Frames[i][j].Buffer = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, NIL, &rowLen))) // = lr.pBits;
+            if ((bnk->buffers.Frames[i][j].Buffer = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, &rgnSiz, &rowLen))) // = lr.pBits;
                 bnk->buffers.Frames[i][j].BufferPitch = rowLen;// = lr.Pitch;
         }
     }
@@ -253,7 +253,7 @@ _AFXEXPORT afxError AfxBinkClose(afxBinkVideo *bnk)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
+_AFXEXPORT afxError AfxOpenVideoBink(afxBinkVideo *bnk, afxUri const *uri)
 {
     afxError err = AFX_ERR_NONE;
     afxUri2048 uri2;
@@ -287,7 +287,7 @@ _AFXEXPORT afxError AfxBinkOpen(afxBinkVideo *bnk, afxUri const *uri)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkDrop(afxBinkVideo *bnk)
+_AFXEXPORT afxError AfxDropVideoBink(afxBinkVideo *bnk)
 {
     afxError err = AFX_ERR_NONE;
     AfxBinkClose(bnk);
@@ -303,7 +303,7 @@ _AFXEXPORT afxError AfxBinkDrop(afxBinkVideo *bnk)
     return err;
 }
 
-_AFXEXPORT afxError AfxBinkDeploy(afxBinkVideo *bnk, afxDrawContext dctx)
+_AFXEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
     bnk->running = FALSE;

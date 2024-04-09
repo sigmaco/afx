@@ -18,7 +18,6 @@
 #define AFX_STRING_H
 
 #include "qwadro/core/afxRawString.h"
-#include "qwadro/core/afxDebug.h"
 #include "qwadro/core/afxFcc.h"
 
 #define AFX_STR_MAX_LEN AFX_N32_MAX

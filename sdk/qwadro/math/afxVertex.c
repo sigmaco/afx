@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #include "qwadro/math/afxVertex.h"
 
 _AFXINL afxReal AfxGetDistanceBetweenV3d(afxV3d const v, afxV3d const other)

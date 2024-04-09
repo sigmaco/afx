@@ -57,7 +57,7 @@ _A4D afxError _SalSbufCtor(afxSoundBuffer sbuf, afxCookie const* cookie)
     afxMmu mmu = AfxGetSoundContextMmu(sctx);
     AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
-    if (!(sbuf->base.bytemap = AfxAllocate(mmu, sizeof(afxByte), sbuf->base.siz, 0, AfxHint()))) AfxThrowError();
+    if (!(sbuf->base.bytemap = AfxAllocate(mmu, sizeof(afxByte), sbuf->base.siz, 0, AfxHere()))) AfxThrowError();
     else
     {
         if (spec->src)
@@ -79,7 +79,7 @@ _A4D afxError _SalSbufCtor(afxSoundBuffer sbuf, afxCookie const* cookie)
     return err;
 }
 
-_A4D afxClassConfig _SalSbufClsConfig =
+_A4D afxClassConfig _SalSbufMgrCfg =
 {
     .fcc = afxFcc_SBUF,
     .name = "Sound Buffer",

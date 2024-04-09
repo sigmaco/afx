@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
+
 #define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
 
@@ -279,7 +281,7 @@ _AFX void* LoadFileSection(afxUrdSection const* sec, void *DestinationMemory, vo
         else
         {
             //use Section->InternalAlignment
-            Result = AfxAllocate(1, alignedSiz, sec->internalAlignment, AfxHint());
+            Result = AfxAllocate(1, alignedSiz, sec->internalAlignment, AfxHere());
             result = Result;
         }
 
@@ -288,7 +290,7 @@ _AFX void* LoadFileSection(afxUrdSection const* sec, void *DestinationMemory, vo
             if (sec->fmt)
             {
                 afxNat v8 = AfxGetCompressionPaddingSize(sec->fmt);
-                void *v9 = AfxAllocate(1, sec->dataSiz + v8, 0, AfxHint());
+                void *v9 = AfxAllocate(1, sec->dataSiz + v8, 0, AfxHere());
 
                 if (v9)
                 {
@@ -482,7 +484,7 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
 #endif
 
 #if 0
-_AFX afxClassConfig const _AfxFileClsConfig =
+_AFX afxClassConfig const _AfxFileMgrCfg =
 {
     .fcc = afxFcc_FILE,
     .name = "File",
@@ -612,7 +614,7 @@ _AFX afxError AfxReloadFile(afxStream iob, afxUri const *uri)
     AfxMakeUri2048(&path, NIL);
     AfxResolveUri(afxFileFlag_R, uri, &path.uri);
 
-    AfxLogEcho("Reloading file %u... <%.*s>('%.*s')", AfxIdentifyObject(iob), AfxPushString(AfxGetUriString(uri)), AfxPushString(AfxGetUriString(&path.uri)));
+    AfxLogEcho("Reloading file %u... <%.*s>('%.*s')", AfxGetObjectId(iob), AfxPushString(AfxGetUriString(uri)), AfxPushString(AfxGetUriString(&path.uri)));
 
     afxChar const *rawName = AfxGetUriStorage(&path.uri, 0);
     FILE* fd;

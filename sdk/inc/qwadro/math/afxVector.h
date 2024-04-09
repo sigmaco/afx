@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
+
 #ifndef AFX_VECTOR_H
 #define AFX_VECTOR_H
 

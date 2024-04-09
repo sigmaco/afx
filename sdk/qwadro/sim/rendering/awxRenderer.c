@@ -51,7 +51,7 @@ _AKX afxError AwxCmdDrawBodies(afxDrawStream diob, awxRenderer rnd, afxReal dt, 
         afxM4d m, m2;
         //AfxComputeModelDisplacement(bod->mdl, m);
         //afxReal64 ct, dt;
-        //AfxQueryThreadTime(&ct, &dt);
+        //AfxGetThreadTime(&ct, &dt);
         //AwxUpdateBodyMatrix(bod, dt, FALSE, bod->placement, bod->placement);
         AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, bod->placement, rnd->lp, rnd->wp, 0.0);
         //AwxSampleBodyAnimationsLODSparse(bod, 0, bod->cachedBoneCnt, rnd->lp, 0.0, NIL);
@@ -596,7 +596,7 @@ _AKX afxError _AfxRndCtor(awxRenderer rnd, afxCookie const *cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxRndClsConfig =
+_AKX afxClassConfig _AfxRndMgrCfg =
 {
     .fcc = afxFcc_RND,
     .name = "Renderer",

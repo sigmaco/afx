@@ -78,7 +78,7 @@ _AFXINL afxError AfxAllocateString(afxRestring* str, afxNat cap, void const *sta
 
     void *buf = NIL;
     
-    if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHint())))
+    if (effectiveCap && !(buf = AfxAllocate(1, effectiveCap, 0, AfxHere())))
         AfxThrowError();
 
     AfxMakeRestring(str, effectiveCap, buf, 0);
@@ -113,7 +113,7 @@ _AFXINL afxError AfxReallocateString(afxRestring* str, afxNat cap, void const *s
         afxNat effectiveRange = len > effectiveCap ? effectiveCap : len; // truncate to capacity when string has space.
         AfxAssert(effectiveRange);
 
-        if (!(buf = AfxReallocate(NIL, str->startRW, effectiveCap, 0, AfxHint()))) AfxThrowError();
+        if (!(buf = AfxReallocate(NIL, str->startRW, effectiveCap, 0, AfxHere()))) AfxThrowError();
         else
         {
             str->len = effectiveRange;

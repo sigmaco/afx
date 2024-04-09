@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_QUERY_POOL_C
 #include "qwadro/draw/afxDrawSystem.h"

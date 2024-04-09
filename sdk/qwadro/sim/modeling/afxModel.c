@@ -201,12 +201,12 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, af
 
                 afxNat biasCnt = msh->biasCnt;
 
-                if (biasCnt && !(biasToJointMap = AfxAllocate(biasCnt, sizeof(biasToJointMap[0]), 0, AfxHint())))
+                if (biasCnt && !(biasToJointMap = AfxAllocate(biasCnt, sizeof(biasToJointMap[0]), 0, AfxHere())))
                     AfxThrowError();
                 else
                 {
                     if (!transplanted) biasFromJointMap = biasToJointMap;
-                    else if (biasCnt && !(biasFromJointMap = AfxAllocate(biasCnt, sizeof(biasFromJointMap[0]), 0, AfxHint())))
+                    else if (biasCnt && !(biasFromJointMap = AfxAllocate(biasCnt, sizeof(biasFromJointMap[0]), 0, AfxHere())))
                         AfxThrowError();
 
                     if (!err)
@@ -414,7 +414,7 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
         mdl->rigCnt = 0;
         mdl->rigs = NIL;
 
-        if (rigCnt && !(mdl->rigs = AfxAllocate(rigCnt, sizeof(mdl->rigs[0]), 0, AfxHint()))) AfxThrowError();
+        if (rigCnt && !(mdl->rigs = AfxAllocate(rigCnt, sizeof(mdl->rigs[0]), 0, AfxHere()))) AfxThrowError();
         else
         {
             if (rigCnt)
@@ -450,7 +450,7 @@ _AKX afxError _AfxMdlCtor(afxModel mdl, afxCookie const *cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxMdlClsConfig =
+_AKX afxClassConfig _AfxMdlMgrCfg =
 {
     .fcc = afxFcc_MDL,
     .name = "Model",

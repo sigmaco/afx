@@ -14,6 +14,8 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+// This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
 #define _AFX_DRAW_C
 #define _AFX_PIPELINE_C
 #include "qwadro/draw/afxDrawSystem.h"
@@ -201,9 +203,6 @@ _AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput 
     afxError err = AFX_ERR_NONE;
 
     afxPipeline pip = NIL;
-
-    afxMmu mmu = AfxGetDrawContextMmu(dctx);
-    AfxAssertObjects(1, &mmu, afxFcc_MMU);
 
     AfxAssert(uri);
     AfxAssert(!AfxUriIsBlank(uri));

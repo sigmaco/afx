@@ -76,9 +76,9 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 
     // Note: because the NegZ axis is forward, we have to invert the way you'd normally
     // think about the 'W' or 'S' key's action.
-    afxReal64 ForwardSpeed = (AfxGetKeyPressure(0, AFX_KEY_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_S) ? 1 : 0.0f);
-    afxReal64 RightSpeed = (AfxGetKeyPressure(0, AFX_KEY_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_D) ? 1 : 0.0f);
-    afxReal64 UpSpeed = (AfxGetKeyPressure(0, AFX_KEY_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, AFX_KEY_E) ? 1 : 0.0f);
+    afxReal64 ForwardSpeed = (AfxGetKeyPressure(0, afxKey_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_S) ? 1 : 0.0f);
+    afxReal64 RightSpeed = (AfxGetKeyPressure(0, afxKey_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_D) ? 1 : 0.0f);
+    afxReal64 UpSpeed = (AfxGetKeyPressure(0, afxKey_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_E) ? 1 : 0.0f);
     afxV3d v =
     {
         MovementThisFrame * RightSpeed,
@@ -168,19 +168,19 @@ _AFXEXPORT afxError SkyboxProc(afxApplication app, afxThreadOpcode opcode)
     switch (opcode)
     {
     //case 0: break;
-    case AFX_THR_OPCODE_RUN:
+    case afxThreadEvent_RUN:
     {
         Once(app);
         break;
     }
-    case AFX_THR_OPCODE_QUIT:
+    case afxThreadEvent_QUIT:
     {
         break;
     }
     default:
     {
         afxReal64 dt;
-        AfxQueryThreadTime(NIL, &dt);
+        AfxGetThreadTime(NIL, &dt);
         UpdateFrameMovement(dt);
         break;
     }

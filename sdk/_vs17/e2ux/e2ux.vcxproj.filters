@@ -24,6 +24,9 @@
     <ClCompile Include="..\..\qwadro\ux\afxWidget.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\afxApplication_w32.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\ux\afxApplication.h">

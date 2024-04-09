@@ -42,7 +42,6 @@
 #endif//__e2sound__
 
 //AFX_DEFINE_HANDLE(afxSoundSystem);
-AFX_DEFINE_HANDLE(afxSoundThread);
 AFX_DEFINE_HANDLE(afxSoundDevice);
 AFX_DEFINE_HANDLE(afxSoundContext);
 AFX_DEFINE_HANDLE(afxSoundOutput);

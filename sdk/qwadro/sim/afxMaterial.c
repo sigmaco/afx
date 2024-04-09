@@ -247,7 +247,7 @@ _AKX afxError _AfxMtlCtor(afxMaterial mtl, afxCookie const *cookie)
         mtl->mapCnt = 0;
         mtl->maps = NIL;
     }
-    else if (!(mtl->maps = AfxAllocate(mapCnt, sizeof(mtl->maps[0]), 0, AfxHint()))) AfxThrowError();
+    else if (!(mtl->maps = AfxAllocate(mapCnt, sizeof(mtl->maps[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
         for (afxNat i = 0; i < mapCnt; i++)
@@ -322,7 +322,7 @@ _AKX afxError AfxAcquireMaterial(afxSimulation sim, afxString const* id, afxRast
     return err;
 }
 
-_AKX afxClassConfig _AfxMtlClsConfig =
+_AKX afxClassConfig _AfxMtlMgrCfg =
 {
     .fcc = afxFcc_MTL,
     .name = "Material",

@@ -260,7 +260,7 @@ _AKX afxError AwxUpdateVertexData(awxVertexData vtd, afxNat attrIdx, afxNat base
     afxVertexFormat fmt = vtd->attrs[attrIdx].fmt;
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
-    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+    if (!vtd->attrs[attrIdx].data && !(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
         AfxThrowError();
 
     if (!err)
@@ -302,7 +302,7 @@ _AKX afxError AwxFillVertexData(awxVertexData vtd, afxNat attrIdx, afxNat baseVt
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
             AfxThrowError();
 
     if (!err)
@@ -325,7 +325,7 @@ _AKX afxError AwxNormalizeVertexData(awxVertexData vtd, afxNat attrIdx, afxNat b
     afxNat32 unitSiz = AfxVertexFormatGetSize(fmt);
 
     if (!vtd->attrs[attrIdx].data)
-        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHint())))
+        if (!(vtd->attrs[attrIdx].data = AfxAllocate(vtd->vtxCnt, unitSiz, AFX_SIMD_ALIGN, AfxHere())))
             AfxThrowError();
 
     if (!err)
@@ -416,7 +416,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
     afxNat attrCnt = spec->attrCnt;
     awxVertexDataAttr* attrs;
 
-    if (!(attrs = AfxAllocate(attrCnt, sizeof(attrs[0]), NIL, AfxHint()))) AfxThrowError();
+    if (!(attrs = AfxAllocate(attrCnt, sizeof(attrs[0]), NIL, AfxHere()))) AfxThrowError();
     else
     {
         vtd->attrCnt = attrCnt;
@@ -461,7 +461,7 @@ _AKX afxError _AfxVtdCtor(awxVertexData vtd, afxCookie const* cookie)
     return err;
 }
 
-_AKX afxClassConfig _AfxVtdClsConfig =
+_AKX afxClassConfig _AfxVtdMgrCfg =
 {
     .fcc = afxFcc_VTD,
     .name = "Vertex Data",

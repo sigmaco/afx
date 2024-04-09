@@ -80,8 +80,8 @@ AFX afxError    AfxEmulateMouseButtonActions(afxNat port, afxNat cnt, afxMouseBu
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxBool     AfxGetMouse(afxNat port, afxMouse* mse);
+AFX afxBool     AfxGetMouse(afxNat port, afxMouse* mouse);
 
-AFX afxError    AfxAcquireMouse(afxNat port, afxMouse* mse);
+AFX afxError    AfxAcquireMouse(afxNat port, afxMouse* mouse);
 
 #endif//AFX_MOUSE_H

@@ -55,9 +55,9 @@ typedef afxBool (*afxEventFilterFn)(afxObject obj, afxObject watched, afxEvent *
 AFX_DEFINE_STRUCT(afxObjectBase)
 {
     afxFcc              fcc; // OBJ
-    afxManager*           cls;
-    /*afxAtomic*/afxInt           refCnt;
-    afxNat      instIdx;
+    afxManager*         mgr;
+    afxAtomic           refCnt;
+    afxNat              instIdx;
     afxList             signaling; // slot holders
     afxList             handling; // slot helds
     
@@ -66,7 +66,7 @@ AFX_DEFINE_STRUCT(afxObjectBase)
     afxNat32            tid;
     afxObjectFlags      flags;
 
-    afxAddress          data[];
+    afxAddress          afxSimd(data[1]);
 };
 
 AFX_DEFINE_STRUCT(afxEventFilter)
@@ -78,7 +78,7 @@ AFX_DEFINE_STRUCT(afxEventFilter)
 
 AFX afxError AfxObjectInstallEventFilter(afxObject obj, afxObject filter); // if filter is already filtering this object, callback will be replaced.
 AFX afxError AfxObjectRemoveEventFilter(afxObject obj, afxObject filter);
-AFX afxBool AfxObjectEmitEvent(afxObject obj, afxEvent *ev);
+AFX afxBool AfxNotifyObject(afxObject obj, afxEvent *ev);
 
 AFX_DEFINE_STRUCT(afxConnection)
 {
@@ -98,11 +98,11 @@ AFX_DEFINE_STRUCT(afxConnection)
     afxInt32            tenacity; // reference counter
 };
 
-AFX afxResult           AfxObjectTestFcc(afxObject obj, afxFcc fcc);
+AFX afxResult           AfxTestObjectFcc(afxObject obj, afxFcc fcc);
 AFX afxFcc              AfxObjectGetFcc(afxObject obj);
 AFX afxChar const*      AfxObjectGetFccAsString(afxObject obj);
 
-AFX afxManager*           AfxGetClass(afxObject obj);
+AFX afxManager*         AfxGetClass(afxObject obj);
 AFX void*               AfxGetObjectProvider(afxObject obj);
 AFX afxNat              AfxObjectGetIndex(afxObject obj, afxBool b2f);
 AFX void const*         AfxObjectGetVmt(afxObject obj);
@@ -110,7 +110,7 @@ AFXINL afxBool          AfxObjectInherits(afxObject obj, afxManager const* cls);
 
 AFX afxInt32            AfxGetRefCount(afxObject obj);
 
-AFX afxNat32            AfxObjectGetTid(afxObject obj);
+AFX afxNat32            AfxGetObjectTid(afxObject obj);
 
 AFX afxResult           AfxObjectSignalConnections(afxObject obj, afxEventId evtype, void *data);
 AFX afxConnection*      AfxObjectConnect(afxObject obj, afxObject holder, void(*handler)(afxObject,afxEvent*), afxNat32 filter, afxConnection *objc);
@@ -143,8 +143,8 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 #   define AfxAssertConnection(var_) ((!!((var_) && ((var_)->fcc == afxFcc_OBJC)))||(err = (afxError)__LINE__,AfxLogError("%s\n    %s",AFX_STRINGIFY((var_)),errorMsg[AFXERR_INVALID]),0))
 
-#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxObject)obj_), (fcc_), AfxHint(), AFX_STRINGIFY((obj_))));
-#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxObject)obj_), (fcc_), AfxHint(), AFX_STRINGIFY((obj_))))));
+#   define AfxAssertObject(obj_, fcc_) (err = AfxObjectAssert(((afxObject)obj_), (fcc_), AfxHere(), AFX_STRINGIFY((obj_))));
+#   define AfxTryAssertObject(obj_, fcc_) ((!obj_) || ((obj_) && (err = AfxObjectAssert(((afxObject)obj_), (fcc_), AfxHere(), AFX_STRINGIFY((obj_))))));
 
 #else
 
@@ -157,13 +157,13 @@ AFXINL afxError         AfxConnectionSetFilter(afxConnection *objc, afxNat32 fil
 
 AFX afxError    AfxAcquireObjects(afxManager* cls, afxNat cnt, afxObject handles[], void const* udd[]);
 AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject handles[]);
-AFX afxBool     AfxReleaseObjects(afxNat cnt, void* handles[]);
+AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject handles[]);
 
-AFX afxResult   _AfxAssertObjects(afxNat cnt, afxObject const handles[], afxFcc fcc);
+AFX afxBool     _AfxAssertObjects(afxNat cnt, afxObject const handles[], afxFcc fcc);
 #define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_)))
 #define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxObject const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_))))
 
-AFX afxNat      AfxIdentifyObject(afxObject obj);
+AFX afxNat      AfxGetObjectId(afxObject obj);
 
 AFX afxResult   AfxWaitForObject(afxObject obj, afxTime timeout);
 
