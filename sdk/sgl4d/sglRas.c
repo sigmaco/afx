@@ -70,6 +70,7 @@ _SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afx
     return err;
 }
 
+# if 0
 _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras) // ras must be bound
 {
     afxError err = AFX_ERR_NONE;
@@ -118,14 +119,14 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
                 data = NIL;
 
                 //if (!isSurface)
-                    data = AfxOpenRasterRegion(ras, &rgn, afxRasterAccess_R, &rgnSize, &rowSiz);
+                    data = AfxMapRaster(ras, &rgn, afxRasterAccess_R, &rgnSize, &rowSiz);
 
                 AfxAssert(data);
                 gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
                 _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, (afxAddress const)data);
 
                 //if (!isSurface)
-                    AfxCloseRasterRegion(ras, &rgn);
+                    AfxUnmapRaster(ras, &rgn);
             }
         }
         break;
@@ -149,14 +150,14 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
                 data = NIL;
 
                 //if (!isSurface)
-                data = AfxOpenRasterRegion(ras, &rgn, afxRasterAccess_R, &rgnSize, &rowSiz);
+                data = AfxMapRaster(ras, &rgn, afxRasterAccess_R, &rgnSize, &rowSiz);
 
                 AfxAssert(data);
                 gl->PixelStorei(GL_UNPACK_ALIGNMENT, gpuUnpackAlign);
                 _SglTexSubImage(gl, glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, (afxAddress const)data);
 
                 //if (!isSurface)
-                AfxCloseRasterRegion(ras, &rgn);
+                AfxUnmapRaster(ras, &rgn);
             }
         }
         break;
@@ -164,8 +165,9 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
     }
     return err;
 }
+#endif
 
-_SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxRaster ras)
+_SGL afxError DpuBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxRaster ras)
 {
     //AfxEntry("img=%p", img);
     afxError err = AFX_ERR_NONE;
@@ -187,6 +189,7 @@ _SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glU
         GLenum glTarget = ras->glTarget;            
         afxBool bound = FALSE;
 
+        _SglThrowErrorOccuried();
         gl->ActiveTexture(GL_TEXTURE0 + glUnit); _SglThrowErrorOccuried();
 
         if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
@@ -278,6 +281,7 @@ _SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glU
                 bound = TRUE;
             }
 
+#if 0
             _SglTexFlushDevice(gl, glTarget, ras);
             ras->lastUpdOffset[0] = 0;
             ras->lastUpdOffset[1] = 0;
@@ -285,6 +289,7 @@ _SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glU
             ras->lastUpdRange[0] = 0;
             ras->lastUpdRange[1] = 0;
             ras->lastUpdRange[2] = 0;
+#endif
         }
 
         if (bound && !(bindFlags & sglBindFlag_KEEP))
@@ -298,73 +303,7 @@ _SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glU
     return err;
 }
 
-_SGL afxError _AfxCloseTextureRegion(afxRaster ras, afxRasterRegion const *rgn)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    (void)rgn;
-    
-    --ras->locked;
-
-    return err;
-}
-
-_SGL afxError _AfxOpenTextureRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat *size, afxNat* rowLen, void**ptr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssert(rgn);
-    AfxAssert(ras->base.lodCnt > rgn->lodIdx);
-    AfxAssertRange(ras->base.layerCnt, rgn->baseLayer, rgn->layerCnt);
-    AfxAssertRange(ras->base.whd[0], rgn->offset[0], rgn->whd[0]);
-    AfxAssertRange(ras->base.whd[1], rgn->offset[1], rgn->whd[1]);
-    AfxAssertRange(ras->base.whd[2], rgn->offset[2], rgn->whd[2]);
-
-    //afxDrawContext dctx = AfxGetObjectProvider(ras);
-
-    if (!ras->base.maps)
-        AfxBufferizeRaster(ras); // force texture allocation
-
-    void *map = NIL;
-
-    afxNat offset = AfxDetermineRasterOffset(ras, rgn->lodIdx, rgn->baseLayer, rgn->offset);
-
-    afxNat layerSiz;
-    AfxAssert(rowLen);
-    AfxDetermineRasterStride(ras, rgn->lodIdx, rowLen, &layerSiz);
-
-    if (size)
-        *size = AfxMeasureRasterRegion(ras, rgn);
-
-    map = &(ras->base.maps[offset]);
-
-    ++ras->locked;
-
-    ras->lastUpdImgBase = AfxMin(ras->lastUpdImgBase, rgn->baseLayer);
-    ras->lastUpdImgRange = AfxMax(ras->lastUpdImgRange, rgn->layerCnt);
-    ras->lastUpdLodBase = AfxMin(ras->lastUpdLodBase, rgn->lodIdx);
-    ras->lastUpdLodRange = AfxMax(ras->lastUpdLodRange, rgn->lodIdx + 1);
-
-    ras->lastUpdOffset[0] = AfxMin(ras->lastUpdOffset[0], rgn->offset[0]);
-    ras->lastUpdOffset[1] = AfxMin(ras->lastUpdOffset[1], rgn->offset[1]);
-    ras->lastUpdOffset[2] = AfxMin(ras->lastUpdOffset[2], rgn->offset[2]);
-
-    ras->lastUpdRange[0] = AfxMax(ras->lastUpdRange[0], rgn->whd[0]);
-    ras->lastUpdRange[1] = AfxMax(ras->lastUpdRange[1], rgn->whd[1]);
-    ras->lastUpdRange[2] = AfxMax(ras->lastUpdRange[2], rgn->whd[2]);
-
-    if (flags & afxRasterAccess_W)
-        ras->updFlags |= SGL_UPD_FLAG_DEVICE_FLUSH;
-
-    if (flags & afxRasterAccess_X)
-    {
-        ras->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
-    }
-    *ptr = map;
-    return err;
-}
-
-_SGL afxError _SglRasDtor(afxRaster ras)
+_SGL afxError _RasDtor(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -377,15 +316,10 @@ _SGL afxError _SglRasDtor(afxRaster ras)
         ras->glHandle = 0;
     }
 
-    if (ras->base.maps)
-    {
-        AfxDeallocate(ras->base.maps);
-    }
-
     return err;
 }
 
-_SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
+_SGL afxError _RasCtor(afxRaster ras, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -409,19 +343,19 @@ _SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
     ras->base.whd[1] = AfxMax(texi->whd[1], 1);
     ras->base.whd[2] = AfxMax(texi->whd[2], 1);
 
-    if (ras->base.whd[1] == 1)
+    if (ras->base.whd[1] > 1)
     {
-        if (ras->base.whd[2] == 1)
-            ras->base.flags |= afxRasterFlag_1D;
-        else
+        if (ras->base.whd[2] > 1)
             ras->base.flags |= afxRasterFlag_3D;
+        else
+            ras->base.flags |= afxRasterFlag_2D;
     }
     else
     {
-        if (ras->base.whd[2] == 1)
-            ras->base.flags |= afxRasterFlag_2D;
-        else
+        if (ras->base.whd[2] > 1)
             ras->base.flags |= afxRasterFlag_3D;
+        else
+            ras->base.flags |= afxRasterFlag_1D;
     }
 
     if (ras->base.layerCnt > 1)
@@ -430,25 +364,15 @@ _SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
     if (ras->base.lodCnt > 1)
         ras->base.flags |= afxRasterFlag_SUBSAMPLED;
 
-    ras->base.maps = NIL;
-
     //ras->idd = NIL;
 
     if (!err)
     {
-        ras->base.map = _AfxOpenTextureRegion;
-        ras->base.unmap = _AfxCloseTextureRegion;
-        
         ras->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
         //ras->lastUpdImgRange = AfxCountRasterLayers(ras);
         //ras->lastUpdLodRange = AfxCountRasterLods(ras);
         //AfxGetRasterExtent(ras, 0, ras->lastUpdRange);
-    }
-
-    if (err && ras->base.maps)
-    {
-        AfxDeallocate(ras->base.maps);
     }
 
     return err;
@@ -461,6 +385,6 @@ _SGL afxClassConfig const _SglRasMgrCfg =
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxRaster)),
     .mmu = NIL,
-    .ctor = (void*)_SglRasCtor,
-    .dtor = (void*)_SglRasDtor
+    .ctor = (void*)_RasCtor,
+    .dtor = (void*)_RasDtor
 };

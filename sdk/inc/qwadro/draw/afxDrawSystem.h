@@ -262,7 +262,7 @@ AFX_OBJECT(afxDrawDevice)
     struct
     {
         afxDrawPortCaps     portCaps;
-        afxManager          queues;
+        afxManager          ddgeMgr;
     }*                      ports;
     
     afxClipSpace            clipCfg;

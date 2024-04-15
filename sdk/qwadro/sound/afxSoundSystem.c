@@ -345,7 +345,7 @@ _AAX afxResult _AaxSsysctl(afxSystem sys, afxInt reqCode, ...)
     {
         afxSoundSystem ssys;
 
-        if (AfxGetSoundSystem(&ssys)) AfxThrowError();
+        if (!AfxGetSoundSystem(&ssys)) AfxThrowError();
         else
         {
             ssysReady = FALSE;

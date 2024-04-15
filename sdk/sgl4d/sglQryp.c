@@ -53,7 +53,7 @@ _SGL void _DpuCopyQueryResults(sglDpu* dpu, afxQueryPool pool, afxNat baseQuery,
     glVmt const* gl = &dpu->gl;
     GLenum pname = (flags & afxQueryResultFlag_WAIT) ? GL_QUERY_RESULT : GL_QUERY_RESULT_NO_WAIT;
 
-    //_SglBindAndSyncBuf(dpu, TRUE, TRUE, GL_QUERY_RESULT_BUFFER, );
+    //DpuBindAndSyncBuf(dpu, TRUE, TRUE, GL_QUERY_RESULT_BUFFER, );
 
     if (flags & afxQueryResultFlag_64)
     {

@@ -190,7 +190,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
             afxDrawBridge ddge;
             afxDrawBridgeConfig dqueSpec = { 0 };
 
-            if (AfxAcquireObjects(&ddev->ports[j].queues, 1, (afxObject*)&ddge, (void const*[]) { ddev, dctx, &j, &dqueSpec }))
+            if (AfxAcquireObjects(&ddev->ports[j].ddgeMgr, 1, (afxObject*)&ddge, (void const*[]) { ddev, dctx, &j, &dqueSpec }))
             {
                 AfxThrowError();
                 _SglDctxFreeAllQueueSlots(dctx);

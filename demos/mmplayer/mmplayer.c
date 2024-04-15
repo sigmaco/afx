@@ -169,7 +169,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                             execReq.diob = diob;
                             execReq.signal = dscrCompleteSem;
 
-                            if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
+                            if (AFX_INVALID_INDEX == AfxExecuteDrawStreams(din, 1, &execReq, NIL))
                                 AfxThrowError();
                         }
 
@@ -182,7 +182,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
                 //AfxStampDrawOutputBuffers(1, &req, AfxV2d(100, 100), &AfxString("Qwadro Execution Ecosystem\nSIGMA_GL/2"), 738);
 
-                if (AfxPresentDrawOutputBuffer(dout[0], outBufIdx, portIdx, dscrCompleteSem))
+                if (AFX_INVALID_INDEX == AfxPresentDrawOutputBuffer(dout[0], outBufIdx, portIdx, dscrCompleteSem))
                     AfxThrowError();
             }
         }
@@ -205,7 +205,7 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     AfxAssert(dumpImg);
     AfxFormatUri(&uri.uri, "tmp/world2.tga");
-    AfxPrintRasterToTarga(dumpImg, 0, 0, 1, &uri.uri);
+    AfxPrintRasterToTarga(dumpImg, NIL, &uri.uri);
     AfxReleaseObjects(1, (void*[]) { dumpImg });
 
     AfxFormatUri(&uri.uri, "desktop");
@@ -311,7 +311,7 @@ int main(int argc, char const* argv[])
     while (AfxSystemIsExecuting())
     {
         AfxBinkDoFrame(&bnk, TRUE, TRUE);
-        DrawInputProc(din[0], (afxEvent[]) {0});
+        DrawInputProc(din[0], (afxDrawEvent[]) {0});
         AfxDoOverlay(ovy);
         AfxDoSystemExecution(0);
     }

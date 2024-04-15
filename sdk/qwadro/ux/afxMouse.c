@@ -494,7 +494,7 @@ _AFX afxError AfxAcquireMouse(afxNat port, afxMouse* mouse)
     {
         AfxLogEcho("Acquiring mouse at port %u", port);
 
-        afxManager* cls = AfxGetMouseClass();
+        afxManager* cls = AfxGetMouseManager();
         AfxAssertClass(cls, afxFcc_MSE);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&mse, (void const*[]) { &port }))
@@ -533,7 +533,7 @@ _AFX afxNat AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetMouseClass();
+    afxManager* cls = AfxGetMouseManager();
     AfxAssertClass(cls, afxFcc_MSE);
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
@@ -543,7 +543,7 @@ _AFX afxNat AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mouses[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(mouses);
-    afxManager* cls = AfxGetMouseClass();
+    afxManager* cls = AfxGetMouseManager();
     AfxAssertClass(cls, afxFcc_MSE);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)mouses);
 }
@@ -551,7 +551,7 @@ _AFX afxNat AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mouses[])
 _AFX afxNat AfxCountMouses(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetMouseClass();
+    afxManager* cls = AfxGetMouseManager();
     AfxAssertClass(cls, afxFcc_MSE);
     return AfxCountObjects(cls);
 }

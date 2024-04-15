@@ -150,9 +150,9 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
                 afxNat vtxCnt = objectWalker->object.numberVertices;
                 afxNat triCnt = 0;
                 afxNat surfaceCnt = 0;
-                afxV4d* posn = objectWalker->object.vertices;
-                afxV3d* nrm = objectWalker->object.normals;
-                afxV2d* uv = objectWalker->object.texCoords;
+                afxV4d* posn = (void*)objectWalker->object.vertices;
+                afxV3d* nrm = (void*)objectWalker->object.normals;
+                afxV2d* uv = (void*)objectWalker->object.texCoords;
 
                 GLUSgroupList* groupWalker = objectWalker->object.groups;
                 while (groupWalker)

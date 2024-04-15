@@ -31,7 +31,7 @@ _AFX void AfxGetTid(afxNat32* tid)
 #endif
 }
 
-_AFX void AfxYieldThread(void)
+_AFX void AfxYield(void)
 {
     thrd_yield();
 }
@@ -229,7 +229,7 @@ _AFX afxResult AfxWaitForThread(afxThread thr, afxResult* exitCode)
     {
         while (thr->running)
         {
-            AfxYieldThread();
+            AfxYield();
         }
         return TRUE;
     }
@@ -410,7 +410,7 @@ _AFX int startCbOnSysProcUnit(afxThread thr)
     AfxGetTid(&thr->tid);
     thr->osHandle = thrd_current();
 
-    AfxYieldThread();
+    AfxYield();
 
     AfxDbgLogf(1, NIL, "Starting Thread Execution Unit %u", thr->tid);
 
@@ -422,7 +422,7 @@ _AFX int startCbOnSysProcUnit(afxThread thr)
             again = FALSE;
 
         _AfxThrExecuteCb(thr, 0);
-        AfxYieldThread();
+        AfxYield();
     } while (again);
 
     AfxDbgLogf(1, NIL, "Stopping Thread Execution Unit %u", thr->tid);
@@ -470,7 +470,7 @@ _AFX void AfxRunThread(afxThread thr)
             {
                 do
                 {
-                    AfxYieldThread();
+                    AfxYield();
                 } while (!thr->tid);
 
                 AfxAssert(thr->tid);

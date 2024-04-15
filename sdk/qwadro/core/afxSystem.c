@@ -223,7 +223,7 @@ _AFX afxManager* AfxGetStreamClass(void)
     return cls;
 }
 
-_AFX afxManager* AfxGetHidClass(void)
+_AFX afxManager* AfxGetHidManager(void)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -231,39 +231,6 @@ _AFX afxManager* AfxGetHidClass(void)
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxManager *cls = &sys->hidMgr;
     AfxAssertClass(cls, afxFcc_HID);
-    return cls;
-}
-
-_AFX afxManager* AfxGetKeyboardClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->kbdMgr;
-    AfxAssertClass(cls, afxFcc_KBD);
-    return cls;
-}
-
-_AFX afxManager* AfxGetMouseClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->mseMgr;
-    AfxAssertClass(cls, afxFcc_MSE);
-    return cls;
-}
-
-_AFX afxManager* AfxGetControllerClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->ctrlMgr;
-    AfxAssertClass(cls, afxFcc_CTRL);
     return cls;
 }
 
@@ -343,7 +310,7 @@ _AFX void AfxRequestSystemShutdown(afxInt exitCode)
     else
     {
         AfxAssertObjects(1, &sys, afxFcc_SYS);
-        _AfxInterruptionAllThreads(exitCode);
+        //_AfxInterruptionAllThreads(exitCode);
         sys->exitCode = exitCode;
         sys->isInShutdown = TRUE;
     }
@@ -534,51 +501,51 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                     AfxAssertObjects(1, &sys, afxFcc_SYS);
                     AfxDbgLogf(6, NIL, "Setting up the Environment...");
 
-                    afxKeyboard kbd;
+                    afxUri point, location;
+                    AfxMakeUri(&point, "code", 0);
+                    AfxMakeUri(&location, "system", 0);
 
-                    if (AfxAcquireKeyboard(0, &kbd)) AfxThrowError();
+                    if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
                     else
                     {
-                        AfxAssertObjects(1, &kbd, afxFcc_KBD);
-                        sys->stdKbd = kbd;
-                        afxMouse mse;
-
-                        if (AfxAcquireMouse(0, &mse)) AfxThrowError();
+                        if (AfxAcquireShell(&sys->env)) AfxThrowError();
                         else
                         {
-                            AfxAssertObjects(1, &mse, afxFcc_MSE);
-                            sys->stdMse = mse;
+                            afxKeyboard kbd;
 
-                            afxUri point, location;
-                            AfxMakeUri(&point, "code", 0);
-                            AfxMakeUri(&location, "system", 0);
-
-                            if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
+                            if (AfxAcquireKeyboard(0, &kbd)) AfxThrowError();
                             else
                             {
-                                if (AfxAcquireShell(&sys->env)) AfxThrowError();
+                                AfxAssertObjects(1, &kbd, afxFcc_KBD);
+                                sys->stdKbd = kbd;
+                                afxMouse mse;
+
+                                if (AfxAcquireMouse(0, &mse)) AfxThrowError();
                                 else
                                 {
+                                    AfxAssertObjects(1, &mse, afxFcc_MSE);
+                                    sys->stdMse = mse;
+
                                     afxUri uri;
                                     AfxMakeUri(&uri, "system/qwadro.xss", 0);
 
                                     afxString s;
                                     AfxMakeString(&s, "qwadro", 0);
                                     AfxLoadScript(&s, &uri);
+
+                                    if (err)
+                                        AfxReleaseObjects(1, (void*[]) { mse });
                                 }
 
                                 if (err)
-                                    AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+                                {
+                                    AfxReleaseObjects(1, (void*[]) { kbd });
+                                }
                             }
-
-                            if (err)
-                                AfxReleaseObjects(1, (void*[]) { mse });
                         }
 
                         if (err)
-                        {
-                            AfxReleaseObjects(1, (void*[]) { kbd });
-                        }
+                            AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
                     }
                 }
 

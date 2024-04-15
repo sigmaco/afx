@@ -202,7 +202,7 @@ _AFX afxNat AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidManager();
     AfxAssertClass(cls, afxFcc_HID);
     return cnt ? AfxInvokeObjects(cls, first, cnt, (void*)f, udd) : 0;
 }
@@ -212,7 +212,7 @@ _AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(hids);
-    afxManager* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidManager();
     AfxAssertClass(cls, afxFcc_HID);
     return cnt ? AfxEnumerateObjects(cls, first, cnt, (afxObject*)hids) : 0;
 }
@@ -220,7 +220,7 @@ _AFX afxNat AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[])
 _AFX afxNat AfxCountHids(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetHidClass();
+    afxManager* cls = AfxGetHidManager();
     AfxAssertClass(cls, afxFcc_HID);
     return AfxCountObjects(cls);
 }

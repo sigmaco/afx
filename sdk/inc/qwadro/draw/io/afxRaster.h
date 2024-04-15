@@ -20,11 +20,6 @@
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-/// Textures in Qwadro are stored in as straightforward a manner as possible.
-/// Each texture says what kind it is (such as color map or cube map), what encoding it is (such as raw pixels or S3TC), and how many images it has (1 for a color map, 6 for a cube map, etc.).
-/// It then has a list of images, and each image lists its MIP levels.
-/// That's about all there is to textures. How the texture is meant to be used (ie., as a diffuse map or a normal map or something else) is not specified in the texture itself, since it might be used differently in different materials.
-
 #ifndef AFX_RASTER_H
 #define AFX_RASTER_H
 
@@ -73,31 +68,41 @@ typedef enum afxRasterAccess
 
 AFX_DEFINE_STRUCT(afxRasterRegion)
 {
-    afxNat                  lodIdx;
-    afxNat                  baseLayer;
-    afxNat                  layerCnt;
-    afxWhd                  offset; /// is the initial x, y, z offsets in texels of the sub-region of the source or destination afxRaster data.
-    afxWhd                  whd; /// is the size in texels of the afxRaster to copy in width, height and depth.
+    afxNat          lodIdx;
+    afxNat          baseLayer;
+    afxNat          layerCnt;
+    afxWhd          origin; /// is the initial x, y, z offsets in texels of the sub-region of the source or destination afxRaster data.
+    afxWhd          whd; /// is the size in texels of the afxRaster to copy in width, height and depth.
 };
 
 AFX_DEFINE_STRUCT(afxRasterIoOp)
 /// Especificação de operação de transferência arbitrária de afxRaster.
 {
-    afxRasterRegion         rgn;
-    afxNat                  bufOffset; /// is the offset in bytes from the start of the buffer object where the afxRaster data is copied from or to.
-    afxNat                  bufRowSiz; /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
-    afxNat                  bufRowCnt; /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
+    afxRasterRegion rgn;
+    afxNat          bufOffset; /// is the offset in bytes from the start of the buffer object where the afxRaster data is copied from or to.
+    afxNat          bufRowSiz; /// (aka bytes per row) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
+    afxNat          bufRowCnt; /// (aka rows per layer) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
+};
+
+AFX_DEFINE_STRUCT(afxRasterCopyOp)
+/// Especificação de operação de cópia de afxRaster.
+{
+    afxNat          srcLodIdx;
+    afxNat          srcBaseLayer;
+    afxNat          srcLayerCnt;
+    afxWhd          srcOffset; /// select the initial x, y, and z offsets in texels of the sub-regions of the source and destination afxRaster data.
+    afxRasterRegion dst;
 };
 
 AFX_DEFINE_STRUCT(afxRasterInfo)
 {
-    afxNat                  lodCnt;
-    afxNat                  layerCnt;
-    afxWhd                  whd;
-    afxPixelFormat          fmt;
-    afxNat                  sampleCnt;
-    afxRasterUsage          usage;
-    afxRasterFlags          flags;
+    afxNat          lodCnt;
+    afxNat          layerCnt;
+    afxWhd          whd;
+    afxPixelFormat  fmt;
+    afxNat          sampleCnt;
+    afxRasterUsage  usage;
+    afxRasterFlags  flags;
 };
 
 // LOD is mip level or sample level, depending on raster
@@ -110,64 +115,53 @@ AFX_OBJECT(afxRaster)
 struct afxBaseRaster
 #endif
 {
-    afxNat                  lodCnt; // mip level cnt
-    afxNat                  layerCnt;
-    afxWhd                  whd; // extent of image
+    afxNat          lodCnt; // mip level cnt
+    afxNat          layerCnt;
+    afxWhd          whd; // extent of image
     
-    afxPixelFormat          fmt;
-    afxNat                  sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
+    afxPixelFormat  fmt;
+    afxNat          sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
     afxColorSwizzling const*swizzling;
-    afxByte*                maps;
-    afxByte*                sidemap; // aux map (usually for indexed/palettized)
     
-    afxRasterFlags          flags;
-    afxRasterUsage          usage;
-
-    afxError                (*map)(afxRaster, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat *siz, afxNat* rowSiz, void**ptr);
-    afxError                (*unmap)(afxRaster, afxRasterRegion const *rgn);
+    afxRasterFlags  flags;
+    afxRasterUsage  usage;
 };
 #endif
 #endif//_AFX_DRAW_C
 
-AVX afxRasterUsage  AfxGetRasterUsage(afxRaster ras);
-AVX afxRasterFlags  AfxGetRasterFlags(afxRaster ras);
-
-AVX void            AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd);
-
-AVX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
+AVX afxDrawContext  AfxGetRasterContext(afxRaster ras);
 
 AVX afxNat          AfxCountRasterLods(afxRaster ras);
 AVX afxNat          AfxCountRasterLayers(afxRaster ras);
 AVX afxNat          AfxCountRasterSamples(afxRaster ras);
 
-AVX afxNat          AfxDetermineRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset);
-AVX void            AfxDetermineRasterStride(afxRaster ras, afxNat lodIdx, afxNat* bytesPerRow, afxNat* bytesPerLayer);
-
-AVX void            AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc);
-
-AVX afxNat          AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
+AVX afxRasterUsage  AfxGetRasterUsage(afxRaster ras);
+AVX afxRasterFlags  AfxGetRasterFlags(afxRaster ras);
+AVX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
+AVX void            AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd);
 
 AVX afxBool         AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw);
 
-AVX afxRasterUsage  AfxTestRasterUsage(afxRaster ras, afxRasterUsage bitmask);
-AVX afxRasterFlags  AfxTestRasterFlags(afxRaster ras, afxRasterFlags bitmask);
+AVX void            AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc);
 
-AVX afxError        AfxBufferizeRaster(afxRaster ras);
+AVX afxNat          AfxDetermineRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset);
+AVX void            AfxDetermineRasterStride(afxRaster ras, afxNat lodIdx, afxNat* bytesPerRow, afxNat* bytesPerLayer);
+AVX afxNat          AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
 
-AVX void*           AfxOpenRasterRegion(afxRaster ras, afxRasterRegion const *rgn, afxRasterAccess flags, afxNat* rgnSiz, afxNat* rowSiz);
-AVX void            AfxCloseRasterRegion(afxRaster ras, afxRasterRegion const *rgn);
+AVX afxRasterUsage  AfxTestRasterUsage(afxRaster ras, afxRasterUsage mask);
+AVX afxRasterFlags  AfxTestRasterFlags(afxRaster ras, afxRasterFlags mask);
 
 // Update texture image data from arbitrary raw allocation. A safe way of copying.
-AVX afxError        AfxUpdateRaster(afxRaster ras, afxRasterIoOp const* op, void const* src);
-AVX afxError        AfxDumpRaster(afxRaster ras, afxRasterIoOp const* op, void* dst);
+AVX afxError        AfxUpdateRaster(afxRaster ras, afxRasterRegion const* rgn, void const* src);
+AVX afxError        AfxDumpRaster(afxRaster ras, afxRasterRegion const* rgn, void* dst);
 
 // Stream in/out texture image data from/to a stream.
 AVX afxError        AfxUploadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream in);
 AVX afxError        AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream out);
 
 // Stream in/out texture image data from/to a file.
-AVX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri);
-AVX afxError        AfxPrintRasterToTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri);
+AVX afxError        AfxFetchRasterFromTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri);
+AVX afxError        AfxPrintRasterToTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri);
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -175,8 +169,8 @@ AVX afxError        AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRaster
 
 AVX afxError        AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[]);
 
-AVX afxRaster       AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[]);
-AVX afxError        AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras);
-AVX afxRaster       AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const uri[6]);
+AVX afxRaster       AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[]);
+AVX afxError        AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras);
+AVX afxRaster       AfxAssembleCubemapRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxUri const faces[6]);
 
 #endif//AFX_RASTER_H

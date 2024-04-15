@@ -118,8 +118,8 @@ AFX_OBJECT(afxWidget)
 #endif
 #endif
 
-AUX afxError AfxAcquireWidget(afxApplication app, afxViewport const* vp);
+AUX afxError    AfxAcquireWidget(afxOverlay ovy, afxViewport const* vp);
 
-AUX afxError            AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[]);
+AUX afxError    AfxAcquireWidgets(afxOverlay ovy, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[]);
 
 #endif//AFX_WIDGET_H

@@ -109,19 +109,24 @@ _SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawContext dctx, afxN
         if (AfxGetDrawOutputContext(dout, &from))
         {
             AfxAssertObjects(1, &from, afxFcc_DCTX);
-            AfxAssert(ddev == AfxGetDrawContextDevice(from));
-
-            afxDrawOutput dout2;
-            AfxIterateLinkageB2F(AFX_OBJECT(afxDrawOutput), dout2, &from->base.outputs, dctx)
+            
+            if (from == dctx) break;
+            else
             {
-                AfxAssertObjects(1, &dout2, afxFcc_DOUT);
+                AfxAssert(ddev == AfxGetDrawContextDevice(from));
 
-                if (dout2 == dout)
+                afxDrawOutput dout2;
+                AfxIterateLinkageB2F(AFX_OBJECT(afxDrawOutput), dout2, &from->base.outputs, dctx)
                 {
-                    AfxPopLinkage(&dout->dctx);
-                    AfxRevalidateDrawOutputBuffers(dout);
-                    AfxReleaseObjects(1, (void*[]) { from });
-                    break;
+                    AfxAssertObjects(1, &dout2, afxFcc_DOUT);
+
+                    if (dout2 == dout)
+                    {
+                        AfxPopLinkage(&dout->dctx);
+                        AfxRevalidateDrawOutputBuffers(dout);
+                        AfxReleaseObjects(1, (void*[]) { from });
+                        break;
+                    }
                 }
             }
         }
@@ -243,7 +248,7 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
             int pxlAttrPairs[][2] =
             {
                 { WGL_DRAW_TO_WINDOW_ARB, GL_TRUE },
-                { WGL_SUPPORT_OPENGL_ARB, GL_TRUE }, // suportar o que se não OpenGL na fucking API do OpenGL? Direct3D, filha da puta?!
+                { WGL_SUPPORT_OPENGL_ARB, GL_TRUE }, // suportar o que se não OpenGL na fucking API do OpenGL? Direct3D, filha da puta?
                 { WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB },
                 { WGL_DOUBLE_BUFFER_ARB, TRUE }, // single buffer not supported anymore today. Qwadro will just virtualizes it.
                 { WGL_PIXEL_TYPE_ARB, AfxPixelFormatIsReal(pixelFmt) ? WGL_TYPE_RGBA_FLOAT_ARB : WGL_TYPE_RGBA_ARB },
@@ -333,7 +338,7 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
         }
         else
         {
-#if 0
+#if !0
             if (dout->presentMode == afxPresentMode_FIFO)
             {
                 dpu->wgl.SwapIntervalEXT(1); // causes lag when 1

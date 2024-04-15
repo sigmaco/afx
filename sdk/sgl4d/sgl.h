@@ -340,8 +340,8 @@ typedef struct
     }                       activeResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO], nextResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
     afxMask                 nextResBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
 
-    afxBuffer               activePixelUnpackBuf;
-    afxBuffer               activePixelPackBuf;
+    afxBuffer               activeUnpakPbo;
+    afxBuffer               activePakPbo;
 
     afxMask                 nextVinBindingsMask;
     afxNat                  nextVinBindingsCnt;
@@ -464,6 +464,15 @@ AFX_DEFINE_STRUCT(_sglQueueingStamp)
     afxPresentationRequest  afxSimd(items[]);
 };
 
+AFX_DEFINE_STRUCT(_sglQueueingMmap)
+{
+    _sglQueueing            hdr;
+    afxBuffer               buf;
+    afxSize                 off;
+    afxNat                  ran;
+    afxFlags                flags;
+};
+
 AFX_DEFINE_STRUCT(_sglDeleteGlRes)
 {
     union
@@ -556,10 +565,6 @@ AFX_OBJECT(afxBuffer)
     GLenum          glTarget;
     //GLenum          glUsage;
     GLbitfield      glAccess;
-    
-    afxSize         lastUpdOffset;
-    afxNat          lastUpdRange;
-    afxBool         locked;
 };
 
 AFX_OBJECT(afxRaster)
@@ -570,12 +575,6 @@ AFX_OBJECT(afxRaster)
     GLuint          glHandleAux; // for draw buffers
     GLint           glIntFmt;
     GLenum          glTarget, glFmt, glType;
-    
-    afxNat          lastUpdLodBase, lastUpdLodRange;
-    afxNat          lastUpdImgBase, lastUpdImgRange;
-    afxNat          lastUpdOffset[3];
-    afxNat          lastUpdRange[3];
-    afxBool         locked;
 };
 
 AFX_OBJECT(afxCanvas)
@@ -1064,9 +1063,9 @@ SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle);
 
 typedef enum sglBindFlags
 {
-    sglBindFlag_BIND,
-    sglBindFlag_SYNC,
-    sglBindFlag_KEEP,
+    sglBindFlag_BIND = AFX_BIT_OFFSET(0),
+    sglBindFlag_SYNC = AFX_BIT_OFFSET(1),
+    sglBindFlag_KEEP = AFX_BIT_OFFSET(2)
 }sglBindFlags;
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
@@ -1074,7 +1073,7 @@ _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp);
 SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
 SGL afxError _DpuSurfSync(sglDpu* dpu, afxSurface surf, glVmt const* gl); // must be used before texUpdate
-SGL afxError _SglBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxRaster tex);
+SGL afxError DpuBindAndSyncRas(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxRaster tex);
 SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, GLint level, afxNat baseLayer, afxNat layerCnt, afxWhd const xyz, afxWhd const whd, GLenum glFmt, GLenum glType, afxAddress const src);
 
 SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings);
@@ -1082,7 +1081,7 @@ SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPipe
 SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr);
 SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, GLuint glHandle, afxNat unit, afxBindSchema legt, glVmt const* gl);
 SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv);
-SGL afxError _SglBindAndSyncBuf(sglDpu* dpu, sglBindFlags bindFlags, GLenum glTarget, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage);
+SGL afxError DpuBindAndSyncBuf(sglDpu* dpu, sglBindFlags bindFlags, GLenum glTarget, afxBuffer buf, afxNat offset, afxNat range, afxNat stride, GLenum usage);
 
 //SGL afxSize _AfxMeasureTextureRegion(afxRaster tex, afxRasterRegion const *rgn);
 
@@ -1096,7 +1095,7 @@ SGL int SglGetPixelFormat(HDC hdc, wglVmt const* vmt);
 SGL afxBindSchema _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
 
 SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawBridge ddge, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
-SGL afxError _SglDdevProcDpuCb(afxThread dthr, afxDrawContext dctx);
+SGL afxError _DdgeProcCb(afxDrawBridge ddge, afxThread thr);
 
 SGL afxClassConfig const _SglDctxMgrCfg;
 
@@ -1135,6 +1134,6 @@ SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout);
 SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNat cnt, afxDrawInput inputs[]);
 SGL afxError _SglDdevRelinkDoutCb(afxDrawDevice ddev, afxDrawContext dctx, afxNat cnt, afxDrawOutput outputs[]);
 
-
+SGL afxNat _SglDdgeEnqueueMmapCb(afxDrawBridge ddge, afxBuffer buf, afxSize off, afxNat ran, afxFlags flags);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

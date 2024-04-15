@@ -106,19 +106,24 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNa
         if (AfxGetDrawInputContext(din, &from))
         {
             AfxAssertObjects(1, &from, afxFcc_DCTX);
-            AfxAssert(ddev == AfxGetDrawContextDevice(from));
 
-            afxDrawInput din2;
-            AfxIterateLinkageB2F(AFX_OBJECT(afxDrawInput), din2, &from->base.inputs, dctx)
+            if (from == dctx) break;
+            else
             {
-                AfxAssertObjects(1, &din2, afxFcc_DIN);
+                AfxAssert(ddev == AfxGetDrawContextDevice(from));
 
-                if (din2 == din)
+                afxDrawInput din2;
+                AfxIterateLinkageB2F(AFX_OBJECT(afxDrawInput), din2, &from->base.inputs, dctx)
                 {
-                    AfxPopLinkage(&din->dctx);
-                    _SglDinFreeAllBuffers(din);
-                    AfxReleaseObjects(1, (void*[]) { from });
-                    break;
+                    AfxAssertObjects(1, &din2, afxFcc_DIN);
+
+                    if (din2 == din)
+                    {
+                        AfxPopLinkage(&din->dctx);
+                        _SglDinFreeAllBuffers(din);
+                        AfxReleaseObjects(1, (void*[]) { from });
+                        break;
+                    }
                 }
             }
         }
@@ -130,7 +135,6 @@ _SGL afxError _SglDdevRelinkDinCb(afxDrawDevice ddev, afxDrawContext dctx, afxNa
 
             AfxReacquireObjects(1, (void*[]) { dctx });
             AfxPushLinkage(&din->dctx, &dctx->base.inputs);
-
 
             din->cachedClipCfg = dctx->base.clipCfg;
         }

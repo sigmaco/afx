@@ -26,27 +26,27 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, afxRa
     {
     case GL_TEXTURE_2D:
     {
-        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         break;
     }
     case GL_TEXTURE_1D_ARRAY:
     {
         for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_1D:
     {
-        gl->CopyTexSubImage1D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], origin[0], origin[1], dstRgn->whd[0]);
+        gl->CopyTexSubImage1D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], origin[0], origin[1], dstRgn->whd[0]);
         break;
     }
     case GL_TEXTURE_3D:
     {
         for (afxNat i = 0; i < dstRgn->whd[2]; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->offset[2] + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], dstRgn->origin[2] + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
@@ -54,7 +54,7 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, afxRa
     {
         for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
@@ -62,7 +62,7 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, afxRa
     {
         for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage3D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], dstRgn->baseLayer + i, origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
@@ -70,14 +70,14 @@ _SGL void _SglCopyTexImageFromFboReadBuf(glVmt const* gl, GLenum glTarget, afxRa
     {
         for (afxNat i = 0; i < dstRgn->layerCnt; i++)
         {
-            gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+            gl->CopyTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
         }
         break;
     }
     case GL_TEXTURE_RECTANGLE:
     {
         AfxAssert(dstRgn->lodIdx == 0);
-        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->offset[0], dstRgn->offset[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
+        gl->CopyTexSubImage2D(glTarget, dstRgn->lodIdx, dstRgn->origin[0], dstRgn->origin[1], origin[0], origin[1], dstRgn->whd[0], dstRgn->whd[1]); _SglThrowErrorOccuried();
     };
     default:
         AfxThrowError();
@@ -131,6 +131,7 @@ _SGL afxCmdId _SglEncodeCmdRasCopy(afxDrawStream diob, afxRaster src, afxRaster 
     return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.cpy) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
+#if 0
 _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
 {
     afxError err = AFX_ERR_NONE;
@@ -160,9 +161,9 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
         afxRasterRegion rgn = op->rgn;
         AfxAssertRange(rasCap.lodCnt, rgn.lodIdx, 1);
         AfxAssertRange(rasCap.layerCnt, rgn.baseLayer, rgn.layerCnt);
-        AfxAssertRange(rasCap.whd[0], rgn.offset[0], rgn.whd[0]);
-        AfxAssertRange(rasCap.whd[1], rgn.offset[1], rgn.whd[1]);
-        AfxAssertRange(rasCap.whd[2], rgn.offset[2], rgn.whd[2]);
+        AfxAssertRange(rasCap.whd[0], rgn.origin[0], rgn.whd[0]);
+        AfxAssertRange(rasCap.whd[1], rgn.origin[1], rgn.whd[1]);
+        AfxAssertRange(rasCap.whd[2], rgn.origin[2], rgn.whd[2]);
 
         afxNat rasRowCnt = rgn.whd[1];
         afxNat bufOffset = op->bufOffset;
@@ -174,7 +175,7 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
 
         if (cmd->down)
         {
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
             afxNat bufSiz = AfxMeasureRasterRegion(ras, &rgn);
             
@@ -183,9 +184,9 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
             gl->BindBuffer(GL_PIXEL_PACK_BUFFER, pbo); _SglThrowErrorOccuried();
             gl->BufferStorage(GL_PIXEL_PACK_BUFFER, bufSiz, NIL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT); _SglThrowErrorOccuried();
             gl->BindFramebuffer(GL_READ_FRAMEBUFFER, dpu->fboOpSrc); _SglThrowErrorOccuried();
-            _SglBindFboAttachment(&dpu->gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ras->glTarget, ras->glHandle, rgn.lodIdx, rgn.baseLayer, rgn.offset[2]);
+            _SglBindFboAttachment(&dpu->gl, GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, ras->glTarget, ras->glHandle, rgn.lodIdx, rgn.baseLayer, rgn.origin[2]);
             gl->ReadBuffer(GL_COLOR_ATTACHMENT0); _SglThrowErrorOccuried();
-            gl->ReadPixels(rgn.offset[0], rgn.offset[1], rgn.whd[0], rgn.whd[1], ras->glFmt, ras->glType, NIL); _SglThrowErrorOccuried();
+            gl->ReadPixels(rgn.origin[0], rgn.origin[1], rgn.whd[0], rgn.whd[1], ras->glFmt, ras->glType, NIL); _SglThrowErrorOccuried();
             afxByte* bytemap = gl->MapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY); _SglThrowErrorOccuried();
             AfxSeekStreamFromBegin(ios, bufOffset);
             AfxWriteStream(ios, bufSiz, 0, bytemap);
@@ -194,7 +195,7 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
         }
         else
         {
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
             afxNat bufSiz = AfxMeasureRasterRegion(ras, &rgn);
             
@@ -202,7 +203,7 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
             gl->GenBuffers(1, &pbo); _SglThrowErrorOccuried();
             gl->BindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo); _SglThrowErrorOccuried();
             gl->BufferStorage(GL_PIXEL_UNPACK_BUFFER, bufSiz, NIL, GL_DYNAMIC_STORAGE_BIT | GL_MAP_WRITE_BIT); _SglThrowErrorOccuried();
-            _SglTexSubImage(gl, ras->glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, NIL);
+            _SglTexSubImage(gl, ras->glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.origin, rgn.whd, ras->glFmt, ras->glType, NIL);
             afxByte* bytemap = gl->MapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY); _SglThrowErrorOccuried();
             AfxSeekStreamFromBegin(ios, bufOffset);
             AfxReadStream(ios, bufSiz, 0, bytemap);
@@ -211,30 +212,7 @@ _SGL void _DpuRasIo(sglDpu* dpu, _sglCmdRwRasterRegions const* cmd)
         }
     }
 }
-
-_SGL afxCmdId _SglEncodeCmdRasIo(afxDrawStream diob, afxRaster ras, afxStream ios, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &ios, afxFcc_IOB);
-    AfxAssert(opCnt);
-    AfxAssert(ops);
-
-    _sglCmdRwRasterRegions *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (opCnt * sizeof(cmd->ops[0])));
-    AfxAssert(cmd);
-    cmd->down = !!down;
-    cmd->ras = ras;
-    cmd->ios = ios;
-    cmd->cdc = cdc;
-    cmd->opCnt = opCnt;
-    AfxAssert(8 > opCnt);
-
-    for (afxNat i = 0; i < opCnt; i++)
-        cmd->ops[i] = ops[i];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ras.io) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
+#endif
 
 _SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
 {
@@ -265,17 +243,17 @@ _SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
         afxRasterRegion rgn = op->rgn;
         AfxAssertRange(rasCap.lodCnt, rgn.lodIdx, 1);
         AfxAssertRange(rasCap.layerCnt, rgn.baseLayer, rgn.layerCnt);
-        AfxAssertRange(rasCap.whd[0], rgn.offset[0], rgn.whd[0]);
-        AfxAssertRange(rasCap.whd[1], rgn.offset[1], rgn.whd[1]);
-        AfxAssertRange(rasCap.whd[2], rgn.offset[2], rgn.whd[2]);
+        AfxAssertRange(rasCap.whd[0], rgn.origin[0], rgn.whd[0]);
+        AfxAssertRange(rasCap.whd[1], rgn.origin[1], rgn.whd[1]);
+        AfxAssertRange(rasCap.whd[2], rgn.origin[2], rgn.whd[2]);
 
         afxNat rasRowCnt = rgn.whd[1];
         afxNat bufOffset = op->bufOffset;
         afxNat bufRowSiz = op->bufRowSiz;
         afxNat bufRowCnt = op->bufRowCnt;
 
-        AfxAssert(rasMaxRowSiz >= bufRowSiz);
-        AfxAssert(rasMaxRowCnt >= bufRowCnt);
+        AfxAssert(bufRowSiz >= rasMaxRowSiz);
+        AfxAssert(bufRowCnt >= rasMaxRowCnt);
 
         if (cmd->unpack)
         {
@@ -315,30 +293,30 @@ _SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
             //afxNat rowCnt = rasRowCnt ? rasRowCnt : bufRowCnt;
             //afxNat dataSiz = rowSiz * rowCnt * rgn.whd[2] * rgn.layerCnt;
 
-            _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_UNPACK_BUFFER, cmd->buf, 0, 0, 0, GL_STREAM_COPY);
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+            DpuBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_UNPACK_BUFFER, cmd->buf, 0, 0, 0, GL_STREAM_COPY);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
             gl->PixelStorei(GL_UNPACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_UNPACK_SKIP_PIXELS, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_UNPACK_SKIP_ROWS, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_UNPACK_SKIP_IMAGES, ); _SglThrowErrorOccuried();
-            //gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, ); _SglThrowErrorOccuried();
-            //gl->PixelStorei(GL_UNPACK_ROW_LENGTH, ); _SglThrowErrorOccuried();
+            gl->PixelStorei(GL_UNPACK_IMAGE_HEIGHT, bufRowCnt); _SglThrowErrorOccuried();
+            gl->PixelStorei(GL_UNPACK_ROW_LENGTH, bufRowSiz); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_UNPACK_LSB_FIRST, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_UNPACK_SWAP_BYTES, ); _SglThrowErrorOccuried();
 
             if (ras->glTarget == GL_TEXTURE_CUBE_MAP)
             {
                 for (afxNat j = 0; j < rgn.layerCnt; j++)
-                    _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, rgn.lodIdx, rgn.baseLayer, 1, rgn.offset, rgn.whd, ras->glFmt, ras->glType, bufOffset);
+                    _SglTexSubImage(gl, GL_TEXTURE_CUBE_MAP_POSITIVE_X + j, rgn.lodIdx, rgn.baseLayer, 1, rgn.origin, rgn.whd, ras->glFmt, ras->glType, bufOffset);
             }
             else
             {
-                _SglTexSubImage(gl, ras->glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.offset, rgn.whd, ras->glFmt, ras->glType, bufOffset);
+                _SglTexSubImage(gl, ras->glTarget, rgn.lodIdx, rgn.baseLayer, rgn.layerCnt, rgn.origin, rgn.whd, ras->glFmt, ras->glType, bufOffset);
             }
 
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
-            _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_UNPACK_BUFFER, NIL, 0, 0, 0, GL_STREAM_COPY);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
+            DpuBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_UNPACK_BUFFER, NIL, 0, 0, 0, GL_STREAM_COPY);
         }
         else
         {
@@ -380,15 +358,15 @@ _SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
             //afxNat dataSiz = rowSiz * rowCnt * rgn.whd[2] * rgn.layerCnt;
             //AfxAssert(rgnSiz >= dataSiz);
 
-            _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_PACK_BUFFER, cmd->buf, 0, 0, 0, GL_STREAM_COPY);
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+            DpuBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_PACK_BUFFER, cmd->buf, 0, 0, 0, GL_STREAM_COPY);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
 
             gl->PixelStorei(GL_PACK_ALIGNMENT, 1); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_PACK_SKIP_PIXELS, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_PACK_SKIP_ROWS, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_PACK_SKIP_IMAGES, ); _SglThrowErrorOccuried();
-            //gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, ); _SglThrowErrorOccuried();
-            //gl->PixelStorei(GL_PACK_ROW_LENGTH, ); _SglThrowErrorOccuried();
+            gl->PixelStorei(GL_PACK_IMAGE_HEIGHT, bufRowCnt); _SglThrowErrorOccuried();
+            gl->PixelStorei(GL_PACK_ROW_LENGTH, bufRowSiz); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_PACK_LSB_FIRST, ); _SglThrowErrorOccuried();
             //gl->PixelStorei(GL_PACK_SWAP_BYTES, ); _SglThrowErrorOccuried();
 
@@ -404,8 +382,8 @@ _SGL void _DpuRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd)
                 gl->GetTexImage(ras->glTarget, rgn.lodIdx, ras->glFmt, ras->glType, (void*)bufOffset); _SglThrowErrorOccuried();
             }
 
-            _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
-            _SglBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_PACK_BUFFER, NIL, 0, 0, 0, GL_STREAM_COPY);
+            DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
+            DpuBindAndSyncBuf(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, GL_PIXEL_PACK_BUFFER, NIL, 0, 0, 0, GL_STREAM_COPY);
         }
     }
 }
@@ -449,9 +427,9 @@ _SGL void _DpuRasSubsample(sglDpu* dpu, _sglCmdRegenerateMipmaps const* cmd)
     afxNat rasLayerCnt = AfxCountRasterLayers(ras);
     afxNat rasLodCnt = AfxCountRasterLods(ras);
 
-    _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+    DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP | sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
     gl->GenerateMipmap(ras->glTarget); _SglThrowErrorOccuried();
-    _SglBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
+    DpuBindAndSyncRas(dpu, sglBindFlag_BIND | sglBindFlag_KEEP, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, NIL);
 
     AfxAssertRange(rasLodCnt, baseLod, lodCnt);
     AfxThrowError();
@@ -493,9 +471,9 @@ _SGL void _DpuRasSwizzle(sglDpu* dpu, _sglCmdSwizzleRasterRegions const* cmd)
         AfxAssert(rgn);
         AfxAssert(rasLodCnt > rgn->lodIdx);
         AfxAssertRange(rasLayerCnt, rgn->baseLayer, rgn->layerCnt);
-        AfxAssertRange(rasWhd[0], rgn->offset[0], rgn->whd[0]);
-        AfxAssertRange(rasWhd[1], rgn->offset[1], rgn->whd[1]);
-        AfxAssertRange(rasWhd[2], rgn->offset[2], rgn->whd[2]);
+        AfxAssertRange(rasWhd[0], rgn->origin[0], rgn->whd[0]);
+        AfxAssertRange(rasWhd[1], rgn->origin[1], rgn->whd[1]);
+        AfxAssertRange(rasWhd[2], rgn->origin[2], rgn->whd[2]);
 
         afxPixelFormat fmt = AfxGetRasterFormat(ras);
         AfxAssert(fmt == afxPixelFormat_BGR8 || fmt == afxPixelFormat_BGRA8 || fmt == afxPixelFormat_RGB8 || fmt == afxPixelFormat_RGBA8);
@@ -508,7 +486,7 @@ _SGL void _DpuRasSwizzle(sglDpu* dpu, _sglCmdSwizzleRasterRegions const* cmd)
 
         afxNat rgnSize;
         afxNat rowLen = 0;
-        afxByte *bytemap = AfxOpenRasterRegion(ras, rgn, afxRasterAccess_RW, &rgnSize, &rowLen);
+        afxByte *bytemap = NIL;// AfxMapRaster(ras, rgn, afxRasterAccess_RW, &rgnSize, &rowLen);
 
         // swap the R and B values to get RGB since the bitmap color format is in BGR
         for (afxNat k = 0; k < rgn->whd[0] * rgn->whd[1] * pixelSiz; k += pixelSiz)
@@ -518,7 +496,7 @@ _SGL void _DpuRasSwizzle(sglDpu* dpu, _sglCmdSwizzleRasterRegions const* cmd)
             bytemap[k + a] = temp;
         }
 
-        AfxCloseRasterRegion(ras, rgn);
+        //AfxUnmapRaster(ras, rgn);
     }
 }
 
@@ -574,7 +552,7 @@ _SGL void _DpuRasXform(sglDpu* dpu, _sglCmdFlipRasterRegions const* cmd)
         for (afxNat layer = 0; layer < srcRgn.layerCnt; ++layer)
         {
             srcRgn.baseLayer = layer;
-            afxByte* bytemap = AfxOpenRasterRegion(ras, &srcRgn, afxRasterAccess_RW, &size, &rowLen);
+            afxByte* bytemap = NIL;// AfxMapRaster(ras, &srcRgn, afxRasterAccess_RW, &size, &rowLen);
 
             for (afxNat row = 0, row2 = rowCnt; row < rowCnt; row++)
             {
@@ -594,7 +572,7 @@ _SGL void _DpuRasXform(sglDpu* dpu, _sglCmdFlipRasterRegions const* cmd)
                     bytesLeft -= bytesCpy;
                 }
             }
-            AfxCloseRasterRegion(ras, &srcRgn);
+            //AfxUnmapRaster(ras, &srcRgn);
             //bytemap += bpl;
         }
     }
@@ -661,5 +639,4 @@ _SGL afxCmdRaster const _SglEncodeCmdRasterVmt =
     .mip = _SglEncodeCmdRasSubsample,
     .cpy = _SglEncodeCmdRasCopy,
     .pak = _SglEncodeCmdRasPack,
-    .io = _SglEncodeCmdRasIo
 };

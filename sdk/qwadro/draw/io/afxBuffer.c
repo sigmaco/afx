@@ -64,21 +64,19 @@ _AVX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access)
     return buf->access & access;
 }
 
-_AVX void AfxUnmapBufferRange(afxBuffer buf)
+_AVX void AfxUnmapBuffer(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-
     buf->unmap(buf);
 }
 
-_AVX void* AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags)
+_AVX void* AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     //AfxAssertAlign(offset, 64);
     AfxAssertRange(buf->siz, offset, range);
-
     return buf->map(buf, offset, range, flags);
 }
 
@@ -93,7 +91,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
     AfxAssert(dst);
     AfxAssert(dstStride);
 
-    afxByte *map = AfxMapBufferRange(buf, offset, cnt * stride, afxBufferAccess_R);
+    afxByte *map = AfxMapBuffer(buf, offset, cnt * stride, afxBufferAccess_R);
 
     if (!map) AfxThrowError();
     else
@@ -112,7 +110,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
             }
         }
 
-        AfxUnmapBufferRange(buf);
+        AfxUnmapBuffer(buf);
     }
     return err;
 }
@@ -124,19 +122,31 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
     AfxAssertAlign(offset, 64);
 
     afxNat siz = AfxGetBufferCapacity(buf);
-    AfxAssert(siz > offset);
-    AfxAssert(range);
-    AfxAssert(siz >= offset + range);
+    AfxAssertRange(siz, offset, range);
+    range = range ? range : siz - offset;
+    AfxAssertRange(siz, offset, range);
     AfxAssert(dst);
 
-    afxByte *map = AfxMapBufferRange(buf, offset, range, afxBufferAccess_R);
+    afxDrawContext dctx = AfxGetBufferContext(buf);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-    if (!map) AfxThrowError();
+    afxTransferRequest req = { 0 };
+    req.data.buf = buf;
+    req.data.offset = offset;
+    req.data.range = range;
+    req.srcFcc = afxFcc_BUF;
+    req.data.dst = dst;
+    afxNat queIdx = AFX_INVALID_INDEX;
+
+    if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
     else
     {
-        AfxCopy2(1, range, map, dst);
+        AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        AfxUnmapBufferRange(buf);
+        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+            AfxThrowError();
     }
     return err;
 }
@@ -154,7 +164,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
     AfxAssert(src);
     AfxAssert(srcStride);
 
-    afxByte *map = AfxMapBufferRange(buf, rgn->base, rgn->range, afxBufferAccess_W);
+    afxByte *map = AfxMapBuffer(buf, rgn->base, rgn->range, afxBufferAccess_W);
 
     if (!map) AfxThrowError();
     else
@@ -179,7 +189,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
             }
         }
 
-        AfxUnmapBufferRange(buf);
+        AfxUnmapBuffer(buf);
     }
 
     return err;
@@ -196,7 +206,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
     AfxAssert(src);
     AfxAssert(srcStride);
 
-    afxByte *map = AfxMapBufferRange(buf, offset, range, afxBufferAccess_W);
+    afxByte *map = AfxMapBuffer(buf, offset, range, afxBufferAccess_W);
 
     if (!map) AfxThrowError();
     else
@@ -223,7 +233,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
             }
         }
 
-        AfxUnmapBufferRange(buf);
+        AfxUnmapBuffer(buf);
     }
     return err;
 }
@@ -236,16 +246,100 @@ _AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
 
     afxNat siz = AfxGetBufferCapacity(buf);
     AfxAssertRange(siz, offset, range);
+    range = range ? range : siz - offset;
+    AfxAssertRange(siz, offset, range);
     AfxAssert(src);
 
-    afxByte *map = AfxMapBufferRange(buf, offset, range, afxBufferAccess_W);
+    afxDrawContext dctx = AfxGetBufferContext(buf);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-    if (!map) AfxThrowError();
+    afxTransferRequest req = { 0 };
+    req.data.buf = buf;
+    req.data.offset = offset;
+    req.data.range = range;
+    req.dstFcc = afxFcc_BUF;
+    req.data.src = src;
+    afxNat queIdx = AFX_INVALID_INDEX;
+
+    if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
     else
     {
-        AfxCopy2(1, range, src, map);
+        AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        AfxUnmapBufferRange(buf);
+        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+            AfxThrowError();
+    }
+    return err;
+}
+
+_AVX afxError AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
+
+    afxDrawContext dctx = AfxGetBufferContext(buf);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+
+    for (afxNat i = 0; i < opCnt; i++)
+    {
+        afxTransferRequest req = { 0 };
+        req.data.buf = buf;
+        req.data.offset = ops[i].dstOffset;
+        req.data.range = ops[i].range;
+        req.dstFcc = afxFcc_BUF;
+        req.data.iob = in;
+        req.data.dataOff = ops[i].srcOffset;
+        req.srcFcc = afxFcc_IOB;
+        afxNat queIdx = AFX_INVALID_INDEX;
+
+        if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
+        else
+        {
+            AfxAssert(queIdx != AFX_INVALID_INDEX);
+
+            if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+                AfxThrowError();
+        }
+    }
+    return err;
+}
+
+_AVX afxError AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
+
+    afxDrawContext dctx = AfxGetBufferContext(buf);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+
+    for (afxNat i = 0; i < opCnt; i++)
+    {
+        afxTransferRequest req = { 0 };
+        req.data.buf = buf;
+        req.data.offset = ops[i].srcOffset;
+        req.data.range = ops[i].range;
+        req.srcFcc = afxFcc_BUF;
+        req.data.iob = out;
+        req.data.dataOff = ops[i].dstOffset;
+        req.dstFcc = afxFcc_IOB;
+        afxNat queIdx = AFX_INVALID_INDEX;
+
+        if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
+        else
+        {
+            AfxAssert(queIdx != AFX_INVALID_INDEX);
+
+            if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+                AfxThrowError();
+        }
     }
     return err;
 }

@@ -100,6 +100,10 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     avxBinkFramebuffers buffers;
     //avxCanvas               canv[BINKMAXFRAMEBUFFERS];
     // this is the GPU info for the textures
+    afxNat              rasUnpakOff[4];
+    afxNat              rasUnpakSiz[4];
+    afxNat              stageBufSiz;
+    afxBuffer           stageBuffers[BINKMAXFRAMEBUFFERS];
     afxRaster           rasters[BINKMAXFRAMEBUFFERS][4]; // Y, cR, cB, A.
     afxBool             hasAlphaPlane;
 

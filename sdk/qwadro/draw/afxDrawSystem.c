@@ -499,7 +499,7 @@ _AVX afxResult _AvxDsysctl(afxSystem sys, afxInt reqCode, ...)
     {
         afxDrawSystem dsys;
 
-        if (AfxGetDrawSystem(&dsys)) AfxThrowError();
+        if (!AfxGetDrawSystem(&dsys)) AfxThrowError();
         else
         {
             dsysReady = FALSE;

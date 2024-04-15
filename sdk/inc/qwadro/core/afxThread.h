@@ -119,7 +119,7 @@ AFX void        AfxExitThread(afxInt code);
 AFX void        AfxQuitThread(void);
 
 /// Yields execution of the current thread to another runnable thread, if any. Note that the operating system decides to which thread to switch.
-AFX void        AfxYieldThread(void);
+AFX void        AfxYield(void);
 
 AFX void        AfxGetThreadFrequency(afxNat* iterNo, afxNat* lastFreq);
 AFX void        AfxGetThreadTime(afxReal64* ct, afxReal64* dt);

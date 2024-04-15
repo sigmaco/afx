@@ -131,13 +131,7 @@ _AUX afxError _AuxAppCtor(afxApplication app, afxCookie const* cookie)
     {
         if (!(app->din = config->din))
         {
-            afxDrawInputConfig dinConfig = { 0 };
-            dinConfig.cmdPoolMemStock = 4096;
-            dinConfig.estimatedSubmissionCnt = 2;
-            dinConfig.proc = NIL;
-
-            if (AfxAcquireDrawInput(0, &dinConfig, &app->din))
-                AfxThrowError();
+            //AfxThrowError();
         }
         else
         {
@@ -147,7 +141,7 @@ _AUX afxError _AuxAppCtor(afxApplication app, afxCookie const* cookie)
 
         if (!err)
         {
-            AfxAssertObjects(1, &app->din, afxFcc_DIN);
+            //AfxAssertObjects(1, &app->din, afxFcc_DIN);
 
             //AfxEstablishManager(&app->ovyMgr, NIL, &app->mgrChn, &_AuxOvyMgrCfg);
 
@@ -174,8 +168,8 @@ _AUX afxError _AuxAppDtor(afxApplication app)
 
     AfxCleanUpChainedManagers(&app->mgrChn);
 
-    AfxReleaseObjects(1, (void*[]) { app->din });
-    AfxReleaseObjects(1, (void*[]) { app->dctx });
+    //AfxReleaseObjects(1, (void*[]) { app->din });
+    //AfxReleaseObjects(1, (void*[]) { app->dctx });
 
     return err;
 }

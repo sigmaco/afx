@@ -103,7 +103,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                             execReq.diob = diob;
                             execReq.signal = dscrCompleteSem;
 
-                            if (AfxExecuteDrawStreams(din, 1, &execReq, NIL))
+                            if (AFX_INVALID_INDEX == AfxExecuteDrawStreams(din, 1, &execReq, NIL))
                                 AfxThrowError();
                         }
 
@@ -117,7 +117,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
                 //AfxStampDrawOutputBuffers(1, &req, AfxV2d(200, 200), &AfxString("Test"), 738);
 
-                if (AfxPresentDrawOutputBuffer(dout, outBufIdx, portIdx, dscrCompleteSem))
+                if (AFX_INVALID_INDEX == AfxPresentDrawOutputBuffer(dout, outBufIdx, portIdx, dscrCompleteSem))
                     AfxThrowError();
 
             }
@@ -300,19 +300,21 @@ _AFXEXPORT afxResult Once(afxApplication app)
     hdr.sklDirBaseOffset = firstSklOffset;
 #endif
 
-#if !0
+#if 0
     afxSize firstMshtOffset = AfxGetStreamPosn(fs);
     AfxSerializeMeshTopologies(fs, 1, (void*[]) { AfxGetMeshTopology(cube) });
     hdr.mshtCnt = 1;
     hdr.mshtDirBaseOffset = firstMshtOffset;
 #endif
 
+#if 0
     AfxWriteStream(fs, sizeof(hdr), 0, &hdr);
     AfxReleaseObjects(1, &fs);
 
     fs = AfxOpenFile(&uriMap, afxIoFlag_R);
     AfxSeekStreamFromEnd(fs, sizeof(hdr));
     AfxReadStream(fs, sizeof(hdr), 1, &hdr);
+#endif
     
 #if 0
     AfxAssert(hdr.sklCnt);
@@ -424,7 +426,7 @@ int main(int argc, char const* argv[])
         while (AfxSystemIsExecuting())
         {
             DrawInputProc(rnd->din, NIL);
-            SandboxProc(TheApp, (afxEvent[]) {0});
+            SandboxProc(TheApp, (afxUxEvent[]) {0});
             AfxDoSystemExecution(0);
         }
         AfxReleaseObjects(1, (void*[]) { TheApp });

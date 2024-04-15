@@ -21,6 +21,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/core/afxFixedString.h"
 #include "qwadro/math/afxVector.h"
+#include "qwadro/core/afxManager.h"
 
 AFX_DEFINE_HANDLE(afxHandle);
 
@@ -71,6 +72,22 @@ AFX void        XssPullString(afxShell sh, afxNat slot, afxString* s);
 AFX void GenAcqObj(afxShell sh);
 AFX void GenRelObj(void* data);
 
-AFX afxError    AfxAcquireShell(afxShell* sh);
+AFX afxError        AfxAcquireShell(afxShell* shell);
+
+AFX afxManager*     AfxGetControllerManager(void);
+AFX afxManager*     AfxGetKeyboardManager(void);
+AFX afxManager*     AfxGetMouseManager(void);
+
+AFX afxNat          AfxCountControllers(void);
+AFX afxNat          AfxCountKeyboards(void);
+AFX afxNat          AfxCountMouses(void);
+
+AFX afxNat          AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[]);
+AFX afxNat          AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboards[]);
+AFX afxNat          AfxEnumerateMouses(afxNat first, afxNat cnt, afxMouse mouses[]);
+
+AFX afxNat          AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxController, void*), void *udd);
+AFX afxNat          AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard, void*), void *udd);
+AFX afxNat          AfxInvokeMouses(afxNat first, afxNat cnt, afxBool(*f)(afxMouse, void*), void *udd);
 
 #endif//AFX_SHELL_H

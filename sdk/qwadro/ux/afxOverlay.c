@@ -308,6 +308,7 @@ _AUX afxBool DoutNotifyOvy(afxOverlay ovy, afxNat bufIdx)
     AfxAssertObjects(1, &ovy, afxFcc_OVY);
     ovy->w32.lastBufIdx = bufIdx;
     ovy->w32.swap = 1;
+    return 1;
 }
 
 _AUX afxError AfxDoOverlay(afxOverlay ovy)
@@ -475,7 +476,7 @@ _AUX afxError _AuxOvyCtor(afxOverlay ovy, afxCookie const *cookie)
             doutCfg.pixelFmtDs[0] = afxPixelFormat_D24;
             doutCfg.bufCnt = 3;
             doutCfg.endpointObj = ovy;
-            doutCfg.endpointNotifier = DoutNotifyOvy;
+            doutCfg.endpointNotifier = (void*)DoutNotifyOvy;
             doutCfg.w32.hinstance = ovy->w32.wndClss.hInstance;
             doutCfg.w32.hwnd = hWnd;
             doutCfg.udd = &ovy->w32.hDc;
@@ -518,6 +519,8 @@ _AUX afxError _AuxOvyDtor(afxOverlay ovy)
     AfxAssertObjects(1, &ovy, afxFcc_OVY);
 
     AfxCleanUpChainedManagers(&ovy->mgrChn);
+
+    AfxReleaseObjects(1, &ovy->dout);
 
     DragAcceptFiles(ovy->w32.hWnd, FALSE);
     DestroyWindow(ovy->w32.hWnd);

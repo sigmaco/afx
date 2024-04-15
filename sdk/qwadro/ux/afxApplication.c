@@ -132,7 +132,7 @@ _AUX afxDrawInput AfxApplicationGetDrawInput(afxApplication app)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &app, afxFcc_APP);
     afxDrawInput din = app->din;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
+    AfxTryAssertObjects(1, &din, afxFcc_DIN);
     return din;
 }
 

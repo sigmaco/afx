@@ -61,12 +61,10 @@ AFX_DEFINE_STRUCT(afxCmdBuffer)
     afxCmdId(*cpy)(afxDrawStream diob, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[]);
     afxCmdId(*set)(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxNat data);
     afxCmdId(*rw)(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* data);
-    afxCmdId(*io)(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxBool toHost, afxStream io);
 };
 
 AFX_DEFINE_STRUCT(afxCmdRaster)
 {
-    afxCmdId(*io)(afxDrawStream diob, afxRaster ras, afxStream iob, afxNat opCnt, afxRasterIoOp const ops[], afxBool down, afxCodec cdc);
     afxCmdId(*pak)(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[], afxBool unpack);
     afxCmdId(*cpy)(afxDrawStream diob, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[]);
     afxCmdId(*mip)(afxDrawStream diob, afxRaster ras, afxNat baseLod, afxNat lodCnt);

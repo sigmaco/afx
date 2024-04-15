@@ -108,7 +108,7 @@ AUX void                AfxFocusWidget(afxApplication app, afxWidget widg, afxV2
 AUX void                AfxGrabWidget(afxApplication app, afxWidget widg, afxV2d const point);
 AUX void                AfxHoverWidget(afxApplication app, afxWidget widg, afxV2d const point);
 
-AUX afxNat              AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget widgets[]);
+AUX afxNat              AfxEnumerateWidgets(afxOverlay ovy, afxNat first, afxNat cnt, afxWidget widgets[]);
 
 ////////////////////////////////////////////////////////////////////////////////
 

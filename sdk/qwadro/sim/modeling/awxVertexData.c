@@ -155,8 +155,6 @@ _AKX afxError AwxBufferizeVertexData(afxDrawInput din, awxVertexData vtd)
 
         if (attr->data)
             AfxUpdateBufferRegion(buf, &rgn, attr->data, srcStride);
-
-        
     }
     return err;
 }

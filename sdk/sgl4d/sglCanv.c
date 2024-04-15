@@ -146,7 +146,7 @@ _SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenu
                             AfxAssertObjects(1, &ras, afxFcc_RAS);
                             AfxAssert(AfxTestRasterUsage(ras, afxRasterUsage_DRAW));
 
-                            _SglBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+                            DpuBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
                             glTexHandle = ras->glHandle;
                             glTexTarget = ras->glTarget;
                             AfxAssert(gl->IsTexture(glTexHandle));
@@ -222,7 +222,7 @@ _SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenu
                             if (ras)
                             {
                                 AfxAssertObjects(1, &ras, afxFcc_RAS);
-                                _SglBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
+                                DpuBindAndSyncRas(dpu, sglBindFlag_SYNC, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, ras);
                             }
                         }
                     }

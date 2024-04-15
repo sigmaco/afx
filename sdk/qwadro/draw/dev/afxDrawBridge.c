@@ -293,11 +293,13 @@ _AVX afxError _AfxSubmitDrawQueueWorkloads(afxDrawBridge ddge, afxDrawSubmission
 
 #endif
 
-_AVX afxError AfxWaitForIdleDrawQueue(afxDrawBridge ddge, afxNat queueIdx)
+_AVX afxDrawDevice AfxGetDrawBridgeDevice(afxDrawBridge ddge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-    return ddge->waitCb(ddge, queueIdx);
+    afxDrawDevice ddev = AfxGetObjectProvider(ddge);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    return ddev;
 }
 
 _AVX afxDrawContext AfxGetDrawBridgeContext(afxDrawBridge ddge)
@@ -309,16 +311,14 @@ _AVX afxDrawContext AfxGetDrawBridgeContext(afxDrawBridge ddge)
     return dctx;
 }
 
-_AVX afxDrawDevice AfxGetDrawBridgeDevice(afxDrawBridge ddge)
+_AVX afxError AfxWaitForIdleDrawQueue(afxDrawBridge ddge, afxNat queIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-    afxDrawDevice ddev = AfxGetObjectProvider(ddge);
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    return ddev;
+    return ddge->waitCb(ddge, queIdx);
 }
 
-_AVX afxError AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[])
+_AVX afxNat AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
@@ -331,26 +331,30 @@ _AVX afxError AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxN
         If a command buffer was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
     */
 
-    if (ddge->executeCb(ddge, fenc, cnt, req))
+    afxNat queIdx;
+
+    if (AFX_INVALID_INDEX == (queIdx = ddge->executeCb(ddge, fenc, cnt, req)))
         AfxThrowError();
 
-    return err;
+    return queIdx;
 }
 
-_AVX afxError AfxEnqueueTransferRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[])
+_AVX afxNat AfxEnqueueTransferRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
     AfxAssert(req);
 
-    if (ddge->transferCb(ddge, fenc, cnt, req))
+    afxNat queIdx;
+
+    if (AFX_INVALID_INDEX == (queIdx = ddge->transferCb(ddge, fenc, cnt, req)))
         AfxThrowError();
 
-    return err;
+    return queIdx;
 }
 
-_AVX afxError AfxEnqueuePresentRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[])
+_AVX afxNat AfxEnqueuePresentRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
@@ -366,21 +370,25 @@ _AVX afxError AfxEnqueuePresentRequest(afxDrawBridge ddge, afxNat cnt, afxPresen
         However, the scope of this set of queue operations does not include the actual processing of the image by the presentation engine.
     */
 
-    if (ddge->presentCb(ddge, cnt, req))
+    afxNat queIdx;
+
+    if (AFX_INVALID_INDEX == (queIdx = ddge->presentCb(ddge, cnt, req)))
         AfxThrowError();
 
-    return err;
+    return queIdx;
 }
 
-_AVX afxError AfxEnqueueStampRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption)
+_AVX afxNat AfxEnqueueStampRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
     AfxAssert(req);
 
-    if (ddge->stampCb(ddge, cnt, req, origin, caption))
+    afxNat queIdx;
+
+    if (AFX_INVALID_INDEX == (queIdx = ddge->stampCb(ddge, cnt, req, origin, caption)))
         AfxThrowError();
 
-    return err;
+    return queIdx;
 }

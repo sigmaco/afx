@@ -238,9 +238,9 @@ _AVX afxError AfxPrintDrawBuffer(afxCanvas canv, afxNat surIdx, afxUri const* ur
     if (!AfxEnumerateDrawBuffers(canv, surIdx, 1, &ras)) AfxThrowError();
     else
     {
-        afxRasterIoOp op = { 0 };
-        op.rgn.layerCnt = canv->layerCnt;
-        AfxGetCanvasExtent(canv, op.rgn.whd);
+        afxRasterCopyOp op = { 0 };
+        op.dst.layerCnt = canv->layerCnt;
+        AfxGetCanvasExtent(canv, op.dst.whd);
 
         if (AfxPrintRasterToTarga(ras, &op, uri))
             AfxThrowError();

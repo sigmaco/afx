@@ -150,7 +150,7 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
             else
             {
                 AfxAssert(stride);
-                _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC, GL_ARRAY_BUFFER, buf, offset, range, stride, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
+                DpuBindAndSyncBuf(dpu, sglBindFlag_SYNC, GL_ARRAY_BUFFER, buf, offset, range, stride, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
                 gl->BindVertexBuffer(streamIdx, buf->glHandle, offset, stride); _SglThrowErrorOccuried();
             }
         }
@@ -184,7 +184,7 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
         }
         else
         {
-            _SglBindAndSyncBuf(dpu, sglBindFlag_SYNC | sglBindFlag_BIND | sglBindFlag_KEEP, GL_ELEMENT_ARRAY_BUFFER, buf, off, range, idxSrcSiz, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
+            DpuBindAndSyncBuf(dpu, sglBindFlag_SYNC | sglBindFlag_BIND | sglBindFlag_KEEP, GL_ELEMENT_ARRAY_BUFFER, buf, off, range, idxSrcSiz, /*buf->glUsage ? buf->glUsage : */GL_STATIC_DRAW);
             gl->BindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf->glHandle);
         }
     }
