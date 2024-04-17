@@ -21,6 +21,7 @@
 #ifndef AFX_STREAM_H
 #define AFX_STREAM_H
 
+#include "qwadro/core/afxAtomic.h"
 #include "qwadro/core/afxObject.h"
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/io/afxUri.h"

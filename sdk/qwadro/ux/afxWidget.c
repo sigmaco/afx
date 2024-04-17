@@ -62,25 +62,25 @@ _AUX afxClassConfig _AuxWidMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AUX afxError AfxAcquireWidgets(afxApplication app, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[])
+_AUX afxError AfxAcquireWidgets(afxOverlay ovy, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &app, afxFcc_APP);
+    AfxAssertObjects(1, &ovy, afxFcc_OVY);
 
-    afxManager* cls = AfxGetWidgetClass(app);
+    afxManager* cls = AfxGetWidgetClass(ovy);
     AfxAssertClass(cls, afxFcc_WID);
 
-    if (AfxAcquireObjects(cls, cnt, AfxObjects(widgets), (void const*[]) { app, config }))
+    if (AfxAcquireObjects(cls, cnt, AfxObjects(widgets), (void const*[]) { ovy, config }))
         AfxThrowError();
 
     return err;
 }
 
-_AUX afxNat AfxEnumerateWidgets(afxApplication app, afxNat first, afxNat cnt, afxWidget widgets[])
+_AUX afxNat AfxEnumerateWidgets(afxOverlay ovy, afxNat first, afxNat cnt, afxWidget widgets[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &app, afxFcc_APP);
-    afxManager *cls = AfxGetWidgetClass(app);
+    AfxAssertObjects(1, &ovy, afxFcc_OVY);
+    afxManager *cls = AfxGetWidgetClass(ovy);
     AfxAssertClass(cls, afxFcc_DCTX);
     return AfxEnumerateObjects(cls, first, cnt, AfxObjects(widgets));
 }

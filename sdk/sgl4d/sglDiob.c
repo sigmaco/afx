@@ -90,7 +90,7 @@ _SGL afxError _SglDiobDtor(afxDrawStream diob)
             //afxDrawContext dctx = AfxGetObjectProvider(&diob->base.obj);
             //AfxAssertType(dctxD, afxFcc_DCTX);
             //AfxDrawContextProcess(dctx); // process until draw context ends its works and unlock this script.
-            //AfxYieldThread();
+            //AfxYield();
         }
         break;
     }

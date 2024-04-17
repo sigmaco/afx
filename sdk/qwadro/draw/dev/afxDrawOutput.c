@@ -204,11 +204,12 @@ _AVX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 }
 #endif
 
-_AVX afxError AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait, afxV2d const origin, afxString const* caption)
+_AVX afxNat AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait, afxV2d const origin, afxString const* caption)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, bufIdx, 1);
+    afxNat queIdx = AFX_INVALID_INDEX;
     afxDrawContext dctx;
 
     if (!AfxGetDrawOutputContext(dout, &dctx)) AfxThrowError();
@@ -224,19 +225,20 @@ _AVX afxError AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat
         afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-        if (AfxEnqueueStampRequest(ddge, 1, &req, origin, caption))
+        if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueStampRequest(ddge, 1, &req, origin, caption)))
             AfxThrowError();
     }
-    return err;
+    return queIdx;
 }
 
-_AVX afxError AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait)
+_AVX afxNat AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, bufIdx, 1);
+    afxNat queIdx = AFX_INVALID_INDEX;
     afxDrawContext dctx;
-
+    
     if (!AfxGetDrawOutputContext(dout, &dctx)) AfxThrowError();
     else
     {
@@ -250,10 +252,10 @@ _AVX afxError AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxN
         afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-        if (AfxEnqueuePresentRequest(ddge, 1, &req))
+        if (AFX_INVALID_INDEX == (queIdx = AfxEnqueuePresentRequest(ddge, 1, &req)))
             AfxThrowError();
     }
-    return err;
+    return queIdx;
 }
 
 _AVX afxError AfxPrintDrawOutput(afxDrawOutput dout, afxNat bufIdx, afxUri const* uri)
@@ -274,15 +276,15 @@ _AVX afxError AfxPrintDrawOutput(afxDrawOutput dout, afxNat bufIdx, afxUri const
 // CONNECTION                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxBool AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* dctx)
+_AVX afxBool AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* context)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    afxDrawContext dctx2 = AfxGetLinker(&dout->dctx);
-    AfxTryAssertObjects(1, &dctx2, afxFcc_DCTX);
-    AfxAssert(dctx);
-    *dctx = dctx2;
-    return !!dctx2;
+    afxDrawContext dctx = AfxGetLinker(&dout->dctx);
+    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(context);
+    *context = dctx;
+    return !!dctx;
 }
 
 _AVX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
@@ -605,8 +607,6 @@ _AVX afxError AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
         dout->whd[2] = AfxMax(whd[2], 1);
         dout->wwOverHw = (afxReal64)dout->whd[0] / (afxReal64)dout->whd[1];
 
-        AfxRevalidateDrawOutputBuffers(dout);
-
         //afxEvent ev;
         //AfxEventDeploy(&ev, AFX_EVENT_DOUT_EXTENT, &dout->obj, dout->whd);
         //AfxNotifyObject(&dout->obj, &ev);
@@ -616,6 +616,8 @@ _AVX afxError AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
         afxV2d ndc;
         AfxNdcV2d(ndc, AfxSpawnV2d(whd2[0], whd2[1]), AfxSpawnV2d(dout->res[0], dout->res[1]));
         AfxLogEcho("DOUT#%03u adjusted. <%u, %u, %.3f> %f <%u, %u, %.3f>", AfxGetObjectId(dout), whd2[0], dout->res[0], ndc[0], dout->wwOverHw, whd2[1], dout->res[1], ndc[1]);
+
+        AfxRevalidateDrawOutputBuffers(dout);
 
         --dout->resizing;
     }
@@ -797,7 +799,7 @@ _AVX afxClassConfig const _AvxDoutMgrCfg =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxUri const* endpoint, afxDrawOutput* dout)
+_AVX afxError AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxUri const* endpoint, afxDrawOutput* output)
 // file, window, desktop, widget, etc; physical or virtual VDUs.
 {
     afxError err = AFX_ERR_NONE;
@@ -810,31 +812,31 @@ _AVX afxError AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, a
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
         afxManager* cls = AfxGetDrawOutputClass();
         AfxAssertClass(cls, afxFcc_DOUT);
-        afxDrawOutput dout2;
+        afxDrawOutput dout;
 
-        if (AfxAcquireObjects(cls, 1, (afxObject*)&dout2, (void const*[]) { ddev, cfg, endpoint })) AfxThrowError();
+        if (AfxAcquireObjects(cls, 1, (afxObject*)&dout, (void const*[]) { ddev, cfg, endpoint })) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &dout2, afxFcc_DOUT);
-            AfxAssert(dout);
-            *dout = dout2;
+            AfxAssertObjects(1, &dout, afxFcc_DOUT);
+            AfxAssert(output);
+            *output = dout;
         }
     }
     return err;
 }
 
-_AVX afxError AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* dout)
+_AVX afxError AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* output)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cfg);
-    afxDrawOutput dout2;
+    afxDrawOutput dout;
 
-    if (AfxOpenDrawOutput(ddevId, cfg, NIL, &dout2)) AfxThrowError();
+    if (AfxOpenDrawOutput(ddevId, cfg, NIL, &dout)) AfxThrowError();
     else
     {
-        AfxAssertObjects(1, &dout2, afxFcc_DOUT);
-        AfxAssert(dout);
-        *dout = dout2;
+        AfxAssertObjects(1, &dout, afxFcc_DOUT);
+        AfxAssert(output);
+        *output = dout;
     }
     return err;
 }

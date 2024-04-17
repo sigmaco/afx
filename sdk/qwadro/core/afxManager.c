@@ -14,6 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
+#define _AFX_MANAGER_C
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxBool metaObjectMgrInited = FALSE;
@@ -71,7 +72,7 @@ _AFX afxResult AfxCleanUpChainedManagers(afxChain *provisions)
             else
             {
                 AfxAssert(mgr->maxInstCnt == 1);
-                AfxAssert(mgr->pool.totalUsedCnt == 1);
+                //AfxAssert(mgr->pool.totalUsedCnt == 1);
                 break; // has only the SYS. We can't drop it else we will fuck the entire platform. Break.
             }                
         }
@@ -291,13 +292,33 @@ _AFX afxError _AfxDeallocateObjects(afxManager *mgr, afxNat cnt, afxObject objec
     return err;
 }
 
+_AFX afxError _AfxAllocateObjects(afxManager *mgr, afxNat cnt, afxObject objects[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(mgr);
+    AfxAssertType(mgr, afxFcc_CLS);
+    AfxAssert(cnt);
+
+    afxPool* pool = &mgr->pool;
+    afxNat room = (mgr->maxInstCnt - pool->totalUsedCnt);
+
+    if ((room == 0) || (cnt > room))
+        AfxThrowError();
+    else
+    {
+        if (AfxAllocatePoolUnits(pool, cnt, (void**)objects))
+            AfxThrowError();
+    }
+    return err;
+}
+
 _AFX afxError _AfxAllocateObjectsAt(afxManager *mgr, afxNat subset, afxNat cnt, afxObject objects[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(mgr);
     AfxAssertType(mgr, afxFcc_CLS);
     AfxAssert(cnt);
-    
+
     afxPool* pool = &mgr->pool;
     afxNat room = (mgr->maxInstCnt - pool->totalUsedCnt);
 
@@ -323,26 +344,6 @@ _AFX afxError _AfxAllocateObjectsAt(afxManager *mgr, afxNat subset, afxNat cnt, 
                 _AfxDeallocateObjects(mgr, i, objects);
             }
         }
-    }
-    return err;
-}
-
-_AFX afxError _AfxAllocateObjects(afxManager *mgr, afxNat cnt, afxObject objects[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(mgr);
-    AfxAssertType(mgr, afxFcc_CLS);
-    AfxAssert(cnt);
-
-    afxPool* pool = &mgr->pool;
-    afxNat room = (mgr->maxInstCnt - pool->totalUsedCnt);
-
-    if ((room == 0) || (cnt > room))
-        AfxThrowError();
-    else
-    {
-        if (AfxAllocatePoolUnits(pool, cnt, (void**)objects))
-            AfxThrowError();
     }
     return err;
 }
@@ -595,11 +596,14 @@ _AFX afxNat AfxExhaustManager(afxManager *mgr)
     AfxAssertType(mgr, afxFcc_CLS);
     afxNat rslt = 0;
 
-    afxObject obj;
-    while (_AfxClsEnumerateObjects(mgr, TRUE, 0, 1, &obj))
+    if (mgr->siz)
     {
-        while (TRUE != AfxReleaseObjects(1, &obj));
-        ++rslt;
+        afxObject obj;
+        while (_AfxClsEnumerateObjects(mgr, TRUE, 0, 1, &obj))
+        {
+            while (TRUE != AfxReleaseObjects(1, &obj));
+            ++rslt;
+        }
     }
     return rslt;
 }

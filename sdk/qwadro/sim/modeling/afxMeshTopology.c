@@ -172,7 +172,7 @@ _AKX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
             AfxUpdateBufferRegion(cache->buf, &rgn, msht->tris, sizeof(msht->tris[0][0]));
 
             // debug
-            void* p = AfxMapBufferRange(cache->buf, cache->base, cache->range, afxBufferAccess_W);
+            void* p = AfxMapBuffer(cache->buf, cache->base, cache->range, afxBufferAccess_W);
 
             for (afxNat i = 0; i < msht->triCnt; i++)
             {
@@ -208,7 +208,7 @@ _AKX afxError AfxBufferizeMeshTopology(afxMeshTopology msht)
                 }
             }
 
-            AfxUnmapBufferRange(cache->buf);
+            AfxUnmapBuffer(cache->buf);
         }
     }
     return err;

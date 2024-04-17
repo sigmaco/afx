@@ -16,8 +16,16 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
+#include "qwadro/../_dep/luna_vm.h"
 #include "qwadro/../_dep/luna.h"
 #include "qwadro/core/afxSystem.h"
+
+extern afxClassConfig const _AfxKbdMgrCfg;
+extern afxClassConfig const _AfxMseMgrCfg;
+extern afxClassConfig const _AfxCtrlMgrCfg;
+
+extern afxError _AfxRunDtor(afxShell env);
+extern afxError _AfxRunCtor(afxShell env, afxCookie const* cookie);
 
 _AFX void GenAcqObj(afxShell sh)
 {
@@ -217,19 +225,19 @@ _AFX afxError XssCall(afxShell sh, afxHandle method)
     return lunaCall(sh, method);
 }
 
-_AFX afxError AfxAcquireShell(afxShell* sh)
+_AFX afxError AfxAcquireShell(afxShell* shell)
 {
     afxError err = AFX_ERR_NONE;
 
     afxManager* cls = AfxGetEnvironmentClass();
     AfxAssertClass(cls, afxFcc_ENV);
-    afxShell env2;
+    afxShell sh;
 
-    if (AfxAcquireObjects(cls, 1, (afxObject*)&env2, (void const*[]) { NIL }))
+    if (AfxAcquireObjects(cls, 1, (afxObject*)&sh, (void const*[]) { NIL }))
         AfxThrowError();
 
-    AfxAssert(sh);
-    *sh = env2;
+    AfxAssert(shell);
+    *shell = sh;
 
     return err;
 }
@@ -323,4 +331,80 @@ _AFX afxResult AfxInjectScript(afxString const* domain, afxString const* code)
     afxResult xRslt = lunaInterpret(sh, dom.buf, code->start);
     
     return xRslt;
+}
+
+_AFX afxError _AfxShCtor(afxShell sh, afxCookie const* cookie)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sh, afxFcc_ENV);
+
+    if (_AfxRunCtor(sh, cookie))
+        AfxThrowError();
+
+    afxChain* mgrChn = &sh->mgrChn;
+    AfxSetUpChain(mgrChn, sh);
+    afxClassConfig clsCfg;
+
+    AfxEstablishManager(&sh->kbdMgr, AfxGetHidManager(), mgrChn, &_AfxKbdMgrCfg); // require hid
+    AfxEstablishManager(&sh->mseMgr, AfxGetHidManager(), mgrChn, &_AfxMseMgrCfg); // require hid
+    AfxEstablishManager(&sh->ctrlMgr, AfxGetHidManager(), mgrChn, &_AfxCtrlMgrCfg); // require hid
+
+    return err;
+}
+
+_AFX afxError _AfxShDtor(afxShell sh)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sh, afxFcc_ENV);
+
+    AfxCleanUpChainedManagers(&sh->mgrChn);
+
+    if (_AfxRunDtor(sh))
+        AfxThrowError();
+
+    return err;
+}
+
+_AFX afxClassConfig const _AfxShMgrCfg =
+{
+    .fcc = afxFcc_ENV,
+    .name = "Shell",
+    .desc = "Execution Environment",
+    .unitsPerPage = 1,
+    .size = sizeof(AFX_OBJECT(afxShell)),
+    .ctor = (void*)_AfxShCtor,
+    .dtor = (void*)_AfxShDtor
+};
+
+_AFX afxManager* AfxGetKeyboardManager(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxShell sh;
+    AfxGetShell(&sh);
+    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxManager *cls = &sh->kbdMgr;
+    AfxAssertClass(cls, afxFcc_KBD);
+    return cls;
+}
+
+_AFX afxManager* AfxGetMouseManager(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxShell sh;
+    AfxGetShell(&sh);
+    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxManager *cls = &sh->mseMgr;
+    AfxAssertClass(cls, afxFcc_MSE);
+    return cls;
+}
+
+_AFX afxManager* AfxGetControllerManager(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxShell sh;
+    AfxGetShell(&sh);
+    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxManager *cls = &sh->ctrlMgr;
+    AfxAssertClass(cls, afxFcc_CTRL);
+    return cls;
 }

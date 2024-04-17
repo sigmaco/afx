@@ -305,7 +305,7 @@ _AFX afxError AfxAcquireKeyboard(afxNat port, afxKeyboard* keyboard)
     {
         AfxLogEcho("Acquiring keyboard at port %u", port);
 
-        afxManager* cls = AfxGetKeyboardClass();
+        afxManager* cls = AfxGetKeyboardManager();
         AfxAssertClass(cls, afxFcc_KBD);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&kbd, (void const*[]) { &port }))
@@ -344,7 +344,7 @@ _AFX afxNat AfxInvokeKeyboards(afxNat first, afxNat cnt, afxBool(*f)(afxKeyboard
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardManager();
     AfxAssertClass(cls, afxFcc_KBD);
     return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
 }
@@ -354,7 +354,7 @@ _AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboard
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(keyboards);
-    afxManager* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardManager();
     AfxAssertClass(cls, afxFcc_KBD);
     return AfxEnumerateObjects(cls, first, cnt, (afxObject*)keyboards);
 }
@@ -362,7 +362,7 @@ _AFX afxNat AfxEnumerateKeyboards(afxNat first, afxNat cnt, afxKeyboard keyboard
 _AFX afxNat AfxCountKeyboards(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetKeyboardClass();
+    afxManager* cls = AfxGetKeyboardManager();
     AfxAssertClass(cls, afxFcc_KBD);
     return AfxCountObjects(cls);
 }

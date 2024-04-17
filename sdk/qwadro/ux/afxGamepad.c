@@ -47,7 +47,6 @@ _AFX afxResult _AfxCtrlCtor(afxController ctrl, afxCookie const *cookie)
     ctrl->hid.port = port;
     ctrl->hid.flags = NIL;
 
-
     return err;
 }
 
@@ -68,7 +67,7 @@ _AFX afxClassConfig const _AfxCtrlMgrCfg =
 _AFX afxError AfxAcquireControllers(afxNat cnt, afxNat const port[], afxController controllers[])
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetControllerClass();
+    afxManager* cls = AfxGetControllerManager();
     AfxAssertClass(cls, afxFcc_CTRL);
 
     for (afxNat i = 0; i < cnt; i++)
@@ -98,34 +97,6 @@ _AFX afxError AfxAcquireControllers(afxNat cnt, afxNat const port[], afxControll
     return err;
 }
 
-_AFX afxNat AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxController, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetControllerClass();
-    AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(controllers);
-    afxManager* cls = AfxGetControllerClass();
-    AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)controllers);
-}
-
-_AFX afxNat AfxCountControllers(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetControllerClass();
-    AfxAssertClass(cls, afxFcc_CTRL);
-    return AfxCountObjects(cls);
-}
-
 _AFX afxController AfxGetController(afxNat port)
 {
     afxError err = AFX_ERR_NONE;
@@ -141,4 +112,32 @@ _AFX afxController AfxGetController(afxNat port)
         ++i;
     }
     return NIL;
+}
+
+_AFX afxNat AfxInvokeControllers(afxNat first, afxNat cnt, afxBool(*f)(afxController, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxManager* cls = AfxGetControllerManager();
+    AfxAssertClass(cls, afxFcc_CTRL);
+    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+}
+
+_AFX afxNat AfxEnumerateControllers(afxNat first, afxNat cnt, afxController controllers[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(controllers);
+    afxManager* cls = AfxGetControllerManager();
+    AfxAssertClass(cls, afxFcc_CTRL);
+    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)controllers);
+}
+
+_AFX afxNat AfxCountControllers(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxManager* cls = AfxGetControllerManager();
+    AfxAssertClass(cls, afxFcc_CTRL);
+    return AfxCountObjects(cls);
 }

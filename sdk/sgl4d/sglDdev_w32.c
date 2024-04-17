@@ -64,7 +64,7 @@ _SGL afxError SglSwapBuffers(HDC hdc, wglVmt const* vmt)
 
     //SetWindowTextA(doutD->wglWnd, doutD->title.buf); // deadlocks mem threads on exit
     //UpdateWindow(doutD->wglWnd);
-    //AfxYieldThread();
+    //AfxYield();
 
     return err;
 }
@@ -856,7 +856,16 @@ _SGL afxBool _SglDctxProcCb(afxDrawContext dctx, void *udd)
 
     //AfxInvokeConnectedDrawInputs(dctx, 0, AFX_N32_MAX, _SglDinProcCb, &ev);
 
-    _SglDdevProcDpuCb(thr, dctx);
+    afxNat dxgeIdx = 0;
+    afxDrawBridge ddge;
+    AfxIterateLinkageB2F(AFX_OBJECT(afxDrawBridge), ddge, &dctx->base.ownedBridges, base.dctx)
+    {
+        AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+
+        _DdgeProcCb(ddge, thr);
+        ++dxgeIdx;
+    }
+
     _SglDdevProcessResDel(ddev, 0); // delete after is safer?
 
     //AfxInvokeConnectedDrawOutputs(dctx, 0, AFX_N32_MAX, _SglDoutProcCb, (void*)thr);
@@ -869,12 +878,21 @@ _SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxThread thr)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssertObjects(1, &thr, afxFcc_THR);
+
     afxDrawSystem dsys;
     AfxGetDrawSystem(&dsys);
     AfxAssertObjects(1, &dsys, afxFcc_DSYS);
 
-    AfxInvokeDrawContexts(ddev, 0, AFX_N32_MAX, _SglDctxProcCb, (void*)thr);
+    //AfxInvokeDrawContexts(ddev, 0, AFX_N32_MAX, _SglDctxProcCb, (void*)thr);
 
+    afxNat portCnt = ddev->portCnt;
+
+    for (afxNat i = 0; i < portCnt; i++)
+    {
+        afxManager* mgr = &ddev->ports[i].ddgeMgr;
+        AfxAssertClass(mgr, afxFcc_DDGE);
+        AfxInvokeObjects(mgr, 0, AFX_N32_MAX, (void*)_DdgeProcCb, thr);
+    }
     return err;
 }
 
@@ -929,6 +947,11 @@ _SGL afxError _SglDdevIddDtor(afxDrawDevice ddev)
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
     AfxExhaustChainedManagers(&ddev->dev.classes);
+
+    afxResult exitCode;
+    AfxRequestThreadInterruption(ddev->idd->dedThread);
+    AfxWaitForThread(ddev->idd->dedThread, &exitCode);
+    AfxReleaseObjects(1, &ddev->idd->dedThread);
 
 #if 0
     for (afxNat i = ddev->idd->dpuCnt; i-- > 0;)
@@ -1010,7 +1033,7 @@ _SGL afxError _SglDdevIddCtor(afxDrawDevice ddev)
             ddev->ports[i].portCaps = portCaps[i];
 
             tmpClsCfg = _SglDdgeMgrCfg;
-            AfxEstablishManager(&ddev->ports[i].queues, NIL, classes, &tmpClsCfg);
+            AfxEstablishManager(&ddev->ports[i].ddgeMgr, NIL, classes, &tmpClsCfg);
         }
 
         // dctx must be after ddge

@@ -28,15 +28,6 @@ AFX_DEFINE_STRUCT(afxBufferCopyOp)
     afxNat              range; /// is the number of bytes to copy.
 };
 
-AFX_DEFINE_STRUCT(afxBufferIoOp)
-{
-    afxNat              range; /// is the number of bytes to copy.
-    afxNat              srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
-    afxNat              srcStride;
-    afxNat              dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
-    afxNat              dstStride;
-};
-
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////

@@ -263,7 +263,7 @@ _AKX afxError AfxRigMeshes(afxModel mdl, afxSkeleton sklOrig, afxNat baseRig, af
 
                     if (AfxRiggedMeshIsTransplanted(mdl, rigIdx))
                     {
-                        afxSkeleton sklOrig = mdl->rigs[rigIdx].sklOrig;
+                        afxSkeleton sklOrig = rig->sklOrig;
                         AfxTryAssertObjects(1, &sklOrig, afxFcc_SKL);
                         AfxReleaseObjects(1, (void*[]) { sklOrig });
                         rig->sklOrig = NIL;
@@ -352,11 +352,13 @@ _AKX afxError _AfxMdlDtor(afxModel mdl)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
-    for (afxNat i = 0; i < mdl->rigCnt; i++)
-        AfxRigMeshes(mdl, NIL, i, 1, NIL);
-
     if (mdl->rigs)
+    {
+        for (afxNat i = 0; i < mdl->rigCnt; i++)
+            AfxRigMeshes(mdl, NIL, i, 1, NIL);
+
         AfxDeallocate(mdl->rigs);
+    }
 
     afxSkeleton skl;
 

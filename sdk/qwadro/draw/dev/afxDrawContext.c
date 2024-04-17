@@ -343,9 +343,22 @@ _AVX afxNat AfxInvokeDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, 
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetDrawContextClass(ddev);
-    AfxAssertClass(cls, afxFcc_DCTX);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    afxManager* mgr = AfxGetDrawContextClass(ddev);
+    AfxAssertClass(mgr, afxFcc_DCTX);
+#if 0
+    afxNat rslt = 0;
+
+    // This function is used during draw context acquisition to process default resource loading. Due to generic manager method not processing uncounted 
+
+    //if (mgr->instCnt)
+    {
+        AfxEnterSlockShared((void*)&mgr->poolLock);
+        rslt = _AfxClsCurateObjects(mgr, FALSE, first, cnt, f, udd);
+        AfxExitSlockShared((void*)&mgr->poolLock);
+    }
+    return rslt;
+#endif
+    return AfxInvokeObjects(mgr, first, cnt, (void*)f, udd);
 }
 
 _AVX afxNat AfxEnumerateDrawContexts(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawContext contexts[])

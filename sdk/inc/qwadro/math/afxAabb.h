@@ -16,14 +16,15 @@
 
 // This code is part of SIGMA Foundation Math <https://sigmaco.org/math>
 
+/// An axis-aligned bounding box, or AABB for short, is a box aligned with coordinate axes and fully enclosing some object.
+/// Because the box is never rotated with respect to the axes, it can be defined by supremum and infemum points.
+/// The AABB data in memory is six 32-bit floats consisting of the minimum x, y, and z values followed by the maximum x, y, and z values.
+
 #ifndef AFX_AABB_H
 #define AFX_AABB_H
 
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxSphere.h"
-
-/// An axis-aligned bounding box, or AABB for short, is a box aligned with coordinate axes and fully enclosing some object.
-/// Because the box is never rotated with respect to the axes, it canv be defined by supremum and infemum points.
 
 #define AFX_AABB_SUP 0
 #define AFX_AABB_INF 1
@@ -37,30 +38,30 @@ AFX_DEFINE_STRUCT(afxAabb)
 };
 */
 
-AFXINL void         AfxResetAabb(afxAabb aabb); // make identity
+AFXINL void         AfxResetAabb(afxAabb bb); // make identity
 
 /// Automaticallly constructs an AABB from a list of vertex positions only.
-AFXINL void         AfxRecomputeAabb(afxAabb aabb, afxNat cnt, afxV3d const points[]);
+AFXINL void         AfxRecomputeAabb(afxAabb bb, afxNat cnt, afxV3d const points[]);
 
-AFXINL void         AfxCopyAabb(afxAabb aabb, afxAabb const in);
+AFXINL void         AfxCopyAabb(afxAabb bb, afxAabb const in);
 
 /// Returns the centre point of this AABB and the distance to each side of the box.
-AFXINL void         AfxGetAabbExtents(afxAabb const aabb, afxV3d extent);
-AFXINL void         AfxGetAabbCentre(afxAabb const aabb, afxV4d centre);
+AFXINL void         AfxGetAabbExtents(afxAabb const bb, afxV3d extent);
+AFXINL void         AfxGetAabbCentre(afxAabb const bb, afxV4d centre);
 
-AFXINL void         AfxExtractAabbCorner(afxAabb const aabb, afxNat index, afxV4d corner);
+AFXINL void         AfxExtractAabbCorner(afxAabb const bb, afxNat index, afxV4d corner);
 
-AFXINL void         AfxEncapsulateAabbs(afxAabb aabb, afxNat cnt, afxAabb const other[]);
-AFXINL void         AfxEncapsulatePoints(afxAabb aabb, afxNat cnt, afxV4d const v[]);
-AFXINL void         AfxEncapsulateSpheres(afxAabb aabb, afxNat cnt, afxSphere const sph[]);
-AFXINL void         AfxEncapsulateVertices(afxAabb aabb, afxNat cnt, afxV3d const v[]);
+AFXINL void         AfxEncapsulateAabbs(afxAabb bb, afxNat cnt, afxAabb const other[]);
+AFXINL void         AfxEncapsulatePoints(afxAabb bb, afxNat cnt, afxV4d const v[]);
+AFXINL void         AfxEncapsulateSpheres(afxAabb bb, afxNat cnt, afxSphere const sph[]);
+AFXINL void         AfxEncapsulateVertices(afxAabb bb, afxNat cnt, afxV3d const v[]);
 
-AFXINL afxBool      AfxAabbContainsAabbs(afxAabb const aabb, afxNat cnt, afxAabb const other[]);
-AFXINL afxMask      AfxAabbContainsPoints(afxAabb const aabb, afxNat cnt, afxV3d const v[32]);
-AFXINL afxBool      AfxAabbContainsSpheres(afxAabb const aabb, afxNat cnt, afxSphere const sph[]);
+AFXINL afxBool      AfxAabbContainsAabbs(afxAabb const bb, afxNat cnt, afxAabb const other[]);
+AFXINL afxNat       AfxAabbContainsPoints(afxAabb const bb, afxNat cnt, afxV3d const v[]);
+AFXINL afxBool      AfxAabbContainsSpheres(afxAabb const bb, afxNat cnt, afxSphere const sph[]);
 
 /// Given an AABB in local space, transform to world space
-AFXINL void         AfxTransformAabb(afxAabb const aabb, afxM4d const m, afxAabb to);
+AFXINL void         AfxTransformAabb(afxAabb const bb, afxM4d const m, afxAabb to);
 
 AFXINL void         AfxTransformObbs(afxM3d const ltm, afxV4d const atv, afxNat cnt, afxAabb const in[], afxAabb out[]);
 

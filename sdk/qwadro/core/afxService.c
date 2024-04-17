@@ -78,7 +78,7 @@ _AFX void RequestJobWorker(afxWorkerFn in_fnJobWorker, afxJobType jobType, afxNa
         //while (!AfxEnqueueFifo(&fifo, jobType))
         {
             // if the job could not be enqueued, then yield the thread so that someone else can clear up the queue, and try again
-            AfxYieldThread();
+            AfxYield();
         }
     }
     //AfxReleaseSemaphore(g_semaphore, workerCnt);

@@ -107,39 +107,3 @@ _AVX afxCmdId AfxCmdDumpBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset,
     AfxAssert(dst);
     return diob->stdCmds->buf.rw(diob, buf, offset, range, TRUE, dst);
 }
-
-_AVX afxCmdId AfxCmdStreamUpBuffer(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
-    return diob->stdCmds->buf.io(diob, buf, opCnt, ops, FALSE, in);
-}
-
-_AVX afxCmdId AfxCmdStreamDownBuffer(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
-    return diob->stdCmds->buf.io(diob, buf, opCnt, ops, TRUE, out);
-}
-
-_AVX afxCmdId AfxCmdUploadBuffer(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
-    return diob->stdCmds->buf.io(diob, buf, opCnt, ops, FALSE, in);
-}
-
-_AVX afxCmdId AfxCmdDownloadBuffer(afxDrawStream diob, afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
-    return diob->stdCmds->buf.io(diob, buf, opCnt, ops, TRUE, out);
-}

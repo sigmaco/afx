@@ -159,6 +159,10 @@ AFX afxError    AfxAcquireObjects(afxManager* cls, afxNat cnt, afxObject handles
 AFX afxError    AfxReacquireObjects(afxNat cnt, afxObject handles[]);
 AFX afxBool     AfxReleaseObjects(afxNat cnt, afxObject handles[]);
 
+#ifndef _AFX_MANAGER_C
+#   define AfxReleaseObjects(cnt_, objects_) AfxReleaseObjects((cnt_), (afxObject*)(objects_))
+#endif
+
 AFX afxBool     _AfxAssertObjects(afxNat cnt, afxObject const handles[], afxFcc fcc);
 #define         AfxAssertObjects(cnt_, objs_, fcc_) AfxAssert(((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_)))
 #define         AfxTryAssertObjects(cnt_, objs_, fcc_) AfxAssert((!(((afxObject const*)objs_)[0])) || (((afxResult)(cnt_)) == _AfxAssertObjects((cnt_), (afxObject const*)(objs_),(fcc_))))

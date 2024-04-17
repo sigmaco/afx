@@ -83,7 +83,19 @@ _AKX afxError AfxBuildSkybox(awxSky* sky, afxSimulation sim)
     AfxMakeUri(&cubeUri[4], "art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
     AfxMakeUri(&cubeUri[5], "art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
 #endif
-    sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, cubeUri);
+
+    afxUri facesUri[6];
+    AfxMakeUri(&facesUri[0], "right.tga", 0); // x+
+    AfxMakeUri(&facesUri[1], "left.tga", 0); // x-
+    AfxMakeUri(&facesUri[3], "top.tga", 0);
+    AfxMakeUri(&facesUri[2], "bottom.tga", 0); // y-
+    AfxMakeUri(&facesUri[4], "front.tga", 0);
+    AfxMakeUri(&facesUri[5], "back.tga", 0);
+
+    afxUri cubeDir;
+    AfxMakeUri(&cubeDir, "art/skybox/purple", 0);
+
+    sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, &cubeDir, facesUri);
     //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
 
 

@@ -26,46 +26,38 @@ AFX_DEFINE_UNION(afxClearValue)
 {
     union
     {
-        afxV4d              color;
-        afxInt              colori[4];
-        afxNat              colorn[4];
+        afxV4d      color;
+        afxInt      colori[4];
+        afxNat      colorn[4];
     };
     struct
     {
-        afxReal             depth; /// default is 1.f
-        afxNat              stencil; /// default is 0
+        afxReal     depth; /// default is 1.f
+        afxNat      stencil; /// default is 0
     };
-};
-
-AFX_DEFINE_STRUCT(afxRasterCopyOp)
-/// Especificação de operação de cópia de afxRaster.
-{
-    afxNat                  srcLodIdx;
-    afxNat                  srcBaseLayer;
-    afxNat                  srcLayerCnt;
-    afxWhd                  srcOffset; /// select the initial x, y, and z offsets in texels of the sub-regions of the source and destination afxRaster data.
-    afxRasterRegion         dst;
 };
 
 AFX_DEFINE_STRUCT(afxRasterBlitOp)
 /// Structure specifying an afxRaster blit operation.
 {
-    afxRasterRegion         src;
-    afxRasterRegion         dst;
+    afxRasterRegion src;
+    afxRasterRegion dst;
 };
 
 AFX_DEFINE_STRUCT(afxRasterSubset)
 /// Structure specifying an afxRaster subresource range.
 {
-    afxNat                  baseLod; /// the first mipmap level accessible to the view.
-    afxNat                  lodCnt; /// the number of mipmap levels (starting from @baseLodIdx) accessible to the view.
-    afxNat                  baseLayer; /// the first array layer accessible to the view.
-    afxNat                  layerCnt; /// the number of array layers (starting from @baseLayer) accessible to the view.
+    afxNat          baseLod; /// the first mipmap level accessible to the view.
+    afxNat          lodCnt; /// the number of mipmap levels (starting from @baseLodIdx) accessible to the view.
+    afxNat          baseLayer; /// the first array layer accessible to the view.
+    afxNat          layerCnt; /// the number of array layers (starting from @baseLayer) accessible to the view.
 };
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDOS                                                            ////
 //////////////////////////////////////////////////////////////////////////////
+
+#if 0
 
 AVX afxCmdId                AfxCmdInputRaster
 /// Load data from a afxStream into an afxRaster.
@@ -115,7 +107,9 @@ AVX afxCmdId                AfxCmdOutputRasterRegion
     afxCodec                cdc
 );
 
-AVX afxCmdId                AfxCmdPackRaster
+#endif
+
+AVX afxCmdId                AfxCmdPackRaster2
 /// Copy afxRaster data into a afxBuffer.
 (
     afxDrawStream           diob,
@@ -125,7 +119,7 @@ AVX afxCmdId                AfxCmdPackRaster
     afxRasterIoOp const     ops[] /// an array of structures specifying the regions to copy.
 );
 
-AVX afxCmdId                AfxCmdPackRasterRegion
+AVX afxCmdId                AfxCmdPackRaster
 /// Copy afxRaster data into a afxBuffer.
 (
     afxDrawStream           diob,
@@ -137,7 +131,7 @@ AVX afxCmdId                AfxCmdPackRasterRegion
     afxNat                  bufRowCnt /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
 );
 
-AVX afxCmdId                AfxCmdUnpackRaster
+AVX afxCmdId                AfxCmdUnpackRaster2
 /// Copy data from a afxBuffer into an afxRaster.
 (
     afxDrawStream           diob,
@@ -147,7 +141,7 @@ AVX afxCmdId                AfxCmdUnpackRaster
     afxRasterIoOp const     ops[] /// an array of structures specifying the regions to copy.
 );
 
-AVX afxCmdId                AfxCmdUnpackRasterRegion
+AVX afxCmdId                AfxCmdUnpack
 /// Copy data from a afxBuffer into an afxRaster.
 (
     afxDrawStream           diob,
@@ -159,7 +153,7 @@ AVX afxCmdId                AfxCmdUnpackRasterRegion
     afxNat                  bufRowCnt /// (aka rows per afxRaster) specify in texels a subregion of a larger two- or three-dimensional afxRaster in buffer memory, and control the addressing calculations. If either of these values is zero, that aspect of the buffer memory is considered to be tightly packed according to the imageExtent.
 );
 
-AVX afxCmdId                AfxCmdCopyRaster
+AVX afxCmdId                AfxCmdCopyRaster2
 /// Copy data between afxRaster's.
 (
     afxDrawStream           diob,
@@ -169,7 +163,7 @@ AVX afxCmdId                AfxCmdCopyRaster
     afxRasterCopyOp const   ops[] /// an array of structures specifying the regions to copy.
 );
 
-AVX afxCmdId                AfxCmdCopyRasterRegion
+AVX afxCmdId                AfxCmdCopyRaster
 /// Copy data between afxRaster's.
 (
     afxDrawStream           diob,
@@ -182,7 +176,7 @@ AVX afxCmdId                AfxCmdCopyRasterRegion
     afxRasterRegion const*  dstRgn
 );
 
-AVX afxCmdId                AfxCmdSwizzleRaster
+AVX afxCmdId                AfxCmdSwizzleRaster2
 /// Permute color components of a raster.
 (
     afxDrawStream           diob,
@@ -193,7 +187,7 @@ AVX afxCmdId                AfxCmdSwizzleRaster
     afxRasterRegion const   regions[]
 );
 
-AVX afxCmdId                AfxCmdSwizzleRasterRegion
+AVX afxCmdId                AfxCmdSwizzleRaster
 (
     afxDrawStream           diob,
     afxRaster               ras,
@@ -202,7 +196,7 @@ AVX afxCmdId                AfxCmdSwizzleRasterRegion
     afxRasterRegion const*  rgn
 );
 
-AVX afxCmdId                AfxCmdTransformRaster
+AVX afxCmdId                AfxCmdTransformRaster2
 (
     afxDrawStream           diob,
     afxRaster               ras,
@@ -211,7 +205,7 @@ AVX afxCmdId                AfxCmdTransformRaster
     afxRasterRegion const   regions[]
 );
 
-AVX afxCmdId                AfxCmdTransformRasterRegion
+AVX afxCmdId                AfxCmdTransformRaster
 (
     afxDrawStream           diob,
     afxRaster               ras,

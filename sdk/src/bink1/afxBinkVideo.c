@@ -58,10 +58,17 @@ _AFXEXPORT afxError FreeBinkTextures(afxBinkVideo *bnk)
     afxError err = AFX_ERR_NONE;
 
     for (int i = 0; i < bnk->buffers.TotalFrames; ++i)
+    {
         for (afxNat j = 0; j < 4; j++)
+        {
             if (bnk->rasters[i][j])
                 AfxReleaseObjects(1, (void*[]) { bnk->rasters[i][j] });
 
+        }
+
+        if (bnk->stageBuffers[i])
+            AfxReleaseObjects(1, (void*[]) { bnk->stageBuffers[i] });
+    }
     return err;
 }
 
@@ -69,6 +76,8 @@ _AFXEXPORT afxError CreateBinkTextures(afxBinkVideo *bnk)
 {
     afxError err = AFX_ERR_NONE;
 
+    afxPixelLayout pfd;
+    AfxDescribePixelFormat(afxPixelFormat_R8, &pfd);
     afxRasterInfo texi[4] = { 0 };
     texi[0].whd[0] = (texi[3].whd[0] = bnk->buffers.YABufferWidth);
     texi[0].whd[1] = (texi[3].whd[1] = bnk->buffers.YABufferHeight);
@@ -80,41 +89,35 @@ _AFXEXPORT afxError CreateBinkTextures(afxBinkVideo *bnk)
     
     afxNat rasCnt = (bnk->hasAlphaPlane || (bnk->hasAlphaPlane = bnk->buffers.Frames[0][3].Allocate)) ? 4 : 3;
 
-    afxRasterRegion rgn = { 0 };
-    rgn.lodIdx = 0;
-    rgn.baseLayer = 0;
-    rgn.layerCnt = 1;
-    rgn.offset[0] = 0;
-    rgn.offset[1] = 0;
-    rgn.offset[2] = 0;
+    bnk->rasUnpakOff[0] = 0;
+    bnk->rasUnpakSiz[0] = AFX_ALIGN(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 16);
+    bnk->rasUnpakOff[1] = bnk->rasUnpakSiz[0];
+    bnk->rasUnpakSiz[1] = AFX_ALIGN(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 16);
+    bnk->rasUnpakOff[2] = bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[0];
+    bnk->rasUnpakSiz[2] = AFX_ALIGN(bnk->buffers.cRcBBufferWidth * bnk->buffers.cRcBBufferHeight, 16);
+    bnk->rasUnpakOff[3] = bnk->rasUnpakSiz[2] + bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[0];
+    bnk->rasUnpakSiz[3] = bnk->hasAlphaPlane ? AFX_ALIGN(bnk->buffers.YABufferWidth * bnk->buffers.YABufferHeight, 16) : 0;
+
+    afxBufferSpecification bufi = { 0 };
+    bufi.siz = bnk->rasUnpakSiz[0] + bnk->rasUnpakSiz[1] + bnk->rasUnpakSiz[2] + bnk->rasUnpakSiz[3];
+    bufi.access = afxBufferAccess_W;
+    bufi.usage = afxBufferUsage_SRC;
+
+    bnk->stageBufSiz = bufi.siz;
 
     for (afxNat i = 0; i < BINKMAXFRAMEBUFFERS; ++i)
     {
+        if (AfxAcquireBuffers(bnk->dctx, 1, &bufi, &bnk->stageBuffers[i]))
+            AfxThrowError();
+
         if (AfxAcquireRasters(bnk->dctx, rasCnt, texi, bnk->rasters[i])) AfxThrowError();
         else
         {
             for (afxNat j = 0; j < rasCnt; j++)
             {
-                AfxGetRasterExtent(bnk->rasters[i][j], 0, rgn.whd);
-
-                afxNat rowLen;
-                afxNat rgnSiz;
-
-                void* start;
-
-                if (!(start = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, &rgnSiz, &rowLen)))
-                {
-                    AfxThrowError();
-                    break;
-                }
-
-                bnk->buffers.Frames[i][j].Buffer = start;
-                bnk->buffers.Frames[i][j].BufferPitch = rowLen;
-
-                AfxCloseRasterRegion(bnk->rasters[i][j], &rgn);
+                bnk->buffers.Frames[i][j].BufferPitch = AFX_ALIGN(((j >= 1 && 2 <= j) ? bnk->buffers.cRcBBufferWidth : bnk->buffers.YABufferWidth), 16);
             }
         }
-
     }
 
     if (err)
@@ -123,53 +126,61 @@ _AFXEXPORT afxError CreateBinkTextures(afxBinkVideo *bnk)
     return err;
 }
 
-void LockBinkTextures(afxBinkVideo *bnk)
+#if !0
+void LockBinkTextures(afxBinkVideo *bnk, afxNat i)
 {
-    afxRasterRegion rgn;
-    rgn.lodIdx = 0;
-    rgn.baseLayer = 0;
-    rgn.layerCnt = 1;
-    rgn.offset[0] = 0;
-    rgn.offset[1] = 0;
-    rgn.offset[2] = 0;
+    afxError err = AFX_ERR_NONE;
+    afxNat rasCnt = bnk->hasAlphaPlane ? 4 : 3;
 
+#if !0
     for (afxInt i = 0; i < bnk->buffers.TotalFrames; ++i)
     {
-        afxNat rowLen, rgnSiz;
-        afxNat rasCnt = (bnk->hasAlphaPlane) ? 4 : 3;
+        afxByte* start;
 
-        for (afxNat j = 0; j < rasCnt; j++)
+        if (!(start = AfxMapBuffer(bnk->stageBuffers[i], 0, bnk->stageBufSiz, NIL)))
         {
-            AfxGetRasterExtent(bnk->rasters[i][j], 0, rgn.whd);
-
-            if ((bnk->buffers.Frames[i][j].Buffer = AfxOpenRasterRegion(bnk->rasters[i][j], &rgn, afxRasterAccess_W, &rgnSiz, &rowLen))) // = lr.pBits;
-                bnk->buffers.Frames[i][j].BufferPitch = rowLen;// = lr.Pitch;
+            AfxThrowError();
+            break;
+        }
+        else
+        {
+            for (afxNat j = 0; j < rasCnt; j++)
+            {
+                bnk->buffers.Frames[i][j].Buffer = &start[bnk->rasUnpakOff[j]];
+            }
         }
     }
+#else
+    afxByte* start;
+
+    if (!(start = AfxMapBuffer(bnk->stageBuffers[i], 0, bnk->stageBufSiz[i], NIL)))
+    {
+        AfxThrowError();
+    }
+    else
+    {
+        for (afxNat j = 0; j < rasCnt; j++)
+        {
+            bnk->buffers.Frames[i][j].Buffer = &start[bnk->rasUnpakOff[j]];
+        }
+    }
+#endif
+    BinkRegisterFrameBuffers(bnk->bik, &bnk->buffers);
 }
 
-void UnlockBinkTextures(afxBinkVideo *bnk)
+void UnlockBinkTextures(afxBinkVideo *bnk, afxNat i)
 {
-    afxRasterRegion rgn;
-    rgn.lodIdx = 0;
-    rgn.baseLayer = 0;
-    rgn.layerCnt = 1;
-    rgn.offset[0] = 0;
-    rgn.offset[1] = 0;
-    rgn.offset[2] = 0;
-
+    afxError err = AFX_ERR_NONE;
+#if !0
     for (afxInt i = 0; i < bnk->buffers.TotalFrames; ++i)
     {
-        afxNat rasCnt = (bnk->hasAlphaPlane) ? 4 : 3;
-
-        for (afxNat j = 0; j < rasCnt; j++)
-        {
-            AfxGetRasterExtent(bnk->rasters[i][j], 0, rgn.whd);
-            AfxCloseRasterRegion(bnk->rasters[i][j], &rgn);
-            bnk->buffers.Frames[i][j].Buffer = NIL;
-        }
+        AfxUnmapBuffer(bnk->stageBuffers[i]);
     }
+#else
+    AfxUnmapBuffer(bnk->stageBuffers[i]);
+#endif
 }
+#endif
 
 _AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob)
 {
@@ -179,6 +190,20 @@ _AFXEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob)
 
     AfxAssertObjects(1, &bnk->yv12ToRgbaPip, afxFcc_PIP);
     AfxCmdBindPipeline(diob, 0, bnk->yv12ToRgbaPip);
+
+    afxRasterRegion rgn = { 0 };
+    rgn.layerCnt = 1;
+    AfxGetRasterExtent(bnk->rasters[bnk->buffers.FrameNum][0], 0, rgn.whd);
+    AfxCmdUnpack(diob, bnk->rasters[bnk->buffers.FrameNum][0], &rgn, bnk->stageBuffers[bnk->buffers.FrameNum], bnk->rasUnpakOff[0], bnk->buffers.Frames[0][0].BufferPitch, bnk->buffers.YABufferHeight);
+    
+    if (bnk->hasAlphaPlane)
+    {
+        AfxCmdUnpack(diob, bnk->rasters[bnk->buffers.FrameNum][3], &rgn, bnk->stageBuffers[bnk->buffers.FrameNum], bnk->rasUnpakOff[3], bnk->buffers.Frames[0][3].BufferPitch, bnk->buffers.YABufferHeight);
+    }
+
+    AfxGetRasterExtent(bnk->rasters[bnk->buffers.FrameNum][1], 0, rgn.whd);
+    AfxCmdUnpack(diob, bnk->rasters[bnk->buffers.FrameNum][1], &rgn, bnk->stageBuffers[bnk->buffers.FrameNum], bnk->rasUnpakOff[1], bnk->buffers.Frames[0][1].BufferPitch, bnk->buffers.cRcBBufferHeight);
+    AfxCmdUnpack(diob, bnk->rasters[bnk->buffers.FrameNum][2], &rgn, bnk->stageBuffers[bnk->buffers.FrameNum], bnk->rasUnpakOff[2], bnk->buffers.Frames[0][2].BufferPitch, bnk->buffers.cRcBBufferHeight);
 
     // Set the textures.
     //AvxCmdBindLegos(diob, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
@@ -197,7 +222,7 @@ static void DecompressFrame(afxBinkVideo *bnk)
     //bnk->buffers.FrameNum = outBufIdx;
 
     // Lock the textures.
-    LockBinkTextures(bnk);
+    LockBinkTextures(bnk, bnk->buffers.FrameNum);
 
     End_and_start_next_timer(bnk->Render_microseconds);
 
@@ -214,7 +239,7 @@ static void DecompressFrame(afxBinkVideo *bnk)
     End_and_start_next_timer(bnk->Bink_microseconds);
 
     // Unlock the textures.
-    UnlockBinkTextures(bnk);
+    UnlockBinkTextures(bnk, bnk->buffers.FrameNum);
 
     End_and_start_next_timer(bnk->Render_microseconds);
 

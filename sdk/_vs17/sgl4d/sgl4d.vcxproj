@@ -168,7 +168,7 @@
     <ClCompile Include="..\..\sgl4d\sglDdev_w32.c" />
     <ClCompile Include="..\..\sgl4d\sglDin.c" />
     <ClCompile Include="..\..\sgl4d\sglDout_w32.c" />
-    <ClCompile Include="..\..\sgl4d\sglDxge_w32.c" />
+    <ClCompile Include="..\..\sgl4d\sglDdge_w32.c" />
     <ClCompile Include="..\..\sgl4d\sglDiob.c" />
     <ClCompile Include="..\..\sgl4d\sglFenc.c" />
     <ClCompile Include="..\..\sgl4d\sglLoader.c" />

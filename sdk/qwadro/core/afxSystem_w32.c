@@ -69,18 +69,13 @@ extern afxClassConfig const _AfxIosMgrCfg;
 extern afxClassConfig const _AfxCdcMgrCfg;
 //extern afxClassConfig const _AfxFileMgrCfg;
 extern afxClassConfig const _AfxArcMgrCfg;
-extern afxClassConfig const _AfxAppMgrCfg;
-extern afxClassConfig const _AfxKbdMgrCfg;
-extern afxClassConfig const _AfxMseMgrCfg;
 extern afxClassConfig const _AfxSimMgrCfg;
 extern afxClassConfig const _AfxSvcMgrCfg;
-extern afxClassConfig const _AfxIcdMgrCfg;
 extern afxClassConfig const _AfxDevMgrCfg;
 extern afxClassConfig const _AfxFsysMgrCfg;
 extern afxClassConfig const _AfxHidMgrCfg;
-extern afxClassConfig const _AfxCtrlMgrCfg;
 extern afxClassConfig const _AfxStrbMgrCfg;
-extern afxClassConfig const _AfxEnvMgrCfg;
+extern afxClassConfig const _AfxShMgrCfg;
 
 _AFX void Start_us_count(afxNat64* out_count)
 {
@@ -461,7 +456,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     }
 
     afxChain* mgrChn = &sys->mgrChn;
-    AfxSetUpChain(mgrChn, &sys);
+    AfxSetUpChain(mgrChn, sys);
     afxClassConfig clsCfg;
 
     clsCfg = _AfxThrMgrCfg;
@@ -486,11 +481,8 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
 
 
     AfxEstablishManager(&sys->hidMgr, /*AfxGetDeviceClass()*/NIL, mgrChn, &_AfxHidMgrCfg);
-    AfxEstablishManager(&sys->kbdMgr, &sys->hidMgr, mgrChn, &_AfxKbdMgrCfg); // require hid
-    AfxEstablishManager(&sys->mseMgr, &sys->hidMgr, mgrChn, &_AfxMseMgrCfg); // require hid
-    AfxEstablishManager(&sys->ctrlMgr, &sys->hidMgr, mgrChn, &_AfxCtrlMgrCfg); // require hid
 
-    AfxEstablishManager(&sys->envMgr, NIL, mgrChn, &_AfxEnvMgrCfg); // require iob
+    AfxEstablishManager(&sys->envMgr, NIL, mgrChn, &_AfxShMgrCfg); // require iob, hid
 
     afxThread primeThr;
     afxThreadConfig thrCfg = { 0 };

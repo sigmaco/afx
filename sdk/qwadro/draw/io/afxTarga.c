@@ -552,17 +552,17 @@ _AVX afxError AfxAcquireRastersFromTarga(afxDrawInput din, afxRasterFlags flags,
             }
             else
             {
-                afxRasterInfo texi = { 0 };
-                texi.fmt = im.fmt;
-                texi.lodCnt = 1;
-                texi.sampleCnt = 1;
-                texi.usage = im.flags;
-                texi.layerCnt = im.imgCnt;
-                texi.whd[0] = im.width;
-                texi.whd[1] = im.height;
-                texi.whd[2] = im.depth;
+                afxRasterInfo rasi = { 0 };
+                rasi.fmt = im.fmt;
+                rasi.lodCnt = 1;
+                rasi.sampleCnt = 1;
+                rasi.usage = im.flags;
+                rasi.layerCnt = im.imgCnt;
+                rasi.whd[0] = im.width;
+                rasi.whd[1] = im.height;
+                rasi.whd[2] = im.depth;
 
-                if (AfxAcquireRasters(dctx, 1, &texi, &ras[i]))
+                if (AfxAcquireRasters(dctx, 1, &rasi, &ras[i]))
                 {
                     AfxThrowError();
                     AfxReleaseObjects(i, (void**)ras);
@@ -628,17 +628,17 @@ _AVX afxError AfxAcquireLayeredRasterFromTarga(afxDrawInput din, afxRasterFlags 
             {
                 if (i == 0)
                 {
-                    afxRasterInfo texi = { 0 };
-                    texi.fmt = im.fmt;
-                    texi.lodCnt = 1;
-                    texi.sampleCnt = 1;
-                    texi.usage = flags;
-                    texi.layerCnt = layerCnt;
-                    texi.whd[0] = im.width;
-                    texi.whd[1] = im.height;
-                    texi.whd[2] = im.depth;
+                    afxRasterInfo rasi = { 0 };
+                    rasi.fmt = im.fmt;
+                    rasi.lodCnt = 1;
+                    rasi.sampleCnt = 1;
+                    rasi.usage = flags;
+                    rasi.layerCnt = layerCnt;
+                    rasi.whd[0] = im.width;
+                    rasi.whd[1] = im.height;
+                    rasi.whd[2] = im.depth;
 
-                    if (AfxAcquireRasters(dctx, 1, &texi, ras))
+                    if (AfxAcquireRasters(dctx, 1, &rasi, ras))
                     {
                         AfxThrowError();
                         //AfxReleaseObjects(i, (void**)ras);
@@ -1080,10 +1080,29 @@ _AVX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height,
     return TRUE;
 }
 
-_AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri)
+_AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
+    afxRasterCopyOp rgn2 = { 0 };
+
+    if (rgn)
+    {
+        rgn2 = *rgn;
+
+        rgn2.srcLayerCnt = AfxMinorNonZero(1, rgn2.srcLayerCnt);
+        rgn2.dst.layerCnt = AfxMinorNonZero(1, rgn2.dst.layerCnt);
+        rgn2.dst.whd[0] = AfxMinorNonZero(1, rgn2.dst.whd[0]);
+        rgn2.dst.whd[1] = AfxMinorNonZero(1, rgn2.dst.whd[1]);
+        rgn2.dst.whd[2] = AfxMinorNonZero(1, rgn2.dst.whd[2]);
+    }
+    else
+    {
+        rgn2.srcLayerCnt = 1;
+        rgn2.dst.layerCnt = 1;
+        AfxGetRasterExtent(ras, 0, rgn2.dst.whd);
+    }
 
     afxDrawContext dctx = AfxGetObjectProvider(ras);
 
@@ -1095,16 +1114,14 @@ _AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxRasterIoOp const* op, afxU
         _afxTga im;
         AfxZero2(1, sizeof(im), &im);
 
-        //afxWhd extent;
-        //AfxGetRasterExtent(tex, 0, extent);
         afxPixelLayout pfd;
         afxPixelFormat fmt = AfxGetRasterFormat(ras);
         AfxDescribePixelFormat(fmt, &pfd);
 
-        if (FALSE == _AfxTgaGen(NIL, &im, op->rgn.whd[0], op->rgn.whd[1], op->rgn.whd[2], fmt)) AfxThrowError();
+        if (FALSE == _AfxTgaGen(NIL, &im, rgn2.dst.whd[0], rgn2.dst.whd[1], rgn2.dst.whd[2], fmt)) AfxThrowError();
         else
         {
-            AfxDumpRaster(ras, op, im.data);
+            AfxDumpRaster(ras, &rgn2.dst, im.data);
 
             if (_AfxTgaSave(NIL, file, &im)) AfxThrowError();
             else
@@ -1120,17 +1137,33 @@ _AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxRasterIoOp const* op, afxU
     return err;
 }
 
-_AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterIoOp const* op, afxUri const* uri)
+_AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    
+
+    afxRasterCopyOp rgn2 = { 0 };
+
+    if (rgn)
+    {
+        rgn2 = *rgn;
+
+        rgn2.srcLayerCnt = AfxMinorNonZero(1, rgn2.srcLayerCnt);
+        rgn2.dst.layerCnt = AfxMinorNonZero(1, rgn2.dst.layerCnt);
+        rgn2.dst.whd[0] = AfxMinorNonZero(1, rgn2.dst.whd[0]);
+        rgn2.dst.whd[1] = AfxMinorNonZero(1, rgn2.dst.whd[1]);
+        rgn2.dst.whd[2] = AfxMinorNonZero(1, rgn2.dst.whd[2]);
+    }
+    else
+    {
+        rgn2.srcLayerCnt = 1;
+        rgn2.dst.layerCnt = 1;
+        AfxGetRasterExtent(ras, 0, rgn2.dst.whd);
+    }
+
     afxDrawContext dctx = AfxGetObjectProvider(ras);
     afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
 
-    //afxFile file;
-
-    //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
     if (AfxReloadFile(ios, uri)) AfxThrowError();
     else
     {
@@ -1140,17 +1173,7 @@ _AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterIoOp const* op, af
         if (_AfxTgaLoad(NIL, TRUE, /*AfxGetFileStream(file)*/ios, &im)) AfxThrowError();
         else
         {
-            afxPixelLayout pfd;
-            AfxDescribePixelFormat(im.fmt, &pfd);
-
-            afxRasterIoOp op2 = *op;
-            op2.rgn.layerCnt = 1;
-            op2.rgn.whd[0] = AfxMin(op2.rgn.whd[0], im.width);
-            op2.rgn.whd[1] = AfxMin(op2.rgn.whd[1], im.height);
-            op2.rgn.whd[2] = 1;
-            afxNat siz = (im.width * im.height * im.depth * pfd.bpp) / AFX_BYTE_SIZE;
-
-            if (AfxUpdateRaster(ras, &op2, im.data)) AfxThrowError();
+            if (AfxUpdateRaster(ras, &rgn2.dst, im.data)) AfxThrowError();
             else
             {
 
@@ -1158,7 +1181,6 @@ _AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterIoOp const* op, af
         }
 
         _AfxTgaDestroy(NIL, &im);
-        //AfxReleaseObjects(1, (void*[]) { file });
     }
     AfxReleaseObjects(1, (void*[]){ ios });
     return err;
@@ -1172,9 +1194,6 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        //afxFile file;
-
-        //if (AfxOpenFiles(1, &file, &uri[i], (afxFileFlags[]) { afxFileFlag_R })) AfxThrowError();
         if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
         else
         {
@@ -1188,62 +1207,54 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
             }
             else
             {
-                afxRasterInfo texi = { 0 };
-                texi.fmt = im.fmt;
-                texi.lodCnt = 1;
-                texi.sampleCnt = 1;
-                texi.usage = usage | im.usage;
-                texi.flags = flags | im.flags;
-                texi.layerCnt = im.imgCnt;
-                texi.whd[0] = im.width;
-                texi.whd[1] = im.height;
-                texi.whd[2] = im.depth;
+                afxRasterInfo rasi = { 0 };
+                rasi.fmt = im.fmt;
+                rasi.lodCnt = 1;
+                rasi.sampleCnt = 1;
+                rasi.usage = usage | im.usage;
+                rasi.flags = flags | im.flags;
+                rasi.layerCnt = im.imgCnt;
+                rasi.whd[0] = im.width;
+                rasi.whd[1] = im.height;
+                rasi.whd[2] = im.depth;
 
-                if (AfxAcquireRasters(dctx, 1, &texi, &rasters[i]))
+                if (AfxAcquireRasters(dctx, 1, &rasi, &rasters[i]))
                 {
                     AfxThrowError();
                     AfxReleaseObjects(i, (void**)rasters);
                 }
                 else
                 {
-                    afxPixelLayout pfd;
-                    AfxDescribePixelFormat(im.fmt, &pfd);
-
-                    afxRasterIoOp op = { 0 };
-                    op.rgn.lodIdx = 0;
-                    op.rgn.baseLayer = 0;
-                    op.rgn.layerCnt = 1;
-                    op.rgn.offset[0] = 0;
-                    op.rgn.offset[1] = 0;
-                    op.rgn.offset[2] = 0;
-                    op.rgn.whd[0] = im.width;
-                    op.rgn.whd[1] = im.height;
-                    op.rgn.whd[2] = im.depth;
-                    op.bufOffset = 0;
-                    op.bufRowCnt = 0;
-                    op.bufRowSiz = 0;
-
-                    AfxUpdateRaster(rasters[i], &op, im.data);
+                    afxRasterRegion rgn = { 0 };
+                    rgn.layerCnt = 1;
+                    rgn.whd[0] = im.width;
+                    rgn.whd[1] = im.height;
+                    rgn.whd[2] = im.depth;
+                    
+                    AfxUpdateRaster(rasters[i], &rgn, im.data);
                 }
             }
 
             _AfxTgaDestroy(NIL, &im);
-            //AfxReleaseObjects(1, (void*[]) { file });
         }
     }
     AfxReleaseObjects(1, (void*[]){ ios });
     return err;
 }
 
-_AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster* ras)
+_AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
-
     afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
+
+    afxUri2048 urib;
+    AfxMakeUri2048(&urib, NIL);
     
     for (afxNat i = 0; i < cnt; i++)
     {
-        if (AfxReloadFile(ios, &uri[i])) AfxThrowError();
+        AfxFormatUri(&urib.uri, "%.*s/%.*s", AfxPushString(AfxGetUriString(dir)), AfxPushString(AfxGetUriString(&layers[i])));
+        
+        if (AfxReloadFile(ios, &urib.uri)) AfxThrowError();
         else
         {
             AfxRewindStream(ios);
@@ -1263,109 +1274,40 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
 
                 if (i == 0)
                 {
-                    afxRasterInfo texi = { 0 };
-                    texi.fmt = fmt;
-                    texi.lodCnt = 1;
-                    texi.sampleCnt = 1;
-                    texi.usage = usage;
-                    texi.flags = flags;
-                    texi.layerCnt = cnt;
-                    texi.whd[0] = tga.whd[0];
-                    texi.whd[1] = tga.whd[1];
-                    texi.whd[2] = tga.whd[2];
+                    afxRasterInfo rasi = { 0 };
+                    rasi.fmt = fmt;
+                    rasi.lodCnt = 1;
+                    rasi.sampleCnt = 1;
+                    rasi.usage = usage;
+                    rasi.flags = flags;
+                    rasi.layerCnt = cnt;
+                    rasi.whd[0] = tga.whd[0];
+                    rasi.whd[1] = tga.whd[1];
+                    rasi.whd[2] = tga.whd[2];
 
-                    if (AfxAcquireRasters(dctx, 1, &texi, ras))
+                    if (AfxAcquireRasters(dctx, 1, &rasi, ras))
                     {
                         AfxThrowError();
-                        //AfxReleaseObjects(i, (void**)ras);
+                        break;
                     }
                 }
 
                 if (!err)
                 {
-                    afxPixelLayout pfd;
-                    AfxDescribePixelFormat(fmt, &pfd);
-
-                    afxRasterIoOp op = { 0 };
-                    op.rgn.lodIdx = 0;
-                    op.rgn.baseLayer = i;
-                    op.rgn.layerCnt = 1;
-                    op.rgn.offset[0] = 0;
-                    op.rgn.offset[1] = 0;
-                    op.rgn.offset[2] = 0;
-                    op.rgn.whd[0] = tga.whd[0];
-                    op.rgn.whd[1] = tga.whd[1];
-                    op.rgn.whd[2] = tga.whd[2];
-                    op.bufOffset = 0;
-                    op.bufRowCnt = 0;
-                    op.bufRowSiz = 0;
-
-                    if (AfxUpdateRaster(*ras, &op, tga.data))
+                    afxRasterRegion rgn = { 0 };
+                    rgn.baseLayer = i;
+                    rgn.layerCnt = 1;
+                    rgn.whd[0] = tga.whd[0];
+                    rgn.whd[1] = tga.whd[1];
+                    rgn.whd[2] = tga.whd[2];
+                    
+                    if (AfxUpdateRaster(*ras, &rgn, tga.data))
                         AfxThrowError();
                 }
 
                 if (tga.data)
                     AfxDeallocate(tga.data);
             }
-
-
-#if 0
-
-            _afxTga im;
-            AfxZero2(1, sizeof(im), &im);
-
-            if (_AfxTgaLoad(mmu, TRUE, /*AfxGetFileStream(file)*/ios, &im))
-            {
-                AfxThrowError();
-            }
-            else
-            {
-                if (i == 0)
-                {
-                    afxRasterInfo texi = { 0 };
-                    texi.fmt = im.fmt;
-                    texi.lodCnt = 1;
-                    texi.sampleCnt = 1;
-                    texi.usage = usage;
-                    texi.flags = flags;
-                    texi.layerCnt = cnt;
-                    texi.whd[0] = im.width;
-                    texi.whd[1] = im.height;
-                    texi.whd[2] = im.depth;
-
-                    if (AfxAcquireRasters(dctx, 1, &texi, ras))
-                    {
-                        AfxThrowError();
-                        //AfxReleaseObjects(i, (void**)ras);
-                    }                    
-                }
-                
-                if (!err)
-                {
-                    afxPixelLayout pfd;
-                    AfxDescribePixelFormat(im.fmt, &pfd);
-
-                    afxRasterIoOp op = { 0 };
-                    op.rgn.lodIdx = 0;
-                    op.rgn.baseLayer = i;
-                    op.rgn.layerCnt = 1;
-                    op.rgn.offset[0] = 0;
-                    op.rgn.offset[1] = 0;
-                    op.rgn.offset[2] = 0;
-                    op.rgn.whd[0] = im.width;
-                    op.rgn.whd[1] = im.height;
-                    op.rgn.whd[2] = im.depth;
-                    op.bufOffset = 0;
-                    op.bufRowCnt = 0;
-                    op.bufRowSiz = 0;
-
-                    if (AfxUpdateRasterRegions(*ras, 1, &op, im.data))
-                        AfxThrowError();
-                }
-            }
-            _AfxTgaDestroy(mmu, &im);
-            //AfxReleaseObjects(1, (void*[]) { file });            
-#endif
         }
     }
 

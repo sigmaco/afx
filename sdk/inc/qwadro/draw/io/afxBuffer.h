@@ -21,6 +21,9 @@
 
 #include "qwadro/draw/afxDrawDefs.h"
 
+#define AFX_BUF_ALIGNMENT 64
+#define AFX_BUF_ALIGN(siz_) AFX_ALIGN((siz_), AFX_BUF_ALIGNMENT)
+
 typedef enum afxBufferAccess
 {
     afxBufferAccess_R       = AFX_BIT_OFFSET(0), // Mapped range is readable by CPU.
@@ -32,12 +35,14 @@ typedef enum afxBufferAccess
 
 typedef enum afxBufferUsage
 {
-    afxBufferUsage_VERTEX   = AFX_BIT_OFFSET(0), // The buffer can be used as a vertex buffer.
-    afxBufferUsage_INDEX    = AFX_BIT_OFFSET(1), // The buffer can be used as an index buffer.
-    afxBufferUsage_UNIFORM  = AFX_BIT_OFFSET(2), // The buffer can be used as a uniform buffer.
-    afxBufferUsage_STORAGE  = AFX_BIT_OFFSET(3), // The buffer can be used as a storage buffer.
-    afxBufferUsage_INDIRECT = AFX_BIT_OFFSET(4), // The buffer can be used as to store indirect command arguments.
-    afxBufferUsage_QUERY    = AFX_BIT_OFFSET(5), // The buffer can be used to capture query results.
+    afxBufferUsage_SRC      = AFX_BIT_OFFSET(0), // The buffer can be used as the source of a copy operation.
+    afxBufferUsage_DST      = AFX_BIT_OFFSET(1), // The buffer can be used as the destination of a copy or write operation.
+    afxBufferUsage_VERTEX   = AFX_BIT_OFFSET(2), // The buffer can be used as a vertex buffer.
+    afxBufferUsage_INDEX    = AFX_BIT_OFFSET(3), // The buffer can be used as an index buffer.
+    afxBufferUsage_UNIFORM  = AFX_BIT_OFFSET(4), // The buffer can be used as a uniform buffer.
+    afxBufferUsage_STORAGE  = AFX_BIT_OFFSET(5), // The buffer can be used as a storage buffer.
+    afxBufferUsage_INDIRECT = AFX_BIT_OFFSET(6), // The buffer can be used as to store indirect command arguments.
+    afxBufferUsage_QUERY    = AFX_BIT_OFFSET(7), // The buffer can be used to capture query results.
 } afxBufferUsage;
 
 AFX_DEFINE_STRUCT(afxBufferSpecification)
@@ -55,6 +60,15 @@ AFX_DEFINE_STRUCT(afxBufferRegion)
     afxNat stride;
     afxNat offset;
     afxNat unitSiz;
+};
+
+AFX_DEFINE_STRUCT(afxBufferIoOp)
+{
+    afxNat              srcOffset; /// is the starting offset in bytes from the start of srcBuffer.
+    afxNat              srcStride;
+    afxNat              dstOffset; /// is the starting offset in bytes from the start of dstBuffer.
+    afxNat              dstStride;
+    afxNat              range; /// is the number of bytes to copy.
 };
 
 #ifdef _AFX_DRAW_C
@@ -85,8 +99,8 @@ AVX afxBufferUsage  AfxTestBufferUsage(afxBuffer buf, afxBufferUsage usage);
 AVX afxBufferAccess AfxGetBufferAccess(afxBuffer buf);
 AVX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access);
 
-AVX void*           AfxMapBufferRange(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags);
-AVX void            AfxUnmapBufferRange(afxBuffer buf);
+AVX void*           AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags);
+AVX void            AfxUnmapBuffer(afxBuffer buf);
 
 AVX afxError        AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *dst);
 AVX afxError        AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat cnt, void *dst, afxNat dstStride);
@@ -95,6 +109,9 @@ AVX afxError        AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, 
 AVX afxError        AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNat stride, void const *src, afxNat srcStride);
 
 AVX afxError        AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, void const* src, afxNat srcStride);
+
+AVX afxError        AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream in);
+AVX afxError        AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const ops[], afxStream out);
 
 ////////////////////////////////////////////////////////////////////////////////
 

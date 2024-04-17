@@ -16,6 +16,12 @@
 
 // This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
+// A mount point is a directory on a file system that is logically linked to another file system.
+// Mount points are used to make the data on a different physical storage drive easily available in a folder structure.
+// Mount points are fundamental to Unix, Linux and macOS. Windows can use mount points, but it is not common.
+
+// Mounting is a process by which the operating system makes files and directories on a storage device available for users to access via the computer's file system.
+
 #ifndef AFX_STORAGE_H
 #define AFX_STORAGE_H
 
@@ -45,24 +51,8 @@ Similarly when iterating, a file with the same name but different
 contents may be returned.
 #endif
 
-typedef struct afxResourceInfo
-{
-    // virtual file
-    // blob
-    // file
-    // directory
-    afxBool isFile; // else it is a directory
-
-} afxResourceInfo;
-
 #define AFX_FS_SYM_LEN  (8)
 #define AFX_FS_DIR_LEN  (1024 + 1 + AFX_FS_SYM_LEN + 1)
-
-// A mount point is a directory on a file system that is logically linked to another file system.
-// Mount points are used to make the data on a different physical storage drive easily available in a folder structure.
-// Mount points are fundamental to Unix, Linux and macOS. Windows can use mount points, but it is not common.
-
-// Mounting is a process by which the operating system makes files and directories on a storage device available for users to access via the computer's file system.
 
 typedef enum afxStorageUsage
 {

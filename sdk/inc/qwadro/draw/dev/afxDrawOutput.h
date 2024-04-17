@@ -237,9 +237,9 @@ AVX afxDrawDevice       AfxGetDrawOutputDevice(afxDrawOutput dout);
 
 // Connection
 
-AVX afxBool             AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* dctx);
 AVX afxBool             AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx);
 AVX afxError            AfxDisconnectDrawOutput(afxDrawOutput dout);
+AVX afxBool             AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* context);
 
 // Extent
 
@@ -266,13 +266,13 @@ AVX afxError            AfxLockDrawOutputBuffer(afxDrawOutput dout, afxTime time
 
 // Se não há garantia de presentação no tempo de retorno da função nem controle sobre a fila, não seria melhor submeter direto pelo afxDrawOutput e esperar pelo semáforo?
 
-AVX afxError            AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait);
-AVX afxError            AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait, afxV2d const origin, afxString const* caption);
+AVX afxNat              AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait);
+AVX afxNat              AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat portIdx, afxSemaphore wait, afxV2d const origin, afxString const* caption);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError            AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* dout);
+AVX afxError            AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* output);
 
-AVX afxError            AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxUri const* endpoint, afxDrawOutput* dout);
+AVX afxError            AfxOpenDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxUri const* endpoint, afxDrawOutput* output);
 
 #endif//AFX_DRAW_OUTPUT_H

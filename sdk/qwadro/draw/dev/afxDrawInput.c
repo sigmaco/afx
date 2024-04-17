@@ -62,23 +62,15 @@ _AVX afxManager* AfxGetIndexBufferClass(afxDrawInput din)
     return cls;
 }
 
-_AVX afxBool AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* dctx)
+_AVX afxBool AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* context)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxDrawContext dctx2 = AfxGetLinker(&din->dctx);
-    AfxTryAssertObjects(1, &dctx2, afxFcc_DCTX);
-    AfxAssert(dctx);
-    *dctx = dctx2;
-    return !!dctx2;
-}
-
-_AVX afxBool AfxDrawInputIsOnline(afxDrawInput din)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-    afxDrawContext dctx;
-    return !!(AfxGetDrawInputContext(din, &dctx));
+    afxDrawContext dctx = AfxGetLinker(&din->dctx);
+    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
+    AfxAssert(context);
+    *context = dctx;
+    return !!dctx;
 }
 
 _AVX afxBool AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx)
@@ -128,7 +120,7 @@ _AVX afxError AfxDisconnectDrawInput(afxDrawInput din)
     if (!AfxReconnectDrawInput(din, NIL))
         AfxThrowError();
 
-    AfxAssert(!AfxDrawInputIsOnline(din));
+    AfxAssert(!AfxGetLinker(&din->dctx));
     return err;
 }
 
@@ -278,7 +270,7 @@ _AVX void AfxComputeBasicPerspectiveMatrices(afxDrawInput din, afxReal aspectRat
         AfxInvertM4d(p, ip);
 }
 
-_AVX afxError AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc)
+_AVX afxNat AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -291,6 +283,7 @@ _AVX afxError AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRe
         If a command buffer was recorded with the VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT flag, it instead moves back to the invalid state.
     */
 
+    afxNat queIdx = AFX_INVALID_INDEX;
     afxDrawContext dctx;
 
     if (!AfxGetDrawInputContext(din, &dctx)) AfxThrowError();
@@ -301,10 +294,10 @@ _AVX afxError AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRe
         afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
-        if (AfxEnqueueExecutionRequest(ddge, fenc, 1, req))
+        if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueExecutionRequest(ddge, fenc, 1, req)))
             AfxThrowError();
     }
-    return err;
+    return queIdx;
 }
 
 _AVX afxError AfxUplinkTxds(afxDrawInput din, afxNat baseSlot, afxNat slotCnt, afxUri const uris[])
@@ -348,8 +341,8 @@ _AVX afxError _AvxDinDtor(afxDrawInput din)
     // avoid draw thread entrance
 
     //AfxDiscardAllDrawInputSubmissions(din);
-    //AfxYieldThread();
-    //while (!AfxTryEnterSlockExclusive(&din->prefetchSlock)) AfxYieldThread();
+    //AfxYield();
+    //while (!AfxTryEnterSlockExclusive(&din->prefetchSlock)) AfxYield();
 
     //AfxCleanUpSlock(&din->prefetchSlock);
 

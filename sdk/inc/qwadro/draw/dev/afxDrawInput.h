@@ -101,14 +101,16 @@ AVX afxDrawDevice   AfxGetDrawInputDevice(afxDrawInput din);
 
 AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
 
-// Connection
-AVX afxBool         AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* dctx);
-AVX afxBool         AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
-AVX afxError        AfxDisconnectDrawInput(afxDrawInput din);
-AVX afxBool         AfxDrawInputIsOnline(afxDrawInput din);
-
 AVX afxManager*     AfxGetVertexBufferClass(afxDrawInput din);
 AVX afxManager*     AfxGetIndexBufferClass(afxDrawInput din);
+
+// Connection
+
+AVX afxBool         AfxReconnectDrawInput(afxDrawInput din, afxDrawContext dctx);
+AVX afxError        AfxDisconnectDrawInput(afxDrawInput din);
+AVX afxBool         AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* context);
+
+// Matrices
 
 AVX void            AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip);
 
@@ -133,7 +135,7 @@ AVX afxError        AfxLoadTarga(afxDrawInput din, afxUri const* uri, afxRaster*
 AVX afxError        AfxReloadTarga(afxRaster ras, afxUri const* uri);
 
 
-AVX afxError        AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
+AVX afxNat          AfxExecuteDrawStreams(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
 
 ////////////////////////////////////////////////////////////////////////////////
 

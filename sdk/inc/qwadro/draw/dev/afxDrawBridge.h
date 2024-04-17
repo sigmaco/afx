@@ -86,39 +86,45 @@ AFX_DEFINE_STRUCT(afxPresentationRequest)
 
 AFX_DEFINE_STRUCT(afxTransferRequest)
 {
-    afxSemaphore        wait;
     union
     {
         struct
         {
-            void const* ptr;
-            afxNat      siz;
-        }               buf;
-        struct
-        {
-            afxStream   obj;
-            afxSize     offset;
-            afxNat      siz;
-        }               iob;
-    }                   src;
-    afxFcc              srcFcc;
-    union
-    {
-        struct
-        {
-            afxBuffer   obj;
-            afxSize     offset;
-            afxNat      siz;
-        }               buf;
-        struct
-        {
-            afxRaster   obj;
+            afxRaster       ras;
             afxRasterRegion rgn;
-        }               ras;
-    }                   dst;
+            union
+            {
+                void*       dst;
+                void const* src;
+                afxBuffer   buf;
+                afxStream   iob;
+            };
+            afxSize         offset; // offset into buffer data;
+            afxNat          rowSiz; // bytes per row
+            afxNat          rowCnt; // rows per layer
+        }                   img;
+        struct
+        {
+            afxBuffer       buf;
+            afxSize         offset;
+            afxNat          range;
+            union
+            {
+                void*       dst;
+                void const* src;
+                afxStream   iob;
+            };
+            afxSize         dataOff;
+        }                   data;
+    };
+
+    afxFcc              srcFcc;
     afxFcc              dstFcc;
+
     afxCodec            codec;
-    afxNat              uncompressedSiz;
+    afxNat              decompressedSiz;
+
+    afxSemaphore        wait;
     afxSemaphore        signal;
 };
 
@@ -154,10 +160,10 @@ struct afxBaseDrawBridge
     afxChain            mgrChn;
 
     afxError            (*waitCb)(afxDrawBridge,afxNat);
-    afxError            (*executeCb)(afxDrawBridge,afxFence,afxNat,afxExecutionRequest const[]);
-    afxError            (*transferCb)(afxDrawBridge, afxFence, afxNat, afxTransferRequest const[]);
-    afxError            (*presentCb)(afxDrawBridge,afxNat,afxPresentationRequest const[]);
-    afxError            (*stampCb)(afxDrawBridge,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
+    afxNat              (*executeCb)(afxDrawBridge,afxFence,afxNat,afxExecutionRequest const[]);
+    afxNat              (*transferCb)(afxDrawBridge, afxFence, afxNat, afxTransferRequest const[]);
+    afxNat              (*presentCb)(afxDrawBridge,afxNat,afxPresentationRequest const[]);
+    afxNat              (*stampCb)(afxDrawBridge,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
 
     afxNat              queCnt;
     afxDrawQueue*       queues;
@@ -172,12 +178,12 @@ AVX afxError            AfxWaitForIdleDrawQueue
 /// Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
 (
     afxDrawBridge       ddge, /// the bridge on which to wait.
-    afxNat              queueIdx /// the queue on which to wait.
+    afxNat              queIdx /// the queue on which to wait.
 );
 
-AVX afxError            AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[]);
-AVX afxError            AfxEnqueueTransferRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[]);
-AVX afxError            AfxEnqueuePresentRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[]);
-AVX afxError            AfxEnqueueStampRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption);
+AVX afxNat              AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[]);
+AVX afxNat              AfxEnqueueTransferRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[]);
+AVX afxNat              AfxEnqueuePresentRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[]);
+AVX afxNat              AfxEnqueueStampRequest(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption);
 
 #endif//AFX_DRAW_BRIDGE_H
