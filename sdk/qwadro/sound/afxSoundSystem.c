@@ -46,12 +46,12 @@ static_assert(sizeof(theSsysData) >= (sizeof(afxObjectBase) + sizeof(TheSoundSys
 
 AAX afxClassConfig const _sthrMgrCfg;
 
-_AAX afxBool AfxGetSoundSystem(afxSoundSystem* dsys)
+_AAX afxBool AfxGetSoundSystem(afxSoundSystem* ssys)
 {
     afxError err = AFX_ERR_NONE;
     //AfxTryAssertObjects(1, &TheSoundSystem, afxFcc_SSYS);
-    AfxAssert(dsys);
-    *dsys = TheSoundSystem;
+    AfxAssert(ssys);
+    *ssys = TheSoundSystem;
     return ssysReady;
 }
 
@@ -341,6 +341,7 @@ _AAX afxResult _AaxSsysctl(afxSystem sys, afxInt reqCode, ...)
         //AfxInvokeSoundDevices(NIL, 0, AFX_N32_MAX, (void*)DoSdevService, sys->primeThr);
         break;
     }
+#if 0
     case 2:
     {
         afxSoundSystem ssys;
@@ -391,6 +392,7 @@ _AAX afxResult _AaxSsysctl(afxSystem sys, afxInt reqCode, ...)
         }
         break;
     }
+#endif
     default:
     {
         AfxThrowError();
@@ -407,4 +409,54 @@ _AAX void AfxChooseSoundSystemConfiguration(afxSoundSystemConfig *config, afxNat
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
     *config = (afxSoundSystemConfig) { 0 };
+}
+
+_AAX afxError AfxEntryPoint(afxModule mdle, afxNat reqCode, void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &mdle, afxFcc_MDLE);
+
+    switch (reqCode)
+    {
+    case afxFcc_SYS:
+    {
+        afxSoundSystem ssys;
+
+        if (!AfxGetSoundSystem(&ssys))
+        {
+            AfxAssert(TheSoundSystem == ssys);
+            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
+
+            afxManager* mgr = _AfxGetSsysMgr();
+            AfxAssertClass(mgr, afxFcc_SSYS);
+
+            if (_AfxConstructObjects(mgr, 1, (void**)&TheSoundSystem, udd)) AfxThrowError();
+            else
+            {
+                AfxAssert(TheSoundSystem != ssys); // Attention! Ctor moves the object pointer to hide out the object base.
+                ssys = TheSoundSystem;
+                AfxAssertObjects(1, &ssys, afxFcc_SSYS);
+                ssysReady = TRUE;
+            }
+        }
+        else
+        {
+            AfxAssertObjects(1, &ssys, afxFcc_SSYS);
+            ssysReady = FALSE;
+
+            afxManager* mgr = _AfxGetSsysMgr();
+            AfxAssertClass(mgr, afxFcc_SSYS);
+
+            AfxAssert(TheSoundSystem == ssys);
+
+            if (_AfxDestructObjects(mgr, 1, (void**)&TheSoundSystem))
+                AfxThrowError();
+
+            AfxAssert(TheSoundSystem != ssys); // Attention! Dtor moves the object pointer to expose the object base.
+            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
+        }
+    }
+    default: break;
+    }
+    return err;
 }

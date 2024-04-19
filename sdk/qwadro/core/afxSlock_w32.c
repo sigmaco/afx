@@ -36,8 +36,7 @@ AFX afxBool AfxTryEnterSlockShared(afxSlock *slck)
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
 
-    afxNat tid;
-    AfxGetTid(&tid);
+    afxNat tid = AfxGetTid();
     //AfxLogEcho("%p try rdlocked by %u", slck, tid);
 
     return TryAcquireSRWLockShared((PSRWLOCK)&slck->srwl);
@@ -51,11 +50,8 @@ AFX afxBool AfxTryEnterSlockExclusive(afxSlock *slck)
 
     if (rslt)
     {
-        afxNat tid;
-        AfxGetTid(&tid);
-        //AfxLogEcho("%p try wdlocked by %u", slck, tid);
-
-        AfxGetTid((afxNat32*)&slck->tidEx);
+        slck->tidEx = AfxGetTid();
+        //AfxLogEcho("%p try wdlocked by %u", slck, slck->tidEx);
     }
     return rslt;
 }
@@ -64,9 +60,7 @@ AFX void AfxEnterSlockShared(afxSlock *slck)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
-    afxNat tid;
-    AfxGetTid(&tid);
-    //AfxLogEcho("%p rdlocked by %u", slck, tid);
+    //AfxLogEcho("%p rdlocked by %u", slck, AfxGetTid());
     AcquireSRWLockShared((PSRWLOCK)&slck->srwl);
 }
 
@@ -74,20 +68,16 @@ AFX void AfxEnterSlockExclusive(afxSlock *slck)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
-    afxNat tid;
-    AfxGetTid(&tid);
-    //AfxLogEcho("%p wdlocked by %u", slck, tid);
+    //AfxLogEcho("%p wdlocked by %u", slck, AfxGetTid());
     AcquireSRWLockExclusive((PSRWLOCK)&slck->srwl);
-    AfxGetTid((afxNat32*)&slck->tidEx);
+    slck->tidEx = AfxGetTid();
 }
 
 AFX void AfxExitSlockShared(afxSlock *slck)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
-    afxNat tid;
-    AfxGetTid(&tid);
-    //AfxLogEcho("%p rdunlocked by %u", slck, tid);
+    //AfxLogEcho("%p rdunlocked by %u", slck, AfxGetTid());
     ReleaseSRWLockShared((PSRWLOCK)&slck->srwl);
 }
 
@@ -95,10 +85,8 @@ AFX void AfxExitSlockExclusive(afxSlock *slck)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(slck, afxFcc_SLCK);
-    afxNat32 tid;
-    AfxGetTid(&tid);
-    AfxAssert(tid == (afxNat32)slck->tidEx);
-    //AfxLogEcho("%p wdunlocked by %u", slck, tid);
+    AfxAssert(AfxGetTid() == slck->tidEx);
+    //AfxLogEcho("%p wdunlocked by %u", slck, AfxGetTid());
     ReleaseSRWLockExclusive((PSRWLOCK)&slck->srwl);
     slck->tidEx = 0;
 }

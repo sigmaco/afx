@@ -21,24 +21,45 @@
 #include "qwadro/sound/afxSoundInput.h"
 #include "qwadro/ux/afxWidget.h"
 #include "qwadro/ux/afxOverlay.h"
-#include "qwadro/ux/afxMouse.h"
+#include "qwadro/ux/afxHid.h"
 #include "qwadro/core/afxThread.h"
-#include "qwadro/env/afxShell.h"
 #include "qwadro/core/afxManager.h"
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 
 typedef enum afxUxEventId
 {
-    afxUxEvent_RUN = 1,
-    afxUxEvent_QUIT
-}afxUxEventId;
+    afxUxEventId_RUN  = 1,
+    afxUxEventId_QUIT,
+
+    afxUxEventId_KEY,
+
+    // events são mudanças de estado, não continuidade de estado. Use funções para trabalhar com continuidade de estado.
+    afxUxEventId_LMB,
+    afxUxEventId_RMB,
+    afxUxEventId_MMB,
+    afxUxEventId_XMB1,
+    afxUxEventId_XMB2,
+
+    afxUxEventId_WHEEL,
+    afxUxEventId_AXIS,
+
+    afxUxEventId_DND,
+
+    
+} afxUxEventId;
 
 AFX_DEFINE_STRUCT(afxUxEvent)
 {
-    afxUxEventId    id;
-    afxBool         posted, accepted;
-    void*           udd[0];
+    afxUxEventId        id;
+    afxNat32            tid; // poster
+    //afxBool             posted;
+    afxBool             accepted;
+    afxNat              hidPortIdx;
+    afxOverlay          ovy;
+    afxWidget           wid;
+    afxSize             udd;
+    afxSize             udd2;
 };
 
 typedef afxResult(*afxApplicationProc)(afxApplication app, afxUxEvent* ev);
@@ -83,15 +104,17 @@ AFX_OBJECT(afxApplication)
     afxClock            startClock;
     afxClock            lastClock;
 
+#if !0
     afxHandle           xssInitFn;
     afxHandle           xssQuitFn;
     afxHandle           xssStepFn;
     afxHandle           xssDrawFn;
     afxHandle           xssMainVar;
+#endif
 
 #ifdef _AFX_APPLICATION_IMPL
-#ifdef AFX_PLATFORM_WIN
-#endif//AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
+#endif//AFX_OS_WIN
 #endif//_AFX_APPLICATION_C
 };
 #endif//_AFX_APPLICATION_C

@@ -41,6 +41,9 @@ AFX_OBJECT(afxOverlay)
     afxBool         floating;
     afxBool         fullscreen;
 
+    afxClock        startClock;
+    afxClock        lastClock;
+
     afxV2d          cursorPos;
     afxV2d          cursorMove;
     afxV2d          cursorPosNdc;
@@ -52,7 +55,7 @@ AFX_OBJECT(afxOverlay)
     afxWidget       grabbedWidg;
     afxV2d          grabPoint;
 #ifdef _AFX_OVERLAY_IMPL
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
     struct
     {
         WNDCLASSEX  wndClss;
@@ -61,7 +64,7 @@ AFX_OBJECT(afxOverlay)
         afxAtomic   lastBufIdx;
         afxBool     swap;
     }               w32;
-#endif//AFX_PLATFORM_WIN
+#endif//AFX_OS_WIN
 #endif//_AFX_APPLICATION_IMPL
     void*           udd;
 };
@@ -71,12 +74,16 @@ AFX_OBJECT(afxOverlay)
 
 AUX afxError        AfxDoOverlay(afxOverlay ovy);
 
-AUX afxError        AfxAdjustOverlay(afxOverlay ovly, afxWhd const whd);
+AUX afxError        AfxAdjustOverlay(afxOverlay ovy, afxWhd const whd);
 AUX afxError        AfxAdjustOverlayNdc(afxOverlay ovy, afxV3d const whd);
 
-AUX afxNat          AfxFormatOverlayCaption(afxOverlay ovly, afxChar const* fmt, ...);
+AUX afxNat          AfxFormatOverlayCaption(afxOverlay ovy, afxChar const* fmt, ...);
 
-AUX afxManager*     AfxGetWidgetClass(afxOverlay ovly);
+AUX afxManager*     AfxGetWidgetClass(afxOverlay ovy);
+
+AUX void            AfxStepOverlay(afxOverlay ovy, afxReal64* ct, afxReal64* dt);
+
+AUX afxBool         AfxGetOverlayDrawOutput(afxOverlay ovy, afxDrawOutput* output);
 
 ////////////////////////////////////////////////////////////////////////////////
 

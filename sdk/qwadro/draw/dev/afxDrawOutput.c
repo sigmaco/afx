@@ -185,7 +185,7 @@ _AVX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
 
                     for (afxNat j = 0; j < i; j++)
                     {
-                        //AfxObjectRemoveEventFilter(&dout->obj, &canv[j]->obj);
+                        //AfxDeinstallWatcher(&dout->obj, &canv[j]->obj);
                         AfxReleaseObjects(1, (void*[]) { canv[j] });
                         canv[j] = NIL;
                     }
@@ -194,7 +194,7 @@ _AVX afxError AfxBuildDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNa
                 else
                 {
                     AfxAssertObjects(1, &canv[i], afxFcc_CANV);
-                    //AfxObjectInstallEventFilter(&dout->obj, &canv[i]->obj);
+                    //AfxInstallWatcher(&dout->obj, &canv[i]->obj);
                     rslt++;
                 }
             }

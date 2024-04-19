@@ -153,13 +153,31 @@
     <ClCompile Include="..\..\qwadro\ux\afxApplication.c" />
     <ClCompile Include="..\..\qwadro\ux\afxApplication_w32.c" />
     <ClCompile Include="..\..\qwadro\ux\afxBrush.c" />
+    <ClCompile Include="..\..\qwadro\ux\afxGamepad.c" />
+    <ClCompile Include="..\..\qwadro\ux\afxHid.c" />
     <ClCompile Include="..\..\qwadro\ux\afxOverlay.c" />
+    <ClCompile Include="..\..\qwadro\ux\afxShell.c" />
     <ClCompile Include="..\..\qwadro\ux\afxWidget.c" />
+    <ClCompile Include="..\..\qwadro\ux\xss\xssCamera.c" />
+    <ClCompile Include="..\..\qwadro\ux\xss\xssDraw.c" />
+    <ClCompile Include="..\..\qwadro\ux\xss\xssIo.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_compiler.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_core.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_debug.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_opt_meta.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_opt_random.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_primitive.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_utils.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_value.c" />
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_vm.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\ux\afxApplication.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxBrush.h" />
+    <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h" />
+    <ClInclude Include="..\..\inc\qwadro\ux\afxHid.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxOverlay.h" />
+    <ClInclude Include="..\..\inc\qwadro\ux\afxShell.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxUxDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxWidget.h" />
     <ClInclude Include="resource.h" />

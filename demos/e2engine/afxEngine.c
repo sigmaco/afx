@@ -150,7 +150,7 @@ int main(int argc, char const* argv[])
 
     afxBool reboot = 1;
 
-    while (!AfxDoSystemBootUp(NIL))
+    while (!AfxDoBootUp(NIL))
     {
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 
@@ -180,7 +180,7 @@ int main(int argc, char const* argv[])
             if (AfxDoSystemExecution(0))
                 reboot = 0;
 
-        AfxDoSystemShutdown(0);
+        AfxDoShutdown(0);
 
         if (!reboot)
             break;

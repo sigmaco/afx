@@ -242,8 +242,6 @@
     <ClCompile Include="..\..\qwadro\draw\pipe\afxSampler.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxTransformOps.c" />
     <ClCompile Include="..\..\qwadro\draw\pipe\afxVertexInput.c" />
-    <ClCompile Include="..\..\qwadro\env\xssCamera.c" />
-    <ClCompile Include="..\..\qwadro\env\xssDraw.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

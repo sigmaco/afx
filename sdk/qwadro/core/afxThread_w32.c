@@ -20,15 +20,21 @@
 #define _AFX_THREAD_C
 #include "qwadro/core/afxSystem.h"
 
-_AFX void AfxGetTid(afxNat32* tid)
+_AFX afxNat32 _primeTid = NIL;
+_AFX afxThread _primeThr = NIL;
+_Thread_local static afxNat32 _currTid = 0;
+_Thread_local static afxThread _currThr = NIL;
+
+_AFX afxNat32 AfxGetTid(void)
 {
 #if defined(_WIN32)
     afxError err = NIL;
-    AfxAssert(tid);
-    *tid = GetCurrentThreadId();
+    AfxAssert(!_currTid || (_currTid == GetCurrentThreadId()));
 #else
 #error "";
 #endif
+    //return _currTid;
+    return GetCurrentThreadId();
 }
 
 _AFX void AfxYield(void)
@@ -76,10 +82,33 @@ _AFX afxBool AfxGetThread(afxThread* thread)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(thread);
+#if 0
     *thread = NIL;
-    afxNat32 tid;
-    AfxGetTid(&tid);
+    afxNat32 tid = AfxGetTid();
     return AfxFindThread(tid, thread);
+#else
+    *thread = _currThr;
+    return !!_currThr;
+#endif
+}
+
+_AFX afxBool AfxGetPrimeThread(afxThread* thread)
+{
+    afxError err = AFX_ERR_NONE;
+    afxThread thr = _primeThr;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    *thread = thr;
+    return !!thr;
+}
+
+_AFX afxBool AfxIsPrimeThread(void)
+{
+#if 0
+    afxThread curr, prime;
+    return (AfxGetThread(&curr) && AfxGetPrimeThread(&prime) && (curr == prime));
+#else
+    return (_currTid == _primeTid);
+#endif
 }
 
 _AFXINL void _AfxGetThreadFrequency(afxThread thr, afxNat* execNo, afxNat* lastFreq)
@@ -402,13 +431,28 @@ _AFX afxBool _AfxThrExecuteCb(afxThread thr, void* udd)
     return FALSE; // dont interrupt curation
 }
 
+_AFX afxBool AfxPostEvent(afxThread thr, void(*event)(void* udd), void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+    return PostThreadMessageA(thr->tid, WM_USER, (WPARAM)event, (LPARAM)udd);
+}
+
 _AFX int startCbOnSysProcUnit(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
 
-    AfxGetTid(&thr->tid);
+    thr->tid = AfxGetTid();
     thr->osHandle = thrd_current();
+    _currTid = thr->tid;
+    _currThr = thr;
+    AfxAssert(!AfxIsPrimeThread());
+
+#ifdef AFX_OS_WIN
+    // When your thread starts running, it should post a message to itself first to create a message queue, then set a signal to indicate that it is ready to receive messages, then finally enter its message loop.
+    PostThreadMessageA(thr->tid, WM_USER, NIL, NIL);
+#endif
 
     AfxYield();
 
@@ -418,6 +462,35 @@ _AFX int startCbOnSysProcUnit(afxThread thr)
 
     do
     {
+        MSG msg;
+        afxResult msgCnt = 0;
+        while (PeekMessageA(&(msg), NIL, 0, 0, PM_REMOVE/* | PM_NOYIELD*/))
+        {
+            ++msgCnt;
+
+            if (msg.message == WM_QUIT) // PostQuitMessage()
+            {
+                int a = 1;
+            }
+            else if (msg.message == WM_USER)
+            {
+                void(*event)(void* udd) = (void*)msg.wParam;
+
+                if (event)
+                    event((void*)msg.lParam);
+            }
+            else
+            {
+                if (msg.message == WM_INPUT || msg.message == WM_INPUT_DEVICE_CHANGE)
+                {
+                    int a = 1;
+                }
+
+                TranslateMessage(&msg);
+                DispatchMessageA(&msg);
+            }
+        }
+
         if (!!(thr->interruptionRequested))
             again = FALSE;
 
@@ -551,6 +624,11 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
     if (AfxAllocateQueue(&thr->events, sizeof(afxEvent), AfxMax(AFX_THR_MIN_EVENT_CAP, cfg->minEventCap))) AfxThrowError();
     else
     {
+        //AfxSetUpSlock(&thr->evSlock);
+        //AfxAllocateArena(NIL, &thr->evArena, NIL, AfxHere());
+
+        //AfxSetUpFifo(&thr->events2, sizeof(afxPostedEvent), AFX_THR_MIN_EVENT_CAP);
+
         thr->tid = 0;
 
         if (cfg->tid != 0)
@@ -565,6 +643,13 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
                 {
                     thr->tid = cfg->tid;
                     thr->procCb = NIL;
+
+                    if (thr->tid == _primeTid) // is prime thread
+                    {
+                        _currTid = _primeTid;
+                        _currThr = thr;
+                        AfxAssert(AfxIsPrimeThread());
+                    }
                 }
             }
         }

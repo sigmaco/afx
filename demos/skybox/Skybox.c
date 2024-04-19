@@ -155,7 +155,7 @@ _AFXEXPORT void Once(afxApplication app)
     rnd->activeCam = cam;
 
     afxMouse mse = AfxGetMouse(0);
-    AfxObjectInstallEventFilter(mse, cam);
+    AfxInstallWatcher(mse, cam);
     
     //AfxEnableDrawInputPrefetching(rnd->din, TRUE); // bug: sem isso não desenha
     
@@ -208,7 +208,7 @@ int main(int argc, char const* argv[])
         AfxChooseDrawSystemConfiguration(&dsysCfg);
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
-        AfxDoSystemBootUp(&sysCfg);
+        AfxDoBootUp(&sysCfg);
         AfxAssertObjects(1, (void*[]) { AfxGetSystem() }, afxFcc_SYS);
 
         afxDrawDevice ddev = AfxGetDrawDevice(0);
@@ -236,7 +236,7 @@ int main(int argc, char const* argv[])
 
         AfxReleaseObjects(1, (void*[]) { dctx });
 
-        AfxDoSystemShutdown(0);
+        AfxDoShutdown(0);
     }
     Sleep(3000);
     return 0;

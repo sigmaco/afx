@@ -148,7 +148,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
             if (!pointEnd)
             {
                 AfxFormatUri(&out[i], "%.*s", AfxGetStringLength(pathStr), AfxGetStringData(pathStr, 0));
-                AfxCanonicalizePath(&out[i], AFX_PLATFORM_WIN);
+                AfxCanonicalizePath(&out[i], AFX_OS_WIN);
 
                 if (stat(dstData, &(st))) AfxThrowError();
                 else
@@ -176,7 +176,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
                         if ((fsto->flags & ioPerms) == ioPerms)
                         {
                             AfxFormatUri(&out[i], "%.*s/%.*s\0", AfxPushString(AfxGetUriString(&fsto->rootPath)), pointEndRange, pointEnd);
-                            AfxCanonicalizePath(&out[i], AFX_PLATFORM_WIN);
+                            AfxCanonicalizePath(&out[i], AFX_OS_WIN);
                             //AfxLogEcho(dstData);
 
                             if (!stat(dstData, &(st)) || (ioPerms & afxFileFlag_W) || hasWildcard)
@@ -292,25 +292,25 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
             afxString const *rootUriString = AfxGetSystemDirectoryString(NIL);
             //AfxFormatString(&location2.uri.str, "%.*s"
             AfxFormatUri(&endpoint2.uri, "%.*s"
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
                 "\\"
 #else
                 "/"
 #endif
                 "%.*s"
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
                 "\\"
 #else
                 "/"
 #endif
                 , AfxPushString(rootUriString), AfxPushString(AfxGetUriString(endpoint)));
             AfxReparseUri(&endpoint2.uri);
-            AfxCanonicalizePath(&endpoint2.uri, AFX_PLATFORM_WIN);
+            AfxCanonicalizePath(&endpoint2.uri, AFX_OS_WIN);
         }
     }
     else
     {
-        AfxCanonicalizePath(&endpoint2.uri, AFX_PLATFORM_WIN);
+        AfxCanonicalizePath(&endpoint2.uri, AFX_OS_WIN);
 
         afxChar const *pathRaw = AfxGetUriData(&endpoint2.uri, 0);
         struct stat st;

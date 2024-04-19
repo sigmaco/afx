@@ -75,17 +75,6 @@ _AFX afxChain* _AfxGetSystemClassChain(void)
     return &sys->mgrChn;
 }
 
-_AFX afxBool AfxGetShell(afxShell* shell)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    AfxAssert(shell);
-    *shell = sys->env;
-    return !!sys->env;
-}
-
 _AFX afxNat AfxGetIoBufferSize(void)
 {
     afxError err = AFX_ERR_NONE;
@@ -104,6 +93,15 @@ _AFX afxNat AfxGetMemoryPageSize(void)
     return sys->memPageSize;
 }
 
+_AFX afxNat AfxGetThreadingCapacity(void)
+{
+    afxError err = AFX_ERR_NONE;
+    afxSystem sys;
+    AfxGetSystem(&sys);
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
+    return sys->hwConcurrencyCap;
+}
+
 _AFX afxManager* AfxGetStorageClass(void)
 {
     afxError err = AFX_ERR_NONE;
@@ -113,15 +111,6 @@ _AFX afxManager* AfxGetStorageClass(void)
     afxManager *cls = &sys->fsysMgr;
     AfxAssertClass(cls, afxFcc_FSYS);
     return cls;
-}
-
-_AFX afxNat AfxGetThreadingCapacity(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    return sys->hwConcurrencyCap;
 }
 
 _AFX afxManager* AfxGetServiceClass(void)
@@ -154,17 +143,6 @@ _AFX afxManager* AfxGetDeviceClass(void)
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxManager *cls = &sys->devMgr;
     AfxAssertClass(cls, afxFcc_DEV);
-    return cls;
-}
-
-_AFX afxManager* AfxGetEnvironmentClass(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->envMgr;
-    AfxAssertClass(cls, afxFcc_ENV);
     return cls;
 }
 
@@ -220,17 +198,6 @@ _AFX afxManager* AfxGetStreamClass(void)
     AfxAssertObjects(1, &sys, afxFcc_SYS);
     afxManager *cls = &sys->iosMgr;
     AfxAssertClass(cls, afxFcc_IOB);
-    return cls;
-}
-
-_AFX afxManager* AfxGetHidManager(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxSystem sys;
-    AfxGetSystem(&sys);
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxManager *cls = &sys->hidMgr;
-    AfxAssertClass(cls, afxFcc_HID);
     return cls;
 }
 
@@ -301,7 +268,7 @@ _AFX void _AfxInterruptionAllThreads(afxInt exitCode)
     AfxInvokeThreads(0, AFX_N32_MAX, _AfxThrQuitAndExecuteCb, &exitCode);
 }
 
-_AFX void AfxRequestSystemShutdown(afxInt exitCode)
+_AFX void AfxRequestShutdown(afxInt exitCode)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -332,11 +299,10 @@ _AFX afxBool AfxSystemIsExecuting(void)
 _AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertType(receiver, afxFcc_OBJ);
-    AfxAssertType(ev, afxFcc_EVNT);
+    AfxAssert(receiver);
+    AfxAssert(ev);
 
-    afxNat32 tid;
-    AfxGetTid(&tid);
+    afxNat32 tid = AfxGetTid();
     
     if (tid == AfxGetObjectTid(receiver))
     {
@@ -352,38 +318,7 @@ _AFX afxBool AfxEmitEvent(afxObject receiver, afxEvent* ev)
     }
 }
 
-_AFX afxError _SysCleanUpEnv(afxSystem sys)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sys, afxFcc_SYS);
-    afxShell env;
-    AfxGetShell(&env);
-
-    if (env)
-    {
-        AfxAssertObjects(1, &env, afxFcc_ENV);
-
-        if (!AfxReleaseObjects(1, (void*[]) { env }))
-            AfxThrowError();
-
-        sys->env = NIL;
-
-        afxUri point, location;
-        AfxMakeUri(&point, "code", 0);
-        AfxMakeUri(&location, "system", 0);
-        AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
-    }
-
-    if (sys->stdKbd)
-    {
-        AfxReleaseObjects(1, (void*[]) { sys->stdKbd });
-        sys->stdKbd = NIL;
-    }
-
-    return err;
-}
-
-_AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
+_AFX afxError AfxDoBootUp(afxSystemConfig const *config)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -426,7 +361,7 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
 
                 if (!(AfxIniGetBool(&ini, &AfxString("SoundSystem"), &AfxString("bDisabled"), &ssysDisabled) && ssysDisabled))
                 {
-                    AfxDbgLogf(6, NIL, "Setting up the Qwadro Sound System...");
+                    AfxDbgLogf(6, NIL, "Establishing the Qwadro Sound System...");
 
                     afxUri uri;
                     AfxMakeUri(&uri, "e2sound.dll", 0);
@@ -436,24 +371,15 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                     else
                     {
                         AfxAssertObjects(1, &e2sound, afxFcc_MDLE);
+                        afxError(*entryPoint)(afxModule mdle, afxNat reqCode, void* udd) = AfxFindModuleSymbol(e2sound, "AfxEntryPoint");
 
-                        afxResult(*ssysctl)(afxSystem, afxInt, ...) = AfxFindModuleSymbol(e2sound, "_AaxSsysctl");
-
-                        if (!ssysctl) AfxThrowError();
-                        else
-                        {
-                            afxSoundSystem ssys;
-
-                            if (ssysctl(sys, 1, ini, config ? config->sound : NIL)) AfxThrowError();
-                            else
-                            {
-                                sys->ssysctl = ssysctl;
-                                sys->e2sound = e2sound;
-                            }
-                        }
+                        if (!entryPoint || entryPoint(e2sound, afxFcc_SYS, (void const*[]) { sys, &ini, config ? config->sound : NIL }))
+                            AfxThrowError();
 
                         if (err)
-                            AfxReleaseObjects(1, (void*[]) { e2sound });
+                            AfxReleaseObjects(1, &e2sound);
+
+                        sys->e2sound = e2sound;
                     }
                 }
 
@@ -463,7 +389,7 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
 
                     if (!(AfxIniGetBool(&ini, &AfxString("DrawSystem"), &AfxString("bDisabled"), &dsysDisabled) && dsysDisabled))
                     {
-                        AfxDbgLogf(6, NIL, "Setting up the Qwadro Draw System...");
+                        AfxDbgLogf(6, NIL, "Establishing the Qwadro Draw System...");
 
                         afxUri uri;
                         AfxMakeUri(&uri, "e2draw.dll", 0);
@@ -473,25 +399,15 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                         else
                         {
                             AfxAssertObjects(1, &e2draw, afxFcc_MDLE);
+                            afxError(*entryPoint)(afxModule mdle, afxNat reqCode, void* udd) = AfxFindModuleSymbol(e2draw, "AfxEntryPoint");
 
-                            afxResult(*dsysctl)(afxSystem, afxInt, ...) = AfxFindModuleSymbol(e2draw, "_AvxDsysctl");
-
-                            if (!dsysctl) AfxThrowError();
-                            else
-                            {
-                                afxDrawSystem dsys;
-
-                                if (dsysctl(sys, 1, ini, config ? config->draw : NIL)) AfxThrowError();
-                                else
-                                {
-                                    sys->dsysctl = dsysctl;
-                                    sys->e2draw = e2draw;
-                                }
-                            }
+                            if (!entryPoint || entryPoint(e2draw, afxFcc_SYS, (void const*[]) { sys, &ini, config ? config->draw : NIL }))
+                                AfxThrowError();
 
                             if (err)
-                                AfxReleaseObjects(1, (void*[]) { e2draw });
+                                AfxReleaseObjects(1, &e2draw);
                         }
+                        sys->e2draw = e2draw;
                     }
                 }
 
@@ -499,61 +415,29 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                 {
                     afxError err = AFX_ERR_NONE;
                     AfxAssertObjects(1, &sys, afxFcc_SYS);
-                    AfxDbgLogf(6, NIL, "Setting up the Environment...");
+                    AfxDbgLogf(6, NIL, "Establishing up the Environment...");
+                    
+                    afxUri uri;
+                    AfxMakeUri(&uri, "e2ux", 0);
+                    afxModule e2uxMdle;
 
-                    afxUri point, location;
-                    AfxMakeUri(&point, "code", 0);
-                    AfxMakeUri(&location, "system", 0);
-
-                    if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
+                    if (AfxLoadModule(&uri, NIL, &e2uxMdle)) AfxThrowError();
                     else
                     {
-                        if (AfxAcquireShell(&sys->env)) AfxThrowError();
-                        else
-                        {
-                            afxKeyboard kbd;
+                        AfxAssertObjects(1, &e2uxMdle, afxFcc_MDLE);
+                        afxError(*entryPoint)(afxModule mdle, afxNat reqCode, void* udd) = AfxFindModuleSymbol(e2uxMdle, "AfxEntryPoint");
 
-                            if (AfxAcquireKeyboard(0, &kbd)) AfxThrowError();
-                            else
-                            {
-                                AfxAssertObjects(1, &kbd, afxFcc_KBD);
-                                sys->stdKbd = kbd;
-                                afxMouse mse;
-
-                                if (AfxAcquireMouse(0, &mse)) AfxThrowError();
-                                else
-                                {
-                                    AfxAssertObjects(1, &mse, afxFcc_MSE);
-                                    sys->stdMse = mse;
-
-                                    afxUri uri;
-                                    AfxMakeUri(&uri, "system/qwadro.xss", 0);
-
-                                    afxString s;
-                                    AfxMakeString(&s, "qwadro", 0);
-                                    AfxLoadScript(&s, &uri);
-
-                                    if (err)
-                                        AfxReleaseObjects(1, (void*[]) { mse });
-                                }
-
-                                if (err)
-                                {
-                                    AfxReleaseObjects(1, (void*[]) { kbd });
-                                }
-                            }
-                        }
+                        if (!entryPoint || entryPoint(e2uxMdle, afxFcc_SYS, (void const*[]) { sys, &ini, NIL } ))
+                            AfxThrowError();
 
                         if (err)
-                            AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+                            AfxReleaseObjects(1, &e2uxMdle);
                     }
+                    sys->e2ux = e2uxMdle;
                 }
 
                 if (!err)
                 {
-                    afxShell env;
-                    AfxGetShell(&env);
-                    AfxAssert(sys->env == env);
 
 #if 0
                     if (sys->e2sound)
@@ -579,9 +463,6 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                         sys->interruptionRequested = FALSE;
                         sysReady = TRUE;
                     }
-
-                    if (err)
-                        _SysCleanUpEnv(sys);
                 }
 
                 if (err)
@@ -589,22 +470,26 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                     if (_AfxDestructObjects(mgr, 1, (void*[]) { sys }))
                         AfxThrowError();
 
-                    if (sys->dsysctl)
+                    if (sys->e2draw)
                     {
-                        if (sys->dsysctl(sys, 0))
+                        AfxAssertObjects(1, &sys->e2draw, afxFcc_MDLE);
+                        afxError(*entryPoint)(afxModule mdle, afxNat reqCode, void* udd) = AfxFindModuleSymbol(sys->e2draw, "AfxEntryPoint");
+
+                        if (!entryPoint || entryPoint(sys->e2draw, afxFcc_SYS, NIL))
                             AfxThrowError();
 
-                        AfxAssertObjects(1, &sys->e2draw, afxFcc_MDLE);
-                        AfxReleaseObjects(1, (void*[]) { sys->e2draw });
+                        AfxReleaseObjects(1, &sys->e2draw);
                     }
 
-                    if (sys->ssysctl)
+                    if (sys->e2sound)
                     {
-                        if (sys->ssysctl(sys, 0))
+                        AfxAssertObjects(1, &sys->e2sound, afxFcc_MDLE);
+                        afxError(*entryPoint)(afxModule mdle, afxNat reqCode, void* udd) = AfxFindModuleSymbol(sys->e2sound, "AfxEntryPoint");
+
+                        if (!entryPoint || entryPoint(sys->e2sound, afxFcc_SYS, NIL))
                             AfxThrowError();
 
-                        AfxAssertObjects(1, &sys->e2sound, afxFcc_MDLE);
-                        AfxReleaseObjects(1, (void*[]) { sys->e2sound });
+                        AfxReleaseObjects(1, &sys->e2sound);
                     }
                 }
             }
@@ -615,7 +500,7 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
     return err;
 }
 
-_AFX void AfxDoSystemShutdown(afxInt exitCode)
+_AFX void AfxDoShutdown(afxInt exitCode)
 {
     afxError err = AFX_ERR_NONE;
     afxSystem sys;
@@ -626,7 +511,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
 
         do
         {
-            AfxRequestSystemShutdown(exitCode);
+            AfxRequestShutdown(exitCode);
             AfxDoSystemExecution(0);
         } while (AfxSystemIsExecuting());
 
@@ -659,7 +544,7 @@ _AFX void AfxDoSystemShutdown(afxInt exitCode)
         if (_AfxDestructObjects(mgr, 1, (void**)&TheSystem))
             AfxThrowError();
 
-        AfxAssert(TheSystem != sys); // Attention! Dtor moves the object pointer to expose the object base.
+        AfxAssert(TheSystem != sys); // Attention! Dtor moves the object pointer to expose the object hdr.
         AfxZero(TheSystem, sizeof(afxObjectBase));
     }
 #ifndef _AFX_DISABLE_DEBUGGER

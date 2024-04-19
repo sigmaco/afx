@@ -22,12 +22,7 @@
 #define _AFX_APPLICATION_C
 #define _AFX_APPLICATION_IMPL
 #define _AFX_OVERLAY_C
-#include "qwadro/mem/afxMmu.h"
-#include "qwadro/io/afxUri.h"
-#include "qwadro/io/afxStream.h"
-#include "qwadro/core/afxSystem.h"
-#include "qwadro/ux/afxApplication.h"
-#include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/ux/afxShell.h"
 
 //extern afxChain* _AfxGetSystemClassChain(void);
 extern afxClassConfig const _AuxWidMgrCfg;
@@ -158,12 +153,12 @@ _AUX afxResult AfxRunApplication(afxApplication app, afxUri const* uri)
             AfxMakeString(&fns[1], "quit()", 0);
             AfxMakeString(&fns[2], "step(_)", 0);
             AfxMakeString(&fns[3], "draw(_,_)", 0);
-            XssHandleAnyCall(env, 4, fns, fn);
+            XssHandleAnyCall(env->vm, 4, fns, fn);
 
             afxHandle var;
             afxString vars;
             AfxMakeString(&vars, "Game", 0);
-            XssHandleAnyVar(env, &domain, 0, 1, &vars, &var);
+            XssHandleAnyVar(env->vm, &domain, 0, 1, &vars, &var);
             
             app->xssInitFn = fn[0];
             app->xssQuitFn = fn[1];

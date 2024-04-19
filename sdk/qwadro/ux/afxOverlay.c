@@ -30,7 +30,9 @@
 #define _AFX_DRAW_C
 #define _AFX_DRAW_OUTPUT_IMPL
 #define _AFX_DRAW_OUTPUT_C
-#include "qwadro/ux/afxApplication.h"
+#include "qwadro/ux/afxShell.h"
+
+extern afxKey const Scan1MakeToQwadroDereferenceMap[afxKey_TOTAL];
 
 extern afxClassConfig const _AuxWidMgrCfg;
 
@@ -51,12 +53,13 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
     if (ovy)
     {
         AfxAssertObjects(1, &ovy, afxFcc_OVY);
+        static afxByte buf[4096] = { 0 };
+        afxNat bufSiz = sizeof(buf);
 
-        afxNat32 tid;
-        AfxGetTid(&tid);
+        afxNat32 tid = AfxGetTid();
         afxNat32 doutTid = AfxGetObjectTid(ovy);
         AfxAssert(doutTid == tid);
-
+        
         AfxAssert(ovy->w32.hWnd == hWnd);
 #if 0
         HDC dc = ovy->w32.hDc;
@@ -69,6 +72,163 @@ _AUX LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM 
 
         switch (message)
         {
+        case WM_INPUT:
+        {
+            //if (GET_RAWINPUT_CODE_WPARAM(wParam) == RIM_INPUT) // Only handle foreground events.
+            {
+                HRAWINPUT hRawInput = (void*)lParam;
+                GetRawInputData(hRawInput, RID_INPUT, NIL, &(bufSiz), sizeof(RAWINPUTHEADER));
+                
+                if (bufSiz > 0) // Ignore empty packets.
+                {
+                    if ((bufSiz != GetRawInputData(hRawInput, RID_INPUT, buf, &(bufSiz), sizeof(RAWINPUTHEADER)))) AfxThrowError();
+                    else
+                    {
+                        RAWINPUT* rid = (RAWINPUT*)buf;
+
+                        if (rid->header.dwType == RIM_TYPEMOUSE)
+                        {
+                            afxNat butChangeCnt = 0;
+                            afxMouseButton buttons[AFX_MB_TOTAL];
+                            afxBool pressed[AFX_MB_TOTAL];
+                            USHORT usButtonFlags = rid->data.mouse.usButtonFlags;
+
+                            if (usButtonFlags & (RI_MOUSE_LEFT_BUTTON_DOWN | RI_MOUSE_LEFT_BUTTON_UP))
+                            {
+                                buttons[butChangeCnt] = AFX_LMB;
+                                pressed[butChangeCnt] = (RI_MOUSE_LEFT_BUTTON_DOWN == (usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN));
+                                butChangeCnt++;
+                            }
+
+                            if (usButtonFlags & (RI_MOUSE_RIGHT_BUTTON_DOWN | RI_MOUSE_RIGHT_BUTTON_UP))
+                            {
+                                buttons[butChangeCnt] = AFX_RMB;
+                                pressed[butChangeCnt] = (RI_MOUSE_RIGHT_BUTTON_DOWN == (usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN));
+                                butChangeCnt++;
+                            }
+
+                            if (usButtonFlags & (RI_MOUSE_MIDDLE_BUTTON_DOWN | RI_MOUSE_MIDDLE_BUTTON_UP))
+                            {
+                                buttons[butChangeCnt] = AFX_MMB;
+                                pressed[butChangeCnt] = (RI_MOUSE_MIDDLE_BUTTON_DOWN == (usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN));
+                                butChangeCnt++;
+                            }
+
+                            if (usButtonFlags & ((RI_MOUSE_BUTTON_4_DOWN | RI_MOUSE_BUTTON_4_UP) | (RI_MOUSE_BUTTON_5_DOWN | RI_MOUSE_BUTTON_5_UP)))
+                            {
+                                if (usButtonFlags & (RI_MOUSE_BUTTON_4_DOWN | RI_MOUSE_BUTTON_4_UP))
+                                {
+                                    buttons[butChangeCnt] = AFX_XMB1;
+                                    pressed[butChangeCnt] = (RI_MOUSE_BUTTON_4_DOWN == (usButtonFlags & RI_MOUSE_BUTTON_4_DOWN));
+                                    butChangeCnt++;
+                                }
+
+                                if (usButtonFlags & (RI_MOUSE_BUTTON_5_DOWN | RI_MOUSE_BUTTON_5_UP))
+                                {
+                                    buttons[butChangeCnt] = AFX_XMB2;
+                                    pressed[butChangeCnt] = (RI_MOUSE_BUTTON_5_DOWN == (usButtonFlags & RI_MOUSE_BUTTON_5_DOWN));
+                                    butChangeCnt++;
+                                }
+                            }
+
+                            if (butChangeCnt)
+                            {
+                                AfxEmulateMouseButtonActions(0, butChangeCnt, buttons, pressed);
+
+                                for (afxNat i = 0; i < butChangeCnt; i++)
+                                {
+                                    afxUxEventId evtype;
+
+                                    switch (buttons[i])
+                                    {
+                                    case AFX_LMB:
+                                    {
+                                        evtype = afxUxEventId_LMB;
+                                        break;
+                                    }
+                                    case AFX_RMB:
+                                    {
+                                        evtype = afxUxEventId_RMB;
+                                        break;
+                                    }
+                                    case AFX_MMB:
+                                    {
+                                        evtype = afxUxEventId_MMB;
+                                        break;
+                                    }
+                                    case AFX_XMB1:
+                                    {
+                                        evtype = afxUxEventId_XMB1;
+                                        break;
+                                    }
+                                    case AFX_XMB2:
+                                    {
+                                        evtype = afxUxEventId_XMB2;
+                                        break;
+                                    }
+                                    default:
+                                    {
+                                        AfxThrowError();
+                                        evtype = NIL;
+                                        break;
+                                    }
+                                    }
+
+                                    if (evtype)
+                                    {
+                                        afxUxEvent ev = { 0 };
+                                        ev.id = evtype;
+                                        ev.ovy = ovy;
+                                        ev.hidPortIdx = 0;
+                                        //AfxNotifyObject(ovy, (void*)&ev);
+                                        AfxEmitEvent(ovy, (void*)&ev);
+                                    }
+                                }
+                            }
+
+                            afxReal motion[2] = { (afxReal64)rid->data.mouse.lLastX, (afxReal64)rid->data.mouse.lLastY };
+                            AfxEmulateMouseMotion(0, motion);
+
+                            afxUxEvent ev = { 0 };
+                            ev.id = afxUxEventId_AXIS;
+                            ev.ovy = ovy;
+                            ev.hidPortIdx = 0;
+                            //AfxNotifyObject(ovy, (void*)&ev);
+                            AfxEmitEvent(ovy, (void*)&ev);
+
+                            if (RI_MOUSE_WHEEL == (usButtonFlags & RI_MOUSE_WHEEL))
+                            {
+                                afxReal wheel = (afxInt16)rid->data.mouse.usButtonData;
+                                AfxEmulateMouseWheelAction(0, wheel);
+
+                                afxUxEvent ev = { 0 };
+                                ev.id = afxUxEventId_WHEEL;
+                                ev.ovy = ovy;
+                                ev.hidPortIdx = 0;
+                                //AfxNotifyObject(ovy, (void*)&ev);
+                                AfxEmitEvent(ovy, (void*)&ev);
+                            }
+                        }
+                        else if (rid->header.dwType == RIM_TYPEKEYBOARD)
+                        {
+                            afxKey key2 = Scan1MakeToQwadroDereferenceMap[rid->data.keyboard.MakeCode];
+                            //afxKey key = vkDereferenceMap[rid->data.keyboard.VKey];
+                            afxNat8 pressure = (RI_KEY_BREAK == (rid->data.keyboard.Flags & RI_KEY_BREAK)) ? 0x00 : 0xFF; //!!(rid->data.keyboard.Message == WM_KEYDOWN || rid->data.keyboard.Message == WM_SYSKEYDOWN);
+                            AfxEmulatePressedKeys(0, 1, &key2, &pressure, ovy, NIL);
+
+                            afxUxEvent ev = { 0 };
+                            ev.id = afxUxEventId_KEY;
+                            ev.hidPortIdx = 0;
+                            ev.ovy = ovy;
+                            ev.udd = key2;
+                            //AfxNotifyObject(ovy, (void*)&ev);
+                            AfxEmitEvent(ovy, (void*)&ev);
+                        }
+                    }
+                }
+            }
+            break;
+        }
         case WM_SYSCOMMAND: // Intercept System Commands
         {
             switch (wParam) // Check System Calls
@@ -339,6 +499,29 @@ _AUX afxManager* AfxGetWidgetClass(afxOverlay ovy)
     return cls;
 }
 
+_AUX afxBool AfxGetOverlayDrawOutput(afxOverlay ovy, afxDrawOutput* output)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ovy, afxFcc_OVY);
+    afxDrawOutput dout = ovy->dout;
+    AfxTryAssertObjects(1, &dout, afxFcc_DOUT);
+    *output = dout;
+    return !!dout;
+}
+
+_AUX void AfxStepOverlay(afxOverlay ovy, afxReal64* ct, afxReal64* dt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ovy, afxFcc_OVY);
+    afxClock currClock;
+    AfxGetClock(&currClock);
+    AfxAssert(ct);
+    *ct = AfxGetSecondsElapsed(&ovy->startClock, &currClock);
+    AfxAssert(dt);
+    *dt = AfxGetSecondsElapsed(&ovy->lastClock, &currClock);
+    ovy->lastClock = currClock;
+}
+
 _AUX afxNat AfxFormatOverlayCaption(afxOverlay ovy, afxChar const* fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
@@ -412,6 +595,9 @@ _AUX afxError _AuxOvyCtor(afxOverlay ovy, afxCookie const *cookie)
     AfxZeroV2d(ovy->cursorPosNdc);
     AfxZeroV2d(ovy->cursorMoveNdc);
 
+    AfxGetClock(&ovy->startClock);
+    ovy->lastClock = ovy->startClock;
+
     AfxZeroV2d(ovy->grabPoint);
     AfxZeroV2d(ovy->hoverPoint);
 
@@ -429,12 +615,12 @@ _AUX afxError _AuxOvyCtor(afxOverlay ovy, afxCookie const *cookie)
     ovy->w32.wndClss.cbClsExtra = sizeof(afxObject);
     ovy->w32.wndClss.cbWndExtra = sizeof(afxObject);
     ovy->w32.wndClss.hInstance = GetModuleHandleA(NULL);
-    ovy->w32.wndClss.hIcon = LoadIconA(NULL, IDI_WINLOGO);
+    ovy->w32.wndClss.hIcon = LoadIconA(NULL, IDI_SHIELD);
     ovy->w32.wndClss.hCursor = LoadCursorA(NULL, IDC_ARROW);
     ovy->w32.wndClss.hbrBackground = NULL;
     ovy->w32.wndClss.lpszMenuName = NULL;
     ovy->w32.wndClss.lpszClassName = "The Unified UX Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build";
-    ovy->w32.wndClss.hIconSm = NULL;
+    ovy->w32.wndClss.hIconSm = LoadIconA(NULL, IDI_SHIELD);
 
     if (!(RegisterClassExA(&(ovy->w32.wndClss)))) AfxThrowError();
     else

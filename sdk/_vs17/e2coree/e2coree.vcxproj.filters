@@ -22,17 +22,8 @@
     <Filter Include="qwadro\core">
       <UniqueIdentifier>{629751d2-24e3-44d0-a657-fa62690906f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\env">
-      <UniqueIdentifier>{c3327b02-e1cb-4dc5-95ff-cc94bf2bcca6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\env\_dep">
-      <UniqueIdentifier>{5a9b8b0b-e581-4e1d-b484-9389976faa9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\core\_dep">
       <UniqueIdentifier>{a08923a5-8750-4ed2-b33d-c26bbe41277b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="qwadro\ux">
-      <UniqueIdentifier>{0b467895-da93-480d-97da-dd110ff0a759}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -228,45 +219,6 @@
     <ClInclude Include="..\..\inc\qwadro\core\afxManager.h">
       <Filter>qwadro\core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_common.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_compiler.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_core.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_debug.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_math.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_opcodes.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_opt_meta.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_opt_random.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_primitive.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_utils.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_value.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\qwadro\env\_dep\luna_vm.h">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxPlatformDefs.h">
       <Filter>qwadro\core</Filter>
     </ClInclude>
@@ -275,21 +227,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxManifest.h">
       <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\ux\afxMouse.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\ux\afxHid.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\ux\afxKeyboard.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\env\afxShell.h">
-      <Filter>qwadro\env</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\core\afxAtomic.h">
       <Filter>qwadro\core</Filter>
@@ -301,24 +238,6 @@
   <ItemGroup>
     <None Include="..\..\inc\qwadro\README.md">
       <Filter>qwadro</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_core.luna.inc">
-      <Filter>qwadro\env\_dep</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_core.luna">
-      <Filter>qwadro\env\_dep</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_opt_random.luna.inc">
-      <Filter>qwadro\env\_dep</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_opt_meta.luna.inc">
-      <Filter>qwadro\env\_dep</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_opt_meta.luna">
-      <Filter>qwadro\env\_dep</Filter>
-    </None>
-    <None Include="..\..\qwadro\env\_dep\luna_opt_random.luna">
-      <Filter>qwadro\env\_dep</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -486,9 +405,6 @@
     <ClCompile Include="..\..\qwadro\core\afxChain.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\xssIo.c">
-      <Filter>qwadro\env</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxModule.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
@@ -501,56 +417,14 @@
     <ClCompile Include="..\..\qwadro\core\afxManager.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_compiler.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_core.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_debug.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_opt_meta.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_opt_random.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_primitive.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_utils.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_value.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\_dep\luna_vm.c">
-      <Filter>qwadro\env\_dep</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxCondition.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxManifest.c">
       <Filter>qwadro\core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\qwadro\ux\afxMouse.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\ux\afxGamepad.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\ux\afxHid.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\ux\afxKeyboard.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\qwadro\core\afxThread_w32.c">
       <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\afxShell.c">
-      <Filter>qwadro\env</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\mem\afxFifo.c">
       <Filter>qwadro\mem</Filter>

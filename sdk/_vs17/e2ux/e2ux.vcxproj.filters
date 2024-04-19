@@ -10,6 +10,12 @@
     <Filter Include="qwadro\ux">
       <UniqueIdentifier>{4be41a32-e9be-4f31-b40f-df5202683b52}</UniqueIdentifier>
     </Filter>
+    <Filter Include="qwadro\ux\_luna">
+      <UniqueIdentifier>{a8de9658-341e-4840-8fc4-58b74ae3bad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\xss">
+      <UniqueIdentifier>{31d9c80b-e9bf-4d76-ae49-5afc5aaacec6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\qwadro\ux\afxApplication.c">
@@ -25,6 +31,51 @@
       <Filter>qwadro\ux</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\ux\afxApplication_w32.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\afxShell.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_compiler.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_core.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_debug.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_opt_meta.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_opt_random.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_primitive.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_utils.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_value.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\_luna\luna_vm.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\xss\xssDraw.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\xss\xssIo.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\xss\xssCamera.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\afxHid.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\qwadro\ux\afxGamepad.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
   </ItemGroup>
@@ -46,6 +97,15 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxShell.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxHid.h">
+      <Filter>qwadro\ux</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -120,7 +120,7 @@ afxResult AfxDbgLogf(afxNat ch, afxHere const hint, afxChar const* msg, ...)
 
         if ((ch % 10) >= 7)
         {
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
@@ -165,7 +165,7 @@ void AfxLogCall_(afxHere const hint, afxChar const* args, ...)
         afxChar msg[8192];
         int len;
 
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
         len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
 #else
         len = stbsp_sprintf(msg, "%s(", (char const *const)hint[2]);
@@ -197,7 +197,7 @@ void AfxLogComment_(afxHere const hint, afxChar const* msg, ...)
     }
         else
         {
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
@@ -236,7 +236,7 @@ void AfxLogEcho_(afxHere const hint, afxChar const* msg, ...)
         }
         else
         {
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
             len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
             len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
@@ -269,7 +269,7 @@ void AfxLogAssistence_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
@@ -301,7 +301,7 @@ void AfxLogAdvertence_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const *const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const *const)hint[0]), (int)hint[1]);
@@ -333,7 +333,7 @@ void AfxLogError_(afxHere const hint, afxChar const* msg, ...)
         afxChar msg2[8192];
         int len;
 
-#ifdef AFX_PLATFORM_64
+#ifdef AFX_ISA_X86_64
         len = stbsp_sprintf(msg2, "%s:%lli\n", AfxFindPathTarget((char const * const)hint[0]), hint[1]);
 #else
         len = stbsp_sprintf(msg2, "%s:%i\n", AfxFindPathTarget((char const * const)hint[0]), (int)hint[1]);
@@ -376,8 +376,7 @@ afxResult _AfxDbgUnlock(void)
 
             if (AfxGetSystem(&sys))
             {
-                afxNat unitUnlockerIdx;
-                AfxGetTid(&unitUnlockerIdx);
+                afxNat unitUnlockerIdx = AfxGetTid();
                 //afxError err;
                 //AfxAssert(unitUnlockerIdx == debugger.unitLockerIdx);
             }
@@ -401,7 +400,7 @@ afxResult _AfxDbgLock(void)
             
             if (AfxGetSystem(&sys))
             {
-                AfxGetTid(&debugger.unitLockerIdx);
+                debugger.unitLockerIdx = AfxGetTid();
 
                 if (oldUnitIdx != debugger.unitLockerIdx)
                 {

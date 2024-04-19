@@ -629,6 +629,68 @@ _AVX void AfxGetCameraFrustum(afxCamera cam, afxFrustum* frustum)
     AfxCopyFrustum(frustum, &cam->frustum);
 }
 
+#if 0
+_AVX afxBool AfxProcessCameraInteraction(afxCamera cam, afxNat port, afxReal64 speed, afxReal64 dt)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &cam, afxFcc_CAM);
+    afxBool updated = FALSE;
+
+    if (AfxLmbIsPressed(port))
+    {
+        afxV2d delta;
+        afxV3d deltaEar;
+        AfxGetMouseMotion(0, delta);
+        deltaEar[1] = -((afxReal)(delta[0] * AFX_PI / 180.f));
+        deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.f));
+        deltaEar[2] = 0.f;
+
+        AfxApplyCameraElevAzimRoll(cam, deltaEar);
+        updated = TRUE;
+    }
+
+    if (AfxRmbIsPressed(port))
+    {
+        afxV2d delta;
+        afxV3d off;
+        AfxGetMouseMotion(0, delta);
+        off[0] = -((afxReal)(delta[0] * AFX_PI / 180.f));
+        off[1] = -((afxReal)(delta[1] * AFX_PI / 180.f));
+        off[2] = 0.f;
+
+        AfxApplyCameraOffset(cam, off);
+        updated = TRUE;
+    }
+
+    afxReal w = AfxGetMouseWheelDelta(port);
+    w = w / 120.f; // WHEEL_DELTA
+    AfxApplyCameraDistance(cam, w);
+
+    if (!speed)
+        speed = 30.f;
+
+    afxReal64 frameStep = dt * speed;
+    // Note: because the negZ axis is forward, we have to invert the way you'd normally think about the 'W' or 'S' key's action.
+    afxReal64 fwdSpeed = (AfxGetKeyPressure(0, afxKey_W) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_S) ? 1 : 0.0f);
+    afxReal64 sideSpeed = (AfxGetKeyPressure(0, afxKey_A) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_D) ? 1 : 0.0f);
+    afxReal64 upSpeed = (AfxGetKeyPressure(0, afxKey_Q) ? -1 : 0.0f) + (AfxGetKeyPressure(0, afxKey_E) ? 1 : 0.0f);
+    afxV3d v =
+    {
+        frameStep * sideSpeed,
+        frameStep * upSpeed,
+        frameStep * fwdSpeed
+    };
+
+    if (AfxSumV3d(v))
+    {
+        AfxApplyCameraMotion(cam, v);
+        updated = TRUE;
+    }
+    return updated;
+}
+#endif
+
+#if 0
 _AVX afxBool _AvxCamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
@@ -690,6 +752,7 @@ _AVX afxBool _AvxCamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev
     }
     return FALSE;
 }
+#endif
 
 _AVX afxError _AvxCamCtor(afxCamera cam, afxCookie const *cookie)
 {
@@ -726,7 +789,9 @@ _AVX afxClassConfig const _AvxCamMgrCfg =
     .mmu = NIL,
     .ctor = (void*)_AvxCamCtor,
     .dtor = (void*)_AvxCamDtor,
+#if 0
     .eventFilter = (void*)_AvxCamEventFilter
+#endif
 };
 
 ////////////////////////////////////////////////////////////////////////////////
