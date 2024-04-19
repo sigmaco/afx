@@ -213,13 +213,12 @@ AFX_DEFINE_HANDLE(afxGamepad);
 AFX_DEFINE_HANDLE(afxController);
 AFX_DEFINE_HANDLE(afxResource);
 AFX_DEFINE_HANDLE(afxStorage);
+AFX_DEFINE_HANDLE(afxStringBase);
 
 AFX_DEFINE_HANDLE(afxShell);
-
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSimulation);
-AFX_DEFINE_HANDLE(afxStringBase);
 
 
 

@@ -200,6 +200,8 @@ AVX void            AfxGetCameraDown(afxCamera cam, afxReal down[3]);
 AVX void            AfxGetCameraForward(afxCamera cam, afxReal fwd[3]);
 AVX void            AfxGetCameraBack(afxCamera cam, afxReal back[3]);
 
+AVX afxBool         AfxProcessCameraInteraction(afxCamera cam, afxNat port, afxReal64 speed, afxReal64 dt);
+
 ////////////////////////////////////////////////////////////////////////////////
 // MASSIVE OPERATIONS                                                         //
 ////////////////////////////////////////////////////////////////////////////////

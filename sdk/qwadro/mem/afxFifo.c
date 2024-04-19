@@ -50,6 +50,7 @@ _AFXINL afxError AfxSetUpFifo(afxFifo* fifo, afxNat unitSiz, afxNat cap)
 _AFXINL afxError AfxCleanUpFifo(afxFifo* fifo)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssert(fifo);
 
     /// Libera a memória reservado para a fila e redefine o estado interno.
     /// A fila deve estar vazia quando esta função for chamada.
@@ -67,6 +68,10 @@ _AFXINL afxError AfxCleanUpFifo(afxFifo* fifo)
 
 _AFXINL afxBool AfxEnqueueFifo(afxFifo* fifo, void* src)
 {
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(fifo);
+    AfxAssert(src);
+
     afxNat64 const queIdxMask = fifo->queIdxMask;
     afxInt64 writePosn = AfxLoadAtom64(&fifo->writePosn);
     afxInt64 seqDelta;
@@ -90,6 +95,10 @@ _AFXINL afxBool AfxEnqueueFifo(afxFifo* fifo, void* src)
 
 _AFXINL afxBool AfxDequeueFifo(afxFifo* fifo, void* dst)
 {
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(fifo);
+    AfxAssert(dst);
+
     afxInt64 const queIdxMask = fifo->queIdxMask;
     afxInt64 readPosn = AfxLoadAtom64(&fifo->readPosn);
     afxInt64 seqDelta;

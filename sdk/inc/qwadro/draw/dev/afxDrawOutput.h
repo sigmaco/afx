@@ -112,7 +112,7 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
     afxNat              bufCnt; // 2 or 3; double or triple-buffered.
     afxBool             dontManageCanvases;
 
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
     struct
     {
         void*           hwnd;
@@ -217,7 +217,7 @@ AFX_OBJECT(afxDrawOutput)
     struct _afxDoutIdd* idd;
 
 #ifdef _AFX_DRAW_OUTPUT_IMPL
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
     struct
     {
         HINSTANCE       hInst;
@@ -227,7 +227,7 @@ AFX_OBJECT(afxDrawOutput)
         int             dcPxlFmtBkp;
         afxBool         isWpp;
     }                   w32;
-#endif//AFX_PLATFORM_WIN
+#endif//AFX_OS_WIN
 #endif//_AFX_DRAW_OUTPUT_IMPL
 };
 #endif//_AFX_DRAW_OUTPUT_C

@@ -19,8 +19,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-#include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/afxQwadro.h"
+#include "qwadro/draw/afxDrawSystem.h"
 
 _AVX afxString const targaSignature = AFX_STRING(
 "\n           :::::::::::     :::     :::::::::   ::::::::      :::               "

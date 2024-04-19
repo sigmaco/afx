@@ -29,12 +29,11 @@
 //#include "qwadro/core/afxModule.h"
 
 // core
+#include "qwadro/core/afxDevice.h"
 #include "qwadro/core/afxService.h"
 #include "qwadro/core/afxTerminal.h"
 #include "qwadro/core/afxThread.h"
 #include "qwadro/core/afxVersion.h"
-// env
-#include "qwadro/env/afxShell.h"
 // io
 #include "qwadro/io/afxData.h"
 #include "qwadro/io/afxSource.h"
@@ -47,9 +46,6 @@
 #include "qwadro/mem/afxFifo.h"
 #include "qwadro/mem/afxQueue.h"
 #include "qwadro/mem/afxStack.h"
-// ux
-#include "qwadro/ux/afxKeyboard.h"
-#include "qwadro/ux/afxMouse.h"
 
 
 enum // opcodes used for primitive communication bethween engine and executables.
@@ -72,7 +68,7 @@ typedef struct afxSoundSystemConfig afxSoundSystemConfig;
 
 AFX_DEFINE_STRUCT(afxPlatformConfig)
 {
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
     /*HINSTANCE*/void*          instance;
     /*HWND*/void*               hWnd;
 #endif
@@ -125,8 +121,8 @@ AFX_OBJECT(afxSystem)
     afxNat                  hwConcurrencyCap; // # of logical proc units (hardware threads)
     afxReal                 unitsPerMeter; // the number of units in a meter.
     afxNat                  ioBufSiz;
-    afxNat                  primeTid;
-    afxThread               primeThr;
+    //afxNat                  primeTid;
+    //afxThread               primeThr;
 
     afxUri2048              pwd; // process working dir (usually abs/path/to/qwadro/system/$(host)/)
     afxUri2048              qwd; // root dir for Qwadro forked from pwd (usually qwadro/system/$(host)/../../)
@@ -135,7 +131,6 @@ AFX_OBJECT(afxSystem)
     afxManager              mmuMgr;
     afxManager              strbMgr;
     afxManager              exeMgr;
-    afxManager              hidMgr;
     afxManager              thrMgr;
     afxManager              devMgr;
     afxManager              svcMgr;
@@ -144,7 +139,6 @@ AFX_OBJECT(afxSystem)
     afxManager              fileMgr;
     afxManager              archMgr;
     afxManager              fsysMgr;
-    afxManager              envMgr;
 
     afxStorage              defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
 
@@ -155,8 +149,6 @@ AFX_OBJECT(afxSystem)
     afxResult               (*dsysctl)(afxSystem,afxInt,...);
     afxModule               e2sim;
     afxModule               e2ux;
-    afxKeyboard             stdKbd;
-    afxMouse                stdMse;
 
 
     afxSize                 maxMemUsage;
@@ -181,24 +173,20 @@ AFX_OBJECT(afxSystem)
         }                   supplyChain[1];
     }                       resourcing;
     afxInt                  exitCode;
-
-    afxShell          env;
 };
 #endif//_AFX_SYSTEM_C
 #endif//_AFX_CORE_C
 
 AFX void                AfxChooseSystemConfiguration(afxSystemConfig* cfg, afxPlatformConfig* plaf);
-AFX afxError            AfxDoSystemBootUp(afxSystemConfig const *config);
-AFX void                AfxDoSystemShutdown(afxInt exitCode);
+AFX afxError            AfxDoBootUp(afxSystemConfig const *config);
+AFX void                AfxDoShutdown(afxInt exitCode);
 AFX afxBool             AfxGetSystem(afxSystem* system);
 
 AFX afxBool             AfxSystemIsExecuting(void);
 AFX afxResult           AfxDoSystemExecution(afxTime timeout);
-AFX void                AfxRequestSystemShutdown(afxInt exitCode);
+AFX void                AfxRequestShutdown(afxInt exitCode);
 
 AFX afxNat              AfxGetIoBufferSize(void);
-
-AFX afxBool             AfxGetShell(afxShell* shell);
 
 AFX afxNat              AfxGetMemoryPageSize(void);
 
@@ -221,10 +209,8 @@ AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
 
 AFX afxManager*         AfxGetArchiveClass(void);
 AFX afxManager*         AfxGetDeviceClass(void);
-AFX afxManager*         AfxGetEnvironmentClass(void);
 AFX afxManager*         AfxGetFileClass(void);
 AFX afxManager*         AfxGetStorageClass(void);
-AFX afxManager*         AfxGetHidManager(void);
 AFX afxManager*         AfxGetMmuClass(void);
 AFX afxManager*         AfxGetModuleClass(void);
 AFX afxManager*         AfxGetServiceClass(void);
@@ -235,7 +221,6 @@ AFX afxManager*         AfxGetThreadClass(void);
 AFX afxNat              AfxCountArchives(void);
 AFX afxNat              AfxCountDevices(afxDeviceType type);
 AFX afxNat              AfxCountFiles(void);
-AFX afxNat              AfxCountHids(void);
 AFX afxNat              AfxCountMmus(void);
 AFX afxNat              AfxCountModules(void);
 AFX afxNat              AfxCountServices(void);
@@ -247,7 +232,6 @@ AFX afxNat              AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchiv
 AFX afxNat              AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, afxDevice devices[]);
 AFX afxNat              AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[]);
 AFX afxNat              AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[]);
-AFX afxNat              AfxEnumerateHids(afxNat first, afxNat cnt, afxHid hids[]);
 AFX afxNat              AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[]);
 AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule executables[]);
 AFX afxNat              AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[]);
@@ -258,7 +242,6 @@ AFX afxNat              AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(
 AFX afxNat              AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
 AFX afxNat              AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd);
 AFX afxNat              AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd);
-AFX afxNat              AfxInvokeHids(afxNat first, afxNat cnt, afxBool(*f)(afxHid, void*), void *udd);
 AFX afxNat              AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd);
 AFX afxNat              AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd);
 AFX afxNat              AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, void*), void *udd);

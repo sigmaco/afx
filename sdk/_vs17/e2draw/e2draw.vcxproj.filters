@@ -19,9 +19,6 @@
     <Filter Include="qwadro\draw\io">
       <UniqueIdentifier>{744bf3d2-a0ce-4ec1-bc14-63223fd1dc4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\env">
-      <UniqueIdentifier>{1f40247d-52e0-418d-8bf9-b5d5bdeb986d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro\draw\dev">
       <UniqueIdentifier>{79952113-2851-45c7-bde4-db074637ee76}</UniqueIdentifier>
     </Filter>
@@ -207,12 +204,6 @@
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\io\afxXsh.c">
       <Filter>qwadro\draw\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\xssCamera.c">
-      <Filter>qwadro\env</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\qwadro\env\xssDraw.c">
-      <Filter>qwadro\env</Filter>
     </ClCompile>
     <ClCompile Include="..\..\qwadro\draw\pipe\afxDrawOps.c">
       <Filter>qwadro\draw\pipe</Filter>

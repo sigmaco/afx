@@ -19,6 +19,7 @@
 #ifndef AFX_UX_DEFS_H
 #define AFX_UX_DEFS_H
 
+#include "qwadro/core/afxSystem.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/sound/afxSoundSystem.h"
 
@@ -46,5 +47,7 @@
 
 AFX_DEFINE_HANDLE(afxWidget);
 AFX_DEFINE_HANDLE(afxOverlay);
+
+AFX_DEFINE_HANDLE(afxHandle);
 
 #endif//AFX_UX_DEFS_H

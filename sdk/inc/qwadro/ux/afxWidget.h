@@ -92,7 +92,7 @@ AFX_OBJECT(afxWidget)
     afxByte                         extra[512];
     struct
     {
-        afxConnection               bgTexture;
+        afxRaster                   bgTexture;
         afxColor                    color, bgColor;
 
         afxNat                      visibility;

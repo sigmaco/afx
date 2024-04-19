@@ -1,11 +1,27 @@
+/*
+ *          ::::::::  :::       :::     :::     :::::::::  :::::::::   ::::::::
+ *         :+:    :+: :+:       :+:   :+: :+:   :+:    :+: :+:    :+: :+:    :+:
+ *         +:+    +:+ +:+       +:+  +:+   +:+  +:+    +:+ +:+    +:+ +:+    +:+
+ *         +#+    +:+ +#+  +:+  +#+ +#++:++#++: +#+    +:+ +#++:++#:  +#+    +:+
+ *         +#+  # +#+ +#+ +#+#+ +#+ +#+     +#+ +#+    +#+ +#+    +#+ +#+    +#+
+ *         #+#   +#+   #+#+# #+#+#  #+#     #+# #+#    #+# #+#    #+# #+#    #+#
+ *          ###### ###  ###   ###   ###     ### #########  ###    ###  ########
+ *
+ *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
+ *
+ *                                   Public Test Build
+ *                       (c) 2017 SIGMA, Engineering In Technology
+ *                             <https://sigmaco.org/qwadro/>
+ */
+
+/// afxFifo is a lock-less, thread-safe, multi-producer-multi-consumer queue data structure. It is designed to hold copyable values.
+
 #ifndef AFX_FIFO_H
 #define AFX_FIFO_H
 
 #include "qwadro/core/afxCoreDefs.h"
 #include "qwadro/core/afxDebug.h"
 #include "qwadro/core/afxAtomic.h"
-
-/// afxFifo is a lock-less, thread-safe, multi-producer-multi-consumer queue data structure. It is designed to hold copyable values.
 
 AFX_DEFINE_STRUCT(afxFifo)
 {
@@ -20,25 +36,25 @@ AFX_DEFINE_STRUCT(afxFifo)
     afxAtom64       writePosn; /// writeIndex of where we are in the sequence
 };
 
-/// Initializa a file afxFifo e aloca memória para o número especificado de entradas.
+/// Inicializa a fila afxFifo e aloca memória para o número especificado de entradas.
 /// O número de entradas não é mutável após inicialização.
-AFXINL afxError     AfxSetUpFifo(afxFifo* fifo, afxNat unitSiz, afxNat cap);
+AFX afxError    AfxSetUpFifo(afxFifo* fifo, afxNat unitSiz, afxNat cap);
 
 /// Libera a memória reservado para a fila e redefine o estado interno.
 /// A fila deve estar vazia quando esta função for chamada.
-AFXINL afxError     AfxCleanUpFifo(afxFifo* fifo);
+AFX afxError    AfxCleanUpFifo(afxFifo* fifo);
+
+/// Checa se há um valor disponível para ser pipocado
+AFX afxBool     AfxFifoIsEmpty(afxFifo* fifo);
 
 /// Enfileira o valor provido. O valor será copiado para o buffer interno da fila.
 /// Retorna TRUE se o enfileiramente foi desempenhado sucesivamente.
 /// Retorna FALSE se o enfileiramento não pode ser realizado.
 /// Isto pode acontecer se a fila estiver cheia, e algumas operações de desenfileiramento há de ocorrer.
-AFXINL afxBool      AfxEnqueueFifo(afxFifo* fifo, void* src);
+AFX afxBool     AfxEnqueueFifo(afxFifo* fifo, void* src);
 
 /// Desenfilera um valor da file especificada, copiando-o para para a variável argumentada.
 /// Retorna TRUE se um valor foi sucessivamente desenfileirado, FALSE caso contrário (se FALSE, data não será escrito.
-AFXINL afxBool      AfxDequeueFifo(afxFifo* fifo, void* value);
-
-/// Checa se há um valor disponível para ser pipocado
-AFXINL afxBool      AfxFifoIsEmpty(afxFifo* fifo);
+AFX afxBool     AfxDequeueFifo(afxFifo* fifo, void* value);
 
 #endif//AFX_FIFO_H

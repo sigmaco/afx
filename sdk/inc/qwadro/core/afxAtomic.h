@@ -19,7 +19,7 @@
 
 #include "qwadro/core/afxDebug.h"
 
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
 typedef volatile long       afxAtom32;
 typedef volatile long long  afxAtom64;
 typedef volatile void*      afxAtomPtr;

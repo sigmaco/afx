@@ -78,6 +78,7 @@ AFX_OBJECT(afxThread)
     afxSlock            evSlock;
     afxArena            evArena;
     afxQueue            events;
+    afxFifo             events2;
 
     afxChar const*      _file_;
     afxSize             _line_;
@@ -96,7 +97,9 @@ AFX_OBJECT(afxThread)
 
 /// functions affection the currrent caller thread.
 
-AFX void        AfxGetTid(afxNat32* tid);
+AFX afxBool     AfxIsPrimeThread(void);
+
+AFX afxNat32    AfxGetTid(void);
 
 AFX afxBool     AfxFindThread(afxNat32 tid, afxThread* thread);
 
@@ -161,10 +164,8 @@ AFX afxResult   AfxWaitForThread(afxThread thr, afxResult *exitCode);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxBool     AfxIsPrimeThread(void);
+AFX afxError    AfxAcquireThread(afxHere const hint, afxThreadConfig const* cfg, afxThread* thread);
 
 AFX afxBool     AfxGetPrimeThread(afxThread* thread);
-
-AFX afxError    AfxAcquireThread(afxHere const hint, afxThreadConfig const* cfg, afxThread* thread);
 
 #endif//AFX_THREAD_H

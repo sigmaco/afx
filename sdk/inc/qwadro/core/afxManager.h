@@ -120,8 +120,8 @@ AFX_DEFINE_STRUCT(afxManager)
     afxError        (*output)(afxObject obj, void* ios); // afxStream
     afxError        (*input)(afxObject obj, void* ios);
     
-    afxBool         (*event)(afxObject obj, afxEvent *ev);
-    afxBool         (*eventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
+    afxBool         (*defEvent)(afxObject obj, afxEvent *ev);
+    afxBool         (*defEventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     
     afxMmu          mmu; // afxMmu
     afxNat          siz;
@@ -136,15 +136,15 @@ AFX afxError        AfxEstablishManager(afxManager* mgr, afxManager *base, afxCh
 AFX afxError        AfxAbolishManager(afxManager* mgr);
 AFX afxNat          AfxExhaustManager(afxManager* mgr);
 
-AFXINL afxNat       AfxCountObjects(afxManager const* mgr);
-AFXINL afxNat       AfxGetObjectSize(afxManager const* mgr);
-AFXINL afxNat       AfxGetObjectStrictSize(afxManager const* mgr);
+AFX afxNat          AfxCountObjects(afxManager const* mgr);
+AFX afxNat          AfxGetObjectSize(afxManager const* mgr);
+AFX afxNat          AfxGetObjectStrictSize(afxManager const* mgr);
 
-AFXINL afxManager*  AfxGetSubmanager(afxManager const* mgr);
-AFXINL afxObject    AfxGetObject(afxManager const* mgr, afxNat32 uniqueId);
+AFX afxManager*     AfxGetSubmanager(afxManager const* mgr);
+AFX afxObject       AfxGetObject(afxManager const* mgr, afxNat32 uniqueId);
 
-AFXINL afxNat       AfxEnumerateObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxObject objects[]);
-AFXINL afxNat       AfxInvokeObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
+AFX afxNat          AfxEnumerateObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxObject objects[]);
+AFX afxNat          AfxInvokeObjects(afxManager const* mgr, afxNat first, afxNat cnt, afxBool(*f)(afxObject obj, void *udd), void *udd);
 
 AFX afxError        _AfxDeallocateObjects(afxManager* mgr, afxNat cnt, afxObject objects[]);
 AFX afxError        _AfxAllocateObjects(afxManager* mgr, afxNat cnt, afxObject objects[]);

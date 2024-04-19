@@ -7,10 +7,7 @@
 #define _AFX_OVERLAY_C
 
 #include "qwadro/afxQwadro.h"
-#include "qwadro/ux/afxApplication.h"
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/math/afxMathDefs.h"
-#include "qwadro/ux/afxMouse.h"
+#include "qwadro/ux/afxShell.h"
 #include "../src/techid/afxMD5Model.h"
 #include "../src/cadio/afxWavefrontObject.h"
 #include "../src/rad3d/afxGranny2Model.h"
@@ -25,6 +22,7 @@
 
 afxBool readyToRender = FALSE;
 afxApplication TheApp;
+afxOverlay window;
 awxBody cubeBod = NIL;
 afxModel cubeMdl = NIL;
 afxMesh cube = NIL;
@@ -128,6 +126,66 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     return FALSE;
 }
 
+afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
+{
+    afxError err = AFX_ERR_NONE;
+    afxCamera cam = (void*)obj;
+    AfxAssertObjects(1, &cam, afxFcc_CAM);
+    (void)watched;
+    (void)ev;
+
+    switch (ev->id)
+    {
+    case afxUxEventId_AXIS:
+    {
+        //afxMouse mse = (void*)watched;
+        //AfxAssertObjects(1, &mse, afxFcc_MSE);
+
+        // TODO Leva isso para o usuário
+
+        if (AfxLmbIsPressed(0))
+        {
+            afxV2d delta;
+            afxV3d deltaEar;
+            AfxGetMouseMotion(0, delta);
+            deltaEar[1] = -((afxReal)(delta[0] * AFX_PI / 180.f));
+            deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.f));
+            deltaEar[2] = 0.f;
+
+            AfxApplyCameraElevAzimRoll(cam, deltaEar);
+        }
+
+        if (AfxRmbIsPressed(0))
+        {
+            afxV2d delta;
+            afxV3d off;
+            AfxGetMouseMotion(0, delta);
+            off[0] = -((afxReal)(delta[0] * AFX_PI / 180.f));
+            off[1] = -((afxReal)(delta[1] * AFX_PI / 180.f));
+            off[2] = 0.f;
+
+            AfxApplyCameraOffset(cam, off);
+        }
+        break;
+    }
+    case afxUxEventId_WHEEL:
+    {
+        afxReal w = AfxGetMouseWheelDelta(0);
+        w = w / 120.f; // WHEEL_DELTA
+        AfxApplyCameraDistance(cam, w);
+        break;
+    }
+    case afxUxEventId_KEY:
+    {
+        //afxKeyboard kbd = (void*)watched;
+        //AfxAssertObjects(1, &kbd, afxFcc_KBD);
+        break;
+    }
+    default:break;
+    }
+    return FALSE;
+}
+
 void UpdateFrameMovement(afxReal64 DeltaTime)
 {
     afxError err = AFX_ERR_NONE;
@@ -147,6 +205,8 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 
     if (AfxSumV3d(v))
         AfxApplyCameraMotion(cam, v);
+#else
+    //AfxProcessCameraInteraction(cam, 0, CameraSpeed, DeltaTime);
 #endif
 
     afxReal64 curTime, lastTime;
@@ -181,15 +241,13 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxAcquireSimulations(1, &simSpec, &sim);
     AfxAssertObjects(1, &sim, afxFcc_SIM);
     
-    afxOverlay ovly;
-    AfxAcquireOverlay(dctx, NIL, &ovly);
-    AfxAdjustOverlayNdc(ovly, AfxSpawnV3d(0.5, 0.5, 1));
+    //AfxInstallWatcher();
 #if 0
     afxDrawOutputConfig doutConfig = {0};
     doutConfig.pixelFmtDs[0] = afxPixelFormat_D24;
     AfxAcquireDrawOutput(0, &doutConfig, &dout);
 #endif
-    dout = ovly->dout;
+    AfxGetOverlayDrawOutput(window, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -227,8 +285,8 @@ _AFXEXPORT afxResult Once(afxApplication app)
     AfxMakeUri(&uriMap, "art/object/container/container.obj", 0);
     //AfxSimulationLoadObjAssets(sim, &uriMap, NIL);
 
-    //AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
-    AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
+    AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
+    //AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
     //AfxMakeUri(&uriMap, "art/actor/p_explorer.gr2", 0);
     mdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
 
@@ -260,7 +318,8 @@ _AFXEXPORT afxResult Once(afxApplication app)
     awxMotor moto = AwxRunAnimation(bod, 0, ani);
     //awxMotor moto2 = AwxRunAnimation(bod, 0, ani);
     
-    AwxAdjustMotorIterations(moto, 0);
+    if (moto)
+        AwxAdjustMotorIterations(moto, 0);
     //AwxAdjustMotorIterations(moto2, 0);
     //AwxReleaseOnceUnusedMotors(1, &moto);
 
@@ -341,47 +400,16 @@ _AFXEXPORT afxResult Once(afxApplication app)
 
     rnd->activeCam = cam;
 
-    afxMouse mse;
-    AfxGetMouse(0, &mse);
-    AfxObjectInstallEventFilter(mse, cam);
+    afxHid hid;
+    AfxGetHid(0, &hid);
+    AfxInstallEventFilter(cam, CamEventFilter);
+    AfxInstallWatcher(window, cam);
     
     AfxAcquirePoses(sim, 1, (afxNat[]) { 256 }, &sharedLocalPose);
     AfxAcquirePoseBuffers(sim, 1, (afxNat[]) { 256 }, NIL, &sharedPoseBuffer);
 
     readyToRender = TRUE;
     return AFX_SUCCESS; 
-}
-
-_AFXEXPORT afxResult SandboxProc(afxApplication app, afxUxEvent* ev)
-{
-    afxError err = AFX_ERR_NONE;
-
-    switch (ev->id)
-    {
-        //case 0: break;
-    case afxUxEvent_RUN:
-    {
-        Once(app);
-        break;
-    }
-    case afxUxEvent_QUIT:
-    {
-        //AfxReleaseObject(&dinD->obj);
-        AfxLogEcho("aaaaaaaaaaaa");
-
-        break;
-    }
-    default:
-    {
-        afxReal64 ct, dt;
-        AfxGetApplicationTime(app, &ct, &dt);
-        UpdateFrameMovement(dt);
-
-        break;
-    }
-    }
-
-    return err;
 }
 
 int main(int argc, char const* argv[])
@@ -403,7 +431,7 @@ int main(int argc, char const* argv[])
         AfxChooseDrawSystemConfiguration(&dsysCfg);
         sysCfg.platform = &winCfg;
         sysCfg.draw = &dsysCfg;
-        AfxDoSystemBootUp(&sysCfg);
+        AfxDoBootUp(&sysCfg);
 
         afxDrawContextConfig dctxCfg = { 0 };
         AfxAcquireDrawContexts(0, 1, &dctxCfg, &dctx);
@@ -413,7 +441,6 @@ int main(int argc, char const* argv[])
         appConfig.argc = argc;
         appConfig.argv = argv;
         appConfig.dctx = dctx;
-        appConfig.procCb = SandboxProc;
         AfxAcquireApplications(1, &appConfig, &TheApp);
         AfxAssertObjects(1, &TheApp, afxFcc_APP);
 
@@ -421,19 +448,28 @@ int main(int argc, char const* argv[])
         AfxMakeUri(&uri, "system/sandbox.xss", 0);
         AfxRunApplication(TheApp, &uri);
 
-        Once(TheApp);
+        AfxAcquireOverlay(dctx, NIL, &window);
+        AfxAdjustOverlayNdc(window, AfxSpawnV3d(0.5, 0.5, 1));
+
+        Once(NIL);
 
         while (AfxSystemIsExecuting())
         {
-            DrawInputProc(rnd->din, NIL);
-            SandboxProc(TheApp, (afxUxEvent[]) {0});
             AfxDoSystemExecution(0);
+            DrawInputProc(rnd->din, NIL);
+            
+            afxReal64 ct, dt;
+            AfxStepOverlay(window, &ct, &dt);
+            UpdateFrameMovement(dt);
         }
-        AfxReleaseObjects(1, (void*[]) { TheApp });
 
-        AfxReleaseObjects(1, (void*[]) { dctx });
+        AfxReleaseObjects(1, &window);
 
-        AfxDoSystemShutdown(0);
+        AfxReleaseObjects(1, &TheApp);
+
+        AfxReleaseObjects(1, &dctx);
+
+        AfxDoShutdown(0);
     }
     Sleep(3000);
     return 0;

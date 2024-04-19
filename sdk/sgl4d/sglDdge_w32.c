@@ -1609,20 +1609,20 @@ _SGL afxNat _SglDgdeEnqueueExecuteCb(afxDrawBridge ddge, afxFence fenc, afxNat c
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
     AfxAssert(req);
-    afxNat queIdx;
-    afxBool success = FALSE;
+    afxNat queIdx = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
 
-    do
+    while (!queued)
     {
-        for (queIdx = 0; queIdx < ddge->base.queCnt; queIdx++)
+        for (afxNat i = 0; i < ddge->base.queCnt; i++)
         {
-            afxDrawQueue* dque = &ddge->base.queues[queIdx];
+            afxDrawQueue* dque = &ddge->base.queues[i];
 
             if (AfxTryLockMutex(&dque->workChnMtx))
             {
                 _sglQueueingExecute* subm;
                 afxNat queuingSiz = sizeof(*subm) + (cnt * sizeof(subm->items[0]));
-                subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                subm = _AfxDqueRequestArenaSpace(ddge, i, queuingSiz);
                 *subm = (_sglQueueingExecute) { 0 };
                 subm->hdr.siz = queuingSiz;
                 AfxGetTime(&subm->hdr.pushTime);
@@ -1640,17 +1640,15 @@ _SGL afxNat _SglDgdeEnqueueExecuteCb(afxDrawBridge ddge, afxFence fenc, afxNat c
 
                 AfxPushLinkage(&subm->hdr.chain, &dque->workChn);
                 AfxUnlockMutex(&dque->workChnMtx);
-                success = TRUE;
+                queued = TRUE;
+                queIdx = i;
                 break;
             }
         }
 
-        if (success)
-            break;
-        else
-            AfxYield();
-    } while (1);
-    return success ? queIdx : AFX_INVALID_INDEX;
+        AfxYield();
+    }
+    return queIdx;
 }
 
 _SGL afxNat _SglDdgeEnqueueTransferCb(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[])
@@ -1659,20 +1657,20 @@ _SGL afxNat _SglDdgeEnqueueTransferCb(afxDrawBridge ddge, afxFence fenc, afxNat 
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
     AfxAssert(req);
-    afxNat queIdx;
-    afxBool success = FALSE;
+    afxNat queIdx = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
 
-    do
+    while (!queued)
     {
-        for (queIdx = 0; queIdx < ddge->base.queCnt; queIdx++)
+        for (afxNat i = 0; i < ddge->base.queCnt; i++)
         {
-            afxDrawQueue* dque = &ddge->base.queues[queIdx];
+            afxDrawQueue* dque = &ddge->base.queues[i];
 
             if (AfxTryLockMutex(&dque->workChnMtx))
             {
                 _sglQueueingTransfer* subm;
                 afxNat queuingSiz = sizeof(*subm) + (cnt * sizeof(subm->items[0]));
-                subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                subm = _AfxDqueRequestArenaSpace(ddge, i, queuingSiz);
                 *subm = (_sglQueueingTransfer) { 0 };
                 subm->hdr.siz = queuingSiz;
                 AfxGetTime(&subm->hdr.pushTime);
@@ -1686,17 +1684,15 @@ _SGL afxNat _SglDdgeEnqueueTransferCb(afxDrawBridge ddge, afxFence fenc, afxNat 
 
                 AfxPushLinkage(&subm->hdr.chain, &dque->workChn);
                 AfxUnlockMutex(&dque->workChnMtx);
-                success = TRUE;
+                queued = TRUE;
+                queIdx = i;
                 break;
             }
         }
 
-        if (success)
-            break;
-        else
-            AfxYield();
-    } while (1);
-    return success ? queIdx : AFX_INVALID_INDEX;
+        AfxYield();
+    }
+    return queIdx;
 }
 
 _SGL afxNat _SglDdgeEnqueuePresentCb(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[])
@@ -1705,20 +1701,20 @@ _SGL afxNat _SglDdgeEnqueuePresentCb(afxDrawBridge ddge, afxNat cnt, afxPresenta
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
     AfxAssert(req);
-    afxNat queIdx;
-    afxBool success = FALSE;
+    afxNat queIdx = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
 
-    do
+    while (!queued)
     {
-        for (queIdx = 0; queIdx < ddge->base.queCnt; queIdx++)
+        for (afxNat i = 0; i < ddge->base.queCnt; i++)
         {
-            afxDrawQueue* dque = &ddge->base.queues[queIdx];
+            afxDrawQueue* dque = &ddge->base.queues[i];
 
             if (AfxTryLockMutex(&dque->workChnMtx))
             {
                 _sglQueueingPresent* subm;
                 afxNat queuingSiz = sizeof(*subm) + (cnt * sizeof(subm->items[0]));
-                subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                subm = _AfxDqueRequestArenaSpace(ddge, i, queuingSiz);
                 *subm = (_sglQueueingPresent) { 0 };
                 subm->hdr.siz = queuingSiz;
                 subm->hdr.exec = (void*)_DpuPresent;
@@ -1735,17 +1731,15 @@ _SGL afxNat _SglDdgeEnqueuePresentCb(afxDrawBridge ddge, afxNat cnt, afxPresenta
 
                 AfxPushLinkage(&subm->hdr.chain, &dque->workChn);
                 AfxUnlockMutex(&dque->workChnMtx);
-                success = TRUE;
+                queued = TRUE;
+                queIdx = i;
                 break;
             }
         }
 
-        if (success)
-            break;
-        else
-            AfxYield();
-    } while (1);
-    return success ? queIdx : AFX_INVALID_INDEX;
+        AfxYield();
+    }
+    return queIdx;
 }
 
 _SGL afxNat _SglDdgeEnqueueStampCb(afxDrawBridge ddge, afxNat cnt, afxPresentationRequest const req[], afxV2d const origin, afxString const* caption)
@@ -1753,20 +1747,20 @@ _SGL afxNat _SglDdgeEnqueueStampCb(afxDrawBridge ddge, afxNat cnt, afxPresentati
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     AfxAssert(cnt);
-    afxNat queIdx;
-    afxBool success = FALSE;
+    afxNat queIdx = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
 
-    do
+    while (!queued)
     {
-        for (queIdx = 0; queIdx < ddge->base.queCnt; queIdx++)
+        for (afxNat i = 0; i < ddge->base.queCnt; i++)
         {
-            afxDrawQueue* dque = &ddge->base.queues[queIdx];
+            afxDrawQueue* dque = &ddge->base.queues[i];
 
             if (AfxTryLockMutex(&dque->workChnMtx))
             {
                 _sglQueueingStamp* subm;
                 afxNat queuingSiz = sizeof(*subm) + (cnt * sizeof(subm->items[0]));
-                subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                subm = _AfxDqueRequestArenaSpace(ddge, i, queuingSiz);
                 *subm = (_sglQueueingStamp) { 0 };
                 subm->hdr.siz = queuingSiz;
                 subm->hdr.exec = (void*)_DpuStamp;
@@ -1785,37 +1779,35 @@ _SGL afxNat _SglDdgeEnqueueStampCb(afxDrawBridge ddge, afxNat cnt, afxPresentati
 
                 AfxPushLinkage(&subm->hdr.chain, &dque->workChn);
                 AfxUnlockMutex(&dque->workChnMtx);
-                success = TRUE;
+                queued = TRUE;
+                queIdx = i;
                 break;
             }
         }
 
-        if (success)
-            break;
-        else
-            AfxYield();
-    } while (1);
-    return success ? queIdx : AFX_INVALID_INDEX;
+        AfxYield();
+    }
+    return queIdx;
 }
 
 _SGL afxNat _SglDdgeEnqueueMmapCb(afxDrawBridge ddge, afxBuffer buf, afxSize off, afxNat ran, afxFlags flags)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-    afxNat queIdx;
-    afxBool success = FALSE;
+    afxNat queIdx = AFX_INVALID_INDEX;
+    afxBool queued = FALSE;
 
-    do
+    while (!queued)
     {
-        for (queIdx = 0; queIdx < ddge->base.queCnt; queIdx++)
+        for (afxNat i = 0; i < ddge->base.queCnt; i++)
         {
-            afxDrawQueue* dque = &ddge->base.queues[queIdx];
+            afxDrawQueue* dque = &ddge->base.queues[i];
 
             if (AfxTryLockMutex(&dque->workChnMtx))
             {
                 _sglQueueingMmap* subm;
                 afxNat queuingSiz = sizeof(*subm);
-                subm = _AfxDqueRequestArenaSpace(ddge, queIdx, queuingSiz);
+                subm = _AfxDqueRequestArenaSpace(ddge, i, queuingSiz);
                 *subm = (_sglQueueingMmap) { 0 };
                 subm->hdr.siz = queuingSiz;
                 subm->hdr.exec = (void*)_DpuMmap;
@@ -1828,17 +1820,15 @@ _SGL afxNat _SglDdgeEnqueueMmapCb(afxDrawBridge ddge, afxBuffer buf, afxSize off
 
                 AfxPushLinkage(&subm->hdr.chain, &dque->workChn);
                 AfxUnlockMutex(&dque->workChnMtx);
-                success = TRUE;
+                queued = TRUE;
+                queIdx = i;
                 break;
             }
         }
 
-        if (success)
-            break;
-        else
-            AfxYield();
-    } while (1);
-    return success ? queIdx : AFX_INVALID_INDEX;
+        AfxYield();
+    }
+    return queIdx;
 }
 
 _SGL afxError _SglDdgeWaitCb(afxDrawBridge ddge, afxNat queIdx)

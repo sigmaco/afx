@@ -43,7 +43,7 @@ _AFX afxNat AfxFindSymbolAddresses(afxModule mdle, afxNat cnt, afxString const n
     void* osHandle = mdle->osHandle;
     afxBool demangle = mdle->demangle;
 
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
     PIMAGE_NT_HEADERS header = (PIMAGE_NT_HEADERS)((BYTE *)osHandle + ((PIMAGE_DOS_HEADER)osHandle)->e_lfanew);
     AfxAssert(header->Signature == IMAGE_NT_SIGNATURE);
     AfxAssert(header->OptionalHeader.NumberOfRvaAndSizes > 0);
@@ -109,7 +109,7 @@ _AFX afxResult AfxFindModuleSymbols(afxModule mdle, afxNat cnt, afxChar const *n
 
     for (afxNat i = 0; i < cnt; i++)
     {
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
         syms[i] = (void*)GetProcAddress(mdle->osHandle, name[i]);
 #else
         syms[i] = dlsym(mdle->osHandle, name[i]);
@@ -148,7 +148,7 @@ _AFX afxNat AfxGetSymbolAddresses2(afxModule mdle, afxBool demangle, afxNat cnt,
     {
         void* osHandle = mdle->osHandle;
 
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
         PIMAGE_NT_HEADERS header = (PIMAGE_NT_HEADERS)((BYTE *)osHandle + ((PIMAGE_DOS_HEADER)osHandle)->e_lfanew);
         AfxAssert(header->Signature == IMAGE_NT_SIGNATURE);
         AfxAssert(header->OptionalHeader.NumberOfRvaAndSizes > 0);
@@ -222,7 +222,7 @@ _AFX afxNat AfxGetSymbolAddresses(afxModule mdle, afxNat cnt, afxString const na
     {
         AfxCopyString(&s.str, &names[i]);
 
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
         addresses[i] = (void*)GetProcAddress((void*)osHandle, s.buf);
 #else
         addresses[i] = dlsym((void*)osHandle, s.buf);
@@ -283,7 +283,7 @@ _AFX afxError _AfxMdleCtor(afxModule mdle, afxCookie const* cookie)
 
     //if (!oshandle)
     {
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
         osHandle = LoadLibraryA(pathStr);
 #else
         osHandle = dlopen(pathStr, RTLD_NOW);
@@ -305,7 +305,7 @@ _AFX afxError _AfxMdleCtor(afxModule mdle, afxCookie const* cookie)
         {
             if (loaded)
             {
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
                 FreeLibrary(osHandle);
 #else
                 dlclose(osHandle);
@@ -325,7 +325,7 @@ _AFX afxError _AfxMdleDtor(afxModule mdle)
 
     if (mdle->hasBeenLoaded)
     {
-#ifdef AFX_PLATFORM_WIN
+#ifdef AFX_OS_WIN
         FreeLibrary(mdle->osHandle);
 #else
         dlclose(mdle->osHandle);

@@ -495,6 +495,7 @@ _AVX afxResult _AvxDsysctl(afxSystem sys, afxInt reqCode, ...)
 
         break;
     }
+#if 0
     case 2:
     {
         afxDrawSystem dsys;
@@ -553,6 +554,7 @@ _AVX afxResult _AvxDsysctl(afxSystem sys, afxInt reqCode, ...)
         }
         break;
     }
+#endif
     default:
     {
         AfxThrowError();
@@ -569,4 +571,54 @@ _AVX void AfxChooseDrawSystemConfiguration(afxDrawSystemConfig* cfg)
     afxError err = AFX_ERR_NONE;
     AfxAssert(cfg);
     *cfg = (afxDrawSystemConfig) { 0 };
+}
+
+_AVX afxError AfxEntryPoint(afxModule mdle, afxNat reqCode, void* udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &mdle, afxFcc_MDLE);
+
+    switch (reqCode)
+    {
+    case afxFcc_SYS:
+    {
+        afxDrawSystem dsys;
+
+        if (!AfxGetDrawSystem(&dsys))
+        {
+            AfxAssert(TheDrawSystem == dsys);
+            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
+
+            afxManager* mgr = _AfxGetDsysMgr();
+            AfxAssertClass(mgr, afxFcc_DSYS);
+
+            if (_AfxConstructObjects(mgr, 1, (void**)&TheDrawSystem, udd)) AfxThrowError();
+            else
+            {
+                AfxAssert(TheDrawSystem != dsys); // Attention! Ctor moves the object pointer to hide out the object base.
+                dsys = TheDrawSystem;
+                AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+                dsysReady = TRUE;
+            }
+        }
+        else
+        {
+            AfxAssertObjects(1, &dsys, afxFcc_DSYS);
+            dsysReady = FALSE;
+
+            afxManager* mgr = _AfxGetDsysMgr();
+            AfxAssertClass(mgr, afxFcc_DSYS);
+
+            AfxAssert(TheDrawSystem == dsys);
+
+            if (_AfxDestructObjects(mgr, 1, (void**)&TheDrawSystem))
+                AfxThrowError();
+
+            AfxAssert(TheDrawSystem != dsys); // Attention! Dtor moves the object pointer to expose the object base.
+            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
+        }
+    }
+    default: break;
+    }
+    return err;
 }

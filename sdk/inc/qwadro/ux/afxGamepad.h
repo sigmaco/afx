@@ -20,7 +20,7 @@
 #include "qwadro/ux/afxHid.h"
 #include "qwadro/math/afxVector.h"
 
-#ifdef _AFX_CORE_C
+#ifdef _AFX_UX_C
 #ifdef _AFX_GAMEPAD_C
 AFX_OBJECT(afxGamepad)
 {
@@ -57,37 +57,37 @@ AFX_OBJECT(afxController)
 
 };
 #endif//_AFX_CONTROLLER_C
-#endif//_AFX_CORE_C
+#endif//_AFX_UX_C
 
-AFX afxBool         AfxTabKeyWasPressed(afxNat port); // Tab
-AFX afxBool         AfxQuickKeyWasPressed(afxNat port); // Q
-AFX afxBool         AfxForwardKeyWasPressed(afxNat port); // W
-AFX afxBool         AfxBackwardKeyWasPressed(afxNat port); // S
-AFX afxBool         AfxWestwardKeyWasPressed(afxNat port); // A
-AFX afxBool         AfxEastwardKeyWasPressed(afxNat port); // D
-AFX afxBool         AfxExecuteKeyWasPressed(afxNat port); // E
-AFX afxBool         AfxReuseKeyWasPressed(afxNat port); // R
-AFX afxBool         AfxFunctionKeyWasPressed(afxNat port); // F
-AFX afxBool         AfxGiveKeyWasPressed(afxNat port); // G
-AFX afxBool         AfxShiftKeyWasPressed(afxNat port); // Shift
-AFX afxBool         AfxFireKeyWasPressed(afxNat port); // LMB
-AFX afxBool         AfxPrecisionKeyWasPressed(afxNat port); // RMB
+AUX afxBool         AfxTabKeyWasPressed(afxNat port); // Tab
+AUX afxBool         AfxQuickKeyWasPressed(afxNat port); // Q
+AUX afxBool         AfxForwardKeyWasPressed(afxNat port); // W
+AUX afxBool         AfxBackwardKeyWasPressed(afxNat port); // S
+AUX afxBool         AfxWestwardKeyWasPressed(afxNat port); // A
+AUX afxBool         AfxEastwardKeyWasPressed(afxNat port); // D
+AUX afxBool         AfxExecuteKeyWasPressed(afxNat port); // E
+AUX afxBool         AfxReuseKeyWasPressed(afxNat port); // R
+AUX afxBool         AfxFunctionKeyWasPressed(afxNat port); // F
+AUX afxBool         AfxGiveKeyWasPressed(afxNat port); // G
+AUX afxBool         AfxShiftKeyWasPressed(afxNat port); // Shift
+AUX afxBool         AfxFireKeyWasPressed(afxNat port); // LMB
+AUX afxBool         AfxPrecisionKeyWasPressed(afxNat port); // RMB
 
-AFX void            AfxGetLeftStickAxis(afxNat port, afxV2d axis);
-AFX void            AfxGetRightStickAxis(afxNat port, afxV2d axis);
+AUX void            AfxGetLeftStickAxis(afxNat port, afxV2d axis);
+AUX void            AfxGetRightStickAxis(afxNat port, afxV2d axis);
 
-AFX afxReal         AfxGetLeftTriggerPressure(afxNat port);
-AFX afxReal         AfxGetRightTriggerPressure(afxNat port);
+AUX afxReal         AfxGetLeftTriggerPressure(afxNat port);
+AUX afxReal         AfxGetRightTriggerPressure(afxNat port);
 
-AFX void            AfxGetLhb(afxNat port, afxNat first, afxNat cnt);
-AFX void            AfxGetRhb(afxNat port, afxNat first, afxNat cnt);
+AUX void            AfxGetLhb(afxNat port, afxNat first, afxNat cnt);
+AUX void            AfxGetRhb(afxNat port, afxNat first, afxNat cnt);
 
-AFX void            AfxGetGamepadFnButton(afxNat port, afxNat first, afxNat cnt);
+AUX void            AfxGetGamepadFnButton(afxNat port, afxNat first, afxNat cnt);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX afxController   AfxGetController(afxNat port);
+AUX afxController   AfxGetController(afxNat port);
 
-AFX afxError        AfxAcquireControllers(afxNat cnt, afxNat const port[], afxController controllers[]);
+AUX afxError        AfxAcquireControllers(afxNat cnt, afxNat const port[], afxController controllers[]);
 
 #endif//AFX_GAMEPAD_H

@@ -394,49 +394,14 @@ _AFX afxError _AfxDestructObjects(afxManager *mgr, afxNat cnt, afxObject objects
         {
             --mgr->instCnt;
             //AfxLogEcho("Dismantling %s object (#%d) %p...", mgr->name, i, obj[i]);
-            afxObjectBase *base = (afxObjectBase *)obj;
-            --base;
-            AfxAssertType(base, afxFcc_OBJ);
-            AfxAssert(AfxGetClass(obj) == mgr);
+            afxObjectBase *hdr = (afxObjectBase *)obj;
+            --hdr;
+            AfxAssertType(hdr, afxFcc_OBJ);
+            AfxAssert(AfxGetManager(obj) == mgr);
 
-            //afxFcc fcc = AfxObjectGetFcc(item);
+            //afxFcc fcc = AfxGetObjectFcc(item);
             //afxNat refCnt = AfxGetRefCount(item);
             //AfxLogEcho("Destroying %s... %p[%.4s]^%i", mgr->name, item, (afxChar*)&fcc, item->refCnt);
-
-            {
-                AfxObjectSignalConnections(obj, AFX_EVENT_OBJ_DESTROYED, NIL);
-
-                afxConnection *objc;
-                afxList *connections = &base->handling;
-
-                while (1)
-                {
-                    afxLink *first = AfxGetFirstLink(connections), *head = AfxGetListHead(connections);
-
-                    if (first == head) break;
-                    else
-                    {
-                        objc = AFX_REBASE(first, afxConnection, holderLink);
-                        AfxAssertConnection(objc);
-                        AfxConnectionDrop(objc);
-                    }
-                }
-
-                connections = &base->signaling;
-
-                while (1)
-                {
-                    afxLink *first = AfxGetFirstLink(connections), *head = AfxGetListHead(connections);
-
-                    if (first == head) break;
-                    else
-                    {
-                        objc = AFX_REBASE(first, afxConnection, objLink);
-                        AfxAssertConnection(objc);
-                        AfxConnectionDrop(objc);
-                    }
-                }
-            }
 
             {
                 afxEvent ev = { 0 };
@@ -445,13 +410,13 @@ _AFX afxError _AfxDestructObjects(afxManager *mgr, afxNat cnt, afxObject objects
 
                 afxEventFilter *flt;
 
-                while (base->watching)
+                while (hdr->watching)
                 {
-                    afxLinkage *first = AfxGetLastLinkage(base->watching);
+                    afxLinkage *first = AfxGetLastLinkage(hdr->watching);
 
                     if (!first)
                     {
-                        AfxAssert(!base->watching);
+                        AfxAssert(!hdr->watching);
                         break;
                     }
                     else
@@ -459,17 +424,17 @@ _AFX afxError _AfxDestructObjects(afxManager *mgr, afxNat cnt, afxObject objects
                         flt = AFX_REBASE(first, afxEventFilter, holder);
                         AfxAssert(AfxGetLinker(&flt->holder) == obj);
                         //AfxAssertType((afxHandle*)flt->watched.chain->owner, afxFcc_OBJ);
-                        AfxObjectRemoveEventFilter(AfxGetLinker(&flt->watched), obj);
+                        AfxDeinstallWatcher(AfxGetLinker(&flt->watched), obj);
                     }
                 }
 
-                while (base->watchers)
+                while (hdr->watchers)
                 {
-                    afxLinkage *first = AfxGetLastLinkage(base->watchers);
+                    afxLinkage *first = AfxGetLastLinkage(hdr->watchers);
 
                     if (!first)
                     {
-                        AfxAssert(!base->watchers);
+                        AfxAssert(!hdr->watchers);
                         break;
                     }
                     else
@@ -477,7 +442,7 @@ _AFX afxError _AfxDestructObjects(afxManager *mgr, afxNat cnt, afxObject objects
                         flt = AFX_REBASE(first, afxEventFilter, watched);
                         AfxAssert(AfxGetLinker(&flt->watched) == obj);
                         //AfxAssertType((afxHandle*)flt->holder.chain->owner, afxFcc_OBJ);
-                        AfxObjectRemoveEventFilter(obj, AfxGetLinker(&flt->holder));
+                        AfxDeinstallWatcher(obj, AfxGetLinker(&flt->holder));
                     }
                 }
             }
@@ -485,8 +450,8 @@ _AFX afxError _AfxDestructObjects(afxManager *mgr, afxNat cnt, afxObject objects
             if (_AfxObjDtor(mgr, obj))
                 AfxThrowError();
 
-            AfxZero2(1, sizeof(*base), base);
-            objects[i] = base;
+            AfxZero2(1, sizeof(*hdr), hdr);
+            objects[i] = hdr;
 
             //AfxDeallocate(mgr->all, item);
 
@@ -547,25 +512,23 @@ _AFX afxError _AfxConstructObjects(afxManager *mgr, afxNat cnt, afxObject object
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        afxObjectBase* base = objects[i];
-        AfxAssert(AfxIsAligned(base, sizeof(void*)));
-        base->fcc = afxFcc_OBJ;
-        base->mgr = mgr;
+        afxObjectBase* hdr = objects[i];
+        AfxAssert(AfxIsAligned(hdr, sizeof(void*)));
+        hdr->fcc = afxFcc_OBJ;
+        hdr->mgr = mgr;
 
-        base->refCnt = 1;
-        AfxDeployList(&base->signaling);
-        AfxDeployList(&base->handling);
+        AfxStoreAtom32(&hdr->refCnt, 1);
 
-        base->tid;
-        AfxGetTid(&base->tid);
+        hdr->tid = AfxGetTid();
 
-        base->watchers = NIL;
-        base->watching = NIL;
+        hdr->watchers = NIL;
+        hdr->watching = NIL;
+        hdr->event = mgr->defEvent;
 
-        objects[i] = base + 1; // move the pointer forward
+        objects[i] = hdr + 1; // move the pointer forward
 
         AfxAssert(AfxIsAligned(objects[i], sizeof(void*)));
-        AfxAssert(base == (((afxObjectBase*)(objects[i])) - 1));
+        AfxAssert(hdr == (((afxObjectBase*)(objects[i])) - 1));
 
         cookie.no = i;
 
@@ -579,7 +542,7 @@ _AFX afxError _AfxConstructObjects(afxManager *mgr, afxNat cnt, afxObject object
                 afxObjectBase* subset = objects[j];
                 objects[j] = subset - 1; // move the pointer backward
             }
-            objects[i] = base - 1; // move the pointer backward
+            objects[i] = hdr - 1; // move the pointer backward
         }
         else
         {
@@ -730,8 +693,8 @@ _AFX afxError AfxEstablishManager(afxManager* mgr, afxManager* subset, afxChain*
     AfxStrcpy(mgr->name, cfg->name ? cfg->name : "");
     mgr->input = NIL;
     mgr->output = NIL;
-    mgr->event = cfg->event;
-    mgr->eventFilter = cfg->eventFilter;
+    mgr->defEvent = cfg->event;
+    mgr->defEventFilter = cfg->eventFilter;
     mgr->vmt = cfg->vmt;
     mgr->unitsPerPage = cfg->unitsPerPage;
 
@@ -761,14 +724,14 @@ _AFX afxError AfxEstablishManager(afxManager* mgr, afxManager* subset, afxChain*
 _AFX afxNat AfxGetObjectId(afxObject obj)
 {
     afxError err = AFX_ERR_NONE;
-    afxObjectBase* base = (afxObjectBase*)obj;
-    --base;
-    AfxAssertType(base, afxFcc_OBJ);
+    afxObjectBase* hdr = (afxObjectBase*)obj;
+    --hdr;
+    AfxAssertType(hdr, afxFcc_OBJ);
     
-    afxPool* pool = &(AfxGetClass(obj)->pool);
+    afxPool* pool = &(AfxGetManager(obj)->pool);
     AfxAssertType(pool, afxFcc_POOL);
     afxNat idx = AFX_INVALID_INDEX;
-    AfxFindPoolUnitIndex(pool, (afxByte*)base, &idx, NIL);
+    AfxFindPoolUnitIndex(pool, (afxByte*)hdr, &idx, NIL);
     return idx;
 }
 
@@ -820,10 +783,10 @@ _AFX afxError AfxReacquireObjects(afxNat cnt, afxObject objects[])
 
         if (obj)
         {
-            afxObjectBase* base = (afxObjectBase*)(obj);
-            --base;
-            AfxAssertType(base, afxFcc_OBJ);
-            ++base->refCnt;
+            afxObjectBase* hdr = (afxObjectBase*)(obj);
+            --hdr;
+            AfxAssertType(hdr, afxFcc_OBJ);
+            AfxIncAtom32(&hdr->refCnt);
         }
     }
     return err;
@@ -842,18 +805,17 @@ _AFX afxBool AfxReleaseObjects(afxNat cnt, afxObject objects[])
 
         if (obj)
         {
-            afxObjectBase* base = (afxObjectBase*)(obj);
-            --base;
-            AfxAssertType(base, afxFcc_OBJ);
+            afxObjectBase* hdr = (afxObjectBase*)(obj);
+            --hdr;
+            AfxAssertType(hdr, afxFcc_OBJ);
 
             AfxCatchError(err);
-
             afxInt refCnt;
 
-            if (0 == (refCnt = --base->refCnt))
+            if (0 == (refCnt = AfxDecAtom32(&hdr->refCnt)))
             {
                 ++rslt;
-                afxManager* mgr = base->mgr;
+                afxManager* mgr = hdr->mgr;
                 AfxAssertType(mgr, afxFcc_CLS);
 
                 // se der erro aqui, é porque você provavelmente está passando uma array como elemento aninhado (ex.: AfxReleaseObjects(n, (void*[]){ array })) ao invés de passar a array diretamente (ex.: AfxReleaseObjects(n, array));
@@ -861,6 +823,7 @@ _AFX afxBool AfxReleaseObjects(afxNat cnt, afxObject objects[])
                 AfxEnterSlockExclusive(&mgr->poolLock);
 
                 _AfxDestructObjects(mgr, 1, &obj);
+                AfxAssert(obj == hdr);
                 _AfxDeallocateObjects(mgr, 1, &obj);
 
                 AfxExitSlockExclusive(&mgr->poolLock);
@@ -885,10 +848,10 @@ _AFX afxBool _AfxAssertObjects(afxNat cnt, afxObject const objects[], afxFcc fcc
 
         if (obj)
         {
-            afxObjectBase* base = obj;
-            --base;
-            AfxAssertType(base, afxFcc_OBJ);
-            afxManager* mgr = base->mgr;
+            afxObjectBase* hdr = obj;
+            --hdr;
+            AfxAssertType(hdr, afxFcc_OBJ);
+            afxManager* mgr = hdr->mgr;
             AfxAssertType(mgr, afxFcc_CLS);
 
             do if (mgr->objFcc == fcc)

@@ -116,7 +116,7 @@ static void LoadLibNow(void)
 
         if (!AfxGetSystem(&system))
         {
-            if (AfxDoSystemBootUp(NIL))
+            if (AfxDoBootUp(NIL))
                 AfxThrowError();
             else
             {
@@ -125,8 +125,8 @@ static void LoadLibNow(void)
         }
 
         afxUri uri;
-#ifdef AFX_PLATFORM_WIN
-#ifdef AFX_PLATFORM_W64
+#ifdef AFX_OS_WIN
+#ifdef AFX_OS_WIN64
         AfxMakeUri(&uri, "system/binkw64.dl_", 0);
 #else
         AfxMakeUri(&uri, "system/binkw32.dl_", 0);

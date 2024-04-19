@@ -28,7 +28,7 @@ _AFXINL long AfxAndAtom32(afxAtom32* dst, long value) { return InterlockedAnd(ds
 _AFXINL long AfxOrAtom32(afxAtom32* dst, long value) { return InterlockedOr(dst, value) | value; }
 _AFXINL int AfxCasAtom32(afxAtom32* dst, long proposed, long expected) { return InterlockedCompareExchange(dst, proposed, expected) == expected ? 1 : 0; }
 
-#ifdef AFX_PLATFORM_W64
+#ifdef AFX_OS_WIN64
 _AFXINL long long AfxLoadAtom64(afxAtom64* src) { return *src; }
 #else
 _AFXINL long long AfxLoadAtom64(afxAtom64* src) { return InterlockedCompareExchange64(src, 0, 0); }
@@ -46,7 +46,7 @@ _AFXINL int AfxCasAtom64(afxAtom64* dst, long long proposed, long long expected)
 
 _AFXINL void* AfxLoadAtomPtr(afxAtomPtr* src) { return (void*)*src; }
 
-#ifdef AFX_PLATFORM_W64
+#ifdef AFX_OS_WIN64
 _AFXINL void AfxStoreAtomPtr(afxAtomPtr* dst, void* value) { InterlockedExchangePointer((volatile PVOID*)dst, value); }
 _AFXINL void* AfxExchangeAtomPtr(afxAtomPtr* dst, void* value) { return InterlockedExchangePointer((volatile PVOID*)dst, value); }
 _AFXINL int AfxCasAtomPtr(afxAtomPtr* dst, void* proposed, void* expected) { return InterlockedCompareExchangePointer((volatile PVOID*)dst, proposed, expected) == expected ? 1 : 0; }

@@ -25,4 +25,4 @@
 /sdk/_vs17/**/Release
 /sdk/qwadro/math/afxCurve.c
 /sdk/qwadro/sim/motion/**.c
-/sdk/qwadro/env/_dep
+/sdk/qwadro/ux/_luna

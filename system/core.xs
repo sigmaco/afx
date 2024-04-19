@@ -21,17 +21,12 @@ ffi class Storage {
     ffi firm Dismount(point, endpoint, mode)
 }
 
-ffi class Keyboard {
+ffi class Hid {
     ffi firm Reacquire(port)
     ffi firm Release(port)
     
     ffi firm GetKeyPressure(port, code)
     ffi firm GetKeyCombo(port, neg, pos)
-}
-
-ffi class Mouse {
-    ffi firm Reacquire(port)
-    ffi firm Release(port)
     
     ffi firm LmbIsPressed(port)
     ffi firm RmbIsPressed(port)

@@ -61,6 +61,8 @@ _AFX afxSystem TheSystem = (void*)&theSysData;
 static_assert(sizeof(theSysData) >= (sizeof(afxObjectBase) + sizeof(TheSystem[0])), "");
 
 extern afxReal64 const renderWareUnitsPerMeter;
+extern afxThread _primeThr;
+extern afxNat32 _primeTid;
 
 extern afxClassConfig const _AfxMmuMgrCfg;
 extern afxClassConfig const _AfxMdleMgrCfg;
@@ -73,7 +75,6 @@ extern afxClassConfig const _AfxSimMgrCfg;
 extern afxClassConfig const _AfxSvcMgrCfg;
 extern afxClassConfig const _AfxDevMgrCfg;
 extern afxClassConfig const _AfxFsysMgrCfg;
-extern afxClassConfig const _AfxHidMgrCfg;
 extern afxClassConfig const _AfxStrbMgrCfg;
 extern afxClassConfig const _AfxShMgrCfg;
 
@@ -110,41 +111,34 @@ _AFX afxResult _AfxProcessHostPlatformEvents(void)
     afxError err = AFX_ERR_NONE;
 
     MSG msg;
-    //afxEvent ev;
     afxResult msgCnt = 0;
-    
     while (PeekMessageA(&(msg), NIL, 0, 0, PM_REMOVE/* | PM_NOYIELD*/))
     {
         ++msgCnt;
 
         if (msg.message == WM_QUIT) // PostQuitMessage()
         {
-            AfxRequestSystemShutdown(0);
+            AfxRequestShutdown(0);
         }
         else
         {
-            if (msg.message == WM_INPUT || msg.message == WM_INPUT_DEVICE_CHANGE)
+            if (GetKeyState(VK_F1))
             {
-                _AfxProcessSystemInputMessageWin32(&msg);
-
-                if (AfxKeyWasPressed(0, afxKey_F1))
-                {
-                    AfxLogAssistence("User input requested support.");
-                    AfxLogAssistence("Get help at https://sigmaco.org/");
-                    system("start https://sigmaco.org");
-                }
-                else if (AfxKeyWasPressed(0, afxKey_F4))
-                {
-                    //AfxRequestThreadInterruption(thr);
-                    AfxLogAdvertence("User input requested application break.");
-                    AfxRequestSystemShutdown(0);
-                }
-                else if (AfxKeyWasPressed(0, afxKey_F5))
-                {
-                    AfxLogAdvertence("User input requested application reboot.");
-                    //_AfxInterruptionAllApplications();
-                    //opcode = AFX_OPCODE_REBOOT;
-                }
+                AfxLogAssistence("User input requested support.");
+                AfxLogAssistence("Get help at https://sigmaco.org/");
+                system("start https://sigmaco.org");
+            }
+            else if (GetKeyState(VK_F4))
+            {
+                //AfxRequestThreadInterruption(thr);
+                AfxLogAdvertence("User input requested application break.");
+                AfxRequestShutdown(0);
+            }
+            else if (GetKeyState(VK_F5))
+            {
+                AfxLogAdvertence("User input requested application reboot.");
+                //_AfxInterruptionAllApplications();
+                //opcode = AFX_OPCODE_REBOOT;
             }
 
             TranslateMessage(&msg);
@@ -156,7 +150,7 @@ _AFX afxResult _AfxProcessHostPlatformEvents(void)
 
 _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
 {
-
+    return 0;
 }
 
 _AFX afxBool DoDevService(afxDevice dev, afxThread thr)
@@ -186,10 +180,9 @@ _AFX afxResult AfxDoSystemExecution(afxTime timeout)
         {
             afxResult msgCnt = _AfxProcessHostPlatformEvents();
 
-            afxNat tid;
-            AfxGetTid(&tid);
+            afxNat tid = AfxGetTid();
             
-            if (tid == sys->primeTid)
+            if (tid == _primeTid)
             {
                 if (sys->ssysctl)
                     sys->ssysctl(sys, 0);
@@ -197,7 +190,7 @@ _AFX afxResult AfxDoSystemExecution(afxTime timeout)
                 if (sys->dsysctl)
                     sys->dsysctl(sys, 0);
 
-                AfxInvokeDevices(NIL, 0, AFX_N32_MAX, (void*)DoDevService, sys->primeThr);
+                AfxInvokeDevices(NIL, 0, AFX_N32_MAX, (void*)DoDevService, _primeThr);
                 //PrimeThreadProc(sys->primeThr, );
             }
             else
@@ -240,8 +233,8 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
         if (AfxMountStorageUnit(&point, &location, afxFileFlag_RX)) AfxThrowError();
         else
         {
-#ifdef AFX_PLATFORM_64
-#   ifdef AFX_PLATFORM_WIN
+#ifdef AFX_ISA_X86_64
+#   ifdef AFX_OS_WIN
             AfxMakeUri(&location, "system64", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
@@ -254,7 +247,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
                     AfxThrowError();
             }
 #       endif
-#   elif defined(AFX_PLATFORM_LINUX)
+#   elif defined(AFX_OS_LNX)
             AfxMakeUri(&location, "system64x", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
@@ -268,8 +261,8 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
             }
 #       endif
 #   endif
-#elif defined(AFX_PLATFORM_32)
-#   ifdef AFX_PLATFORM_WIN
+#elif defined(AFX_ISA_X86_32)
+#   ifdef AFX_OS_WIN
             AfxMakeUri(&location, "system32", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
@@ -282,7 +275,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
                     AfxThrowError();
             }
 #       endif
-#   elif defined(AFX_PLATFORM_LINUX)
+#   elif defined(AFX_OS_LNX)
             AfxMakeUri(&location, "systemx", 0);
 
             if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
@@ -367,7 +360,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     SetCurrentDirectoryA(AfxGetUriData(&sys->pwd.uri, 0));
 
 
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
     SYSTEM_INFO si;
     GetSystemInfo(&si);
 #endif
@@ -394,7 +387,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     if (0 == sys->hwConcurrencyCap)
     {
         sys->hwConcurrencyCap =
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
             si.dwNumberOfProcessors;
 #else
             1;
@@ -404,7 +397,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     if (0 == sys->memPageSize)
     {
         sys->memPageSize =
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
             si.dwPageSize;
 #else
             4096;
@@ -414,7 +407,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     if (0 == sys->allocGranularity)
     {
         sys->allocGranularity =
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
             si.dwAllocationGranularity;
 #else
             4096;
@@ -422,8 +415,8 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     }
 
 
-    AfxGetTid(&sys->primeTid);
-    AfxAssert(sys->primeTid);
+    _primeTid = AfxGetTid();
+    AfxAssert(_primeTid);
     sys->ioBufSiz = BUFSIZ;
     sys->unitsPerMeter = renderWareUnitsPerMeter;
 
@@ -479,20 +472,15 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
     AfxEstablishManager(&sys->exeMgr, NIL, mgrChn, &_AfxMdleMgrCfg);
     AfxEstablishManager(&sys->devMgr, NIL, mgrChn, &_AfxDevMgrCfg); // require mdle
 
-
-    AfxEstablishManager(&sys->hidMgr, /*AfxGetDeviceClass()*/NIL, mgrChn, &_AfxHidMgrCfg);
-
-    AfxEstablishManager(&sys->envMgr, NIL, mgrChn, &_AfxShMgrCfg); // require iob, hid
-
-    afxThread primeThr;
     afxThreadConfig thrCfg = { 0 };
-    AfxGetTid(&thrCfg.tid);
+    thrCfg.tid = AfxGetTid();
     thrCfg.procCb = PrimeThreadProc;
 
-    if (AfxAcquireThread(AfxHere(), &thrCfg, &primeThr)) AfxThrowError();
+    if (AfxAcquireThread(AfxHere(), &thrCfg, &_primeThr)) AfxThrowError();
     else
     {
-        sys->primeThr = primeThr;
+        AfxAssertObjects(1, &_primeThr, afxFcc_THR);
+        //sys->primeThr = primeThr;
 
         if (_AfxSysMountDefaultFileStorages(sys)) AfxThrowError();
         else
@@ -555,7 +543,7 @@ _AFX void AfxChooseSystemConfiguration(afxSystemConfig* cfg, afxPlatformConfig* 
 
     if (platform)
     {
-#ifdef AFX_PLATFORM_W32
+#ifdef AFX_OS_WIN32
         AfxZero(platform, sizeof(*platform));
         platform->instance = GetModuleHandle(NULL);
         platform->hWnd = GetActiveWindow();        
