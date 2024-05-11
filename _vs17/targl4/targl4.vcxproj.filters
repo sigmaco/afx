@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{c80c1acf-b0e0-4300-8e08-8cb7c2a12fad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="targl4">
+      <UniqueIdentifier>{39674572-e32c-4d83-adef-0eb216f358df}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\targl4\sgl.h">
+      <Filter>targl4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\targl4\sglDdrv.h">
+      <Filter>targl4</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\targl4\sglBuf.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglBufOps.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglCanv.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDcmd.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDctx.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDin.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDout_w32.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglFenc.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglPip.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglQryp.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglRas.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglRasOps.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglRazr.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglRazrOps.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglSamp.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglShd.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglTmerOps.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglVin.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglBsch.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDiob.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDdev_w32.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglLoader.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglQwadroToGpu.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglDdge_w32.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="targl4.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\src\targl4\sglWrapper.inl">
+      <Filter>targl4</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,35 @@
+[Qwadro.Icd]
+DriverDate=2024/05/08
+DriverDesc=TARGA over OpenGL 4
+DriverVersion=4.0.16385
+ProviderName=SIGMA Technology Group
+ProviderUrl=https://sigmaco.org
+FeatureScore=1
+Service=video
+DllFile=targl4.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.Targa
+
+[Device.Targa]
+Class=DRAW
+Description=TARGA Advanced Raster Graphics Adapter
+PortCnt=1
+Ports=Targa.Ports
+; device internal
+GlVerMajor=4
+GlVerMinor=0
+GlslVer=400 core
+RobustContext=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelarationPrefered=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoSymbolsWsi=1
+OpenglDll=opengl32.dll
+
+[Targa.Ports]
+=Targa.Port0

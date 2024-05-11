@@ -1,6 +1,30 @@
-[Device]
-Type=SOUND
+[Qwadro.Icd]
+DriverDate=2024/05/10
+DriverDesc=A4D over OpenAL 1
+DriverVersion=0.1.1514
+ProviderName=SIGMA Technology Group
+ProviderUrl=https://sigmaco.org
+FeatureScore=1
 Service=audio
-Provider=SIGMA
-Version=
 DllFile=oal4d.dll
+Devices=Icd.Devices
+
+[Icd.Devices]
+=Device.A4d
+
+[Device.A4d]
+Class=SOUND
+Description=A4D Sound Acceleration Adapter
+PortCnt=1
+Ports=A4d.Ports
+; device internal
+AlVerMajor=1
+AlVerMinor=1
+DebugContext=1
+DebugOutput=1
+DebugOutputSync=1
+HwAccelerationPrefered=1
+HwAccelerationRequired=1
+EchoSymbols=1
+EchoSymbolsWsi=1
+OpenalDll=openal32.dll
