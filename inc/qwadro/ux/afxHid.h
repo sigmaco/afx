@@ -10,12 +10,16 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_HID_H
-#define AFX_HID_H
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced User Experience on Qwadro                                       //
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef AUX_HID_H
+#define AUX_HID_H
 
 #include "qwadro/ux/afxUxDefs.h"
 #include "qwadro/core/afxDevice.h"
@@ -215,7 +219,7 @@ typedef enum afxHidFlag
 } afxHidFlag;
 
 #ifdef _AUX_UX_C
-#ifdef _AFX_HID_C
+#ifdef _AUX_HID_C
 AFX_OBJECT(afxHid)
 {
     AFX_OBJECT(afxDevice)   dev;
@@ -238,7 +242,7 @@ AFX_OBJECT(afxHid)
     afxV2d                  lastMotion;
     afxV2d                  prevMotion;
 };
-#endif//_AFX_HID_C
+#endif//_AUX_HID_C
 #endif//_AUX_UX_C
 
 AUX afxNat      AfxGetHidPort(afxHid hid);
@@ -296,4 +300,4 @@ AUX afxBool     AfxGetHid(afxNat port, afxHid* hid);
 
 AUX afxError    AfxAcquireHid(afxNat port, afxHid* hid);
 
-#endif//AFX_HID_H
+#endif//AUX_HID_H

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -370,7 +370,7 @@ _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
-    afxSoundDevice sdev = AfxGetThreadUdd(thr);
+    afxSoundDevice sdev = AfxGetThreadUdd(thr)[0];
 
     switch (ev->id)
     {
@@ -443,7 +443,7 @@ _A4D afxError _SalSdevIddCtorCb(afxSoundDevice sdev)
                     afxThread sthr;
                     afxThreadConfig stCfg = { 0 };
                     stCfg.procCb = SoundThreadProc;
-                    stCfg.udd = sdev;
+                    stCfg.udd[0] = sdev;
 
                     if (AfxAcquireThread(AfxHere(), &stCfg, &sthr)) AfxThrowError();
                     else

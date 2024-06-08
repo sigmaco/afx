@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -20,12 +20,13 @@
 #include <Windows.h>
 #include <hidusage.h>
 
-#define _AUX_UX_C
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AFX_HID_C
-#define _AFX_GAMEPAD_C
-#define _AFX_CONTROLLER_C
+
+#define _AUX_UX_C
+#define _AUX_HID_C
+#define _AUX_GAMEPAD_C
+#define _AUX_CONTROLLER_C
 #include "qwadro/ux/afxShell.h"
 
 

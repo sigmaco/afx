@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -80,13 +80,13 @@ typedef enum afxPixelFormat
 
 typedef enum afxPixelFlag
 {
-    AFX_PIXEL_FLAG_REAL = AFX_BIT_OFFSET(0),
-    AFX_PIXEL_FLAG_DEPTH = AFX_BIT_OFFSET(1),
-    AFX_PIXEL_FLAG_SIGNED = AFX_BIT_OFFSET(2),
-    AFX_PIXEL_FLAG_NORMALIZED = AFX_BIT_OFFSET(3),
-    AFX_PIXEL_FLAG_COMPRESSED = AFX_BIT_OFFSET(4),
-    AFX_PIXEL_FLAG_INDEXED = AFX_BIT_OFFSET(5),
-    AFX_PIXEL_FLAG_LUMINANCE = AFX_BIT_OFFSET(6),
+    AFX_PIXEL_FLAG_REAL = AFX_BIT(0),
+    AFX_PIXEL_FLAG_DEPTH = AFX_BIT(1),
+    AFX_PIXEL_FLAG_SIGNED = AFX_BIT(2),
+    AFX_PIXEL_FLAG_NORMALIZED = AFX_BIT(3),
+    AFX_PIXEL_FLAG_COMPRESSED = AFX_BIT(4),
+    AFX_PIXEL_FLAG_INDEXED = AFX_BIT(5),
+    AFX_PIXEL_FLAG_LUMINANCE = AFX_BIT(6),
 } afxPixelFlag;
 
 AFX_DEFINE_STRUCT(afxPixelFormatSpecification)

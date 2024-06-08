@@ -15,7 +15,7 @@ Devices=Icd.Devices
 [Device.Targa]
 Class=DRAW
 Description=TARGA Advanced Raster Graphics Adapter
-PortCnt=1
+PortCount=1
 Ports=Targa.Ports
 ; device internal
 GlVerMajor=4
@@ -30,6 +30,7 @@ HwAccelerationRequired=1
 EchoSymbols=1
 EchoSymbolsWsi=1
 OpenglDll=opengl32.dll
+DpuCount=1
 
 [Targa.Ports]
 =Targa.Port0

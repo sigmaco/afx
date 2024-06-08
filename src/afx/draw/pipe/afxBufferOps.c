@@ -10,33 +10,33 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AVX_DRAW_C
-#define _AVX_DRAW_STREAM_C
+#define _AVX_CMD_BUFFER_C
 #include "qwadro/draw/afxDrawSystem.h"
 
 // buffer ops
 
-_AVX afxCmdId AfxCmdCopyBuffer(afxDrawStream diob, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
+_AVX afxCmdId AvxCmdCopyBuffer(avxCmdb cmdb, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &src, afxFcc_BUF);
     AfxAssertObjects(1, &dst, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(src, afxBufferAccess_R));
     AfxAssert(AfxTestBufferAccess(dst, afxBufferAccess_W));
-    return diob->stdCmds->buf.cpy(diob, src, dst, opCnt, ops);
+    return cmdb->stdCmds->buf.cpy(cmdb, src, dst, opCnt, ops);
 }
 
-_AVX afxCmdId AfxCmdCopyBufferRegion(afxDrawStream diob, afxBuffer src, afxNat srcOffset, afxBuffer dst, afxNat dstOffset, afxNat range)
+_AVX afxCmdId AvxCmdCopyBufferRegion(avxCmdb cmdb, afxBuffer src, afxNat srcOffset, afxBuffer dst, afxNat dstOffset, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &src, afxFcc_BUF);
     AfxAssertObjects(1, &dst, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(src, afxBufferAccess_R));
@@ -51,39 +51,39 @@ _AVX afxCmdId AfxCmdCopyBufferRegion(afxDrawStream diob, afxBuffer src, afxNat s
     op.srcOffset = srcOffset;
     op.dstOffset = dstOffset;
     op.range = range;
-    return diob->stdCmds->buf.cpy(diob, src, dst, 1, &op);
+    return cmdb->stdCmds->buf.cpy(cmdb, src, dst, 1, &op);
 }
 
-_AVX afxCmdId AfxCmdFillBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, afxNat value)
+_AVX afxCmdId AvxCmdFillBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNat range, afxNat value)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
     AfxAssert(offset % sizeof(afxNat32) == 0);
     AfxAssert(range % sizeof(afxNat32) == 0);
     AfxAssert(range);
-    return diob->stdCmds->buf.set(diob, buf, offset, range, value);
+    return cmdb->stdCmds->buf.set(cmdb, buf, offset, range, value);
 }
 
-_AVX afxCmdId AfxCmdClearBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range)
+_AVX afxCmdId AvxCmdClearBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNat range)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
     AfxAssert(offset % sizeof(afxNat32) == 0);
     AfxAssert(range % sizeof(afxNat32) == 0);
     AfxAssert(range);
-    return diob->stdCmds->buf.set(diob, buf, offset, range, 0);
+    return cmdb->stdCmds->buf.set(cmdb, buf, offset, range, 0);
 }
 
-_AVX afxCmdId AfxCmdUpdateBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, void const* src)
+_AVX afxCmdId AvxCmdUpdateBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNat range, void const* src)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
@@ -91,13 +91,13 @@ _AVX afxCmdId AfxCmdUpdateBuffer(afxDrawStream diob, afxBuffer buf, afxNat offse
     AfxAssert(range % sizeof(afxNat32) == 0);
     AfxAssert(range);
     AfxAssert(src);
-    return diob->stdCmds->buf.rw(diob, buf, offset, range, FALSE, (void*)src);
+    return cmdb->stdCmds->buf.rw(cmdb, buf, offset, range, FALSE, (void*)src);
 }
 
-_AVX afxCmdId AfxCmdDumpBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset, afxNat range, void* dst)
+_AVX afxCmdId AvxCmdDumpBuffer(avxCmdb cmdb, afxBuffer buf, afxNat offset, afxNat range, void* dst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
     AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
@@ -105,5 +105,5 @@ _AVX afxCmdId AfxCmdDumpBuffer(afxDrawStream diob, afxBuffer buf, afxNat offset,
     AfxAssert(range % sizeof(afxNat32) == 0);
     AfxAssert(range);
     AfxAssert(dst);
-    return diob->stdCmds->buf.rw(diob, buf, offset, range, TRUE, dst);
+    return cmdb->stdCmds->buf.rw(cmdb, buf, offset, range, TRUE, dst);
 }

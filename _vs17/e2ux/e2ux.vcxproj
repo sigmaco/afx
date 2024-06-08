@@ -155,7 +155,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\afx\ux\afxScript.c" />
-    <ClCompile Include="..\..\src\afx\ux\afxBrush.c" />
     <ClCompile Include="..\..\src\afx\ux\afxGamepad.c" />
     <ClCompile Include="..\..\src\afx\ux\afxHid.c" />
     <ClCompile Include="..\..\src\afx\ux\afxWindow.c" />
@@ -176,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\ux\afxScript.h" />
-    <ClInclude Include="..\..\inc\qwadro\ux\afxBrush.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxHid.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxWindow.h" />

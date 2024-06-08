@@ -10,13 +10,14 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced Visual Experience on Qwadro                                     //
+//////////////////////////////////////////////////////////////////////////////
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
-
-// The Unified Qwadro Video Graphics Infrastructure
 
 #ifndef AVX_DRAW_SYSTEM_H
 #define AVX_DRAW_SYSTEM_H
@@ -26,31 +27,31 @@
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/draw/afxPixel.h"
 // provided classes.
-#include "qwadro/draw/dev/afxDrawBridge.h"
-#include "qwadro/draw/dev/afxDrawStream.h"
+#include "qwadro/draw/afxDrawBridge.h"
+#include "qwadro/draw/avxCmdb.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
-#include "qwadro/draw/dev/afxDrawContext.h"
-#include "qwadro/draw/dev/afxDrawOutput.h"
-#include "qwadro/draw/dev/afxDrawInput.h"
+#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/draw/afxDrawOutput.h"
+#include "qwadro/draw/afxDrawInput.h"
 #include "qwadro/draw/io/afxTarga.h"
 // provided classes.
 #include "qwadro/draw/afxCamera.h"
 
 AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
 {
-    afxNat maxImageDimension1D;
-    afxNat maxImageDimension2D;
-    afxNat maxImageDimension3D;
-    afxNat maxImageDimensionCube;
-    afxNat maxImageArrayLayers;
-    afxNat maxTexelBufferElements;
-    afxNat maxUniformBufferRange;
-    afxNat maxStorageBufferRange;
-    afxNat maxPushConstantsSize;
-    afxNat maxMemoryAllocationCount;
-    afxNat maxSamplerAllocationCount;
-    afxSize bufferImageGranularity;
-    afxSize sparseAddressSpaceSize;
+    afxNat maxRasterDim1D;
+    afxNat maxRasterDim2D;
+    afxNat maxRasterDim3D;
+    afxNat maxRasterDimCube;
+    afxNat maxRasterArrayLayers;
+    afxNat maxTexelBufElements;
+    afxNat maxUniformBufRange;
+    afxNat maxStorageBufRange;
+    afxNat maxPushConstantsSiz;
+    afxNat maxMemAllocCnt;
+    afxNat maxSamplerAllocCnt;
+    afxSize bufferRasterGranularity;
+    afxSize sparseAddrSpaceSiz;
     afxNat maxBoundDescriptorSets;
     afxNat maxPerStageDescriptorSamplers;
     afxNat maxPerStageDescriptorUniformBuffers;
@@ -67,47 +68,47 @@ AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
     afxNat maxDescriptorSetSampledImages;
     afxNat maxDescriptorSetStorageImages;
     afxNat maxDescriptorSetInputAttachments;
-    afxNat maxVertexInputAttributes;
-    afxNat maxVertexInputBindings;
-    afxNat maxVertexInputAttributeOffset;
-    afxNat maxVertexInputBindingStride;
-    afxNat maxVertexOutputComponents;
-    afxNat maxTessellationGenerationLevel;
-    afxNat maxTessellationPatchSize;
-    afxNat maxTessellationControlPerVertexInputComponents;
-    afxNat maxTessellationControlPerVertexOutputComponents;
-    afxNat maxTessellationControlPerPatchOutputComponents;
-    afxNat maxTessellationControlTotalOutputComponents;
-    afxNat maxTessellationEvaluationInputComponents;
-    afxNat maxTessellationEvaluationOutputComponents;
-    afxNat maxGeometryShaderInvocations;
-    afxNat maxGeometryInputComponents;
-    afxNat maxGeometryOutputComponents;
-    afxNat maxGeometryOutputVertices;
-    afxNat maxGeometryTotalOutputComponents;
-    afxNat maxFragmentInputComponents;
-    afxNat maxFragmentOutputAttachments;
-    afxNat maxFragmentDualSrcAttachments;
-    afxNat maxFragmentCombinedOutputResources;
-    afxNat maxComputeSharedMemorySize;
-    afxNat maxComputeWorkGroupCount[3];
+    afxNat maxVtxInputAttributes;
+    afxNat maxVtxInputBindings;
+    afxNat maxVtxInputAttributeOffset;
+    afxNat maxVtxInputBindingStride;
+    afxNat maxVtxOutputCompos;
+    afxNat maxTessGenLvl;
+    afxNat maxTessPatchSiz;
+    afxNat maxTessCtrlPerVtxInComps;
+    afxNat maxTessCtrlPerVtxOutComps;
+    afxNat maxTessCtrlPerPatchOutComps;
+    afxNat maxTessCtrlTotalOutComps;
+    afxNat maxTessEvalInComps;
+    afxNat maxTessEvalOutComps;
+    afxNat maxPrimShaderInvocations;
+    afxNat maxPrimInComps;
+    afxNat maxPrimOutComps;
+    afxNat maxPrimOutVertices;
+    afxNat maxPrimTotalOutComps;
+    afxNat maxFragInComps;
+    afxNat maxFragOutAttachments;
+    afxNat maxFragDualSrcAttachments;
+    afxNat maxFragCombinedOutputResources;
+    afxNat maxComputeSharedMemorySiz;
+    afxNat maxComputeWorkGroupCnt[3];
     afxNat maxComputeWorkGroupInvocations;
-    afxNat maxComputeWorkGroupSize[3];
+    afxNat maxComputeWorkGroupSiz[3];
     afxNat subPixelPrecisionBits;
     afxNat subTexelPrecisionBits;
     afxNat mipmapPrecisionBits;
-    afxNat maxDrawIndexedIndexValue;
-    afxNat maxDrawIndirectCount;
+    afxNat maxDrawIndexedIdxValue;
+    afxNat maxDrawIndirectCnt;
     afxReal maxSamplerLodBias;
     afxReal maxSamplerAnisotropy;
     afxNat maxViewports;
     afxNat maxViewportDimensions[2];
     afxReal viewportBoundsRange[2];
     afxNat viewportSubPixelBits;
-    afxSize minMemoryMapAlignment;
-    afxSize minTexelBufferOffsetAlignment;
-    afxSize minUniformBufferOffsetAlignment;
-    afxSize minStorageBufferOffsetAlignment;
+    afxSize minMemMapAlign;
+    afxSize minTexelBufOffsetAlign;
+    afxSize minUniformBufOffsetAlign;
+    afxSize minStorageBufOffsetAlign;
     afxInt minTexelOffset;
     afxNat maxTexelOffset;
     afxInt minTexelGatherOffset;
@@ -115,19 +116,19 @@ AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
     afxReal minInterpolationOffset;
     afxReal maxInterpolationOffset;
     afxNat subPixelInterpolationOffsetBits;
-    afxNat maxFramebufferWidth;
-    afxNat maxFramebufferHeight;
-    afxNat maxFramebufferLayers;
-    afxFlags framebufferColorSampleCounts;
-    afxFlags framebufferDepthSampleCounts;
-    afxFlags framebufferStencilSampleCounts;
-    afxFlags framebufferNoAttachmentsSampleCounts;
+    afxNat maxCanvasWidth;
+    afxNat maxCanvasHeight;
+    afxNat maxCanvasLayers;
+    afxFlags canvasColorSampleCnts;
+    afxFlags canvasDepthSampleCnts;
+    afxFlags canvasStencilSampleCnts;
+    afxFlags canvasNoAttachmentsSampleCnts;
     afxNat maxColorAttachments;
-    afxFlags sampledImageColorSampleCounts;
-    afxFlags sampledImageIntegerSampleCounts;
-    afxFlags sampledImageDepthSampleCounts;
-    afxFlags sampledImageStencilSampleCounts;
-    afxFlags storageImageSampleCounts;
+    afxFlags sampledRasterColorSampleCnts;
+    afxFlags sampledRasterIntegerSampleCnts;
+    afxFlags sampledRasterDepthSampleCnts;
+    afxFlags sampledRasterStencilSampleCnts;
+    afxFlags storageRasterSampleCnts;
     afxNat maxSampleMaskWords;
     afxBool timestampComputeAndGraphics;
     afxReal timestampPeriod;
@@ -135,30 +136,30 @@ AFX_DEFINE_STRUCT(afxDrawDeviceLimits)
     afxNat maxCullDistances;
     afxNat maxCombinedClipAndCullDistances;
     afxNat discreteQueuePriorities;
-    afxReal pointSizeRange[2];
+    afxReal pointSizRange[2];
     afxReal lineWidthRange[2];
-    afxReal pointSizeGranularity;
+    afxReal pointSizGranularity;
     afxReal lineWidthGranularity;
     afxBool strictLines;
     afxBool standardSampleLocations;
-    afxSize optimalBufferCopyOffsetAlignment;
-    afxSize optimalBufferCopyRowPitchAlignment;
-    afxSize nonCoherentAtomSize;
+    afxSize optimalBufCopyOffsetAlign;
+    afxSize optimalBufCopyRowPitchAlign;
+    afxSize nonCoherentAtomSiz;
 };
 
 AFX_DEFINE_STRUCT(afxDrawDeviceCaps)
 {
-    afxBool robustBufferAccess;
-    afxBool fullDrawIndexUint32;
-    afxBool imageCubeArray;
+    afxBool robustBufAccess;
+    afxBool fullDrawIdxUint32;
+    afxBool rasterCubeArray;
     afxBool independentBlend;
-    afxBool geometryShader;
-    afxBool tessellationShader;
+    afxBool primShader;
+    afxBool tessShader;
     afxBool sampleRateShading;
     afxBool dualSrcBlend;
     afxBool logicOp;
     afxBool multiDrawIndirect;
-    afxBool drawIndirectFirstInstance;
+    afxBool drawIndirectFirstInst;
     afxBool depthClamp;
     afxBool depthBiasClamp;
     afxBool fillModeNonSolid;
@@ -168,34 +169,34 @@ AFX_DEFINE_STRUCT(afxDrawDeviceCaps)
     afxBool alphaToOne;
     afxBool multiViewport;
     afxBool samplerAnisotropy;
-    afxBool textureCompressionETC2;
-    afxBool textureCompressionASTC_LDR;
-    afxBool textureCompressionBC;
+    afxBool etc2; // texture compression.
+    afxBool astc_LDR; // texture compression.
+    afxBool dxt; // texture compression.
     afxBool occlusionQueryPrecise;
-    afxBool pipelineStatisticsQuery;
-    afxBool vertexPipelineStoresAndAtomics;
-    afxBool fragmentStoresAndAtomics;
-    afxBool shaderTessellationAndGeometryPointSize;
-    afxBool shaderImageGatherExtended;
-    afxBool shaderStorageImageExtendedFormats;
-    afxBool shaderStorageImageMultisample;
-    afxBool shaderStorageImageReadWithoutFormat;
-    afxBool shaderStorageImageWriteWithoutFormat;
-    afxBool shaderUniformBufferArrayDynamicIndexing;
-    afxBool shaderSampledImageArrayDynamicIndexing;
-    afxBool shaderStorageBufferArrayDynamicIndexing;
-    afxBool shaderStorageImageArrayDynamicIndexing;
-    afxBool shaderClipDistance;
-    afxBool shaderCullDistance;
+    afxBool pipelineStatsQuery;
+    afxBool vtxPipelineStoresAndAtomics;
+    afxBool fragStoresAndAtomics;
+    afxBool shaderTessAndPrimPointSiz;
+    afxBool shaderRasterGatherExt;
+    afxBool shaderStorageRasterExtFmts;
+    afxBool shaderStorageRasterMultisample;
+    afxBool shaderStorageRasterReadWithoutFmt;
+    afxBool shaderStorageRasterWriteWithoutFmt;
+    afxBool shaderUniformBufferArrayDynIndexing;
+    afxBool shaderSampledRasterArrayDynIndexing;
+    afxBool shaderStorageBufferArrayDynIndexing;
+    afxBool shaderStorageImageArrayDynIndexing;
+    afxBool shaderClipDist;
+    afxBool shaderCullDist;
     afxBool shaderFloat64;
     afxBool shaderInt64;
     afxBool shaderInt16;
-    afxBool shaderResourceResidency;
-    afxBool shaderResourceMinLod;
+    afxBool shaderRsrcResidency;
+    afxBool shaderRsrcMinLod;
     afxBool sparseBinding;
     afxBool sparseResidencyBuffer;
-    afxBool sparseResidencyImage2D;
-    afxBool sparseResidencyImage3D;
+    afxBool sparseResidencyRaster2D;
+    afxBool sparseResidencyRaster3D;
     afxBool sparseResidency2Samples;
     afxBool sparseResidency4Samples;
     afxBool sparseResidency8Samples;
@@ -210,43 +211,6 @@ AFX_DEFINE_STRUCT(afxDrawPortCaps)
     afxDrawBridgeFlags  queFlags;
     afxNat              queCnt;
 };
-
-AFX_DEFINE_STRUCT(afxDrawDeviceInfo)
-{
-    afxDeviceInfo       dev;
-    afxNat              portCnt;
-    afxDrawPortCaps const*portCaps;
-    afxDrawDeviceCaps   caps;
-    afxDrawDeviceLimits limits;
-    afxClipSpace        clipSpace;
-    void*               idd;
-    afxError            (*iddCtorCb)(afxDrawDevice);
-    afxError            (*iddDtorCb)(afxDrawDevice);
-    afxError            (*procCb)(afxDrawDevice,afxThread); // call their draw threads.    
-    afxError            (*dinIddDtorCb)(afxDrawDevice,afxDrawInput);
-    afxError            (*dinIddCtorCb)(afxDrawDevice,afxDrawInput,afxDrawInputConfig const*,afxUri const*);
-    afxError            (*dinRelinkCb)(afxDrawDevice,afxDrawContext,afxNat,afxDrawInput[]);
-    afxError            (*doutIddDtorCb)(afxDrawDevice,afxDrawOutput);
-    afxError            (*doutIddCtorCb)(afxDrawDevice,afxDrawOutput,afxDrawOutputConfig const*,afxUri const*);
-    afxError            (*doutRelinkCb)(afxDrawDevice,afxDrawContext,afxNat,afxDrawOutput[]);
-    afxClassConfig const*dctxClsCfg;
-    afxClassConfig const*ddgeClsCfg;
-};
-
-typedef enum _ddevReqCode
-{
-    _ddevReqCode_0,
-    _ddevReqCode_1,
-    _ddevReqCode_DIN_DTOR,
-    _ddevReqCode_DIN_CTOR,
-    _ddevReqCode_DIN_RLNK,
-    _ddevReqCode_DOUT_RLNK,
-    _ddevReqCode_DOUT_DTOR,
-    _ddevReqCode_DOUT_CTOR,
-    _ddevReqCode_DCTX_DTOR,
-    _ddevReqCode_DCTX_CTOR,
-}
-_ddevReqCode;
 
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_DRAW_DEVICE_C
@@ -275,6 +239,7 @@ AFX_OBJECT(afxDrawDevice)
     {
         afxDrawPortCaps portCaps;
         afxManager      ddgeMgr;
+        afxManager      dqueMgr;
     }*                  ports;
     
     afxClipSpace        clipCfg;
@@ -310,7 +275,15 @@ AFX_OBJECT(afxDrawSystem)
 #endif//_AVX_DRAW_SYSTEM_C
 #endif//_AVX_DRAW_C
 
-AVX afxBool         AfxGetDrawSystem(afxDrawSystem* system);
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxReal64       AfxFindAllowedCameraLodError(afxReal64 errInPixels, afxInt vpHeightInPixels, afxReal64 fovY, afxReal64 distanceFromCam);
+
+/// If you don't know what the physical aspect ratio is of the device you're using 
+/// (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
+/// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
+
+AVX afxReal64       AfxFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
 
 AVX afxManager*     AfxGetDrawDeviceManager(void);
 AVX afxManager*     AfxGetDrawOutputClass(void);
@@ -325,16 +298,9 @@ AVX afxNat          AfxCountCameras(void);
 AVX afxNat          AfxInvokeCameras(afxNat first, afxNat cnt, afxBool(*f)(afxCamera, void*), void* udd);
 AVX afxNat          AfxEnumerateCameras(afxNat first, afxNat cnt, afxCamera cameras[]);
 
-AVX afxReal64       AfxFindAllowedCameraLodError(afxReal64 errInPixels, afxInt vpHeightInPixels, afxReal64 fovY, afxReal64 distanceFromCam);
-
-// If you don't know what the physical aspect ratio is of the device you're using (for example, if you're using a standard PC, there is no way to determine for sure what kind of monitor is attached), 
-// you can either assume square pixels (pass the width of the screen divided by the height), or you can use Qwadro's "best guess": 
-
-AVX afxReal64       AfxFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight);
-
 AVX afxBool         AfxGetDrawDevice(afxNat ddevId, afxDrawDevice* device);
-AVX afxNat          AfxChooseDrawDevice(afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxDrawDevice ddevId[]); // return count of found devices
 
+AVX afxNat          AfxChooseDrawDevices(afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxNat ddevId[]); // return count of found devices
 AVX afxNat          AfxChooseDrawOutputEndpoint(afxNat ddevId, afxDrawOutputCaps const* caps, afxNat maxCnt, afxNat endpointIdx[]);
 AVX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afxNat endpointIdx[]);
 
@@ -345,7 +311,11 @@ AVX afxNat          AfxChooseDrawInputEndpoint(afxNat ddevId, afxNat maxCnt, afx
 AVX afxBool         AfxDrawDeviceIsRunning(afxDrawDevice ddev);
 AVX void*           AfxGetDrawDeviceIdd(afxDrawDevice ddev);
 AVX afxManager*     AfxGetDrawBridgeClass(afxDrawDevice ddev, afxNat portIdx);
+AVX afxManager*     AfxGetDrawQueueClass(afxDrawDevice ddev, afxNat portIdx);
 AVX afxManager*     AfxGetDrawContextClass(afxDrawDevice ddev);
+
+/// Test the capabilities and limits of a draw device.
+AVX afxBool         AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits);
 
 AVX afxNat          AfxCountDrawPorts(afxDrawDevice ddev);
 AVX void            AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits);
@@ -363,20 +333,5 @@ AVX afxNat          AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, af
 AVX afxNat          AfxCountDrawInputs(afxDrawDevice ddev);
 AVX afxNat          AfxInvokeDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawInput, void*), void *udd);
 AVX afxNat          AfxEnumerateDrawInputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawInput inputs[]);
-
-////////////////////////////////////////////////////////////////////////////////
-
-AVX afxClassConfig const _AvxDdgeStdImplementation;
-AVX afxClassConfig const _AvxDctxStdImplementation;
-AVX afxClassConfig const _AvxDiobStdImplementation;
-AVX afxClassConfig const _AvxCanvStdImplementation;
-AVX afxClassConfig const _AvxPipStdImplementation;
-AVX afxClassConfig const _AvxSampStdImplementation;
-AVX afxClassConfig const _AvxShdStdImplementation;
-AVX afxClassConfig const _AvxRasStdImplementation;
-AVX afxClassConfig const _AvxBufStdImplementation;
-AVX afxClassConfig const _AvxRazrStdImplementation;
-AVX afxClassConfig const _AvxBschStdImplementation;
-AVX afxClassConfig const _AvxVinStdImplementation;
 
 #endif//AVX_DRAW_SYSTEM_H

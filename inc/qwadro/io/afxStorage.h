@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -56,12 +56,12 @@ contents may be returned.
 
 typedef enum afxStorageUsage
 {
-    afxStorageUsage_SYSTEM  = AFX_BIT_OFFSET(0),
-    afxStorageUsage_SOUND   = AFX_BIT_OFFSET(1),
-    afxStorageUsage_CODE    = AFX_BIT_OFFSET(2),
-    afxStorageUsage_DATA    = AFX_BIT_OFFSET(3),
-    afxStorageUsage_TEMP    = AFX_BIT_OFFSET(4),
-    afxStorageUsage_ART     = AFX_BIT_OFFSET(5),
+    afxStorageUsage_SYSTEM  = AFX_BIT(0),
+    afxStorageUsage_SOUND   = AFX_BIT(1),
+    afxStorageUsage_CODE    = AFX_BIT(2),
+    afxStorageUsage_DATA    = AFX_BIT(3),
+    afxStorageUsage_TEMP    = AFX_BIT(4),
+    afxStorageUsage_ART     = AFX_BIT(5),
 }
 afxStorageUsage;
 

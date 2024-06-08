@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -107,7 +107,7 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     afxRaster           rasters[BINKMAXFRAMEBUFFERS][4]; // Y, cR, cB, A.
     afxBool             hasAlphaPlane;
 
-    afxPipeline         yv12ToRgbaPip;
+    afxRasterizer       yv12ToRgbaRazr;
     afxSampler          samplers[4];
 
     afxNat64            Last_timer;
@@ -117,9 +117,9 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
 };
 
 #ifdef _AFX_BINK_VIDEO_C
-#define AFXBINK _AFXEXPORT
+#define AFXBINK DLLEXPORT
 #else
-#define AFXBINK _AFXIMPORT
+#define AFXBINK DLLIMPORT
 #endif
 
 AFXBINK afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx);
@@ -129,6 +129,6 @@ AFXBINK afxError AfxOpenVideoBink(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
-AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, afxDrawStream diob);
+AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb);
 
 #endif//AFX_BINK_VIDEO_H

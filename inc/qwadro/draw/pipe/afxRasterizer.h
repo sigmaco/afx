@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -28,6 +28,7 @@
 #include "qwadro/draw/afxPixel.h"
 #include "qwadro/draw/afxColor.h"
 #include "qwadro/core/afxFixedString.h"
+#include "qwadro/draw/pipe/afxPipeline.h"
 
 /*
     The first stage of the graphics pipeline (Input Assembler) assembles vertices to form geometric primitives such as points, lines, and triangles, based on a requested primitive topology.
@@ -43,31 +44,82 @@
 
 // Front facing and cull mode should not have effect no point and lines.
 
-AFX_DEFINE_STRUCT(afxStencilConfig)
-/// Structure specifying stencil operation state
+#define AVX_MAX_SAMPLE_MASKS 32
+#define AVX_MAX_COLOR_OUTPUT_CHANNELS 8
+
+typedef enum afxDepthStencilFlag
 {
-    afxCompareOp    compareOp; /// is a value specifying the comparison operator used in the stencil test. /// afxCompareOp_ALWAYS
-    afxNat32        reference; /// is an integer stencil reference value that is used in the unsigned stencil comparison. /// 0
-    afxNat32        compareMask; /// selects the bits of the unsigned integer stencil values participating in the stencil test. // 1
-    afxNat32        writeMask; /// selects the bits of the unsigned integer stencil values updated by the stencil test in the stencil framebuffer attachment. /// 1
-    afxStencilOp    failOp; /// is a value specifying the action performed on samples that fail the stencil test. /// afxStencilOp_KEEP
-    afxStencilOp    depthFailOp; /// is a value specifying the action performed on samples that pass the stencil test and fail the depth test. /// afxStencilOp_KEEP
-    afxStencilOp    passOp; /// is a value specifying the action performed on samples that pass both the depth and stencil tests. /// afxStencilOp_KEEP    
-};
+    afxDepthStencilFlag_TEST = AFX_BIT(0),
+    afxDepthStencilFlag_COMPARE = AFX_BIT(1),
+    afxDepthStencilFlag_DONT_WRITE = AFX_BIT(2),
+
+    afxDepthStencilFlag_STENCIL_OP_F = AFX_BIT(4),
+    afxDepthStencilFlag_STENCIL_TEST_F = AFX_BIT(5),
+    afxDepthStencilFlag_STENCIL_WRITE_F = AFX_BIT(6),
+    afxDepthStencilFlag_STENCIL_REF_F = AFX_BIT(7),
+    afxDepthStencilFlag_STENCIL_FAIL_F = AFX_BIT(8),
+    afxDepthStencilFlag_STENCIL_DFAIL_F = AFX_BIT(9),
+    afxDepthStencilFlag_STENCIL_PASS_F = AFX_BIT(10),
+
+    afxDepthStencilFlag_STENCIL_OP_B = AFX_BIT(11),
+    afxDepthStencilFlag_STENCIL_TEST_B = AFX_BIT(12),
+    afxDepthStencilFlag_STENCIL_WRITE_B = AFX_BIT(13),
+    afxDepthStencilFlag_STENCIL_REF_B = AFX_BIT(14),
+    afxDepthStencilFlag_STENCIL_FAIL_B = AFX_BIT(15),
+    afxDepthStencilFlag_STENCIL_DFAIL_B = AFX_BIT(16),
+    afxDepthStencilFlag_STENCIL_PASS_B = AFX_BIT(17),
+
+    afxDepthStencilFlag_STENCIL_TEST = afxDepthStencilFlag_STENCIL_TEST_F | afxDepthStencilFlag_STENCIL_TEST_B,
+
+    afxDepthStencilFlag_BOUNDS_TEST = AFX_BIT(31) // it is here because it only works with a depth buffer
+} afxDepthStencilFlags;
+
+typedef enum afxMultisamplingFlag
+{
+    afxMultisamplingFlag_SHADING = AFX_BIT(0),
+    afxMultisamplingFlag_ALPHA_TO_COVERAGE = AFX_BIT(1),
+    afxMultisamplingFlag_ALPHA_TO_ONE = AFX_BIT(2),
+} afxMultisamplingFlags;
+
+typedef enum afxRasterizationFlag
+{
+    afxRasterizationFlag_FILL_MODE = AFX_BIT(0),
+    afxRasterizationFlag_LINE_WIDTH = AFX_BIT(1),
+    afxRasterizationFlag_DEPTH_BIAS = AFX_BIT(2)
+} afxRasterizationFlags;
+
+typedef enum afxColorOutputFlag
+{
+    afxColorOutputFlag_SCISSOR = AFX_BIT(0),
+    afxColorOutputFlag_BLEND_CONSTANTS = AFX_BIT(1),
+    afxColorOutputFlag_LOGIC_OP = AFX_BIT(2)
+} afxColorOutputFlags;
 
 typedef enum afxRgbaMask
 /// Bitmask controlling which components are written to the framebuffer.
 /// The color write mask operation is applied regardless of whether blending is enabled.
 /// The color write mask operation is applied only if Color Write Enable is enabled for the respective attachment. Otherwise the color write mask is ignored and writes to all components of the attachment are disabled.
 {
-    afxRgbaMask_R           = AFX_BIT_OFFSET(0), /// specifies that the R value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_G           = AFX_BIT_OFFSET(1), /// specifies that the G value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_B           = AFX_BIT_OFFSET(2), /// specifies that the B value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_A           = AFX_BIT_OFFSET(3), /// specifies that the A value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
-    afxRgbaMask_RG          = afxRgbaMask_R | afxRgbaMask_G,
-    afxRgbaMask_RGB         = afxRgbaMask_RG | afxRgbaMask_B,
-    afxRgbaMask_RGBA        = afxRgbaMask_RGB | afxRgbaMask_A
+    afxRgbaMask_R = AFX_BIT(0), /// specifies that the R value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_G = AFX_BIT(1), /// specifies that the G value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_B = AFX_BIT(2), /// specifies that the B value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_A = AFX_BIT(3), /// specifies that the A value is written to the color attachment for the appropriate sample. Otherwise, the value in memory is unmodified.
+    afxRgbaMask_RG = afxRgbaMask_R | afxRgbaMask_G,
+    afxRgbaMask_RGB = afxRgbaMask_RG | afxRgbaMask_B,
+    afxRgbaMask_RGBA = afxRgbaMask_RGB | afxRgbaMask_A
 } afxRgbaMask;
+
+AFX_DEFINE_STRUCT(afxStencilConfig)
+/// Structure specifying stencil operation state
+{
+    afxCompareOp            compareOp; /// is a value specifying the comparison operator used in the stencil test. /// afxCompareOp_ALWAYS
+    afxNat32                reference; /// is an integer stencil reference value that is used in the unsigned stencil comparison. /// 0
+    afxNat32                compareMask; /// selects the bits of the unsigned integer stencil values participating in the stencil test. // 1
+    afxNat32                writeMask; /// selects the bits of the unsigned integer stencil values updated by the stencil test in the stencil framebuffer attachment. /// 1
+    afxStencilOp            failOp; /// is a value specifying the action performed on samples that fail the stencil test. /// afxStencilOp_KEEP
+    afxStencilOp            depthFailOp; /// is a value specifying the action performed on samples that pass the stencil test and fail the depth test. /// afxStencilOp_KEEP
+    afxStencilOp            passOp; /// is a value specifying the action performed on samples that pass both the depth and stencil tests. /// afxStencilOp_KEEP    
+};
 
 AFX_DEFINE_STRUCT(afxColorBlendConfig)
 /// Describes how the color or alpha components of a fragment are blended
@@ -88,108 +140,64 @@ AFX_DEFINE_STRUCT(afxColorOutputChannel)
     afxRgbaMask             discardMask; /// NIL = write all
 };
 
-typedef enum afxDepthStencilFlag
-{
-    afxDepthStencilFlag_TEST            = AFX_BIT_OFFSET(0),
-    afxDepthStencilFlag_COMPARE         = AFX_BIT_OFFSET(1),
-    afxDepthStencilFlag_DONT_WRITE      = AFX_BIT_OFFSET(2),
-    
-    afxDepthStencilFlag_STENCIL_OP_F    = AFX_BIT_OFFSET(4),
-    afxDepthStencilFlag_STENCIL_TEST_F  = AFX_BIT_OFFSET(5),
-    afxDepthStencilFlag_STENCIL_WRITE_F = AFX_BIT_OFFSET(6),
-    afxDepthStencilFlag_STENCIL_REF_F   = AFX_BIT_OFFSET(7),
-    afxDepthStencilFlag_STENCIL_FAIL_F  = AFX_BIT_OFFSET(8),
-    afxDepthStencilFlag_STENCIL_DFAIL_F = AFX_BIT_OFFSET(9),
-    afxDepthStencilFlag_STENCIL_PASS_F  = AFX_BIT_OFFSET(10),
-
-    afxDepthStencilFlag_STENCIL_OP_B    = AFX_BIT_OFFSET(11),
-    afxDepthStencilFlag_STENCIL_TEST_B  = AFX_BIT_OFFSET(12),
-    afxDepthStencilFlag_STENCIL_WRITE_B = AFX_BIT_OFFSET(13),
-    afxDepthStencilFlag_STENCIL_REF_B   = AFX_BIT_OFFSET(14),
-    afxDepthStencilFlag_STENCIL_FAIL_B  = AFX_BIT_OFFSET(15),
-    afxDepthStencilFlag_STENCIL_DFAIL_B = AFX_BIT_OFFSET(16),
-    afxDepthStencilFlag_STENCIL_PASS_B  = AFX_BIT_OFFSET(17),
-
-    afxDepthStencilFlag_STENCIL_TEST    = afxDepthStencilFlag_STENCIL_TEST_F | afxDepthStencilFlag_STENCIL_TEST_B,
-
-    afxDepthStencilFlag_BOUNDS_TEST     = AFX_BIT_OFFSET(31) // it is here because it only works with a depth buffer
-} afxDepthStencilFlags;
-
-typedef enum afxMultisamplingFlag
-{
-    afxMultisamplingFlag_SHADING        = AFX_BIT_OFFSET(0),
-    afxMultisamplingFlag_ALPHA_TO_COVERAGE  = AFX_BIT_OFFSET(1),
-    afxMultisamplingFlag_ALPHA_TO_ONE   = AFX_BIT_OFFSET(2),
-} afxMultisamplingFlags;
-
-typedef enum afxRasterizationFlag
-{
-    afxRasterizationFlag_FILL_MODE      = AFX_BIT_OFFSET(0),
-    afxRasterizationFlag_LINE_WIDTH     = AFX_BIT_OFFSET(1),
-    afxRasterizationFlag_DEPTH_BIAS     = AFX_BIT_OFFSET(2)
-} afxRasterizationFlags;
-
-typedef enum afxColorOutputFlag
-{
-    afxColorOutputFlag_SCISSOR          = AFX_BIT_OFFSET(0),
-    afxColorOutputFlag_BLEND_CONSTANTS  = AFX_BIT_OFFSET(1),
-    afxColorOutputFlag_LOGIC_OP         = AFX_BIT_OFFSET(2)
-} afxColorOutputFlags;
-
 AFX_DEFINE_STRUCT(afxRasterizationConfig)
 {
-    afxDepthStencilFlags        dsFlags;
-    afxMultisamplingFlags       msFlags;
-    afxRasterizationFlags       rasFlags;
-    afxColorOutputFlags         pixelFlags;
+    afxPipelineBlueprint    xfmrPipb;
+    afxUri                  xfmrPipUri;
+    //afxShader               fsh;
+    //afxUri                  fshUri;
+    //afxString               fshFn; // entry point
+    //                          fshConstants;
+    //                          fshSpecId;
+
+    afxDepthStencilFlags    dsFlags;
+    afxMultisamplingFlags   msFlags;
+    afxRasterizationFlags   rasFlags;
+    afxColorOutputFlags     pixelFlags;
 
     // rasterization
-    afxFillMode                 fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
-    afxReal                     lineWidth; /// is the width of rasterized line segments. /// 1.f
+    afxFillMode             fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
+    afxReal                 lineWidth; /// is the width of rasterized line segments. /// 1.f
     // depth bias computation
-    afxBool                     depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
-    afxReal                     depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
-    afxReal                     depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
-    afxReal                     depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
+    afxBool                 depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
+    afxReal                 depthBiasSlopeScale; /// is a scalar factor applied to a fragment's slope in depth bias calculations. /// 0.f
+    afxReal                 depthBiasConstFactor; /// is a scalar factor controlling the constant depth value added to each fragment. /// 0.f
+    afxReal                 depthBiasClamp; /// is the maximum (or minimum) depth bias of a fragment. /// 0.f
     // multisampling rasterization
-    afxBool                     msEnabled;
-    afxNat                      sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
-    afxMask                     sampleMasks[32]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
+    afxBool                 msEnabled;
+    afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
+    afxMask                 sampleMasks[AVX_MAX_SAMPLE_MASKS]; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
 
     // fragment & pixel output operations
-    afxUri                      fragShd;
-    afxString                   fragFn; // entry point
-    //                          fragConstants;
-    //                          fragSpecId;
 
     // scissor test
 
     //
-    afxBool                     alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
-    afxBool                     alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
-    afxBool                     sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
-    afxReal                     minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
+    afxBool                 alphaToOneEnabled; /// controls whether the alpha component of the fragment's first color output is replaced with one. /// FALSE
+    afxBool                 alphaToCoverageEnabled; /// controls whether a temporary coverage value is generated based on the alpha component of the fragment's first color output. /// FALSE
+    afxBool                 sampleShadingEnabled; /// used to enable Sample Shading. /// FALSE
+    afxReal                 minSampleShadingValue; /// specifies a minimum fraction of sample shading if sampleShadingEnable is set to TRUE. /// 0.f
 
     // stencil test
-    afxBool                     stencilTestEnabled;
-    afxStencilConfig            stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
-    afxStencilConfig            stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
+    afxBool                 stencilTestEnabled;
+    afxStencilConfig        stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
+    afxStencilConfig        stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
 
     // depth test
-    afxBool                     depthTestEnabled; /// controls whether depth testing is enabled. FALSE
-    afxCompareOp                depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. afxCompareOp_LESS
-    afxBool                     depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. FALSE
-    afxPixelFormat              dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
+    afxBool                 depthTestEnabled; /// controls whether depth testing is enabled. FALSE
+    afxCompareOp            depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. afxCompareOp_LESS
+    afxBool                 depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. FALSE
+    afxPixelFormat          dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
     // depth bounds test
-    afxBool                     depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled.
-    afxV2d                      depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
+    afxBool                 depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled.
+    afxV2d                  depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
 
     // color bending, logical op and color writing
-    afxNat                      colorOutCnt;
-    afxColorOutputChannel       colorOuts[8];
-    afxColor                    blendConstants;
-    afxBool                     pixelLogicOpEnabled;
-    afxLogicOp                  pixelLogicOp;
+    afxNat                  colorOutCnt;
+    afxColorOutputChannel   colorOuts[AVX_MAX_COLOR_OUTPUT_CHANNELS];
+    afxColor                blendConstants;
+    afxBool                 pixelLogicOpEnabled;
+    afxLogicOp              pixelLogicOp;
 };
 
 #ifdef _AVX_DRAW_C
@@ -200,10 +208,12 @@ AFX_OBJECT(afxRasterizer)
 struct afxBaseRasterizer
 #endif
 {
-    afxDepthStencilFlags        dsFlags;
-    afxMultisamplingFlags       msFlags;
-    afxRasterizationFlags       rasFlags;
-    afxColorOutputFlags         pixelFlags;
+    afxPipeline             pip;
+
+    afxDepthStencilFlags    dsFlags;
+    afxMultisamplingFlags   msFlags;
+    afxRasterizationFlags   rasFlags;
+    afxColorOutputFlags     pixelFlags;
 
     // rasterization
     afxFillMode             fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
@@ -225,11 +235,7 @@ struct afxBaseRasterizer
     afxNat                  sampleCnt; /// is a value specifying the number of samples used in rasterization. /// 0
     afxMask*                sampleMasks; /// an array of sample mask values used in the sample mask test. /// [ 1, ]
     
-    // fragment & pixel output operations
-    afxUri128          fragShd;
-    afxString8         fragFn;
-    //                      fragConstants;
-    //                      fragSpecId;
+    // pixel output operations
 
     // scissor test
 
@@ -260,28 +266,31 @@ struct afxBaseRasterizer
     afxBool                 logicOpEnabled; /// FALSE
     afxLogicOp              logicOp; /// afxLogicOp_NOP
 };
-#endif
-#endif
+#endif//_AVX_RASTERIZER_C
+#endif//_AVX_DRAW_C
 
-AVX afxError            AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[]);
-AVX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri);
-
-AVX afxBool             AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op); // return TRUE if depth test is enabled
+AVX afxBool             AfxGetDepthComparison(afxRasterizer razr, afxCompareOp* op); // return TRUE if depth test is enabled
 AVX afxBool             AfxDepthWriteIsDisabled(afxRasterizer razr);
 AVX afxBool             AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxReal* constFactor, afxReal* clamp); // return TRUE if depth bias is enabled
-AVX afxBool             AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]); // return TRUE if depth bounds is enabled
+AVX afxBool             AfxGetDepthBoundsInfo(afxRasterizer razr, afxV2d bounds); // return TRUE if depth bounds is enabled
 AVX afxBool             AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back); // return TRUE if stencil test is enabled
 AVX afxBool             AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op); // return TRUE if logical pixel operation is enabled
-AVX void                AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4]);
+AVX void                AfxGetColorBlendConstants(afxRasterizer razr, afxV4d rgba);
 AVX afxNat              AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat cnt, afxColorOutputChannel ch[]);
 AVX afxNat              AfxCountColorOutputChannels(afxRasterizer razr);
-AVX afxBool             AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
+AVX afxBool             AfxGetSampleShadingInfo(afxRasterizer razr, afxReal* minSampleShadingValue); // return TRUE if sample shading is enabled
 AVX afxFillMode         AfxGetRasterizationMode(afxRasterizer razr);
 AVX afxBool             AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth);
 AVX afxBool             AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxMask sampleMask[32]);
 
-AVX void                AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn);
+AVX afxPipeline         AfxGetRasterizerPipeline(afxRasterizer razr);
 
 AVX void                AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizationConfig* config);
+
+////////////////////////////////////////////////////////////////////////////////
+
+AVX afxError            AfxAssembleRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const cfg[], afxRasterizer razr[]);
+
+AVX afxRasterizer       AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
 
 #endif//AVX_RASTERIZER_H

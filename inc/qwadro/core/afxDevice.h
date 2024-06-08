@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -37,14 +37,14 @@ typedef enum afxDeviceType
 
 typedef enum afxDeviceAccelor
 {
-    afxDeviceAccelor_CPU        = AFX_BIT_OFFSET(0), // CPU with no graphic support --- ex.: Ryzen 7
-    afxDeviceAccelor_GPU        = AFX_BIT_OFFSET(1), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
-    afxDeviceAccelor_APU        = AFX_BIT_OFFSET(2), // combined CPU-GPU --- ex.: AMD A-series
-    afxDeviceAccelor_IGPU       = AFX_BIT_OFFSET(3), // integrated GPU --- ex.: Intel HD Graphics
-    afxDeviceAccelor_VGPU       = AFX_BIT_OFFSET(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
-    afxDeviceAccelor_PPU        = AFX_BIT_OFFSET(5), // physics processing unit --- ex.: Ageia PhysX card
-    afxDeviceAccelor_SPU        = AFX_BIT_OFFSET(6), // synergistic processing unit
-    afxDeviceAccelor_DSP        = AFX_BIT_OFFSET(7),
+    afxDeviceAccelor_CPU        = AFX_BIT(0), // CPU with no graphic support --- ex.: Ryzen 7
+    afxDeviceAccelor_GPU        = AFX_BIT(1), // dedicated GPU --- ex.: AMD/NVidia PCIE adapter
+    afxDeviceAccelor_APU        = AFX_BIT(2), // combined CPU-GPU --- ex.: AMD A-series
+    afxDeviceAccelor_IGPU       = AFX_BIT(3), // integrated GPU --- ex.: Intel HD Graphics
+    afxDeviceAccelor_VGPU       = AFX_BIT(4), // virtual GPU --- ex.: VM/sandboxed instantiation.
+    afxDeviceAccelor_PPU        = AFX_BIT(5), // physics processing unit --- ex.: Ageia PhysX card
+    afxDeviceAccelor_SPU        = AFX_BIT(6), // synergistic processing unit
+    afxDeviceAccelor_DSP        = AFX_BIT(7),
     
     afxDeviceAccelor_TOTAL = 8
 } afxDeviceAccelor;
@@ -52,10 +52,10 @@ typedef enum afxDeviceAccelor
 typedef enum afxDeviceStatus
 {
     // NIL /// The device state is unknown or invalid.
-    afxDeviceStatus_ACTIVE      = AFX_BIT_OFFSET(0), /// The device is active That is, the adapter that connects to the endpoint device is present and enabled.
-    afxDeviceStatus_DISABLED    = AFX_BIT_OFFSET(1), /// The device is disabled.
-    afxDeviceStatus_AUSENT      = AFX_BIT_OFFSET(2), /// The device is not present because the adapter that connects to the endpoint device has been removed from the system.
-    afxDeviceStatus_UNPLUGGED   = AFX_BIT_OFFSET(3), /// The device is unplugged.
+    afxDeviceStatus_ACTIVE      = AFX_BIT(0), /// The device is active That is, the adapter that connects to the endpoint device is present and enabled.
+    afxDeviceStatus_DISABLED    = AFX_BIT(1), /// The device is disabled.
+    afxDeviceStatus_AUSENT      = AFX_BIT(2), /// The device is not present because the adapter that connects to the endpoint device has been removed from the system.
+    afxDeviceStatus_UNPLUGGED   = AFX_BIT(3), /// The device is unplugged.
     
     afxDeviceStatus_ALL         = afxDeviceStatus_ACTIVE | afxDeviceStatus_DISABLED | afxDeviceStatus_AUSENT | afxDeviceStatus_UNPLUGGED, /// Includes devices in all states.
 } afxDeviceStatus;

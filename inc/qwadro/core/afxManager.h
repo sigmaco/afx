@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -54,7 +54,7 @@ AFX_DEFINE_STRUCT(afxIterator)
 
 typedef enum afxBlueprintFlags
 {
-    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT_OFFSET(0)
+    AFX_OBJB_FLAG_DONT_DELETE   = AFX_BIT(0)
 } afxBlueprintFlags;
 
 AFX_DEFINE_STRUCT(afxBlueprint)

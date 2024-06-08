@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -42,84 +42,67 @@
 typedef enum afxPipelineStage
 {
     // NIL,
-    afxPipelineStage_TOP            = AFX_BIT_OFFSET(0),
-    afxPipelineStage_DRAW_INDIRECT  = AFX_BIT_OFFSET(1), /// where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
-    afxPipelineStage_VERTEX_INPUT   = AFX_BIT_OFFSET(2), /// where vertex and index buffers are consumed.
-    afxPipelineStage_VERTEX         = AFX_BIT_OFFSET(3), /// the vertex shader stage.
-    afxPipelineStage_DOMAIN         = AFX_BIT_OFFSET(4), /// the tessellation control shader stage.
-    afxPipelineStage_HULL           = AFX_BIT_OFFSET(5), /// the tessellation evaluation shader stage.
-    afxPipelineStage_PRIM           = AFX_BIT_OFFSET(6), /// the primitive (aka geometry) shader stage.
-    afxPipelineStage_FRAGMENT       = AFX_BIT_OFFSET(7), /// the fragment shader stage.
-    afxPipelineStage_EARLY_TESTS    = AFX_BIT_OFFSET(8), /// where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes render pass load operations for framebuffer attachments with a depth/stencil format.
-    afxPipelineStage_LATE_TESTS     = AFX_BIT_OFFSET(9), /// where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes render pass store operations for framebuffer attachments with a depth/stencil format.
-    afxPipelineStage_COLOR_OUTPUT   = AFX_BIT_OFFSET(10), /// where the final color values are output from the pipeline. This stage includes blending, logic operations, render pass load and store operations for color attachments, render pass multisample resolve operations, and AfxCmdClearAttachments.
-    afxPipelineStage_COMPUTE        = AFX_BIT_OFFSET(11), /// the execution of a compute shader.
-    afxPipelineStage_TRANSFER       = AFX_BIT_OFFSET(12), /// the following commands: copies, blits, resolves, clears.
-    afxPipelineStage_BOTTOM         = AFX_BIT_OFFSET(13), 
-    afxPipelineStage_HOST           = AFX_BIT_OFFSET(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
-    afxPipelineStage_GRAPHICS       = AFX_BIT_OFFSET(15), /// the execution of all graphics pipeline stages.
-    afxPipelineStage_COMMANDS       = AFX_BIT_OFFSET(16), /// all operations performed by all commands supported on the queue it is used with.
+    afxPipelineStage_TOP            = AFX_BIT(0),
+    afxPipelineStage_DRAW_INDIRECT  = AFX_BIT(1), /// where DrawIndirect*/DispatchIndirect*/TraceRaysIndirect* data structures are consumed.
+    afxPipelineStage_VERTEX_INPUT   = AFX_BIT(2), /// where vertex and index buffers are consumed.
+    afxPipelineStage_VERTEX         = AFX_BIT(3), /// the vertex shader stage.
+    afxPipelineStage_DOMAIN         = AFX_BIT(4), /// the tessellation control shader stage.
+    afxPipelineStage_HULL           = AFX_BIT(5), /// the tessellation evaluation shader stage.
+    afxPipelineStage_PRIM           = AFX_BIT(6), /// the primitive (aka geometry) shader stage.
+    afxPipelineStage_FRAGMENT       = AFX_BIT(7), /// the fragment shader stage.
+    afxPipelineStage_EARLY_TESTS    = AFX_BIT(8), /// where early fragment tests (depth and stencil tests before fragment shading) are performed. This stage also includes render pass load operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_LATE_TESTS     = AFX_BIT(9), /// where late fragment tests (depth and stencil tests after fragment shading) are performed. This stage also includes render pass store operations for framebuffer attachments with a depth/stencil format.
+    afxPipelineStage_COLOR_OUTPUT   = AFX_BIT(10), /// where the final color values are output from the pipeline. This stage includes blending, logic operations, render pass load and store operations for color attachments, render pass multisample resolve operations, and AvxCmdClearAttachments.
+    afxPipelineStage_COMPUTE        = AFX_BIT(11), /// the execution of a compute shader.
+    afxPipelineStage_TRANSFER       = AFX_BIT(12), /// the following commands: copies, blits, resolves, clears.
+    afxPipelineStage_BOTTOM         = AFX_BIT(13), 
+    afxPipelineStage_HOST           = AFX_BIT(14), /// pseudo-stage indicating execution on the host of reads/writes of device memory. This stage is not invoked by any commands recorded in a command buffer.
+    afxPipelineStage_GRAPHICS       = AFX_BIT(15), /// the execution of all graphics pipeline stages.
+    afxPipelineStage_COMMANDS       = AFX_BIT(16), /// all operations performed by all commands supported on the queue it is used with.
 } afxPipelineStage;
 
-AFX_DEFINE_STRUCT(afxPipelineInputLocation)
-/// vertex attribute input stream
+typedef enum afxPipelineFlag
 {
-    afxNat              location; /// is the shader input location number for this attribute.
-    //afxNat8             binding; /// is the binding number which this attribute takes its data from.
-    afxVertexFormat     fmt; // is the size and type of the vertex attribute data.
-    //afxNat32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
-    afxNat              stream;
-};
+    afxPipelineFlag_TOPOLOGY        = AFX_BIT(0),
+    afxPipelineFlag_RESTART         = AFX_BIT(1),
+    afxPipelineFlag_VIEWPORT        = AFX_BIT(2),
+    afxPipelineFlag_DEPTH_CLAMP     = AFX_BIT(3),
+    afxPipelineFlag_CULL_MODE       = AFX_BIT(4),
+    afxPipelineFlag_FRONT_FACE_INV  = AFX_BIT(5),
+    afxPipelineFlag_CTRL_POINTS     = AFX_BIT(6)
+} afxPipelineFlags;
 
-typedef enum afxPipelinePrimitiveFlag
+AFX_DEFINE_STRUCT(afxPipelineBlueprint)
 {
-    afxPipelinePrimitiveFlag_TOPOLOGY       = AFX_BIT_OFFSET(0),
-    afxPipelinePrimitiveFlag_RESTART        = AFX_BIT_OFFSET(1),
-    afxPipelinePrimitiveFlag_VIEWPORT       = AFX_BIT_OFFSET(2),
-    afxPipelinePrimitiveFlag_DEPTH_CLAMP    = AFX_BIT_OFFSET(3),
-    afxPipelinePrimitiveFlag_CULL_MODE      = AFX_BIT_OFFSET(4),
-    afxPipelinePrimitiveFlag_FRONT_FACE_INV = AFX_BIT_OFFSET(5),
-    afxPipelinePrimitiveFlag_CTRL_POINTS    = AFX_BIT_OFFSET(6)
-} afxPipelinePrimitiveFlags;
+    afxPipelineFlags    primFlags;
+    afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+    afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
+    afxNat              patchControlPoints; /// is the number of control points per patch.
+    afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE    
+    afxBool             rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
+    afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+    afxBool             invertFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
+    afxNat              vpCnt; /// the number of viewports used by the pipeline. At least 1.
+    afxVertexInput      vin;
 
-AFX_DEFINE_STRUCT(afxPipelineConfig)
-{
-    afxPipelinePrimitiveFlags   primFlags;
-    afxPrimTopology             primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
-    afxBool                     primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
-    afxNat                      patchControlPoints; /// is the number of control points per patch.
-    afxBool                     depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE    
-    afxBool                     rasterizationDisabled; /// controls whether primitives are discarded immediately before the rasterization stage. /// FALSE
-    afxCullMode                 cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
-    afxBool                     invertFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
-    
-    afxVertexInput              vin;
-    afxNat                      visCnt;
-    struct
-    {
-        afxNat                  slot;
-        afxNat                  instanceRate;
-    }                           vis[8];
-
-    afxNat                      shdCnt;
-    afxShaderStage              shdStage[4];
-    afxUri                      shdUri[4];
-    afxString                   shdFn[4];
-    afxRasterizer               razr;
-    afxUri                      razrUri;
+    afxNat              shdCnt;
+    afxShader           shd[5];
+    afxShaderStage      shdStage[5];
+    afxUri              shdUri[5];
+    afxString           shdFn[5];
+    //afxRasterizer       razr;
+    //afxUri              razrUri;
 };
 
 #ifdef _AVX_DRAW_C
-
-AFX_DEFINE_STRUCT(afxPipelineModule)
+AFX_DEFINE_STRUCT(afxShaderSlot)
 {
-    afxUri128          shd;
-    afxString8         fn;
-    afxShaderStage          stage;
+    afxShaderStage      stage;
+    afxShader           shd;
+    afxString8          fn;
     //constants;
-    //                      specId;
+    //                  specId;
 };
-
 #ifdef _AVX_PIPELINE_C
 #ifndef _AVX_PIPELINE_IMPL
 AFX_OBJECT(afxPipeline)
@@ -127,38 +110,28 @@ AFX_OBJECT(afxPipeline)
 struct afxBasePipeline
 #endif
 {
-    afxPipelinePrimitiveFlags   primFlags;
+    afxNat              stageCnt;
+    afxShaderSlot*      stages;
+    afxNat              vtxShdIdx;
+    afxNat              hulShdIdx;
+    afxNat              domShdIdx;
+    afxNat              geoShdIdx;
+    afxNat              fshdIdx;
 
-    afxNat                  stageCnt;
-    afxPipelineModule*      stages;
+    afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+    afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
+    afxNat              patchControlPoints; /// is the number of control points per patch.
+    afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
+    afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+    afxBool             frontFacingInverted; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
+    afxNat              vpCnt; /// the number of viewports used by the pipeline. At least 1.
 
-    struct
-    {
-        afxNat              set;
-        afxBindSchema       legt;
-    }                      *wiring;
-    afxNat                  wiringCnt;
-
-    afxNat                  inCnt;
-    afxPipelineInputLocation ins[8];
-    afxVertexInput          vin;
-
-    afxPrimTopology         primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
-    afxBool                 primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
-    afxNat                  patchControlPoints; /// is the number of control points per patch.
-    afxBool                 depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
-    afxCullMode             cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
-    afxBool                 frontFacingInverted; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
-    
-    afxRasterizer           razr;
+    //afxRasterizer       razr;
+    afxLigature         liga;
+    afxVertexInput      vin;
 };
-#endif
-#endif
-
-AFX_DEFINE_STRUCT(afxPipelineAssembler)
-{
-    int a;
-};
+#endif//_AVX_PIPELINE_C
+#endif//_AVX_DRAW_C
 
 AVX afxPrimTopology     AfxGetPrimitiveTopology(afxPipeline pip);
 AVX afxBool             AfxPrimitiveRestartIsEnabled(afxPipeline pip);
@@ -166,30 +139,18 @@ AVX afxBool             AfxDepthClampIsEnabled(afxPipeline pip);
 
 AVX afxCullMode         AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacingInverted); // return the culling mode set if any.
 
-AVX afxNat              AfxCountPipelineBindSchemas(afxPipeline pip);
-AVX afxError            AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[]);
+AVX afxBool             AfxGetPipelineLigature(afxPipeline pip, afxLigature* ligature);
 
-AVX afxNat              AfxCountPipelineInputs(afxPipeline pip);
-AVX afxNat              AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[]);
-AVX afxVertexInput      AfxGetPipelineVertexInput(afxPipeline pip);
+AVX afxBool             AfxGetPipelineVertexInput(afxPipeline pip, afxVertexInput* input);
 
-AVX afxNat              AfxCountLinkedShaders(afxPipeline pip);
-AVX afxNat              AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[]);
-AVX afxBool             AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd);
-
-AVX afxRasterizer       AfxGetLinkedRasterizer(afxPipeline pip);
+AVX afxNat              AfxCountShaderSlots(afxPipeline pip);
+AVX afxNat              AfxGetLinkedShaders(afxPipeline pip, afxIndex first, afxNat cnt, afxShader shaders[]);
+AVX afxBool             AfxGetPipelineStage(afxPipeline pip, afxShaderStage stage, afxShader* shader);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-//AVX afxError            AfxAssemblePrimitiveRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AfxAssemblePrimitiveShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AwxAssembleMeshShadingPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxError            AwxAssembleMeshRasterizationPipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
+AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineBlueprint const blueprints[], afxPipeline pipelines[]);
 
-//AVX afxError            AfxAssemblePipelines2(afxDrawContext dctx, afxPipelineAssembler const* pipb, afxNat cnt, void* data[], afxPipeline pip[]);
-//AVX afxPipeline         AfxAssemblePipelineFromXml(afxDrawContext dctx, afxXmlNode const* node);
-
-AVX afxError            AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[]);
-AVX afxPipeline         AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
+AVX afxPipeline         AfxLoadPipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri);
 
 #endif//AVX_PIPELINE_H

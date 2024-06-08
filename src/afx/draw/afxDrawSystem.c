@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -34,8 +34,9 @@
 #define _AVX_DRAW_INPUT_C
 
 #include "qwadro/draw/afxDrawSystem.h"
+#include "qwadro/draw/avxDevKit.h"
 
-_AVX afxBool dsysReady = FALSE;
+//_AVX afxBool dsysReady = FALSE;
 _AVX afxByte theDsysData[AFX_ALIGN(sizeof(afxObjectBase), 16) + AFX_ALIGN(sizeof(AFX_OBJECT(afxDrawSystem)), 16)] = { 0 };
 _AVX afxDrawSystem TheDrawSystem = (void*)&theDsysData;
 AFX_STATIC_ASSERT(sizeof(theDsysData) >= (sizeof(afxObjectBase) + sizeof(TheDrawSystem[0])), "");
@@ -61,15 +62,6 @@ _AVX afxString const sgl2Signature = AFX_STRING(
     "                                www.sigmaco.org                                \n"
     "                                                                               \n"
 );
-
-_AVX afxBool AfxGetDrawSystem(afxDrawSystem* system)
-{
-    afxError err = AFX_ERR_NONE;
-    //AfxTryAssertObjects(1, &TheDrawSystem, afxFcc_DSYS);
-    AfxAssert(system);
-    *system = TheDrawSystem;
-    return dsysReady;
-}
 
 _AVX afxManager* AfxGetCameraClass(void)
 {
@@ -98,8 +90,18 @@ _AVX afxManager* AfxGetDrawBridgeClass(afxDrawDevice ddev, afxNat portIdx)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssertRange(ddev->portCnt, portIdx, 1);
-    afxManager* cls = &ddev->contexts;
-    AfxAssertClass(cls, afxFcc_DCTX);
+    afxManager* cls = &ddev->ports[portIdx].ddgeMgr;
+    AfxAssertClass(cls, afxFcc_DDGE);
+    return cls;
+}
+
+_AVX afxManager* AfxGetDrawQueueClass(afxDrawDevice ddev, afxNat portIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertRange(ddev->portCnt, portIdx, 1);
+    afxManager* cls = &ddev->ports[portIdx].dqueMgr;
+    AfxAssertClass(cls, afxFcc_DQUE);
     return cls;
 }
 
@@ -228,6 +230,228 @@ _AVX void AfxGetDrawDeviceLimits(afxDrawDevice ddev, afxDrawDeviceLimits* limits
     *limits = ddev->limits;
 }
 
+_AVX afxBool AfxIsDrawDeviceAcceptable(afxDrawDevice ddev, afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssert(limits);
+    AfxAssert(caps);
+    afxBool rslt = TRUE;
+
+    if (caps)
+    {
+        if (
+            (caps->robustBufAccess && !ddev->caps.robustBufAccess) ||
+            (caps->fullDrawIdxUint32 && !ddev->caps.fullDrawIdxUint32) ||
+            (caps->rasterCubeArray && !ddev->caps.rasterCubeArray) ||
+            (caps->independentBlend && !ddev->caps.independentBlend) ||
+            (caps->primShader && !ddev->caps.primShader) ||
+            (caps->tessShader && !ddev->caps.tessShader) ||
+            (caps->sampleRateShading && !ddev->caps.sampleRateShading) ||
+            (caps->dualSrcBlend && !ddev->caps.dualSrcBlend) ||
+            (caps->logicOp && !ddev->caps.logicOp) ||
+            (caps->multiDrawIndirect && !ddev->caps.multiDrawIndirect) ||
+            (caps->drawIndirectFirstInst && !ddev->caps.drawIndirectFirstInst) ||
+            (caps->depthClamp && !ddev->caps.depthClamp) ||
+            (caps->depthBiasClamp && !ddev->caps.depthBiasClamp) ||
+            (caps->fillModeNonSolid && !ddev->caps.fillModeNonSolid) ||
+            (caps->depthBounds && !ddev->caps.depthBounds) ||
+            (caps->wideLines && !ddev->caps.wideLines) ||
+            (caps->largePoints && !ddev->caps.largePoints) ||
+            (caps->alphaToOne && !ddev->caps.alphaToOne) ||
+            (caps->multiViewport && !ddev->caps.multiViewport) ||
+            (caps->samplerAnisotropy && !ddev->caps.samplerAnisotropy) ||
+            (caps->etc2 && !ddev->caps.etc2) ||
+            (caps->astc_LDR && !ddev->caps.astc_LDR) ||
+            (caps->dxt && !ddev->caps.dxt) ||
+            (caps->occlusionQueryPrecise && !ddev->caps.occlusionQueryPrecise) ||
+            (caps->pipelineStatsQuery && !ddev->caps.pipelineStatsQuery) ||
+            (caps->vtxPipelineStoresAndAtomics && !ddev->caps.vtxPipelineStoresAndAtomics) ||
+            (caps->fragStoresAndAtomics && !ddev->caps.fragStoresAndAtomics) ||
+            (caps->shaderTessAndPrimPointSiz && !ddev->caps.shaderTessAndPrimPointSiz) ||
+            (caps->shaderRasterGatherExt && !ddev->caps.shaderRasterGatherExt) ||
+            (caps->shaderStorageRasterExtFmts && !ddev->caps.shaderStorageRasterExtFmts) ||
+            (caps->shaderStorageRasterMultisample && !ddev->caps.shaderStorageRasterMultisample) ||
+            (caps->shaderStorageRasterReadWithoutFmt && !ddev->caps.shaderStorageRasterReadWithoutFmt) ||
+            (caps->shaderStorageRasterWriteWithoutFmt && !ddev->caps.shaderStorageRasterWriteWithoutFmt) ||
+            (caps->shaderUniformBufferArrayDynIndexing && !ddev->caps.shaderUniformBufferArrayDynIndexing) ||
+            (caps->shaderSampledRasterArrayDynIndexing && !ddev->caps.shaderSampledRasterArrayDynIndexing) ||
+            (caps->shaderStorageBufferArrayDynIndexing && !ddev->caps.shaderStorageBufferArrayDynIndexing) ||
+            (caps->shaderStorageImageArrayDynIndexing && !ddev->caps.shaderStorageImageArrayDynIndexing) ||
+            (caps->shaderClipDist && !ddev->caps.shaderClipDist) ||
+            (caps->shaderCullDist && !ddev->caps.shaderCullDist) ||
+            (caps->shaderFloat64 && !ddev->caps.shaderFloat64) ||
+            (caps->shaderInt64 && !ddev->caps.shaderInt64) ||
+            (caps->shaderInt16 && !ddev->caps.shaderInt16) ||
+            (caps->shaderRsrcResidency && !ddev->caps.shaderRsrcResidency) ||
+            (caps->shaderRsrcMinLod && !ddev->caps.shaderRsrcMinLod) ||
+            (caps->sparseBinding && !ddev->caps.sparseBinding) ||
+            (caps->sparseResidencyBuffer && !ddev->caps.sparseResidencyBuffer) ||
+            (caps->sparseResidencyRaster2D && !ddev->caps.sparseResidencyRaster2D) ||
+            (caps->sparseResidencyRaster3D && !ddev->caps.sparseResidencyRaster3D) ||
+            (caps->sparseResidency2Samples && !ddev->caps.sparseResidency2Samples) ||
+            (caps->sparseResidency4Samples && !ddev->caps.sparseResidency4Samples) ||
+            (caps->sparseResidency8Samples && !ddev->caps.sparseResidency8Samples) ||
+            (caps->sparseResidency16Samples && !ddev->caps.sparseResidency16Samples) ||
+            (caps->sparseResidencyAliased && !ddev->caps.sparseResidencyAliased) ||
+            (caps->variableMultisampleRate && !ddev->caps.variableMultisampleRate) ||
+            (caps->inheritedQueries && !ddev->caps.inheritedQueries))
+        {
+            rslt = FALSE;
+        }
+    }
+
+    if (limits)
+    {
+        if (
+            (limits->maxRasterDim1D > ddev->limits.maxRasterDim1D) ||
+            (limits->maxRasterDim2D > ddev->limits.maxRasterDim2D) ||
+            (limits->maxRasterDim3D > ddev->limits.maxRasterDim3D) ||
+            (limits->maxRasterDimCube > ddev->limits.maxRasterDimCube) ||
+            (limits->maxRasterArrayLayers > ddev->limits.maxRasterArrayLayers) ||
+            (limits->maxTexelBufElements > ddev->limits.maxTexelBufElements) ||
+            (limits->maxUniformBufRange > ddev->limits.maxUniformBufRange) ||
+            (limits->maxStorageBufRange > ddev->limits.maxStorageBufRange) ||
+            (limits->maxPushConstantsSiz > ddev->limits.maxPushConstantsSiz) ||
+            (limits->maxMemAllocCnt > ddev->limits.maxMemAllocCnt) ||
+            (limits->maxSamplerAllocCnt > ddev->limits.maxSamplerAllocCnt) ||
+            (limits->bufferRasterGranularity > ddev->limits.bufferRasterGranularity) ||
+            (limits->sparseAddrSpaceSiz > ddev->limits.sparseAddrSpaceSiz) ||
+            (limits->maxBoundDescriptorSets > ddev->limits.maxBoundDescriptorSets) ||
+            (limits->maxPerStageDescriptorSamplers > ddev->limits.maxPerStageDescriptorSamplers) ||
+            (limits->maxPerStageDescriptorUniformBuffers > ddev->limits.maxPerStageDescriptorUniformBuffers) ||
+            (limits->maxPerStageDescriptorStorageBuffers > ddev->limits.maxPerStageDescriptorStorageBuffers) ||
+            (limits->maxPerStageDescriptorSampledImages > ddev->limits.maxPerStageDescriptorSampledImages) ||
+            (limits->maxPerStageDescriptorStorageImages > ddev->limits.maxPerStageDescriptorStorageImages) ||
+            (limits->maxPerStageDescriptorInputAttachments > ddev->limits.maxPerStageDescriptorInputAttachments) ||
+            (limits->maxPerStageResources > ddev->limits.maxPerStageResources) ||
+            (limits->maxDescriptorSetSamplers > ddev->limits.maxDescriptorSetSamplers) ||
+            (limits->maxDescriptorSetUniformBuffers > ddev->limits.maxDescriptorSetUniformBuffers) ||
+            (limits->maxDescriptorSetUniformBuffersDynamic > ddev->limits.maxDescriptorSetUniformBuffersDynamic) ||
+            (limits->maxDescriptorSetStorageBuffers > ddev->limits.maxDescriptorSetStorageBuffers) ||
+            (limits->maxDescriptorSetStorageBuffersDynamic > ddev->limits.maxDescriptorSetStorageBuffersDynamic) ||
+            (limits->maxDescriptorSetSampledImages > ddev->limits.maxDescriptorSetSampledImages) ||
+            (limits->maxDescriptorSetStorageImages > ddev->limits.maxDescriptorSetStorageImages) ||
+            (limits->maxDescriptorSetInputAttachments > ddev->limits.maxDescriptorSetInputAttachments) ||
+            (limits->maxVtxInputAttributes > ddev->limits.maxVtxInputAttributes) ||
+            (limits->maxVtxInputBindings > ddev->limits.maxVtxInputBindings) ||
+            (limits->maxVtxInputAttributeOffset > ddev->limits.maxVtxInputAttributeOffset) ||
+            (limits->maxVtxInputBindingStride > ddev->limits.maxVtxInputBindingStride) ||
+            (limits->maxVtxOutputCompos > ddev->limits.maxVtxOutputCompos) ||
+            (limits->maxTessGenLvl > ddev->limits.maxTessGenLvl) ||
+            (limits->maxTessPatchSiz > ddev->limits.maxTessPatchSiz) ||
+            (limits->maxTessCtrlPerVtxInComps > ddev->limits.maxTessCtrlPerVtxInComps) ||
+            (limits->maxTessCtrlPerVtxOutComps > ddev->limits.maxTessCtrlPerVtxOutComps) ||
+            (limits->maxTessCtrlPerPatchOutComps > ddev->limits.maxTessCtrlPerPatchOutComps) ||
+            (limits->maxTessCtrlTotalOutComps > ddev->limits.maxTessCtrlTotalOutComps) ||
+            (limits->maxTessEvalInComps > ddev->limits.maxTessEvalInComps) ||
+            (limits->maxTessEvalOutComps > ddev->limits.maxTessEvalOutComps) ||
+            (limits->maxPrimShaderInvocations > ddev->limits.maxPrimShaderInvocations) ||
+            (limits->maxPrimInComps > ddev->limits.maxPrimInComps) ||
+            (limits->maxPrimOutComps > ddev->limits.maxPrimOutComps) ||
+            (limits->maxPrimOutVertices > ddev->limits.maxPrimOutVertices) ||
+            (limits->maxPrimTotalOutComps > ddev->limits.maxPrimTotalOutComps) ||
+            (limits->maxFragInComps > ddev->limits.maxFragInComps) ||
+            (limits->maxFragOutAttachments > ddev->limits.maxFragOutAttachments) ||
+            (limits->maxFragDualSrcAttachments > ddev->limits.maxFragDualSrcAttachments) ||
+            (limits->maxFragCombinedOutputResources > ddev->limits.maxFragCombinedOutputResources) ||
+            (limits->maxComputeSharedMemorySiz > ddev->limits.maxComputeSharedMemorySiz) ||
+            (limits->maxComputeWorkGroupCnt[0] > ddev->limits.maxComputeWorkGroupCnt[0]) ||
+            (limits->maxComputeWorkGroupCnt[1] > ddev->limits.maxComputeWorkGroupCnt[1]) ||
+            (limits->maxComputeWorkGroupCnt[2] > ddev->limits.maxComputeWorkGroupCnt[2]) ||
+            (limits->maxComputeWorkGroupInvocations > ddev->limits.maxComputeWorkGroupInvocations) ||
+            (limits->maxComputeWorkGroupSiz[0] > ddev->limits.maxComputeWorkGroupSiz[0]) ||
+            (limits->maxComputeWorkGroupSiz[1] > ddev->limits.maxComputeWorkGroupSiz[1]) ||
+            (limits->maxComputeWorkGroupSiz[2] > ddev->limits.maxComputeWorkGroupSiz[2]) ||
+            (limits->subPixelPrecisionBits > ddev->limits.subPixelPrecisionBits) ||
+            (limits->subTexelPrecisionBits > ddev->limits.subTexelPrecisionBits) ||
+            (limits->mipmapPrecisionBits > ddev->limits.mipmapPrecisionBits) ||
+            (limits->maxDrawIndexedIdxValue > ddev->limits.maxDrawIndexedIdxValue) ||
+            (limits->maxDrawIndirectCnt > ddev->limits.maxDrawIndirectCnt) ||
+            (limits->maxSamplerLodBias > ddev->limits.maxSamplerLodBias) ||
+            (limits->maxSamplerAnisotropy > ddev->limits.maxSamplerAnisotropy) ||
+            (limits->maxViewports > ddev->limits.maxViewports) ||
+            (limits->maxViewportDimensions[0] > ddev->limits.maxViewportDimensions[0]) ||
+            (limits->maxViewportDimensions[1] > ddev->limits.maxViewportDimensions[1]) ||
+            (limits->viewportBoundsRange[0] > ddev->limits.viewportBoundsRange[0]) ||
+            (limits->viewportBoundsRange[1] > ddev->limits.viewportBoundsRange[1]) ||
+            (limits->viewportSubPixelBits > ddev->limits.viewportSubPixelBits) ||
+            (limits->minMemMapAlign > ddev->limits.minMemMapAlign) ||
+            (limits->minTexelBufOffsetAlign > ddev->limits.minTexelBufOffsetAlign) ||
+            (limits->minUniformBufOffsetAlign > ddev->limits.minUniformBufOffsetAlign) ||
+            (limits->minStorageBufOffsetAlign > ddev->limits.minStorageBufOffsetAlign) ||
+            (limits->minTexelOffset > ddev->limits.minTexelOffset) ||
+            (limits->maxTexelOffset > ddev->limits.maxTexelOffset) ||
+            (limits->minTexelGatherOffset > ddev->limits.minTexelGatherOffset) ||
+            (limits->maxTexelGatherOffset > ddev->limits.maxTexelGatherOffset) ||
+            (limits->minInterpolationOffset > ddev->limits.minInterpolationOffset) ||
+            (limits->maxInterpolationOffset > ddev->limits.maxInterpolationOffset) ||
+            (limits->subPixelInterpolationOffsetBits > ddev->limits.subPixelInterpolationOffsetBits) ||
+            (limits->maxCanvasWidth > ddev->limits.maxCanvasWidth) ||
+            (limits->maxCanvasHeight > ddev->limits.maxCanvasHeight) ||
+            (limits->maxCanvasLayers > ddev->limits.maxCanvasLayers) ||
+            (limits->canvasColorSampleCnts > ddev->limits.canvasColorSampleCnts) ||
+            (limits->canvasDepthSampleCnts > ddev->limits.canvasDepthSampleCnts) ||
+            (limits->canvasStencilSampleCnts > ddev->limits.canvasStencilSampleCnts) ||
+            (limits->canvasNoAttachmentsSampleCnts > ddev->limits.canvasNoAttachmentsSampleCnts) ||
+            (limits->maxColorAttachments > ddev->limits.maxColorAttachments) ||
+            (limits->sampledRasterColorSampleCnts > ddev->limits.sampledRasterColorSampleCnts) ||
+            (limits->sampledRasterIntegerSampleCnts > ddev->limits.sampledRasterIntegerSampleCnts) ||
+            (limits->sampledRasterDepthSampleCnts > ddev->limits.sampledRasterDepthSampleCnts) ||
+            (limits->sampledRasterStencilSampleCnts > ddev->limits.sampledRasterStencilSampleCnts) ||
+            (limits->storageRasterSampleCnts > ddev->limits.storageRasterSampleCnts) ||
+            (limits->maxSampleMaskWords > ddev->limits.maxSampleMaskWords) ||
+            (limits->timestampComputeAndGraphics > ddev->limits.timestampComputeAndGraphics) ||
+            (limits->timestampPeriod > ddev->limits.timestampPeriod) ||
+            (limits->maxClipDistances > ddev->limits.maxClipDistances) ||
+            (limits->maxCullDistances > ddev->limits.maxCullDistances) ||
+            (limits->maxCombinedClipAndCullDistances > ddev->limits.maxCombinedClipAndCullDistances) ||
+            (limits->discreteQueuePriorities > ddev->limits.discreteQueuePriorities) ||
+            (limits->pointSizRange[0] > ddev->limits.pointSizRange[0]) ||
+            (limits->pointSizRange[1] > ddev->limits.pointSizRange[1]) ||
+            (limits->lineWidthRange[0] > ddev->limits.lineWidthRange[0]) ||
+            (limits->lineWidthRange[1] > ddev->limits.lineWidthRange[1]) ||
+            (limits->pointSizGranularity > ddev->limits.pointSizGranularity) ||
+            (limits->lineWidthGranularity > ddev->limits.lineWidthGranularity) ||
+            (limits->strictLines > ddev->limits.strictLines) ||
+            (limits->standardSampleLocations > ddev->limits.standardSampleLocations) ||
+            (limits->optimalBufCopyOffsetAlign > ddev->limits.optimalBufCopyOffsetAlign) ||
+            (limits->optimalBufCopyRowPitchAlign > ddev->limits.optimalBufCopyRowPitchAlign) ||
+            (limits->nonCoherentAtomSiz > ddev->limits.nonCoherentAtomSiz)
+            )
+        {
+            rslt = FALSE;
+        }
+    }
+    return rslt;
+}
+
+_AVX afxNat AfxChooseDrawDevices(afxDrawDeviceCaps const* caps, afxDrawDeviceLimits const* limits, afxNat maxCnt, afxNat ddevId[])
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(limits);
+    AfxAssert(caps);
+    afxNat rslt = 0;
+
+    afxNat i = 0;
+    afxDrawDevice ddev;
+    while (AfxEnumerateDrawDevices(i, 1, &ddev))
+    {
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+
+        if (AfxIsDrawDeviceAcceptable(ddev, caps, limits))
+        {
+            ddevId[rslt] = i;
+            ++rslt;
+
+            if (maxCnt > rslt)
+                break;
+        }
+        i++;
+    }
+    return rslt;
+}
+
 _AVX afxReal64 AfxFindPhysicalAspectRatio(afxNat screenWidth, afxNat screenHeight)
 {
     afxError err = AFX_ERR_NONE;
@@ -332,11 +556,6 @@ _AVX afxError _AvxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
         ddev->limits = info2.limits;
         ddev->clipCfg = info2.clipSpace;
 
-        if (!(AfxSumV3d(ddev->clipCfg.boundMin) + AfxSumV3d(ddev->clipCfg.boundMax)))
-        {
-            ddev->clipCfg = AFX_CLIP_SPACE_QWADRO;
-        }
-
         ddev->dev.procCb = (void*)info2.procCb;
         ddev->idd = info2.idd;
         ddev->iddDtorCb = info2.iddDtorCb;
@@ -362,13 +581,16 @@ _AVX afxError _AvxDdevCtor(afxDrawDevice ddev, afxCookie const* cookie)
             {
                 ddev->ports[i].portCaps = info2.portCaps[i];
 
+                tmpClsCfg = *info2.dqueClsCfg;
+                AfxEstablishManager(&ddev->ports[i].dqueMgr, NIL, classes, &tmpClsCfg);
+
                 tmpClsCfg = *info2.ddgeClsCfg;
                 AfxEstablishManager(&ddev->ports[i].ddgeMgr, NIL, classes, &tmpClsCfg);
             }
 
             // dctx must be after ddge
             tmpClsCfg = *info2.dctxClsCfg;
-            AfxEstablishManager(&ddev->contexts, NIL, classes, &tmpClsCfg); // require ddge, diob
+            AfxEstablishManager(&ddev->contexts, NIL, classes, &tmpClsCfg); // require ddge, cmdb
 
             if (info2.iddCtorCb(ddev)) AfxThrowError();
             else
@@ -510,96 +732,32 @@ _AVX afxError _AvxDsysDtor(afxDrawSystem dsys)
     return err;
 }
 
-_AVX afxManager* _AvxGetDsysMgr(void)
+_AVX afxClassConfig const _AvxDsysMgrCfg =
 {
-    //afxError err = AFX_ERR_NONE;
-    static afxManager dsysMgr = { 0 };
-    static afxBool dsysMgrReady = FALSE;
-    static afxClassConfig const dsysMgrCfg =
-    {
-        .fcc = afxFcc_DSYS,
-        .name = "DrawSystem",
-        .desc = "Unified Video Graphics Infrastructure",
-        .maxCnt = 1,
-        //.size = sizeof(AFX_OBJECT(afxDrawSystem)),
-        .ctor = (void*)_AvxDsysCtor,
-        .dtor = (void*)_AvxDsysDtor
-    };
+    .fcc = afxFcc_DSYS,
+    .name = "DrawSystem",
+    .desc = "Draw I/O System",
+    .unitsPerPage = 1,
+    .maxCnt = 1,
+    //.size = sizeof(AFX_OBJECT(afxDrawSystem)),
+    .ctor = (void*)_AvxDsysCtor,
+    .dtor = (void*)_AvxDsysDtor
+};
 
-    if (dsysMgr.fcc != afxFcc_CLS)
-    {
-        AfxEstablishManager(&dsysMgr, NIL, /*_AfxGetSystemClassChain()*/NIL, &dsysMgrCfg);
-        dsysMgrReady = TRUE;
-    }
-    return &dsysMgr;
-}
-
-_AVX afxResult _AvxDsysctl(afxSystem sys, afxInt reqCode, ...)
+_AVX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void** udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    switch (reqCode)
-    {
-    case 0:
-    {
-
-        break;
-    }
-    default:
-    {
-        AfxThrowError();
-        break;
-    }
-    }
-    return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-_AVX afxError AfxEntryPoint(afxModule mdle, afxNat reqCode, void* udd)
-{
-    afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdle, afxFcc_MDLE);
 
     switch (reqCode)
     {
-    case afxFcc_SYS:
+    case 2:
     {
-        afxDrawSystem dsys;
-
-        if (!AfxGetDrawSystem(&dsys))
-        {
-            AfxAssert(TheDrawSystem == dsys);
-            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
-
-            afxManager* mgr = _AvxGetDsysMgr();
-            AfxAssertClass(mgr, afxFcc_DSYS);
-
-            if (_AfxConstructObjects(mgr, 1, (void**)&TheDrawSystem, udd)) AfxThrowError();
-            else
-            {
-                AfxAssert(TheDrawSystem != dsys); // Attention! Ctor moves the object pointer to hide out the object base.
-                dsys = TheDrawSystem;
-                AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-                dsysReady = TRUE;
-            }
-        }
-        else
-        {
-            AfxAssert(TheDrawSystem == dsys);
-            AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-            dsysReady = FALSE;
-
-            afxManager* mgr = _AvxGetDsysMgr();
-            AfxAssertClass(mgr, afxFcc_DSYS);
-
-            if (_AfxDestructObjects(mgr, 1, (void**)&TheDrawSystem))
-                AfxThrowError();
-
-            AfxAssert(TheDrawSystem != dsys); // Attention! Dtor moves the object pointer to expose the object base.
-            AfxZero(TheDrawSystem, sizeof(afxObjectBase));
-        }
+        AfxAssert(udd);
+        udd[0] = (void*)&_AvxDsysMgrCfg;
+        udd[1] = TheDrawSystem;
+        break;
     }
     default: break;
     }

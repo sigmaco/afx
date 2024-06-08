@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -56,6 +56,7 @@ AFX afxBool     AfxFindManifestRecord(afxManifest const* ini, afxNat pagIdx, afx
 
 AFX afxBool     AfxGetManifestString(afxManifest const* ini, afxNat pagIdx, afxNat recIdx, afxString* value);
 AFX afxBool     AfxGetManifestUri(afxManifest const* ini, afxNat pagIdx, afxNat recIdx, afxUri* uri);
+AFX afxBool     AfxGetManifestNat(afxManifest const* ini, afxNat pagIdx, afxNat recIdx, afxNat* value);
 
 AFX afxBool     AfxIniGetStringIndexed(afxManifest const* ini, afxNat pagIdx, afxString const* key, afxString* value);
 AFX afxBool     AfxIniGetUriIndexed(afxManifest const* ini, afxNat pagIdx, afxString const* key, afxUri* value);

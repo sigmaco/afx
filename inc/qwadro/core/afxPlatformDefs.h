@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -76,8 +76,8 @@
 #   error "Unsupported endianess"
 #endif
 
-//#define _AFXIMPORT __declspec(dllimport)
-//#define _AFXEXPORT __declspec(dllexport)
+//#define DLLIMPORT __declspec(dllimport)
+//#define DLLEXPORT __declspec(dllexport)
 //#define _AFXINLINE __forceinline
 //#define _AFXEMBED extern __forceinline
 #define AFXCALL __cdecl
@@ -178,6 +178,10 @@ typedef afxNat32    afxMask32;
 typedef afxNat64    afxMask64;
 typedef afxMask32   afxMask;
 
+typedef afxNat8     afxIndex8;
+typedef afxNat16    afxIndex16;
+typedef afxNat32    afxIndex32;
+typedef afxIndex32  afxIndex;
 
 typedef afxInt8     afxI8;
 typedef afxInt16    afxI16;

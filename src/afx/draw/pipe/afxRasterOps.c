@@ -10,100 +10,20 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AVX_DRAW_C
-#define _AVX_DRAW_STREAM_C
+#define _AVX_CMD_BUFFER_C
 #include "qwadro/draw/afxDrawSystem.h"
 
-#if 0
-
-_AVX afxCmdId AfxCmdOutputRaster(afxDrawStream diob, afxRaster ras, afxStream dst, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
+_AVX afxCmdId AvxCmdPackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIo const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &dst, afxFcc_BUF);
-    AfxAssert(opCnt);
-    AfxAssert(ops);
-
-    for (afxNat i = 0; i < opCnt; i++)
-    {
-        afxWhd whd;
-        afxRasterIoOp const* op = &ops[i];
-        AfxAssertRange(AfxCountRasterLods(ras), op->rgn.lodIdx, 1);
-        AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
-        AfxAssertRange(AfxCountRasterLayers(ras), op->rgn.baseLayer, op->rgn.layerCnt);
-        AfxAssertWhd(whd, op->rgn.offset, op->rgn.whd);
-        AfxAssert(op->bufRowSiz);
-        AfxAssert(op->bufRowCnt);
-    }
-    return diob->stdCmds->ras.io(diob, ras, dst, opCnt, ops, TRUE, cdc);
-}
-
-_AVX afxCmdId AfxCmdOutputRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream dst, afxNat dstOffset, afxNat dstRowSiz, afxNat dstRowCnt, afxCodec cdc)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &dst, afxFcc_BUF);    
-    afxRasterIoOp op;
-    AfxAssert(rgn);
-    op.rgn = *rgn;
-    op.bufOffset = dstOffset;
-    op.bufRowSiz = dstRowSiz;
-    op.bufRowCnt = dstRowCnt;
-    return AfxCmdOutputRaster(diob, ras, dst, 1, &op, cdc);
-}
-
-_AVX afxCmdId AfxCmdInputRaster(afxDrawStream diob, afxRaster ras, afxStream src, afxNat opCnt, afxRasterIoOp const ops[], afxCodec cdc)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &src, afxFcc_IOB);
-    AfxAssert(opCnt);
-    AfxAssert(ops);
-
-    for (afxNat i = 0; i < opCnt; i++)
-    {
-        afxWhd whd;
-        afxRasterIoOp const* op = &ops[i];
-        AfxAssertRange(AfxCountRasterLods(ras), op->rgn.lodIdx, 1);
-        AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
-        AfxAssertRange(AfxCountRasterLayers(ras), op->rgn.baseLayer, op->rgn.layerCnt);
-        AfxAssertWhd(whd, op->rgn.offset, op->rgn.whd);
-        AfxAssert(op->bufRowSiz);
-        AfxAssert(op->bufRowCnt);
-    }
-    return diob->stdCmds->ras.io(diob, ras, src, opCnt, ops, FALSE, cdc);
-}
-
-_AVX afxCmdId AfxCmdInputRasterRegion(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxStream src, afxNat srcOffset, afxNat srcRowSiz, afxNat srcRowCnt, afxCodec cdc)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &src, afxFcc_IOB);
-    afxRasterIoOp op;
-    AfxAssert(rgn);
-    op.rgn = *rgn;
-    op.bufOffset = srcOffset;
-    op.bufRowSiz = srcRowSiz;
-    op.bufRowCnt = srcRowCnt;
-    return AfxCmdInputRaster(diob, ras, src, 1, &op, cdc);
-}
-
-#endif
-
-_AVX afxCmdId AfxCmdPackRaster2(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(opCnt);
@@ -112,36 +32,29 @@ _AVX afxCmdId AfxCmdPackRaster2(afxDrawStream diob, afxRaster ras, afxBuffer buf
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxWhd whd;
-        afxRasterIoOp const* op = &ops[i];
+        afxRasterIo const* op = &ops[i];
         AfxAssertRange(AfxCountRasterLods(ras), op->rgn.lodIdx, 1);
         AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
-        AfxAssertRange(AfxCountRasterLayers(ras), op->rgn.baseLayer, op->rgn.layerCnt);
         AfxAssertWhd(whd, op->rgn.origin, op->rgn.whd);
-        AfxAssert(op->bufRowStride);
-        AfxAssert(op->bufRowCnt);
+        AfxAssert(op->rowStride);
+        AfxAssert(op->rowCnt);
     }
-    return diob->stdCmds->ras.pak(diob, ras, buf, opCnt, ops, FALSE);
+    return cmdb->stdCmds->ras.pak(cmdb, ras, buf, opCnt, ops, FALSE);
 }
 
-_AVX afxCmdId AfxCmdPackRaster(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowStride, afxNat bufRowCnt)
+_AVX afxCmdId AvxCmdPackRaster(avxCmdb cmdb, afxRaster ras, afxRasterIo const* op, afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    afxRasterIoOp op;
-    AfxAssert(rgn);
-    op.rgn = *rgn;
-    op.bufOffset = bufOffset;
-    op.bufRowStride = bufRowStride;
-    op.bufRowCnt = bufRowCnt;
-    return AfxCmdPackRaster2(diob, ras, buf, 1, &op);
+    return AvxCmdPackRasterRegions(cmdb, ras, buf, 1, op);
 }
 
-_AVX afxCmdId AfxCmdUnpackRaster2(afxDrawStream diob, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIoOp const ops[])
+_AVX afxCmdId AvxCmdUnpackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIo const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(opCnt);
@@ -150,36 +63,29 @@ _AVX afxCmdId AfxCmdUnpackRaster2(afxDrawStream diob, afxRaster ras, afxBuffer b
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxWhd whd;
-        afxRasterIoOp const* op = &ops[i];
+        afxRasterIo const* op = &ops[i];
         AfxAssertRange(AfxCountRasterLods(ras), op->rgn.lodIdx, 1);
         AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
-        AfxAssertRange(AfxCountRasterLayers(ras), op->rgn.baseLayer, op->rgn.layerCnt);
         AfxAssertWhd(whd, op->rgn.origin, op->rgn.whd);
-        AfxAssert(op->bufRowStride);
-        AfxAssert(op->bufRowCnt);
+        AfxAssert(op->rowStride);
+        AfxAssert(op->rowCnt);
     }
-    return diob->stdCmds->ras.pak(diob, ras, buf, opCnt, ops, TRUE);
+    return cmdb->stdCmds->ras.pak(cmdb, ras, buf, opCnt, ops, TRUE);
 }
 
-_AVX afxCmdId AfxCmdUnpack(afxDrawStream diob, afxRaster ras, afxRasterRegion const* rgn, afxBuffer buf, afxNat bufOffset, afxNat bufRowStride, afxNat bufRowCnt)
+_AVX afxCmdId AvxCmdUnpackRaster(avxCmdb cmdb, afxRaster ras, afxRasterIo const* op, afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);    
-    afxRasterIoOp op;
-    AfxAssert(rgn);
-    op.rgn = *rgn;
-    op.bufOffset = bufOffset;
-    op.bufRowStride = bufRowStride;
-    op.bufRowCnt = bufRowCnt;
-    return AfxCmdUnpackRaster2(diob, ras, buf, 1, &op);
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
+    return AvxCmdUnpackRasterRegions(cmdb, ras, buf, 1, op);
 }
 
-_AVX afxCmdId AfxCmdCopyRaster2(afxDrawStream diob, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopyOp const ops[])
+_AVX afxCmdId AvxCmdCopyRasterRegions(avxCmdb cmdb, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopy const ops[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &dst, afxFcc_RAS);
     AfxAssertObjects(1, &src, afxFcc_RAS);
     AfxAssert(opCnt);
@@ -188,50 +94,41 @@ _AVX afxCmdId AfxCmdCopyRaster2(afxDrawStream diob, afxRaster src, afxRaster dst
     for (afxNat i = 0; i < opCnt; i++)
     {
         afxWhd whd;
-        afxRasterCopyOp const* op = &ops[i];
+        afxRasterCopy const* op = &ops[i];
 
         AfxGetRasterExtent(src, 0, whd);
         AfxAssertWhd(whd, op->srcOffset, op->dst.whd);
         AfxAssertRange(AfxCountRasterLods(src), op->srcLodIdx, 1);
-        AfxAssertRange(AfxCountRasterLayers(src), op->srcBaseLayer, op->srcLayerCnt);
 
         AfxGetRasterExtent(dst, 0, whd);
         AfxAssertWhd(whd, op->dst.origin, op->dst.whd);
         AfxAssertRange(AfxCountRasterLods(dst), op->dst.lodIdx, 1);
-        AfxAssertRange(AfxCountRasterLayers(dst), op->dst.baseLayer, op->dst.layerCnt);
     }
-    return diob->stdCmds->ras.cpy(diob, src, dst, opCnt, ops);
+    return cmdb->stdCmds->ras.cpy(cmdb, src, dst, opCnt, ops);
 }
 
-_AVX afxCmdId AfxCmdCopyRaster(afxDrawStream diob, afxRaster src, afxNat srcLodIdx, afxNat srcBaseLayer, afxNat srcLayerCnt, afxWhd srcOffset, afxRaster dst, afxRasterRegion const* dstRgn)
+_AVX afxCmdId AvxCmdCopyRaster(avxCmdb cmdb, afxRaster src, afxRasterCopy const* op, afxRaster dst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &dst, afxFcc_RAS);
-    AfxAssertObjects(1, &src, afxFcc_RAS);    
-    afxRasterCopyOp op;
-    op.srcLodIdx = srcLodIdx;
-    op.srcBaseLayer = srcBaseLayer;
-    op.srcLayerCnt = srcLayerCnt;
-    AfxCopyWhd(op.srcOffset, srcOffset);
-    AfxAssert(dstRgn);
-    op.dst = *dstRgn;
-    return AfxCmdCopyRaster2(diob, src, dst, 1, &op);
+    AfxAssertObjects(1, &src, afxFcc_RAS);
+    return AvxCmdCopyRasterRegions(cmdb, src, dst, 1, op);
 }
 
-AVX afxCmdId AfxCmdSubsampleRaster(afxDrawStream diob, afxRaster ras, afxNat baseLod, afxNat lodCnt)
+AVX afxCmdId AvxCmdSubsampleRaster(avxCmdb cmdb, afxRaster ras, afxNat baseLod, afxNat lodCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertRange(AfxCountRasterLods(ras), baseLod, lodCnt);
-    return diob->stdCmds->ras.mip(diob, ras, baseLod, lodCnt);
+    return cmdb->stdCmds->ras.mip(cmdb, ras, baseLod, lodCnt);
 }
 
-_AVX afxCmdId AfxCmdTransformRaster2(afxDrawStream diob, afxRaster ras, afxM4d const m, afxNat rgnCnt, afxRasterRegion const regions[])
+_AVX afxCmdId AvxCmdTransformRasterRegions(avxCmdb cmdb, afxRaster ras, afxM4d const m, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssert(m);
     AfxAssert(rgnCnt);
@@ -245,25 +142,24 @@ _AVX afxCmdId AfxCmdTransformRaster2(afxDrawStream diob, afxRaster ras, afxM4d c
         AfxGetRasterExtent(ras, 0, whd);
         AfxAssertWhd(whd, rgn->origin, rgn->whd);
         AfxAssertRange(AfxCountRasterLods(ras), rgn->lodIdx, 1);
-        AfxAssertRange(AfxCountRasterLayers(ras), rgn->baseLayer, rgn->layerCnt);
     }
-    return diob->stdCmds->ras.xform(diob, ras, m, rgnCnt, regions);
+    return cmdb->stdCmds->ras.xform(cmdb, ras, m, rgnCnt, regions);
 }
 
-_AVX afxCmdId AfxCmdTransformRaster(afxDrawStream diob, afxRaster ras, afxM4d const m, afxRasterRegion const* rgn)
+_AVX afxCmdId AvxCmdTransformRaster(avxCmdb cmdb, afxRaster ras, afxM4d const m, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssert(m);
     AfxAssert(rgn);
-    return AfxCmdTransformRaster2(diob, ras, m, 1, rgn);
+    return AvxCmdTransformRasterRegions(cmdb, ras, m, 1, rgn);
 }
 
-_AVX afxCmdId AfxCmdSwizzleRaster2(afxDrawStream diob, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const regions[])
+_AVX afxCmdId AvxCmdSwizzleRasterRegions(avxCmdb cmdb, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssert(a || b);
     AfxAssert(rgnCnt);
@@ -277,17 +173,16 @@ _AVX afxCmdId AfxCmdSwizzleRaster2(afxDrawStream diob, afxRaster ras, afxColorSw
         AfxGetRasterExtent(ras, 0, whd);
         AfxAssertWhd(whd, rgn->origin, rgn->whd);
         AfxAssertRange(AfxCountRasterLods(ras), rgn->lodIdx, 1);
-        AfxAssertRange(AfxCountRasterLayers(ras), rgn->baseLayer, rgn->layerCnt);
     }
-    return diob->stdCmds->ras.swizzle(diob, ras, a, b, rgnCnt, regions);
+    return cmdb->stdCmds->ras.swizzle(cmdb, ras, a, b, rgnCnt, regions);
 }
 
-_AVX afxCmdId AfxCmdSwizzleRaster(afxDrawStream diob, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const* rgn)
+_AVX afxCmdId AvxCmdSwizzleRaster(avxCmdb cmdb, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssert(a || b);
     AfxAssert(rgn);
-    return AfxCmdSwizzleRaster2(diob, ras, a, b, 1, rgn);
+    return AvxCmdSwizzleRasterRegions(cmdb, ras, a, b, 1, rgn);
 }

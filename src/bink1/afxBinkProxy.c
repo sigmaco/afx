@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -23,7 +23,7 @@
 #include "afxBinkVideo.h"
 #include "afxBinkProxy.h"
 #include "qwadro/core/afxSystem.h"
-#include "qwadro/draw/dev/afxDrawStream.h"
+#include "qwadro/draw/avxCmdb.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
 static afxBool bootstrapped = FALSE;

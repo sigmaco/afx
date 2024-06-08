@@ -10,9 +10,13 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
+
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced User Experience on Qwadro                                       //
+//////////////////////////////////////////////////////////////////////////////
 
 #ifndef AFX_APPLICATION_H
 #define AFX_APPLICATION_H
@@ -26,7 +30,7 @@
 typedef afxResult(*afxApplicationProc)(afxScript app, afxUxEvent* ev);
 
 #ifdef _AUX_UX_C
-#ifdef _AFX_SCRIPT_C
+#ifdef _AUX_SCRIPT_C
 AFX_OBJECT(afxScript)
 {
     xssVm*              vm;
@@ -44,7 +48,7 @@ AFX_OBJECT(afxScript)
     afxHandle           xssMainVar;
 #endif
 };
-#endif//_AFX_SCRIPT_C
+#endif//_AUX_SCRIPT_C
 #endif//_AUX_UX_C
 
 AUX void                AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt);

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -66,7 +66,7 @@ AVX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
 AVX afxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
-AFX_DECLARE_STRUCT(awxVertexDataCache);
+AFX_DECLARE_STRUCT(akxVertexDataCache);
 
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_INDEX_BUFFER_C

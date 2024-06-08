@@ -163,7 +163,7 @@
     <ResourceCompile Include="targl4.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\targl4\sglBsch.c" />
+    <ClCompile Include="..\..\src\targl4\sglLiga.c" />
     <ClCompile Include="..\..\src\targl4\sglBuf.c" />
     <ClCompile Include="..\..\src\targl4\sglBufOps.c" />
     <ClCompile Include="..\..\src\targl4\sglCanv.c" />
@@ -173,7 +173,7 @@
     <ClCompile Include="..\..\src\targl4\sglDin.c" />
     <ClCompile Include="..\..\src\targl4\sglDout_w32.c" />
     <ClCompile Include="..\..\src\targl4\sglDdge_w32.c" />
-    <ClCompile Include="..\..\src\targl4\sglDiob.c" />
+    <ClCompile Include="..\..\src\targl4\sglCmdb.c" />
     <ClCompile Include="..\..\src\targl4\sglFenc.c" />
     <ClCompile Include="..\..\src\targl4\sglLoader.c" />
     <ClCompile Include="..\..\src\targl4\sglPip.c" />

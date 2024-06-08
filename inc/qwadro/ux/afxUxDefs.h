@@ -10,11 +10,13 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// Advanced User Experience Extensions for Qwadro
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced User Experience on Qwadro                                       //
+//////////////////////////////////////////////////////////////////////////////
 
 #ifndef AUX_UX_DEFS_H
 #define AUX_UX_DEFS_H
@@ -46,7 +48,6 @@
 #endif//__e2ux__
 
 AFX_DEFINE_HANDLE(afxWidget);
-AFX_DEFINE_HANDLE(afxWindow);
 AFX_DEFINE_HANDLE(afxScript);
 
 AFX_DEFINE_HANDLE(afxHandle);

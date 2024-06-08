@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -26,7 +26,7 @@
 
 #include "sgl.h"
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/draw/dev/afxDrawOutput.h"
+#include "qwadro/draw/afxDrawOutput.h"
 #include "qwadro/core/afxString.h"
 #include "qwadro/math/afxVector.h"
 
@@ -171,6 +171,209 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
     return err;
 }
 
+_SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
+{
+    afxError err = AFX_ERR_NONE;
+
+    afxDrawContext dctx = dpu->activeDctx;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+
+    AfxAssert(dout->presentingBufIdx == (afxAtom32)AFX_INVALID_INDEX);
+
+    if (_SglActivateDout(dpu, dout)) AfxThrowError();
+    else
+    {
+        dout->presentingBufIdx = outBufIdx;
+
+        //wglVmt const*wgl = &dpu->wgl;
+        
+        afxRaster surf;
+        AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
+        afxCanvas canv;
+        AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
+        AfxAssertObjects(1, &surf, afxFcc_RAS);
+        //AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
+        glVmt const* gl = &dpu->gl;
+#if !0
+#if 0
+        dpu->activeTmpFboIdx = (dpu->activeTmpFboIdx + 1) % (sizeof(dpu->tmpFbo) / sizeof(dpu->tmpFbo[0]));
+        GLuint tmpFbo = dpu->tmpFbo[dpu->activeTmpFboIdx];
+
+        if (!tmpFbo)
+        {
+            gl->GenFramebuffers(1, &(tmpFbo)); _SglThrowErrorOccuried();
+        }
+        else
+        {
+            gl->DeleteFramebuffers(1, &(tmpFbo)); _SglThrowErrorOccuried();
+            gl->GenFramebuffers(1, &(tmpFbo)); _SglThrowErrorOccuried();
+        }
+        gl->BindFramebuffer(GL_READ_FRAMEBUFFER, tmpFbo); _SglThrowErrorOccuried();
+        AfxAssert(gl->IsFramebuffer(tmpFbo));
+        gl->FramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, surf->glTarget, surf->glHandle, 0); _SglThrowErrorOccuried();
+#else
+        dpu->activeRasterState.pass.canv = NIL;
+        gl->BindFramebuffer(GL_READ_FRAMEBUFFER, canv->glHandle); _SglThrowErrorOccuried();
+#endif
+        gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
+        gl->Clear(GL_COLOR_BUFFER_BIT);  _SglThrowErrorOccuried();
+        afxBool useLerp = (surf->base.whd[0] != canv->base.whd[0]) && (surf->base.whd[1] != canv->base.whd[1]);
+        gl->BlitFramebuffer(0, 0, surf->base.whd[0], surf->base.whd[1], 0, 0, surf->base.whd[0], surf->base.whd[1], GL_COLOR_BUFFER_BIT, useLerp ? GL_LINEAR : GL_NEAREST); _SglThrowErrorOccuried();
+        //gl->BindFramebuffer(GL_READ_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
+        gl->Flush(); _SglThrowErrorOccuried();
+#else
+
+#if !0
+        AfxAssert(gl->ClipControl);
+
+        //gl->ClipControl(GL_UPPER_LEFT, GL_ZERO_TO_ONE); _SglThrowErrorOccuried();// set screen origin to top to bottm, and set depth to [ 0, 1 ]
+
+        afxWhd extent;
+        AfxGetRasterExtent(surf, 0, extent);
+
+        _sglCmdBeginSynthesis cmdBeginOp = { 0 };
+        cmdBeginOp.defFbo = TRUE;
+        cmdBeginOp.canv = NIL;
+        cmdBeginOp.area = (afxRect const) { { { 0, 0 } }, { { extent[0], extent[1] } } };
+        cmdBeginOp.rasterCnt = 1;
+        cmdBeginOp.rasters[0] = (afxDrawTarget const) { .loadOp = afxSurfaceLoadOp_CLEAR, .storeOp = afxSurfaceStoreOp_STORE, .clearValue = { .color = { 0.3, 0.1, 0.3, 1 } } };
+
+        _DpuBeginSynthesis(dpu, &cmdBeginOp);
+
+        _sglCmdPipeline cmdBindPip = { 0 };
+        cmdBindPip.pip = dctx->presentPip;
+        _DpuBindPipeline(dpu, &cmdBindPip);
+
+#else
+        afxDrawTarget const rasterRt = { NIL, afxSurfaceLoadOp_CLEAR, NIL, { 0.3, 0.1, 0.3, 1.0 } };
+        _DpuBeginCombination(dpu, NIL, 1, 0, &rasterRt, NIL, NIL);
+
+        afxPipeline pip = AfxDrawOperationGetPipeline(idd->presentDop, 0, 0);
+        AfxAssertObjects(1, &pip, afxFcc_PIP);
+        _DpuBindPipeline(dpu, pip);
+#endif   
+        //_DpuEmployTechnique(ddge, 0);
+
+        _sglCmdViewport cmdSetVp = { 0 };
+        cmdSetVp.cnt = 1;
+        cmdSetVp.vp[0].extent[0] = extent[0];
+        cmdSetVp.vp[0].extent[1] = extent[1];
+        cmdSetVp.vp[0].depth[1] = 1;
+        cmdSetVp.reset = TRUE;
+
+        _DpuSetViewports(dpu, &cmdSetVp);
+
+#if 0 // already set by pipeline
+        afxPipelineRasterizerState const ras = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
+        _DpuSetRasterizerState(ddge, &ras);
+
+        afxPipelineDepthState const depth = { 0 };
+        _DpuSetDepthState(ddge, &depth);
+#endif
+
+#if 0 // already set by pipeline
+        afxPipelinePrimitiveState ia;
+        ia.topology = afxPrimTopology_TRI_STRIP;
+        ia.primRestartEnable = FALSE;
+        _DpuSetInputAssemblyState(ddge, &ia);
+#endif
+#if 0
+        afxNat const baseVtxs[] = { 0, 0 };
+        afxNat const vtxArrs[] = { 0, 1 };
+        afxVertexBuffer vbufs[] = { idd->rgbRectVbo, idd->rgbRectVbo };
+        _DpuBindVertexBuffers(ddge, 0, 2, vbufs, baseVtxs, vtxArrs);
+#endif
+
+#if 0
+        _sglCmdVertexAttributes const vtxAttrs =
+        {
+            .cnt = 1,
+            .location[0] = 0,
+            .fmt[0] = afxVertexFormat_V2D,
+            .srcIdx[0] = 7,
+            .offset[0] = 0
+        };
+        _DpuResetVertexAttributes(dpu, &vtxAttrs);
+        _sglCmdVertexStreams const vtxStreams =
+        {
+            .cnt = 1,
+            .srcIdx[0] = 7,
+            .stride[0] = sizeof(afxV2d),
+            .instance[0] = FALSE
+        };
+        _DpuResetVertexStreams(dpu, &vtxStreams);
+        _sglCmdVertexSources bindVbuf = { .first = 7,.cnt = 1,.offset[0] = 0,.range[0] = sizeof(afxV2d) * 4 };
+        bindVbuf.buf[0] = dctx->tristrippedQuad2dPosBuf;
+        _DpuBindVertexSources(dpu, &bindVbuf);
+#endif
+        //_DpuBindLegos(ddge, 0, 1, &idd->presentLego);
+        _sglCmdBindRasters cmdBindTex = { 0 };
+        cmdBindTex.first = 0;
+        cmdBindTex.cnt = 1;
+        cmdBindTex.smp[0] = dctx->presentSmp;
+        cmdBindTex.tex[0] = surf;
+        _DpuBindRasters(dpu, &cmdBindTex);
+
+        _sglCmdDraw cmdDraw = { 0 };
+        cmdDraw.vtxCnt = 4;
+        cmdDraw.instCnt = 1;
+        _DpuDraw(dpu, &cmdDraw);
+
+#if !0
+        _DpuFinishSynthesis(dpu, NIL);
+#else
+        _DpuEndCombination(dpu, NIL);
+#endif
+#endif
+
+        HDC dc = dout->w32.hDc;
+
+        if (dc)
+        {
+            //afxNat cnt = dout->refreshRate;
+            //while (--cnt) DwmFlush();
+            //SglSwapBuffers(dc, &dpu->wgl); // deadlocks all
+            SwapBuffers(dc);
+            //Sleep(1);
+            //AfxYield();
+        }
+        //gl->Flush();
+
+        //gl->ClipControl(GL_LOWER_LEFT, GL_NEGATIVE_ONE_TO_ONE); _SglThrowErrorOccuried(); // reset GL default
+
+        afxClock currClock;
+        AfxGetClock(&currClock);
+
+        if (1.0 > AfxGetSecondsElapsed(&dout->outCntResetClock, &currClock)) ++dout->outNo;
+        else
+        {
+            dout->outCntResetClock = currClock;
+            dout->outRate = dout->outNo; // 681 no showing (presenting from overlay thread (acquirer)), 818 frozen (present from draw thread (worker))
+            dout->outNo = 0;
+        }
+        afxReal64 ct = AfxGetSecondsElapsed(&dout->startClock, &currClock);
+        afxReal64 dt = AfxGetSecondsElapsed(&dout->lastClock, &currClock);
+        dout->lastClock = currClock;
+
+        if (0 == dout->outNo)
+        {
+            //AfxFormatOverlayCaption(ovly, "Delta time %0f, IPS %u --- OpenGL/Vulkan Continuous Integration --- SIGMA GL/2 --- Qwadro Execution Ecosystem (c) 2017 SIGMA Technology Group --- Public Test Build", deltaTime, lastFreq);
+        }
+
+        if (dout->endpointNotifyFn)
+        {
+            dout->endpointNotifyFn(dout->endpointNotifyObj, outBufIdx);
+        }
+
+        dout->presentingBufIdx = (afxAtom32)AFX_INVALID_INDEX;
+        AfxStoreAtom32(&dout->buffers[outBufIdx].booked, FALSE);
+        AfxStoreAtom32(&dout->lastUnlockedBufIdx, outBufIdx);
+        AfxDecAtom32(&dout->lockedBufCnt);
+        AfxDecAtom32(&dout->submCnt);
+    }
+    return err;
+}
+
 _SGL afxError _SglDdevDeinitDoutCb(afxDrawDevice ddev, afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
@@ -209,12 +412,13 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
             afxNat colorBpp = pfl.bpp;
             afxNat alphaBpp = pfl.bpc[3];
 
+#if 0
             HWND hDskWnd = GetDesktopWindow();
             HDC hDskDc = GetDC(hDskWnd);
             PIXELFORMATDESCRIPTOR pfd2;
             int dskPf = SglGetPixelFormat(hDskDc, &dpu->wgl);
             SglDescribePixelFormat(hDskDc, dskPf, sizeof(pfd2), &pfd2, &dpu->wgl);
-
+#endif
 
             int pxlAttrPairCnt = 0;
             int pxlAttrPairs[][2] =
@@ -334,9 +538,9 @@ _SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDraw
     AfxZero(&dout->w32, sizeof(dout->w32));
 
     dout->lockCb = _SglDoutVmtReqCb;
-    dout->getIddCb = _SglDouVmtGetIddCb;
+    dout->iddCb = _SglDouVmtGetIddCb;
 
-    HWND wnd = cfg->w32.hwnd;
+    HWND wnd = cfg->w32.hWnd;
 
     if (wnd)
     {
@@ -353,17 +557,17 @@ _SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDraw
                 GetDeviceCaps(dc, PLANES)
             };
             afxReal64 physAspRatio = (afxReal64)GetDeviceCaps(dc, HORZSIZE) / (afxReal64)GetDeviceCaps(dc, VERTSIZE);
-            afxNat refreshRate = GetDeviceCaps(dc, VREFRESH);
-            AfxAdaptDrawOutputResolution(dout, screenRes, refreshRate, physAspRatio);
+            afxReal refreshRate = GetDeviceCaps(dc, VREFRESH);
+            AfxResetDrawOutputResolution(dout, screenRes, refreshRate, physAspRatio);
 
-            //AfxAdjustDrawOutputNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
+            //AfxAdjustDrawOutputFromNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
 
-            dout->w32.hInst = cfg->w32.hinstance;
-            dout->w32.hWnd = cfg->w32.hwnd;
+            dout->w32.hInst = cfg->w32.hInst;
+            dout->w32.hWnd = cfg->w32.hWnd;
             dout->w32.hDc = dc;
 
-            if (cfg->udd)
-                ((HDC*)cfg->udd)[0] = dc;
+            if (cfg->udd[0])
+                ((HDC*)cfg->udd[0])[0] = dc;
 
             if (err)
                 ReleaseDC(wnd, dc);

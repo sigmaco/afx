@@ -14,26 +14,29 @@
 #define ENABLE_DRAW 1
 
 #ifdef ENABLE_DRAW
-#include "qwadro/sim/rendering/awxRenderer.h"
+#include "qwadro/sim/rendering/akxRenderer.h"
 #endif
+#include "../../dep_/vgl/vgl.h"
 
 afxBool readyToRender = FALSE;
 afxScript TheApp;
 afxWindow window;
-awxBody cubeBod = NIL;
+afxBody cubeBod = NIL;
 afxModel cubeMdl = NIL;
 afxMesh cube = NIL;
 const afxReal CameraSpeed = 30.0f;
 afxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
-awxRenderer rnd = NIL;
-awxAnimation ani = NIL;
+akxRenderer rnd = NIL;
+akxAnimation ani = NIL;
 afxCamera cam = NIL;
-awxBody bod = NIL;
+afxBody bod = NIL;
 
-awxPose *sharedLocalPose;
-awxPoseBuffer *sharedPoseBuffer;
+void *vg = NIL;
+
+akxPose sharedLocalPose;
+akxPoseBuffer sharedPoseBuffer;
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -44,7 +47,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     {
     default:
     {
-        awxRenderer rnd = AfxGetDrawInputUdd(din);
+        akxRenderer rnd = AfxGetDrawInputUdd(din);
         afxDrawContext dctx;
         AfxGetDrawInputContext(din, &dctx);
         
@@ -54,59 +57,54 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
             if (!AfxLockDrawOutputBuffer(dout, 0, &outBufIdx))
             {
-                afxDrawStream diob;
+                avxCmdb cmdb;
                 afxNat queIdx = AFX_INVALID_INDEX;
                 afxNat portIdx = 0;
 
-                if (AfxAcquireDrawStreams(dctx, portIdx, &queIdx, 1, &diob)) AfxThrowError();
+                if (AfxAcquireCmdBuffers(din, avxCmdbUsage_ONCE, 1, &cmdb)) AfxThrowError();
                 else
                 {
-                    if (AfxRecordDrawStreams(afxDrawStreamUsage_ONCE, 1, &diob)) AfxThrowError();
+                    afxCanvas canv;
+                    AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
+                    AfxAssertObjects(1, &canv, afxFcc_CANV);
+
+                    AkxCmdBeginSceneRendering(cmdb, rnd, rnd->activeCam, NIL, canv);
+
+                    if (bod)
+                    {
+                        afxReal64 ct, dt;
+                        //AfxGetApplicationTime(TheApp, &ct, &dt);
+                        AkxCmdDrawBodies(cmdb, rnd, dt, 1, &bod);
+                    }
+
+                    //if (cubeBod)
+                        //AkxCmdDrawBodies(cmdb, rnd, 1, &cubeBod);
+
+                    AkxCmdDrawTestIndexed(cmdb, rnd);
+
+                    AfxDrawSky(cmdb, &rnd->sky);
+
+                    afxWhd canvWhd;
+                    AfxGetCanvasExtent(canv, canvWhd);
+                    //TestSvg(vg, cmdb, canvWhd);
+
+                    AkxCmdEndSceneRendering(cmdb, rnd);
+
+                    afxSemaphore dscrCompleteSem = NIL;
+
+                    if (AfxCompileCmdBuffers(1, &cmdb)) AfxThrowError();
                     else
                     {
-                        afxRaster surf;
-                        AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
-                        afxCanvas canv;
-                        AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
-                        AfxAssertObjects(1, &surf, afxFcc_RAS);
+                        afxExecutionRequest execReq = { 0 };
+                        execReq.cmdb = cmdb;
+                        execReq.signal = dscrCompleteSem;
 
-                        AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
-
-
-                        if (bod)
-                        {
-                            afxReal64 ct, dt;
-                            //AfxGetApplicationTime(TheApp, &ct, &dt);
-                            AwxCmdDrawBodies(diob, rnd, dt, 1, &bod);
-                        }
-
-                        //if (cubeBod)
-                            //AwxCmdDrawBodies(diob, rnd, 1, &cubeBod);
-
-                        AwxCmdDrawTestIndexed(diob, rnd);
-
-                        AfxDrawSky(diob, &rnd->sky);
-
-                        AwxCmdEndSceneRendering(diob, rnd);
-
-                        afxSemaphore dscrCompleteSem = NIL;
-
-                        if (AfxCompileDrawStreams(1, &diob)) AfxThrowError();
-                        else
-                        {
-                            afxExecutionRequest execReq = { 0 };
-                            execReq.diob = diob;
-                            execReq.signal = dscrCompleteSem;
-
-                            if (AFX_INVALID_INDEX == AfxExecuteDrawStreams(din, 1, &execReq, NIL))
-                                AfxThrowError();
-                        }
-
-                        void* ddge = AfxGetDrawBridge(dctx, portIdx);
-                        AfxWaitForIdleDrawQueue(ddge, queIdx);
+                        if (AFX_INVALID_INDEX == (queIdx = AfxExecuteCmdBuffers(din, 1, &execReq, NIL)))
+                            AfxThrowError();
                     }
-                }
 
+                    AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx);
+                }
 
                 afxSemaphore dscrCompleteSem = NIL;
 
@@ -208,12 +206,12 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
 
     afxReal64 curTime, lastTime;
     AfxGetThreadTime(&curTime, &lastTime);
-    AwxReclockMotives(bod, curTime);
+    AfxReclockMotives(bod, curTime);
 
 #if 0
     afxM4d m;
     AfxComputeModelDisplacement(bod->mdl, m);
-    AwxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedPoseBuffer, 0.0);
+    AfxSampleBodyAnimationsAcceleratedLOD(bod, bod->cachedBoneCnt, m, sharedLocalPose, sharedPoseBuffer, 0.0);
 #if 0
     afxM4d CompositeMatrix;
     AfxEnumerateRiggedMeshes(bod->mdl, i);
@@ -252,21 +250,21 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
 
-    AfxAcquireWindow(dctx, NIL, &window);
-    AfxAdjustWindowNdc(window, AfxSpawnV3d(0.5, 0.5, 1));
+    AfxAcquireWindow(0, dctx, NIL, &window);
+    AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV3d(0.5, 0.5, 1));
 
 #if 0
     afxDrawOutputConfig doutConfig = { 0 };
     doutConfig.pixelFmtDs[0] = afxPixelFormat_D24;
     AfxAcquireDrawOutput(0, &doutConfig, &dout);
 #endif
-    AfxGetWindowDrawOutput(window, &dout);
+    AfxGetSurfaceDrawOutput(window, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
     // Acquire a simulation
 
-    awxSimulationConfig simSpec = { 0 };
+    akxSimulationConfig simSpec = { 0 };
     AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     simSpec.dctx = dctx;
     simSpec.din = NIL;
@@ -281,9 +279,9 @@ int main(int argc, char const* argv[])
     // Acquire a simulation renderer
 
     //AfxInstallWatcher();
-    awxRendererConfig rndConf = { 0 };
+    akxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DrawInputProc;
-    AwxAcquireRenderers(sim, 1, &rnd, &rndConf);
+    AkxAcquireRenderers(sim, 1, &rnd, &rndConf);
 
     // Load assets
 
@@ -320,10 +318,10 @@ int main(int argc, char const* argv[])
     //AfxMakeUri(&uriMap, "art/building/fort/SPC_Fort_Center.gr2", 0);
     AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age.gr2", 0);
     //AfxMakeUri(&uriMap, "art/actor/p_explorer.gr2", 0);
-    mdl = AwxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
+    mdl = AkxLoadModelsFromGrn3d2(sim, &uriMap, 0); // .m4d
 
 
-    awxAsset cad;
+    akxAsset cad;
     //AfxLoadAssetsFromWavefrontObj(sim, NIL, 1, &uriMap, &cad);
     //AfxLoadAssetsFromMd5(sim, NIL, 1, &uriMap, &cad);
 
@@ -338,22 +336,22 @@ int main(int argc, char const* argv[])
     //AfxAcquireModels(sim, 1, &uriMap2, &mdl);
     // TODO FetchModel(/dir/to/file)
 
-    AwxEmbodyModel(mdl, 1, &bod);
+    AfxAcquireBodies(mdl, 1, &bod);
     AfxAssert(bod);
 
     AfxMakeUri(&uriMap, "art/building/mill/w_mill_3age_idle.gr2", 0);
     //AfxMakeUri(&uriMap, "art/actor/knockout_recover.gr2", 0);
-    //ani = AwxLoadAnimationsFromGrn3d2(sim, &uriMap, 0); // .k4d
+    ani = AkxLoadAnimationsFromGrn3d2(sim, &uriMap, 0); // .k4d
 
 
 
-    awxMotor moto = AwxRunAnimation(bod, 0, ani);
-    //awxMotor moto2 = AwxRunAnimation(bod, 0, ani);
+    akxMotor moto = AfxRunAnimation(bod, 0, ani);
+    //akxMotor moto2 = AfxRunAnimation(bod, 0, ani);
 
     if (moto)
-        AwxAdjustMotorIterations(moto, 0);
-    //AwxAdjustMotorIterations(moto2, 0);
-    //AwxReleaseOnceUnusedMotors(1, &moto);
+        AkxAdjustMotorIterations(moto, 0);
+    //AkxAdjustMotorIterations(moto2, 0);
+    //AkxReleaseOnceUnusedMotors(1, &moto);
 
     cube = AfxBuildCubeMesh(sim, -200.0);
     //cube = AfxBuildParallelepipedMesh(sim, 100, 100);
@@ -370,14 +368,14 @@ int main(int argc, char const* argv[])
     mdlb.skl = AfxGetModelSkeleton(mdl);
     mdlb.strb = strb;
     AfxAssembleModel(sim, 1, &mdlb, &cubeMdl);
-    AwxEmbodyModel(cubeMdl, 1, &cubeBod);
+    AfxAcquireBodies(cubeMdl, 1, &cubeBod);
 #if 0
     mdl = AfxSimulationFindModel(sim, &str);
     body = AfxSimulationAcquireBody(sim, &str, NIL, mdl);
     AfxAssert(body);
 #endif
     //AfxCopyStringLiteral(&str, 0, "zero");
-    //awxBody body2;
+    //afxBody body2;
     //AfxAcquireBody(&body2, sim, &str, AfxFindModel(sim, &str));
     //AfxAssert(body2);
 
@@ -448,21 +446,25 @@ int main(int argc, char const* argv[])
 
     afxUri uri;
     AfxMakeUri(&uri, "system/sandbox.xss", 0);
-    AfxLoadScript(NIL, &uri);
+    //AfxLoadScript(NIL, &uri);
 
     // Run
 
     readyToRender = TRUE;
 
+    vg = AvxAcquireGraphic(dctx, 1);
+
     while (AfxSystemIsExecuting())
     {
         AfxDoSystemExecution(0);
         DrawInputProc(rnd->din, NIL);
-            
+
         afxReal64 ct, dt;
         AfxStepWindow(window, &ct, &dt);
         UpdateFrameMovement(dt);
     }
+
+    AvxReleaseGraphic(vg);
 
     AfxReleaseObjects(1, &window);
 

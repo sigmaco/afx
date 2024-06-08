@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -114,6 +114,7 @@ AFXINL afxChar const* AfxFindPathTarget(afxChar const* path)
 #   define AfxAssertRangei(capacity_, first_, count_) ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%i + <%s>%i is out of capacity <%s>%i.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
 #   define AfxAssertRangef(capacity_, first_, count_) ((!!((capacity_ >= first_ + count_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%f + <%s>%f is out of capacity <%s>%f.",AFX_STRINGIFY(first_),(first_),AFX_STRINGIFY(count_),(count_),AFX_STRINGIFY(capacity_),(capacity_)),0))
 #   define AfxAssertCapacity(capacity_, unit_)        ((!!((capacity_ >= unit_))))||(AfxThrowError(),AfxLogAssertionFailure("%s<%u> is out of capacity %s<%u>.",AFX_STRINGIFY(unit_),(unit_),AFX_STRINGIFY(capacity_),(capacity_)),0))
+#   define AfxAssertBounds(value_, min_, max_)  ((!!((value_ >= min_ && value_ <= max_)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is out of bounds <%s>[%u, %u]<%s>.",AFX_STRINGIFY(value_),(value_),AFX_STRINGIFY(min_),(min_),(max_),AFX_STRINGIFY(max_)),0))
 
 #   define AfxAssertBool(value_) ((!!((value_!=FALSE)||(value_!=TRUE)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is a illegal bool.",AFX_STRINGIFY(value_),(value_)),0))
 #   define AfxAssertAbs(value_) ((!!((value_>=0)))||(AfxThrowError(),AfxLogAssertionFailure("<%s>%u is not absolute.",AFX_STRINGIFY(value_),(value_)),0))

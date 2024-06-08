@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -29,9 +29,9 @@
 typedef enum afxIoFlag
 {
     // permissions
-    afxIoFlag_R         = AFX_BIT_OFFSET(0), // Readable
-    afxIoFlag_W         = AFX_BIT_OFFSET(1), // Writeable
-    afxIoFlag_X         = AFX_BIT_OFFSET(2), // Executable (seekable)
+    afxIoFlag_R         = AFX_BIT(0), // Readable
+    afxIoFlag_W         = AFX_BIT(1), // Writeable
+    afxIoFlag_X         = AFX_BIT(2), // Executable (seekable)
     afxIoFlag_RW        = (afxIoFlag_R | afxIoFlag_W),
     afxIoFlag_RX        = (afxIoFlag_R | afxIoFlag_X),
     afxIoFlag_WX        = (afxIoFlag_W | afxIoFlag_X),

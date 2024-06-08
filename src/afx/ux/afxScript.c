@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -19,8 +19,8 @@
 #include <Windows.h>
 
 #define _AUX_UX_C
-#define _AFX_SHELL_C
-#define _AFX_SCRIPT_C
+#define _AUX_SHELL_C
+#define _AUX_SCRIPT_C
 #include "qwadro/../_luna/luna_vm.h"
 #include "qwadro/../_luna/luna.h"
 #include "qwadro/ux/afxShell.h"
@@ -285,7 +285,7 @@ _AUX afxError _AuxXssCtor(afxScript xss, afxCookie const* cookie)
     AfxAssertObjects(1, &xss, afxFcc_XSS);
 
     afxShell sh = cookie->udd[0];
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    AfxAssertObjects(1, &sh, afxFcc_USYS);
     afxString const* domain = ((afxString const*)cookie->udd[1]) + cookie->no;
     afxString const* code = ((afxString const*)cookie->udd[2]) + cookie->no;
 
@@ -332,7 +332,7 @@ _AUX afxError AfxAcquireScript(afxString const* domain, afxString const* code, a
 
     afxShell sh;
     AfxGetShell(&sh);
-    AfxAssertObjects(1, sh, afxFcc_ENV);
+    AfxAssertObjects(1, sh, afxFcc_USYS);
     afxManager* cls = AfxGetScriptManager();
     AfxAssertClass(cls, afxFcc_XSS);
 

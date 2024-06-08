@@ -37,10 +37,10 @@ typedef struct DdtLayer
     afxNat32 siz;
 } DDTImageEntry;
 
-_AFXEXPORT afxError AfxLoadTexturesDdt(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxRaster tex[]);
+DLLEXPORT afxError AfxLoadTexturesDdt(afxDrawContext dctx, afxNat cnt, afxUri const uri[], afxRaster tex[]);
 
-_AFXEXPORT afxError AfxFetchRasterDdt(afxRaster tex, afxUri const *uri);
-_AFXEXPORT afxError AfxFetchRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);
+DLLEXPORT afxError AfxFetchRasterDdt(afxRaster tex, afxUri const *uri);
+DLLEXPORT afxError AfxFetchRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);
 
-_AFXEXPORT afxError AfxPrintRasterDdt(afxRaster tex, afxUri const *uri);
-_AFXEXPORT afxError AfxPrintRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);
+DLLEXPORT afxError AfxPrintRasterDdt(afxRaster tex, afxUri const *uri);
+DLLEXPORT afxError AfxPrintRasterRegionsDdt(afxRaster tex, afxNat cnt, afxRasterRegion const rgn[], afxUri const uri[]);

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -20,7 +20,7 @@
 #include <Windows.h>
 
 #define _AUX_UX_C
-#define _AFX_WIDGET_C
+#define _AUX_WIDGET_C
 #include "qwadro/ux/afxWidget.h"
 #include "qwadro/ux/afxScript.h"
 

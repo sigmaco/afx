@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -139,13 +139,29 @@ AFX_OBJECT(afxSystem)
     afxStorage              defStops[9]; // [ ., system/$(host)d, system/$(host), system, code, sound, data, art, tmp ]
 
     afxModule               e2coree;
-    afxModule               e2sound;
-    afxResult               (*ssysctl)(afxSystem,afxInt,...);
-    afxModule               e2draw;
-    afxResult               (*dsysctl)(afxSystem,afxInt,...);
-    afxModule               e2sim;
-    afxModule               e2ux;
 
+    // avx
+    afxDrawSystem           dsys;
+    afxObject               dsysObj;
+    afxManager              dsysMgr;
+    afxModule               e2drawDll;
+    afxError                (*avxctl)(afxSystem,afxModule,afxNat,void*);
+    
+    // asx
+    afxModule               e2soundDll;
+    afxSoundSystem          ssys;
+    afxObject               ssysObj;
+    afxManager              ssysMgr;
+    afxError                (*asxctl)(afxSystem,afxModule,afxNat,void*);
+    
+    // aux (shell)
+    afxShell                usys;
+    afxObject               usysObj;
+    afxManager              usysMgr;
+    afxModule               e2uxDll;
+    afxError                (*auxctl)(afxSystem,afxModule,afxNat,void*);
+
+    afxModule               e2sim;
 
     afxSize                 maxMemUsage;
     
@@ -202,46 +218,46 @@ AFX afxString const*    AfxGetPwdString(afxRestring *dst);
 
 AFX afxBool             AfxEmitEvent(afxObject receiver, afxEvent* ev);
 
+AFX afxBool             AfxGetDrawSystem(afxDrawSystem* system);
+AFX afxBool             AfxGetSoundSystem(afxSoundSystem* system);
+AFX afxBool             AfxGetShell(afxShell* shell);
 
 AFX afxManager*         AfxGetArchiveClass(void);
 AFX afxManager*         AfxGetDeviceClass(void);
+AFX afxManager*         AfxGetDrawSystemClass(void);
 AFX afxManager*         AfxGetFileClass(void);
 AFX afxManager*         AfxGetStorageClass(void);
 AFX afxManager*         AfxGetMmuClass(void);
 AFX afxManager*         AfxGetModuleClass(void);
 AFX afxManager*         AfxGetServiceClass(void);
+AFX afxManager*         AfxGetShellClass(void);
+AFX afxManager*         AfxGetSoundSystemClass(void);
 AFX afxManager*         AfxGetStreamClass(void);
 AFX afxManager*         AfxGetStringBaseClass(void);
 AFX afxManager*         AfxGetThreadClass(void);
 
-AFX afxNat              AfxCountArchives(void);
 AFX afxNat              AfxCountDevices(afxDeviceType type);
 AFX afxNat              AfxCountFiles(void);
 AFX afxNat              AfxCountMmus(void);
 AFX afxNat              AfxCountModules(void);
 AFX afxNat              AfxCountServices(void);
 AFX afxNat              AfxCountStorages(void);
-AFX afxNat              AfxCountStreams(void);
 AFX afxNat              AfxCountThreads(void);
 
-AFX afxNat              AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[]);
 AFX afxNat              AfxEnumerateDevices(afxDeviceType type, afxNat first, afxNat cnt, afxDevice devices[]);
 AFX afxNat              AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[]);
 AFX afxNat              AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[]);
 AFX afxNat              AfxEnumerateMmus(afxNat first, afxNat cnt, afxMmu mmus[]);
 AFX afxNat              AfxEnumerateModules(afxNat first, afxNat cnt, afxModule executables[]);
 AFX afxNat              AfxEnumerateServices(afxNat first, afxNat cnt, afxService services[]);
-AFX afxNat              AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream streams[]);
 AFX afxNat              AfxEnumerateThreads(afxNat first, afxNat cnt, afxThread threads[]);
 
-AFX afxNat              AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd);
 AFX afxNat              AfxInvokeDevices(afxDeviceType type, afxNat first, afxNat cnt, afxBool(*f)(afxDevice, void*), void *udd);
 AFX afxNat              AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd);
 AFX afxNat              AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, void*), void *udd);
 AFX afxNat              AfxInvokeMmus(afxNat first, afxNat cnt, afxBool(*f)(afxMmu, void*), void *udd);
 AFX afxNat              AfxInvokeModules(afxNat first, afxNat cnt, afxBool(*f)(afxModule, void*), void *udd);
 AFX afxNat              AfxInvokeServices(afxNat first, afxNat cnt, afxBool(*f)(afxService, void*), void *udd);
-AFX afxNat              AfxInvokeStreams(afxNat first, afxNat cnt, afxBool(*f)(afxStream, void*), void *udd);
 AFX afxNat              AfxInvokeThreads(afxNat first, afxNat cnt, afxBool(*f)(afxThread, void*), void *udd);
 
 #if 0

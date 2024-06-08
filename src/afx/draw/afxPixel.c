@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -259,6 +259,7 @@ _AVXINL afxBool AfxPixelFormatIsDepth(afxPixelFormat fmt)
     AfxAssert(afxPixelFormat_TOTAL > fmt);
     return layouts[fmt].depth;
 }
+
 _AVXINL afxBool AfxPixelFormatIsStencil(afxPixelFormat fmt)
 {
     afxError err = NIL;

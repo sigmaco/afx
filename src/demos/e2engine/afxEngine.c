@@ -4,6 +4,7 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/sim/afxSimulation.h"
 
+#include "../../dep_/vgl/vgl.h"
 afxSimulation sim = NIL;
 
 afxBool readyToRender = FALSE;
@@ -12,6 +13,8 @@ afxWindow window;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
 afxDrawInput din = NIL;
+
+void *vg = NIL;
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -22,7 +25,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     {
     default:
     {
-        awxRenderer rnd = AfxGetDrawInputUdd(din);
+        akxRenderer rnd = AfxGetDrawInputUdd(din);
         afxDrawContext dctx;
         AfxGetDrawInputContext(din, &dctx);
 
@@ -32,40 +35,61 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
             if (!AfxLockDrawOutputBuffer(dout, 0, &outBufIdx))
             {
-                afxDrawStream diob;
+                avxCmdb cmdb;
                 afxNat queIdx = AFX_INVALID_INDEX;
                 afxNat portIdx = 0;
 
-                if (AfxAcquireDrawStreams(dctx, portIdx, &queIdx, 1, &diob)) AfxThrowError();
+                if (AfxAcquireCmdBuffers(din, avxCmdbUsage_ONCE, 1, &cmdb)) AfxThrowError();
                 else
                 {
-                    if (AfxRecordDrawStreams(afxDrawStreamUsage_ONCE, 1, &diob)) AfxThrowError();
+                    queIdx = AfxGetCmdBufferPool(cmdb);
+
+                    afxWhd canvWhd;
+                    afxCanvas canv;
+                    AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
+                    AfxAssertObjects(1, &canv, afxFcc_CANV);                        
+                    AfxGetCanvasExtent(canv, canvWhd);
+
+                    afxDrawTarget dt[2] = { 0 };
+                    AfxSetV4d(dt[0].clearValue.color, 0.3, 0.3, 0.3, 1.0);
+                    dt[1].clearValue.depth = 1.0;
+                    dt[1].clearValue.stencil = 0;
+                    afxSynthesisConfig sync = { 0 };
+                    sync.area.w = canvWhd[0];
+                    sync.area.h = canvWhd[1];
+                    sync.canv = canv;
+                    sync.rasterCnt = 1;
+                    sync.rasters = &dt[0];
+                    sync.depth = &dt[1];
+                    AvxCmdBeginSynthesis(cmdb, &sync);
+
+                    afxViewport vp = { 0 };
+                    vp.offset[0] = sync.area.x;
+                    vp.offset[1] = sync.area.y;
+                    vp.extent[0] = sync.area.w;
+                    vp.extent[1] = sync.area.h;
+                    vp.depth[1] = 1.0f;
+                    AvxCmdAdjustViewports(cmdb, 0, 1, &vp);
+
+                    TestSvg(vg, cmdb, canvWhd);
+
+                    AvxCmdFinishSynthesis(cmdb);
+
+                    afxSemaphore dscrCompleteSem = NIL;
+
+                    if (AfxCompileCmdBuffers(1, &cmdb)) AfxThrowError();
                     else
                     {
-                        afxRaster surf;
-                        AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
-                        afxCanvas canv;
-                        AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
-                        AfxAssertObjects(1, &surf, afxFcc_RAS);
+                        afxExecutionRequest execReq = { 0 };
+                        execReq.cmdb = cmdb;
+                        execReq.signal = dscrCompleteSem;
 
-                        afxSemaphore dscrCompleteSem = NIL;
-
-                        if (AfxCompileDrawStreams(1, &diob)) AfxThrowError();
-                        else
-                        {
-                            afxExecutionRequest execReq = { 0 };
-                            execReq.diob = diob;
-                            execReq.signal = dscrCompleteSem;
-
-                            if (AFX_INVALID_INDEX == AfxExecuteDrawStreams(din, 1, &execReq, NIL))
-                                AfxThrowError();
-                        }
-
-                        void* ddge = AfxGetDrawBridge(dctx, portIdx);
-                        AfxWaitForIdleDrawQueue(ddge, queIdx);
+                        if (AFX_INVALID_INDEX == (queIdx = AfxExecuteCmdBuffers(din, 1, &execReq, NIL)))
+                            AfxThrowError();
                     }
-                }
 
+                    AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx);
+                }
 
                 afxSemaphore dscrCompleteSem = NIL;
 
@@ -115,11 +139,12 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
 
-    AfxAcquireWindow(dctx, NIL, &window);
-    AfxAdjustWindowNdc(window, AfxSpawnV3d(0.5, 0.5, 1));
+    AfxAcquireWindow(0, dctx, NIL, &window);
+    AfxAssertObjects(1, &window, afxFcc_WND);
+    AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
-    AfxGetWindowDrawOutput(window, &dout);
-    AfxAssert(dout);
+    AfxGetSurfaceDrawOutput(window, &dout);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxReconnectDrawOutput(dout, dctx);
 
     // Acquire a draw operator
@@ -132,7 +157,7 @@ int main(int argc, char const* argv[])
 
     // Acquire a simulation
 
-    awxSimulationConfig simSpec = { 0 };
+    akxSimulationConfig simSpec = { 0 };
     AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     simSpec.dctx = dctx;
     simSpec.sctx = sctx;
@@ -155,6 +180,8 @@ int main(int argc, char const* argv[])
 
     readyToRender = TRUE;
 
+    vg = AvxAcquireGraphic(dctx, 1);
+
     while (AfxSystemIsExecuting())
     {
         AfxDoSystemExecution(0);
@@ -164,6 +191,8 @@ int main(int argc, char const* argv[])
         AfxStepWindow(window, &ct, &dt);
         UpdateFrameMovement(dt);
     }
+
+    AvxReleaseGraphic(vg);
 
     AfxReleaseObjects(1, &window);
 

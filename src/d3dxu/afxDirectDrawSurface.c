@@ -401,7 +401,7 @@ void flip(afxMmu mmu, DdsData *dds, char *image, int width, int height, int dept
 // filename - fully qualified name of DDS image
 // flipImage - specifies whether image is flipped on load, default is true
 
-_AFXEXPORT afxBool _AfxDdsLoad(afxMmu mmu, afxUri *filename, afxBool flipImage, DdsData *dds)
+DLLEXPORT afxBool _AfxDdsLoad(afxMmu mmu, afxUri *filename, afxBool flipImage, DdsData *dds)
 {
     DDS_HEADER ddsh;
     char filecode[4];
@@ -580,10 +580,10 @@ _AFXEXPORT afxBool _AfxDdsLoad(afxMmu mmu, afxUri *filename, afxBool flipImage, 
     return TRUE;
 }
 
-_AFXEXPORT afxError AfxLoadTexturesDds(avxDrawContext dctx, afxNat cnt, afxUri const uri[], avxRaster tex[]);
+DLLEXPORT afxError AfxLoadTexturesDds(avxDrawContext dctx, afxNat cnt, afxUri const uri[], avxRaster tex[]);
 
-_AFXEXPORT afxError AfxFetchRasterDds(avxRaster tex, afxUri const *uri);
-_AFXEXPORT afxError AfxFetchRasterRegionsDds(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
+DLLEXPORT afxError AfxFetchRasterDds(avxRaster tex, afxUri const *uri);
+DLLEXPORT afxError AfxFetchRasterRegionsDds(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
 
-_AFXEXPORT afxError AfxPrintRasterDds(avxRaster tex, afxUri const *uri);
-_AFXEXPORT afxError AfxPrintRasterRegionsDds(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
+DLLEXPORT afxError AfxPrintRasterDds(avxRaster tex, afxUri const *uri);
+DLLEXPORT afxError AfxPrintRasterRegionsDds(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);

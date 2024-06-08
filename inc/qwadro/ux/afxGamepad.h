@@ -10,18 +10,22 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#ifndef AFX_GAMEPAD_H
-#define AFX_GAMEPAD_H
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced User Experience on Qwadro                                       //
+//////////////////////////////////////////////////////////////////////////////
+
+#ifndef AUX_GAMEPAD_H
+#define AUX_GAMEPAD_H
 
 #include "qwadro/ux/afxHid.h"
 #include "qwadro/math/afxVector.h"
 
 #ifdef _AUX_UX_C
-#ifdef _AFX_GAMEPAD_C
+#ifdef _AUX_GAMEPAD_C
 AFX_OBJECT(afxGamepad)
 {
     AFX_OBJECT(afxHid)  hid;
@@ -35,8 +39,8 @@ AFX_OBJECT(afxGamepad)
     afxReal             hiFreqVib; // The high-frequency rumble motor (usually the right one).
     // The two motors should not be the same, as they create different vibration effects.
 };
-#endif//_AFX_GAMEPAD_C
-#ifdef _AFX_CONTROLLER_C
+#endif//_AUX_GAMEPAD_C
+#ifdef _AUX_CONTROLLER_C
 AFX_OBJECT(afxController)
 {
     AFX_OBJECT(afxHid)  hid;
@@ -56,7 +60,7 @@ AFX_OBJECT(afxController)
 
 
 };
-#endif//_AFX_CONTROLLER_C
+#endif//_AUX_CONTROLLER_C
 #endif//_AUX_UX_C
 
 AUX afxBool         AfxTabKeyWasPressed(afxNat port); // Tab
@@ -90,4 +94,4 @@ AUX afxController   AfxGetController(afxNat port);
 
 AUX afxError        AfxAcquireControllers(afxNat cnt, afxNat const port[], afxController controllers[]);
 
-#endif//AFX_GAMEPAD_H
+#endif//AUX_GAMEPAD_H

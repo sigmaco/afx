@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -41,9 +41,10 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 
 #define AFX_BIT_OFFSET(bit_) ((afxNat32)1 << (afxNat32)(bit_)) // get bit offset
+#define AFX_BIT AFX_BIT_OFFSET  // get bit offset
 
-#define AFX_MASK_MIN AFX_BIT_OFFSET(0)
-#define AFX_MASK_MAX AFX_BIT_OFFSET(31)
+#define AFX_MASK_MIN AFX_BIT(0)
+#define AFX_MASK_MAX AFX_BIT(31)
 #define AFX_MASK_ALL 0xFFFFFFFF
 #define AFX_MASK_NONE 0xFFFFFFFF
 
@@ -89,10 +90,25 @@ AFX afxNat AfxFlagsFindMsb(afxFlags mask);
 #define AfxIsAligned(ptr_, byteCnt_) (((uintptr_t)(const void *)((afxSize)ptr_)) % (byteCnt_) == 0)
 
 #define AfxAbs(x_) ((0 > (x_)) ? -(x_) : (x_))
+#define AfxAbsf(x_) ((0 > (afxReal)(x_)) ? -(afxReal)(x_) : (afxReal)(x_))
 #define AfxMin(a_,b_) (((a_) < (b_)) ? (a_) : (b_))
 #define AfxMax(a_,b_) (((a_) > (b_)) ? (a_) : (b_))
 #define AfxMinorNonZero(a_,b_) ((a_) && (a_) < (b_)) ? (a_) : ((b_) ? (b_) : (a_)) // minor non-zero
-#define AfxElse(a_,b_) (((a_) ? (a_) : (b_))
+#define AfxElse(a_,b_) ((a_) ? (a_) : (b_))
+
+
+#define AfxClamp(_value_, _min_, _max_) ((_value_) < (_min_) ? (_min_) : ((_value_) > (_max_) ? (_max_) : (_value_)))
+
+
+#define AfxMinf(a_,b_) AfxMin((afxReal)(a_),(afxReal)(b_))
+#define AfxMinf64(a_,b_) AfxMin((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMini(a_,b_) AfxMin((afxInt)(a_),(afxInt)(b_))
+#define AfxMinu(a_,b_) AfxMin((afxNat)(a_),(afxNat)(b_))
+
+#define AfxMaxf(a_,b_) AfxMax((afxReal)(a_),(afxReal)(b_))
+#define AfxMaxf64(a_,b_) AfxMax((afxReal64)(a_),(afxReal64)(b_))
+#define AfxMaxi(a_,b_) AfxMax((afxInt)(a_),(afxInt)(b_))
+#define AfxMaxu(a_,b_) AfxMax((afxNat)(a_),(afxNat)(b_))
 
 #define AfxAtLeast(var_,min_) 
 
@@ -179,9 +195,9 @@ afxCriterion;
 
 typedef enum afxProfileFlag
 {
-    afxProfileFlag_ROBUSTNESS   = AFX_BIT_OFFSET(0),
-    afxProfileFlag_PERFORMANCE  = AFX_BIT_OFFSET(1),
-    afxProfileFlag_QUALITY      = AFX_BIT_OFFSET(2),
+    afxProfileFlag_ROBUSTNESS   = AFX_BIT(0),
+    afxProfileFlag_PERFORMANCE  = AFX_BIT(1),
+    afxProfileFlag_QUALITY      = AFX_BIT(2),
 } afxProfileFlag;
 
 // Object handles defined by Core Execution System
@@ -221,6 +237,7 @@ AFX_DEFINE_HANDLE(afxShell);
 AFX_DEFINE_HANDLE(afxDrawSystem);
 AFX_DEFINE_HANDLE(afxSoundSystem);
 AFX_DEFINE_HANDLE(afxSimulation);
+AFX_DEFINE_HANDLE(afxWindow);
 
 
 
@@ -234,7 +251,7 @@ AFX void AfxAccumulateCrc32(afxNat32 *crc, void const* data, afxSize len);
 
 #define AFX_FUNC( _type, _name ) _type _CALL _name // Declare a function
 #define AFX_EXTERN_FUNC( _type, _name ) extern _type  _name // // Declare an extern function
-#define AFX_EXTERN_API_FUNC( _type, _name ) extern _AFXIMPORT _type  _name // Declare an extern function that is exported/imported
+#define AFX_EXTERN_API_FUNC( _type, _name ) extern DLLIMPORT _type  _name // Declare an extern function that is exported/imported
 #define AFX_CALLBACK( _type, _name ) typedef _type (*_name ) // Declare a callback function type
 
 

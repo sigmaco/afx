@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -18,10 +18,10 @@
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream diob, afxNat id, afxNat siz, _sglCmd *cmd)
+_SGL afxCmdId _SglEncodeCmdCommand(avxCmdb cmdb, afxNat id, afxNat siz, _sglCmd *cmd)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     cmd->id = id;
     AfxAssertRange(SGL_CMD_TOTAL, cmd->id, 1);
 
@@ -31,84 +31,123 @@ _SGL afxCmdId _SglEncodeCmdCommand(afxDrawStream diob, afxNat id, afxNat siz, _s
     }
 
     cmd->siz = siz;
-    return AfxPushLinkage(&cmd->script, &diob->commands);
+    return AfxPushLinkage(&cmd->script, &cmdb->commands);
 }
 
 ///////////////////////////////////////////
 
-_SGL afxCmdId FlushNextCachedPipelineBinding(afxDrawStream diob, afxNat segment)
+_SGL afxCmdId FlushNextCachedPipelineBinding(avxCmdb cmdb, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-    afxPipeline curr = diob->levelCaches[segment].pip.curr;
-    afxPipeline next = diob->levelCaches[segment].pip.next;
+    AfxAssert(cmdb->base.state == avxCmdbState_RECORDING);
+    afxPipeline curr = cmdb->levelCaches[segment].pip.curr;
+    afxPipeline next = cmdb->levelCaches[segment].pip.next;
 
     if ((curr != next) && next)
     {
-        diob->levelCaches[segment].pip.curr = next;
-        diob->levelCaches[segment].pip.next = NIL;
+        cmdb->levelCaches[segment].pip.curr = next;
+        cmdb->levelCaches[segment].pip.next = NIL;
 
-        _sglCmdPipeline *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+        _sglCmdPipeline *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
         AfxAssert(cmd);
         cmd->segment = segment;
         cmd->pip = next;
-        return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, BindPipeline) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+        return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, BindPipeline) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
     }
     return 0;
 }
 
-_SGL afxCmdId FlushCachedDrawStuff(afxDrawStream diob, afxNat segment)
+_SGL afxCmdId FlushCachedDrawStuff(avxCmdb cmdb, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
+    AfxAssert(cmdb->base.state == avxCmdbState_RECORDING);
 
-    return FlushNextCachedPipelineBinding(diob, segment);
+    return FlushNextCachedPipelineBinding(cmdb, segment);
 }
 
-_SGL afxCmdId FlushCachedDrawIndexedStuff(afxDrawStream diob, afxNat segment)
+_SGL afxCmdId FlushCachedDrawIndexedStuff(avxCmdb cmdb, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-    return FlushCachedDrawStuff(diob, segment);
+    AfxAssert(cmdb->base.state == avxCmdbState_RECORDING);
+    return FlushCachedDrawStuff(cmdb, segment);
 }
 
-_SGL afxCmdId FlushCachedStuff(afxDrawStream diob, afxNat segment)
+_SGL afxCmdId FlushCachedStuff(avxCmdb cmdb, afxNat segment)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-    return FlushCachedDrawIndexedStuff(diob, segment);
+    AfxAssert(cmdb->base.state == avxCmdbState_RECORDING);
+    return FlushCachedDrawIndexedStuff(cmdb, segment);
 }
 
-_SGL afxCmdId _SglEncodeCmdBindPipeline(afxDrawStream diob, afxNat segment, afxPipeline pip)
+//
+
+_SGL void _DecodeCmdBindPipeline(sglDpu* dpu, _sglCmdPipeline *cmd)
+{
+    _DpuBindPipeline(dpu, cmd->pip, cmd->dynamics);
+}
+
+_SGL void _DecodeCmdBindRasterizer(sglDpu* dpu, _sglCmdRasterizer *cmd)
+{
+    _DpuBindRasterizer(dpu, cmd->razr, cmd->dynamics);
+}
+
+_SGL afxCmdId _EncodeCmdBindPipeline(avxCmdb cmdb, afxNat segment, afxPipeline pip, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 #if 0
-    afxPipeline next = diob->levelCaches[line].pip.next;
+    afxPipeline next = cmdb->levelCaches[line].pip.next;
 
     if (next != pip)
     {
-        afxCmdId cmdId = FlushNextCachedPipelineBinding(diob, line);
-        diob->levelCaches[line].pip.next = pip;
+        afxCmdId cmdId = FlushNextCachedPipelineBinding(cmdb, line);
+        cmdb->levelCaches[line].pip.next = pip;
         return cmdId;
     }
 #else
 
-    _sglCmdPipeline *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdPipeline *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->segment = segment;
     cmd->pip = pip;
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, BindPipeline) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    cmd->dynamics = dynamics;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, BindPipeline) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 #endif
     return 0;
 }
 
-_SGL afxCmdId _SglEncodeCmdBindBuffers(afxDrawStream diob, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+_SGL afxCmdId _EncodeCmdBindRasterizer(avxCmdb cmdb, afxRasterizer razr, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
+#if 0
+    afxPipeline next = cmdb->levelCaches[line].pip.next;
 
-    _sglCmdBindBuffers *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    if (next != pip)
+    {
+        afxCmdId cmdId = FlushNextCachedPipelineBinding(cmdb, line);
+        cmdb->levelCaches[line].pip.next = pip;
+        return cmdId;
+    }
+#else
+
+    _sglCmdRasterizer *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->razr = razr;
+    cmd->dynamics = dynamics;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, BindRasterizer) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+#endif
+    return 0;
+}
+//
+
+_SGL void _DecodeCmdBindBuffers(sglDpu* dpu, _sglCmdBindBuffers const *cmd)
+{
+    _DpuBindBuffers(dpu, cmd->set, cmd->first, cmd->cnt, (afxBuffer*)cmd->buf, cmd->offset, cmd->range);
+}
+
+_SGL afxCmdId _EncodeCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat first, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBindBuffers *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->set = set;
     cmd->first = first;
@@ -120,15 +159,20 @@ _SGL afxCmdId _SglEncodeCmdBindBuffers(afxDrawStream diob, afxNat set, afxNat fi
         cmd->offset[i] = offset ? offset[i] : 0;
         cmd->range[i] = range ? range[i] : 0;
     }
-    return _SglEncodeCmdCommand(diob, offsetof(afxCmd, BindBuffers) / sizeof(void*), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, offsetof(afxCmd, BindBuffers) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdBindRasters(afxDrawStream diob, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxRaster tex[])
+//
+
+_SGL void _DecodeCmdBindRasters(sglDpu* dpu, _sglCmdBindRasters const *cmd)
+{
+    _DpuBindRasters(dpu, cmd->set, cmd->first, cmd->cnt, (afxSampler*)cmd->smp, (afxRaster*)cmd->tex);
+}
+
+_SGL afxCmdId _EncodeCmdBindRasters(avxCmdb cmdb, afxNat set, afxNat first, afxNat cnt, afxSampler smp[], afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBindRasters *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdBindRasters *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->set = set;
     cmd->first = first;
@@ -140,51 +184,57 @@ _SGL afxCmdId _SglEncodeCmdBindRasters(afxDrawStream diob, afxNat set, afxNat fi
         cmd->tex[i] = tex ? tex[i] : 0;
     }
 
-    return _SglEncodeCmdCommand(diob, offsetof(afxCmd, BindRasters) / sizeof(void*), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, offsetof(afxCmd, BindRasters) / sizeof(void*), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdExecuteCommands(afxDrawStream diob, afxNat cnt, afxDrawStream subsets[])
+//
+
+_SGL afxCmdId _EncodeCmdExecuteCommands(avxCmdb cmdb, afxNat cnt, avxCmdb subsets[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdExecCmds *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdExecCmds *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->cnt = cnt;
 
     for (afxNat i = 0; i < cnt; i++)
         cmd->subsets[i] = subsets[i];
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, ExecuteCommands) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, ExecuteCommands) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 // Draw
 
-_SGL afxCmdId _SglEncodeCmdDraw(afxDrawStream diob, afxNat32 vtxCnt, afxNat32 instCnt, afxNat32 firstVtx, afxNat32 firstInst)
+_SGL void _DecodeCmdDraw(sglDpu* dpu, _sglCmdDraw const *cmd)
+{
+    _DpuDraw(dpu, cmd->vtxCnt, cmd->instCnt, cmd->firstVtx, cmd->firstInst);
+}
+
+_SGL afxCmdId _EncodeCmdDraw(avxCmdb cmdb, afxNat32 vtxCnt, afxNat32 instCnt, afxNat32 firstVtx, afxNat32 firstInst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
+    FlushCachedDrawStuff(cmdb, 0);
 
-    FlushCachedDrawStuff(diob, 0);
-
-    _sglCmdDraw *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdDraw *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->vtxCnt = vtxCnt;
     cmd->instCnt = instCnt;
     cmd->firstVtx = firstVtx;
     cmd->firstInst = firstInst;
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Draw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Draw) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdDrawIndexed(afxDrawStream diob, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
+_SGL void _DecodeCmdDrawIndexed(sglDpu* dpu, _sglCmdDrawIndexed const* cmd)
+{
+    _DpuDrawIndexed(dpu, cmd->idxCnt, cmd->instCnt, cmd->firstIdx, cmd->vtxOff, cmd->firstInst);
+}
+
+_SGL afxCmdId _EncodeCmdDrawIndexed(avxCmdb cmdb, afxNat32 idxCnt, afxNat32 instCnt, afxNat32 firstIdx, afxNat32 vtxOff, afxNat32 firstInst)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
+    FlushCachedDrawIndexedStuff(cmdb, 0);
 
-    FlushCachedDrawIndexedStuff(diob, 0);
-
-    _sglCmdDrawIndexed *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdDrawIndexed *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
     cmd->idxCnt = idxCnt;
     cmd->instCnt = instCnt;
@@ -192,24 +242,25 @@ _SGL afxCmdId _SglEncodeCmdDrawIndexed(afxDrawStream diob, afxNat32 idxCnt, afxN
     cmd->vtxOff = vtxOff;
     cmd->firstInst = firstInst;
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, DrawIndexed) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, DrawIndexed) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxError _SglDiobEndCb(afxDrawStream diob)
+_SGL afxError _SglCmdbEndCb(avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    FlushCachedStuff(diob, 0);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    FlushCachedStuff(cmdb, 0);
     return err;
 }
 
 _SGL afxCmd _SglEncodeCmdVmt =
 {
-    .BindPipeline = _SglEncodeCmdBindPipeline,
-    .Draw = _SglEncodeCmdDraw,
-    .DrawIndexed = _SglEncodeCmdDrawIndexed,
-    .ExecuteCommands = _SglEncodeCmdExecuteCommands,
-    .BindBuffers = _SglEncodeCmdBindBuffers,    
-    .BindRasters = _SglEncodeCmdBindRasters,
-    //.Rasterization = _SglEncodeCmdRasterizationVmt
+    .BindPipeline = _EncodeCmdBindPipeline,
+    .BindRasterizer = _EncodeCmdBindRasterizer,
+    .Draw = _EncodeCmdDraw,
+    .DrawIndexed = _EncodeCmdDrawIndexed,
+    .ExecuteCommands = _EncodeCmdExecuteCommands,
+    .BindBuffers = _EncodeCmdBindBuffers,    
+    .BindRasters = _EncodeCmdBindRasters,
+    //.Rasterization = _EncodeCmdRasterizationVmt
 };

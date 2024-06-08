@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -48,9 +48,9 @@
 AFX_DEFINE_HANDLE(afxDrawDevice);
 AFX_DEFINE_HANDLE(afxDrawContext);
 AFX_DEFINE_HANDLE(afxDrawBridge);
-//AFX_DEFINE_HANDLE(afxDrawQueue);
+AFX_DEFINE_HANDLE(afxDrawQueue);
 AFX_DEFINE_HANDLE(afxDrawInput);
-AFX_DEFINE_HANDLE(afxDrawStream);
+AFX_DEFINE_HANDLE(avxCmdb);
 AFX_DEFINE_HANDLE(afxDrawOutput);
 AFX_DEFINE_HANDLE(afxDrawOperation);
 AFX_DEFINE_HANDLE(afxDrawTechnique);
@@ -58,7 +58,7 @@ AFX_DEFINE_HANDLE(afxPipeline);
 AFX_DEFINE_HANDLE(afxRasterizer);
 AFX_DEFINE_HANDLE(afxVertexInput);
 AFX_DEFINE_HANDLE(afxShader);
-AFX_DEFINE_HANDLE(afxBindSchema);
+AFX_DEFINE_HANDLE(afxLigature);
 AFX_DEFINE_HANDLE(afxSampler);
 AFX_DEFINE_HANDLE(afxQueryPool);
 AFX_DEFINE_HANDLE(afxBuffer);
@@ -163,11 +163,14 @@ typedef enum afxLogicOp
 } afxLogicOp;
 
 typedef enum afxCullMode
+/// Bitmask controlling triangle culling.
+/// Once the orientation of triangles is determined, they are culled according to the cull mode.
+/// Following culling, fragments are produced for any triangles which have not been discarded.
 {
-    // NIL = DISABLED
-    afxCullMode_FRONT = AFX_BIT_OFFSET(0),
-    afxCullMode_BACK  = AFX_BIT_OFFSET(1),
-    afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, // sum to cull both faces --- who would use it?
+    afxCullMode_NONE, /// specifies that no triangles are discarded.
+    afxCullMode_FRONT   = AFX_BIT(0), /// specifies that front-facing triangles are discarded.
+    afxCullMode_BACK  = AFX_BIT(1), /// specifies that back-facing triangles are discarded.
+    afxCullMode_BOTH  = afxCullMode_FRONT | afxCullMode_BACK, /// specifies that all triangles are discarded.
     
     afxCullMode_TOTAL
 } afxCullMode;
@@ -271,6 +274,8 @@ typedef enum
     afxBlendFactor_ONE_MINUS_SRC1_A,
     /// (1-As1,1-As1,1-As1)
     /// 1-As1
+
+    afxBlendFactor_TOTAL
 } afxBlendFactor;
 
 typedef enum

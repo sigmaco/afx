@@ -3,13 +3,13 @@
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
         <VertexShader>data/pipeline/skybox/skybox.vsh</VertexShader>
-        <Rasterizer>data/pipeline/skybox/skybox.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LEQUAL</DepthCompareOp>
+        <Transformer>data/pipeline/skybox/skybox.xsh.xml</Transformer>
         <FragmentShader>data/pipeline/skybox/sampleOutRgbaCube.fsh</FragmentShader>
     </Rasterizer>
     <DrawTechnique>

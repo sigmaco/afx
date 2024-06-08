@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -83,7 +83,7 @@ _AFXINL afxReal AfxLerpf(afxReal a, afxReal b, afxReal time)
     return  a * (1.f - time) + time * b;
 }
 
-_AFXINL afxReal64 AfxClamp(afxReal64 value, afxReal64 min, afxReal64 max)
+_AFXINL afxReal64 AfxClampd(afxReal64 value, afxReal64 min, afxReal64 max)
 {
     return (value < min ? min : (value > max ? max : value));
 }
@@ -91,6 +91,16 @@ _AFXINL afxReal64 AfxClamp(afxReal64 value, afxReal64 min, afxReal64 max)
 _AFXINL afxReal AfxClampf(afxReal value, afxReal min, afxReal max)
 {
     return (value < min ? min : (value > max ? max : value));
+}
+
+_AFXINL afxReal AfxModf(afxReal x, afxReal y)
+{
+    return fmodf(x, y);
+}
+
+_AFXINL afxReal64 AfxMod(afxReal64 x, afxReal64 y)
+{
+    return fmod(x, y);
 }
 
 _AFXINL afxReal64 AfxSq(afxReal64 s)
@@ -586,7 +596,7 @@ _AFXINL afxInt16 AfxReal32ToSnorm(afxReal v)
 {
     //According to D3D10 rules, the value "-1.0f" has two representations: 0x1000 and 0x10001
     //This allows everyone to convert by just multiplying by 32767 instead of multiplying the negative values by 32768 and 32767 for positive.
-    return (afxInt16)(AfxClamp(v >= 0.0f ? (v * 32767.0f + 0.5f) : (v * 32767.0f - 0.5f), -32768.0f, 32767.0f));
+    return (afxInt16)(AfxClampd(v >= 0.0f ? (v * 32767.0f + 0.5f) : (v * 32767.0f - 0.5f), -32768.0f, 32767.0f));
 }
 
 _AFXINL afxReal AfxSnorm16ToReal32(afxInt16 v)

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -23,10 +23,10 @@
 #   include <hidusage.h>
 #endif
 
-#define _AUX_UX_C
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
-#define _AFX_HID_C
+#define _AUX_UX_C
+#define _AUX_HID_C
 #include "qwadro/ux/afxShell.h"
 
 _AUX afxKey const vkDereferenceMap[afxKey_TOTAL];

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -31,10 +31,10 @@
 
 typedef enum afxTransformFlags
 {
-    afxTransformFlags_TRANSLATED    = AFX_BIT_OFFSET(0), // has non-identity position
-    afxTransformFlags_ROTATED       = AFX_BIT_OFFSET(1), // has non-identity orientation
+    afxTransformFlags_TRANSLATED    = AFX_BIT(0), // has non-identity position
+    afxTransformFlags_ROTATED       = AFX_BIT(1), // has non-identity orientation
     afxTrasnformFlags_RIGID         = afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED,
-    afxTransformFlags_DEFORMED      = AFX_BIT_OFFSET(2), // has non-identity scale/shear
+    afxTransformFlags_DEFORMED      = AFX_BIT(2), // has non-identity scale/shear
     afxTransformFlags_ALL =         (afxTransformFlags_TRANSLATED | afxTransformFlags_ROTATED | afxTransformFlags_DEFORMED)
 } afxTransformFlags;
 

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -219,249 +219,189 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
     }
     else
     {
-        if (bind || sync)
+        AfxAssertObjects(1, &pip, afxFcc_PIP);
+        GLuint glHandle = pip->glHandle;
+        sglUpdateFlags devUpdReq = (pip->updFlags & SGL_UPD_FLAG_DEVICE);
+        afxBool bound = FALSE;
+
+        if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
         {
-            AfxAssertObjects(1, &pip, afxFcc_PIP);
-            GLuint glHandle = pip->glHandle;
-            sglUpdateFlags devUpdReq = (pip->updFlags & SGL_UPD_FLAG_DEVICE);
-            afxBool bound = FALSE;
-
-            if ((!glHandle) || (devUpdReq & SGL_UPD_FLAG_DEVICE_INST))
+            if (glHandle)
             {
-                if (glHandle)
+                gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
+                glHandle = NIL;
+            }
+
+            //afxArray code;
+            afxChar errStr[1024];
+            afxNat tmpShdGlHandleCnt = 0;
+            GLuint tmpShdGlHandles[5];
+            //AfxAllocateArray(&code, 2048, sizeof(afxChar), NIL);
+
+            afxArray code;
+            AfxAllocateArray(&code, 4096, sizeof(afxByte), NIL);
+
+            for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+            {
+                AfxEmptyArray(&code);
+                AfxDumpShaderCode(pip->base.stages[stageIdx].shd, &code);
+
+                afxShaderStage stage = pip->base.stages[stageIdx].stage;
+
+                GLuint shader;
+
+                if (!(shader = gl->CreateShader(AfxToGlShaderStage(stage))))
                 {
-                    gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
-                    glHandle = NIL;
+                    _SglThrowErrorOccuried();
                 }
-
-                //afxArray code;
-                afxChar errStr[1024];
-                GLuint tmpShdGlHandles[5];
-                //AfxAllocateArray(&code, 2048, sizeof(afxChar), NIL);
-
-                for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+                else
                 {
-                    //AfxEmptyArray(&code);
-                    //AfxLoadGlScript(&code, &pip->base.stages[stageIdx].shd.uri);
-                    afxShaderBlueprint shdb;
-#if 0
-                    _SglLoadShaderBlueprint(&shdb, &pip->base.stages[stageIdx].shd.uri);
-#else
-                    AfxShaderBlueprintBegin(&shdb, NIL, NIL, NIL, 0, 0, 0);
-                    AfxLoadGlScript(&shdb, &pip->base.stages[stageIdx].shd.uri);
-#endif
+                    GLint compiled = 0;
+                    //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                    AfxLogComment("%.*s", code.cnt, code.bytemap);
+                    gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                    gl->CompileShader(shader); _SglThrowErrorOccuried();
+                    gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
 
-                    GLuint shader;
-
-                    if (!(shader = gl->CreateShader(AfxToGlShaderStage(pip->base.stages[stageIdx].stage))))
+                        
+                    if (compiled == GL_FALSE)
                     {
-                        _SglThrowErrorOccuried();
+                        AfxThrowError();
+                        gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                        AfxLogError(errStr);
+                        gl->DeleteShader(shader); _SglThrowErrorOccuried();
                     }
                     else
                     {
-                        GLint compiled = 0;
-                        //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
-                        gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)shdb.codes.bytemap }, (GLint const[]) { shdb.codes.cnt }); _SglThrowErrorOccuried();
-                        gl->CompileShader(shader); _SglThrowErrorOccuried();
-                        gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
+                        tmpShdGlHandles[tmpShdGlHandleCnt] = shader;
+                        tmpShdGlHandleCnt++;
+                    }
+                }
 
-                        AfxLogComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
+                if (err)
+                {
+                    for (afxNat i = tmpShdGlHandleCnt; i-- > 0;)
+                    {
+                        gl->DeleteShader(tmpShdGlHandles[tmpShdGlHandleCnt]); _SglThrowErrorOccuried();
+                        tmpShdGlHandles[tmpShdGlHandleCnt] = NIL;
+                    }
+                    break;
+                }
+            }
 
-                        if (compiled == GL_FALSE)
+            if (!err)
+            {
+#if 0
+                afxShader shd;
+                afxRasterizer razr;
+
+                if (AfxGetLinkedRasterizer(pip, &razr))
+                {
+                    if (AfxGetFragmentShader(razr, &shd, NIL))
+                    {
+                        GLuint shader;
+
+                        if (!(shader = gl->CreateShader(GL_FRAGMENT_SHADER)))
                         {
-                            AfxThrowError();
-                            gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxLogError(errStr);
+                            _SglThrowErrorOccuried();
                         }
                         else
                         {
-                            tmpShdGlHandles[stageIdx] = shader;
+                            AfxEmptyArray(&code);
+                            AfxDumpShaderCode(shd, &code);
+
+                            GLint compiled = 0;
+                            //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                            AfxLogComment("%.*s", code.cnt, code.bytemap);
+                            gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
+                            gl->CompileShader(shader); _SglThrowErrorOccuried();
+                            gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
+
+                                
+                            if (compiled == GL_FALSE)
+                            {
+                                AfxThrowError();
+                                gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                                AfxLogError(errStr);
+                                gl->DeleteShader(shader); _SglThrowErrorOccuried();
+                            }
+                            else
+                            {
+                                tmpShdGlHandles[tmpShdGlHandleCnt] = shader;
+                                tmpShdGlHandleCnt++;
+                            }
                         }
-                        //gl->DeleteShader(shader); _SglThrowErrorOccuried();
+                    }
+                }
+#endif
+            }
+
+            AfxDeallocateArray(&code);
+
+            if (!err)
+            {
+                if (!(glHandle = gl->CreateProgram()))
+                {
+                    _SglThrowErrorOccuried();
+                }
+                else
+                {
+                    afxBool linked;
+
+                    for (afxNat i = 0; i < tmpShdGlHandleCnt; i++)
+                    {
+                        gl->AttachShader(glHandle, tmpShdGlHandles[i]); _SglThrowErrorOccuried();
                     }
 
-                    AfxShaderBlueprintEnd(&shdb, 0, NIL);
+                    gl->LinkProgram(glHandle); _SglThrowErrorOccuried();
+                    gl->GetProgramiv(glHandle, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
+
+                    if (linked == GL_FALSE)
+                    {
+                        AfxThrowError();
+                        gl->GetProgramInfoLog(glHandle, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
+                        AfxLogError(errStr);
+                    }
+
+                    // required bind due to issue with Intel Graphics Drivers no allowing retrieve of uniform locations after assembling.
+                    AfxAssert(gl->IsProgram(glHandle));
+                    gl->UseProgram(glHandle); _SglThrowErrorOccuried();
+                    bound = TRUE;
+
+                    if (_DpuBindAndResolveLego(dpu, pip->base.liga, glHandle))
+                        AfxThrowError();
+
+                    for (afxNat i = tmpShdGlHandleCnt; i-- > 0;)
+                    {
+                        gl->DetachShader(glHandle, tmpShdGlHandles[i]); _SglThrowErrorOccuried();
+                    }
 
                     if (err)
                     {
-                        for (afxNat i = stageIdx; i-- > 0;)
-                        {
-                            gl->DeleteShader(tmpShdGlHandles[i]); _SglThrowErrorOccuried();
-                            tmpShdGlHandles[i] = NIL;
-                        }
-                        break;
+                        gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
+                        glHandle = NIL;
                     }
                 }
 
+                for (afxNat i = tmpShdGlHandleCnt; i-- > 0;)
                 {
-                    afxShaderBlueprint shdb;
-#if 0
-                    _SglLoadShaderBlueprint(&shdb, &pip->base.razr->base.fragShd.uri);
-#else
-                    AfxShaderBlueprintBegin(&shdb, NIL, NIL, NIL, 0, 0, 0);
-                    AfxLoadGlScript(&shdb, &pip->base.razr->base.fragShd.uri);
-#endif
-
-                    GLuint shader;
-
-                    if (!(shader = gl->CreateShader(GL_FRAGMENT_SHADER)))
-                    {
-                        _SglThrowErrorOccuried();
-                    }
-                    else
-                    {
-                        GLint compiled = 0;
-                        //gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)code.bytemap }, (GLint const[]) { code.cnt }); _SglThrowErrorOccuried();
-                        gl->ShaderSource(shader, 1, (GLchar const*const[]) { (void*)shdb.codes.bytemap }, (GLint const[]) { shdb.codes.cnt }); _SglThrowErrorOccuried();
-                        gl->CompileShader(shader); _SglThrowErrorOccuried();
-                        gl->GetShaderiv(shader, GL_COMPILE_STATUS, &compiled); _SglThrowErrorOccuried();
-
-                        AfxLogComment("%.*s", shdb.codes.cnt, shdb.codes.bytemap);
-
-                        if (compiled == GL_FALSE)
-                        {
-                            AfxThrowError();
-                            gl->GetShaderInfoLog(shader, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxLogError(errStr);
-                        }
-                        else
-                        {
-                            tmpShdGlHandles[4] = shader;
-                        }
-                        //gl->DeleteShader(shader); _SglThrowErrorOccuried();
-                    }
-                    AfxShaderBlueprintEnd(&shdb, 0, NIL);
-                }
-
-                //AfxDeallocateArray(&code);
-
-                if (!err)
-                {
-                    if (!(glHandle = gl->CreateProgram()))
-                    {
-                        _SglThrowErrorOccuried();
-                    }
-                    else
-                    {
-                        afxBool linked;
-
-                        for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
-                        {
-                            gl->AttachShader(glHandle, tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
-                        }
-
-                        gl->AttachShader(glHandle, tmpShdGlHandles[4]); _SglThrowErrorOccuried();
-
-                        gl->LinkProgram(glHandle); _SglThrowErrorOccuried();
-                        gl->GetProgramiv(glHandle, GL_LINK_STATUS, &linked); _SglThrowErrorOccuried();
-
-                        if (linked == GL_FALSE)
-                        {
-                            AfxThrowError();
-                            gl->GetProgramInfoLog(glHandle, sizeof(errStr), NIL, (GLchar*)errStr); _SglThrowErrorOccuried();
-                            AfxLogError(errStr);
-                        }
-
-                        // required bind due to issue with Intel Graphics Drivers no allowing retrieve of uniform locations after assembling.
-                        AfxAssert(gl->IsProgram(glHandle));
-                        gl->UseProgram(glHandle); _SglThrowErrorOccuried();
-                        bound = TRUE;
-
-                        for (afxNat i = 0; i < pip->base.wiringCnt; i++)
-                            if (_DpuBindAndResolveLego(dpu, glHandle, pip->base.wiring[i].set, pip->base.wiring[i].legt, gl))
-                                AfxThrowError();
-
-                        gl->DetachShader(glHandle, tmpShdGlHandles[4]); _SglThrowErrorOccuried();
-
-                        for (afxNat stageIdx = pip->base.stageCnt; stageIdx-- > 0;)
-                        {
-                            gl->DetachShader(glHandle, tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
-                        }
-
-                        if (err)
-                        {
-                            gl->DeleteProgram(glHandle); _SglThrowErrorOccuried();
-                            glHandle = NIL;
-                        }
-                    }
-
-                    for (afxNat stageIdx = pip->base.stageCnt; stageIdx-- > 0;)
-                    {
-                        gl->DeleteShader(tmpShdGlHandles[stageIdx]); _SglThrowErrorOccuried();
-                        tmpShdGlHandles[stageIdx] = NIL;
-                    }
-                    gl->DeleteShader(tmpShdGlHandles[4]); _SglThrowErrorOccuried();
-                }
-
-                pip->glHandle = glHandle;
-
-                if (!err)
-                {
-                    AfxLogEcho("afxPipeline %p hardware-side data instanced.", pip);
-                    pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-
-#if 0
-                    GLuint vao;
-                    gl->GenVertexArrays(1, &vao); _SglThrowErrorOccuried();
-                    gl->BindVertexArray(vao); _SglThrowErrorOccuried();
-
-                    afxShader vsh;
-
-                    if (AfxFindLinkedShader(pip, afxShaderStage_VERTEX, &vsh))
-                    {
-                        afxNat attrCnt = AfxCountPipelineInputs(pip);
-
-                        afxNat32 offset[SGL_MAX_VERTEX_ATTRIB_BINDINGS] = { 0 };
-
-                        for (afxNat i = 0; i < attrCnt; i++)
-                        {
-                            afxPipelineInputLocation in;
-                            AfxGetPipelineInputs(pip, i, 1, &in);
-
-                            afxNat location = in.location;
-                            afxNat srcIdx = in.stream;
-
-                            GLint glsiz;
-                            GLenum gltype;
-                            GLuint glStride;
-                            AfxToGlVertexFormat(in.fmt, &glsiz, &gltype, &glStride);
-
-                            gl->BindAttribLocation(glHandle, pip->base.ins[i].location, AfxGetStringData(&(vsh->base.ioDecls[i].semantic), 0)); _SglThrowErrorOccuried();
-
-                            AfxAssert(16 > location);  // max vertex attrib
-                            gl->EnableVertexAttribArray(location); _SglThrowErrorOccuried();
-                            AfxAssert(gl->BindVertexBuffer);
-                            gl->VertexAttribFormat(location, glsiz, gltype, FALSE, offset[srcIdx]); _SglThrowErrorOccuried();
-                            //afxNat srcIdx = streamIdx;// dpu->state.vertexInput.streams[streamIdx].srcIdx;
-                            //AfxAssertRange(_SGL_MAX_VBO_PER_BIND, srcIdx, 1);
-                            AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
-                            gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
-
-                            offset[srcIdx] += AfxVertexFormatGetSize(in.fmt);
-
-                            // TODO mover VAO para Pipeline. A indireção de stream/source supostamente permite
-                        }
-                        pip->vertexInput.attrCnt = attrCnt;
-                    }
-                    pip->vertexInput.vao = vao;
-#else
-
-#endif
-
+                    gl->DeleteShader(tmpShdGlHandles[i]); _SglThrowErrorOccuried();
+                    tmpShdGlHandles[i] = NIL;
                 }
             }
-            
-            if (bind && !bound)
+
+            pip->glHandle = glHandle;
+
+            if (!err)
             {
-                AfxAssert(gl->IsProgram(glHandle));
-                gl->UseProgram(glHandle); _SglThrowErrorOccuried();
+                AfxLogEcho("afxPipeline %p hardware-side data instanced.", pip);
+                pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
             }
-#if 0
-            else if (bound && !bind)
-            {
-                gl->UseProgram(0); _SglThrowErrorOccuried();
-            }
-#endif
+        }
+        else
+        {
+            AfxAssert(gl->IsProgram(glHandle));
+            gl->UseProgram(glHandle); _SglThrowErrorOccuried();
         }
     }
     return err;
@@ -495,7 +435,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     else
     {
         afxDrawContext dctx = cookie->udd[0];
-        afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
+        afxPipelineBlueprint const *pipb = ((afxPipelineBlueprint const*)cookie->udd[1]) + cookie->no;
         //AfxAssertType(pipb, afxFcc_PIPB);
 
         pip->glHandle = 0;
@@ -512,7 +452,7 @@ _SGL afxClassConfig const _SglPipMgrCfg =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",
-    .desc = "Draw Execution Pipeline",
+    .desc = "Draw Device Execution Pipeline",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxPipeline)),
     .ctor = (void*)_SglPipCtor,

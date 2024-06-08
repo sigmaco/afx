@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -19,7 +19,7 @@
 #define _AVX_DRAW_C
 //#define _AVX_DRAW_CONTEXT_C
 #define _AFX_TYPOGRAPHY_C
-#include "qwadro/draw/dev/afxDrawContext.h"
+#include "qwadro/draw/afxDrawContext.h"
 #include "qwadro/draw/io/afxTypography.h"
 
 static afxByte const utf8d[] =

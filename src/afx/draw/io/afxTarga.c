@@ -10,33 +10,13 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <Windows.h>
 #include "qwadro/draw/afxDrawSystem.h"
-
-_AVX afxString const targaSignature = AFX_STRING(
-"\n           :::::::::::     :::     :::::::::   ::::::::      :::               "
-"\n               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             "
-"\n               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            "
-"\n               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           "
-"\n               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           "
-"\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
-"\n               ###     ###     ### ###    ###  ########  ###     ###           "
-"\n                                                                               "
-"\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
-"\n                                                                               "
-"\n                               Public Test Build                               "
-"\n                   (c) 2017 SIGMA, Engineering In Technology                   "
-"\n                                www.sigmaco.org                                "
-"\n                                                                               "
-);
 
 typedef struct _afxTgaImg
 {
@@ -162,6 +142,50 @@ void DecodeRle8Chunk(afxStream stream, afxNat siz, afxNat len, afxByte *dst)
     }
 }
 
+_AVX afxBool AfxSetUpTarga(afxTarga* tga, afxRaster ras, afxRasterIo const* op, afxNat lodCnt)
+{
+    afxError err = NIL;
+    *tga = (afxTarga) { 0 };
+    
+    if (ras)
+        tga->fmt = AfxGetRasterFormat(ras);
+
+    if (op)
+    {
+        tga->baseLod = op->rgn.lodIdx;
+        tga->lodCnt = AfxMax(1, lodCnt);
+        tga->origin[0] = op->rgn.origin[0];
+        tga->origin[1] = op->rgn.origin[1];
+        tga->origin[2] = op->rgn.origin[2];
+        tga->whd[0] = AfxMax(1, op->rgn.whd[0]);
+        tga->whd[1] = AfxMax(1, op->rgn.whd[1]);
+        tga->whd[2] = AfxMax(1, op->rgn.whd[2]);
+
+        tga->rowStride = op->rowStride;
+    }
+    else if (ras)
+    {
+        AfxGetRasterExtent(ras, 0, tga->whd);
+        afxNat maxLodCnt = AfxCountRasterLods(ras);
+
+        tga->lodCnt = AfxMin(AfxMax(1, lodCnt), maxLodCnt);
+
+        if (AfxTestRasterFlags(ras, afxRasterFlag_CUBEMAP))
+            tga->flags |= afxTargaFlag_CUBEMAP;
+
+        if (AfxTestRasterFlags(ras, afxRasterFlag_3D))
+            tga->flags |= afxTargaFlag_3D;
+    }
+    else AfxThrowError();
+
+    afxRasterLayout layout;
+    AfxQueryRasterLayout(ras, 0, 0, &layout);
+    tga->rowStride = tga->rowStride ? tga->rowStride : layout.rowStride;
+    tga->depthStride = tga->depthStride ? tga->depthStride : layout.depthStride;
+
+    return err;
+}
+
 _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
 {
     afxError err = NIL;
@@ -169,7 +193,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
     afxNat bkpOff = AfxGetStreamPosn(in);
     AfxReadStream(in, sizeof(hdr3), 0, &hdr3);
 
-    if (hdr3.fcc == AFX_MAKE_FCC('t', 'g', 'a', '4')) // Try read as the SIGMA Targa format.
+    if (hdr3.fcc == AFX_MAKE_FCC('t', 'g', 'a', '4')) // Try read as the SIGMA-engineered Targa format.
     {
         tga->udd[0] = hdr3.udd[0];
         tga->udd[1] = hdr3.udd[1];
@@ -191,7 +215,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
         tga->rowStride = hdr3.rowStride;
         tga->data.offset = hdr3.offset;
     }
-    else // Try read as the Truevision Targa format.
+    else // Try read as the Truevision standard TGA format.
     {
         AfxSeekStreamFromBegin(in, bkpOff);
         _afxStreamTgaHdr hdr2;
@@ -330,7 +354,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                         switch (hdr2.imgType)
                         {
                         case 1: // Uncompressed, color-mapped images.
-                            tga->codec = afxTargaCodec_RLE8;
+                            tga->codec = afxTargaCodec_NONE;
                             tga->encSiz = tga->decSiz;
                             break;
                         case 9: // Runlength encoded color-mapped images.
@@ -348,7 +372,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                         switch (hdr2.imgType)
                         {
                         case 1: // Uncompressed, color-mapped images.
-                            tga->codec = afxTargaCodec_RLE8;
+                            tga->codec = afxTargaCodec_NONE;
                             tga->encSiz = tga->decSiz;
                             break;
                         case 9: // Runlength encoded color-mapped images.
@@ -366,7 +390,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                         switch (hdr2.imgType)
                         {
                         case 1: // Uncompressed, color-mapped images.
-                            tga->codec = afxTargaCodec_RLE8;
+                            tga->codec = afxTargaCodec_NONE;
                             tga->encSiz = tga->decSiz;
                             break;
                         case 9: // Runlength encoded color-mapped images.
@@ -384,7 +408,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                         switch (hdr2.imgType)
                         {
                         case 1: // Uncompressed, color-mapped images.
-                            tga->codec = afxTargaCodec_RLE8;
+                            tga->codec = afxTargaCodec_NONE;
                             tga->encSiz = tga->decSiz;
                             break;
                         case 9: // Runlength encoded color-mapped images.
@@ -402,7 +426,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
                         switch (hdr2.imgType)
                         {
                         case 1: // Uncompressed, color-mapped images.
-                            tga->codec = afxTargaCodec_RLE8;
+                            tga->codec = afxTargaCodec_NONE;
                             tga->encSiz = tga->decSiz;
                             break;
                         case 9: // Runlength encoded color-mapped images.
@@ -427,7 +451,7 @@ _AVX afxBool AfxReadTarga(afxTarga* tga, afxStream in)
     return !err;
 }
 
-_AVX afxBool AfxDecodeTarga(afxTarga* tga, afxStream in, void* dst)
+_AVX afxBool AfxDoTargaInput(afxTarga* tga, afxStream in, void* dst)
 {
     afxError err = NIL;
     
@@ -450,7 +474,6 @@ _AVX afxBool AfxDecodeTarga(afxTarga* tga, afxStream in, void* dst)
         {
             DecodeRle8Chunk(in, pixelStride, tga->whd[0] * tga->whd[1] * tga->whd[2], dst);
         }
-
         break;
     }
     case afxTargaCodec_GDEFLATE:
@@ -461,6 +484,105 @@ _AVX afxBool AfxDecodeTarga(afxTarga* tga, afxStream in, void* dst)
     default: AfxThrowError();
     }
     return !err;
+}
+
+_AVX afxBool AfxBeginTargaOutput(afxTarga* tga, afxStream out)
+{
+    afxError err = NIL;
+    _afxStreamTgaHdr hdr2;
+
+    switch (tga->fmt)
+    {
+    case afxPixelFormat_R8:
+    case afxPixelFormat_S8:
+        hdr2.bpp = 8; break;
+    case afxPixelFormat_RG8:
+    case afxPixelFormat_GR8:
+    case afxPixelFormat_D16:
+        hdr2.bpp = 16; break;
+    case afxPixelFormat_RGB8:
+    case afxPixelFormat_BGR8:
+    case afxPixelFormat_RGB8_SRGB:
+    case afxPixelFormat_RGBA4:
+    case afxPixelFormat_RGB5A1:
+    case afxPixelFormat_R5G6B5:
+    case afxPixelFormat_D24:
+        hdr2.bpp = 24; break;
+    case afxPixelFormat_RGBA8:
+    case afxPixelFormat_BGRA8:
+    case afxPixelFormat_RGBA8_SRGB:
+    case afxPixelFormat_R32F:
+    case afxPixelFormat_RGB9E5:
+    case afxPixelFormat_RGB10A2:
+    case afxPixelFormat_D32:
+    case afxPixelFormat_D32F:
+    case afxPixelFormat_D24S8:
+        hdr2.bpp = 32; break;
+    default: AfxThrowError(); break;
+    }
+
+    hdr2.idLen = 0;
+    hdr2.paletteType = 0;
+    hdr2.imgType = hdr2.bpp == 8 ? 3 : 2;
+    hdr2.paletteBase = 0;
+    hdr2.paletteLen = 0;
+    hdr2.paletteBpp = 0;
+    hdr2.originOffX = tga->origin[0];
+    hdr2.originOffY = tga->origin[1];
+    hdr2.width = tga->whd[0];
+    hdr2.height = tga->whd[1];
+    hdr2.bpp = hdr2.bpp;
+    hdr2.descriptor = 0;
+
+    if (AfxWriteStream(out, sizeof(hdr2), 0, &hdr2))
+        AfxThrowError();
+
+    return !err;
+}
+
+_AVX afxBool AfxEndTargaOutput(afxTarga* tga, afxStream out)
+{
+    afxError err = NIL;
+    afxTargaFileHdr hdr3 = { 0 };
+    hdr3.codec = tga->codec;
+    hdr3.decSiz = tga->decSiz;
+    hdr3.encSiz = tga->encSiz;
+    hdr3.depthStride = tga->depthStride;
+    hdr3.fcc = AFX_MAKE_FCC('t', 'g', 'a', '\0');
+    hdr3.flags = tga->flags;
+    hdr3.fmt = tga->fmt;
+    hdr3.lodCnt = tga->lodCnt;
+    hdr3.origin[0] = tga->origin[0];
+    hdr3.origin[1] = tga->origin[1];
+    hdr3.origin[2] = tga->origin[2];
+    hdr3.whd[0] = tga->whd[0];
+    hdr3.whd[1] = tga->whd[1];
+    hdr3.whd[2] = tga->whd[2];
+    hdr3.rowStride = tga->rowStride;
+    hdr3.udd[0] = tga->udd[0];
+    hdr3.udd[1] = tga->udd[1];
+    hdr3.offset = tga->data.offset;
+
+    if (AfxWriteStream(out, sizeof(hdr3), 0, &hdr3))
+        AfxThrowError();
+
+    return !err;
+}
+
+_AVX afxBool AfxDoTargaOutput(afxTarga* tga, afxNat iterNo, void const* src, afxStream out)
+{
+    afxError err = NIL;
+
+    if (iterNo == 0)
+    {
+        AfxBeginTargaOutput(tga, out);
+        
+        if (AfxWriteStream(out, tga->rowStride * tga->whd[1] * tga->depthStride, 0, src))
+            AfxThrowError();
+    }
+
+    AfxThrowError();
+    return err;
 }
 
 _AVX afxBool TGA_Load(afxStream in, _afxTgaImg* img)
@@ -1060,131 +1182,86 @@ _AVX afxError _AfxTgaLoad(afxMmu mmu, afxBool bgrToRgb, afxStream stream, _afxTg
     return err;
 }
 
-_AVX afxResult _AfxTgaGen(afxMmu mmu, _afxTga* tga, afxInt width, afxInt height, afxInt depth, afxPixelFormat format)
-{
-    afxInt stride;
-
-    if (!tga || width < 1 || height < 1 || depth < 1)
-    {
-        return FALSE;
-    }
-
-    if (format == afxPixelFormat_R8)
-    {
-        stride = 1;
-    }
-    else if (format == afxPixelFormat_BGR8 || format == afxPixelFormat_RGB8)
-    {
-        stride = 3;
-    }
-    else if (format == afxPixelFormat_BGRA8 || format == afxPixelFormat_RGBA8)
-    {
-        stride = 4;
-    }
-    else
-    {
-        return FALSE;
-    }
-
-    if (!(tga->data = AfxAllocate(width * height * depth, stride * sizeof(afxByte), 0, AfxHere())))
-    {
-        return FALSE;
-    }
-    tga->width = width;
-    tga->height = height;
-    tga->depth = depth;
-    tga->fmt = format;
-
-    return TRUE;
-}
-
-_AVX afxError AfxPrintRasterToTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri)
+_AVX afxError AfxPrintRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-
-    afxRasterCopyOp rgn2 = { 0 };
-
-    if (rgn)
-    {
-        rgn2 = *rgn;
-
-        rgn2.srcLayerCnt = AfxMinorNonZero(1, rgn2.srcLayerCnt);
-        rgn2.dst.layerCnt = AfxMinorNonZero(1, rgn2.dst.layerCnt);
-        rgn2.dst.whd[0] = AfxMinorNonZero(1, rgn2.dst.whd[0]);
-        rgn2.dst.whd[1] = AfxMinorNonZero(1, rgn2.dst.whd[1]);
-        rgn2.dst.whd[2] = AfxMinorNonZero(1, rgn2.dst.whd[2]);
-    }
-    else
-    {
-        rgn2.srcLayerCnt = 1;
-        rgn2.dst.layerCnt = 1;
-        AfxGetRasterExtent(ras, 0, rgn2.dst.whd);
-    }
-
-    afxDrawContext dctx = AfxGetObjectProvider(ras);
-
     afxStream file;
 
     if (!(file = AfxOpenFile(uri, afxIoFlag_W))) AfxThrowError();
     else
     {
-        _afxTga im;
-        AfxZero2(1, sizeof(im), &im);
+        afxRasterIo iop = { 0 };
 
-        afxPixelLayout pfd;
-        afxPixelFormat fmt = AfxGetRasterFormat(ras);
-        AfxDescribePixelFormat(fmt, &pfd);
+        if (op)
+        {
+            afxWhd whd;
+            AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
+            iop.rgn = op->rgn;
 
-        if (FALSE == _AfxTgaGen(NIL, &im, rgn2.dst.whd[0], rgn2.dst.whd[1], rgn2.dst.whd[2], fmt)) AfxThrowError();
+            iop.rgn.origin[0] = AfxMin(iop.rgn.origin[0], whd[0] - 1);
+            iop.rgn.origin[1] = AfxMin(iop.rgn.origin[1], whd[1] - 1);
+            iop.rgn.origin[2] = AfxMin(iop.rgn.origin[2], whd[2] - 1);
+            iop.rgn.whd[0] = AfxMin(AfxMax(1, iop.rgn.whd[0]), whd[0]);
+            iop.rgn.whd[1] = AfxMin(AfxMax(1, iop.rgn.whd[1]), whd[1]);
+            iop.rgn.whd[2] = AfxMin(AfxMax(1, iop.rgn.whd[2]), whd[2]);
+        }
         else
         {
-            AfxDumpRaster(ras, &rgn2.dst, im.data);
-
-            if (_AfxTgaSave(NIL, file, &im)) AfxThrowError();
-            else
-            {
-
-            }
+            AfxGetRasterExtent(ras, 0, iop.rgn.whd);
         }
 
-        _AfxTgaDestroy(NIL, &im);
+        afxTarga tga;
+        AfxSetUpTarga(&tga, ras, &iop, 1);
+        AfxBeginTargaOutput(&tga, file);
+
+        iop.rowStride = tga.rowStride;
+        iop.rowCnt = iop.rgn.whd[1];
+        iop.offset = AfxGetStreamPosn(file);
+
+        AfxDownloadRaster(ras, &iop, lodCnt, file);
+        tga.data.offset = iop.offset;
+        AfxEndTargaOutput(&tga, file);
 
         AfxReleaseObjects(1, &file);
     }
+
     return err;
 }
 
-_AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterCopyOp const* rgn, afxUri const* uri)
+_AVX afxError AfxReloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
 
-    afxRasterCopyOp rgn2 = { 0 };
+    afxRasterIo iop = { 0 };
 
-    if (rgn)
+    afxWhd whd;
+    AfxGetRasterExtent(ras, op->rgn.lodIdx, whd);
+
+    if (op)
     {
-        rgn2 = *rgn;
+        iop.rgn = op->rgn;
 
-        rgn2.srcLayerCnt = AfxMinorNonZero(1, rgn2.srcLayerCnt);
-        rgn2.dst.layerCnt = AfxMinorNonZero(1, rgn2.dst.layerCnt);
-        rgn2.dst.whd[0] = AfxMinorNonZero(1, rgn2.dst.whd[0]);
-        rgn2.dst.whd[1] = AfxMinorNonZero(1, rgn2.dst.whd[1]);
-        rgn2.dst.whd[2] = AfxMinorNonZero(1, rgn2.dst.whd[2]);
+        iop.rgn.origin[0] = AfxMin(iop.rgn.origin[0], whd[0] - 1);
+        iop.rgn.origin[1] = AfxMin(iop.rgn.origin[1], whd[1] - 1);
+        iop.rgn.origin[2] = AfxMin(iop.rgn.origin[2], whd[2] - 1);
+        iop.rgn.whd[0] = AfxMin(AfxMax(1, iop.rgn.whd[0]), whd[0]);
+        iop.rgn.whd[1] = AfxMin(AfxMax(1, iop.rgn.whd[1]), whd[1]);
+        iop.rgn.whd[2] = AfxMin(AfxMax(1, iop.rgn.whd[2]), whd[2]);
     }
     else
     {
-        rgn2.srcLayerCnt = 1;
-        rgn2.dst.layerCnt = 1;
-        AfxGetRasterExtent(ras, 0, rgn2.dst.whd);
+        AfxGetRasterExtent(ras, 0, iop.rgn.whd);
     }
 
-    afxDrawContext dctx = AfxGetObjectProvider(ras);
     afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
 
     if (AfxReloadFile(ios, uri)) AfxThrowError();
     else
     {
+        
+#if 0
         _afxTgaImg tga = { 0 };
 
         if (TGA_Load(ios, &tga)) AfxThrowError();
@@ -1199,12 +1276,13 @@ _AVX afxError AfxFetchRasterFromTarga(afxRaster ras, afxRasterCopyOp const* rgn,
             if (tga.data)
                 AfxDeallocate(tga.data);
         }
+#endif
     }
-    AfxReleaseObjects(1, (void*[]){ ios });
+    AfxReleaseObjects(1, &ios);
     return err;
 }
 
-_AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
+_AVX afxError AfxLoadRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxNat cnt, afxUri const uri[], afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -1239,7 +1317,6 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
                 rasi.sampleCnt = 1;
                 rasi.usage = usage;
                 rasi.flags = flags;
-                rasi.layerCnt = 1;
                 rasi.whd[0] = tga.whd[0];
                 rasi.whd[1] = tga.whd[1];
                 rasi.whd[2] = tga.whd[2];
@@ -1251,13 +1328,12 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
                 }
                 else
                 {
-                    afxRasterRegion rgn = { 0 };
-                    rgn.layerCnt = 1;
-                    rgn.whd[0] = tga.whd[0];
-                    rgn.whd[1] = tga.whd[1];
-                    rgn.whd[2] = tga.whd[2];
+                    afxRasterIo op = { 0 };
+                    op.rgn.whd[0] = tga.whd[0];
+                    op.rgn.whd[1] = tga.whd[1];
+                    op.rgn.whd[2] = tga.whd[2];
                     
-                    AfxUpdateRaster(rasters[i], &rgn, tga.data);
+                    AfxUpdateRaster(rasters[i], &op, tga.data);
                 }
 
 
@@ -1266,11 +1342,11 @@ _AVX afxError AfxLoadRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage,
             }
         }
     }
-    AfxReleaseObjects(1, (void*[]){ ios });
+    AfxReleaseObjects(1, &ios);
     return err;
 }
 
-_AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
+_AVX afxError AfxAssembleRasters(afxDrawContext dctx, afxRasterUsage usage, afxRasterFlags flags, afxUri const* dir, afxNat cnt, afxUri const layers[], afxRaster* ras)
 {
     afxError err = AFX_ERR_NONE;
     afxStream ios = AfxAcquireStream(afxIoFlag_R, 0);
@@ -1308,10 +1384,9 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
                     rasi.sampleCnt = 1;
                     rasi.usage = usage;
                     rasi.flags = flags;
-                    rasi.layerCnt = cnt;
                     rasi.whd[0] = tga.whd[0];
                     rasi.whd[1] = tga.whd[1];
-                    rasi.whd[2] = tga.whd[2];
+                    rasi.whd[2] = cnt;
 
                     if (AfxAcquireRasters(dctx, 1, &rasi, ras))
                     {
@@ -1322,14 +1397,13 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
 
                 if (!err)
                 {
-                    afxRasterRegion rgn = { 0 };
-                    rgn.baseLayer = i;
-                    rgn.layerCnt = 1;
-                    rgn.whd[0] = tga.whd[0];
-                    rgn.whd[1] = tga.whd[1];
-                    rgn.whd[2] = tga.whd[2];
+                    afxRasterIo op = { 0 };
+                    op.rgn.origin[2] = i;
+                    op.rgn.whd[0] = tga.whd[0];
+                    op.rgn.whd[1] = tga.whd[1];
+                    op.rgn.whd[2] = 1;
                     
-                    if (AfxUpdateRaster(*ras, &rgn, tga.data))
+                    if (AfxUpdateRaster(*ras, &op, tga.data))
                         AfxThrowError();
                 }
 
@@ -1339,6 +1413,6 @@ _AVX afxError AfxAssembleRastersFromTarga(afxDrawContext dctx, afxRasterUsage us
         }
     }
 
-    AfxReleaseObjects(1, (void*[]){ ios });
+    AfxReleaseObjects(1, &ios);
     return err;
 }

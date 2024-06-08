@@ -10,14 +10,14 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AVX_DRAW_C
-#define _AVX_DRAW_STREAM_C
+#define _AVX_CMD_BUFFER_C
 #include "qwadro/draw/afxDrawSystem.h"
 
 
@@ -67,96 +67,153 @@ _AVX afxString const afxDrawCmdStrings[] =
     AFX_STRING("DrawIndexedIndirectCount"),
 };
 
-_AVX afxCmdId AfxCmdBindPipeline(afxDrawStream diob, afxNat segment, afxPipeline pip)
+_AVX afxCmdId AvxCmdBindPipeline(avxCmdb cmdb, afxNat segment, afxPipeline pip, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    /// pip must be a valid afxPipeline handle.
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return diob->stdCmds->BindPipeline(diob, segment, pip);
+
+    return cmdb->stdCmds->BindPipeline(cmdb, segment, pip, dynamics);
 }
 
-_AVX afxCmdId AfxCmdBindBuffers(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+_AVX afxCmdId AvxCmdBindRasterizer(avxCmdb cmdb, afxRasterizer razr, afxFlags dynamics)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    /// razr must be a valid afxRasterizer handle.
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
+
+    return cmdb->stdCmds->BindRasterizer(cmdb, razr, dynamics);
+}
+
+_AVX afxCmdId AvxCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat cnt, afxBuffer buf[], afxNat offset[], afxNat range[])
+{
+    afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertRange(8, baseIdx, cnt);
-    return diob->stdCmds->BindBuffers(diob, set, baseIdx, cnt, buf, offset, range);
+    return cmdb->stdCmds->BindBuffers(cmdb, set, baseIdx, cnt, buf, offset, range);
 }
 
-_AVX afxCmdId AfxCmdBindRasters(afxDrawStream diob, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[])
+_AVX afxCmdId AvxCmdBindRasters(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat cnt, afxSampler smp[], afxRaster tex[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertRange(8, baseIdx, cnt);
-    return diob->stdCmds->BindRasters(diob, set, baseIdx, cnt, smp, tex);
+    return cmdb->stdCmds->BindRasters(cmdb, set, baseIdx, cnt, smp, tex);
 }
 
-_AVX afxCmdId AfxCmdExecuteCommands(afxDrawStream diob, afxNat cnt, afxDrawStream aux[])
+_AVX afxCmdId AvxCmdExecuteCommands(avxCmdb cmdb, afxNat cnt, avxCmdb aux[])
 {
     afxError err = AFX_ERR_NONE;
-    return diob->stdCmds->ExecuteCommands(diob, cnt, aux);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    return cmdb->stdCmds->ExecuteCommands(cmdb, cnt, aux);
 }
 
 // Draw
 
-_AVX afxCmdId AfxCmdDraw(afxDrawStream diob, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
+_AVX afxCmdId AvxCmdDraw(avxCmdb cmdb, afxNat baseInstIdx, afxNat instCnt, afxNat baseVtxIdx, afxNat vtxCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssert(vtxCnt);
     //AfxAssert(instCnt);
-    return diob->stdCmds->Draw(diob, vtxCnt, instCnt, baseVtxIdx, baseInstIdx);
+    return cmdb->stdCmds->Draw(cmdb, vtxCnt, instCnt, baseVtxIdx, baseInstIdx);
 }
 
-_AVX afxCmdId AfxCmdDrawIndirect(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
+_AVX afxCmdId AvxCmdDrawIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssert(drawCnt);
     AfxAssert(stride);
-    return diob->stdCmds->DrawIndirect(diob, buf, offset, drawCnt, stride);
+    return cmdb->stdCmds->DrawIndirect(cmdb, buf, offset, drawCnt, stride);
 }
 
-_AVX afxCmdId AfxCmdDrawIndirectCount(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
+_AVX afxCmdId AvxCmdDrawIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssertObjects(1, &cntBuf, afxFcc_BUF);
     AfxAssert(cntBuf);
     AfxAssert(maxDrawCnt);
     AfxAssert(stride);
-    return diob->stdCmds->DrawIndirectCount(diob, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
+    return cmdb->stdCmds->DrawIndirectCount(cmdb, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
-_AVX afxCmdId AfxCmdDrawIndexed(afxDrawStream diob, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
+_AVX afxCmdId AvxCmdDrawIndexed(avxCmdb cmdb, afxNat vtxOff, afxNat baseInstIdx, afxNat instCnt, afxNat baseIdx, afxNat idxCnt)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssert(idxCnt);
     //AfxAssert(instCnt);
-    return diob->stdCmds->DrawIndexed(diob, idxCnt, instCnt, baseIdx, vtxOff, baseInstIdx);
+    return cmdb->stdCmds->DrawIndexed(cmdb, idxCnt, instCnt, baseIdx, vtxOff, baseInstIdx);
 }
 
-_AVX afxCmdId AfxCmdDrawIndexedIndirect(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
+_AVX afxCmdId AvxCmdDrawIndexedIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssert(drawCnt);
     AfxAssert(stride);
-    return diob->stdCmds->DrawIndexedIndirect(diob, buf, offset, drawCnt, stride);
+    return cmdb->stdCmds->DrawIndexedIndirect(cmdb, buf, offset, drawCnt, stride);
 }
 
-_AVX afxCmdId AfxCmdDrawIndexedIndirectCount(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
+_AVX afxCmdId AvxCmdDrawIndexedIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     AfxAssertObjects(1, &cntBuf, afxFcc_BUF);
     AfxAssert(maxDrawCnt);
     AfxAssert(stride);
-    return diob->stdCmds->DrawIndexedIndirectCount(diob, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
+    return cmdb->stdCmds->DrawIndexedIndirectCount(cmdb, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);
 }
 
 
@@ -169,13 +226,13 @@ _AVX afxCmdId AfxCmdDrawIndexedIndirectCount(afxDrawStream diob, afxBuffer buf, 
 
 
 
-_AVX afxCmdId AfxCmdBindFontSIG(afxDrawStream diob, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[])
+_AVX afxCmdId AvxCmdBindFontSIG(avxCmdb cmdb, afxNat first, afxNat cnt, afxTypography typ[], afxPipeline pip[], afxSampler smp[], afxRaster ras[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     AfxAssert(first == 0);
     AfxAssert(cnt == 1);
-    AfxCmdBindPipeline(diob, 0, pip[0]);
-    AfxCmdBindRasters(diob, 0, 1, 1, smp, ras);
+    AvxCmdBindPipeline(cmdb, 0, pip[0], NIL);
+    AvxCmdBindRasters(cmdb, 0, 1, 1, smp, ras);
     return 0;
 }

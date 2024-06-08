@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -23,9 +23,9 @@
 #include "qwadro/core/afxSystem.h"
 
 #ifdef _AFX_BINK_VIDEO_C
-#define _AVXBINK _AFXEXPORT
+#define _AVXBINK DLLEXPORT
 #else
-#define _AVXBINK _AFXIMPORT
+#define _AVXBINK DLLIMPORT
 #endif
 
 #define AVXBINK _AVXBINK

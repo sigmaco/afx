@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -45,7 +45,7 @@ _SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr)
 
 #if 0
             afxShader fsh;
-            AfxFindLinkedShader(pip, afxShaderStage_FRAGMENT, &fsh);
+            AfxGetPipelineStage(pip, afxShaderStage_FRAGMENT, &fsh);
             afxNat outCnt = AfxCountColorOutputChannels(pip->base.razr);
             //vtxShd->base.ioDecls.
             for (afxNat i = 0; i < outCnt; i++)
@@ -93,9 +93,9 @@ _SGL afxClassConfig const _SglRazrMgrCfg =
 {
     .fcc = afxFcc_RAZR,
     .name = "Rasterizer",
+    .desc = "Draw Device Rasterization Pipeline",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxRasterizer)),
-    .mmu = NIL,
     .ctor = (void*)_SglRazrCtor,
     .dtor = (void*)_SglRazrDtor
 };

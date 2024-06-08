@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -669,32 +669,4 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
         *error = err;
 
     return arc;
-}
-
-_AFX afxNat AfxInvokeArchives(afxNat first, afxNat cnt, afxBool(*f)(afxArchive, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetArchiveClass();
-    AfxAssertClass(cls, afxFcc_ARC);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxEnumerateArchives(afxNat first, afxNat cnt, afxArchive archives[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(archives);
-    afxManager* cls = AfxGetArchiveClass();
-    AfxAssertClass(cls, afxFcc_ARC);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)archives);
-}
-
-_AFX afxNat AfxCountArchives(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetArchiveClass();
-    AfxAssertClass(cls, afxFcc_ARC);
-    return AfxCountObjects(cls);
 }

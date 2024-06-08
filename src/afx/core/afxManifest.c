@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -158,6 +158,27 @@ _AFX afxBool AfxGetManifestUri(afxManifest const* ini, afxNat pagIdx, afxNat rec
         AfxUriFromString(uri, &s);
     else
         AfxResetUri(uri);
+
+    return rslt;
+}
+
+_AFX afxBool AfxGetManifestNat(afxManifest const* ini, afxNat pagIdx, afxNat recIdx, afxNat* value)
+{
+    afxError err = NIL;
+    AfxAssert(ini);
+    AfxAssertRange(ini->pageCnt, pagIdx, 1);
+    AfxAssertRange(ini->pages[pagIdx].keyCnt, recIdx, 1);
+    AfxAssert(value);
+    afxBool rslt = FALSE;
+    afxString s;
+
+    if ((rslt = AfxGetManifestString(ini, pagIdx, recIdx, &s)))
+    {
+        afxString2048 bstr;
+        AfxMakeString2048(&bstr, &s);
+        *value = (afxNat)atoi(bstr.str.str.start);
+    }
+    else *value = 0;
 
     return rslt;
 }

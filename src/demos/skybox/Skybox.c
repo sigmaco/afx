@@ -3,7 +3,7 @@
 #include <Windows.h>
 
 #include "qwadro/afxQwadro.h"
-#include "qwadro/sim/rendering/awxRenderer.h"
+#include "qwadro/sim/rendering/akxRenderer.h"
 
 #define ENABLE_DRAW 1
 
@@ -14,11 +14,12 @@ const afxReal CameraSpeed = 30.0f;
 afxSimulation sim = NIL;
 afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
-awxRenderer rnd = NIL;
+akxRenderer rnd = NIL;
 
 afxCamera cam = NIL;
 
 afxUri2048 uri;
+
 
 afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
 {
@@ -29,7 +30,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
     {
     default:
     {
-        awxRenderer rnd = AfxGetDrawInputUdd(din);
+        akxRenderer rnd = AfxGetDrawInputUdd(din);
         afxDrawContext dctx;
         AfxGetDrawInputContext(din, &dctx);
 
@@ -39,54 +40,48 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 
             if (!AfxLockDrawOutputBuffer(dout, 0, &outBufIdx))
             {
-                afxDrawStream diob;
+                avxCmdb cmdb;
                 afxNat queIdx = AFX_INVALID_INDEX;
                 afxNat portIdx = 0;
 
-                if (AfxAcquireDrawStreams(dctx, portIdx, &queIdx, 1, &diob)) AfxThrowError();
+                if (AfxAcquireCmdBuffers(din, avxCmdbUsage_ONCE, 1, &cmdb)) AfxThrowError();
                 else
                 {
-                    if (AfxRecordDrawStreams(afxDrawStreamUsage_ONCE, 1, &diob)) AfxThrowError();
+                    queIdx = AfxGetCmdBufferPool(cmdb);
+
+                    afxCanvas canv;
+                    AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
+                    AfxAssertObjects(1, &canv, afxFcc_CANV);
+
+                    AkxCmdBeginSceneRendering(cmdb, rnd, rnd->activeCam, NIL, canv);
+
+                    AfxDrawSky(cmdb, &rnd->sky);
+
+                    AkxCmdEndSceneRendering(cmdb, rnd);
+
+                    afxSemaphore dscrCompleteSem = NIL;
+
+                    if (AfxCompileCmdBuffers(1, &cmdb)) AfxThrowError();
                     else
                     {
-                        afxRaster surf;
-                        AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
-                        afxCanvas canv;
-                        AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
-                        AfxAssertObjects(1, &surf, afxFcc_RAS);
+                        afxExecutionRequest execReq = { 0 };
+                        execReq.cmdb = cmdb;
+                        execReq.signal = dscrCompleteSem;
 
-                        AwxCmdBeginSceneRendering(diob, rnd, rnd->activeCam, NIL, canv);
-
-                        AfxDrawSky(diob, &rnd->sky);
-
-                        AwxCmdEndSceneRendering(diob, rnd);
-
-                        afxSemaphore dscrCompleteSem = NIL;
-
-                        if (AfxCompileDrawStreams(1, &diob)) AfxThrowError();
-                        else
-                        {
-                            afxExecutionRequest execReq = { 0 };
-                            execReq.diob = diob;
-                            execReq.signal = dscrCompleteSem;
-
-                            if (AFX_INVALID_INDEX == AfxExecuteDrawStreams(din, 1, &execReq, NIL))
-                                AfxThrowError();
-                        }
-
-                        void* ddge = AfxGetDrawBridge(dctx, portIdx);
-                        AfxWaitForIdleDrawQueue(ddge, queIdx);
+                        if (AFX_INVALID_INDEX == (queIdx = AfxExecuteCmdBuffers(din, 1, &execReq, NIL)))
+                            AfxThrowError();
                     }
-                }
 
+                    AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx);
+                }
 
                 afxSemaphore dscrCompleteSem = NIL;
 
                 //AfxStampDrawOutputBuffers(1, &req, AfxV2d(200, 200), &AfxString("Test"), 738);
+                //AfxStampDrawOutputBuffer(dout, outBufIdx, portIdx, NIL, AfxV2d(200, 200), &AfxString("Test awgaw\nglhmawh\npanwhpinwanhawnpihnawpnwh\nipawnonhaiownoiawh\nnoiawhnawionhawoinhaow"));
 
                 if (AFX_INVALID_INDEX == AfxPresentDrawOutputBuffer(dout, outBufIdx, portIdx, dscrCompleteSem))
                     AfxThrowError();
-
             }
         }
         break;
@@ -173,6 +168,8 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
         MovementThisFrame * ForwardSpeed
     };
     AfxApplyCameraMotion(cam, v);
+
+
 }
 
 int main(int argc, char const* argv[])
@@ -198,10 +195,10 @@ int main(int argc, char const* argv[])
 
     // Acquire a drawable surface
 
-    AfxAcquireWindow(dctx, NIL, &window);
-    AfxAdjustWindowNdc(window, AfxSpawnV3d(0.5, 0.5, 1));
+    AfxAcquireWindow(0, dctx, NIL, &window);
+    AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
-    AfxGetWindowDrawOutput(window, &dout);
+    AfxGetSurfaceDrawOutput(window, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -237,7 +234,7 @@ int main(int argc, char const* argv[])
 
     // Acquire a simulation
 
-    awxSimulationConfig simSpec = { 0 };
+    akxSimulationConfig simSpec = { 0 };
     AfxRecomputeAabb(simSpec.extent, 2, (afxV3d const[]) { { -1000, -1000, -1000 }, { 1000, 1000, 1000 } });
     simSpec.dctx = dctx;
     simSpec.din = NIL;
@@ -251,9 +248,9 @@ int main(int argc, char const* argv[])
 
     // Acquire a simulation renderer
 
-    awxRendererConfig rndConf = { 0 };
+    akxRendererConfig rndConf = { 0 };
     rndConf.dinProc = DrawInputProc;
-    AwxAcquireRenderers(sim, 1, &rnd, &rndConf);
+    AkxAcquireRenderers(sim, 1, &rnd, &rndConf);
 
     // Acquire a view point
 

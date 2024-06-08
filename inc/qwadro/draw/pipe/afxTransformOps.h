@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -43,34 +43,24 @@ AFX_DEFINE_STRUCT(afxVertexInputPoint) /// vertex attribute input stream
     afxNat              srcSlotIdx; /// is the binding number which this attribute takes its data from.
     afxVertexFormat     fmt; /// is the size and type of the vertex attribute data.
     afxNat32            offset; /// is a byte offset of this attribute relative to the start of an element in the vertex input binding.
-    //awxVertexUsage      usage; /// special flags used to opportunistic optimization
+    //akxVertexUsage      usage; /// special flags used to opportunistic optimization
 };
 
   //////////////////////////////////////////////////////////////////////////////
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-/// Set the viewport count and viewports dynamically for a command buffer.
-/// This command sets the viewport count and viewports state for subsequent drawing commands when pipeline is created without viewport set.
-
-AVX afxCmdId            AfxCmdResetViewports
-(
-    afxDrawStream       diob,
-    afxNat              cnt, /// specifies the viewport count.
-    afxViewport const   vp[] /// specifies the viewports to use for drawing.
-);
-
 /// Set the viewport dynamically for a command buffer.
 /// This command sets the viewport transformation parameters state for subsequent drawing commands when the graphics pipeline is created without viewport set.
 
 /// The viewport parameters taken from element #i of @vp replace the current state for the viewport index @baseIdx + #i, for #i in[0, @cnt).
 
-AVX afxCmdId            AfxCmdReadjustViewports
+AVX afxCmdId            AvxCmdAdjustViewports
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxNat              baseIdx, /// is the index of the first viewport whose parameters are updated by the command.
     afxNat              cnt, /// is the number of viewports whose parameters are updated by the command.
-    afxViewport const   vp[] /// is a pointer to an array of afxViewport structures specifying viewport parameters.
+    afxViewport const   viewports[] /// is a pointer to an array of afxViewport structures specifying viewport parameters.
 );
 
 /// Bind vertex buffers to a command buffer and dynamically set strides.
@@ -84,23 +74,23 @@ AVX afxCmdId            AfxCmdReadjustViewports
 
 /// This command also dynamically sets the byte strides between consecutive elements within buffer @buf[#i] to the corresponding @stride[#i] value when drawing using shader objects, or when the graphics pipeline is created without vertex input binding stride set.
 
-AVX afxCmdId            AfxCmdBindVertexSources
+AVX afxCmdId            AvxCmdBindVertexSources
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxNat              baseSlotIdx, /// is the index of the first vertex input binding whose state is updated by the command.
     afxNat              slotCnt, /// is the number of vertex input bindings whose state is updated by the command.
-    afxBuffer           buf[], /// is an array of buffer handles.
-    afxNat32 const      offset[], /// the start of buffer.
-    afxNat32 const      range[], /// the size in bytes of vertex data bound from buffer.
-    afxNat32 const      stride[] /// the byte stride between consecutive elements within the buffer.
+    afxBuffer           buffers[], /// is an array of buffer handles.
+    afxNat32 const      offsets[], /// the start of buffer.
+    afxNat32 const      ranges[], /// the size in bytes of vertex data bound from buffer.
+    afxNat32 const      strides[] /// the byte stride between consecutive elements within the buffer.
     //afxNat32 const    divisor[] /// the number of successive instances that will use the same value of the vertex attribute when instanced rendering is used.
 );
 
 /// Bind an index buffer to a command buffer.
 
-AVX afxCmdId            AfxCmdBindIndexSource
+AVX afxCmdId            AvxCmdBindIndexSource
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxBuffer           buf, /// is the buffer being bound.
     afxNat32            offset, /// is the starting offset in bytes within buffer used in index buffer address calculations.
     afxNat32            range, /// is the size in bytes of index data bound from buffer.
@@ -110,29 +100,28 @@ AVX afxCmdId            AfxCmdBindIndexSource
 /// Set primitive topology state dynamically for a command buffer.
 /// This command sets the primitive topology for subsequent drawing commands when drawing using shader objects, or when the graphics pipeline is created without primitive topology set.
 
-AVX afxCmdId            AfxCmdSetPrimitiveTopology
+AVX afxCmdId            AvxCmdSetPrimitiveTopology
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxPrimTopology     topology /// specifies the primitive topology to use for drawing.
 );
 
-AVX afxCmdId            AfxCmdSwitchFrontFace
+/// Set front face orientation dynamically for a command buffer.
+
+AVX afxCmdId            AvxCmdSwitchFrontFace
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxBool             cw /// is a value specifying the front-facing triangle orientation to be used for culling.
 );
 
-AVX afxCmdId            AfxCmdSetCullMode
+/// Set cull mode dynamically for a command buffer.
+
+AVX afxCmdId            AvxCmdSetCullMode
 (
-    afxDrawStream       diob,
+    avxCmdb        cmdb,
     afxCullMode         mode /// specifies the cull mode property to use for drawing.
 );
 
-AVX afxCmdId            AfxCmdBindVertexInput(afxDrawStream diob, afxVertexInput vin);
-
-
-//                      TODO Pipeline Gateway
-AVX afxCmdId            AfxCmdResetVertexStreams(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[]);
-AVX afxCmdId            AfxCmdResetVertexAttributes(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[]);
+AVX afxCmdId            AvxCmdBindVertexInput(avxCmdb cmdb, afxVertexInput vin);
 
 #endif//AFX_TRANSFORM_OPS_H

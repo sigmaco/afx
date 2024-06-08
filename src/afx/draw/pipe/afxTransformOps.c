@@ -10,102 +10,179 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AVX_DRAW_C
-#define _AVX_DRAW_STREAM_C
+#define _AVX_CMD_BUFFER_C
 #include "qwadro/draw/afxDrawSystem.h"
 
-_AVX afxCmdId AfxCmdBindVertexInput(afxDrawStream diob, afxVertexInput vin)
+_AVX afxCmdId AvxCmdBindVertexInput(avxCmdb cmdb, afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &vin, afxFcc_VIN);
-    return diob->stdCmds->Transformation.BindVertexInput(diob, vin);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    AfxTryAssertObjects(1, &vin, afxFcc_VIN);
+    return cmdb->stdCmds->Transformation.BindVertexInput(cmdb, vin);
 }
 
-_AVX afxCmdId AfxCmdSwitchFrontFace(afxDrawStream diob, afxBool cw)
+_AVX afxCmdId AvxCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    return diob->stdCmds->Transformation.SwitchFrontFace(diob, cw);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    
+    AfxAssertRange(cw, FALSE, TRUE);
+    cw = AfxClamp(cw, FALSE, TRUE);
+
+    return cmdb->stdCmds->Transformation.SwitchFrontFace(cmdb, cw);
 }
 
-_AVX afxCmdId AfxCmdSetCullMode(afxDrawStream diob, afxCullMode mode)
+_AVX afxCmdId AvxCmdSetCullMode(avxCmdb cmdb, afxCullMode mode)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    return diob->stdCmds->Transformation.SetCullMode(diob, mode);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    /// mode must be a valid combination of afxCullMode values.
+    AfxAssertBounds(mode, afxCullMode_NONE, afxCullMode_BOTH);
+    mode = AfxClamp(mode, afxCullMode_NONE, afxCullMode_BOTH);
+
+    return cmdb->stdCmds->Transformation.SetCullMode(cmdb, mode);
 }
 
-_AVX afxCmdId AfxCmdResetViewports(afxDrawStream diob, afxNat cnt, afxViewport const vp[])
+_AVX afxCmdId AvxCmdAdjustViewports(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, afxViewport const viewports[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssert(!cnt || vp);
-    return diob->stdCmds->Transformation.ResetViewports(diob, cnt, vp);
-}
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
 
-_AVX afxCmdId AfxCmdReadjustViewports(afxDrawStream diob, afxNat baseIdx, afxNat cnt, afxViewport const vp[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cnt must be greater than 0.
+    AfxAssert(cnt);
+
+    /// viewports must be a valid pointer to an array of cnt valid afxViewport structures.
+    AfxAssert(viewports);    
     AfxAssertRange(8, baseIdx, cnt);
-    AfxAssert(!cnt || vp);
-    return diob->stdCmds->Transformation.ReadjustViewports(diob, baseIdx, cnt, vp);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        afxNat vpIdx = baseIdx + i;
+        afxViewport const* vp = &viewports[vpIdx];
+        AfxAssert(vp->extent[0]);
+        AfxAssert(vp->extent[1]);
+        AfxAssertBounds(vp->depth[0], 0.0, 1.0);
+        AfxAssertBounds(vp->depth[1], 0.0, 1.0);
+    }
+    return cmdb->stdCmds->Transformation.AdjustViewports(cmdb, baseIdx, cnt, viewports);
 }
 
-_AVX afxCmdId AfxCmdBindVertexSources(afxDrawStream diob, afxNat baseSlotIdx, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
+_AVX afxCmdId AvxCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlotIdx, afxNat slotCnt, afxBuffer buffers[], afxNat32 const offsets[], afxNat32 const ranges[], afxNat32 const strides[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
     AfxAssertRange(8, baseSlotIdx, slotCnt);
-    AfxAssert(stride);
+    AfxAssert(strides);
     
     for (afxNat i = 0; i < slotCnt; i++)
     {
-        AfxAssert(stride[i]);
+        if (buffers)
+        {
+            afxBuffer buf = buffers[i];
+
+            if (buf)
+            {
+                /// If buf is not NIL, buffer must be a valid afxBuffer handle.
+                AfxAssertObjects(1, &buf, afxFcc_BUF);
+
+                /// All elements of buffers must have been created with the afxBufferUsage_VERTEX flag.
+                AfxAssert(AfxTestBufferUsage(buf, afxBufferUsage_VERTEX));
+
+                afxNat bufCap = AfxGetBufferCapacity(buf);
+
+                /// If sizes is not NIL, all elements of offsets must be less than the size of the corresponding element in buffers.
+                /// If sizes is not NIL, all elements of offsets plus pSizes , where sizes is not zero, must be less than or equal to the size of the corresponding element in buffers.
+                afxNat offset = offsets ? offsets[i] : 0;
+                afxNat range = ranges ? ranges[i] : bufCap - offset;
+                AfxAssertRange(bufCap, offset, range);
+                AfxAssert(range);
+
+                AfxAssert(strides && strides[i]);
+            }
+        }
+        else
+        {
+            /// If an element of buffers is NIL, then the corresponding element of offsets must be zero.
+            AfxAssert(!ranges || !ranges[i]);
+            AfxAssert(!offsets || !offsets[i]);
+            AfxAssert(!strides || !strides[i]);
+        }
     }
-    return diob->stdCmds->Transformation.BindVertexSources(diob, baseSlotIdx, slotCnt, buf, offset, range, stride);
+    return cmdb->stdCmds->Transformation.BindVertexSources(cmdb, baseSlotIdx, slotCnt, buffers, offsets, ranges, strides);
 }
 
-#if 0
-_AVX afxCmdId AfxCmdResetVertexStreams(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[])
+_AVX afxCmdId AvxCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertRange(8, 0, cnt);
-    return diob->stdCmds->ResetVertexStreams(diob, cnt, srcIdx, stride, instance);
-}
-
-_AVX afxCmdId AfxCmdResetVertexAttributes(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertRange(8, 0, cnt);
-    return diob->stdCmds->ResetVertexAttributes(diob, cnt, location, fmt, srcIdx, offset);
-}
-#endif
-
-_AVX afxCmdId AfxCmdBindIndexSource(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
-    AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(AfxGetBufferCapacity(buf), offset, range);
-    AfxAssert(range);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    
+    /// idxSiz must not be zero.
     AfxAssert(idxSiz);
-    return diob->stdCmds->Transformation.BindIndexSource(diob, buf, offset, range, idxSiz);
+
+    if (!buf)
+    {
+        AfxAssert(!offset);
+        AfxAssert(!range);
+        offset = 0;
+        range = 0;
+    }
+    else
+    {
+        /// If buf is not NIL, buffer must be a valid afxBuffer handle.
+        AfxAssertObjects(1, &buf, afxFcc_BUF);
+
+        /// buffer must have been created with the afxBufferUsage_INDEX flag.
+        AfxAssert(AfxTestBufferUsage(buf, afxBufferUsage_INDEX));
+
+        /// offset must be less than the size of buffer.
+        afxNat bufCap = AfxGetBufferCapacity(buf);
+        AfxAssertRange(bufCap, offset, range);
+        AfxAssert(range);
+
+        offset = AfxClamp(offset, 0, bufCap - 1);
+        range = AfxClamp(range, 0, bufCap - offset);
+    }
+    return cmdb->stdCmds->Transformation.BindIndexSource(cmdb, buf, offset, range, idxSiz);
 }
 
-_AVX afxCmdId AfxCmdSetPrimitiveTopology(afxDrawStream diob, afxPrimTopology topology)
+_AVX afxCmdId AvxCmdSetPrimitiveTopology(avxCmdb cmdb, afxPrimTopology topology)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &diob, afxFcc_DIOB);
+    /// cmdb must be a valid avxCmdb handle.
+    AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+
+    /// topology must be a valid afxPrimTopology value.
     AfxAssert(topology < afxPrimTopology_TOTAL);
-    return diob->stdCmds->Transformation.SetPrimitiveTopology(diob, topology);
+
+    return cmdb->stdCmds->Transformation.SetPrimitiveTopology(cmdb, topology);
 }

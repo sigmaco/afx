@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -32,27 +32,6 @@
 
 #define _AFX_CORE_C
 #define _AFX_SYSTEM_C
-#define _AFX_THREAD_C
-#define _AFX_HID_C
-#define _AFX_MOUSE_C
-#define _AFX_KEYBOARD_C
-#define _AFX_EXECUTABLE_C
-#define _AFX_ICD_C
-#define _AFX_FILE_C
-#define _AFX_FILE_SYSTEM_C
-#define _AFX_STREAM_C
-#define _AFX_CODEC_C
-#define _AFX_ARCHIVE_C
-#define _AFX_APPLICATION_C
-#define _AFX_MMU_C
-#define _AFX_DEVICE_C
-#define _AVX_DRAW_C
-#define _AVX_DRAW_SYSTEM_C
-#define _AFX_TXU_C
-#define _AFX_SOUND_C
-#define _AFX_SOUND_SYSTEM_C
-#define _AFX_STRING_CATALOG_C
-#define _AFX_CONTROLLER_C
 #include "qwadro/core/afxSystem.h"
 
 _AFX afxBool sysReady = FALSE;
@@ -170,6 +149,7 @@ _AFX afxResult PrimeThreadProc(afxThread thr, afxEvent* ev)
     return 0;
 }
 
+#if 0
 _AFX afxBool DoDevService(afxDevice dev, afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
@@ -178,6 +158,7 @@ _AFX afxBool DoDevService(afxDevice dev, afxThread thr)
     dev->procCb(dev, thr);
     return 0; // continue
 }
+#endif
 
 extern afxBool _AfxThrExecuteCb(afxThread thr, void* udd);
 
@@ -201,11 +182,14 @@ _AFX afxResult AfxDoSystemExecution(afxTime timeout)
             
             if (tid == _primeTid)
             {
-                if (sys->ssysctl)
-                    sys->ssysctl(sys, 0);
+                if (sys->avxctl)
+                    sys->avxctl(sys, sys->e2drawDll, 0, &timeout);
 
-                if (sys->dsysctl)
-                    sys->dsysctl(sys, 0);
+                if (sys->asxctl)
+                    sys->asxctl(sys, sys->e2soundDll, 0, &timeout);
+
+                if (sys->auxctl)
+                    sys->auxctl(sys, sys->e2uxDll, 0, &timeout);
 
                 //AfxInvokeDevices(NIL, 0, AFX_N32_MAX, (void*)DoDevService, _primeThr);
                 //PrimeThreadProc(sys->primeThr, );

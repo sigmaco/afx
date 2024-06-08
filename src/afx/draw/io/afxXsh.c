@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -18,6 +18,7 @@
 
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxShaderBlueprint.h"
+#include "qwadro/draw/io/afxXsh.h"
 
 AVX afxChar const *shdResTypeNames[];
 
@@ -580,7 +581,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
             }
         }
-        else if (0 == AfxCompareString(&name, &AfxStaticString("FragmentShader")))
+        else if (0 == AfxCompareString(&name, &AfxStaticString("Transformer")))
         {
             if (!AfxStringIsEmpty(&content))
             {
@@ -588,9 +589,26 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 AfxUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                AfxResetUri(&config->fragShd);
-                AfxReplicateUri(&config->fragShd, &tempUri);
-                AfxResetString(&config->fragFn);
+                AfxResetUri(&config->xfmrPipUri);
+                AfxParsePipelineFromXsh(&config->xfmrPipb, &tempUri);
+            }
+            else
+            {
+                AfxResetUri(&config->xfmrPipUri);
+            }
+        }
+        else if (0 == AfxCompareString(&name, &AfxStaticString("FragmentShader")))
+        {
+            if (!AfxStringIsEmpty(&content))
+            {
+                afxUri tempUri;
+                AfxUriFromString(&tempUri, &content);
+                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
+                
+                AfxResetUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt]);
+                AfxReplicateUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt], &tempUri);
+                config->xfmrPipb.shdStage[config->xfmrPipb.shdCnt] = afxShaderStage_FRAGMENT;
+                ++config->xfmrPipb.shdCnt;
             }
             else
             {
@@ -599,7 +617,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
         }
         else
         {
-        AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
+            AfxLogY("Node '%.*s' not handled.", AfxPushString(&name));
             hasUnhandledNodes = TRUE;
         }
     }
@@ -608,7 +626,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 }
 
 #if 0
-_AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineConfig const* identity, afxPipelineConfig *ds, afxPipelineDepthFlags *foundMask)
+_AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineBlueprint const* identity, afxPipelineBlueprint *ds, afxPipelineDepthFlags *foundMask)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -626,12 +644,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.failOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(7);
+                *foundMask |= AFX_BIT(7);
             }
             else
             {
                 ds->stencilBack.failOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(11);
+                *foundMask |= AFX_BIT(11);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_pass))
@@ -639,12 +657,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.passOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(8);
+                *foundMask |= AFX_BIT(8);
             }
             else
             {
                 ds->stencilBack.passOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(12);
+                *foundMask |= AFX_BIT(12);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_depthFail))
@@ -652,12 +670,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(9);
+                *foundMask |= AFX_BIT(9);
             }
             else
             {
                 ds->stencilBack.depthFailOp = AfxFindStencilOp(content);
-                *foundMask |= AFX_BIT_OFFSET(13);
+                *foundMask |= AFX_BIT(13);
             }
         }
         else if (0 == AfxCompareString(name, &g_str_compare))
@@ -665,12 +683,12 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
             if (front)
             {
                 ds->stencilFront.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AFX_BIT_OFFSET(10);
+                *foundMask |= AFX_BIT(10);
             }
             else
             {
                 ds->stencilBack.compareOp = AfxFindCompareOp(content);
-                *foundMask |= AFX_BIT_OFFSET(14);
+                *foundMask |= AFX_BIT(14);
             }
         }
         else
@@ -682,17 +700,17 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
 }
 #endif
 
-_AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
-    AfxAssert(identity);
     //AfxAssertType(xml, afxFcc_XML);
     //AfxAssertType(blueprint, afxFcc_PIPB);
     
     afxString name;
     afxString content;
 
+    afxNat baseShd = config->shdCnt;
     afxNat foundShdCnt = 0;
     afxNat childCnt = AfxCountXmlChilds(xml, elemIdx);
 
@@ -709,7 +727,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 AfxAssertRange(afxPrimTopology_TOTAL, primTop, 1);
                 config->primTop = primTop;
-                config->primFlags |= afxPipelinePrimitiveFlag_TOPOLOGY;
+                config->primFlags |= afxPipelineFlag_TOPOLOGY;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("CullMode")))
@@ -720,7 +738,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
             {
                 AfxAssertRange(afxCullMode_TOTAL, cullMode, 1);
                 config->cullMode = cullMode;
-                config->primFlags |= afxPipelinePrimitiveFlag_CULL_MODE;
+                config->primFlags |= afxPipelineFlag_CULL_MODE;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("FrontFace")))
@@ -732,13 +750,13 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxAssert(!invertFrontFacing && (0 == AfxCompareString(&content, &AfxStaticString("CCW"))));
                 AfxAssertBool(invertFrontFacing);
                 config->invertFrontFacing = invertFrontFacing;
-                config->primFlags |= afxPipelinePrimitiveFlag_FRONT_FACE_INV;
+                config->primFlags |= afxPipelineFlag_FRONT_FACE_INV;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthClampEnabled")))
         {
             config->depthClampEnabled = TRUE;
-            config->primFlags |= afxPipelinePrimitiveFlag_DEPTH_CLAMP;
+            config->primFlags |= afxPipelineFlag_DEPTH_CLAMP;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("VertexShader")))
         {
@@ -748,9 +766,9 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                AfxResetUri(&config->shdUri[foundShdCnt]);
-                AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
-                config->shdStage[foundShdCnt] = afxShaderStage_VERTEX;
+                AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
+                AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
+                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_VERTEX;
                 ++foundShdCnt;
             }
             else
@@ -794,9 +812,9 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 }
             }
 
-            config->vis[config->visCnt].instanceRate = instanceRate;
-            config->vis[config->visCnt].slot = visSlot;
-            config->visCnt++;
+            //config->vis[config->visCnt].instanceRate = instanceRate;
+            //config->vis[config->visCnt].slot = visSlot;
+            //config->visCnt++;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("HullShader")))
         {
@@ -806,9 +824,9 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                AfxResetUri(&config->shdUri[foundShdCnt]);
-                AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
-                config->shdStage[foundShdCnt] = afxShaderStage_TESS_EVAL;
+                AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
+                AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
+                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_TESS_EVAL;
                 ++foundShdCnt;
             }
             else
@@ -824,9 +842,9 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                AfxResetUri(&config->shdUri[foundShdCnt]);
-                AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
-                config->shdStage[foundShdCnt] = afxShaderStage_TESS_CTRL;
+                AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
+                AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
+                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_TESS_CTRL;
                 ++foundShdCnt;
             }
             else
@@ -842,32 +860,14 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
                 AfxUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
-                AfxResetUri(&config->shdUri[foundShdCnt]);
-                AfxReplicateUri(&config->shdUri[foundShdCnt], &tempUri);
-                config->shdStage[foundShdCnt] = afxShaderStage_PRIMITIVE;
+                AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
+                AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
+                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_PRIMITIVE;
                 ++foundShdCnt;
             }
             else
             {
                 // ?
-            }
-        }
-        else if (0 == AfxCompareString(&name, &AfxStaticString("Rasterizer")))
-        {
-            if (!AfxStringIsEmpty(&content))
-            {
-                afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
-                AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
-
-                config->razr = NIL;
-                AfxResetUri(&config->razrUri);
-                AfxReplicateUri(&config->razrUri, &tempUri);
-            }
-            else
-            {
-                config->razr = NIL;
-                AfxResetUri(&config->razrUri);
             }
         }
         else
@@ -876,7 +876,88 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelin
         }
     }
 
-    config->shdCnt = foundShdCnt;
+    config->shdCnt += foundShdCnt;
+    return err;
+}
+
+_AVX afxError AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* uri)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(pipb);
+    AfxAssert(uri);
+
+    AfxAssert(uri);
+    AfxAssert(!AfxUriIsBlank(uri));
+
+    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
+
+    afxUri fext;
+    AfxPickUriExtension(uri, FALSE, &fext);
+
+    if (AfxUriIsBlank(&fext)) AfxThrowError();
+    else
+    {
+        afxUri fpath;
+        AfxPickUriPath(uri, &fpath);
+
+        if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
+        {
+            afxXml xml;
+
+            if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
+            else
+            {
+                //AfxAssertType(&xml, afxFcc_XML);
+                afxBool isQwadroXml = AfxTestXmlRoot(&xml, &AfxStaticString("Qwadro"));
+                AfxAssert(isQwadroXml);
+
+                afxString query;
+                AfxPickUriQueryToString(uri, TRUE, &query);
+
+                afxNat xmlElemIdx = 0;
+                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
+                AfxAssert(xmlElemIdx != AFX_INVALID_INDEX);
+
+                if (foundCnt)
+                {
+                    if (AfxLoadPipelineConfigFromXml(pipb, 0, &xml, xmlElemIdx)) AfxThrowError();
+                    else
+                    {
+#if 0
+                        afxString128 tmp;
+                        AfxMakeString128(&tmp);
+                        AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
+
+                        if (!AfxUriIsBlank(&blueprint.uri.uri))
+                        {
+                            AfxConcatenateStringL(&tmp.str, "?", 1);
+                            AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
+                        }
+
+                        afxUri tmpUri;
+                        AfxUriFromString(&tmpUri, &tmp.str);
+                        AfxCopyUri(&blueprint.uri.uri, &tmpUri);
+#endif
+
+                        //if (AfxCompileShadersFromXsh(dctx, config.shdCnt, config.shdUri, config.shd)) AfxThrowError();
+                        //else
+                        {
+                            //AfxAssertObjects(config.shdCnt, &config.shd, afxFcc_SHD);
+
+                            //AfxReleaseObjects(config.shdCnt, (void**)config.shd );
+                        }
+                    }
+                }
+
+                AfxCleanUpXml(&xml);
+            }
+        }
+        else
+        {
+            AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
+            AfxThrowError();
+        }
+    }
     return err;
 }
 

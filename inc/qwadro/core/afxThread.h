@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -51,7 +51,7 @@ AFX_DEFINE_STRUCT(afxThreadConfig)
     afxThreadPurpose    purpose;
     afxThreadProc       procCb;
     afxNat              tid;
-    void*               udd;
+    void*               udd[4];
 };
 
 #ifdef _AFX_CORE_C
@@ -84,7 +84,7 @@ AFX_OBJECT(afxThread)
     afxSize             _line_;
     afxChar const*      _func_;
 
-    void*               udd;
+    void*               udd[4];
 
     afxNat              unitIdx;
     afxNat32            tid;
@@ -130,7 +130,7 @@ AFX void        AfxGetThreadClock(afxClock* curr, afxClock* last);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AFX void*       AfxGetThreadUdd(afxThread thr);
+AFX void**      AfxGetThreadUdd(afxThread thr);
 
 /// Begins execution of the thread by calling run(). The operating system will schedule the thread according to the priority parameter. If the thread is already running, this function does nothing.
 /// The effect of the priority parameter is dependent on the operating system's scheduling policy. In particular, the priority will be ignored on systems that do not support thread priorities (such as on Linux, see the sched_setscheduler documentation for more details).

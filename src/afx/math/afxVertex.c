@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -40,7 +40,7 @@ _AFXINL afxReal AfxGetAngleBetweenV3d(afxV3d const v, afxV3d const other)
     AfxAssert(other);
 
     afxReal cosAngle = AfxDotV3d(v, other) * (AfxMagV3dRecip(v) * AfxMagV3dRecip(other));
-    AfxClamp(cosAngle, -1.0, 1.0);
+    AfxClampd(cosAngle, -1.0, 1.0);
     return AfxAcosf(cosAngle);
 }
 

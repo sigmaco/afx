@@ -155,16 +155,19 @@
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\dep_\vgl\vgl.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxCamera.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxCmdb.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxColor.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawBridge.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawContext.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOutput.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxDrawSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxDevKit.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxPaint.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\afxPixel.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawBridge.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawContext.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawInput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawOutput.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\dev\afxDrawStream.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxBuffer.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxRaster.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxShader.h" />
@@ -174,7 +177,7 @@
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxTypography.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxVertexStream.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\io\afxXsh.h" />
-    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxBindSchema.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxLigature.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxBufferOps.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxCanvas.h" />
     <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOps.h" />
@@ -200,16 +203,18 @@
     <ResourceCompile Include="e2draw.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\dep_\vgl\vgl.c" />
     <ClCompile Include="..\..\src\afx\draw\afxCamera.c" />
+    <ClCompile Include="..\..\src\afx\draw\avxCmdb.c" />
     <ClCompile Include="..\..\src\afx\draw\afxColor.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawBridge.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawContext.c" />
     <ClCompile Include="..\..\src\afx\draw\afxDrawDefs.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawInput.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawOutput.c" />
     <ClCompile Include="..\..\src\afx\draw\afxDrawSystem.c" />
+    <ClCompile Include="..\..\src\afx\draw\avxPaint.c" />
     <ClCompile Include="..\..\src\afx\draw\afxPixel.c" />
-    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawBridge.c" />
-    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawContext.c" />
-    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawInput.c" />
-    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawOutput.c" />
-    <ClCompile Include="..\..\src\afx\draw\dev\afxDrawStream.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxBuffer.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxRaster.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxShader.c" />
@@ -218,7 +223,7 @@
     <ClCompile Include="..\..\src\afx\draw\io\afxTypography.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxVertexStream.c" />
     <ClCompile Include="..\..\src\afx\draw\io\afxXsh.c" />
-    <ClCompile Include="..\..\src\afx\draw\pipe\afxBindSchema.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxLigature.c" />
     <ClCompile Include="..\..\src\afx\draw\pipe\afxBufferOps.c" />
     <ClCompile Include="..\..\src\afx\draw\pipe\afxCanvas.c" />
     <ClCompile Include="..\..\src\afx\draw\pipe\afxDrawOps.c" />

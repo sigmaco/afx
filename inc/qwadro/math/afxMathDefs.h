@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -134,8 +134,11 @@ AFXINL afxReal      AfxRecipf(afxReal value);
 AFXINL afxReal64    AfxLerp(afxReal64 a, afxReal64 b, afxReal64 time);
 AFXINL afxReal      AfxLerpf(afxReal a, afxReal b, afxReal time);
 
-AFXINL afxReal64    AfxClamp(afxReal64 value, afxReal64 min, afxReal64 max);
+AFXINL afxReal64    AfxClampd(afxReal64 value, afxReal64 min, afxReal64 max);
 AFXINL afxReal      AfxClampf(afxReal value, afxReal min, afxReal max);
+
+AFXINL afxReal64    AfxMod(afxReal64 x, afxReal64 y);
+AFXINL afxReal      AfxModf(afxReal x, afxReal y);
 
 AFXINL afxReal64    AfxSq(afxReal64 s);
 AFXINL afxReal      AfxSqf(afxReal s);

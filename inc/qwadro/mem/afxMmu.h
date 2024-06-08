@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -122,12 +122,12 @@ AFX_DEFINE_HANDLE(afxMemory);
 
 typedef enum afxMemFlags
 {
-    afxMemFlag_ZEROED       = AFX_BIT_OFFSET(0),
-    afxMemFlag_RESIZABLE    = AFX_BIT_OFFSET(1),
+    afxMemFlag_ZEROED       = AFX_BIT(0),
+    afxMemFlag_RESIZABLE    = AFX_BIT(1),
 
-    afxMemFlag_TEMPORARY    = AFX_BIT_OFFSET(8), // to be used just inside "this" function.
-    afxMemFlag_TRANSIENT    = AFX_BIT_OFFSET(9), // to be used across functions, as example signaling objects about an event occurance.
-    afxMemFlag_PERMANENT    = AFX_BIT_OFFSET(10), // to be used across the entire system and or subsystem, 
+    afxMemFlag_TEMPORARY    = AFX_BIT(8), // to be used just inside "this" function.
+    afxMemFlag_TRANSIENT    = AFX_BIT(9), // to be used across functions, as example signaling objects about an event occurance.
+    afxMemFlag_PERMANENT    = AFX_BIT(10), // to be used across the entire system and or subsystem, 
     afxMemFlag_DURATION_MASK= afxMemFlag_TEMPORARY | afxMemFlag_TRANSIENT | afxMemFlag_PERMANENT,
 
     AFX_MEM_PROP_DEVICE_LOCAL, // specifies that memory allocated with this type is the most efficient for device access. This property will be set if and only if the memory type belongs to a heap with the VK_MEMORY_HEAP_DEVICE_LOCAL_BIT set.

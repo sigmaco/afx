@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -23,7 +23,7 @@
 
 enum
 {
-    _AFX_STR_FLAG_ALLOCED = AFX_BIT_OFFSET(0)
+    _AFX_STR_FLAG_ALLOCED = AFX_BIT(0)
 };
 
 AFX_DEFINE_STRUCT(afxRestring)

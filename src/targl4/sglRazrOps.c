@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -20,141 +20,17 @@
  //#define _SGL_DBG_IGNORE_DEPTH_WRITE
 #define _SGL_DBG_IGNORE_DEPTH_BOUNDS_TEST
 #define _SGL_DBG_IGNORE_LINE_WIDTH
-#define _SGL_DBG_IGNORE_STENCIL_TEST
+//#define _SGL_DBG_IGNORE_STENCIL_TEST
 #define _SGL_DBG_IGNORE_MULTISAMPLING
-#define _SGL_DBG_IGNORE_BLEND
-#define _SGL_DBG_IGNORE_LOGICAL_OP
-#define _SGL_DBG_IGNORE_COLOR_MASK
-#define _SGL_DBG_IGNORE_SCISSOR_TEST
+//#define _SGL_DBG_IGNORE_BLEND
+//#define _SGL_DBG_IGNORE_LOGICAL_OP
+//#define _SGL_DBG_IGNORE_COLOR_MASK
+//#define _SGL_DBG_IGNORE_SCISSOR_TEST
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
 
-_SGL void _DpuDisableRasterization(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.rasterizationDisabled = cmd->value;
-}
-
-_SGL void _DpuEnableDepthBias(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthBiasEnabled = cmd->value;
-}
-
-_SGL void _DpuSetDepthBias(sglDpu* dpu, _sglCmdReal3 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthBiasConstFactor = cmd->value[0];
-    dpu->nextRasterState.depthBiasClamp = cmd->value[1];
-    dpu->nextRasterState.depthBiasSlopeScale = cmd->value[2];
-}
-
-_SGL void _DpuSetLineWidth(sglDpu* dpu, _sglCmdReal const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.lineWidth = cmd->value;
-}
-
-_SGL void _DpuEnableStencilTest(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.stencilTestEnabled = cmd->value;
-}
-
-_SGL void _DpuSetStencilCompareMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT_OFFSET(0))
-        dpu->nextRasterState.stencilFront.compareMask = cmd->value;
-
-    if (cmd->mask & AFX_BIT_OFFSET(1))
-        dpu->nextRasterState.stencilBack.compareMask = cmd->value;
-}
-
-_SGL void _DpuSetStencilWriteMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT_OFFSET(0))
-        dpu->nextRasterState.stencilFront.writeMask = cmd->value;
-
-    if (cmd->mask & AFX_BIT_OFFSET(1))
-        dpu->nextRasterState.stencilBack.writeMask = cmd->value;
-}
-
-_SGL void _DpuSetStencilReference(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT_OFFSET(0) | AFX_BIT_OFFSET(1)), AFX_BIT_OFFSET(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT_OFFSET(0))
-        dpu->nextRasterState.stencilFront.reference = cmd->value;
-
-    if (cmd->mask & AFX_BIT_OFFSET(1))
-        dpu->nextRasterState.stencilBack.reference = cmd->value;
-}
-
-_SGL void _DpuEnableDepthTest(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthTestEnabled = cmd->value;
-}
-
-_SGL void _DpuSetDepthCompareOp(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthCompareOp = cmd->value;
-}
-
-_SGL void _DpuDisableDepthWrite(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthWriteDisabled = cmd->value;
-}
-
-_SGL void _DpuSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxCopyV4d(dpu->nextRasterState.blendConstants, cmd->value);
-    dpu->nextBlendConstUpd = TRUE;
-}
-
-_SGL void _DpuSetScissors(sglDpu* dpu, _sglCmdScissor const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        dpu->nextRasterState.scisRects[first + i] = cmd->rect[i], dpu->nextScissorUpdMask |= AFX_BIT_OFFSET(first + i);
-
-    dpu->nextScissorUpdCnt = AfxMax(dpu->nextScissorUpdCnt, cnt);
-
-    if (cmd->reset)
-        dpu->nextRasterState.scisCnt = cnt;
-}
-
-_SGL void _DpuSetAreas(sglDpu* dpu, _sglCmdArea const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        dpu->nextRasterState.areaRects[first + i] = cmd->rect[i], dpu->nextAreaUpdMask |= AFX_BIT_OFFSET(first + i);
-
-    dpu->nextAreaUpdCnt = AfxMax(dpu->nextAreaUpdCnt, cnt);
-
-    if (cmd->reset)
-        dpu->nextRasterState.areaCnt = cnt;
-}
 
 _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 {
@@ -414,13 +290,13 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
         if (depthWriteDisabled)
         {
-            AfxAssert(dpu->activeRasterState.depthWriteDisabled);
+            //AfxAssert(dpu->activeRasterState.depthWriteDisabled);
             gl->DepthMask(GL_FALSE); _SglThrowErrorOccuried();
         }
         else
         {
-            AfxAssert(!dpu->activeRasterState.depthWriteDisabled);
-            gl->DepthMask(GL_TRUE); _SglThrowErrorOccuried();            
+            //AfxAssert(!dpu->activeRasterState.depthWriteDisabled);
+            gl->DepthMask(GL_TRUE); _SglThrowErrorOccuried();
         }
         dpu->activeRasterState.depthWriteDisabled = depthWriteDisabled;
     }
@@ -809,17 +685,6 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
 #endif
 
-    // BLEND CONSTANT
-#ifndef _SGL_DBG_IGNORE_BLEND
-
-    if (dpu->nextBlendConstUpd)
-    {
-        gl->BlendColor(dpu->activeRasterState.blendConstants[0], dpu->activeRasterState.blendConstants[1], dpu->activeRasterState.blendConstants[2], dpu->activeRasterState.blendConstants[3]);
-        AfxCopyColor(dpu->activeRasterState.blendConstants, dpu->nextRasterState.blendConstants);
-        dpu->nextBlendConstUpd = NIL;
-    }
-#endif
-
     afxBool blendNoUsed = TRUE;
 
     afxNat outCnt = dpu->nextRasterState.outCnt;
@@ -832,7 +697,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 #ifndef _SGL_DBG_IGNORE_BLEND
         if (ch->blendEnabled)
         {
-            if (ch->blendEnabled != dpu->activeRasterState.outs[i].blendEnabled)
+            //if (ch->blendEnabled != dpu->activeRasterState.outs[i].blendEnabled)
             {
                 if (ch->blendEnabled)
                 {
@@ -850,65 +715,79 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
                             gl->Enable(GL_BLEND); _SglThrowErrorOccuried();
                             dpu->activeRasterState.anyBlendEnabled = TRUE;
                         }
-                        /*
-                            glBlendColor — set the blend color.
-
-                            The GL_BLEND_COLOR may be used to calculate the source and destination blending factors. The color components are clamped to the range [0,1] before being stored.
-                            See glBlendFunc for a complete description of the blending operations. Initially the GL_BLEND_COLOR is set to (0, 0, 0, 0).
-                        */
-                        if (AfxGetColorBlendConstants(ras, dpu->activeRasterState.blendConstants))
-                        {
-                            gl->BlendColor(dpu->activeRasterState.blendConstants[0], dpu->activeRasterState.blendConstants[1], dpu->activeRasterState.blendConstants[2], dpu->activeRasterState.blendConstants[3]); _SglThrowErrorOccuried();
-                        }
                     }
 
-                    if ((dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp != ch->blendConfig.rgbBlendOp) || (dpu->activeRasterState.outs[i].blendConfig.aBlendOp != ch->blendConfig.aBlendOp))
-                    {
-                        /*
-                            glBlendEquationSeparate — set the RGB blend equation and the alpha blend equation separately.
-
-                            The blend equations determines how a new pixel (the source color) is combined with a pixel already in the framebuffer (the destination color).
-                            These functions specify one blend equation for the RGB-color components and one blend equation for the alpha component.
-                            glBlendEquationSeparatei specifies the blend equations for a single draw buffer whereas glBlendEquationSeparate sets the blend equations for all draw buffers.
-
-                            The blend equations use the source and destination blend factors specified by either glBlendFunc or glBlendFuncSeparate.
-                            See glBlendFunc or glBlendFuncSeparate for a description of the various blend factors.
-                        */
-                        gl->BlendEquationSeparatei(i, AfxToGlBlendOp(ch->blendConfig.rgbBlendOp), AfxToGlBlendOp(ch->blendConfig.aBlendOp)); _SglThrowErrorOccuried();
-                        dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp = ch->blendConfig.rgbBlendOp;
-                        dpu->activeRasterState.outs[i].blendConfig.aBlendOp = ch->blendConfig.aBlendOp;
-                    }
-
-                    if ((dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor != ch->blendConfig.rgbSrcFactor) || (dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor != ch->blendConfig.rgbDstFactor) || (dpu->activeRasterState.outs[i].blendConfig.aSrcFactor != ch->blendConfig.aSrcFactor) || (dpu->activeRasterState.outs[i].blendConfig.aDstFactor != ch->blendConfig.aDstFactor))
-                    {
-                        /*
-                            glBlendFuncSeparate — specify pixel arithmetic for RGB and alpha components separately.
-
-                            Pixels can be drawn using a function that blends the incoming (source) RGBA values with the RGBA values that are already in the frame buffer (the destination values).
-                            Blending is initially disabled. Use glEnable and glDisable with argument GL_BLEND to enable and disable blending.
-
-                            glBlendFuncSeparate defines the operation of blending for all draw buffers when it is enabled.
-                            glBlendFuncSeparatei defines the operation of blending for a single draw buffer specified by buf when enabled for that draw buffer.
-                            srcRGB specifies which method is used to scale the source RGB-color components. dstRGB specifies which method is used to scale the destination RGB-color components.
-                            Likewise, srcAlpha specifies which method is used to scale the source alpha color component, and dstAlpha specifies which method is used to scale the destination alpha component.
-                            The possible methods are described in the following table. Each method defines four scale factors, one each for red, green, blue, and alpha.
-                        */
-                        gl->BlendFuncSeparatei(i, AfxToGlBlendFactor(ch->blendConfig.rgbSrcFactor), AfxToGlBlendFactor(ch->blendConfig.rgbDstFactor), AfxToGlBlendFactor(ch->blendConfig.aSrcFactor), AfxToGlBlendFactor(ch->blendConfig.aDstFactor)); _SglThrowErrorOccuried();
-                        dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor = ch->blendConfig.rgbSrcFactor;
-                        dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor = ch->blendConfig.rgbDstFactor;
-                        dpu->activeRasterState.outs[i].blendConfig.aSrcFactor = ch->blendConfig.aSrcFactor;
-                        dpu->activeRasterState.outs[i].blendConfig.aDstFactor = ch->blendConfig.aDstFactor;
-                    }
+                    
                 }
                 dpu->activeRasterState.outs[i].blendEnabled = ch->blendEnabled;
             }
 
+            //if (dpu->activeRasterState.outs[i].blendEnabled)
+            {
+                if (dpu->nextBlendConstUpd)
+                {
+                    /*
+                        glBlendColor — set the blend color.
+
+                        The GL_BLEND_COLOR may be used to calculate the source and destination blending factors. The color components are clamped to the range [0,1] before being stored.
+                        See glBlendFunc for a complete description of the blending operations. Initially the GL_BLEND_COLOR is set to (0, 0, 0, 0).
+                    */
+
+                    AfxCopyColor(dpu->activeRasterState.blendConstants, dpu->nextRasterState.blendConstants);
+                    gl->BlendColor(dpu->activeRasterState.blendConstants[0], dpu->activeRasterState.blendConstants[1], dpu->activeRasterState.blendConstants[2], dpu->activeRasterState.blendConstants[3]);
+                    dpu->nextBlendConstUpd = NIL;
+                }
+#if 0
+                if ((dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp != ch->blendConfig.rgbBlendOp) ||
+                    (dpu->activeRasterState.outs[i].blendConfig.aBlendOp != ch->blendConfig.aBlendOp))
+#endif
+                {
+                    /*
+                        glBlendEquationSeparate — set the RGB blend equation and the alpha blend equation separately.
+
+                        The blend equations determines how a new pixel (the source color) is combined with a pixel already in the framebuffer (the destination color).
+                        These functions specify one blend equation for the RGB-color components and one blend equation for the alpha component.
+                        glBlendEquationSeparatei specifies the blend equations for a single draw buffer whereas glBlendEquationSeparate sets the blend equations for all draw buffers.
+
+                        The blend equations use the source and destination blend factors specified by either glBlendFunc or glBlendFuncSeparate.
+                        See glBlendFunc or glBlendFuncSeparate for a description of the various blend factors.
+                    */
+                    gl->BlendEquationSeparatei(i, AfxToGlBlendOp(ch->blendConfig.rgbBlendOp), AfxToGlBlendOp(ch->blendConfig.aBlendOp)); _SglThrowErrorOccuried();
+                    dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp = ch->blendConfig.rgbBlendOp;
+                    dpu->activeRasterState.outs[i].blendConfig.aBlendOp = ch->blendConfig.aBlendOp;
+                }
+#if 0
+                if ((dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor != ch->blendConfig.rgbSrcFactor) ||
+                    (dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor != ch->blendConfig.rgbDstFactor) ||
+                    (dpu->activeRasterState.outs[i].blendConfig.aSrcFactor != ch->blendConfig.aSrcFactor) ||
+                    (dpu->activeRasterState.outs[i].blendConfig.aDstFactor != ch->blendConfig.aDstFactor))
+#endif
+                {
+                    /*
+                        glBlendFuncSeparate — specify pixel arithmetic for RGB and alpha components separately.
+
+                        Pixels can be drawn using a function that blends the incoming (source) RGBA values with the RGBA values that are already in the frame buffer (the destination values).
+                        Blending is initially disabled. Use glEnable and glDisable with argument GL_BLEND to enable and disable blending.
+
+                        glBlendFuncSeparate defines the operation of blending for all draw buffers when it is enabled.
+                        glBlendFuncSeparatei defines the operation of blending for a single draw buffer specified by buf when enabled for that draw buffer.
+                        srcRGB specifies which method is used to scale the source RGB-color components. dstRGB specifies which method is used to scale the destination RGB-color components.
+                        Likewise, srcAlpha specifies which method is used to scale the source alpha color component, and dstAlpha specifies which method is used to scale the destination alpha component.
+                        The possible methods are described in the following table. Each method defines four scale factors, one each for red, green, blue, and alpha.
+                    */
+                    gl->BlendFuncSeparatei(i, AfxToGlBlendFactor(ch->blendConfig.rgbSrcFactor), AfxToGlBlendFactor(ch->blendConfig.rgbDstFactor), AfxToGlBlendFactor(ch->blendConfig.aSrcFactor), AfxToGlBlendFactor(ch->blendConfig.aDstFactor)); _SglThrowErrorOccuried();
+                    dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor = ch->blendConfig.rgbSrcFactor;
+                    dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor = ch->blendConfig.rgbDstFactor;
+                    dpu->activeRasterState.outs[i].blendConfig.aSrcFactor = ch->blendConfig.aSrcFactor;
+                    dpu->activeRasterState.outs[i].blendConfig.aDstFactor = ch->blendConfig.aDstFactor;
+                }
+            }
         }
 #endif
 
 #ifndef _SGL_DBG_IGNORE_COLOR_MASK
 
-        if (ch->discardMask != dpu->nextRasterState.outs[i].discardMask)
+        //if (ch->discardMask != dpu->nextRasterState.outs[i].discardMask)
         {
             /*
                 glColorMask, glColorMaski — enable and disable writing of frame buffer color components.
@@ -920,7 +799,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
                 Changes to individual bits of components cannot be controlled. Rather, changes are either enabled or disabled for entire color components.
             */
             gl->ColorMaski(i, !(ch->discardMask & afxRgbaMask_R), !(ch->discardMask & afxRgbaMask_G), !(ch->discardMask & afxRgbaMask_B), !(ch->discardMask & afxRgbaMask_A)); _SglThrowErrorOccuried();
-            dpu->nextRasterState.outs[i].discardMask = ch->discardMask;
+            dpu->activeRasterState.outs[i].discardMask = ch->discardMask;
         }
 #endif
     }
@@ -980,264 +859,17 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 #endif
 }
 
-_SGL afxCmdId _SglEncodeCmdReadjustScissors(afxDrawStream diob, afxNat32 first, afxNat32 cnt, afxRect const rect[])
+
+
+//
+
+_SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *state)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
 
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
-    cmd->reset = FALSE;
+    afxNat rasCnt = state->rasterCnt;
 
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.ReadjustScissors) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdResetScissors(afxDrawStream diob, afxNat32 cnt, afxRect const rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->first = 0;
-    cmd->cnt = cnt;
-    cmd->reset = TRUE;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.ResetScissors) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdReadjustAreas(afxDrawStream diob, afxBool exclusive, afxNat32 first, afxNat32 cnt, afxRect const rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdArea *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->exclusive = exclusive;
-    cmd->first = first;
-    cmd->cnt = cnt;
-    cmd->reset = FALSE;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.ReadjustAreas) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdResetAreas(afxDrawStream diob, afxBool exclusive, afxNat32 cnt, afxRect const rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdArea *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->exclusive = exclusive;
-    cmd->first = 0;
-    cmd->cnt = cnt;
-    cmd->reset = TRUE;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.ResetAreas) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdDisableRasterization(afxDrawStream diob, afxBool disable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = disable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.DisableRasterization) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdEnableDepthBias(afxDrawStream diob, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.EnableDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetDepthBias(afxDrawStream diob, afxReal constFactor, afxReal clamp, afxReal slopeFactor)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdReal3 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value[0] = constFactor;
-    cmd->value[1] = clamp;
-    cmd->value[2] = slopeFactor;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetLineWidth(afxDrawStream diob, afxReal lineWidth)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdReal *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = lineWidth;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetLineWidth) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdEnableDepthBoundsTest(afxDrawStream diob, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.EnableDepthBoundsTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetDepthBounds(afxDrawStream diob, afxReal const bounds[2])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdReal2 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value[0] = bounds[0];
-    cmd->value[1] = bounds[1];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetDepthBounds) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdEnableStencilTest(afxDrawStream diob, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.EnableStencilTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetStencilCompareMask(afxDrawStream diob, afxMask faceMask, afxNat32 compareMask)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = compareMask;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetStencilCompareMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetStencilWriteMask(afxDrawStream diob, afxMask faceMask, afxNat32 writeMask)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = writeMask;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetStencilWriteMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetStencilReference(afxDrawStream diob, afxMask faceMask, afxNat32 reference)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = reference;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetStencilReference) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdEnableDepthTest(afxDrawStream diob, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.EnableDepthTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetDepthCompareOp(afxDrawStream diob, afxCompareOp op)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = op;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetDepthCompareOp) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdDisableDepthWrite(afxDrawStream diob, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.DisableDepthWrite) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdSetBlendConstants(afxDrawStream diob, afxReal const blendConstants[4])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdReal4 *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value[0] = blendConstants[0];
-    cmd->value[1] = blendConstants[1];
-    cmd->value[2] = blendConstants[2];
-    cmd->value[3] = blendConstants[3];
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.SetBlendConstants) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdBeginSynthesis(afxDrawStream diob, afxSynthesisConfig const *state)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    afxNat extraRasCnt = state->rasterCnt;
-
-    if (extraRasCnt)
-        --extraRasCnt;
-
-    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraRasCnt * sizeof(cmd->raster_[0])));
+    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (rasCnt * sizeof(cmd->rasters[0])));
     AfxAssert(cmd);
 
     AfxRectCopy(&cmd->area, &state->area);
@@ -1246,10 +878,8 @@ _SGL afxCmdId _SglEncodeCmdBeginSynthesis(afxDrawStream diob, afxSynthesisConfig
     cmd->canv = state->canv;
     cmd->defFbo = FALSE;
 
-    cmd->raster0 = state->rasters[0];
-
-    for (afxNat i = 0; i < extraRasCnt; i++)
-        cmd->raster_[i] = state->rasters[1 + i];
+    for (afxNat i = 0; i < rasCnt; i++)
+        cmd->rasters[i] = state->rasters[i];
 
     if (state->depth)
         cmd->depth = *state->depth;
@@ -1261,55 +891,382 @@ _SGL afxCmdId _SglEncodeCmdBeginSynthesis(afxDrawStream diob, afxSynthesisConfig
     else
         cmd->stencil = (afxDrawTarget) { 0 };
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.BeginSynthesis) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.BeginSynthesis) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdFinsihSynthesis(afxDrawStream diob)
+_SGL void _DecodeCmdBeginSynthesis(sglDpu* dpu, _sglCmdBeginSynthesis const *cmd)
+{
+    _DpuBeginSynthesis(dpu, cmd->canv, &cmd->area, cmd->layerCnt, cmd->rasterCnt, &cmd->rasters[0], &cmd->depth, &cmd->stencil, cmd->defFbo);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdFinsihSynthesis(avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmd *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmd *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.FinishSynthesis) / sizeof(void*)), sizeof(cmd), cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.FinishSynthesis) / sizeof(void*)), sizeof(cmd), cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdNextPass(afxDrawStream diob, afxBool useAuxScripts)
+_SGL void _DecodeCmdFinishSynthesis(sglDpu* dpu, _sglCmd const *cmd)
+{
+    (void)cmd;
+    _DpuFinishSynthesis(dpu);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdNextPass(avxCmdb cmdb, afxBool useAuxStreams)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdNextPass *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
+    _sglCmdNextPass *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
-    cmd->useAuxScripts = !!useAuxScripts;
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Rasterization.NextPass) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    cmd->useAuxScripts = !!useAuxStreams;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.NextPass) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
+
+_SGL void _DecodeCmdNextPass(sglDpu* dpu, _sglCmd const *cmd)
+{
+
+}
+
+//
+
+_SGL void _DecodeCmdDisableRasterization(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.rasterizationDisabled = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdDisableRasterization(avxCmdb cmdb, afxBool disable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = disable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.DisableRasterization) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdEnableDepthBias(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.depthBiasEnabled = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdEnableDepthBias(avxCmdb cmdb, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = enable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdSetDepthBias(sglDpu* dpu, _sglCmdReal3 const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.depthBiasConstFactor = cmd->value[0];
+    dpu->nextRasterState.depthBiasClamp = cmd->value[1];
+    dpu->nextRasterState.depthBiasSlopeScale = cmd->value[2];
+}
+
+_SGL afxCmdId _EncodeCmdSetDepthBias(avxCmdb cmdb, afxReal constFactor, afxReal clamp, afxReal slopeFactor)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdReal3 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value[0] = constFactor;
+    cmd->value[1] = clamp;
+    cmd->value[2] = slopeFactor;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdSetLineWidth(sglDpu* dpu, _sglCmdReal const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.lineWidth = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSetLineWidth(avxCmdb cmdb, afxReal lineWidth)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdReal *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = lineWidth;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetLineWidth) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdEnableStencilTest(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.stencilTestEnabled = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdEnableStencilTest(avxCmdb cmdb, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = enable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableStencilTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdSetStencilCompareMask(avxCmdb cmdb, afxMask faceMask, afxNat32 compareMask)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->mask = faceMask;
+    cmd->value = compareMask;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilCompareMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSetStencilCompareMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
+
+    if (cmd->mask & AFX_BIT(0))
+        dpu->nextRasterState.stencilFront.compareMask = cmd->value;
+
+    if (cmd->mask & AFX_BIT(1))
+        dpu->nextRasterState.stencilBack.compareMask = cmd->value;
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdSetStencilWriteMask(avxCmdb cmdb, afxMask faceMask, afxNat32 writeMask)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->mask = faceMask;
+    cmd->value = writeMask;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilWriteMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSetStencilWriteMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
+
+    if (cmd->mask & AFX_BIT(0))
+        dpu->nextRasterState.stencilFront.writeMask = cmd->value;
+
+    if (cmd->mask & AFX_BIT(1))
+        dpu->nextRasterState.stencilBack.writeMask = cmd->value;
+}
+
+//
+
+_SGL void _DecodeCmdSetStencilReference(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
+
+    if (cmd->mask & AFX_BIT(0))
+        dpu->nextRasterState.stencilFront.reference = cmd->value;
+
+    if (cmd->mask & AFX_BIT(1))
+        dpu->nextRasterState.stencilBack.reference = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSetStencilReference(avxCmdb cmdb, afxMask faceMask, afxNat32 reference)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->mask = faceMask;
+    cmd->value = reference;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilReference) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdEnableDepthTest(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.depthTestEnabled = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdEnableDepthTest(avxCmdb cmdb, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = enable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdSetDepthCompareOp(sglDpu* dpu, _sglCmdNat const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.depthCompareOp = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSetDepthCompareOp(avxCmdb cmdb, afxCompareOp op)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = op;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthCompareOp) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdDisableDepthWrite(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextRasterState.depthWriteDisabled = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdDisableDepthWrite(avxCmdb cmdb, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = enable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.DisableDepthWrite) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxCopyV4d(dpu->nextRasterState.blendConstants, cmd->value);
+    dpu->nextBlendConstUpd = TRUE;
+}
+
+_SGL afxCmdId _EncodeCmdSetBlendConstants(avxCmdb cmdb, afxV4d const blendConstants)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdReal4 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    AfxCopyV4d(cmd->value, blendConstants);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetBlendConstants) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL void _DecodeCmdSetScissors(sglDpu* dpu, _sglCmdScissor const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    afxNat first = cmd->first;
+    afxNat cnt = cmd->cnt;
+    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
+
+    for (afxNat i = 0; i < cnt; i++)
+        dpu->nextRasterState.scisRects[first + i] = cmd->rect[i], dpu->nextScissorUpdMask |= AFX_BIT(first + i);
+
+    dpu->nextScissorUpdCnt = AfxMax(dpu->nextScissorUpdCnt, cnt);
+}
+
+_SGL afxCmdId _EncodeCmdAdjustScissors(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, afxRect const rect[])
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
+    AfxAssert(cmd);
+    cmd->first = first;
+    cmd->cnt = cnt;
+
+    for (afxNat i = 0; i < cnt; i++)
+        cmd->rect[i] = rect[i];
+
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.AdjustScissors) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdAdjustCurtains(avxCmdb cmdb, afxBool exclusive, afxNat32 first, afxNat32 cnt, afxRect const rect[])
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
+    AfxAssert(cmd);
+    cmd->first = first;
+    cmd->cnt = cnt;
+
+    for (afxNat i = 0; i < cnt; i++)
+        cmd->rect[i] = rect[i];
+
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.AdjustCurtains) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSetCurtains(sglDpu* dpu, _sglCmdScissor const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    afxNat first = cmd->first;
+    afxNat cnt = cmd->cnt;
+    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
+
+    for (afxNat i = 0; i < cnt; i++)
+        dpu->nextRasterState.areaRects[first + i] = cmd->rect[i], dpu->nextAreaUpdMask |= AFX_BIT(first + i);
+
+    dpu->nextAreaUpdCnt = AfxMax(dpu->nextAreaUpdCnt, cnt);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdEnableDepthBoundsTest(avxCmdb cmdb, afxBool enable)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = enable;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthBoundsTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
+
+_SGL afxCmdId _EncodeCmdSetDepthBounds(avxCmdb cmdb, afxReal const bounds[2])
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdReal2 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    AfxCopyV2d(cmd->value, bounds);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthBounds) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+//
 
 _SGL afxCmdRasterization const _SglEncodeCmdRasterizationVmt =
 {
-    .DisableRasterization = _SglEncodeCmdDisableRasterization,
-    .EnableDepthBias = _SglEncodeCmdEnableDepthBias,
-    .SetDepthBias = _SglEncodeCmdSetDepthBias,
-    .SetLineWidth = _SglEncodeCmdSetLineWidth,
+    .DisableRasterization = _EncodeCmdDisableRasterization,
+    .EnableDepthBias = _EncodeCmdEnableDepthBias,
+    .SetDepthBias = _EncodeCmdSetDepthBias,
+    .SetLineWidth = _EncodeCmdSetLineWidth,
 
-    .ResetScissors = _SglEncodeCmdResetScissors,
-    .ReadjustScissors = _SglEncodeCmdReadjustScissors,
+    .AdjustScissors = _EncodeCmdAdjustScissors,
 
-    .EnableDepthBoundsTest = _SglEncodeCmdEnableDepthBoundsTest,
-    .SetDepthBounds = _SglEncodeCmdSetDepthBounds,
+    .EnableDepthBoundsTest = _EncodeCmdEnableDepthBoundsTest,
+    .SetDepthBounds = _EncodeCmdSetDepthBounds,
 
-    .EnableStencilTest = _SglEncodeCmdEnableStencilTest,
-    .SetStencilCompareMask = _SglEncodeCmdSetStencilCompareMask,
-    .SetStencilWriteMask = _SglEncodeCmdSetStencilWriteMask,
-    .SetStencilReference = _SglEncodeCmdSetStencilReference,
+    .EnableStencilTest = _EncodeCmdEnableStencilTest,
+    .SetStencilCompareMask = _EncodeCmdSetStencilCompareMask,
+    .SetStencilWriteMask = _EncodeCmdSetStencilWriteMask,
+    .SetStencilReference = _EncodeCmdSetStencilReference,
 
-    .EnableDepthTest = _SglEncodeCmdEnableDepthTest,
-    .SetDepthCompareOp = _SglEncodeCmdSetDepthCompareOp,
-    .DisableDepthWrite = _SglEncodeCmdDisableDepthWrite,
+    .EnableDepthTest = _EncodeCmdEnableDepthTest,
+    .SetDepthCompareOp = _EncodeCmdSetDepthCompareOp,
+    .DisableDepthWrite = _EncodeCmdDisableDepthWrite,
 
-    .SetBlendConstants = _SglEncodeCmdSetBlendConstants,
+    .SetBlendConstants = _EncodeCmdSetBlendConstants,
 
-    .BeginSynthesis = _SglEncodeCmdBeginSynthesis,
-    .NextPass = _SglEncodeCmdNextPass,
-    .FinishSynthesis = _SglEncodeCmdFinsihSynthesis
+    .BeginSynthesis = _EncodeCmdBeginSynthesis,
+    .NextPass = _EncodeCmdNextPass,
+    .FinishSynthesis = _EncodeCmdFinsihSynthesis
 };

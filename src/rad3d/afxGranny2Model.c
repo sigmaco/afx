@@ -6,9 +6,9 @@
 
 #define _AFX_MOTION_C
 #include "afxGranny2Model.h"
-#include "qwadro/sim/modeling/afxMesh.h"
-#include "qwadro/sim/modeling/awxVertexData.h"
-#include "qwadro/sim/awxNode.h"
+#include "qwadro/cad/afxMesh.h"
+#include "qwadro/cad/akxVertexData.h"
+#include "qwadro/sim/akxNode.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/core/afxSystem.h"
@@ -24,7 +24,7 @@ void BuildVertexDataFrom(afxSimulation sim, afxMeshBuilder* mshb, granny_vertex_
 
 }
 
-awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNat pivotCnt, granny_vertex_data* VertexData)
+akxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNat pivotCnt, granny_vertex_data* VertexData)
 {
     afxError err = NIL;
 
@@ -34,7 +34,7 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     afxVertex rigidVtx;
     rigidVtx.baseBiasIdx = 0;
     rigidVtx.biasCnt = 1;
-    awxVertexDataSpec spec = { 0 };
+    akxVertexDataSpec spec = { 0 };
     spec.attrCnt = 3;
     spec.baseAttrIdx = 0;
     spec.vtxCnt = VertexData->VertexCount;
@@ -44,15 +44,15 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     spec.vtxSrc = NIL;
     spec.vtxSrcStride = 0;
 
-    awxVertexAttrSpec attrSpecs[16];
+    akxVertexAttrSpec attrSpecs[16];
     afxNat attrCnt = 0;
     afxBool deformable = FALSE;
     afxBool rigid = TRUE;
 
     attrSpecs[attrCnt].id = "pos";
-    attrSpecs[attrCnt].flags = awxVertexFlag_AFFINE | awxVertexFlag_LINEAR | awxVertexFlag_POSITIONAL;
+    attrSpecs[attrCnt].flags = akxVertexFlag_AFFINE | akxVertexFlag_LINEAR | akxVertexFlag_POSITIONAL;
     attrSpecs[attrCnt].fmt = afxVertexFormat_V3D;
-    attrSpecs[attrCnt].usage = awxVertexUsage_POS | awxVertexUsage_POSITIONAL;
+    attrSpecs[attrCnt].usage = akxVertexUsage_POS | akxVertexUsage_POSITIONAL;
     attrSpecs[attrCnt].src = NIL;
     attrSpecs[attrCnt].srcStride = 0;
     ++attrCnt;
@@ -62,9 +62,9 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
         rigid = FALSE;
 
         attrSpecs[attrCnt].id = "pvt";
-        attrSpecs[attrCnt].flags = awxVertexFlag_POSITIONAL;
+        attrSpecs[attrCnt].flags = akxVertexFlag_POSITIONAL;
         attrSpecs[attrCnt].fmt = pivotCnt > 2 ? afxVertexFormat_V4B : afxVertexFormat_BYTE;
-        attrSpecs[attrCnt].usage = awxVertexUsage_JNT | awxVertexUsage_POSITIONAL;
+        attrSpecs[attrCnt].usage = akxVertexUsage_JNT | akxVertexUsage_POSITIONAL;
         attrSpecs[attrCnt].src = NIL;
         attrSpecs[attrCnt].srcStride = 0;
         ++attrCnt;
@@ -74,9 +74,9 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
             deformable = TRUE;
 
             attrSpecs[attrCnt].id = "wgt";
-            attrSpecs[attrCnt].flags = awxVertexFlag_NORMALIZED | awxVertexFlag_POSITIONAL;
+            attrSpecs[attrCnt].flags = akxVertexFlag_NORMALIZED | akxVertexFlag_POSITIONAL;
             attrSpecs[attrCnt].fmt = afxVertexFormat_V4D;
-            attrSpecs[attrCnt].usage = awxVertexUsage_WGT | awxVertexUsage_POSITIONAL;
+            attrSpecs[attrCnt].usage = akxVertexUsage_WGT | akxVertexUsage_POSITIONAL;
             attrSpecs[attrCnt].src = NIL;
             attrSpecs[attrCnt].srcStride = 0;
             ++attrCnt;
@@ -84,9 +84,9 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     }
 
     attrSpecs[attrCnt].id = "nrm";
-    attrSpecs[attrCnt].flags = awxVertexFlag_LINEAR;
+    attrSpecs[attrCnt].flags = akxVertexFlag_LINEAR;
     attrSpecs[attrCnt].fmt = afxVertexFormat_V3D;
-    attrSpecs[attrCnt].usage = awxVertexUsage_NRM | awxVertexUsage_TANGENT;
+    attrSpecs[attrCnt].usage = akxVertexUsage_NRM | akxVertexUsage_TANGENT;
     attrSpecs[attrCnt].src = NIL;
     attrSpecs[attrCnt].srcStride = 0;
     ++attrCnt;
@@ -94,13 +94,13 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
     attrSpecs[attrCnt].id = "uv";
     attrSpecs[attrCnt].flags = NIL;
     attrSpecs[attrCnt].fmt = afxVertexFormat_V2D;
-    attrSpecs[attrCnt].usage = awxVertexUsage_UV;
+    attrSpecs[attrCnt].usage = akxVertexUsage_UV;
     attrSpecs[attrCnt].src = NIL;
     attrSpecs[attrCnt].srcStride = 0;
     ++attrCnt;
 
-    awxVertexData vtd;
-    AwxAcquireVertexDatas(sim, strb, attrSpecs, 1, &spec, &vtd);
+    akxVertexData vtd;
+    AkxAcquireVertexDatas(sim, strb, attrSpecs, 1, &spec, &vtd);
 
     switch (pivotCnt)
     {
@@ -113,11 +113,11 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
 
         afxV4d hcw;
         AfxResetV4d(hcw);
-        AwxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
+        AkxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
 
-        AwxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
         AfxDeallocate(Vertices);
         break;
@@ -131,12 +131,12 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
 
         afxV4d hcw;
         AfxResetV4d(hcw);
-        AwxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
+        AkxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
 
-        AwxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, &Vertices->BoneIndex, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, &Vertices->BoneIndex, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
         AfxDeallocate(Vertices);
         break;
@@ -150,13 +150,13 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
 
         afxV4d hcw;
         AfxResetV4d(hcw);
-        AwxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
+        AkxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
 
-        AwxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->BoneIndices, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->BoneWeights, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->BoneIndices, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->BoneWeights, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
         AfxDeallocate(Vertices);
         break;
@@ -170,13 +170,13 @@ awxVertexData Gr2VertexDataToQwadro(afxSimulation sim, afxStringBase strb, afxNa
 
         afxV4d hcw;
         AfxResetV4d(hcw);
-        AwxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
+        AkxFillVertexData(vtd, 0, 0, spec.vtxCnt, &hcw);
 
-        AwxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->BoneIndices, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->BoneWeights, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
-        AwxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 0, 0, spec.vtxCnt, Vertices->Position, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 1, 0, spec.vtxCnt, Vertices->BoneIndices, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 2, 0, spec.vtxCnt, Vertices->BoneWeights, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 3, 0, spec.vtxCnt, Vertices->Normal, sizeof(Vertices[0]));
+        AkxUpdateVertexData(vtd, 4, 0, spec.vtxCnt, Vertices->UV, sizeof(Vertices[0]));
 
         AfxDeallocate(Vertices);
         break;
@@ -250,7 +250,7 @@ afxMesh Gr2MeshToQwadro(afxSimulation sim, afxStringBase strb, granny_mesh* Mesh
 {
     afxError err = NIL;
 
-    awxVertexData vtd = Gr2VertexDataToQwadro(sim, strb, Mesh->BoneBindingCount, Mesh->PrimaryVertexData);
+    akxVertexData vtd = Gr2VertexDataToQwadro(sim, strb, Mesh->BoneBindingCount, Mesh->PrimaryVertexData);
     afxMeshTopology msht = Gr2TopologyToQwadro(sim, Mesh->PrimaryTopology);
 
     afxString pivots[256];
@@ -303,7 +303,7 @@ afxModel Gr2ModelToQwadro(afxSimulation sim, afxStringBase strb, granny_model* M
     return mdl;
 }
 
-afxModel AwxLoadModelsFromGrn3d2(afxSimulation sim, afxUri const *uri, afxNat mdlIdx)
+afxModel AkxLoadModelsFromGrn3d2(afxSimulation sim, afxUri const *uri, afxNat mdlIdx)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -353,13 +353,20 @@ void Gr2CurveToQwadro(afxSimulation sim, granny_curve2* Curve, afxCurve *c)
     {
         granny_curve_data_da_k32f_c32f* d = data;
         //AfxSetUpCurve(c, afxCurveFormat_DaK32fC32f, d->CurveDataHeader.Degree, 1, d->ControlCount);
+#if 0
         afxCurve tmp;
         AfxMakeCurveDaKC32f(&tmp, GrannyCurveGetDegree(Curve), GrannyCurveGetDimension(Curve), GrannyCurveGetKnotCount(Curve), d->Knots, d->Controls);
         afxCurveBlueprint cb;
         AfxBeginCurveCopy(&cb, &tmp);
-        AfxEndCurve(&cb, c);
-
-
+        *c = AfxEndCurve(&cb, sim);
+#endif
+        afxCurveInfo info;
+        AfxResetCurveInfo(&info, afxCurveFormat_DaK32fC32f, GrannyCurveGetDegree(Curve), GrannyCurveGetDimension(Curve), GrannyCurveGetKnotCount(Curve));
+        info.knots = d->Knots;
+        info.ctrls = d->Controls;
+        
+        if (AfxAcquireCurves(sim, 1, &info, c))
+            AfxThrowError();
 
         break;
     }
@@ -385,13 +392,13 @@ void Gr2CurveToQwadro(afxSimulation sim, granny_curve2* Curve, afxCurve *c)
 
 }
 
-awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringBase strb, granny_track_group* TrackGroup)
+afxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringBase strb, granny_track_group* TrackGroup)
 {
     afxError err = NIL;
 
     afxString pivots[256];
 
-    awxMotionBlueprint blue = { 0 };
+    akxMotionBlueprint blue = { 0 };
     blue.strb = strb;
     blue.pivotId = pivots;
     blue.pivotLodError = TrackGroup->TransformLODErrors;
@@ -403,23 +410,23 @@ awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringBase strb, granny_track_
     AfxMakeString(&tid, TrackGroup->Name, 0);
     AfxMakeString32(&blue.id, &tid);
 
-    for (afxNat i = 0; i < TrackGroup->TransformTrackCount; i++)
+    for (int i = 0; i < TrackGroup->TransformTrackCount; i++)
     {
         AfxMakeString(&pivots[i], TrackGroup->TransformTracks[i].Name, 0);
     }
 
-    awxMotion mot;
+    afxMotion mot;
     AfxAssembleMotions(sim, 1, &blue, &mot);
     mot->flags = TrackGroup->Flags;
     
 
     //mot->flags = TrackGroup->Flags;
 
-    for (afxNat i = 0; i < TrackGroup->TransformTrackCount; i++)
+    for (int i = 0; i < TrackGroup->TransformTrackCount; i++)
     {
         afxMask flags = TrackGroup->TransformTracks[i].Flags;
 
-        awxMotionTransform src = { 0 };
+        akxMotionTransform src = { 0 };
 
         src.flags = flags;
         Gr2CurveToQwadro(sim, &TrackGroup->TransformTracks[i].OrientationCurve, &src.transmission);
@@ -433,11 +440,11 @@ awxMotion Gr2MotionToQwadro(afxSimulation sim, afxStringBase strb, granny_track_
     return mot;
 }
 
-awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringBase strb, granny_animation* Anim)
+akxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringBase strb, granny_animation* Anim)
 {
     afxError err = NIL;
 
-    awxAnimationBlueprint anib = { 0 };
+    akxAnimationBlueprint anib = { 0 };
     anib.motions = NIL;
     anib.motSlotCnt = Anim->TrackGroupCount;
     anib.dur = Anim->Duration;
@@ -451,19 +458,19 @@ awxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringBase strb, granny_anima
     AfxPickUriObject(&uri, &name);
     AfxMakeString32(&anib.id, AfxGetUriString(&name));
 
-    awxAnimation ani;
-    AwxAssembleAnimations(sim, 1, &anib, &ani);
+    akxAnimation ani;
+    AkxAssembleAnimations(sim, 1, &anib, &ani);
 
     for (afxNat i = 0; i < anib.motSlotCnt; i++)
     {
-        awxMotion mot = Gr2MotionToQwadro(sim, strb, Anim->TrackGroups[i]);
-        AwxRelinkMotions(ani, i, 1, &mot);
+        afxMotion mot = Gr2MotionToQwadro(sim, strb, Anim->TrackGroups[i]);
+        AkxRelinkMotions(ani, i, 1, &mot);
     }
 
     return ani;
 }
 
-awxAnimation AwxLoadAnimationsFromGrn3d2(afxSimulation sim, afxUri const *uri, afxNat animIdx)
+akxAnimation AkxLoadAnimationsFromGrn3d2(afxSimulation sim, afxUri const *uri, afxNat animIdx)
 {
     afxError err = NIL;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
@@ -482,7 +489,7 @@ awxAnimation AwxLoadAnimationsFromGrn3d2(afxSimulation sim, afxUri const *uri, a
 
     granny_animation* Anim = Info->Animations[animIdx];
 
-    awxAnimation ani = Gr2AnimToQwadro(sim, strb, Anim);
+    akxAnimation ani = Gr2AnimToQwadro(sim, strb, Anim);
 
     GrannyFreeFile(GrannyFile);
 

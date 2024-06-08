@@ -10,14 +10,14 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // Advanced User Experience Extensions for Qwadro
 
-#ifndef AFX_WIDGET_H
-#define AFX_WIDGET_H
+#ifndef AUX_WIDGET_H
+#define AUX_WIDGET_H
 
 #include "qwadro/ux/afxUxDefs.h"
 #include "qwadro/draw/afxColor.h"
@@ -70,7 +70,7 @@ AFX_DEFINE_STRUCT(afxWidgetConfig)
 };
 
 #ifdef _AUX_UX_C
-#ifdef _AFX_WIDGET_C
+#ifdef _AUX_WIDGET_C
 AFX_OBJECT(afxWidget)
 {
     afxLinkage                      parent;
@@ -115,11 +115,11 @@ AFX_OBJECT(afxWidget)
 
     };
 };
-#endif
-#endif
+#endif//_AUX_WIDGET_C
+#endif//_AUX_UX_C
 
 AUX afxError    AfxAcquireWidget(afxWindow ovy, afxViewport const* vp);
 
 AUX afxError    AfxAcquireWidgets(afxWindow ovy, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[]);
 
-#endif//AFX_WIDGET_H
+#endif//AUX_WIDGET_H

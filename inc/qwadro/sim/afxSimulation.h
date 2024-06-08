@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -20,18 +20,19 @@
 #define AFX_SIMULATION_H
 
 #include "qwadro/core/afxManager.h"
-#include "qwadro/sim/awxEntity.h"
-#include "qwadro/sim/rendering/awxLight.h"
-#include "qwadro/sim/afxSkeleton.h"
-#include "qwadro/sim/modeling/afxModel.h"
-#include "qwadro/sim/motion/awxAnimation.h"
-#include "qwadro/sim/afxMaterial.h"
-#include "qwadro/draw/dev/afxDrawInput.h"
-#include "qwadro/draw/dev/afxDrawContext.h"
-#include "qwadro/sim/motion/awxMotor.h"
-#include "qwadro/sim/motion/awxMotion.h"
-#include "qwadro/sim/rendering/awxRenderer.h"
+#include "qwadro/sim/akxEntity.h"
+#include "qwadro/sim/rendering/akxLighting.h"
+#include "qwadro/space/afxSkeleton.h"
+#include "qwadro/cad/afxModel.h"
+#include "qwadro/space/akxAnimation.h"
+#include "qwadro/cad/afxMaterial.h"
+#include "qwadro/draw/afxDrawInput.h"
+#include "qwadro/draw/afxDrawContext.h"
+#include "qwadro/space/akxMotor.h"
+#include "qwadro/space/afxMotion.h"
+#include "qwadro/sim/rendering/akxRenderer.h"
 #include "qwadro/sound/afxSoundDefs.h"
+#include "qwadro/space/afxCurve.h"
 
 // A computer simulation (or "sim") is an attempt to model a real-life or hypothetical situation on a computer so that it can be studied to see how the system works. 
 // By changing variables in the simulation, predictions may be made about the behaviour of the system. 
@@ -41,23 +42,23 @@
 
 typedef struct smt
 {
-    void(*SampleTrackUUULocalAtTime0)(awxMotionTransform const* SourceTrack, afxTransform *Result);
-    void(*SampleTrackUUULocal)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, afxTransform *Result);
-    void(*SampleTrackUUU)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackIII)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackCII)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackCCI)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackCAI)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackAII)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackACI)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*SampleTrackAAI)(const sample_context *Context, const awxMotionTransform*SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxReal *ParentMatrixAliased, afxReal *WorldResultAliased, afxReal *CompositeResultAliased);
-    void(*Samplers[3][3][3])(const sample_context *, const awxMotionTransform *, awxBoundMotionTransform *, const afxTransform *, const afxReal *, const afxReal *, afxReal *, afxReal *);
-    void(*SampleTrackSSS)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxReal *InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*(*GetTrackSamplerFor)(const awxMotionTransform *Track))(const sample_context *, const awxMotionTransform *, awxBoundMotionTransform *, const afxTransform *, const afxReal *, const afxReal *, afxReal *, afxReal *);
-    void(*SampleTrackUUUAtTime0)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult);
-    void(*SampleTrackUUUBlendWithTime0)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult, afxReal BlendAmount);
-    void(*SampleTrackIIU)(const sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
-    void(*SampleTrackPOLocal)(const struct sample_context *Context, const awxMotionTransform *SourceTrack, awxBoundMotionTransform *Track, afxV3d ResultPosition, afxQuat ResultOrientation);
+    void(*SampleTrackUUULocalAtTime0)(akxMotionTransform const* SourceTrack, afxTransform *Result);
+    void(*SampleTrackUUULocal)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, afxTransform *Result);
+    void(*SampleTrackUUU)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackIII)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCII)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCCI)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackCAI)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackAII)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackACI)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackAAI)(const sample_context *Context, const akxMotionTransform*SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*Samplers[3][3][3])(const sample_context *, const akxMotionTransform *, akxBoundMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
+    void(*SampleTrackSSS)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*(*GetTrackSamplerFor)(const akxMotionTransform *Track))(const sample_context *, const akxMotionTransform *, akxBoundMotionTransform *, const afxTransform *, const afxM4d, const afxM4d, afxM4d, afxM4d);
+    void(*SampleTrackUUUAtTime0)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult);
+    void(*SampleTrackUUUBlendWithTime0)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4, const afxM4d ParentMatrix, afxM4d WorldResult, afxM4d CompositeResult, afxReal BlendAmount);
+    void(*SampleTrackIIU)(const sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, const afxTransform *RestTransform, const afxM4d InverseWorld4x4Aliased, const afxM4d ParentMatrixAliased, afxM4d WorldResultAliased, afxM4d CompositeResultAliased);
+    void(*SampleTrackPOLocal)(const struct sample_context *Context, const akxMotionTransform *SourceTrack, akxBoundMotionTransform *Track, afxV3d ResultPosition, afxQuat ResultOrientation);
 } smt;
 
 AKX smt Smt;
@@ -83,7 +84,7 @@ AKX mmt Mmt;
 
 
 
-AFX_DEFINE_STRUCT(awxSimulationConfig)
+AFX_DEFINE_STRUCT(akxSimulationConfig)
 {
     afxUri const*   driver;
     afxAabb         extent;
@@ -113,8 +114,11 @@ AFX_OBJECT(afxSimulation)
     afxManager      topologies;
     afxManager      models;
     afxManager      skeletons;
-    afxManager      animations;
-    afxManager      motions;
+    afxManager      poseMgr;
+    afxManager      posbMgr;
+    afxManager      curMgr;
+    afxManager      motMgr;
+    afxManager      aniMgr;
     afxManager      nodes;
     afxManager      renderers;
 
@@ -131,7 +135,7 @@ AFX_OBJECT(afxSimulation)
     afxSize         stepTime, swapTime;
     afxReal         stepDeltaTime;
 
-    awxMotive       globalMotorInterlinks;
+    akxMotive       globalMotorInterlinks;
 
     afxDrawContext  dctx;
 };
@@ -139,21 +143,24 @@ AFX_OBJECT(afxSimulation)
 
 AKX afxMmu          AfxGetSimulationMmu(afxSimulation sim);
 
-AKX afxManager*     AwxGetMotorClass(afxSimulation sim);
+AKX afxManager*     AfxGetCurveClass(afxSimulation sim);
+AKX afxManager*     AkxGetMotorClass(afxSimulation sim);
 AKX afxManager*     AfxGetBodyClass(afxSimulation sim);
 AKX afxManager*     AfxGetEntityClass(afxSimulation sim);
 AKX afxManager*     AfxGetLightClass(afxSimulation sim);
 AKX afxManager*     AfxGetMaterialClass(afxSimulation sim);
-AKX afxManager*     AwxGetMeshClass(afxSimulation sim);
-AKX afxManager*     AwxGetMeshDataClass(afxSimulation sim);
-AKX afxManager*     AwxGetMeshTopologyClass(afxSimulation sim);
-AKX afxManager*     AwxGetModelClass(afxSimulation sim);
+AKX afxManager*     AkxGetMeshClass(afxSimulation sim);
+AKX afxManager*     AkxGetMeshDataClass(afxSimulation sim);
+AKX afxManager*     AkxGetMeshTopologyClass(afxSimulation sim);
+AKX afxManager*     AkxGetModelClass(afxSimulation sim);
 AKX afxManager*     AfxGetNodeClass(afxSimulation sim);
+AKX afxManager*     AfxGetPoseClass(afxSimulation sim);
+AKX afxManager*     AfxGetPoseBufferClass(afxSimulation sim);
 AKX afxManager*     AfxGetRendererClass(afxSimulation sim);
 AKX afxManager*     AfxGetSkeletonClass(afxSimulation sim);
 
-AKX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, awxBody bod[]);
-AKX afxNat          AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, awxEntity ent[]);
+AKX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bod[]);
+AKX afxNat          AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, akxEntity ent[]);
 AKX afxNat          AfxEnumerateMaterials(afxSimulation sim, afxNat base, afxNat cnt, afxMaterial mtl[]);
 AKX afxNat          AfxEnumerateMeshes(afxSimulation sim, afxNat base, afxNat cnt, afxMesh msh[]);
 AKX afxNat          AfxEnumerateModels(afxSimulation sim, afxNat base, afxNat cnt, afxModel mdl[]);
@@ -183,6 +190,6 @@ AKX afxNat          AfxCountSimulations(void);
 AKX afxManager*     AfxGetSimulationClass(void);
 AKX afxNat          AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[]);
 AKX afxNat          AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd);
-AKX afxError        AfxAcquireSimulations(afxNat cnt, awxSimulationConfig const config[], afxSimulation simulations[]);
+AKX afxError        AfxAcquireSimulations(afxNat cnt, akxSimulationConfig const config[], afxSimulation simulations[]);
 
 #endif//AFX_SIMULATION_H

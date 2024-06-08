@@ -10,13 +10,14 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #define _AVX_DRAW_C
+#define _AVX_PIPELINE_C
 #define _AVX_RASTERIZER_C
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/io/afxXsh.h"
@@ -71,12 +72,9 @@ _AVX void AfxDescribeRasterizerConfiguration(afxRasterizer razr, afxRasterizatio
     AfxCopyColor(config->blendConstants, razr->blendConstants);
     config->pixelLogicOpEnabled = razr->logicOpEnabled;
     config->pixelLogicOp = razr->logicOp;
-
-    AfxReplicateUri(&config->fragShd, &razr->fragShd.uri);
-    AfxReflectString(&razr->fragFn.str.str, &config->fragFn);
 }
 
-_AVX afxBool AfxGetDepthComparator(afxRasterizer razr, afxCompareOp* op) // return TRUE if depth test is enabled
+_AVX afxBool AfxGetDepthComparison(afxRasterizer razr, afxCompareOp* op) // return TRUE if depth test is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -101,19 +99,21 @@ _AVX afxBool AfxGetDepthBiasInfo(afxRasterizer razr, afxReal* slopeScale, afxRea
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->depthBiasEnabled;
 
-    if (enabled && constFactor)
-        *constFactor = razr->depthBiasConstFactor;
+    if (enabled)
+    {
+        if (constFactor)
+            *constFactor = razr->depthBiasConstFactor;
 
-    if (enabled && clamp)
-        *clamp = razr->depthBiasClamp;
+        if (clamp)
+            *clamp = razr->depthBiasClamp;
 
-    if (enabled && slopeScale)
-        *slopeScale = razr->depthBiasSlopeScale;
-
+        if (slopeScale)
+            *slopeScale = razr->depthBiasSlopeScale;
+    }
     return enabled;
 }
 
-_AVX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // return TRUE if depth bounds is enabled
+_AVX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxV2d bounds) // return TRUE if depth bounds is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -125,30 +125,20 @@ _AVX afxBool AfxGetDepthBoundsInfo(afxRasterizer razr, afxReal bounds[2]) // ret
     return enabled;
 }
 
-_AVX void AfxGetFragmentShader(afxRasterizer razr, afxUri* uri, afxString* fn)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &razr, afxFcc_RAZR);
-
-    if (uri)
-        AfxReplicateUri(uri, &razr->fragShd.uri);
-
-    if (fn)
-        AfxReflectString(&razr->fragFn.str.str, fn);
-}
-
 _AVX afxBool AfxGetStencilConfig(afxRasterizer razr, afxStencilConfig* front, afxStencilConfig* back) // return TRUE if stencil test is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->stencilTestEnabled;
 
-    if (enabled && front)
-        *front = razr->stencilFront;
+    if (enabled)
+    {
+        if (front)
+            *front = razr->stencilFront;
 
-    if (enabled && back)
-        *back = razr->stencilBack;
-
+        if (back)
+            *back = razr->stencilBack;
+    }
     return enabled;
 }
 
@@ -164,7 +154,7 @@ _AVX afxBool AfxGetLogicalPixelOperation(afxRasterizer razr, afxLogicOp* op) // 
     return enabled;
 }
 
-_AVX void AfxGetColorBlendConstants(afxRasterizer razr, afxReal rgba[4])
+_AVX void AfxGetColorBlendConstants(afxRasterizer razr, afxV4d rgba)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -183,8 +173,8 @@ _AVX afxNat AfxGetColorOutputChannels(afxRasterizer razr, afxNat first, afxNat c
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     AfxAssertRange(razr->outCnt, first, cnt);
+    AfxAssert(cnt);
     AfxAssert(ch);
-
     afxNat i = 0;
 
     for (; i < cnt; i++)
@@ -199,17 +189,19 @@ _AVX afxBool AfxGetMultisamplingInfo(afxRasterizer razr, afxNat* sampleCnt, afxM
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     afxBool enabled = razr->msEnabled;
 
-    if (enabled && sampleCnt)
-        *sampleCnt = razr->sampleCnt;
+    if (enabled)
+    {
+        if (sampleCnt)
+            *sampleCnt = razr->sampleCnt;
 
-    if (enabled && sampleMask)
-        for (afxNat i = 0; i < razr->sampleCnt; i++)
-            sampleMask[i] = razr->sampleMasks[i];
-
+        if (sampleMask)
+            for (afxNat i = 0; i < razr->sampleCnt; i++)
+                sampleMask[i] = razr->sampleMasks[i];
+    }
     return enabled;
 }
 
-_AVX afxBool AfxGetMinimumSampleShadingValue(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
+_AVX afxBool AfxGetSampleShadingInfo(afxRasterizer razr, afxReal* minSampleShadingValue) // return TRUE if sample shading is enabled
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -239,12 +231,25 @@ _AVX afxBool AfxGetLineRasterizationWidth(afxRasterizer razr, afxReal* lineWidth
     return razr->fillMode == afxFillMode_EDGE;
 }
 
+_AVX afxPipeline AfxGetRasterizerPipeline(afxRasterizer razr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &razr, afxFcc_RAZR);
+    afxPipeline pip = razr->pip;
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
+    return pip;
+}
+
 _AVX afxError _AvxRazrStdDtor(afxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
     afxDrawContext dctx = AfxGetObjectProvider(razr);
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    
+    if (razr->pip)
+        AfxReleaseObjects(1, &razr->pip);
 
     if (razr->sampleMasks)
         AfxDeallocate(razr->sampleMasks);
@@ -261,83 +266,110 @@ _AVX afxError _AvxRazrStdCtor(afxRasterizer razr, afxCookie const* cookie)
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
 
     afxDrawContext dctx = cookie->udd[0];
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxRasterizationConfig const *rasc = ((afxRasterizationConfig const*)cookie->udd[1]) + cookie->no;
     //AfxAssertType(rasc, afxFcc_RASB);
+    afxPipeline pip = NIL;
 
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-
-    afxRasterizationFlags rasFlags = rasc->rasFlags;
-    razr->rasFlags = NIL;
-
-    razr->fillMode = rasc->fillMode;
-    razr->lineWidth = rasc->lineWidth;
-
-    razr->depthBiasEnabled = !!rasc->depthBiasEnabled;
-    razr->depthBiasSlopeScale = rasc->depthBiasSlopeScale;
-    razr->depthBiasConstFactor = rasc->depthBiasConstFactor;
-    razr->depthBiasClamp = rasc->depthBiasClamp;
-
-    afxMultisamplingFlags msFlags = rasc->msFlags;
-    razr->msFlags = NIL;
-
-    razr->msEnabled = !!rasc->msEnabled;
-    razr->minSampleShadingValue = rasc->minSampleShadingValue;
-
-    razr->sampleCnt = rasc->sampleCnt;
-    razr->sampleMasks = NIL;
-
-    if (razr->sampleCnt && !(razr->sampleMasks = AfxAllocate(razr->sampleCnt, sizeof(razr->sampleMasks[0]), 0, AfxHere()))) AfxThrowError();
-    else
+    if (AfxUriIsBlank(&rasc->xfmrPipUri))
     {
-        for (afxNat i = 0; i < razr->sampleCnt; i++)
-            razr->sampleMasks[i] = rasc->sampleMasks[i];
-    
-        afxDepthStencilFlags dsFlags = rasc->dsFlags;
-        razr->dsFlags = NIL;
-
-        razr->depthTestEnabled = !!rasc->depthTestEnabled;
-        razr->depthCompareOp = rasc->depthCompareOp;
-        razr->depthWriteDisabled = !!rasc->depthWriteDisabled;
-
-        razr->stencilTestEnabled = !!rasc->stencilTestEnabled;
-        razr->stencilFront = rasc->stencilFront;
-        razr->stencilBack = rasc->stencilBack;
-
-        razr->depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
-        AfxCopyV2d(razr->depthBounds, rasc->depthBounds);
-
-        razr->dsFmt = rasc->dsFmt; // ?
-
-        afxColorOutputFlags pixelFlags = rasc->pixelFlags;
-        razr->pixelFlags = NIL;
-
-        razr->outCnt = rasc->colorOutCnt;
-        razr->outs = NIL;
-
-        if (razr->outCnt && !(razr->outs = AfxAllocate(razr->outCnt, sizeof(razr->outs[0]), 0, AfxHere()))) AfxThrowError();
+        if (AfxAssemblePipelines(dctx, 1, &rasc->xfmrPipb, &pip)) AfxThrowError();
         else
         {
-            for (afxNat i = 0; i < razr->outCnt; i++)
-                razr->outs[i] = rasc->colorOuts[i];
-
-            // deveria ser só o blend/write, já que só podemos determinar as saídas quando assembleado com fragment shaders enquanto pipeline completo.
-        
-            AfxCopyV4d(razr->blendConstants, rasc->blendConstants);
-
-            razr->logicOpEnabled = !!rasc->pixelLogicOpEnabled;
-            razr->logicOp = rasc->pixelLogicOp;
-
-            AfxMakeUri128(&razr->fragShd, &rasc->fragShd);
-            AfxMakeString8(&razr->fragFn, &rasc->fragFn);
-
-            if (err && razr->outs)
-                AfxDeallocate(razr->outs);
+            AfxAssertObjects(1, &pip, afxFcc_PIP);
         }
+    }
+    else
+    {
+        afxPipelineBlueprint pipb = { 0 };
 
-        if (err && razr->sampleMasks)
-            AfxDeallocate(razr->sampleMasks);
+        if (AfxParsePipelineFromXsh(&pipb, &rasc->xfmrPipUri)) AfxThrowError();
+        else
+        {
+            if (AfxAssemblePipelines(dctx, 1, &pipb, &pip)) AfxThrowError();
+            else
+            {
+                AfxAssertObjects(1, &pip, afxFcc_PIP);
+            }
+        }
     }
 
+    if (!err)
+    {
+        razr->pip = pip;
+
+        afxRasterizationFlags rasFlags = rasc->rasFlags;
+        razr->rasFlags = NIL;
+
+        razr->fillMode = rasc->fillMode;
+        razr->lineWidth = rasc->lineWidth;
+
+        razr->depthBiasEnabled = !!rasc->depthBiasEnabled;
+        razr->depthBiasSlopeScale = rasc->depthBiasSlopeScale;
+        razr->depthBiasConstFactor = rasc->depthBiasConstFactor;
+        razr->depthBiasClamp = rasc->depthBiasClamp;
+
+        afxMultisamplingFlags msFlags = rasc->msFlags;
+        razr->msFlags = NIL;
+
+        razr->msEnabled = !!rasc->msEnabled;
+        razr->minSampleShadingValue = rasc->minSampleShadingValue;
+
+        razr->sampleCnt = rasc->sampleCnt;
+        razr->sampleMasks = NIL;
+
+        if (razr->sampleCnt && !(razr->sampleMasks = AfxAllocate(razr->sampleCnt, sizeof(razr->sampleMasks[0]), 0, AfxHere()))) AfxThrowError();
+        else
+        {
+            for (afxNat i = 0; i < razr->sampleCnt; i++)
+                razr->sampleMasks[i] = rasc->sampleMasks[i];
+
+            afxDepthStencilFlags dsFlags = rasc->dsFlags;
+            razr->dsFlags = NIL;
+
+            razr->depthTestEnabled = !!rasc->depthTestEnabled;
+            razr->depthCompareOp = rasc->depthCompareOp;
+            razr->depthWriteDisabled = !!rasc->depthWriteDisabled;
+
+            razr->stencilTestEnabled = !!rasc->stencilTestEnabled;
+            razr->stencilFront = rasc->stencilFront;
+            razr->stencilBack = rasc->stencilBack;
+
+            razr->depthBoundsTestEnabled = !!rasc->depthBoundsTestEnabled;
+            AfxCopyV2d(razr->depthBounds, rasc->depthBounds);
+
+            razr->dsFmt = rasc->dsFmt; // ?
+
+            afxColorOutputFlags pixelFlags = rasc->pixelFlags;
+            razr->pixelFlags = NIL;
+
+            razr->outCnt = rasc->colorOutCnt;
+            razr->outs = NIL;
+
+            if (razr->outCnt && !(razr->outs = AfxAllocate(razr->outCnt, sizeof(razr->outs[0]), 0, AfxHere()))) AfxThrowError();
+            else
+            {
+                for (afxNat i = 0; i < razr->outCnt; i++)
+                    razr->outs[i] = rasc->colorOuts[i];
+
+                // deveria ser só o blend/write, já que só podemos determinar as saídas quando assembleado com fragment shaders enquanto pipeline completo.
+
+                AfxCopyV4d(razr->blendConstants, rasc->blendConstants);
+
+                razr->logicOpEnabled = !!rasc->pixelLogicOpEnabled;
+                razr->logicOp = rasc->pixelLogicOp;
+
+                if (err && razr->outs)
+                    AfxDeallocate(razr->outs);
+            }
+
+            if (err && razr->sampleMasks)
+                AfxDeallocate(razr->sampleMasks);
+        }
+
+        if (err)
+            AfxReleaseObjects(1, &pip);
+    }
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return err;
 }
@@ -346,7 +378,7 @@ _AVX afxClassConfig const _AvxRazrStdImplementation =
 {
     .fcc = afxFcc_RAZR,
     .name = "Rasterizer",
-    .desc = "Pipelined Rasterization Module",
+    .desc = "Draw Device Rasterization Pipeline",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxRasterizer)),
     .ctor = (void*)_AvxRazrStdCtor,
@@ -355,24 +387,24 @@ _AVX afxClassConfig const _AvxRazrStdImplementation =
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAcquireRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const config[], afxRasterizer razr[])
+_AVX afxError AfxAssembleRasterizers(afxDrawContext dctx, afxNat cnt, afxRasterizationConfig const cfg[], afxRasterizer razr[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(config);
+    AfxAssert(cfg);
     AfxAssert(razr);
     AfxAssert(cnt);
 
     afxManager* cls = AfxGetRasterizerClass(dctx);
     AfxAssertClass(cls, afxFcc_RAZR);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)razr, (void const*[]) { dctx, (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)razr, (void const*[]) { dctx, (void*)cfg }))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* uri)
+_AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -435,7 +467,9 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxUri const* u
                         AfxUriFromString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
-                        if (AfxAcquireRasterizers(dctx, 1, &config, &razr)) AfxThrowError();
+                        config.xfmrPipb.vin = vin;
+
+                        if (AfxAssembleRasterizers(dctx, 1, &config, &razr)) AfxThrowError();
                         else
                         {
                             AfxAssertObjects(1, &razr, afxFcc_RAZR);

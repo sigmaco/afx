@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -296,7 +296,7 @@ _AFX void AfxRequestThreadInterruption(afxThread thr)
     }
 }
 
-_AFX void* AfxGetThreadUdd(afxThread thr)
+_AFX void** AfxGetThreadUdd(afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
@@ -398,7 +398,7 @@ _AFX afxBool _AfxThrExecuteCb(afxThread thr, void* udd)
 
             AfxAssert(thr->procCb);
 
-            if (thr->running && !thr->started && !thr->finished && AfxSystemIsExecuting())
+            if (thr->running && !thr->started && !thr->finished/* && AfxSystemIsExecuting()*/)
             {
                 afxEvent ev2 = { 0 };
                 ev2.id = afxThreadEvent_RUN;
@@ -614,7 +614,21 @@ _AFX afxError _AfxThrCtor(afxThread thr, afxCookie const *cookie)
     thr->isInFinish = FALSE;
     thr->interruptionRequested = FALSE;
     thr->exitCode = 0;
-    thr->udd = cfg ? cfg->udd : NIL;
+
+    if (cfg)
+    {
+        thr->udd[0] = cfg->udd[0];
+        thr->udd[1] = cfg->udd[1];
+        thr->udd[2] = cfg->udd[2];
+        thr->udd[3] = cfg->udd[3];
+    }
+    else
+    {
+        thr->udd[0] = NIL;
+        thr->udd[1] = NIL;
+        thr->udd[2] = NIL;
+        thr->udd[3] = NIL;
+    }
 
     thr->_file_ = AfxFindPathTarget((void*)hint[0]);
     thr->_line_ = hint[1];

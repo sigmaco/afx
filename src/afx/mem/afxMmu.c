@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -223,7 +223,7 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
                 mem->align = align ? align : AFX_SIMD_ALIGN;
                 mem->siz = siz;
                 mem->cnt = cnt;
-                mem->flags = AFX_BIT_OFFSET(31) | flags;
+                mem->flags = AFX_BIT(31) | flags;
                 AfxPushLinkage(&mem->mmu, &mmu->memChain);
             }
 
@@ -246,7 +246,7 @@ _AFX afxMemory _AfxAllocCallback2(afxMmu mmu, afxSize cnt, afxSize siz, afxSize 
             mem->align = align ? align : AFX_SIMD_ALIGN;
             mem->siz = siz;
             mem->cnt = cnt;
-            mem->flags = AFX_BIT_OFFSET(31) | flags;
+            mem->flags = AFX_BIT(31) | flags;
             AfxPushLinkage(&mem->mmu, &mmu->memChain);
         }
     }
@@ -791,7 +791,7 @@ _AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat al
                     mem->align = align ? align : AFX_SIMD_ALIGN;
                     mem->siz = siz;
                     mem->cnt = cnt;
-                    mem->flags = AFX_BIT_OFFSET(31) | flags;
+                    mem->flags = AFX_BIT(31) | flags;
                     AfxPushLinkage(&mem->mmu, &mmu->memChain);
                 }
 
@@ -814,7 +814,7 @@ _AFX afxMemory AfxAllocateMemory(afxMmu mmu, afxSize siz, afxSize cnt, afxNat al
                 mem->align = align ? align : AFX_SIMD_ALIGN;
                 mem->siz = siz;
                 mem->cnt = cnt;
-                mem->flags = AFX_BIT_OFFSET(31) | flags;
+                mem->flags = AFX_BIT(31) | flags;
                 AfxPushLinkage(&mem->mmu, &mmu->memChain);
             }
         }

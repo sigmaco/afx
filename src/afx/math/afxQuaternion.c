@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -499,7 +499,7 @@ _AFXINL void AfxSlerpQuat(afxQuat q, afxQuat const a, afxQuat const b, afxReal p
                 else
                 {
                     // keep the dot product in the range that acos canv handle (shouldn't get here)
-                    dot = AfxClamp(dot, AfxScalar(-1), AfxScalar(1));
+                    dot = AfxClampd(dot, AfxScalar(-1), AfxScalar(1));
                     afxReal theta = AfxAcosf(dot); // the angle between start a end in radians
                     afxReal s = AfxSinf(theta), f1 = AfxSinf((AfxScalar(1) - percent) * theta) / s, f2 = AfxSinf(percent * theta) / s; // compute negative a positive
 

@@ -10,11 +10,13 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
+
+// A afxSampler object represent the state of an image sampler which is used by the implementation to read image data and apply filtering and other transformations for the shader.
 
 #ifndef AVX_SAMPLER_H
 #define AVX_SAMPLER_H
@@ -58,36 +60,34 @@ typedef enum afxYuvModelConversion
     */
 } afxYuvModelConversion;
 
-AFX_DEFINE_STRUCT(afxSamplerConfigYuv)
+AFX_DEFINE_STRUCT(afxSamplerConfig)
 {
+    afxTexelFilter          magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
+    afxTexelFilter          minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
+    afxTexelFilter          mipmapFilter; // LINEAR.
+    afxTexelAddress         uvw[3]; // REPEAT. Sets the wrap parameter for texture coordinates.
+    afxBool                 anisotropyEnabled; // FALSE
+    afxReal                 anisotropyMaxDegree; // 1
+    afxBool                 compareEnabled;
+    afxCompareOp            compareOp; // LEQUAL
+    afxReal                 lodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
+    afxReal                 minLod; // -1000. Sets the minimum level-of-detail parameter. This floating-point value limits the selection of highest resolution mipmap (lowest mipmap level).
+    afxReal                 maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
+    afxColor                borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
+    afxBool                 unnormalizedCoords;
+};
+
+AFX_DEFINE_STRUCT(afxYuvSamplerConfig)
+{
+    afxSamplerConfig        base;
     afxPixelFormat          fmt;
     afxYuvModelConversion   ycbcrModel;
-    afxBool                 useNarrowRange; 
+    afxBool                 useNarrowRange;
     afxColorSwizzling       components;
     afxBool                 xChromaOffsetAtMidpoint;
     afxBool                 yChromaOffsetAtMidpoint;
     afxTexelFilter          chromaFilter;
     afxBool                 forceExplicitReconstruction;
-};
-
-// A afxSampler object represent the state of an image sampler which is used by the implementation to read image data and apply filtering and other transformations for the shader.
-
-AFX_DEFINE_STRUCT(afxSamplerConfig)
-{
-    afxTexelFilter  magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified. Aka upsampling filter.
-    afxTexelFilter  minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions. Aka downsampling filter.
-    afxTexelFilter  mipmapFilter; // LINEAR.
-    afxTexelAddress uvw[3]; // REPEAT. Sets the wrap parameter for texture coordinates.
-    afxBool         anisotropyEnabled; // FALSE
-    afxReal         anisotropyMaxDegree; // 1
-    afxBool         compareEnabled;
-    afxCompareOp    compareOp; // LEQUAL
-    afxReal         lodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
-    afxReal         minLod; // -1000. Sets the minimum level-of-detail parameter. This floating-point value limits the selection of highest resolution mipmap (lowest mipmap level).
-    afxReal         maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
-    afxColor        borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
-    afxBool         unnormalizedCoords;
-    void*           ext;
 };
 
 #ifdef _AVX_DRAW_C
@@ -98,20 +98,9 @@ AFX_OBJECT(afxSampler)
 struct afxBaseSampler
 #endif
 {
-    afxNat32        crc32;
-    afxTexelFilter  magFilter; // LINEAR. The texture magnification function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be magified.
-    afxTexelFilter  minFilter; // NEAREST. The texture minifying function is used whenever the level-of-detail function used when sampling from the texture determines that the texture should be minified. There are six defined minifying functions.
-    afxTexelFilter  mipmapFilter; // LINEAR.
-    afxTexelAddress uvw[3]; // REPEAT. Sets the wrap parameter for texture coordinates.
-    afxBool         anisotropyEnabled; // FALSE
-    afxReal         anisotropyMaxDegree; // 1
-    afxBool         compareEnabled;
-    afxCompareOp    compareOp; // LEQUAL
-    afxReal         lodBias; // 0. Specifies a fixed bias value that is to be added to the level-of-detail parameter for the texture before texture sampling.
-    afxReal         minLod; // -1000. Sets the minimum level-of-detail parameter. This floating-point value limits the selection of highest resolution mipmap (lowest mipmap level).
-    afxReal         maxLod; // 1000. Sets the maximum level-of-detail parameter. This floating-point value limits the selection of the lowest resolution mipmap (highest mipmap level).
-    afxColor        borderColor; // (0, 0, 0, 0). Specifies the color that should be used for border texels. If a texel is sampled from the border of the texture, this value is used for the non-existent texel data. If the texture contains depth components, the first component of this color is interpreted as a depth value.
-    afxBool         unnormalizedCoords;
+    afxNat32                crc;
+    afxYuvSamplerConfig     cfg;
+    afxBool                 yuv;
 };
 #endif
 #endif
@@ -120,10 +109,11 @@ AVX void            AfxDescribeSampler(afxSampler samp, afxSamplerConfig* config
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const config[], afxSampler samplers[]);
+AVX afxError        AfxAcquireSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const cfg[], afxSampler samplers[]);
+AVX afxError        AfxAcquireYuvSamplers(afxDrawContext dctx, afxNat cnt, afxYuvSamplerConfig const cfg[], afxSampler samplers[]);
 
-AVX afxSampler      AfxAcquireBilinearSampler(afxDrawContext dctx);
-AVX afxSampler      AfxAcquireTrilinearSampler(afxDrawContext dctx);
+AVX afxBool         AfxFindSamplers(afxDrawContext dctx, afxNat cnt, afxSamplerConfig const cfg[], afxSampler samplers[]);
+AVX afxBool         AfxFindYuvSamplers(afxDrawContext dctx, afxNat cnt, afxYuvSamplerConfig const cfg[], afxSampler samplers[]);
 
 AVX void            AfxDescribeDefaultSampler(afxSamplerConfig* config);
 

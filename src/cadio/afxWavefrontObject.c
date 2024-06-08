@@ -5,9 +5,9 @@
 #define _AFX_SKELETON_C
 #include "qwadro/core/afxSystem.h"
 #include "afxWavefrontObject.h"
-#include "qwadro/sim/modeling/afxMesh.h"
+#include "qwadro/cad/afxMesh.h"
 #include "qwadro/sim/afxMaterial.h"
-#include "qwadro/sim/awxAsset.h"
+#include "qwadro/sim/akxAsset.h"
 #include "../dep/glus/GL/glus.h"
 #include "../dep/glus/GLUS/glus_wavefront.h"
 #include "qwadro/io/afxUri.h"
@@ -28,7 +28,7 @@ struct cadbData
     afxSkeleton skl;
 };
 
-_AFXEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
+DLLEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
 {
     struct cadbData* data = data2;
 
@@ -54,7 +54,7 @@ _AFXEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afx
 
 }
 
-_AFXEXPORT void CadbGetTypeInfoObj(void* data2, afxNat setIdx, afxFcc* resType, afxNat* resCnt)
+DLLEXPORT void CadbGetTypeInfoObj(void* data2, afxNat setIdx, afxFcc* resType, afxNat* resCnt)
 {
     struct cadbData* data = data2;
 
@@ -65,7 +65,7 @@ _AFXEXPORT void CadbGetTypeInfoObj(void* data2, afxNat setIdx, afxFcc* resType, 
         *resCnt = (setIdx == 0) ? data->meshCnt : (setIdx == 1) ? 1 : (setIdx == 2) ? 1 : 0;
 }
 
-_AFXEXPORT void* CadbGetResourceInfoObj(void* data2, afxFcc type, afxNat resIdx, afxUri* name)
+DLLEXPORT void* CadbGetResourceInfoObj(void* data2, afxFcc type, afxNat resIdx, afxUri* name)
 {
     struct cadbData* data = data2;
 
@@ -89,7 +89,7 @@ _AFXEXPORT void* CadbGetResourceInfoObj(void* data2, afxFcc type, afxNat resIdx,
     return NIL;
 }
 
-_AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], awxAsset cad[])
+DLLEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], akxAsset cad[])
 {
     afxError err = AFX_ERR_NONE;
 
@@ -278,7 +278,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
             AfxAssembleModel(sim, 1, &mdlb, &mdl);
             AfxAssertObjects(1, &mdl, afxFcc_MDL);
 
-            awxAssetBuilder cadb = { 0 };
+            akxAssetBuilder cadb = { 0 };
             cadb.GetInfo = CadbGetInfoObj;
             cadb.GetResourceInfo = CadbGetResourceInfoObj;
             cadb.GetTypeInfo = CadbGetTypeInfoObj;
@@ -297,7 +297,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fl
             AfxReleaseObjects(meshCnt, meshes.data);
             AfxDeallocateArray(&meshes);
             //AfxDeallocateArray(&meshNames);
-            AfxReleaseObjects(1, (void*[]) { skl });
+            AfxReleaseObjects(1, &skl);
             AfxReleaseObjects(1, (void*[]) { mdl });
 
             _ldrWavefrontDestroyScene(&(g_wavefrontScene));

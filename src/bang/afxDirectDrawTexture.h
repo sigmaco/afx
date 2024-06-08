@@ -3,12 +3,12 @@
 
 #include "qwadro/draw/avxDrawContext.h"
 
-_AFXIMPORT afxError    AfxLoadTexturesDdt(avxDrawContext dctx, afxNat cnt, afxUri const uri[], avxRaster tex[]);
+DLLIMPORT afxError    AfxLoadTexturesDdt(avxDrawContext dctx, afxNat cnt, afxUri const uri[], avxRaster tex[]);
 
-_AFXIMPORT afxError    AfxFetchRasterDdt(avxRaster tex, afxUri const *uri);
-_AFXIMPORT afxError    AfxFetchRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
+DLLIMPORT afxError    AfxFetchRasterDdt(avxRaster tex, afxUri const *uri);
+DLLIMPORT afxError    AfxFetchRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
 
-_AFXIMPORT afxError    AfxPrintRasterDdt(avxRaster tex, afxUri const *uri);
-_AFXIMPORT afxError    AfxPrintRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
+DLLIMPORT afxError    AfxPrintRasterDdt(avxRaster tex, afxUri const *uri);
+DLLIMPORT afxError    AfxPrintRasterRegionsDdt(avxRaster tex, afxNat cnt, avxRasterRegion const rgn[], afxUri const uri[]);
 
 #endif//AFX_DIRECTDRAW_TEXTURE_H

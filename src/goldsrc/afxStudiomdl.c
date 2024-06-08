@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -19,7 +19,7 @@
 
 #include "qwadro/afxQwadro.h"
 #include "qwadro/sim/afxSimulation.h"
-#include "qwadro/sim/awxAsset.h"
+#include "qwadro/sim/akxAsset.h"
 #include "qwadro/mem/afxStack.h"
 
 enum {
@@ -43,7 +43,7 @@ struct smd_vertex
     afxV3d binormal;
 };
 
-_AFXEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], awxAsset cad[])
+DLLEXPORT afxError AfxLoadAssetsFromStudiomdl(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], akxAsset cad[])
 {
 
     int state = STATE_LOAD_EMPTY;

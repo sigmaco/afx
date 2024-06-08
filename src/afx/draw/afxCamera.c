@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -366,6 +366,7 @@ _AVX void AfxApplyCameraMotion(afxCamera cam, afxV3d const motion)
 
 _AVX void AfxComputeCameraProjectiveMatrices(afxCamera cam, afxM4d p, afxM4d ip)
 {
+    afxError err = NIL;
     afxReal64 h = AfxSinf(cam->fovY * 0.5f) / AfxCosf(cam->fovY * 0.5f);
     p[0][0] = cam->wrOverHr / (cam->wwOverHw * cam->wpOverHp * h);
     p[0][1] = 0.f;
@@ -381,13 +382,15 @@ _AVX void AfxComputeCameraProjectiveMatrices(afxCamera cam, afxM4d p, afxM4d ip)
     p[3][0] = 0.f;
     p[3][1] = 0.f;
     p[3][3] = 0.f;
-    afxClipBoundary depthRange = cam->depthRange;
     afxReal far = cam->farClipPlane;
     afxReal near = cam->nearClipPlane;
     afxReal epsilon = cam->depthRangeEpsilon;
     afxReal nearMinusFarRecip = 1.f / (near - far);
     afxReal nearTimesFar = near * far;
     
+#if 0
+    afxClipBoundary depthRange = cam->depthRange;
+
     if (depthRange == afxClipBoundary_NEG_ONE_TO_ONE)
     {
         if (far == 0.f)
@@ -419,6 +422,49 @@ _AVX void AfxComputeCameraProjectiveMatrices(afxCamera cam, afxM4d p, afxM4d ip)
         p[2][2] = nearMinusFarRecip * near;
         p[3][2] = nearMinusFarRecip * nearTimesFar;
     }
+#else
+    switch (cam->depthRange)
+    {
+    case afxClipBoundary_NEG_ONE_TO_ONE:
+    {
+        if (far == 0.f)
+        {
+            p[2][2] = epsilon - 1.f;
+            p[3][2] = (epsilon - 2.f) * near;
+        }
+        else
+        {
+            p[2][2] = nearMinusFarRecip * (near + far);
+            p[3][2] = nearMinusFarRecip * nearTimesFar + nearMinusFarRecip * nearTimesFar;
+        }
+        break;
+    }
+    case afxClipBoundary_NEG_ONE_TO_ZERO:
+    {
+        if (far != 0.f)
+        {
+            p[2][2] = nearMinusFarRecip * near;
+            p[3][2] = nearMinusFarRecip * nearTimesFar;
+        }
+        break;
+    }
+    case afxClipBoundary_ZERO_TO_ONE:
+    {
+        if (far == 0.f)
+        {
+            p[2][2] = epsilon - 1.f;
+            p[3][2] = (epsilon - 1.f) * near;
+        }
+        else
+        {
+            p[2][2] = nearMinusFarRecip * far;
+            p[3][2] = nearMinusFarRecip * nearTimesFar;
+        }
+        break;
+    }
+    default: AfxThrowError(); break;
+    };
+#endif
     ip[0][0] = 1.f / p[0][0];
     ip[0][1] = 0.f;
     ip[0][2] = 0.f;
@@ -503,9 +549,9 @@ _AVX void AfxRecomputeCameraMatrices(afxCamera cam)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    AfxRecomputeFrustum(&cam->frustum, cam->v, cam->p);
     AfxComputeCameraMatrices(cam, cam->v, cam->iv);
     AfxComputeCameraProjectiveMatrices(cam, cam->p, cam->ip);
+    AfxRecomputeFrustum(&cam->frustum, cam->v, cam->p);
 }
 
 _AVX void AfxFindWorldCoordinates(afxCamera cam, afxV2d const wh, afxV3d const screenPoint, afxV4d worldPoint)
@@ -758,7 +804,9 @@ _AVX afxError _AvxCamCtor(afxCamera cam, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
-    (void)cookie;
+
+    afxDrawInput din = cookie->udd[0];
+    AfxAssertObjects(1, &din, afxFcc_DIN);
 
     cam->perspective = TRUE;
 
@@ -768,6 +816,10 @@ _AVX afxError _AvxCamCtor(afxCamera cam, afxCookie const *cookie)
     AfxRecomputeFrustum(&(cam->frustum), m, m2);
     
     AfxResetCamera(cam);
+
+    afxClipSpace clip;
+    AfxDescribeClipSpace(din, &clip);
+    AfxSetCameraDepthRange(cam, clip.boundary);
 
     return err;
 }
@@ -786,7 +838,6 @@ _AVX afxClassConfig const _AvxCamMgrCfg =
     .desc = "Camera",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxCamera)),
-    .mmu = NIL,
     .ctor = (void*)_AvxCamCtor,
     .dtor = (void*)_AvxCamDtor,
 #if 0
@@ -804,16 +855,8 @@ _AVX afxError AfxAcquireCameras(afxDrawInput din, afxNat cnt, afxCamera cam[])
     afxManager* cls = AfxGetCameraClass();
     AfxAssertClass(cls, afxFcc_CAM);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)cam, (void const*[]) { (void*)NIL }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)cam, (void const*[]) { din }))
         AfxThrowError();
-    else
-    {
-        afxClipSpace clip;
-        AfxDescribeClipSpace(din, &clip);
-
-        for (afxNat i = 0; i < cnt; i++)
-            AfxSetCameraDepthRange(cam[i], clip.boundary);
-    }
 
     AfxAssertObjects(cnt, cam, afxFcc_CAM);
 

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -33,7 +33,7 @@ _AVX afxNat AfxGetBufferCapacity(afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    return buf->siz;
+    return buf->cap;
 }
 
 _AVX afxBufferUsage AfxGetBufferUsage(afxBuffer buf)
@@ -64,18 +64,37 @@ _AVX afxBufferAccess AfxTestBufferAccess(afxBuffer buf, afxBufferAccess access)
     return buf->access & access;
 }
 
-_AVX void AfxUnmapBuffer(afxBuffer buf)
+_AVX void AfxUnmapBuffer(afxBuffer buf, afxBool wait)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    
+    while (AfxLoadAtom32(&buf->pendingRemap))
+        AfxYield();
+
+    AfxIncAtom32(&buf->pendingRemap);
 
     if (buf->mappedRange)
     {
-        if (buf->unmap(buf))
-            AfxThrowError();
+        afxNat portIdx, dqueIdx;
+        
+        if (buf->unmap(buf, &portIdx, &dqueIdx)) AfxThrowError();
+        else if (wait)
+        {
+            afxDrawContext dctx = AfxGetBufferContext(buf);
+            AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+            AfxAssert(portIdx != AFX_INVALID_INDEX);
+            AfxAssert(dqueIdx != AFX_INVALID_INDEX);
+            AfxAssertRange(AfxCountDrawBridges(dctx), portIdx, 1);
+            AfxAssertRange(AfxCountDrawQueues(dctx, portIdx), dqueIdx, 1);
 
-        AfxAssert(!buf->mappedRange);
+            if (AfxWaitForIdleDrawQueue(dctx, portIdx, dqueIdx))
+                AfxThrowError();
+
+            AfxAssert(!buf->mappedRange);
+        }
     }
+    AfxDecAtom32(&buf->pendingRemap);
 }
 
 _AVX void* AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags)
@@ -83,14 +102,36 @@ _AVX void* AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags fla
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
     //AfxAssertAlign(offset, 64);
-    AfxAssertRange(buf->siz, offset, range);
+    AfxAssertRange(buf->cap, offset, range);
     void* ptr = NIL;
+
+    while (AfxLoadAtom32(&buf->pendingRemap))
+        AfxYield();
+
+    if (!range)
+        range = AfxMin(buf->cap, buf->cap - offset);
+
+    AfxIncAtom32(&buf->pendingRemap);
 
     if (!buf->mappedRange)
     {
-        if (buf->remap(buf, offset, range, flags)) AfxThrowError();
+        afxNat portIdx, dqueIdx;
+
+        if (buf->remap(buf, offset, range, flags, &portIdx, &dqueIdx)) AfxThrowError();
         else
         {
+            afxDrawContext dctx = AfxGetBufferContext(buf);
+            AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+            AfxAssert(portIdx != AFX_INVALID_INDEX);
+            AfxAssert(dqueIdx != AFX_INVALID_INDEX);
+            AfxAssertRange(AfxCountDrawBridges(dctx), portIdx, 1);
+            AfxAssertRange(AfxCountDrawQueues(dctx, portIdx), dqueIdx, 1);
+
+            if (AfxWaitForIdleDrawQueue(dctx, portIdx, dqueIdx))
+                AfxThrowError();
+
+            AfxAssert(buf->mappedRange);
+
             AfxAssert(buf->mappedOffset + buf->mappedRange >= offset + range);
             AfxAssert(buf->mappedOffset >= offset);
             ptr = &buf->bytemap[buf->mappedOffset - offset];
@@ -103,6 +144,7 @@ _AVX void* AfxMapBuffer(afxBuffer buf, afxNat offset, afxNat range, afxFlags fla
         AfxAssert(buf->mappedOffset >= offset);
         ptr = &buf->bytemap[buf->mappedOffset - offset];
     }
+    AfxDecAtom32(&buf->pendingRemap);
     return ptr;
 }
 
@@ -110,6 +152,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
     AfxAssertAlign(offset, 64);
 
     afxNat siz = AfxGetBufferCapacity(buf);
@@ -136,7 +179,7 @@ _AVX afxError AfxDumpBuffer2(afxBuffer buf, afxNat offset, afxNat stride, afxNat
             }
         }
 
-        AfxUnmapBuffer(buf);
+        AfxUnmapBuffer(buf, FALSE);
     }
     return err;
 }
@@ -145,6 +188,7 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_R));
     AfxAssertAlign(offset, 64);
 
     afxNat siz = AfxGetBufferCapacity(buf);
@@ -155,7 +199,8 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
 
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -171,7 +216,7 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
@@ -181,6 +226,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     AfxAssert(rgn);
     AfxAssertAlign(rgn->base, 64);
     
@@ -215,7 +261,7 @@ _AVX afxError AfxUpdateBufferRegion(afxBuffer buf, afxBufferRegion const* rgn, v
             }
         }
 
-        AfxUnmapBuffer(buf);
+        AfxUnmapBuffer(buf, FALSE);
     }
 
     return err;
@@ -225,6 +271,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     AfxAssertAlign(offset, 64);
 
     afxNat bufSiz = AfxGetBufferCapacity(buf);
@@ -259,7 +306,7 @@ _AVX afxError AfxUpdateBuffer2(afxBuffer buf, afxNat offset, afxNat range, afxNa
             }
         }
 
-        AfxUnmapBuffer(buf);
+        AfxUnmapBuffer(buf, FALSE);
     }
     return err;
 }
@@ -268,17 +315,19 @@ _AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    AfxAssert(AfxTestBufferAccess(buf, afxBufferAccess_W));
     //AfxAssertAlign(offset, 64);
 
-    afxNat siz = AfxGetBufferCapacity(buf);
-    AfxAssertRange(siz, offset, range);
-    range = range ? range : siz - offset;
-    AfxAssertRange(siz, offset, range);
+    afxNat bufCap = AfxGetBufferCapacity(buf);
+    AfxAssertRange(bufCap, offset, range);
+    offset = AfxMin(bufCap - 1, offset);
+    range = AfxMin(bufCap, range - offset);
     AfxAssert(src);
 
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -294,7 +343,7 @@ _AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
@@ -308,7 +357,8 @@ _AVX afxError AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const o
 
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     for (afxNat i = 0; i < opCnt; i++)
@@ -328,7 +378,7 @@ _AVX afxError AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const o
         {
             AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-            if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+            if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
                 AfxThrowError();
         }
     }
@@ -343,7 +393,8 @@ _AVX afxError AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const
 
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     for (afxNat i = 0; i < opCnt; i++)
@@ -363,7 +414,7 @@ _AVX afxError AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const
         {
             AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-            if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+            if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
                 AfxThrowError();
         }
     }
@@ -378,7 +429,7 @@ _AVX afxError _AvxBufStdDtor(afxBuffer buf)
 
     if (buf->mappedRange)
     {
-        AfxUnmapBuffer(buf);
+        AfxUnmapBuffer(buf, TRUE);
         AfxAssert(!buf->mappedRange);
     }
     return err;
@@ -397,7 +448,7 @@ _AVX afxError _AvxBufStdCtor(afxBuffer buf, afxCookie const* cookie)
     else if (!spec->usage) AfxThrowError();
     else
     {
-        buf->siz = spec->siz;
+        buf->cap = AFX_ALIGN(spec->siz, AFX_SIMD_ALIGN);
         buf->usage = spec->usage;
         buf->access = spec->access ? spec->access : afxBufferAccess_W;
 
@@ -406,13 +457,16 @@ _AVX afxError _AvxBufStdCtor(afxBuffer buf, afxCookie const* cookie)
         buf->mappedRange = 0;
         buf->mappedFlags = NIL;
 
+        buf->pendingRemap = 0;
         buf->remap = NIL;
         buf->unmap = NIL;
 
         if (spec->src)
         {
-            if (AfxUpdateBuffer(buf, 0, buf->siz, spec->src))
-                AfxThrowError();
+            // instantiation flags must be set before using it from Qwadro.
+
+            //if (AfxUpdateBuffer(buf, 0, buf->cap, spec->src))
+                //AfxThrowError();
         }
     }
     return err;
@@ -422,7 +476,7 @@ _AVX afxClassConfig const _AvxBufStdImplementation =
 {
     .fcc = afxFcc_BUF,
     .name = "Buffer",
-    .desc = "Buffer",
+    .desc = "Device Memory Buffer",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxBuffer)),
     .ctor = (void*)_AvxBufStdCtor,

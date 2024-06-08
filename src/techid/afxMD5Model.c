@@ -8,7 +8,7 @@
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxQuaternion.h"
-#include "qwadro/sim/modeling/afxMeshTopology.h"
+#include "qwadro/cad/afxMeshTopology.h"
 #include "afxMD5Model.h"
 #include <stdio.h>
 #include <string.h>
@@ -438,7 +438,7 @@ struct cadbData
     afxSkeleton skl;
 };
 
-_AFXEXPORT void CadbGetInfoMd5(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
+DLLEXPORT void CadbGetInfoMd5(void* data2, afxNat *typeCnt, afxNat* resCnt, afxUri* name)
 {
     struct cadbData* data = data2;
 
@@ -464,7 +464,7 @@ _AFXEXPORT void CadbGetInfoMd5(void* data2, afxNat *typeCnt, afxNat* resCnt, afx
 
 }
 
-_AFXEXPORT void CadbGetTypeInfoMd5(void* data2, afxNat setIdx, afxFcc* resType, afxNat* resCnt)
+DLLEXPORT void CadbGetTypeInfoMd5(void* data2, afxNat setIdx, afxFcc* resType, afxNat* resCnt)
 {
     struct cadbData* data = data2;
 
@@ -475,7 +475,7 @@ _AFXEXPORT void CadbGetTypeInfoMd5(void* data2, afxNat setIdx, afxFcc* resType, 
         *resCnt = (setIdx == 0) ? data->meshCnt : (setIdx == 1) ? 1 : (setIdx == 2) ? 1 : 0;
 }
 
-_AFXEXPORT void* CadbGetResourceInfoMd5(void* data2, afxFcc type, afxNat resIdx, afxUri* name)
+DLLEXPORT void* CadbGetResourceInfoMd5(void* data2, afxFcc type, afxNat resIdx, afxUri* name)
 {
     struct cadbData* data = data2;
 
@@ -499,7 +499,7 @@ _AFXEXPORT void* CadbGetResourceInfoMd5(void* data2, afxFcc type, afxNat resIdx,
     return NIL;
 }
 
-_AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], awxAsset cad[])
+DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNat cnt, afxUri const file[], akxAsset cad[])
 {
     afxError err = AFX_ERR_NONE;
     
@@ -776,7 +776,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             AfxAssembleModel(sim, 1, &mdlb, &mdl);
             AfxTryAssertObjects(1, &mdl, afxFcc_MDL);
 
-            awxAssetBuilder cadb = { 0 };
+            akxAssetBuilder cadb = { 0 };
             cadb.GetInfo = CadbGetInfoMd5;
             cadb.GetResourceInfo = CadbGetResourceInfoMd5;
             cadb.GetTypeInfo = CadbGetTypeInfoMd5;
@@ -795,7 +795,7 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
             AfxDeallocateArray(&meshRes);
             AfxReleaseObjects(md5.num_meshes, meshes.data);
             AfxDeallocateArray(&meshes);
-            AfxReleaseObjects(1, (void*[]) { skl });
+            AfxReleaseObjects(1, &skl);
             AfxReleaseObjects(1, (void*[]) { mdl });
 
 
@@ -805,10 +805,10 @@ _AFXEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxN
                 //bone = bone;
             }
 
-            awxPose *lp;
+            akxPose *lp;
             AfxAcquirePoses(sim, 1, &skl->jointCnt, &lp);
             AfxComputeRestLocalPose(skl, 0, skl->jointCnt, lp);
-            awxPoseBuffer *wp;
+            akxPoseBuffer *wp;
             AfxAcquirePoseBuffers(sim, 1, &skl->jointCnt, NIL, &wp);
             AfxComputeRestPoseBuffer(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
 

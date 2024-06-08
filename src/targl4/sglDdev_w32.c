@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -308,6 +308,9 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     //wglVmt const* wgl = &dpu->wgl;
     glVmt const* gl = &dpu->gl;
 
+    while (unitIdx != 0 && !ddev->idd->dpus[0].instanced)
+        AfxYield();
+
     afxNat devPagIdx;
     afxManifest const* ini = AfxGetDeviceManifest(&ddev->dev, &devPagIdx);
 
@@ -325,52 +328,61 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     DWORD dwExStyle = WS_EX_APPWINDOW;
     DWORD wndStyles = WS_POPUP;
 
-    if (!(tmpHwnd = CreateWindowExA(dwExStyle, ddev->idd->wndClss.lpszClassName, "", wndStyles | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, ddev))) AfxThrowError();
-    else
+    if (unitIdx == 0)
     {
-        if (!(tmpHdc = GetDC(tmpHwnd))) AfxThrowError();
+        if (!(tmpHwnd = CreateWindowExA(dwExStyle, ddev->idd->wndClss.lpszClassName, "", wndStyles | WS_CLIPCHILDREN | WS_CLIPSIBLINGS, 0, 0, 1, 1, NIL, NIL, ddev->idd->wndClss.hInstance, ddev))) AfxThrowError();
         else
         {
-            PIXELFORMATDESCRIPTOR pfd = { 0 };
-            pfd.nSize = sizeof(pfd);
-            pfd.nVersion = 1;
-            pfd.dwFlags = pfdFlags;
-            pfd.iPixelType = PFD_TYPE_RGBA;
-            pfd.cColorBits = GetDeviceCaps(tmpHdc, BITSPIXEL);
-            pfd.cAlphaBits = 8;
-            pfd.cDepthBits = 24;
-            pfd.cStencilBits = 8;
-            int pxlfmt;
-
-            if (!(pxlfmt = ChoosePixelFormat(tmpHdc, &(pfd))))
-                AfxThrowError();
-
-            if (!(DescribePixelFormat(tmpHdc, pxlfmt, sizeof(pfd), &pfd)))
-                AfxThrowError();
-
-            if (!SetPixelFormat(tmpHdc, pxlfmt, &(pfd)))
-                AfxThrowError();
-
-            AfxLogComment("Creating transient OpenGL context");
-
-            if (!(tmpHrc = dpu->wgl.CreateContext(tmpHdc))) AfxThrowError();
+            if (!(tmpHdc = GetDC(tmpHwnd))) AfxThrowError();
             else
             {
-                if (!(dpu->wgl.MakeCurrent(tmpHdc, tmpHrc))) AfxThrowError();
+                PIXELFORMATDESCRIPTOR pfd = { 0 };
+                pfd.nSize = sizeof(pfd);
+                pfd.nVersion = 1;
+                pfd.dwFlags = pfdFlags;
+                pfd.iPixelType = PFD_TYPE_RGBA;
+                pfd.cColorBits = GetDeviceCaps(tmpHdc, BITSPIXEL);
+                pfd.cAlphaBits = 8;
+                pfd.cDepthBits = 24;
+                pfd.cStencilBits = 8;
+                int pxlfmt;
+
+                if (!(pxlfmt = ChoosePixelFormat(tmpHdc, &(pfd))))
+                    AfxThrowError();
+
+                if (!(DescribePixelFormat(tmpHdc, pxlfmt, sizeof(pfd), &pfd)))
+                    AfxThrowError();
+
+                if (!SetPixelFormat(tmpHdc, pxlfmt, &(pfd)))
+                    AfxThrowError();
+
+                AfxLogComment("Creating transient OpenGL context");
+
+                if (!(tmpHrc = dpu->wgl.CreateContext(tmpHdc))) AfxThrowError();
                 else
                 {
-                    afxString ver;
-                    afxNat verMajor, verMinor, verPatch;
-                    PFNGLGETSTRINGPROC _glGetString;
-                    SglLoadGlVmt(opengl32, offsetof(glVmt,GetString) / sizeof(void*), 1, (void**)&_glGetString, FALSE);
-                    AfxMakeString(&ver, (afxChar const*)_glGetString(GL_VERSION), 0);
-                    AfxScanString(&ver, "%u.%u.%u", &verMajor, &verMinor, &verPatch);
-                    dpu->verMajor = verMajor;
-                    dpu->verMinor = verMinor;
-                    dpu->verPatch = verPatch;
+                    if (!(dpu->wgl.MakeCurrent(tmpHdc, tmpHrc))) AfxThrowError();
+                    else
+                    {
+                        afxString ver;
+                        afxNat verMajor, verMinor, verPatch;
+                        PFNGLGETSTRINGPROC _glGetString;
+                        SglLoadGlVmt(opengl32, offsetof(glVmt, GetString) / sizeof(void*), 1, (void**)&_glGetString, FALSE);
+                        AfxMakeString(&ver, (afxChar const*)_glGetString(GL_VERSION), 0);
+                        AfxScanString(&ver, "%u.%u.%u", &verMajor, &verMinor, &verPatch);
+                        dpu->verMajor = verMajor;
+                        dpu->verMinor = verMinor;
+                        dpu->verPatch = verPatch;
+                    }
                 }
             }
         }
+    }
+    else
+    {
+        dpu->verMajor = ddev->idd->dpus[0].verMajor;
+        dpu->verMinor = ddev->idd->dpus[0].verMinor;
+        dpu->verPatch = ddev->idd->dpus[0].verPatch;
     }
 
     if (!err)
@@ -422,7 +434,15 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                 UINT formatCount;
                 dpu->dcPxlFmt = 0;
                 wglVmt tmpWglExt;
-                _LoadWglExtendedSymbols(opengl32, &tmpWglExt);
+
+                if (unitIdx == 0)
+                {
+                    _LoadWglExtendedSymbols(opengl32, &tmpWglExt);
+                }
+                else
+                {
+                    tmpWglExt = ddev->idd->dpus[0].wgl;
+                }
 
                 if (!tmpWglExt.ChoosePixelFormatARB(dpu->dc, &pxlAttrPairs[0][0], 0, 1, &(dpu->dcPxlFmt), &(formatCount))) AfxThrowError();
                 else
@@ -466,8 +486,11 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 
                     AfxLogComment("Creating definitive OpenGL context");
 
-                    dpu->wgl.DeleteContext(tmpHrc); // to avoid a anomalous error in kernel base it is needed to delete the temp context in order to create the definitive one.
-                    tmpHrc = NIL;
+                    if (unitIdx == 0)
+                    {
+                        dpu->wgl.DeleteContext(tmpHrc); // to avoid a anomalous error in kernel base it is needed to delete the temp context in order to create the definitive one.
+                        tmpHrc = NIL;
+                    }
 
                     if (!(dpu->glrc = tmpWglExt.CreateContextAttribsARB(dpu->dc, unitIdx ? ddev->idd->dpus[0].glrc : NIL, (void*)ctxAttrPairs))) AfxThrowError();
                     else
@@ -475,9 +498,17 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
                         if (!(dpu->wgl.MakeCurrent(dpu->dc, dpu->glrc))) AfxThrowError();
                         else
                         {
-                            _LoadWglExtendedSymbols(opengl32, (wglVmt*)&dpu->wgl);
-                            //SglLoadOpenGlVmt(opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, (void**)&dpu->wgl.ptr, 0 == unitIdx);
-                            SglLoadGlVmt(opengl32, 0, (sizeof(dpu->gl) / sizeof(dpu->gl.ptr)), (void**)&dpu->gl.ptr, 0 == unitIdx);
+                            if (unitIdx == 0)
+                            {
+                                _LoadWglExtendedSymbols(opengl32, (wglVmt*)&dpu->wgl);
+                                //SglLoadOpenGlVmt(opengl32, 0, sizeof(wglNames) / sizeof(wglNames[0]), wglNames, (void**)&dpu->wgl.ptr, 0 == unitIdx);
+                                SglLoadGlVmt(opengl32, 0, (sizeof(dpu->gl) / sizeof(dpu->gl.ptr)), (void**)&dpu->gl.ptr, 0 == unitIdx);
+                            }
+                            else
+                            {
+                                dpu->wgl = ddev->idd->dpus[0].wgl;
+                                dpu->gl = ddev->idd->dpus[0].gl;
+                            }
 
 #if 0
                             if (0 == unitIdx)
@@ -495,8 +526,11 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 #endif
                         }
 
-                        if (err)
-                            dpu->wgl.MakeCurrent(tmpHdc, tmpHrc);
+                        if (unitIdx == 0)
+                        {
+                            if (err)
+                                dpu->wgl.MakeCurrent(tmpHdc, tmpHrc);
+                        }
 
                         if (err)
                             dpu->wgl.DeleteContext(dpu->glrc);
@@ -517,19 +551,22 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
 
     // release temp objects used to get a GL context
 
-    if (tmpHrc)
+    if (unitIdx == 0)
     {
-        if (err)
-            dpu->wgl.MakeCurrent(bkpHdc, bkpGlrc);
+        if (tmpHrc)
+        {
+            if (err)
+                dpu->wgl.MakeCurrent(bkpHdc, bkpGlrc);
 
-        dpu->wgl.DeleteContext(tmpHrc); // disable for detour of some bug caused by OBS
+            dpu->wgl.DeleteContext(tmpHrc); // disable for detour of some bug caused by OBS
+        }
+
+        if (tmpHdc)
+            ReleaseDC(tmpHwnd, tmpHdc);
+
+        if (tmpHwnd)
+            DestroyWindow(tmpHwnd);
     }
-
-    if (tmpHdc)
-        ReleaseDC(tmpHwnd, tmpHdc);
-
-    if (tmpHwnd)
-        DestroyWindow(tmpHwnd);
 
     if (!err)
     {
@@ -671,51 +708,51 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         gl->GetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &datai); _SglThrowErrorOccuried();
         limits.maxColorAttachments = datai; // at least 16384
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_WIDTH, &datai); _SglThrowErrorOccuried();
-        limits.maxFramebufferWidth = datai; // at least 16384
+        limits.maxCanvasWidth = datai; // at least 16384
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_HEIGHT, &datai); _SglThrowErrorOccuried();
-        limits.maxFramebufferHeight = datai; // at least 16384
+        limits.maxCanvasHeight = datai; // at least 16384
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_LAYERS, &datai); _SglThrowErrorOccuried();
-        limits.maxFramebufferLayers = datai; // at least 2048
+        limits.maxCanvasLayers = datai; // at least 2048
         gl->GetIntegerv(GL_MAX_FRAMEBUFFER_SAMPLES, &datai); _SglThrowErrorOccuried();
-        limits.framebufferNoAttachmentsSampleCounts = datai; // at least 4
+        limits.canvasNoAttachmentsSampleCnts = datai; // at least 4
 
         gl->GetIntegerv(GL_MAX_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxImageDimension1D = datai; // at least 1024
-        limits.maxImageDimension2D = datai; // at least 1024
+        limits.maxRasterDim1D = datai; // at least 1024
+        limits.maxRasterDim2D = datai; // at least 1024
         gl->GetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxImageDimension3D = datai; // at least 64
+        limits.maxRasterDim3D = datai; // at least 64
         gl->GetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &datai); _SglThrowErrorOccuried();
-        limits.maxImageArrayLayers = datai; // at least 256
+        limits.maxRasterArrayLayers = datai; // at least 256
         gl->GetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &datai); _SglThrowErrorOccuried();
-        limits.maxImageDimensionCube = datai; // at least 1024
+        limits.maxRasterDimCube = datai; // at least 1024
         gl->GetFloatv(GL_MAX_TEXTURE_LOD_BIAS, &dataf); _SglThrowErrorOccuried();
         limits.maxSamplerLodBias = dataf; // at least 2.0
 
         gl->GetIntegerv(GL_MAX_INTEGER_SAMPLES, &datai); _SglThrowErrorOccuried();
-        limits.sampledImageIntegerSampleCounts = datai;
+        limits.sampledRasterIntegerSampleCnts = datai;
         gl->GetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
-        limits.sampledImageColorSampleCounts = datai;
-        limits.framebufferColorSampleCounts = datai;
+        limits.sampledRasterColorSampleCnts = datai;
+        limits.canvasColorSampleCnts = datai;
         gl->GetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &datai); _SglThrowErrorOccuried();
-        limits.sampledImageDepthSampleCounts = datai;
-        limits.sampledImageStencilSampleCounts = datai;
-        limits.framebufferDepthSampleCounts = datai;
-        limits.framebufferStencilSampleCounts = datai;
+        limits.sampledRasterDepthSampleCnts = datai;
+        limits.sampledRasterStencilSampleCnts = datai;
+        limits.canvasDepthSampleCnts = datai;
+        limits.canvasStencilSampleCnts = datai;
 
         gl->GetIntegerv(GL_MIN_MAP_BUFFER_ALIGNMENT, &datai); _SglThrowErrorOccuried();
-        limits.minMemoryMapAlignment = datai; // at least 64
+        limits.minMemMapAlign = datai; // at least 64
         gl->GetIntegerv(GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
-        limits.minStorageBufferOffsetAlignment = datai; // at least 64
+        limits.minStorageBufOffsetAlign = datai; // at least 64
         gl->GetIntegerv(GL_TEXTURE_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
-        limits.minTexelBufferOffsetAlignment = datai; // at least 64
+        limits.minTexelBufOffsetAlign = datai; // at least 64
         gl->GetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &datai); _SglThrowErrorOccuried();
-        limits.minUniformBufferOffsetAlignment = datai; // at least 64
+        limits.minUniformBufOffsetAlign = datai; // at least 64
 
         gl->GetFloatv(GL_POINT_SIZE_RANGE, dataf2); _SglThrowErrorOccuried();
-        limits.pointSizeRange[0] = dataf2[0]; // at least 1
-        limits.pointSizeRange[1] = dataf2[1]; // at least 1
+        limits.pointSizRange[0] = dataf2[0]; // at least 1
+        limits.pointSizRange[1] = dataf2[1]; // at least 1
         gl->GetFloatv(GL_POINT_SIZE_GRANULARITY, &dataf); _SglThrowErrorOccuried();
-        limits.pointSizeGranularity = dataf;
+        limits.pointSizGranularity = dataf;
         gl->GetFloatv(GL_SMOOTH_LINE_WIDTH_RANGE, dataf2); _SglThrowErrorOccuried();
         limits.lineWidthRange[0] = dataf2[0];
         limits.lineWidthRange[1] = dataf2[1];
@@ -723,42 +760,42 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         limits.lineWidthGranularity = dataf;
 
         gl->GetIntegerv(GL_MAX_VERTEX_ATTRIBS, &datai); _SglThrowErrorOccuried();
-        limits.maxVertexInputAttributes = datai; // at least 16
+        limits.maxVtxInputAttributes = datai; // at least 16
         gl->GetIntegerv(GL_MAX_VERTEX_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxVertexOutputComponents = datai; // at least 64
+        limits.maxVtxOutputCompos = datai; // at least 64
         gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_BINDINGS, &datai); _SglThrowErrorOccuried();
-        limits.maxVertexInputBindings = datai;
+        limits.maxVtxInputBindings = datai;
         gl->GetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &datai); _SglThrowErrorOccuried();
-        limits.maxVertexInputAttributeOffset = datai;
+        limits.maxVtxInputAttributeOffset = datai;
         gl->GetIntegerv(GL_VERTEX_BINDING_STRIDE, &datai); _SglThrowErrorOccuried();
-        limits.maxVertexInputBindingStride = datai;
+        limits.maxVtxInputBindingStride = datai;
 
         gl->GetIntegerv(GL_MAX_FRAGMENT_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxFragmentInputComponents = datai; // at least 128
+        limits.maxFragInComps = datai; // at least 128
         gl->GetIntegerv(GL_MAX_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
-        limits.maxFragmentOutputAttachments = datai; // at least 8
+        limits.maxFragOutAttachments = datai; // at least 8
         gl->GetIntegerv(GL_MAX_DUAL_SOURCE_DRAW_BUFFERS, &datai); _SglThrowErrorOccuried();
-        limits.maxFragmentDualSrcAttachments = datai; // at least 1
+        limits.maxFragDualSrcAttachments = datai; // at least 1
 
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &datai); _SglThrowErrorOccuried();
         limits.maxComputeWorkGroupInvocations = datai;
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_COUNT, datai2); _SglThrowErrorOccuried();
-        limits.maxComputeWorkGroupCount[0] = datai2[0];
-        limits.maxComputeWorkGroupCount[1] = datai2[1];
-        limits.maxComputeWorkGroupCount[2] = datai2[2];
+        limits.maxComputeWorkGroupCnt[0] = datai2[0];
+        limits.maxComputeWorkGroupCnt[1] = datai2[1];
+        limits.maxComputeWorkGroupCnt[2] = datai2[2];
         gl->GetIntegerv(GL_MAX_COMPUTE_WORK_GROUP_SIZE, datai2); _SglThrowErrorOccuried();
-        limits.maxComputeWorkGroupSize[0] = datai2[0];
-        limits.maxComputeWorkGroupSize[1] = datai2[1];
-        limits.maxComputeWorkGroupSize[2] = datai2[2];
+        limits.maxComputeWorkGroupSiz[0] = datai2[0];
+        limits.maxComputeWorkGroupSiz[1] = datai2[1];
+        limits.maxComputeWorkGroupSiz[2] = datai2[2];
 
 
         gl->GetIntegerv(GL_MAX_GEOMETRY_INPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxGeometryInputComponents = datai; // at least 64
+        limits.maxPrimInComps = datai; // at least 64
         gl->GetIntegerv(GL_MAX_GEOMETRY_OUTPUT_COMPONENTS, &datai); _SglThrowErrorOccuried();
-        limits.maxGeometryOutputComponents = datai; // at least 128
+        limits.maxPrimOutComps = datai; // at least 128
 
         limits.maxBoundDescriptorSets = 4;
-        limits.maxPushConstantsSize = 0;
+        limits.maxPushConstantsSiz = 0;
 
         ddev->limits = limits;
 
@@ -897,13 +934,14 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
-    afxDrawDevice ddev = AfxGetThreadUdd(thr);
+    afxDrawDevice ddev = AfxGetThreadUdd(thr)[0];
+    afxNat dpuIdx = (afxNat)(AfxGetThreadUdd(thr)[1]);
 
     switch (ev->id)
     {
     case afxThreadEvent_RUN:
     {
-        if (_SglBuildDpu(ddev, 0))
+        if (_SglBuildDpu(ddev, dpuIdx))
         {
             AfxThrowError();
             AfxExitThread(err);
@@ -916,7 +954,7 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
     }
     case afxThreadEvent_QUIT:
     {
-        if (_SglDestroyDpu(ddev, 0))
+        if (_SglDestroyDpu(ddev, dpuIdx))
         {
             AfxThrowError();
         }
@@ -945,10 +983,13 @@ _SGL afxError _SglDdevIddDtorCb(afxDrawDevice ddev)
 
     AfxExhaustChainedManagers(&ddev->dev.classes);
 
-    afxResult exitCode;
-    AfxRequestThreadInterruption(ddev->idd->dedThread);
-    AfxWaitForThread(ddev->idd->dedThread, &exitCode);
-    AfxReleaseObjects(1, &ddev->idd->dedThread);
+    for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
+    {
+        afxResult exitCode;
+        AfxRequestThreadInterruption(ddev->idd->dpus[i].dedThread);
+        AfxWaitForThread(ddev->idd->dpus[i].dedThread, &exitCode);
+        AfxReleaseObjects(1, &ddev->idd->dpus[i].dedThread);
+    }
 
     AfxDeallocate(ddev->idd->dpus);
     ddev->idd->dpus = NIL;
@@ -1015,25 +1056,32 @@ _SGL afxError _SglDdevIddCtorCb(afxDrawDevice ddev)
                         }
                     };
 
-                    ddev->idd->dpuCnt = ddev->portCnt;
+                    if (!AfxFindManifestRecord(ini, devPagIdx, &AfxString("DpuCount"), &recIdx) || !AfxGetManifestNat(ini, devPagIdx, recIdx, &ddev->idd->dpuCnt))
+                        ddev->idd->dpuCnt = ddev->portCnt;
 
                     if (!(ddev->idd->dpus = AfxAllocate(ddev->idd->dpuCnt, sizeof(ddev->idd->dpus[0]), 0, AfxHere()))) AfxThrowError();
                     else
                     {
                         AfxZero2(ddev->idd->dpuCnt, sizeof(ddev->idd->dpus[0]), ddev->idd->dpus);
 
-                        afxThreadConfig dtCfg = { 0 };
-                        dtCfg.procCb = DrawThreadProc;
-                        dtCfg.udd = ddev;
-
-                        if (AfxAcquireThread(AfxHere(), &dtCfg, &ddev->idd->dedThread)) AfxThrowError();
-                        else
+                        for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
                         {
+                            ddev->idd->dpus[i].portIdx = i;
+
+                            afxThreadConfig dtCfg = { 0 };
+                            dtCfg.procCb = DrawThreadProc;
+                            dtCfg.udd[0] = ddev;
+                            dtCfg.udd[1] = (void*)i;
+
+                            if (AfxAcquireThread(AfxHere(), &dtCfg, &ddev->idd->dpus[i].dedThread)) AfxThrowError();
+                            else
+                            {
+                                AfxAssert(ddev->dev.procCb);
+                                ddev->dev.serving = TRUE;
+                                AfxRunThread(ddev->idd->dpus[i].dedThread);
+                            }
                             AfxAssert(ddev->dev.procCb);
-                            ddev->dev.serving = TRUE;
-                            AfxRunThread(ddev->idd->dedThread);
                         }
-                        AfxAssert(ddev->dev.procCb);
 
                         if (err)
                             AfxDeallocate(ddev->idd->dpus), ddev->idd->dpus = NIL;
@@ -1081,6 +1129,7 @@ _SGL afxResult AfxDeviceIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va)
         info2->procCb = _SglDdevProcCb;
         info2->iddCtorCb = _SglDdevIddCtorCb;
         info2->iddDtorCb = _SglDdevIddDtorCb;
+        info2->dinIddCtorCb = _SglDdevInitDinCb;
         info2->doutIddDtorCb = _SglDdevDeinitDoutCb;
         info2->doutIddCtorCb = _SglDdevInitDoutCb;
         info2->portCnt = 1;
@@ -1089,6 +1138,26 @@ _SGL afxResult AfxDeviceIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va)
 
         info2->dctxClsCfg = &_SglDctxMgrCfg;
         info2->ddgeClsCfg = &_SglDdgeMgrCfg;
+        info2->dqueClsCfg = &_AvxDqueStdImplementation;
+
+        info2->caps.robustBufAccess = TRUE;
+        info2->caps.fullDrawIdxUint32 = TRUE;
+        info2->caps.rasterCubeArray = TRUE;
+        info2->caps.independentBlend = TRUE;
+        info2->caps.primShader = TRUE;
+        info2->caps.dualSrcBlend = TRUE;
+        info2->caps.logicOp = TRUE;
+        info2->caps.multiDrawIndirect = TRUE;
+        info2->caps.drawIndirectFirstInst = TRUE;
+        info2->caps.depthClamp = TRUE;
+        info2->caps.depthBiasClamp = TRUE;
+        info2->caps.fillModeNonSolid = TRUE;
+        info2->caps.multiViewport = TRUE;
+        info2->caps.dxt = TRUE;
+        info2->caps.shaderClipDist = TRUE;
+        info2->caps.shaderCullDist = TRUE;
+        info2->caps.alphaToOne = TRUE;
+
         break;
     }
     default: break;

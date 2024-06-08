@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -37,6 +37,23 @@
 #include <assert.h>
 
 static const char*Ebenezer = "Ebenezer";
+
+_SGL afxString const targaSignature = AFX_STRING(
+    "\n           :::::::::::     :::     :::::::::   ::::::::      :::               "
+    "\n               :+:       :+: :+:   :+:    :+: :+:    :+:   :+: :+:             "
+    "\n               +:+      +:+   +:+  +:+    +:+ +:+         +:+   +:+            "
+    "\n               +#+     +#++:++#++: +#++:++#:  :#:        +#++:++#++:           "
+    "\n               +#+     +#+     +#+ +#+    +#+ +#+   +#+# +#+     +#+           "
+    "\n               #+#     #+#     #+# #+#    #+# #+#    #+# #+#     #+#           "
+    "\n               ###     ###     ### ###    ###  ########  ###     ###           "
+    "\n                                                                               "
+    "\n              Q W A D R O   E X E C U T I O N   E C O S Y S T E M              "
+    "\n                                                                               "
+    "\n                               Public Test Build                               "
+    "\n                   (c) 2017 SIGMA, Engineering In Technology                   "
+    "\n                                www.sigmaco.org                                "
+    "\n                                                                               "
+);
 
 _SGL const char *glVmtNames[] =
 {

@@ -19,36 +19,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\sim\afxMaterial.c" />
+    <ClCompile Include="..\..\src\afx\cad\afxMaterial.c" />
+    <ClCompile Include="..\..\src\afx\cad\afxMesh.c" />
+    <ClCompile Include="..\..\src\afx\cad\afxMeshBuilder.c" />
+    <ClCompile Include="..\..\src\afx\cad\afxMeshTopology.c" />
+    <ClCompile Include="..\..\src\afx\cad\afxModel.c" />
+    <ClCompile Include="..\..\src\afx\cad\akxVertexData.c" />
     <ClCompile Include="..\..\src\afx\sim\afxSimulation.c" />
-    <ClCompile Include="..\..\src\afx\sim\afxSkeleton.c" />
-    <ClCompile Include="..\..\src\afx\sim\awxAsset.c" />
-    <ClCompile Include="..\..\src\afx\sim\awxEntity.c" />
-    <ClCompile Include="..\..\src\afx\sim\awxNode.c" />
-    <ClCompile Include="..\..\src\afx\sim\awxPose.c" />
-    <ClCompile Include="..\..\src\afx\sim\awxPoseBuffer.c" />
-    <ClCompile Include="..\..\src\afx\sim\modeling\afxMesh.c" />
-    <ClCompile Include="..\..\src\afx\sim\modeling\afxMeshBuilder.c" />
-    <ClCompile Include="..\..\src\afx\sim\modeling\afxMeshTopology.c" />
-    <ClCompile Include="..\..\src\afx\sim\modeling\afxModel.c" />
-    <ClCompile Include="..\..\src\afx\sim\modeling\awxVertexData.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\afxCurve2.c">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\sim\motion\awxAnimation.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\awxBody.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\awxMotion.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\awxMotor.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\_BuildGenericVmt.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\_MotiveVmt.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\_SampleTrackVmt.c" />
-    <ClCompile Include="..\..\src\afx\sim\motion\_Vmt.c" />
-    <ClCompile Include="..\..\src\afx\sim\rendering\awxLight.c" />
-    <ClCompile Include="..\..\src\afx\sim\rendering\awxRenderer.c" />
-    <ClCompile Include="..\..\src\afx\sim\rendering\awxSky.c" />
+    <ClCompile Include="..\..\src\afx\sim\akxAsset.c" />
+    <ClCompile Include="..\..\src\afx\sim\akxEntity.c" />
+    <ClCompile Include="..\..\src\afx\sim\akxNode.c" />
+    <ClCompile Include="..\..\src\afx\sim\rendering\akxLighting.c" />
+    <ClCompile Include="..\..\src\afx\sim\rendering\akxRenderer.c" />
+    <ClCompile Include="..\..\src\afx\sim\rendering\akxSky.c" />
+    <ClCompile Include="..\..\src\afx\space\afxCurve.c" />
+    <ClCompile Include="..\..\src\afx\space\afxCurveOps_Cpu.c" />
+    <ClCompile Include="..\..\src\afx\space\afxSkeleton.c" />
+    <ClCompile Include="..\..\src\afx\space\akxAnimation.c" />
+    <ClCompile Include="..\..\src\afx\space\afxBody.c" />
+    <ClCompile Include="..\..\src\afx\space\afxMotion.c" />
+    <ClCompile Include="..\..\src\afx\space\akxMotor.c" />
+    <ClCompile Include="..\..\src\afx\space\akxPose.c" />
+    <ClCompile Include="..\..\src\afx\space\akxPoseBuffer.c" />
+    <ClCompile Include="..\..\src\afx\space\_BuildGenericVmt.c" />
+    <ClCompile Include="..\..\src\afx\space\_MotiveVmt.c" />
+    <ClCompile Include="..\..\src\afx\space\_SampleTrackVmt.c" />
+    <ClCompile Include="..\..\src\afx\space\_Vmt.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\e2coree\e2coree.vcxproj">
@@ -62,28 +58,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\sim\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMaterial.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMesh.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshBuilder.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\afxMeshTopology.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\afxModel.h" />
+    <ClInclude Include="..\..\inc\qwadro\cad\akxVertexData.h" />
     <ClInclude Include="..\..\inc\qwadro\sim\afxSimulation.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\afxSkeleton.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxAsset.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxEntity.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxNode.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxPose.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxSimDefs.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\awxPoseBuffer.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\modeling\afxMesh.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\modeling\afxMeshBuilder.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\modeling\afxMeshTopology.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\modeling\afxModel.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\modeling\awxVertexData.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\motion\afxCurve2.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\motion\awxAnimation.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\motion\awxBody.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\motion\awxMotion.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\motion\awxMotor.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\rendering\awxLight.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\rendering\awxRenderer.h" />
-    <ClInclude Include="..\..\inc\qwadro\sim\rendering\awxSky.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\akxAsset.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\akxEntity.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\akxNode.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\afxSimDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxLighting.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxRenderer.h" />
+    <ClInclude Include="..\..\inc\qwadro\sim\rendering\akxSky.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\afxCurve.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\afxSkeleton.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\akxAnimation.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\afxBody.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\afxMotion.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\akxMotor.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\akxPose.h" />
+    <ClInclude Include="..\..\inc\qwadro\space\akxPoseBuffer.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -24,11 +24,6 @@
 
 #include "qwadro/draw/io/afxRaster.h"
 
-typedef enum afxCanvasFlags
-{
-    AFX_CANV_FLAG_REVALIDATE
-} afxCanvasFlags;
-
 AFX_DEFINE_STRUCT(afxSurfaceConfig)
 {
     afxPixelFormat  fmt; // layout
@@ -37,17 +32,9 @@ AFX_DEFINE_STRUCT(afxSurfaceConfig)
     afxRasterFlags  rasFlags;
 };
 
-AFX_DEFINE_STRUCT(afxCanvasBlueprint)
-{
-    afxWhd          whd;
-    afxNat          layerCnt;
-    afxNat          surfCnt;
-    afxSurfaceConfig const*surCfg;
-};
-
 #ifdef _AVX_DRAW_C
 #ifdef _AVX_CANVAS_C
-AFX_DEFINE_STRUCT(afxSurface)
+AFX_DEFINE_STRUCT(afxRasterSlot)
 {
     afxRaster       ras; /// the texture subresource that will be output to for this color attachment.
     afxRaster       resolve; /// the texture subresource that will receive the resolved output for this color attachment if view is multisampled.
@@ -57,41 +44,40 @@ AFX_DEFINE_STRUCT(afxSurface)
     afxRasterFlags  flags;
     afxNat          sampleCnt; /// the number of samples of the image.
 };
-
 #ifndef _AVX_CANVAS_IMPL
 AFX_OBJECT(afxCanvas)
 #else
 struct afxBaseCanvas
 #endif
 {
-    afxNat          wh[2];
-    afxNat          minWh[2]; // when a user-provided raster are attached
-    afxNat          layerCnt;
+    afxWhd          whd; // D is layered    
+    afxWhd          whdMin; // when a user-provided raster are attached
+    afxWhd          whdMax; // when a user-provided raster are attached    
     afxNat          linkedCnt;
     afxNat          surfaceCnt; // immutable
-    afxSurface*     surfaces;
+    afxRasterSlot*  surfaces;
     afxFlags        ownershipMask; // one for each surface. Forcing it to be limited to max 32 surfaces.
     afxNat          colorCnt;
     afxNat          dsIdx[2];
     afxBool         combinedDs; // just for convenience
-    afxCanvasFlags  flags;
+    afxFlags        flags;
     afxError        (*readjust)(afxCanvas, afxWhd const);
     afxError        (*relink)(afxCanvas,afxBool,afxNat,afxNat,afxRaster[]);
     void*           udd[2];
 };
-#endif
-#endif
+#endif//_AVX_CANVAS_C
+#endif//_AVX_DRAW_C
 
-AVX afxResult       AfxTestCanvas(afxCanvas canv, afxCanvasFlags bitmask);
+AVX afxResult       AfxTestCanvas(afxCanvas canv, afxFlags bitmask);
 
 AVX void            AfxGetCanvasExtent(afxCanvas canv, afxWhd whd);
 AVX afxError        AfxReadjustCanvas(afxCanvas canv, afxWhd const whd);
 
-AVX afxNat          AfxCountSurfaces(afxCanvas canv);
-AVX afxNat          AfxCountDrawSurfaces(afxCanvas canv);
+AVX afxNat          AfxCountRasterSlots(afxCanvas canv);
+AVX afxNat          AfxCountColorBufferSlots(afxCanvas canv);
 
-AVX afxBool         AfxGetDepthSurface(afxCanvas canv, afxNat* surIdx);
-AVX afxBool         AfxGetStencilSurface(afxCanvas canv, afxNat* surIdx);
+AVX afxBool         AfxGetDepthBufferSlot(afxCanvas canv, afxNat* surIdx);
+AVX afxBool         AfxGetStencilBufferSlot(afxCanvas canv, afxNat* surIdx);
 AVX afxBool         AfxHasCombinedDepthStencilBuffer(afxCanvas canv);
 
 AVX afxBool         AfxEnumerateDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat surfCnt, afxRaster rasters[]);
@@ -104,12 +90,12 @@ AVX afxError        AfxRelinkDrawBuffers(afxCanvas canv, afxNat baseSurf, afxNat
 AVX afxError        AfxRelinkDepthBuffer(afxCanvas canv, afxRaster depth);
 AVX afxError        AfxRelinkStencilBuffer(afxCanvas canv, afxRaster stencil);
 
-AVX afxError        AfxPrintDrawBuffer(afxCanvas canv, afxNat surIdx, afxUri const* uri);
+AVX afxError        AfxPrintDrawBuffer(afxCanvas canv, afxNat surIdx, afxRasterIo const* op, afxUri const* uri);
 
 AVX afxError        AfxRedoDrawBuffers(afxCanvas canv);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-AVX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat layerCnt, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
+AVX afxError        AfxAcquireCanvases(afxDrawContext dctx, afxWhd const whd, afxNat surCnt, afxSurfaceConfig const surCfg[], afxNat cnt, afxCanvas canvases[]);
 
 #endif//AVX_CANVAS_H

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -19,14 +19,14 @@
 #include <Windows.h>
 
 #define _AUX_UX_C
-#define _AFX_SHELL_C
-#define _AFX_WINDOW_C
-#define _AFX_WINDOW_IMPL
+#define _AUX_SHELL_C
+#define _AUX_WINDOW_C
+#define _AUX_WINDOW_IMPL
 #include "qwadro/../_luna/luna_vm.h"
 #include "qwadro/../_luna/luna.h"
 #include "qwadro/ux/afxShell.h"
 
-_AUX afxBool shReady = FALSE;
+//_AUX afxBool shReady = FALSE;
 _AUX afxByte theShData[AFX_ALIGN(sizeof(afxObjectBase), 16) + AFX_ALIGN(sizeof(AFX_OBJECT(afxShell)), 16)] = { 0 };
 _AUX afxShell TheShell = (void*)&theShData;
 AFX_STATIC_ASSERT(sizeof(theShData) >= (sizeof(afxObjectBase) + sizeof(TheShell[0])), "");
@@ -40,21 +40,13 @@ extern afxError xssDestroyVm(xssVm env);
 extern xssVm xssCreateVm(LunaConfiguration const* config);
 extern LRESULT WINAPI _AuxWndHndlngPrcW32Callback(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-_AUX afxBool AfxGetShell(afxShell* shell)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(shell);
-    *shell = TheShell;
-    return shReady;
-}
-
 _AUX afxManager* AfxGetControllerManager(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
-    afxManager *cls = &sh->ctrlMgr;
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
+    afxManager *cls = &usys->ctrlMgr;
     AfxAssertClass(cls, afxFcc_CTRL);
     return cls;
 }
@@ -62,10 +54,10 @@ _AUX afxManager* AfxGetControllerManager(void)
 _AUX afxManager* AfxGetHidManager(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
-    afxManager *cls = &sh->hidMgr;
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
+    afxManager *cls = &usys->hidMgr;
     AfxAssertClass(cls, afxFcc_HID);
     return cls;
 }
@@ -73,10 +65,10 @@ _AUX afxManager* AfxGetHidManager(void)
 _AUX afxManager* AfxGetWindowManager(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
-    afxManager *cls = &sh->wndMgr;
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
+    afxManager *cls = &usys->wndMgr;
     AfxAssertClass(cls, afxFcc_WND);
     return cls;
 }
@@ -84,10 +76,10 @@ _AUX afxManager* AfxGetWindowManager(void)
 _AUX afxManager* AfxGetScriptManager(void)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
-    afxManager *cls = &sh->xssMgr;
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
+    afxManager *cls = &usys->xssMgr;
     AfxAssertClass(cls, afxFcc_XSS);
     return cls;
 }
@@ -99,9 +91,9 @@ _AUX afxManager* AfxGetScriptManager(void)
 _AUX afxBool AfxConfineCursor(afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
     afxBool rslt = FALSE;
 
     if (!wnd)
@@ -119,30 +111,30 @@ _AUX afxBool AfxConfineCursor(afxWindow wnd)
         ClientToScreen(hWnd, (POINT*)&cr.right);
         rslt = !!ClipCursor(&cr);
     }
-    sh->curCapturedOn = wnd;
+    usys->curCapturedOn = wnd;
     return rslt;
 }
 
 _AUX afxBool AfxLiberateCursor(afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
     afxBool rslt = FALSE;
 
-    if (!wnd || (wnd == sh->curCapturedOn))
+    if (!wnd || (wnd == usys->curCapturedOn))
         rslt = AfxConfineCursor(NIL);
 
     return rslt;
 }
 
-_AUX afxBool AfxCursorIsOnWindowSurface(afxWindow wnd)
+_AUX afxBool AfxCursorIsOnSurface(afxWindow wnd)
 {
     afxError err = AFX_ERR_NONE;
-    afxShell sh;
-    AfxGetShell(&sh);
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    afxShell usys;
+    AfxGetShell(&usys);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
     AfxAssertObjects(1, &wnd, afxFcc_WND);
     HWND hWnd = wnd->w32.hWnd;
     afxBool rslt = FALSE;
@@ -162,174 +154,158 @@ _AUX afxBool AfxCursorIsOnWindowSurface(afxWindow wnd)
     return rslt;
 }
 
-_AUX afxError _AuxShCtor(afxShell sh, afxCookie const* cookie)
+_AUX afxError _AuxUsysCtor(afxShell usys, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
 
-    if (!(sh->vm = xssCreateVm(NIL)))
+    //TheShell = usys;
+
+    if (!(usys->vm = xssCreateVm(NIL)))
         AfxThrowError();
 
-    afxChain* mgrChn = &sh->mgrChn;
-    AfxSetUpChain(mgrChn, sh);
+    afxChain* mgrChn = &usys->mgrChn;
+    AfxSetUpChain(mgrChn, usys);
     afxClassConfig clsCfg;
 
-    AfxEstablishManager(&sh->hidMgr, /*AfxGetDeviceClass()*/NIL, mgrChn, &_AuxHidMgrCfg);
-    AfxEstablishManager(&sh->ctrlMgr, AfxGetHidManager(), mgrChn, &_AuxCtrlMgrCfg); // require hid
-    AfxEstablishManager(&sh->wndMgr, NIL, mgrChn, &_AuxWndMgrCfg);
-    AfxEstablishManager(&sh->xssMgr, NIL, mgrChn, &_AuxXssMgrCfg);
+    AfxEstablishManager(&usys->hidMgr, /*AfxGetDeviceClass()*/NIL, mgrChn, &_AuxHidMgrCfg);
+    AfxEstablishManager(&usys->ctrlMgr, &usys->hidMgr, mgrChn, &_AuxCtrlMgrCfg); // require hid
+    AfxEstablishManager(&usys->wndMgr, NIL, mgrChn, &_AuxWndMgrCfg);
+    AfxEstablishManager(&usys->xssMgr, NIL, mgrChn, &_AuxXssMgrCfg);
 
-    sh->focusedWnd = NIL;
-    sh->curCapturedOn = NIL;
+    usys->focusedWnd = NIL;
+    usys->curCapturedOn = NIL;
 
-    sh->w32.wndClss.cbSize = sizeof(sh->w32.wndClss); // only on EX
-    sh->w32.wndClss.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
-    sh->w32.wndClss.lpfnWndProc = _AuxWndHndlngPrcW32Callback;
-    sh->w32.wndClss.cbClsExtra = sizeof(afxObject);
-    sh->w32.wndClss.cbWndExtra = sizeof(afxObject);
-    sh->w32.wndClss.hInstance = GetModuleHandleA(NULL);
-    sh->w32.wndClss.hIcon = LoadIconA(NULL, IDI_SHIELD);
-    sh->w32.wndClss.hCursor = LoadCursorA(NULL, IDC_ARROW);
-    sh->w32.wndClss.hbrBackground = NULL;
-    sh->w32.wndClss.lpszMenuName = NULL;
-    sh->w32.wndClss.lpszClassName = "The Unified UX Infrastructure --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build";
-    sh->w32.wndClss.hIconSm = LoadIconA(NULL, IDI_SHIELD);
+    usys->w32.wndClss.cbSize = sizeof(usys->w32.wndClss); // only on EX
+    usys->w32.wndClss.style = CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
+    usys->w32.wndClss.lpfnWndProc = _AuxWndHndlngPrcW32Callback;
+    usys->w32.wndClss.cbClsExtra = sizeof(afxObject);
+    usys->w32.wndClss.cbWndExtra = sizeof(afxObject);
+    usys->w32.wndClss.hInstance = GetModuleHandleA(NULL);
+    usys->w32.wndClss.hIcon = LoadIconA(NULL, IDI_SHIELD);
+    usys->w32.wndClss.hCursor = LoadCursorA(NULL, IDC_ARROW);
+    usys->w32.wndClss.hbrBackground = NULL;
+    usys->w32.wndClss.lpszMenuName = NULL;
+    usys->w32.wndClss.lpszClassName = "Advanced User Experience --- Qwadro Execution Ecosystem (c) 2017 SIGMA --- Public Test Build";
+    usys->w32.wndClss.hIconSm = LoadIconA(NULL, IDI_SHIELD);
 
-    if (!(RegisterClassExA(&(sh->w32.wndClss)))) AfxThrowError();
+    if (!(RegisterClassExA(&(usys->w32.wndClss)))) AfxThrowError();
     else
     {
-        afxHid hid;
+        afxNat dwmCnt = 1;
+        usys->dwms = NIL;
 
-        if (AfxAcquireHid(0, &hid)) AfxThrowError();
+        if (!(usys->dwms = AfxAllocate(dwmCnt, sizeof(usys->dwms[0]), NIL, AfxHere()))) AfxThrowError();
         else
         {
-            AfxAssertObjects(1, &hid, afxFcc_HID);
-            sh->stdHid = hid;
+            usys->dwmCnt = dwmCnt;
 
-            afxUri point, location;
-            AfxMakeUri(&point, "code", 0);
-            AfxMakeUri(&location, "system", 0);
-
-            if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
-            else
+            for (afxNat i = 0; i < dwmCnt; i++)
             {
-                afxUri uri;
-                AfxMakeUri(&uri, "system/qwadro.xss", 0);
+                afxDesktop* dwm = &usys->dwms[i];
 
-                afxString s;
-                AfxMakeString(&s, "qwadro", 0);
-                AfxLoadScript(&s, &uri);
-
-                if (err)
-                    AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+#ifdef AFX_OS_WIN
+                
+                dwm->res[0] = GetSystemMetrics(SM_CXSCREEN);
+                dwm->res[1] = GetSystemMetrics(SM_CYSCREEN);
+                dwm->res[2] = 1;
+                dwm->dout = NIL;
+                dwm->refreshRate = 1;
+#endif
             }
 
-            if (err)
+            afxHid hid;
+
+            if (AfxAcquireHid(0, &hid)) AfxThrowError();
+            else
             {
-                AfxReleaseObjects(1, &hid);
+                AfxAssertObjects(1, &hid, afxFcc_HID);
+                usys->stdHid = hid;
+
+                afxUri point, location;
+                AfxMakeUri(&point, "code", 0);
+                AfxMakeUri(&location, "system", 0);
+
+                if (AfxMountStorageUnit(&point, &location, afxFileFlag_RWX)) AfxThrowError();
+                else
+                {
+                    afxUri uri;
+                    AfxMakeUri(&uri, "system/qwadro.xss", 0);
+
+                    afxString s;
+                    AfxMakeString(&s, "qwadro", 0);
+                    AfxLoadScript(&s, &uri);
+
+                    if (err)
+                        AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
+                }
+
+                if (err)
+                {
+                    AfxReleaseObjects(1, &hid);
+                }
             }
         }
 
         if (err)
-            UnregisterClassA(sh->w32.wndClss.lpszClassName, sh->w32.wndClss.hInstance);
+            UnregisterClassA(usys->w32.wndClss.lpszClassName, usys->w32.wndClss.hInstance);
     }
     return err;
 }
 
-_AUX afxError _AuxShDtor(afxShell sh)
+_AUX afxError _AuxUsysDtor(afxShell usys)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sh, afxFcc_ENV);
+    AfxAssertObjects(1, &usys, afxFcc_USYS);
 
-    if (sh->stdHid)
+    if (usys->stdHid)
     {
-        AfxReleaseObjects(1, (void*[]) { sh->stdHid });
-        sh->stdHid = NIL;
+        AfxReleaseObjects(1, (void*[]) { usys->stdHid });
+        usys->stdHid = NIL;
     }
 
-    AfxCleanUpChainedManagers(&sh->mgrChn);
+    AfxCleanUpChainedManagers(&usys->mgrChn);
 
     afxUri point, location;
     AfxMakeUri(&point, "code", 0);
     AfxMakeUri(&location, "system", 0);
     AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);
 
-    if (xssDestroyVm(sh->vm))
-        AfxThrowError();
+    //if (xssDestroyVm(usys->vm))
+      //  AfxThrowError();
 
-    UnregisterClassA(sh->w32.wndClss.lpszClassName, sh->w32.wndClss.hInstance);
+    UnregisterClassA(usys->w32.wndClss.lpszClassName, usys->w32.wndClss.hInstance);
+    //TheShell = NIL;
 
     return err;
 }
 
-_AUX afxManager* AfxGetShellClass(void)
+_AUX afxClassConfig const _AuxUsysMgrCfg =
+{
+    .fcc = afxFcc_USYS,
+    .name = "Shell",
+    .desc = "User I/O System",
+    .unitsPerPage = 1,
+    .maxCnt = 1,
+    //.size = sizeof(AFX_OBJECT(afxShell)),
+    .ctor = (void*)_AuxUsysCtor,
+    .dtor = (void*)_AuxUsysDtor
+};
+
+_AUX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void** udd)
 {
     afxError err = AFX_ERR_NONE;
-    static afxManager shMgr = { 0 };
-    static afxBool shMgrMounted = FALSE;
-    static afxClassConfig shMgrCfg =
-    {
-        .fcc = afxFcc_ENV,
-        .name = "Shell",
-        .desc = "Execution Environment",
-        .unitsPerPage = 1,
-        //.size = sizeof(AFX_OBJECT(afxShell)),
-        .ctor = (void*)_AuxShCtor,
-        .dtor = (void*)_AuxShDtor
-    };
-
-    if (shMgr.fcc != afxFcc_CLS)
-    {
-        AfxEstablishManager(&shMgr, NIL, /*_AfxGetSystemClassChain()*/NIL, &shMgrCfg);
-        shMgrMounted = TRUE;
-    }
-    AfxAssertClass(&shMgr, afxFcc_ENV);
-    return &shMgr;
-}
-
-_AUX afxError AfxEntryPoint(afxModule mdle, afxNat reqCode, void* udd)
-{
-    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sys, afxFcc_SYS);
     AfxAssertObjects(1, &mdle, afxFcc_MDLE);
 
     switch (reqCode)
     {
-    case afxFcc_SYS:
+    case 2:
     {
-        afxShell sh;
-
-        if (!AfxGetShell(&sh))
-        {
-            AfxAssert(TheShell == sh);
-            AfxZero(TheShell, sizeof(afxObjectBase));
-
-            afxManager* mgr = AfxGetShellClass();
-            AfxAssertClass(mgr, afxFcc_ENV);
-
-            if (_AfxConstructObjects(mgr, 1, (void**)&TheShell, udd)) AfxThrowError();
-            else
-            {
-                AfxAssert(TheShell != sh); // Attention! Ctor moves the object pointer to hide out the object base.
-                sh = TheShell;
-                AfxAssertObjects(1, &sh, afxFcc_ENV);
-                shReady = TRUE;
-            }
-        }
-        else
-        {
-            AfxAssert(TheShell == sh);
-            AfxAssertObjects(1, &sh, afxFcc_ENV);
-            shReady = FALSE;
-
-            afxManager* mgr = AfxGetShellClass();
-            AfxAssertClass(mgr, afxFcc_ENV);
-
-            if (_AfxDestructObjects(mgr, 1, (void**)&TheShell))
-                AfxThrowError();
-
-            AfxAssert(TheShell != sh); // Attention! Dtor moves the object pointer to expose the object base.
-            AfxZero(TheShell, sizeof(afxObjectBase));
-        }
+        AfxAssert(udd);
+        udd[0] = (void*)&_AuxUsysMgrCfg;
+        udd[1] = TheShell;
+        break;
     }
     default: break;
     }

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -257,10 +257,10 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxRaster ras, GLenum *target, 
     AfxAssert(type);
     afxResult cubemap = AfxTestRasterFlags(ras, afxRasterFlag_CUBEMAP);
     AfxAssert(ras->base.whd[0]); // always have at least one dimension.
-
-    if (!(ras->base.whd[1] > 1)) // Y
+    
+    if (AfxRasterIs1d(ras)) // Y
     {
-        if (ras->base.layerCnt > 1)
+        if (ras->base.whd[2] > 1)
         {
             *target = GL_TEXTURE_1D_ARRAY;
         }
@@ -273,11 +273,11 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxRaster ras, GLenum *target, 
     {
         // 2D or 2D array?
 
-        if (!(ras->base.whd[2] > 1))
+        if (!AfxRasterIs3d(ras))
         {
             if (cubemap)
             {
-                if (ras->base.layerCnt / 6 > 1)
+                if (ras->base.whd[2] > 6)
                 {
                     *target = GL_TEXTURE_CUBE_MAP_ARRAY;
                 }
@@ -288,7 +288,7 @@ _SGL void SglDetermineGlTargetInternalFormatType(afxRaster ras, GLenum *target, 
             }
             else
             {
-                if (ras->base.layerCnt > 1)
+                if (ras->base.whd[2] > 1)
                 {
                     *target = GL_TEXTURE_2D_ARRAY;
                 }

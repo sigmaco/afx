@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -93,22 +93,41 @@ _AVXINL afxNat AfxCountRasterLods(afxRaster ras)
     return ras->lodCnt;
 }
 
-_AVXINL afxNat AfxCountRasterLayers(afxRaster ras)
+_AVXINL afxBool AfxRasterIs1d(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
-    return ras->layerCnt;
+    return AfxTestRasterFlags(ras, afxRasterFlag_1D);
 }
 
-_AVXINL afxBool AfxGetRasterSwizzling(afxRaster ras, afxColorSwizzling const** csw)
+_AVXINL afxBool AfxRasterIs3d(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+    return AfxTestRasterFlags(ras, afxRasterFlag_3D);
+}
 
-    if (csw)
-        *csw = ras->swizzling;
+_AVXINL afxBool AfxRasterIsCubemap(afxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    return AfxTestRasterFlags(ras, afxRasterFlag_CUBEMAP);
+}
 
-    return !!ras->swizzling;
+_AVXINL afxBool AfxRasterIsLayered(afxRaster ras)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    return AfxTestRasterFlags(ras, afxRasterFlag_LAYERED);
+}
+
+_AVXINL void AfxGetRasterSwizzling(afxRaster ras, afxNat subIdx, afxColorSwizzling* csw)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
+    AfxAssertRange(ras->subCnt, subIdx, 1);
+    AfxAssert(csw);
+    *csw = ras->subs[subIdx].swizzling;
 }
 
 _AVXINL void AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd)
@@ -136,7 +155,6 @@ _AVXINL void AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc)
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssert(desc);
     desc->lodCnt = ras->lodCnt;
-    desc->layerCnt = ras->layerCnt;
     desc->sampleCnt = ras->sampleCnt;
     desc->whd[0] = ras->whd[0];
     desc->whd[1] = ras->whd[1];
@@ -146,132 +164,45 @@ _AVXINL void AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc)
     desc->usage = ras->usage;
 }
 
-_AVXINL void AfxDetermineRasterStride(afxRaster ras, afxNat lodIdx, afxNat* bytesPerRow, afxNat* bytesPerLayer)
+_AVX afxBool AfxQueryRasterLayout(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxRasterLayout* layout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
     AfxAssertRange(ras->lodCnt, lodIdx, 1);
+    AfxAssertRange(ras->whd[2], layerIdx, 1);
 
-    afxNat w = ras->whd[0], h = ras->whd[1], d = ras->whd[2];
-    while (lodIdx--) w = w >> 1, h = h >> 1, d = d >> 1;
-    AfxAssert(w);
+    afxBool is3d = AfxTestRasterFlags(ras, afxRasterFlag_3D);
+    AfxAssert(!layerIdx || !is3d);
 
-    afxNat bpp = AfxGetRasterBpp(ras);
-    afxNat bpr = (w * AFX_ALIGN(bpp, AFX_BYTE_SIZE)) / AFX_BYTE_SIZE;
-    AfxAssert(bpr); // bytes per row
-    afxNat bpl = bpr * h * d;
-    AfxAssert(bpl); // bytes per layer
-    
-    AfxAssert(bytesPerRow);
-    *bytesPerRow = bpr;
-    AfxAssert(bytesPerLayer);
-    *bytesPerLayer = bpl;
-}
-
-_AVX afxNat _AfxDetermineRasterOffset(afxRaster ras, afxNat lodIdx, afxNat layerIdx, afxWhd const offset)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssertRange(ras->lodCnt, lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, layerIdx, 1);
-    //AfxAssertRangef(ras->whd[0], offset[0], 1); // is a evil trick to use it to measure ras
-    //AfxAssertRangef(ras->whd[1], offset[1], 1);
-    //AfxAssertRangef(ras->whd[2], offset[2], 1);
-    
-    afxPixelLayout pfd;
-    AfxDescribePixelFormat(ras->fmt, &pfd);
-    afxNat rowSiz, layerSiz;
-    AfxDetermineRasterStride(ras, lodIdx, &rowSiz, &layerSiz);
-
-    afxWhd whd;
-    AfxGetRasterExtent(ras, lodIdx, whd);
-    afxNat memOff = 0;
-    afxWhd offset2 = { offset[0], offset[1], offset[2] };
-
-    while (lodIdx)
+    afxWhd whd = { ras->whd[0], ras->whd[1], ras->whd[2] };
+    while (lodIdx--)
     {
-        offset2[0] = offset2[0] >> 1;
-        offset2[1] = offset2[1] >> 1;
-        offset2[2] = offset2[2] >> 1;
-        //rowSiz = rowSiz >> 1;
-        //whd[0] = whd[0] >> 1;
-        //whd[1] = whd[1] >> 1;
-        //whd[2] = whd[2] >> 1;
-        
-        memOff += ras->layerCnt * whd[2] * whd[1] * rowSiz;
-        --lodIdx;
+        whd[0] = whd[0] >> 1;
+        whd[1] = whd[1] >> 1;
+
+        if (is3d)
+            whd[2] = whd[2] >> 1;
     }
+    AfxAssert(whd[0]);
+    AfxAssert(whd[1]);
+    AfxAssert(whd[2]);
 
-    memOff += layerIdx * whd[2] * whd[1] * rowSiz;
-    memOff += offset2[2] * offset2[1] * ((offset2[0] * AFX_ALIGN(pfd.bpp, AFX_BYTE_SIZE)) / AFX_BYTE_SIZE);
-    //memOff = AFX_ALIGN(memOff, AFX_SIMD_ALIGN);
-
-    return memOff;
-}
-
-_AVX afxNat AfxMeasureRasterRegion(afxRaster ras, afxRasterRegion const *srcRgn) // can't be multiple because regions couldn't be continous.
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ras, afxFcc_RAS);
-    AfxAssert(srcRgn);
-    AfxAssertRange(ras->lodCnt, srcRgn->lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, srcRgn->baseLayer, srcRgn->layerCnt);
-    AfxAssertRange(ras->whd[0], srcRgn->origin[0], srcRgn->whd[0]);
-    AfxAssertRange(ras->whd[1], srcRgn->origin[1], srcRgn->whd[1]);
-    AfxAssertRange(ras->whd[2], srcRgn->origin[2], srcRgn->whd[2]);
-
-    afxPixelLayout pfd;
-    AfxDescribePixelFormat(ras->fmt, &pfd);
-
-    afxNat lodIdx = srcRgn->lodIdx;
-    afxNat rowSiz, layerSiz;
-    AfxDetermineRasterStride(ras, lodIdx, &rowSiz, &layerSiz);
-
-    afxWhd offset2 = { srcRgn->origin[0], srcRgn->origin[1], srcRgn->origin[2] };
-    afxWhd extent2 = { srcRgn->whd[0], srcRgn->whd[1], srcRgn->whd[2] };
-    afxNat size = 0;
-
-    afxWhd whd;
-    AfxGetRasterExtent(ras, lodIdx, whd);
-    
-    while (lodIdx)
-    {
-        offset2[0] = offset2[0] >> 1;
-        offset2[1] = offset2[1] >> 1;
-        offset2[2] = offset2[2] >> 1;
-        extent2[0] = extent2[0] >> 1;
-        extent2[1] = extent2[1] >> 1;
-        extent2[2] = extent2[2] >> 1;
-        //rowSiz = rowSiz >> 1;
-        //whd[0] = whd[0] >> 1;
-        //whd[1] = whd[1] >> 1;
-        //whd[2] = whd[2] >> 1;
-
-        //memOff += (ras->layerCnt * (whd[2] * (whd[1] * (whd[0] * pixelSiz))));
-        --lodIdx;
-    }
-    
-    extent2[0] = AfxMax(extent2[0], 1);
-    extent2[1] = AfxMax(extent2[1], 1);
-    extent2[2] = AfxMax(extent2[2], 1);
-
-    for (afxNat i = srcRgn->layerCnt; i--> 1;)
-        size += (whd[2] * whd[1] * rowSiz);
-
-    size += extent2[2] * extent2[1] * ((extent2[0] * AFX_ALIGN(pfd.bpp, AFX_BYTE_SIZE)) / AFX_BYTE_SIZE);
-
-    size -= offset2[2] * offset2[1] * ((offset2[0] * AFX_ALIGN(pfd.bpp, AFX_BYTE_SIZE)) / AFX_BYTE_SIZE);
-
-    size = AFX_ALIGN(size, AFX_SIMD_ALIGN);
-
-    return size;
+    afxNat pixelStride = AFX_ALIGN(AfxGetRasterBpp(ras), AFX_BYTE_SIZE) / AFX_BYTE_SIZE;
+    afxNat rowStride = AFX_ALIGN(pixelStride * whd[0], AFX_SIMD_ALIGN);
+    afxNat depthStride = rowStride * whd[1];
+    AfxAssert(layout);
+    layout->depthStride = depthStride;
+    layout->rowStride = rowStride;
+    layout->offset = 0;
+    layout->siz = is3d ? whd[2] * depthStride : depthStride;
+    return !err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // SERIALIZATION AND STORAGE                                                  //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxUploadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream in)
+_AVX afxError AfxUploadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxStream in)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -280,22 +211,30 @@ _AVX afxError AfxUploadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream 
     
     afxRasterRegion rgn = op->rgn;
     AfxAssertRange(ras->lodCnt, rgn.lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, rgn.baseLayer, rgn.layerCnt);
     AfxAssertRange(ras->whd[0], rgn.origin[0], rgn.whd[0]);
     AfxAssertRange(ras->whd[1], rgn.origin[1], rgn.whd[1]);
     AfxAssertRange(ras->whd[2], rgn.origin[2], rgn.whd[2]);
 
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
     req.img.ras = ras;
-    req.img.rgn = op->rgn;
-    req.dstFcc = afxFcc_RAS;
+    req.img.op = *op;
+    req.img.op.rgn.origin[0] = AfxMin(req.img.op.rgn.origin[0], ras->whd[0] - 1);
+    req.img.op.rgn.origin[1] = AfxMin(req.img.op.rgn.origin[1], ras->whd[1] - 1);
+    req.img.op.rgn.origin[2] = AfxMin(req.img.op.rgn.origin[2], ras->whd[2] - 1);
+    req.img.op.rgn.whd[0] = AfxClamp(req.img.op.rgn.whd[0], 1, ras->whd[0]);
+    req.img.op.rgn.whd[1] = AfxClamp(req.img.op.rgn.whd[1], 1, ras->whd[1]);
+    req.img.op.rgn.whd[2] = AfxClamp(req.img.op.rgn.whd[2], 1, ras->whd[2]);
+    
     req.img.iob = in;
+    req.dstFcc = afxFcc_RAS;
     req.srcFcc = afxFcc_IOB;
+    
     afxNat queIdx = AFX_INVALID_INDEX;
 
     if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
@@ -303,13 +242,13 @@ _AVX afxError AfxUploadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream 
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
 }
 
-_AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStream out)
+_AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCnt, afxStream out)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -318,22 +257,30 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStrea
 
     afxRasterRegion rgn = op->rgn;
     AfxAssertRange(ras->lodCnt, rgn.lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, rgn.baseLayer, rgn.layerCnt);
     AfxAssertRange(ras->whd[0], rgn.origin[0], rgn.whd[0]);
     AfxAssertRange(ras->whd[1], rgn.origin[1], rgn.whd[1]);
     AfxAssertRange(ras->whd[2], rgn.origin[2], rgn.whd[2]);
 
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
     req.img.ras = ras;
-    req.img.rgn = op->rgn;
-    req.srcFcc = afxFcc_RAS;
+    req.img.op = *op;
+    req.img.op.rgn.origin[0] = AfxMin(req.img.op.rgn.origin[0], ras->whd[0] - 1);
+    req.img.op.rgn.origin[1] = AfxMin(req.img.op.rgn.origin[1], ras->whd[1] - 1);
+    req.img.op.rgn.origin[2] = AfxMin(req.img.op.rgn.origin[2], ras->whd[2] - 1);
+    req.img.op.rgn.whd[0] = AfxClamp(req.img.op.rgn.whd[0], 1, ras->whd[0]);
+    req.img.op.rgn.whd[1] = AfxClamp(req.img.op.rgn.whd[1], 1, ras->whd[1]);
+    req.img.op.rgn.whd[2] = AfxClamp(req.img.op.rgn.whd[2], 1, ras->whd[2]);
+    
     req.img.iob = out;
+    req.srcFcc = afxFcc_RAS;
     req.dstFcc = afxFcc_IOB;
+    
     afxNat queIdx = AFX_INVALID_INDEX;
 
     if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
@@ -341,7 +288,7 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStrea
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
@@ -351,31 +298,46 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIoOp const* op, afxStrea
 // TRANSFERENCE AND COPY                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxUpdateRaster(afxRaster ras, afxRasterRegion const* rgn, void const* src)
+_AVX afxError AfxUpdateRaster(afxRaster ras, afxRasterIo const* op, void const* src)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
 
-    AfxAssert(rgn);
-    AfxAssertRange(ras->lodCnt, rgn->lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, rgn->baseLayer, rgn->layerCnt);
-    AfxAssertRange(ras->whd[0], rgn->origin[0], rgn->whd[0]);
-    AfxAssertRange(ras->whd[1], rgn->origin[1], rgn->whd[1]);
-    AfxAssertRange(ras->whd[2], rgn->origin[2], rgn->whd[2]);
+    AfxAssert(op);
+    AfxAssertRange(ras->lodCnt, op->rgn.lodIdx, 1);
+    AfxAssertRange(ras->whd[0], op->rgn.origin[0], op->rgn.whd[0]);
+    AfxAssertRange(ras->whd[1], op->rgn.origin[1], op->rgn.whd[1]);
+    AfxAssertRange(ras->whd[2], op->rgn.origin[2], op->rgn.whd[2]);
 
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-
+    
     afxNat unusedBpl;
     afxTransferRequest req = { 0 };
     req.img.ras = ras;
-    req.img.rgn = *rgn;
+    req.img.op = *op;
+    req.img.op.rgn.origin[0] = AfxMin(req.img.op.rgn.origin[0], ras->whd[0] - 1);
+    req.img.op.rgn.origin[1] = AfxMin(req.img.op.rgn.origin[1], ras->whd[1] - 1);
+    req.img.op.rgn.origin[2] = AfxMin(req.img.op.rgn.origin[2], ras->whd[2] - 1);
+    req.img.op.rgn.whd[0] = AfxClamp(req.img.op.rgn.whd[0], 1, ras->whd[0]);
+    req.img.op.rgn.whd[1] = AfxClamp(req.img.op.rgn.whd[1], 1, ras->whd[1]);
+    req.img.op.rgn.whd[2] = AfxClamp(req.img.op.rgn.whd[2], 1, ras->whd[2]);
+    
+    if (!req.img.op.rowStride)
+    {
+        afxBool is3d = AfxRasterIs3d(ras);
+        afxRasterLayout layout;
+        AfxQueryRasterLayout(ras, req.img.op.rgn.lodIdx, (is3d ? 0 : req.img.op.rgn.whd[2]), &layout);
+        req.img.op.rowStride = layout.rowStride;
+        req.img.op.rowCnt = req.img.op.rgn.whd[1];
+    }
+
     req.dstFcc = afxFcc_RAS;
     req.img.src = src;
-    req.img.rowStride = 0;
-    AfxDetermineRasterStride(ras, req.img.rgn.lodIdx, &req.img.rowStride, &unusedBpl);
+
     afxNat queIdx = AFX_INVALID_INDEX;
 
     if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
@@ -383,38 +345,43 @@ _AVX afxError AfxUpdateRaster(afxRaster ras, afxRasterRegion const* rgn, void co
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
 }
 
-_AVX afxError AfxDumpRaster(afxRaster ras, afxRasterRegion const* rgn, void* dst)
+_AVX afxError AfxDumpRaster(afxRaster ras, afxRasterIo const* op, void* dst)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
 
-    AfxAssert(rgn);
-    AfxAssertRange(ras->lodCnt, rgn->lodIdx, 1);
-    AfxAssertRange(ras->layerCnt, rgn->baseLayer, rgn->layerCnt);
-    AfxAssertRange(ras->whd[0], rgn->origin[0], rgn->whd[0]);
-    AfxAssertRange(ras->whd[1], rgn->origin[1], rgn->whd[1]);
-    AfxAssertRange(ras->whd[2], rgn->origin[2], rgn->whd[2]);
+    AfxAssert(op);
+    AfxAssertRange(ras->lodCnt, op->rgn.lodIdx, 1);
+    AfxAssertRange(ras->whd[0], op->rgn.origin[0], op->rgn.whd[0]);
+    AfxAssertRange(ras->whd[1], op->rgn.origin[1], op->rgn.whd[1]);
+    AfxAssertRange(ras->whd[2], op->rgn.origin[2], op->rgn.whd[2]);
 
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, 0);
+    afxNat portIdx = 0;
+    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxNat unusedBpl;
     afxTransferRequest req = { 0 };
     req.img.ras = ras;
-    req.img.rgn = *rgn;
+    req.img.op = *op;
+    req.img.op.rgn.origin[0] = AfxMin(req.img.op.rgn.origin[0], ras->whd[0] - 1);
+    req.img.op.rgn.origin[1] = AfxMin(req.img.op.rgn.origin[1], ras->whd[1] - 1);
+    req.img.op.rgn.origin[2] = AfxMin(req.img.op.rgn.origin[2], ras->whd[2] - 1);
+    req.img.op.rgn.whd[0] = AfxClamp(req.img.op.rgn.whd[0], 1, ras->whd[0]);
+    req.img.op.rgn.whd[1] = AfxClamp(req.img.op.rgn.whd[1], 1, ras->whd[1]);
+    req.img.op.rgn.whd[2] = AfxClamp(req.img.op.rgn.whd[2], 1, ras->whd[2]);
+
     req.srcFcc = afxFcc_RAS;
     req.img.dst = dst;
-    req.img.rowCnt = req.img.rgn.whd[1];
-    req.img.rowStride = 0;
-    AfxDetermineRasterStride(ras, req.img.rgn.lodIdx, &req.img.rowStride, &unusedBpl);
+
     afxNat queIdx = AFX_INVALID_INDEX;
 
     if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueTransferRequest(ddge, NIL, 1, &req))) AfxThrowError();
@@ -422,7 +389,7 @@ _AVX afxError AfxDumpRaster(afxRaster ras, afxRasterRegion const* rgn, void* dst
     {
         AfxAssert(queIdx != AFX_INVALID_INDEX);
 
-        if (AfxWaitForIdleDrawQueue(ddge, queIdx))
+        if (AfxWaitForIdleDrawQueue(dctx, portIdx, queIdx))
             AfxThrowError();
     }
     return err;
@@ -439,48 +406,47 @@ _AVX afxError _AvxRasStdDtor(afxRaster ras)
 _AVX afxError _AvxRasStdCtor(afxRaster ras, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ras, afxFcc_RAS);
 
     afxRasterInfo const *texi = ((afxRasterInfo const *)cookie->udd[1]) + cookie->no;
 
     afxDrawContext dctx = AfxGetObjectProvider(ras);
 
-    ras->swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
+    ras->subCnt = 0;
+    ras->subs = NIL;
+
+    //ras->swizzling = NIL; //&AFX_STD_COLOR_SWIZZLING;
     ras->sampleCnt = AfxMax(texi->sampleCnt, 1);
-    //ras->linearlyTiled = FALSE;
 
-    ras->layerCnt = AfxMax(texi->layerCnt, 1);
     ras->lodCnt = AfxMax(texi->lodCnt, 1);
-
-    ras->flags = texi->flags;
-    ras->usage = texi->usage;
-
-    ras->fmt = texi->fmt;
-
     ras->whd[0] = AfxMax(texi->whd[0], 1);
     ras->whd[1] = AfxMax(texi->whd[1], 1);
     ras->whd[2] = AfxMax(texi->whd[2], 1);
 
-    if (ras->whd[1] > 1)
-    {
-        if (ras->whd[2] > 1)
-            ras->flags |= afxRasterFlag_3D;
-        else
-            ras->flags |= afxRasterFlag_2D;
-    }
+    ras->flags = NIL;;
+    ras->usage = texi->usage;
+
+    ras->fmt = texi->fmt;
+
+    afxRasterFlags flags = (afxRasterFlag_SUBSAMPLED | afxRasterFlag_RESAMPLED);
+
+    if ((ras->flags = (texi->flags & flags)) == flags) AfxThrowError();
     else
     {
-        if (ras->whd[2] > 1)
-            ras->flags |= afxRasterFlag_3D;
+        if (ras->lodCnt > 1)
+            if (!(ras->flags & flags))
+                ras->flags |= afxRasterFlag_SUBSAMPLED;
+
+        flags = (afxRasterFlag_3D | afxRasterFlag_CUBEMAP | afxRasterFlag_LAYERED);
+
+        if ((ras->flags = (texi->flags & flags)) == flags) AfxThrowError();
         else
-            ras->flags |= afxRasterFlag_1D;
+        {
+            if (ras->whd[2] > 1)
+                if (!(ras->flags & flags))
+                    ras->flags = afxRasterFlag_LAYERED;
+        }
     }
-
-    if (ras->layerCnt > 1)
-        ras->flags |= afxRasterFlag_LAYERED;
-
-    if (ras->lodCnt > 1)
-        ras->flags |= afxRasterFlag_SUBSAMPLED;
-
     return err;
 }
 
@@ -491,7 +457,6 @@ _AVX afxClassConfig const _AvxRasStdImplementation =
     .desc = "Formatted Video Buffer",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxRaster)),
-    .mmu = NIL,
     .ctor = (void*)_AvxRasStdCtor,
     .dtor = (void*)_AvxRasStdDtor
 };
@@ -525,7 +490,7 @@ _AVX afxRaster AfxAssembleRaster(afxDrawContext dctx, afxRasterUsage usage, afxR
     AfxAssert(cnt);
     afxRaster ras;
 
-    if (AfxAssembleRastersFromTarga(dctx, usage, flags, dir, cnt, layers, &ras))
+    if (AfxAssembleRasters(dctx, usage, flags, dir, cnt, layers, &ras))
         AfxThrowError();
 
     AfxTryAssertObjects(1, &ras, afxFcc_RAS);

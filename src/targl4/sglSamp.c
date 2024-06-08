@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -23,13 +23,17 @@
 // SAMPLER                                                                    //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, sglBindFlags bindFlags, afxNat glUnit, afxSampler samp)
+_SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, afxNat glUnit, afxSampler samp)
 {
     //AfxEntry("smp=%p", smp);
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
 
-    if (samp)
+    if (!samp)
+    {
+        gl->BindSampler(glUnit, 0); _SglThrowErrorOccuried();
+    }
+    else
     {
         AfxAssertObjects(1, &samp, afxFcc_SAMP);
         sglUpdateFlags devUpdReq = (samp->updFlags & SGL_UPD_FLAG_DEVICE);
@@ -51,12 +55,12 @@ _SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, sglBindFlags bindFlags, afxNat gl
             samp->glHandle = glHandle;
             bound = TRUE;
 
-            GLenum magF = SglToGlTexelFilterMode(samp->base.magFilter);
-            GLenum minF = SglToGlTexelFilterModeMipmapped(samp->base.minFilter, samp->base.mipmapFilter);
-            GLint wrapS = SglToGlTexWrapMode(samp->base.uvw[0]);
-            GLint wrapT = SglToGlTexWrapMode(samp->base.uvw[1]);
-            GLint wrapR = SglToGlTexWrapMode(samp->base.uvw[2]);
-            GLint cop = SglToGlCompareOp(samp->base.compareOp);
+            GLenum magF = SglToGlTexelFilterMode(samp->base.cfg.base.magFilter);
+            GLenum minF = SglToGlTexelFilterModeMipmapped(samp->base.cfg.base.minFilter, samp->base.cfg.base.mipmapFilter);
+            GLint wrapS = SglToGlTexWrapMode(samp->base.cfg.base.uvw[0]);
+            GLint wrapT = SglToGlTexWrapMode(samp->base.cfg.base.uvw[1]);
+            GLint wrapR = SglToGlTexWrapMode(samp->base.cfg.base.uvw[2]);
+            GLint cop = SglToGlCompareOp(samp->base.cfg.base.compareOp);
 
             gl->SamplerParameteri(glHandle, GL_TEXTURE_MAG_FILTER, magF); _SglThrowErrorOccuried();
             gl->SamplerParameteri(glHandle, GL_TEXTURE_MIN_FILTER, minF); _SglThrowErrorOccuried();
@@ -65,37 +69,35 @@ _SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, sglBindFlags bindFlags, afxNat gl
             gl->SamplerParameteri(glHandle, GL_TEXTURE_WRAP_T, wrapT); _SglThrowErrorOccuried();
             gl->SamplerParameteri(glHandle, GL_TEXTURE_WRAP_R, wrapR); _SglThrowErrorOccuried();
 
-            if (samp->base.anisotropyEnabled)
+            if (samp->base.cfg.base.anisotropyEnabled)
             {
-                gl->SamplerParameterf(glHandle, GL_TEXTURE_MAX_ANISOTROPY, samp->base.anisotropyMaxDegree); _SglThrowErrorOccuried();
+                gl->SamplerParameterf(glHandle, GL_TEXTURE_MAX_ANISOTROPY, samp->base.cfg.base.anisotropyMaxDegree); _SglThrowErrorOccuried();
             }
             else
             {
                 //gl->SamplerParameterf(smp->glHandle, GL_TEXTURE_MAX_ANISOTROPY, 0); _SglThrowErrorOccuried();
             }
 
-            gl->SamplerParameterf(glHandle, GL_TEXTURE_LOD_BIAS, samp->base.lodBias); _SglThrowErrorOccuried();
-            gl->SamplerParameterf(glHandle, GL_TEXTURE_MIN_LOD, samp->base.minLod); _SglThrowErrorOccuried();
-            gl->SamplerParameterf(glHandle, GL_TEXTURE_MAX_LOD, samp->base.maxLod); _SglThrowErrorOccuried();
+            gl->SamplerParameterf(glHandle, GL_TEXTURE_LOD_BIAS, samp->base.cfg.base.lodBias); _SglThrowErrorOccuried();
+            gl->SamplerParameterf(glHandle, GL_TEXTURE_MIN_LOD, samp->base.cfg.base.minLod); _SglThrowErrorOccuried();
+            gl->SamplerParameterf(glHandle, GL_TEXTURE_MAX_LOD, samp->base.cfg.base.maxLod); _SglThrowErrorOccuried();
 
-            if (samp->base.compareEnabled)
+            if (samp->base.cfg.base.compareEnabled)
             {
                 // what about GL_TEXTURE_COMPARE_MODE?
             }
 
             gl->SamplerParameteri(glHandle, GL_TEXTURE_COMPARE_MODE, GL_NONE); _SglThrowErrorOccuried();
             gl->SamplerParameteri(glHandle, GL_TEXTURE_COMPARE_FUNC, cop); _SglThrowErrorOccuried();
-            gl->SamplerParameterfv(glHandle, GL_TEXTURE_BORDER_COLOR, (void*)samp->base.borderColor); _SglThrowErrorOccuried();
+            gl->SamplerParameterfv(glHandle, GL_TEXTURE_BORDER_COLOR, (void*)samp->base.cfg.base.borderColor); _SglThrowErrorOccuried();
 
-            AfxLogEcho("afxSampler %p hardware-side data instanced.", samp);
-
-            if (bound && !(bindFlags & sglBindFlag_KEEP))
-            {
-                gl->BindSampler(glUnit, 0); _SglThrowErrorOccuried();
-                //bound = FALSE;
-            }
+            AfxLogEcho("Hardware-side sampler %p ready.", samp);
+            samp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
         }
-        samp->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
+        else
+        {
+            gl->BindSampler(glUnit, glHandle); _SglThrowErrorOccuried();
+        }
     }
     return err;
 }

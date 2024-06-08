@@ -200,17 +200,22 @@
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <VertexShader>system/video/uvOutTristripQuad.vsh</VertexShader>
-        <Rasterizer>system/video/sampleOutRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='yFlipped'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
         <VertexShader>system/video/uvOutTristripQuadInvY.vsh</VertexShader>
-        <Rasterizer>system/video/sampleOutRgba.xsh.xml</Rasterizer>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthWriteEnabled></DepthWriteEnabled>
+        <Transformer>system/video/sampleOutRgba.xsh.xml</Transformer>
+        <FragmentShader>system/video/sampleOutRgba2d.fsh</FragmentShader>
+    </Rasterizer>
+    <Rasterizer  id='yFlipped'>
+        <FillMode>SOLID</FillMode>
+        <DepthWriteEnabled></DepthWriteEnabled>
+        <Transformer>system/video/sampleOutRgba.xsh.xml</Transformer>
         <FragmentShader>system/video/sampleOutRgba2d.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

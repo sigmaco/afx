@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -29,7 +29,9 @@
 #define AFX_AABB_SUP 0
 #define AFX_AABB_INF 1
 
-typedef afxV4d afxAabb[2]; // [ sup/max, inf/min ]
+typedef afxV4d afxBox[2];
+typedef afxBox afxAabb; // [ sup/max, inf/min ]
+typedef afxBox afxObb;
 
 /*
 AFX_DEFINE_STRUCT(afxAabb)

@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -19,7 +19,7 @@
 #ifndef AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 #define AFX_XML_BACKED_DRAWABLE_RESOURCES_H
 
-#include "qwadro/draw/dev/afxDrawContext.h"
+#include "qwadro/draw/afxDrawContext.h"
 
 #if 0
 AVX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], afxDrawContext dctx, afxDrawOperation dop[]);
@@ -27,8 +27,9 @@ AVX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[],
 
 
 AVX afxError    AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxError    AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* uri);
 
-AVX afxError    AfxLoadPipelineConfigFromXml(afxPipelineConfig* config, afxPipelineConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxError    AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 AVX afxError    AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 
 AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path);

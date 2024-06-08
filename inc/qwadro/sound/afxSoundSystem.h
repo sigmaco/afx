@@ -10,13 +10,14 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-// The Unified Qwadro Accoustic Infrastructure
-// This section is part of SIGMA A4D.
-// Advanced Audio Extensions for Qwadro.
+  //////////////////////////////////////////////////////////////////////////////
+ // Advanced Sound Experience on Qwadro                                      //
+//////////////////////////////////////////////////////////////////////////////
+// This section is part of SIGMA A4D; Advanced Audio Extensions for Qwadro.
 
 #ifndef ASX_SOUND_SYSTEM_H
 #define ASX_SOUND_SYSTEM_H
@@ -25,9 +26,9 @@
 #include "qwadro/core/afxManager.h"
 #include "qwadro/io/afxSource.h"
 #include "qwadro/core/afxDevice.h"
-#include "qwadro/sound/dev/afxSoundContext.h"
-#include "qwadro/sound/dev/afxSoundOutput.h"
-#include "qwadro/sound/dev/afxSoundInput.h"
+#include "qwadro/sound/afxSoundContext.h"
+#include "qwadro/sound/afxSoundOutput.h"
+#include "qwadro/sound/afxSoundInput.h"
 #include "qwadro/sound/afxListener.h"
 
 typedef enum _sdevReqCode
@@ -128,8 +129,6 @@ AFX_OBJECT(afxSoundSystem)
 };
 #endif//_ASX_SOUND_SYSTEM_C
 #endif//_ASX_SOUND_C
-
-ASX afxBool         AfxGetSoundSystem(afxSoundSystem* system);
 
 ASX afxManager*     AfxGetSoundDeviceManager(void);
 ASX afxManager*     AfxGetSoundOutputClass(void);

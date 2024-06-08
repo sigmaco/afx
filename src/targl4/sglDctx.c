@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -44,7 +44,7 @@ _SGL afxError _SglDctxDtor(afxDrawContext dctx)
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     AfxDisconnectDrawContext(dctx, TRUE, TRUE);
-    AfxWaitForIdleDrawContext(dctx);
+    AfxWaitForDrawContext(dctx);
 
     AfxCleanUpChainedManagers(&dctx->base.ctx.classes);
 
@@ -99,11 +99,11 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         tmpClsConf = _SglShdMgrCfg;
         AfxEstablishManager(&dctx->base.shaders, NIL, classes, &tmpClsConf);
 
-        tmpClsConf = _SglRazrMgrCfg;
-        AfxEstablishManager(&dctx->base.rasterizers, NIL, classes, &tmpClsConf);
-
         tmpClsConf = _SglPipMgrCfg;
-        AfxEstablishManager(&dctx->base.pipelines, NIL, classes, &tmpClsConf);
+        AfxEstablishManager(&dctx->base.pipMgr, NIL, classes, &tmpClsConf);
+
+        tmpClsConf = _SglRazrMgrCfg;
+        AfxEstablishManager(&dctx->base.razrMgr, NIL, classes, &tmpClsConf);
 
         afxUri uri;
         AfxMakeUri(&uri, "system/video/sampleOutRgba.xsh.xml", 0);
@@ -112,9 +112,9 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         //dctx->base.presentPip = AfxDrawContextFetchPipeline(dctx, &uri);
 
 
-        dctx->presentPip = AfxAssemblePipelineFromXsh(dctx, NIL, &uri);
+        dctx->presentRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
 
-        AfxAssertObjects(1, &dctx->presentPip, afxFcc_PIP);
+        AfxAssertObjects(1, &dctx->presentRazr, afxFcc_RAZR);
 
         afxSamplerConfig smpSpec = { 0 };
         smpSpec.magFilter = afxTexelFilter_POINT;
@@ -143,7 +143,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         vtxAttrSpec.secIdx = 0;
         vtxAttrSpec.semantic = &tmpStr;
         vtxAttrSpec.fmt = afxVertexFormat_V2D;
-        vtxAttrSpec.usage = awxVertexUsage_POS;
+        vtxAttrSpec.usage = akxVertexUsage_POS;
         vtxAttrSpec.src = vtxPos;
         vtxAttrSpec.srcFmt = afxVertexFormat_V2D;
         vtxAttrSpec.srcStride = sizeof(afxV2d);
@@ -166,7 +166,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
 
         afxUri uri2;
         AfxMakeUri(&uri2, "system/video/font-256.tga", 0);
-        AfxLoadRastersFromTarga(dctx, afxRasterUsage_SAMPLING, NIL, 1, &uri2, &dctx->fntRas);
+        AfxLoadRasters(dctx, afxRasterUsage_SAMPLING, NIL, 1, &uri2, &dctx->fntRas);
 
         afxVertexInputStream const vinStreams[] =
         {
@@ -203,9 +203,9 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         AfxAssertObjects(1, &vin, afxFcc_VIN);
 
         AfxMakeUri(&uri2, "system/video/font.xsh.xml?instanced", 0);
-        dctx->fntPip = AfxAssemblePipelineFromXsh(dctx, vin, &uri2);
-        AfxAssertObjects(1, &dctx->fntPip, afxFcc_PIP);
-        AfxReleaseObjects(1, (void*[]) { vin });
+        dctx->fntRazr = AfxLoadRasterizerFromXsh(dctx, vin, &uri2);
+        AfxAssertObjects(1, &dctx->fntRazr, afxFcc_RAZR);
+        AfxReleaseObjects(1, &dctx->fntRazr);
 
         afxBufferSpecification vboSpec = { 0 };
         vboSpec.access = afxBufferAccess_W;
@@ -225,12 +225,12 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         AfxAssertObjects(1, &dctx->fntSamp, afxFcc_SAMP);
 
         afxBufferSpecification bufSpec = { 0 };
-        bufSpec.siz = sizeof(awxViewConstants);
+        bufSpec.siz = sizeof(akxViewConstants);
         bufSpec.usage = afxBufferUsage_UNIFORM;
         bufSpec.access = afxBufferAccess_W;
         bufSpec.src = NIL;
         AfxAcquireBuffers(dctx, 1, &bufSpec, &dctx->fntUnifBuf);
-        AfxAssertObjects(1, &dctx->fntDataBuf, afxFcc_BUF);
+        AfxAssertObjects(1, &dctx->fntUnifBuf, afxFcc_BUF);
 
         //AfxAssert(dctx->base.vmt);
 
@@ -253,10 +253,9 @@ _SGL afxClassConfig const _SglDctxMgrCfg =
 {
     .fcc = afxFcc_DCTX,
     .name = "DrawContext",
-    .desc = "Draw Device Context Management",
+    .desc = "Draw Device Driver Context",
     .unitsPerPage = 1,
     .size = sizeof(AFX_OBJECT(afxDrawContext)),
-    .mmu = NIL,
     .ctor = (void*)_SglDctxCtor,
     .dtor = (void*)_SglDctxDtor
 };

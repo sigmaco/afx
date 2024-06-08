@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -58,120 +58,70 @@ _AVX afxCullMode AfxGetPrimitiveCullingMode(afxPipeline pip, afxBool* frontFacin
     return cullMode;
 }
 
-_AVX afxNat AfxGetPipelineInputs(afxPipeline pip, afxNat first, afxNat cnt, afxPipelineInputLocation streams[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(pip->inCnt, first, cnt);
-    AfxAssert(streams);
-    AfxAssert(cnt);
-    afxNat hitCnt = 0;
-
-    afxPipelineInputLocation const* ins = pip->ins;
-    afxNat cnt2 = AfxMin(pip->inCnt, cnt);
-
-    for (afxNat i = 0; i < cnt2; i++)
-    {
-        AfxCopy2(1, sizeof(streams[0]), &ins[first + i], &streams[i]);
-        hitCnt++;
-    }
-    return hitCnt;
-}
-
-_AVX afxVertexInput AfxGetPipelineVertexInput(afxPipeline pip)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    afxVertexInput vin = pip->vin;
-    AfxAssertObjects(1, &vin, afxFcc_VIN);
-    return vin;
-}
-
-_AVX afxNat AfxCountPipelineInputs(afxPipeline pip)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return pip->inCnt;
-}
-
-_AVX afxBool AfxFindLinkedShader(afxPipeline pip, afxShaderStage stage, afxUri* shd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(afxShaderStage_TOTAL, stage, 1);
-    AfxAssert(shd);    
-
-    for (afxNat i = 0; i < pip->stageCnt; i++)
-    {
-        if (pip->stages[i].stage == stage)
-        {
-            if (shd)
-            {
-                AfxReplicateUri(shd, &pip->stages[i].shd.uri);
-            }
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-_AVX afxNat AfxGetLinkedShaders(afxPipeline pip, afxNat first, afxNat cnt, afxUri shd[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssert(cnt);
-    AfxAssert(shd);
-    AfxAssertRange(pip->stageCnt, first, cnt);
-    afxNat hitCnt = 0;
-
-    for (afxNat i = 0; i < AfxMin(pip->stageCnt, cnt); i++)
-    {
-        AfxReplicateUri(&shd[i], &pip->stages[first + i].shd.uri);
-        hitCnt++;
-    }
-    return hitCnt;
-}
-
-_AVX afxNat AfxCountLinkedShaders(afxPipeline pip)
+_AVX afxNat AfxCountShaderSlots(afxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return pip->stageCnt;
 }
 
-AVX afxNat AfxCountPipelineBindSchemas(afxPipeline pip)
+_AVX afxBool AfxGetPipelineLigature(afxPipeline pip, afxLigature* ligature)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    return pip->wiringCnt;
+    afxLigature liga = pip->liga;
+    AfxTryAssertObjects(1, &liga, afxFcc_BSCH);
+    *ligature = liga;
+    return !!liga;
 }
 
-AVX afxError AfxGetPipelineBindSchemas(afxPipeline pip, afxNat first, afxNat cnt, afxNat setIdx[], afxBindSchema bsch[])
+_AVX afxBool AfxGetPipelineVertexInput(afxPipeline pip, afxVertexInput* input)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    AfxAssertRange(pip->wiringCnt, first, cnt);
-    AfxAssert(setIdx);
-    AfxAssert(bsch);
-    //afxBindSchema pipr = AfxGetLinker(&pip->pipr);
-    //AfxAssertObject(pipr, afxFcc_RAZR);
+    afxVertexInput vin = pip->vin;
+    AfxTryAssertObjects(1, &vin, afxFcc_BSCH);
+    *input = vin;
+    return !!vin;
+}
 
-    for (afxNat i = 0; i < AfxMin(pip->wiringCnt, cnt); i++)
+_AVX afxBool AfxGetPipelineStage(afxPipeline pip, afxShaderStage stage, afxShader* shader)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &pip, afxFcc_PIP);
+    AfxAssertRange(afxShaderStage_TOTAL, stage, 1);
+    AfxAssert(shader);
+    afxBool rslt = FALSE;
+
+    switch (stage)
     {
-        afxNat schIdx = first + i;
-        setIdx[0] = pip->wiring[schIdx].set;
-        bsch[i] = pip->wiring[schIdx].legt;
+    case afxShaderStage_COMPUTE: *shader = pip->stageCnt ? pip->stages[0].shd : NIL; break;
+    case afxShaderStage_VERTEX: *shader = (pip->vtxShdIdx != AFX_INVALID_INDEX) ? pip->stages[pip->vtxShdIdx].shd : NIL; break;
+    case afxShaderStage_TESS_EVAL: *shader = (pip->hulShdIdx != AFX_INVALID_INDEX) ? pip->stages[pip->hulShdIdx].shd : NIL; break;
+    case afxShaderStage_TESS_CTRL: *shader = (pip->domShdIdx != AFX_INVALID_INDEX) ? pip->stages[pip->domShdIdx].shd : NIL; break;
+    case afxShaderStage_PRIMITIVE: *shader = (pip->geoShdIdx != AFX_INVALID_INDEX) ? pip->stages[pip->geoShdIdx].shd : NIL; break;
+    case afxShaderStage_FRAGMENT: *shader = (pip->fshdIdx != AFX_INVALID_INDEX) ? pip->stages[pip->fshdIdx].shd : NIL; break;
+    default: AfxThrowError(); break;
     }
-    return err;
+    return rslt;
 }
 
-_AVX afxRasterizer AfxGetLinkedRasterizer(afxPipeline pip)
+_AVX afxNat AfxGetLinkedShaders(afxPipeline pip, afxIndex first, afxNat cnt, afxShader shaders[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
-    afxRasterizer razr = pip->razr;
-    AfxAssertObjects(1, &razr, afxFcc_RAZR);
-    return razr;
+    AfxAssertRange(pip->stageCnt, first, cnt);
+    AfxAssert(cnt);
+    AfxAssert(shaders);
+    afxNat hitCnt = 0;
+    cnt = AfxMin(pip->stageCnt, cnt);
+
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        shaders[i] = pip->stages[i].shd;
+        hitCnt++;
+    }
+    return hitCnt;
 }
 
 _AVX afxError _AvxPipStdDtor(afxPipeline pip)
@@ -181,26 +131,19 @@ _AVX afxError _AvxPipStdDtor(afxPipeline pip)
 
     afxDrawContext dctx = AfxGetObjectProvider(pip);
 
-    AfxAssert(pip->stages);
-    AfxDeallocate(pip->stages);
-
-    if (pip->wiring)
+    if (pip->stages)
     {
-        for (afxNat i = 0; i < pip->wiringCnt; i++)
-            AfxReleaseObjects(1, &pip->wiring[i].legt);
+        for (afxNat i = pip->stageCnt; i-- > 0;)
+            AfxReleaseObjects(1, &pip->stages[i].shd);
 
-        AfxDeallocate(pip->wiring);
+        AfxDeallocate(pip->stages);
     }
 
-    if (pip->razr)
-    {
-        AfxReleaseObjects(1, &pip->razr);
-    }
+    if (pip->liga)
+        AfxReleaseObjects(1, &pip->liga);
 
     if (pip->vin)
-    {
         AfxReleaseObjects(1, &pip->vin);
-    }
 
     return err;
 }
@@ -211,30 +154,25 @@ _AVX afxError _AvxPipStdCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssertObjects(1, &pip, afxFcc_PIP);
 
     afxDrawContext dctx = cookie->udd[0];
-    afxPipelineConfig const *pipb = ((afxPipelineConfig const*)cookie->udd[1]) + cookie->no;
+    afxPipelineBlueprint const *pipb = ((afxPipelineBlueprint const*)cookie->udd[1]) + cookie->no;
+    afxBool additiveStage = !!cookie->udd[2];
     //AfxAssertType(pipb, afxFcc_PIPB);
 
     // GRAPHICS STATE SETTING
 
-    afxPipelinePrimitiveFlags primFlags = pipb->primFlags;
-    pip->primFlags = NIL;
+    pip->primTop = pipb->primTop;
+    pip->patchControlPoints = pipb->patchControlPoints;
+    pip->cullMode = pipb->cullMode;
+    pip->vpCnt = AfxClamp(pipb->vpCnt, 1, 8);
 
-    //if (primFlags)
-    {
-        if (primFlags & afxPipelinePrimitiveFlag_TOPOLOGY)
-            pip->primTop = pipb->primTop;
+    pip->vtxShdIdx = AFX_INVALID_INDEX;
+    pip->domShdIdx = AFX_INVALID_INDEX;
+    pip->hulShdIdx = AFX_INVALID_INDEX;
+    pip->geoShdIdx = AFX_INVALID_INDEX;
+    pip->fshdIdx = AFX_INVALID_INDEX;
 
-        if (primFlags & afxPipelinePrimitiveFlag_CTRL_POINTS)
-            pip->patchControlPoints = pipb->patchControlPoints;
-
-        if (primFlags & afxPipelinePrimitiveFlag_CULL_MODE)
-            pip->cullMode = pipb->cullMode;
-    }
-
-    if ((pip->razr = pipb->razr))
-        AfxReacquireObjects(1, &pip->razr);
-
-    // XFORM STATE SETTING
+    afxNat listedShaderCnt = 0;
+    afxShader listedShaders[10] = { 0 };
 
     pip->stages = NIL;
     afxNat stageCnt = pipb->shdCnt;
@@ -244,139 +182,158 @@ _AVX afxError _AvxPipStdCtor(afxPipeline pip, afxCookie const* cookie)
     if (!(pip->stages = AfxAllocate(stageCnt, sizeof(pip->stages[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
+        afxNat stageIdx = AFX_INVALID_INDEX;
         afxNat shaderCnt = 0;
-        afxShaderBlueprint shdb[5];
 
         for (afxNat i = 0; i < stageCnt; i++)
         {
-            AfxMakeUri128(&pip->stages[pip->stageCnt].shd, &pipb->shdUri[i]);
-            AfxMakeString8(&pip->stages[pip->stageCnt].fn, NIL/*&pipb->shdFn[i]*/);
-            pip->stages[pip->stageCnt].stage = pipb->shdStage[i];
+            afxBool replace = FALSE;
 
-            AfxShaderBlueprintBegin(&shdb[shaderCnt], afxShaderStage_VERTEX, NIL, NIL, 0, 0, 0);
-            AfxLoadGlScript(&shdb[shaderCnt], &pip->stages[pip->stageCnt].shd.uri);
+            switch (pipb->shdStage[i])
+            {
+            case afxShaderStage_VERTEX:
+            {
+                AfxAssert(pip->vtxShdIdx == AFX_INVALID_INDEX);
+                
+                if (pip->vtxShdIdx == AFX_INVALID_INDEX)
+                    pip->vtxShdIdx = (stageIdx = shaderCnt);
+                else
+                    stageIdx = pip->vtxShdIdx, replace = TRUE;
 
-            shaderCnt++;
-            pip->stageCnt++;
+                break;
+            }
+            case afxShaderStage_TESS_EVAL:
+            {
+                AfxAssert(pip->hulShdIdx == AFX_INVALID_INDEX);
+
+                if (pip->hulShdIdx == AFX_INVALID_INDEX)
+                    pip->hulShdIdx = (stageIdx = shaderCnt);
+                else
+                    stageIdx = pip->hulShdIdx, replace = TRUE;
+                    
+                break;
+            }
+            case afxShaderStage_TESS_CTRL:
+            {
+                AfxAssert(pip->domShdIdx == AFX_INVALID_INDEX);
+
+                if (pip->domShdIdx == AFX_INVALID_INDEX)
+                    pip->domShdIdx = (stageIdx = shaderCnt);                    
+                else
+                    stageIdx = pip->domShdIdx, replace = TRUE;
+                    
+                break;
+            }
+            case afxShaderStage_PRIMITIVE:
+            {
+                AfxAssert(pip->geoShdIdx == AFX_INVALID_INDEX);
+
+                if (pip->geoShdIdx == AFX_INVALID_INDEX)
+                    pip->geoShdIdx = (stageIdx = shaderCnt);
+                else
+                    stageIdx = pip->geoShdIdx, replace = TRUE;
+
+                break;
+            }
+            case afxShaderStage_FRAGMENT:
+            {
+                AfxAssert(pip->fshdIdx == AFX_INVALID_INDEX);
+
+                if (pip->fshdIdx == AFX_INVALID_INDEX)
+                    pip->fshdIdx = (stageIdx = shaderCnt);
+                else
+                    stageIdx = pip->fshdIdx, replace = TRUE;
+
+                break;
+            }
+            default: AfxThrowError(); break;
+            };
+
+            if (!err)
+            {
+                if (pipb->shd[i])
+                {
+                    AfxAssertObjects(1, &pipb->shd[i], afxFcc_SHD);
+                    AfxReacquireObjects(1, &pipb->shd[i]);
+
+                    if (replace)
+                        AfxReleaseObjects(1, &pip->stages[stageIdx].shd);
+
+                    pip->stages[stageIdx].shd = pipb->shd[i];
+                    pip->stages[stageIdx].stage = pipb->shdStage[i];
+                    listedShaders[listedShaderCnt] = pip->stages[stageIdx].shd;
+                    listedShaderCnt++;
+                    shaderCnt++;
+                    pip->stageCnt++;
+                }
+                else
+                {
+                    if (!AfxUriIsBlank(&pipb->shdUri[i]))
+                    {
+                        if (AfxCompileShadersFromFile(dctx, 1, &pipb->shdUri[i], &pip->stages[stageIdx].shd)) AfxThrowError();
+                        else
+                        {
+                            AfxAssertObjects(1, &pip->stages[stageIdx].shd, afxFcc_SHD);
+                            
+                            if (replace)
+                                AfxReleaseObjects(1, &pip->stages[stageIdx].shd);
+
+                            pip->stages[stageIdx].stage = pipb->shdStage[i];
+                            listedShaders[listedShaderCnt] = pip->stages[stageIdx].shd;
+                            listedShaderCnt++;
+                            shaderCnt++;
+                            pip->stageCnt++;
+                        }
+                    }
+                }
+
+                AfxMakeString8(&pip->stages[stageIdx].fn, NIL);
+
+                if (!AfxStringIsEmpty(&pipb->shdFn[i]))
+                {
+                    AfxAssertObjects(1, &pip->stages[stageIdx].shd, afxFcc_SHD);
+                    afxStringBase strb;
+
+                    if (!AfxGetShaderStringBase(pip->stages[stageIdx].shd, &strb)) AfxThrowError();
+                    else
+                    {
+                        if (!AfxCatalogStrings2(strb, 1, &pipb->shdFn[i], &pip->stages[stageIdx].fn.str.str))
+                            AfxThrowError();
+                    }
+                }
+            }
         }
 
         if (!err)
         {
             AfxAssert(pip->stageCnt == stageCnt);
 
-            //afxShaderBlueprint test;
-            AfxShaderBlueprintBegin(&shdb[shaderCnt], afxShaderStage_FRAGMENT, NIL, NIL, 0, 0, 0);
-            AfxLoadGlScript(&shdb[shaderCnt], &pip->razr->fragShd.uri);
-
-            AfxLogEcho("%s", &shdb[shaderCnt].codes.bytemap);
-
-            shaderCnt++;
-
-            afxPipelineRigBlueprint legb[/*_SGL_MAX_LEGO_PER_BIND*/4];
-
-            for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
-            {
-                AfxLegoBlueprintBegin(&legb[i], 1);
-
-                if (AfxLegoBlueprintAddShaderContributions(&legb[i], i, shaderCnt, shdb))
-                {
-                    AfxThrowError();
-                }
-
-                if (err)
-                {
-
-                    for (afxNat j = 0; j < i; j++)
-                    {
-                        AfxLegoBlueprintEnd(&legb[i], NIL);
-                    }
-                    break;
-                }
-            }
-
-            afxNat setCnt = 0;
-
-            for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
-                setCnt += AfxCountArrayElements(&legb[i].bindings) ? 1 : 0;
-
-            pip->wiringCnt = 0;
-
-            if (setCnt && !(pip->wiring = AfxAllocate(setCnt, sizeof(pip->wiring[0]), 0, AfxHere()))) AfxThrowError();
-            else
-            {
-                for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
-                {
-                    if (AfxCountArrayElements(&legb[i].bindings))
-                    {
-                        if (AfxAcquireBindSchemas(dctx, 1, &(pip->wiring[pip->wiringCnt].legt), &legb[i]))
-                        {
-                            AfxThrowError();
-                        }
-                        else
-                        {
-                            AfxAssertObjects(1, &(pip->wiring[pip->wiringCnt].legt), afxFcc_BSCH);
-                            pip->wiring[pip->wiringCnt].set = i;
-                            ++pip->wiringCnt;
-                        }
-                    }
-
-                    if (i >= setCnt)
-                        break;
-                }
-            }
-
-            for (afxNat i = 0; i < /*_SGL_MAX_LEGO_PER_BIND*/4; i++)
-            {
-                AfxLegoBlueprintEnd(&legb[i], NIL);
-            }
-
             if (!err)
             {
-                pip->inCnt = 0;
+                afxLigature liga;
+                afxLigatureConfig ligc = { 0 };
+                ligc.shaderCnt = listedShaderCnt;
+                ligc.shaders = listedShaders;
 
-                for (afxNat i = 0; i < stageCnt; i++)
+                if (AfxBuildLigatures(dctx, 1, &ligc, &liga)) AfxThrowError();
+                else
                 {
-                    if (afxShaderStage_VERTEX == shdb->stage)
-                    {
-                        for (afxNat j = 0; j < shdb->inOuts.cnt; j++)
-                        {
-                            afxShaderBlueprintInOut shdio = *(afxShaderBlueprintInOut*)AfxGetArrayUnit(&shdb->inOuts, j);
+                    pip->liga = liga;
 
-                            pip->ins[pip->inCnt].location = shdio.location;
-                            //pip->base.ins[pip->base.inCnt].binding = pip->base.ins[pip->base.inCnt].location;
-                            pip->ins[pip->inCnt].fmt = shdio.fmt;
-                            //pip->base.ins[pip->base.inCnt].offset = 0;
-                            pip->ins[pip->inCnt].stream = shdio.stream;
+                    if ((pip->vin = pipb->vin))
+                        AfxReacquireObjects(1, &pip->vin);
 
-
-                            pip->ins[pip->inCnt].stream = shdio.location > 2 ? 1 : 0; // DEBUG only
-
-                            pip->inCnt++;
-                        }
-                        break;
-                    }
+                    if (err && liga)
+                        AfxReleaseObjects(1, &liga);
                 }
-
-                if ((pip->vin = pipb->vin))
-                    AfxReacquireObjects(1, &pip->vin);
-            }
-
-            for (afxNat i = stageCnt; i-- > 0;)
-            {
-                AfxShaderBlueprintEnd(&shdb[i], 0, NIL);
-            }
-
-            if (err && pip->wiring)
-            {
-                for (afxNat i = 0; i < pip->wiringCnt; i++)
-                    AfxReleaseObjects(1, &pip->wiring[i].legt);
-
-                AfxDeallocate(pip->wiring);
             }
         }
 
-        if (err)
+        if (err && pip->stages)
         {
+            for (afxNat i = pip->stageCnt; i--> 0;)
+                AfxReleaseObjects(1, &pip->stages[i].shd);
+
             AfxAssert(pip->stages);
             AfxDeallocate(pip->stages);
         }
@@ -389,126 +346,49 @@ _AVX afxClassConfig const _AvxPipStdImplementation =
 {
     .fcc = afxFcc_PIP,
     .name = "Pipeline",
+    .desc = "Draw Device Execution Pipeline",
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxPipeline)),
-    .mmu = NIL,
     .ctor = (void*)_AvxPipStdCtor,
     .dtor = (void*)_AvxPipStdDtor
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_AVX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineConfig const config[], afxPipeline pipelines[])
+_AVX afxError AfxAssemblePipelines(afxDrawContext dctx, afxNat cnt, afxPipelineBlueprint const blueprints[], afxPipeline pipelines[])
 {
     afxError err = AFX_ERR_NONE;
 
     afxManager* cls = AfxGetPipelineClass(dctx);
     AfxAssertClass(cls, afxFcc_PIP);
 
-    if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dctx, (void*)config }))
+    if (AfxAcquireObjects(cls, cnt, (afxObject*)pipelines, (void const*[]) { dctx, (void*)blueprints }))
         AfxThrowError();
 
     return err;
 }
 
-_AVX afxPipeline AfxAssemblePipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri)
+_AVX afxPipeline AfxLoadPipelineFromXsh(afxDrawContext dctx, afxVertexInput vin, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
-
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxPipeline pip = NIL;
 
-    AfxAssert(uri);
-    AfxAssert(!AfxUriIsBlank(uri));
+    afxPipelineBlueprint pipb = { 0 };
+    pipb.cullMode = afxCullMode_BACK;
+    pipb.primTop = afxPrimTopology_TRI_LIST;
+    pipb.vpCnt = 1;
 
-    AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
-
-    afxUri fext;
-    AfxPickUriExtension(uri, FALSE, &fext);
-
-    if (AfxUriIsBlank(&fext)) AfxThrowError();
+    if (AfxParsePipelineFromXsh(&pipb, uri)) AfxThrowError();
     else
     {
-        afxUri fpath;
-        AfxPickUriPath(uri, &fpath);
+        pipb.vin = vin;
 
-        if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
-        {
-            afxXml xml;
-
-            if (AfxLoadXml(&xml, &fpath)) AfxThrowError();
-            else
-            {
-                //AfxAssertType(&xml, afxFcc_XML);
-                afxBool isQwadroXml = AfxTestXmlRoot(&xml, &AfxStaticString("Qwadro"));
-                AfxAssert(isQwadroXml);
-
-                afxString query;
-                AfxPickUriQueryToString(uri, TRUE, &query);
-
-                afxNat xmlElemIdx = 0;
-                afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
-                AfxAssert(xmlElemIdx != AFX_INVALID_INDEX);
-
-                if (foundCnt)
-                {
-                    afxPipelineConfig defConfig = { 0 };
-                    defConfig.cullMode = afxCullMode_BACK;
-                    defConfig.primTop = afxPrimTopology_TRI_LIST;
-                    afxPipelineConfig config = defConfig;
-
-                    if (AfxLoadPipelineConfigFromXml(&config, &defConfig, 0, &xml, xmlElemIdx)) AfxThrowError();
-                    else
-                    {
-#if 0
-                        afxString128 tmp;
-                        AfxMakeString128(&tmp);
-                        AfxCopyString(&tmp.str, AfxGetUriString(&fpath));
-
-                        if (!AfxUriIsBlank(&blueprint.uri.uri))
-                        {
-                            AfxConcatenateStringL(&tmp.str, "?", 1);
-                            AfxConcatenateString(&tmp.str, AfxGetUriString(&blueprint.uri.uri));
-                        }
-
-                        afxUri tmpUri;
-                        AfxUriFromString(&tmpUri, &tmp.str);
-                        AfxCopyUri(&blueprint.uri.uri, &tmpUri);
-#endif
-                        
-                        //if (AfxCompileShadersFromXsh(dctx, config.shdCnt, config.shdUri, config.shd)) AfxThrowError();
-                        //else
-                        {
-                            //AfxAssertObjects(config.shdCnt, &config.shd, afxFcc_SHD);
-
-                            if (!(config.razr = AfxLoadRasterizerFromXsh(dctx, &config.razrUri))) AfxThrowError();
-                            else
-                            {
-                                AfxAssertObjects(1, &config.razr, afxFcc_RAZR);
-
-                                config.vin = vin;
-
-                                if (AfxAssemblePipelines(dctx, 1, &config, &pip)) AfxThrowError();
-                                else
-                                {
-                                    AfxAssertObjects(1, &pip, afxFcc_PIP);
-                                }
-
-                                AfxReleaseObjects(1, &config.razr);
-                            }
-                            //AfxReleaseObjects(config.shdCnt, (void**)config.shd );
-                        }
-                    }
-                }
-
-                AfxCleanUpXml(&xml);
-            }
-        }
+        if (AfxAssemblePipelines(dctx, 1, &pipb, &pip)) AfxThrowError();
         else
         {
-            AfxLogError("Extension (%.*s) not supported.", AfxPushString(AfxGetUriString(&fext)));
-            AfxThrowError();
+            AfxAssertObjects(1, &pip, afxFcc_PIP);
         }
     }
-
     return pip;
 }

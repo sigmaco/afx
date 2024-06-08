@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -344,7 +344,7 @@ _AFXINL afxSize AfxGetStreamPosn(afxStream iob)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
     afxSize cur = iob->pimpl->tell(iob);
-    AfxAssert(cur == iob->idd.m.posn);
+    //AfxAssert(cur == iob->idd.m.posn);
     return cur;
 }
 
@@ -1284,32 +1284,4 @@ _AFX afxStream AfxOpenOutputStream(void* buf, afxNat bufCap)
         AfxThrowError();
 
     return out;
-}
-
-_AFX afxNat AfxInvokeStreams(afxNat first, afxNat cnt, afxBool(*f)(afxStream, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetStreamClass();
-    AfxAssertClass(cls, afxFcc_IOB);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxEnumerateStreams(afxNat first, afxNat cnt, afxStream streams[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(streams);
-    afxManager* cls = AfxGetStreamClass();
-    AfxAssertClass(cls, afxFcc_IOB);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)streams);
-}
-
-_AFX afxNat AfxCountStreams(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetStreamClass();
-    AfxAssertClass(cls, afxFcc_IOB);
-    return AfxCountObjects(cls);
 }

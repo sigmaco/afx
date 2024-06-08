@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -56,7 +56,7 @@ _AVX afxError _AvxVinStdDtor(afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
-    afxDrawContext dctx = AfxGetObjectProvider(vin);
+    //afxDrawContext dctx = AfxGetObjectProvider(vin);
     
     if (vin->streams)
         AfxDeallocate(vin->streams);

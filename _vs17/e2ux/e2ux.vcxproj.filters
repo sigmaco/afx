@@ -18,9 +18,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\ux\afxBrush.c">
-      <Filter>qwadro\ux</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\ux\afxWidget.c">
       <Filter>qwadro\ux</Filter>
     </ClCompile>
@@ -77,9 +74,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\ux\afxBrush.h">
-      <Filter>qwadro\ux</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\ux\afxUxDefs.h">
       <Filter>qwadro\ux</Filter>
     </ClInclude>

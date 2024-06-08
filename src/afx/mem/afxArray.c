@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -250,6 +250,8 @@ _AFXINL void* AfxInsertArrayUnits(afxArray *arr, afxNat cnt, afxNat *firstIdx, v
     }
     else
     {
+        AfxAssert(arr->cap >= arr->cnt + cnt);
+
         afxNat baseIdx = arr->cnt;
         arr->cnt += cnt;
 
@@ -293,6 +295,8 @@ _AFXINL afxError AfxAddArrayUnits(afxArray *arr, afxNat cnt, void const* src, af
     {
         *firstIdx = arr->cnt;
 
+        AfxAssert(arr->cap >= arr->cnt + cnt);
+
         afxByte* map = &arr->bytemap[arr->cnt * arr->unitSiz];
 
         if (!src)
@@ -326,6 +330,7 @@ _AFXINL afxError AfxUpdateArrayUnits(afxArray *arr, afxNat base, afxNat cnt, voi
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);
+    AfxAssertRange(arr->cnt, base, cnt);
     AfxAssert(srcStride);
 
     afxByte* map = &arr->bytemap[base * arr->unitSiz];
@@ -434,7 +439,8 @@ _AFXINL afxError AfxAppendArray(afxArray *arr, afxArray const *src)
     //AfxAssertType(src, afxFcc_ARR);
     afxNat idx;
 
-    if (AfxAddArrayUnits(arr, arr->cnt, arr->bytemap, arr->unitSiz, &idx))
+    if (AfxReserveArraySpace(arr, arr->cnt + src->cnt)) AfxThrowError();
+    else if (AfxAddArrayUnits(arr, src->cnt, src->bytemap, arr->unitSiz, &idx))
         AfxThrowError();
 
     return err;

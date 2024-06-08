@@ -10,7 +10,7 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
@@ -35,21 +35,12 @@
 
 //extern afxChain* _AfxGetSystemClassChain(void);
 
-_ASX afxBool ssysReady = FALSE;
+//_ASX afxBool ssysReady = FALSE;
 _ASX afxByte theSsysData[AFX_ALIGN(sizeof(afxObjectBase), 16) + AFX_ALIGN(sizeof(AFX_OBJECT(afxSoundSystem)), 16)] = { 0 };
 _ASX afxSoundSystem TheSoundSystem = (void*)&theSsysData;
 AFX_STATIC_ASSERT(sizeof(theSsysData) >= (sizeof(afxObjectBase) + sizeof(TheSoundSystem[0])), "");
 extern afxClassConfig const _AsxSoutMgrCfg;
 extern afxClassConfig const _AsxSinMgrCfg;
-
-_ASX afxBool AfxGetSoundSystem(afxSoundSystem* system)
-{
-    afxError err = AFX_ERR_NONE;
-    //AfxTryAssertObjects(1, &TheSoundSystem, afxFcc_SSYS);
-    AfxAssert(system);
-    *system = TheSoundSystem;
-    return ssysReady;
-}
 
 _ASX afxBool AfxSoundDeviceIsRunning(afxSoundDevice sdev)
 {
@@ -224,7 +215,7 @@ _ASX afxError _AsxSdevCtor(afxSoundDevice sdev, afxCookie const* cookie)
 
             // sctx must be after ddge
             tmpClsCfg = *info2.sctxClsCfg;
-            AfxEstablishManager(&sdev->contexts, NIL, classes, &tmpClsCfg); // require ddge, diob
+            AfxEstablishManager(&sdev->contexts, NIL, classes, &tmpClsCfg); // require ddge, cmdb
 
             if (info2.iddCtorCb(sdev)) AfxThrowError();
             else
@@ -363,164 +354,32 @@ _ASX afxError _AsxSsysDtor(afxSoundSystem ssys)
     return err;
 }
 
-_ASX afxManager* _AsxGetSsysMgr(void)
+_ASX afxClassConfig const _AsxSsysMgrCfg =
 {
-    //afxError err = AFX_ERR_NONE;
-    static afxManager ssysMgr = { 0 };
-    static afxBool ssysMgrReady = FALSE;
-    static afxClassConfig const ssysMgrCfg =
-    {
-        .fcc = afxFcc_SSYS,
-        .name = "SoundSystem",
-        .desc = "Unified Sound System Infrastructure",
-        .maxCnt = 1,
-        //.size = sizeof(AFX_OBJECT(afxSoundSystem)),
-        .ctor = (void*)_AsxSsysCtor,
-        .dtor = (void*)_AsxSsysDtor
-    };
+    .fcc = afxFcc_SSYS,
+    .name = "SoundSystem",
+    .desc = "Sound I/O System",
+    .unitsPerPage = 1,
+    .maxCnt = 1,
+    //.size = sizeof(AFX_OBJECT(afxSoundSystem)),
+    .ctor = (void*)_AsxSsysCtor,
+    .dtor = (void*)_AsxSsysDtor
+};
 
-    if (ssysMgr.fcc != afxFcc_CLS)
-    {
-        AfxEstablishManager(&ssysMgr, NIL, /*_AfxGetSystemClassChain()*/NIL, &ssysMgrCfg);
-        ssysMgrReady = TRUE;
-    }
-    return &ssysMgr;
-}
-
-#if 0
-_ASX afxError DoSdevService(afxSoundDevice sdev, )
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-
-    afxThread thr;
-    if (AfxGetThread(&thr))
-    {
-        err = dev->proc(dev, thr);
-    }
-    return err;
-}
-#endif
-
-_ASX afxResult _AsxSsysctl(afxSystem sys, afxInt reqCode, ...)
+_ASX afxError AfxSystemIoctl(afxSystem sys, afxModule mdle, afxNat reqCode, void** udd)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sys, afxFcc_SYS);
-
-    switch (reqCode)
-    {
-    case 0:
-    {
-
-        //AfxInvokeSoundDevices(NIL, 0, AFX_N32_MAX, (void*)DoSdevService, sys->primeThr);
-        break;
-    }
-#if 0
-    case 2:
-    {
-        afxSoundSystem ssys;
-
-        if (!AfxGetSoundSystem(&ssys)) AfxThrowError();
-        else
-        {
-            ssysReady = FALSE;
-
-            afxManager* mgr = _AfxGetSsysMgr();
-            AfxAssertClass(mgr, afxFcc_SSYS);
-
-            AfxAssert(TheSoundSystem == ssys);
-
-            if (_AfxDestructObjects(mgr, 1, (void**)&TheSoundSystem))
-                AfxThrowError();
-
-            AfxAssert(TheSoundSystem != ssys); // Attention! Dtor moves the object pointer to expose the object base.
-            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
-        }
-        break;
-    }
-    case 1:
-    {
-        afxSoundSystem ssys;
-
-        if (AfxGetSoundSystem(&ssys)) AfxThrowError();
-        else
-        {
-            AfxAssert(TheSoundSystem == ssys);
-            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
-
-            afxManager* mgr = _AfxGetSsysMgr();
-            AfxAssertClass(mgr, afxFcc_SSYS);
-
-            va_list va;
-            va_start(va, reqCode);
-
-            if (_AfxConstructObjects(mgr, 1, (void**)&TheSoundSystem, (void*[]) { sys, va_arg(va, afxManifest*), va_arg(va, afxSoundSystemConfig*) })) AfxThrowError();
-            else
-            {
-                AfxAssert(TheSoundSystem != ssys); // Attention! Ctor moves the object pointer to hide out the object base.
-                ssys = TheSoundSystem;
-                AfxAssertObjects(1, &ssys, afxFcc_SSYS);
-                ssysReady = TRUE;
-            }
-            va_end(va);
-        }
-        break;
-    }
-#endif
-    default:
-    {
-        AfxThrowError();
-        break;
-    }
-    }
-    return err;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-
-_ASX afxError AfxEntryPoint(afxModule mdle, afxNat reqCode, void* udd)
-{
-    afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &mdle, afxFcc_MDLE);
 
     switch (reqCode)
     {
-    case afxFcc_SYS:
+    case 2:
     {
-        afxSoundSystem ssys;
-
-        if (!AfxGetSoundSystem(&ssys))
-        {
-            AfxAssert(TheSoundSystem == ssys);
-            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
-
-            afxManager* mgr = _AsxGetSsysMgr();
-            AfxAssertClass(mgr, afxFcc_SSYS);
-
-            if (_AfxConstructObjects(mgr, 1, (void**)&TheSoundSystem, udd)) AfxThrowError();
-            else
-            {
-                AfxAssert(TheSoundSystem != ssys); // Attention! Ctor moves the object pointer to hide out the object base.
-                ssys = TheSoundSystem;
-                AfxAssertObjects(1, &ssys, afxFcc_SSYS);
-                ssysReady = TRUE;
-            }
-        }
-        else
-        {
-            AfxAssert(TheSoundSystem == ssys);
-            AfxAssertObjects(1, &ssys, afxFcc_SSYS);
-            ssysReady = FALSE;
-
-            afxManager* mgr = _AsxGetSsysMgr();
-            AfxAssertClass(mgr, afxFcc_SSYS);
-
-            if (_AfxDestructObjects(mgr, 1, (void**)&TheSoundSystem))
-                AfxThrowError();
-
-            AfxAssert(TheSoundSystem != ssys); // Attention! Dtor moves the object pointer to expose the object base.
-            AfxZero(TheSoundSystem, sizeof(afxObjectBase));
-        }
+        AfxAssert(udd);
+        udd[0] = (void*)&_AsxSsysMgrCfg;
+        udd[1] = TheSoundSystem;
+        break;
     }
     default: break;
     }

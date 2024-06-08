@@ -10,186 +10,16 @@
  *                  Q W A D R O   E X E C U T I O N   E C O S Y S T E M
  *
  *                                   Public Test Build
- *                       (c) 2017 SIGMA, Engitech, Scitech, Serpro
+ *                               (c) 2017 SIGMA FEDERATION
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _SGL_DBG_IGNORE_DEPTH_RANGE
+//#define _SGL_DBG_IGNORE_DEPTH_RANGE
 #define _SGL_DBG_IGNORE_PRIM_RESTART
 #define _SGL_DBG_IGNORE_DEPTH_CLAMP
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
 #include "qwadro/draw/pipe/afxDrawOps.h"
-
-_SGL void _DpuSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.cwFrontFacing = cmd->value;
-}
-
-_SGL void _DpuSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.cullMode = cmd->value;
-}
-
-_SGL void _DpuSetPrimitiveTopology(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.primTop = cmd->value;
-}
-
-_SGL void _DpuSetViewports(sglDpu* dpu, _sglCmdViewport const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxViewport const* pvp = i ? &cmd->vp_[i] : &cmd->vp0;
-        dpu->nextXformState.vps[first + i] = *pvp;
-        dpu->nextViewportUpdMask |= AFX_BIT_OFFSET(first + i);
-    }
-
-    dpu->nextViewportUpdCnt = AfxMax(dpu->nextViewportUpdCnt, cnt);
-
-    if (cmd->reset)
-        dpu->nextXformState.vpCnt = cnt;
-}
-
-_SGL void _DpuBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cmd)
-{
-    /*
-        The values taken from elements i of pBuffers and pOffsets replace the current state for the vertex input binding firstBinding + i, for i in[0, bindingCount).
-        The vertex input binding is updated to start at the offset indicated by pOffsets[i] from the start of the buffer pBuffers[i].
-        If pSizes is not NULL then pSizes[i] specifies the bound size of the vertex buffer starting from the corresponding elements of pBuffers[i] plus pOffsets[i].
-        All vertex input attributes that use each of these bindings will use these updated addresses in their address calculations for subsequent drawing commands.
-        If the nullDescriptor feature is enabled, elements of pBuffers can be VK_NULL_HANDLE, and can be used by the vertex shader.
-        If a vertex input attribute is bound to a vertex input binding that is VK_NULL_HANDLE, the values taken from memory are considered to be zero, and missing G, B, or A components are filled with(0, 0, 1).
-
-        This command also dynamically sets the byte strides between consecutive elements within buffer pBuffers[i] to the corresponding pStrides[i] value when drawing using shader objects, or when the graphics pipeline is created with VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE set in VkPipelineDynamicStateCreateInfo::pDynamicStates.Otherwise, strides are specified by the VkVertexInputBindingDescription::stride values used to create the currently active pipeline.
-
-        If drawing using shader objects or if the bound pipeline state object was also created with the VK_DYNAMIC_STATE_VERTEX_INPUT_EXT dynamic state enabled then vkCmdSetVertexInputEXT can be used instead of vkCmdBindVertexBuffers2 to set the stride.
-    */
-
-    afxError err = AFX_ERR_NONE;
-    glVmt const* gl = &dpu->gl;
-
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxBuffer buf;
-        afxNat32 offset;
-        afxNat32 range;
-        afxNat32 stride;
-
-        if (!i)
-        {
-            buf = cmd->source0.buf;
-            offset = cmd->source0.offset;
-            range = cmd->source0.range;
-            stride = cmd->source0.stride;
-        }
-        else
-        {
-            buf = cmd->source_[i].buf;
-            offset = cmd->source_[i].offset;
-            range = cmd->source_[i].range;
-            stride = cmd->source_[i].stride;
-        }
-        AfxAssert(!buf || stride);
-
-        afxNat bindingIdx = first + i;
-        AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, bindingIdx, 1);
-
-        dpu->nextVinBindings.sources[bindingIdx].buf = buf;
-        dpu->nextVinBindings.sources[bindingIdx].offset = offset;
-        dpu->nextVinBindings.sources[bindingIdx].range = range;
-        dpu->nextVinBindings.sources[bindingIdx].stride = stride;
-        dpu->nextVinBindingsMask |= AFX_BIT_OFFSET(bindingIdx);
-    }
-    dpu->nextVinBindingsCnt = AfxMax(dpu->nextVinBindingsCnt, cnt);
-}
-
-#if 0
-_SGL void _DpuResetVertexStreams(sglDpu* dpu, _sglCmdVertexStreams const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    glVmt const* gl = &dpu->gl;
-
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, 0, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        //afxNat streamIdx = i;
-
-        afxNat srcIdx = cmd->srcIdx[i];
-        AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
-        afxNat stride = cmd->stride[i];
-        afxBool instance = cmd->instance[i];
-
-        dpu->nextVertexInput.streams[srcIdx].srcIdx = srcIdx;
-        dpu->nextVertexInput.streams[srcIdx].stride = stride;
-        dpu->nextVertexInput.streams[srcIdx].instance = instance;
-        dpu->nextVtxInStreamUpdMask |= AFX_BIT_OFFSET(srcIdx);
-    }
-    dpu->nextVtxInStreamUpdCnt = AfxMax(dpu->nextVtxInStreamUpdCnt, cnt);
-}
-
-_SGL void _DpuResetVertexAttributes(sglDpu* dpu, _sglCmdVertexAttributes const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    glVmt const* gl = &dpu->gl;
-
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VERTEX_ATTRIBS, 0, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        afxNat location = cmd->location[i];
-        afxVertexFormat fmt = cmd->fmt[i];
-        afxNat srcIdx = cmd->srcIdx[i];
-        afxNat32 offset = cmd->offset[i];
-
-        afxNat attrIdx = location;
-        AfxAssertRange(SGL_MAX_VERTEX_ATTRIBS, attrIdx, 1);
-        dpu->nextVertexInput.attrs[attrIdx].location = location;
-        dpu->nextVertexInput.attrs[attrIdx].fmt = fmt;
-        dpu->nextVertexInput.attrs[attrIdx].srcIdx = srcIdx;
-        dpu->nextVertexInput.attrs[attrIdx].offset = offset;
-        dpu->nextVtxInAttribUpdMask |= AFX_BIT_OFFSET(attrIdx);
-    }
-    dpu->nextVtxInAttribUpdCnt = AfxMax(dpu->nextVtxInAttribUpdCnt, cnt);
-}
-#endif
-
-_SGL void _DpuBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextVinBindings.idxSrcBuf = cmd->buf;
-    dpu->nextVinBindings.idxSrcOff = cmd->offset;
-    dpu->nextVinBindings.idxSrcRange = cmd->range;
-    dpu->nextVinBindings.idxSrcSiz = cmd->stride;
-    dpu->nextVinBindings.iboUpdReq = TRUE;
-}
-
-_SGL void _DpuBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextVin = cmd->vin;
-    afxVertexInput vin = cmd->vin;
-
-    if (vin)
-    {
-
-    }
-}
 
 _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 {
@@ -268,11 +98,29 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 
     if (dpu->nextViewportUpdMask)
     {
-        afxNat cnt = dpu->nextViewportUpdCnt;
-        AfxAssert(cnt);
+        afxNat vpCnt = dpu->activePip->base.vpCnt;
 
-        if (cnt)
+        if (1 < vpCnt)
         {
+            AfxAssert(vpCnt);
+            GLint x = (GLint)(dpu->nextXformState.vps[0].offset[0]);
+            GLint y = (GLint)(dpu->nextXformState.vps[0].offset[1]);
+            GLsizei w = (GLsizei)(dpu->nextXformState.vps[0].extent[0]);
+            GLsizei h = (GLsizei)(dpu->nextXformState.vps[0].extent[1]);
+            gl->Viewport(x, y, w, h); _SglThrowErrorOccuried();
+
+#ifndef _SGL_DBG_IGNORE_DEPTH_RANGE
+            GLdouble n = dpu->nextXformState.vps[0].depth[0];
+            GLdouble f = dpu->nextXformState.vps[0].depth[1];
+            gl->DepthRange(n, f); _SglThrowErrorOccuried();
+#endif
+        }
+        else
+        {
+            afxNat cnt = dpu->nextViewportUpdCnt;
+            AfxAssert(cnt);
+            cnt = AfxClamp(cnt, 0, vpCnt);
+
             afxMask updMask = dpu->nextViewportUpdMask;
 
             for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
@@ -285,20 +133,11 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
                         AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
 
                         v[0][0] = dpu->nextXformState.vps[i].offset[0],
-                            v[0][1] = dpu->nextXformState.vps[i].offset[1],
-                            v[0][2] = dpu->nextXformState.vps[i].extent[0],
-                            v[0][3] = dpu->nextXformState.vps[i].extent[1];
+                        v[0][1] = dpu->nextXformState.vps[i].offset[1],
+                        v[0][2] = dpu->nextXformState.vps[i].extent[0],
+                        v[0][3] = dpu->nextXformState.vps[i].extent[1];
 
                         gl->ViewportArrayv(i, 1, &v[0][0]); _SglThrowErrorOccuried();
-                    }
-                    else
-                    {
-                        GLint x = (GLint)(dpu->nextXformState.vps[0].offset[0]);
-                        GLint y = (GLint)(dpu->nextXformState.vps[0].offset[1]);
-                        GLsizei w = (GLsizei)(dpu->nextXformState.vps[0].extent[0]);
-                        GLsizei h = (GLsizei)(dpu->nextXformState.vps[0].extent[1]);
-                        AfxAssert(i == 0);
-                        gl->Viewport(x, y, w, h); _SglThrowErrorOccuried();
                     }
 #ifndef _SGL_DBG_IGNORE_DEPTH_RANGE
                     if (gl->DepthRangeArrayv)
@@ -311,22 +150,16 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 
                         gl->DepthRangeArrayv(0, 1, &v[0][0]); _SglThrowErrorOccuried();
                     }
-                    else
-                    {
-                        GLdouble n = dpu->nextXformState.vps[0].depth[0];
-                        GLdouble f = dpu->nextXformState.vps[0].depth[1];
-
-                        AfxAssert(i == 0);
-                        gl->DepthRange(n, f); _SglThrowErrorOccuried();
-                    }
 #endif
                     dpu->activeXformState.vps[i] = dpu->nextXformState.vps[i];
                 }
+
+                if (--cnt == 0)
+                    break;
             }
         }
         dpu->nextViewportUpdMask = NIL;
     }
-
 
 #ifndef _SGL_DBG_IGNORE_PRIM_RESTART
 
@@ -406,221 +239,213 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 #endif
 }
 
-_SGL afxCmdId _SglEncodeCmdBindVertexInput(afxDrawStream diob, afxVertexInput vin)
+_SGL void _DpuSetViewports(sglDpu* dpu, afxNat first, afxNat cnt, afxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-    
-    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->vin = vin;
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdId _SglEncodeCmdBindVertexSources(afxDrawStream diob, afxNat baseSlot, afxNat slotCnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    afxNat extraVisCnt = slotCnt;
-
-    if (extraVisCnt)
-        --extraVisCnt;
-
-    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVisCnt * sizeof(cmd->source_[0])));
-    AfxAssert(cmd);
-    cmd->first = baseSlot;
-    cmd->cnt = slotCnt;
-
-    cmd->source0.buf = buf ? buf[0] : NIL;
-    cmd->source0.range = range ? range[0] : 0;
-    cmd->source0.offset = offset ? offset[0] : 0;
-    cmd->source0.stride = stride ? stride[0] : 0;
-
-    for (afxNat i = 0; i < extraVisCnt; i++)
-    {
-        if ((cmd->source_[i].buf = buf ? buf[1 + i] : NIL))
-        {
-            AfxAssertObjects(1, &cmd->source_[i].buf, afxFcc_BUF);
-        }
-
-        cmd->source_[i].offset = offset ? offset[1 + i] : 0;
-        cmd->source_[i].range = range ? range[1 + i] : 0;
-        cmd->source_[i].stride = stride ? stride[1 + i] : 0;
-        //cmd->spec[i].instance = FALSE;
-        //cmd->spec[i].instDivisor = 1;
-
-        if (cmd->source_[i].buf)
-        {
-            AfxAssertRange(AfxGetBufferCapacity(cmd->source_[i].buf), cmd->source_[i].offset, cmd->source_[i].range);
-        }
-    }
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindVertexSources) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-#if 0
-_SGL afxCmdId _SglEncodeCmdResetVertexStreams(afxDrawStream diob, afxNat cnt, afxNat const srcIdx[], afxNat32 const stride[], afxBool const instance[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdVertexStreams *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->cnt = cnt;
+    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        cmd->srcIdx[i] = srcIdx ? srcIdx[i] : 0;
-        cmd->stride[i] = stride ? stride[i] : 0;
-        cmd->instance[i] = instance ? instance[i] : FALSE;
+        afxNat vpIdx = first + i;
+        dpu->nextXformState.vps[vpIdx] = vp[i];
+        dpu->nextViewportUpdMask |= AFX_BIT(vpIdx);
     }
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetVertexStreams) / sizeof(void*), sizeof(cmd), &cmd->cmd);
+    dpu->nextViewportUpdCnt = AfxMax(dpu->nextViewportUpdCnt, cnt);
 }
 
-_SGL afxCmdId _SglEncodeCmdResetVertexAttributes(afxDrawStream diob, afxNat cnt, afxNat const location[], afxVertexFormat const fmt[], afxNat const srcIdx[], afxNat32 const offset[])
+_SGL void _DpuBindVertexSources(sglDpu* dpu, afxNat first, afxNat cnt, sglBufferInfo const src[])
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
+    /*
+        The values taken from elements i of pBuffers and pOffsets replace the current state for the vertex input binding firstBinding + i, for i in[0, bindingCount).
+        The vertex input binding is updated to start at the offset indicated by pOffsets[i] from the start of the buffer pBuffers[i].
+        If pSizes is not NULL then pSizes[i] specifies the bound size of the vertex buffer starting from the corresponding elements of pBuffers[i] plus pOffsets[i].
+        All vertex input attributes that use each of these bindings will use these updated addresses in their address calculations for subsequent drawing commands.
+        If the nullDescriptor feature is enabled, elements of pBuffers can be VK_NULL_HANDLE, and can be used by the vertex shader.
+        If a vertex input attribute is bound to a vertex input binding that is VK_NULL_HANDLE, the values taken from memory are considered to be zero, and missing G, B, or A components are filled with(0, 0, 1).
 
-    _sglCmdVertexAttributes *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->cnt = cnt;
+        This command also dynamically sets the byte strides between consecutive elements within buffer pBuffers[i] to the corresponding pStrides[i] value when drawing using shader objects, or when the graphics pipeline is created with VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE set in VkPipelineDynamicStateCreateInfo::pDynamicStates.Otherwise, strides are specified by the VkVertexInputBindingDescription::stride values used to create the currently active pipeline.
+
+        If drawing using shader objects or if the bound pipeline state object was also created with the VK_DYNAMIC_STATE_VERTEX_INPUT_EXT dynamic state enabled then vkCmdSetVertexInputEXT can be used instead of vkCmdBindVertexBuffers2 to set the stride.
+    */
+
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+
+    AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, first, cnt);
 
     for (afxNat i = 0; i < cnt; i++)
     {
-        cmd->location[i] = location ? location[i] : 0;
-        cmd->fmt[i] = fmt ? fmt[i] : NIL;
-        AfxAssert(cmd->fmt[i]);
-        cmd->srcIdx[i] = srcIdx ? srcIdx[i] : 0;
-        cmd->offset[i] = offset ? offset[i] : 0;
+        sglBufferInfo const* info = &src[i];
+        
+        afxBuffer buf = info->buf;
+        afxNat32 offset = info->offset;
+        afxNat32 range = info->range;
+        afxNat32 stride = info->stride;
+
+        afxNat bindingIdx = first + i;
+        AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, bindingIdx, 1);
+
+        dpu->nextVinBindings.sources[bindingIdx].buf = buf;
+        dpu->nextVinBindings.sources[bindingIdx].offset = AfxMin(offset, AfxGetBufferCapacity(buf) - 1);
+        dpu->nextVinBindings.sources[bindingIdx].range = !range && buf ? AfxGetBufferCapacity(buf) - offset : range;
+        dpu->nextVinBindings.sources[bindingIdx].stride = stride;
+        dpu->nextVinBindingsMask |= AFX_BIT(bindingIdx);
     }
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetVertexAttributes) / sizeof(void*), sizeof(cmd), &cmd->cmd);
-}
-#endif
-
-_SGL afxCmdId _SglEncodeCmdBindIndexSource(afxDrawStream diob, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-
-    cmd->offset = offset;
-    cmd->range = range;
-    cmd->stride = idxSiz;
-
-    if ((cmd->buf = buf))
-    {
-        AfxAssertObjects(1, &cmd->buf, afxFcc_BUF);
-        AfxAssertRange(AfxGetBufferCapacity(cmd->buf), cmd->offset, cmd->range);
-    }
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.BindIndexSource) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    dpu->nextVinBindingsCnt = AfxMax(dpu->nextVinBindingsCnt, cnt);
 }
 
-// Fixed-function vertex post-processing
-
-_SGL afxCmdId _SglEncodeCmdSetPrimitiveTopology(afxDrawStream diob, afxPrimTopology topology)
+_SGL void _DpuBindIndexSource(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 stride)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = topology;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    dpu->nextVinBindings.idxSrcBuf = buf;
+    dpu->nextVinBindings.idxSrcOff = offset;
+    dpu->nextVinBindings.idxSrcRange = range;
+    dpu->nextVinBindings.idxSrcSiz = stride;
+    dpu->nextVinBindings.iboUpdReq = TRUE;
 }
 
-_SGL afxCmdId _SglEncodeCmdSwitchFrontFace(afxDrawStream diob, afxBool cw)
+_SGL void _DpuBindVertexInput(sglDpu* dpu, afxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = cw;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    dpu->nextVin = vin;
 }
 
-_SGL afxCmdId _SglEncodeCmdSetCullMode(afxDrawStream diob, afxCullMode mode)
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// DECODING
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+_SGL void _DecodeCmdSetViewports(sglDpu* dpu, _sglCmdViewport const *cmd)
 {
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = mode;
-
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    _DpuSetViewports(dpu, cmd->first, cmd->cnt, &cmd->vp[0]);
 }
 
-// Viewports, synthesis areas and scissors.
-
-_SGL afxCmdId _SglEncodeCmdReadjustViewports(afxDrawStream diob, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
+_SGL afxCmdId _EncodeCmdAdjustViewports(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    afxNat extraVpCnt = cnt;
-
-    if (extraVpCnt)
-        --extraVpCnt;
-
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
+    _sglCmdViewport *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
     AfxAssert(cmd);
     cmd->first = first;
     cmd->cnt = cnt;
-    cmd->reset = FALSE;
-    cmd->vp0 = vp[0];
 
-    for (afxNat i = 0; i < extraVpCnt; i++)
-        cmd->vp_[i] = vp[1 + i];
+    for (afxNat i = 0; i < cnt; i++)
+        cmd->vp[i] = vp[i];
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ReadjustViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.AdjustViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
-_SGL afxCmdId _SglEncodeCmdResetViewports(afxDrawStream diob, afxNat32 cnt, afxViewport const vp[])
+_SGL void _DecodeCmdBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cmd)
+{
+    _DpuBindVertexSources(dpu, cmd->first, cmd->cnt, &cmd->info[0]);
+}
+
+_SGL afxCmdId _SglEncodeCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlot, afxNat cnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(diob->base.state == afxDrawStreamState_RECORDING);
-
-    afxNat extraVpCnt = cnt;
-
-    if (extraVpCnt)
-        --extraVpCnt;
-
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&diob->base.cmdArena, sizeof(*cmd) + (extraVpCnt * sizeof(cmd->vp_[0])));
+    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->info[0])));
     AfxAssert(cmd);
-    cmd->first = 0;
+    cmd->first = baseSlot;
     cmd->cnt = cnt;
-    cmd->reset = TRUE;
-    cmd->vp0 = vp[0];
 
-    for (afxNat i = 0; i < extraVpCnt; i++)
-        cmd->vp_[i] = vp[1 + i];
+    for (afxNat i = 0; i < cnt; i++)
+    {
+        sglBufferInfo* info = &cmd->info[i];
+        info->buf = buf ? buf[i] : NIL;
+        info->offset = offset ? offset[i] : 0;
+        info->range = range ? range[i] : 0;
+        info->stride = stride ? stride[i] : 0;
 
-    return _SglEncodeCmdCommand(diob, (offsetof(afxCmd, Transformation.ResetViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+    }
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindVertexSources) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSetPrimitiveTopology(sglDpu* dpu, _sglCmdNat const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextXformState.primTop = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSetPrimitiveTopology(avxCmdb cmdb, afxPrimTopology topology)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = topology;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextXformState.cwFrontFacing = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = cw;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd)
+{
+    afxError err = AFX_ERR_NONE;
+    dpu->nextXformState.cullMode = cmd->value;
+}
+
+_SGL afxCmdId _EncodeCmdSetCullMode(avxCmdb cmdb, afxCullMode mode)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->value = mode;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+
+_SGL void _DecodeCmdBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd)
+{
+    _DpuBindIndexSource(dpu, cmd->buf, cmd->offset, cmd->range, cmd->stride);
+}
+
+_SGL afxCmdId _EncodeCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->buf = buf;
+    cmd->offset = offset;
+    cmd->range = range;
+    cmd->stride = idxSiz;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindIndexSource) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
+}
+
+_SGL void _DecodeCmdBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd)
+{
+    _DpuBindVertexInput(dpu, cmd->vin);
+}
+
+_SGL afxCmdId _EncodeCmdBindVertexInput(avxCmdb cmdb, afxVertexInput vin)
+{
+    afxError err = AFX_ERR_NONE;
+    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
+    AfxAssert(cmd);
+    cmd->vin = vin;
+    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
 _SGL afxCmdTransformation const _SglEncodeCmdTransformationVmt =
 {
-    .BindVertexInput = _SglEncodeCmdBindVertexInput,
+    .BindVertexInput = _EncodeCmdBindVertexInput,
 
     .BindVertexSources = _SglEncodeCmdBindVertexSources,
-    //.ResetVertexStreams = _SglEncodeCmdResetVertexStreams,
-    //.ResetVertexAttributes = _SglEncodeCmdResetVertexAttributes,
-    .BindIndexSource = _SglEncodeCmdBindIndexSource,
-    .SetPrimitiveTopology = _SglEncodeCmdSetPrimitiveTopology,
+    .BindIndexSource = _EncodeCmdBindIndexSource,
+    .SetPrimitiveTopology = _EncodeCmdSetPrimitiveTopology,
 
-    .ResetViewports = _SglEncodeCmdResetViewports,
-    .ReadjustViewports = _SglEncodeCmdReadjustViewports,
+    .AdjustViewports = _EncodeCmdAdjustViewports,
 
-    .SwitchFrontFace = _SglEncodeCmdSwitchFrontFace,
-    .SetCullMode = _SglEncodeCmdSetCullMode
+    .SwitchFrontFace = _EncodeCmdSwitchFrontFace,
+    .SetCullMode = _EncodeCmdSetCullMode
 };
