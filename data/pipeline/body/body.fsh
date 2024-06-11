@@ -1,6 +1,6 @@
-#include <data/pipeline/stdEnv.inc>
-#include <data/pipeline/stdView.inc>
-#include <data/pipeline/stdMaterial.inc>
+#include <../data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdView.inc>
+#include <../data/pipeline/stdMaterial.inc>
 
 UNIFORM(0, 0, sampler2D, diffuse_sampler);
         

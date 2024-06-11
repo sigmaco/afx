@@ -1,0 +1,18 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemSetting up String BaseafxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Setting up ThreadSetting up Memory Management UnitSetting up ServiceSetting up CodecSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceAcquiring thread...  2600 "afxSystem_w32.c:481"Mounting storage unit... <.>('E:/qwadro/afx///'),5Mounting storage unit... <system>('E:/qwadro/afx//system/'),5Mounting storage unit... <system>('E:/qwadro/afx//system32/'),7Mounting storage unit... <system>('E:/qwadro/afx//system32d/'),7Loading module... <system/e2coree.dll>Memory page size: 4096Logical processor count: 2Establishing the Qwadro Sound System...Loading module... <e2sound.dll>Setting up SoundSystemSetting up SoundDevice[Device]Setting up SoundOutputSetting up SoundInputLoading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Setting up SoundBrigeSetting up SoundContextLoading module... <openal32.dll>Acquiring thread...  0 "salSdev_w32.c:448"Starting Thread Execution Unit 5664The audience is listeningEstablishing the Qwadro Draw System...Loading module... <e2draw.dll>Setting up DrawSystemSetting up CameraSetting up DrawDevice[Device]Setting up DrawOutputSetting up DrawInputLoading module... <targl4.dll>Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Setting up DrawBridgeSetting up DrawContextLoading module... <opengl32.dll>afxStorage.c:153
+afxStorage.c:215
+Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008Acquiring thread...  0 "sglDdev_w32.c:1076"Doing the shell start up...Loading module... <e2ux>afxStorage.c:153
+afxStorage.c:215
+Setting up Shell

@@ -2,15 +2,15 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <VertexShader>data/pipeline/skybox/skybox.vsh</VertexShader>
-        <Rasterizer>data/pipeline/skybox/skybox.xsh.xml</Rasterizer>
+        <VertexShader>../data/pipeline/skybox/skybox.vsh</VertexShader>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LEQUAL</DepthCompareOp>
-        <FragmentShader>data/pipeline/skybox/sampleOutRgbaCube.fsh</FragmentShader>
+        <Transformer>../data/pipeline/skybox/skybox.xsh.xml</Transformer>
+        <FragmentShader>../data/pipeline/skybox/sampleOutRgbaCube.fsh</FragmentShader>
     </Rasterizer>
     <DrawTechnique>
         <Pass>
@@ -20,8 +20,8 @@
             <DepthWriteEnabled></DepthWriteEnabled>
             <DepthCompareOp>LEQUAL</DepthCompareOp>
             <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-            <Shader>data/pipeline/skybox/skybox.vsh</Shader>
-            <Shader>data/pipeline/skybox/skybox.fsh</Shader>
+            <Shader>../data/pipeline/skybox/skybox.vsh</Shader>
+            <Shader>../data/pipeline/skybox/skybox.fsh</Shader>
         </Pass>
     </DrawTechnique>
 </Qwadro>

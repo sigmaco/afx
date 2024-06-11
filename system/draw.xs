@@ -1,15 +1,15 @@
 require "core" for Storage
 
 ffi class Camera {
-    ffi firm Acquire(din, x, y, z)
-    ffi firm Get(id)
+    ffi firm Acquire(din, fX, fY, fZ)
+    ffi firm Get(nId)
     
     ffi Reset()
     
-    ffi ApplyMotion(x, y, z)
-    ffi ApplyOrientation(x, y, z)
-    ffi ApplyOffset(x, y, z)
-    ffi ApplyDistance(lambda)
+    ffi ApplyMotion(fX, fY, fZ)
+    ffi ApplyOrientation(fX, fY, fZ)
+    ffi ApplyOffset(fX, fY, fZ)
+    ffi ApplyDistance(fLambda)
 }
 
 /*

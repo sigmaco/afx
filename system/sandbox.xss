@@ -1,4 +1,4 @@
-require "core" for Keyboard, Mouse
+require "ux" for Keyboard, Mouse
 require "draw" for Camera
 
 class Main {

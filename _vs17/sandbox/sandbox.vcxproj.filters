@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="demo_sandbox">
+      <UniqueIdentifier>{bfa6c214-c185-4c69-a508-90580971539e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\demos\sandbox\Sandbox.c">
+      <Filter>demo_sandbox</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

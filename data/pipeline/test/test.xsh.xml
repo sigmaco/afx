@@ -2,14 +2,13 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <VertexShader>data/pipeline/test/test.vsh</VertexShader>
-        <Rasterizer>data/pipeline/test/test.xsh.xml</Rasterizer>
+        <VertexShader>../data/pipeline/test/test.vsh</VertexShader>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthTestEnabled></DepthTestEnabled>
-        <DepthWriteEnabled></DepthWriteEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
-        <FragmentShader>data/pipeline/test/test.fsh</FragmentShader>
+        <Transformer>../data/pipeline/test/test.xsh.xml</Transformer>
+        <FragmentShader>../data/pipeline/test/test.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

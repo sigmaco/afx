@@ -1,4 +1,4 @@
-#include <data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdEnv.inc>
 
 OUT(0, vec4, sgl_rgba);
 

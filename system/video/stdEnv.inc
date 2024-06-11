@@ -26,3 +26,4 @@
 #define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
 #define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
 #define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_

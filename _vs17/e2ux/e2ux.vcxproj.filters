@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_nfo">
+      <UniqueIdentifier>{37004e6e-1459-46e6-b3e3-44ba7270d08a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro">
+      <UniqueIdentifier>{e6ecb287-47f6-4d13-be4f-5191defecfbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux">
+      <UniqueIdentifier>{4be41a32-e9be-4f31-b40f-df5202683b52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\_luna">
+      <UniqueIdentifier>{a8de9658-341e-4840-8fc4-58b74ae3bad4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\ux\xss">
+      <UniqueIdentifier>{31d9c80b-e9bf-4d76-ae49-5afc5aaacec6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\afx\ux\afxWidget.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\afxShell.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_compiler.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_core.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_debug.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_opt_meta.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_opt_random.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_primitive.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_utils.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_value.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\_luna\luna_vm.c">
+      <Filter>qwadro\ux\_luna</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\xss\xssDraw.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\xss\xssIo.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\xss\xssCamera.c">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\afxHid.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\afxGamepad.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\afxScript.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\ux\afxWindow.c">
+      <Filter>qwadro\ux</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxUxDefs.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxWidget.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>_nfo</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxShell.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxGamepad.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxHid.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\xss\xss.h">
+      <Filter>qwadro\ux\xss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxScript.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\ux\afxWindow.h">
+      <Filter>qwadro\ux</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2ux.rc">
+      <Filter>_nfo</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{2D93C9E6-A8BD-40E6-8FFE-CD15319B0241}</ProjectGuid>
+    <RootNamespace>e2draw</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>e2draw</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>llvm</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)d\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)..\system$(PlatformArchitecture)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link />
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link />
+    <Link>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <PreprocessorDefinitions>__e2draw__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <Link />
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\dep_\vgl\vgl.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxCamera.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxCmdb.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxColor.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawBridge.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawContext.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawDefs.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawInput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawOutput.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxDrawSystem.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\avxDevKit.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\afxPixel.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\imm\avxPaint.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxBuffer.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxRaster.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxShader.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxShaderBlueprint.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxTarga.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxTxd.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxTypography.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxVertexStream.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\io\afxXsh.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxLigature.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxBufferOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxCanvas.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawOperation.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxDrawTechnique.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxPipeline.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxQueryPool.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterizationOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterizer.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxRasterOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxSampler.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxTransformationOps.h" />
+    <ClInclude Include="..\..\inc\qwadro\draw\pipe\afxVertexInput.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\e2coree\e2coree.vcxproj">
+      <Project>{973a60ff-ea6c-4d62-a302-bf610cabab8c}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="e2draw.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\dep_\vgl\vgl.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxCamera.c" />
+    <ClCompile Include="..\..\src\afx\draw\avxCmdb.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxColor.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawBridge.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawContext.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawDefs.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawInput.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawOutput.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxDrawSystem.c" />
+    <ClCompile Include="..\..\src\afx\draw\afxPixel.c" />
+    <ClCompile Include="..\..\src\afx\draw\imm\avxPaint.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxBuffer.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxRaster.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxShader.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxTarga.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxTxd.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\draw\io\afxTypography.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxVertexStream.c" />
+    <ClCompile Include="..\..\src\afx\draw\io\afxXsh.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxLigature.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxBufferOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxCanvas.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxDrawOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxDrawOperation.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxDrawTechnique.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxPipeline.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxQueryOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxQueryPool.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxRasterizationOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxRasterizer.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxRasterOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxSampler.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxTransformationOps.c" />
+    <ClCompile Include="..\..\src\afx\draw\pipe\afxVertexInput.c" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

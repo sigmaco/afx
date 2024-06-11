@@ -1,6 +1,6 @@
-#include <data/pipeline/stdEnv.inc>
-#include <data/pipeline/stdView.inc>
-#include <data/pipeline/stdObject.inc>
+#include <../data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdView.inc>
+#include <../data/pipeline/stdObject.inc>
 
 IN(0, vec3, in_pos);
 IN(1, vec4, in_wgt);
