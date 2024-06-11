@@ -460,7 +460,7 @@ DLLEXPORT void CadbGetInfoMd5(void* data2, afxNat *typeCnt, afxNat* resCnt, afxU
         *resCnt = data->meshCnt + 1 + 1;
 
     if (name)
-        AfxPickUriPath(data->name, name);
+        AfxClipUriPath(name, data->name);
 
 }
 

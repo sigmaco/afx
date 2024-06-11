@@ -2,27 +2,27 @@
     <Pipeline id='rigid'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <VertexShader>data/pipeline/body/rigidBody.vsh</VertexShader>
+        <VertexShader>../data/pipeline/body/rigidBody.vsh</VertexShader>
     </Pipeline>
     <Pipeline id='skinned'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <VertexShader specialization='1'>data/pipeline/body/skinnedBody.vsh</VertexShader>
+        <VertexShader specialization='1'>../data/pipeline/body/skinnedBody.vsh</VertexShader>
     </Pipeline>
     <Rasterizer id='rigid'>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <FillMode>SOLID</FillMode>
         <DepthCompareOp>LESS</DepthCompareOp>
-        <Rasterizer>data/pipeline/body/body.xsh.xml?rigid</Rasterizer>
-        <FragmentShader>data/pipeline/body/body.fsh</FragmentShader>
+        <Rasterizer>../data/pipeline/body/body.xsh.xml?rigid</Rasterizer>
+        <FragmentShader>../data/pipeline/body/body.fsh</FragmentShader>
     </Rasterizer>
     <Rasterizer id='skinned'>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthWriteEnabled></DepthWriteEnabled>
         <FillMode>SOLID</FillMode>
         <DepthCompareOp>LESS</DepthCompareOp>
-        <Rasterizer>data/pipeline/body/body.xsh.xml?skinned</Rasterizer>
-        <FragmentShader>data/pipeline/body/body.fsh</FragmentShader>
+        <Rasterizer>../data/pipeline/body/body.xsh.xml?skinned</Rasterizer>
+        <FragmentShader>../data/pipeline/body/body.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

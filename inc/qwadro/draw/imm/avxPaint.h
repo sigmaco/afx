@@ -22,6 +22,24 @@
 
 AFX_DEFINE_HANDLE(avxVectorizer);
 
+AFX_DEFINE_STRUCT(avxImmVertex)
+{
+    afxV4d      posn; // in RW, W is the reciprocal of homogeneous W; known as RHW.
+    afxV2d      uv;
+    afxNat32    col; // emissive color
+};
+
+AFX_DEFINE_STRUCT(avxImm3dVertex)
+{
+    afxV3d      pos;
+    afxV3d      nrm;
+    afxV2d      uv;
+    afxNat32    col;
+};
+
+typedef afxIndex avxVertexIndex;
+
+
 AFX_OBJECT(avxVectorizer)
 {
     int a;
@@ -31,6 +49,14 @@ AFX_DEFINE_STRUCT(avxGraph)
 {
     int a;
 };
+
+AVX void        AvxCmdBeginImm2d(avxCmdb cmdb);
+AVX void        AvxCmdEndImm2d(avxCmdb cmdb);
+AVX void        AvxCmdTransformImmVertices(avxCmdb cmdb, afxM4d const m, afxNat cnt, avxImmVertex vertices[]);
+
+AVX void        AvxImmSetColor(avxCmdb cmdb, afxColor const inner, afxColor const outer);
+AVX void        AvxImmBindRasters();
+AVX void        AvxImmBindRasterizer(avxCmdb cmdb, afxRasterizer razr);
 
 /// The BeginPath() function opens a path bracket in the specified device context.
 AVX afxBool     AvxBeginPath(avxVectorizer vecr);

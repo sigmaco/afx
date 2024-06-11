@@ -23,6 +23,7 @@
 
 #define _AUX_UX_C
 #define _AUX_SHELL_C
+#define _AUX_SHELL_IMPL
 #define _AUX_WINDOW_C
 #define _AUX_WINDOW_IMPL
 #include "qwadro/ux/afxShell.h"

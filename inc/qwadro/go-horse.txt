@@ -3,7 +3,7 @@
 
 Uso de constante 4 ao invés de sizeof(pointer). Quando compilando em x64, tenha certeza que vai dar merda.
 
-Quando realizando operações aritméticas sem parênteses envolvendo adição e multiplicação, o multiplicador é executado antes do adicionador, independente da ordem.
+Quando realizando operações aritméticas sem parênteses envolvendo adição e multiplicação, o multiplicador é executado antes do adicionador, independente da ordem. Princípios de PENDAS. Nós usamos parênteses extras para ajudar a noção.
 
 Quando usando 'for', é possível que a variável de índice operada por 'for' não esteja sendo usada em favor do valor total.
 

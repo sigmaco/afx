@@ -60,28 +60,28 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     afxUri cubeUri[6];
 #if !0
 #if 0    
-    AfxMakeUri(&cubeUri[0], "art/skybox/day/right.tga", 0);
-    AfxMakeUri(&cubeUri[1], "art/skybox/day/left.tga", 0);
-    AfxMakeUri(&cubeUri[3], "art/skybox/day/top.tga", 0);
-    AfxMakeUri(&cubeUri[2], "art/skybox/day/bottom.tga", 0);
-    AfxMakeUri(&cubeUri[4], "art/skybox/day/front.tga", 0);
-    AfxMakeUri(&cubeUri[5], "art/skybox/day/back.tga", 0);
+    AfxMakeUri(&cubeUri[0], "../art/skybox/day/right.tga", 0);
+    AfxMakeUri(&cubeUri[1], "../art/skybox/day/left.tga", 0);
+    AfxMakeUri(&cubeUri[3], "../art/skybox/day/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], "../art/skybox/day/bottom.tga", 0);
+    AfxMakeUri(&cubeUri[4], "../art/skybox/day/front.tga", 0);
+    AfxMakeUri(&cubeUri[5], "../art/skybox/day/back.tga", 0);
 #else
-    AfxMakeUri(&cubeUri[0], "art/skybox/purple/right.tga", 0); // x+
-    AfxMakeUri(&cubeUri[1], "art/skybox/purple/left.tga", 0); // x-
-    AfxMakeUri(&cubeUri[3], "art/skybox/purple/top.tga", 0);
-    AfxMakeUri(&cubeUri[2], "art/skybox/purple/bottom.tga", 0); // y-
-    AfxMakeUri(&cubeUri[4], "art/skybox/purple/front.tga", 0);
-    AfxMakeUri(&cubeUri[5], "art/skybox/purple/back.tga", 0);
+    AfxMakeUri(&cubeUri[0], "../art/skybox/purple/right.tga", 0); // x+
+    AfxMakeUri(&cubeUri[1], "../art/skybox/purple/left.tga", 0); // x-
+    AfxMakeUri(&cubeUri[3], "../art/skybox/purple/top.tga", 0);
+    AfxMakeUri(&cubeUri[2], "../art/skybox/purple/bottom.tga", 0); // y-
+    AfxMakeUri(&cubeUri[4], "../art/skybox/purple/front.tga", 0);
+    AfxMakeUri(&cubeUri[5], "../art/skybox/purple/back.tga", 0);
 
 #endif
 #else
-    AfxMakeUri(&cubeUri[0], "art/skybox/envmap_interstellar/interstellar_rt.tga", 0); // x+
-    AfxMakeUri(&cubeUri[1], "art/skybox/envmap_interstellar/interstellar_lf.tga", 0); // x-
-    AfxMakeUri(&cubeUri[3], "art/skybox/envmap_interstellar/interstellar_up.tga", 0);
-    AfxMakeUri(&cubeUri[2], "art/skybox/envmap_interstellar/interstellar_dn.tga", 0); // y-
-    AfxMakeUri(&cubeUri[4], "art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
-    AfxMakeUri(&cubeUri[5], "art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
+    AfxMakeUri(&cubeUri[0], "../art/skybox/envmap_interstellar/interstellar_rt.tga", 0); // x+
+    AfxMakeUri(&cubeUri[1], "../art/skybox/envmap_interstellar/interstellar_lf.tga", 0); // x-
+    AfxMakeUri(&cubeUri[3], "../art/skybox/envmap_interstellar/interstellar_up.tga", 0);
+    AfxMakeUri(&cubeUri[2], "../art/skybox/envmap_interstellar/interstellar_dn.tga", 0); // y-
+    AfxMakeUri(&cubeUri[4], "../art/skybox/envmap_interstellar/interstellar_ft.tga", 0);
+    AfxMakeUri(&cubeUri[5], "../art/skybox/envmap_interstellar/interstellar_bk.tga", 0);
 #endif
 
     afxUri facesUri[6];
@@ -93,7 +93,7 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     AfxMakeUri(&facesUri[5], "back.tga", 0);
 
     afxUri cubeDir;
-    AfxMakeUri(&cubeDir, "art/skybox/purple", 0);
+    AfxMakeUri(&cubeDir, "../art/skybox/purple", 0);
 
     sky->cubemap = AfxAssembleCubemapRasters(dctx, afxRasterUsage_SAMPLING, afxRasterFlag_CUBEMAP, &cubeDir, facesUri);
     //AfxFlipRaster(sky->cubemap, FALSE, TRUE);
@@ -160,7 +160,7 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     AfxAssertObjects(1, &sky->cube, afxFcc_BUF);
 
     afxUri uri;
-    AfxMakeUri(&uri, "data/pipeline/skybox/skybox.xsh.xml", 0);
+    AfxMakeUri(&uri, "../data/pipeline/skybox/skybox.xsh.xml", 0);
     sky->skyRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
     sky->type = akxSkyType_BOX;
 
@@ -187,7 +187,7 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     afxSamplerConfig smpSpec = { 0 };
     smpSpec.magFilter = afxTexelFilter_LINEAR;
     smpSpec.minFilter = afxTexelFilter_LINEAR;
-    smpSpec.mipmapFilter = afxTexelFilter_LINEAR;
+    smpSpec.mipFilter = afxTexelFilter_LINEAR;
     smpSpec.uvw[0] = afxTexelAddress_CLAMP;
     smpSpec.uvw[1] = afxTexelAddress_CLAMP;
     smpSpec.uvw[2] = afxTexelAddress_CLAMP;

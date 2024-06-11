@@ -122,6 +122,9 @@
 #define SGL_MAX_COLOR_ATTACHMENTS 8
 #define _SGL_MAX_SURF_PER_CANV SGL_MAX_COLOR_ATTACHMENTS + 2
 
+#define FORCE_GL_GENERIC_FUNCS 1 // we also attempt to use specific functions as a medium of hinting for the driver.
+
+
 typedef enum sglUpdateFlags
 {
     SGL_UPD_FLAG_DEVICE_FLUSH   = AFX_BIT(0), // flush from host to device

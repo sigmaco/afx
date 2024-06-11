@@ -56,7 +56,7 @@ _SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, afxNat glUnit, afxSampler samp)
             bound = TRUE;
 
             GLenum magF = SglToGlTexelFilterMode(samp->base.cfg.base.magFilter);
-            GLenum minF = SglToGlTexelFilterModeMipmapped(samp->base.cfg.base.minFilter, samp->base.cfg.base.mipmapFilter);
+            GLenum minF = SglToGlTexelFilterModeMipmapped(samp->base.cfg.base.minFilter, samp->base.cfg.base.mipFilter);
             GLint wrapS = SglToGlTexWrapMode(samp->base.cfg.base.uvw[0]);
             GLint wrapT = SglToGlTexWrapMode(samp->base.cfg.base.uvw[1]);
             GLint wrapR = SglToGlTexWrapMode(samp->base.cfg.base.uvw[2]);

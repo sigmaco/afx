@@ -1,5 +1,5 @@
-#include <data/pipeline/stdEnv.inc>
-#include <data/pipeline/stdView.inc>
+#include <../data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdView.inc>
 
 IN(0, vec3, a_xyz);
 

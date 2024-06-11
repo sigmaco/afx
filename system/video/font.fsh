@@ -1,4 +1,4 @@
-#include <system/video/stdEnv.inc>
+#include <../system/video/stdEnv.inc>
 
 SAMPLING_UNIT(0, 1, sampler2D, atlas);
 

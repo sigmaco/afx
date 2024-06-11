@@ -217,10 +217,48 @@ _AFX void AfxStdAssertHookCallback(char const* exp, char const* file, int line)
     AfxDbgLogf(8, NIL, "\n %s:%i\n\t     %s", file, line, exp);
 }
 
-_AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
+_AFX afxError MountHostVolumes()
 {
     afxError err = AFX_ERR_NONE;
 
+    afxUri32 urib, urib2;
+    AfxMakeUri32(&urib, NIL);
+    AfxMakeUri32(&urib2, NIL);
+
+    char buf[256];
+    struct stat st;
+
+    for (int i = 0; i < 26; i++)
+    {
+        sprintf(buf, "%c:\\", 'A' + i);
+
+        if (0 == stat(buf, &st))
+        {
+            AfxFormatUri(&urib.uri, "//./%c/", 'a' + i);
+            AfxFormatUri(&urib2.uri, "%c:\\", 'A' + i);
+            
+            afxFileFlags ioFlags = NIL;
+
+            if ((st.st_mode & _S_IREAD) == _S_IREAD)
+                ioFlags |= afxFileFlag_R;
+
+            if ((st.st_mode & _S_IWRITE) == _S_IWRITE)
+                ioFlags |= afxFileFlag_W;
+
+            if ((st.st_mode & _S_IEXEC) == _S_IEXEC)
+                ioFlags |= afxFileFlag_X;
+
+            AfxMountStorageUnit(&urib.uri, &urib2.uri, ioFlags);
+        }
+    }
+
+    int a = 0;
+}
+
+_AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
+{
+    afxError err = AFX_ERR_NONE;
+    
     afxUri point, location;
     AfxMakeUri(&point, ".", 0);
     AfxMakeUri(&location, "", 0);
@@ -331,6 +369,7 @@ _AFX afxError _AfxSysMountDefaultFileStorages(afxSystem sys)
         }
     }
 #endif
+    MountHostVolumes();
     return err;
 }
 
@@ -381,7 +420,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
         AfxMakeString2048(&tbs, AfxGetUriString(&sys->pwd.uri));
         AfxConcatenateStringL(&tbs.str, "system.ini", 0);
 
-        AfxUriFromString(&uri, &tbs.str.str);
+        AfxMakeUriFromString(&uri, &tbs.str.str);
         AfxIniLoadFromFile(ini, &uri);
     }
     
@@ -492,7 +531,7 @@ _AFX afxError _AfxSysCtor(afxSystem sys, afxCookie const* cookie)
         {
             afxUri128 urib;
             AfxMakeUri128(&urib, NIL);
-            AfxFormatUri(&urib.uri, "system/e2coree.dll");
+            AfxFormatUri(&urib.uri, "e2coree.dll");
             afxModule e2coree;
 
             if (AfxLoadModule(&urib.uri, NIL, &e2coree)) AfxThrowError();

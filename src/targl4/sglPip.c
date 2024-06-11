@@ -160,13 +160,13 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
 {
     afxError err = AFX_ERR_NONE;
     afxUri fext;
-    AfxPickUriExtension(uri, FALSE, &fext);
+    AfxClipUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxPickUriPath(uri, &fpath);
+        AfxClipUriPath(&fpath, uri);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -178,7 +178,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
                 AfxAssertType(&xml, afxFcc_XML);
 
                 afxString query;
-                AfxPickUriQueryToString(uri, TRUE, &query);
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Shader"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);

@@ -434,7 +434,7 @@ _AFX afxError _AfxFileCtor(afxFile file, afxCookie const* cookie)
     AfxAssert(uri);
     
 
-    if (!AfxPickUriPath(uri, &path)) AfxThrowError();
+    if (!AfxClipUriPath(&path, uri)) AfxThrowError();
     else
     {
         afxUri2048 uri2;
@@ -530,7 +530,7 @@ _AFX afxStream AfxOpenFile(afxUri const* uri, afxIoFlags flags)
 
     afxUri path;
     AfxAssert(uri);
-    AfxPickUriPath(uri, &path);
+    AfxClipUriPath(&path, uri);
     AfxAssert(!AfxUriIsBlank(&path));
     afxUri2048 uri2;
     AfxMakeUri2048(&uri2, NIL);

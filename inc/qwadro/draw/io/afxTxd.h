@@ -28,14 +28,18 @@
 
 AFX_DEFINE_STRUCT(afxTexture)
 {
-    afxUri32    name;
+    afxUri          name;
+    afxTexelAddress uvw[3];
+    afxTexelFilter  minFlt;
+    afxSampler      samp;
+    afxRaster       ras;
 };
 
 AFX_DEFINE_HANDLE(afxTxd);
 
 #ifdef _AVX_DRAW_C
-#ifdef _AFX_TXD_C
-#ifndef _AFX_TXD_IMPL
+#ifdef _AVX_TXD_C
+#ifndef _AVX_TXD_IMPL
 AFX_OBJECT(afxTxd)
 #else
 struct afxBaseTxd
@@ -44,7 +48,7 @@ struct afxBaseTxd
     afxUri128   uri;
     afxNat      texCnt;
     afxString*  texName;
-    afxRaster*  texRas;
+    afxRaster*  rasters;
     afxColor*   texColor;
 };
 #endif//_AFX_TXD_C

@@ -50,7 +50,7 @@ DLLEXPORT void CadbGetInfoObj(void* data2, afxNat *typeCnt, afxNat* resCnt, afxU
         *resCnt = data->meshCnt + 1 + 1;
 
     if (name && data->name)
-        AfxPickUriPath(data->name, name);
+        AfxClipUriPath(name, data->name);
 
 }
 
@@ -111,7 +111,7 @@ DLLEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fla
         afxUri file2;
         afxUri2048 uri2;
         AfxMakeUri2048(&uri2, NIL);
-        AfxPickUriPath(&file[i], &file2);
+        AfxClipUriPath(&file2, &file[i]);
         AfxResolveUri(afxFileFlag_R, &file2, &uri2.uri);
 
         if (!_ldrWavefrontLoadScene(AfxGetUriStorage(&uri2.uri, 0), &g_wavefrontScene, NIL)) AfxThrowError();

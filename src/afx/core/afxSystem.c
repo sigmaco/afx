@@ -703,6 +703,25 @@ _AFX afxError AfxDoSystemBootUp(afxSystemConfig const *config)
                 if (!err && _AfxDoAuxStartUp(sys, &ini))
                     AfxThrowError();
 
+#if 0
+                // Test path
+
+                afxUri2048 uri, uri2;
+                AfxMakeUri2048(&uri2, NIL);
+                AfxMakeUri2048(&uri, NIL);
+                
+                //AfxCanonicalizePath(&uri.uri, TRUE);
+
+                AfxFormatUri(&uri.uri, "art://./actor/");
+                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+                AfxFormatUri(&uri.uri, "//./art/actor/");
+                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+                AfxFormatUri(&uri.uri, "system://./e2draw.dll");
+                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+                AfxFormatUri(&uri.uri, "//./system/e2draw.dll");                
+                AfxResolveUri(afxFileFlag_R, &uri.uri, &uri2.uri);
+#endif
+
                 if (!err)
                 {
 

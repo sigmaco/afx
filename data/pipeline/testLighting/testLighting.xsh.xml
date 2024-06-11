@@ -2,13 +2,13 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_LIST</PrimitiveTopology>
-        <VertexShader>data/pipeline/testLighting/testLightingBlinn.vsh</VertexShader>
+        <VertexShader>../data/pipeline/testLighting/testLightingBlinn.vsh</VertexShader>
     </Pipeline>
     <Rasterizer id='blinn'>
         <FillMode>SOLID</FillMode>
         <DepthTestEnabled></DepthTestEnabled>
         <DepthCompareOp>LESS</DepthCompareOp>
-        <Transformer>data/pipeline/testLighting/testLighting.xsh.xml</Transformer>
-        <FragmentShader>data/pipeline/testLighting/testLightingBlinn.fsh</FragmentShader>
+        <Transformer>../data/pipeline/testLighting/testLighting.xsh.xml</Transformer>
+        <FragmentShader>../data/pipeline/testLighting/testLightingBlinn.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

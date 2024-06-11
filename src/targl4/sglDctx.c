@@ -119,7 +119,7 @@ _SGL afxError _SglDctxCtor(afxDrawContext dctx, afxCookie const* cookie)
         afxSamplerConfig smpSpec = { 0 };
         smpSpec.magFilter = afxTexelFilter_POINT;
         smpSpec.minFilter = afxTexelFilter_POINT;
-        smpSpec.mipmapFilter = afxTexelFilter_POINT;
+        smpSpec.mipFilter = afxTexelFilter_POINT;
         smpSpec.uvw[0] = afxTexelAddress_REPEAT; // EDGE fucks this shit
         smpSpec.uvw[1] = afxTexelAddress_REPEAT; // EDGE fucks this shit
         smpSpec.uvw[2] = afxTexelAddress_REPEAT; // EDGE fucks this shit

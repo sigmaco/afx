@@ -23,9 +23,21 @@
 _AVX afxCmdId AvxCmdPackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIo const ops[])
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+
+    /// opCnt must be greater than 0.
     AfxAssert(opCnt);
     AfxAssert(ops);
 
@@ -45,18 +57,43 @@ _AVX afxCmdId AvxCmdPackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer buf
 _AVX afxCmdId AvxCmdPackRaster(avxCmdb cmdb, afxRaster ras, afxRasterIo const* op, afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    AfxAssert(op);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+
     return AvxCmdPackRasterRegions(cmdb, ras, buf, 1, op);
 }
 
 _AVX afxCmdId AvxCmdUnpackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer buf, afxNat opCnt, afxRasterIo const ops[])
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+
+    /// opCnt must be greater than 0.
     AfxAssert(opCnt);
     AfxAssert(ops);
 
@@ -76,20 +113,45 @@ _AVX afxCmdId AvxCmdUnpackRasterRegions(avxCmdb cmdb, afxRaster ras, afxBuffer b
 _AVX afxCmdId AvxCmdUnpackRaster(avxCmdb cmdb, afxRaster ras, afxRasterIo const* op, afxBuffer buf)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    AfxAssert(op);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+
     return AvxCmdUnpackRasterRegions(cmdb, ras, buf, 1, op);
 }
 
 _AVX afxCmdId AvxCmdCopyRasterRegions(avxCmdb cmdb, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopy const ops[])
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
-    AfxAssertObjects(1, &dst, afxFcc_RAS);
-    AfxAssertObjects(1, &src, afxFcc_RAS);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// opCnt must be greater than 0.
     AfxAssert(opCnt);
     AfxAssert(ops);
+
+    /// dst must be a valid afxRaster handle.
+    AfxAssertObjects(1, &dst, afxFcc_RAS);
+    /// src must be a valid afxRaster handle.
+    AfxAssertObjects(1, &src, afxFcc_RAS);
 
     for (afxNat i = 0; i < opCnt; i++)
     {
@@ -110,17 +172,41 @@ _AVX afxCmdId AvxCmdCopyRasterRegions(avxCmdb cmdb, afxRaster src, afxRaster dst
 _AVX afxCmdId AvxCmdCopyRaster(avxCmdb cmdb, afxRaster src, afxRasterCopy const* op, afxRaster dst)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// opCnt must be greater than 0.
+    AfxAssert(op);
+
+    /// dst must be a valid afxRaster handle.
     AfxAssertObjects(1, &dst, afxFcc_RAS);
+    /// src must be a valid afxRaster handle.
     AfxAssertObjects(1, &src, afxFcc_RAS);
+
     return AvxCmdCopyRasterRegions(cmdb, src, dst, 1, op);
 }
 
 AVX afxCmdId AvxCmdSubsampleRaster(avxCmdb cmdb, afxRaster ras, afxNat baseLod, afxNat lodCnt)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
     AfxAssertRange(AfxCountRasterLods(ras), baseLod, lodCnt);
     return cmdb->stdCmds->ras.mip(cmdb, ras, baseLod, lodCnt);
 }
@@ -128,8 +214,18 @@ AVX afxCmdId AvxCmdSubsampleRaster(avxCmdb cmdb, afxRaster ras, afxNat baseLod, 
 _AVX afxCmdId AvxCmdTransformRasterRegions(avxCmdb cmdb, afxRaster ras, afxM4d const m, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
     AfxAssert(m);
     AfxAssert(rgnCnt);
     AfxAssert(regions);
@@ -149,8 +245,18 @@ _AVX afxCmdId AvxCmdTransformRasterRegions(avxCmdb cmdb, afxRaster ras, afxM4d c
 _AVX afxCmdId AvxCmdTransformRaster(avxCmdb cmdb, afxRaster ras, afxM4d const m, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
     AfxAssert(m);
     AfxAssert(rgn);
     return AvxCmdTransformRasterRegions(cmdb, ras, m, 1, rgn);
@@ -159,8 +265,18 @@ _AVX afxCmdId AvxCmdTransformRaster(avxCmdb cmdb, afxRaster ras, afxM4d const m,
 _AVX afxCmdId AvxCmdSwizzleRasterRegions(avxCmdb cmdb, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxNat rgnCnt, afxRasterRegion const regions[])
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
     AfxAssert(a || b);
     AfxAssert(rgnCnt);
     AfxAssert(regions);
@@ -180,8 +296,18 @@ _AVX afxCmdId AvxCmdSwizzleRasterRegions(avxCmdb cmdb, afxRaster ras, afxColorSw
 _AVX afxCmdId AvxCmdSwizzleRaster(avxCmdb cmdb, afxRaster ras, afxColorSwizzle a, afxColorSwizzle b, afxRasterRegion const* rgn)
 {
     afxError err = AFX_ERR_NONE;
+    /// cmdb must be a valid avxCmdb handle.
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
+    /// cmdb must be in the recording state.
+    AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// ras must be a valid afxRaster handle.
     AfxAssertObjects(1, &ras, afxFcc_RAS);
+
     AfxAssert(a || b);
     AfxAssert(rgn);
     return AvxCmdSwizzleRasterRegions(cmdb, ras, a, b, 1, rgn);

@@ -411,7 +411,7 @@ _AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice
     afxResult rslt = FALSE;
 
     afxUri target;
-    AfxPickUriFile(manifest, &target);
+    AfxClipUriFile(&target, manifest);
 
     afxNat i = 0;
     afxDevice dev;
@@ -421,7 +421,8 @@ _AFX afxBool AfxFindDevice(afxDeviceType type, afxUri const* manifest, afxDevice
         AfxAssert(!type || (dev->type == type));
 
         afxUri tmp;
-        AfxPickUriFile(&dev->manifestUri.uri, &tmp);
+        AfxClipUriFile(&tmp, &dev->manifestUri.uri);
+
         if (0 == AfxCompareUri(&target, &tmp))
         {
             *device = dev;

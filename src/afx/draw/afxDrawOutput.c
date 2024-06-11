@@ -24,7 +24,9 @@
 #define _AVX_DRAW_DEVICE_C
 #define _AVX_DRAW_CONTEXT_C
 #define _AVX_DRAW_OUTPUT_C
+//#define _AVX_DRAW_OUTPUT_IMPL
 #include "qwadro/draw/afxDrawSystem.h"
+
 
 _AVX afxNat _AvxDoutBuffersAreLocked(afxDrawOutput dout)
 {

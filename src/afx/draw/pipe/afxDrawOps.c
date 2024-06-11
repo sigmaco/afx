@@ -74,6 +74,8 @@ _AVX afxCmdId AvxCmdBindPipeline(avxCmdb cmdb, afxNat segment, afxPipeline pip, 
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// pip must be a valid afxPipeline handle.
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -102,6 +104,8 @@ _AVX afxCmdId AvxCmdBindBuffers(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(8, baseIdx, cnt);
     return cmdb->stdCmds->BindBuffers(cmdb, set, baseIdx, cnt, buf, offset, range);
@@ -114,6 +118,8 @@ _AVX afxCmdId AvxCmdBindRasters(avxCmdb cmdb, afxNat set, afxNat baseIdx, afxNat
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(8, baseIdx, cnt);
     return cmdb->stdCmds->BindRasters(cmdb, set, baseIdx, cnt, smp, tex);
@@ -126,6 +132,8 @@ _AVX afxCmdId AvxCmdExecuteCommands(avxCmdb cmdb, afxNat cnt, avxCmdb aux[])
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     return cmdb->stdCmds->ExecuteCommands(cmdb, cnt, aux);
 }
@@ -139,6 +147,10 @@ _AVX afxCmdId AvxCmdDraw(avxCmdb cmdb, afxNat baseInstIdx, afxNat instCnt, afxNa
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssert(vtxCnt);
     //AfxAssert(instCnt);
@@ -152,8 +164,14 @@ _AVX afxCmdId AvxCmdDrawIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, a
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+
     AfxAssert(drawCnt);
     AfxAssert(stride);
     return cmdb->stdCmds->DrawIndirect(cmdb, buf, offset, drawCnt, stride);
@@ -166,9 +184,16 @@ _AVX afxCmdId AvxCmdDrawIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat32 offs
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    /// cntBuf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &cntBuf, afxFcc_BUF);
+
     AfxAssert(cntBuf);
     AfxAssert(maxDrawCnt);
     AfxAssert(stride);
@@ -182,6 +207,10 @@ _AVX afxCmdId AvxCmdDrawIndexed(avxCmdb cmdb, afxNat vtxOff, afxNat baseInstIdx,
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssert(idxCnt);
     //AfxAssert(instCnt);
@@ -195,6 +224,13 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirect(avxCmdb cmdb, afxBuffer buf, afxNat32 of
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
+    /// buf must be a valid afxBuffer handle.
+    AfxAssertObjects(1, &buf, afxFcc_BUF);
 
     AfxAssert(drawCnt);
     AfxAssert(stride);
@@ -208,9 +244,16 @@ _AVX afxCmdId AvxCmdDrawIndexedIndirectCount(avxCmdb cmdb, afxBuffer buf, afxNat
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called inside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
+    /// buf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &buf, afxFcc_BUF);
+    /// cntBuf must be a valid afxBuffer handle.
     AfxAssertObjects(1, &cntBuf, afxFcc_BUF);
+
     AfxAssert(maxDrawCnt);
     AfxAssert(stride);
     return cmdb->stdCmds->DrawIndexedIndirectCount(cmdb, buf, offset, cntBuf, cntBufOff, maxDrawCnt, stride);

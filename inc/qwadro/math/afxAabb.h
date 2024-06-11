@@ -42,14 +42,14 @@ AFX_DEFINE_STRUCT(afxAabb)
 
 AFXINL void         AfxResetAabb(afxAabb bb); // make identity
 
+AFXINL void         AfxCopyAabb(afxAabb bb, afxAabb const in);
+
 /// Automaticallly constructs an AABB from a list of vertex positions only.
 AFXINL void         AfxRecomputeAabb(afxAabb bb, afxNat cnt, afxV3d const points[]);
 
-AFXINL void         AfxCopyAabb(afxAabb bb, afxAabb const in);
-
 /// Returns the centre point of this AABB and the distance to each side of the box.
-AFXINL void         AfxGetAabbExtents(afxAabb const bb, afxV3d extent);
 AFXINL void         AfxGetAabbCentre(afxAabb const bb, afxV4d centre);
+AFXINL void         AfxGetAabbExtents(afxAabb const bb, afxV3d extent);
 
 AFXINL void         AfxExtractAabbCorner(afxAabb const bb, afxNat index, afxV4d corner);
 

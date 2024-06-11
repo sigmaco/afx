@@ -141,7 +141,7 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
 
                 if (!buf)
                 {
-                    gl->BindVertexBuffer(streamIdx, 0, 0, 0); _SglThrowErrorOccuried();
+                    gl->BindVertexBuffer(streamIdx, 0, 0, 16); _SglThrowErrorOccuried();
                 }
                 else
                 {

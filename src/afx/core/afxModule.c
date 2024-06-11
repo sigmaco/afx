@@ -275,15 +275,15 @@ _AFX afxError _AfxMdleCtor(afxModule mdle, afxCookie const* cookie)
     afxResult loaded = FALSE;
     
     afxUri128 absUri;
-    AfxMakeUri128(&absUri, NIL);
+    AfxMakeUri128(&absUri, uri);
 
-    AfxResolveUri(afxFileFlag_R, uri, &absUri.uri);
+    //AfxResolveUri(afxFileFlag_R, uri, &absUri.uri);
 
     //afxString1024 str;
     //AfxString1024(&str, 0, 0);
     afxUri path;
     //AfxCopyString(AfxPickUriPath(&absUri, &tmp), &str.str);
-    AfxPickUriPath(&absUri.uri, &path);
+    AfxClipUriPath(&path, &absUri.uri);
     afxChar const *pathStr = AfxGetUriData(&path, 0);
 
     HMODULE osHandle;// = GetModuleHandleA(AfxGetStringData(pathStr, 0));
@@ -425,7 +425,7 @@ _AFX afxBool AfxFindModule(afxUri const *uri, afxModule* mdle)
 
         if (uri->fext)
         {
-            AfxPickUriFile(&mdle2->path.uri, &exeFile);
+            AfxClipUriFile(&exeFile, &mdle2->path.uri);
 
             if (0 == AfxCompareUri(&exeFile, uri))
             {
@@ -435,7 +435,7 @@ _AFX afxBool AfxFindModule(afxUri const *uri, afxModule* mdle)
         }
         else
         {
-            AfxClipUriObject(&exeFile, &mdle2->path.uri);
+            AfxClipUriTarget(&exeFile, &mdle2->path.uri);
 
             if (0 == AfxCompareUri(&exeFile, uri))
             {

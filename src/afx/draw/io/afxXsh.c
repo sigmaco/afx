@@ -224,7 +224,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
                 if (0 == AfxCompareString(name, &AfxStaticString("uri")))
                 {
                     afxUri uri;
-                    AfxUriFromString(&uri, content);
+                    AfxMakeUriFromString(&uri, content);
 
                     if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                         AfxThrowError();
@@ -238,7 +238,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri uri;
-                AfxUriFromString(&uri, &content);
+                AfxMakeUriFromString(&uri, &content);
 
                 if (AfxShaderBlueprintAddCodeFromResource(blueprint, &uri))
                     AfxThrowError();
@@ -586,7 +586,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->xfmrPipUri);
@@ -602,7 +602,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
                 
                 AfxResetUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt]);
@@ -763,7 +763,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -821,7 +821,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -839,7 +839,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -857,7 +857,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
             if (!AfxStringIsEmpty(&content))
             {
                 afxUri tempUri;
-                AfxUriFromString(&tempUri, &content);
+                AfxMakeUriFromString(&tempUri, &content);
                 AfxLogEcho("%.*s", AfxPushString(AfxGetUriString(&tempUri)));
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
@@ -892,13 +892,13 @@ _AVX afxError AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* 
     AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxPickUriExtension(uri, FALSE, &fext);
+    AfxClipUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxPickUriPath(uri, &fpath);
+        AfxClipUriPath(&fpath, uri);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -912,7 +912,7 @@ _AVX afxError AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* 
                 AfxAssert(isQwadroXml);
 
                 afxString query;
-                AfxPickUriQueryToString(uri, TRUE, &query);
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Pipeline"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
@@ -935,7 +935,7 @@ _AVX afxError AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* 
                         }
 
                         afxUri tmpUri;
-                        AfxUriFromString(&tmpUri, &tmp.str);
+                        AfxMakeUriFromString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
 
@@ -987,7 +987,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
             if (0 == AfxCompareString(name, &g_str_id))
             {
                 afxUri tmpUri;
-                AfxUriFromString(&tmpUri, content);
+                AfxMakeUriFromString(&tmpUri, content);
                 AfxDrawOperationBlueprintRename(blueprint, &tmpUri);
             }
             else
@@ -1082,7 +1082,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                             else if (0 == AfxCompareString(name, &g_str_uri))
                                             {
                                                 afxUri tempUri;
-                                                AfxUriFromString(&tempUri, content);
+                                                AfxMakeUriFromString(&tempUri, content);
 
                                                 if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                     AfxThrowError();
@@ -1099,7 +1099,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                         if (content && !AfxStringIsEmpty(content))
                                         {
                                             afxUri tempUri;
-                                            AfxUriFromString(&tempUri, content);
+                                            AfxMakeUriFromString(&tempUri, content);
 
                                             if (AfxDrawOperationBlueprintAddShaders(blueprint, tecIdx, passIdx, 1, &tempUri))
                                                 AfxThrowError();

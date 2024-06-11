@@ -97,6 +97,9 @@ struct afxBaseCmdBuffer
     afxArena            cmdArena; /// owned by dctx data for specific port
     afxBool             disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
 
+    afxBool             inRenderPass;
+    afxBool             inVideoCoding;
+
     afxCmd const*       stdCmds;
 };
 #endif//_AVX_CMD_BUFFER_C

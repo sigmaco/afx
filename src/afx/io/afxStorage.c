@@ -16,6 +16,9 @@
 
 // This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
+#define _CRT_SECURE_NO_WARNINGS 1
+#define WIN32_LEAN_AND_MEAN 1
+#include <Windows.h>
 #include <sys/stat.h>
 #include <stdio.h>
 
@@ -109,9 +112,9 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
         else
         {
             afxUri path, dir, file;
-            AfxPickUriPath(&in[i], &path);
-            AfxPickUriDirectory(&in[i], &dir);
-            AfxPickUriFile(&in[i], &file);
+            AfxClipUriPath(&path, &in[i]);
+            AfxClipUriDirectory(&dir, &in[i]);
+            AfxClipUriFile(&file, &in[i]);
             afxString const *pathStr = AfxGetUriString(&path);
             afxString const *dirStr = AfxGetUriString(&dir);
             afxString const *fileStr = AfxGetUriString(&file);
@@ -121,12 +124,16 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
             afxChar const *pointStart = srcData;
 
             afxChar const *pointEnd = AfxStrchr(pointStart, '/');
+            afxChar const *pointEnd2 = AfxStrchr(pointStart, '\\');
+
+            if (pointEnd > pointEnd2 && pointEnd2)
+                pointEnd = pointEnd2;
 
             afxString point;
             AfxMakeString(&point, pointStart, pointEnd ? pointEnd - pointStart : AfxGetStringLength(pathStr));
             afxString const *pointStr = &point;
 
-            if (pointEnd && *pointEnd == '/')
+            if (pointEnd && (*pointEnd == '/' || *pointEnd == '\\'))
                 pointEnd++; // skip bar
 
             afxNat pointEndRange = pointEnd ? AfxGetStringLength(pathStr) - (pointEnd - pointStart) : AfxGetStringLength(pathStr);
@@ -150,7 +157,8 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
                 AfxFormatUri(&out[i], "%.*s", AfxGetStringLength(pathStr), AfxGetStringData(pathStr, 0));
                 AfxCanonicalizePath(&out[i], AFX_OS_WIN);
 
-                if (stat(dstData, &(st))) AfxThrowError();
+                if (stat(dstData, &(st)))
+                    AfxThrowError();
                 else
                 {
                     if (!((st.st_mode & flagsToTest) == flagsToTest))
@@ -163,7 +171,7 @@ _AFX afxError AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri 
             else
             {
                 afxUri uri3;
-                AfxUriFromString(&uri3, &point);
+                AfxMakeUriFromString(&uri3, &point);
                 afxStorage fsys;
                 
                 if ((fsys = AfxFindStorage(&uri3)))
@@ -217,6 +225,38 @@ _AFX afxError AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *
     return err;
 }
 
+_AFX afxError AfxFindFile(afxUri const* name, afxResult(*callback)(afxUri const*, void*), void* udd)
+{
+    HANDLE fh;
+    WIN32_FIND_DATAA wfd;
+    afxUri2048 pathBuf;
+    AfxMakeUri2048(&pathBuf, NIL);
+    afxUri fileMask;
+    AfxMakeUri(&fileMask, "system/*.inf", 0);
+    AfxResolveUri(afxFileFlag_RX, &fileMask, &pathBuf.uri);
+    /*
+    "art://./actor/";
+    "//./art/actor/";
+    "system://./e2draw.dll";
+    "//./system/e2draw.dll";
+    */
+    afxDeviceType devType = afxDeviceType_DRAW;
+
+    if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
+    {
+        do
+        {
+            afxUri found;
+            AfxMakeUri(&found, wfd.cFileName, 0);
+
+            if (callback(&found, udd))
+                break;
+
+        } while (FindNextFileA(fh, &wfd));
+        FindClose(fh);
+    }
+}
+
 _AFX afxNat AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags)
 {
     afxError err = AFX_ERR_NONE;
@@ -248,7 +288,7 @@ _AFX afxError _DismountStorageUnit(afxStorage fsys, afxStorageUnit* fsto)
     afxError err = AFX_ERR_NONE;
     AfxAssert(fsto);
 
-    //AfxLogEcho("Dismounting storage unit #u... <%.*s>('%.*s'),%x", AfxGetObjectId(fsys), 2,"  "/*AfxPushString(AfxGetUriString(&fsys->point.uri))*/, 2, "  "/*AfxPushString(AfxGetUriString(&fsto->rootPath))*/, fsto->flags);
+    AfxLogEcho("Dismounting... <%.*s>('%.*s'),%x @u", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&fsto->rootPath)), fsto->flags, AfxGetObjectId(fsys));
 
     AfxPopLinkage(&fsto->fsys);
 
@@ -273,10 +313,10 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 
     if (AfxPathIsRelative(endpoint))
     {
-        //AfxPickUriPath(&location2, &endpoint);
+        //AfxClipUriPath(&endpoint, &location2);
         afxUri archiveNameExtUri;
 
-        if (AfxPickUriExtension(endpoint, FALSE, &archiveNameExtUri))
+        if (AfxClipUriExtension(&archiveNameExtUri, endpoint, FALSE))
         {
             fileFlags |= afxFileFlag_D;
 
@@ -310,12 +350,14 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
     }
     else
     {
-        AfxCanonicalizePath(&endpoint2.uri, AFX_OS_WIN);
+        AfxMakeUri2048(&endpoint2, endpoint);
+        //AfxCanonicalizePath(&endpoint2.uri, AFX_OS_WIN);
 
         afxChar const *pathRaw = AfxGetUriData(&endpoint2.uri, 0);
         struct stat st;
 
-        if (stat(pathRaw, &(st))) AfxThrowError();
+        if (stat(pathRaw, &(st)))
+            AfxThrowError();
         else
         {
             unsigned short flagsToTest = NIL;
@@ -347,7 +389,7 @@ _AFX afxError _MountStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFile
 
     if (!err)
     {
-        AfxLogEcho("Mounting storage unit... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
+        AfxLogEcho("Mounting... <%.*s>('%.*s'),%x", AfxPushString(AfxGetUriString(&fsys->point.uri)), AfxPushString(AfxGetUriString(&endpoint2.uri)), fileFlags);
 
         afxStorageUnit* fsto = AfxAllocate(1, sizeof(*fsto), 0, AfxHere());
 
@@ -441,7 +483,7 @@ _AFX afxError AfxMountStorageUnit(afxUri const* point, afxUri const* endpoint, a
     if (point->dir)
         AfxClipUriDirectory(&point2, point);
     else
-        AfxClipUriObject(&point2, point);
+        AfxClipUriTarget(&point2, point);
 
     if (!(fsys = AfxFindStorage(&point2)))
     {

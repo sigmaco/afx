@@ -649,21 +649,32 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
             afxMask updMask = dpu->nextScissorUpdMask;
 
+            GLint v[SGL_MAX_VIEWPORTS][4];
+            AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
+
+#if FORCE_GL_GENERIC_FUNCS
+            for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
+            {
+                v[i][0] = dpu->nextRasterState.scisRects[i].offset[0];
+                v[i][1] = dpu->nextRasterState.scisRects[i].offset[1];
+                v[i][2] = dpu->nextRasterState.scisRects[i].extent[0];
+                v[i][3] = dpu->nextRasterState.scisRects[i].extent[1];
+            }
+            gl->ScissorArrayv(0, cnt, &v[0][0]); _SglThrowErrorOccuried();
+#else
             for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
             {
                 AfxAssertRange(SGL_MAX_VIEWPORTS, i, 1);
 
                 if (AfxTestBitEnabled(updMask, i))
                 {
+                    v[i][0] = dpu->nextRasterState.scisRects[i].offset[0],
+                    v[i][1] = dpu->nextRasterState.scisRects[i].offset[1],
+                    v[i][2] = dpu->nextRasterState.scisRects[i].extent[0],
+                    v[i][3] = dpu->nextRasterState.scisRects[i].extent[1];
+
                     if (gl->ScissorArrayv)
                     {
-                        GLint v[SGL_MAX_VIEWPORTS][4];
-                        AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
-                        v[0][0] = dpu->nextRasterState.scisRects[i].offset[0],
-                            v[0][1] = dpu->nextRasterState.scisRects[i].offset[1],
-                            v[0][2] = dpu->nextRasterState.scisRects[i].extent[0],
-                            v[0][3] = dpu->nextRasterState.scisRects[i].extent[1];
-
                         gl->ScissorArrayv(i, 1, &v[0][0]); _SglThrowErrorOccuried();
                     }
                     else
@@ -679,6 +690,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
                     AfxRectCopy(&(dpu->activeRasterState.scisRects[i]), &dpu->nextRasterState.scisRects[i]);
                 }
             }
+#endif
         }
         dpu->nextScissorUpdMask = NIL;
     }
@@ -891,6 +903,8 @@ _SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *s
     else
         cmd->stencil = (afxDrawTarget) { 0 };
 
+    cmdb->base.inRenderPass = TRUE;
+
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.BeginSynthesis) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
 }
 
@@ -906,6 +920,7 @@ _SGL afxCmdId _EncodeCmdFinsihSynthesis(avxCmdb cmdb)
     afxError err = AFX_ERR_NONE;
     _sglCmd *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
     AfxAssert(cmd);
+    cmdb->base.inRenderPass = FALSE;
     return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.FinishSynthesis) / sizeof(void*)), sizeof(cmd), cmd);
 }
 

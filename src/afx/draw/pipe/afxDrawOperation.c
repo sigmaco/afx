@@ -481,14 +481,14 @@ _AVX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
         AfxLogEcho("Uploading draw operation '%.*s'", AfxPushString(&uri[i].str));
         
         afxUri fext;
-        AfxPickUriExtension(&fext, &uri[i], FALSE);
+        AfxClipUriExtension(&fext, &uri[i], FALSE);
         
         if (AfxUriIsBlank(&fext)) AfxThrowError();
         else
         {
             afxUri fpath, query;
-            AfxPickUriPath(&fpath, &uri[i]);
-            AfxPickUriQuery(&query, &uri[i], TRUE);
+            AfxClipUriPath(&fpath, &uri[i]);
+            AfxClipUriQuery(&query, &uri[i], TRUE);
 
             if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
             {
@@ -525,7 +525,7 @@ _AVX afxError AfxUploadDrawOperations(afxDrawContext dctx, afxNat cnt, afxUri co
                             }
 
                             afxUri tmpUri;
-                            AfxUriFromString(&tmpUri, &tmp.str);
+                            AfxMakeUriFromString(&tmpUri, &tmp.str);
                             AfxDrawOperationBlueprintRename(&blueprint, &tmpUri);
 
                             if (AfxBuildDrawOperations(dctx, 1, &blueprint, &dop[i])) AfxThrowError();

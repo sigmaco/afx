@@ -612,7 +612,7 @@ _AVX afxShader AfxCompileShaderFromXml(afxDrawContext dctx, afxNat specIdx, afxX
         }
 
         afxUri tmpUri;
-        AfxUriFromString(&tmpUri, &tmp.str);
+        AfxMakeUriFromString(&tmpUri, &tmp.str);
         AfxShaderBlueprintRename(&blueprint, &tmpUri);
 #endif
         if (AfxCompileShaders(dctx, 1, &blueprint, &shd))
@@ -635,13 +635,13 @@ _AVX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
     AfxLogEcho("Uploading shader '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxPickUriExtension(uri, FALSE, &fext);
+    AfxClipUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxPickUriPath(uri, &fpath);
+        AfxClipUriPath(&fpath, uri);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -653,7 +653,7 @@ _AVX afxShader AfxCompileShaderFromXsh(afxDrawContext dctx, afxUri const* uri)
                 AfxAssertType(&xml, afxFcc_XML);
 
                 afxString query;
-                AfxPickUriQueryToString(uri, TRUE, &query);
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx = 0;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Shader"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);

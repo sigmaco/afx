@@ -52,10 +52,8 @@ _AUX afxClassConfig _AuxWidMgrCfg =
 {
     .fcc = afxFcc_WID,
     .name = "Widget",
-    .maxCnt = 1,
     .unitsPerPage = 2,
     .size = sizeof(AFX_OBJECT(afxWidget)),
-    .mmu = NIL,
     .ctor = (void*)_AuxWidCtor,
     .dtor = (void*)_AuxWidDtor
 };

@@ -58,13 +58,14 @@ AFX_OBJECT(afxShell)
 
     afxNat              dwmCnt;
     afxDesktop*         dwms;
-
+#ifdef _AUX_SHELL_IMPL
 #ifdef AFX_OS_WIN
     struct
     {
         WNDCLASSEX      wndClss;
     }                   w32;
 #endif//AFX_OS_WIN
+#endif//_AUX_SHELL_IMPL
 };
 #endif//_AUX_SHELL_C
 #endif//_AUX_UX_C

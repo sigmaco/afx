@@ -58,7 +58,7 @@ AFX_DEFINE_STRUCT(afxColorSwizzling)
 
 #define AfxColor(x_, y_, z_, w_) (afxColor const){ (afxReal)x_, (afxReal)y_, (afxReal)z_, (afxReal)w_ }
 
-#define AfxPackArgb32(a, r, g, b) (afxNat32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b)))
+#define AfxPackArgb32(a, r, g, b) (afxNat32)(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
 
 AVX afxColorSwizzling const AFX_STD_COLOR_SWIZZLING;
 

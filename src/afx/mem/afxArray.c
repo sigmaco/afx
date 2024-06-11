@@ -186,6 +186,7 @@ _AFXINL void* AfxGetArrayUnit(afxArray const *arr, afxNat unitIdx)
     //AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, unitIdx, 1);
     //AfxReserveArraySpace((void*)arr, unitIdx + 1);
+    AfxAssert(arr->bytemap);
     return &(arr->bytemap[unitIdx * arr->unitSiz]);
 }
 
@@ -193,6 +194,7 @@ _AFXINL void* AfxGetLastArrayUnit(afxArray const *arr)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);
+    AfxAssert(arr->bytemap);
     return arr->cnt ? &(arr->bytemap[(arr->cnt - 1) * arr->unitSiz]) : NIL;
 }
 
@@ -201,6 +203,7 @@ _AFXINL void AfxUpdateArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, firstUnit, unitCnt);
+    AfxAssert(arr->bytemap);
     AfxAssert(src);
     AfxCopy2(unitCnt, arr->unitSiz, src, &(arr->bytemap[firstUnit * arr->unitSiz]));
 }
@@ -218,6 +221,7 @@ _AFXINL void AfxDumpArrayRange(afxArray const* arr, afxNat firstUnit, afxNat uni
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);
     AfxAssertRange(arr->cnt, firstUnit, unitCnt);
+    AfxAssert(arr->bytemap);
     AfxAssert(dst);
     AfxCopy2(unitCnt, arr->unitSiz, &arr->bytemap[firstUnit * arr->unitSiz], dst);
 }

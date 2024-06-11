@@ -14,4 +14,30 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/draw/avxPaint.h"
+#include "qwadro/draw/imm/avxPaint.h"
+
+void ClumpRenderBoundingBox(avxCmdb cmdb, afxBox box, afxM4d const m)
+{
+    // based on RenderWare void ClumpRenderBoundingBox(RpClump *clump);
+
+    avxImmVertex vtx[8];
+    avxVertexIndex const indices[24] = { 0, 1, 1, 3, 3, 2, 2, 0, 4, 5, 5, 7, 7, 6, 6, 4, 0, 4, 1, 5, 2, 6, 3, 7 };
+    
+    for (int i = 0; i < 8; i++)
+    {
+        AfxSetV3d(vtx[i].posn, i & 1 ? box[AFX_AABB_SUP][0] : box[AFX_AABB_INF][0], i & 2 ? box[AFX_AABB_SUP][1] : box[AFX_AABB_INF][1], i & 4 ? box[AFX_AABB_SUP][2] : box[AFX_AABB_INF][2]);
+        vtx[i].col = AfxPackArgb32(255, 196, 196, 0);
+    }
+
+    // set flat shade mode
+    // set no raster
+
+    //AvxCmdTransformImmVertices(cmdb, m, 8, vtx);
+    //AvxCmdPushImmIndexedPrimitive(cmdb, afxPrimTopology_LINE_LIST, 24, indices);
+    
+    return;
+}
+
+
+
+

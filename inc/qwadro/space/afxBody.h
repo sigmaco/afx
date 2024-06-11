@@ -113,6 +113,8 @@ AKX void    AkxCmdSampleBodyMotions(avxCmdb cmdb, afxBody bod, afxNat basePivot,
 
 ////////////////////////////////////////////////////////////////////////////////
 
+AKX afxError            AfxSpawnBodies(afxModel proto, afxNat cnt, afxBody bod[]);
+
 AKX afxError            AfxAcquireBodies(afxModel mdl, afxNat cnt, afxBody bod[]);
 
 #endif//AFX_BODY_H

@@ -286,7 +286,7 @@ _ASX afxError _AsxSsysCtor(afxSoundSystem ssys, afxCookie const *cookie)
                 AfxSetUpIni(&ini);
                 afxUri manifestUri, manifestFile;
                 AfxMakeUri(&manifestUri, wfd.cFileName, 0);
-                AfxPickUriFile(&manifestUri, &manifestFile);
+                AfxClipUriFile(&manifestFile, &manifestUri);
                 AfxIniLoadFromFile(&ini, &manifestFile);
 
                 afxNat icdPagIdx, listPagIdx, listCnt, devPagIdx, recIdx;

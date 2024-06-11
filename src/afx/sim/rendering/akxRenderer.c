@@ -421,7 +421,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
         vin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams), vinStreams, AFX_COUNTOF(vinAttrs), vinAttrs);
         AfxAssertObjects(1, &vin, afxFcc_VIN);
 
-        AfxMakeUri(&uri, "data/pipeline/test/test.xsh.xml", 0);
+        AfxMakeUri(&uri, "../data/pipeline/test/test.xsh.xml", 0);
         rnd->testRazr = AfxLoadRasterizerFromXsh(dctx, vin, &uri);
     }
 
@@ -549,9 +549,9 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
     }
 
     {
-        AfxMakeUri(&uri, "data/pipeline/body/body.xsh.xml?rigid", 0);
+        AfxMakeUri(&uri, "../data/pipeline/body/body.xsh.xml?rigid", 0);
         rnd->rigidBodyRazr = AfxLoadRasterizerFromXsh(dctx, rigidVin, &uri);
-        AfxMakeUri(&uri, "data/pipeline/body/body.xsh.xml?skinned", 0);
+        AfxMakeUri(&uri, "../data/pipeline/body/body.xsh.xml?skinned", 0);
         rnd->skinnedBodyRazr = AfxLoadRasterizerFromXsh(dctx, skinnedVin, &uri);
     }
 
@@ -561,13 +561,13 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
     AfxAcquirePoses(sim, 1, (afxNat[]) { 255 }, &rnd->lp);
     AfxAcquirePoseBuffers(sim, 1, (afxNat[]) { 255 }, (afxBool[]) {TRUE}, &rnd->wp);
 
-    AfxMakeUri(&uri, "data/pipeline/testLighting/testLighting.xsh.xml?blinn", 0);
+    AfxMakeUri(&uri, "../data/pipeline/testLighting/testLighting.xsh.xml?blinn", 0);
     rnd->blinnTestRazr = AfxLoadRasterizerFromXsh(dctx, rigidVin, &uri);
 
-    AfxMakeUri(&uri, "data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil", 0);
+    AfxMakeUri(&uri, "../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil", 0);
     rnd->tutCamUtil = AfxLoadRasterizerFromXsh(dctx, rigidVin, &uri);
 
-    AfxMakeUri(&uri, "data/pipeline/lighting/lighting.xsh.xml?lighting", 0);
+    AfxMakeUri(&uri, "../data/pipeline/lighting/lighting.xsh.xml?lighting", 0);
     rnd->lighting = AfxLoadRasterizerFromXsh(dctx, rigidVin, &uri);
 
     return err;

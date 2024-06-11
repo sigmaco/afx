@@ -27,8 +27,8 @@
 #include "qwadro/draw/io/afxTypography.h"
 #include "qwadro/draw/pipe/afxQueryOps.h"
 #include "qwadro/draw/pipe/afxPipeline.h"
-#include "qwadro/draw/pipe/afxTransformOps.h"
-#include "qwadro/draw/pipe/afxImagingOps.h"
+#include "qwadro/draw/pipe/afxTransformationOps.h"
+#include "qwadro/draw/pipe/afxRasterizationOps.h"
 
 typedef enum afxDrawPrefab
 {

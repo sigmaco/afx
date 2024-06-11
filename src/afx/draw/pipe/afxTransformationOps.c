@@ -27,6 +27,8 @@ _AVX afxCmdId AvxCmdBindVertexInput(avxCmdb cmdb, afxVertexInput vin)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxTryAssertObjects(1, &vin, afxFcc_VIN);
     return cmdb->stdCmds->Transformation.BindVertexInput(cmdb, vin);
@@ -39,6 +41,8 @@ _AVX afxCmdId AvxCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     AfxAssertRange(cw, FALSE, TRUE);
     cw = AfxClamp(cw, FALSE, TRUE);
@@ -53,6 +57,8 @@ _AVX afxCmdId AvxCmdSetCullMode(avxCmdb cmdb, afxCullMode mode)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// mode must be a valid combination of afxCullMode values.
     AfxAssertBounds(mode, afxCullMode_NONE, afxCullMode_BOTH);
@@ -68,6 +74,8 @@ _AVX afxCmdId AvxCmdAdjustViewports(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, af
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// cnt must be greater than 0.
     AfxAssert(cnt);
@@ -95,6 +103,8 @@ _AVX afxCmdId AvxCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlotIdx, afxNat s
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(8, baseSlotIdx, slotCnt);
     AfxAssert(strides);
@@ -143,6 +153,8 @@ _AVX afxCmdId AvxCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     /// idxSiz must not be zero.
     AfxAssert(idxSiz);
@@ -180,6 +192,8 @@ _AVX afxCmdId AvxCmdSetPrimitiveTopology(avxCmdb cmdb, afxPrimTopology topology)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// topology must be a valid afxPrimTopology value.
     AfxAssert(topology < afxPrimTopology_TOTAL);

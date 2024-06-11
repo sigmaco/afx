@@ -58,10 +58,10 @@ AFX_DEFINE_STRUCT(afxFileReference)
 
 AFX_DEFINE_STRUCT(afxFileSection)
 {
+    afxSize             dataOffset;
     afxNat              codec; // codec used to compress this section
-    afxNat              dataOffset;
-    afxNat              dataSizStored;
-    afxNat              dataSiz;
+    afxNat              encSiz; // compressed size
+    afxNat              decSiz; // uncompressed size
     afxNat              intAlign;
 };
 
@@ -69,7 +69,7 @@ AFX_DEFINE_STRUCT(afxFileHeader)
 {
     afxNat              ver;
     afxNat              totalSiz;
-    afxNat32            crc;
+    afxNat32            crc32;
     afxNat              secOffset;
     afxNat              secCnt;
     afxFileReference    rootObjectTypeDef;

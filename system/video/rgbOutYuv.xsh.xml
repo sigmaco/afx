@@ -2,24 +2,24 @@
     <Pipeline>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <VertexShader>system/video/uvOutTristripQuad.vsh</VertexShader>
-        <Rasterizer>system/video/rgbOutYuv.xsh.xml</Rasterizer>
+        <VertexShader>../system/video/uvOutTristripQuad.vsh</VertexShader>
+        <Rasterizer>../system/video/rgbOutYuv.xsh.xml</Rasterizer>
     </Pipeline>
     <Pipeline id='yFlipped'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <VertexShader>system/video/uvOutTristripQuadInvY.vsh</VertexShader>
+        <VertexShader>../system/video/uvOutTristripQuadInvY.vsh</VertexShader>
     </Pipeline>
     <Rasterizer>
         <FillMode>SOLID</FillMode>
         <DepthWriteEnabled></DepthWriteEnabled>
-        <Transformer>system/video/rgbOutYuv.xsh.xml</Transformer>
-        <FragmentShader>system/video/rgbOutYuvSigma.fsh</FragmentShader>
+        <Transformer>../system/video/rgbOutYuv.xsh.xml</Transformer>
+        <FragmentShader>../system/video/rgbOutYuvSigma.fsh</FragmentShader>
     </Rasterizer>
     <Rasterizer id='yFlipped'>
         <FillMode>SOLID</FillMode>
         <DepthWriteEnabled></DepthWriteEnabled>
-        <Transformer>system/video/rgbOutYuv.xsh.xml?yFlipped</Transformer>
-        <FragmentShader>system/video/rgbOutYuvSigma.fsh</FragmentShader>
+        <Transformer>../system/video/rgbOutYuv.xsh.xml?yFlipped</Transformer>
+        <FragmentShader>../system/video/rgbOutYuvSigma.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

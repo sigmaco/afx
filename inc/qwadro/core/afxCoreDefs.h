@@ -57,6 +57,7 @@ AFX_STATIC_ASSERT(AFX_INVALID_INDEX32 == AFX_N32_MAX, "");
 
 #define AFX_DEFINE_HANDLE(object) typedef struct object##_T* object
 #define AFX_DEFINE_STRUCT(struct_) typedef struct struct_ struct_; struct struct_
+#define AFX_DEFINE_STRUCT_SIMD(struct_) typedef struct struct_ struct_; afxSimd(struct struct_)
 #define AFX_DEFINE_UNION(union_) typedef union union_ union_; union union_
 
 #define AFX_DECLARE_STRUCT(struct_) typedef struct struct_ struct_

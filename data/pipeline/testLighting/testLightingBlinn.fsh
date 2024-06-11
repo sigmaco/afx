@@ -1,6 +1,6 @@
-#include <data/pipeline/stdEnv.inc>
-#include <data/pipeline/stdView.inc>
-#include <data/pipeline/stdMaterial.inc>
+#include <../data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdView.inc>
+#include <../data/pipeline/stdMaterial.inc>
 
 in block
 {

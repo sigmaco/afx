@@ -20,6 +20,7 @@
 
 #define _AUX_UX_C
 #define _AUX_SHELL_C
+#define _AUX_SHELL_IMPL
 #define _AUX_WINDOW_C
 #define _AUX_WINDOW_IMPL
 #include "qwadro/../_luna/luna_vm.h"
@@ -234,7 +235,7 @@ _AUX afxError _AuxUsysCtor(afxShell usys, afxCookie const* cookie)
 
                     afxString s;
                     AfxMakeString(&s, "qwadro", 0);
-                    AfxLoadScript(&s, &uri);
+                    //AfxLoadScript(&s, &uri);
 
                     if (err)
                         AfxDismountStorageUnit(&point, &location, afxFileFlag_RWX);

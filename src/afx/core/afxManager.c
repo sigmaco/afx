@@ -703,8 +703,6 @@ _AFX afxError AfxEstablishManager(afxManager* mgr, afxManager* subset, afxChain*
     mgr->dtor = cfg->dtor ? cfg->dtor : _AfxDummyObjDtor;
     AfxAssert(cfg->name && cfg->name[0]);
     AfxStrcpy(mgr->name, cfg->name ? cfg->name : "");
-    mgr->input = NIL;
-    mgr->output = NIL;
     mgr->defEvent = cfg->event;
     mgr->defEventFilter = cfg->eventFilter;
     mgr->vmt = cfg->vmt;
@@ -882,3 +880,176 @@ _AFX afxResult AfxWaitForObject(afxTime timeout, afxObject obj)
     AfxAssert(obj);
     return 0;
 }
+
+#if 0
+afxBool AfxFindManagedExtension(afxManager const* mgr, afxNat pluginID, afxNat* off, afxNat* siz)
+{
+    afxError err = NIL;
+    AfxAssert(mgr);
+    afxBool rslt = FALSE;
+
+    afxManagedExtension* entry;
+    afxChain const* entries = (afxChain const *)&mgr->anchor.lnk;
+    AfxChainForEveryLinkageB2F(entries, afxManagedExtension, lnk, entry)
+    {
+        if (entry->fcc == pluginID)
+        {
+            *off = entry->off;
+            *siz = entry->siz;
+            rslt = TRUE;
+            break;
+        }
+    }
+    return rslt;
+}
+
+RwInt32 AfxAddManagedExtension(afxManager const* mgr, afxNat pluginID, afxNat siz, void* ctor, void* dtor)
+{
+    RwPluginRegEntry *entry;
+    RwInt32 newStructSize;
+
+    AfxAssert(mgr);
+    AfxAssert(mgr->instCnt == 0);
+
+    /* add the registry to the list if freelists aren't used */
+    if (RWSRCGLOBAL(memoryAlloc) != _rwFreeListAllocReal)
+    {
+        RwUInt32    i;
+
+        for (i = 0; i < numRegToolkits; i += 1)
+        {
+            RWASSERT(NULL != toolkitNonFLRegList);
+
+            if (reg == toolkitNonFLRegList[i])
+            {
+                break;
+            }
+        }
+
+        if (numRegToolkits == i)
+        {
+            RwPluginRegistry    **newRegistryList;
+
+            RwUInt32            j;
+
+
+            newRegistryList = (RwPluginRegistry **)RwMalloc(sizeof(RwPluginRegistry *) * (numRegToolkits + 1),
+                rwMEMHINTDUR_GLOBAL);
+
+            j = 0;
+            if (NULL != toolkitNonFLRegList)
+            {
+                for (; j < numRegToolkits; j += 1)
+                {
+                    newRegistryList[j] = toolkitNonFLRegList[j];
+                }
+
+                RwFree(toolkitNonFLRegList);
+                toolkitNonFLRegList = (RwPluginRegistry **)NULL;
+            }
+
+            newRegistryList[j] = reg;
+
+            numRegToolkits += 1;
+
+            toolkitNonFLRegList = newRegistryList;
+        }
+    }
+
+    /* Make sure it's not in the list yet */
+    entry = reg->firstRegEntry;
+
+    while (entry)
+    {
+        if (entry->pluginID == pluginID)
+        {
+            /* Can't register twice, return the already registered offset */
+
+#ifdef RWDEBUG
+            {
+                RwChar  msg[80];
+
+                sprintf(msg, "Plugin ,Vendor ID = 0x%02x, Object ID = 0x%02x, already registered.\n",
+                    GETVENDORID(pluginID), GETOBJECTID(pluginID));
+
+                RWMESSAGE(("%s", msg));
+            }
+#endif /* RWDEBUG */
+
+            RWERROR((E_RW_PLUGININIT));
+            RWRETURN(entry->offset);
+        }
+        entry = entry->nextRegEntry;
+    }
+
+    /* Increase structure size, but keep longword alignment */
+#ifdef RWDEBUG
+    /* Allow for a longword front and back for stomp detection */
+    newStructSize = reg->sizeOfStruct + ((siz + (sizeof(afxNat32) * 2) + 3) & ~3);
+#else /* RWDEBUG */
+    newStructSize = reg->sizeOfStruct + ((siz + 3) & ~3);
+#endif /* RWDEBUG */
+
+    if (reg->maxSizeOfStruct && (newStructSize > reg->maxSizeOfStruct))
+    {
+        /* We've exceeded our limit, so fail */
+        RWRETURN(-1);
+    }
+
+    entry = (RwPluginRegEntry *)RwFreeListAlloc(toolkitRegEntries, rwMEMHINTDUR_GLOBAL);
+    RWASSERT(RWFREELISTALIGNED(entry, toolkitRegEntries));
+
+    if (entry)
+    {
+        /* Fill it the entry */
+
+#ifdef RWDEBUG
+        /* Allow for a longword front and back for stomp detection */
+        entry->offset = reg->sizeOfStruct + sizeof(afxNat32);
+#else /* RWDEBUG */
+        entry->offset = reg->sizeOfStruct;
+#endif /* RWDEBUG */
+
+        reg->sizeOfStruct = newStructSize;
+
+        entry->size = siz;
+        entry->pluginID = pluginID;
+        entry->readCB = (RwPluginDataChunkReadCallBack)NULL;
+        entry->writeCB = (RwPluginDataChunkWriteCallBack)NULL;
+        entry->getSizeCB = (RwPluginDataChunkGetSizeCallBack)NULL;
+        entry->alwaysCB = (RwPluginDataChunkAlwaysCallBack)NULL;
+        entry->rightsCB = (RwPluginDataChunkRightsCallBack)NULL;
+        entry->constructCB = constructCB ? constructCB : PluginDefaultConstructor;
+        entry->destructCB = destructCB ? destructCB : PluginDefaultDestructor;
+        entry->copyCB = copyCB ? copyCB : PluginDefaultCopy;
+        entry->errStrCB = (RwPluginErrorStrCallBack)NULL;
+        entry->nextRegEntry = (RwPluginRegEntry *)NULL;
+        entry->prevRegEntry = (RwPluginRegEntry *)NULL;
+
+        /* Point back to the parent */
+        entry->parentRegistry = reg;
+
+        /* Append it to the list */
+        if (reg->firstRegEntry == NULL)
+        {
+            /* First in the list, just shove it in */
+            reg->firstRegEntry = entry;
+            reg->lastRegEntry = entry;
+        }
+        else
+        {
+            /* Whack it on the end */
+            reg->lastRegEntry->nextRegEntry = entry;
+            entry->prevRegEntry = reg->lastRegEntry;
+
+            /* New end of the list */
+            reg->lastRegEntry = entry;
+        }
+
+        RWRETURN(entry->offset);
+    }
+
+    /* Failed to allocate a freelist entry */
+    RWRETURN(-1);
+}
+#endif

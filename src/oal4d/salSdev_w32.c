@@ -477,17 +477,21 @@ _A4D afxError _SalSdevIddDtorCb(afxSoundDevice sdev)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
 
-    AfxCleanUpChainedManagers(&sdev->dev.classes);
+    AfxExhaustChainedManagers(&sdev->dev.classes);
 
+#if 0
+    for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+    {
+        afxResult exitCode;
+        AfxRequestThreadInterruption(sdev->idd->spus[i].dedThread);
+        AfxWaitForThread(sdev->idd->spus[i].dedThread, &exitCode);
+        AfxReleaseObjects(1, &sdev->idd->spus[i].dedThread);
+    }
+#else
     afxResult exitCode;
     AfxRequestThreadInterruption(sdev->idd->dedThread);
     AfxWaitForThread(sdev->idd->dedThread, &exitCode);
     AfxReleaseObjects(1, &sdev->idd->dedThread);
-
-#if 0
-    for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
-        if (_SalDestroySpu(sdev, i))
-            AfxThrowError();
 #endif
 
     AfxDeallocate(sdev->idd->spus);
@@ -499,9 +503,6 @@ _A4D afxError _SalSdevIddDtorCb(afxSoundDevice sdev)
 
     AfxDeallocate(sdev->idd);
     sdev->idd = NIL;
-
-    if (sdev->ports)
-        AfxDeallocate(sdev->ports);
 
     return err;
 }

@@ -1,4 +1,4 @@
-#include <data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdEnv.inc>
 
 in block
 {

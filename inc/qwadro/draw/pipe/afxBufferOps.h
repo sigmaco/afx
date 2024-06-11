@@ -32,7 +32,7 @@ AFX_DEFINE_STRUCT(afxBufferCopyOp)
  //// COMMANDS                                                             ////
 //////////////////////////////////////////////////////////////////////////////
 
-AVX afxCmdId                AvxCmdCopyBuffer
+AVX afxCmdId                AvxCmdCopyBufferRegions
 /// Copy data between afxBuffer regions.
 (
     avxCmdb            cmdb,
@@ -42,7 +42,7 @@ AVX afxCmdId                AvxCmdCopyBuffer
     afxBufferCopyOp const   ops[] /// an array of structures specifying the regions to copy.
 );
 
-AVX afxCmdId                AvxCmdCopyBufferRegion
+AVX afxCmdId                AvxCmdCopyBuffer
 /// Copy data between afxBuffer regions.
 (
     avxCmdb            cmdb,

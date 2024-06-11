@@ -22,19 +22,19 @@
 #define _AFX_ARENA_C
 #include "qwadro/core/afxSystem.h"
 
-AFX_DEFINE_STRUCT(afxArenaCleanup)
+AFX_DEFINE_STRUCT_SIMD(afxArenaCleanup)
 {
     void(*action)(void *data,void*extra);
     void *data;
     void *extra;
 };
 
-AFX_DEFINE_STRUCT(afxArenaRecycleItem)
+AFX_DEFINE_STRUCT_SIMD(afxArenaRecycleItem)
 {
     afxArenaRecycleItem* next;
 };
 
-AFX_DEFINE_STRUCT(afxArenaLargeItem)
+AFX_DEFINE_STRUCT_SIMD(afxArenaLargeItem)
 {
     afxArenaLargeItem* next;
     afxArenaLargeItem* prev;

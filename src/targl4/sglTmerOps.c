@@ -100,6 +100,26 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
     {
         afxNat vpCnt = dpu->activePip->base.vpCnt;
 
+#if FORCE_GL_GENERIC_FUNCS
+        afxNat cnt = dpu->nextViewportUpdCnt;
+
+        GLfloat v[SGL_MAX_VIEWPORTS][4];
+        GLfloat v2[SGL_MAX_VIEWPORTS][2];
+        AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
+
+        for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
+        {
+            v[i][0] = dpu->nextXformState.vps[i].offset[0];
+            v[i][1] = dpu->nextXformState.vps[i].offset[1];
+            v[i][2] = dpu->nextXformState.vps[i].extent[0];
+            v[i][3] = dpu->nextXformState.vps[i].extent[1];
+
+            v2[i][0] = dpu->nextXformState.vps[i].depth[0];
+            v2[i][1] = dpu->nextXformState.vps[i].depth[1];
+        }
+        gl->ViewportArrayv(0, cnt, &v[0][0]); _SglThrowErrorOccuried();
+        gl->DepthRangeArrayv(0, cnt, &v2[0][0]); _SglThrowErrorOccuried();
+#else
         if (1 < vpCnt)
         {
             AfxAssert(vpCnt);
@@ -132,10 +152,10 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
                         GLfloat v[SGL_MAX_VIEWPORTS][4];
                         AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
 
-                        v[0][0] = dpu->nextXformState.vps[i].offset[0],
-                        v[0][1] = dpu->nextXformState.vps[i].offset[1],
-                        v[0][2] = dpu->nextXformState.vps[i].extent[0],
-                        v[0][3] = dpu->nextXformState.vps[i].extent[1];
+                        v[i][0] = dpu->nextXformState.vps[i].offset[0],
+                        v[i][1] = dpu->nextXformState.vps[i].offset[1],
+                        v[i][2] = dpu->nextXformState.vps[i].extent[0],
+                        v[i][3] = dpu->nextXformState.vps[i].extent[1];
 
                         gl->ViewportArrayv(i, 1, &v[0][0]); _SglThrowErrorOccuried();
                     }
@@ -145,8 +165,8 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
                         GLdouble v[SGL_MAX_VIEWPORTS][2];
                         AfxAssert(SGL_MAX_VIEWPORTS >= cnt);
 
-                        v[0][0] = dpu->nextXformState.vps[i].depth[0],
-                            v[0][1] = dpu->nextXformState.vps[i].depth[1];
+                        v[i][0] = dpu->nextXformState.vps[i].depth[0],
+                            v[i][1] = dpu->nextXformState.vps[i].depth[1];
 
                         gl->DepthRangeArrayv(0, 1, &v[0][0]); _SglThrowErrorOccuried();
                     }
@@ -158,6 +178,7 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
                     break;
             }
         }
+#endif
         dpu->nextViewportUpdMask = NIL;
     }
 

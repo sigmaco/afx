@@ -27,7 +27,6 @@
 #include <Windows.h>
 #include <dwmapi.h>
 
-
 // RENDERING SCOPE
  
 _SGL void _DpuFinishSynthesis(sglDpu* dpu)
@@ -158,7 +157,7 @@ _SGL void _DpuBeginSynthesis(sglDpu* dpu, afxCanvas canv, afxRect const* area, a
 
         if (canv->storeBitmask != storeBitmask)
         {
-            canv->storeBitmask = storeBitmask;
+            canv->storeBitmask = storeBitmask; // cache it
             gl->DrawBuffers(enabledToDrawCnt, enabledToDraw); _SglThrowErrorOccuried();
         }
         
@@ -560,6 +559,11 @@ _SGL void _DpuDraw(sglDpu* dpu, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, 
         //AfxAssert(cmd->instCnt);
         GLenum top = AfxToGlTopology(dpu->activeXformState.primTop);
 
+
+#if FORCE_GL_GENERIC_FUNCS
+        AfxAssert(gl->DrawArraysInstancedBaseInstance);
+        gl->DrawArraysInstancedBaseInstance(top, firstVtx, vtxCnt, instCnt, firstInst); _SglThrowErrorOccuried();
+#else
         if (instCnt)
         {
             if (firstInst)
@@ -576,6 +580,7 @@ _SGL void _DpuDraw(sglDpu* dpu, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, 
         {
             gl->DrawArrays(top, firstVtx, vtxCnt); _SglThrowErrorOccuried();
         }
+#endif
         dpu->numOfFedVertices += vtxCnt;
         dpu->numOfFedInstances += instCnt;
 
@@ -645,6 +650,10 @@ _SGL void _DpuDrawIndexed(sglDpu* dpu, afxNat idxCnt, afxNat instCnt, afxNat fir
 
         glVmt const* gl = &dpu->gl;
 
+#if FORCE_GL_GENERIC_FUNCS
+        AfxAssert(gl->DrawElementsInstancedBaseVertexBaseInstance);
+        gl->DrawElementsInstancedBaseVertexBaseInstance(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, instCnt, vtxOff2, firstInst); _SglThrowErrorOccuried();
+#else
         if (instCnt)
         {
             if (firstInst)
@@ -654,13 +663,29 @@ _SGL void _DpuDrawIndexed(sglDpu* dpu, afxNat idxCnt, afxNat instCnt, afxNat fir
             }
             else
             {
-                gl->DrawElementsInstancedBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, instCnt, vtxOff2); _SglThrowErrorOccuried();
+                if (vtxOff2)
+                {
+                    gl->DrawElementsInstancedBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, instCnt, vtxOff2); _SglThrowErrorOccuried();
+                }
+                else
+                {
+                    gl->DrawElementsInstanced(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, instCnt); _SglThrowErrorOccuried();
+                }
             }
         }
         else
         {
-            gl->DrawElementsBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, vtxOff2); _SglThrowErrorOccuried();
+            if (vtxOff2)
+            {
+                gl->DrawElementsBaseVertex(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff, vtxOff2); _SglThrowErrorOccuried();
+            }
+            else
+            {
+                gl->DrawElements(top, idxCnt, idxSizGl[idxSiz], (void const*)dataOff); _SglThrowErrorOccuried();
+            }
         }
+#endif
+
         //dpu->numOfFedVertices += cmd->idxCnt;
         dpu->numOfFedIndices += idxCnt;
         dpu->numOfFedInstances += instCnt;

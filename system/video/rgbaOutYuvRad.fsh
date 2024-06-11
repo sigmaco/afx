@@ -1,4 +1,4 @@
-#include <system/video/stdEnv.inc>
+#include <../system/video/stdEnv.inc>
 
 //#define ALPHA // enable auxiliar texture for alpha mask.
 const vec4 crc = vec4( 1.595794678f , -0.813476563f , 0, 0.0 );

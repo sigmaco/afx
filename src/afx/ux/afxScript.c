@@ -393,7 +393,7 @@ _AUX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
     afxString scope2;
 
     if (AfxStringIsEmpty(scope))
-        AfxPickUriObjectToString(uri, &scope2);
+        AfxGetUriTargetString(uri, &scope2);
     else
         AfxReflectString(scope, &scope2);
 
@@ -453,7 +453,7 @@ _AUX afxResult AfxRunScript(afxScript xss, afxUri const* uri)
     if (uri)
     {
         afxString domain;
-        AfxPickUriObjectToString(uri, &domain);
+        AfxGetUriTargetString(uri, &domain);
 
         if (AfxLoadScript(&domain, uri)) AfxThrowError();
         else

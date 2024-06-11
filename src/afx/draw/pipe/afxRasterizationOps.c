@@ -27,6 +27,8 @@ _AVX afxCmdId AvxCmdEnableDepthBias(avxCmdb cmdb, afxBool enable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(enable, FALSE, TRUE);
     enable = AfxClamp(enable, FALSE, TRUE);
@@ -41,6 +43,9 @@ _AVX afxCmdId AvxCmdSetDepthBias(avxCmdb cmdb, afxReal constFactor, afxReal clam
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     return cmdb->stdCmds->Rasterization.SetDepthBias(cmdb, constFactor, clamp, slopeFactor);
 }
 
@@ -51,6 +56,9 @@ _AVX afxCmdId AvxCmdSetLineWidth(avxCmdb cmdb, afxReal lineWidth)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     return cmdb->stdCmds->Rasterization.SetLineWidth(cmdb, lineWidth);
 }
 
@@ -61,6 +69,8 @@ _AVX afxCmdId AvxCmdDisableRasterization(avxCmdb cmdb, afxBool disable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(disable, FALSE, TRUE);
     disable = AfxClamp(disable, FALSE, TRUE);
@@ -75,6 +85,8 @@ _AVX afxCmdId AvxCmdEnableDepthTest(avxCmdb cmdb, afxBool enable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(enable, FALSE, TRUE);
     enable = AfxClamp(enable, FALSE, TRUE);
@@ -89,6 +101,9 @@ _AVX afxCmdId AvxCmdSetDepthCompareOp(avxCmdb cmdb, afxCompareOp op)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     AfxAssertBounds(op, afxCompareOp_NEVER, afxCompareOp_ALWAYS);
 
     op = AfxClamp(op, afxCompareOp_NEVER, afxCompareOp_ALWAYS);
@@ -103,6 +118,8 @@ _AVX afxCmdId AvxCmdDisableDepthWrite(avxCmdb cmdb, afxBool disable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     AfxAssertRange(disable, FALSE, TRUE);
     disable = AfxClamp(disable, FALSE, TRUE);
@@ -117,6 +134,9 @@ _AVX afxCmdId AvxCmdEnableStencilTest(avxCmdb cmdb, afxBool enable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     return cmdb->stdCmds->Rasterization.EnableStencilTest(cmdb, enable);
 }
 
@@ -127,6 +147,8 @@ _AVX afxCmdId AvxCmdSetStencilCompareMask(avxCmdb cmdb, afxMask faceMask, afxNat
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssert(faceMask);
 
@@ -140,6 +162,8 @@ _AVX afxCmdId AvxCmdSetStencilWriteMask(avxCmdb cmdb, afxMask faceMask, afxNat32
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssert(faceMask);
 
@@ -153,6 +177,8 @@ _AVX afxCmdId AvxCmdSetStencilReference(avxCmdb cmdb, afxMask faceMask, afxNat32
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssert(faceMask);
 
@@ -166,6 +192,8 @@ _AVX afxCmdId AvxCmdEnableDepthBoundsTest(avxCmdb cmdb, afxBool enable)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     AfxAssertRange(enable, FALSE, TRUE);
     enable = AfxClamp(enable, FALSE, TRUE);
@@ -180,6 +208,8 @@ _AVX afxCmdId AvxCmdSetDepthBounds(avxCmdb cmdb, afxV2d const bounds)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     if (!bounds)
         return cmdb->stdCmds->Rasterization.SetDepthBounds(cmdb, AfxSpawnV2d(0, 1));
@@ -194,6 +224,8 @@ _AVX afxCmdId AvxCmdSetBlendConstants(avxCmdb cmdb, afxV4d const blendConstants)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     if (blendConstants)
         return cmdb->stdCmds->Rasterization.SetBlendConstants(cmdb, blendConstants);
@@ -208,6 +240,8 @@ _AVX afxCmdId AvxCmdAdjustScissors(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, afx
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// cnt must be greater than 0.
     AfxAssert(cnt);
@@ -239,6 +273,8 @@ _AVX afxCmdId AvxCmdAdjustCurtains(avxCmdb cmdb, afxNat baseIdx, afxNat cnt, afx
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
 
     /// cnt must be greater than 0.
     AfxAssert(cnt);
@@ -270,6 +306,10 @@ _AVX afxCmdId AvxCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const* cfg)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(!cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
     
     /// cfg must be a valid pointer to a valid afxSynthesisConfig structure.
     AfxAssert(cfg);
@@ -320,6 +360,11 @@ _AVX afxCmdId AvxCmdFinishSynthesis(avxCmdb cmdb)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     return cmdb->stdCmds->Rasterization.FinishSynthesis(cmdb);
 }
 
@@ -330,5 +375,10 @@ _AVX afxCmdId AvxCmdNextPass(avxCmdb cmdb, afxBool useAuxScripts)
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
     /// cmdb must be in the recording state.
     AfxAssert(cmdb->state == avxCmdbState_RECORDING);
+    /// This command must only be called outside of a render pass instance.
+    AfxAssert(cmdb->inRenderPass);
+    /// This command must only be called outside of a video coding scope.
+    AfxAssert(!cmdb->inVideoCoding);
+
     return cmdb->stdCmds->Rasterization.NextPass(cmdb, useAuxScripts);
 }

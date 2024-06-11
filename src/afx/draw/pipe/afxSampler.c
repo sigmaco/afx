@@ -28,7 +28,7 @@ _AVX void AfxDescribeSampler(afxSampler samp, afxSamplerConfig* spec)
 
     spec->magFilter = samp->cfg.base.magFilter;
     spec->minFilter = samp->cfg.base.minFilter;
-    spec->mipmapFilter = samp->cfg.base.mipmapFilter;
+    spec->mipFilter = samp->cfg.base.mipFilter;
     spec->uvw[0] = samp->cfg.base.uvw[0];
     spec->uvw[1] = samp->cfg.base.uvw[1];
     spec->uvw[2] = samp->cfg.base.uvw[2];
@@ -59,7 +59,7 @@ _AVX afxError _AvxSampStdCtor(afxSampler samp, afxCookie const* cookie)
     AfxAssert(cfg);
     AfxAssert(cfg[0].base.magFilter < afxTexelFilter_TOTAL);
     AfxAssert(cfg[0].base.minFilter < afxTexelFilter_TOTAL);
-    AfxAssert(cfg[0].base.mipmapFilter < afxTexelFilter_TOTAL);
+    AfxAssert(cfg[0].base.mipFilter < afxTexelFilter_TOTAL);
     AfxAssert(cfg[0].base.uvw[0] < afxTexelAddress_TOTAL);
     AfxAssert(cfg[0].base.uvw[1] < afxTexelAddress_TOTAL);
     AfxAssert(cfg[0].base.uvw[2] < afxTexelAddress_TOTAL);
@@ -228,7 +228,7 @@ AVX void AfxDescribeDefaultSampler(afxSamplerConfig* config)
     {
         .magFilter = afxTexelFilter_LINEAR,
         .minFilter = afxTexelFilter_POINT,
-        .mipmapFilter = afxTexelFilter_LINEAR,
+        .mipFilter = afxTexelFilter_LINEAR,
         .uvw[0] = afxTexelAddress_REPEAT,
         .uvw[1] = afxTexelAddress_REPEAT,
         .uvw[2] = afxTexelAddress_REPEAT,

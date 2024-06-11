@@ -98,6 +98,44 @@ AFX_DEFINE_STRUCT(afxClassConfig)
     afxClassSuballocation const* suballocs;
 };
 
+AFX_DEFINE_STRUCT(afxObjectChunk)
+{
+    afxNat      off;
+    afxNat      siz;
+};
+
+AFX_DEFINE_STRUCT(afxManagedExtension)
+{
+    afxLinkage  lnk;
+    afxNat      off;
+    afxNat      siz;
+    afxFcc      fcc;
+    afxError    (*dtor)(afxObject obj, afxNat off, afxNat siz);
+    afxError    (*ctor)(afxObject obj, afxNat off, afxNat siz, afxCookie const* cookie); // void to avoid warnings
+    afxError    (*cpy)(afxObject dst, afxObject src, afxNat off, afxNat siz);
+    afxError    (*ioAlways)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
+    afxError    (*ioRights)(afxStream iob, afxObject obj, afxNat off, afxNat siz, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
+    afxError    (*ioWrite)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // writes extension data to a binary stream.
+    afxError    (*ioRead)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // reads extension data from a binary stream.
+    afxSize     (*ioSiz)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // determines the binary size of the extension data.
+};
+
+AFX_DEFINE_STRUCT(afxClassPlugin)
+{
+    afxLinkage  cls;
+    afxFcc      pluginId;
+    afxNat      objOff;
+    afxNat      objSiz;
+    afxError    (*dtor)(afxObject obj, afxNat off, afxNat siz);
+    afxError    (*ctor)(afxObject obj, afxNat off, afxNat siz, afxCookie const* cookie); // void to avoid warnings
+    afxError    (*cpy)(afxObject dst, afxObject src, afxNat off, afxNat siz);
+    afxError    (*ioAlways)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
+    afxError    (*ioRights)(afxStream iob, afxObject obj, afxNat off, afxNat siz, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
+    afxError    (*ioWrite)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // writes extension data to a binary stream.
+    afxError    (*ioRead)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // reads extension data from a binary stream.
+    afxSize     (*ioSiz)(afxStream iob, afxObject obj, afxNat off, afxNat siz); // determines the binary size of the extension data.
+};
+
 AFX_DEFINE_STRUCT(afxManager)
 {
     afxFcc          fcc; // afxFcc_CLS
@@ -117,9 +155,14 @@ AFX_DEFINE_STRUCT(afxManager)
 
     afxError        (*ctor)(afxObject obj, afxCookie const* cookie); // void to avoid warnings
     afxError        (*dtor)(afxObject obj);
-    afxError        (*output)(afxObject obj, void* ios); // afxStream
-    afxError        (*input)(afxObject obj, void* ios);
+    afxError        (*ioAlways)(afxStream iob, afxObject obj); // called after the reading of plugin stream data is finished(useful to set up plugin data for plugins that found no data in the stream, but that cannot set up the data during the ctor callback)
+    afxError        (*ioRights)(afxStream iob, afxObject obj, void* data); // called after the reading of plugin stream data is finished, and the object finalised, if and only if the object's rights id was equal to that of the plugin registering the call.
+    afxError        (*ioWrite)(afxStream iob, afxObject obj); // writes extension data to a binary stream.
+    afxError        (*ioRead)(afxStream iob, afxObject obj); // reads extension data from a binary stream.
+    afxSize         (*ioSiz)(afxStream iob, afxObject obj); // determines the binary size of the extension data.
     
+    afxManagedExtension anchor;
+
     afxBool         (*defEvent)(afxObject obj, afxEvent *ev);
     afxBool         (*defEventFilter)(afxObject obj, afxObject watched, afxEvent *ev);
     

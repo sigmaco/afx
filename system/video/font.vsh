@@ -1,5 +1,5 @@
-#include <system/video/stdEnv.inc>
-#include <system/video/stdView.inc>
+#include <../system/video/stdEnv.inc>
+#include <../system/video/stdView.inc>
 
 IN(0, vec2, in_instPos);
 IN(1, vec2, in_instUv);

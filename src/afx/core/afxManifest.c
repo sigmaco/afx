@@ -155,7 +155,7 @@ _AFX afxBool AfxGetManifestUri(afxManifest const* ini, afxNat pagIdx, afxNat rec
     afxString s;
 
     if ((rslt = AfxGetManifestString(ini, pagIdx, recIdx, &s)))
-        AfxUriFromString(uri, &s);
+        AfxMakeUriFromString(uri, &s);
     else
         AfxResetUri(uri);
 
@@ -456,7 +456,7 @@ _AFX afxBool AfxIniGetUri(afxManifest const* ini, afxString const* page, afxStri
 
     //if ((rslt = ((rslt = !!(entry = _AfxIniGetRecord(ini, page, key))) && (!(AfxStringIsEmpty(&entry->value))))))
     if ((rslt = ((rslt = AfxIniGetString(ini, page, key, &val)) && (!(AfxStringIsEmpty(&val))))))
-        AfxUriFromString(value, &val);
+        AfxMakeUriFromString(value, &val);
     else
         AfxResetUri(value);
 
@@ -471,7 +471,7 @@ _AFX afxBool AfxIniGetUriIndexed(afxManifest const* ini, afxNat pagIdx, afxStrin
 
     //if ((rslt = ((rslt = !!(entry = _AfxIniFindRecord(ini, &ini->pages[pagIdx], key))) && (!(AfxStringIsEmpty(&entry->value))))))
     if ((rslt = ((rslt = !!_AfxIniFindRecord(ini, &ini->pages[pagIdx], key)) && (!(AfxStringIsEmpty(&val))))))
-        AfxUriFromString(value, &val);
+        AfxMakeUriFromString(value, &val);
     else
         AfxResetUri(value);
 

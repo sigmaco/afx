@@ -416,13 +416,13 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxVertexInput 
     AfxLogEcho("Uploading pipeline '%.*s'", AfxPushString(&uri->str.str));
 
     afxUri fext;
-    AfxPickUriExtension(uri, FALSE, &fext);
+    AfxClipUriExtension(&fext, uri, FALSE);
 
     if (AfxUriIsBlank(&fext)) AfxThrowError();
     else
     {
         afxUri fpath;
-        AfxPickUriPath(uri, &fpath);
+        AfxClipUriPath(&fpath, uri);
 
         if (0 == AfxCompareStringCil(AfxGetUriString(&fext), 0, ".xml", 4))
         {
@@ -436,7 +436,7 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxVertexInput 
                 AfxAssert(isQwadroXml);
 
                 afxString query;
-                AfxPickUriQueryToString(uri, TRUE, &query);
+                AfxGetUriQueryString(uri, TRUE, &query);
 
                 afxNat xmlElemIdx;
                 afxNat foundCnt = AfxFindXmlTaggedElements(&xml, 0, 0, &AfxStaticString("Rasterizer"), &AfxStaticString("id"), 1, &query, &xmlElemIdx);
@@ -464,7 +464,7 @@ _AVX afxRasterizer AfxLoadRasterizerFromXsh(afxDrawContext dctx, afxVertexInput 
                         }
 
                         afxUri tmpUri;
-                        AfxUriFromString(&tmpUri, &tmp.str);
+                        AfxMakeUriFromString(&tmpUri, &tmp.str);
                         AfxCopyUri(&blueprint.uri.uri, &tmpUri);
 #endif
                         config.xfmrPipb.vin = vin;

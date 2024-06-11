@@ -2,13 +2,13 @@
     <Pipeline id='instanced'>
         <CullMode>BACK</CullMode>
         <PrimitiveTopology>TRI_STRIP</PrimitiveTopology>
-        <VertexShader>system/video/font.vsh</VertexShader>
+        <VertexShader>../system/video/font.vsh</VertexShader>
         <VertexInputStream instanceRate='1'>0</VertexInputStream>
     </Pipeline>
     <Rasterizer id='instanced'>
         <FillMode>SOLID</FillMode>
         <DepthWriteEnabled></DepthWriteEnabled>
-        <Transformer>system/video/font.xsh.xml?instanced</Transformer>
-        <FragmentShader>system/video/font.fsh</FragmentShader>
+        <Transformer>../system/video/font.xsh.xml?instanced</Transformer>
+        <FragmentShader>../system/video/font.fsh</FragmentShader>
     </Rasterizer>
 </Qwadro>

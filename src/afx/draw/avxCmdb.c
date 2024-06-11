@@ -98,6 +98,9 @@ _AVX afxError _AvxCmdbStdCtor(avxCmdb cmdb, afxCookie const* cookie)
     cmdb->beginCb = NIL;
     cmdb->endCb = NIL;
     cmdb->resetCb = NIL;
+    
+    cmdb->inRenderPass = FALSE;
+    cmdb->inVideoCoding = FALSE;
 
     return err;
 }

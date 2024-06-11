@@ -212,7 +212,7 @@ _AVX afxError _AvxDdgeStdCtor(afxDrawBridge ddge, afxCookie const* cookie)
         afxManager* cls = AfxGetDrawQueueClass(ddev, cfg->portIdx);
         AfxAssertClass(cls, afxFcc_DQUE);
 
-        if (AfxAcquireObjects(cls, ddge->queCnt, (afxObject*)ddge->queues, (void const*[]) { ddev, ddge }))
+        if (AfxAcquireObjects(cls, ddge->queCnt, (afxObject*)ddge->queues, (void const*[]) { ddev, ddge, cfg }))
             AfxThrowError();
 
         if (err)
