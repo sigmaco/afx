@@ -14,12 +14,6 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#include <stdio.h>
-#define WIN32_LEAN_AND_MEAN 1
-#include <Windows.h>
-#include <hidusage.h>
-
 #define _AFX_CORE_C
 #define _AFX_DEVICE_C
 
@@ -27,8 +21,9 @@
 #define _AUX_HID_C
 #define _AUX_GAMEPAD_C
 #define _AUX_CONTROLLER_C
-#include "qwadro/ux/afxShell.h"
-
+#include "../src/afx/dev/afxDevCoreBase.h"
+#include "dev/AuxDevKit.h"
+//#include "dev/AuxOverWin32.h"
 
 _AUX afxError _AuxCtrlDtor(afxController ctrl)
 {
@@ -56,9 +51,7 @@ _AUX afxClassConfig const _AuxCtrlMgrCfg =
     .fcc = afxFcc_CTRL,
     .name = "Controller",
     .desc = "HID/Controller Handling",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxController)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxController)),
     .ctor = (void*)_AuxCtrlCtor,
     .dtor = (void*)_AuxCtrlDtor
 };
@@ -69,7 +62,7 @@ _AUX afxClassConfig const _AuxCtrlMgrCfg =
 _AUX afxError AfxAcquireControllers(afxNat cnt, afxNat const port[], afxController controllers[])
 {
     afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetControllerManager();
+    afxClass* cls = AfxGetControllerClass();
     AfxAssertClass(cls, afxFcc_CTRL);
 
     for (afxNat i = 0; i < cnt; i++)

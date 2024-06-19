@@ -20,7 +20,7 @@
 #define AVX_VERTEX_BUFFER_H
 
 #include "qwadro/draw/io/afxBuffer.h"
-#include "qwadro/draw/pipe/afxVertexInput.h"
+#include "qwadro/draw/pipe/avxVertexInput.h"
 
 AFX_DECLARE_STRUCT(afxVertexBufferSegment);
 
@@ -63,7 +63,7 @@ AVX afxError        AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVer
 
 AVX afxBuffer       AfxGetVertexBufferStorage(afxVertexBuffer vbuf);
 AVX afxNat          AfxGetVertexBufferUsage(afxVertexBuffer vbuf);
-AVX afxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
+AVX avxVertexInput  AfxGetVertexBufferLayout(afxVertexBuffer vbuf);
 AVX afxNat          AfxGetVertexBufferCapacity(afxVertexBuffer vbuf);
 
 AFX_DECLARE_STRUCT(akxVertexDataCache);

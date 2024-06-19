@@ -51,9 +51,7 @@ _A4D afxClassConfig _SalCurMgrCfg =
     .fcc = afxFcc_SBUF,
     .name = "Curve",
     .desc = "Hardware-accelerated Curve",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxCurve)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxCurve)),
     .ctor = (void*)_SalCurCtor,
     .dtor = (void*)_SalCurDtor
 };

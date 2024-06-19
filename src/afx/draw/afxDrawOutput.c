@@ -24,9 +24,8 @@
 #define _AVX_DRAW_DEVICE_C
 #define _AVX_DRAW_CONTEXT_C
 #define _AVX_DRAW_OUTPUT_C
-//#define _AVX_DRAW_OUTPUT_IMPL
-#include "qwadro/draw/afxDrawSystem.h"
-
+#define _AVX_DRAW_OUTPUT_IMPL
+#include "dev/AvxDevKit.h"
 
 _AVX afxNat _AvxDoutBuffersAreLocked(afxDrawOutput dout)
 {
@@ -95,7 +94,7 @@ _AVX afxError _AvxDoutFreeAllBuffers(afxDrawOutput dout)
 
     for (afxNat i = 0; i < dout->bufCnt; i++)
     {
-        afxCanvas canv = dout->buffers[i].canv;
+        avxCanvas canv = dout->buffers[i].canv;
         //afxRaster ras = dout->buffers[i].ras;
 
         if (/*!ras*/!canv)
@@ -154,7 +153,8 @@ _AVX afxNat AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat p
         req.dout = dout;
         req.wait = wait;
 
-        afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+        afxDrawBridge ddge;
+        AfxGetDrawBridge(dctx, portIdx, &ddge);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
         if (AFX_INVALID_INDEX == (queIdx = AfxEnqueueStampRequest(ddge, 1, &req, origin, caption)))
@@ -181,7 +181,8 @@ _AVX afxNat AfxPresentDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxNat
         req.dout = dout;
         req.wait = wait;
 
-        afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+        afxDrawBridge ddge;
+        AfxGetDrawBridge(dctx, portIdx, &ddge);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
         if (AFX_INVALID_INDEX == (queIdx = AfxEnqueuePresentRequest(ddge, 1, &req)))
@@ -195,7 +196,7 @@ _AVX afxError AfxPrintDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxUri
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, bufIdx, 1);
-    afxCanvas canv;
+    avxCanvas canv;
 
     if (!AfxGetDrawOutputCanvas(dout, bufIdx, &canv)) AfxThrowError();
     else
@@ -213,17 +214,23 @@ _AVX afxError AfxPrintDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxUri
 _AVX afxBool AfxGetDrawOutputContext(afxDrawOutput dout, afxDrawContext* context)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxDrawContext dctx = AfxGetLinker(&dout->dctx);
-    AfxTryAssertObjects(1, &dctx, afxFcc_DCTX);
-    AfxAssert(context);
-    *context = dctx;
+
+    if (dctx)
+    {
+        AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+        AfxAssert(context);
+        *context = dctx;
+    }
     return !!dctx;
 }
 
 _AVX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     if (!AfxReconnectDrawOutput(dout, NIL))
@@ -237,6 +244,7 @@ _AVX afxError AfxDisconnectDrawOutput(afxDrawOutput dout)
 _AVX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
@@ -246,13 +254,52 @@ _AVX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
     while (ddev->relinking)
         AfxWaitCondition(&ddev->relinkedCnd, &ddev->relinkedCndMtx);
 
-    afxDrawContext from;
+    afxDrawContext from = NIL;
     AfxGetDrawOutputContext(dout, &from);
 
     if (dctx != from)
     {
         ddev->relinking = TRUE;
         dout->reconnecting = TRUE;
+
+        if (from)
+        {
+            AfxAssertObjects(1, &from, afxFcc_DCTX);
+
+            afxDrawOutput found;
+            AfxIterateLinkageB2F(AFX_OBJECT(afxDrawOutput), found, &from->outputs, dctx)
+            {
+                AfxAssertObjects(1, &found, afxFcc_DOUT);
+
+                if (found == dout)
+                {
+                    do
+                    {
+                        AfxAssertObjects(1, &from, afxFcc_DCTX);
+
+                        if (AfxWaitForDrawContext(from))
+                            AfxThrowError();
+
+                    } while (AfxLoadAtom32(&dout->submCnt));
+
+                    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+
+                    if (ddev->relinkDoutCb && ddev->relinkDoutCb(ddev, NIL, 1, &dout)) // if disconnection was refused
+                    {
+                        AfxThrowError();
+                    }
+                    else
+                    {
+                        AfxPopLinkage(&dout->dctx);
+                        AfxRedoDrawOutputBuffers(dout);
+                        AfxAssertObjects(1, &from, afxFcc_DCTX);
+                        AfxReleaseObjects(1, &from);
+                    }
+                    break;
+                }
+            }
+            AfxAssert(found == dout);
+        }
 
         if (dctx)
         {
@@ -265,52 +312,23 @@ _AVX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
                 AfxThrowError();
                 dctx = NIL; // so just disconnect
             }
-        }
-
-        if (from)
-        {
-            afxDrawOutput dout2;
-            AfxIterateLinkageB2F(AFX_OBJECT(afxDrawOutput), dout2, &from->outputs, dctx)
-            {
-                AfxAssertObjects(1, &dout2, afxFcc_DOUT);
-
-                if (dout2 == dout)
-                {
-                    do
-                    {
-                        if (AfxWaitForDrawContext(from))
-                            AfxThrowError();
-                    } while (AfxLoadAtom32(&dout->submCnt));
-
-                    if (ddev->doutRelinkCb && ddev->doutRelinkCb(ddev, NIL, 1, &dout)) // if disconnection was refused
-                    {
-                        AfxThrowError();
-                    }
-                    else
-                    {
-                        AfxPopLinkage(&dout->dctx);
-                        AfxRedoDrawOutputBuffers(dout);
-                        AfxReleaseObjects(1, &from);
-                    }
-                    break;
-                }
-            }
-        }
-
-        if (!err && dctx)
-        {
-            AfxReacquireObjects(1, &dctx);
-            AfxPushLinkage(&dout->dctx, &dctx->outputs);
-
-            if (ddev->doutRelinkCb && ddev->doutRelinkCb(ddev, dctx, 1, &dout)) // if reconnection was refused
-            {
-                AfxThrowError();
-                AfxPopLinkage(&dout->dctx);
-                AfxReleaseObjects(1, &dctx);
-            }
             else
             {
-                AfxRedoDrawOutputBuffers(dout);
+                AfxReacquireObjects(1, &dctx);
+                AfxPushLinkage(&dout->dctx, &dctx->outputs);
+
+                AfxAssertObjects(1, &dout, afxFcc_DOUT);
+
+                if (ddev->relinkDoutCb && ddev->relinkDoutCb(ddev, dctx, 1, &dout)) // if reconnection was refused
+                {
+                    AfxThrowError();
+                    AfxPopLinkage(&dout->dctx);
+                    AfxReleaseObjects(1, &dctx);
+                }
+                else
+                {
+                    AfxRedoDrawOutputBuffers(dout);
+                }
             }
         }
 
@@ -328,23 +346,33 @@ _AVX afxBool AfxReconnectDrawOutput(afxDrawOutput dout, afxDrawContext dctx)
 _AVX afxNat AfxCountDrawOutputBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     return dout->bufCnt;
 }
 
 _AVX afxError AfxLockDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNat *bufIdx)
+// Pull an available draw output buffer (usually from the WSI).
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxNat bufIdx2 = AFX_INVALID_INDEX;
 
     if (AfxLoadAtom32(&dout->reconnecting)) AfxThrowError();
     else
     {
-        if (!(err = dout->lockCb(dout, timeout, &bufIdx2)))
+        if (dout->lockCb)
         {
-            AfxAssert(AFX_INVALID_INDEX != bufIdx2);
-            AfxAssertRange(dout->bufCnt, bufIdx2, 1);
+            if (!(err = dout->lockCb(dout, timeout, &bufIdx2)))
+            {
+                AfxAssert(AFX_INVALID_INDEX != bufIdx2);
+                AfxAssertRange(dout->bufCnt, bufIdx2, 1);
+            }
+        }
+        else
+        {
+
         }
     }
     AfxAssert(bufIdx);
@@ -352,37 +380,44 @@ _AVX afxError AfxLockDrawOutputBuffer(afxDrawOutput dout, afxTime timeout, afxNa
     return err;
 }
 
-_AVX afxNat AfxEnumerateDrawOutputCanvases(afxDrawOutput dout, afxNat baseBuf, afxNat bufCnt, afxCanvas canvases[])
+_AVX afxNat AfxEnumerateDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, avxCanvas canvases[])
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    AfxAssertRange(dout->bufCnt, baseBuf, bufCnt);
-    AfxAssert(canvases);
+    afxNat totalBufCnt = dout->bufCnt;
+    AfxAssertRange(totalBufCnt, first, cnt);
     afxNat rslt = 0;
 
-    for (afxNat i = 0; i < bufCnt; i++)
+    if (totalBufCnt > first)
     {
-        afxNat bufIdx = baseBuf + i;
-        AfxAssertRange(dout->bufCnt, bufIdx, 1);
-        afxCanvas canv;
+        AfxAssert(canvases);
 
-        if ((canv = dout->buffers[bufIdx].canv))
+        for (afxNat i = 0; i < cnt; i++)
         {
-            AfxAssertObjects(1, &canv, afxFcc_CANV);
-            ++rslt;
+            afxNat bufIdx = first + i;
+            AfxAssertRange(totalBufCnt, bufIdx, 1);
+            avxCanvas canv;
+
+            if ((canv = dout->buffers[bufIdx].canv))
+            {
+                AfxAssertObjects(1, &canv, afxFcc_CANV);
+                ++rslt;
+            }
+            canvases[i] = canv;
         }
-        canvases[i] = canv;
     }
     return rslt;
 }
 
-_AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, afxCanvas* canvas)
+_AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, avxCanvas* canvas)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, bufIdx, 1);
     afxBool rslt;
-    afxCanvas canv;
+    avxCanvas canv;
     while ((rslt = AfxEnumerateDrawOutputCanvases(dout, bufIdx, 1, &canv)))
     {
         AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -393,32 +428,38 @@ _AVX afxBool AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, afxCanvas
     return rslt;
 }
 
-_AVX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat baseBuf, afxNat bufCnt, afxRaster rasters[])
+_AVX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[])
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
-    AfxAssertRange(dout->bufCnt, baseBuf, bufCnt);
-    AfxAssert(rasters);
+    afxNat totalBufCnt = dout->bufCnt;
+    AfxAssertRange(totalBufCnt, first, cnt);
     afxNat rslt = 0;
 
-    for (afxNat i = 0; i < bufCnt; i++)
+    if (totalBufCnt > first)
     {
-        afxNat bufIdx = baseBuf + i;
-        AfxAssertRange(dout->bufCnt, bufIdx, 1);
-        afxRaster ras = NIL;
-        afxCanvas canv;
-
-        if (AfxEnumerateDrawOutputCanvases(dout, bufIdx, 1, &canv))
+        AfxAssert(rasters);
+    
+        for (afxNat i = 0; i < cnt; i++)
         {
-            AfxAssertObjects(1, &canv, afxFcc_CANV);
+            afxNat bufIdx = first + i;
+            AfxAssertRange(totalBufCnt, bufIdx, 1);
+            afxRaster ras = NIL;
+            avxCanvas canv;
 
-            if (AfxEnumerateDrawBuffers(canv, 0, 1, &ras))
+            if (AfxGetDrawOutputCanvas(dout, bufIdx, &canv))
             {
-                AfxAssertObjects(1, &ras, afxFcc_RAS);
-                ++rslt;
+                AfxAssertObjects(1, &canv, afxFcc_CANV);
+
+                if (AfxEnumerateDrawBuffers(canv, 0, 1, &ras))
+                {
+                    AfxAssertObjects(1, &ras, afxFcc_RAS);
+                    ++rslt;
+                }
             }
+            rasters[i] = ras;
         }
-        rasters[i] = ras;
     }
     return rslt;
 }
@@ -426,6 +467,7 @@ _AVX afxNat AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat baseBuf, af
 _AVX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxRaster* raster)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssertRange(dout->bufCnt, bufIdx, 1);
     afxBool rslt;
@@ -443,6 +485,7 @@ _AVX afxBool AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxRaster
 _AVX afxError AfxRedoDrawOutputBuffers(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     if (!dout->buffers)
@@ -459,7 +502,7 @@ _AVX afxError AfxRedoDrawOutputBuffers(afxDrawOutput dout)
     {
         for (afxNat i = 0; i < dout->bufCnt; i++)
         {
-            afxCanvas canv = dout->buffers[i].canv;
+            avxCanvas canv = dout->buffers[i].canv;
 
             if (canv)
             {
@@ -538,6 +581,7 @@ _AVX afxError AfxRedoDrawOutputBuffers(afxDrawOutput dout)
 _AVX void AfxGetDrawOutputAspectRatio(afxDrawOutput dout, afxReal64* wpOverHp, afxReal64* wrOverHr, afxReal64* wwOverHw)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert3(wpOverHp, wrOverHr, wwOverHw);
     *wpOverHp = dout->wpOverHp;
@@ -548,6 +592,7 @@ _AVX void AfxGetDrawOutputAspectRatio(afxDrawOutput dout, afxReal64* wpOverHp, a
 _AVX void AfxGetDrawOutputResolution(afxDrawOutput dout, afxWhd res, afxReal* refreshRate)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert(res);
     res[0] = dout->res[0];
@@ -560,6 +605,7 @@ _AVX void AfxGetDrawOutputResolution(afxDrawOutput dout, afxWhd res, afxReal* re
 _AVX void AfxGetDrawOutputExtent(afxDrawOutput dout, afxWhd whd)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert(whd);
     whd[0] = dout->whd[0];
@@ -571,6 +617,7 @@ _AVX void AfxGetDrawOutputExtentAsNdc(afxDrawOutput dout, afxV3d whd)
 // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert(whd);
     afxWhd whd2;
@@ -581,6 +628,7 @@ _AVX void AfxGetDrawOutputExtentAsNdc(afxDrawOutput dout, afxV3d whd)
 _AVX afxError AfxAdjustDrawOutput(afxDrawOutput dout, afxWhd const whd)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     
     afxWhd whd2;
@@ -624,6 +672,7 @@ _AVX afxError AfxAdjustDrawOutputFromNdc(afxDrawOutput dout, afxV3d const whd)
 // normalized (bethween 0 and 1 over the total available) porportions of exhibition area.
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxAssert4(whd, whd[0], whd[1], whd[2]);
 
@@ -639,6 +688,7 @@ _AVX afxError AfxAdjustDrawOutputFromNdc(afxDrawOutput dout, afxV3d const whd)
 _AVX afxBool AfxResetDrawOutputResolution(afxDrawOutput dout, afxWhd const res, afxReal refreshRate, afxReal64 physAspectRatio)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxBool rslt = TRUE;
 
@@ -686,15 +736,17 @@ _AVX afxBool AfxResetDrawOutputResolution(afxDrawOutput dout, afxWhd const res, 
 _AVX afxDrawDevice AfxGetDrawOutputDevice(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxDrawDevice ddev = AfxGetLinker(&dout->ddev);
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     return ddev;
 }
 
-_AVX afxError _AvxDoutDtor(afxDrawOutput dout)
+_AVX afxError _AvxDoutDtorCb(afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
+    /// dout must be a valid afxDrawOutput handle.
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     afxDrawDevice ddev = AfxGetDrawOutputDevice(dout);
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
@@ -702,7 +754,7 @@ _AVX afxError _AvxDoutDtor(afxDrawOutput dout)
     AfxDisconnectDrawOutput(dout);
     //dout->disabled;
 
-    if (ddev->doutIddDtorCb && ddev->doutIddDtorCb(ddev, dout))
+    if (ddev->closeDoutCb && ddev->closeDoutCb(ddev, dout))
         AfxThrowError();
 
     AfxAssert(!dout->idd);
@@ -721,7 +773,7 @@ _AVX afxError _AvxDoutDtor(afxDrawOutput dout)
     return err;
 }
 
-_AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
+_AVX afxError _AvxDoutCtorCb(afxDrawOutput dout, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -733,7 +785,7 @@ _AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     afxDrawOutputConfig const* cfg = ((afxDrawOutputConfig const *)cookie->udd[2]) + cookie->no;
     AfxAssert(cfg);
     
-    AfxPushLinkage(&dout->ddev, &ddev->outputs);
+    AfxPushLinkage(&dout->ddev, &ddev->openedDoutChain);
     AfxPushLinkage(&dout->dctx, NIL);
 
     // endpoint
@@ -747,7 +799,7 @@ _AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->wpOverHp = AfxFindPhysicalAspectRatio(dout->res[0], dout->res[1]);
     dout->presentAlpha = cfg->presentAlpha; // consider transparency for window composing.
     dout->presentTransform = cfg->presentTransform; // The default is to leave it as it is.
-    dout->presentMode = cfg->presentMode; // The default afxPresentMode_LIFO is already zero.
+    dout->presentMode = cfg->presentMode; // The default avxPresentMode_LIFO is already zero.
     dout->doNotClip = !!cfg->doNotClip; // don't spend resources doing off-screen draw.
     dout->udd[0] = cfg->udd[0];
     dout->udd[1] = cfg->udd[1];
@@ -756,14 +808,13 @@ _AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->endpointNotifyObj = cfg->endpointNotifyObj;
     dout->endpointNotifyFn = cfg->endpointNotifyFn;
     dout->idd = NIL;
-    dout->iddCb = NIL;
 
     // canvas
     dout->whd[0] = AfxMax(1, cfg->whd[0]);
     dout->whd[1] = AfxMax(1, cfg->whd[1]);
     dout->whd[2] = AfxMax(1, cfg->whd[2]);
     dout->wwOverHw = dout->whd[0] / dout->whd[1];
-    dout->colorSpc = cfg->colorSpc ? cfg->colorSpc : afxColorSpace_SRGB; // sRGB is the default
+    dout->colorSpc = cfg->colorSpc ? cfg->colorSpc : avxColorSpace_SRGB; // sRGB is the default
     dout->pixelFmt = cfg->pixelFmt ? cfg->pixelFmt : afxPixelFormat_RGBA8; // or afxPixelFormat_RGBA8R ?
     dout->pixelFmtDs[0] = cfg->pixelFmtDs[0];
     dout->pixelFmtDs[1] = cfg->pixelFmtDs[1];
@@ -794,12 +845,9 @@ _AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     dout->lockCb = NIL;
     dout->buffers = NIL;
 
+    AfxAssert(ddev->openDoutCb);
 
-#ifdef AFX_OS_WIN
-    //AfxZero(&dout->w32, sizeof(dout->w32));
-#endif
-
-    if (ddev->doutIddCtorCb(ddev, dout, cfg, endpoint)) AfxThrowError();
+    if (ddev->openDoutCb(ddev, dout, cfg, endpoint)) AfxThrowError();
     else
     {
         AfxAssert(dout->res[0]);
@@ -819,15 +867,14 @@ _AVX afxError _AvxDoutCtor(afxDrawOutput dout, afxCookie const* cookie)
     return err;
 }
 
-_AVX afxClassConfig const _AvxDoutMgrCfg =
+_AVX afxClassConfig const _AvxDoutClsCfg =
 {
     .fcc = afxFcc_DOUT,
     .name = "DrawOutput",
     .desc = "Draw Output Mechanism",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxDrawOutput)),
-    .ctor = (void*)_AvxDoutCtor,
-    .dtor = (void*)_AvxDoutDtor
+    .fixedSiz = sizeof(AFX_OBJECT(afxDrawOutput)),
+    .ctor = (void*)_AvxDoutCtorCb,
+    .dtor = (void*)_AvxDoutDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -843,7 +890,7 @@ _AVX afxError AfxOpenDrawOutput(afxNat ddevId, afxUri const* endpoint, afxDrawOu
     else
     {
         AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-        afxManager* cls = AfxGetDrawOutputClass();
+        afxClass* cls = (afxClass*)AfxGetDrawOutputClass();
         AfxAssertClass(cls, afxFcc_DOUT);
         afxDrawOutput dout;
 
@@ -874,14 +921,21 @@ _AVX afxError AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg
     return err;
 }
 
-_AVX afxNat AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
+_AVXINL afxBool _AvxTestDoutIsFromDdevFltCb(afxDrawOutput dout, afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetDrawOutputClass();
-    AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    return (ddev == AfxGetDrawOutputDevice(dout));
+}
+
+_AVXINL afxBool _AvxTestDoutIsFromDdevFlt2Cb(afxDrawOutput dout, void** udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    afxDrawDevice ddev = udd[0];
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    return (ddev == AfxGetDrawOutputDevice(dout)) && ((afxBool(*)(afxDrawOutput,void*))udd[1])(dout, udd[2]);
 }
 
 _AVX afxNat AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxDrawOutput outputs[])
@@ -889,16 +943,69 @@ _AVX afxNat AfxEnumerateDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(outputs);
-    afxManager* cls = AfxGetDrawOutputClass();
+    afxClass const* cls = AfxGetDrawOutputClass();
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
+    afxNat rslt = 0;
+
+    if (!ddev) rslt = AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)outputs);
+    else
+    {
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        rslt = AfxEvokeClassInstances(cls, (void*)_AvxTestDoutIsFromDdevFltCb, ddev, first, cnt, (afxObject*)outputs);
+    }
+    return rslt;
 }
 
-_AVX afxNat AfxCountDrawOutputs(afxDrawDevice ddev)
+_AVX afxNat AfxEvokeDrawOutputs(afxDrawDevice ddev, afxBool(*flt)(afxDrawOutput, void*), void* fdd, afxNat first, afxNat cnt, afxDrawOutput outputs[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    afxManager*cls = AfxGetDrawOutputClass();
+    AfxAssert(cnt);
+    AfxAssert(outputs);
+    afxClass const* cls = AfxGetDrawOutputClass();
     AfxAssertClass(cls, afxFcc_DOUT);
-    return AfxCountObjects(cls);
+    afxNat rslt = 0;
+
+    if (!ddev) rslt = AfxEvokeClassInstances(cls, (void*)flt, fdd, first, cnt, (afxObject*)outputs);
+    else
+    {
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        rslt = AfxEvokeClassInstances(cls, (void*)_AvxTestDoutIsFromDdevFlt2Cb, (void*[]) { ddev, flt, fdd }, first, cnt, (afxObject*)outputs);
+    }
+    return rslt;
+}
+
+_AVX afxNat AfxInvokeDrawOutputs(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*f)(afxDrawOutput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass const* cls = AfxGetDrawOutputClass();
+    AfxAssertClass(cls, afxFcc_DOUT);
+    afxNat rslt = 0;
+
+    if (!ddev) rslt = AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+    else
+    {
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)_AvxTestDoutIsFromDdevFltCb, ddev, (void*)f, udd);
+    }
+    return rslt;
+}
+
+_AVX afxNat AfxInvokeDrawOutputs2(afxDrawDevice ddev, afxNat first, afxNat cnt, afxBool(*flt)(afxDrawOutput, void*), void *fdd, afxBool(*f)(afxDrawOutput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass const* cls = AfxGetDrawOutputClass();
+    AfxAssertClass(cls, afxFcc_DOUT);
+    afxNat rslt = 0;
+
+    if (!ddev) rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)flt, fdd, (void*)f, udd);
+    else
+    {
+        AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+        rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)_AvxTestDoutIsFromDdevFlt2Cb, (void*[]) { ddev, flt, fdd }, (void*)f, udd);
+    }
+    return rslt;
 }

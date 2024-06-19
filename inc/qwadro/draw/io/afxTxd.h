@@ -29,9 +29,9 @@
 AFX_DEFINE_STRUCT(afxTexture)
 {
     afxUri          name;
-    afxTexelAddress uvw[3];
-    afxTexelFilter  minFlt;
-    afxSampler      samp;
+    avxTexelAddress uvw[3];
+    avxTexelFilter  minFlt;
+    avxSampler      samp;
     afxRaster       ras;
 };
 

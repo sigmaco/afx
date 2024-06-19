@@ -1,0 +1,6411 @@
+Booting up the Qwadro Execution Ecosystem...
+Setting up SystemSetting up String Basemalign 311DD0
+realign 30AEA0
+malign 311EA0
+afxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.realign 2E3E50
+realign 30AEF0
+malign 311DD0
+realign 312210
+realign 313050
+realign 311DD0
+realign 3122D0
+realign 311DD0
+realign 3122D0
+realign 311DD0
+realign 3122D0
+realign 3123A0
+realign 312480
+malign 311DD0
+realign 3122D0
+realign 315010
+realign 3123A0
+realign 312490
+realign 315010
+realign 3123A0
+malign 311DD0
+realign 3124A0
+Setting up ThreadSetting up Memory Management UnitSetting up ServiceSetting up CodecSetting up StreamSetting up ArchiveSetting up StorageSetting up ModuleSetting up DeviceAcquiring thread...  3852 "afxSystem_w32.c:523"realign 30AEF0
+malign 313FE0
+malign 3142C0
+realign 30AF40
+malign 314690
+Mounting... <.>('E:/qwadro/afx///'),5malign 2E3DA0
+malign 311DD0
+Mounting... <system>('E:/qwadro/afx//system/'),5malign 311E30
+malign 313050
+Mounting... <system>('E:/qwadro/afx//system32/'),7malign 314990
+malign 3130B0
+Mounting... <system>('E:/qwadro/afx//system32d/'),7malign 314A00
+malign 313110
+Mounting... <//./c/>('C:\'),7malign 314A70
+malign 300A40
+Mounting... <//./e/>('E:\'),7malign 314AE0
+malign 300A90
+Mounting... <//./f/>('F:\'),7malign 314B50
+malign 300AD0
+Mounting... <//./g/>('G:\'),7malign 314BC0
+malign 300B20
+realign 313170
+malign 314C30
+Mounting... <//./h/>('H:\'),7malign 314F40
+malign 300B60
+Mounting... <//./i/>('I:\'),7malign 314FB0
+malign 300BB0
+Mounting... <//./z/>('Z:\'),7malign 315020
+malign 300BF0
+Loading module... <e2coree.dll>realign 30AF40
+malign 315F30
+Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>Setting up DrawSystemSetting up CameraSetting up DrawDevice[Device]Setting up DrawOutputSetting up DrawInputmalign 316190
+realign 317340
+realign 30AF90
+malign 316190
+realign 317400
+realign 316190
+realign 3161F0
+realign 315090
+realign 2FB860
+realign 316190
+realign 3174D0
+realign 316190
+realign 3174D0
+realign 3175A0
+realign 319580
+realign 319660
+realign 319740
+realign 319580
+realign 319670
+realign 319760
+realign 319580
+realign 317400
+realign 3196D0
+malign 316190
+realign 317400
+realign 3197E0
+malign 316190
+realign 3196D0
+realign 3198F0
+realign 319790
+realign 3198B0
+realign 3199E0
+realign 319790
+realign 3198E0
+realign 319A40
+realign 319790
+realign 319900
+realign 319A80
+realign 319790
+realign 319920
+realign 319A70
+realign 3196D0
+realign 319A70
+realign 3196D0
+realign 319A70
+realign 3196D0
+realign 319A70
+realign 3196D0
+malign 3171A0
+realign 317310
+realign 30AF90
+malign 3171A0
+realign 3173E0
+realign 3171A0
+realign 3171F0
+realign 315090
+realign 2FB860
+realign 3171A0
+realign 3174A0
+realign 3171A0
+realign 3174A0
+realign 3171A0
+realign 3174A0
+realign 31A5B0
+realign 31A690
+realign 31A780
+realign 31A5B0
+realign 31A6B0
+realign 31A7B0
+realign 3173E0
+realign 31A5B0
+malign 3171A0
+realign 31A6C0
+realign 3173E0
+malign 3171A0
+realign 31A5B0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 3173E0
+realign 31A8F0
+realign 31AA40
+realign 31ABF0
+realign 31ADB0
+realign 31AA40
+realign 31AC10
+realign 31AE00
+realign 31AA40
+realign 31AC50
+realign 31AA40
+realign 31AE70
+realign 31AC00
+realign 31AE30
+malign 3171A0
+realign 31A5B0
+realign 31B070
+realign 30AF90
+malign 31B2B0
+malign 31A8F0
+realign 3131D0
+malign 3171A0
+realign 317490
+realign 30AEA0
+malign 31A8F0
+realign 31AC00
+realign 3172A0
+realign 31A8F0
+realign 315090
+realign 2FB860
+realign 31A8F0
+realign 31A980
+realign 31ACD0
+realign 31A8F0
+realign 31ACD0
+realign 31A8F0
+realign 31ACD0
+realign 31A8F0
+realign 31ACD0
+realign 31A8F0
+realign 31ACD0
+realign 31A8F0
+realign 31ADD0
+realign 31AED0
+malign 31AC00
+realign 31ACD0
+realign 31AD90
+malign 31AC00
+realign 31AEB0
+realign 31B8B0
+realign 31B9D0
+realign 31BAF0
+realign 31B8B0
+realign 31BA00
+realign 31BB60
+realign 31B8B0
+realign 31BA20
+realign 31BBA0
+realign 31BD30
+realign 31B8B0
+realign 31BA50
+realign 31B8B0
+realign 31AD90
+realign 31B9F0
+realign 31AD90
+realign 31B9F0
+realign 31AD90
+realign 31B9F0
+realign 31AD90
+realign 31B9F0
+realign 31AD90
+realign 31BC10
+realign 31B8B0
+realign 31BAE0
+malign 31AC00
+realign 31AF60
+realign 31BD10
+Loading module... <targl4.dll>realign 313230
+malign 31B8B0
+Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 319580
+Setting up DrawQueueSetting up DrawBridgeSetting up DrawContextmalign 2FB8E0
+Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008malign 31F360
+Acquiring thread...  0 "sglDdev_w32.c:1076"malign 321160
+Doing the ASX start up...Loading module... <e2sound>Starting Thread Execution Unit 7484realign 30D180
+malign 31B020
+Setting up SoundSystemSetting up SoundDevice[Device]Setting up SoundOutputSetting up SoundInputmalign 316990
+realign 316CC0
+realign 30B2B0
+malign 316990
+realign 317040
+realign 326F70
+realign 30D1E0
+realign 315100
+realign 2FBEE0
+realign 31AB70
+realign 317100
+realign 316990
+realign 328FD0
+realign 317720
+realign 3247F0
+realign 328FD0
+realign 3290B0
+realign 329190
+realign 328FD0
+realign 3290C0
+realign 3291C0
+realign 317040
+realign 328FD0
+malign 316990
+realign 3290E0
+realign 316D90
+malign 316990
+realign 328FD0
+realign 316EA0
+realign 316FC0
+realign 316D90
+realign 316EC0
+realign 317000
+realign 316D90
+realign 316EE0
+realign 329300
+realign 32BAD0
+realign 32BC40
+realign 329550
+realign 32BC30
+realign 329EF0
+realign 32A090
+realign 32A230
+realign 329EF0
+realign 32C800
+realign 330430
+realign 33AE20
+realign 33E010
+realign 33D8A0
+malign 33EA20
+malign 316990
+realign 32B1D0
+realign 348770
+malign 316990
+realign 329550
+realign 326F70
+realign 30D1E0
+realign 315100
+realign 2FC060
+realign 316990
+realign 329620
+realign 316990
+realign 329620
+realign 317720
+realign 3248C0
+realign 32C900
+realign 330530
+realign 3D6AC0
+realign 3D6BB0
+realign 3D6CA0
+realign 3D6AC0
+Creating transient OpenGL contextrealign 3D6DA0
+realign 2F16400
+malign 33AF40
+realign 2F1FF30
+realign 2F55DE0
+malign 2F16400
+realign 2F93BB0
+realign 2F93DE0
+realign 4A119C0
+realign 4A16F10
+realign 4A17560
+realign 4A16A10
+realign 4A17560
+realign 4A16B40
+realign 4A16CA0
+realign 4A16E10
+realign 4A11F90
+realign 4A16CE0
+realign 4A16E70
+realign 4A2E1F0
+realign 4A1CEC0
+realign 4A163D0
+realign 4A16590
+000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.realign 4A16760
+000 wglSwapIntervalEXT core found.000 wglGetExtensionsStringARB core found.realign 4A163D0
+realign 4A16720
+Creating definitive OpenGL contextrealign 4A16920
+Loading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.malign 497C700
+000 wglSwapIntervalEXT core found.Setting up SoundBrigeSetting up SoundContextmalign 327440
+Loading module... <openal32.dll>realign 2F98420
+malign 497C880
+000 wglGetExtensionsStringARB core found.malign 497CAE0
+Acquiring thread...  0 "salSdev_w32.c:448"realign 2F571D0
+malign 497CD40
+malign 497D020
+391 glReleaseShaderCompiler core found.392 glShaderBinary core found.The audience is listeningmalign 316CC0
+realign 2FA1830
+realign 30AEF0
+malign 316CC0
+realign 2F323A0
+realign 327330
+realign 30D180
+realign 4951280
+realign 2FC160
+realign 2F55D50
+realign 4A1FF00
+realign 31A7B0
+393 glGetShaderPrecisionFormat core found.394 glDepthRangef core found.395 glClearDepthf core found.Starting Thread Execution Unit 3620realign 2F525D0
+realign 316CC0
+realign 324A70
+realign 2F16400
+realign 2F772C0
+realign 2F16400
+realign 2F772C0
+realign 2F16400
+realign 497BA30
+realign 4A20700
+396 glGetProgramBinary core found.397 glProgramBinary core found.realign 2F16400
+398 glProgramParameteri core found.399 glUseProgramStages core found.400 glActiveShaderProgram core found.401 glCreateShaderProgramv core found.402 glBindProgramPipeline core found.403 glDeleteProgramPipelines core found.404 glGenProgramPipelines core found.405 glIsProgramPipeline core found.406 glGetProgramPipelineiv core found.407 glProgramUniform1i core found.malign 316CC0
+realign 2F323A0
+realign 32BC30
+408 glProgramUniform1iv core found.409 glProgramUniform1f core found.malign 316CC0
+realign 2F16400
+410 glProgramUniform1fv core found.411 glProgramUniform1d core found.realign 33E010
+412 glProgramUniform1dv core found.413 glProgramUniform1ui core found.realign 32BC30
+414 glProgramUniform1uiv core found.415 glProgramUniform2i core found.416 glProgramUniform2iv core found.417 glProgramUniform2f core found.418 glProgramUniform2fv core found.419 glProgramUniform2d core found.420 glProgramUniform2dv core found.421 glProgramUniform2ui core found.422 glProgramUniform2uiv core found.423 glProgramUniform3i core found.424 glProgramUniform3iv core found.425 glProgramUniform3f core found.426 glProgramUniform3fv core found.427 glProgramUniform3d core found.428 glProgramUniform3dv core found.429 glProgramUniform3ui core found.realign 33E010
+realign 32BC30
+realign 4978B20
+realign 32BC30
+realign 33E010
+realign 32BC30
+realign 33E010
+realign 32BC30
+430 glProgramUniform3uiv core found.431 glProgramUniform4i core found.432 glProgramUniform4iv core found.realign 33E010
+realign 498C660
+433 glProgramUniform4f core found.434 glProgramUniform4fv core found.435 glProgramUniform4d core found.realign 32BC30
+436 glProgramUniform4dv core found.realign 498C810
+realign 4990890
+realign 4990A50
+437 glProgramUniform4ui core found.438 glProgramUniform4uiv core found.439 glProgramUniformMatrix2fv core found.realign 498C750
+440 glProgramUniformMatrix3fv core found.441 glProgramUniformMatrix4fv core found.442 glProgramUniformMatrix2dv core found.realign 4992B40
+realign 498C750
+realign 4992EA0
+realign 498C750
+realign 4992EA0
+443 glProgramUniformMatrix3dv core found.444 glProgramUniformMatrix4dv core found.445 glProgramUniformMatrix2x3fv core found.446 glProgramUniformMatrix3x2fv core found.realign 4993070
+447 glProgramUniformMatrix2x4fv core found.448 glProgramUniformMatrix4x2fv core found.449 glProgramUniformMatrix3x4fv core found.450 glProgramUniformMatrix4x3fv core found.451 glProgramUniformMatrix2x3dv core found.452 glProgramUniformMatrix3x2dv core found.453 glProgramUniformMatrix2x4dv core found.454 glProgramUniformMatrix4x2dv core found.455 glProgramUniformMatrix3x4dv core found.456 glProgramUniformMatrix4x3dv core found.457 glValidateProgramPipeline core found.458 glGetProgramPipelineInfoLog core found.459 glVertexAttribL1d core found.460 glVertexAttribL2d core found.461 glVertexAttribL3d core found.realign 498C750
+462 glVertexAttribL4d core found.463 glVertexAttribL1dv core found.464 glVertexAttribL2dv core found.realign 4993530
+465 glVertexAttribL3dv core found.466 glVertexAttribL4dv core found.malign 4993460
+467 glVertexAttribLPointer core found.realign 4993D80
+468 glGetVertexAttribLdv core found.469 glViewportArrayv core found.470 glViewportIndexedf core found.471 glViewportIndexedfv core found.472 glScissorArrayv core found.realign 49941E0
+473 glScissorIndexed core found.474 glScissorIndexedv core found.Doing the AUX start up...475 glDepthRangeArrayv core found.Loading module... <e2ux>Setting up Shell476 glDepthRangeIndexed core found.477 glGetFloati_v core found.478 glGetDoublei_v core found.479 glDrawArraysInstancedBaseInstance core found.480 glDrawElementsInstancedBaseInstance core found.481 glDrawElementsInstancedBaseVertexBaseInstance core found.482 glGetInternalformativ core found.483 glGetActiveAtomicCounterBufferiv core found.484 glBindImageTexture core found.485 glMemoryBarrier core found.486 glTexStorage1D core found.487 glTexStorage2D core found.488 glTexStorage3D core found.489 glDrawTransformFeedbackInstanced core found.490 glDrawTransformFeedbackStreamInstanced core found.493 glDispatchCompute core found.494 glDispatchComputeIndirect core found.496 glFramebufferParameteri core found.497 glGetFramebufferParameteriv core found.498 glGetInternalformati64v core found.503 glInvalidateFramebuffer core found.504 glInvalidateSubFramebuffer core found.505 glMultiDrawArraysIndirect core found.506 glMultiDrawElementsIndirect core found.507 glGetProgramInterfaceiv core found.508 glGetProgramResourceIndex core found.509 glGetProgramResourceName core found.510 glGetProgramResourceiv core found.511 glGetProgramResourceLocation core found.512 glGetProgramResourceLocationIndex core found.513 glShaderStorageBlockBinding core found.514 glTexBufferRange core found.515 glTexStorage2DMultisample core found.516 glTexStorage3DMultisample core found.Setting up HID518 glBindVertexBuffer core found.519 glVertexAttribFormat core found.Setting up Controller[HID]520 glVertexAttribIFormat core found.521 glVertexAttribLFormat core found.522 glVertexAttribBinding core found.Setting up WindowSetting up Script523 glVertexBindingDivisor core found.524 glDebugMessageControl core found.525 glDebugMessageInsert core found.526 glDebugMessageCallback core found.527 glGetDebugMessageLog core found.528 glPushDebugGroup core found.529 glPopDebugGroup core found.530 glObjectLabel core found.malign 2F988D0
+531 glGetObjectLabel core found.532 glObjectPtrLabel core found.533 glGetObjectPtrLabel core found.534 glBufferStorage core found.Acquiring HID at port 0543 glClipControlEXT ext found.551 glNamedBufferStorageEXT ext found.589 glTextureBufferRangeEXT ext found.606 glTextureParameteriEXT ext found.realign 49D7E50
+641 glMemoryBarrierByRegion core found.malign 49DDE60
+644 glGetGraphicsResetStatusARB ext found.Mounting... <code>('E:/qwadro/afx//system/'),7645 glGetnCompressedTexImageARB ext found.malign 4952E80
+646 glGetnTexImageARB ext found.malign 49D3060
+Entering the Thread Execution Environment 3852
+realign 49D7EA0
+Entering the Thread Execution Environment 7484
+647 glGetnUniformdvARB ext found.648 glGetnUniformfvARB ext found.Entering the Thread Execution Environment 3852
+malign 49E2630
+malign 312340
+Entering the Thread Execution Environment 7484
+649 glGetnUniformivARB ext found.650 glGetnUniformuivARB ext found.651 glReadnPixelsARB ext found.Entering the Thread Execution Environment 3852
+malign 49E3670
+malign 49E46B0
+malign 49C63D0
+realign 49D7EF0
+malign 49C8FA0
+malign 49D7F40
+realign 49D7F90
+malign 498C9C0
+realign 49D30C0
+malign 4A65010
+malign 4A65330
+malign 4A65480
+malign 4A664C0
+Entering the Thread Execution Environment 7484
+677 381 1920 1080 96 96 32 1 36 36 51 60 1 Entering the Thread Execution Environment 3852
+malign 4A15FA0
+Entering the Thread Execution Environment 7484
+SIGMA GL/2 Hardware-accelerated Draw Processing Unit 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161malign 498CCE0
+Entering the Thread Execution Environment 3852
+malign 4A66D10
+malign 4A67F80
+Entering the Thread Execution Environment 7484
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:744
+GL: INVAL_PARAMEntering the Thread Execution Environment 3852
+malign 4A687E0
+malign 4A6A7C0
+Entering the Thread Execution Environment 7484
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:770
+GL: INVAL_PARAMEntering the Thread Execution Environment 3852
+malign 4A6B810
+Entering the Thread Execution Environment 7484
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:780
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMEntering the Thread Execution Environment 3852
+Setting up SemaphoreEntering the Thread Execution Environment 7484
+sglDdev_w32.c:782
+GL: INVAL_PARAMEntering the Thread Execution Environment 3852
+Setting up FenceEntering the Thread Execution Environment 7484
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:786
+GL: INVAL_PARAMEntering the Thread Execution Environment 3852
+Setting up Query PoolSetting up LigatureSetting up SamplerSetting up BufferSetting up RasterSetting up CanvasSetting up Vertex InputSetting up ShaderSetting up PipelineSetting up RasterizerUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')realign 49D7F90
+malign 4A77400
+malign 4A78770
+realign 30D450
+recoalign 49C6540
+recoalign 49C65D0
+realign 4A16340
+recoalign 49C6610
+recoalign 49C6660
+malign 2F5A060
+malign 2F59F60
+malign 2F5A110
+realign 49D7FE0
+realign 2F5A170
+realign 499DBD0
+recoalign 49C6660
+recoalign 49C6580
+malign 30D450
+realign 49D8030
+realign 325130
+recoalign 49C6610
+recoalign 49C66A0
+malign 30D3F0
+realign 49D80D0
+realign 3D69C0
+recoalign 49C6730
+recoalign 49C6780
+malign 30D380
+malign 30D1E0
+malign 2F5A010
+realign 49D8080
+realign 30D320
+malign 30D1E0
+realign 2F5A170
+realign 4A7A5B0
+recoalign 49C67C0
+recoalign 49C6810
+malign 30D380
+realign 2F5A1C0
+malign 30D2B0
+realign 49D8170
+realign 4A7EDD0
+recoalign 49C6540
+recoalign 49C6850
+malign 2F5A170
+malign 2F5A220
+malign 2F5A270
+realign 49D81C0
+realign 2F98C90
+realign 4A7B490
+recoalign 49C68A0
+recoalign 49C68E0
+malign 30D320
+realign 49D8210
+realign 4A11C80
+recoalign 49C6780
+recoalign 49C69C0
+malign 30D250
+realign 49D82B0
+realign 4A83DF0
+recoalign 49C6A00
+recoalign 4A84000
+malign 49D3BF0
+malign 49D3C60
+malign 2F5A220
+realign 49D8210
+realign 4A14490
+malign 49D3C60
+realign 2F5A060
+realign 4A84FA0
+recoalign 4A84000
+recoalign 4A84050
+malign 49D3BF0
+realign 49D4CD0
+malign 49D3CC0
+realign 49D82B0
+realign 4A89B20
+recoalign 4A84090
+recoalign 4A840E0
+malign 2F5A060
+malign 49D4D20
+malign 49D4DD0
+realign 49D8300
+realign 4A7EF80
+realign 4A92750
+recoalign 4A840E0
+recoalign 4A84120
+malign 49D3D30
+realign 49D8350
+realign 4A92970
+recoalign 4A84090
+recoalign 4A84170
+malign 49D3D90
+realign 49D83A0
+realign 4A92BB0
+recoalign 4A841B0
+recoalign 4A84200
+malign 49D3E00
+malign 49D3E60
+malign 49D4D20
+realign 49D8350
+realign 4A7CAA0
+malign 49D3E60
+realign 49D4E30
+realign 4A92750
+recoalign 4A84200
+recoalign 4A84240
+malign 49D3E00
+realign 49D4E80
+malign 49D3ED0
+realign 49D4D80
+realign 498F090
+recoalign 4A84290
+recoalign 4A84320
+realign 4A8E100
+recoalign 4A843F0
+recoalign 4A84440
+malign 49D4070
+realign 49D83A0
+realign 49905A0
+recoalign 4A84290
+recoalign 4A84480
+malign 49D40D0
+realign 49D83F0
+realign 4A91390
+recoalign 4A844D0
+recoalign 4A84510
+malign 49D4140
+realign 49D4F30
+malign 49D41A0
+realign 49D4F90
+realign 4A916B0
+recoalign 4A84560
+recoalign 4A845A0
+malign 49D4D80
+malign 49D4FE0
+malign 49D5090
+realign 49D83F0
+realign 4A8E310
+realign 4A92450
+recoalign 4A845A0
+recoalign 4A84630
+malign 49D4210
+realign 49D83A0
+realign 4A91390
+recoalign 4A84560
+recoalign 4A84680
+malign 49D4270
+realign 49D8170
+realign 4A7A9A0
+recoalign 4A83FC0
+recoalign 4A846C0
+malign 49D42E0
+realign 49D4FE0
+malign 49D4340
+realign 49D3180
+realign 4A98D20
+recoalign 4A84750
+recoalign 4A847A0
+realign 4A91E90
+recoalign 4A847E0
+recoalign 4A84830
+malign 49D43B0
+realign 49D83A0
+realign 4A92280
+recoalign 4A84750
+recoalign 4A84870
+malign 49D4410
+realign 49D8440
+realign 4A91A90
+recoalign 4A848C0
+recoalign 4A84900
+malign 49D44E0
+realign 49D50F0
+realign 4A91EC0
+recoalign 4A84950
+recoalign 4A84990
+malign 49D4550
+realign 49D4F90
+malign 49D45B0
+realign 49D31E0
+realign 4A92320
+recoalign 4A849E0
+recoalign 4A84A20
+malign 49D50F0
+malign 49D5140
+malign 49D51A0
+realign 49D8440
+realign 316990
+realign 4A874C0
+recoalign 4A84A20
+recoalign 4A84AB0
+malign 49D4620
+realign 49D83A0
+realign 4A92180
+recoalign 4A849E0
+recoalign 4A84B00
+malign 49D4680
+realign 49D8490
+realign 4A7B0C0
+recoalign 4A84710
+recoalign 4A84B40
+malign 49D46F0
+realign 49D4D80
+realign 4A7A9A0
+recoalign 4A84A70
+recoalign 4A845F0
+malign 49D4750
+realign 49D51F0
+malign 49D47C0
+realign 49D4820
+malign 49D4890
+realign 4A7E9E0
+malign 4A753E0
+Node 'DepthWriteEnabled' not handled.../system/video/sampleOutRgba.xsh.xmlUploading pipeline '../system/video/sampleOutRgba.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/sampleOutRgba.xsh.xml>('../system/video/sampleOutRgba.xsh.xml')realign 49D8120
+malign 4A88960
+malign 4AA4580
+realign 49D48F0
+recoalign 4A84BD0
+recoalign 4A84C20
+realign 4A16340
+recoalign 4A84C60
+recoalign 4A84CB0
+malign 49D5140
+malign 49D50F0
+malign 49D5250
+realign 49D8170
+realign 49D52A0
+realign 499DBD0
+recoalign 4A84CB0
+recoalign 4A84CF0
+malign 49D4960
+realign 49D83A0
+realign 3252E0
+recoalign 4A84C60
+recoalign 4A84D80
+malign 49D49C0
+realign 49D84E0
+realign 3D69C0
+recoalign 4A84DD0
+recoalign 4A84E10
+malign 49D4A30
+malign 4A93F50
+malign 49D5140
+realign 49D83A0
+realign 4A93FB0
+malign 4A93F50
+realign 49D52A0
+realign 4A926C0
+recoalign 4A84E10
+recoalign 4A84E60
+malign 4A94020
+realign 49D5300
+malign 4A94080
+realign 49D84E0
+realign 4A83C20
+recoalign 49C6540
+recoalign 49C6930
+malign 49D4D80
+malign 49D5040
+malign 49D52A0
+realign 49D7F90
+realign 2F98C90
+realign 498F2A0
+recoalign 49C6930
+recoalign 49C6970
+malign 4A93FB0
+realign 49D8260
+realign 4A96030
+recoalign 49C6540
+recoalign 4A84D40
+malign 4A940F0
+realign 49D8490
+realign 4A83C20
+recoalign 4A84B90
+recoalign 4A84BD0
+malign 4A94150
+malign 4A941C0
+malign 2F5A170
+realign 49D8260
+realign 4A13E30
+malign 4A941C0
+realign 2F59F60
+realign 4A7C7A0
+recoalign 4A84BD0
+recoalign 4A84EA0
+malign 4A94150
+realign 2F5A2D0
+malign 4A94220
+realign 49D8490
+realign 498F2A0
+recoalign 4A84EF0
+recoalign 4A84F30
+malign 2F59F60
+malign 2F5A060
+malign 49D50F0
+realign 49D84E0
+realign 4996850
+realign 4A7C7A0
+recoalign 4A84F30
+recoalign 4A77310
+malign 4A94290
+realign 49D80D0
+realign 498F2A0
+recoalign 4A84EF0
+recoalign 4A77360
+malign 4A942F0
+realign 49D8530
+realign 4A8E100
+recoalign 4A773A0
+recoalign 4A773F0
+malign 4A94360
+malign 4A943C0
+malign 2F5A060
+realign 49D80D0
+realign 4A7CAA0
+malign 4A943C0
+realign 2F59F60
+realign 49905A0
+recoalign 4A773F0
+recoalign 4A77430
+malign 4A94360
+realign 49D5040
+malign 4A94430
+realign 2F59F60
+realign 4A8E100
+recoalign 4A77480
+recoalign 4A774C0
+realign 49905A0
+recoalign 4A77510
+recoalign 4A77550
+malign 4A94490
+realign 49D8490
+realign 4A7A5B0
+recoalign 4A77480
+recoalign 4A775A0
+malign 4A94500
+realign 49D8530
+realign 4A78300
+recoalign 4A775E0
+recoalign 4A77630
+malign 4A94560
+realign 49D4D80
+malign 4A945D0
+realign 49D5350
+realign 4A7A5B0
+recoalign 4A77670
+recoalign 4A776C0
+malign 2F59F60
+malign 49D53B0
+malign 49D5400
+realign 49D8530
+realign 4A7A8F0
+realign 4A78300
+recoalign 4A776C0
+recoalign 4A77700
+malign 4A94630
+realign 49D8490
+realign 4A98010
+recoalign 4A77670
+recoalign 4A77750
+malign 4A946A0
+realign 49D8580
+realign 4A78300
+Entering the Thread Execution Environment 3620
+0  - OpenAL Soft1  - Generic SoftwareListing devices available with ALC_ENUMERATE_ALL_EXT0  - OpenAL Soft on Alto-falantes (VIA HD Audio(Compatible))1  - OpenAL Soft on Headphone (VIA HD Audio(Compatible))2  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))3  - Generic Software on Headphone (VIA HD Audio(Compatible))Listing available capture devices:0  - OpenAL Soft on Mixagem estÃ©reo (VIA HD Audio(Compatible))1  - OpenAL Soft on Microfone (VIA HD Audio(Compatible))2  - OpenAL Soft on Entrada (VIA HD Audio(Compatible))3  - Mixagem estéreo (VIA HD Audio(C4  - Microfone (VIA HD Audio(Compati5  - Entrada (VIA HD Audio(CompatiblEntering the Thread Execution Environment 3852
+recoalign 4A77790
+recoalign 4A77870
+malign 4A94700
+realign 49D54B0
+malign 4A94770
+realign 49D31E0
+realign 4A98D20
+recoalign 4A77940
+recoalign 4A77990
+realign 4A78300
+recoalign 4A779D0
+recoalign 4A77A20
+malign 4A947D0
+realign 49D8670
+realign 4A81E30
+recoalign 4A77940
+recoalign 4A77A60
+malign 4A948A0
+realign 49D86C0
+realign 4A78300
+recoalign 4A77AB0
+recoalign 4A77AF0
+malign 4A94910
+realign 49D5560
+realign 4A81A20
+recoalign 4A77B80
+recoalign 4A77BD0
+malign 4A94970
+realign 49D55C0
+malign 4A949E0
+realign 49D3180
+realign 4A82570
+recoalign 4A77C10
+recoalign 4A77C60
+malign 49D5560
+malign 49D5610
+malign 49D5670
+realign 49D86C0
+realign 4998400
+realign 4A92C20
+recoalign 4A77C60
+recoalign 4A77CA0
+malign 4A94A40
+realign 49D8670
+realign 4A82570
+recoalign 4A77C10
+recoalign 4A77CF0
+malign 4A94AB0
+realign 49D8710
+realign 4A92C20
+recoalign 4A77D30
+recoalign 4A77D80
+malign 4A94B10
+realign 49D5610
+realign 4A82570
+recoalign 4A77DC0
+recoalign 4A77E10
+malign 4A94B80
+realign 49D5560
+malign 4A94BE0
+realign 4A94C50
+malign 4A94D20
+realign 4A92C20
+malign 4A757F0
+../system/video/uvOutTristripQuad.vsh../system/video/sampleOutRgba2d.fshrealign 49D86C0
+malign 4A93C80
+realign 49D8530
+malign 4A888F0
+malign 2FC8E0
+realign 49D80D0
+malign 4A96030
+malign 4A94C50
+malign 4990770
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuad.vsh>('../system/video/uvOutTristripQuad.vsh'),1malign 4A94BE0
+realign 49D84E0
+malign 4AA4330
+Entering the Thread Execution Environment 3620
+Opening file... <system/qwadroDeepNote>('E:/qwadro/afx//system//qwadroDeepNote'),1Entering the Thread Execution Environment 3852
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 49D3180
+Entering the Thread Execution Environment 3620
+malign 4A94B10
+realign 49D31E0
+malign 4AB1360
+Entering the Thread Execution Environment 3852
+realign 4A13E30
+realign 4A13C90
+realign 4996850
+realign 499DBD0
+realign 499DB20
+realign 4AA44A0
+realign 4AB14E0
+realign 4AA44A0
+realign 49E0740
+Entering the Thread Execution Environment 3620
+malign 7B20050
+Entering the Thread Execution Environment 3852
+realign 4A21150
+realign 4A20C20
+realign 4AB38D0
+realign 49C9480
+realign 4AB38D0
+realign 4AB3A10
+realign 4AB3B50
+realign 4AB38D0
+realign 4AB3A30
+realign 4AB3BB0
+Entering the Thread Execution Environment 3620
+realign 49D84E0
+Entering the Thread Execution Environment 3852
+realign 4AB38D0
+realign 49BBEE0
+realign 4AB38D0
+realign 4AB3B40
+realign 4AB3E10
+realign 4AB38D0
+realign 4AB3BC0
+realign 4AB3F00
+realign 4AB38D0
+realign 4AB3CC0
+realign 4AB40E0
+realign 4AB38D0
+realign 4AB0330
+realign 4AB0810
+realign 4AB0D00
+realign 4AB0330
+realign 4AB0820
+realign 4AB0D20
+realign 4AB0330
+realign 4AB0830
+realign 4AB0D50
+realign 4AB0330
+realign 4AB08B0
+realign 4AB0E30
+realign 4AB0330
+realign 4AB0900
+malign 4AB0ED0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUv[gl_VertexID];
+}
+malign 4A94BE0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/sampleOutRgba2d.fsh>('../system/video/sampleOutRgba2d.fsh'),1malign 4A94B10
+realign 49D84E0
+malign 4AA4330
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 49D3180
+realign 4A13C90
+realign 4A13E30
+realign 4996850
+realign 499DB20
+realign 499DBD0
+realign 4AB14E0
+realign 4AB15B0
+realign 4AA44A0
+realign 49E0740
+realign 4A20C20
+realign 4A21150
+realign 4AB4900
+realign 49C9480
+realign 4AB4900
+realign 4AB4A40
+realign 4AB4B80
+realign 4AB4900
+realign 4AB4A60
+realign 4AB4BE0
+realign 4AB4D60
+realign 49BBEE0
+realign 4AB4900
+realign 4AB4B70
+realign 4AB0330
+realign 4AB4900
+realign 4AB4BF0
+realign 4AB0330
+realign 4AB4900
+realign 4AB0330
+realign 4AB4900
+realign 49D3180
+malign 4A77C10
+realign 4AAF300
+realign 4AB4900
+realign 4AAF300
+realign 4AB4900
+realign 4AAF300
+realign 4AB4900
+realign 4AAF300
+realign 49D5400
+realign 4AB4900
+realign 4AAF300
+realign 4AB4900
+realign 4AAF300
+realign 4AB4900
+realign 4AAF300
+malign 4AAF7C0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uv0);
+}
+malign 49D31E0
+malign 4A77CF0
+malign 49D4D80
+realign 49D84E0
+malign 49E0740
+realign 4A13E30
+realign 4AAFC80
+malign 2F98C90
+malign 49D5400
+realign 49D8440
+malign 4AA4330
+realign 49D83F0
+malign 4AAF300
+malign 4AAF470
+Reloading file 0... <system/video/font-256.tga>('E:/qwadro/afx//system//video/font-256.tga')malign 7260050
+malign 8300050
+realign 49D8350
+malign 4AAF470
+afxRaster.c:172
+afxRaster.c:172
+<layerIdx>1 + <1>1 is out of capacity <ras->whd[2]>1.Entering the Thread Execution Environment 7484
+Hardware-side raster 04aaf4b0 ready. de1, 8058, [4096,4096,1]Entering the Thread Execution Environment 3852
+realign 49D83F0
+malign 4AC47D0
+malign 2FC960
+malign 49D4F30
+Uploading pipeline 'system/video/font.xsh.xml?instanced'Loading file... <system/video/font.xsh.xml>('E:/qwadro/afx//system//video/font.xsh.xml')realign 49D8210
+malign 4AAF300
+malign 4AC4A10
+realign 49D4890
+recoalign 4A849E0
+recoalign 4A84A20
+realign 4A16340
+recoalign 4A84B00
+recoalign 4A84B40
+malign 49D4D20
+malign 49D5040
+malign 49D50F0
+realign 49D81C0
+realign 49D4E80
+realign 499DBD0
+recoalign 4A84B40
+recoalign 4A84AB0
+malign 49D4890
+realign 49D7FE0
+realign 3253C0
+recoalign 4A84B00
+recoalign 4A84950
+malign 49D47C0
+realign 49D8260
+realign 3D69C0
+recoalign 4A84990
+recoalign 4A848C0
+malign 49D46F0
+realign 49D5040
+realign 4B08EE0
+recoalign 4A84900
+recoalign 4A84750
+malign 49D4D20
+malign 49D5090
+malign 49D4DD0
+realign 49D8260
+realign 49D4820
+malign 49D4750
+realign 49D5090
+malign 49D4620
+realign 49D7FE0
+realign 4AC4E60
+recoalign 4A849E0
+recoalign 4A84750
+malign 49D5040
+malign 49D4D20
+malign 49D4E80
+realign 49D7F90
+realign 2F990C0
+realign 4AC4FA0
+recoalign 4A84750
+recoalign 4A84870
+malign 49D4820
+realign 49D83A0
+realign 4A96960
+recoalign 4A849E0
+recoalign 4A847E0
+malign 49D45B0
+realign 49D8170
+realign 4AC4E60
+recoalign 4A84830
+recoalign 4A847A0
+malign 49D4550
+realign 49D4D20
+realign 4AC5010
+recoalign 4A83FC0
+recoalign 4A846C0
+malign 49D4680
+realign 49D5040
+malign 49D44E0
+realign 49D8170
+malign 49D4410
+realign 4AC51E0
+malign 4952FD0
+Node 'DepthWriteEnabled' not handled.../system/video/font.xsh.xml?instancedUploading pipeline '../system/video/font.xsh.xml?instanced'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/font.xsh.xml>('../system/video/font.xsh.xml')realign 49D8210
+malign 4AAF300
+malign 4AC53B0
+realign 49D43B0
+recoalign 4A84560
+recoalign 4A84680
+realign 4A16340
+recoalign 4A845A0
+recoalign 4A84630
+malign 49D4D20
+malign 49D4CD0
+malign 49D52A0
+realign 49D7FE0
+realign 49D5300
+realign 499DBD0
+recoalign 4A84630
+recoalign 4A844D0
+malign 49D43B0
+realign 49D83A0
+realign 3253C0
+recoalign 4A845A0
+recoalign 4A84510
+malign 49D4340
+realign 49D8120
+realign 3D69C0
+recoalign 4A84290
+recoalign 4A84480
+malign 49D42E0
+realign 49D4CD0
+realign 4B08EE0
+recoalign 4A843F0
+recoalign 4A84440
+malign 49D4D20
+malign 49D5140
+malign 49D5250
+realign 49D8120
+realign 49D4270
+malign 49D4210
+realign 49D5140
+malign 49D41A0
+realign 49D83A0
+realign 4AC4E60
+recoalign 4A84560
+recoalign 4A84440
+malign 49D4CD0
+malign 49D4D20
+malign 49D5300
+realign 49D8760
+realign 2F99050
+realign 4AC97D0
+recoalign 4A84440
+recoalign 4A84320
+malign 49D4270
+realign 49D87B0
+realign 4A96960
+recoalign 4A84560
+recoalign 4A84200
+malign 49D4140
+realign 49D8800
+realign 4AC4E60
+recoalign 4A84240
+recoalign 4A841B0
+malign 49D40D0
+realign 49D4D20
+realign 4AC97D0
+recoalign 4A84090
+recoalign 4A84170
+malign 49D4070
+realign 49D4CD0
+malign 49D3ED0
+realign 49D8800
+malign 49D3E00
+realign 4AC99A0
+malign 4952FD0
+../system/video/font.vsh../system/video/font.fshmalign 2FCA60
+realign 49D32A0
+malign 4A96960
+malign 49D3240
+realign 49D3E00
+malign 4AC57F0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/font.vsh>('../system/video/font.vsh'),1malign 3131D0
+realign 49D80D0
+malign 4AAF300
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 49D3300
+realign 4A14400
+realign 4A142F0
+realign 4996850
+realign 499DBD0
+realign 499DA70
+realign 4AB15B0
+realign 4AB14E0
+realign 4A94F30
+realign 49E0830
+realign 4A20D30
+realign 4A21250
+realign 4B08EE0
+realign 49C9480
+realign 4AC4E60
+realign 4AC8E60
+realign 4AC4E60
+realign 4AC8E60
+realign 4AC4E60
+realign 4AC8E60
+realign 4AC8FE0
+realign 49BBEE0
+realign 4AC8E60
+realign 4AC90E0
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9150
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdView.inc>('../system/video/stdView.inc'),1malign 49D3300
+realign 4AC8E60
+realign 49D3360
+malign 49D8800
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 4AC8E60
+realign 4AC9B70
+realign 49D4CD0
+realign 4ACA080
+realign 4952FD0
+realign 4AC7E30
+realign 2FC9E0
+realign 4AC9B70
+realign 4ACA0C0
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA0E0
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA110
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA140
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA170
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA1B0
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA1C0
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA1E0
+realign 4AC7E30
+realign 4AC9B70
+realign 4ACA1F0
+realign 4AC7E30
+realign 4AC9B70
+realign 4AC7E30
+malign 4AC9B70
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec2, in_instPos);
+IN(1, vec2, in_instUv);
+IN(2, vec4, in_instRgba);
+
+const vec2 pos[4] =
+{
+    vec2( 0, 16),
+    vec2( 0, 0),
+    vec2(16, 16),
+    vec2(16, 0)
+};
+const vec2 uv[4] =
+{
+    vec2(0.00625, -0.00625),
+    vec2(0.00625, -0.05625),
+    vec2(0.05625, -0.00625),
+    vec2(0.05652, -0.05625)
+};
+
+out block
+{
+    vec2 uv;
+    vec4 rgba;
+} sgl_v;
+
+void main()
+{
+    gl_Position = p * vec4((pos[gl_VertexID] + in_instPos), 0.0, 1.0);
+    sgl_v.uv = uv[gl_VertexID] + in_instUv;
+    sgl_v.rgba = vec4(1,1,1,1);//in_instRgba;
+}
+malign 3131D0
+malign 49D80D0
+malign 2FCAE0
+malign 49D3360
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/font.fsh>('../system/video/font.fsh'),1malign 49D3300
+realign 49D8760
+malign 4AAF300
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 49D3180
+realign 4A142F0
+realign 4A14400
+realign 4996850
+realign 499DA70
+realign 499DBD0
+realign 4AB14E0
+realign 4AB15B0
+realign 4A94F30
+realign 49E0830
+realign 4A21250
+realign 4A20D30
+realign 4B08EE0
+realign 49C9480
+realign 4AC4E60
+realign 4ACA290
+realign 4AC4E60
+realign 4ACA290
+realign 4AC4E60
+realign 4ACA290
+realign 4ACA410
+realign 49BBEE0
+realign 4ACA290
+realign 4ACA510
+realign 4AC8E60
+realign 4AC9130
+realign 4ACA290
+realign 4AC8E60
+realign 4ACA290
+realign 4AC8E60
+realign 4ACA290
+realign 49D3180
+malign 4A84090
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+realign 49D4CD0
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+realign 4AC7E30
+realign 4ACA290
+malign 4AC6E00
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 1, sampler2D, atlas);
+
+in block
+{
+    vec2 uv;
+    vec4 rgba;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{    
+    vec4 sampled = texture(atlas, sgl_v.uv); //vec4(1.0, 1.0, 1.0, texture(samp, sgl_v.uv0).a);
+    sgl_rgba = sgl_v.rgba * sampled;
+    //sgl_rgba = vec4(/*sgl_v.rgba.rgb*/vec3(1.0, 1.0, 1.0), texture(atlas, sgl_v.uv).r);
+}
+malign 49D3300
+malign 4A84170
+malign 49D5300
+realign 4A14400
+realign 4AC7390
+malign 499DBD0
+malign 49D4CD0
+realign 3131D0
+realign 49D8170
+realign 49D7F90
+malign 49C9480
+realign 49D8260
+malign 4AC9B70
+Setting up Widgetrealign 49D81C0
+malign 4ACA690
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>malign 2FCA60
+realign 49D8760
+malign 4AC4E60
+malign 2FCAE0
+realign 49D32A0
+malign 4AAF300
+realign 49D8350
+malign 3253C0
+malign 2FC9E0
+realign 49D3E00
+malign 4AC74C0
+realign 49D32A0
+malign 4AC7630
+malign 2FCB60
+realign 2F98FD0
+malign 4AC77D0
+realign 49D3240
+malign 3252E0
+afxDrawOutput 000 adjusted. <952, 1920, 0.496> 1.881423 <506, 1080, 0.469>malign 2FCAE0
+malign 2FC9E0
+realign 49D4680
+realign 49D88A0
+realign 49D88F0
+realign 49D3240
+malign 4AC7630
+malign 2FCB60
+realign 2F98FD0
+malign 4AC77D0
+realign 49D32A0
+malign 3252E0
+Setting up Simulationrealign 49D88F0
+malign 4ACB1E0
+realign 49D88A0
+malign 4AC9450
+Setting up MaterialSetting up Mesh TopologySetting up Vertex DataSetting up MeshSetting up Skeletal PoseSetting up Skeletal Pose BufferSetting up SkeletonSetting up ModelSetting up CurveSetting up MotionSetting up AnimationSetting up Locomotion MotorSetting up BodySetting up EntitySetting up LightSetting up CAD AssetSetting up Rendererrealign 49D8940
+malign 4ACC960
+realign 49D8990
+malign 4ACEA90
+Setting up Vertex Buffermalign 4ACF300
+malign 49D89E0
+Setting up CmdBufferSetting up CmdBufferrealign 49D3180
+malign 49C9820
+Entering the Thread Execution Environment 7484
+Hardware-side buffer 049c9860 ready. 34962, 1, 4Hardware-side buffer 049c98d8 ready. 34963, 2, 8Entering the Thread Execution Environment 3852
+malign 49D4E80
+malign 49D5090
+Uploading pipeline '../data/pipeline/test/test.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/test/test.xsh.xml>('../data/pipeline/test/test.xsh.xml')realign 49D8A80
+malign 4ACF4A0
+malign 4ACF610
+realign 49D4680
+recoalign 4A848C0
+recoalign 4A84B00
+realign 4993500
+recoalign 4A84950
+recoalign 4A84B40
+realign 499DBD0
+recoalign 4A84AB0
+recoalign 4A84A20
+malign 49D4680
+realign 49D8AD0
+realign 325570
+recoalign 4A84950
+recoalign 4A84240
+malign 49D4550
+realign 49D8B20
+realign 3D69C0
+recoalign 4A841B0
+recoalign 4A84560
+malign 49D45B0
+realign 49D4DD0
+malign 49D4820
+realign 49D8B20
+realign 4ACF860
+recoalign 4A848C0
+recoalign 4A84200
+realign 4ACF980
+recoalign 4A84440
+recoalign 4A84320
+malign 49D4620
+realign 49D8AD0
+realign 4ACFAC0
+recoalign 4A848C0
+recoalign 4A843F0
+malign 49D4750
+realign 49D8B70
+realign 4A96C70
+recoalign 4A84290
+recoalign 4A84480
+malign 49D46F0
+realign 49D50F0
+realign 4ACF860
+recoalign 4A845A0
+recoalign 4A84510
+malign 49D47C0
+realign 49D5140
+realign 4ACFA10
+recoalign 4A84630
+recoalign 4A844D0
+malign 49D4890
+realign 49D3420
+malign 49D3ED0
+realign 49D8B70
+malign 49D4070
+realign 4ACFBE0
+malign 4952FD0
+../data/pipeline/test/test.xsh.xmlUploading pipeline '../data/pipeline/test/test.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/test/test.xsh.xml>('../data/pipeline/test/test.xsh.xml')realign 49D8A80
+malign 4AF2080
+malign 4ACFDB0
+realign 49D40D0
+recoalign 4A84680
+recoalign 4A840E0
+realign 4993500
+recoalign 4A84120
+recoalign 4A84000
+realign 499DBD0
+recoalign 4A84050
+recoalign 4A84EF0
+malign 49D40D0
+realign 49D8B20
+realign 325570
+recoalign 4A84120
+recoalign 4A84F30
+malign 49D4140
+realign 49D8AD0
+realign 3D69C0
+recoalign 4A84BD0
+recoalign 4A84EA0
+malign 49D4270
+realign 49D5140
+malign 49D41A0
+realign 49D8AD0
+realign 4ACF4A0
+recoalign 4A84680
+recoalign 4A84B90
+realign 4ACF860
+recoalign 4A84D40
+recoalign 4A84E10
+malign 49D4210
+realign 49D8B20
+realign 4ACF4A0
+recoalign 4A84680
+recoalign 4A84E60
+malign 49D42E0
+realign 49D8BC0
+realign 4A96C70
+recoalign 4A84DD0
+recoalign 4A84C60
+malign 49D4340
+realign 49D50F0
+realign 4ACF860
+recoalign 4A84D80
+recoalign 4A84CB0
+malign 49D43B0
+realign 49D5250
+realign 4ACFFF0
+recoalign 4A84CF0
+recoalign 4A84C20
+malign 49D3E60
+realign 49D33C0
+malign 49D3D90
+realign 49D8BC0
+malign 49D3D30
+realign 4AD01C0
+malign 4952FD0
+../data/pipeline/test/test.vsh../data/pipeline/test/test.fshmalign 2FCBE0
+realign 49D33C0
+malign 4A96C70
+malign 49D3D30
+realign 49D3D90
+malign 4AC57F0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/test/test.vsh>('../data/pipeline/test/test.vsh'),1malign 49D3E60
+realign 49D8170
+malign 4AF2080
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 3131D0
+realign 4A140D0
+realign 4A14160
+realign 49936C0
+realign 499DBD0
+realign 499DA70
+realign 4AB15B0
+realign 4AB14E0
+realign 4A94F30
+realign 49E0830
+realign 4A20D30
+realign 4A21250
+realign 4ACF4A0
+realign 49C9960
+realign 4ACF4A0
+realign 4ACF860
+realign 4ACF4A0
+realign 4ACF860
+realign 4AD0390
+realign 4ACF860
+realign 4AD0390
+realign 49BBEE0
+realign 4AF60D0
+realign 4AF6340
+realign 4AF6610
+realign 4AF60D0
+realign 4AF63C0
+realign 4AF6700
+realign 4AF60D0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 3131D0
+realign 4AF64C0
+realign 49D34E0
+malign 49D8BC0
+realign 4AF68B0
+realign 4AF60D0
+realign 4AF64E0
+realign 4AF68F0
+realign 4AF60D0
+realign 4AF6500
+realign 4AF6940
+realign 4AF60D0
+realign 4AF6530
+realign 4AF6990
+realign 4AF60D0
+realign 4AF6560
+realign 4AF6A00
+realign 4AF60D0
+realign 4AF6580
+realign 4AF6A50
+realign 4AF50A0
+realign 49D5140
+realign 4AF5570
+realign 4AF5A50
+realign 4AF50A0
+realign 4AF5590
+realign 4AF5A80
+realign 4AF50A0
+realign 4AF55D0
+malign 4AF4070
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+void main()
+{
+    vec4 pos = p * v * vec4(a_xyz, 1.0);
+    gl_Position = pos;
+}
+malign 3131D0
+malign 49D8170
+malign 49D5250
+malign 49D3E60
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/test/test.fsh>('../data/pipeline/test/test.fsh'),1malign 49D43B0
+realign 49D8A80
+malign 4AF2080
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D34E0
+realign 4A14160
+realign 4A140D0
+realign 49936C0
+realign 499DA70
+realign 499DBD0
+realign 4AB14E0
+realign 4AB15B0
+realign 4A94F30
+realign 49E0830
+realign 4A21250
+realign 4A20D30
+realign 4ACF4A0
+realign 49C9960
+realign 4ACF4A0
+realign 4ACF860
+realign 4ACF4A0
+realign 4ACF860
+realign 4AD0390
+realign 4ACF860
+realign 4AD0390
+realign 49BBEE0
+realign 4AF6600
+realign 4AF6880
+realign 4AF6B50
+realign 4AF6600
+realign 4AF68F0
+realign 4AF6C30
+realign 4AF6600
+realign 4AF55D0
+realign 49D5140
+realign 4AF59C0
+realign 4AF5DD0
+realign 4AF55D0
+realign 4AF59F0
+realign 4AF5E00
+realign 4AF55D0
+malign 4AF45A0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = vec4(0.5, 0.5, 0.5, 1.0);
+}
+malign 49D50F0
+realign 4A140D0
+realign 4AF49E0
+malign 2F98EE0
+malign 49D5140
+realign 49D8B70
+malign 4AF2080
+malign 4AF49E0
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/right.tga>('../art/skybox/purple/right.tga')malign 8C50050
+malign 9330050
+Entering the Thread Execution Environment 7484
+Hardware-side raster 04ac78a0 ready. 8513, 8051, [2048,2048,6]Entering the Thread Execution Environment 3852
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/left.tga>('../art/skybox/purple/left.tga')malign 9330050
+malign AB40050
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/bottom.tga>('../art/skybox/purple/bottom.tga')malign AB40050
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/top.tga>('../art/skybox/purple/top.tga')malign A6D0050
+malign 8C50050
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/front.tga>('../art/skybox/purple/front.tga')malign 8C50050
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <../art/skybox/purple/back.tga>('../art/skybox/purple/back.tga')malign 8C50050
+realign 49D3ED0
+malign 49C9960
+Entering the Thread Execution Environment 7484
+Hardware-side buffer 049c99a0 ready. 34962, 3, 4Entering the Thread Execution Environment 3852
+Uploading pipeline '../data/pipeline/skybox/skybox.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/skybox/skybox.xsh.xml>('../data/pipeline/skybox/skybox.xsh.xml')realign 49D8AD0
+malign C4F18A0
+malign 4AFAE80
+realign 49D4070
+recoalign 4A848C0
+recoalign 4A84510
+realign C509880
+recoalign 4A84480
+recoalign 4A84440
+realign 499DBD0
+recoalign 4A845A0
+recoalign 4A843F0
+malign 49D4070
+realign 49D8C60
+realign 325490
+recoalign 4A84480
+recoalign 4A84290
+malign 49D46F0
+realign 49D8DF0
+realign C47DD30
+recoalign 4A84320
+recoalign 4A84200
+malign 49D47C0
+realign 4B095E0
+malign 49D4750
+realign 49D8DF0
+realign 4ACF4A0
+recoalign 4A848C0
+recoalign 4A841B0
+realign C53BC60
+recoalign 4A84560
+recoalign 4A84950
+malign 49D4620
+realign 49D8C60
+realign 4ACF4A0
+recoalign 4A848C0
+recoalign 4A84240
+malign 49D4820
+realign 49D8DA0
+realign 4A964C0
+recoalign 4A84AB0
+recoalign 4A84A20
+malign 49D45B0
+realign 4B09580
+realign C53BC60
+recoalign 4A84B40
+recoalign 4A84B00
+malign 49D4550
+realign 4B09C10
+realign C47C500
+recoalign 4A84CF0
+recoalign 4A84C20
+malign 49D4680
+realign 49D3180
+realign 4AF8F70
+recoalign 4A84D80
+recoalign 4A84CB0
+malign 49D43B0
+realign 49D3480
+malign 49D4340
+realign 49D8DA0
+realign 4AFB4C0
+recoalign 4A84DD0
+recoalign 4A84C60
+realign C61B030
+recoalign 4A84680
+recoalign 4A84E60
+realign 4AFF720
+recoalign 4A84D40
+recoalign 4A84E10
+malign 49D42E0
+realign 49D8DF0
+realign 4B1FB50
+recoalign 4A84680
+recoalign 4A84B90
+malign 49D4210
+realign 49D8C60
+realign C554CD0
+recoalign 4A84BD0
+recoalign 4A84EA0
+malign 49D41A0
+realign 4B09C10
+realign C554F70
+recoalign 4A84120
+recoalign 4A84F30
+malign 49D4270
+realign 4B09580
+realign 4B1FB50
+recoalign 4A84050
+recoalign 4A84EF0
+malign 49D4140
+realign 49D3180
+realign C554CD0
+recoalign 4A84000
+recoalign 4A840E0
+malign 49D40D0
+realign 49D3600
+realign 4B1FB50
+recoalign 4A77C60
+recoalign 4A77CA0
+malign 49D3CC0
+realign 49D3BF0
+realign C554CD0
+recoalign 4A77B80
+recoalign 4A77BD0
+malign 49D3C60
+realign 49D49C0
+malign 49D3BF0
+realign 49D8C60
+malign 49D4960
+realign 4B09580
+malign 49D4A30
+realign 4B1FB50
+malign 49936C0
+Node 'DepthWriteEnabled' not handled.../data/pipeline/skybox/skybox.xsh.xmlUploading pipeline '../data/pipeline/skybox/skybox.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/skybox/skybox.xsh.xml>('../data/pipeline/skybox/skybox.xsh.xml')realign 49D8AD0
+malign C4F18A0
+malign 4AD0990
+realign 49D4890
+recoalign 4A84DD0
+recoalign 4A77AB0
+realign C509880
+recoalign 4A77AF0
+recoalign 4A77940
+realign 499DBD0
+recoalign 4A77A60
+recoalign 4A779D0
+malign 49D4890
+realign 49D8DA0
+realign 325490
+recoalign 4A77AF0
+recoalign 4A77A20
+malign 4A94B10
+realign 49D8DF0
+realign C4D74A0
+recoalign 4A77990
+recoalign 4A77790
+malign 4A94A40
+realign 4B09C10
+malign 4A949E0
+realign 49D8DF0
+realign 4B1FEB0
+recoalign 4A84DD0
+recoalign 4A77870
+realign 4ACF4A0
+recoalign 4A77670
+recoalign 4A77750
+malign 4A94970
+realign 49D8DA0
+realign C53BC60
+recoalign 4A84DD0
+recoalign 4A776C0
+malign 4A94910
+realign 49D8D50
+realign 4A964C0
+recoalign 4A77700
+recoalign 4A775E0
+malign 4A948A0
+realign 4B09160
+realign C53BC60
+recoalign 4A77630
+recoalign 4A77480
+malign 4A947D0
+realign 4B09530
+realign C47C500
+recoalign 4A775A0
+recoalign 4A77510
+malign 4A94770
+realign 49D3600
+realign 4AF8F70
+recoalign 4A77550
+recoalign 4A774C0
+malign 4A94700
+realign 49D3180
+malign 4A946A0
+realign 49D8D50
+realign 4AFB4C0
+recoalign 4A773F0
+recoalign 4A77430
+realign C61B030
+recoalign 4A773A0
+recoalign 4A77360
+realign 4AFF720
+recoalign 4A77310
+recoalign 4A77E50
+malign 4A94630
+realign 49D8DF0
+realign 4AD0FE0
+recoalign 4A773A0
+recoalign 4A77EE0
+malign 4A945D0
+realign 49D8DA0
+realign C438FC0
+recoalign 4A77F30
+recoalign 4A77F70
+malign 4A94560
+realign 4B09530
+realign 4AD0FE0
+recoalign 4A77FC0
+recoalign 4A78000
+malign 4A94500
+realign 4B09160
+realign C438FC0
+recoalign 4A78050
+recoalign 4A78090
+malign 4A94490
+realign 49D3600
+realign 4AD0FE0
+recoalign 4A780E0
+recoalign 4A78120
+malign 4A94430
+realign 49D35A0
+realign C438FC0
+recoalign 4A78170
+recoalign 4A781B0
+malign 4A94360
+realign 4A943C0
+realign 4AD0FE0
+recoalign 4A78200
+recoalign 4A78240
+malign 4A942F0
+realign 4A94290
+malign 4A943C0
+realign 49D8DA0
+malign 4A94220
+realign 4B09160
+malign 4A94150
+realign C438FC0
+malign 49936C0
+../data/pipeline/skybox/skybox.vsh../data/pipeline/skybox/sampleOutRgbaCube.fshrealign 49D3180
+malign C439320
+realign 49D35A0
+malign 4B1FEB0
+malign 2FCC60
+realign 4A94150
+malign 4A964C0
+malign 4A94220
+realign 2F99320
+malign 4ACF4A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/skybox/skybox.vsh>('../data/pipeline/skybox/skybox.vsh'),1malign 49D3D90
+realign 49D8530
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D33C0
+realign 4A14510
+realign 4A14950
+realign 49936C0
+realign 499DBD0
+realign 499DA70
+realign C4C94A0
+realign C4C9560
+realign 4B085F0
+realign 49E0830
+realign 4A20C20
+realign 4A21460
+realign C503AB0
+realign 49C9A90
+realign 4AD1340
+realign C53BC60
+realign 4AD1340
+realign C53BC60
+realign 4AD1340
+realign C53BC60
+realign 4AF8F70
+realign 49BBEE0
+realign 4AFF720
+realign C4395B0
+realign C439880
+realign C4297A0
+realign C4395B0
+realign C4398F0
+realign C4297A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D33C0
+realign C4395B0
+realign 49D3600
+malign 49D86C0
+realign C4399A0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign 4B09160
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C429EA0
+realign C4395B0
+realign C4297A0
+realign C429ED0
+realign C4395B0
+realign C4297A0
+realign C429F10
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C4395B0
+realign C4297A0
+realign C39A740
+realign C4395B0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+realign 4AD1CF0
+realign C4297A0
+malign C422D60
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+const vec3 points[] =
+{
+    {-1.0, 1.0,-1.0 },
+    {-1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0,-1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0,-1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    {-1.0, 1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0, 1.0 }
+};
+
+out block
+{
+    vec3 uvw0;
+} sgl_v;
+
+void main()
+{
+    vec3 xyz = points[gl_VertexID];
+    sgl_v.uvw0 = xyz;
+    
+    // Convert cubemap coordinates into Vulkan coordinate space
+    sgl_v.uvw0.xy *= -1.0;
+    
+    // Remove translation from view matrix
+    vec4 pos = p * mat4(mat3(v)) * vec4(xyz, 1.0);
+    
+    gl_Position = pos.xyww;
+}
+malign 49D33C0
+malign 49D8530
+malign 4B09C10
+malign 4953190
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>('../data/pipeline/skybox/sampleOutRgbaCube.fsh'),1malign 49539E0
+realign 49D8DA0
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3600
+realign 4A14950
+realign 4A14510
+realign 49936C0
+realign 499DA70
+realign 499DBD0
+realign C4C9560
+realign C4C94A0
+realign 4B085F0
+realign 49E0830
+realign 4A21460
+realign 4A20C20
+realign C503880
+realign 49C9A90
+realign 4AD1340
+realign C53BC60
+realign 4AD1340
+realign C53BC60
+realign 4AD1340
+realign C53BC60
+realign 4AF8F70
+realign 49BBEE0
+realign 4AFF720
+realign C4236F0
+realign C4239C0
+realign C4395B0
+realign C4398A0
+realign C4236F0
+realign C4395B0
+realign C4399A0
+realign 49D3600
+malign 4A78200
+realign C4236F0
+realign C4395B0
+realign C4236F0
+realign C4395B0
+realign 49CB790
+realign C4236F0
+realign C4395B0
+realign 4B09160
+realign C4236F0
+realign C4395B0
+realign C4236F0
+realign C4395B0
+realign C4236F0
+realign C4395B0
+malign C4236F0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+SAMPLING_UNIT(0, 1, samplerCube, samp);
+
+in block
+{
+    vec3 uvw0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uvw0);
+}
+malign 49D3540
+malign 4A78240
+malign 4B09530
+realign 49D3600
+malign 49E0830
+realign 4A14510
+realign C4297A0
+malign 499DBD0
+malign 4B09160
+realign 49D3480
+malign C61B030
+malign 4B09580
+malign 4B095E0
+realign 49D3660
+malign 4AFF720
+malign 4A7CBF0
+malign 49539E0
+realign 49D4A30
+malign C4395B0
+malign C550240
+malign 4953970
+realign 2F992A0
+malign 49C9A90
+realign C5502C0
+malign 49C9BD0
+realign C509880
+malign 49C9D00
+realign C54E240
+malign 49C9E40
+Uploading pipeline '../data/pipeline/body/body.xsh.xml?rigid'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/body/body.xsh.xml>('../data/pipeline/body/body.xsh.xml')realign 49D8440
+malign C4F18A0
+malign C4297A0
+realign 49D3ED0
+recoalign 4A77B80
+recoalign 4A77BD0
+realign C509880
+recoalign 4A77C60
+recoalign 4A77CA0
+malign 49D83F0
+malign 49D8C60
+malign 4B094D0
+realign 49D84E0
+realign 4B09480
+realign 499DA70
+recoalign 4A77CA0
+recoalign 4A78170
+malign 49D3ED0
+realign 49D8C60
+realign 325490
+recoalign 4A77C60
+recoalign 4A781B0
+malign 49D4960
+realign 49D83F0
+realign C4D74A0
+recoalign 4A780E0
+recoalign 4A78120
+malign 49D3BF0
+realign 4B09420
+malign 49D49C0
+realign 49D83F0
+realign 4AD1340
+recoalign 4A77B80
+recoalign 4A78050
+malign 49D8C60
+malign 49D8DA0
+malign 4B093D0
+realign 49D8AD0
+realign 49D3C60
+realign C53BC60
+recoalign 4A78050
+recoalign 4A78090
+malign 49D3CC0
+realign 49D8DA0
+realign 4AD1340
+recoalign 4A77B80
+recoalign 4A77FC0
+malign 49D40D0
+realign 49D8C60
+realign 4A96F80
+recoalign 4A78000
+recoalign 4A77F30
+malign 4B09480
+malign 4B09370
+malign 4B09320
+realign 49D8DA0
+realign 2F992A0
+malign 49D3C60
+realign 4B09370
+malign 49D4140
+realign 49D8C60
+realign 4AD1340
+recoalign 4A77F30
+recoalign 4A77F70
+malign 49D83F0
+malign 49D8D50
+malign 4B09480
+realign 49D8DF0
+realign 4A14510
+realign C47C500
+recoalign 4A77F70
+recoalign 4A773A0
+malign 49D4270
+realign 49D8D50
+realign 4AF8F70
+recoalign 4A77F30
+recoalign 4A77EE0
+malign 49D41A0
+realign 49D83F0
+realign 4AFB4C0
+recoalign 4A77310
+recoalign 4A77E50
+malign 49D4210
+realign 4B09A50
+realign C4397F0
+recoalign 4A77360
+recoalign 4A77430
+malign 49D42E0
+realign 4B092C0
+realign C439A30
+recoalign 4A77550
+recoalign 4A774C0
+malign 49D4340
+realign 49D3480
+realign C429DF0
+recoalign 4A775A0
+recoalign 4A77510
+malign 49D43B0
+realign 49D3420
+malign 49D4680
+realign 4B092C0
+realign C4397F0
+recoalign 4A77630
+recoalign 4A77480
+malign 49D8C60
+malign 49D83F0
+malign 4B09A50
+realign 49D8D50
+realign C54E2E0
+realign C439A90
+recoalign 4A77480
+recoalign 4A77700
+malign 49D4550
+realign 49D83F0
+realign C429DF0
+recoalign 4A77630
+recoalign 4A775E0
+malign 49D45B0
+realign 49D8C60
+realign C42A0E0
+recoalign 4A776C0
+recoalign 4A77670
+malign 49D4820
+realign 4B09A00
+realign C4397F0
+recoalign 4A77750
+recoalign 4A77870
+malign 49D4620
+realign 4B09270
+realign C429DF0
+recoalign 4A77990
+recoalign 4A77790
+malign 49D4750
+realign 49D3480
+realign C42A150
+recoalign 4A77AF0
+recoalign 4A77A20
+malign 49D47C0
+realign 49D34E0
+malign 49D46F0
+realign 4B09270
+malign 49D4070
+realign C4397F0
+malign 49936C0
+Node 'DepthWriteEnabled' not handled.Node 'Rasterizer' not handled.../data/pipeline/body/body.fshmalign 49D3480
+realign 2F992A0
+malign 4A96F80
+malign 4A94150
+realign C5502C0
+malign 4AD1340
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1malign 4A943C0
+realign 49D8440
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D36C0
+realign 4A14510
+realign 4A14950
+realign 4AD1440
+realign 499DA70
+realign 499DB20
+realign C4C94A0
+realign C4C9560
+realign 4B085F0
+realign 49E0920
+realign 4A20C20
+realign 4A21460
+realign C503880
+realign 49C9F70
+realign C53BC60
+realign C42A4D0
+realign C53BC60
+realign C42A4D0
+realign C53BC60
+realign C42A4D0
+realign 4AF8F70
+realign 49BBEE0
+realign C429DF0
+realign 4B0B020
+realign C429DF0
+realign 4B0B020
+realign C429DF0
+realign 4B0B020
+realign 4B0B3C0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D36C0
+realign 4B0B7B0
+realign 49D3720
+malign 49D8C60
+realign 4B0BBA0
+realign 4B0B020
+realign 4B0B430
+realign 4B0B840
+realign 4B0B020
+realign 4B0B450
+realign 4B0B890
+realign 4B0B020
+realign 4B0B480
+realign 4B0B8E0
+realign 4B0B020
+realign 4B0B4B0
+realign 4B0B950
+realign 4B0B020
+realign 4B0B4D0
+realign 4B0B9A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1malign 4A94290
+realign 4B0B020
+realign C550340
+malign 49D83F0
+realign 4B0B4F0
+realign 4B0B9E0
+realign 4B0B020
+realign 4B0B520
+realign 4B0BA20
+realign 4B0B020
+realign 4B0B540
+realign 4B0BA70
+realign 4B0B020
+realign 4B0B560
+realign 4AD2D20
+realign 4AD3290
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD32A0
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD32D0
+realign 4B09FF0
+realign 4B092C0
+realign 4AD2D20
+realign 4AD32F0
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD3350
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD33B0
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD33D0
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD3400
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD3490
+realign 4B09FF0
+realign 4AD2D20
+realign 4AD34D0
+realign 4B09FF0
+realign 4AD2D20
+realign 4B09FF0
+realign 4AD2D20
+realign 4B09FF0
+realign 4AD2D20
+realign 4B09FF0
+malign 4B0A8E0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+UNIFORM(0, 0, sampler2D, diffuse_sampler);
+        
+in block
+{
+    vec3 xyz;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, FragColor);
+
+const vec3 lightPosition = vec3(10, 10, 10);
+const vec3 lightAmbient = vec3(0.1, 0.1, 0.1);
+const vec3 lightDiffuse = vec3(0.5, 0.5, 0.5);
+const vec3 lightSpecular = vec3(0.5, 0.5, 0.5);
+
+void main()
+{
+    // ambient
+    vec3 ambient = lightAmbient;
+    
+    // diffuse 
+    vec3 norm = normalize(sgl_v.nrm);
+    vec3 lightDir = normalize(lightPosition - sgl_v.xyz);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = lightDiffuse * (diff * Kd);
+    
+    // specular
+    vec3 viewDir = normalize(vec3(viewpoint.xyz) - sgl_v.xyz);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Ns);
+    vec3 specular = lightSpecular * (spec * Ks);  
+        
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
+}
+malign C5503C0
+malign 49D8440
+malign 49D8CB0
+malign 4B09A00
+realign 4A14950
+realign 4B09FF0
+malign 499DB20
+malign 4A943C0
+Uploading pipeline '../data/pipeline/body/body.xsh.xml?skinned'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/body/body.xsh.xml>('../data/pipeline/body/body.xsh.xml')realign 49D8D50
+malign C4F18A0
+malign 4B09FF0
+realign 49D4070
+recoalign 4A77AF0
+recoalign 4A77A20
+realign C509880
+recoalign 4A77990
+recoalign 4A77790
+malign 49D8DF0
+malign 49D8DA0
+malign 4B09270
+realign 49D8AD0
+realign 4B09A50
+realign 499DA70
+recoalign 4A77790
+recoalign 4A77750
+malign 49D4070
+realign 49D8DA0
+realign 325490
+recoalign 4A77990
+recoalign 4A77870
+malign 49D46F0
+realign 49D8DF0
+realign C4D74A0
+recoalign 4A776C0
+recoalign 4A77670
+malign 49D47C0
+realign 4B09480
+malign 49D4750
+realign 49D8DF0
+realign C53BC60
+recoalign 4A77AF0
+recoalign 4A77630
+malign 49D8DA0
+malign 49D84E0
+malign 4B09370
+realign 49D8D00
+realign 49D4620
+realign C42A4D0
+recoalign 4A77630
+recoalign 4A775E0
+malign 49D4820
+realign 49D84E0
+realign C53BC60
+recoalign 4A77AF0
+recoalign 4A77480
+malign 49D45B0
+realign 49D8DA0
+realign 4A961B0
+recoalign 4A77700
+recoalign 4A775A0
+malign 4B09A50
+malign 4B09320
+malign 4B093D0
+realign 49D84E0
+realign 2F99320
+malign 49D4620
+realign 4B09320
+malign 49D4550
+realign 49D8DA0
+realign C53BC60
+recoalign 4A775A0
+recoalign 4A77510
+malign 49D8DF0
+malign 49D8E40
+malign 4B09A50
+realign 49D8E90
+realign 4A14950
+realign C47C500
+recoalign 4A77510
+recoalign 4A77550
+malign 49D4680
+realign 49D8E40
+realign 4AF8F70
+recoalign 4A775A0
+recoalign 4A774C0
+malign 49D43B0
+realign 49D8DF0
+realign 4AFB4C0
+recoalign 4A77360
+recoalign 4A77430
+malign 49D4340
+realign 4B09420
+realign C439B70
+recoalign 4A77310
+recoalign 4A77E50
+malign 49D42E0
+realign 4B094D0
+realign 4B0A630
+recoalign 4A77F30
+recoalign 4A77EE0
+malign 49D4210
+realign 49D34E0
+realign C429DF0
+recoalign 4A77F70
+recoalign 4A773A0
+malign 49D41A0
+realign 49D3420
+malign 49D4270
+realign 4B094D0
+realign 4B0A630
+recoalign 4A78000
+recoalign 4A77B80
+malign 49D8DA0
+malign 49D8DF0
+malign 4B09420
+realign 49D8E40
+realign C54E370
+realign C429DF0
+recoalign 4A77B80
+recoalign 4A77FC0
+malign 49D4140
+realign 49D8DF0
+realign 4B0B1E0
+recoalign 4A78000
+recoalign 4A78050
+malign 49D3C60
+realign 49D8DA0
+realign C429DF0
+recoalign 4A78090
+recoalign 4A780E0
+malign 49D40D0
+realign 4B092C0
+realign 4B0B1E0
+recoalign 4A78120
+recoalign 4A77C60
+malign 49D3CC0
+realign 4B099A0
+realign C429DF0
+recoalign 4A781B0
+recoalign 4A77CA0
+malign 49D49C0
+realign 49D34E0
+realign 4B0B1E0
+recoalign 4A78170
+recoalign 4A77BD0
+malign 49D3BF0
+realign 49D3720
+malign 49D4960
+realign 4B099A0
+malign 49D3ED0
+realign 4B0B560
+malign 4AD1440
+Node 'DepthWriteEnabled' not handled.Node 'Rasterizer' not handled.../data/pipeline/body/body.fshrealign 49D3D90
+malign 4B0A630
+realign 49D4890
+malign C53BC60
+malign 49D35A0
+malign 4A94290
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/body/body.fsh>('../data/pipeline/body/body.fsh'),1malign 4A942F0
+realign 49D8D50
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3180
+realign 4A14950
+realign 4A14510
+realign 4AD1440
+realign 499DA70
+realign 499E990
+realign C4C9560
+realign C4C94A0
+realign 4B085F0
+realign 49E0920
+realign 4A21460
+realign 4A20C20
+realign C503880
+realign 49C9F70
+realign C42A4D0
+realign 4AF8F70
+realign C42A4D0
+realign 4AF8F70
+realign C42A4D0
+realign 4AF8F70
+realign C42A4D0
+realign 49BBEE0
+realign C429DF0
+realign 4B0B8E0
+realign C429DF0
+realign 4B0B8E0
+realign C429DF0
+realign 4B0B8E0
+realign C414FB0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D3180
+realign 4B0B8E0
+realign 49D34E0
+malign 49D8DA0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1malign 4A94360
+realign C414FB0
+realign C550340
+malign 49D8DF0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign C414FB0
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4B094D0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4B0B8E0
+realign 4AD2D20
+realign 4AD3460
+realign C413F80
+realign 4AD2D20
+realign 4AD34C0
+realign C413F80
+realign 4AD2D20
+realign C413F80
+realign 4AD2D20
+realign C413F80
+realign 4AD2D20
+realign C413F80
+realign 4AD2D20
+malign 4AD1CF0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+UNIFORM(0, 0, sampler2D, diffuse_sampler);
+        
+in block
+{
+    vec3 xyz;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, FragColor);
+
+const vec3 lightPosition = vec3(10, 10, 10);
+const vec3 lightAmbient = vec3(0.1, 0.1, 0.1);
+const vec3 lightDiffuse = vec3(0.5, 0.5, 0.5);
+const vec3 lightSpecular = vec3(0.5, 0.5, 0.5);
+
+void main()
+{
+    // ambient
+    vec3 ambient = lightAmbient;
+    
+    // diffuse 
+    vec3 norm = normalize(sgl_v.nrm);
+    vec3 lightDir = normalize(lightPosition - sgl_v.xyz);
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = lightDiffuse * (diff * Kd);
+    
+    // specular
+    vec3 viewDir = normalize(vec3(viewpoint.xyz) - sgl_v.xyz);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), Ns);
+    vec3 specular = lightSpecular * (spec * Ks);  
+        
+    vec3 result = ambient + diffuse + specular;
+    FragColor = vec4(result, 1.0);
+}
+malign C550440
+malign 49D8D50
+malign 49D8EE0
+malign 4B092C0
+realign 4A942F0
+malign 49E0920
+realign 4A14510
+realign 4AD25E0
+malign 499E990
+malign 4A94360
+realign 49D8E40
+malign 49DF0D0
+malign C4CF480
+realign 49D8E90
+malign 4B085F0
+malign 4AD44F0
+Uploading pipeline '../data/pipeline/testLighting/testLighting.xsh.xml?blinn'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/testLighting/testLighting.xsh.xml>('../data/pipeline/testLighting/testLighting.xsh.xml')realign 49D84E0
+malign C4F18A0
+malign 4B0B8E0
+realign 49D3ED0
+recoalign 4A78170
+recoalign 4A77BD0
+realign C509880
+recoalign 4A781B0
+recoalign 4A77CA0
+realign 499DA70
+recoalign 4A78120
+recoalign 4A77C60
+malign 49D3ED0
+realign 49D8D00
+realign 325490
+recoalign 4A781B0
+recoalign 4A78090
+malign 49D4960
+realign 49D8AD0
+realign C4D74A0
+recoalign 4A780E0
+recoalign 4A78000
+malign 49D3BF0
+realign 4B099A0
+malign 49D49C0
+realign 49D8AD0
+realign C42A4D0
+recoalign 4A78170
+recoalign 4A78050
+malign 49D8D00
+malign 49D8F30
+malign 4B09420
+realign 49D8F80
+realign 4B09A50
+realign 4AD84F0
+recoalign 4A78050
+recoalign 4A77B80
+malign 49D3CC0
+realign 49D8F30
+realign C42A4D0
+recoalign 4A78170
+recoalign 4A77FC0
+malign 49D40D0
+realign 49D8D00
+realign 4A961B0
+recoalign 4A77F70
+recoalign 4A773A0
+malign 49D3C60
+realign 4B09320
+realign C42A4D0
+recoalign 4A77F30
+recoalign 4A77EE0
+malign 49D4140
+realign 4B093D0
+realign C47C500
+recoalign 4A77310
+recoalign 4A77E50
+malign 49D4270
+realign 49D3720
+malign 49D41A0
+realign 49D8D00
+malign 49D4210
+realign C47C6D0
+malign 4953890
+../data/pipeline/testLighting/testLighting.xsh.xmlUploading pipeline '../data/pipeline/testLighting/testLighting.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/testLighting/testLighting.xsh.xml>('../data/pipeline/testLighting/testLighting.xsh.xml')realign 49D84E0
+malign C4F18A0
+malign 4AD25E0
+realign 49D42E0
+recoalign 4A77360
+recoalign 4A77430
+realign C509880
+recoalign 4A775A0
+recoalign 4A774C0
+realign 499DA70
+recoalign 4A77510
+recoalign 4A77550
+malign 49D42E0
+realign 49D8AD0
+realign 325490
+recoalign 4A775A0
+recoalign 4A77700
+malign 49D4340
+realign 49D8F30
+realign C4D74A0
+recoalign 4A77AF0
+recoalign 4A77480
+malign 49D43B0
+realign 4B093D0
+malign 49D4680
+realign 49D8F30
+realign C42A4D0
+recoalign 4A77360
+recoalign 4A77630
+malign 49D8AD0
+malign 49D8FD0
+malign 4B09320
+realign 49D9020
+realign 4B09370
+realign 4AD84F0
+recoalign 4A77630
+recoalign 4A775E0
+malign 49D4550
+realign 49D8FD0
+realign C42A4D0
+recoalign 4A77360
+recoalign 4A776C0
+malign 49D4620
+realign 49D8AD0
+realign 4A961B0
+recoalign 4A77670
+recoalign 4A77990
+malign 49D45B0
+realign 4B09480
+realign C42A4D0
+recoalign 4A77870
+recoalign 4A77790
+malign 49D4820
+realign 4B09270
+realign C47C8B0
+recoalign 4A77750
+recoalign 4A77A20
+malign 49D4750
+realign 49D3420
+malign 49D47C0
+realign 49D8AD0
+malign 49D46F0
+realign C47CA80
+malign 4953890
+../data/pipeline/testLighting/testLightingBlinn.vsh../data/pipeline/testLighting/testLightingBlinn.fshmalign C550340
+realign C5504C0
+malign 4A961B0
+malign 2F992A0
+realign C509880
+malign C42A4D0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/testLighting/testLightingBlinn.vsh>('../data/pipeline/testLighting/testLightingBlinn.vsh'),1malign 2F99320
+realign 49D8AD0
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3420
+realign 4A14510
+realign 4A14950
+realign 4AD1440
+realign 499DA70
+realign 499E8E0
+realign C4C94A0
+realign C4C9560
+realign C42A5D0
+realign 49E0A10
+realign 4A20C20
+realign 4A21460
+realign C503880
+realign 49C9F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 49BBEE0
+realign 4AD3A60
+realign C429DF0
+realign C414FB0
+realign C429DF0
+realign C414FB0
+realign C4152F0
+realign C415690
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D3420
+realign C415A80
+realign 49D3600
+malign 49D9020
+realign C414FB0
+realign C4153C0
+realign C4157D0
+realign C414FB0
+realign C4153E0
+realign C415810
+realign C414FB0
+realign C415400
+realign C415860
+realign C414FB0
+realign C415430
+realign C4158D0
+realign C414FB0
+realign C415460
+realign C415910
+realign C414FB0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1malign 49D46F0
+realign C415480
+realign C5502C0
+malign 49D84E0
+realign C415950
+realign C414FB0
+realign C4154A0
+realign C4159A0
+realign C414FB0
+realign C4154C0
+realign 4B09320
+realign C4159D0
+realign 4953890
+realign C413F80
+realign C4144C0
+realign C4149F0
+realign C413F80
+realign C4144D0
+realign C414A20
+realign C413F80
+realign C4144F0
+realign C414A60
+realign C413F80
+realign C414500
+realign C414AB0
+realign C413F80
+realign C414590
+realign C414B90
+realign C413F80
+malign 4AD2A30
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+
+out block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_out;
+
+void main()
+{
+    sgl_out.posn = v * m * vec4(in_pos, 1);
+    mat3 n = mat3(transpose(inverse(m))); // gambiarra
+    sgl_out.nrm = normalize(n * in_nrm);
+
+    gl_Position = p * v * m * vec4(in_pos, 1);
+}
+malign C550540
+malign 49D8AD0
+malign 49D8F30
+malign 4953900
+malign 2F99320
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/testLighting/testLightingBlinn.fsh>('../data/pipeline/testLighting/testLightingBlinn.fsh'),1malign 2F99230
+realign 49D8FD0
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3600
+realign 4A14950
+realign 4A14510
+realign 4AD1440
+realign 499E8E0
+realign 499DA70
+realign C4C9560
+realign C4C94A0
+realign C42A5D0
+realign 49E0A10
+realign 4A21460
+realign 4A20C20
+realign C503880
+realign 49C9F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 4AF8F70
+realign 4AD84F0
+realign 49BBEE0
+realign 4B0BD20
+realign C429DF0
+realign 4AD3060
+realign C429DF0
+realign 4AD3060
+realign 4AD33A0
+realign 4AD3740
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D3600
+realign 4AD3060
+realign 49D3420
+malign 49D9070
+realign 4AD3450
+realign 4AD3860
+realign 4AD3060
+realign 4AD3480
+realign 4AD38A0
+realign 4AD3060
+realign 4AD34A0
+realign C44BE50
+realign C44C2B0
+realign C44C710
+realign C44BE50
+realign C44C2F0
+realign C44C780
+realign C44BE50
+realign C44C310
+realign C44C7E0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1malign 49D46F0
+realign C44BE50
+realign C5502C0
+malign 49D90C0
+realign C44C320
+realign C44C810
+realign C44BE50
+realign C44C350
+realign C44C860
+realign C44BE50
+realign C44C380
+realign C44C8B0
+realign C44BE50
+realign C44C3A0
+realign 4AD3060
+realign 4AD35B0
+realign C414FB0
+realign C415510
+realign 4AD3060
+realign 4AD35E0
+realign 4B09320
+realign C414FB0
+realign C415550
+realign 4AD3060
+realign 4AD3620
+realign C414FB0
+realign C4155D0
+realign 4AD3060
+realign C414FB0
+realign C415640
+realign 4AD3060
+realign C414FB0
+realign C415670
+realign 4AD3060
+realign C414FB0
+realign C4156D0
+realign 4AD3060
+realign C414FB0
+realign C415730
+realign 4AD3060
+realign C414FB0
+realign C415790
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+realign C414FB0
+realign 4AD3060
+malign C413F80
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+in block
+{
+    vec4 posn;
+    vec3 nrm;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+vec4 litSrc0Pos = vec4(100, 1000, 0, 1);
+vec4 litProd0Ambi = vec4(0.1, 0.1, 0.1, 1);
+vec4 litProd0Diff = vec4(0.9, 0.8, 0.7, 1);
+vec4 litProd0Spec = vec4(0.1, 0.1, 0.1, 1);
+vec4 litModelAmbi = vec4(1, 1, 1, 1);
+vec4 mtlAmbi = vec4(0.1, 0.1, 0.1, 1);
+float mltShinisses = 10;
+
+void main (void)
+{ 
+    // calculate light diffusion
+    vec3 light = normalize(litSrc0Pos.xyz - sgl_in.posn.xyz); 
+    vec3 view = normalize(-sgl_in.posn.xyz); 
+    vec3 normal = normalize(sgl_in.nrm); 
+
+    // calculate ambience
+    vec4 ambient = litProd0Ambi;
+    vec4 global = mtlAmbi * litModelAmbi;
+
+    // get vector to light
+    vec4 diffuse = litProd0Diff * max(dot(sgl_in.nrm, light), 0.0);
+    diffuse = clamp(diffuse, 0.0, 1.0);
+
+    // Blinn specular variation
+    vec3 halfDir = normalize(light + view);
+    float spec = pow(max(dot(normal, halfDir), 0.0), mltShinisses * 0.2);
+    vec4 specular = litProd0Spec * spec;
+    specular = clamp(specular, 0.0, 1.0);
+
+    // do calculations on every fragment
+    out_rgba0 = global + ambient + diffuse + specular;
+}
+malign C5505C0
+malign 49D8FD0
+malign 49D9110
+malign 4B093D0
+realign 4A14510
+realign 4AD3060
+malign C42A5D0
+malign 2F99230
+Uploading pipeline '../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml?tutCamUtil'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml')realign 49D8D00
+malign C4F18A0
+malign 4AD3060
+realign 49D4210
+recoalign 4A77310
+recoalign 4A77E50
+realign C509910
+recoalign 4A77F30
+recoalign 4A77EE0
+malign 4B09420
+malign 4B099A0
+malign 4B09320
+realign 49D8F80
+realign 4B09270
+realign 499DA70
+recoalign 4A77EE0
+recoalign 4A77F70
+malign 49D4210
+realign 49D9160
+realign 325490
+recoalign 4A77F30
+recoalign 4A773A0
+malign 49D41A0
+realign 49D91B0
+realign C4D74A0
+recoalign 4A78170
+recoalign 4A77FC0
+malign 49D4270
+realign 4B099A0
+malign 49D4140
+realign 49D91B0
+realign 4AD84F0
+recoalign 4A77310
+recoalign 4A78050
+malign 49D3720
+malign 49D3420
+malign 4B09420
+realign 49D9160
+realign 49D3C60
+realign 4AF8F70
+recoalign 4A78050
+recoalign 4A77B80
+malign 49D40D0
+realign 49D9200
+realign 4AD84F0
+recoalign 4A77310
+recoalign 4A780E0
+malign 49D3CC0
+realign 49D9250
+realign 4A96DF0
+recoalign 4A78000
+recoalign 4A781B0
+malign 49D49C0
+realign 4B09270
+malign 49D3BF0
+realign 49D9250
+realign 4AD84F0
+recoalign 4A78090
+recoalign 4A78120
+malign 4B09480
+malign 4B094D0
+malign 4B091C0
+realign 49D91B0
+realign 2F991B0
+realign C47CC60
+recoalign 4A78120
+recoalign 4A77C60
+malign 49D3C60
+realign 49D9200
+realign 4AD84F0
+recoalign 4A78090
+recoalign 4A77CA0
+malign 49D4960
+realign 49D92A0
+realign 4AFB4C0
+recoalign 4A77BD0
+recoalign 4A77750
+malign 49D3ED0
+realign 4B094D0
+realign C439B70
+recoalign 4A77A20
+recoalign 4A77870
+malign 49D46F0
+realign 4B09480
+realign 4B0BD20
+recoalign 4A77790
+recoalign 4A77670
+malign 49D47C0
+realign 49D3420
+realign C429DF0
+recoalign 4A77990
+recoalign 4A77360
+malign 49D4750
+realign 49D3720
+malign 49D4820
+realign 4B09480
+realign 4B0BD20
+recoalign 4A776C0
+recoalign 4A77630
+malign 49D3420
+malign 49D3600
+malign 4B094D0
+realign 49D9250
+realign 4A14510
+realign C429DF0
+recoalign 4A77630
+recoalign 4A775E0
+malign 49D45B0
+realign 49D92A0
+realign 4AD36B0
+recoalign 4A776C0
+recoalign 4A77AF0
+malign 49D4620
+realign 49D9200
+realign 4AD39A0
+recoalign 4A77480
+recoalign 4A775A0
+malign 49D4550
+realign 4B09950
+realign C429DF0
+recoalign 4A77700
+recoalign 4A77510
+malign 49D4680
+realign 4B09110
+realign 4AD36B0
+recoalign 4A77550
+recoalign 4A774C0
+malign 49D43B0
+realign 49D3600
+realign C414930
+recoalign 4A77430
+recoalign 4A77A60
+malign 49D4340
+realign 49D3420
+malign 49D42E0
+realign 4B09110
+malign 49D4070
+realign 4AD36B0
+malign 4AD1440
+Node 'DepthWriteEnabled' not handled.../data/pipeline/tutCamUtil/tutCamUtil.xsh.xmlUploading pipeline '../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml>('../data/pipeline/tutCamUtil/tutCamUtil.xsh.xml')realign 49D8D00
+malign C4F18A0
+malign C414CB0
+realign 4A94430
+recoalign 4A779D0
+recoalign 4A77940
+realign C509910
+recoalign 4A77AB0
+recoalign 4A773F0
+malign 4B09480
+malign 4B09950
+malign 4B098F0
+realign 49D9200
+realign 4B090B0
+realign 499DA70
+recoalign 4A773F0
+recoalign 4A78290
+malign 4A94430
+realign 49D92A0
+realign 325490
+recoalign 4A77AB0
+recoalign 4A84000
+malign 4A94490
+realign 49D92F0
+realign C4D74A0
+recoalign 4A840E0
+recoalign 4A84050
+malign 4A94500
+realign 4B09950
+malign 4A94560
+realign 49D92F0
+realign 4AD84F0
+recoalign 4A779D0
+recoalign 4A84EF0
+malign 49D3600
+malign 49D34E0
+malign 4B09480
+realign 49D92A0
+realign 4A945D0
+realign 4AF8F70
+recoalign 4A84EF0
+recoalign 4A84120
+malign 4A94630
+realign 49D9340
+realign 4AD84F0
+recoalign 4A779D0
+recoalign 4A84F30
+malign 4A946A0
+realign 49D9390
+realign 4A96DF0
+recoalign 4A84BD0
+recoalign 4A84EA0
+malign 4A94700
+realign 4B090B0
+malign 4A94770
+realign 49D9390
+realign 4AD84F0
+recoalign 4A84680
+recoalign 4A84B90
+malign 4B098A0
+malign 4B09060
+malign 4B09000
+realign 49D92F0
+realign 2F991B0
+realign C47CC60
+recoalign 4A84B90
+recoalign 4A84D40
+malign 4A945D0
+realign 49D9340
+realign 4AD84F0
+recoalign 4A84680
+recoalign 4A84E10
+malign 4A947D0
+realign 49D93E0
+realign 4AFB4C0
+recoalign 4A84E60
+recoalign 4A84C60
+malign 4A948A0
+realign 4B09060
+realign C439B70
+recoalign 4A84D80
+recoalign 4A84CB0
+malign 4A94910
+realign 4B098A0
+realign 4AD3A30
+recoalign 4A84CF0
+recoalign 4A84C20
+malign 4A94970
+realign 49D34E0
+realign 4B0BD20
+recoalign 4A84B40
+recoalign 4A84B00
+malign 4A949E0
+realign 49D3600
+malign 4A94A40
+realign 4B098A0
+realign 4AD3A30
+recoalign 4A84AB0
+recoalign 4A84A20
+malign 49D34E0
+malign 49D3180
+malign 4B09060
+realign 49D9390
+realign 4A14950
+realign C429DF0
+recoalign 4A84A20
+recoalign 4A848C0
+malign 4A94B10
+realign 49D93E0
+realign C415300
+recoalign 4A84AB0
+recoalign 4A84240
+malign 4A941C0
+realign 49D9340
+realign C429DF0
+recoalign 4A84560
+recoalign 4A84950
+malign 4A940F0
+realign 4B09840
+realign C415300
+recoalign 4A841B0
+recoalign 4A84320
+malign 4A93FB0
+realign 4B097F0
+realign C429DF0
+recoalign 4A84200
+recoalign 4A84480
+malign 4A94080
+realign 49D3180
+realign C415300
+recoalign 4A84290
+recoalign 4A845A0
+malign 4A94020
+realign 49D34E0
+malign 4A93F50
+realign 4B097F0
+malign 4A94D80
+realign C415680
+malign 4AD1440
+../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh../data/pipeline/tutCamUtil/tutCamUtil.fshrealign 2F991B0
+malign 4AD3A30
+realign 2F99140
+malign 4AD84F0
+malign C5502C0
+realign C509910
+malign 4A96DF0
+malign 2F98D00
+realign C54E410
+malign 4AF8F70
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh>('../data/pipeline/tutCamUtil/tutCamUtilRigid.vsh'),1malign 2F98DF0
+realign 49D9390
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D34E0
+realign 4A147C0
+realign 4A14840
+realign 4AD8650
+realign 499DA70
+realign 499E8E0
+realign C4C94A0
+realign C4C9560
+realign 4A94F30
+realign 49E0A10
+realign 4A20C20
+realign 4A21460
+realign C503880
+realign 49C9F70
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 49BBEE0
+realign 4B0BD20
+realign C429DF0
+realign C415A00
+realign C429DF0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D34E0
+realign C4EF4B0
+realign 49D3600
+malign 49D92F0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1malign 49D4890
+realign C415A00
+realign C5504C0
+malign 49D92A0
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign C4EF4B0
+realign C415A00
+realign 4B097F0
+realign C44BE50
+realign 4953890
+realign C415A00
+realign C550640
+realign C44BE50
+realign C415A00
+realign C44BE50
+realign C415A00
+realign C44BE50
+realign C415A00
+realign C44BE50
+realign C415A00
+realign C44BE50
+realign C44C400
+realign C4EE480
+realign C44BE50
+realign C44C460
+realign C4EE480
+realign C44BE50
+realign C44C4A0
+realign C4EE480
+realign C44BE50
+realign C44C4E0
+realign C4EE480
+realign C44BE50
+realign C44C540
+realign C4EE480
+realign C44BE50
+realign C44C5C0
+realign C4EE480
+malign C4EEC10
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+IN(6, vec2, in_uv0);
+
+out block
+{
+    vec2 uv0;
+    vec3 rgba0;
+} sgl_out;
+
+float3 DirFromLight = vec3(100, 100, 0);
+float4 LightColour = vec4(0.9, 0.9, 0.9, 1);
+float4 AmbientColour = vec4(0.1, 0.1, 0.1, 0.1);
+
+void main()
+{
+    float4 WorldPos = m * vec4(in_pos, 1);
+    float4 ViewPos  = v * WorldPos;
+    float4 ClipPos  = p * ViewPos;
+
+    float4 InNormal  = float4( in_nrm, 0);
+    float3 ObjNormal = vec4(m * InNormal).xyz;
+
+    sgl_out.uv0     = in_uv0;
+    sgl_out.rgba0  = vec3(LightColour * dot(vec4(ObjNormal,0), vec4(DirFromLight,0)) + AmbientColour);
+
+    gl_Position = ClipPos;
+}
+malign C5506C0
+malign 49D9390
+malign 49D9200
+malign C550740
+malign 4953890
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/tutCamUtil/tutCamUtil.fsh>('../data/pipeline/tutCamUtil/tutCamUtil.fsh'),1malign 4954770
+realign 49D8D00
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3600
+realign 4A14840
+realign 4A147C0
+realign 4AD8650
+realign 499E8E0
+realign 499DA70
+realign C4C9560
+realign C4C94A0
+realign 4A94F30
+realign 49E0A10
+realign 4A21460
+realign 4A20C20
+realign C503880
+realign 49C9F70
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 49BBEE0
+realign 4B0BD20
+realign C429DF0
+realign C415A00
+realign C429DF0
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign 4B097F0
+realign C415A00
+realign C4EE480
+realign 49D3600
+malign 4B09060
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+realign C4EE480
+realign C415A00
+malign C4EE480
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+in block
+{
+    vec2 uv0;
+    vec3 rgba0;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+SAMPLING_UNIT(0, 1, sampler2D, diffuse_texture);
+
+void main (void)
+{ 
+    float3 DiffuseSamp = vec3(1, 1, 1); //texture( diffuse_texture, sgl_in.uv0 );
+    DiffuseSamp *= sgl_in.rgba0;
+
+    out_rgba0 = float4(DiffuseSamp, 1);
+}
+malign 49D34E0
+malign 4B09000
+malign 4B090B0
+realign 2F98DF0
+malign 49E0A10
+realign 4A147C0
+realign C4EF390
+malign 4A94F30
+malign 4A942F0
+Uploading pipeline '../data/pipeline/lighting/lighting.xsh.xml?lighting'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/lighting/lighting.xsh.xml>('../data/pipeline/lighting/lighting.xsh.xml')realign 49D9250
+malign C4F18A0
+malign C415A00
+realign 49D4070
+recoalign 4A77430
+recoalign 4A77A60
+realign C509880
+recoalign 4A77550
+recoalign 4A774C0
+realign 499DA70
+recoalign 4A77700
+recoalign 4A77510
+malign 49D4070
+realign 49D91B0
+realign 325490
+recoalign 4A77550
+recoalign 4A77480
+malign 49D42E0
+realign 49D9160
+realign C4D74A0
+recoalign 4A775A0
+recoalign 4A776C0
+malign 49D4340
+realign 4B09110
+realign C415E40
+recoalign 4A77AF0
+recoalign 4A77630
+malign 49D9160
+malign 49D91B0
+malign 4B094D0
+realign 49D8F80
+realign 4B091C0
+malign 49D43B0
+realign 4B09270
+realign C423B80
+recoalign 4A77630
+recoalign 4A775E0
+malign 49D91B0
+malign 49D9160
+malign 4B09110
+realign 49D8D00
+realign 49D4680
+malign 49D4550
+realign 49D3420
+realign 4AFB4C0
+recoalign 4A775E0
+recoalign 4A77990
+malign 49D9160
+malign 49D91B0
+malign 4B09270
+realign 49D9340
+realign 2F98D80
+malign 49D4680
+realign 49D3720
+malign 49D4620
+realign 49D91B0
+realign 4A96340
+recoalign 4A77430
+recoalign 4A77990
+malign 4B091C0
+malign 4B09420
+malign 4B099A0
+realign 49D9160
+realign 4A147C0
+realign C423B80
+recoalign 4A77990
+recoalign 4A77360
+malign 49D45B0
+realign 49D93E0
+realign C47CC60
+recoalign 4A77430
+recoalign 4A77790
+malign 49D4820
+realign 49D9430
+realign C423B80
+recoalign 4A77670
+recoalign 4A77A20
+malign 49D4750
+realign 4B09420
+realign 4AFB4C0
+recoalign 4A77870
+recoalign 4A77BD0
+malign 49D47C0
+realign 4B091C0
+realign C4EE9A0
+recoalign 4A77750
+recoalign 4A78090
+malign 49D46F0
+realign 49D3420
+realign C439B70
+recoalign 4A77CA0
+recoalign 4A78120
+malign 49D3ED0
+realign 49D3600
+malign 49D4960
+realign 49D9430
+malign 49D3C60
+realign C4EE9A0
+malign C550640
+Node 'DepthWriteEnabled' not handled.../data/pipeline/lighting/lighting.xsh.xmlUploading pipeline '../data/pipeline/lighting/lighting.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../data/pipeline/lighting/lighting.xsh.xml>('../data/pipeline/lighting/lighting.xsh.xml')realign 49D9250
+malign C4F18A0
+malign C4EF390
+realign 49D3BF0
+recoalign 4A77C60
+recoalign 4A78000
+realign C509880
+recoalign 4A781B0
+recoalign 4A77310
+realign 499DA70
+recoalign 4A780E0
+recoalign 4A78050
+malign 49D3BF0
+realign 49D91B0
+realign 325490
+recoalign 4A781B0
+recoalign 4A77B80
+malign 49D49C0
+realign 49D93E0
+realign C4D74A0
+recoalign 4A78170
+recoalign 4A77FC0
+malign 49D3CC0
+realign 4B091C0
+realign C415E40
+recoalign 4A77F30
+recoalign 4A773A0
+malign 49D93E0
+malign 49D91B0
+malign 4B09420
+realign 49D9480
+realign 4B09320
+malign 49D40D0
+realign 4B097F0
+realign C423B80
+recoalign 4A773A0
+recoalign 4A77EE0
+malign 49D91B0
+malign 49D93E0
+malign 4B091C0
+realign 49D94D0
+realign 49D4140
+malign 49D4270
+realign 49D3420
+realign 4AFB4C0
+recoalign 4A77EE0
+recoalign 4A77F70
+malign 49D93E0
+malign 49D91B0
+malign 4B097F0
+realign 49D9520
+realign 2F98D80
+malign 49D4140
+realign 49D3180
+malign 49D41A0
+realign 49D91B0
+realign 4A96340
+recoalign 4A77C60
+recoalign 4A77F70
+malign 4B09320
+malign 4B09480
+malign 4B09950
+realign 49D93E0
+realign 4A14840
+realign C423B80
+recoalign 4A77F70
+recoalign 4A77E50
+malign 49D4210
+realign 49D9570
+realign C47CC60
+recoalign 4A77C60
+recoalign 4A779D0
+malign 49D4890
+realign 49D95C0
+realign C423B80
+recoalign 4A77AB0
+recoalign 4A773F0
+malign 49D3D90
+realign 4B09480
+realign 4AFB4C0
+recoalign 4A78290
+recoalign 4A77940
+malign 4A94D80
+realign 4B09320
+realign 4B0BD20
+recoalign 4A84290
+recoalign 4A845A0
+malign 4A93F50
+realign 49D3420
+realign C429DF0
+recoalign 4A84200
+recoalign 4A84480
+malign 4A94020
+realign 49D36C0
+malign 4A94080
+realign 49D95C0
+malign 4A93FB0
+realign 4B0BD20
+malign C550640
+../data/pipeline/lighting/lighting.vshNode 'Input' not handled.Node 'Input' not handled.Node 'Input' not handled.../data/pipeline/lighting/lighting.fshmalign C550640
+realign C54E4A0
+malign 4A96340
+malign 4954770
+realign 4A7CB50
+malign C42A050
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/lighting/lighting.vsh>('../data/pipeline/lighting/lighting.vsh'),1malign 4954700
+realign 49D95C0
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D36C0
+realign 4A146B0
+realign 4A14730
+realign 4AD8650
+realign 499DA70
+realign 499E8E0
+realign C4C94A0
+realign C4C9560
+realign C3CA640
+realign 49E0B00
+realign 4A20C20
+realign 4A21460
+realign C503880
+realign 49C9F70
+realign C415E40
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign 49BBEE0
+realign C4EF7E0
+realign C4EFA50
+realign C4EFD20
+realign C4EFFF0
+realign C4EF7E0
+realign C4EFB20
+realign C4EFEC0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D36C0
+realign C4EF7E0
+realign 49D3180
+malign 49D93E0
+realign C4EFBD0
+realign C4EFFE0
+realign C4EF7E0
+realign C4EFBF0
+realign C4F0020
+realign C4EF7E0
+realign C4EFC20
+realign C549260
+realign C5496C0
+realign C549B20
+realign C549260
+realign C5496F0
+realign C549B90
+realign C549260
+realign C549710
+realign C549BE0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdObject.inc>('../data/pipeline/stdObject.inc'),1malign 4A93FB0
+realign C549260
+realign C5504C0
+malign 49D9520
+realign C549730
+realign C549C20
+realign C549260
+realign C549750
+realign C549C60
+realign C4EF7E0
+realign 4B09950
+realign C4EFCF0
+realign 4954690
+realign C44BE50
+realign C5507C0
+realign C44C390
+realign C4EF7E0
+realign C4EFD30
+realign C44BE50
+realign C44C3B0
+realign C4EF7E0
+realign C4EFD50
+realign C44BE50
+realign C44C3E0
+realign C4EF7E0
+realign C4EFD80
+realign C44BE50
+realign C44C420
+realign C4EF7E0
+realign C4EFDD0
+realign C44BE50
+malign C44C480
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(3, 0, sgl_obj)
+{
+    mat4 m;
+    mat4 w[32];
+};
+
+IN(0, vec3, in_pos);
+IN(3, vec3, in_nrm);
+IN(6, vec2, in_uv0);
+
+out block
+{
+    vec4 posn;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_out;
+
+void main()
+{
+    sgl_out.posn = m * vec4(in_pos, 1);
+    sgl_out.nrm = in_nrm;
+    sgl_out.uv0 = in_uv0;
+    gl_Position = p * v * m * vec4(in_pos, 1);
+}
+malign C550840
+malign 49D95C0
+malign 49D94D0
+malign C5508C0
+malign 4954700
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/lighting/lighting.fsh>('../data/pipeline/lighting/lighting.fsh'),1malign 4954690
+realign 49D9480
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3180
+realign 4A14730
+realign 4A146B0
+realign 4AD8650
+realign 499E8E0
+realign 499DA70
+realign C4C9560
+realign C4C94A0
+realign C3CA640
+realign 49E0B00
+realign 4A21460
+realign 4A20C20
+realign C503880
+realign 49C9F70
+realign C415E40
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign 49BBEE0
+realign C44CAB0
+realign C44BE50
+realign C44C120
+realign C44CAB0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D3180
+realign C4EF7E0
+realign 49D36C0
+malign 49D9250
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdMaterial.inc>('../data/pipeline/stdMaterial.inc'),1malign 4A93FB0
+realign C44BE50
+realign C5507C0
+malign 49D91B0
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C54E410
+malign 49D9570
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign 4B09950
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C44BE50
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+realign C4EF7E0
+realign C548230
+malign C4EF7E0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+UNIFORM_UNIT(2, 0, sgl_mtl)
+{
+    vec3  Kd;
+    vec3  Ks;
+    float Ns;
+    float d;
+    float Ni;
+    int   illum;
+};
+
+SAMPLING_UNIT(2, 1, sampler2D, floorTexture);
+
+vec3 lightPos = vec3(100, 100, 0);
+int blinn = 1;
+
+in block
+{
+    vec4 posn;
+    vec3 nrm;
+    vec2 uv0;
+} sgl_in;
+
+OUT(0, vec4, out_rgba0);
+
+void main (void)
+{ 
+    vec3 color = vec3(0.5,0.5,0.5);//texture(floorTexture, sgl_in.uv0).rgb;
+    
+    // ambient
+    vec3 ambient = 0.05 * color;
+    
+    // diffuse
+    vec3 lightDir = normalize(lightPos - vec3(sgl_in.posn));
+    vec3 normal = normalize(sgl_in.nrm);
+    float diff = max(dot(lightDir, normal), 0.0);
+    vec3 diffuse = diff * color;
+    
+    // specular
+    vec3 viewDir = vec3(normalize(viewPos - sgl_in.posn));
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = 0.0;
+    
+    if(blinn == 1)
+    {
+        vec3 halfwayDir = normalize(lightDir + viewDir);  
+        spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+    }
+    else
+    {
+        vec3 reflectDir = reflect(-lightDir, normal);
+        spec = pow(max(dot(viewDir, reflectDir), 0.0), 8.0);
+    }
+    
+    vec3 specular = vec3(0.3) * spec; // assuming bright white light color
+    out_rgba0 = vec4(ambient + diffuse + specular, 1.0);
+}
+malign C54E540
+malign 49D9480
+malign 49D9610
+malign 49D9660
+malign 4B097F0
+realign 4A146B0
+realign C44AE20
+malign C503880
+malign 2F98D80
+realign 49D9430
+malign C44CAB0
+Installing watcher <0c44caf0> for 04ac9bb0...malign 4B099A0
+malign 4B09270
+malign 49D3600
+realign 49D9160
+malign C44AE20
+malign 4A69360
+malign C44B250
+malign C548230
+malign C4F0190
+Entering the Thread Execution Environment 7484
+Hardware-side raster 04aaf540 ready. de1, 8058, [952,506,1]Hardware-side raster 04aaf340 ready. de1, 81a6, [952,506,1]afxCanvas 04ac4ea0 hardware-side data instanced.Hardware-side buffer 049c9c88 ready. 35345, 4, 10afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/skybox/skybox.vsh>('../data/pipeline/skybox/skybox.vsh'),1malign 49D3ED0
+realign 49D9700
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D3720
+realign 4A14730
+realign 4A14AF0
+realign 4AD8650
+realign 499DA70
+realign 499E8E0
+realign C4C94A0
+realign C4C9560
+realign C54A240
+realign 49E0CE0
+realign 4A20C20
+realign 4A21460
+realign C503990
+realign 49C9F70
+realign C415E40
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign C423B80
+realign 4AFB4C0
+realign 49BBEE0
+realign C549AA0
+realign C549D20
+realign 4AB2500
+realign C549AA0
+realign C549D90
+realign 4AB2500
+realign C549AA0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdView.inc>('../data/pipeline/stdView.inc'),1malign 49D3720
+realign 4AB2500
+realign 49D36C0
+malign 49D9750
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4AB2500
+realign C549AA0
+realign 4B098F0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign C549AA0
+realign 4AB14D0
+realign 4AB1C70
+realign 4AB2420
+realign 4AB2BD0
+realign 4AB14D0
+realign 4AB1CB0
+realign C39A740
+realign 4AB14D0
+realign 4AB1CF0
+realign 4AB2530
+realign 4AB14D0
+realign 4AB1D10
+realign 4AB2550
+realign 4AB14D0
+realign 4AB1D30
+realign 4AB2590
+realign 4AB14D0
+realign 4AB1D40
+realign 4AB25B0
+realign 4AB14D0
+realign 4AB1D80
+realign 4AB2630
+realign 4AB14D0
+realign 4AB1DE0
+realign 4AB26F0
+realign 4AB14D0
+realign 4AB1E40
+realign 4AB27B0
+realign 4AB14D0
+realign 4AB1E60
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+UNIFORM_UNIT(0, 0, sgl_view)
+{
+    mat4 v;
+    mat4 iv;
+    mat4 p;
+    mat4 ip;
+    mat4 vp;
+    mat4 ivp;
+    
+    vec4 viewPos; // view point
+    vec2 viewExtent;
+
+    vec3 starDir;
+    vec4 starPos;
+    vec4 starKd;
+};
+
+IN(0, vec3, a_xyz);
+
+const vec3 points[] =
+{
+    {-1.0, 1.0,-1.0 },
+    {-1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0,-1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0,-1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+
+    {-1.0,-1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0,-1.0, 1.0 },
+    {-1.0,-1.0, 1.0 },
+
+    {-1.0, 1.0,-1.0 },
+    { 1.0, 1.0,-1.0 },
+    { 1.0, 1.0, 1.0 },
+    { 1.0, 1.0, 1.0 },
+    {-1.0, 1.0, 1.0 },
+    {-1.0, 1.0,-1.0 },
+
+    {-1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0,-1.0 },
+    { 1.0,-1.0,-1.0 },
+    {-1.0,-1.0, 1.0 },
+    { 1.0,-1.0, 1.0 }
+};
+
+out block
+{
+    vec3 uvw0;
+} sgl_v;
+
+void main()
+{
+    vec3 xyz = points[gl_VertexID];
+    sgl_v.uvw0 = xyz;
+    
+    // Convert cubemap coordinates into Vulkan coordinate space
+    sgl_v.uvw0.xy *= -1.0;
+    
+    // Remove translation from view matrix
+    vec4 pos = p * mat4(mat3(v)) * vec4(xyz, 1.0);
+    
+    gl_Position = pos.xyww;
+}
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/skybox/sampleOutRgbaCube.fsh>('../data/pipeline/skybox/sampleOutRgbaCube.fsh'),1malign 4954620
+realign 49D9700
+malign C4F18A0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../data/pipeline/stdEnv.inc>('../data/pipeline/stdEnv.inc'),1malign 49D36C0
+realign C53C170
+realign C53C200
+realign 4AFB640
+realign 499E8E0
+realign 499DA70
+realign C541120
+realign C541440
+realign C54A240
+realign 49E0CE0
+realign C5451C0
+realign C5450B0
+realign C503990
+realign 49C9F70
+realign C415E40
+realign C45CFB0
+realign C502600
+realign C45CFB0
+realign C502600
+realign C45CFB0
+realign C462870
+realign 49BD120
+realign C50F590
+realign 4AB31D0
+realign C50F590
+realign 4AB31D0
+realign C620580
+realign C54C930
+realign C620580
+realign C54C930
+realign 49D36C0
+malign 4B0C990
+realign C620580
+realign C54C930
+realign C620580
+realign C54C930
+realign 49CB790
+realign C54C930
+realign C620580
+realign 4B09AB0
+realign C54C930
+realign C620580
+realign C54C930
+realign C620580
+realign C54C930
+realign C620580
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+
+SAMPLING_UNIT(0, 1, samplerCube, samp);
+
+in block
+{
+    vec3 uvw0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uvw0);
+}
+afxPipeline 04b1fef0 hardware-side data instanced.Hardware-side sampler 04aff760 ready.Entering the Thread Execution Environment 3852
+malign C4F0190
+Entering the Thread Execution Environment 7484
+sglDdev_w32.c:122
+Hardware-side raster 04aaf3d0 ready. de1, 8058, [952,506,1]Hardware-side raster 04ac7500 ready. de1, 81a6, [952,506,1]afxCanvas 04ac4f50 hardware-side data instanced.Hardware-side buffer 049c9a18 ready. 35345, 5, 10Entering the Thread Execution Environment 3852
+malign C4F0190
+Entering the Thread Execution Environment 7484
+Hardware-side raster 04ac7590 ready. de1, 8058, [952,506,1]Hardware-side raster 04ac7810 ready. de1, 81a6, [952,506,1]afxCanvas 04ac7670 hardware-side data instanced.Entering the Thread Execution Environment 3852
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+malign C4F0190
+afxSystem_w32.c:118
+User input requested application break.afxSystem_w32.c:118
+User input requested application break.afxSystem_w32.c:118
+User input requested application break.afxSystem_w32.c:118
+User input requested application break.afxSystem_w32.c:118
+User input requested application break.malign C4F0190
+Deinstalling watcher <0c44caf0> for 04ac9bb0realign 49D9840
+realign 49D97F0

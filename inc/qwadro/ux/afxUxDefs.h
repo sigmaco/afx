@@ -21,7 +21,7 @@
 #ifndef AUX_UX_DEFS_H
 #define AUX_UX_DEFS_H
 
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/sound/afxSoundSystem.h"
 
@@ -52,48 +52,48 @@ AFX_DEFINE_HANDLE(afxScript);
 
 AFX_DEFINE_HANDLE(afxHandle);
 
-typedef enum afxUxEventId
+typedef enum auxEventId
 {
-    afxUxEventId_RUN = 1,
-    afxUxEventId_QUIT,
+    auxEventId_RUN = 1,
+    auxEventId_QUIT,
 
-    afxUxEventId_KEY,
+    auxEventId_KEY,
 
     // events são mudanças de estado, não continuidade de estado. Use funções para trabalhar com continuidade de estado.
-    afxUxEventId_LMB,
-    afxUxEventId_RMB,
-    afxUxEventId_MMB,
-    afxUxEventId_XMB1,
-    afxUxEventId_XMB2,
+    auxEventId_LMB,
+    auxEventId_RMB,
+    auxEventId_MMB,
+    auxEventId_XMB1,
+    auxEventId_XMB2,
 
-    afxUxEventId_WHEEL, // mouse wheel
-    afxUxEventId_AXIS, // mouse motion
+    auxEventId_WHEEL, // mouse wheel
+    auxEventId_AXIS, // mouse motion
 
-    afxUxEventId_HOVER, // pointer enter/leave
+    auxEventId_HOVER, // pointer enter/leave
 
-    afxUxEventId_MOVE, // widget move
-    afxUxEventId_SIZE, // widget resized
-    afxUxEventId_FOCUS, // widget focus changed
-    afxUxEventId_SCROLL, // ex.: list scroll
-    afxUxEventId_CHANGED, // ex.: setting applied
-    afxUxEventId_CHECKED, // ex.: combobox (un)checked
+    auxEventId_MOVE, // widget move
+    auxEventId_SIZE, // widget resized
+    auxEventId_FOCUS, // widget focus changed
+    auxEventId_SCROLL, // ex.: list scroll
+    auxEventId_CHANGED, // ex.: setting applied
+    auxEventId_CHECKED, // ex.: combobox (un)checked
 
-    afxUxEventId_DND, // drag and drop
+    auxEventId_DND, // drag and drop
 
 
-} afxUxEventId;
+} auxEventId;
 
-AFX_DEFINE_STRUCT(afxUxEvent)
+AFX_DEFINE_STRUCT(auxEvent)
 {
-    afxUxEventId        id;
-    afxNat32            tid; // poster
-    //afxBool             posted;
-    afxBool             accepted;
-    afxNat              hidPortIdx;
-    afxWindow           wnd;
-    afxWidget           wid;
-    afxSize             udd;
-    afxSize             udd2;
+    auxEventId      id;
+    afxNat32        tid; // poster
+    //afxBool       posted;
+    afxBool         accepted;
+    afxNat          hidPortIdx;
+    afxWindow       wnd;
+    afxWidget       wid;
+    afxSize         udd;
+    afxSize         udd2;
 };
 
 #endif//AUX_UX_DEFS_H

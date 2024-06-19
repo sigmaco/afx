@@ -487,9 +487,7 @@ _AKX afxClassConfig _AkxMshtMgrCfg =
 {
     .fcc = afxFcc_MSHT,
     .name = "Mesh Topology",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxMeshTopology)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxMeshTopology)),
     .ctor = (void*)_AkxMshtCtor,
     .dtor = (void*)_AkxMshtDtor
 };

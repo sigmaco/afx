@@ -14,7 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 #if !0
 
@@ -69,7 +69,7 @@ _AFXINL void AfxEmptyArray(afxArray *arr)
     arr->cnt = 0;
 }
 
-_AFXINL void AfxFillArrayRange(afxArray *arr, afxNat first, afxNat cnt, void* val)
+_AFXINL void AfxFillArrayRange(afxArray *arr, afxNat first, afxNat cnt, void const* val)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);
@@ -78,7 +78,7 @@ _AFXINL void AfxFillArrayRange(afxArray *arr, afxNat first, afxNat cnt, void* va
     AfxFill2(cnt, arr->unitSiz, val, &arr->bytemap[first * arr->unitSiz]);
 }
 
-_AFXINL void AfxFillArray(afxArray *arr, void* val)
+_AFXINL void AfxFillArray(afxArray *arr, void const* val)
 {
     afxError err = AFX_ERR_NONE;
     //AfxAssertType(arr, afxFcc_ARR);

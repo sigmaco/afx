@@ -4,7 +4,7 @@
 
 #define _AFX_SKELETON_C
 #include "qwadro/mem/afxMmu.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/math/afxMatrix.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxQuaternion.h"
@@ -482,7 +482,7 @@ DLLEXPORT void* CadbGetResourceInfoMd5(void* data2, afxFcc type, afxNat resIdx, 
     if (name)
     {
         if (type != afxFcc_MSH)
-            AfxPickUriObject(data->name, name);
+            AfxClipUriTarget(name, data->name);
         else
             AfxMakeUri(name, &data->meshNames[resIdx].shader, 0);
     }
@@ -745,7 +745,7 @@ DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNa
             afxTransform wt;
             AfxResetTransform(&wt);
             afxSkeletonBuilder sklb;
-            AfxPickUriObject(&nameUri, &uri2.uri);
+            AfxClipUriTarget(&uri2.uri, &nameUri);
             AfxBeginSkeletonBuilding(&sklb, md5.num_joints, AfxGetUriString(&nameUri), NIL);
 
             for (afxNat i = 0; i < md5.num_joints; i++)
@@ -805,10 +805,10 @@ DLLEXPORT afxError AfxLoadAssetsFromMd5(afxSimulation sim, afxFlags flags, afxNa
                 //bone = bone;
             }
 
-            akxPose *lp;
+            akxPose lp;
             AfxAcquirePoses(sim, 1, &skl->jointCnt, &lp);
             AfxComputeRestLocalPose(skl, 0, skl->jointCnt, lp);
-            akxPoseBuffer *wp;
+            akxPoseBuffer wp;
             AfxAcquirePoseBuffers(sim, 1, &skl->jointCnt, NIL, &wp);
             AfxComputeRestPoseBuffer(skl, 0, skl->jointCnt, AFX_M4D_IDENTITY, wp);
 

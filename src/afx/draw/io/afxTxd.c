@@ -630,38 +630,38 @@ afxBool _rwD3D9NativeTextureRead(afxStream stream)
         }
     } while (--face);
 
-    afxSamplerConfig sampc = {0};
+    avxSamplerConfig sampc = {0};
 
     switch (nativeTexture.filterAndAddress & 0xFF)
     {
-    case 1: sampc.minFilter = (sampc.magFilter = (sampc.mipFilter = afxTexelFilter_POINT)); break; // rwFILTERNEAREST, /**<Point sampled */
-    case 2: sampc.minFilter = (sampc.magFilter = (sampc.mipFilter = afxTexelFilter_LINEAR)); break;// rwFILTERLINEAR, /**<Bilinear */
-    case 3: sampc.mipFilter = afxTexelFilter_POINT; break; // rwFILTERMIPNEAREST, /**<Point sampled per pixel mip map */
-    case 4: sampc.mipFilter = afxTexelFilter_LINEAR; break; // rwFILTERMIPLINEAR, /**<Bilinear per pixel mipmap */
-    case 5: sampc.minFilter = (sampc.magFilter = afxTexelFilter_LINEAR); sampc.mipFilter = afxTexelFilter_POINT; break; // rwFILTERLINEARMIPNEAREST, /**<MipMap interp point sampled */
-    case 6: sampc.minFilter = (sampc.magFilter = afxTexelFilter_LINEAR); sampc.mipFilter = afxTexelFilter_LINEAR; break; // rwFILTERLINEARMIPLINEAR, /**<Trilinear */
+    case 1: sampc.minFilter = (sampc.magFilter = (sampc.mipFilter = avxTexelFilter_POINT)); break; // rwFILTERNEAREST, /**<Point sampled */
+    case 2: sampc.minFilter = (sampc.magFilter = (sampc.mipFilter = avxTexelFilter_LINEAR)); break;// rwFILTERLINEAR, /**<Bilinear */
+    case 3: sampc.mipFilter = avxTexelFilter_POINT; break; // rwFILTERMIPNEAREST, /**<Point sampled per pixel mip map */
+    case 4: sampc.mipFilter = avxTexelFilter_LINEAR; break; // rwFILTERMIPLINEAR, /**<Bilinear per pixel mipmap */
+    case 5: sampc.minFilter = (sampc.magFilter = avxTexelFilter_LINEAR); sampc.mipFilter = avxTexelFilter_POINT; break; // rwFILTERLINEARMIPNEAREST, /**<MipMap interp point sampled */
+    case 6: sampc.minFilter = (sampc.magFilter = avxTexelFilter_LINEAR); sampc.mipFilter = avxTexelFilter_LINEAR; break; // rwFILTERLINEARMIPLINEAR, /**<Trilinear */
     default: AfxThrowError(); break;
     }
 
     switch ((nativeTexture.filterAndAddress >> 8) & 0x0F)
     {
-    case 1: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_REPEAT))); break; // rwTEXTUREADDRESSWRAP,      /**<UV wraps (tiles) */
-    case 2: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_MIRROR))); break; // rwTEXTUREADDRESSMIRROR,    /**<Alternate UV is flipped */
-    case 3: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_CLAMP))); break; // rwTEXTUREADDRESSCLAMP,     /**<UV is clamped to 0-1 */
-    case 4: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_BORDER))); break; // rwTEXTUREADDRESSBORDER, /**<Border color takes effect outside of 0-1 */
+    case 1: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_REPEAT))); break; // rwTEXTUREADDRESSWRAP,      /**<UV wraps (tiles) */
+    case 2: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_MIRROR))); break; // rwTEXTUREADDRESSMIRROR,    /**<Alternate UV is flipped */
+    case 3: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_CLAMP))); break; // rwTEXTUREADDRESSCLAMP,     /**<UV is clamped to 0-1 */
+    case 4: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_BORDER))); break; // rwTEXTUREADDRESSBORDER, /**<Border color takes effect outside of 0-1 */
     default: AfxThrowError(); break;
     }
 
     switch ((nativeTexture.filterAndAddress >> 12) & 0x0F)
     {
-    case 1: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_REPEAT))); break; // rwTEXTUREADDRESSWRAP,      /**<UV wraps (tiles) */
-    case 2: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_MIRROR))); break; // rwTEXTUREADDRESSMIRROR,    /**<Alternate UV is flipped */
-    case 3: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_CLAMP))); break; // rwTEXTUREADDRESSCLAMP,     /**<UV is clamped to 0-1 */
-    case 4: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (afxTexelAddress_BORDER))); break; // rwTEXTUREADDRESSBORDER, /**<Border color takes effect outside of 0-1 */
+    case 1: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_REPEAT))); break; // rwTEXTUREADDRESSWRAP,      /**<UV wraps (tiles) */
+    case 2: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_MIRROR))); break; // rwTEXTUREADDRESSMIRROR,    /**<Alternate UV is flipped */
+    case 3: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_CLAMP))); break; // rwTEXTUREADDRESSCLAMP,     /**<UV is clamped to 0-1 */
+    case 4: sampc.uvw[0] = (sampc.uvw[1] = (sampc.uvw[2] = (avxTexelAddress_BORDER))); break; // rwTEXTUREADDRESSBORDER, /**<Border color takes effect outside of 0-1 */
     default: AfxThrowError(); break;
     }
 
-    afxSampler samp;
+    avxSampler samp;
     AfxAcquireSamplers(dctx, 1, &sampc, &samp);
 
     return 0;

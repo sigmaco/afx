@@ -21,18 +21,18 @@ afxDrawOutput dout[3] = { NIL, NIL, NIL };
 afxDrawInput din[3] = { NIL, NIL, NIL };
 afxDrawContext dctx = NIL;
 
-//afxCanvas canv[3][60] = { NIL };
+//avxCanvas canv[3][60] = { NIL };
 
 afxUri2048 uri, uri2;
 
 afxBuffer ubo = NIL;
-afxPipeline dpip[2] = { NIL, NIL };
+avxPipeline dpip[2] = { NIL, NIL };
 afxRaster tex[4] = { NIL, NIL, NIL, NIL };
 
 afxBinkVideo bnk = { 0 };
 afxBuffer viewConstantsBuffer = NIL;
 
-afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
+afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -51,6 +51,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
             {
                 afxDrawContext dctx;
                 AfxGetDrawInputContext(din, &dctx);
+                AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
                 afxNat queIdx;
                 afxNat portIdx = 0;
@@ -59,12 +60,14 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                 if (AfxAcquireCmdBuffers(din, avxCmdbUsage_ONCE, 1, &cmdb)) AfxThrowError();
                 else
                 {
-                    afxCanvas canv;
+                    AfxBinkPrepareFrameBlit(bnk, cmdb);
+
+                    avxCanvas canv;
                     AfxEnumerateDrawOutputCanvases(dout[0], outBufIdx, 1, &canv);
                     //afxRaster surf = AfxEnumerateDrawOutputBuffers(dout[0], outBufIdx);
                     AfxAssertObjects(1, &canv, afxFcc_CANV);
                     //AfxAssertObjects(1, &surf, afxFcc_RAS);
-
+                    
                     afxBool readjust = TRUE;
                     afxBool upscale = FALSE;
                     afxWhd extent;
@@ -109,7 +112,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     dps.area.extent[1] = extent[1];
                     AvxCmdBeginSynthesis(cmdb, &dps);
 
-                    afxViewport vp = { 0 };
+                    avxViewport vp = { 0 };
                     vp.extent[0] = extent[0];
                     vp.extent[1] = extent[1];
                     vp.depth[0] = (afxReal)0;
@@ -117,22 +120,22 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     AvxCmdAdjustViewports(cmdb, 0, 1, &vp);
 
 #if 0
-                    afxPipelineRasterizerState ras = { 0 };
-                    ras.cullMode = afxCullMode_BACK;
-                    ras.fillMode = afxFillMode_SOLID;
-                    ras.frontFace = afxFrontFace_CCW;
+                    avxPipelineRasterizerState ras = { 0 };
+                    ras.cullMode = avxCullMode_BACK;
+                    ras.fillMode = avxFillMode_SOLID;
+                    ras.frontFace = avxFrontFace_CCW;
                     ras.lineWidth = 1.f;
                     AvxCmdSetRasterizerState(cmdb, &ras);
 #endif
                     // turn off Z buffering, culling, and projection (since we are drawing orthographically)
-                    //afxPipelineDepthState const depth = { 0 };
+                    //avxPipelineDepthState const depth = { 0 };
                     //AvxCmdSetDepthState(cmdb, &depth);
 
                     //AfxBinkDoFrame(&bnk, TRUE, TRUE, outBufIdx, cmdb, canv, NIL);
                     //AfxBinkDoFrame(bnk, TRUE, TRUE);
                     //AfxBinkBlitFrame(bnk2, cmdb, canv[0][outBufIdx], NIL);
                     //AfxBinkDoFrame(bnk, TRUE, TRUE, 0, 0, NIL);
-                    AfxBinkBlitFrame(bnk, cmdb);
+                    //AfxBinkBlitFrame(bnk, cmdb);
 
 #if 0
                     if (AfxRandom2(0, 60) == 60)
@@ -143,6 +146,9 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                         AfxPrintRasterToTarga(surf, 0, 0, 1, &uri);
                     }
 #endif
+                    AfxBinkBlitFrame(bnk, cmdb);
+
+                    AvxCmdFinishSynthesis(cmdb);
 
                     afxSemaphore dscrCompleteSem = NIL;
 
@@ -187,11 +193,11 @@ int main(int argc, char const* argv[])
 
     afxSoundContext sctx;
     afxSoundContextConfig sctxCfg = { 0 };
-    AfxAcquireSoundContext(0, &sctxCfg, &sctx);
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    //AfxOpenSoundDevice(0, &sctxCfg, &sctx);
+    //AfxAssertObjects(1, &sctx, afxFcc_SCTX);
 
     afxDrawContextConfig dctxCfg = { 0 };        
-    AfxAcquireDrawContext(0, &dctxCfg, &dctx);
+    AfxOpenDrawDevice(0, &dctxCfg, &dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
 #if 0
@@ -205,12 +211,12 @@ int main(int argc, char const* argv[])
     doutConfig.colorSpc = NIL;
     doutConfig.presentAlpha = FALSE;
     doutConfig.pixelFmt = afxPixelFormat_RGBA8;
-    doutConfig.presentMode = afxPresentMode_LIFO;
+    doutConfig.presentMode = avxPresentMode_LIFO;
     doutConfig.presentTransform = NIL;
     doutConfig.bufUsage = AFX_TEX_FLAG_SURFACE_RASTER;
 #endif
     doutCfg.pixelFmt = afxPixelFormat_RGB8;
-    //doutConfig.colorSpc = afxColorSpace_SRGB;
+    //doutConfig.colorSpc = avxColorSpace_SRGB;
     AfxOpenDrawOutput(0, NIL, &doutCfg, &dout[0]);
     AfxAssertObjects(1, &dout[0], afxFcc_DOUT);
     AfxReconnectDrawOutput(dout[0], dctx);
@@ -227,15 +233,15 @@ int main(int argc, char const* argv[])
 
     afxUri uri;
     AfxMakeUri(&uri, "system/mmplayer.xss", 0);
-    AfxLoadScript(NIL, &uri);
+    //AfxLoadScript(NIL, &uri);
 
-    AfxFormatUri(&uriB.uri, "art/world.tga");
+    AfxFormatUri(&uriB.uri, "../art/world.tga");
 
     if (AfxLoadRasters(dctx, NIL, NIL, 1, &uriB.uri, &dumpImg))
         AfxThrowError();
 
     AfxAssert(dumpImg);
-    AfxFormatUri(&uriB.uri, "tmp/world2.tga");
+    AfxFormatUri(&uriB.uri, "../tmp/world2.tga");
     AfxPrintRaster(dumpImg, NIL, 1, &uriB.uri);
     AfxReleaseObjects(1, &dumpImg);
 
@@ -250,32 +256,32 @@ int main(int argc, char const* argv[])
     err = AfxSetUpBinkPlayer(&bnk, dctx);
     AfxAssert(!err);
 #if 0
-    AfxFormatUri(&uriB.uri, "art/fmv/t2.bik");
+    AfxFormatUri(&uriB.uri, "../art/fmv/t2.bik");
 #else
-    AfxFormatUri(&uriB.uri, "art/fmv/ubi.bik");
-    //AfxFormatUri(&uri.uri, "art/fmv/disco.bik");
+    AfxFormatUri(&uriB.uri, "../art/fmv/ubi.bik");
+    //AfxFormatUri(&uri.uri, "../art/fmv/disco.bik");
 #endif
 
     err = AfxOpenVideoBink(&bnk, &uriB.uri);
     AfxAssert(!err);
 
     afxWindow wnd;
-    afxRect rc = { 0 };
-    rc.w = bnk.whd[0];
-    rc.h = bnk.whd[1];
-    AfxAcquireWindow(0, dctx, &rc, &wnd);
+    afxWindowConfig wndCfg = { 0 };
+    wndCfg.rc.w = bnk.whd[0];
+    wndCfg.rc.h = bnk.whd[1];
+    AfxAcquireWindow(dctx, &wndCfg, &wnd);
     AfxAssertObjects(1, &wnd, afxFcc_WND);
-    AfxGetSurfaceDrawOutput(wnd, &dout[0]);
+    AfxGetWindowDrawOutput(wnd, NIL, &dout[0]);
     AfxAssert(dout[0]);
     AfxReconnectDrawOutput(dout[0], dctx);
-    AfxAdjustWindowSurface(wnd, &rc);
+    AfxAdjustWindow(wnd, NIL, &wndCfg.rc);
 
     //AfxAdjustDrawOutput(dout[0], bnk.whd);
 
     while (AfxSystemIsExecuting())
     {
         AfxBinkDoFrame(&bnk, TRUE, TRUE);
-        DrawInputProc(din[0], (afxDrawEvent[]) {0});
+        DrawInputProc(din[0], (avxEvent[]) {0});
         //AfxRedrawWindow(ovy);
         AfxDoSystemExecution(0);
     }

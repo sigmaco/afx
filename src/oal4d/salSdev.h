@@ -48,7 +48,8 @@
 #define _ASX_SOUND_BUFFER_IMPL
 #define _ASX_SOUND_IMPL
 #include "qwadro/sound/afxSoundSystem.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
+#include "../src/afx/sound/dev/asxDevKit.h"
 
 #ifndef ASX_DRV_SRC
 #   ifdef _DEBUG
@@ -225,6 +226,8 @@ AFX_DEFINE_STRUCT(salSpu)
 
     afxNat  verMajor, verMinor, verPatch;
     afxBool eaxEnabled;
+    afxThread   dedThread;
+    afxNat      portIdx;
 };
 
 struct _afxSdevIdd
@@ -232,7 +235,6 @@ struct _afxSdevIdd
     afxModule   openal32;
     afxNat      spuCnt;
     salSpu*     spus;
-    afxThread   dedThread;
 };
 
 AFX_DEFINE_STRUCT(_salQueueing)
@@ -272,39 +274,50 @@ AFX_DEFINE_STRUCT(_salQueueingTransfer)
 
 AFX_OBJECT(afxSoundContext)
 {
-    struct _afxBaseSoundContext base;
+    AFX_OBJECT(_asxSoundContext) m;
 };
 
 AFX_OBJECT(afxSoundBridge)
 {
-    struct _afxBaseSoundBridge base;
+    AFX_OBJECT(_asxSoundBridge) m;
+
+};
+
+AFX_OBJECT(afxSoundQueue)
+{
+    AFX_OBJECT(_asxSoundQueue) m;
 
 };
 
 AFX_OBJECT(afxFence)
 {
-    struct _afxBaseFence base;
+    AFX_OBJECT(_afxFence) m;
     //sglUpdateFlags  updFlags;
     //GLsync          glHandle;
 };
 
 AFX_OBJECT(afxSemaphore)
 {
-    struct _afxBaseSemaphore base;
+    AFX_OBJECT(_afxSemaphore) m;
 };
-
+#if 0
 AFX_OBJECT(afxSound)
 {
-    struct _afxBaseSound base;
+    AFX_OBJECT(_asxSound) m;
 
 };
 
 AFX_OBJECT(afxSoundBuffer)
 {
-    struct _afxBaseSoundBuffer base;
+    AFX_OBJECT(_asxSoundBuffer) m;
 
 };
+#endif
+A4D afxBool _SdgeProcCb(afxSoundBridge sdge, afxThread thr);
 
-A4D afxError _SdgeProcCb(afxSoundBridge sdge, afxThread thr);
+A4D afxError _SalSdevOpenCb(afxSoundDevice sdev, afxSoundContext sctx, afxCookie const* cookie);
+A4D afxError _SalSdevCloseCb(afxSoundDevice sdev, afxSoundContext sctx);
+
+A4D afxError _SalSdgeCtorCb(afxSoundBridge sdge, afxCookie const* cookie);
 
 #endif//A4D_SDEV_H

@@ -294,116 +294,116 @@ _AVX afxResult AfxResolveFormat(afxFormat fmt, afxFormat *subfmt, afxSize *subSi
     return 0;
 }
 
-_AVX afxPrimTopology AfxFindPrimitiveTopology(afxString const *str)
+_AVX avxTopology AfxFindPrimitiveTopology(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxPrimTopology_TOTAL; i++)
+    for (afxNat i = 0; i < avxTopology_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &primTopologyString[i]))
-            return (afxPrimTopology)i;
+            return (avxTopology)i;
     }
 
-    return (afxPrimTopology)-1;
+    return (avxTopology)-1;
 }
 
-_AVX afxLogicOp AfxFindLogicOp(afxString const *str)
+_AVX avxLogicOp AfxFindLogicOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxLogicOp_TOTAL; i++)
+    for (afxNat i = 0; i < avxLogicOp_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &logicOpString[i]))
-            return (afxLogicOp)i;
+            return (avxLogicOp)i;
     }
 
-    return (afxLogicOp)-1;
+    return (avxLogicOp)-1;
 }
 
-_AVX afxStencilOp AfxFindStencilOp(afxString const *str)
+_AVX avxStencilOp AfxFindStencilOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxStencilOp_TOTAL; i++)
+    for (afxNat i = 0; i < avxStencilOp_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &stencilOpString[i]))
-            return (afxStencilOp)i;
+            return (avxStencilOp)i;
     }
 
-    return (afxStencilOp)-1;
+    return (avxStencilOp)-1;
 }
 
-_AVX afxCompareOp AfxFindCompareOp(afxString const *str)
+_AVX avxCompareOp AfxFindCompareOp(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxCompareOp_TOTAL; i++)
+    for (afxNat i = 0; i < avxCompareOp_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &compareOpString[i]))
-            return (afxCompareOp)i;
+            return (avxCompareOp)i;
     }
 
-    return (afxCompareOp)-1;
+    return (avxCompareOp)-1;
 }
 
-_AVX afxCullMode AfxFindCullMode(afxString const *str)
+_AVX avxCullMode AfxFindCullMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxCullMode_TOTAL; i++)
+    for (afxNat i = 0; i < avxCullMode_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &cullModeString[i]))
-            return (afxCullMode)i;
+            return (avxCullMode)i;
     }
 
-    return (afxCullMode)-1;
+    return (avxCullMode)-1;
 }
 
-_AVX afxFrontFace AfxFindFrontFace(afxString const *str)
+_AVX avxFrontFace AfxFindFrontFace(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxFrontFace_TOTAL; i++)
+    for (afxNat i = 0; i < avxFrontFace_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &frontFaceString[i]))
-            return (afxFrontFace)i;
+            return (avxFrontFace)i;
     }
 
-    return (afxFrontFace)-1;
+    return (avxFrontFace)-1;
 }
 
-_AVX afxFillMode AfxFindFillMode(afxString const *str)
+_AVX avxFillMode AfxFindFillMode(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxFillMode_TOTAL; i++)
+    for (afxNat i = 0; i < avxFillMode_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &fillModeString[i]))
-            return (afxFillMode)i;
+            return (avxFillMode)i;
     }
 
-    return (afxFillMode)-1;
+    return (avxFillMode)-1;
 }
 
-_AVX afxShaderStage AfxFindShaderStage(afxString const *str)
+_AVX avxShaderStage AfxFindShaderStage(afxString const *str)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(str);
 
-    for (afxNat i = 0; i < afxShaderStage_TOTAL; i++)
+    for (afxNat i = 0; i < avxShaderStage_TOTAL; i++)
     {
         if (0 == AfxCompareStringCi(str, &shaderStageString[i]))
-            return (afxShaderStage)i;
+            return (avxShaderStage)i;
     }
 
-    return (afxShaderStage)0;
+    return (avxShaderStage)0;
 }
 
 _AVX afxVertexFormat AfxFindVertexFormat(afxString const *str)
@@ -420,66 +420,66 @@ _AVX afxVertexFormat AfxFindVertexFormat(afxString const *str)
     return (afxVertexFormat)-1;
 }
 
-_AVX afxString const* AfxStringifyShaderStage(afxShaderStage ss, afxRestring *out)
+_AVX afxString const* AfxStringifyShaderStage(avxShaderStage ss, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(ss < afxShaderStage_TOTAL);
+    AfxAssert(ss < avxShaderStage_TOTAL);
     AfxCopyString(out, &shaderStageString[ss]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyFillMode(afxFillMode fm, afxRestring *out)
+_AVX afxString const* AfxStringifyFillMode(avxFillMode fm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(fm < afxFillMode_TOTAL);
+    AfxAssert(fm < avxFillMode_TOTAL);
     AfxCopyString(out, &fillModeString[fm]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyFrontFace(afxFrontFace ff, afxRestring *out)
+_AVX afxString const* AfxStringifyFrontFace(avxFrontFace ff, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(ff < afxFrontFace_TOTAL);
+    AfxAssert(ff < avxFrontFace_TOTAL);
     AfxCopyString(out, &frontFaceString[ff]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyCullMode(afxCullMode cm, afxRestring *out)
+_AVX afxString const* AfxStringifyCullMode(avxCullMode cm, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cm < afxCullMode_TOTAL);
+    AfxAssert(cm < avxCullMode_TOTAL);
     AfxCopyString(out, &cullModeString[cm]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyCompareOp(afxCompareOp co, afxRestring *out)
+_AVX afxString const* AfxStringifyCompareOp(avxCompareOp co, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(co < afxCompareOp_TOTAL);
+    AfxAssert(co < avxCompareOp_TOTAL);
     AfxCopyString(out, &compareOpString[co]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyStencilOp(afxStencilOp so, afxRestring *out)
+_AVX afxString const* AfxStringifyStencilOp(avxStencilOp so, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(so < afxStencilOp_TOTAL);
+    AfxAssert(so < avxStencilOp_TOTAL);
     AfxCopyString(out, &stencilOpString[so]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyLogicOp(afxLogicOp lo, afxRestring *out)
+_AVX afxString const* AfxStringifyLogicOp(avxLogicOp lo, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(lo < afxLogicOp_TOTAL);
+    AfxAssert(lo < avxLogicOp_TOTAL);
     AfxCopyString(out, &logicOpString[lo]);
     return &out->str;
 }
 
-_AVX afxString const* AfxStringifyPrimitiveTopology(afxPrimTopology pt, afxRestring *out)
+_AVX afxString const* AfxStringifyPrimitiveTopology(avxTopology pt, afxRestring *out)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(pt < afxPrimTopology_TOTAL);
+    AfxAssert(pt < avxTopology_TOTAL);
     AfxCopyString(out, &primTopologyString[pt]);
     return &out->str;
 }

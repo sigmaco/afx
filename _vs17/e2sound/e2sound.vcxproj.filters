@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="_nfo">
-      <UniqueIdentifier>{e079bb88-1f5f-4aad-abba-47ccd6d6b3a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro">
       <UniqueIdentifier>{b6431235-55fe-4642-8ffd-16a65a827a88}</UniqueIdentifier>
     </Filter>
@@ -16,10 +13,16 @@
     <Filter Include="qwadro\sound\pipe">
       <UniqueIdentifier>{75df2f39-7e9f-4e10-83cf-77a70feef893}</UniqueIdentifier>
     </Filter>
+    <Filter Include="_dll">
+      <UniqueIdentifier>{e079bb88-1f5f-4aad-abba-47ccd6d6b3a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\sound\dev">
+      <UniqueIdentifier>{db2f4866-1478-42dd-9379-98482c0fec87}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
-      <Filter>_nfo</Filter>
+      <Filter>_dll</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\sound\afxListener.h">
       <Filter>qwadro\sound</Filter>
@@ -51,10 +54,19 @@
     <ClInclude Include="..\..\inc\qwadro\sound\afxSoundInput.h">
       <Filter>qwadro\sound</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\afx\sound\dev\asxDevKit.h">
+      <Filter>qwadro\sound\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\sound\dev\asxHostDevKit.h">
+      <Filter>qwadro\sound\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\sound\dev\asxDeviceDevKit.h">
+      <Filter>qwadro\sound\dev</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2sound.rc">
-      <Filter>_nfo</Filter>
+      <Filter>_dll</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>

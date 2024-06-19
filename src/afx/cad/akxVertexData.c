@@ -24,7 +24,7 @@
 #include "qwadro/cad/akxVertexData.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/math/afxMatrix.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
 #include "qwadro/mem/afxMappedString.h"
 
 _AKX afxError AkxCmdBindVertexDataCache(avxCmdb cmdb, afxNat slotIdx, akxVertexData vtd)
@@ -463,9 +463,7 @@ _AKX afxClassConfig _AkxVtdMgrCfg =
 {
     .fcc = afxFcc_VTD,
     .name = "Vertex Data",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(akxVertexData)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(akxVertexData)),
     .ctor = (void*)_AkxVtdCtor,
     .dtor = (void*)_AkxVtdDtor
 };

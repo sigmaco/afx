@@ -18,7 +18,7 @@
 #define ASX_SOUND_CONTEXT_H
 
 #include "qwadro/mem/afxArena.h"
-#include "qwadro/core/afxManager.h"
+#include "qwadro/base/afxClass.h"
 #include "qwadro/sound/io/afxSoundBuffer.h"
 #include "qwadro/sound/afxListener.h"
 #include "qwadro/sound/afxSoundOutput.h"
@@ -26,51 +26,53 @@
 
 AFX_DEFINE_STRUCT(afxSoundContextConfig)
 {
+    afxNat              bridgeCnt;
+    afxSoundBridgeConfig const* bridges;
     void*               udd;
 };
 
-#ifdef _ASX_SOUND_C
-#ifdef _ASX_SOUND_CONTEXT_C
-#ifdef _ASX_SOUND_CONTEXT_IMPL
-struct _afxBaseSoundContext
-#else
-AFX_OBJECT(afxSoundContext)
-#endif
-{
-    AFX_OBJECT(afxContext)  ctx;
-    afxBool             running;
-    afxArena            aren;
+ASX afxSoundDevice  AfxGetSoundContextDevice(afxSoundContext sctx);
 
-    afxNat              ownedBridgeCnt;
-    afxSoundBridge*     ownedBridges;
+ASX afxBool         AfxGetSoundBridge
+/// Get a bridge handle from a device context.
+(
+    afxSoundContext sctx,
+    afxNat          portIdx, /// the index of the bridge.
+    afxSoundBridge* bridge /// a pointer to a afxSoundBridge object that will be filled with the handle for the requested bridge.
+);
 
-    afxChain            inputs;
-    afxChain            outputs;
+ASX afxBool         AfxGetSoundQueue
+/// Get a queue handle from a device context.
+(
+    afxSoundContext sctx,
+    afxNat          portIdx, /// the index of the bridge to which the queue belongs.
+    afxNat          queIdx, /// the index within this bridge of the queue to retrieve.
+    afxSoundQueue*  queue /// a pointer to a afxSoundQueue object that will be filled with the handle for the requested queue.
+);
 
-    //afxChain            classes;
-    afxManager          buffers;
+ASX afxNat          AfxCountSoundBridges(afxSoundContext sctx);
+ASX afxNat          AfxCountSoundQueues(afxSoundContext sctx, afxNat portIdx);
 
-    afxError            (*waitCb)(afxSoundContext);
+ASX afxError        AfxWaitForSoundContext
+/// Wait for a device context to become idle.
+(
+    afxSoundContext sctx
+);
 
-    struct _afxSctxIdd* idd;
-    void*               udd; // user-defined data
-};
+ASX afxError        AfxWaitForIdleSoundBridge
+/// Wait for a bridge to become idle. To wait on the host for the completion of outstanding queue operations for a given bridge.
+(
+    afxSoundContext sctx,
+    afxNat          portIdx /// the bridge on which to wait.
+);
 
-#ifdef _ASX_SOUND_CONTEXT_IMPL
-AFX_STATIC_ASSERT(offsetof(struct _afxBaseSoundContext, ctx) == 0x00, "");
-#else
-AFX_STATIC_ASSERT(offsetof(AFX_OBJECT(afxSoundContext), ctx) == 0x00, "");
-#endif
-
-#endif//_ASX_SOUND_CONTEXT_C
-#endif//_ASX_SOUND_C
-
-ASX afxSoundDevice      AfxGetSoundContextDevice(afxSoundContext sctx);
-
-ASX afxNat              AfxCountSoundBridges(afxSoundContext sctx);
-ASX afxSoundBridge      AfxGetSoundBridge(afxSoundContext sctx, afxNat portIdx);
-
-ASX afxError            AfxWaitForIdleSoundContext(afxSoundContext sctx);
+ASX afxError        AfxWaitForIdleSoundQueue
+/// Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
+(
+    afxSoundContext sctx,
+    afxNat          portIdx, /// the bridge on which to wait.
+    afxNat          queIdx /// the queue on which to wait.
+);
 
 ASX afxNat              AfxCountSoundOutputConnections(afxSoundContext sctx);
 ASX afxNat              AfxCountSoundInputConnections(afxSoundContext sctx);
@@ -80,11 +82,11 @@ ASX afxNat              AfxInvokeConnectedSoundInputs(afxSoundContext sctx, afxN
 ASX afxNat              AfxInvokeConnectedSoundOutputs(afxSoundContext sctx, afxNat baseCon, afxNat conCnt, afxBool(*f)(afxSoundOutput, void*), void *udd);
 ASX afxNat              AfxEnumerateConnectedSoundInputs(afxSoundContext sctx, afxNat baseCon, afxNat conCnt, afxSoundInput inputs[]);
 ASX afxNat              AfxEnumerateConnectedSoundOutputs(afxSoundContext sctx, afxNat baseCon, afxNat conCnt, afxSoundOutput outputs[]);
-ASX afxError            AfxDisconnectSoundContext(afxSoundContext sctx, afxBool inputs, afxBool outputs);
+ASX afxError            AfxDisconnectSoundContext(afxSoundContext sctx, afxBool keepInputs, afxBool keepOutputs);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-ASX afxError            AfxAcquireSoundContext(afxNat sdevId, afxSoundContextConfig const* cfg, afxSoundContext* context);
+ASX afxError            AfxOpenSoundDevice(afxNat sdevId, afxSoundContextConfig const* cfg, afxSoundContext* context);
 
 
 #if 0
@@ -165,6 +167,64 @@ AFX_EXTERN_API_FUNC(afxResult, ExecuteActionOnEvent_)
     asxCurveInterpolation in_eFadeCurve,   ///< Curve type to be used for the transition
     asxPlayingId in_PlayingID                    ///< Associated PlayingID
     );
+
+#endif
+
+#if 0
+////////////////////////////////////////////////////////////////////////////////
+// QWADRO PLUGIN SYSTEM
+////////////////////////////////////////////////////////////////////////////////
+
+typedef void afxPlugin;
+typedef void afxPluginParam;
+
+/// Registered plugin creation function prototype.
+
+AFX_CALLBACK(afxPlugin*, afxCreatePluginCallback)(afxAllocator * in_pAllocator);
+
+// Registered plugin parameter node creation function prototype.
+
+AFX_CALLBACK(afxPluginParam*, afxCreateParamCallback)(afxAllocator * in_pAllocator);
+
+// Registered plugin device enumeration function prototype, used for providing lists of devices by plug-ins.
+
+AFX_CALLBACK(afxResult, afxGetDeviceListCallback)
+(
+    afxNat32    *io_maxNumDevices,                 ///< In: The length of the out_deviceDescriptions array, or zero is out_deviceDescriptions is null. Out: If out_deviceDescriptions is not-null, this should be set to the number of entries in out_deviceDescriptions that was populated (and should be less-than-or-equal to the initial value). If out_deviceDescriptions is null, this should be set to the maximum number of devices that may be returned by this callback.
+    afxDeviceDescription* out_deviceDescriptions ///< The output array of device descriptions. If this is not-null, there will be a number of entries equal to the input value of io_maxNumDevices.
+    );
+
+/// Plug-in type.
+
+typedef enum afxPluginType
+{
+    afxPluginTypeNone = 0,   ///< Unknown/invalid plug-in type.
+    afxPluginTypeCodec = 1,  ///< Compressor/decompressor plug-in (allows support for custom audio file types).
+    afxPluginTypeSource = 2, ///< Source plug-in: creates sound by synthesis method (no input, just output).
+    afxPluginTypeEffect = 3, ///< Effect plug-in: applies processing to audio data.
+    afxPluginTypeMixer = 6,  ///< Mixer plug-in: mix voices at the bus level.
+    afxPluginTypeSink = 7,   ///< Sink plug-in: implement custom sound engine end point.
+    afxPluginTypeGlobalExtension = 8,    ///< Global Extension plug-in: (e.g. Spatial Audio, Interactive Music)
+    afxPluginTypeMetadata = 9,   ///< Metadata plug-in: applies object-based processing to audio data
+    afxPluginTypeMask = 0xf  ///< Plug-in type mask is 4 bits.
+} afxPluginType;
+
+/// Registers a plug-in with the sound engine and sets the callback functions to create the plug-in and its parameter node.  
+/// This function is deprecated. Registration is now automatic if you link plug-ins statically. If plug-ins are dynamic libraries (such as DLLs or SOs), use \c RegisterPluginDLL.
+/// Codecs and plug-ins must be registered before loading banks that use them.
+/// Loading a bank referencing an unregistered plug-in or codec will result in a load bank success, but the plug-ins will not be used. More specifically, playing a sound that uses an unregistered effect plug-in will result in audio playback without applying the said effect. If an unregistered source plug-in is used by an event's audio objects, posting the event will fail.
+
+AFX_EXTERN_API_FUNC(afxError, RegisterPlugin)
+(
+    afxPluginType in_eType, // Plug-in type (for example, source or effect)
+    afxNat32 in_ulCompanyID, // Company identifier (as declared in the plug-in description XML file)
+    afxNat32 in_ulPluginID, // Plug-in identifier (as declared in the plug-in description XML file)
+    afxCreatePluginCallback in_pCreateFunc, // Pointer to the plug-in's creation function
+    afxCreateParamCallback in_pCreateParamFunc, // Pointer to the plug-in's parameter node creation function
+    afxGetDeviceListCallback in_pGetDeviceList // Optional pointer to the plug-in's device enumeration function. Specify for a sink plug-in to support \ref AK::SoundEngine::GetDeviceList.
+    );
+
+
 
 #endif
 

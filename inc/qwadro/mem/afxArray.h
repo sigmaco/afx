@@ -17,8 +17,8 @@
 #ifndef AFX_ARRAY_H
 #define AFX_ARRAY_H
 
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxFcc.h"
+#include "qwadro/base/afxDebug.h"
+#include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMmu.h"
 
 // The elements are stored contiguously, which means that elements can be accessed not only through iterators, but also using offsets to regular pointers to elements.
@@ -101,8 +101,8 @@ AFXINL void         AfxEmptyArray(afxArray *arr);
 AFXINL void         AfxZeroArray(afxArray *arr);
 AFXINL void         AfxZeroArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt);
 
-AFXINL void         AfxFillArray(afxArray *arr, void* val);
-AFXINL void         AfxFillArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt, void* val);
+AFXINL void         AfxFillArray(afxArray *arr, void const* val);
+AFXINL void         AfxFillArrayRange(afxArray *arr, afxNat firstUnit, afxNat unitCnt, void const* val);
 
 AFXINL void*        AfxGetArrayUnit(afxArray const *arr, afxNat unitIdx);
 AFXINL void*        AfxGetLastArrayUnit(afxArray const *arr);

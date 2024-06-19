@@ -22,7 +22,7 @@
 #define _AFX_CORE_C
 #define _AFX_FILE_C
 #define _AFX_STREAM_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +34,7 @@ _AFX afxBool _AfxFileStreamEosCb(afxStream file)
     return b;
 }
 
-_AFX afxError _AfxFileStreamSeekCb(afxStream file, afxInt offset, afxSeekMode origin)
+_AFX afxError _AfxFileStreamSeekCb(afxStream file, afxSize offset, afxSeekMode origin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
@@ -52,7 +52,7 @@ _AFX afxNat _AfxFileStreamTellCb(afxStream file)
     return ftell(file->idd.f.fd);
 }
 
-_AFX afxError _AfxFileStreamWriteCb(afxStream file, void const* const src, afxSize siz)
+_AFX afxError _AfxFileStreamWriteCb(afxStream file, void const* const src, afxNat32 siz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
@@ -64,7 +64,7 @@ _AFX afxError _AfxFileStreamWriteCb(afxStream file, void const* const src, afxSi
     return clampedOffRange;
 }
 
-_AFX afxError _AfxFileStreamReadCb(afxStream file, void *dst, afxSize siz)
+_AFX afxError _AfxFileStreamReadCb(afxStream file, void *dst, afxNat32 siz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &file, afxFcc_IOB);
@@ -488,9 +488,7 @@ _AFX afxClassConfig const _AfxFileMgrCfg =
 {
     .fcc = afxFcc_FILE,
     .name = "File",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxFile)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxFile)),
     .ctor = (void*)_AfxFileCtor,
     .dtor = (void*)NIL
 };
@@ -656,33 +654,3 @@ _AFX afxStream AfxWrapFile(void* fd, afxIoFlags flags)
 
     return file;
 }
-
-#if 0
-_AFX afxNat AfxInvokeFiles(afxNat first, afxNat cnt, afxBool(*f)(afxFile, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetFileClass();
-    AfxAssertClass(cls, afxFcc_FILE);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AFX afxNat AfxEnumerateFiles(afxNat first, afxNat cnt, afxFile files[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(files);
-    afxManager* cls = AfxGetFileClass();
-    AfxAssertClass(cls, afxFcc_FILE);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)files);
-}
-
-_AFX afxNat AfxCountFiles(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetFileClass();
-    AfxAssertClass(cls, afxFcc_FILE);
-    return AfxCountObjects(cls);
-}
-#endif

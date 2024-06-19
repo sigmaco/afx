@@ -59,8 +59,6 @@
 #define _AVX_SAMPLER_IMPL
 #define _AVX_SHADER_C
 #define _AVX_SHADER_IMPL
-#define _AVX_SAMPLER_C
-#define _AVX_SAMPLER_IMPL
 #define _AVX_CANVAS_C
 #define _AVX_CANVAS_IMPL
 #define _AVX_BIND_SCHEMA_C
@@ -76,13 +74,13 @@
 #define _AVX_QUERY_POOL_C
 #define _AVX_QUERY_POOL_IMPL
 
-#define _AUX_UX_C
-#define _AUX_OVERLAY_IMPL
-#define _AUX_OVERLAY_C
+//#define _AUX_UX_C
+//#define _AUX_OVERLAY_IMPL
+//#define _AUX_OVERLAY_C
 
-#include "qwadro/draw/avxDevKit.h"
+#include "../src/afx/draw/dev/AvxDevKit.h"
 #include "qwadro/ux/afxScript.h"
-#include "sglDdrv.h"
+#include "AvxToGlMapping.h"
 
 #define _SGL_MAX_DOUT_PER_PRESENTATION 4
 #define _SGL_MAX_DSCR_PER_SUBMISSION 4
@@ -123,7 +121,7 @@
 #define _SGL_MAX_SURF_PER_CANV SGL_MAX_COLOR_ATTACHMENTS + 2
 
 #define FORCE_GL_GENERIC_FUNCS 1 // we also attempt to use specific functions as a medium of hinting for the driver.
-
+#define SGL_DONT_USE_ROBUST_ACCESS 1
 
 typedef enum sglUpdateFlags
 {
@@ -172,7 +170,7 @@ AFX_DEFINE_UNION(sglLegoData) // A GPUBindGroupEntry describes a single resource
     };
     struct
     {
-        afxSampler          smp;
+        avxSampler          smp;
         afxRaster          tex;
     };
 };
@@ -220,15 +218,15 @@ AFX_DEFINE_STRUCT(sglVertexInputState)
 typedef struct sglXfrmState
 {
     afxNat              vpCnt; /// 0
-    afxViewport         vps[SGL_MAX_VIEWPORTS];
+    avxViewport         vps[SGL_MAX_VIEWPORTS];
 
-    afxPrimTopology     primTop; /// is a option defining the primitive topology. /// afxPrimTopology_TRI_LIST
+    avxTopology     primTop; /// is a option defining the primitive topology. /// avxTopology_TRI_LIST
     afxBool             primRestartEnabled; /// controls whether a special vertex index value (0xFF, 0xFFFF, 0xFFFFFFFF) is treated as restarting the assembly of primitives. /// FALSE
     afxNat              patchControlPoints; /// is the number of control points per patch.
 
     afxBool             depthClampEnabled; /// controls whether to clamp the fragment's depth values as described in Depth Test. /// FALSE
 
-    afxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// afxCullMode_BACK
+    avxCullMode         cullMode; /// is the triangle facing direction used for primitive culling. /// avxCullMode_BACK
     afxBool             cwFrontFacing; /// If this member is TRUE, a triangle will be considered front-facing if its vertices are clockwise. /// FALSE (CCW)
 
 } sglXfrmState;
@@ -239,7 +237,7 @@ typedef struct sglRasterizerState
 
     struct
     {
-        afxCanvas       canv;
+        avxCanvas       canv;
         afxRect         area;
         afxNat32        layerCnt;
         afxNat32        rasterCnt;
@@ -248,7 +246,7 @@ typedef struct sglRasterizerState
         afxBool         defFbo;
     }                   pass; // always active pass
 
-    afxFillMode         fillMode; /// is the triangle rendering mode. /// afxFillMode_SOLID
+    avxFillMode         fillMode; /// is the triangle rendering mode. /// avxFillMode_SOLID
     afxReal             lineWidth; /// is the width of rasterized line segments. /// 1.f    
 
     afxBool             depthBiasEnabled; /// controls whether to bias fragment depth values. /// FALSE
@@ -267,13 +265,13 @@ typedef struct sglRasterizerState
     afxPixelFormat      dsFmt; /// is the format of depth/stencil surface this pipeline will be compatible with.
 
     afxBool             depthTestEnabled; /// controls whether depth testing is enabled. /// FALSE
-    afxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// afxCompareOp_LESS
+    avxCompareOp        depthCompareOp; /// is a value specifying the comparison operator to use in the Depth Comparison step of the depth test. /// avxCompareOp_LESS
     afxBool             depthWriteDisabled; /// controls whether depth writes are enabled when depthTestEnable is TRUE. Depth writes are always disabled when depthTestEnable is FALSE. /// FALSE
     afxBool             depthBoundsTestEnabled; /// controls whether depth bounds testing is enabled. /// FALSE
     afxV2d              depthBounds; /// is the minimum depth bound used in the depth bounds test. /// [ min, max ]
     afxBool             stencilTestEnabled; /// FALSE
-    afxStencilConfig    stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
-    afxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
+    avxStencilConfig    stencilFront; /// is the configuration values controlling the corresponding parameters of the stencil test.
+    avxStencilConfig    stencilBack; /// is the configuration controlling the corresponding parameters of the stencil test.
 
 
     afxNat              areaCnt; /// 0
@@ -282,11 +280,11 @@ typedef struct sglRasterizerState
     afxRect             scisRects[SGL_MAX_VIEWPORTS];
 
     afxNat              outCnt;
-    afxColorOutputChannel   outs[8];
+    avxColorOutputChannel   outs[8];
     afxBool             anyBlendEnabled;
     afxReal             blendConstants[4]; /// [ 0, 0, 0, 1 ]
     afxBool             logicOpEnabled; /// FALSE
-    afxLogicOp          logicOp; /// afxLogicOp_NOP
+    avxLogicOp          logicOp; /// avxLogicOp_NOP
 } sglRasterizerState;
 
 
@@ -316,9 +314,9 @@ typedef struct
     sglXfrmState            activeXformState, nextXformState;
     sglRasterizerState      activeRasterState, nextRasterState;
 
-    afxRasterizer           activeRazr, nextRazr;
-    afxPipeline             activePip, nextPip;
-    afxVertexInput          activeVin, nextVin;
+    avxRasterizer           activeRazr, nextRazr;
+    avxPipeline             activePip, nextPip;
+    avxVertexInput          activeVin, nextVin;
     sglVertexInputState     nextVinBindings;
 
     union
@@ -332,8 +330,9 @@ typedef struct
         };
         struct
         {
-            afxSampler      smp;
+            avxSampler      smp;
             afxRaster      ras;
+            afxNat          subrasIdx;
         };
     }                       activeResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO], nextResBind[_SGL_MAX_LEGO_PER_BIND][_SGL_MAX_ENTRY_PER_LEGO];
     afxMask                 nextResBindUpdMask[_SGL_MAX_LEGO_PER_BIND];
@@ -394,17 +393,27 @@ struct _afxDdevIdd
     sglDpu*         dpus;
 };
 
+struct _afxDoutIdd
+{
+    HINSTANCE       hInst;
+    HWND            hWnd;
+    HDC             hDc;
+    int             dcPxlFmt;
+    int             dcPxlFmtBkp;
+    afxBool         isWpp;
+};
+
 AFX_OBJECT(afxDrawContext)
 {
-    struct _afxBaseDrawContext base;
+    AFX_OBJECT(_avxDrawContext) m;
     // presentation stuff, only on unit 0.
     afxBool presentationSuspended;
     //GLuint presentFboGpuHandle;
-    afxRasterizer presentRazr;
-    afxSampler  presentSmp;
+    avxRasterizer presentRazr;
+    avxSampler  presentSmp;
     
-    afxRasterizer fntRazr;
-    afxSampler  fntSamp;    
+    avxRasterizer fntRazr;
+    avxSampler  fntSamp;    
     afxRaster   fntRas;
     afxBuffer   fntDataBuf;
     afxBuffer   fntUnifBuf;
@@ -414,12 +423,12 @@ AFX_OBJECT(afxDrawContext)
 
 AFX_OBJECT(afxDrawBridge)
 {
-    struct _afxBaseDrawBridge base;
+    AFX_OBJECT(_avxDrawBridge) m;
 };
 
 AFX_OBJECT(afxDrawQueue)
 {
-    struct _afxBaseDrawQueue base;
+    AFX_OBJECT(_avxDrawQueue) m;
 };
 
 AFX_DEFINE_STRUCT(_sglQueueing)
@@ -491,74 +500,74 @@ AFX_DEFINE_STRUCT(_sglCmd)
     afxNat              siz;
 };
 
-AFX_OBJECT(afxPipeline)
+AFX_OBJECT(avxPipeline)
 {
-    struct afxBasePipeline base;
+    AFX_OBJECT(_avxPipeline) m;
     sglUpdateFlags  updFlags;
     GLuint          glHandle;
     //sglVertexInput  vertexInput;
 };
 
-AFX_OBJECT(afxVertexInput)
+AFX_OBJECT(avxVertexInput)
 {
-    struct afxBaseVertexInput base;
+    AFX_OBJECT(_avxVertexInput) m;
     sglUpdateFlags  updFlags;
     GLuint          glHandle;
     sglVertexInputState bindings;
 };
 
-AFX_OBJECT(afxRasterizer)
+AFX_OBJECT(avxRasterizer)
 {
-    struct afxBaseRasterizer base;
+    AFX_OBJECT(_avxRasterizer) m;
     sglUpdateFlags  updFlags;
 
 };
 
-AFX_OBJECT(afxQueryPool)
+AFX_OBJECT(avxQueryPool)
 {
-    struct _afxBaseQueryPool base;
+    AFX_OBJECT(_avxQueryPool) m;
     sglUpdateFlags  updFlags;
     GLuint         *glHandle; // * cap
     GLenum          glTarget;
 };
 
-AFX_OBJECT(afxLigature)
+AFX_OBJECT(avxLigature)
 {
-    struct afxBaseLigature base;
+    AFX_OBJECT(_avxLigature) m;
     int a;
 };
 
-AFX_OBJECT(afxShader)
+AFX_OBJECT(avxShader)
 {
-    struct afxBaseShader base;
+    AFX_OBJECT(_avxShader) m;
     sglUpdateFlags      updFlags;
     afxNat              glHandle;
     afxNat              glProgHandle;
     afxBool             compiled;
 };
 
-AFX_OBJECT(afxSampler)
+AFX_OBJECT(avxSampler)
 {
-    struct afxBaseSampler base;
+    AFX_OBJECT(_avxSampler) m;
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
 };
 
 AFX_OBJECT(afxFence)
 {
-    struct _afxBaseFence base;
+    AFX_OBJECT(_afxFence) m;
     sglUpdateFlags  updFlags;
     GLsync          glHandle;
 };
 
 AFX_OBJECT(afxSemaphore)
 {
-    struct _afxBaseSemaphore base;
+    AFX_OBJECT(_afxSemaphore) m;
 };
 
 AFX_OBJECT(afxBuffer)
 {
-    struct afxBaseBuffer    base;
+    AFX_OBJECT(_avxBuffer) m;
     // idd
 
     sglUpdateFlags  updFlags;
@@ -572,7 +581,7 @@ AFX_OBJECT(afxBuffer)
 
 AFX_OBJECT(afxRaster)
 {
-    struct afxBaseRaster base;
+    AFX_OBJECT(_avxRaster) m;
     sglUpdateFlags  updFlags;
     GLuint          glHandle;
     GLuint          glHandleAux; // for draw buffers
@@ -580,9 +589,9 @@ AFX_OBJECT(afxRaster)
     GLenum          glTarget, glFmt, glType;
 };
 
-AFX_OBJECT(afxCanvas)
+AFX_OBJECT(avxCanvas)
 {
-    struct afxBaseCanvas base;
+    AFX_OBJECT(_avxCanvas) m;
     sglUpdateFlags  updFlags;
     afxNat          glHandle;
     afxMask         storeBitmask;
@@ -590,7 +599,7 @@ AFX_OBJECT(afxCanvas)
 
 AFX_OBJECT(avxCmdb)
 {
-    struct afxBaseCmdBuffer    base;
+    AFX_OBJECT(_avxCmdb) m;
     afxChain                    commands;
     afxChain                    echoes;
     afxChain                    canvOps;
@@ -627,16 +636,16 @@ AFX_OBJECT(avxCmdb)
     {
         struct
         {
-            afxPipeline     next;
-            afxPipeline     curr;
+            avxPipeline     next;
+            avxPipeline     curr;
         } pip;
     } levelCaches[1];
 };
 
 typedef struct _DrawPipelineResource
 {
-    afxShaderStage stages;
-    afxShaderResourceType resType;
+    avxShaderStage stages;
+    avxShaderResourceType resType;
     //afxShaerBaseResType baseType;
     //VkAccessFlags access;
     afxNat8 set;
@@ -712,6 +721,12 @@ typedef enum afxDrawCmdId
 #define SGL_CMD_TOTAL offsetof(afxCmd, Total) / sizeof(void*)
 #endif
 
+AFX_DEFINE_UNION(sglDecodeVmt)
+{
+    afxCmd  cmd;
+    void(*f[SGL_CMD_TOTAL])(sglDpu* dpu, _sglCmd *cmd);
+};
+
 AFX_DEFINE_STRUCT(_sglCmdEcho)
 {
     _sglCmd                     cmd;
@@ -732,20 +747,66 @@ AFX_DEFINE_STRUCT(_sglCmdEchoFmt)
 AFX_DEFINE_STRUCT(_sglCmdDraw)
 {
     _sglCmd                     cmd;
-    afxNat32                        vtxCnt, instCnt, firstVtx, firstInst;
+    avxDrawIndirectCmd          data;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdDrawIndirect)
+{
+    _sglCmd                     cmd;
+    afxBuffer buf;
+    afxNat32 offset;
+    afxNat32 drawCnt;
+    afxNat32 stride;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdDrawIndirectCnt)
+{
+    _sglCmd                     cmd;
+    afxBuffer buf;
+    afxNat32 offset;
+    afxBuffer cntBuf;
+    afxNat32 cntBufOff;
+    afxNat32 maxDrawCnt;
+    afxNat32 stride;
 };
 
 AFX_DEFINE_STRUCT(_sglCmdDrawIndexed)
 {
     _sglCmd                     cmd;
-    afxNat32                        idxCnt, instCnt, firstIdx, vtxOff, firstInst;
+    avxDrawIndexedIndirectCmd   data;
 };
 
-AFX_DEFINE_STRUCT(_sglCmdDrawPrefab)
+AFX_DEFINE_STRUCT(_sglCmdDrawIndexedIndirect)
 {
     _sglCmd                     cmd;
-    afxDrawPrefab                   prefab;
-    afxNat32                        instCnt;
+    afxBuffer buf;
+    afxNat32 offset;
+    afxNat32 drawCnt;
+    afxNat32 stride;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdDrawIndexedIndirectCnt)
+{
+    _sglCmd                     cmd;
+    afxBuffer buf;
+    afxNat32 offset;
+    afxBuffer cntBuf;
+    afxNat32 cntBufOff;
+    afxNat32 maxDrawCnt;
+    afxNat32 stride;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdDispatch)
+{
+    _sglCmd                     cmd;
+    avxDispatchIndirectCmd      data;
+};
+
+AFX_DEFINE_STRUCT(_sglCmdDispatchIndirect)
+{
+    _sglCmd                     cmd;
+    afxBuffer buf;
+    afxNat32 offset;
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBeginSynthesis)
@@ -753,7 +814,7 @@ AFX_DEFINE_STRUCT(_sglCmdBeginSynthesis)
     _sglCmd cmd;
     afxBool defFbo;
     afxLinkage canvOpsLnk;
-    afxCanvas canv;
+    avxCanvas canv;
     afxRect area;
     afxNat32 layerCnt;
     afxDrawTarget depth;
@@ -767,8 +828,16 @@ AFX_DEFINE_STRUCT(_sglCmdBindRasters)
     _sglCmd cmd;
     afxNat32 set;
     afxNat32 first, cnt;
-    afxSampler afxSimd(smp[_SGL_MAX_ENTRY_PER_LEGO]);
     afxRaster afxSimd(tex[_SGL_MAX_ENTRY_PER_LEGO]);
+    afxNat subras[_SGL_MAX_ENTRY_PER_LEGO];
+};
+
+AFX_DEFINE_STRUCT(_sglCmdBindSamplers)
+{
+    _sglCmd cmd;
+    afxNat32 set;
+    afxNat32 first, cnt;
+    avxSampler afxSimd(smp[_SGL_MAX_ENTRY_PER_LEGO]);
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBindBuffers)
@@ -833,7 +902,7 @@ AFX_DEFINE_STRUCT(_sglCmdBufferRange)
 AFX_DEFINE_STRUCT(_sglCmdRasterizer)
 {
     _sglCmd                     cmd;
-    afxRasterizer               razr;
+    avxRasterizer               razr;
     afxFlags                    dynamics;
 };
 
@@ -841,14 +910,14 @@ AFX_DEFINE_STRUCT(_sglCmdPipeline)
 {
     _sglCmd                     cmd;
     afxNat                      segment;
-    afxPipeline                 pip;
+    avxPipeline                 pip;
     afxFlags                    dynamics;
 };
 
 AFX_DEFINE_STRUCT(_sglCmdVertexInput)
 {
     _sglCmd                     cmd;
-    afxVertexInput              vin;
+    avxVertexInput              vin;
 };
 
 AFX_DEFINE_STRUCT(_sglCmdBool)
@@ -913,7 +982,7 @@ AFX_DEFINE_STRUCT(_sglCmdCopyRasterRegions)
 
 AFX_DEFINE_STRUCT(_sglCmdRegenerateMipmaps)
 {
-    _sglCmd         cmd;
+    _sglCmd             cmd;
     afxRaster           ras;
     afxNat              baseLod;
     afxNat              lodCnt;
@@ -923,8 +992,8 @@ AFX_DEFINE_STRUCT(_sglCmdSwizzleRasterRegions)
 {
     _sglCmd             cmd;
     afxRaster           ras;
-    afxColorSwizzle     a;
-    afxColorSwizzle     b;
+    avxColorSwizzle     a;
+    avxColorSwizzle     b;
     afxNat              rgnCnt;
     afxRasterRegion     afxSimd(rgn[]);
 };
@@ -1004,7 +1073,7 @@ AFX_DEFINE_STRUCT(_sglCmdViewport)
 {
     _sglCmd cmd;
     afxNat32 first, cnt;
-    afxViewport afxSimd(vp[]);
+    avxViewport afxSimd(vp[]);
 };
 
 AFX_DEFINE_STRUCT(_sglCmdNextPass)
@@ -1062,17 +1131,17 @@ typedef enum sglBindFlags
 
 _SGL afxError AfxRegisterDrawDrivers(afxModule mdle, afxDrawSystem dsys);
 
-SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, afxNat glUnit, afxSampler samp);
-SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl);
+SGL afxError _DpuBindAndSyncSamp(sglDpu* dpu, afxNat glUnit, avxSampler samp);
+SGL afxError _DpuSyncShd(sglDpu* dpu, avxShader shd, avxShaderStage stage, glVmt const* gl);
 SGL afxError _DpuSurfSync(sglDpu* dpu, afxRasterSlot surf, glVmt const* gl); // must be used before texUpdate
 SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster tex);
 SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, afxRasterRegion const* rgn, GLenum glFmt, GLenum glType, afxAddress const src);
 
-SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings);
-SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPipeline pip);
-SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr);
-SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, afxLigature legt, GLuint glHandle);
-SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv);
+SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, avxVertexInput vin, sglVertexInputState* nextVinBindings);
+SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, avxPipeline pip);
+SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, avxRasterizer razr);
+SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature legt, GLuint glHandle);
+SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, avxCanvas canv);
 
 
 SGL afxError DpuBindAndSyncBuf(sglDpu* dpu, GLenum glTarget, afxBuffer buf);
@@ -1089,6 +1158,8 @@ SGL afxError _DpuUnpackRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
 SGL afxError _DpuOutputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, afxStream out);
 SGL afxError _DpuInputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, afxStream in);
 
+SGL afxError _DpuCopyRas(sglDpu* dpu, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopy const ops[]);
+
 SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx);
 
 //SGL afxSize _AfxMeasureTextureRegion(afxRaster tex, afxRasterRegion const *rgn);
@@ -1100,25 +1171,24 @@ SGL BOOL SglSetPixelFormat(HDC hdc, int format, CONST PIXELFORMATDESCRIPTOR * pp
 SGL int SglDescribePixelFormat(HDC hdc, int iPixelFormat, UINT nBytes, LPPIXELFORMATDESCRIPTOR ppfd, wglVmt const* vmt);
 SGL int SglGetPixelFormat(HDC hdc, wglVmt const* vmt);
 
-SGL afxLigature _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, afxPipelineRigBindingDecl const bindings[]);
+SGL avxLigature _SglDrawContextFindLego(afxDrawContext dctx, afxNat bindCnt, avxPipelineRigBindingDecl const bindings[]);
+
+SGL afxError _SglDdevOpenCb(afxDrawDevice ddev, afxDrawContext dctx, afxCookie const* cookie);
+SGL afxError _SglDdevCloseCb(afxDrawDevice ddev, afxDrawContext dctx);
 
 //SGL afxBool _SglDqueVmtSubmitCb(afxDrawContext dctx, afxDrawBridge ddge, afxDrawSubmissionSpecification const *spec, afxNat *submNo);
-SGL afxError _DdgeProcCb(afxDrawBridge ddge, afxThread thr);
+SGL afxBool _DdgeProcCb(afxDrawBridge ddge, afxThread thr);
 
 SGL afxClassConfig const _SglDctxMgrCfg;
 
 SGL afxError _SglDoutVmtFlushCb(afxDrawOutput dout, afxTime timeout);
 
-SGL afxError _SglDdevInitDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawInputConfig const* cfg, afxUri const* endpoint);
-SGL afxError _SglDdevDeinitDoutCb(afxDrawDevice ddev, afxDrawOutput dout);
-SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawOutputConfig const* config, afxUri const* endpoint);
+SGL afxError _SglDdevOpenDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawInputConfig const* cfg, afxUri const* endpoint);
+SGL afxError _SglDdevCloseDoutCb(afxDrawDevice ddev, afxDrawOutput dout);
+SGL afxError _SglDdevOpenDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawOutputConfig const* config, afxUri const* endpoint);
 SGL afxError _SglDinFreeAllBuffers(afxDrawInput din);
 
 SGL afxCmd _SglEncodeCmdVmt;
-SGL afxCmdBuf const _SglEncodeCmdBufferVmt;
-SGL afxCmdRas const _SglEncodeCmdRasterVmt;
-SGL afxCmdTransformation const _SglEncodeCmdTransformationVmt;
-SGL afxCmdRasterization const _SglEncodeCmdRasterizationVmt;
 SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttachment, GLenum texTarget, GLuint texHandle, GLint level, GLuint layer, GLuint z);
 
 SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFence const fences[]);
@@ -1128,7 +1198,6 @@ SGL afxCmdId _SglEncodeCmdCommand(avxCmdb cmdb, afxNat id, afxNat siz, _sglCmd *
 
 SGL afxClassConfig const _SglFencMgrCfg;
 SGL afxClassConfig const _SglSemMgrCfg;
-SGL afxClassConfig const _SglQrypMgrCfg;
 
 SGL afxResult _SglDdevIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va);
 
@@ -1140,6 +1209,9 @@ SGL void _LoadWglBaseSymbols(HMODULE opengl32, wglVmt* wgl);
 
 SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout);
 
+SGL afxError _SglDdgeCtor(afxDrawBridge ddge, afxCookie const* cookie);
+SGL afxError _SglDdgeDtor(afxDrawBridge ddge);
+
 SGL afxNat _SglDdgeEnqueueMmapCb(afxDrawBridge ddge, afxBuffer buf, afxSize off, afxNat ran, afxFlags flags);
 
 
@@ -1147,6 +1219,8 @@ SGL void _SglCopyTexSubImage(sglDpu* dpu, GLenum glDstTarget, GLenum glSrcTarget
 SGL void _SglUnpackTexSubImage(sglDpu* dpu, GLenum glTarget, afxNat bpp, GLenum glFmt, GLenum glType, afxNat opCnt, afxRasterIo const ops[]);
 
 SGL void DpuBufRw(sglDpu* dpu, afxBuffer buf, afxNat offset, afxNat range, afxBool toHost, void* srcOrDst);
+SGL void DpuBufCpy(sglDpu* dpu, afxBuffer src, afxBuffer dst, afxNat opCnt, afxBufferCopyOp const ops[]);
+SGL void DpuBufSet(sglDpu* dpu, afxBuffer buf, afxNat offset, afxNat range, afxNat data);
 
 SGL void _DecodeCmdSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd);
 SGL void _DecodeCmdSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd);
@@ -1156,8 +1230,10 @@ SGL void _DecodeCmdBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cm
 SGL void _DecodeCmdBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd);
 SGL void _DecodeCmdBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd);
 
+SGL void _DpuBindIndexSource(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 stride);
+SGL void _DpuBindVertexInput(sglDpu* dpu, avxVertexInput vin);
 SGL void _DpuBindVertexSources(sglDpu* dpu, afxNat first, afxNat cnt, sglBufferInfo const src[]);
-SGL void _DpuSetViewports(sglDpu* dpu, afxNat first, afxNat cnt, afxViewport const vp[]);
+SGL void _DpuSetViewports(sglDpu* dpu, afxNat first, afxNat cnt, avxViewport const vp[]);
 
 SGL void _DecodeCmdDisableRasterization(sglDpu* dpu, _sglCmdBool const *cmd);
 SGL void _DecodeCmdEnableDepthBias(sglDpu* dpu, _sglCmdBool const *cmd);
@@ -1174,11 +1250,9 @@ SGL void _DecodeCmdSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd);
 SGL void _DecodeCmdSetScissors(sglDpu* dpu, _sglCmdScissor const *cmd);
 SGL void _DecodeCmdSetCurtains(sglDpu* dpu, _sglCmdScissor const *cmd);
 
-SGL void _DpuCmdRasSubsample(sglDpu* dpu, _sglCmdRegenerateMipmaps const* cmd);
-SGL void _DpuCmdRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd);
-SGL void _DpuCmdRasCopy(sglDpu* dpu, _sglCmdCopyRasterRegions const* cmd);
-SGL void _DpuCmdRasSwizzle(sglDpu* dpu, _sglCmdSwizzleRasterRegions const* cmd);
-SGL void _DpuCmdRasXform(sglDpu* dpu, _sglCmdFlipRasterRegions const* cmd);
+SGL void _DecodeCmdRasSubsample(sglDpu* dpu, _sglCmdRegenerateMipmaps const* cmd);
+SGL void _DecodeCmdRasPack(sglDpu* dpu, _sglCmdPackRasterRegions const* cmd);
+SGL void _DecodeCmdRasCopy(sglDpu* dpu, _sglCmdCopyRasterRegions const* cmd);
 
 SGL void _DecodeCmdBufCpy(sglDpu* dpu, _sglCmdBufCpy const* cmd);
 SGL void _DecodeCmdBufSet(sglDpu* dpu, _sglCmdBufSet const* cmd);
@@ -1191,6 +1265,7 @@ SGL void _DecodeCmdNextPass(sglDpu* dpu, _sglCmd const *cmd);
 SGL void _DecodeCmdFinishSynthesis(sglDpu* dpu, _sglCmd const *cmd);
 SGL void _DecodeCmdBeginSynthesis(sglDpu* dpu, _sglCmdBeginSynthesis const *cmd);
 
+SGL void _DecodeCmdBindSamplers(sglDpu* dpu, _sglCmdBindSamplers const *cmd);
 SGL void _DecodeCmdBindRasters(sglDpu* dpu, _sglCmdBindRasters const *cmd);
 SGL void _DecodeCmdBindBuffers(sglDpu* dpu, _sglCmdBindBuffers const *cmd);
 
@@ -1201,16 +1276,47 @@ SGL void _DecodeCmdBindRasterizer(sglDpu* dpu, _sglCmdRasterizer *cmd);
 SGL void _DecodeCmdDraw(sglDpu* dpu, _sglCmdDraw const *cmd);
 SGL void _DecodeCmdDrawIndexed(sglDpu* dpu, _sglCmdDrawIndexed const* cmd);
 
-SGL void _DpuBeginSynthesis(sglDpu* dpu, afxCanvas canv, afxRect const* area, afxNat layerCnt, afxNat cCnt, afxDrawTarget const* c, afxDrawTarget const* d, afxDrawTarget const* s, afxBool defFbo);
+SGL void _DpuBeginSynthesis(sglDpu* dpu, avxCanvas canv, afxRect const* area, afxNat layerCnt, afxNat cCnt, afxDrawTarget const* c, afxDrawTarget const* d, afxDrawTarget const* s, afxBool defFbo);
 SGL void _DpuFinishSynthesis(sglDpu* dpu);
 
-SGL void _DpuDraw(sglDpu* dpu, afxNat vtxCnt, afxNat instCnt, afxNat firstVtx, afxNat firstInst);
-SGL void _DpuDrawIndexed(sglDpu* dpu, afxNat idxCnt, afxNat instCnt, afxNat firstIdx, afxNat vtxOff, afxNat firstInst);
+SGL void _DpuExecuteCommands(sglDpu* dpu, afxNat cnt, avxCmdb streams[]);
+SGL void _DpuDraw(sglDpu* dpu, avxDrawIndirectCmd const* data);
+SGL void _DpuDrawIndirect(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
+SGL void _DpuDrawIndirectCount(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
+SGL void _DpuDrawIndexed(sglDpu* dpu, avxDrawIndexedIndirectCmd const* data);
+SGL void _DpuDrawIndexedIndirect(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxNat32 drawCnt, afxNat32 stride);
+SGL void _DpuDrawIndexedIndirectCount(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxBuffer cntBuf, afxNat32 cntBufOff, afxNat32 maxDrawCnt, afxNat32 stride);
+SGL void _DpuDispatch(sglDpu* dpu, afxNat grpCntX, afxNat grpCntY, afxNat grpCntZ);
+SGL void _DpuDispatchIndirect(sglDpu* dpu, afxBuffer buf, afxNat32 offset);
 
-SGL void _DpuBindRasters(sglDpu* dpu, afxNat set, afxNat first, afxNat cnt, afxSampler samplers[], afxRaster rasters[]);
+SGL void _DpuBindRasters(sglDpu* dpu, afxNat set, afxNat first, afxNat cnt, afxRaster rasters[], afxNat const subras[]);
+SGL void _DpuBindSamplers(sglDpu* dpu, afxNat set, afxNat first, afxNat cnt, avxSampler samplers[]);
 SGL void _DpuBindBuffers(sglDpu* dpu, afxNat set, afxNat first, afxNat cnt, afxBuffer buffers[], afxNat const offsets[], afxNat const ranges[]);
 
-SGL void _DpuBindPipeline(sglDpu* dpu, afxPipeline pip, afxFlags dynamics);
-SGL void _DpuBindRasterizer(sglDpu* dpu, afxRasterizer razr, afxFlags dynamics);
+SGL void _DpuBindPipeline(sglDpu* dpu, avxPipeline pip, afxFlags dynamics);
+SGL void _DpuBindRasterizer(sglDpu* dpu, avxRasterizer razr, afxFlags dynamics);
+
+SGL sglDecodeVmt _SglDecodeCmdVmt;
+
+SGL afxError _SglPipCtor(avxPipeline pip, afxCookie const* cookie);
+SGL afxError _SglPipDtor(avxPipeline pip);
+SGL afxError _SglRazrDtor(avxRasterizer razr);
+SGL afxError _SglRazrCtor(avxRasterizer razr, afxCookie const* cookie);
+SGL afxError _SglShdCtor(avxShader shd, afxCookie const* cookie);
+SGL afxError _SglShdDtor(avxShader shd);
+SGL afxError _SglVinCtor(avxVertexInput vin, afxCookie const* cookie);
+SGL afxError _SglVinDtor(avxVertexInput vin);
+SGL afxError _SglCanvCtor(avxCanvas canv, afxCookie const* cookie);
+SGL afxError _SglCanvDtor(avxCanvas canv);
+SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie);
+SGL afxError _SglRasDtor(afxRaster ras);
+SGL afxError _BufCtorCb(afxBuffer buf, afxCookie const* cookie);
+SGL afxError _BufDtorCb(afxBuffer buf);
+SGL afxError _SglSampCtor(avxSampler samp, afxCookie const* cookie);
+SGL afxError _SglSampDtor(avxSampler samp);
+SGL afxError _SglBschCtor(avxLigature liga, afxCookie const* cookie);
+SGL afxError _SglBschDtor(avxLigature liga);
+SGL afxError _SglQrypCtor(avxQueryPool qryp, afxCookie const* cookie);
+SGL afxError _SglQrypDtor(avxQueryPool qryp);
 
 #endif//AFX_STD_DRAW_DRIVER_IMPLEMENTATION_H

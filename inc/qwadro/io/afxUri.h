@@ -22,7 +22,7 @@
 #ifndef AFX_URI_H
 #define AFX_URI_H
 
-#include "qwadro/core/afxRestring.h"
+#include "qwadro/base/afxRestring.h"
 
 #define AFX_URI_FILE_EXT_SEP '.'
 #define AFX_URI_PATH_HERE '.'
@@ -66,6 +66,11 @@ AFXINL afxUri*          AfxMakeUri8(afxUri8 *uri, afxUri const* src);
 AFXINL afxUri*          AfxMakeUri32(afxUri32 *uri, afxUri const* src);
 AFXINL afxUri*          AfxMakeUri128(afxUri128 *uri, afxUri const* src);
 AFXINL afxUri*          AfxMakeUri2048(afxUri2048 *uri, afxUri const* src);
+
+AFXINL afxUri*          AfxFormatUri8(afxUri8 *uri, afxChar const *fmt, ...);
+AFXINL afxUri*          AfxFormatUri32(afxUri32 *uri, afxChar const *fmt, ...);
+AFXINL afxUri*          AfxFormatUri128(afxUri128 *uri, afxChar const *fmt, ...);
+AFXINL afxUri*          AfxFormatUri2048(afxUri2048 *uri, afxChar const *fmt, ...);
 
 AFXINL void             AfxResetUri(afxUri *uri); // WARNING string storage is resetted too. Any storage assigned will be nulled.
 

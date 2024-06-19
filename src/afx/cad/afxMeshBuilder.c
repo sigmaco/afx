@@ -144,7 +144,7 @@ afxMesh AfxAddDomeToModel(afxModel mdl, afxReal radius, afxNat32 slices)
         }
     }
 
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, afxPrimTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     //AfxFillMeshSection(msh, msecIdx, numberIndices);
     afxNat32* indices = msec->indices.pool;
     msec->indices.pop = msec->indices.cap;
@@ -183,7 +183,7 @@ afxMesh AfxAddParallelepipedToModel(afxModel mdl, afxReal width, afxReal height)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, xy_tangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, xy_normals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, xy_texCoords, 0);
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, afxPrimTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "parallelepiped"));
     AfxFillMeshSection(msec, numberIndices, xy_indices);
 
     afxM4d m4d;
@@ -251,7 +251,7 @@ afxMesh AfxAddCubeToModel(afxModel mdl, afxReal scale)
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_TAN, numberVertices, 0, cubeTangents, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_NRM, numberVertices, 0, cubeNormals, 0);
     AfxPopulateVertexBuffer(&msh->vbuf, AFX_VERTEX_ATTR_UV, numberVertices, 0, cubeTexCoords, 0);
-    afxMeshSurface msec = AfxAcquireMeshSection(msh, afxPrimTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
+    afxMeshSurface msec = AfxAcquireMeshSection(msh, avxTopology_TRI_LIST, numberIndices, 0, AfxAcquireMaterial(mdl, "cube"));
     AfxFillMeshSection(msec, numberIndices, cubeIndices);
     return msh;
 }

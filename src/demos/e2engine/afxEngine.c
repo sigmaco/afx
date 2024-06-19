@@ -16,7 +16,7 @@ afxDrawInput din = NIL;
 
 void *vg = NIL;
 
-afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
+afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -45,7 +45,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     queIdx = AfxGetCmdBufferPool(cmdb);
 
                     afxWhd canvWhd;
-                    afxCanvas canv;
+                    avxCanvas canv;
                     AfxGetDrawOutputCanvas(dout, outBufIdx, &canv);
                     AfxAssertObjects(1, &canv, afxFcc_CANV);                        
                     AfxGetCanvasExtent(canv, canvWhd);
@@ -63,7 +63,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                     sync.depth = &dt[1];
                     AvxCmdBeginSynthesis(cmdb, &sync);
 
-                    afxViewport vp = { 0 };
+                    avxViewport vp = { 0 };
                     vp.offset[0] = sync.area.x;
                     vp.offset[1] = sync.area.y;
                     vp.extent[0] = sync.area.w;
@@ -117,9 +117,9 @@ int main(int argc, char const* argv[])
     afxError err = AFX_ERR_NONE;
     afxResult rslt = AFX_SUCCESS, opcode = AFX_OPCODE_CONTINUE;
 
-    afxUri2048 romUri;
-    AfxMakeUri2048(&romUri, NIL);
-    AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
+    //afxUri2048 romUri;
+    //AfxMakeUri2048(&romUri, NIL);
+    //AfxFormatUri(&romUri.uri, "%s", argv[0]); // hardcoded name
 
     // Boot up the Qwadro
 
@@ -128,22 +128,40 @@ int main(int argc, char const* argv[])
     AfxDoSystemBootUp(&sysCfg);
 
     // Acquire hardware device contexts
-
+#if 0
     afxSoundContextConfig sctxCfg = { 0 };
-    AfxAcquireSoundContext(0, &sctxCfg, &sctx);
+    AfxOpenSoundDevice(0, &sctxCfg, &sctx);
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-
+#endif
     afxDrawContextConfig dctxCfg = { 0 };
-    AfxAcquireDrawContext(0, &dctxCfg, &dctx);
+    AfxOpenDrawDevice(0, &dctxCfg, &dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     // Acquire a drawable surface
 
-    AfxAcquireWindow(0, dctx, NIL, &window);
+    afxDrawOutput outputs[4];
+    afxDrawOutputConfig doutCfg = { 0 };
+    AfxAcquireDrawOutput(0, &doutCfg, &outputs[0]);
+    AfxAcquireDrawOutput(0, &doutCfg, &outputs[1]);
+    AfxAcquireDrawOutput(0, &doutCfg, &outputs[2]);
+    AfxAcquireDrawOutput(0, &doutCfg, &outputs[3]);
+    AfxAssertObjects(4, outputs, afxFcc_DOUT);
+    AfxReconnectDrawOutput(outputs[0], dctx);
+    AfxReconnectDrawOutput(outputs[0], dctx);
+    AfxDisconnectDrawOutput(outputs[0]);
+    AfxDisconnectDrawOutput(outputs[0]);
+    AfxDisconnectDrawOutput(outputs[0]);
+    AfxReconnectDrawOutput(outputs[0], dctx);
+    AfxDisconnectDrawOutput(outputs[0]);
+    AfxReconnectDrawOutput(outputs[0], dctx);
+    AfxReleaseObjects(4, outputs);
+
+    afxWindowConfig winCfg = { 0 };
+    AfxAcquireWindow(dctx, &winCfg, &window);
     AfxAssertObjects(1, &window, afxFcc_WND);
     AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
-    AfxGetSurfaceDrawOutput(window, &dout);
+    AfxGetWindowDrawOutput(window, NIL, &dout);
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -174,7 +192,7 @@ int main(int argc, char const* argv[])
 
     afxUri uri;
     AfxMakeUri(&uri, "system/engine.xss", 0);
-    AfxLoadScript(NIL, &uri);
+    //AfxLoadScript(NIL, &uri);
 
     // Run
 

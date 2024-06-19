@@ -1,0 +1,19 @@
+Booting up the Qwadro Execution Ecosystem...
+afxManifest.c:324
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.Acquiring thread...  3404 "afxSystem_w32.c:573"Mounting... <.>('E:/qwadro/afx///'),5Mounting... <system>('E:/qwadro/afx//system/'),5Mounting... <system>('E:/qwadro/afx//system32/'),7Mounting... <system>('E:/qwadro/afx//system32d/'),7Mounting... <//./c/>('C:\'),7Mounting... <//./e/>('E:\'),7Mounting... <//./f/>('F:\'),7Mounting... <//./g/>('G:\'),7Mounting... <//./h/>('H:\'),7Mounting... <//./i/>('I:\'),7Loading module... <e2coree>Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>Loading module... <targl4.dll>Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Doing the ASX start up...Loading module... <e2sound>Loading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+Doing the AUX start up...Loading module... <e2ux>Acquiring HID at port 0Mounting... <code>('E:/qwadro/afx//system/'),7Entering the Thread Execution Environment 3404
+Loading module... <openal32.dll>Acquiring thread...  0 "salSdev_w32.c:408"Entering the Thread Execution Environment 6072
+Starting Thread Execution Unit 6072Entering the Thread Execution Environment 3404
+afxThread_PC.c:559
+afxThread_PC.c:559
+(thr->osHandle == thrd)
+    Invalid

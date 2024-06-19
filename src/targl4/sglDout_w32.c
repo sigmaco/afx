@@ -27,7 +27,7 @@
 #include "sgl.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/draw/afxDrawOutput.h"
-#include "qwadro/core/afxString.h"
+#include "qwadro/base/afxString.h"
 #include "qwadro/math/afxVector.h"
 
 _SGL afxNat _SglDoutBuffersAreLocked(afxDrawOutput dout)
@@ -99,12 +99,12 @@ _SGL afxBool _SglDouVmtGetIddCb(afxDrawOutput dout, afxNat code, void* dst)
     {
     case 0:
     {
-        *(HDC*)dst = dout->w32.hDc;
+        *(HDC*)dst = dout->idd->hDc;
         break;
     }
     case 1:
     {
-        *(int*)dst = dout->w32.dcPxlFmt;
+        *(int*)dst = dout->idd->dcPxlFmt;
         break;
     }
     default: break;
@@ -144,7 +144,7 @@ _SGL afxError _SglDoutVmtReqCb(afxDrawOutput dout, afxTime timeout, afxNat *bufI
             if (AfxCasAtom32(&dout->buffers[lastLockedBufIdx].booked, &boolFalse, TRUE))
             {
                 AfxIncAtom32(&dout->lockedBufCnt);
-                afxCanvas canv = dout->buffers[lastLockedBufIdx].canv;
+                avxCanvas canv = dout->buffers[lastLockedBufIdx].canv;
 
                 if (canv)
                 {
@@ -189,7 +189,7 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
         
         afxRaster surf;
         AfxEnumerateDrawOutputBuffers(dout, outBufIdx, 1, &surf);
-        afxCanvas canv;
+        avxCanvas canv;
         AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
         AfxAssertObjects(1, &surf, afxFcc_RAS);
         //AfxAssert(surf->state == AFX_SURF_STATE_PENDING);
@@ -217,8 +217,8 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
 #endif
         gl->BindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
         gl->Clear(GL_COLOR_BUFFER_BIT);  _SglThrowErrorOccuried();
-        afxBool useLerp = (surf->base.whd[0] != canv->base.whd[0]) && (surf->base.whd[1] != canv->base.whd[1]);
-        gl->BlitFramebuffer(0, 0, surf->base.whd[0], surf->base.whd[1], 0, 0, surf->base.whd[0], surf->base.whd[1], GL_COLOR_BUFFER_BIT, useLerp ? GL_LINEAR : GL_NEAREST); _SglThrowErrorOccuried();
+        afxBool useLerp = (surf->m.whd[0] != canv->m.whd[0]) && (surf->m.whd[1] != canv->m.whd[1]);
+        gl->BlitFramebuffer(0, 0, surf->m.whd[0], surf->m.whd[1], 0, 0, surf->m.whd[0], surf->m.whd[1], GL_COLOR_BUFFER_BIT, useLerp ? GL_LINEAR : GL_NEAREST); _SglThrowErrorOccuried();
         //gl->BindFramebuffer(GL_READ_FRAMEBUFFER, 0); _SglThrowErrorOccuried();
         gl->Flush(); _SglThrowErrorOccuried();
 #else
@@ -248,7 +248,7 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
         afxDrawTarget const rasterRt = { NIL, afxSurfaceLoadOp_CLEAR, NIL, { 0.3, 0.1, 0.3, 1.0 } };
         _DpuBeginCombination(dpu, NIL, 1, 0, &rasterRt, NIL, NIL);
 
-        afxPipeline pip = AfxDrawOperationGetPipeline(idd->presentDop, 0, 0);
+        avxPipeline pip = AfxDrawOperationGetPipeline(idd->presentDop, 0, 0);
         AfxAssertObjects(1, &pip, afxFcc_PIP);
         _DpuBindPipeline(dpu, pip);
 #endif   
@@ -264,16 +264,16 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
         _DpuSetViewports(dpu, &cmdSetVp);
 
 #if 0 // already set by pipeline
-        afxPipelineRasterizerState const ras = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
+        avxPipelineRasterizerState const ras = { FALSE, FALSE, avxFillMode_SOLID, avxCullMode_BACK, avxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
         _DpuSetRasterizerState(ddge, &ras);
 
-        afxPipelineDepthState const depth = { 0 };
+        avxPipelineDepthState const depth = { 0 };
         _DpuSetDepthState(ddge, &depth);
 #endif
 
 #if 0 // already set by pipeline
-        afxPipelinePrimitiveState ia;
-        ia.topology = afxPrimTopology_TRI_STRIP;
+        avxPipelinePrimitiveState ia;
+        ia.topology = avxTopology_TRI_STRIP;
         ia.primRestartEnable = FALSE;
         _DpuSetInputAssemblyState(ddge, &ia);
 #endif
@@ -326,7 +326,7 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
 #endif
 #endif
 
-        HDC dc = dout->w32.hDc;
+        HDC dc = dout->idd->hDc;
 
         if (dc)
         {
@@ -374,37 +374,18 @@ _SGL afxError _DpuPresentDout(sglDpu* dpu, afxDrawOutput dout, afxNat outBufIdx)
     return err;
 }
 
-_SGL afxError _SglDdevDeinitDoutCb(afxDrawDevice ddev, afxDrawOutput dout)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    AfxAssertObjects(1, &dout, afxFcc_DOUT);
-
-    _SglDoutSuspendFunction(dout);
-    _SglDoutLockBuffers(dout);
-
-    ReleaseDC(dout->w32.hWnd, dout->w32.hDc);
-
-    if (dout->idd)
-    {
-        AfxDeallocate(dout->idd);
-        dout->idd = NIL;
-    }
-    return err;
-}
-
 _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
     afxBool fallback = TRUE;
-    HDC hDc = dout->w32.hDc;
+    HDC hDc = dout->idd->hDc;
     HDC currDc = dpu->wgl.GetCurrentDC();
 
     if (hDc)
     {
-        if (!dout->w32.dcPxlFmt)
+        if (!dout->idd->dcPxlFmt)
         {
             afxPixelLayout pfl;
             afxPixelFormat pixelFmt = dout->pixelFmt;
@@ -432,12 +413,12 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
                 { WGL_ALPHA_BITS_ARB, alphaBpp },
                 //{ WGL_DEPTH_BITS_ARB, 24 }, // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
                 //{ WGL_STENCIL_BITS_ARB, 8 },  // No Qwadro, não é possível desenhar arbitrariamente no default framebuffer. Logo, não há necessidade de stencil.
-                //{ WGL_TRANSPARENT_ARB, (dout->presentAlpha && dout->presentAlpha != afxPresentAlpha_OPAQUE) },
-                //{ WGL_SWAP_METHOD_ARB, (dout->presentMode && dout->presentMode == afxPresentMode_IMMEDIATE) ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB },
+                //{ WGL_TRANSPARENT_ARB, (dout->presentAlpha && dout->presentAlpha != avxPresentAlpha_OPAQUE) },
+                //{ WGL_SWAP_METHOD_ARB, (dout->presentMode && dout->presentMode == avxPresentMode_IMMEDIATE) ? WGL_SWAP_COPY_ARB : WGL_SWAP_EXCHANGE_ARB },
                 //{ WGL_SAMPLE_BUFFERS_ARB,  GL_FALSE },  // works on Intel, didn't work on Mesa
                 //{ WGL_SAMPLES_ARB, 8 }, // works on Intel, didn't work on Mesa
-                //{ WGL_COLORSPACE_EXT, dout->colorSpc == afxColorSpace_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == afxColorSpace_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL) }, // works on Mesa, didn't work on Intel
-                //{ WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, (dout->colorSpc == afxColorSpace_SRGB) }, // works on Mesa, didn't work on Intel
+                //{ WGL_COLORSPACE_EXT, dout->colorSpc == avxColorSpace_SRGB ? WGL_COLORSPACE_SRGB_EXT : (dout->colorSpc == avxColorSpace_LINEAR ? WGL_COLORSPACE_LINEAR_EXT : NIL) }, // works on Mesa, didn't work on Intel
+                //{ WGL_FRAMEBUFFER_SRGB_CAPABLE_ARB, (dout->colorSpc == avxColorSpace_SRGB) }, // works on Mesa, didn't work on Intel
                 { NIL, NIL },
             };
 
@@ -453,7 +434,7 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
                 PIXELFORMATDESCRIPTOR pfd;
                 AfxZero2(1, sizeof(pfd), &pfd);
                 SglDescribePixelFormat(hDc, dcPxlFmt, sizeof(pfd), &pfd, &dpu->wgl);
-                dout->w32.dcPxlFmtBkp = SglGetPixelFormat(hDc, &dpu->wgl);
+                dout->idd->dcPxlFmtBkp = SglGetPixelFormat(hDc, &dpu->wgl);
 #if 0
                 pfd.nSize = sizeof(pfd);
                 pfd.nVersion = 1;
@@ -465,13 +446,20 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
                 pfd.cStencilBits = 8;
 #endif
                 //dout->wglDcPxlFmt = _SglChoosePixelFormat(dout->wglDc, &(pfd));
-                DWORD pfdFlags = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DIRECT3D_ACCELERATED | PFD_SWAP_EXCHANGE /* | PFD_SUPPORT_COMPOSITION*/;
+                DWORD pfdFlags = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_SWAP_EXCHANGE
+#if 0
+                    | PFD_DIRECT3D_ACCELERATED
+#endif
+#if 0
+                    | PFD_SUPPORT_COMPOSITION
+#endif
+                    ;
                 AfxAssert(pfd.dwFlags & pfdFlags);
 
                 if (!SglSetPixelFormat(hDc, dcPxlFmt, &(pfd), &dpu->wgl)) AfxThrowError();
                 else
                 {
-                    dout->w32.dcPxlFmt = dcPxlFmt;
+                    dout->idd->dcPxlFmt = dcPxlFmt;
                     fallback = FALSE;
                 }
             }
@@ -508,14 +496,14 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
                 AfxThrowError();
                 AfxLogError("Fallback failure on DPU %u.", dpu->portIdx);
 
-                if (dout->presentMode == afxPresentMode_FIFO)
+                if (dout->presentMode == avxPresentMode_FIFO)
                     dpu->wgl.SwapIntervalEXT(0); // revert V-sync
             }
         }
         else
         {
 #if !0
-            if (dout->presentMode == afxPresentMode_FIFO)
+            if (dout->presentMode == avxPresentMode_FIFO)
             {
                 dpu->wgl.SwapIntervalEXT(1); // causes lag when 1
             }
@@ -529,13 +517,19 @@ _SGL afxError _SglActivateDout(sglDpu* dpu, afxDrawOutput dout)
     return err;
 }
 
-_SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawOutputConfig const* cfg, afxUri const* endpoint)
+_SGL afxError _SglDdevOpenDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDrawOutputConfig const* cfg, afxUri const* endpoint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
     AfxAssertObjects(1, &dout, afxFcc_DOUT);
 
-    AfxZero(&dout->w32, sizeof(dout->w32));
+    if (!(dout->idd = AfxAllocate(1, sizeof(*dout->idd), 0, AfxHere())))
+    {
+        AfxThrowError();
+        return err;
+    }
+
+    AfxZero(dout->idd, sizeof(*dout->idd));
 
     dout->lockCb = _SglDoutVmtReqCb;
     dout->iddCb = _SglDouVmtGetIddCb;
@@ -562,9 +556,9 @@ _SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDraw
 
             //AfxAdjustDrawOutputFromNdc(dout, AfxSpawnV3d(0.6666666, 0.6666666, 1));
 
-            dout->w32.hInst = cfg->w32.hInst;
-            dout->w32.hWnd = cfg->w32.hWnd;
-            dout->w32.hDc = dc;
+            dout->idd->hInst = cfg->w32.hInst;
+            dout->idd->hWnd = cfg->w32.hWnd;
+            dout->idd->hDc = dc;
 
             if (cfg->udd[0])
                 ((HDC*)cfg->udd[0])[0] = dc;
@@ -572,6 +566,25 @@ _SGL afxError _SglDdevInitDoutCb(afxDrawDevice ddev, afxDrawOutput dout, afxDraw
             if (err)
                 ReleaseDC(wnd, dc);
         }
+    }
+    return err;
+}
+
+_SGL afxError _SglDdevCloseDoutCb(afxDrawDevice ddev, afxDrawOutput dout)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+
+    _SglDoutSuspendFunction(dout);
+    _SglDoutLockBuffers(dout);
+
+    ReleaseDC(dout->idd->hWnd, dout->idd->hDc);
+
+    if (dout->idd)
+    {
+        AfxDeallocate(dout->idd);
+        dout->idd = NIL;
     }
     return err;
 }

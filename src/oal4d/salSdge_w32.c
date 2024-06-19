@@ -14,16 +14,7 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _ASX_SOUND_C
-#define _ASX_SOUND_SYSTEM_C
 #include "salSdev.h"
-
-#include "qwadro/sound/afxSoundSystem.h"
-
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <Windows.h>
-#include <dwmapi.h>
 
 extern afxClassConfig _SalSiobMgrCfg;
 
@@ -32,16 +23,16 @@ _A4D void* _AfxDqueRequestArenaSpace(afxSoundBridge sdge, afxNat queIdx, afxNat 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
 
-    afxSoundQueue* sque = &sdge->base.queues[queIdx];
+    afxSoundQueue sque = sdge->m.queues[queIdx];
 
-    AfxEnterSlockExclusive(&sque->workArenaSlock);
+    AfxEnterSlockExclusive(&sque->m.workArenaSlock);
 
-    void *block = AfxRequestArenaUnit(&sque->workArena, siz);
+    void *block = AfxRequestArenaUnit(&sque->m.workArena, siz);
 
     if (!block)
         AfxThrowError();
 
-    AfxExitSlockExclusive(&sque->workArenaSlock);
+    AfxExitSlockExclusive(&sque->m.workArenaSlock);
 
     return block;
 }
@@ -51,22 +42,22 @@ _A4D void _AfxDqueRecycleArenaSpace(afxSoundBridge sdge, afxNat queIdx, void *bl
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
 
-    afxSoundQueue* sque = &sdge->base.queues[queIdx];
+    afxSoundQueue sque = sdge->m.queues[queIdx];
 
-    AfxEnterSlockExclusive(&sque->workArenaSlock);
+    AfxEnterSlockExclusive(&sque->m.workArenaSlock);
 
     AfxAssert(block);
 
-    AfxRecycleArenaUnit(&sque->workArena, block, siz);
+    AfxRecycleArenaUnit(&sque->m.workArena, block, siz);
 
-    AfxExitSlockExclusive(&sque->workArenaSlock);
+    AfxExitSlockExclusive(&sque->m.workArenaSlock);
 }
 
 _A4D afxError _SalSdevProcPortUnlocked(salSpu *spu, afxSoundBridge sdge, afxNat queIdx)
 {
     afxError err = AFX_ERR_NONE;
     afxBool ctxEntered = FALSE;
-    afxNat portIdx = sdge->base.portIdx;
+    afxNat portIdx = sdge->m.portIdx;
     afxSoundContext sctx = AfxGetSoundBridgeContext(sdge);
 
     if (!ctxEntered)
@@ -89,10 +80,10 @@ _A4D afxError _SalSdevProcPortUnlocked(salSpu *spu, afxSoundBridge sdge, afxNat 
 
     if (ctxEntered)
     {
-        afxSoundQueue* sque = &sdge->base.queues[queIdx];
+        afxSoundQueue sque = sdge->m.queues[queIdx];
 
         _salQueueing* subm;
-        AfxChainForEveryLinkageB2F(&sque->workChn, _salQueueing, chain, subm)
+        AfxChainForEveryLinkageB2F(&sque->m.workChn, _salQueueing, chain, subm)
         {
             AfxGetTime(&subm->pullTime);
 
@@ -119,7 +110,7 @@ _A4D afxError _SalSdevProcPortUnlocked(salSpu *spu, afxSoundBridge sdge, afxNat 
     return err;
 }
 
-_A4D afxError _SdgeProcCb(afxSoundBridge sdge, afxThread thr)
+_A4D afxBool _SdgeProcCb(afxSoundBridge sdge, afxThread thr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
@@ -128,24 +119,24 @@ _A4D afxError _SdgeProcCb(afxSoundBridge sdge, afxThread thr)
     afxSoundDevice sdev = AfxGetObjectProvider(sdge);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
 
-    afxNat portIdx = sdge->base.portIdx;
+    afxNat portIdx = sdge->m.portIdx;
     AfxAssertRange(sdev->idd->spuCnt, portIdx, 1);
     salSpu *spu = &sdev->idd->spus[portIdx];
         
-    AfxAssert(portIdx == sdge->base.portIdx);
+    AfxAssert(portIdx == sdge->m.portIdx);
 
-    for (afxNat queIdx = 0; queIdx < sdge->base.queCnt; queIdx++)
+    for (afxNat queIdx = 0; queIdx < sdge->m.queCnt; queIdx++)
     {
-        afxSoundQueue* sque = &sdge->base.queues[queIdx];
+        afxSoundQueue sque = sdge->m.queues[queIdx];
 
-        if (AfxTryLockMutex(&sque->workChnMtx))
+        if (AfxTryLockMutex(&sque->m.workChnMtx))
         {
             _SalSdevProcPortUnlocked(spu, sdge, queIdx);
-            AfxUnlockMutex(&sque->workChnMtx);
-            AfxSignalCondition2(&sque->idleCnd);
+            AfxUnlockMutex(&sque->m.workChnMtx);
+            AfxSignalCondition2(&sque->m.idleCnd);
         }
     }
-    return err;
+    return TRUE;
 }
 
 _A4D afxNat _SalSdgeEnqueueTransferCb(afxSoundBridge sdge, afxFence fenc, afxNat cnt, afxTransferRequest2 const req[])
@@ -159,11 +150,11 @@ _A4D afxNat _SalSdgeEnqueueTransferCb(afxSoundBridge sdge, afxFence fenc, afxNat
 
     do
     {
-        for (afxNat i = 0; i < sdge->base.queCnt; i++)
+        for (afxNat i = 0; i < sdge->m.queCnt; i++)
         {
-            afxSoundQueue* sque = &sdge->base.queues[i];
+            afxSoundQueue sque = sdge->m.queues[i];
 
-            if (AfxTryLockMutex(&sque->workChnMtx))
+            if (AfxTryLockMutex(&sque->m.workChnMtx))
             {
                 _salQueueingTransfer* subm;
                 afxNat queuingSiz = sizeof(*subm) + (cnt * sizeof(subm->items[0]));
@@ -179,8 +170,8 @@ _A4D afxNat _SalSdgeEnqueueTransferCb(afxSoundBridge sdge, afxFence fenc, afxNat
                     subm->items[i] = req[i];
                 }
 
-                AfxPushLinkage(&subm->hdr.chain, &sque->workChn);
-                AfxUnlockMutex(&sque->workChnMtx);
+                AfxPushLinkage(&subm->hdr.chain, &sque->m.workChn);
+                AfxUnlockMutex(&sque->m.workChnMtx);
                 queued = TRUE;
                 queIdx = i;
                 break;
@@ -204,11 +195,11 @@ _A4D afxNat _SalSdgeEnqueueMmapCb(afxSoundBridge sdge, afxSoundBuffer buf, afxSi
 
     do
     {
-        for (afxNat i = 0; i < sdge->base.queCnt; i++)
+        for (afxNat i = 0; i < sdge->m.queCnt; i++)
         {
-            afxSoundQueue* sque = &sdge->base.queues[i];
+            afxSoundQueue sque = sdge->m.queues[i];
 
-            if (AfxTryLockMutex(&sque->workChnMtx))
+            if (AfxTryLockMutex(&sque->m.workChnMtx))
             {
                 _salQueueingMmap* subm;
                 afxNat queuingSiz = sizeof(*subm);
@@ -223,8 +214,8 @@ _A4D afxNat _SalSdgeEnqueueMmapCb(afxSoundBridge sdge, afxSoundBuffer buf, afxSi
                 subm->ran = ran;
                 subm->flags = flags;
 
-                AfxPushLinkage(&subm->hdr.chain, &sque->workChn);
-                AfxUnlockMutex(&sque->workChnMtx);
+                AfxPushLinkage(&subm->hdr.chain, &sque->m.workChn);
+                AfxUnlockMutex(&sque->m.workChnMtx);
                 queued = TRUE;
                 queIdx = i;
                 break;
@@ -250,7 +241,7 @@ _A4D afxError _SalSdgeDtor(afxSoundBridge sdge)
     return err;
 }
 
-_A4D afxError _SalSdgeCtor(afxSoundBridge sdge, afxCookie const* cookie)
+_A4D afxError _SalSdgeCtorCb(afxSoundBridge sdge, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
@@ -258,31 +249,11 @@ _A4D afxError _SalSdgeCtor(afxSoundBridge sdge, afxCookie const* cookie)
     if (_AsxSdgeStdImplementation.ctor(sdge, cookie)) AfxThrowError();
     else
     {
-        sdge->base.executeCb = NIL;// _SalSdgeEnqueueExecuteCb;
-        sdge->base.transferCb = _SalSdgeEnqueueTransferCb;
-
-        for (afxNat i = 0; i < sdge->base.queCnt; i++)
-        {
-            afxSoundQueue* sque = &sdge->base.queues[i];
-
-            //AfxAbolishManager(&sque->streams);
-            //afxClassConfig tmpClsCfg = _SalSiobMgrCfg;
-            //AfxEstablishManager(&sque->streams, NIL, &sdge->base.managers, &tmpClsCfg);
-        }
+        sdge->m.executeCb = NIL;// _SalSdgeEnqueueExecuteCb;
+        sdge->m.transferCb = _SalSdgeEnqueueTransferCb;
 
         if (err && _AsxSdgeStdImplementation.dtor(sdge))
             AfxThrowError();
     }
     return err;
 }
-
-_A4D afxClassConfig _SalSdgeMgrCfg =
-{
-    .fcc = afxFcc_SDGE,
-    .name = "SoundBrige",
-    .desc = "Sound Execution Bridge",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxSoundBridge)),
-    .ctor = (void*)_SalSdgeCtor,
-    .dtor = (void*)_SalSdgeDtor
-};

@@ -36,7 +36,7 @@ _SGL afxError _SglDinRelinkCb(afxDrawDevice ddev, afxDrawContext dctx, afxNat cn
     return err;
 }
 
-_SGL afxError _SglDdevInitDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawInputConfig const* cfg, afxUri const* endpoint)
+_SGL afxError _SglDdevOpenDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawInputConfig const* cfg, afxUri const* endpoint)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
@@ -44,9 +44,9 @@ _SGL afxError _SglDdevInitDinCb(afxDrawDevice ddev, afxDrawInput din, afxDrawInp
 
     for (afxNat i = 0; i < din->poolCnt; i++)
     {
-        AfxAbolishManager(&din->pools[i].streams);
+        AfxDeregisterClass(&din->pools[i].streams);
         afxClassConfig tmpClsCfg = _SglCmdbMgrCfg;
-        AfxEstablishManager(&din->pools[i].streams, NIL, &din->classes, &tmpClsCfg);
+        AfxRegisterClass(&din->pools[i].streams, NIL, &din->classes, &tmpClsCfg);
     }
 
     return err;

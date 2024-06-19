@@ -25,32 +25,33 @@
 #ifndef AVX_DRAW_INPUT_H
 #define AVX_DRAW_INPUT_H
 
-#include "qwadro/core/afxManager.h"
+#include "qwadro/base/afxClass.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/draw/afxDrawBridge.h"
 #include "qwadro/draw/io/afxVertexStream.h"
+#include "qwadro/draw/math/avxMatrix.h"
 
-typedef enum afxDrawEventId
+typedef enum avxEventId
 {
-    afxDrawEventId_FENCE,
-    afxDrawEventId_EXECUTE,
-    afxDrawEventId_PRESENT,
-    afxDrawEventId_UPLOAD,
-    afxDrawEventId_DOWNLOAD,
-    afxDrawEventId_PREFETCH,
-    afxDrawEventId_REFRESH,
-    afxDrawEventId_RECONNECT,
-    afxDrawEventId_EXTENT,    
-} afxDrawEventId;
+    avxEventId_FENCE,
+    avxEventId_EXECUTE,
+    avxEventId_PRESENT,
+    avxEventId_UPLOAD,
+    avxEventId_DOWNLOAD,
+    avxEventId_PREFETCH,
+    avxEventId_REFRESH,
+    avxEventId_RECONNECT,
+    avxEventId_EXTENT,    
+} avxEventId;
 
-AFX_DEFINE_STRUCT(afxDrawEvent)
+AFX_DEFINE_STRUCT(avxEvent)
 {
-    afxDrawEventId  id;
+    avxEventId  id;
     afxBool         posted, accepted;
-    void*           udd[0];
+    void*           udd[1];
 };
 
-typedef afxBool(*afxDrawInputProc)(afxDrawInput din, afxDrawEvent const* ev);
+typedef afxBool(*afxDrawInputProc)(afxDrawInput din, avxEvent const* ev);
 
 AFX_DEFINE_STRUCT(afxDrawInputConfig)
 {
@@ -67,57 +68,13 @@ AFX_DEFINE_STRUCT(afxDrawInputConfig)
     void*               udd;
 };
 
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_DRAW_INPUT_C
-AFX_OBJECT(afxDrawInput)
-{
-    afxLinkage          ddev;
-    afxLinkage          dctx; // bound context
-    
-    afxChain            classes;
-    afxManager          ibuffers;
-    afxManager          vbuffers;
-
-    struct
-    {
-        afxDrawBridgeFlags queFlags;
-        afxNat          portIdx;
-        // one command pool per queue to avoid thread interation.
-        afxManager      streams;
-        // one stream manager per queue to avoid thread interaction
-
-        afxQueue        recycQue;
-        afxSlock        reqLock;
-        afxBool         lockedForReq;
-    }*                  pools;
-    afxNat              poolCnt;
-
-    afxClipSpace        cachedClipCfg;
-
-    afxUri128           txdUris[8];
-    afxFile             txdHandles[8];
-
-    afxNat              minVtxBufSiz;
-    afxNat              maxVtxBufSiz;
-    afxNat              minIdxBufSiz;
-    afxNat              maxIdxBufSiz; // 13500000
-
-    afxDrawInputProc    procCb;
-
-    afxBool             reconnecting;
-
-    struct _afxDinIdd*  idd;
-    void*               udd; // user-defined data
-};
-#endif//_AVX_DRAW_INPUT_C
-#endif//_AVX_DRAW_C
-
 AVX afxDrawDevice   AfxGetDrawInputDevice(afxDrawInput din);
 
 AVX void*           AfxGetDrawInputUdd(afxDrawInput din);
 
-AVX afxManager*     AfxGetVertexBufferClass(afxDrawInput din);
-AVX afxManager*     AfxGetIndexBufferClass(afxDrawInput din);
+AVX afxClass const* AfxGetCameraClass(afxDrawInput din);
+AVX afxClass*       AfxGetVertexBufferClass(afxDrawInput din);
+AVX afxClass*       AfxGetIndexBufferClass(afxDrawInput din);
 
 // Connection
 
@@ -127,7 +84,7 @@ AVX afxBool         AfxGetDrawInputContext(afxDrawInput din, afxDrawContext* con
 
 // Matrices
 
-AVX void            AfxDescribeClipSpace(afxDrawInput din, afxClipSpace* clip);
+AVX void            AfxDescribeClipSpace(afxDrawInput din, avxClipSpace* clip);
 
 AVX void            AfxComputeLookToMatrices(afxDrawInput din, afxV3d const eye, afxV3d const dir, afxM4d v, afxM4d iv);
 AVX void            AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye, afxV3d const target, afxM4d v, afxM4d iv);
@@ -135,7 +92,7 @@ AVX void            AfxComputeLookAtMatrices(afxDrawInput din, afxV3d const eye,
 AVX void            AfxComputeBasicOrthographicMatrices(afxDrawInput din, afxReal aspectRatio, afxReal scale, afxReal range, afxM4d p, afxM4d ip);
 AVX void            AfxComputeOrthographicMatrices(afxDrawInput din, afxV2d const extent, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 AVX void            AfxComputeOffcenterOrthographicMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
-AVX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxAabb const aabb, afxM4d p, afxM4d ip);
+AVX void            AfxComputeBoundingOrthographicMatrices(afxDrawInput din, afxBox const aabb, afxM4d p, afxM4d ip);
 
 AVX void            AfxComputeFovMatrices(afxDrawInput din, afxReal fovY, afxReal aspectRatio, afxReal near, afxReal far, afxM4d p, afxM4d ip);
 AVX void            AfxComputeFrustrumMatrices(afxDrawInput din, afxReal left, afxReal right, afxReal bottom, afxReal top, afxReal near, afxReal far, afxM4d p, afxM4d ip);
@@ -151,6 +108,11 @@ AVX afxError        AfxReloadTarga(afxRaster ras, afxUri const* uri);
 
 
 AVX afxNat          AfxExecuteCmdBuffers(afxDrawInput din, afxNat cnt, afxExecutionRequest const req[], afxFence fenc);
+
+AVX afxNat          AfxEnumerateCameras(afxDrawInput din, afxNat first, afxNat cnt, avxCamera cameras[]);
+AVX afxNat          AfxEvokeCameras(afxDrawInput din, afxBool(*flt)(avxCamera, void*), void* fdd, afxNat first, afxNat cnt, avxCamera cameras[]);
+AVX afxNat          AfxInvokeCameras(afxDrawInput din, afxNat first, afxNat cnt, afxBool(*f)(avxCamera, void*), void* udd);
+AVX afxNat          AfxInvokeCameras(afxDrawInput din, afxNat first, afxNat cnt, afxBool(*f)(avxCamera, void*), void *udd);
 
 ////////////////////////////////////////////////////////////////////////////////
 

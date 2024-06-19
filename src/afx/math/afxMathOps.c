@@ -153,7 +153,7 @@ _AFXINL afxReal64 AfxRad(afxReal64 degrees)
 
 _AFXINL afxReal AfxRadf(afxReal degrees)
 {
-    return degrees * (AFX_PI / 180.0);
+    return degrees * (AFX_PI / 180.f);
 }
 
 // Converts radians to degrees.
@@ -166,7 +166,7 @@ _AFXINL afxReal64 AfxDeg(afxReal64 radians)
 
 _AFXINL afxReal AfxDegf(afxReal radians)
 {
-    return radians * (180.0 / AFX_PI);
+    return radians * (180.f / AFX_PI);
 }
 
 // The standard trigonometric sine function.
@@ -482,7 +482,7 @@ _AFXINL afxReal AfxRsqrtf(afxReal s)
     s = *(afxReal *)&i;
     return s * (1.5f - v_half * s * s);
 #   else
-    return 1.0 / AfxSqrtf(s);
+    return 1.f / AfxSqrtf(s);
 #   endif
 #endif
 }
@@ -606,22 +606,6 @@ _AFXINL afxReal AfxSnorm16ToReal32(afxInt16 v)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-_AFXINL void AfxRectZero(afxRect *rect)
-{
-    rect->x = 0;
-    rect->y = 0;
-    rect->w = 1;
-    rect->h = 1;
-}
-
-_AFXINL void AfxRectCopy(afxRect *rect, afxRect const *src)
-{
-    rect->x = src->x;
-    rect->y = src->y;
-    rect->w = src->w;
-    rect->h = src->h;
-}
 
 _AFXINL void AfxNdcV2d(afxV2d v, afxV2d const from, afxV2d const total)
 {

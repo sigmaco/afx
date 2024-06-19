@@ -16,9 +16,6 @@
 
 #include "salSdev.h"
 
-extern afxClassConfig const _SalSctxMgrCfg;
-extern afxClassConfig const _SalSdgeMgrCfg;
-
 static char const *alVmtNames[] =
 {
     // v1
@@ -328,55 +325,18 @@ _A4D afxError _SalDestroySpu(afxSoundDevice sdev, afxNat unitIdx)
     return err;
 }
 
-_A4D afxBool _SalProcessSctxCb(afxSoundContext sctx, void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-    afxThread thr = (afxThread)udd;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    for (afxNat i = 0; i < sctx->base.ownedBridgeCnt; i++)
-    {
-        afxSoundBridge sdge = sctx->base.ownedBridges[i];
-        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
-        _SdgeProcCb(sdge, thr);
-    }
-
-    return FALSE; // don't interrupt curation;
-}
-
-_A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxThread thr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    //AfxInvokeSoundContexts(sdev, 0, AFX_N32_MAX, _SalProcessSctxCb, (void*)thr);
-
-    afxNat portCnt = sdev->portCnt;
-
-    for (afxNat i = 0; i < portCnt; i++)
-    {
-        afxManager* mgr = &sdev->ports[i].sdgeMgr;
-        AfxAssertClass(mgr, afxFcc_SDGE);
-        AfxInvokeObjects(mgr, 0, AFX_N32_MAX, (void*)_SdgeProcCb, thr);
-    }
-
-    return err;
-}
-
 _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &thr, afxFcc_THR);
     afxSoundDevice sdev = AfxGetThreadUdd(thr)[0];
+    afxNat spuIdx = (afxNat)(AfxGetThreadUdd(thr)[1]);
 
     switch (ev->id)
     {
     case afxThreadEvent_RUN:
     {
-        if (_SalBuildSpu(sdev, 0))
+        if (_SalBuildSpu(sdev, spuIdx))
         {
             AfxThrowError();
             AfxExitThread(err);
@@ -384,12 +344,13 @@ _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
         else
         {
             sdev->dev.serving = TRUE;
+            AfxLogY("The audience is listening");
         }
         break;
     }
     case afxThreadEvent_QUIT:
     {
-        if (_SalDestroySpu(sdev, 0))
+        if (_SalDestroySpu(sdev, spuIdx))
         {
             AfxThrowError();
         }
@@ -401,9 +362,7 @@ _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
     }
     default:
     {
-        if (sdev->dev.serving)
-            _SalSdevProcCb(sdev, thr);
-
+        AfxDoDeviceService(&sdev->dev);
         break;
     }
     }
@@ -411,12 +370,11 @@ _A4D afxResult SoundThreadProc(afxThread thr, afxEvent* ev)
     return 0;
 }
 
-_A4D afxError _SalSdevIddCtorCb(afxSoundDevice sdev)
+_A4D afxError _SalSdevStartCb(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
-
-    sdev->idd = NIL;
-
+    AfxAssert(!sdev->idd);
+    
     if (!(sdev->idd = AfxAllocate(1, sizeof(sdev->idd[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
@@ -438,23 +396,24 @@ _A4D afxError _SalSdevIddCtorCb(afxSoundDevice sdev)
                 {
                     AfxZero2(sdev->idd->spuCnt, sizeof(sdev->idd->spus[0]), sdev->idd->spus);
 
-                    AfxAssert(sdev->dev.procCb);
-
-                    afxThread sthr;
-                    afxThreadConfig stCfg = { 0 };
-                    stCfg.procCb = SoundThreadProc;
-                    stCfg.udd[0] = sdev;
-
-                    if (AfxAcquireThread(AfxHere(), &stCfg, &sthr)) AfxThrowError();
-                    else
+                    for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
                     {
-                        sdev->idd->dedThread = sthr;
-                        sdev->dev.serving = TRUE;
-                        AfxRunThread(sthr);
+                        sdev->idd->spus[i].portIdx = i;
 
-                        AfxLogY("The audience is listening");
+                        afxThreadConfig dtCfg = { 0 };
+                        dtCfg.procCb = SoundThreadProc;
+                        dtCfg.udd[0] = sdev;
+                        dtCfg.udd[1] = (void*)sdev->idd->spus[i].portIdx;
+
+                        if (AfxAcquireThread(AfxHere(), &dtCfg, &sdev->idd->spus[i].dedThread)) AfxThrowError();
+                        else
+                        {
+                            AfxAssert(sdev->dev.procCb);
+                            sdev->dev.serving = TRUE;
+                            AfxRunThread(sdev->idd->spus[i].dedThread);
+                        }
+                        AfxAssert(sdev->dev.procCb);
                     }
-                    AfxAssert(sdev->dev.procCb);
                 }
 
                 if (err)
@@ -467,43 +426,145 @@ _A4D afxError _SalSdevIddCtorCb(afxSoundDevice sdev)
     }
 
     if (err)
-        AfxCleanUpChainedManagers(&sdev->dev.classes);
+        AfxCleanUpChainedClasses(&sdev->dev.classes);
     
     return err;
 }
 
-_A4D afxError _SalSdevIddDtorCb(afxSoundDevice sdev)
+_A4D afxError _SalSdevStopCb(afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
 
-    AfxExhaustChainedManagers(&sdev->dev.classes);
+    AfxExhaustChainedClasses(&sdev->dev.classes);
 
-#if 0
-    for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+    if (sdev->idd->spus)
     {
-        afxResult exitCode;
-        AfxRequestThreadInterruption(sdev->idd->spus[i].dedThread);
-        AfxWaitForThread(sdev->idd->spus[i].dedThread, &exitCode);
-        AfxReleaseObjects(1, &sdev->idd->spus[i].dedThread);
+        for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+        {
+            afxThread dedThread = sdev->idd->spus[i].dedThread;
+
+            if (dedThread)
+            {
+                afxResult exitCode;
+                AfxRequestThreadInterruption(dedThread);
+                AfxWaitForThread(dedThread, &exitCode);
+                AfxReleaseObjects(1, &dedThread);
+}
+        }
+        AfxDeallocate(sdev->idd->spus);
+        sdev->idd->spus = NIL;
     }
-#else
-    afxResult exitCode;
-    AfxRequestThreadInterruption(sdev->idd->dedThread);
-    AfxWaitForThread(sdev->idd->dedThread, &exitCode);
-    AfxReleaseObjects(1, &sdev->idd->dedThread);
-#endif
 
-    AfxDeallocate(sdev->idd->spus);
-    sdev->idd->spus = NIL;
-
-    //AfxCleanUpMutex(&sdev->idd->ioConMtx);
-
-    AfxReleaseObjects(1, &sdev->idd->openal32);
+    if (sdev->idd->openal32)
+        AfxReleaseObjects(1, &sdev->idd->openal32);
 
     AfxDeallocate(sdev->idd);
     sdev->idd = NIL;
 
+    return err;
+}
+
+_A4D afxBool _SalSinProcCb(afxSoundInput sin, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sin, afxFcc_SIN);
+
+    asxEvent* ev = udd;
+
+    //if (din->procCb && (ev->accepted |= !!din->procCb(din, ev)))
+      //  AfxThrowError();
+
+    return TRUE; // don't interrupt curation;
+}
+
+_A4D afxBool _SalSoutProcCb(afxSoundOutput sout, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sout, afxFcc_SOUT);
+    afxThread thr = (afxThread)udd;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    return TRUE; // don't interrupt curation;
+}
+
+_A4D afxBool _SalSctxProcCb(afxSoundContext sctx, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    afxThread thr = (afxThread)udd;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    afxSoundDevice sdev = AfxGetObjectProvider(sctx);
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+
+    AfxInvokeConnectedSoundInputs(sctx, 0, AFX_N32_MAX, _SalSinProcCb, thr);
+
+    for (afxNat i = 0; i < sctx->m.ownedBridgeCnt; i++)
+    {
+        if (sdev->idd->spus[i].dedThread == thr)
+        {
+            afxSoundBridge sdge = sctx->m.ownedBridges[i];
+            AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+            _SdgeProcCb(sdge, thr);
+        }
+    }
+
+    //_SalSdevProcessResDel(sdev, 0); // delete after is safer?
+
+    AfxInvokeConnectedSoundOutputs(sctx, 0, AFX_N32_MAX, _SalSoutProcCb, thr);
+
+    return TRUE; // don't interrupt curation;
+}
+
+_A4D afxError _SalSdevExecSpuCb(afxSoundDevice sdev, afxNat dpuIdx, afxThread thr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    AfxAssertRange(sdev->idd->spuCnt, dpuIdx, 1);
+    salSpu* spu = &sdev->idd->spus[dpuIdx];
+
+    if (spu->dedThread == thr)
+    {
+        AfxInvokeSoundContexts(sdev, 0, AFX_N32_MAX, _SalSctxProcCb, (void*)thr);
+
+        afxClass* cls = &sdev->sdgeCls;
+        AfxAssertClass(cls, afxFcc_SDGE);
+        AfxInvokeClassInstances(cls, 0, AFX_N32_MAX, (void*)_SdgeProcCb, thr);
+    }
+    return err;
+}
+
+_A4D afxError _SalSdevProcCb(afxSoundDevice sdev, afxThread thr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    if (sdev->sdgeCls.instCnt && !AfxSoundDeviceIsRunning(sdev))
+    {
+        if (_SalSdevStartCb(sdev)) // start or resume
+            AfxThrowError();
+    }
+
+    if (!err)
+    {
+        AfxAssert(AfxSoundDeviceIsRunning(sdev));
+
+        for (afxNat i = 0; i < sdev->idd->spuCnt; i++)
+        {
+            if (_SalSdevExecSpuCb(sdev, i, thr))
+                AfxThrowError();
+        }
+    }
+
+    if (sdev->sdgeCls.instCnt == 0 && AfxSoundDeviceIsRunning(sdev))
+    {
+        if (_SalSdevStopCb(sdev)) // suspend or stop
+            AfxThrowError();
+
+        AfxAssert(!AfxSoundDeviceIsRunning(sdev));
+    }
     return err;
 }
 
@@ -517,7 +578,6 @@ _A4D afxResult AfxDeviceIoctl(afxSoundDevice sdev, afxNat reqCode, va_list va)
     {
     case afxFcc_SSYS:
     {
-#if 0
         static afxSoundPortCaps const portCaps[] =
         {
             {
@@ -529,20 +589,26 @@ _A4D afxResult AfxDeviceIoctl(afxSoundDevice sdev, afxNat reqCode, va_list va)
                 .queCnt = 2
             },
         };
-#endif
 
-        afxSoundDeviceInfo* info2 = va_arg(va, afxSoundDeviceInfo*);
-        AfxAssert(info2);
-        info2->procCb = _SalSdevProcCb;
-        info2->iddCtorCb = _SalSdevIddCtorCb;
-        info2->iddDtorCb = _SalSdevIddDtorCb;
-        //info2->soutIddDtorCb = _SalSdevDeinitDoutCb;
-        //info2->soutIddCtorCb = _SalSdevInitDoutCb;
-        info2->portCnt = 1;
-        //info2->portCaps = portCaps;
+        sdev->dev.procCb = (void*)_SalSdevProcCb;        
+        sdev->stopCb = _SalSdevStopCb;
+        sdev->startCb = _SalSdevStartCb;
+        sdev->openCb = _SalSdevOpenCb;
+        sdev->closeCb = _SalSdevCloseCb;
 
-        info2->sctxClsCfg = &_SalSctxMgrCfg;
-        info2->sdgeClsCfg = &_SalSdgeMgrCfg;
+        sdev->portCnt = 1;
+        sdev->portCaps = portCaps;
+
+        afxClassConfig clsCfg = _AsxSdgeStdImplementation;
+        //clsCfg.fixedSiz = sizeof(AFX_OBJECT(asxSoundBridge));
+        //clsCfg.maxCnt = sdev->portCnt;
+        //clsCfg.unitsPerPage = sdev->portCnt;
+        clsCfg.ctor = (void*)_SalSdgeCtorCb;
+        AfxRegisterClass(&sdev->sdgeCls, NIL, &sdev->dev.classes, &clsCfg);
+
+        clsCfg = _AsxSctxStdImplementation;
+        AfxRegisterClass(&sdev->sctxCls, NIL, &sdev->dev.classes, &clsCfg); // require sdge
+
         break;
     }
     default: break;

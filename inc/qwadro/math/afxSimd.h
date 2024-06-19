@@ -19,7 +19,7 @@
 #ifndef AFX_SIMD_H
 #define AFX_SIMD_H
 
-#include "qwadro/core/afxCoreDefs.h"
+#include "qwadro/base/afxCoreDefs.h"
 
 
 #endif//AFX_SIMD_H

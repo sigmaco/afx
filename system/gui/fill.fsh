@@ -1,4 +1,4 @@
-#include <data/pipeline/stdEnv.inc>
+#include <../data/pipeline/stdEnv.inc>
 
 UNIFORM_UNIT(0, 1, frag)
 {

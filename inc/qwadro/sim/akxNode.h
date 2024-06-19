@@ -17,10 +17,10 @@
 #ifndef AFX_NODE_H
 #define AFX_NODE_H
 
-#include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxString.h"
+#include "qwadro/base/afxObject.h"
+#include "qwadro/base/afxString.h"
 #include "qwadro/math/afxMathDefs.h"
-#include "qwadro/math/afxAabb.h"
+#include "qwadro/math/afxBox.h"
 #include "qwadro/math/afxSphere.h"
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/space/akxPose.h"

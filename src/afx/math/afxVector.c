@@ -755,8 +755,8 @@ _AFXINL void AfxCeilV2d(afxV2d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxCeil(in[0]);
-    v[1] = AfxCeil(in[1]);
+    v[0] = AfxCeilf(in[0]);
+    v[1] = AfxCeilf(in[1]);
 }
 
 _AFXINL void AfxCeilV3d(afxV3d v, afxV3d const in)
@@ -764,9 +764,9 @@ _AFXINL void AfxCeilV3d(afxV3d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxCeil(in[0]);
-    v[1] = AfxCeil(in[1]);
-    v[2] = AfxCeil(in[2]);
+    v[0] = AfxCeilf(in[0]);
+    v[1] = AfxCeilf(in[1]);
+    v[2] = AfxCeilf(in[2]);
 }
 
 _AFXINL void AfxCeilV4d(afxV4d v, afxV4d const in)
@@ -774,10 +774,10 @@ _AFXINL void AfxCeilV4d(afxV4d v, afxV4d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxCeil(in[0]);
-    v[1] = AfxCeil(in[1]);
-    v[2] = AfxCeil(in[2]);
-    v[3] = AfxCeil(in[3]);
+    v[0] = AfxCeilf(in[0]);
+    v[1] = AfxCeilf(in[1]);
+    v[2] = AfxCeilf(in[2]);
+    v[3] = AfxCeilf(in[3]);
 }
 
 // Floor
@@ -787,8 +787,8 @@ _AFXINL void AfxFloorV2d(afxV2d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxFloor(in[0]);
-    v[1] = AfxFloor(in[1]);
+    v[0] = AfxFloorf(in[0]);
+    v[1] = AfxFloorf(in[1]);
 }
 
 _AFXINL void AfxFloorV3d(afxV3d v, afxV3d const in)
@@ -796,9 +796,9 @@ _AFXINL void AfxFloorV3d(afxV3d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxFloor(in[0]);
-    v[1] = AfxFloor(in[1]);
-    v[2] = AfxFloor(in[2]);
+    v[0] = AfxFloorf(in[0]);
+    v[1] = AfxFloorf(in[1]);
+    v[2] = AfxFloorf(in[2]);
 }
 
 _AFXINL void AfxFloorV4d(afxV4d v, afxV4d const in)
@@ -806,10 +806,10 @@ _AFXINL void AfxFloorV4d(afxV4d v, afxV4d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxFloor(in[0]);
-    v[1] = AfxFloor(in[1]);
-    v[2] = AfxFloor(in[2]);
-    v[3] = AfxFloor(in[3]);
+    v[0] = AfxFloorf(in[0]);
+    v[1] = AfxFloorf(in[1]);
+    v[2] = AfxFloorf(in[2]);
+    v[3] = AfxFloorf(in[3]);
 }
 
 // Recip
@@ -1947,8 +1947,8 @@ _AFXINL void AfxExp10V2d(afxV2d v, afxV2d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxExp10(in[0]);
-    v[1] = AfxExp10(in[1]);
+    v[0] = AfxExp10f(in[0]);
+    v[1] = AfxExp10f(in[1]);
 }
 
 _AFXINL void AfxExp10V3d(afxV3d v, afxV3d const in)
@@ -1956,9 +1956,9 @@ _AFXINL void AfxExp10V3d(afxV3d v, afxV3d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxExp10(in[0]);
-    v[1] = AfxExp10(in[1]);
-    v[2] = AfxExp10(in[2]);
+    v[0] = AfxExp10f(in[0]);
+    v[1] = AfxExp10f(in[1]);
+    v[2] = AfxExp10f(in[2]);
 }
 
 _AFXINL void AfxExp10V4d(afxV4d v, afxV4d const in)
@@ -1966,10 +1966,10 @@ _AFXINL void AfxExp10V4d(afxV4d v, afxV4d const in)
     afxError err = AFX_ERR_NONE;
     AfxAssert(v);
     AfxAssert(in);
-    v[0] = AfxExp10(in[0]);
-    v[1] = AfxExp10(in[1]);
-    v[2] = AfxExp10( in[2]);
-    v[3] = AfxExp10(in[3]);
+    v[0] = AfxExp10f(in[0]);
+    v[1] = AfxExp10f(in[1]);
+    v[2] = AfxExp10f( in[2]);
+    v[3] = AfxExp10f(in[3]);
 }
 
 // Negate

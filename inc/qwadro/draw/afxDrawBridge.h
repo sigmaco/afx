@@ -21,12 +21,13 @@
 /// Isto porque, no QWADRO, você não executa as operações de desenho. Ao invés, você submete elas a serem processadas através de um afxDrawInput.
 /// Uma afxDrawBridge livre, por sua vez, e que pode realizar determinada operação submetida, então puxará a submissão.
 
-/// A afxDrawBridge é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
+/// Uma afxDrawBridge é um objeto que mapeia afxDrawQueue para uma porta de execução de cargas de trabalho.
+/// A afxDrawQueue é uma unidade de gestão de transporte, onde se armazena a carga de trabalho até sua consumação.
 
 #ifndef AVX_DRAW_BRIDGE_H
 #define AVX_DRAW_BRIDGE_H
 
-#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/pipe/avxPipeline.h"
 #include "qwadro/draw/io/afxRaster.h"
 
 typedef enum afxDrawBridgeFlag
@@ -113,65 +114,10 @@ AFX_DEFINE_STRUCT(afxDrawBridgeConfig)
     afxReal const*      queuePriority;
 };
 
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_DRAW_QUEUE_C
-#ifdef _AVX_DRAW_QUEUE_IMPL
-struct _afxBaseDrawQueue
-#else
-AFX_OBJECT(afxDrawQueue)
-#endif
-{
-    afxDrawBridge       ddge; // owner bridge
-    afxDrawContext      dctx; // owner context
-    afxBool             immediate; // 0 = deferred, 1 = immediate
-    afxBool             closed; // can't enqueue
-
-    afxSlock            workArenaSlock;
-    afxArena            workArena; // used by submission of queue operations, not stream commands.        
-    afxChain            workChn;
-    afxMutex            workChnMtx;
-    
-    afxCondition        idleCnd;
-    afxMutex            idleCndMtx;
-};
-#endif//_AVX_DRAW_QUEUE_C
-#ifdef _AVX_DRAW_BRIDGE_C
-#ifdef _AVX_DRAW_BRIDGE_IMPL
-struct _afxBaseDrawBridge
-#else
-AFX_OBJECT(afxDrawBridge)
-#endif
-{
-    afxDrawContext      dctx; // owner
-    afxNat              portIdx;
-    afxNat              queCnt;
-    afxDrawQueue*       queues;
-    afxChain            managers;
-    
-    afxError            (*waitCb)(afxDrawBridge,afxNat);
-    afxNat              (*executeCb)(afxDrawBridge,afxFence,afxNat,afxExecutionRequest const[]);
-    afxNat              (*transferCb)(afxDrawBridge, afxFence, afxNat, afxTransferRequest const[]);
-    afxNat              (*presentCb)(afxDrawBridge,afxNat,afxPresentationRequest const[]);
-    afxNat              (*stampCb)(afxDrawBridge,afxNat,afxPresentationRequest const[],afxV2d const,afxString const*);
-};
-#endif//_AVX_DRAW_BRIDGE_C
-#endif//_AVX_DRAW_C
-
 AVX afxDrawDevice       AfxGetDrawBridgeDevice(afxDrawBridge ddge);
 AVX afxDrawContext      AfxGetDrawBridgeContext(afxDrawBridge ddge);
 
 AVX afxNat              AfxGetDrawBridgePort(afxDrawBridge ddge);
-
-#if 0
-AVX afxNat              AfxCountDrawQueues(afxDrawBridge ddge);
-
-AVX afxError            AfxWaitForIdleDrawQueue
-/// Wait for a queue to become idle. To wait on the host for the completion of outstanding queue operations for a given queue.
-(
-    afxDrawBridge       ddge, /// the bridge on which to wait.
-    afxNat              queIdx /// the queue on which to wait.
-);
-#endif
 
 AVX afxNat              AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[]);
 AVX afxNat              AfxEnqueueTransferRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxTransferRequest const req[]);

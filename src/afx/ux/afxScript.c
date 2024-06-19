@@ -14,16 +14,16 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <Windows.h>
-
 #define _AUX_UX_C
-#define _AUX_SHELL_C
 #define _AUX_SCRIPT_C
+#define _AUX_SHELL_C
+//#define _AUX_SHELL_IMPL
 #include "qwadro/../_luna/luna_vm.h"
 #include "qwadro/../_luna/luna.h"
-#include "qwadro/ux/afxShell.h"
+#include "dev/AuxDevKit.h"
+#include "dev/qowDefs.h"
+
+extern AFX_OBJECT(afxShell) TheShell;
 
 _AUX void GenAcqObj(xssVm vm)
 {
@@ -236,14 +236,14 @@ _AUX void AfxGetScriptTime(afxScript xss, afxReal64* ct, afxReal64* dt)
     xss->lastClock = currClock;
 }
 
-_AUX afxBool _AuxXssEvent(afxScript xss, afxUxEvent *ev)
+_AUX afxBool _AuxXssEvent(afxScript xss, auxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &xss, afxFcc_XSS);
 
     switch (ev->id)
     {
-    case afxUxEventId_RUN:
+    case auxEventId_RUN:
     {
         if (xss->xssInitFn)
         {
@@ -252,7 +252,7 @@ _AUX afxBool _AuxXssEvent(afxScript xss, afxUxEvent *ev)
         }
         break;
     }
-    case afxUxEventId_QUIT:
+    case auxEventId_QUIT:
     {
         if (xss->xssQuitFn)
         {
@@ -315,9 +315,7 @@ _AUX afxClassConfig const _AuxXssMgrCfg =
     .fcc = afxFcc_XSS,
     .name = "Script",
     .desc = "Cross-System Scripting",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxScript)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxScript)),
     .ctor = (void*)_AuxXssCtor,
     .dtor = (void*)_AuxXssDtor,
     .event = (void*)_AuxXssEvent
@@ -333,7 +331,7 @@ _AUX afxError AfxAcquireScript(afxString const* domain, afxString const* code, a
     afxShell sh;
     AfxGetShell(&sh);
     AfxAssertObjects(1, sh, afxFcc_USYS);
-    afxManager* cls = AfxGetScriptManager();
+    afxClass* cls = AfxGetScriptClass();
     AfxAssertClass(cls, afxFcc_XSS);
 
     if (AfxAcquireObjects(cls, 1, (void*)script, ((void const*[]) { sh, domain, code })))
@@ -411,9 +409,10 @@ _AUX afxError AfxLoadScript(afxString const* scope, afxUri const* uri)
 
         if (!xRslt)
         {
+#if 0
             afxShell sh;
             AfxGetShell(&sh);
-#if 0
+
             afxHandle fn[4];
             afxString fns[4];
             AfxMakeString(&fns[0], "init()", 0);
@@ -489,46 +488,15 @@ _AUX afxResult AfxRunScript(afxScript xss, afxUri const* uri)
 }
 #endif
 
-_AUX afxNat AfxInvokeScripts(afxNat first, afxNat cnt, afxBool(*f)(afxScript, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetScriptManager();
-    AfxAssertClass(cls, afxFcc_XSS);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
-_AUX afxNat AfxEnumerateScripts(afxNat first, afxNat cnt, afxScript applications[])
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(cnt);
-    AfxAssert(applications);
-    afxManager* cls = AfxGetScriptManager();
-    AfxAssertClass(cls, afxFcc_XSS);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)applications);
-}
-
-_AUX afxNat AfxCountScripts(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetScriptManager();
-    AfxAssertClass(cls, afxFcc_XSS);
-    return AfxCountObjects(cls);
-}
-
 _AUX afxResult AfxInjectScript(afxString const* scope, afxString const* code)
 {
     afxError err = 0;
-
-    afxShell sh;
-    AfxGetShell(&sh);
 
     afxString32 scope2;
     AfxMakeString32(&scope2, scope);
 
     AfxDbgLogf(0, NIL, code->start);
-    afxResult xRslt = lunaInterpret(sh->vm, scope2.buf, code->start);
+    afxResult xRslt = lunaInterpret(TheShell.vm, scope2.buf, code->start);
 
     return xRslt;
 }

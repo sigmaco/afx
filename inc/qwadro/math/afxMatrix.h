@@ -71,7 +71,6 @@
 #include "qwadro/math/afxVector.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxPlane.h"
-#include "qwadro/math/afxViewport.h"
 
 AFX afxM2d const AFX_M2D_ZERO;
 AFX afxM3d const AFX_M3D_ZERO;
@@ -113,18 +112,19 @@ AFXINL void     AfxCopyM4d(afxM4d m, afxM4d const in); // copy every row and col
 AFXINL void     AfxPickM2d(afxM3d const m, afxM2d sub);
 AFXINL void     AfxPickM2d2(afxM4d const m, afxM2d sup, afxM2d inf);
 
-AFXINL void     AfxPickM3d(afxM4d const m, afxM3d sub);
-AFXINL void     AfxPickM3dTransposed(afxM4d const m, afxM3d t);
+AFXINL void     AfxClipM3d(afxM3d ltm, afxM4d const m);
+AFXINL void     AfxClipM3dTransposed(afxM3d lttm, afxM4d const m); // ltm will be transposed
 
-AFXINL void     AfxPickLtm4d(afxM4d const m, afxM4d ltm); // copy only the 3x3
-AFXINL void     AfxPickLtm4dTransposed(afxM4d const m, afxM4d t); // only consider 3x3; ignore W components and the W row.
+AFXINL void     AfxClipLtm4d(afxM4d ltm, afxM4d const m); // copy only the 3x3
+AFXINL void     AfxClipLtm4dTransposed(afxM4d lttm, afxM4d const m); // only consider 3x3; ignore W components and the W row.
 
-AFXINL void     AfxPickAtm4d(afxM4d const m, afxM4d atm); // copy only the 4x3
-AFXINL void     AfxPickAtm4dTransposed(afxM4d const m, afxM4d t); // only consider 4x3; ignore W components.
+AFXINL void     AfxClipAtm4d(afxM4d atm, afxM4d const m); // copy only the 4x3
+AFXINL void     AfxClipAtm4dTransposed(afxM4d attm, afxM4d const m); // only consider 4x3; ignore W components.
 
 AFXINL void     AfxMakeM3dFromM2d(afxM3d m, afxM2d const in);
 AFXINL void     AfxMakeM4dFromM2d(afxM4d m, afxM2d const in);
 AFXINL void     AfxMakeM4dFromM3d(afxM4d m, afxM3d const in, afxV4d const translation);
+AFXINL void     AfxMakeM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation);
 
 AFXINL void     AfxSwapM2d(afxM2d m, afxM2d other);
 AFXINL void     AfxSwapM3d(afxM3d m, afxM3d other);
@@ -133,8 +133,6 @@ AFXINL void     AfxSwapM4d(afxM4d m, afxM4d other);
 AFXINL void     AfxTransposeM2d(afxM2d const m, afxM2d t);
 AFXINL void     AfxTransposeM3d(afxM3d const m, afxM3d t);
 AFXINL void     AfxTransposeM4d(afxM4d const m, afxM4d t);
-
-AFXINL void     AfxMakeM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation);
 
 AFXINL void     AfxAddM2d(afxM2d m, afxM2d const a, afxM2d const b); // m = a + b
 AFXINL void     AfxAddM3d(afxM3d m, afxM3d const a, afxM3d const b); // m = a + b

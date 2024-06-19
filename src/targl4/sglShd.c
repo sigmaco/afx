@@ -16,17 +16,17 @@
 
 #include "sgl.h"
 
-#include "qwadro/draw/io/afxShader.h"
+#include "qwadro/draw/io/avxShader.h"
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/io/afxShaderBlueprint.h"
+#include "qwadro/draw/io/avxShaderBlueprint.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // SHADER                                                                     //
 ////////////////////////////////////////////////////////////////////////////////
 
-_SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVmt const* gl)
+_SGL afxError _DpuSyncShd(sglDpu* dpu, avxShader shd, avxShaderStage stage, glVmt const* gl)
 {
     //AfxEntry("shd=%p", shd);
     afxError err = AFX_ERR_NONE;
@@ -54,8 +54,8 @@ _SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVm
             {
                 AfxAssert(shd);
                 AfxAssert(gl->IsShader(shd->glHandle));
-                const GLint codeLens[] = { shd->base.codeLen };
-                GLchar const* const codes[] = { (GLchar const*)shd->base.code };
+                const GLint codeLens[] = { shd->m.codeLen };
+                GLchar const* const codes[] = { (GLchar const*)shd->m.code };
                 gl->ShaderSource(shd->glHandle, 1, codes, codeLens); _SglThrowErrorOccuried();
                 gl->CompileShader(shd->glHandle); _SglThrowErrorOccuried();
                 GLint status = 0;
@@ -75,7 +75,7 @@ _SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVm
                     shd->glProgHandle = 0;
                     shd->compiled = TRUE;
                     shd->updFlags &= ~(SGL_UPD_FLAG_DEVICE_INST | SGL_UPD_FLAG_DEVICE_FLUSH);
-                    AfxLogEcho("afxShader %p hardware-side data instanced.", shd);
+                    AfxLogEcho("avxShader %p hardware-side data instanced.", shd);
                 }
             }
         }
@@ -89,7 +89,7 @@ _SGL afxError _DpuSyncShd(sglDpu* dpu, afxShader shd, afxShaderStage stage, glVm
     return err;
 }
 
-_SGL afxError _SglShdDtor(afxShader shd)
+_SGL afxError _SglShdDtor(avxShader shd)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -113,7 +113,7 @@ _SGL afxError _SglShdDtor(afxShader shd)
     return err;
 }
 
-_SGL afxError _SglShdCtor(afxShader shd, afxCookie const* cookie)
+_SGL afxError _SglShdCtor(avxShader shd, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &shd, afxFcc_SHD);
@@ -138,8 +138,7 @@ _SGL afxClassConfig const _SglShdMgrCfg =
     .fcc = afxFcc_SHD,
     .name = "Shader",
     .desc = "Programmable Pipeline Module",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxShader)),
+    .fixedSiz = sizeof(AFX_OBJECT(avxShader)),
     .ctor = (void*)_SglShdCtor,
     .dtor = (void*)_SglShdDtor
 };

@@ -17,7 +17,7 @@
 #ifndef ASX_SOUND_DEFS_H
 #define ASX_SOUND_DEFS_H
 
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 #ifndef __e2sound__
 #   ifdef _DEBUG
@@ -47,7 +47,7 @@ AFX_DEFINE_HANDLE(afxSoundContext);
 AFX_DEFINE_HANDLE(afxSoundOutput);
 AFX_DEFINE_HANDLE(afxSoundInput);
 AFX_DEFINE_HANDLE(afxSoundBridge);
-//AFX_DEFINE_HANDLE(afxSoundQueue);
+AFX_DEFINE_HANDLE(afxSoundQueue);
 AFX_DEFINE_HANDLE(asxBank);
 AFX_DEFINE_HANDLE(asxTracker);
 AFX_DEFINE_HANDLE(afxSoundBuffer);

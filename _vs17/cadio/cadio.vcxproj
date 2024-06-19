@@ -110,7 +110,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2cad__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,21 +143,20 @@
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\dep_\glus\glus_complex.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_line.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_math.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_matrix.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_point.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_quaternion.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_shape.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_vector.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_wavefront.c" />
     <ClCompile Include="..\..\src\cadio\afxWavefrontObject.c" />
-    <ClCompile Include="..\..\dep\glus\glus_complex.c" />
-    <ClCompile Include="..\..\dep\glus\glus_line.c" />
-    <ClCompile Include="..\..\dep\glus\glus_math.c" />
-    <ClCompile Include="..\..\dep\glus\glus_matrix.c" />
-    <ClCompile Include="..\..\dep\glus\glus_point.c" />
-    <ClCompile Include="..\..\dep\glus\glus_quaternion.c" />
-    <ClCompile Include="..\..\dep\glus\glus_shape.c" />
-    <ClCompile Include="..\..\dep\glus\glus_vector.c" />
-    <ClCompile Include="..\..\dep\glus\glus_wavefront.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cadio\afxWavefrontObject.h" />

@@ -29,7 +29,7 @@
 
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
 
 
 _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
@@ -61,7 +61,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
     }
 #endif
 
-    afxFillMode fillMode = dpu->nextRasterState.fillMode;
+    avxFillMode fillMode = dpu->nextRasterState.fillMode;
 
     if (dpu->activeRasterState.fillMode != fillMode)
     {
@@ -234,7 +234,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
     if (dpu->activeRasterState.depthTestEnabled)
     {
-        afxCompareOp depthCompareOp = dpu->nextRasterState.depthCompareOp;
+        avxCompareOp depthCompareOp = dpu->nextRasterState.depthCompareOp;
 
         if (dpu->activeRasterState.depthCompareOp != depthCompareOp)
         {
@@ -264,7 +264,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
                 In order to unconditionally write to the depth buffer, the depth test should be enabled and set to GL_ALWAYS.
             */
 
-            AfxAssert(depthCompareOp < afxCompareOp_TOTAL);
+            AfxAssert(depthCompareOp < avxCompareOp_TOTAL);
             gl->DepthFunc(SglToGlCompareOp(depthCompareOp)); _SglThrowErrorOccuried();
             dpu->activeRasterState.depthCompareOp = depthCompareOp;
         }
@@ -408,7 +408,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
         */
 
         afxNat32 compareMask = dpu->nextRasterState.stencilFront.compareMask;
-        afxCompareOp compareOp = dpu->nextRasterState.stencilFront.compareOp;
+        avxCompareOp compareOp = dpu->nextRasterState.stencilFront.compareOp;
         afxNat32 reference = dpu->nextRasterState.stencilFront.reference;
 
         if (
@@ -655,8 +655,8 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 #if FORCE_GL_GENERIC_FUNCS
             for (afxNat i = 0; i < SGL_MAX_VIEWPORTS; i++)
             {
-                v[i][0] = dpu->nextRasterState.scisRects[i].offset[0];
-                v[i][1] = dpu->nextRasterState.scisRects[i].offset[1];
+                v[i][0] = dpu->nextRasterState.scisRects[i].origin[0];
+                v[i][1] = dpu->nextRasterState.scisRects[i].origin[1];
                 v[i][2] = dpu->nextRasterState.scisRects[i].extent[0];
                 v[i][3] = dpu->nextRasterState.scisRects[i].extent[1];
             }
@@ -668,8 +668,8 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
                 if (AfxTestBitEnabled(updMask, i))
                 {
-                    v[i][0] = dpu->nextRasterState.scisRects[i].offset[0],
-                    v[i][1] = dpu->nextRasterState.scisRects[i].offset[1],
+                    v[i][0] = dpu->nextRasterState.scisRects[i].origin[0],
+                    v[i][1] = dpu->nextRasterState.scisRects[i].origin[1],
                     v[i][2] = dpu->nextRasterState.scisRects[i].extent[0],
                     v[i][3] = dpu->nextRasterState.scisRects[i].extent[1];
 
@@ -679,15 +679,15 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
                     }
                     else
                     {
-                        GLint x = (GLint)(dpu->nextRasterState.scisRects[0].offset[0]);
-                        GLint y = (GLint)(dpu->nextRasterState.scisRects[0].offset[1]);
+                        GLint x = (GLint)(dpu->nextRasterState.scisRects[0].origin[0]);
+                        GLint y = (GLint)(dpu->nextRasterState.scisRects[0].origin[1]);
                         GLsizei w = (GLsizei)(dpu->nextRasterState.scisRects[0].extent[0]);
                         GLsizei h = (GLsizei)(dpu->nextRasterState.scisRects[0].extent[1]);
 
                         AfxAssert(i == 0);
                         gl->Scissor(x, y, w, h); _SglThrowErrorOccuried();
                     }
-                    AfxRectCopy(&(dpu->activeRasterState.scisRects[i]), &dpu->nextRasterState.scisRects[i]);
+                    AfxCopyRect(&(dpu->activeRasterState.scisRects[i]), &dpu->nextRasterState.scisRects[i]);
                 }
             }
 #endif
@@ -703,7 +703,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
     for (afxNat i = 0; i < outCnt; i++)
     {
-        afxColorOutputChannel const*ch = &dpu->nextRasterState.outs[i];
+        avxColorOutputChannel const*ch = &dpu->nextRasterState.outs[i];
         //AfxGetColorOutputChannels(ras, 0, outCnt, ch);
 
 #ifndef _SGL_DBG_IGNORE_BLEND
@@ -810,7 +810,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
                 Changes to individual bits of components cannot be controlled. Rather, changes are either enabled or disabled for entire color components.
             */
-            gl->ColorMaski(i, !(ch->discardMask & afxRgbaMask_R), !(ch->discardMask & afxRgbaMask_G), !(ch->discardMask & afxRgbaMask_B), !(ch->discardMask & afxRgbaMask_A)); _SglThrowErrorOccuried();
+            gl->ColorMaski(i, !(ch->discardMask & avxRgbaMask_R), !(ch->discardMask & avxRgbaMask_G), !(ch->discardMask & avxRgbaMask_B), !(ch->discardMask & avxRgbaMask_A)); _SglThrowErrorOccuried();
             dpu->activeRasterState.outs[i].discardMask = ch->discardMask;
         }
 #endif
@@ -829,7 +829,7 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
 
 #ifndef _SGL_DBG_IGNORE_LOGICAL_OP
 
-    afxLogicOp logicOp = dpu->nextRasterState.logicOp;
+    avxLogicOp logicOp = dpu->nextRasterState.logicOp;
     afxBool logicOpEnabled = dpu->nextRasterState.logicOpEnabled;
 
     if (dpu->activeRasterState.logicOpEnabled != logicOpEnabled)
@@ -870,418 +870,3 @@ _SGL void SglFlushRasterizationStateChanges(sglDpu* dpu)
     }
 #endif
 }
-
-
-
-//
-
-_SGL afxCmdId _EncodeCmdBeginSynthesis(avxCmdb cmdb, afxSynthesisConfig const *state)
-{
-    afxError err = AFX_ERR_NONE;
-
-    afxNat rasCnt = state->rasterCnt;
-
-    _sglCmdBeginSynthesis *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (rasCnt * sizeof(cmd->rasters[0])));
-    AfxAssert(cmd);
-
-    AfxRectCopy(&cmd->area, &state->area);
-    cmd->layerCnt = state->layerCnt;
-    cmd->rasterCnt = state->rasterCnt;
-    cmd->canv = state->canv;
-    cmd->defFbo = FALSE;
-
-    for (afxNat i = 0; i < rasCnt; i++)
-        cmd->rasters[i] = state->rasters[i];
-
-    if (state->depth)
-        cmd->depth = *state->depth;
-    else
-        cmd->depth = (afxDrawTarget) { 0 };
-
-    if (state->stencil)
-        cmd->stencil = *state->stencil;
-    else
-        cmd->stencil = (afxDrawTarget) { 0 };
-
-    cmdb->base.inRenderPass = TRUE;
-
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.BeginSynthesis) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdBeginSynthesis(sglDpu* dpu, _sglCmdBeginSynthesis const *cmd)
-{
-    _DpuBeginSynthesis(dpu, cmd->canv, &cmd->area, cmd->layerCnt, cmd->rasterCnt, &cmd->rasters[0], &cmd->depth, &cmd->stencil, cmd->defFbo);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdFinsihSynthesis(avxCmdb cmdb)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmd *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmdb->base.inRenderPass = FALSE;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.FinishSynthesis) / sizeof(void*)), sizeof(cmd), cmd);
-}
-
-_SGL void _DecodeCmdFinishSynthesis(sglDpu* dpu, _sglCmd const *cmd)
-{
-    (void)cmd;
-    _DpuFinishSynthesis(dpu);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdNextPass(avxCmdb cmdb, afxBool useAuxStreams)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdNextPass *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->useAuxScripts = !!useAuxStreams;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.NextPass) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdNextPass(sglDpu* dpu, _sglCmd const *cmd)
-{
-
-}
-
-//
-
-_SGL void _DecodeCmdDisableRasterization(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.rasterizationDisabled = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdDisableRasterization(avxCmdb cmdb, afxBool disable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = disable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.DisableRasterization) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdEnableDepthBias(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthBiasEnabled = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdEnableDepthBias(avxCmdb cmdb, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdSetDepthBias(sglDpu* dpu, _sglCmdReal3 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthBiasConstFactor = cmd->value[0];
-    dpu->nextRasterState.depthBiasClamp = cmd->value[1];
-    dpu->nextRasterState.depthBiasSlopeScale = cmd->value[2];
-}
-
-_SGL afxCmdId _EncodeCmdSetDepthBias(avxCmdb cmdb, afxReal constFactor, afxReal clamp, afxReal slopeFactor)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdReal3 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value[0] = constFactor;
-    cmd->value[1] = clamp;
-    cmd->value[2] = slopeFactor;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthBias) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdSetLineWidth(sglDpu* dpu, _sglCmdReal const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.lineWidth = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSetLineWidth(avxCmdb cmdb, afxReal lineWidth)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdReal *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = lineWidth;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetLineWidth) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdEnableStencilTest(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.stencilTestEnabled = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdEnableStencilTest(avxCmdb cmdb, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableStencilTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdSetStencilCompareMask(avxCmdb cmdb, afxMask faceMask, afxNat32 compareMask)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = compareMask;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilCompareMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSetStencilCompareMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT(0))
-        dpu->nextRasterState.stencilFront.compareMask = cmd->value;
-
-    if (cmd->mask & AFX_BIT(1))
-        dpu->nextRasterState.stencilBack.compareMask = cmd->value;
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdSetStencilWriteMask(avxCmdb cmdb, afxMask faceMask, afxNat32 writeMask)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = writeMask;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilWriteMask) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSetStencilWriteMask(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT(0))
-        dpu->nextRasterState.stencilFront.writeMask = cmd->value;
-
-    if (cmd->mask & AFX_BIT(1))
-        dpu->nextRasterState.stencilBack.writeMask = cmd->value;
-}
-
-//
-
-_SGL void _DecodeCmdSetStencilReference(sglDpu* dpu, _sglCmdBitmaskNat32 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertRange((AFX_BIT(0) | AFX_BIT(1)), AFX_BIT(0), cmd->mask);
-
-    if (cmd->mask & AFX_BIT(0))
-        dpu->nextRasterState.stencilFront.reference = cmd->value;
-
-    if (cmd->mask & AFX_BIT(1))
-        dpu->nextRasterState.stencilBack.reference = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSetStencilReference(avxCmdb cmdb, afxMask faceMask, afxNat32 reference)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBitmaskNat32 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->mask = faceMask;
-    cmd->value = reference;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetStencilReference) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdEnableDepthTest(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthTestEnabled = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdEnableDepthTest(avxCmdb cmdb, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdSetDepthCompareOp(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthCompareOp = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSetDepthCompareOp(avxCmdb cmdb, afxCompareOp op)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = op;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthCompareOp) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdDisableDepthWrite(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextRasterState.depthWriteDisabled = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdDisableDepthWrite(avxCmdb cmdb, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.DisableDepthWrite) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdSetBlendConstants(sglDpu* dpu, _sglCmdReal4 const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxCopyV4d(dpu->nextRasterState.blendConstants, cmd->value);
-    dpu->nextBlendConstUpd = TRUE;
-}
-
-_SGL afxCmdId _EncodeCmdSetBlendConstants(avxCmdb cmdb, afxV4d const blendConstants)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdReal4 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    AfxCopyV4d(cmd->value, blendConstants);
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetBlendConstants) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL void _DecodeCmdSetScissors(sglDpu* dpu, _sglCmdScissor const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        dpu->nextRasterState.scisRects[first + i] = cmd->rect[i], dpu->nextScissorUpdMask |= AFX_BIT(first + i);
-
-    dpu->nextScissorUpdCnt = AfxMax(dpu->nextScissorUpdCnt, cnt);
-}
-
-_SGL afxCmdId _EncodeCmdAdjustScissors(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, afxRect const rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.AdjustScissors) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdAdjustCurtains(avxCmdb cmdb, afxBool exclusive, afxNat32 first, afxNat32 cnt, afxRect const rect[])
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdScissor *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->rect[0])));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->rect[i] = rect[i];
-
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.AdjustCurtains) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSetCurtains(sglDpu* dpu, _sglCmdScissor const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    afxNat first = cmd->first;
-    afxNat cnt = cmd->cnt;
-    AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
-
-    for (afxNat i = 0; i < cnt; i++)
-        dpu->nextRasterState.areaRects[first + i] = cmd->rect[i], dpu->nextAreaUpdMask |= AFX_BIT(first + i);
-
-    dpu->nextAreaUpdCnt = AfxMax(dpu->nextAreaUpdCnt, cnt);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdEnableDepthBoundsTest(avxCmdb cmdb, afxBool enable)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = enable;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.EnableDepthBoundsTest) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL afxCmdId _EncodeCmdSetDepthBounds(avxCmdb cmdb, afxReal const bounds[2])
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdReal2 *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    AfxCopyV2d(cmd->value, bounds);
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Rasterization.SetDepthBounds) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-//
-
-_SGL afxCmdRasterization const _SglEncodeCmdRasterizationVmt =
-{
-    .DisableRasterization = _EncodeCmdDisableRasterization,
-    .EnableDepthBias = _EncodeCmdEnableDepthBias,
-    .SetDepthBias = _EncodeCmdSetDepthBias,
-    .SetLineWidth = _EncodeCmdSetLineWidth,
-
-    .AdjustScissors = _EncodeCmdAdjustScissors,
-
-    .EnableDepthBoundsTest = _EncodeCmdEnableDepthBoundsTest,
-    .SetDepthBounds = _EncodeCmdSetDepthBounds,
-
-    .EnableStencilTest = _EncodeCmdEnableStencilTest,
-    .SetStencilCompareMask = _EncodeCmdSetStencilCompareMask,
-    .SetStencilWriteMask = _EncodeCmdSetStencilWriteMask,
-    .SetStencilReference = _EncodeCmdSetStencilReference,
-
-    .EnableDepthTest = _EncodeCmdEnableDepthTest,
-    .SetDepthCompareOp = _EncodeCmdSetDepthCompareOp,
-    .DisableDepthWrite = _EncodeCmdDisableDepthWrite,
-
-    .SetBlendConstants = _EncodeCmdSetBlendConstants,
-
-    .BeginSynthesis = _EncodeCmdBeginSynthesis,
-    .NextPass = _EncodeCmdNextPass,
-    .FinishSynthesis = _EncodeCmdFinsihSynthesis
-};

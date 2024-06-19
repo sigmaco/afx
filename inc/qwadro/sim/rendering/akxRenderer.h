@@ -74,9 +74,9 @@ AFX_OBJECT(akxRenderer)
     afxDrawContext      cachedDctx;
     afxDrawInput        din;
     
-    afxCamera           activeCam;
+    avxCamera           activeCam;
     afxRect             drawArea;
-    afxCanvas           canv;
+    avxCanvas           canv;
     afxNat              frameCnt;
     afxNat              frameIdx;
     struct
@@ -99,20 +99,20 @@ AFX_OBJECT(akxRenderer)
     akxSky                  sky;
     afxBool                 skyEnabled;
 
-    afxPipeline         wirePip;
+    avxPipeline         wirePip;
     afxBool             drawVolumes;
 
     afxBuffer  testIbo;
     afxBuffer testVbo;
-    afxRasterizer testRazr;
+    avxRasterizer testRazr;
 
-    afxRasterizer    rigidBodyRazr;
-    afxRasterizer    skinnedBodyRazr;
+    avxRasterizer    rigidBodyRazr;
+    avxRasterizer    skinnedBodyRazr;
 
-    afxRasterizer    blinnTestRazr;
-    afxRasterizer    tutCamUtil;
+    avxRasterizer    blinnTestRazr;
+    avxRasterizer    tutCamUtil;
     
-    afxRasterizer lighting;
+    avxRasterizer lighting;
 
     akxPose      lp;
     akxPoseBuffer wp;
@@ -138,7 +138,7 @@ for each view {
 }
 #endif
 
-AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv);
+AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, avxCamera cam, afxRect const* drawArea, avxCanvas canv);
 AKX afxError AkxCmdEndSceneRendering(avxCmdb cmdb, akxRenderer rnd);
 
 AKX afxError AfxRendererSetStar(akxRenderer rnd, afxV4d const pos, afxV3d const dir, afxV4d const Kd);

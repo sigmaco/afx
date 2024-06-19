@@ -15,7 +15,7 @@
  */
 
 #include "sgl.h"
-#include "qwadro/draw/pipe/afxCanvas.h"
+#include "qwadro/draw/pipe/avxCanvas.h"
 #include "qwadro/draw/afxDrawOutput.h"
 #include "qwadro/draw/afxDrawSystem.h"
 
@@ -61,7 +61,7 @@ _SGL void _SglBindFboAttachment(glVmt const* gl, GLenum glTarget, GLenum glAttac
     };
 }
 
-_SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, afxCanvas canv)
+_SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenum glTarget, avxCanvas canv)
 {
     //AfxEntry("canv=%p", canv);
     afxError err = AFX_ERR_NONE;
@@ -155,7 +155,7 @@ _SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenu
             {
             case GL_FRAMEBUFFER_COMPLETE:
                 canv->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
-                AfxLogEcho("afxCanvas %p hardware-side data instanced.", canv);
+                AfxLogEcho("avxCanvas %p hardware-side data instanced.", canv);
                 break;
             case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
                 AfxLogError("Not all framebuffer attachment points are framebuffer attachment complete.");
@@ -214,7 +214,7 @@ _SGL afxError _DpuBindAndSyncCanv(sglDpu* dpu, afxBool bind, afxBool sync, GLenu
     return err;
 }
 
-_SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxWhd const whd)
+_SGL afxError _SglReadjustCanvasCb(avxCanvas canv, afxWhd const whd)
 {
 	afxError err = AFX_ERR_NONE;
 	AfxAssertObjects(1, &canv, afxFcc_CANV);
@@ -223,9 +223,9 @@ _SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxWhd const whd)
 	AfxAssert(whd[1]);
     afxWhd minWhd = { SGL_MAX_CANVAS_WIDTH, SGL_MAX_CANVAS_HEIGHT, SGL_MAX_CANVAS_LAYERS }, surWhd;
     
-    for (afxNat i = 0; i < canv->base.surfaceCnt; i++)
+    for (afxNat i = 0; i < canv->m.surfaceCnt; i++)
     {
-        afxRaster ras = canv->base.surfaces[i].ras;
+        afxRaster ras = canv->m.surfaces[i].ras;
 
         if (ras)
         {
@@ -240,39 +240,39 @@ _SGL afxError _SglReadjustCanvasCb(afxCanvas canv, afxWhd const whd)
 
     if ((whd[0] != minWhd[0]) || (whd[1] != minWhd[1]))
     {
-        canv->base.whd[0] = whd[0] < minWhd[0] ? whd[0] : minWhd[0];
-        canv->base.whd[1] = whd[1] < minWhd[1] ? whd[1] : minWhd[1];
+        canv->m.whd[0] = whd[0] < minWhd[0] ? whd[0] : minWhd[0];
+        canv->m.whd[1] = whd[1] < minWhd[1] ? whd[1] : minWhd[1];
         canv->updFlags |= SGL_UPD_FLAG_DEVICE_INST;
     }
 	return err;
 }
 
-_SGL afxError _AfxCanvDropAllSurfaces(afxCanvas canv)
+_SGL afxError _AfxCanvDropAllSurfaces(avxCanvas canv)
 {
 	afxError err = AFX_ERR_NONE;
 	AfxAssertObjects(1, &canv, afxFcc_CANV);
 
-	//canv->base.colorCnt = 0;
-    //canv->base.surfCnt = 0;
+	//canv->m.colorCnt = 0;
+    //canv->m.surfCnt = 0;
 	return err;
 }
 
-_SGL afxError _SglCanvDtor(afxCanvas canv)
+_SGL afxError _SglCanvDtor(avxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
     afxDrawContext dctx = AfxGetObjectProvider(canv);
 
-    for (afxNat i = 0; i < canv->base.surfaceCnt; i++)
+    for (afxNat i = 0; i < canv->m.surfaceCnt; i++)
     {
-        afxRaster ras = canv->base.surfaces[i].ras;
+        afxRaster ras = canv->m.surfaces[i].ras;
 
         if (ras)
         {
             AfxAssertObjects(1, &ras, afxFcc_RAS);
             AfxReleaseObjects(1, &ras);
-            canv->base.surfaces[i].ras = NIL;
+            canv->m.surfaces[i].ras = NIL;
         }
     }
 
@@ -288,28 +288,17 @@ _SGL afxError _SglCanvDtor(afxCanvas canv)
     return err;
 }
 
-_SGL afxError _SglCanvCtor(afxCanvas canv, afxCookie const* cookie)
+_SGL afxError _SglCanvCtor(avxCanvas canv, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
 
     if (_AvxCanvStdImplementation.ctor(canv, cookie)) AfxThrowError();
     else
     {
-        //canv->base.readjust = _SglReadjustCanvasCb;
+        //canv->m.readjust = _SglReadjustCanvasCb;
         canv->updFlags = SGL_UPD_FLAG_DEVICE_INST;
         canv->glHandle = 0;
         canv->storeBitmask = NIL;
     }
     return err;
 }
-
-_SGL afxClassConfig const _SglCanvMgrCfg =
-{
-    .fcc = afxFcc_CANV,
-    .name = "Canvas",
-    .desc = "Buffered Drawing Canvas",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxCanvas)),
-    .ctor = (void*)_SglCanvCtor,
-    .dtor = (void*)_SglCanvDtor
-};

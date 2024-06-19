@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="_nfo">
-      <UniqueIdentifier>{fe663df2-10e0-4928-bb9a-fa629e25f8fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro">
       <UniqueIdentifier>{4d19cb36-9f4e-4675-8e08-3d860b246f15}</UniqueIdentifier>
     </Filter>
@@ -18,6 +15,9 @@
     </Filter>
     <Filter Include="qwadro\space">
       <UniqueIdentifier>{aa6381f6-f0dc-4537-bb74-d38037fee59c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_dll">
+      <UniqueIdentifier>{fe663df2-10e0-4928-bb9a-fa629e25f8fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -105,7 +105,7 @@
       <Filter>qwadro\sim</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>_nfo</Filter>
+      <Filter>_dll</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\cad\afxMesh.h">
       <Filter>qwadro\cad</Filter>
@@ -173,7 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2sim.rc">
-      <Filter>_nfo</Filter>
+      <Filter>_dll</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

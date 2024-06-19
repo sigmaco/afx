@@ -1,0 +1,279 @@
+Booting up the Qwadro Execution Ecosystem...
+malloc2 4939c0,128    afxManifest.c:222realloc2 0 >>> 493a90,12    afxPool.c:327malloc2 4c2620,184    afxPool.c:350afxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c27e0,128    afxManifest.c:59realloc2 0 >>> 4c2e40,6    afxArray.c:173malloc2 4939c0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c5230,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c2e20 >>> 493b60,27    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 493b40 >>> 4c28b0,45    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c2890 >>> 4939c0,73    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c5300,88    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c52e0 >>> 4939c0,102    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c5300,126    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c52e0 >>> 4c53e0,140    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c53c0 >>> 4c54c0,143    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c54a0 >>> 4c5300,154    afxArray.c:173malloc2 4939c0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c5400,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c52e0 >>> 4c54d0,163    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c54b0 >>> 4c55d0,168    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c55b0 >>> 4c56d0,173    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c56b0 >>> 4c54d0,181    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c54b0 >>> 4c55e0,191    afxArray.c:173malloc2 4939c0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4939a0 >>> 4c5300,128    afxManifest.c:41Acquiring thread...  536 "afxSystem_w32.c:523"realloc2 0 >>> 493b60,12    afxPool.c:327malloc2 4c5700,704    afxPool.c:350malloc2 4c5a10,896    afxQueue.c:26realloc2 0 >>> 4c28b0,12    afxPool.c:327malloc2 4c4200,696    afxPool.c:350Mounting... <.>('E:/qwadro/afx///'),5malloc2 4c2730,44    afxStorage.c:394malloc2 4939c0,16    afxRestring.c:81Mounting... <system>('E:/qwadro/afx//system/'),5malloc2 4c54d0,44    afxStorage.c:394malloc2 493a20,22    afxRestring.c:81Mounting... <system>('E:/qwadro/afx//system32/'),7malloc2 4c5560,44    afxStorage.c:394malloc2 4c5df0,24    afxRestring.c:81Mounting... <system>('E:/qwadro/afx//system32d/'),7malloc2 4c5e60,44    afxStorage.c:394malloc2 4c5ee0,25    afxRestring.c:81Mounting... <//./c/>('C:\'),7malloc2 4c5f50,44    afxStorage.c:394malloc2 4c2e40,3    afxRestring.c:81Mounting... <//./e/>('E:\'),7malloc2 4c4510,44    afxStorage.c:394malloc2 4c2ea0,3    afxRestring.c:81Mounting... <//./f/>('F:\'),7malloc2 4c4590,44    afxStorage.c:394malloc2 4c2f00,3    afxRestring.c:81Mounting... <//./g/>('G:\'),7malloc2 4c4620,44    afxStorage.c:394malloc2 4c2f60,3    afxRestring.c:81realloc2 4c2890 >>> 4c46a0,24    afxPool.c:327malloc2 4c4710,696    afxPool.c:350Mounting... <//./h/>('H:\'),7malloc2 4c28b0,44    afxStorage.c:394malloc2 4c2fc0,3    afxRestring.c:81Mounting... <//./i/>('I:\'),7malloc2 4c4a20,44    afxStorage.c:394malloc2 4c3020,3    afxRestring.c:81Loading module... <e2coree.dll>realloc2 0 >>> 4c4ab0,12    afxPool.c:327malloc2 4c4b10,544    afxPool.c:350Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>malloc2 4c5ff0,128    afxManifest.c:222afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5fd0 >>> 4c60d0,128    afxManifest.c:59realloc2 0 >>> 4c4e40,10    afxArray.c:173malloc2 4c5ff0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5fd0 >>> 4c61a0,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ea0,20    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e80 >>> 4c4f10,30    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4ef0 >>> 4ab5f0,40    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4ab5d0 >>> 4c4e40,57    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ed0,70    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4eb0 >>> 4c4f70,78    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f50 >>> 4c4e40,90    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ef0,112    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4ed0 >>> 4c5ff0,123    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5fd0 >>> 4c4e40,142    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4f20,154    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f00 >>> 4c5020,161    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5000 >>> 4c5110,166    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c50f0 >>> 4c4e40,173    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4f40,182    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6180 >>> 4c5050,256    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f20 >>> 4c9010,189    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,200    afxArray.c:173malloc2 4c61a0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6180 >>> 4c5ff0,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,210    afxArray.c:173malloc2 4c61a0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6180 >>> 4c6280,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,215    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,220    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,231    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,261    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,268    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,273    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,282    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,299    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,309    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9010,319    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c8ff0 >>> 4c4e40,331    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6260 >>> 4c9010,256    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9160,342    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9140 >>> 4c4e40,357    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9160,379    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9140 >>> 4c4e40,401    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9160,412    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9140 >>> 4c4e40,426    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c9160,435    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9140 >>> 4c4e40,447    afxArray.c:173afxMmu.c:184
+afxMmu.c:184
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidfree2 4c5050    afxManifest.c:41afxMmu.c:184
+afxMmu.c:184
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidfree2 4c5ff0    afxManifest.c:41afxMmu.c:184
+afxMmu.c:184
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidfree2 4c9010    afxManifest.c:41afxMmu.c:184
+afxMmu.c:184
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidfree2 4c60d0    afxManifest.c:59afxMmu.c:184
+afxMmu.c:184
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidfree2 4c4e40    afxArray.c:173malloc2 4c60d0,128    afxManifest.c:222afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c60b0 >>> 4c5ff0,128    afxManifest.c:59realloc2 0 >>> 4c4e40,10    afxArray.c:173malloc2 4c60d0,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c60b0 >>> 4c6280,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ea0,20    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e80 >>> 4c4f10,30    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4ef0 >>> 4ab5f0,40    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4ab5d0 >>> 4c4e40,59    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ed0,72    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4eb0 >>> 4c4f70,81    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f50 >>> 4c4e40,93    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4ef0,115    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4ed0 >>> 4c60d0,126    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c60b0 >>> 4c4e40,145    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4f20,157    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f00 >>> 4c5020,164    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5000 >>> 4c5120,169    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c5100 >>> 4c4e40,176    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4c4f40,186    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6260 >>> 4c5060,256    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4f20 >>> 4ca010,193    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9ff0 >>> 4c4e40,204    afxArray.c:173malloc2 4c6280,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6260 >>> 4c60d0,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4ca010,216    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c9ff0 >>> 4c4e40,228    afxArray.c:173malloc2 4c6280,128    afxManifest.c:69afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c6260 >>> 4c61a0,128    afxManifest.c:41afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalidrealloc2 4c4e20 >>> 4ca010,233    afxArray.c:173afxMmu.c:222
+afxMmu.c:222
+(*((afxFcc*)&(((afxByte*)p)[p->siz])) == afxFcc_MEM)
+    Invalid

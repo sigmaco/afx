@@ -17,17 +17,20 @@
 #ifndef AFX_QWADRO_H
 #define AFX_QWADRO_H
 
-// QWADRO: A Modern Library for 4D Data Processing
-
-// QWADRO is an open-source library that supports rapid development of software that deals with 4D data.
+// QWADRO is an open-source coalition of libraries that supports rapid development of software that deals with 4D data.
 // The QWADRO frontend exposes a set of carefully selected data structures and algorithms in C.
 // The backend is highly optimized and is set up for parallelization.
 // We welcome contributions from the open-source community.
 
-#include "qwadro/core/afxSystem.h"
+// AFX
+#include "qwadro/exec/afxSystem.h"
+// AVX
 #include "qwadro/draw/afxDrawSystem.h"
+// ASX
 #include "qwadro/sound/afxSoundSystem.h"
+// AUX
 #include "qwadro/ux/afxShell.h"
+// AKX
 #include "qwadro/sim/afxSimulation.h"
 
 #endif//AFX_QWADRO_H

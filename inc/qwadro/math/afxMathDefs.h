@@ -18,17 +18,18 @@
 
 // IMPORTANT: O módulo de matemática do Qwadro é matemática para programadores, não para matemáticos. 
 // Nossos ângulos e suas contrapartes são representadas em "radians", não em "degrees". Funções para degrees são apenas utilitários de conveniência em conversão.
-// Nossas rotações e orientações são representadas primarialmente por "quaternion". Funções para axial rotation e Euler são apenas utilitários.
+// Nossas rotações e orientações são representadas primariamente por "quaternion". Funções para axial rotation e Euler são apenas utilitários.
 // É totalmente vedado adulterar os princípios gigachads e heterotops do Qwadro com essas tcholices dessas game engines randômicas do mundo por responder a vontade das pessoas de querer serem eternos subcolocados..
 
-// No Qwadro, usamos, como estilo de programação, muitos parênteses irrelevantes. Eles existem para fins didáticos mesmo, facilitando a vida de pessoas que não conhecem o princípio de precedência de PEMDAS.
+// No Qwadro, usamos, como estilo de programação, muitos parênteses irrelevantes. 
+// Eles existem para fins didáticos mesmo, facilitando a vida de pessoas que não conhecem o princípio de precedência de PEMDAS.
 
 #ifndef AFX_MATH_DEFS_H
 #define AFX_MATH_DEFS_H
 
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/math/afxSimd.h"
 #include <math.h>
+#include "qwadro/base/afxDebug.h"
+#include "qwadro/math/afxSimd.h"
 //#include <stdalign.h>
 
 //#define MFX_USE_RWMATH
@@ -50,12 +51,13 @@
 typedef afxReal         afxSimd(afxV2d[2]);
 typedef afxReal         afxSimd(afxV3d[3]);
 typedef afxReal         afxSimd(afxV4d[4]);
-AFX_STATIC_ASSERT(sizeof(__m128) == sizeof(afxV4d), "");
 
 typedef afxV2d          afxSimd(afxM2d[2]);
 typedef afxV3d          afxSimd(afxM3d[3]);
 typedef afxV4d          afxSimd(afxM4d[4]);
 typedef afxV4d          afxSimd(afxM4d3[3]);
+typedef afxV3d          afxSimd(afxM34[4]);
+typedef afxM34          afxSimd(afxCompactMatrix);
 
 typedef afxV4d          afxSimd(afxQuat); // 0,1,2 = imaginary, 3 = real
 typedef afxV4d          afxSimd(afxRotor); // 0,1,2 = imaginary, 3 = real
@@ -63,19 +65,23 @@ typedef afxV4d          afxSimd(afxVector);
 typedef afxV4d          afxSimd(afxPoint);
 typedef afxM4d          afxSimd(afxMatrix);
 
-#if 0
+#if !0
 AFX_STATIC_ASSERT(__alignof(afxV2d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxV3d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxV4d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxQuat) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxM3d) == AFX_SIMD_ALIGN, "");
 AFX_STATIC_ASSERT(__alignof(afxM4d) == AFX_SIMD_ALIGN, "");
+AFX_STATIC_ASSERT(sizeof(__m128) == sizeof(afxV4d), "");
 #endif
 
-AFX_DEFINE_STRUCT(afxRect)
+AFX_DEFINE_STRUCT(afxSpace)
+/// A 3D coordinate system, expressed relative to a canonical coordinate system.
 {
-    union { afxInt offset[2]; struct { afxInt x, y; }; };
-    union { afxNat extent[2]; struct { afxNat w, h; }; };
+    afxV3d  right; /// Unit vector pointing to the right (local +x axis).
+    afxV3d  up; /// Unit vector pointing upwards (local +y axis).
+    afxV3d  ahead; /// Unit vector pointing forwards (local -z axis).
+    afxV3d  origin; /// The origin, relative to the canonical coordinate system.
 };
 
 /// A spherical coordinate system is a coordinate system for three-dimensional space where the position of a point is specified by three numbers: 
@@ -99,18 +105,19 @@ AFX_DEFINE_STRUCT(afxRect)
 /// The distance from the pole is called the radial coordinate, radial distance or simply radius, and the angle is called the angular coordinate, polar angle, or azimuth. 
 /// Angles in polar notation are generally expressed in either degrees or radians (2PI radians being equal to 360 degrees).
 
-AFX_DEFINE_STRUCT(afxPolarCoord) // polar coordinates
+AFX_DEFINE_STRUCT(afxPolarCoord)
+// polar coordinates
 {
     afxReal32       r; // norm/distance
     afxReal32       theta; // azimuth
 };
 
-AFX_DEFINE_STRUCT(afxSphericalCoord) // spherical coordinates
+AFX_DEFINE_STRUCT(afxSphericalCoord)
+// spherical coordinates
 {
     afxPolarCoord   polar;
     afxReal32       phi; // elevation
 };
-
 
 AFXINL afxReal16    AfxPackReal16(afxReal f);
 AFXINL afxReal32    AfxUnpackReal16(afxReal16 hf);
@@ -303,11 +310,6 @@ AFXINL afxReal      AfxSqrtf(afxReal s);
 
 AFXINL afxReal64    AfxRsqrt(afxReal64 s);
 AFXINL afxReal      AfxRsqrtf(afxReal s);
-
-////////////////////////////////////////////////////////////////////////////////
-
-AFXINL void         AfxRectZero(afxRect *rect);
-AFXINL void         AfxRectCopy(afxRect *rect, afxRect const *src);
 
 AFXINL afxReal      AfxNdcf(afxReal x, afxReal total);
 AFXINL afxReal      AfxNdcf(afxReal x, afxReal total);

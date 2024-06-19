@@ -33,7 +33,7 @@ void ClumpRenderBoundingBox(avxCmdb cmdb, afxBox box, afxM4d const m)
     // set no raster
 
     //AvxCmdTransformImmVertices(cmdb, m, 8, vtx);
-    //AvxCmdPushImmIndexedPrimitive(cmdb, afxPrimTopology_LINE_LIST, 24, indices);
+    //AvxCmdPushImmIndexedPrimitive(cmdb, avxTopology_LINE_LIST, 24, indices);
     
     return;
 }

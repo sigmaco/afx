@@ -404,12 +404,10 @@ _AFXINL void AfxCopyM4d(afxM4d m, afxM4d const in)
     m[3][3] = in[3][3];
 }
 
-_AFXINL void AfxPickLtm4d(afxM4d const m, afxM4d ltm)
+_AFXINL void AfxClipLtm4d(afxM4d ltm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(ltm);
-    AfxAssertDiffSoft(ltm, m);
+    AfxAssert3(m, ltm, ltm != m);
 
     ltm[0][0] = m[0][0];
     ltm[0][1] = m[0][1];
@@ -432,12 +430,10 @@ _AFXINL void AfxPickLtm4d(afxM4d const m, afxM4d ltm)
     ltm[3][3] = 1.f;
 }
 
-_AFXINL void AfxPickAtm4d(afxM4d const m, afxM4d atm)
+_AFXINL void AfxClipAtm4d(afxM4d atm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(atm);
-    AfxAssertDiffSoft(atm, m);
+    AfxAssert3(m, atm, atm != m);
 
     atm[0][0] = m[0][0];
     atm[0][1] = m[0][1];
@@ -460,58 +456,56 @@ _AFXINL void AfxPickAtm4d(afxM4d const m, afxM4d atm)
     atm[3][3] = 1.f;
 }
 
-_AFXINL void AfxPickLtm4dTransposed(afxM4d const m, afxM4d t)
+_AFXINL void AfxClipLtm4dTransposed(afxM4d ltm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(t);
+    AfxAssert3(m, ltm, ltm != m);
 
-    t[0][0] = m[0][0];
-    t[0][1] = m[1][0];
-    t[0][2] = m[2][0];
-    t[0][3] = 0.f;
+    ltm[0][0] = m[0][0];
+    ltm[0][1] = m[1][0];
+    ltm[0][2] = m[2][0];
+    ltm[0][3] = 0.f;
 
-    t[1][0] = m[0][1];
-    t[1][1] = m[1][1];
-    t[1][2] = m[2][1];
-    t[1][3] = 0.f;
+    ltm[1][0] = m[0][1];
+    ltm[1][1] = m[1][1];
+    ltm[1][2] = m[2][1];
+    ltm[1][3] = 0.f;
 
-    t[2][0] = m[0][2];
-    t[2][1] = m[1][2];
-    t[2][2] = m[2][2];
-    t[2][3] = 0.f;
+    ltm[2][0] = m[0][2];
+    ltm[2][1] = m[1][2];
+    ltm[2][2] = m[2][2];
+    ltm[2][3] = 0.f;
 
-    t[3][0] = 0.f;
-    t[3][1] = 0.f;
-    t[3][2] = 0.f;
-    t[3][3] = 1.f;
+    ltm[3][0] = 0.f;
+    ltm[3][1] = 0.f;
+    ltm[3][2] = 0.f;
+    ltm[3][3] = 1.f;
 }
 
-_AFXINL void AfxPickAtm4dTransposed(afxM4d const m, afxM4d t)
+_AFXINL void AfxClipAtm4dTransposed(afxM4d ltm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(m);
-    AfxAssert(t);
+    AfxAssert3(m, ltm, ltm != m);
 
-    t[0][0] = m[0][0];
-    t[0][1] = m[1][0];
-    t[0][2] = m[2][0];
-    t[0][3] = 0.f;
+    ltm[0][0] = m[0][0];
+    ltm[0][1] = m[1][0];
+    ltm[0][2] = m[2][0];
+    ltm[0][3] = 0.f;
 
-    t[1][0] = m[0][1];
-    t[1][1] = m[1][1];
-    t[1][2] = m[2][1];
-    t[1][3] = 0.f;
+    ltm[1][0] = m[0][1];
+    ltm[1][1] = m[1][1];
+    ltm[1][2] = m[2][1];
+    ltm[1][3] = 0.f;
 
-    t[2][0] = m[0][2];
-    t[2][1] = m[1][2];
-    t[2][2] = m[2][2];
-    t[2][3] = 0.f;
+    ltm[2][0] = m[0][2];
+    ltm[2][1] = m[1][2];
+    ltm[2][2] = m[2][2];
+    ltm[2][3] = 0.f;
 
-    t[3][0] = m[0][3];
-    t[3][1] = m[1][3];
-    t[3][2] = m[2][3];
-    t[3][3] = 1.f;
+    ltm[3][0] = m[0][3];
+    ltm[3][1] = m[1][3];
+    ltm[3][2] = m[2][3];
+    ltm[3][3] = 1.f;
 }
 
 //
@@ -552,43 +546,40 @@ _AFXINL void AfxPickM2d2(afxM4d const m, afxM2d sup, afxM2d inf)
     inf[3][1] = m[3][1];
 }
 
-_AFXINL void AfxPickM3d(afxM4d const m, afxM3d sub)
+_AFXINL void AfxClipM3d(afxM3d ltm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(sub);
-    AfxAssert(m);
-    AfxAssertDiff(sub, m);
+    AfxAssert3(ltm, m, (void*)ltm != (void*)m);
 
-    sub[0][0] = m[0][0];
-    sub[0][1] = m[0][1];
-    sub[0][2] = m[0][2];
+    ltm[0][0] = m[0][0];
+    ltm[0][1] = m[0][1];
+    ltm[0][2] = m[0][2];
 
-    sub[1][0] = m[1][0];
-    sub[1][1] = m[1][1];
-    sub[1][2] = m[1][2];
+    ltm[1][0] = m[1][0];
+    ltm[1][1] = m[1][1];
+    ltm[1][2] = m[1][2];
 
-    sub[2][0] = m[2][0];
-    sub[2][1] = m[2][1];
-    sub[2][2] = m[2][2];
+    ltm[2][0] = m[2][0];
+    ltm[2][1] = m[2][1];
+    ltm[2][2] = m[2][2];
 }
 
-_AFXINL void AfxPickM3dTransposed(afxM4d const m, afxM3d t)
+_AFXINL void AfxClipM3dTransposed(afxM3d ltm, afxM4d const m)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(t);
-    AfxAssert(m);
+    AfxAssert3(ltm, m, (void*)ltm != (void*)m);
 
-    t[0][0] = m[0][0];
-    t[0][1] = m[1][0];
-    t[0][2] = m[2][0];
+    ltm[0][0] = m[0][0];
+    ltm[0][1] = m[1][0];
+    ltm[0][2] = m[2][0];
 
-    t[1][0] = m[0][1];
-    t[1][1] = m[1][1];
-    t[1][2] = m[2][1];
+    ltm[1][0] = m[0][1];
+    ltm[1][1] = m[1][1];
+    ltm[1][2] = m[2][1];
 
-    t[2][0] = m[0][2];
-    t[2][1] = m[1][2];
-    t[2][2] = m[2][2];
+    ltm[2][0] = m[0][2];
+    ltm[2][1] = m[1][2];
+    ltm[2][2] = m[2][2];
 }
 
 _AFXINL void AfxMakeM3dFromM2d(afxM3d m, afxM2d const in)
@@ -661,6 +652,34 @@ _AFXINL void AfxMakeM4dFromM3d(afxM4d m, afxM3d const in, afxV4d const translati
     m[2][1] = in[2][1];
     m[2][2] = in[2][2];
     m[2][3] = AfxScalar(0);
+
+    m[3][0] = translation[0];
+    m[3][1] = translation[1];
+    m[3][2] = translation[2];
+    m[3][3] = translation[3];
+}
+
+_AFXINL void AfxMakeM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(in);
+    AfxAssert(m);
+    AfxAssert(translation);
+
+    m[0][0] = in[0][0];
+    m[0][1] = in[1][0];
+    m[0][2] = in[2][0];
+    m[0][3] = 0.f;
+
+    m[1][0] = in[0][1];
+    m[1][1] = in[1][1];
+    m[1][2] = in[2][1];
+    m[1][3] = 0.f;
+
+    m[2][0] = in[0][2];
+    m[2][1] = in[1][2];
+    m[2][2] = in[2][2];
+    m[2][3] = 0.f;
 
     m[3][0] = translation[0];
     m[3][1] = translation[1];
@@ -768,34 +787,6 @@ _AFXINL void AfxTransposeM4d(afxM4d const m, afxM4d t)
     t[3][1] = m[1][3];
     t[3][2] = m[2][3];
     t[3][3] = m[3][3];
-}
-
-_AFXINL void AfxMakeM4dFromM3dTransposed(afxM4d m, afxM3d const in, afxV4d const translation)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssert(in);
-    AfxAssert(m);
-    AfxAssert(translation);
-
-    m[0][0] = in[0][0];
-    m[0][1] = in[1][0];
-    m[0][2] = in[2][0];
-    m[0][3] = 0.f;
-
-    m[1][0] = in[0][1];
-    m[1][1] = in[1][1];
-    m[1][2] = in[2][1];
-    m[1][3] = 0.f;
-
-    m[2][0] = in[0][2];
-    m[2][1] = in[1][2];
-    m[2][2] = in[2][2];
-    m[2][3] = 0.f;
-
-    m[3][0] = translation[0];
-    m[3][1] = translation[1];
-    m[3][2] = translation[2];
-    m[3][3] = translation[3];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2232,7 +2223,7 @@ _AFXINL void AfxAssimilateAtm4d(afxM3d const ltm, afxM3d const iltm, afxV4d cons
     for (afxNat i = 0; i < cnt; i++)
     {
         afxM3d ss;
-        AfxPickM3d(in[i], ss);
+        AfxClipM3d(ss, in[i]);
         afxV4d pos;
         AfxAssimilateAtv4d(ltm, atv, 1, &in[i][3], &pos);
         AfxAssimilateLtm3d(ltm, iltm, 1, &ss, &ss);

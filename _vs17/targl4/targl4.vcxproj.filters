@@ -15,7 +15,10 @@
     <ClInclude Include="..\..\src\targl4\sgl.h">
       <Filter>targl4</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\targl4\sglDdrv.h">
+    <ClInclude Include="..\..\src\targl4\WglLoader.h">
+      <Filter>targl4</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\targl4\AvxToGlMapping.h">
       <Filter>targl4</Filter>
     </ClInclude>
   </ItemGroup>
@@ -27,9 +30,6 @@
       <Filter>targl4</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\targl4\sglCanv.c">
-      <Filter>targl4</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\targl4\sglDcmd.c">
       <Filter>targl4</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\targl4\sglDctx.c">
@@ -77,12 +77,6 @@
     <ClCompile Include="..\..\src\targl4\sglDdev_w32.c">
       <Filter>targl4</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\targl4\sglLoader.c">
-      <Filter>targl4</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\targl4\sglQwadroToGpu.c">
-      <Filter>targl4</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\targl4\sglDdge_w32.c">
       <Filter>targl4</Filter>
     </ClCompile>
@@ -90,6 +84,18 @@
       <Filter>targl4</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\targl4\sglLiga.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglCmdDecode.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\sglCmdEncode.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\AvxToGl.c">
+      <Filter>targl4</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\targl4\WglLoader.c">
       <Filter>targl4</Filter>
     </ClCompile>
   </ItemGroup>

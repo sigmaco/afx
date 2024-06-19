@@ -19,7 +19,7 @@
 #ifndef AFX_TRIGONOMETRY_H
 #define AFX_TRIGONOMETRY_H
 
-#include "afxVector.h"
+#include "qwadro/math/afxVector.h"
 
 AFXINL void     AfxComputeTriangleNormal(afxV3d const a, afxV3d const b, afxV3d const c, afxReal n[3]);
 

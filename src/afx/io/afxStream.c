@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_STREAM_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 // AUXILIAR FUNCTIONS /////////////////////////////////////////////////////////
 
@@ -30,7 +30,7 @@ _AFX afxBool _AfxStdStreamEosCb(afxStream iob)
     return b;
 }
 
-_AFX afxError _AfxStdStreamSeekCb(afxStream iob, afxInt offset, afxSeekMode origin)
+_AFX afxError _AfxStdStreamSeekCb(afxStream iob, afxSize offset, afxSeekMode origin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
@@ -76,7 +76,7 @@ _AFX afxNat _AfxStdStreamTellCb(afxStream iob)
     return iob->idd.m.posn;
 }
 
-_AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat siz)
+_AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat32 siz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
@@ -112,7 +112,7 @@ _AFX afxError _AfxStdStreamWriteCb(afxStream iob, void const* const src, afxNat 
     return clampedOffRange;
 }
 
-_AFX afxError _AfxStdStreamReadCb(afxStream iob, void *dst, afxNat siz)
+_AFX afxError _AfxStdStreamReadCb(afxStream iob, void *dst, afxNat32 siz)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
@@ -273,7 +273,7 @@ _AFX afxError AfxAdjustStreamBuffer(afxStream iob, afxNat siz)
     return err;
 }
 
-_AFXINL afxError AfxSeekStream(afxStream iob, afxInt offset, afxSeekMode origin)
+_AFXINL afxError AfxSeekStream(afxStream iob, afxSize offset, afxSeekMode origin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
@@ -299,7 +299,7 @@ _AFXINL afxError AfxRecedeStream(afxStream iob, afxNat range)
     AfxAssertObjects(1, &iob, afxFcc_IOB);
     //AfxAssert(AfxTestFlags(iob->flags, afxIoFlag_X));
     AfxAssert(range);
-    return iob->pimpl->seek(iob, -(range), afxSeekMode_RELATIVE);
+    return iob->pimpl->seek(iob, /*-*/(range), afxSeekMode_RELATIVE);
 }
 
 _AFXINL afxError AfxAdvanceStream(afxStream iob, afxNat range)
@@ -311,15 +311,15 @@ _AFXINL afxError AfxAdvanceStream(afxStream iob, afxNat range)
     return iob->pimpl->seek(iob, range, afxSeekMode_RELATIVE);
 }
 
-_AFXINL afxError AfxSeekStreamFromEnd(afxStream iob, afxNat offset)
+_AFXINL afxError AfxSeekStreamFromEnd(afxStream iob, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
     //AfxAssert(AfxTestFlags(iob->flags, afxIoFlag_X));
-    return iob->pimpl->seek(iob, -(offset), afxSeekMode_INVERSE);
+    return iob->pimpl->seek(iob, /*-*/(offset), afxSeekMode_INVERSE);
 }
 
-_AFXINL afxError AfxSeekStreamFromBegin(afxStream iob, afxNat offset)
+_AFXINL afxError AfxSeekStreamFromBegin(afxStream iob, afxSize offset)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &iob, afxFcc_IOB);
@@ -1202,9 +1202,7 @@ _AFX afxClassConfig const _AfxIosMgrCfg =
     .fcc = afxFcc_IOB,
     .name = "Stream",
     .desc = "I/O Bufferization",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxStream)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxStream)),
     .ctor = (void*)_AfxIosCtor,
     .dtor = (void*)_AfxIosDtor
 };
@@ -1215,7 +1213,7 @@ _AFX afxStream AfxAcquireImplementedStream(afxIoFlags flags, _afxIobImpl const* 
 {
     afxError err = AFX_ERR_NONE;
 
-    afxManager* cls = AfxGetStreamClass();
+    afxClass* cls = AfxGetStreamClass();
     AfxAssertClass(cls, afxFcc_IOB);
     afxStream iob;
 

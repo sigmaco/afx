@@ -18,7 +18,7 @@
 
 
 #include <sys/stat.h>
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 _AFXINL afxError AfxUnloadResource(afxResource res)
 {
@@ -164,9 +164,7 @@ afxClassConfig const _AfxResClassSpec =
 {
     afxFcc_RES,
     NIL,
-    0,
     sizeof(AFX_OBJECT(afxResource)),
-    NIL,
     (void*)_AfxResCtor,
     (void*)_AfxResDtor,
     .event = _AfxResEventHandler,

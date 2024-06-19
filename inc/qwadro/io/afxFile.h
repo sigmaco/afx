@@ -88,26 +88,6 @@ AFX_DEFINE_STRUCT(afxFileMagicValue)
     afxNat              reserved[2];
 };
 
-#if 0
-#ifdef _AFX_FILE_C
-AFX_OBJECT(afxFile)
-{
-    afxStream               ios;
-    void                    *fd;
-    afxUri                  path;
-    afxBool                 shouldBeFlushed;
-    afxFileFlags            flags;
-
-    afxFileHeader*          hdr;
-    afxNat                  openSecCnt;
-    void**                  openSections;
-    afxBool8*               marshalled;
-    afxBool8*               isUserMem;
-    afxBool                 byteReserved;
-};
-#endif//_AFX_FILE_C
-#endif
-
 AFX void*                   AfxGetFileDescriptor(afxStream file);
 
 //AFX afxError                AfxReopenFile(afxFile file, afxRwx const rwx, afxUri const *uri);

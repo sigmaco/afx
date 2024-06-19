@@ -25,7 +25,7 @@
 
 #include "qwadro/draw/afxPixel.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/draw/pipe/afxSampler.h"
+#include "qwadro/draw/pipe/avxSampler.h"
 
 typedef enum afxRasterFlag
 {
@@ -114,37 +114,6 @@ AFX_DEFINE_STRUCT(afxRasterInfo)
 
 // LOD is mip level or sample level, depending on raster
 
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_RASTER_C
-AFX_DEFINE_STRUCT(afxSubraster)
-{
-    afxNat              baseLod;
-    afxNat              lodCnt;
-    afxNat              baseLayer;
-    afxNat              layerCnt;
-    afxPixelFormat      fmt;
-    afxColorSwizzling   swizzling;
-    afxRasterFlags      flags;
-};
-#ifndef _AVX_RASTER_IMPL
-AFX_OBJECT(afxRaster)
-#else
-struct afxBaseRaster
-#endif
-{
-    afxRasterFlags      flags;
-    afxRasterUsage      usage;
-    afxNat              lodCnt; // mip level cnt
-    afxWhd              whd; // extent of image
-    afxPixelFormat      fmt;
-    afxNat              sampleCnt; // 1, 2, 4, 8, 16, 32, or 64.
-    
-    afxNat              subCnt;
-    afxSubraster*       subs;
-};
-#endif
-#endif//_AVX_DRAW_C
-
 AVX afxDrawContext  AfxGetRasterContext(afxRaster ras);
 
 AVX afxNat          AfxGetRasterBpp(afxRaster ras);
@@ -162,7 +131,7 @@ AVX afxRasterFlags  AfxGetRasterFlags(afxRaster ras);
 AVX afxPixelFormat  AfxGetRasterFormat(afxRaster ras);
 AVX void            AfxGetRasterExtent(afxRaster ras, afxNat lodIdx, afxWhd whd);
 
-AVX void            AfxGetRasterSwizzling(afxRaster ras, afxNat subIdx, afxColorSwizzling* csw);
+AVX void            AfxGetRasterSwizzling(afxRaster ras, afxNat subIdx, avxColorSwizzling* csw);
 
 AVX void            AfxDescribeRaster(afxRaster ras, afxRasterInfo* desc);
 

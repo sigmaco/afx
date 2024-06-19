@@ -326,9 +326,7 @@ _AKX afxClassConfig _AkxMtlMgrCfg =
 {
     .fcc = afxFcc_MTL,
     .name = "Material",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxMaterial)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxMaterial)),
     .ctor = (void*)_AkxMtlCtor,
     .dtor = (void*)_AkxMtlDtor
 };

@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_RASTER_C
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
 
  // 1d               =   1 x w11 >> lod
  // 1d array         = img x w11 >> lod
@@ -121,7 +121,7 @@ _AVXINL afxBool AfxRasterIsLayered(afxRaster ras)
     return AfxTestRasterFlags(ras, afxRasterFlag_LAYERED);
 }
 
-_AVXINL void AfxGetRasterSwizzling(afxRaster ras, afxNat subIdx, afxColorSwizzling* csw)
+_AVXINL void AfxGetRasterSwizzling(afxRaster ras, afxNat subIdx, avxColorSwizzling* csw)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ras, afxFcc_RAS);
@@ -218,7 +218,8 @@ _AVX afxError AfxUploadRaster(afxRaster ras, afxRasterIo const* op, afxNat lodCn
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -264,7 +265,8 @@ _AVX afxError AfxDownloadRaster(afxRaster ras, afxRasterIo const* op, afxNat lod
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -312,7 +314,8 @@ _AVX afxError AfxUpdateRaster(afxRaster ras, afxRasterIo const* op, void const* 
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     
     afxNat unusedBpl;
@@ -330,7 +333,7 @@ _AVX afxError AfxUpdateRaster(afxRaster ras, afxRasterIo const* op, void const* 
     {
         afxBool is3d = AfxRasterIs3d(ras);
         afxRasterLayout layout;
-        AfxQueryRasterLayout(ras, req.img.op.rgn.lodIdx, (is3d ? 0 : req.img.op.rgn.whd[2]), &layout);
+        AfxQueryRasterLayout(ras, req.img.op.rgn.lodIdx, (is3d ? 0 : req.img.op.rgn.origin[2]), &layout);
         req.img.op.rowStride = layout.rowStride;
         req.img.op.rowCnt = req.img.op.rgn.whd[1];
     }
@@ -365,7 +368,8 @@ _AVX afxError AfxDumpRaster(afxRaster ras, afxRasterIo const* op, void* dst)
     afxDrawContext dctx = AfxGetRasterContext(ras);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxNat unusedBpl;
@@ -447,6 +451,17 @@ _AVX afxError _AvxRasStdCtor(afxRaster ras, afxCookie const* cookie)
                     ras->flags = afxRasterFlag_LAYERED;
         }
     }
+
+    ras->sub0.baseLod = 0;
+    ras->sub0.lodCnt = 1;
+    ras->sub0.baseLayer = 0;
+    ras->sub0.layerCnt = 1;
+    ras->sub0.flags = ras->flags;
+    ras->sub0.fmt = ras->fmt;
+    ras->sub0.swizzling.r = avxColorSwizzle_R;
+    ras->sub0.swizzling.g = avxColorSwizzle_B;
+    ras->sub0.swizzling.b = avxColorSwizzle_G;
+    ras->sub0.swizzling.a = avxColorSwizzle_A;
     return err;
 }
 
@@ -455,8 +470,7 @@ _AVX afxClassConfig const _AvxRasStdImplementation =
     .fcc = afxFcc_RAS,
     .name = "Raster",
     .desc = "Formatted Video Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxRaster)),
+    .fixedSiz = sizeof(AFX_OBJECT(afxRaster)),
     .ctor = (void*)_AvxRasStdCtor,
     .dtor = (void*)_AvxRasStdDtor
 };
@@ -471,7 +485,7 @@ _AVX afxError AfxAcquireRasters(afxDrawContext dctx, afxNat cnt, afxRasterInfo c
     AfxAssert(info);
     AfxAssert(cnt);
 
-    afxManager* cls = AfxGetRasterClass(dctx);
+    afxClass* cls = AfxGetRasterClass(dctx);
     AfxAssertClass(cls, afxFcc_RAS);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)rasters, (void const*[]) { dctx, info }))

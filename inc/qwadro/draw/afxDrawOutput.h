@@ -28,61 +28,93 @@
 
 #include "qwadro/draw/afxDrawBridge.h"
 
-typedef enum afxPresentScaling
-/// tmask specifying presentation scaling methods
+typedef enum avxPresentScaling
+/// mask specifying presentation scaling methods.
 {
-    /// specifies that no scaling occurs, and pixels in the swapchain image are mapped to one and only one pixel in the surface. The mapping between pixels is defined by the chosen presentation gravity.
-    afxPresentScaling_ONE_TO_ONE    = AFX_BIT(0),
+    /// Do not scale.
+    /// Pixels are mapped to one and only one pixel in the surface.
+    avxPresentScaling_ONE_TO_ONE    = AFX_BIT(0),
 
-    /// specifies that the swapchain image will be minified or magnified such that at least one of the resulting width or height is equal to the corresponding surface dimension, and the other resulting dimension is less than or equal to the corresponding surface dimension, with the aspect ratio of the resulting image being identical to that of the original swapchain image.
-    afxPresentScaling_ASPECT_RATIO  = AFX_BIT(1),
+    /// Minify or magnify such that at least one of the resulting width or height is equal to the corresponding surface dimension, 
+    /// and the other resulting dimension is less than or equal to the corresponding surface dimension, 
+    /// with the aspect ratio of the resulting image being identical to that of the original swapchain image.
+    avxPresentScaling_ASPECT_RATIO  = AFX_BIT(1),
 
-    /// specifies that the swapchain image will be minified or magnified such that the resulting image dimensions are equal to those of the surface.
-    afxPresentScaling_STRETCH       = AFX_BIT(2)
-} afxPresentScaling;
+    /// minify or magnify such that the resulting dimensions are equal to those of the surface.
+    avxPresentScaling_STRETCH       = AFX_BIT(2)
+} avxPresentScaling;
 
-typedef enum afxPresentTransform
+typedef enum avxPresentTransform
 {
-    //NIL // Identity
-    afxPresentTransform_FLIP_V  = AFX_BIT(0), // invert pixel grid vertically.
-    afxPresentTransform_FLIP_H  = AFX_BIT(1) // invert pixel grid horizontally.
-} afxPresentTransform;
+    /// Invert pixel grid vertically.
+    avxPresentTransform_FLIP_V  = AFX_BIT(0),
+    
+    /// Invert pixel grid horizontally.
+    avxPresentTransform_FLIP_H  = AFX_BIT(1)
 
-typedef enum afxPresentAlpha
+    /// If no option is chosen, the Qwadro treats it as identity.
+} avxPresentTransform;
+
+typedef enum avxPresentAlpha
 {
-    // NIL The way in which the presentation engine treats the alpha component in the images is unknown to the SIGMA GL/2 API. Instead, the application is responsible for setting the composite alpha blending mode using native window system commands. If the application does not set the blending mode using native window system commands, then a platform-specific default will be used.
-    afxPresentAlpha_OPAQUE      = AFX_BIT(0), // The alpha component, if it exists, of the images is ignored in the compositing process. Instead, the image is treated as if it has a constant alpha of 1.0.
-    afxPresentAlpha_PREMUL      = AFX_BIT(1), // The alpha component, if it exists, of the images is respected in the compositing process. The non-alpha components of the image are expected to already be multiplied by the alpha component by the application.
-    afxPresentAlpha_POSTMUL     = AFX_BIT(2) // The alpha component, if it exists, of the images is respected in the compositing process. The non-alpha components of the image are not expected to already be multiplied by the alpha component by the application; instead, the compositor will multiply the non-alpha components of the image by the alpha component during compositing.
-} afxPresentAlpha;
+    /// Ignore alpha component in the compositing process. 
+    /// The raster is treated as if it has a constant alpha of 1.0.
+    avxPresentAlpha_OPAQUE      = AFX_BIT(0),
 
-typedef enum afxPresentMode
+    /// The compositor will respect the alpha component.
+    avxPresentAlpha_PREMUL      = AFX_BIT(1),
+
+    /// The compositor will multiply the color components of the raster by the alpha component during compositing.
+    avxPresentAlpha_POSTMUL     = AFX_BIT(2)
+
+    /// If no option is chosen, the way in which the presentation engine treats the alpha component in the images is unknown to the SIGMA GL/2 API. 
+    /// Instead, the application is responsible for setting the composite alpha blending mode using native window system commands. 
+    /// If the application does not set the blending mode using native window system commands, then a platform-specific default will be used.
+} avxPresentAlpha;
+
+typedef enum avxPresentMode
 {
-    afxPresentMode_LIFO, // like triple-buffered mode
-    // Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
-    // Tearing cannot be observed. An internal single-entry queue is used to hold pending presentation requests. 
-    // If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. 
-    // One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.
+    /// Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
+    /// Tearing cannot be observed. An internal single-entry queue is used to hold pending presentation requests. 
+    /// If the queue is full when a new presentation request is received, the new request replaces the existing entry, and any images associated with the prior entry become available for re-use by the application. 
+    /// One request is removed from the queue and processed during each vertical blanking period in which the queue is non-empty.
+    avxPresentMode_LIFO, // like triple-buffered mode
+    
+    /// Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
+    /// Tearing cannot be observed. An internal queue is used to hold pending presentation requests. 
+    /// New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. 
+    /// This is the only value of presentMode that is required to be supported.
+    avxPresentMode_FIFO, // like V-sync'ed double-buffered mode
+    
+    /// Specifies that the presentation engine does not wait for a vertical blanking period to update the current image, meaning this mode may result in visible tearing. 
+    /// No internal queuing of presentation requests is needed, as the requests are applied immediately.
+    avxPresentMode_IMMEDIATE,
+    
+} avxPresentMode;
 
-    afxPresentMode_FIFO, // like V-sync'ed double-buffered mode
-    // Specifies that the presentation engine waits for the next vertical blanking period to update the current image. 
-    // Tearing cannot be observed. An internal queue is used to hold pending presentation requests. 
-    // New requests are appended to the end of the queue, and one request is removed from the beginning of the queue and processed during each vertical blanking period in which the queue is non-empty. 
-    // This is the only value of presentMode that is required to be supported.
+typedef afxBool(*avxPresentNotifier)(afxObject receiver, afxNat);
 
-    afxPresentMode_IMMEDIATE,
-    // Specifies that the presentation engine does not wait for a vertical blanking period to update the current image, meaning this mode may result in visible tearing. 
-    // No internal queuing of presentation requests is needed, as the requests are applied immediately.
-
-} afxPresentMode;
-
-typedef afxBool(*afxPresentNotifier)(afxObject receiver, afxNat);
+AFX_DEFINE_STRUCT(afxDrawOutputCaps)
+{
+    afxNat              minBufCnt;
+    afxNat              maxBufCnt;
+    afxNat              currExtent[2];
+    afxWhd              minWhd; // D is layer
+    afxWhd              maxWhd; // D is layer
+    avxPresentTransform supportedTransforms;
+    avxPresentTransform currTransform;
+    avxPresentAlpha     supportedCompositeAlpha;
+    afxRasterFlags      supportedUsageFlags;
+    avxPresentScaling   supportedScaling;
+    afxNat              supportedModeCnt;
+    avxPresentMode      supportedModes;
+};
 
 AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 {
     // canvas
     afxWhd              whd;
-    afxColorSpace       colorSpc; // afxColorSpace_SRGB; if sRGB isn't present, fall down to LINEAR.
+    avxColorSpace       colorSpc; // avxColorSpace_SRGB; if sRGB isn't present, fall down to LINEAR.
     afxPixelFormat      pixelFmt; // RGBA8; pixel format of raster surfaces. Pass zero to let driver choose the optimal format.
     afxPixelFormat      pixelFmtDs[2]; // D24/S8/D24S8; pixel format of raster surfaces. Pass zero to disable depth and/or stencil.
     afxRasterUsage      bufUsage; // DRAW; used as (color) target surface for rasterization.
@@ -92,143 +124,32 @@ AFX_DEFINE_STRUCT(afxDrawOutputConfig)
 
     // swapchain
     afxNat              bufCnt; // 2 or 3; double or triple-buffered.
-    afxBool             dontManageCanvases;
 
     // endpoint
-    afxPresentAlpha     presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
-    afxPresentNotifier  endpointNotifyFn;
+    avxPresentAlpha     presentAlpha; // FALSE; ignore transparency when composing endpoint background, letting it opaque.
+    avxPresentNotifier  endpointNotifyFn;
     afxObject           endpointNotifyObj; // must ensure life of draw output
-    afxPresentTransform presentTransform; // NIL; don't do any transform.
-    afxPresentMode      presentMode; // FIFO; respect the sequence.
+    avxPresentTransform presentTransform; // NIL; don't do any transform.
+    avxPresentMode      presentMode; // FIFO; respect the sequence.
     afxBool             doNotClip; // FALSE; don't do off-screen draw.
     void*               udd[4];
-
-#ifdef AFX_OS_WIN
-    struct
-    {
-        void*           hInst;
-        void*           hWnd;
-        void*           hDc;
-    }                   w32;
-#endif
-};
-
-AFX_DEFINE_STRUCT(afxDrawOutputCaps)
-{
-    afxNat              minBufCnt;
-    afxNat              maxBufCnt;
-    afxNat              currExtent[2];
-    afxWhd              minWhd;
-    afxWhd              maxWhd;
-    afxNat              maxLayerCnt;
-    afxPresentTransform supportedTransforms;
-    afxPresentTransform currTransform;
-    afxPresentAlpha     supportedCompositeAlpha;
-    afxRasterFlags      supportedUsageFlags;
-    afxPresentScaling   supportedScaling;
-    afxNat              supportedModeCnt;
-    afxPresentMode      supportedModes;
-};
-
-AFX_DEFINE_STRUCT(afxDrawOutputEndpoint)
-{
-    afxLinkage          ddev;
-    afxChain            instances;
-    afxMutex            mtx;
-    afxCondition        cnd;
-    afxString           name;
-    afxDrawOutputCaps   caps;
-};
-
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_DRAW_OUTPUT_C
-
-AFX_DEFINE_STRUCT(afxDrawOutputLink)
-{
-    afxChain a;
-};
-
-AFX_OBJECT(afxDrawOutput)
-{
-    afxLinkage          ddev;
-    afxLinkage          dctx; // bound context
-
-    // canvas
-    afxWhd              whd;
-    afxColorSpace       colorSpc; // raster color space. sRGB is the default.    
-    afxPixelFormat      pixelFmt; // pixel format of raster surfaces.
-    afxPixelFormat      pixelFmtDs[2]; // pixel format for depth/stencil. D24/S8/D24S8
-    afxRasterUsage      bufUsage; // raster usage
-    afxRasterUsage      bufUsageDs[2]; // raster usage for depth/stencil
-    afxRasterFlags      bufFlags; // raster flags. What evil things we will do with it?
-    afxRasterFlags      bufFlagsDs[2]; // raster flags for depth/stencil
-
-    // swapchain
-    afxSlock            buffersLock;
-    afxAtom32           lockedBufCnt;
-    afxAtom32           submCnt;
-    afxNat              bufCnt; // usually 2 or 3; double or triple buffered.
-    afxAtom32           lastLockedBufIdx;
-    afxAtom32           lastUnlockedBufIdx;
-    afxAtom32           presentingBufIdx;
-    afxChain            swapchain; // display order
-    struct
-    {
-        //afxRaster       ras; // afxCanvas // should have 1 fb for each swapchain raster.
-        afxCanvas       canv;
-        afxSemaphore    readySem;
-        afxAtom32       booked;
-        afxSlock        lck;
-    }*buffers;
-    afxError            (*lockCb)(afxDrawOutput, afxTime timeout, afxNat*bufIdx);
-    afxError            (*unlockCb)(afxDrawOutput, afxNat cnt, afxNat const bufIdx[]);
     
-    // endpoint
-    afxReal64           wpOverHp; // physical w/h
-    afxReal64           wrOverHr; // (usually screen) resolution w/h
-    afxReal64           wwOverHw; // window w/h
-    afxBool             resizing;
-    afxBool             resizable;
-    afxReal             refreshRate;
-    afxWhd              res; // Screen resolution. Absolute extent available.
-    afxObject           endpointNotifyObj; // must ensure life of draw output
-    afxPresentNotifier  endpointNotifyFn;
-    afxPresentAlpha     presentAlpha; // consider transparency for external composing (usually on windowing system).
-    afxPresentTransform presentTransform; // NIL leaves it as it is.
-    afxPresentMode      presentMode; // FIFO
-    afxBool             doNotClip; // usually false to don't do off-screen draw on compositor-based endpoints (aka window).
-    void*               udd[4]; // user-defined data
-
-    afxNat              suspendCnt;
-    afxSlock            suspendSlock;
-
-    afxAtom32           reconnecting;
-
-    afxClock            startClock;
-    afxClock            lastClock;
-    afxNat              outNo;
-    afxNat              outRate; // outputs per second
-    afxClock            outCntResetClock;
-
-    afxBool             (*iddCb)(afxDrawOutput,afxNat,void*);
-    struct _afxDoutIdd* idd;
-
-#ifdef _AVX_DRAW_OUTPUT_IMPL
-#ifdef AFX_OS_WIN
-    struct
+    union // WSI
     {
-        HINSTANCE       hInst;
-        HWND            hWnd;
-        HDC             hDc;
-        int             dcPxlFmt;
-        int             dcPxlFmtBkp;
-        afxBool         isWpp;
-    }                   w32;
-#endif//AFX_OS_WIN
-#endif//_AVX_DRAW_OUTPUT_IMPL
+        struct
+        {
+            afxWindow   wnd;
+        } wsi;
+#ifdef AFX_OS_WIN
+        struct
+        {
+            void*       hInst; // HINSTANCE
+            void*       hWnd; // HWND
+            void*       hDc; // HDC
+        } w32;
+#endif
+    };
 };
-#endif//_AVX_DRAW_OUTPUT_C
-#endif//_AVX_DRAW_C
 
 AVX afxDrawDevice   AfxGetDrawOutputDevice(afxDrawOutput dout);
 
@@ -255,11 +176,11 @@ AVX void            AfxGetDrawOutputExtentAsNdc(afxDrawOutput dout, afxV3d whd);
 
 // Buffer
 
-AVX afxBool         AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, afxCanvas* canvas);
-AVX afxNat          AfxEnumerateDrawOutputCanvases(afxDrawOutput dout, afxNat baseBuf, afxNat bufCnt, afxCanvas canvases[]);
+AVX afxBool         AfxGetDrawOutputCanvas(afxDrawOutput dout, afxNat bufIdx, avxCanvas* canvas);
+AVX afxNat          AfxEnumerateDrawOutputCanvases(afxDrawOutput dout, afxNat first, afxNat cnt, avxCanvas canvases[]);
 
 AVX afxBool         AfxGetDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, afxRaster* raster);
-AVX afxNat          AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat baseBuf, afxNat bufCnt, afxRaster rasters[]);
+AVX afxNat          AfxEnumerateDrawOutputBuffers(afxDrawOutput dout, afxNat first, afxNat cnt, afxRaster rasters[]);
 
 AVX afxError        AfxRedoDrawOutputBuffers(afxDrawOutput dout);
 AVX afxNat          AfxCountDrawOutputBuffers(afxDrawOutput dout);
@@ -276,6 +197,12 @@ AVX afxNat          AfxStampDrawOutputBuffer(afxDrawOutput dout, afxNat bufIdx, 
 ////////////////////////////////////////////////////////////////////////////////
 
 AVX afxError        AfxAcquireDrawOutput(afxNat ddevId, afxDrawOutputConfig const* cfg, afxDrawOutput* output);
+
+/*
+    AfxOpenDrawDevice("//./targa/", &cfg, &dctx);
+    AfxOpenDrawOutput("//./targa/dwm", &cfg, &dout);
+    AfxOpenDrawOutput("targa://gdi", &cfg, &dout);
+*/
 
 AVX afxError        AfxOpenDrawOutput(afxNat ddevId, afxUri const* endpoint, afxDrawOutputConfig const* cfg, afxDrawOutput* output); // file, window, desktop, widget, frameserver, etc; physical or virtual VDUs.
 
