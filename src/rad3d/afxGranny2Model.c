@@ -1,8 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #define WIN32_LEAN_AND_MEAN 1
 #include <Windows.h>
-#include "./dep/granny2/granny.h"
-#pragma comment(lib, "../../src/rad3d/dep/granny2/granny2")
+#include "../../dep_/granny2/granny.h"
+#pragma comment(lib, "../../../dep_/granny2/granny2")
 
 #define _AFX_MOTION_C
 #include "afxGranny2Model.h"
@@ -11,7 +11,7 @@
 #include "qwadro/sim/akxNode.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/sim/afxSimulation.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/mem/afxMappedString.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
@@ -455,7 +455,7 @@ akxAnimation Gr2AnimToQwadro(afxSimulation sim, afxStringBase strb, granny_anima
 
     afxUri uri, name;
     AfxMakeUri(&uri, Anim->Name, 0);
-    AfxPickUriObject(&uri, &name);
+    AfxClipUriTarget(&name, &uri);
     AfxMakeString32(&anib.id, AfxGetUriString(&name));
 
     akxAnimation ani;

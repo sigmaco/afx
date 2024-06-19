@@ -22,10 +22,11 @@
 #define _ASX_SOUND_DEVICE_C
 #define _ASX_SOUND_CONTEXT_C
 #define _ASX_SOUND_BRIDGE_C
+#define _ASX_SOUND_QUEUE_C
 #define _ASX_SOUND_INPUT_C
 #define _ASX_SOUND_OUTPUT_C
 #define _ASX_SOUND_SYSTEM_C
-#include "qwadro/sound/afxSoundSystem.h"
+#include "../src/afx/sound/dev/asxDevKit.h"
 
 _ASX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
 {
@@ -36,21 +37,154 @@ _ASX afxSoundDevice AfxGetSoundContextDevice(afxSoundContext sctx)
     return sdev;
 }
 
-_ASX afxSoundBridge AfxGetSoundBridge(afxSoundContext sctx, afxNat portIdx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-    AfxAssertRange((afxNat)sctx->ownedBridgeCnt, portIdx, 1);
-    afxSoundBridge sdge = sctx->ownedBridges[portIdx];
-    AfxAssertObjects(1, &sdge, afxFcc_SDGE);
-    return sdge;
-}
-
 _ASX afxNat AfxCountSoundBridges(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
     return sctx->ownedBridgeCnt;
+}
+
+_ASX afxBool AfxGetSoundBridge(afxSoundContext sctx, afxNat portIdx, afxSoundBridge* bridge)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    /// portIdx must be one of the bridge indices specified when device was created.
+    AfxAssertRange(sctx->ownedBridgeCnt, portIdx, 1);
+    afxBool rslt;
+
+    if (!(rslt = (portIdx < sctx->ownedBridgeCnt))) AfxThrowError();
+    else
+    {
+        afxSoundBridge sdge = sctx->ownedBridges[portIdx];
+        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+        /// bridge must be a valid pointer to a afxSoundBridge handle.
+        *bridge = sdge;
+    }
+    return rslt;
+}
+
+_ASX afxBool AfxGetSoundQueue(afxSoundContext sctx, afxNat portIdx, afxNat queIdx, afxSoundQueue* queue)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    /// portIdx must be one of the bridge indices specified when device was created.
+    AfxAssertRange(sctx->ownedBridgeCnt, portIdx, 1);
+    afxSoundBridge sdge;
+    afxBool rslt;
+
+    if (!(rslt = AfxGetSoundBridge(sctx, portIdx, &sdge))) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+        /// queIdx must be less than the value of queCnt for the bridge indicated by portIdx when device context was created.
+        AfxAssertRange(sdge->queCnt, queIdx, 1);
+
+        if (!(rslt = (queIdx < sdge->queCnt))) AfxThrowError();
+        else
+        {
+            afxSoundQueue sque = sdge->queues[queIdx];
+            AfxAssertObjects(1, &sque, afxFcc_SQUE);
+            /// queue must be a valid pointer to a afxSoundQueue handle.        
+            *queue = sque;
+        }
+    }
+    return rslt;
+}
+
+_ASX afxNat AfxCountSoundQueues(afxSoundContext sctx, afxNat portIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    /// portIdx must be a valid index to a bridge.
+    AfxAssertRange((afxNat)sctx->ownedBridgeCnt, portIdx, 1);
+    afxNat queCnt = 0;
+    afxSoundBridge sdge;
+
+    if (!AfxGetSoundBridge(sctx, portIdx, &sdge)) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+        queCnt = sdge->queCnt;
+    }
+    return queCnt;
+}
+
+_ASX afxError AfxWaitForIdleSoundQueue(afxSoundContext sctx, afxNat portIdx, afxNat queIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    /// portIdx must be a valid index to a bridge.
+    AfxAssertRange((afxNat)sctx->ownedBridgeCnt, portIdx, 1);
+    afxSoundBridge sdge;
+
+    if (!AfxGetSoundBridge(sctx, portIdx, &sdge)) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+        /// queIdx must be a valid index to a queue.
+        AfxAssertRange(sdge->queCnt, queIdx, 1);
+
+        if (sdge->queCnt > queIdx)
+        {
+            if (!sdge->waitCb)
+            {
+                afxSoundQueue sque = sdge->queues[queIdx];
+                AfxLockMutex(&sque->idleCndMtx);
+
+                while (sque->workChn.cnt)
+                    AfxWaitCondition(&sque->idleCnd, &sque->idleCndMtx);
+
+                AfxUnlockMutex(&sque->idleCndMtx);
+            }
+            else if (sdge->waitCb(sdge, queIdx))
+                AfxThrowError();
+        }
+    }
+    return err;
+}
+
+_ASX afxError AfxWaitForIdleSoundBridge(afxSoundContext sctx, afxNat portIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    /// portIdx must be a valid index to a bridge.
+    AfxAssertRange((afxNat)sctx->ownedBridgeCnt, portIdx, 1);
+    afxSoundBridge sdge;
+
+    if (!AfxGetSoundBridge(sctx, portIdx, &sdge)) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+        afxNat squeCnt = sdge->queCnt;
+
+        for (afxNat squeIdx = 0; squeIdx < squeCnt; squeIdx++)
+            AfxWaitForIdleSoundQueue(sctx, portIdx, squeIdx);
+    }
+    return err;
+}
+
+_ASX afxError AfxWaitForSoundContext(afxSoundContext sctx)
+{
+    afxError err = AFX_ERR_NONE;
+    /// sctx must be a valid afxSoundContext handle.
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+
+    if (!sctx->waitCb)
+    {
+        afxNat sdgeCnt = sctx->ownedBridgeCnt;
+
+        for (afxNat portIdx = 0; portIdx < sdgeCnt; portIdx++)
+            AfxWaitForIdleSoundBridge(sctx, portIdx);
+    }
+    else if (sctx->waitCb(sctx))
+        AfxThrowError();
+
+    return err;
 }
 
 _ASX afxNat AfxCountSoundInputConnections(afxSoundContext sctx)
@@ -213,12 +347,13 @@ _ASX afxBool AfxGetConnectedSoundOutput(afxSoundContext sctx, afxNat conNo, afxS
     return rslt;
 }
 
-_ASX afxError AfxDisconnectSoundContext(afxSoundContext sctx, afxBool inputs, afxBool outputs)
+_ASX afxError AfxDisconnectSoundContext(afxSoundContext sctx, afxBool keepInputs, afxBool keepOutputs)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    AfxAssert((!keepInputs) || (!keepOutputs));
 
-    if (inputs)
+    if (!keepInputs)
     {
         afxSoundInput sin;
         while (AfxGetConnectedSoundInput(sctx, 0, &sin))
@@ -229,7 +364,7 @@ _ASX afxError AfxDisconnectSoundContext(afxSoundContext sctx, afxBool inputs, af
         }
     }
 
-    if (outputs)
+    if (!keepOutputs)
     {
         afxSoundOutput sout;
         while (AfxGetConnectedSoundOutput(sctx, 0, &sout))
@@ -242,43 +377,33 @@ _ASX afxError AfxDisconnectSoundContext(afxSoundContext sctx, afxBool inputs, af
     return err;
 }
 
-_ASX afxError AfxWaitForIdleSoundContext(afxSoundContext sctx)
+_ASX afxError _AsxSctxStdDtorCb(afxSoundContext sctx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    afxSoundDevice sdev = AfxGetSoundContextDevice(sctx);
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
 
-    if (!sctx->waitCb)
-    {
-        afxNat bridgeCnt = sctx->ownedBridgeCnt;
+    AfxDisconnectSoundContext(sctx, FALSE, FALSE);
+    AfxWaitForSoundContext(sctx);
+    AfxWaitForSoundContext(sctx);
 
-        for (afxNat i = 0; i < bridgeCnt; i++)
-        {
-            afxSoundBridge sdge = sctx->ownedBridges[i];
-            AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-            afxNat queCnt = AfxCountSoundQueues(sdge);
+    AfxAssert(sdev->closeCb);
 
-            for (afxNat j = 0; j < queCnt; j++)
-                AfxWaitForIdleSoundQueue(sdge, j);
-        }
-    }
-    else if (sctx->waitCb(sctx))
+    afxNat ownedBridgeCnt = sctx->ownedBridgeCnt;
+
+    if (sdev->closeCb(sdev, sctx))
         AfxThrowError();
 
-    return err;
-}
+    AfxCleanUpChainedClasses(&sctx->ctx.classes);
 
-_ASX afxError _AsxSctxStdDtor(afxSoundContext sctx)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
-
-    AfxDisconnectSoundContext(sctx, TRUE, TRUE);
-    AfxWaitForIdleSoundContext(sctx);
-
-    AfxCleanUpChainedManagers(&sctx->ctx.classes);
-
-    AfxAssertObjects(sctx->ownedBridgeCnt, sctx->ownedBridges, afxFcc_SDGE);
-    AfxDeallocate(sctx->ownedBridges);
+    if (sctx->ownedBridges)
+    {
+        AfxAssertObjects(ownedBridgeCnt, sctx->ownedBridges, afxFcc_SDGE);
+        AfxReleaseObjects(ownedBridgeCnt, sctx->ownedBridges);
+        AfxDeallocate(sctx->ownedBridges);
+        sctx->ownedBridges = NIL;
+    }
 
     AfxAssert(AfxChainIsEmpty(&sctx->ctx.classes));
 
@@ -287,7 +412,7 @@ _ASX afxError _AsxSctxStdDtor(afxSoundContext sctx)
     return err;
 }
 
-_ASX afxError _AsxSctxStdCtor(afxSoundContext sctx, afxCookie const* cookie)
+_ASX afxError _AsxSctxStdCtorCb(afxSoundContext sctx, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sctx, afxFcc_SCTX);
@@ -295,7 +420,7 @@ _ASX afxError _AsxSctxStdCtor(afxSoundContext sctx, afxCookie const* cookie)
 
     afxSoundDevice sdev = cookie->udd[0];
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    afxSoundContextConfig const *config = ((afxSoundContextConfig const *)cookie->udd[1]) + cookie->no;
+    afxSoundContextConfig const *cfg = ((afxSoundContextConfig const *)cookie->udd[1]) + cookie->no;
 
     sctx->running = FALSE;
 
@@ -309,8 +434,55 @@ _ASX afxError _AsxSctxStdCtor(afxSoundContext sctx, afxCookie const* cookie)
 
     // Acquire bridges and queues
 
-    afxNat bridgeCnt = AfxCountSoundPorts(sdev);
-    AfxAssert(bridgeCnt);
+    // Acquire bridges and queues
+    afxNat bridgeCnt = 0;
+    afxNat totalQueCnt = 0;
+    afxSoundBridgeConfig bridgeCfg[16] = { 0 };
+
+    if (cfg && cfg->bridgeCnt && cfg->bridges)
+    {
+        AfxAssert(16 >= cfg->bridgeCnt);
+
+        for (afxNat i = 0; i < cfg->bridgeCnt; i++)
+        {
+            afxNat bridgeIdx = AFX_INVALID_INDEX;
+
+            for (afxNat j = 0; j < bridgeCnt; j++)
+            {
+                if (cfg->bridges[j].portIdx == bridgeCfg[j].portIdx)
+                {
+                    bridgeCfg[bridgeIdx].queueCnt += cfg->bridges[i].queueCnt;
+                    bridgeCfg[bridgeIdx].queuePriority = NIL;
+                    bridgeCfg[bridgeIdx].flags |= cfg->bridges[i].flags;
+
+                    totalQueCnt += bridgeCfg[bridgeIdx].queueCnt;
+                    break;
+                }
+            }
+
+            if (bridgeIdx == AFX_INVALID_INDEX)
+            {
+                bridgeCfg[bridgeCnt] = cfg->bridges[i];
+                ++bridgeCnt;
+            }
+        }
+    }
+
+    if (!bridgeCnt)
+    {
+        bridgeCnt = AfxCountSoundPorts(sdev);
+        AfxAssert(bridgeCnt);
+
+        for (afxNat i = 0; i < bridgeCnt; i++)
+        {
+            bridgeCfg[i].queueCnt = _AsxSqueStdImplementation.unitsPerPage;
+            bridgeCfg[i].queuePriority = NIL;
+            bridgeCfg[i].flags = NIL;
+
+            totalQueCnt += bridgeCfg[i].queueCnt;
+        }
+    }
+
     afxSoundBridge* ownedBridges;
     sctx->ownedBridges = NIL;
 
@@ -319,10 +491,10 @@ _ASX afxError _AsxSctxStdCtor(afxSoundContext sctx, afxCookie const* cookie)
     {
         for (afxNat j = 0; j < bridgeCnt; j++)
         {
-            afxSoundBridgeConfig sdgeSpec = { 0 };
-            sdgeSpec.portIdx = j;
+            afxClass* cls = &sdev->sdgeCls;
+            AfxAssertClass(cls, afxFcc_SDGE);
 
-            if (AfxAcquireObjects(&sdev->ports[j].sdgeMgr, 1, (afxObject*)&ownedBridges[j], (void const*[]) { sdev, sctx, &sdgeSpec }))
+            if (AfxAcquireObjects(cls, 1, (afxObject*)&ownedBridges[j], (void const*[]) { sdev, sctx, &bridgeCfg[j] }))
             {
                 AfxThrowError();
                 AfxReleaseObjects(j, ownedBridges);
@@ -333,21 +505,31 @@ _ASX afxError _AsxSctxStdCtor(afxSoundContext sctx, afxCookie const* cookie)
             }
         }
 
-        if (err) AfxDeallocate(ownedBridges);
-        else
+        if (!err)
         {
             AfxAssertObjects(bridgeCnt, ownedBridges, afxFcc_SDGE);
             sctx->ownedBridgeCnt = bridgeCnt;
             sctx->ownedBridges = ownedBridges;
+
+            if (AfxDoDeviceService(&sdev->dev)) AfxThrowError(); // let the device build its SPUs.
+            else
+            {
+                AfxAssert(sdev->openCb);
+                AfxAssert(sdev->closeCb);
+
+                if (!err)
+                    if (sdev->openCb(sdev, sctx, cookie))
+                        AfxThrowError();
+            }
+        }
+
+        if (err)
+        {
+            AfxCleanUpChainedClasses(classes);
+            AfxAssert(AfxChainIsEmpty(classes));
+            AfxDeallocate(sctx->ownedBridges);
         }
     }
-
-    if (err)
-    {
-        AfxAssertObjects(sctx->ownedBridgeCnt, sctx->ownedBridges, afxFcc_DDGE);
-        AfxDeallocate(sctx->ownedBridges);
-    }
-
     return err;
 }
 
@@ -355,16 +537,15 @@ _ASX afxClassConfig const _AsxSctxStdImplementation =
 {
     .fcc = afxFcc_SCTX,
     .name = "SoundContext",
-    .desc = "Sound Device Context Management",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxSoundContext)),
-    .ctor = (void*)_AsxSctxStdCtor,
-    .dtor = (void*)_AsxSctxStdDtor
+    .desc = "Sound Device Management Context",
+    .fixedSiz = sizeof(AFX_OBJECT(afxSoundContext)),
+    .ctor = (void*)_AsxSctxStdCtorCb,
+    .dtor = (void*)_AsxSctxStdDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
-_ASX afxError AfxAcquireSoundContext(afxNat sdevId, afxSoundContextConfig const* cfg, afxSoundContext* context)
+_ASX afxError AfxOpenSoundDevice(afxNat sdevId, afxSoundContextConfig const* cfg, afxSoundContext* context)
 {
     afxError err = AFX_ERR_NONE;
     afxSoundDevice sdev;
@@ -373,7 +554,7 @@ _ASX afxError AfxAcquireSoundContext(afxNat sdevId, afxSoundContextConfig const*
     else
     {
         AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-        afxManager* cls = AfxGetSoundContextManager(sdev);
+        afxClass* cls = AfxGetSoundContextClass(sdev);
         AfxAssertClass(cls, afxFcc_SCTX);
         AfxAssert(context);
 
@@ -385,33 +566,48 @@ _ASX afxError AfxAcquireSoundContext(afxNat sdevId, afxSoundContextConfig const*
     return err;
 }
 
-_ASX afxNat AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetSoundContextManager(sdev);
-    AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
-}
-
 _ASX afxNat AfxEnumerateSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
     AfxAssert(contexts);
     AfxAssert(cnt);
-    afxManager* cls = AfxGetSoundContextManager(sdev);
+    afxClass* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)contexts);
+    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)contexts);
 }
 
-_ASX afxNat AfxCountSoundContexts(afxSoundDevice sdev)
+_ASX afxNat AfxEvokeSoundContexts(afxSoundDevice sdev, afxBool(*flt)(afxSoundContext, void*), void* fdd, afxNat first, afxNat cnt, afxSoundContext contexts[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    afxManager* cls = AfxGetSoundContextManager(sdev);
+    AfxAssert(contexts);
+    AfxAssert(flt);
+    AfxAssert(cnt);
+    afxClass* cls = AfxGetSoundContextClass(sdev);
+    AfxAssertClass(cls, afxFcc_DCTX);
+    return AfxEvokeClassInstances(cls, (void*)flt, fdd, first, cnt, (afxObject*)contexts);
+}
+
+_ASX afxNat AfxInvokeSoundContexts(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundContext, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass* cls = AfxGetSoundContextClass(sdev);
     AfxAssertClass(cls, afxFcc_SCTX);
-    return AfxCountObjects(cls);
+    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+}
+
+_ASX afxNat AfxInvokeSoundContexts2(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*flt)(afxSoundContext, void*), void *fdd, afxBool(*f)(afxSoundContext, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    AfxAssert(cnt);
+    AfxAssert(flt);
+    AfxAssert(f);
+    afxClass* cls = AfxGetSoundContextClass(sdev);
+    AfxAssertClass(cls, afxFcc_DCTX);
+    return AfxInvokeClassInstances2(cls, first, cnt, (void*)flt, fdd, (void*)f, udd);
 }

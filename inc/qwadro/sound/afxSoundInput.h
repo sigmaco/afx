@@ -18,27 +18,27 @@
 #define ASX_SOUND_INPUT_H
 
 #include "qwadro/sound/afxSoundDefs.h"
-#include "qwadro/core/afxManager.h"
+#include "qwadro/base/afxClass.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/sound/afxSoundBridge.h"
 
-typedef enum afxSoundEventId
+typedef enum asxEventId
 {
-    afxSoundEventId_FENCE,
-    afxSoundEventId_EXECUTE,
-    afxSoundEventId_UPLOAD,
-    afxSoundEventId_DOWNLOAD,
-    afxSoundEventId_PREFETCH,
-} afxSoundEventId;
+    asxEventId_FENCE,
+    asxEventId_EXECUTE,
+    asxEventId_UPLOAD,
+    asxEventId_DOWNLOAD,
+    asxEventId_PREFETCH,
+} asxEventId;
 
-AFX_DEFINE_STRUCT(afxSoundEvent)
+AFX_DEFINE_STRUCT(asxEvent)
 {
-    afxSoundEventId  id;
+    asxEventId  id;
     afxBool         posted, accepted;
     void*           udd[0];
 };
 
-typedef afxBool(*afxSoundInputProc)(afxSoundInput sin, afxSoundEvent const* ev);
+typedef afxBool(*afxSoundInputProc)(afxSoundInput sin, asxEvent const* ev);
 
 AFX_DEFINE_STRUCT(afxSoundInputConfig)
 {
@@ -55,32 +55,14 @@ AFX_DEFINE_STRUCT(afxSoundInputConfig)
     void*               udd;
 };
 
-#ifdef _ASX_SOUND_C
-#ifdef _ASX_SOUND_INPUT_C
-AFX_OBJECT(afxSoundInput)
-{
-    afxLinkage          sdev;
-    afxLinkage          sctx; // bound context
-
-    afxChain            classes;
-    afxSoundInputProc   procCb;
-
-    afxBool             reconnecting;
-
-    struct _afxDinIdd*  idd;
-    void*               udd; // user-defined data
-};
-#endif//_ASX_SOUND_INPUT_C
-#endif//_ASX_SOUND_C
-
 ASX afxSoundDevice  AfxGetSoundInputDevice(afxSoundInput sin);
 
 ASX void*           AfxGetSoundInputUdd(afxSoundInput sin);
 
 // Connection
 
-ASX afxBool         AfxReconnectSoundInput(afxSoundInput sin, afxSoundContext sctx);
 ASX afxError        AfxDisconnectSoundInput(afxSoundInput sin);
+ASX afxBool         AfxReconnectSoundInput(afxSoundInput sin, afxSoundContext sctx);
 ASX afxBool         AfxGetSoundInputContext(afxSoundInput sin, afxSoundContext* context);
 
 ////////////////////////////////////////////////////////////////////////////////

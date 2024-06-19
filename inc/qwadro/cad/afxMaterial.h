@@ -19,7 +19,7 @@
 
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/base/afxFixedString.h"
 
 // Graphics hardware is still undergoing major changes every year, and as such, there is still no standard way to represent material data for real-time rendering.
 // Qwadro tries to avoid restricting your material rendering by keeping the standardized structure of materials to a minimum, and packing basically every material parameter provided by each art tool into the ExtendedData section of the afxMaterial structure.
@@ -40,7 +40,7 @@ AFX_OBJECT(afxMaterial)
 {
     afxRestring     id; // 128
     afxRaster       tex;
-    afxSampler      smp;
+    avxSampler      smp;
     afxNat          mapCnt;
     afxMaterialMap* maps;
     void            *extData;

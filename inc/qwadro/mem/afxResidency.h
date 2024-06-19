@@ -18,7 +18,7 @@
 #define AFX_HANDLING_H
 
 #include "qwadro/mem/afxPool.h"
-#include "qwadro/core/afxSlock.h"
+#include "qwadro/exec/afxSlock.h"
 
 AFX_DEFINE_STRUCT(afxResident)
 {

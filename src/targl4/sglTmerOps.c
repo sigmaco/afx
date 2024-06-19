@@ -19,7 +19,7 @@
 #define _SGL_DBG_IGNORE_DEPTH_CLAMP
 #include "sgl.h"
 #include "qwadro/afxQwadro.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
 
 _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 {
@@ -28,7 +28,7 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 
     dpu->activeXformState.primTop = dpu->nextXformState.primTop;
 
-    afxCullMode cullMode = dpu->nextXformState.cullMode;
+    avxCullMode cullMode = dpu->nextXformState.cullMode;
 
     if (dpu->activeXformState.cullMode != cullMode)
     {
@@ -98,7 +98,7 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 
     if (dpu->nextViewportUpdMask)
     {
-        afxNat vpCnt = dpu->activePip->base.vpCnt;
+        afxNat vpCnt = dpu->activePip->m.vpCnt;
 
 #if FORCE_GL_GENERIC_FUNCS
         afxNat cnt = dpu->nextViewportUpdCnt;
@@ -260,7 +260,7 @@ _SGL void SglFlushXformStateChanges(sglDpu* dpu)
 #endif
 }
 
-_SGL void _DpuSetViewports(sglDpu* dpu, afxNat first, afxNat cnt, afxViewport const vp[])
+_SGL void _DpuSetViewports(sglDpu* dpu, afxNat first, afxNat cnt, avxViewport const vp[])
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertRange(SGL_MAX_VIEWPORTS, first, cnt);
@@ -326,147 +326,8 @@ _SGL void _DpuBindIndexSource(sglDpu* dpu, afxBuffer buf, afxNat32 offset, afxNa
     dpu->nextVinBindings.iboUpdReq = TRUE;
 }
 
-_SGL void _DpuBindVertexInput(sglDpu* dpu, afxVertexInput vin)
+_SGL void _DpuBindVertexInput(sglDpu* dpu, avxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     dpu->nextVin = vin;
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// DECODING
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-_SGL void _DecodeCmdSetViewports(sglDpu* dpu, _sglCmdViewport const *cmd)
-{
-    _DpuSetViewports(dpu, cmd->first, cmd->cnt, &cmd->vp[0]);
-}
-
-_SGL afxCmdId _EncodeCmdAdjustViewports(avxCmdb cmdb, afxNat32 first, afxNat32 cnt, afxViewport const vp[])
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdViewport *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->vp[0])));
-    AfxAssert(cmd);
-    cmd->first = first;
-    cmd->cnt = cnt;
-
-    for (afxNat i = 0; i < cnt; i++)
-        cmd->vp[i] = vp[i];
-
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.AdjustViewports) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdBindVertexSources(sglDpu* dpu, _sglCmdVertexSources const *cmd)
-{
-    _DpuBindVertexSources(dpu, cmd->first, cmd->cnt, &cmd->info[0]);
-}
-
-_SGL afxCmdId _SglEncodeCmdBindVertexSources(avxCmdb cmdb, afxNat baseSlot, afxNat cnt, afxBuffer buf[], afxNat32 const offset[], afxNat32 const range[], afxNat32 const stride[])
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdVertexSources *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd) + (cnt * sizeof(cmd->info[0])));
-    AfxAssert(cmd);
-    cmd->first = baseSlot;
-    cmd->cnt = cnt;
-
-    for (afxNat i = 0; i < cnt; i++)
-    {
-        sglBufferInfo* info = &cmd->info[i];
-        info->buf = buf ? buf[i] : NIL;
-        info->offset = offset ? offset[i] : 0;
-        info->range = range ? range[i] : 0;
-        info->stride = stride ? stride[i] : 0;
-
-    }
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindVertexSources) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSetPrimitiveTopology(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.primTop = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSetPrimitiveTopology(avxCmdb cmdb, afxPrimTopology topology)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = topology;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SetPrimitiveTopology) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSwitchFrontFace(sglDpu* dpu, _sglCmdBool const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.cwFrontFacing = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSwitchFrontFace(avxCmdb cmdb, afxBool cw)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBool *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = cw;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SwitchFrontFace) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdSetCullMode(sglDpu* dpu, _sglCmdNat const *cmd)
-{
-    afxError err = AFX_ERR_NONE;
-    dpu->nextXformState.cullMode = cmd->value;
-}
-
-_SGL afxCmdId _EncodeCmdSetCullMode(avxCmdb cmdb, afxCullMode mode)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdNat *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->value = mode;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.SetCullMode) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-
-_SGL void _DecodeCmdBindIndexSource(sglDpu* dpu, _sglCmdBufferRange const *cmd)
-{
-    _DpuBindIndexSource(dpu, cmd->buf, cmd->offset, cmd->range, cmd->stride);
-}
-
-_SGL afxCmdId _EncodeCmdBindIndexSource(avxCmdb cmdb, afxBuffer buf, afxNat32 offset, afxNat32 range, afxNat32 idxSiz)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdBufferRange *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->buf = buf;
-    cmd->offset = offset;
-    cmd->range = range;
-    cmd->stride = idxSiz;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindIndexSource) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL void _DecodeCmdBindVertexInput(sglDpu* dpu, _sglCmdVertexInput *cmd)
-{
-    _DpuBindVertexInput(dpu, cmd->vin);
-}
-
-_SGL afxCmdId _EncodeCmdBindVertexInput(avxCmdb cmdb, afxVertexInput vin)
-{
-    afxError err = AFX_ERR_NONE;
-    _sglCmdVertexInput *cmd = AfxRequestArenaUnit(&cmdb->base.cmdArena, sizeof(*cmd));
-    AfxAssert(cmd);
-    cmd->vin = vin;
-    return _SglEncodeCmdCommand(cmdb, (offsetof(afxCmd, Transformation.BindVertexInput) / sizeof(void*)), sizeof(cmd), &cmd->cmd);
-}
-
-_SGL afxCmdTransformation const _SglEncodeCmdTransformationVmt =
-{
-    .BindVertexInput = _EncodeCmdBindVertexInput,
-
-    .BindVertexSources = _SglEncodeCmdBindVertexSources,
-    .BindIndexSource = _EncodeCmdBindIndexSource,
-    .SetPrimitiveTopology = _EncodeCmdSetPrimitiveTopology,
-
-    .AdjustViewports = _EncodeCmdAdjustViewports,
-
-    .SwitchFrontFace = _EncodeCmdSwitchFrontFace,
-    .SetCullMode = _EncodeCmdSetCullMode
-};

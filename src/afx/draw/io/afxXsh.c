@@ -17,12 +17,12 @@
 // This code is part of SIGMA GL/2 <https://sigmaco.org/gl>
 
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/draw/io/afxShaderBlueprint.h"
+#include "qwadro/draw/io/avxShaderBlueprint.h"
 #include "qwadro/draw/io/afxXsh.h"
 
 AVX afxChar const *shdResTypeNames[];
 
-_AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
+_AVX afxError AfxLoadGlScript(avxShaderBlueprint* bp, afxUri const* path)
 {
     afxError err = NIL;
 
@@ -117,7 +117,7 @@ _AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                             AfxMakeString(&typeName.str.str, typeName.buf, 0);
                             AfxMakeString(&varName.str.str, varName.buf, 0);
 
-                            afxShaderResourceType resType = 0;
+                            avxShaderResourceType resType = 0;
 
                             if ((0 == AfxCompareString(&typeName.str.str, &AfxString("sampler1D"))) ||
                                 (0 == AfxCompareString(&typeName.str.str, &AfxString("sampler2D"))) ||
@@ -145,7 +145,7 @@ _AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
 
                             AfxMakeString(&varName.str.str, varName.buf, 0);
 
-                            afxShaderResourceType resType = AFX_SHD_RES_TYPE_CONSTANT_BUFFER;
+                            avxShaderResourceType resType = AFX_SHD_RES_TYPE_CONSTANT_BUFFER;
 
                             if (AfxShaderBlueprintDeclareResource(bp, set, binding, resType, resCnt, &varName.str.str))
                                 AfxThrowError();
@@ -166,7 +166,7 @@ _AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
                             AfxMakeString(&accessName.str.str, accessName.buf, 0);
                             AfxMakeString(&varName.str.str, varName.buf, 0);
 
-                            afxShaderResourceType resType = AFX_SHD_RES_TYPE_STORAGE_BUFFER;
+                            avxShaderResourceType resType = AFX_SHD_RES_TYPE_STORAGE_BUFFER;
 
                             if (AfxShaderBlueprintDeclareResource(bp, set, binding, resType, resCnt, &varName.str.str))
                                 AfxThrowError();
@@ -183,7 +183,7 @@ _AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path)
     return err;
 }
 
-_AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertType(xml, afxFcc_XML);
@@ -202,7 +202,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
 
         if (0 == AfxCompareString(&name, &AfxStaticString("Stage")))
         {
-            afxShaderStage stage = NIL;
+            avxShaderStage stage = NIL;
 
             if (!(stage = AfxFindShaderStage(&content)))
                 AfxThrowError();
@@ -249,7 +249,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
             afxNat resSet = 0;
             afxNat resBinding = 0;
             afxNat resCnt = 1;
-            afxShaderResourceType resType = 0;
+            avxShaderResourceType resType = 0;
             afxString resName;
             AfxReflectString(&content, &resName);
 
@@ -277,7 +277,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
                     {
                         if (0 == AfxCompareStringL(&content, 0, shdResTypeNames[l], 0))
                         {
-                            resType = (afxShaderResourceType)l;
+                            resType = (avxShaderResourceType)l;
                             break;
                         }
                     }                        
@@ -352,7 +352,7 @@ _AVX afxError AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, af
     return err;
 }
 
-_AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxLoadRasterizationConfigFromXml(avxRasterizationConfig* config, avxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
@@ -384,10 +384,10 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("FillMode")))
         {
-            afxFillMode fillMode = AfxFindFillMode(&content);
-            AfxAssertRange(afxFillMode_TOTAL, fillMode, 1);
+            avxFillMode fillMode = AfxFindFillMode(&content);
+            AfxAssertRange(avxFillMode_TOTAL, fillMode, 1);
             config->fillMode = fillMode;
-            config->rasFlags |= afxRasterizationFlag_FILL_MODE;
+            config->rasFlags |= avxRasterizationFlag_FILL_MODE;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthBias")))
         {
@@ -399,7 +399,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 
                 if (0 == AfxCompareString(&name, &AfxStaticString("constant")))
                 {
-                    afxBool depthBiasConstFactor;
+                    afxReal depthBiasConstFactor;
                     
                     if (AfxScanString(&content, "%f", &depthBiasConstFactor))
                     {
@@ -410,7 +410,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
                 else if (0 == AfxCompareString(&name, &AfxStaticString("clamp")))
                 {
-                    afxBool depthBiasClamp;
+                    afxReal depthBiasClamp;
 
                     if (AfxScanString(&content, "%f", &depthBiasClamp))
                     {
@@ -421,7 +421,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 }
                 else if (0 == AfxCompareString(&name, &AfxStaticString("slope")))
                 {
-                    afxBool depthBiasSlopeScale;
+                    afxReal depthBiasSlopeScale;
                     
                     if (AfxScanString(&content, "%f", &depthBiasSlopeScale))
                     {
@@ -438,7 +438,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 
             if (enabledSet)
             {
-                config->rasFlags |= afxRasterizationFlag_DEPTH_BIAS;
+                config->rasFlags |= avxRasterizationFlag_DEPTH_BIAS;
 
                 if (!clampSet)
                 {
@@ -466,24 +466,24 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
             if (AfxScanString(&content, "%f", &lineWidth))
             {
                 config->lineWidth = lineWidth;
-                config->rasFlags |= afxRasterizationFlag_LINE_WIDTH;
+                config->rasFlags |= avxRasterizationFlag_LINE_WIDTH;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthTestEnabled")))
         {
             config->depthTestEnabled = TRUE;
-            config->dsFlags |= afxDepthStencilFlag_TEST;
+            config->dsFlags |= avxDepthStencilFlag_TEST;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthWriteDisabled")))
         {
             config->depthWriteDisabled = TRUE;
-            config->dsFlags |= afxDepthStencilFlag_DONT_WRITE;
+            config->dsFlags |= avxDepthStencilFlag_DONT_WRITE;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthCompareOp")))
         {
             if ((config->depthCompareOp = AfxFindCompareOp(&content)))
             {
-                config->dsFlags |= afxDepthStencilFlag_COMPARE;
+                config->dsFlags |= avxDepthStencilFlag_COMPARE;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthBoundsTest")))
@@ -524,7 +524,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 
             if (boundsSet)
             {
-                config->dsFlags = afxDepthStencilFlag_BOUNDS_TEST;
+                config->dsFlags = avxDepthStencilFlag_BOUNDS_TEST;
 
                 if (!boundsMinSet)
                 {
@@ -549,7 +549,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 {
                     if ((config->stencilTestEnabled = (0 == AfxCompareString(&content, &AfxStaticString("true")))))
                     {
-                        config->dsFlags |= afxDepthStencilFlag_STENCIL_TEST;
+                        config->dsFlags |= avxDepthStencilFlag_STENCIL_TEST;
 #if !0
                         afxNat childCnt2 = AfxCountXmlChilds(xml, childIdx);
 
@@ -607,7 +607,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
                 
                 AfxResetUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt]);
                 AfxReplicateUri(&config->xfmrPipb.shdUri[config->xfmrPipb.shdCnt], &tempUri);
-                config->xfmrPipb.shdStage[config->xfmrPipb.shdCnt] = afxShaderStage_FRAGMENT;
+                config->xfmrPipb.shdStage[config->xfmrPipb.shdCnt] = avxShaderStage_FRAGMENT;
                 ++config->xfmrPipb.shdCnt;
             }
             else
@@ -626,7 +626,7 @@ _AVX afxError AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, 
 }
 
 #if 0
-_AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, afxPipelineBlueprint const* identity, afxPipelineBlueprint *ds, afxPipelineDepthFlags *foundMask)
+_AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *node, afxNat elemIdx, afxNat specIdx, afxBool front, avxPipelineBlueprint const* identity, avxPipelineBlueprint *ds, avxPipelineDepthFlags *foundMask)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -700,7 +700,7 @@ _AVX afxError _AfxParseXmlBackedPipelineDepthStateStencilFace(afxXmlNode const *
 }
 #endif
 
-_AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
+_AVX afxError AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(config);
@@ -721,24 +721,24 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
         
         if (0 == AfxCompareString(&name, &AfxStaticString("PrimitiveTopology")))
         {
-            afxPrimTopology primTop;
+            avxTopology primTop;
 
             if ((primTop = AfxFindPrimitiveTopology(&content)))
             {
-                AfxAssertRange(afxPrimTopology_TOTAL, primTop, 1);
+                AfxAssertRange(avxTopology_TOTAL, primTop, 1);
                 config->primTop = primTop;
-                config->primFlags |= afxPipelineFlag_TOPOLOGY;
+                config->primFlags |= avxPipelineFlag_TOPOLOGY;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("CullMode")))
         {
-            afxCullMode cullMode;
+            avxCullMode cullMode;
 
             if ((cullMode = AfxFindCullMode(&content)))
             {
-                AfxAssertRange(afxCullMode_TOTAL, cullMode, 1);
+                AfxAssertRange(avxCullMode_TOTAL, cullMode, 1);
                 config->cullMode = cullMode;
-                config->primFlags |= afxPipelineFlag_CULL_MODE;
+                config->primFlags |= avxPipelineFlag_CULL_MODE;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("FrontFace")))
@@ -750,13 +750,13 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
                 AfxAssert(!invertFrontFacing && (0 == AfxCompareString(&content, &AfxStaticString("CCW"))));
                 AfxAssertBool(invertFrontFacing);
                 config->invertFrontFacing = invertFrontFacing;
-                config->primFlags |= afxPipelineFlag_FRONT_FACE_INV;
+                config->primFlags |= avxPipelineFlag_FRONT_FACE_INV;
             }
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("DepthClampEnabled")))
         {
             config->depthClampEnabled = TRUE;
-            config->primFlags |= afxPipelineFlag_DEPTH_CLAMP;
+            config->primFlags |= avxPipelineFlag_DEPTH_CLAMP;
         }
         else if (0 == AfxCompareString(&name, &AfxStaticString("VertexShader")))
         {
@@ -768,7 +768,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
-                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_VERTEX;
+                config->shdStage[baseShd + foundShdCnt] = avxShaderStage_VERTEX;
                 ++foundShdCnt;
             }
             else
@@ -826,7 +826,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
-                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_TESS_EVAL;
+                config->shdStage[baseShd + foundShdCnt] = avxShaderStage_TESS_EVAL;
                 ++foundShdCnt;
             }
             else
@@ -844,7 +844,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
-                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_TESS_CTRL;
+                config->shdStage[baseShd + foundShdCnt] = avxShaderStage_TESS_CTRL;
                 ++foundShdCnt;
             }
             else
@@ -862,7 +862,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
 
                 AfxResetUri(&config->shdUri[baseShd + foundShdCnt]);
                 AfxReplicateUri(&config->shdUri[baseShd + foundShdCnt], &tempUri);
-                config->shdStage[baseShd + foundShdCnt] = afxShaderStage_PRIMITIVE;
+                config->shdStage[baseShd + foundShdCnt] = avxShaderStage_PRIMITIVE;
                 ++foundShdCnt;
             }
             else
@@ -880,7 +880,7 @@ _AVX afxError AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat 
     return err;
 }
 
-_AVX afxError AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* uri)
+_AVX afxError AfxParsePipelineFromXsh(avxPipelineBlueprint* pipb, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(pipb);
@@ -1066,7 +1066,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
 
                                     if (0 == AfxCompareString(name, &g_str_Shader))
                                     {
-                                        afxShaderStage stage = NIL;
+                                        avxShaderStage stage = NIL;
                                         afxString const *shaderName = NIL;
 
                                         for (afxNat l = 0; l < attrCnt; l++)
@@ -1107,7 +1107,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                     }
                                     else if (0 == AfxCompareString(name, &g_str_Input))
                                     {
-                                        afxPipelinePrimitiveState ias = { afxPrimTopology_TRI_LIST, FALSE };
+                                        avxPipelinePrimitiveState ias = { avxTopology_TRI_LIST, FALSE };
                                         afxNat foundMask = NIL;
 
                                         if (AfxParseXmlBackedPipelinePrimitiveState(node3, &ias, &foundMask))
@@ -1119,7 +1119,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                 }
 
                                 {
-                                    afxPipelineRasterizerState rs = { FALSE, FALSE, afxFillMode_SOLID, afxCullMode_BACK, afxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
+                                    avxPipelineRasterizerState rs = { FALSE, FALSE, avxFillMode_SOLID, avxCullMode_BACK, avxFrontFace_CCW, FALSE, 0, 0, 0, 1 };
                                     afxNat foundMask = NIL;
 
                                     if (AfxParseXmlBackedPipelineRasterizerState(node2, &rs, &foundMask))
@@ -1130,7 +1130,7 @@ _AVX afxError AfxParseXmlBackedDrawOperationBlueprint(afxXmlNode const *node, af
                                 }
 
                                 {
-                                    afxPipelineDepthState ds = { FALSE, FALSE, afxCompareOp_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
+                                    avxPipelineDepthState ds = { FALSE, FALSE, avxCompareOp_ALWAYS, FALSE, FALSE, { NIL, NIL, NIL, NIL }, { NIL, NIL, NIL, NIL }, 0, 1 };
                                     afxNat foundMask = NIL;
 
                                     if (AfxParseXmlBackedPipelineDepthState(node2, &ds, &foundMask))
@@ -1199,7 +1199,7 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                             {
                                 if (AfxMeasureUriDirectory(&blueprint.reqShaders[k])) // has directory, probably is defined externaly in same XML.
                                 {
-                                    afxShader shd;
+                                    avxShader shd;
                                     AfxAcquireShaders(dctx, 1, &blueprint.reqShaders[k], &shd);
                                     AfxAssertObjects(1, &shd, afxFcc_SHD);
                                 }
@@ -1215,7 +1215,7 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                         if (0 == AfxCompareString(name, &g_str_Shader))
                                         {
                                             afxString const *shdName = NIL;
-                                            afxShaderStage shdStage = NIL;
+                                            avxShaderStage shdStage = NIL;
 
                                             afxNat attrCnt = AfxCountXmlAttributes(node11);
 
@@ -1242,10 +1242,10 @@ _AVX afxResult AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[], 
                                             {
                                                 if (0 == AfxCompareString(shdName, AfxGetUriRestring(&blueprint.reqShaders[k])))
                                                 {
-                                                    afxShaderBlueprint shdb;
+                                                    avxShaderBlueprint shdb;
                                                     AfxParseXmlBackedShaderBlueprint(&shdb, node11);
 
-                                                    afxShader shd;
+                                                    avxShader shd;
                                                     AfxCompileShaders(dctx, 1, &shdb, &shd);
                                                     AfxAssertObjects(1, &shd, afxFcc_SHD);
                                                 }

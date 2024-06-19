@@ -19,7 +19,7 @@
 
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/mem/afxArray.h"
-#include "qwadro/draw/afxColor.h"
+#include "qwadro/draw/math/avxColor.h"
 
 typedef enum akxSkyType
 {
@@ -43,9 +43,9 @@ AFX_DEFINE_STRUCT(akxSky)
     afxV3d          rotPivot;
     afxQuat         rotQuat;
     afxM4d          rotMtx;
-    afxRasterizer   skyRazr;
-    afxVertexInput  skyVin;
-    afxSampler      smp;
+    avxRasterizer   skyRazr;
+    avxVertexInput  skyVin;
+    avxSampler      smp;
 };
 
 AKX afxError    AfxBuildSkybox(akxSky* sky, afxSimulation sim);

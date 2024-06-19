@@ -17,11 +17,11 @@
 #include "qwadro/io/afxXml.h"
 #include "sgl.h"
 
-#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/pipe/avxPipeline.h"
 
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 _SGL afxError _DpuBindAndSyncFenc(sglDpu* dpu, afxBool syncOnly, afxFence fenc)
 {
@@ -68,31 +68,31 @@ _SGL afxError _SglWaitFenc(afxBool waitAll, afxNat64 timeout, afxNat cnt, afxFen
             case GL_ALREADY_SIGNALED:
             {
                 // the sync object was signaled before the function was called.
-                fenc->base.signaled = TRUE;
+                fenc->m.signaled = TRUE;
                 break;
             }
             case GL_TIMEOUT_EXPIRED:
             {
                 // the sync object did not signal within the given timeout period.
-                fenc->base.signaled = FALSE;
+                fenc->m.signaled = FALSE;
                 break;
             }
             case GL_CONDITION_SATISFIED:
             {
                 // the sync object was signaled within the given timeout period.
-                fenc->base.signaled = TRUE;
+                fenc->m.signaled = TRUE;
                 break;
             }
             case GL_WAIT_FAILED:
             default:
             {
                 // If an OpenGL Error occurred, then GL_WAIT_FAILED will be returned in addition to raising an error.
-                fenc->base.signaled = FALSE;
+                fenc->m.signaled = FALSE;
                 break;
             }
             }
 
-            if (fenc->base.signaled && !waitAll)
+            if (fenc->m.signaled && !waitAll)
                 break;
         }
 
@@ -129,7 +129,7 @@ _SGL afxError _SglResetFenc(afxNat cnt, afxFence const fences[])
     {
         afxFence fenc = fences[i];
         AfxAssertObjects(1, fenc, afxFcc_FENC);
-        fenc->base.signaled = FALSE;
+        fenc->m.signaled = FALSE;
     }
     return err;
 }
@@ -174,9 +174,7 @@ _SGL afxClassConfig const _SglFencMgrCfg =
     .fcc = afxFcc_FENC,
     .name = "Fence",
     .desc = "Device Synchronization Fence",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxFence)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxFence)),
     .ctor = (void*)_SglFencCtor,
     .dtor = (void*)_SglFencDtor
 };
@@ -212,9 +210,7 @@ _SGL afxClassConfig const _SglSemMgrCfg =
     .fcc = afxFcc_SEM,
     .name = "Semaphore",
     .desc = "Device Synchronization Semaphore",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxSemaphore)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxSemaphore)),
     .ctor = (void*)_SglSemCtor,
     .dtor = (void*)_SglSemDtor
 };

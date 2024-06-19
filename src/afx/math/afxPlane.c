@@ -93,7 +93,7 @@ _AFXINL afxReal AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3d co
     return (AfxFindPlaneDistance(p, a)) / AfxDotV3d(p, t);
 }
 
-_AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxAabb const aabb)
+_AFXINL afxResult AfxTestPlaneAgainstAabb(afxPlane const p, afxBox const aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(p);
@@ -153,7 +153,7 @@ _AFXINL afxBool AfxTestPlaneAgainstSphere(afxPlane const p, afxSphere const* s)
     AfxAssert(p);
     AfxAssert(s);
 
-    if (AfxDotV3d(s->origin, p) + p[AFX_PLANE_OFFSET] <= -s->radius)
+    if (AfxDotV3d(s->centre, p) + p[AFX_PLANE_OFFSET] <= -s->radius)
         return FALSE;
 
     return TRUE;

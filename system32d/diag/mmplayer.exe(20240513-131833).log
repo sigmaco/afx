@@ -1,0 +1,418 @@
+Booting up the Qwadro Execution Ecosystem...
+Registering... SystemRegistering... String Basemalign 530FF0
+realign 5280A0
+malign 5310B0
+afxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.realign 503AD0
+realign 5280F0
+malign 530FF0
+realign 531420
+realign 534060
+realign 530FF0
+realign 5314F0
+realign 530FF0
+realign 5314F0
+realign 530FF0
+realign 5314F0
+realign 5315C0
+realign 531690
+malign 530FF0
+realign 5314F0
+realign 531770
+realign 5315B0
+realign 5316A0
+realign 531790
+realign 5315B0
+malign 530FF0
+realign 5316C0
+Registering... ThreadRegistering... Memory Management UnitRegistering... ServiceRegistering... CodecRegistering... StreamRegistering... ArchiveRegistering... StorageRegistering... ModuleRegistering... DeviceAcquiring thread...  5192 "afxSystem_w32.c:523"realign 5280F0
+malign 531780
+malign 535040
+realign 528140
+malign 531A90
+Mounting... <.>('E:/qwadro/afx///'),5malign 531D90
+malign 503A20
+Mounting... <system>('E:/qwadro/afx//system/'),5malign 530FF0
+malign 534060
+Mounting... <system>('E:/qwadro/afx//system32/'),7malign 535410
+malign 5340C0
+Mounting... <system>('E:/qwadro/afx//system32d/'),7malign 535480
+malign 534120
+Mounting... <//./c/>('C:\'),7malign 5354F0
+malign 5205E0
+Mounting... <//./e/>('E:\'),7malign 535560
+malign 520630
+Mounting... <//./f/>('F:\'),7malign 5355D0
+malign 520670
+Mounting... <//./g/>('G:\'),7malign 535640
+malign 5206C0
+realign 534180
+malign 5356B0
+Mounting... <//./h/>('H:\'),7malign 533030
+malign 520700
+Mounting... <//./i/>('I:\'),7malign 5330A0
+malign 520750
+Mounting... <//./z/>('Z:\'),7malign 533110
+malign 520790
+Loading module... <e2coree.dll>realign 528140
+malign 5359B0
+Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>Registering... DrawSystemRegistering... CameraRegistering... DrawDevice[Device]Registering... DrawOutputRegistering... DrawInputmalign 535C10
+realign 536DC0
+realign 528190
+malign 535C10
+realign 536E80
+realign 531060
+realign 535C10
+realign 533180
+realign 51B6E0
+realign 535C10
+realign 536F50
+realign 535C10
+realign 536F50
+realign 535C10
+realign 536F50
+realign 537020
+realign 537100
+realign 536F50
+realign 537040
+realign 537130
+realign 536F50
+realign 537230
+realign 537090
+malign 536E80
+realign 535C10
+realign 5371A0
+malign 536E80
+realign 537090
+realign 5372C0
+realign 537160
+realign 537280
+realign 5373B0
+realign 537160
+realign 5372B0
+realign 537400
+realign 537160
+realign 5372D0
+realign 537440
+realign 537160
+realign 5372F0
+realign 537430
+realign 537090
+realign 537430
+realign 537090
+realign 537430
+realign 537090
+realign 537430
+realign 537090
+malign 536C20
+realign 537DC0
+realign 528190
+malign 536C20
+realign 537E90
+realign 531060
+realign 537F50
+realign 533180
+realign 51B6E0
+realign 537F50
+realign 536C20
+realign 537F50
+realign 536C20
+realign 537F50
+realign 538020
+realign 5380F0
+realign 537F50
+realign 538040
+realign 538130
+realign 537F50
+realign 538050
+realign 5381A0
+realign 537E90
+malign 536C20
+realign 5381A0
+realign 538260
+malign 536C20
+realign 537E90
+realign 538380
+realign 5384A0
+realign 538260
+realign 538390
+realign 5384F0
+realign 538260
+realign 5383D0
+realign 538540
+realign 538260
+realign 5383F0
+realign 538590
+realign 538260
+realign 538410
+realign 537E90
+realign 538550
+realign 537E90
+realign 538550
+realign 538730
+realign 538920
+realign 538550
+realign 538760
+realign 537E90
+realign 538260
+realign 538490
+realign 5386C0
+malign 536C20
+realign 538260
+realign 538330
+realign 528190
+malign 538570
+malign 538B70
+realign 5341E0
+malign 538C30
+realign 537C50
+realign 5280A0
+malign 538B70
+realign 538DE0
+realign 531060
+realign 537D10
+realign 533180
+realign 51B6E0
+realign 537D10
+realign 538B70
+realign 537D10
+realign 538B70
+realign 538EB0
+realign 538F70
+realign 539050
+realign 538EB0
+realign 538F90
+realign 539080
+realign 538EB0
+realign 538FB0
+realign 5390F0
+realign 538DE0
+malign 538B70
+realign 5390F0
+realign 5391C0
+malign 538B70
+realign 538DE0
+realign 5392E0
+realign 539400
+realign 5391C0
+realign 5392F0
+realign 539440
+realign 5391C0
+realign 539320
+realign 539490
+realign 5391C0
+realign 539350
+realign 5394E0
+realign 5391C0
+realign 539360
+realign 538DE0
+realign 5394B0
+realign 538DE0
+realign 5394B0
+realign 539680
+realign 539870
+realign 5394B0
+realign 5396C0
+realign 538DE0
+realign 5391C0
+realign 5393E0
+realign 539610
+malign 538B70
+realign 5391C0
+realign 539280
+Loading module... <targl4.dll>realign 534240
+malign 5394D0
+Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 5280A0
+Registering... DrawContextmalign 51B760
+Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008malign 53C510
+Acquiring thread...  0 "sglDdev_w32.c:1083"malign 53E310
+Doing the ASX start up...Loading module... <e2sound>Starting Thread Execution Unit 4592realign 535C30
+malign 5381C0
+Registering... SoundSystemRegistering... SoundDevice[Device]Registering... SoundOutputRegistering... SoundInputmalign 538030
+realign 537A50
+realign 5284B0
+malign 538030
+realign 542B10
+realign 544060
+realign 535C90
+realign 5331F0
+realign 51BCE0
+realign 542BE0
+realign 542C70
+realign 538030
+realign 5380D0
+realign 542BE0
+realign 545060
+realign 542BE0
+realign 538030
+realign 542BE0
+realign 538030
+realign 542BE0
+realign 538030
+realign 547040
+realign 542B10
+malign 542C20
+realign 547040
+realign 542C20
+malign 542B10
+realign 547110
+realign 5471D0
+realign 542B10
+realign 5471D0
+realign 542B10
+realign 5471D0
+realign 542B10
+realign 5471D0
+realign 542B10
+realign 5471D0
+realign 542B10
+realign 5471D0
+realign 542B10
+realign 547360
+realign 547110
+realign 5472B0
+realign 547470
+realign 547110
+realign 5472F0
+realign 5474E0
+realign 547110
+realign 5284B0
+malign 547310
+malign 542C60
+realign 5476D0
+realign 528500
+malign 542C60
+realign 5477A0
+realign 544060
+realign 535C90
+realign 5331F0
+realign 51BCE0
+realign 543F90
+realign 542C60
+realign 543F90
+realign 542C60
+realign 547860
+realign 545060
+realign 542C60
+realign 547860
+realign 547950
+realign 547A40
+realign 547860
+realign 547960
+realign 547AB0
+realign 5477A0
+malign 542C60
+realign 547AB0
+realign 547B70
+malign 542C60
+realign 5477A0
+realign 547C90
+realign 547DB0
+realign 547ED0
+realign 547B70
+realign 547CC0
+realign 547E10
+realign 547B70
+realign 547CD0
+realign 547E40
+realign 547B70
+realign 547D00
+realign 547B70
+realign 5477A0
+realign 547CC0
+realign 5477A0
+realign 547CC0
+realign 547E90
+realign 548070
+realign 547CC0
+realign 547EB0
+Loading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 5F1610
+Registering... SoundBrigeRegistering... SoundContextmalign 544060
+Loading module... <openal32.dll>realign 5F2090
+malign 5F1DD0
+malign 5F2240
+Acquiring thread...  0 "salSdev_w32.c:448"realign 534540
+malign 5F2490
+malign 5F27A0
+The audience is listeningStarting Thread Execution Unit 3972malign 5FC0B0
+realign 5FD260
+realign 576A70
+malign 5FD320
+realign 5FD3F0
+realign 544270
+realign 5F81C0
+realign 5332D0
+realign 51BFE0
+realign 5FD320
+realign 5FD4B0
+realign 5FD320
+realign 5FD4B0
+realign 5FD320
+realign 5452E0
+realign 5FD790
+realign 5FD870
+realign 5FD960
+realign 5FD790
+realign 5FD890
+realign 5FD990
+realign 5FD320
+realign 5FD430
+malign 5FD320
+realign 5FD540
+realign 5FD600
+malign 5FD320
+realign 5FD3F0
+realign 5FD720
+realign 5FD840
+realign 5FD600
+realign 5FD730
+realign 5FDAD0
+realign 5FD600
+realign 5FD770
+realign 5FDAD0
+realign 5FD600
+realign 5FD790
+realign 5FDAD0
+realign 5FD600
+realign 5FD7B0
+realign 5FD320
+realign 5FDAD0
+realign 5FD320
+realign 5FDAD0
+realign 5FD320
+realign 5FDAD0
+realign 5FD320
+realign 5FDAD0
+realign 5FD320
+realign 5FD600
+realign 5FDAD0
+realign 5FD600
+malign 5FD840
+realign 5FDAD0
+realign 5FDBA0
+Doing the AUX start up...Loading module... <e2ux>Creating transient OpenGL contextRegistering... ShellRegistering... HIDRegistering... Controller[HID]Registering... WindowRegistering... Scriptmalign 55585B0
+Acquiring HID at port 0realign 556A470
+malign 56845F0
+Mounting... <code>('E:/qwadro/afx//system/'),7malign 5592260
+malign 554F920
+Entering the Thread Execution Environment 5192
+realign 556A650
+malign 5686430
+malign 5310B0
+malign 5686910
+malign 5687950
+malign 333B300
+realign 556A6A0
+malign 5689E20
+malign 556A740

@@ -19,7 +19,7 @@
 #ifndef AFX_SIMULATION_H
 #define AFX_SIMULATION_H
 
-#include "qwadro/core/afxManager.h"
+#include "qwadro/base/afxClass.h"
 #include "qwadro/sim/akxEntity.h"
 #include "qwadro/sim/rendering/akxLighting.h"
 #include "qwadro/space/afxSkeleton.h"
@@ -87,7 +87,7 @@ AKX mmt Mmt;
 AFX_DEFINE_STRUCT(akxSimulationConfig)
 {
     afxUri const*   driver;
-    afxAabb         extent;
+    afxBox         extent;
     afxDrawContext  dctx;
     afxDrawInput    din;
     afxSoundContext sctx;
@@ -103,31 +103,31 @@ AFX_OBJECT(afxSimulation)
 {
     afxMmu          genrlMem;
     afxChain        classes;
-    afxManager      assets;
-    afxManager      bodies;
-    afxManager      motors;
-    afxManager      entities;
-    afxManager      lights;
-    afxManager      materials;
-    afxManager      meshes;
-    afxManager      meshDatas;
-    afxManager      topologies;
-    afxManager      models;
-    afxManager      skeletons;
-    afxManager      poseMgr;
-    afxManager      posbMgr;
-    afxManager      curMgr;
-    afxManager      motMgr;
-    afxManager      aniMgr;
-    afxManager      nodes;
-    afxManager      renderers;
+    afxClass      assets;
+    afxClass      bodies;
+    afxClass      motors;
+    afxClass      entities;
+    afxClass      lights;
+    afxClass      materials;
+    afxClass      meshes;
+    afxClass      meshDatas;
+    afxClass      topologies;
+    afxClass      models;
+    afxClass      skeletons;
+    afxClass      poseMgr;
+    afxClass      posbMgr;
+    afxClass      curMgr;
+    afxClass      motMgr;
+    afxClass      aniMgr;
+    afxClass      nodes;
+    afxClass      renderers;
 
     afxV4d          right;
     afxV4d          up;
     afxV4d          back;
     afxM3d          basis;
     afxV4d          origin;
-    afxAabb         extent;
+    afxBox         extent;
     afxReal         unitsPerMeter;
     afxReal         allowedLodErrFadingFactor;
 
@@ -143,21 +143,21 @@ AFX_OBJECT(afxSimulation)
 
 AKX afxMmu          AfxGetSimulationMmu(afxSimulation sim);
 
-AKX afxManager*     AfxGetCurveClass(afxSimulation sim);
-AKX afxManager*     AkxGetMotorClass(afxSimulation sim);
-AKX afxManager*     AfxGetBodyClass(afxSimulation sim);
-AKX afxManager*     AfxGetEntityClass(afxSimulation sim);
-AKX afxManager*     AfxGetLightClass(afxSimulation sim);
-AKX afxManager*     AfxGetMaterialClass(afxSimulation sim);
-AKX afxManager*     AkxGetMeshClass(afxSimulation sim);
-AKX afxManager*     AkxGetMeshDataClass(afxSimulation sim);
-AKX afxManager*     AkxGetMeshTopologyClass(afxSimulation sim);
-AKX afxManager*     AkxGetModelClass(afxSimulation sim);
-AKX afxManager*     AfxGetNodeClass(afxSimulation sim);
-AKX afxManager*     AfxGetPoseClass(afxSimulation sim);
-AKX afxManager*     AfxGetPoseBufferClass(afxSimulation sim);
-AKX afxManager*     AfxGetRendererClass(afxSimulation sim);
-AKX afxManager*     AfxGetSkeletonClass(afxSimulation sim);
+AKX afxClass*     AfxGetCurveClass(afxSimulation sim);
+AKX afxClass*     AkxGetMotorClass(afxSimulation sim);
+AKX afxClass*     AfxGetBodyClass(afxSimulation sim);
+AKX afxClass*     AfxGetEntityClass(afxSimulation sim);
+AKX afxClass*     AfxGetLightClass(afxSimulation sim);
+AKX afxClass*     AfxGetMaterialClass(afxSimulation sim);
+AKX afxClass*     AkxGetMeshClass(afxSimulation sim);
+AKX afxClass*     AkxGetMeshDataClass(afxSimulation sim);
+AKX afxClass*     AkxGetMeshTopologyClass(afxSimulation sim);
+AKX afxClass*     AkxGetModelClass(afxSimulation sim);
+AKX afxClass*     AfxGetNodeClass(afxSimulation sim);
+AKX afxClass*     AfxGetPoseClass(afxSimulation sim);
+AKX afxClass*     AfxGetPoseBufferClass(afxSimulation sim);
+AKX afxClass*     AfxGetRendererClass(afxSimulation sim);
+AKX afxClass*     AfxGetSkeletonClass(afxSimulation sim);
 
 AKX afxNat          AfxEnumerateBodies(afxSimulation sim, afxNat base, afxNat cnt, afxBody bod[]);
 AKX afxNat          AfxEnumerateEntities(afxSimulation sim, afxNat base, afxNat cnt, akxEntity ent[]);
@@ -170,7 +170,7 @@ AKX afxNat          AfxEnumerateSkeletons(afxSimulation sim, afxNat base, afxNat
 AKX afxError        _AfxSimulationProcess(afxSimulation sim);
 
 AKX afxError        AfxStepSimulation(afxSimulation sim);
-AKX afxError        AfxCullSimulation(afxSimulation sim, afxCamera cam, afxArray* pvs);
+AKX afxError        AfxCullSimulation(afxSimulation sim, avxCamera cam, afxArray* pvs);
 AKX afxError        AfxRenderSimulation(afxSimulation sim, afxArray const* pvs);
 
 AKX afxNat          AfxCountMotors(afxSimulation sim);
@@ -187,7 +187,7 @@ AKX void            AfxComputeBasisConversion(afxSimulation sim, afxReal unitsPe
 ////////////////////////////////////////////////////////////////////////////////
 
 AKX afxNat          AfxCountSimulations(void);
-AKX afxManager*     AfxGetSimulationClass(void);
+AKX afxClass*     AfxGetSimulationClass(void);
 AKX afxNat          AfxEnumerateSimulations(afxNat first, afxNat cnt, afxSimulation simulations[]);
 AKX afxNat          AfxInvokeSimulations(afxNat first, afxNat cnt, afxBool(*f)(afxSimulation, void*), void *udd);
 AKX afxError        AfxAcquireSimulations(afxNat cnt, akxSimulationConfig const config[], afxSimulation simulations[]);

@@ -180,15 +180,10 @@ void UnlockBinkTextures(afxBinkVideo *bnk, afxNat i)
 }
 #endif
 
-DLLEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb)
+DLLEXPORT afxError AfxBinkPrepareFrameBlit(afxBinkVideo *bnk, avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
-    Start_timer();
-    ++bnk->Frame_count;
-
-    AfxAssertObjects(1, &bnk->yv12ToRgbaRazr, afxFcc_RAZR);
-    AvxCmdBindRasterizer(cmdb, bnk->yv12ToRgbaRazr, NIL);
-
+    
     afxRasterIo op = { 0 };
     AfxGetRasterExtent(bnk->rasters[bnk->buffers.FrameNum][0], 0, op.rgn.whd);
     op.offset = bnk->rasUnpakOff[0];
@@ -214,9 +209,22 @@ DLLEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb)
     op.rowCnt = bnk->buffers.cRcBBufferHeight;
     AvxCmdUnpackRaster(cmdb, bnk->rasters[bnk->buffers.FrameNum][2], &op, bnk->stageBuffers[bnk->buffers.FrameNum]);
 
+    return err;
+}
+
+DLLEXPORT afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb)
+{
+    afxError err = AFX_ERR_NONE;
+    Start_timer();
+    ++bnk->Frame_count;
+
+    AfxAssertObjects(1, &bnk->yv12ToRgbaRazr, afxFcc_RAZR);
+    AvxCmdBindRasterizer(cmdb, bnk->yv12ToRgbaRazr, NIL);
+
     // Set the textures.
     //AvxCmdBindLegos(cmdb, 0, 1, &(bnk->rsrc[bnk->buffers.FrameNum].lego));
-    AvxCmdBindRasters(cmdb, 0, 0, 3, bnk->samplers, bnk->rasters[bnk->buffers.FrameNum]);
+    AvxCmdBindSamplers(cmdb, 0, 0, 3, bnk->samplers);
+    AvxCmdBindRasters(cmdb, 0, 0, 3, bnk->rasters[bnk->buffers.FrameNum], NIL);
 
     AvxCmdDraw(cmdb, 0, 1, 0, 4); // tristripped quad in shader
 
@@ -342,7 +350,7 @@ DLLEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
     afxError err = AFX_ERR_NONE;
     bnk->running = FALSE;
 
-    BinkSetSoundSystem(BinkOpenMiles, 0);
+    //BinkSetSoundSystem(BinkOpenMiles, 0);
 
     //AfxFindSymbolAddresses(bnk->binkw32, AFX_COUNTOF(test), test, bink19c.v);
 
@@ -355,12 +363,12 @@ DLLEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
     
     bnk->yv12ToRgbaRazr = NIL;
 
-    afxSamplerConfig smpSpec = { 0 };
-    smpSpec.magFilter = (smpSpec.minFilter = afxTexelFilter_LINEAR);
-    smpSpec.mipmapFilter = afxTexelFilter_LINEAR;
-    smpSpec.uvw[0] = (smpSpec.uvw[1] = (smpSpec.uvw[2] = afxTexelAddress_CLAMP));
-    //smpSpec.uvw[1] = afxTexelAddress_REPEAT;
-    //smpSpec.uvw[2] = afxTexelAddress_REPEAT;
+    avxSamplerConfig smpSpec = { 0 };
+    smpSpec.magFilter = (smpSpec.minFilter = avxTexelFilter_LINEAR);
+    smpSpec.mipFilter = avxTexelFilter_LINEAR;
+    smpSpec.uvw[0] = (smpSpec.uvw[1] = (smpSpec.uvw[2] = avxTexelAddress_CLAMP));
+    //smpSpec.uvw[1] = avxTexelAddress_REPEAT;
+    //smpSpec.uvw[2] = avxTexelAddress_REPEAT;
 
     AfxAcquireSamplers(bnk->dctx, 1, &smpSpec, &bnk->samplers[0]);
     AfxAssertObjects(1, &bnk->samplers, afxFcc_SAMP);
@@ -370,7 +378,7 @@ DLLEXPORT afxError AfxSetUpBinkPlayer(afxBinkVideo *bnk, afxDrawContext dctx)
     bnk->samplers[3] = bnk->samplers[0];
 
     afxUri uri;
-    AfxMakeUri(&uri, "system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
+    AfxMakeUri(&uri, "../system/video/rgbOutYuv.xsh.xml?yFlipped", 0);
     bnk->yv12ToRgbaRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
     AfxAssert(bnk->yv12ToRgbaRazr);
 

@@ -21,7 +21,7 @@
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/space/afxCurve.h"
 #include "qwadro/math/afxTransform.h"
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/base/afxFixedString.h"
 #include "qwadro/space/afxMotion.h"
 #include "qwadro/space/akxPose.h"
 

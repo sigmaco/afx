@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 //#include "afxDirectDrawTexture.h"
 #include "qwadro/draw/io/afxRaster.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include <stdio.h>
 #include <string.h>
 

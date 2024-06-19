@@ -20,7 +20,7 @@
 #define AFX_PLANE_H
 
 #include "qwadro/math/afxVector.h"
-#include "qwadro/math/afxAabb.h"
+#include "qwadro/math/afxBox.h"
 
 typedef afxV4d afxSimd(afxPlane);
 
@@ -53,7 +53,7 @@ AFXINL afxReal      AfxFindPlaneHitInterpolationConstant(afxPlane const p, afxV3
 /// <0 if the box is completly on the back side of the plane
 /// >0 if the box is completly on the front side of the plane
 /// 0 if the box intersects with the plane
-AFXINL afxResult    AfxTestPlaneAgainstAabb(afxPlane const p, afxAabb const aabb);
+AFXINL afxResult    AfxTestPlaneAgainstAabb(afxPlane const p, afxBox const aabb);
 
 /// Test this plane with a collision sphere.
 AFXINL afxBool      AfxTestPlaneAgainstSphere(afxPlane const p, afxSphere const* s);

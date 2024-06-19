@@ -15,7 +15,7 @@
  */
 
 #define _AFX_CORE_C
-//#define _AFX_EXECUTABLE_C
+//#define _AFX_MODULE_C
 //#define _AFX_ICD_C
 #define _AVX_DRAW_C
 #define _AFX_THREAD_C
@@ -24,8 +24,8 @@
 #define _AFX_DEVICE_C
 #define _AVX_DRAW_DRIVER_C
 #include "sgl.h"
-#include "sglDdrv.h"
-#include "qwadro/core/afxSystem.h"
+#include "WglLoader.h"
+#include "qwadro/exec/afxSystem.h"
 #pragma comment(lib, "opengl32")
 
 #define _CRT_SECURE_NO_WARNINGS 1
@@ -164,7 +164,7 @@ _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
 
     if (AfxTryEnterSlockExclusive(&dpu->deletionLock))
     {
-        if ((delRes = AfxPullNextQueueUnit(&dpu->deletionQueue)))
+        if ((delRes = AfxPeekQueue(&dpu->deletionQueue)))
         {
             switch (delRes->type)
             {
@@ -234,7 +234,7 @@ _SGL afxError _SglDdevProcessResDel(afxDrawDevice ddev, afxNat unitIdx)
             delRes->gpuHandle = 0;
             delRes->type = 0;
 
-            AfxPopNextQueue(&dpu->deletionQueue);
+            AfxPopQueue(&dpu->deletionQueue);
         }
         AfxExitSlockExclusive(&dpu->deletionLock);
     }
@@ -258,7 +258,7 @@ _SGL void _SglDctxDeleteGlRes(afxDrawContext dctx, afxNat type, void* gpuHandle)
     delRes.gpuHandlePtr = gpuHandle;
     delRes.type = type;
     
-    if (AfxPushQueueUnit(&dpu->deletionQueue, &delRes))
+    if (AfxPushQueue(&dpu->deletionQueue, &delRes))
         AfxThrowError();
 
     AfxExitSlockExclusive(&dpu->deletionLock);
@@ -324,7 +324,14 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
     HWND tmpHwnd = NIL;
     HDC tmpHdc = NIL;
     HGLRC tmpHrc = NIL;
-    DWORD pfdFlags = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DIRECT3D_ACCELERATED | PFD_SWAP_EXCHANGE | PFD_SUPPORT_COMPOSITION;
+    DWORD pfdFlags = PFD_DOUBLEBUFFER | PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_SWAP_EXCHANGE
+#if 0
+        | PFD_DIRECT3D_ACCELERATED
+#endif
+#if 0
+        | PFD_SUPPORT_COMPOSITION
+#endif
+    ;
     DWORD dwExStyle = WS_EX_APPWINDOW;
     DWORD wndStyles = WS_POPUP;
 
@@ -642,36 +649,36 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         dpu->nextVinAttribUpdCnt = 0;
         dpu->nextVinBindingsCnt = 0;
 
-        dpu->activeRasterState.depthCompareOp = afxCompareOp_LESS;
+        dpu->activeRasterState.depthCompareOp = avxCompareOp_LESS;
         dpu->activeRasterState.depthWriteDisabled = FALSE;
         dpu->activeRasterState.depthBounds[0] = 0.f;
         dpu->activeRasterState.depthBounds[1] = 1.f;
-        dpu->activeRasterState.stencilFront.compareOp = afxCompareOp_ALWAYS;
+        dpu->activeRasterState.stencilFront.compareOp = avxCompareOp_ALWAYS;
         dpu->activeRasterState.stencilFront.reference = 0;
         dpu->activeRasterState.stencilFront.compareMask = (dpu->activeRasterState.stencilFront.writeMask = 0xFFFFFFFF);
-        dpu->activeRasterState.stencilFront.failOp = (dpu->activeRasterState.stencilFront.passOp = (dpu->activeRasterState.stencilFront.depthFailOp = afxStencilOp_KEEP));
-        dpu->activeRasterState.stencilBack.compareOp = afxCompareOp_ALWAYS;
+        dpu->activeRasterState.stencilFront.failOp = (dpu->activeRasterState.stencilFront.passOp = (dpu->activeRasterState.stencilFront.depthFailOp = avxStencilOp_KEEP));
+        dpu->activeRasterState.stencilBack.compareOp = avxCompareOp_ALWAYS;
         dpu->activeRasterState.stencilBack.reference = 0;
         dpu->activeRasterState.stencilBack.compareMask = (dpu->activeRasterState.stencilBack.writeMask = 0xFFFFFFFF);
-        dpu->activeRasterState.stencilBack.failOp = (dpu->activeRasterState.stencilBack.passOp = (dpu->activeRasterState.stencilBack.depthFailOp = afxStencilOp_KEEP));
+        dpu->activeRasterState.stencilBack.failOp = (dpu->activeRasterState.stencilBack.passOp = (dpu->activeRasterState.stencilBack.depthFailOp = avxStencilOp_KEEP));
         dpu->activeRasterState.depthBiasConstFactor = 0.f;
         dpu->activeRasterState.depthBiasSlopeScale = 0.f;
 
         for (afxNat i = 0; i < 8; i++)
         {
-            dpu->activeRasterState.outs[i].blendConfig.aBlendOp = afxBlendOp_ADD;
-            dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp = afxBlendOp_ADD;
-            dpu->activeRasterState.outs[i].blendConfig.aSrcFactor = afxBlendFactor_ONE;
-            dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor = afxBlendFactor_ONE;
-            dpu->activeRasterState.outs[i].blendConfig.aDstFactor = afxBlendFactor_ZERO;
-            dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor = afxBlendFactor_ZERO;
+            dpu->activeRasterState.outs[i].blendConfig.aBlendOp = avxBlendOp_ADD;
+            dpu->activeRasterState.outs[i].blendConfig.rgbBlendOp = avxBlendOp_ADD;
+            dpu->activeRasterState.outs[i].blendConfig.aSrcFactor = avxBlendFactor_ONE;
+            dpu->activeRasterState.outs[i].blendConfig.rgbSrcFactor = avxBlendFactor_ONE;
+            dpu->activeRasterState.outs[i].blendConfig.aDstFactor = avxBlendFactor_ZERO;
+            dpu->activeRasterState.outs[i].blendConfig.rgbDstFactor = avxBlendFactor_ZERO;
             dpu->activeRasterState.outs[i].discardMask = NIL;
         }
 
         ///
 
         AfxSetUpSlock(&dpu->deletionLock);
-        AfxAllocateQueue(&dpu->deletionQueue, sizeof(_sglDeleteGlRes), 32);
+        AfxSetUpQueue(&dpu->deletionQueue, sizeof(_sglDeleteGlRes), 32);
 
         //gl->Enable(GL_FRAMEBUFFER_SRGB);
         gl->Enable(GL_TEXTURE_CUBE_MAP_SEAMLESS); _SglThrowErrorOccuried();
@@ -688,7 +695,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         GLfloat dataf2[3];
         GLint datai;
         GLint datai2[3];
-        afxDrawDeviceLimits limits = { 0 };
+        static afxDrawDeviceLimits limits = { 0 };
         gl->GetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &datai); _SglThrowErrorOccuried();
         limits.maxSampleMaskWords = datai;
         gl->GetIntegerv(GL_MAX_CLIP_DISTANCES, &datai); _SglThrowErrorOccuried();
@@ -797,7 +804,7 @@ _SGL afxError _SglBuildDpu(afxDrawDevice ddev, afxNat unitIdx)
         limits.maxBoundDescriptorSets = 4;
         limits.maxPushConstantsSiz = 0;
 
-        ddev->limits = limits;
+        ddev->limits = &limits;
 
         //dthrD->thr.proc = _SglDthrProcCb;
 
@@ -832,10 +839,10 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
 
     _SglDdevProcessResDel(ddev, unitIdx);
     AfxCleanUpSlock(&dpu->deletionLock);
-    AfxDeallocateQueue(&dpu->deletionQueue);
+    AfxCleanUpQueue(&dpu->deletionQueue);
 
-    //AfxAbolishManager(&ddev->ports[unitIdx].scripts);
-    //AfxAbolishManager(&ddev->ports[unitIdx].queues);
+    //AfxDeregisterClass(&ddev->ports[unitIdx].scripts);
+    //AfxDeregisterClass(&ddev->ports[unitIdx].queues);
 
     gl->DeleteVertexArrays(1, &dpu->emptyVao); _SglThrowErrorOccuried();
 
@@ -848,85 +855,11 @@ _SGL afxError _SglDestroyDpu(afxDrawDevice ddev, afxNat unitIdx)
         dpu->wgl.MakeCurrent(NIL, NIL);
 
     dpu->wgl.DeleteContext(dpu->glrc);
-
+    dpu->glrc = NIL;
     ReleaseDC(dpu->wnd, dpu->dc);
     DestroyWindow(dpu->wnd);
-    return err;
-}
-
-_SGL afxBool _SglDinProcCb(afxDrawInput din, void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &din, afxFcc_DIN);
-
-    afxDrawEvent* ev = udd;
-
-    if (din->procCb && (ev->accepted |= !!din->procCb(din, ev)))
-        AfxThrowError();
-
-    return FALSE; // don't interrupt curation;
-}
-
-_SGL afxBool _SglDoutProcCb(afxDrawOutput dout, void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dout, afxFcc_DOUT);
-
-    afxThread thr = (afxThread)udd;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    return FALSE; // don't interrupt curation;
-}
-
-_SGL afxBool _SglDctxProcCb(afxDrawContext dctx, void *udd)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    afxThread thr = (afxThread)udd;
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    afxDrawDevice ddev = AfxGetObjectProvider(dctx);
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-
-    afxDrawEvent ev = { 0 };
-    ev.id = afxDrawEventId_PREFETCH;
-
-    //AfxInvokeConnectedDrawInputs(dctx, 0, AFX_N32_MAX, _SglDinProcCb, &ev);
-
-    for (afxNat i = 0; i < dctx->base.ownedBridgeCnt; i++)
-    {
-        afxDrawBridge ddge = dctx->base.ownedBridges[i];
-        AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-        _DdgeProcCb(ddge, thr);
-    }
-
-    _SglDdevProcessResDel(ddev, 0); // delete after is safer?
-
-    //AfxInvokeConnectedDrawOutputs(dctx, 0, AFX_N32_MAX, _SglDoutProcCb, (void*)thr);
-
-    return FALSE; // don't interrupt curation;
-}
-
-_SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxThread thr)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    AfxAssertObjects(1, &thr, afxFcc_THR);
-
-    afxDrawSystem dsys;
-    AfxGetDrawSystem(&dsys);
-    AfxAssertObjects(1, &dsys, afxFcc_DSYS);
-
-    //AfxInvokeDrawContexts(ddev, 0, AFX_N32_MAX, _SglDctxProcCb, (void*)thr);
-
-    afxNat portCnt = ddev->portCnt;
-
-    for (afxNat i = 0; i < portCnt; i++)
-    {
-        afxManager* mgr = &ddev->ports[i].ddgeMgr;
-        AfxAssertClass(mgr, afxFcc_DDGE);
-        AfxInvokeObjects(mgr, 0, AFX_N32_MAX, (void*)_DdgeProcCb, thr);
-    }
+    dpu->dc = NIL;
+    dpu->wnd = NIL;
     return err;
 }
 
@@ -966,9 +899,7 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
     }
     default:
     {
-        if (ddev->dev.serving)
-            _SglDdevProcCb(ddev, thr);
-
+        AfxDoDeviceService(&ddev->dev);
         break;
     }
     }
@@ -976,27 +907,51 @@ _SGL afxResult DrawThreadProc(afxThread thr, afxEvent* ev)
     return 0;
 }
 
-_SGL afxError _SglDdevIddDtorCb(afxDrawDevice ddev)
+_SGL afxError _SglDdevStopCb(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddev, afxFcc_DDEV);
 
-    AfxExhaustChainedManagers(&ddev->dev.classes);
-
-    for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
     {
-        afxResult exitCode;
-        AfxRequestThreadInterruption(ddev->idd->dpus[i].dedThread);
-        AfxWaitForThread(ddev->idd->dpus[i].dedThread, &exitCode);
-        AfxReleaseObjects(1, &ddev->idd->dpus[i].dedThread);
+        for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
+        {
+            afxThread dedThread = ddev->idd->dpus[i].dedThread;
+
+            afxThread thr;
+            AfxGetThread(&thr);
+
+            if (dedThread == thr)
+                return err; // do not let a DPU thread do it
+        }
     }
 
-    AfxDeallocate(ddev->idd->dpus);
-    ddev->idd->dpus = NIL;
+    AfxExhaustChainedClasses(&ddev->dev.classes);
+
+    if (ddev->idd->dpus)
+    {
+        for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
+        {
+            afxThread dedThread = ddev->idd->dpus[i].dedThread;
+
+            afxThread thr;
+            AfxGetThread(&thr);
+
+            if (dedThread != thr)
+            {
+                afxResult exitCode;
+                do AfxRequestThreadInterruption(dedThread);
+                while (!AfxWaitForThread(dedThread, &exitCode));
+                AfxReleaseObjects(1, &dedThread);
+            }
+        }
+        AfxDeallocate(ddev->idd->dpus);
+        ddev->idd->dpus = NIL;
+    }
 
     UnregisterClassA(ddev->idd->wndClss.lpszClassName, ddev->idd->wndClss.hInstance);
-
-    AfxReleaseObjects(1, &ddev->idd->opengl32);
+    
+    if (ddev->idd->opengl32)
+        AfxReleaseObjects(1, &ddev->idd->opengl32);
 
     AfxDeallocate(ddev->idd);
     ddev->idd = NIL;
@@ -1004,9 +959,10 @@ _SGL afxError _SglDdevIddDtorCb(afxDrawDevice ddev)
     return err;
 }
 
-_SGL afxError _SglDdevIddCtorCb(afxDrawDevice ddev)
+_SGL afxError _SglDdevStartCb(afxDrawDevice ddev)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssert(!ddev->idd);
 
     if (!(ddev->idd = AfxAllocate(1, sizeof(ddev->idd[0]), 0, AfxHere()))) AfxThrowError();
     else
@@ -1071,14 +1027,17 @@ _SGL afxError _SglDdevIddCtorCb(afxDrawDevice ddev)
                             afxThreadConfig dtCfg = { 0 };
                             dtCfg.procCb = DrawThreadProc;
                             dtCfg.udd[0] = ddev;
-                            dtCfg.udd[1] = (void*)i;
+                            dtCfg.udd[1] = (void*)ddev->idd->dpus[i].portIdx;
 
                             if (AfxAcquireThread(AfxHere(), &dtCfg, &ddev->idd->dpus[i].dedThread)) AfxThrowError();
                             else
                             {
                                 AfxAssert(ddev->dev.procCb);
-                                ddev->dev.serving = TRUE;
+                                //ddev->dev.serving = TRUE;
                                 AfxRunThread(ddev->idd->dpus[i].dedThread);
+
+                                while (!ddev->dev.serving)
+                                    AfxYield();
                             }
                             AfxAssert(ddev->dev.procCb);
                         }
@@ -1098,6 +1057,113 @@ _SGL afxError _SglDdevIddCtorCb(afxDrawDevice ddev)
 
         if (err)
             AfxDeallocate(ddev->idd);
+    }
+    return err;
+}
+
+_SGL afxBool _SglDinProcCb(afxDrawInput din, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &din, afxFcc_DIN);
+
+    avxEvent* ev = udd;
+
+    //if (din->procCb && (ev->accepted |= !!din->procCb(din, ev)))
+      //  AfxThrowError();
+
+    return TRUE; // don't interrupt curation;
+}
+
+_SGL afxBool _SglDoutProcCb(afxDrawOutput dout, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dout, afxFcc_DOUT);
+    afxThread thr = (afxThread)udd;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    return TRUE; // don't interrupt curation;
+}
+
+_SGL afxBool _SglDctxProcCb(afxDrawContext dctx, void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxThread thr = (afxThread)udd;
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    afxDrawDevice ddev = AfxGetObjectProvider(dctx);
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+
+    AfxInvokeConnectedDrawInputs(dctx, 0, AFX_N32_MAX, _SglDinProcCb, thr);
+
+    for (afxNat i = 0; i < dctx->m.ownedBridgeCnt; i++)
+    {
+        if (ddev->idd->dpus[i].dedThread == thr)
+        {
+            afxDrawBridge ddge = dctx->m.ownedBridges[i];
+            AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+            _DdgeProcCb(ddge, thr);
+        }
+    }
+
+    _SglDdevProcessResDel(ddev, 0); // delete after is safer?
+
+    AfxInvokeConnectedDrawOutputs(dctx, 0, AFX_N32_MAX, _SglDoutProcCb, thr);
+
+    return TRUE; // don't interrupt curation;
+}
+
+_SGL afxError _SglDdevExecDpuCb(afxDrawDevice ddev, afxNat dpuIdx, afxThread thr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertRange(ddev->idd->dpuCnt, dpuIdx, 1);
+    sglDpu* dpu = &ddev->idd->dpus[dpuIdx];
+
+    if (dpu->dedThread == thr)
+    {
+        AfxInvokeDrawContexts(ddev, 0, AFX_N32_MAX, _SglDctxProcCb, (void*)thr);
+
+        afxClass* cls = &ddev->ddgeCls;
+        AfxAssertClass(cls, afxFcc_DDGE);
+        AfxInvokeClassInstances(cls, 0, AFX_N32_MAX, (void*)_DdgeProcCb, thr);
+    }
+    return err;
+}
+
+_SGL afxError _SglDdevProcCb(afxDrawDevice ddev, afxThread thr)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
+    AfxAssertObjects(1, &thr, afxFcc_THR);
+
+    if (ddev->ddgeCls.instCnt && !AfxDrawDeviceIsRunning(ddev))
+    {
+        if (_SglDdevStartCb(ddev)) AfxThrowError(); // start or resume
+        else
+        {
+            AfxAssert(AfxDrawDeviceIsRunning(ddev));
+        }
+    }
+
+    if (!err)
+    {
+        if (AfxDrawDeviceIsRunning(ddev))
+        {
+            for (afxNat i = 0; i < ddev->idd->dpuCnt; i++)
+            {
+                if (_SglDdevExecDpuCb(ddev, i, thr))
+                    AfxThrowError();
+            }
+        }
+    }
+
+    if (ddev->ddgeCls.instCnt == 0 && AfxDrawDeviceIsRunning(ddev))
+    {
+        if (_SglDdevStopCb(ddev)) // suspend or stop
+            AfxThrowError();
+
+        //AfxAssert(!AfxDrawDeviceIsRunning(ddev));
     }
     return err;
 }
@@ -1124,39 +1190,54 @@ _SGL afxResult AfxDeviceIoctl(afxDrawDevice ddev, afxNat reqCode, va_list va)
             },
         };
 
-        afxDrawDeviceInfo* info2 = va_arg(va, afxDrawDeviceInfo*);
-        AfxAssert(info2);
-        info2->procCb = _SglDdevProcCb;
-        info2->iddCtorCb = _SglDdevIddCtorCb;
-        info2->iddDtorCb = _SglDdevIddDtorCb;
-        info2->dinIddCtorCb = _SglDdevInitDinCb;
-        info2->doutIddDtorCb = _SglDdevDeinitDoutCb;
-        info2->doutIddCtorCb = _SglDdevInitDoutCb;
-        info2->portCnt = 1;
-        info2->portCaps = portCaps;
-        info2->clipSpace = AFX_CLIP_SPACE_OPENGL;
+        ddev->dev.procCb = (void*)_SglDdevProcCb;
+        ddev->stopCb = _SglDdevStopCb;
+        ddev->startCb = _SglDdevStartCb;
+        ddev->openCb = _SglDdevOpenCb;
+        ddev->closeCb = _SglDdevCloseCb;
+        ddev->openDinCb = _SglDdevOpenDinCb;
+        ddev->openDoutCb = _SglDdevOpenDoutCb;
+        ddev->closeDoutCb = _SglDdevCloseDoutCb;
+        ddev->portCnt = 1;
+        ddev->portCaps = portCaps;
+        ddev->clipSpace = AVX_CLIP_SPACE_OPENGL;
 
-        info2->dctxClsCfg = &_SglDctxMgrCfg;
-        info2->ddgeClsCfg = &_SglDdgeMgrCfg;
-        info2->dqueClsCfg = &_AvxDqueStdImplementation;
+        static afxDrawDeviceCaps caps =
+        {
+            .robustBufAccess = TRUE,
+            .fullDrawIdxUint32 = TRUE,
+            .rasterCubeArray = TRUE,
+            .independentBlend = TRUE,
+            .primShader = TRUE,
+            .dualSrcBlend = TRUE,
+            .logicOp = TRUE,
+            .multiDrawIndirect = TRUE,
+            .drawIndirectFirstInst = TRUE,
+            .depthClamp = TRUE,
+            .depthBiasClamp = TRUE,
+            .fillModeNonSolid = TRUE,
+            .multiViewport = TRUE,
+            .dxt = TRUE,
+            .shaderClipDist = TRUE,
+            .shaderCullDist = TRUE,
+            .alphaToOne = TRUE
+        };
 
-        info2->caps.robustBufAccess = TRUE;
-        info2->caps.fullDrawIdxUint32 = TRUE;
-        info2->caps.rasterCubeArray = TRUE;
-        info2->caps.independentBlend = TRUE;
-        info2->caps.primShader = TRUE;
-        info2->caps.dualSrcBlend = TRUE;
-        info2->caps.logicOp = TRUE;
-        info2->caps.multiDrawIndirect = TRUE;
-        info2->caps.drawIndirectFirstInst = TRUE;
-        info2->caps.depthClamp = TRUE;
-        info2->caps.depthBiasClamp = TRUE;
-        info2->caps.fillModeNonSolid = TRUE;
-        info2->caps.multiViewport = TRUE;
-        info2->caps.dxt = TRUE;
-        info2->caps.shaderClipDist = TRUE;
-        info2->caps.shaderCullDist = TRUE;
-        info2->caps.alphaToOne = TRUE;
+        afxClassConfig clsCfg = _AvxDdgeStdImplementation;        
+        clsCfg.fixedSiz = sizeof(AFX_OBJECT(afxDrawBridge));
+        //clsCfg.maxCnt = ddev->portCnt;
+        //clsCfg.unitsPerPage = ddev->portCnt;
+        clsCfg.ctor = (void*)_SglDdgeCtor;
+        AfxRegisterClass(&ddev->ddgeCls, NIL, &ddev->dev.classes, &clsCfg);
+
+        clsCfg = _AvxDctxStdImplementation;
+        clsCfg.fixedSiz = sizeof(AFX_OBJECT(afxDrawContext));
+        AfxRegisterClass(&ddev->dctxCls, NIL, &ddev->dev.classes, &clsCfg); // require ddge
+
+        break;
+    }
+    case afxFcc_DDEV:
+    {
 
         break;
     }

@@ -26,7 +26,7 @@
 #define _AFX_CORE_C
 #define _AFX_FILE_C
 #define _AFX_ARCHIVE_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 
 typedef struct zip zip;
@@ -129,7 +129,7 @@ _AFX afxError _AfxZipFindAndReadCdHdr(afxStream file, _afxZipSerializedCdHdr *en
     else
     {
         afxNat fileSize;
-        _afxZipSerializedCdHdr *er;
+        _afxZipSerializedCdHdr *er = NIL;
 
         if ((fileSize = AfxGetStreamPosn(file)) <= sizeof(*er)) AfxThrowError();
         else
@@ -622,9 +622,7 @@ _AFX afxClassConfig const _AfxArcMgrCfg =
     .fcc = afxFcc_ARC,
     .name = "Archive",
     .desc = "Archiving Utility",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxArchive)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxArchive)),
     .ctor = (void*)_AfxArcCtor,
     .dtor = (void*)_AfxArcDtor
 };
@@ -637,7 +635,7 @@ _AFX afxArchive AfxOpenArchive(afxUri const* uri, afxFileFlags const flags, afxE
     AfxAssert(uri);
     afxArchive arc = NIL;
 
-    afxManager* cls = AfxGetArchiveClass();
+    afxClass* cls = AfxGetArchiveClass();
     AfxAssertClass(cls, afxFcc_ARC);
     
     afxStream file = AfxOpenFile(uri, (flags & afxIoFlag_RWX));

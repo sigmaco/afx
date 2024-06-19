@@ -20,7 +20,7 @@
 #include "qwadro/ux/afxUxDefs.h"
 #include "qwadro/draw/io/afxRaster.h"
 #include "qwadro/draw/io/afxBuffer.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 #ifdef _AFX_BINK_VIDEO_C
 #define _AVXBINK DLLEXPORT

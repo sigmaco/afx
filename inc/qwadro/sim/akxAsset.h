@@ -17,11 +17,11 @@
 #ifndef AFX_ASSET_H
 #define AFX_ASSET_H
 
-#include "qwadro/core/afxManager.h"
+#include "qwadro/base/afxClass.h"
 #include "qwadro/sim/akxEntity.h"
 #include "qwadro/io/afxSource.h"
 #include "qwadro/sim/rendering/akxLighting.h"
-#include "qwadro/draw/afxCamera.h"
+#include "qwadro/draw/avxCamera.h"
 #include "qwadro/space/afxSkeleton.h"
 #include "qwadro/cad/afxModel.h"
 #include "qwadro/cad/afxMaterial.h"

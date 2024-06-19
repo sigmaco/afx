@@ -17,8 +17,8 @@
 #ifndef AFX_POOL_H
 #define AFX_POOL_H
 
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxFcc.h"
+#include "qwadro/base/afxDebug.h"
+#include "qwadro/base/afxFcc.h"
 #include "qwadro/mem/afxMmu.h"
 
 AFX_DEFINE_STRUCT(afxPoolPage)
@@ -35,7 +35,7 @@ AFX_DEFINE_STRUCT(afxPool)
     afxNat          totalUsedCnt;
     afxNat          pageCnt;
     afxPoolPage*    pages;
-    afxMmu      mem;
+    afxMmu          mem;
 };
 
 AFX void        AfxSetUpPool(afxPool* pool, afxNat unitSiz, afxNat unitsPerPage);

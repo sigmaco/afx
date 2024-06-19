@@ -17,21 +17,24 @@
 #ifndef AFX_MMU_H
 #define AFX_MMU_H
 
-#ifdef _AFX_DEBUG
+#include "qwadro/base/afxDebug.h"
+
+#ifdef _AFX_DEBUG // after afxDebug!!!
 #   define VLD_FORCE_ENABLE
 #endif
 
+#if 0
 #if (defined(_WIN64) || defined(_WIN32))
 #   ifdef VLD_FORCE_ENABLE
 #       include <vld.h>
 #   endif
 #endif
+#endif
 
-#include "qwadro/core/afxObject.h"
-#include "qwadro/core/afxChain.h"
-#include "qwadro/core/afxFcc.h"
-#include "qwadro/core/afxDebug.h"
-#include "qwadro/core/afxSlock.h"
+#include "qwadro/base/afxObject.h"
+#include "qwadro/base/afxChain.h"
+#include "qwadro/base/afxFcc.h"
+#include "qwadro/exec/afxSlock.h"
 
 //#define _AFX_TRY_ASSERT_ALLOCATION_AREA 1
 
@@ -99,14 +102,6 @@ AFX_DEFINE_STRUCT(afxAllocation)
 //AFX afxError        AfxMemoryRequest(afxMmu mmu, afxAllocation const *a, );
 //AFX afxError        AfxMemoryDispose(afxMmu mmu, afxNat cnt, void *mem[]);
 #endif
-
-AFX_DEFINE_STRUCT(afxAllocationBlock)
-{
-    afxNat              usedUnitCnt;
-    afxByte             *base;
-    afxNat              firstIdx;
-    afxAllocationBlock  *prev;
-};
 
 AFX_DEFINE_STRUCT(afxContextPage)
 {

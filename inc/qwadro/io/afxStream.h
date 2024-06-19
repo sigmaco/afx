@@ -21,8 +21,8 @@
 #ifndef AFX_STREAM_H
 #define AFX_STREAM_H
 
-#include "qwadro/core/afxAtomic.h"
-#include "qwadro/core/afxObject.h"
+#include "qwadro/exec/afxAtomic.h"
+#include "qwadro/base/afxObject.h"
 #include "qwadro/mem/afxMmu.h"
 #include "qwadro/io/afxUri.h"
 
@@ -48,58 +48,19 @@ typedef enum afxSeekMode
 
 typedef afxNat afxRwx[3];
 
+AFX_DECLARE_STRUCT(_afxIobIdd);
+
 AFX_DEFINE_STRUCT(_afxIobImpl)
 {
-    afxError    (*read)(afxStream, void *dst, afxSize range);
+    afxError    (*read)(afxStream, void *dst, afxNat32 range);
     afxResult   (*readFeedback)(afxStream, afxNat32, void*);
-    afxError    (*write)(afxStream, void const * const src, afxSize range);
+    afxError    (*write)(afxStream, void const * const src, afxNat32 range);
     afxResult   (*writeFeedback)(afxStream, afxNat32, void*);
     afxNat      (*tell)(afxStream);
-    afxError    (*seek)(afxStream, afxInt, afxSeekMode);
+    afxError    (*seek)(afxStream, afxSize, afxSeekMode);
     afxBool     (*eos)(afxStream);
     afxResult   (*dtor)(afxStream);
 };
-
-AFX_DECLARE_STRUCT(_afxIobIdd);
-
-#ifdef _AFX_CORE_C
-#ifdef _AFX_STREAM_C
-
-AFX_DEFINE_STRUCT(_afxIobIdd)
-{
-    struct
-    {
-        afxByte*        buf; // when wrapped or externally buffered.
-        afxSize         bufCap; // when buffered
-        afxSize         posn;
-        afxBool         isUserBuf; // when buffered
-    }                   m;
-    struct
-    {
-        afxByte*        buf;
-        afxNat32        bufCap;
-        afxNat32        itemSiz;
-        afxNat32        wPosn;
-        afxNat32        rPosn;
-        afxAtom32       rItemCnt;
-    }                   m2;
-    struct
-    {
-        void*           fd;
-        afxBool         isUserFd;
-        afxUri          path;
-        afxBool         shouldBeFlushed;
-    }                   f;
-};
-
-AFX_OBJECT(afxStream)
-{
-    _afxIobImpl const*  pimpl;
-    afxIoFlags          flags;
-    _afxIobIdd          idd;
-};
-#endif//_AFX_STREAM_C
-#endif//_AFX_CORE_C
 
 // Reads data from a stream
 
@@ -145,9 +106,9 @@ AFX afxSize             AfxGetStreamPosn(afxStream iob);
 AFX afxSize             AfxMeasureStream(afxStream iob);
 AFX afxBool             AfxStreamReachedEnd(afxStream iob);
 
-AFX afxError            AfxSeekStream(afxStream iob, afxInt offset, afxSeekMode origin);
-AFX afxError            AfxSeekStreamFromBegin(afxStream iob, afxNat offset); // if offset is zero, rewind.
-AFX afxError            AfxSeekStreamFromEnd(afxStream iob, afxNat offset);
+AFX afxError            AfxSeekStream(afxStream iob, afxSize offset, afxSeekMode origin);
+AFX afxError            AfxSeekStreamFromBegin(afxStream iob, afxSize offset); // if offset is zero, rewind.
+AFX afxError            AfxSeekStreamFromEnd(afxStream iob, afxSize offset);
 AFX afxError            AfxAdvanceStream(afxStream iob, afxNat range);
 AFX afxError            AfxRecedeStream(afxStream iob, afxNat range);
 AFXINL afxError         AfxRewindStream(afxStream iob);

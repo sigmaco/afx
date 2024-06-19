@@ -17,7 +17,7 @@
 #include "sgl.h"
 
 #include "qwadro/draw/afxDrawSystem.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 _SGL afxError _SglTexSubImage(glVmt const* gl, GLenum glTarget, afxRasterRegion const* rgn, GLenum glFmt, GLenum glType, afxAddress const src)
 {
@@ -88,7 +88,7 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
     AfxAssert(lvlCnt);
 
     afxPixelLayout pfd;
-    AfxDescribePixelFormat(ras->base.fmt, &pfd);
+    AfxDescribePixelFormat(ras->m.fmt, &pfd);
     GLint gpuUnpackAlign = 1;// (8 >= pfd.bpp ? 1 : ((16 >= pfd.bpp ? 2 : (pfd.bpp <= 32 ? 4 : (pfd.bpp <= 32))));
 
     afxRasterRegion rgn;
@@ -100,9 +100,9 @@ _SGL afxError _SglTexFlushDevice(glVmt const* gl, GLenum glTarget, afxRaster ras
     case GL_TEXTURE_CUBE_MAP:
     {
         AfxAssert(isCubemap);
-        AfxAssert(ras->base.layerCnt == 6);
+        AfxAssert(ras->m.layerCnt == 6);
         
-        for (afxNat j = 0; j < ras->base.layerCnt; j++)
+        for (afxNat j = 0; j < ras->m.layerCnt; j++)
         {
             for (afxNat i = 0; i < lvlCnt; i++)
             {
@@ -199,16 +199,13 @@ _SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster ras)
                 glHandle = NIL;
             }
 
-            GLint glIntFmt;
-            SglDetermineGlTargetInternalFormatType(ras, &glTarget, &glIntFmt, &ras->glFmt, &ras->glType);
-            ras->glTarget = glTarget;
-            ras->glIntFmt = glIntFmt;
-
             gl->GenTextures(1, &(glHandle)); _SglThrowErrorOccuried();
             gl->BindTexture(glTarget, glHandle); _SglThrowErrorOccuried();
             AfxAssert(gl->IsTexture(glHandle));
             bound = TRUE;
             ras->glHandle = glHandle;
+
+            GLenum glIntFmt = ras->glIntFmt;
 
             switch (glTarget)
             {
@@ -216,7 +213,7 @@ _SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster ras)
             case GL_PROXY_TEXTURE_1D:
             {
                 AfxAssert(gl->TexStorage1D);
-                gl->TexStorage1D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->base.whd[0]); _SglThrowErrorOccuried();
+                gl->TexStorage1D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D:
@@ -227,45 +224,45 @@ _SGL afxError DpuBindAndSyncRas(sglDpu* dpu, afxNat glUnit, afxRaster ras)
             case GL_PROXY_TEXTURE_CUBE_MAP:
             {
                 AfxAssert(gl->TexStorage2D);
-                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->base.whd[0], ras->base.whd[1]); _SglThrowErrorOccuried();
+                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_1D_ARRAY:
             case GL_PROXY_TEXTURE_1D_ARRAY:
             {
                 AfxAssert(gl->TexStorage2D);
-                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->base.whd[0], ras->base.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage2D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_3D:
             {
                 AfxAssert(gl->TexStorage3D);
-                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D_ARRAY:
             {
                 AfxAssert(gl->TexStorage3D);
-                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2]); _SglThrowErrorOccuried();
+                gl->TexStorage3D(glTarget, AfxCountRasterLods(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D_MULTISAMPLE:
             case GL_PROXY_TEXTURE_2D_MULTISAMPLE:
             {
                 AfxAssert(gl->TexStorage2DMultisample);
-                gl->TexStorage2DMultisample(glTarget, AfxCountRasterSamples(ras), glIntFmt, ras->base.whd[0], ras->base.whd[1], GL_FALSE); _SglThrowErrorOccuried();
+                gl->TexStorage2DMultisample(glTarget, AfxCountRasterSamples(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], GL_FALSE); _SglThrowErrorOccuried();
                 break;
             }
             case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
             case GL_PROXY_TEXTURE_2D_MULTISAMPLE_ARRAY:
             {
                 AfxAssert(gl->TexStorage3DMultisample);
-                gl->TexStorage3DMultisample(glTarget, AfxCountRasterSamples(ras), glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2], GL_FALSE); _SglThrowErrorOccuried();
+                gl->TexStorage3DMultisample(glTarget, AfxCountRasterSamples(ras), glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2], GL_FALSE); _SglThrowErrorOccuried();
                 break;
             }
             default: AfxThrowError(); break;
             }
-            AfxLogEcho("Hardware-side raster %p ready. %x, %x, [%u,%u,%u]", ras, glTarget, glIntFmt, ras->base.whd[0], ras->base.whd[1], ras->base.whd[2]);
+            AfxLogEcho("Hardware-side raster %p ready. %x, %x, [%u,%u,%u]", ras, glTarget, glIntFmt, ras->m.whd[0], ras->m.whd[1], ras->m.whd[2]);
 
             if (!err)
                 ras->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
@@ -436,6 +433,18 @@ _SGL afxError _DpuInputRas(sglDpu* dpu, afxRaster ras, afxRasterIo const* op, af
     return err;
 }
 
+_SGL afxError _DpuCopyRas(sglDpu* dpu, afxRaster src, afxRaster dst, afxNat opCnt, afxRasterCopy const ops[])
+{
+    afxError err = AFX_ERR_NONE;
+    glVmt const* gl = &dpu->gl;
+    AfxAssertObjects(1, &dst, afxFcc_RAS);
+    AfxAssertObjects(1, &src, afxFcc_RAS);
+    DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT, src);
+    DpuBindAndSyncRas(dpu, SGL_LAST_COMBINED_TEXTURE_IMAGE_UNIT - 1, dst);
+    _SglCopyTexSubImage(dpu, dst->glTarget, src->glTarget, src->glHandle, opCnt, ops);
+    return err;
+}
+
 _SGL afxError _SglRasDtor(afxRaster ras)
 {
     afxError err = AFX_ERR_NONE;
@@ -464,19 +473,11 @@ _SGL afxError _SglRasCtor(afxRaster ras, afxCookie const* cookie)
     {
         ras->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
+        GLint glIntFmt;
+        SglDetermineGlTargetInternalFormatType(ras, &ras->glTarget, &ras->glIntFmt, &ras->glFmt, &ras->glType);
+        
         if (err && _AvxRasStdImplementation.dtor(ras))
             AfxThrowError();
     }
     return err;
 }
-
-_SGL afxClassConfig const _SglRasMgrCfg =
-{
-    .fcc = afxFcc_RAS,
-    .name = "Raster",
-    .desc = "Formatted Video Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxRaster)),
-    .ctor = (void*)_SglRasCtor,
-    .dtor = (void*)_SglRasDtor
-};

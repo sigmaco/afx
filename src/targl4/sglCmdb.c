@@ -20,7 +20,7 @@
 _SGL afxError _SglCmdbResetCb(avxCmdb cmdb)
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssert(cmdb->base.state != avxCmdbState_PENDING);
+    AfxAssert(cmdb->m.state != avxCmdbState_PENDING);
 
     _sglCmd const* cmdHdr;
     AfxChainForEveryLinkageB2F(&cmdb->commands, _sglCmd, script, cmdHdr)
@@ -48,7 +48,7 @@ _SGL afxError _SglCmdbResetCb(avxCmdb cmdb)
             _sglCmd *cmd = AFX_REBASE(first, _sglCmd, script);
             AfxPopLinkage(&cmd->script);
 
-            //if (cmd != &cmdb->base.cmdEnd)
+            //if (cmd != &cmdb->m.cmdEnd)
             {
                 //AfxDeallocate(all, cmd);
                 //AfxAssertType(idd->cmdArena, afxFcc_AREN);
@@ -57,7 +57,7 @@ _SGL afxError _SglCmdbResetCb(avxCmdb cmdb)
         }
     }
 #else
-    AfxExhaustArena(&cmdb->base.cmdArena);
+    AfxExhaustArena(&cmdb->m.cmdArena);
 #endif
 
     AfxSetUpChain(&cmdb->commands, cmdb);
@@ -71,7 +71,7 @@ _SGL afxError _SglCmdbBeginCb(avxCmdb cmdb, afxBool permanent)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
-    cmdb->base.disposable = !permanent;
+    cmdb->m.disposable = !permanent;
     return err;
 }
 
@@ -80,7 +80,7 @@ _SGL afxError _SglCmdbDtor(avxCmdb cmdb)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
 
-    while (AfxLoadAtom32(&cmdb->base.submCnt))
+    while (AfxLoadAtom32(&cmdb->m.submCnt))
     {
         AfxYield();
     }
@@ -102,16 +102,11 @@ _SGL afxError _SglCmdbCtor(avxCmdb cmdb, afxCookie const* cookie)
         AfxSetUpChain(&cmdb->commands, cmdb);
         AfxSetUpChain(&cmdb->echoes, cmdb);
 
-        cmdb->base.beginCb = _SglCmdbBeginCb;
-        cmdb->base.endCb = _SglCmdbEndCb;
-        cmdb->base.resetCb = _SglCmdbResetCb;
+        cmdb->m.beginCb = _SglCmdbBeginCb;
+        cmdb->m.endCb = _SglCmdbEndCb;
+        cmdb->m.resetCb = _SglCmdbResetCb;
 
-        _SglEncodeCmdVmt.Transformation = _SglEncodeCmdTransformationVmt;
-        _SglEncodeCmdVmt.Rasterization = _SglEncodeCmdRasterizationVmt;
-        _SglEncodeCmdVmt.buf = _SglEncodeCmdBufferVmt;
-        _SglEncodeCmdVmt.ras = _SglEncodeCmdRasterVmt;
-
-        cmdb->base.stdCmds = &_SglEncodeCmdVmt;
+        cmdb->m.stdCmds = &_SglEncodeCmdVmt;
 
         if (err && _AvxCmdbStdImplementation.dtor(cmdb))
             AfxThrowError();
@@ -124,9 +119,7 @@ _SGL afxClassConfig _SglCmdbMgrCfg =
     .fcc = afxFcc_CMDB,
     .name = "CmdBuffer",
     .desc = "Draw I/O Bufferization",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(avxCmdb)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(avxCmdb)),
     .ctor = (void*)_SglCmdbCtor,
     .dtor = (void*)_SglCmdbDtor
 };

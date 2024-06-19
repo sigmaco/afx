@@ -19,7 +19,7 @@
 #define _ASX_SOUND_C
 #define _ASX_SOUND_BRIDGE_C
 #define _ASX_SOUND_QUEUE_C
-#include "qwadro/sound/afxSoundSystem.h"
+#include "../src/afx/sound/dev/asxDevKit.h"
 
 _ASX afxSoundDevice AfxGetSoundBridgeDevice(afxSoundBridge sdge)
 {
@@ -39,34 +39,21 @@ _ASX afxSoundContext AfxGetSoundBridgeContext(afxSoundBridge sdge)
     return sctx;
 }
 
-_ASX afxNat AfxCountSoundQueues(afxSoundBridge sdge)
+_ASX afxNat AfxGetSoundBridgePort(afxSoundBridge sdge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
-    return sdge->queCnt;
+    return sdge->portIdx;
 }
 
-_ASX afxError AfxWaitForIdleSoundQueue(afxSoundBridge sdge, afxNat queIdx)
+_ASX afxClass const* _AsxGetSoundQueueClass(afxSoundBridge sdge)
 {
     afxError err = AFX_ERR_NONE;
+    /// sdge must be a valid afxSoundBridge handle.
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
-
-    if (!sdge->waitCb)
-    {
-        AfxAssertRange(sdge->queCnt, queIdx, 1);
-        afxSoundQueue* sque = &sdge->queues[queIdx];
-
-        AfxLockMutex(&sque->idleCndMtx);
-
-        while (sque->workChn.cnt)
-            AfxWaitCondition(&sque->idleCnd, &sque->idleCndMtx);
-
-        AfxUnlockMutex(&sque->idleCndMtx);
-    }
-    else if (sdge->waitCb(sdge, queIdx))
-        AfxThrowError();
-
-    return err;
+    afxClass const* cls = &sdge->squeCls;
+    AfxAssertClass(cls, afxFcc_SQUE);
+    return cls;
 }
 
 _ASX afxNat AfxEnqueueExecutionRequest(afxSoundBridge sdge, afxFence fenc, afxNat cnt, afxExecutionRequest2 const req[])
@@ -105,34 +92,67 @@ _ASX afxNat AfxEnqueueTransferRequest(afxSoundBridge sdge, afxFence fenc, afxNat
     return queIdx;
 }
 
-_ASX afxError _AsxSdgeStdDtor(afxSoundBridge sdge)
+_ASX afxError _AsxSqueStdDtorCb(afxSoundQueue sque)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sque, afxFcc_SQUE);
+
+    AfxCleanUpMutex(&sque->workChnMtx);
+    AfxDeallocateArena(&sque->workArena);
+    AfxCleanUpSlock(&sque->workArenaSlock);
+    AfxCleanUpCondition(&sque->idleCnd);
+    AfxCleanUpMutex(&sque->idleCndMtx);
+
+    return err;
+}
+
+_ASX afxError _AsxSdgeStdDtorCb(afxSoundBridge sdge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
 
-    for (afxNat i = 0; i < sdge->queCnt; i++)
-    {
-        afxSoundQueue* sque = &sdge->queues[i];
+    AfxWaitForSoundContext(sdge->sctx);
+    AfxWaitForSoundContext(sdge->sctx); // yes, two times.
 
-        AfxAbolishManager(&sque->streams);
-
-        AfxCleanUpMutex(&sque->workChnMtx);
-        AfxCleanUpSlock(&sque->reqLock);
-        AfxDeallocateArena(&sque->workArena);
-        AfxCleanUpSlock(&sque->workArenaSlock);
-        AfxCleanUpCondition(&sque->idleCnd);
-        AfxCleanUpMutex(&sque->idleCndMtx);
-        AfxDeallocateQueue(&sque->recycQue);
-    }
-
-    AfxCleanUpChainedManagers(&sdge->managers);
-
+    AfxAssertObjects(sdge->queCnt, sdge->queues, afxFcc_SQUE);
+    AfxReleaseObjects(sdge->queCnt, sdge->queues);
+    AfxCleanUpChainedClasses(&sdge->classes);
     AfxDeallocate(sdge->queues);
 
     return err;
 }
 
-_ASX afxError _AsxSdgeStdCtor(afxSoundBridge sdge, afxCookie const* cookie)
+_ASX afxError _AsxSqueStdCtorCb(afxSoundQueue sque, afxCookie const* cookie)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sque, afxFcc_SQUE);
+
+    afxSoundContext sctx = cookie->udd[0];
+    AfxAssertObjects(1, &sctx, afxFcc_SCTX);
+    afxSoundBridge sdge = cookie->udd[1];
+    AfxAssertObjects(1, &sdge, afxFcc_SDGE);
+    afxSoundBridgeConfig const *cfg = ((afxSoundBridgeConfig const *)cookie->udd[2]);
+    AfxAssert(cfg);
+
+    sque->sdge = sdge;
+    sque->sctx = sctx;
+
+    sque->immediate = 0;// !!spec->immedate;
+
+    AfxSetUpSlock(&sque->workArenaSlock);
+    AfxAllocateArena(NIL, &sque->workArena, NIL, AfxHere());
+
+    AfxSetUpMutex(&sque->workChnMtx, AFX_MTX_PLAIN);
+    AfxSetUpChain(&sque->workChn, sdge);
+    AfxSetUpMutex(&sque->idleCndMtx, AFX_MTX_PLAIN);
+    AfxSetUpCondition(&sque->idleCnd);
+
+    sque->closed = FALSE;
+
+    return err;
+}
+
+_ASX afxError _AsxSdgeStdCtorCb(afxSoundBridge sdge, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sdge, afxFcc_SDGE);
@@ -152,52 +172,55 @@ _ASX afxError _AsxSdgeStdCtor(afxSoundBridge sdge, afxCookie const* cookie)
     sdge->executeCb = NIL;
     sdge->transferCb = NIL;
 
-    AfxSetUpChain(&sdge->managers, sdge);
+    sdge->queCnt = AfxMax(_AsxSqueStdImplementation.unitsPerPage, cfg->queueCnt);
+
+    AfxSetUpChain(&sdge->classes, sdge);
 
     sdge->queCnt = AfxMax(3, cfg->queueCnt);
+
+    afxClassConfig clsCfg = _AsxSqueStdImplementation;
+    clsCfg.maxCnt = sdge->queCnt;
+    clsCfg.unitsPerPage = sdge->queCnt;
+    AfxRegisterClass(&sdge->squeCls, NIL, &sdge->classes, &clsCfg);
 
     if (!(sdge->queues = AfxAllocate(sdge->queCnt, sizeof(sdge->queues[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
-        afxClassConfig tmpClsCfg;
+        afxClass* cls = (afxClass*)_AsxGetSoundQueueClass(sdge);
+        AfxAssertClass(cls, afxFcc_SQUE);
 
-        for (afxNat i = 0; i < sdge->queCnt; i++)
+        if (AfxAcquireObjects(cls, sdge->queCnt, (afxObject*)sdge->queues, (void const*[]) { sctx, sdge, cfg })) AfxThrowError();
+        else
         {
-            afxSoundQueue* sque = &sdge->queues[i];
-
-            sque->sdge = sdge;
-
-            sque->immediate = 0;// !!spec->immedate;
-
-            AfxSetUpSlock(&sque->workArenaSlock);
-            AfxAllocateArena(NIL, &sque->workArena, NIL, AfxHere());
-
-            sque->lockedForReq = FALSE;
-
-            AfxSetUpMutex(&sque->workChnMtx, AFX_MTX_PLAIN);
-            AfxSetUpChain(&sque->workChn, sdge);
-            AfxSetUpMutex(&sque->idleCndMtx, AFX_MTX_PLAIN);
-            AfxSetUpCondition(&sque->idleCnd);
-
-            AfxSetUpSlock(&sque->reqLock);
-            AfxAllocateQueue(&sque->recycQue, sizeof(void*/*afxSoundStream*/), 3);
-
-            //tmpClsCfg = _AsxSiobStdImplementation;
-            //AfxEstablishManager(&sque->streams, NIL, &sdge->managers, &tmpClsCfg);
-
-            sque->closed = FALSE;
+            AfxAssertObjects(sdge->queCnt, sdge->queues, afxFcc_SQUE);
         }
+
+        if (err)
+            AfxDeallocate(sdge->queues);
     }
+
+    if (err)
+        AfxCleanUpChainedClasses(&sdge->classes);
+
     return err;
 }
+
+_ASX afxClassConfig const _AsxSqueStdImplementation =
+{
+    .fcc = afxFcc_SQUE,
+    .name = "SoundQueue",
+    .desc = "Sound Device Execution Queue",
+    .fixedSiz = sizeof(AFX_OBJECT(afxSoundQueue)),
+    .ctor = (void*)_AsxSqueStdCtorCb,
+    .dtor = (void*)_AsxSqueStdDtorCb
+};
 
 _ASX afxClassConfig const _AsxSdgeStdImplementation =
 {
     .fcc = afxFcc_SDGE,
     .name = "SoundBrige",
     .desc = "Sound Execution Bridge",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxSoundBridge)),
-    .ctor = (void*)_AsxSdgeStdCtor,
-    .dtor = (void*)_AsxSdgeStdDtor
+    .fixedSiz = sizeof(AFX_OBJECT(afxSoundBridge)),
+    .ctor = (void*)_AsxSdgeStdCtorCb,
+    .dtor = (void*)_AsxSdgeStdDtorCb
 };

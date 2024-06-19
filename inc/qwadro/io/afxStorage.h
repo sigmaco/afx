@@ -67,7 +67,7 @@ afxStorageUsage;
 
 AFX_DEFINE_STRUCT(afxStoragePointSpecification)
 {
-    afxUri const*   namespace; // exchange point
+    afxUri const*   point; // exchange point
     afxString const*hostPath;
     afxIoFlags      perm;
     afxBool         isZip;
@@ -91,24 +91,6 @@ AFX_DEFINE_STRUCT(afxFileInfo)
     afxTime     creationTime; // Time of last status change.
 };
 
-#ifdef _AFX_CORE_C
-#ifdef _AFX_STORAGE_C
-AFX_DEFINE_STRUCT(afxStorageUnit)
-{
-    afxLinkage          fsys;
-    afxFileFlags        flags;
-    afxUri              rootPath;  // path of exchange point
-    afxArchive          arc;
-};
-
-AFX_OBJECT(afxStorage)
-{
-    afxUri8             point; // name of exchange point // AFX_FS_SYM_LEN // can't have control chars. Actually works like a variable without $().
-    afxChain            storages;
-};
-#endif//_AFX_STORAGE_C
-#endif//_AFX_CORE_C
-
 /*
     The mount command instructs the Qwadro to make a file system available for use at a specified location (the mount point). 
     The mount command mounts a file system that is expressed as a directory by using the Node:Directory parameter on the directory specified by the Directory parameter. 
@@ -122,7 +104,11 @@ AFX afxError            AfxDismountStorageUnit(afxUri const* point, afxUri const
 
 AFX afxNat              AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags);
 
+// TODO: Directories starting with "//./" will be resolved as devices instead of paths. Ex.: "//./e/dir/file.ext" -> "E:\\dir\\file.ext"
+
 AFX afxError            AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *out);
 AFX afxError            AfxResolveUris(afxFileFlags const permissions, afxNat cnt, afxUri const in[], afxUri out[]);
+
+AFX afxError            AfxFindFiles(afxUri const* pattern, afxBool(*callback)(afxUri const*, void*), void* udd);
 
 #endif//AFX_STORAGE_H

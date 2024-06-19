@@ -25,16 +25,6 @@
 #include "qwadro/io/afxFile.h"
 #include "qwadro/mem/afxArray.h"
 
-#ifdef _AFX_CORE_C
-#ifdef _AFX_ARCHIVE_C
-AFX_OBJECT(afxArchive)
-{
-    afxStream   file;
-    afxArray    entries;
-};
-#endif//_AFX_ARCHIVE_C
-#endif//_AFX_CORE_C
-
 /* URI for open zipped streams.
  * art.zip#idx
  * art.zip#name

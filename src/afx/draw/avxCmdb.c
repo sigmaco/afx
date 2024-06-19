@@ -25,7 +25,7 @@
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
 #define _AVX_CMD_BUFFER_C
-#include "qwadro/draw/afxDrawSystem.h"
+#include "dev/AvxDevKit.h"
 
 _AVX avxCmdbState AfxGetCmdBufferState(avxCmdb cmdb)
 {
@@ -110,8 +110,7 @@ _AVX afxClassConfig const _AvxCmdbStdImplementation =
     .fcc = afxFcc_CMDB,
     .name = "CmdBuffer",
     .desc = "Device Workload Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(avxCmdb)),
+    .fixedSiz = sizeof(AFX_OBJECT(avxCmdb)),
     .ctor = (void*)_AvxCmdbStdCtor,
     .dtor = (void*)_AvxCmdbStdDtor
 };
@@ -158,7 +157,7 @@ _AVX afxError AfxRecycleCmdBuffers(afxBool freeRes, afxNat cnt, avxCmdb streams[
         
         if (AfxTryEnterSlockExclusive(&din->pools[poolIdx].reqLock))
         {
-            if (AfxPushQueueUnit(&din->pools[poolIdx].recycQue, &cmdb))
+            if (AfxPushQueue(&din->pools[poolIdx].recycQue, &cmdb))
             {
                 AfxReleaseObjects(1, &cmdb);
             }
@@ -219,7 +218,7 @@ _AVX afxError AfxAcquireCmdBuffers(afxDrawInput din, avxCmdbUsage usage, afxNat 
             {
                 avxCmdb* unit;
 
-                while ((unit = AfxPullNextQueueUnit(&din->pools[poolIdx].recycQue)))
+                while ((unit = AfxPeekQueue(&din->pools[poolIdx].recycQue)))
                 {
                     avxCmdb cmdb = *unit;
                     AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
@@ -242,7 +241,7 @@ _AVX afxError AfxAcquireCmdBuffers(afxDrawInput din, avxCmdbUsage usage, afxNat 
                     if (err)
                         AfxReleaseObjects(1, &cmdb);
 
-                    AfxPopNextQueue(&din->pools[poolIdx].recycQue);
+                    AfxPopQueue(&din->pools[poolIdx].recycQue);
 
                     if (cnt2 >= cnt)
                         break;
@@ -297,7 +296,7 @@ _AVX afxError AfxOpenCmdBuffers(afxDrawInput din, afxNat poolIdx, avxCmdbUsage u
         AfxEnterSlockExclusive(&din->pools[poolIdx].reqLock);
 
         avxCmdb* unit;
-        while ((unit = AfxPullNextQueueUnit(&din->pools[poolIdx].recycQue)))
+        while ((unit = AfxPeekQueue(&din->pools[poolIdx].recycQue)))
         {
             avxCmdb cmdb = *unit;
             AfxAssertObjects(1, &cmdb, afxFcc_CMDB);
@@ -321,7 +320,7 @@ _AVX afxError AfxOpenCmdBuffers(afxDrawInput din, afxNat poolIdx, avxCmdbUsage u
             if (err)
                 AfxReleaseObjects(1, &cmdb);
 
-            AfxPopNextQueue(&din->pools[poolIdx].recycQue);
+            AfxPopQueue(&din->pools[poolIdx].recycQue);
 
             if (cnt2 >= cnt)
                 break;
@@ -335,7 +334,7 @@ _AVX afxError AfxOpenCmdBuffers(afxDrawInput din, afxNat poolIdx, avxCmdbUsage u
 
                 for (afxNat i = 0; i < cnt2; i++)
                 {
-                    if (AfxPushQueueUnit(&din->pools[poolIdx].recycQue, &streams[i]))
+                    if (AfxPushQueue(&din->pools[poolIdx].recycQue, &streams[i]))
                     {
                         AfxReleaseObjects(1, (void**)&streams[i]);
                     }

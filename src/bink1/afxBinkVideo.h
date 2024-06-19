@@ -20,7 +20,7 @@
 #include "qwadro/ux/afxUxDefs.h"
 #include "qwadro/draw/io/afxRaster.h"
 #include "qwadro/draw/io/afxBuffer.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 AFX_DEFINE_STRUCT(avxBinkSummary)
 {
@@ -107,8 +107,8 @@ AFX_DEFINE_STRUCT(afxBinkVideo)
     afxRaster           rasters[BINKMAXFRAMEBUFFERS][4]; // Y, cR, cB, A.
     afxBool             hasAlphaPlane;
 
-    afxRasterizer       yv12ToRgbaRazr;
-    afxSampler          samplers[4];
+    avxRasterizer       yv12ToRgbaRazr;
+    avxSampler          samplers[4];
 
     afxNat64            Last_timer;
     afxNat32            Frame_count;
@@ -129,6 +129,7 @@ AFXBINK afxError AfxOpenVideoBink(afxBinkVideo *bnk, afxUri const *uri);
 AFXBINK afxError AfxBinkClose(afxBinkVideo *bnk);
 
 AFXBINK afxError AfxBinkDoFrame(afxBinkVideo *bnk, afxBool copyAll, afxBool neverSkip);
+AFXBINK afxError AfxBinkPrepareFrameBlit(afxBinkVideo *bnk, avxCmdb cmdb);
 AFXBINK afxError AfxBinkBlitFrame(afxBinkVideo *bnk, avxCmdb cmdb);
 
 #endif//AFX_BINK_VIDEO_H

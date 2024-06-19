@@ -133,9 +133,7 @@ _AKX afxClassConfig _AfxLitMgrCfg =
 {
     .fcc = afxFcc_LIT,
     .name = "Light",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(akxLight)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(akxLight)),
     .ctor = (void*)_AfxLitCtor,
     .dtor = (void*)_AfxLitDtor
 };

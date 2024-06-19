@@ -71,28 +71,6 @@ AFX_DEFINE_STRUCT(afxBufferIoOp)
     afxNat              range; /// is the number of bytes to copy.
 };
 
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_BUFFER_C
-#ifndef _AVX_BUFFER_IMPL
-AFX_OBJECT(afxBuffer)
-#else
-struct afxBaseBuffer
-#endif
-{
-    afxNat          cap;
-    afxBufferUsage  usage;
-    afxBufferAccess access;
-    afxByte*        bytemap;
-    afxSize         mappedOffset;
-    afxNat          mappedRange;
-    afxFlags        mappedFlags;
-    afxAtom32       pendingRemap;
-    afxError        (*remap)(afxBuffer,afxNat,afxNat,afxFlags,afxNat*,afxNat*);
-    afxError        (*unmap)(afxBuffer,afxNat*,afxNat*);
-};
-#endif//_AVX_BUFFER_C
-#endif//_AVX_DRAW_C
-
 AVX afxDrawContext  AfxGetBufferContext(afxBuffer buf);
 
 AVX afxNat          AfxGetBufferCapacity(afxBuffer buf);

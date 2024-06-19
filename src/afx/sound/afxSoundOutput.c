@@ -24,9 +24,16 @@
 #define _ASX_SOUND_DEVICE_C
 #define _ASX_SOUND_CONTEXT_C
 #define _ASX_SOUND_OUTPUT_C
-#include "qwadro/sound/afxSoundSystem.h"
+#include "../src/afx/sound/dev/asxDevKit.h"
 
-////////////////////////////////////////////////////////////////////////////////
+_ASX afxSoundDevice AfxGetSoundOutputDevice(afxSoundOutput sout)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sout, afxFcc_SOUT);
+    afxSoundDevice sdev = AfxGetLinker(&sout->sdev);
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    return sdev;
+}
 
 _ASX afxError AfxGetSoundOutputIdd(afxSoundOutput sout, afxNat code, void* dst)
 {
@@ -35,8 +42,6 @@ _ASX afxError AfxGetSoundOutputIdd(afxSoundOutput sout, afxNat code, void* dst)
     sout->getIddCb(sout, code, dst);
     return err;
 }
-
-////////////////////////////////////////////////////////////////////////////////
 
 _ASX afxBool AfxGetSoundOutputContext(afxSoundOutput sout, afxSoundContext* context)
 {
@@ -132,18 +137,7 @@ _ASX afxBool AfxReconnectSoundOutput(afxSoundOutput sout, afxSoundContext sctx)
     return !err;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-
-_ASX afxSoundDevice AfxGetSoundOutputDevice(afxSoundOutput sout)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sout, afxFcc_SOUT);
-    afxSoundDevice sdev = AfxGetLinker(&sout->sdev);
-    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    return sdev;
-}
-
-_ASX afxError _AsxSoutDtor(afxSoundOutput sout)
+_ASX afxError _AsxSoutDtorCb(afxSoundOutput sout)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sout, afxFcc_SOUT);
@@ -153,7 +147,7 @@ _ASX afxError _AsxSoutDtor(afxSoundOutput sout)
     AfxDisconnectSoundOutput(sout);
     //sout->disabled;
 
-    if (sdev->soutIddDtorCb && sdev->soutIddDtorCb(sdev, sout))
+    if (sdev->soutCloseCb && sdev->soutCloseCb(sdev, sout))
         AfxThrowError();
 
     AfxAssert(!sout->idd);
@@ -161,7 +155,7 @@ _ASX afxError _AsxSoutDtor(afxSoundOutput sout)
     return err;
 }
 
-_ASX afxError _AsxSoutCtor(afxSoundOutput sout, afxCookie const* cookie)
+_ASX afxError _AsxSoutCtorCb(afxSoundOutput sout, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -173,14 +167,14 @@ _ASX afxError _AsxSoutCtor(afxSoundOutput sout, afxCookie const* cookie)
     afxSoundOutputConfig const* cfg = ((afxSoundOutputConfig const *)cookie->udd[2]) + cookie->no;
     AfxAssert(cfg);
     
-    AfxPushLinkage(&sout->sdev, &sdev->outputs);
+    AfxPushLinkage(&sout->sdev, &sdev->openedSoutChain);
     AfxPushLinkage(&sout->sctx, NIL);
 
     sout->udd = cfg->udd;
 
     sout->reconnecting = FALSE;
 
-    if (sdev->soutIddCtorCb(sdev, sout, cfg, endpoint)) AfxThrowError();
+    if (sdev->soutOpenCb(sdev, sout, cfg, endpoint)) AfxThrowError();
     else
     {
 
@@ -188,21 +182,19 @@ _ASX afxError _AsxSoutCtor(afxSoundOutput sout, afxCookie const* cookie)
     return err;
 }
 
-_ASX afxClassConfig const _AsxSoutMgrCfg =
+_ASX afxClassConfig const _AsxSoutClsCfg =
 {
     .fcc = afxFcc_SOUT,
     .name = "SoundOutput",
     .desc = "Sound Output Mechanism",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxSoundOutput)),
-    .ctor = (void*)_AsxSoutCtor,
-    .dtor = (void*)_AsxSoutDtor
+    .fixedSiz = sizeof(AFX_OBJECT(afxSoundOutput)),
+    .ctor = (void*)_AsxSoutCtorCb,
+    .dtor = (void*)_AsxSoutDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 
 _ASX afxError AfxOpenSoundOutput(afxNat sdevId, afxUri const* endpoint, afxSoundOutputConfig const* cfg, afxSoundOutput* output)
-// file, window, desktop, widget, etc; physical or virtual VDUs.
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(cfg);
@@ -212,7 +204,7 @@ _ASX afxError AfxOpenSoundOutput(afxNat sdevId, afxUri const* endpoint, afxSound
     else
     {
         AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-        afxManager* cls = AfxGetSoundOutputClass();
+        afxClass* cls = (afxClass*)AfxGetSoundOutputClass();
         AfxAssertClass(cls, afxFcc_SOUT);
         afxSoundOutput sout;
 
@@ -243,15 +235,21 @@ _ASX afxError AfxAcquireSoundOutput(afxNat sdevId, afxSoundOutputConfig const* c
     return err;
 }
 
-_ASX afxNat AfxInvokeSoundOutputs(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundOutput, void*), void *udd)
+_ASXINL afxBool _AvxTestSoutIsFromSdevFltCb(afxSoundOutput sout, afxSoundDevice sdev)
 {
     afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sout, afxFcc_SOUT);
     AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    AfxAssert(cnt);
-    AfxAssert(f);
-    afxManager* cls = AfxGetSoundOutputClass();
-    AfxAssertClass(cls, afxFcc_SOUT);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    return (sdev == AfxGetSoundOutputDevice(sout));
+}
+
+_ASXINL afxBool _AvxTestSoutIsFromSdevFlt2Cb(afxSoundOutput sout, void** udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &sout, afxFcc_SOUT);
+    afxSoundDevice sdev = udd[0];
+    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+    return (sdev == AfxGetSoundOutputDevice(sout)) && ((afxBool(*)(afxSoundOutput, void*))udd[1])(sout, udd[2]);
 }
 
 _ASX afxNat AfxEnumerateSoundOutputs(afxSoundDevice sdev, afxNat first, afxNat cnt, afxSoundOutput outputs[])
@@ -259,16 +257,69 @@ _ASX afxNat AfxEnumerateSoundOutputs(afxSoundDevice sdev, afxNat first, afxNat c
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(outputs);
-    afxManager* cls = AfxGetSoundOutputClass();
+    afxClass const* cls = AfxGetSoundOutputClass();
     AfxAssertClass(cls, afxFcc_SOUT);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)outputs);
+    afxNat rslt = 0;
+
+    if (!sdev) rslt = AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)outputs);
+    else
+    {
+        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+        rslt = AfxEvokeClassInstances(cls, (void*)_AvxTestSoutIsFromSdevFltCb, sdev, first, cnt, (afxObject*)outputs);
+    }
+    return rslt;
 }
 
-_ASX afxNat AfxCountSoundOutputs(afxSoundDevice sdev)
+_ASX afxNat AfxEvokeSoundOutputs(afxSoundDevice sdev, afxBool(*flt)(afxSoundOutput, void*), void* fdd, afxNat first, afxNat cnt, afxSoundOutput outputs[])
 {
     afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &sdev, afxFcc_SDEV);
-    afxManager*cls = AfxGetSoundOutputClass();
+    AfxAssert(cnt);
+    AfxAssert(outputs);
+    afxClass const* cls = AfxGetSoundOutputClass();
     AfxAssertClass(cls, afxFcc_SOUT);
-    return AfxCountObjects(cls);
+    afxNat rslt = 0;
+
+    if (!sdev) rslt = AfxEvokeClassInstances(cls, (void*)flt, fdd, first, cnt, (afxObject*)outputs);
+    else
+    {
+        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+        rslt = AfxEvokeClassInstances(cls, (void*)_AvxTestSoutIsFromSdevFlt2Cb, (void*[]) { sdev, flt, fdd }, first, cnt, (afxObject*)outputs);
+    }
+    return rslt;
+}
+
+_ASX afxNat AfxInvokeSoundOutputs(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*f)(afxSoundOutput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass const* cls = AfxGetSoundOutputClass();
+    AfxAssertClass(cls, afxFcc_SOUT);
+    afxNat rslt = 0;
+
+    if (!sdev) rslt = AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
+    else
+    {
+        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+        rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)_AvxTestSoutIsFromSdevFltCb, sdev, (void*)f, udd);
+    }
+    return rslt;
+}
+
+_ASX afxNat AfxInvokeSoundOutputs2(afxSoundDevice sdev, afxNat first, afxNat cnt, afxBool(*flt)(afxSoundOutput, void*), void *fdd, afxBool(*f)(afxSoundOutput, void*), void *udd)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(cnt);
+    AfxAssert(f);
+    afxClass const* cls = AfxGetSoundOutputClass();
+    AfxAssertClass(cls, afxFcc_SOUT);
+    afxNat rslt = 0;
+
+    if (!sdev) rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)flt, fdd, (void*)f, udd);
+    else
+    {
+        AfxAssertObjects(1, &sdev, afxFcc_SDEV);
+        rslt = AfxInvokeClassInstances2(cls, first, cnt, (void*)_AvxTestSoutIsFromSdevFlt2Cb, (void*[]) { sdev, flt, fdd }, (void*)f, udd);
+    }
+    return rslt;
 }

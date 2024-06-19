@@ -24,7 +24,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_STORAGE_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 /******************************************************************************
 
@@ -225,22 +225,22 @@ _AFX afxError AfxResolveUri(afxFileFlags permissions, afxUri const *in, afxUri *
     return err;
 }
 
-_AFX afxError AfxFindFile(afxUri const* name, afxResult(*callback)(afxUri const*, void*), void* udd)
+_AFX afxError AfxFindFiles(afxUri const* pattern, afxBool(*callback)(afxUri const*, void*), void* udd)
 {
-    HANDLE fh;
-    WIN32_FIND_DATAA wfd;
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(pattern);
+    AfxAssert(callback);
     afxUri2048 pathBuf;
     AfxMakeUri2048(&pathBuf, NIL);
-    afxUri fileMask;
-    AfxMakeUri(&fileMask, "system/*.inf", 0);
-    AfxResolveUri(afxFileFlag_RX, &fileMask, &pathBuf.uri);
+    AfxResolveUri(afxFileFlag_RX, pattern, &pathBuf.uri);
     /*
     "art://./actor/";
     "//./art/actor/";
     "system://./e2draw.dll";
     "//./system/e2draw.dll";
     */
-    afxDeviceType devType = afxDeviceType_DRAW;
+    HANDLE fh;
+    WIN32_FIND_DATAA wfd;
 
     if ((fh = FindFirstFileA(AfxGetUriData(&pathBuf.uri, 0), &(wfd))))
     {
@@ -249,12 +249,13 @@ _AFX afxError AfxFindFile(afxUri const* name, afxResult(*callback)(afxUri const*
             afxUri found;
             AfxMakeUri(&found, wfd.cFileName, 0);
 
-            if (callback(&found, udd))
+            if (!callback(&found, udd))
                 break;
 
         } while (FindNextFileA(fh, &wfd));
         FindClose(fh);
     }
+    return err;
 }
 
 _AFX afxNat AfxFindStorageUnit(afxStorage fsys, afxUri const* endpoint, afxFileFlags ioFlags)
@@ -462,8 +463,7 @@ _AFX afxClassConfig const _AfxFsysMgrCfg =
     .fcc = afxFcc_FSYS,
     .name = "Storage",
     .desc = "I/O Storage System",
-    .unitsPerPage = 6,
-    .size = sizeof(AFX_OBJECT(afxStorage)),
+    .fixedSiz = sizeof(AFX_OBJECT(afxStorage)),
     .ctor = (void*)_AfxFsysCtor,
     .dtor = (void*)_AfxFsysDtor
 };
@@ -487,7 +487,7 @@ _AFX afxError AfxMountStorageUnit(afxUri const* point, afxUri const* endpoint, a
 
     if (!(fsys = AfxFindStorage(&point2)))
     {
-        afxManager* cls = AfxGetStorageClass();
+        afxClass* cls = AfxGetStorageClass();
         AfxAssertClass(cls, afxFcc_FSYS);
 
         if (AfxAcquireObjects(cls, 1, (afxObject*)&fsys, (void const*[]) { &point2, endpoint, &ioFlags, NIL }))
@@ -557,9 +557,9 @@ _AFX afxNat AfxInvokeStorages(afxNat first, afxNat cnt, afxBool(*f)(afxStorage, 
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(f);
-    afxManager* cls = AfxGetStorageClass();
+    afxClass* cls = AfxGetStorageClass();
     AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxInvokeObjects(cls, first, cnt, (void*)f, udd);
+    return AfxInvokeClassInstances(cls, first, cnt, (void*)f, udd);
 }
 
 _AFX afxNat AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[])
@@ -567,15 +567,7 @@ _AFX afxNat AfxEnumerateStorages(afxNat first, afxNat cnt, afxStorage systems[])
     afxError err = AFX_ERR_NONE;
     AfxAssert(cnt);
     AfxAssert(systems);
-    afxManager* cls = AfxGetStorageClass();
+    afxClass* cls = AfxGetStorageClass();
     AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxEnumerateObjects(cls, first, cnt, (afxObject*)systems);
-}
-
-_AFX afxNat AfxCountStorages(void)
-{
-    afxError err = AFX_ERR_NONE;
-    afxManager* cls = AfxGetStorageClass();
-    AfxAssertClass(cls, afxFcc_FSYS);
-    return AfxCountObjects(cls);
+    return AfxEnumerateClassInstances(cls, first, cnt, (afxObject*)systems);
 }

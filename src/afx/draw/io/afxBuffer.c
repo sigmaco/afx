@@ -18,7 +18,7 @@
 
 #define _AVX_DRAW_C
 #define _AVX_BUFFER_C
-#include "qwadro/draw/afxDrawSystem.h"
+#include "../dev/AvxDevKit.h"
 
 _AVX afxDrawContext AfxGetBufferContext(afxBuffer buf)
 {
@@ -200,7 +200,8 @@ _AVX afxError AfxDumpBuffer(afxBuffer buf, afxNat offset, afxNat range, void *ds
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -327,7 +328,8 @@ _AVX afxError AfxUpdateBuffer(afxBuffer buf, afxNat offset, afxNat range, void c
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     afxTransferRequest req = { 0 };
@@ -358,7 +360,8 @@ _AVX afxError AfxUploadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const o
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     for (afxNat i = 0; i < opCnt; i++)
@@ -394,7 +397,8 @@ _AVX afxError AfxDownloadBuffer(afxBuffer buf, afxNat opCnt, afxBufferIoOp const
     afxDrawContext dctx = AfxGetBufferContext(buf);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
     afxNat portIdx = 0;
-    afxDrawBridge ddge = AfxGetDrawBridge(dctx, portIdx);
+    afxDrawBridge ddge;
+    AfxGetDrawBridge(dctx, portIdx, &ddge);
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     for (afxNat i = 0; i < opCnt; i++)
@@ -477,8 +481,7 @@ _AVX afxClassConfig const _AvxBufStdImplementation =
     .fcc = afxFcc_BUF,
     .name = "Buffer",
     .desc = "Device Memory Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxBuffer)),
+    .fixedSiz = sizeof(AFX_OBJECT(afxBuffer)),
     .ctor = (void*)_AvxBufStdCtor,
     .dtor = (void*)_AvxBufStdDtor
 };
@@ -493,7 +496,7 @@ _AVX afxError AfxAcquireBuffers(afxDrawContext dctx, afxNat cnt, afxBufferSpecif
     AfxAssert(spec);
     AfxAssert(cnt);
 
-    afxManager* cls = AfxGetBufferClass(dctx);
+    afxClass* cls = AfxGetBufferClass(dctx);
     AfxAssertClass(cls, afxFcc_BUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)buffers, (void const*[]) { dctx, (void*)spec }))

@@ -17,7 +17,7 @@
 #ifndef AFX_INDEXED_STRING_H
 #define AFX_INDEXED_STRING_H
 
-#include "qwadro/core/afxString.h"
+#include "qwadro/base/afxString.h"
 #include "qwadro/mem/afxArray.h"
 
 AFX_DEFINE_STRUCT(afxMappedString)

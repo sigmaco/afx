@@ -336,9 +336,7 @@ _AKX afxClassConfig _AkxMshMgrCfg =
 {
     .fcc = afxFcc_MSH,
     .name = "Mesh",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxMesh)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxMesh)),
     .ctor = (void*)_AkxMshCtor,
     .dtor = (void*)_AkxMshDtor
 };

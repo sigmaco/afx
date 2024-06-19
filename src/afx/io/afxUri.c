@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 typedef enum
 {
@@ -504,7 +504,7 @@ _AFXINL afxNat AfxPickUriScheme(afxUri const* uri, afxUri* scheme)
     AfxResetUri(scheme);
     afxNat offset = 0;
     afxNat len = (scheme->schem = uri->schem);
-    afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
+    //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
     //AfxMakeRestring(&scheme->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
     AfxExcerptRestring(&uri->str, offset, len, &scheme->str);
     return len;
@@ -522,7 +522,7 @@ _AFXINL afxNat AfxPickUriUserInfo(afxUri const* uri, afxUri* usr, afxUri* pass)
         AfxResetUri(usr);
         afxNat offset = uri->schem;
         afxNat len = (usr->user = uri->user);
-        afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
+        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
         //AfxMakeRestring(&usr->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
         AfxExcerptRestring(&uri->str, offset, len, &usr->str);
         totalLen += len;
@@ -533,7 +533,7 @@ _AFXINL afxNat AfxPickUriUserInfo(afxUri const* uri, afxUri* usr, afxUri* pass)
         AfxResetUri(pass);
         afxNat offset = uri->schem + uri->user;
         afxNat len = (pass->pass = uri->pass);
-        afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
+        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
         //AfxMakeRestring(&pass->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
         AfxExcerptRestring(&uri->str, offset, len, &pass->str);
         totalLen += len;
@@ -554,7 +554,7 @@ _AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* host, afxUri* port
         AfxResetUri(host);
         afxNat offset = uri->schem + uri->user + uri->pass;
         afxNat len = (host->host = uri->host);
-        afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
+        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
         //AfxMakeRestring(&host->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
         AfxExcerptRestring(&uri->str, offset, len, &host->str);
         totalLen += len;
@@ -565,7 +565,7 @@ _AFXINL afxNat AfxPickUriAuthority(afxUri const* uri, afxUri* host, afxUri* port
         AfxResetUri(port);
         afxNat offset = uri->schem + uri->user + uri->pass + uri->host;
         afxNat len = (port->port = uri->port);
-        afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
+        //afxNat cap = offset < uri->str.cap ? uri->str.cap - offset : 0;
         //AfxMakeRestring(&port->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
         AfxExcerptRestring(&uri->str, offset, len, &port->str);
         totalLen += len;
@@ -582,7 +582,7 @@ _AFXINL afxNat AfxClipUriDirectory(afxUri* uri, afxUri const* from)
     AfxResetUri(&t);
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port;
     afxNat len = (t.dir = from->dir);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&dir->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &t.str);
     *uri = t;
@@ -598,7 +598,7 @@ _AFXINL afxNat AfxClipUriTarget(afxUri* uri, afxUri const* from)
     AfxResetUri(&t);
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir;
     afxNat len = (t.fname = from->fname);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&name->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &t.str);
     *uri = t;
@@ -625,7 +625,7 @@ _AFXINL afxNat AfxClipUriExtension(afxUri* uri, afxUri const* from, afxBool skip
     afxNat additive = skipDot && from->fext ? 1 : 0;
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + additive;
     afxNat len = (uri->fext = from->fext - additive);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&ext->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &uri->str);
     return len;
@@ -639,7 +639,7 @@ _AFXINL afxNat AfxClipUriFile(afxUri* uri, afxUri const* from)
     AfxResetUri(uri);
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir;
     afxNat len = (uri->fname = from->fname) + (uri->fext = from->fext);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&uri->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &uri->str);
     return len;
@@ -654,7 +654,7 @@ _AFXINL afxNat AfxClipUriPath(afxUri* uri, afxUri const* from)
     AfxResetUri(&t);
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port;
     afxNat len = (t.dir = from->dir) + (t.fname = from->fname) + (t.fext = from->fext);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&uri->str, cap, len ? AfxGetStringData(&from->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &t.str);
     *uri = t;
@@ -670,7 +670,7 @@ _AFXINL afxNat AfxClipUriQuery(afxUri* uri, afxUri const* from, afxBool skipSep)
     afxNat additive = skipSep && from->query ? 1 : 0;
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + from->fext + additive;
     afxNat len = (uri->query = from->query - additive);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&query->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &uri->str);
     return len;
@@ -696,7 +696,7 @@ _AFXINL afxNat AfxClipUriFragment(afxUri* uri, afxUri const* from, afxBool skipS
     afxNat additive = skipSep && from->frag ? 1 : 0;
     afxNat offset = from->schem + from->user + from->pass + from->host + from->port + from->dir + from->fname + from->fext + from->query + additive;
     afxNat len = (uri->frag = from->frag - additive);
-    afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
+    //afxNat cap = offset < from->str.cap ? from->str.cap - offset : 0;
     //AfxMakeRestring(&frag->str, cap, len ? AfxGetStringData(&uri->str.str, offset) : NIL, len);
     AfxExcerptRestring(&from->str, offset, len, &uri->str);
     return len;
@@ -1105,23 +1105,33 @@ _AFXINL void AfxReparseUri(afxUri *uri)
     }
 }
 
+_AFXINL void AfxFormatUriArg(afxUri *uri, afxChar const *fmt, va_list args)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    AfxAssert(AfxUriIsEditable(uri));
+    afxRestring *str = AfxGetUriRestring(uri);
+    AfxAssert(str);
+    AfxAssert(fmt);
+    AfxFormatStringArg(str, fmt, args);
+    AfxReparseUri(uri);
+    //AfxCanonicalizePath(uri, FALSE);
+}
+
 _AFXINL void AfxFormatUri(afxUri *uri, afxChar const *fmt, ...)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(uri);
     AfxAssert(AfxUriIsEditable(uri));
 
-    AfxAssert(fmt);
-
-    afxRestring *str = AfxGetUriRestring(uri);
-    AfxAssert(str);
-
-    va_list args;
-    va_start(args, fmt);
-    AfxFormatStringArg(str, fmt, args);
-    va_end(args);
-    AfxReparseUri(uri);
-    //AfxCanonicalizePath(uri, FALSE);
+    if (!fmt) AfxClearUri(uri);
+    else
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(uri, fmt, args);
+        va_end(args);
+    }
 }
 
 _AFXINL afxError AfxCopyUri(afxUri *uri, afxUri const *src)
@@ -1477,5 +1487,89 @@ _AFX afxUri* AfxMakeUri2048(afxUri2048 *uri, afxUri const* src)
     if (src)
         AfxCopyUri(&uri->uri, src);
 
+    return &uri->uri;
+}
+
+#define _AFX_FIXED_URI_FMT(_uriType_) \
+{ \
+afxError err = AFX_ERR_NONE; \
+AfxAssert(uri); \
+uri->buf[0] = '\0'; \
+AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0); \
+\
+if (fmt) \
+{ \
+va_list args; \
+va_start(args, fmt); \
+AfxFormatUriArg(uri, fmt, args); \
+va_end(args); \
+} \
+}
+
+_AFXINL afxUri* AfxFormatUri8(afxUri8 *uri, afxChar const *fmt, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    uri->buf[0] = '\0';
+    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+
+    if (fmt)
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(&uri->uri, fmt, args);
+        va_end(args);
+    }
+    return &uri->uri;
+}
+
+_AFXINL afxUri* AfxFormatUri32(afxUri32 *uri, afxChar const *fmt, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    uri->buf[0] = '\0';
+    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+
+    if (fmt)
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(&uri->uri, fmt, args);
+        va_end(args);
+    }
+    return &uri->uri;
+}
+
+_AFXINL afxUri* AfxFormatUri128(afxUri128 *uri, afxChar const *fmt, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    uri->buf[0] = '\0';
+    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+
+    if (fmt)
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(&uri->uri, fmt, args);
+        va_end(args);
+    }
+    return &uri->uri;
+}
+
+_AFXINL afxUri* AfxFormatUri2048(afxUri2048 *uri, afxChar const *fmt, ...)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssert(uri);
+    uri->buf[0] = '\0';
+    AfxMakeMutableUri(&uri->uri, sizeof(uri->buf), uri->buf, 0);
+
+    if (fmt)
+    {
+        va_list args;
+        va_start(args, fmt);
+        AfxFormatUriArg(&uri->uri, fmt, args);
+        va_end(args);
+    }
     return &uri->uri;
 }

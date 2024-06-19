@@ -16,12 +16,12 @@ afxDrawOutput dout = NIL;
 afxDrawContext dctx = NIL;
 akxRenderer rnd = NIL;
 
-afxCamera cam = NIL;
+avxCamera cam = NIL;
 
 afxUri2048 uri;
 
 
-afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by draw thread
+afxBool DrawInputProc(afxDrawInput din, avxEvent const* ev) // called by draw thread
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &din, afxFcc_DIN);
@@ -49,7 +49,7 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
                 {
                     queIdx = AfxGetCmdBufferPool(cmdb);
 
-                    afxCanvas canv;
+                    avxCanvas canv;
                     AfxEnumerateDrawOutputCanvases(dout, outBufIdx, 1, &canv);
                     AfxAssertObjects(1, &canv, afxFcc_CANV);
 
@@ -93,14 +93,14 @@ afxBool DrawInputProc(afxDrawInput din, afxDrawEvent const* ev) // called by dra
 afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
 {
     afxError err = AFX_ERR_NONE;
-    afxCamera cam = (void*)obj;
+    avxCamera cam = (void*)obj;
     AfxAssertObjects(1, &cam, afxFcc_CAM);
     (void)watched;
     (void)ev;
 
     switch (ev->id)
     {
-    case afxUxEventId_AXIS:
+    case auxEventId_AXIS:
     {
         //afxMouse mse = (void*)watched;
         //AfxAssertObjects(1, &mse, afxFcc_MSE);
@@ -116,7 +116,7 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
             deltaEar[0] = -((afxReal)(delta[1] * AFX_PI / 180.f));
             deltaEar[2] = 0.f;
 
-            AfxApplyCameraElevAzimRoll(cam, deltaEar);
+            AfxApplyCameraOrientation(cam, deltaEar);
         }
 
         if (AfxRmbIsPressed(0))
@@ -128,18 +128,18 @@ afxBool CamEventFilter(afxObject *obj, afxObject *watched, afxEvent *ev)
             off[1] = -((afxReal)(delta[1] * AFX_PI / 180.f));
             off[2] = 0.f;
 
-            AfxApplyCameraOffset(cam, off);
+            AfxApplyCameraDisplacement(cam, off);
         }
         break;
     }
-    case afxUxEventId_WHEEL:
+    case auxEventId_WHEEL:
     {
         afxReal w = AfxGetMouseWheelDelta(0);
         w = w / 120.f; // WHEEL_DELTA
         AfxApplyCameraDistance(cam, w);
         break;
     }
-    case afxUxEventId_KEY:
+    case auxEventId_KEY:
     {
         //afxKeyboard kbd = (void*)watched;
         //AfxAssertObjects(1, &kbd, afxFcc_KBD);
@@ -167,7 +167,7 @@ void UpdateFrameMovement(afxReal64 DeltaTime)
         MovementThisFrame * UpSpeed,
         MovementThisFrame * ForwardSpeed
     };
-    AfxApplyCameraMotion(cam, v);
+    AfxTranslateCamera(cam, v);
 
 
 }
@@ -190,15 +190,16 @@ int main(int argc, char const* argv[])
     // Acquire hardware device contexts
 
     afxDrawContextConfig dctxCfg = { 0 };
-    AfxAcquireDrawContext(0, &dctxCfg, &dctx);
+    AfxOpenDrawDevice(0, &dctxCfg, &dctx);
     AfxAssertObjects(1, &dctx, afxFcc_DCTX);
 
     // Acquire a drawable surface
 
-    AfxAcquireWindow(0, dctx, NIL, &window);
+    afxWindowConfig wndCfg = { 0 };
+    AfxAcquireWindow(dctx, &wndCfg, &window);
     AfxAdjustWindowFromNdc(window, NIL, AfxSpawnV2d(0.5, 0.5));
 
-    AfxGetSurfaceDrawOutput(window, &dout);
+    AfxGetWindowDrawOutput(window, NIL, &dout);
     AfxAssert(dout);
     AfxReconnectDrawOutput(dout, dctx);
 
@@ -263,7 +264,7 @@ int main(int argc, char const* argv[])
 
     afxHid hid;
     AfxGetHid(0, &hid);
-    AfxInstallEventFilter(cam, (void*)CamEventFilter);
+    AfxResetEventFilter(cam, (void*)CamEventFilter);
     AfxInstallWatcher(window, cam);
 
     // Run

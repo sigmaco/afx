@@ -16,7 +16,7 @@
 
 #include "sgl.h"
 #include "sglDdrv.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 SGLINL void SglBindTextureUnit(sglDpu* dpu, GLuint unit, GLenum target, GLuint texture)
 {

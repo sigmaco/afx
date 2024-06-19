@@ -27,7 +27,7 @@
 
 // Add concept of environmental variables, such as $(name) -> value, to be used to form strings, paths, etc.
 
-typedef afxResult(*afxApplicationProc)(afxScript app, afxUxEvent* ev);
+typedef afxResult(*afxApplicationProc)(afxScript app, auxEvent* ev);
 
 #ifdef _AUX_UX_C
 #ifdef _AUX_SCRIPT_C

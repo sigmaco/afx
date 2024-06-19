@@ -26,12 +26,12 @@ AVX afxError    AfxUploadXmlBackedDrawOperations(afxNat cnt, afxUri const uri[],
 #endif
 
 
-AVX afxError    AfxParseXmlBackedShaderBlueprint(afxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
-AVX afxError    AfxParsePipelineFromXsh(afxPipelineBlueprint* pipb, afxUri const* uri);
+AVX afxError    AfxParseXmlBackedShaderBlueprint(avxShaderBlueprint *blueprint, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxError    AfxParsePipelineFromXsh(avxPipelineBlueprint* pipb, afxUri const* uri);
 
-AVX afxError    AfxLoadPipelineConfigFromXml(afxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
-AVX afxError    AfxLoadRasterizationConfigFromXml(afxRasterizationConfig* config, afxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxError    AfxLoadPipelineConfigFromXml(avxPipelineBlueprint* config, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
+AVX afxError    AfxLoadRasterizationConfigFromXml(avxRasterizationConfig* config, avxRasterizationConfig const* identity, afxNat specIdx, afxXml const* xml, afxNat elemIdx);
 
-AVX afxError AfxLoadGlScript(afxShaderBlueprint* bp, afxUri const* path);
+AVX afxError AfxLoadGlScript(avxShaderBlueprint* bp, afxUri const* path);
 
 #endif//AFX_XML_BACKED_DRAWABLE_RESOURCES_H

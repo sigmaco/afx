@@ -14,18 +14,13 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#define _CRT_SECURE_NO_WARNINGS 1
-#define WIN32_LEAN_AND_MEAN 1
-#include <stdio.h>
-#include <Windows.h>
-
 #define _AUX_UX_C
 #define _AUX_WIDGET_C
-#include "qwadro/ux/afxWidget.h"
-#include "qwadro/ux/afxScript.h"
+#include "dev/AuxDevKit.h"
+//#include "dev/AuxOverWin32.h"
 
 
-_AUX afxError _AuxWidCtor(afxWidget wid, afxCookie const *cookie)
+_AUX afxError _AuxWidCtorCb(afxWidget wid, afxCookie const *cookie)
 {
     afxError err = AFX_ERR_NONE;
 
@@ -37,7 +32,7 @@ _AUX afxError _AuxWidCtor(afxWidget wid, afxCookie const *cookie)
     return err;
 }
 
-_AUX afxError _AuxWidDtor(afxWidget wid)
+_AUX afxError _AuxWidDtorCb(afxWidget wid)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &wid, afxFcc_WID);
@@ -52,10 +47,9 @@ _AUX afxClassConfig _AuxWidMgrCfg =
 {
     .fcc = afxFcc_WID,
     .name = "Widget",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxWidget)),
-    .ctor = (void*)_AuxWidCtor,
-    .dtor = (void*)_AuxWidDtor
+    .fixedSiz = sizeof(AFX_OBJECT(afxWidget)),
+    .ctor = (void*)_AuxWidCtorCb,
+    .dtor = (void*)_AuxWidDtorCb
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +59,7 @@ _AUX afxError AfxAcquireWidgets(afxWindow ovy, afxNat cnt, afxWidgetConfig confi
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ovy, afxFcc_WND);
 
-    afxManager* cls = AfxGetWidgetClass(ovy);
+    afxClass* cls = AfxGetWidgetClass(ovy);
     AfxAssertClass(cls, afxFcc_WID);
 
     if (AfxAcquireObjects(cls, cnt, AfxObjects(widgets), (void const*[]) { ovy, config }))
@@ -78,7 +72,7 @@ _AUX afxNat AfxEnumerateWidgets(afxWindow ovy, afxNat first, afxNat cnt, afxWidg
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ovy, afxFcc_WND);
-    afxManager *cls = AfxGetWidgetClass(ovy);
+    afxClass *cls = AfxGetWidgetClass(ovy);
     AfxAssertClass(cls, afxFcc_DCTX);
-    return AfxEnumerateObjects(cls, first, cnt, AfxObjects(widgets));
+    return AfxEnumerateClassInstances(cls, first, cnt, AfxObjects(widgets));
 }
