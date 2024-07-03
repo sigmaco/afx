@@ -20,7 +20,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdio.h>
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
 _AFX afxNat AfxResolveStrings2(afxStringBase strc, afxNat cnt, afxString const in[], afxString out[])
 {
@@ -113,9 +113,7 @@ _AFX afxClassConfig _AfxStrbMgrCfg =
 {
     .fcc = afxFcc_STRB,
     .name = "String Base",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxStringBase)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxStringBase)),
     .ctor = (void*)_AfxStrcCtor,
     .dtor = (void*)_AfxStrcDtor
 };
@@ -128,7 +126,7 @@ _AFX afxError AfxAcquireStringCatalogs(afxNat cnt, afxStringBase catalogs[])
     AfxAssert(catalogs);
     AfxAssert(cnt);
 
-    if (AfxAcquireObjects(AfxGetStringBaseClass(), cnt, (afxObject*)catalogs, (void const*[]) {  }))
+    if (AfxAcquireObjects(AfxGetStringBaseClass(), cnt, (afxObject*)catalogs, (void const*[]) { 0 }))
         AfxThrowError();
 
     return err;

@@ -1,0 +1,3652 @@
+Booting up the Qwadro Execution Ecosystem...
+Registering... SystemRegistering... String Basemalign 6739B0
+realign 695400
+malign 673A80
+afxManifest.c:327
+1: Section 'BasedOn="E:\qwadro\afx"' missing ']' operator.realign 6A3EE0
+realign 695450
+malign 6739B0
+realign 6A26E0
+realign 6A3FC0
+realign 6A4FA0
+realign 6739B0
+realign 6A27B0
+realign 6739B0
+realign 6A27B0
+realign 6A4FA0
+realign 6A5070
+realign 6A5150
+malign 6A27B0
+realign 6739B0
+realign 6A4FA0
+realign 6A5090
+realign 6A5180
+realign 6A4FA0
+realign 6A50A0
+malign 6A27B0
+realign 6A4FA0
+Registering... ThreadRegistering... Memory Management UnitRegistering... ServiceRegistering... CodecRegistering... StreamRegistering... ArchiveRegistering... StorageRegistering... ModuleRegistering... DeviceAcquiring thread...  8956 "afxSystem_w32.c:523"realign 695450
+malign 6A51A0
+malign 6A54B0
+realign 6954A0
+malign 6A5870
+Mounting... <.>('E:/qwadro/afx///'),5malign 6A2630
+malign 698E00
+Mounting... <system>('E:/qwadro/afx//system/'),5malign 6A27B0
+malign 6A3FC0
+Mounting... <system>('E:/qwadro/afx//system32/'),7malign 6A5B70
+malign 6A4020
+Mounting... <system>('E:/qwadro/afx//system32d/'),7malign 6A5BE0
+malign 6A4080
+Mounting... <//./c/>('C:\'),7malign 6A5C50
+malign 6904B0
+Mounting... <//./e/>('E:\'),7malign 6A5CC0
+malign 6904F0
+Mounting... <//./f/>('F:\'),7malign 6A5D30
+malign 690540
+Mounting... <//./g/>('G:\'),7malign 6A5DA0
+malign 690580
+realign 6A40E0
+malign 6A36B0
+Mounting... <//./h/>('H:\'),7malign 6A5E30
+malign 6905D0
+Mounting... <//./i/>('I:\'),7malign 6A5EA0
+malign 690610
+Mounting... <//./z/>('Z:\'),7malign 6A5F10
+malign 690660
+Loading module... <e2coree.dll>realign 6954A0
+malign 6A39B0
+Memory page size: 4096Logical processor count: 2Doing the AVX start up...Loading module... <e2draw>Registering... DrawSystemRegistering... CameraRegistering... DrawDevice[Device]Registering... DrawOutputRegistering... DrawInputmalign 6A6E10
+realign 6A3C10
+realign 6954F0
+malign 6A6E10
+realign 6A3CE0
+realign 698E60
+realign 6A6E10
+realign 6A5F80
+realign 68B660
+realign 6A6E10
+realign 6A3DA0
+realign 6A3E40
+realign 6A6E10
+realign 6A3DA0
+realign 6A7FC0
+realign 6A3DA0
+realign 6A7FC0
+realign 6A3DA0
+realign 6A7FC0
+realign 6A3DA0
+realign 6A7FC0
+realign 6A8100
+realign 6A3CE0
+malign 6A6E10
+realign 6A3DF0
+realign 6A8100
+malign 6A6E10
+realign 6A3CE0
+realign 6A8220
+realign 6A8340
+realign 6A8100
+realign 6A8230
+realign 6A8380
+realign 6A8100
+realign 6A8260
+realign 6A83C0
+realign 6A8100
+realign 6A8280
+realign 6A8400
+realign 6A8100
+realign 6A8250
+realign 6A83F0
+realign 6A8590
+realign 6A8250
+realign 6A8420
+realign 6A8600
+realign 6A8250
+realign 6A8440
+malign 6A3C10
+realign 6A3D90
+realign 6954F0
+malign 6A3C10
+realign 6A8E50
+realign 698E60
+realign 6A3E50
+realign 6A5F80
+realign 68B660
+realign 6A3C10
+realign 6A8F10
+realign 6A3C10
+realign 6A8F10
+realign 6A3C10
+realign 6A8F10
+realign 6A8FF0
+realign 6A90D0
+realign 6A8F10
+realign 6A9000
+realign 6A9100
+realign 6A8F10
+realign 6A9200
+realign 6A9060
+malign 6A8E50
+realign 6A3C10
+realign 6A9170
+malign 6A8E50
+realign 6A9060
+realign 6A9290
+realign 6A9120
+realign 6A9250
+realign 6A9380
+realign 6A9120
+realign 6A9280
+realign 6A93F0
+realign 6A9120
+realign 6A92A0
+realign 6A9430
+realign 6A9120
+realign 6A92C0
+realign 6A9120
+realign 6A9470
+realign 6A9270
+realign 6A9430
+realign 6A95F0
+realign 6A9270
+realign 6A9460
+realign 6A9660
+realign 6A9270
+realign 6A9490
+realign 6A9650
+realign 6A9060
+realign 6A9650
+malign 6A8E50
+realign 6A9060
+realign 6A9120
+realign 6954F0
+malign 6A9650
+malign 6A9370
+realign 6A4140
+malign 6A9C50
+realign 6A8E50
+realign 695400
+malign 6A9370
+realign 6A9D50
+realign 698E60
+realign 6A3E50
+realign 6A5F80
+realign 68B660
+realign 6A9370
+realign 6A9E10
+realign 6A9370
+realign 6A9E10
+realign 6A9370
+realign 6A9E10
+realign 6A9370
+realign 6A9E10
+realign 6A9F00
+realign 6A9370
+realign 6A9E10
+realign 6A9F10
+realign 6A9370
+realign 6A9D50
+malign 6A9370
+realign 6AA060
+realign 6A9370
+malign 6A9D50
+realign 6A9E10
+realign 6AA120
+realign 6AA240
+realign 6AA370
+realign 6AA120
+realign 6AA280
+realign 6AA3E0
+realign 6AA120
+realign 6AA290
+realign 6AA410
+realign 6AA120
+realign 6AA2C0
+realign 6AA460
+realign 6AA120
+realign 6A9D50
+realign 6AA270
+realign 6A9D50
+realign 6AA270
+realign 6AA440
+realign 6AA630
+realign 6AA270
+realign 6AA480
+realign 6A9D50
+realign 6AA120
+realign 6AA350
+realign 6AA580
+malign 6A9370
+realign 6AA120
+realign 6AA1F0
+Loading module... <targl4.dll>realign 6A41A0
+malign 6AA430
+Installable client driver discovered.
+	Device: TARGA Advanced Raster Graphics Adapter
+	Driver: TARGA over OpenGL 4
+	Version: 4.0.16385
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 695400
+Registering... DrawContextmalign 68B6E0
+Loading module... <opengl32.dll>Listing mem available display devices...
+#0 = Intel(R) HD Graphics (\\.\DISPLAY1) 8080005#1 = RDPDD Chained DD (\\.\DISPLAYV1) 200008#2 = RDP Encoder Mirror Driver (\\.\DISPLAYV2) 200008#3 = RDP Reflector Display Driver (\\.\DISPLAYV3) 200008malign 6AD530
+Acquiring thread...  0 "sglDdev_w32.c:1083"malign 6A8780
+Starting Thread Execution Unit 8504Doing the ASX start up...Loading module... <e2sound>realign 6A6E30
+malign 6B26F0
+Registering... SoundSystemRegistering... SoundDevice[Device]Registering... SoundOutputRegistering... SoundInputmalign 6A3C10
+realign 6A9050
+realign 695810
+malign 6A3C10
+realign 6A9110
+realign 698F60
+realign 6A6E90
+realign 6A5FF0
+realign 68BE60
+realign 6A9440
+realign 6A91E0
+realign 6A9270
+realign 6A9440
+realign 6A91E0
+realign 6B45E0
+realign 6A9440
+realign 6A91E0
+realign 6B7440
+realign 6B7530
+realign 6B7620
+realign 6B7440
+realign 6A9110
+realign 6B7590
+malign 6A9110
+realign 6A91E0
+realign 6B76A0
+malign 6A9110
+realign 6B7590
+realign 6B97E0
+realign 6B8380
+realign 6BD6E0
+realign 6B8380
+realign 6C0010
+realign 6B8380
+realign 6C1960
+realign 6B8380
+realign 6C32C0
+realign 6C4C40
+realign 6CBDC0
+realign 6C0010
+realign 6CDF50
+realign 6CF8F0
+realign 6D0AA0
+realign 6D0C60
+realign 6D1E30
+realign 6D0AA0
+realign 6D4810
+realign 6D0AA0
+realign 6D5830
+malign 6B3960
+malign 6B7590
+realign 6B97E0
+realign 6DC610
+malign 6B7590
+realign 6BD6E0
+realign 698F60
+realign 6A6E90
+realign 6A5FF0
+realign 68BE60
+realign 6B7590
+realign 6C1960
+realign 6B7590
+realign 6C1960
+realign 6B7590
+realign 6B45E0
+realign 6C1960
+realign 6C32C0
+realign 6C1960
+realign 6C32C0
+realign 6B4070
+realign 6CBDC0
+realign 6BD6E0
+realign 6B4070
+malign 6BD6E0
+realign 6CF8F0
+realign 6BD6E0
+malign 6CF9C0
+realign 6B4070
+realign 764570
+realign 764690
+realign 7647B0
+realign 764570
+realign 7646B0
+realign 764800
+realign 764570
+realign 7646D0
+realign 764840
+realign 764570
+realign 7646F0
+realign 764570
+realign 764880
+realign 7646B0
+realign 764860
+realign 764A20
+Creating transient OpenGL contextrealign 7646B0
+realign 764A20
+realign 766C10
+realign 769E10
+Loading module... <oal4d.dll>Installable client driver discovered.
+	Device: A4D Sound Acceleration Adapter
+	Driver: A4D over OpenAL 1
+	Version: 0.1.1514
+	Provider: SIGMA Technology Group <https://sigmaco.org>
+malign 2618AF0
+Registering... SoundBrigeRegistering... SoundContextmalign 25EE870
+Loading module... <openal32.dll>realign 6BD780
+malign 2648800
+malign 44283F0
+Acquiring thread...  0 "salSdev_w32.c:448"realign 265F6C0
+malign 44273F0
+malign 434DE60
+000 wglMakeContextCurrentARB core found.000 wglGetCurrentReadDCARB core found.000 wglCreateContextAttribsARB core found.Starting Thread Execution Unit 6116The audience is listeningmalign 6A9050
+000 wglChoosePixelFormatARB core found.realign 6C0010
+000 wglSwapIntervalEXT core found.realign 695450
+malign 442B3A0
+realign 442B470
+realign 442C9C0
+realign 26732E0
+realign 266F110
+realign 68C060
+realign 442B3A0
+realign 6D0AA0
+realign 442B3A0
+realign 6D0BC0
+realign 442B3A0
+realign 75FE80
+realign 6D0BC0
+realign 442E150
+realign 442E230
+realign 4422D60
+realign 44236C0
+realign 4425980
+realign 443AE60
+realign 44236C0
+malign 44258A0
+realign 6D0BC0
+realign 4425AC0
+malign 44258A0
+000 wglGetExtensionsStringARB core found.realign 4426270
+realign 4436950
+realign 4438400
+Creating definitive OpenGL contextrealign 44382B0
+realign 4428640
+realign 44336D0
+realign 44381C0
+realign 44263D0
+realign 44381C0
+realign 44263D0
+realign 44381C0
+realign 44263D0
+realign 44381C0
+realign 4428640
+realign 44263D0
+realign 44381C0
+realign 44263D0
+realign 44381C0
+realign 44263D0
+realign 44381C0
+realign 4427140
+realign 263E000
+realign 4427140
+realign 2645000
+realign 2645620
+realign 2645C50
+malign 4426270
+realign 4428B10
+realign 264B770
+Doing the AUX start up...Loading module... <e2ux>Registering... Shell000 wglMakeContextCurrentARB core found.Registering... HIDRegistering... Controller[HID]Registering... WindowRegistering... Script000 wglGetCurrentReadDCARB core found.malign 264C840
+Acquiring HID at port 0realign 4483320
+malign 44AEAF0
+Mounting... <code>('E:/qwadro/afx//system/'),7malign 43F7E10
+malign 447EA30
+Entering the Thread Execution Environment 8956
+realign 4483370
+malign 44AF170
+malign 25F3BF0
+malign 44B0420
+malign 44B1460
+malign 4482070
+Registering... DrawQueueRegistering... DrawBridgerealign 44833C0
+malign 6A3EE0
+malign 4483410
+realign 4483460
+malign 43E9B20
+Entering the Thread Execution Environment 8504
+000 wglCreateContextAttribsARB core found.000 wglChoosePixelFormatARB core found.Entering the Thread Execution Environment 8956
+malign 44876E0
+malign 44BEF00
+malign 44BFF40
+malign 4487820
+malign 44C0790
+malign 44C17D0
+malign 44B8920
+malign 44BA900
+malign 44C2020
+Registering... SemaphoreRegistering... FenceRegistering... Query PoolRegistering... LigatureRegistering... SamplerRegistering... BufferRegistering... RasterRegistering... CanvasRegistering... Vertex InputRegistering... ShaderRegistering... PipelineRegistering... RasterizerUploading pipeline 'system/video/sampleOutRgba.xsh.xml'Loading file... <system/video/sampleOutRgba.xsh.xml>('E:/qwadro/afx//system//video/sampleOutRgba.xsh.xml')realign 44835A0
+malign 4420A60
+malign 44C89F0
+realign 447FB40
+recoalign 4482270
+recoalign 44822B0
+realign 267CE10
+recoalign 44821E0
+recoalign 4482300
+malign 2631520
+malign 2631470
+malign 26315D0
+realign 4483640
+realign 2631620
+realign 264EEF0
+recoalign 4482420
+recoalign 4482460
+malign 447FB40
+realign 44836E0
+realign 760470
+Entering the Thread Execution Environment 8504
+000 wglSwapIntervalEXT core found.Entering the Thread Execution Environment 8956
+recoalign 44824B0
+recoalign 4482580
+malign 447FCE0
+realign 4483780
+Entering the Thread Execution Environment 8504
+000 wglGetExtensionsStringARB core found.Entering the Thread Execution Environment 8956
+realign 44D7FD0
+recoalign 4482610
+recoalign 4482660
+malign 447FD40
+malign 447FDB0
+malign 26316D0
+realign 4483690
+realign 447FE10
+malign 447FDB0
+realign 2631730
+realign 43EBC80
+recoalign 44823D0
+recoalign 4482300
+malign 447FD40
+realign 2631470
+malign 447FE80
+realign 4483780
+realign 44D06E0
+recoalign 4482270
+recoalign 44826A0
+malign 2631730
+malign 2631780
+malign 2631830
+realign 44837D0
+realign 264C8B0
+realign 44D0510
+recoalign 44826F0
+recoalign 4482340
+malign 447FE10
+realign 4483500
+realign 44D0840
+recoalign 44826A0
+recoalign 4482730
+malign 447FFB0
+Entering the Thread Execution Environment 8504
+391 glReleaseShaderCompiler core found.Entering the Thread Execution Environment 8956
+realign 4483870
+realign 44E18C0
+recoalign 44827C0
+recoalign 4482810
+malign 4480020
+malign 4480080
+malign 2631730
+realign 4483500
+realign 442E480
+malign 4480080
+realign 2631570
+realign 6739B0
+recoalign 44825D0
+recoalign 4482390
+malign 4480020
+realign 26314C0
+malign 44800F0
+realign 4483550
+realign 266A8C0
+recoalign 4482780
+recoalign 4482660
+malign 2631570
+malign 2631780
+malign 26317E0
+realign 4483780
+realign 2618A30
+realign 6739B0
+recoalign 4482660
+recoalign 4482270
+malign 4480150
+realign 4483870
+realign 44D1F10
+recoalign 4482780
+recoalign 4482810
+malign 44801C0
+realign 44836E0
+realign 43EBC80
+Entering the Thread Execution Environment 6116
+0  - OpenAL Soft1  - Generic SoftwareListing devices available with ALC_ENUMERATE_ALL_EXT0  - OpenAL Soft on Alto-falantes (VIA HD Audio(Compatible))1  - OpenAL Soft on Headphone (VIA HD Audio(Compatible))2  - Generic Software on Alto-falantes (VIA HD Audio(Compatible))3  - Generic Software on Headphone (VIA HD Audio(Compatible))Listing available capture devices:0  - OpenAL Soft on Mixagem estÃ©reo (VIA HD Audio(Compatible))Entering the Thread Execution Environment 8956
+recoalign 4482850
+recoalign 44828A0
+malign 4480220
+malign 4480290
+malign 2631780
+realign 4483870
+realign 266ED90
+malign 4480290
+realign 2631570
+realign 4480E20
+recoalign 44828A0
+recoalign 44828E0
+malign 4480220
+realign 2631620
+Entering the Thread Execution Environment 6116
+1  - OpenAL Soft on Microfone (VIA HD Audio(Compatible))2  - OpenAL Soft on Entrada (VIA HD Audio(Compatible))3  - Mixagem estéreo (VIA HD Audio(C4  - Microfone (VIA HD Audio(Compati5  - Entrada (VIA HD Audio(CompatiblEntering the Thread Execution Environment 8504
+392 glShaderBinary core found.393 glGetShaderPrecisionFormat core found.394 glDepthRangef core found.Entering the Thread Execution Environment 8956
+malign 44802F0
+Entering the Thread Execution Environment 8504
+395 glClearDepthf core found.Entering the Thread Execution Environment 8956
+realign 26318E0
+realign 44D06E0
+recoalign 4482A50
+recoalign 4482A90
+realign 4480E20
+recoalign 4482AE0
+recoalign 4482B20
+malign 4480360
+realign 44838C0
+realign 44CBB30
+recoalign 4482A50
+recoalign 4482B70
+malign 4480430
+realign 4483910
+realign 4480E20
+recoalign 4482C00
+recoalign 4482C40
+malign 4480490
+realign 26319F0
+malign 4480500
+realign 2631A40
+realign 44D0510
+recoalign 4482C90
+Entering the Thread Execution Environment 8504
+396 glGetProgramBinary core found.Entering the Thread Execution Environment 8956
+recoalign 4482CD0
+malign 26318E0
+malign 2631AA0
+malign 2631AF0
+realign 4483910
+realign 2618A30
+realign 44CC510
+recoalign 4482D60
+recoalign 4482E40
+malign 4480630
+realign 44839B0
+realign 44CC870
+recoalign 4482C90
+recoalign 44EEE90
+malign 44806A0
+realign 4483A00
+realign 44F2A80
+recoalign 44EEED0
+recoalign 44EEF20
+malign 4480700
+realign 2631C00
+malign 4480770
+realign 447EAF0
+realign 44C7CF0
+recoalign 44EEF60
+recoalign 44EEFB0
+realign 44CC510
+recoalign 44EEFF0
+Entering the Thread Execution Environment 6116
+Opening file... <system/qwadroDeepNote>('E:/qwadro/afx//system//qwadroDeepNote'),1malign 44807D0
+Entering the Thread Execution Environment 8956
+recoalign 44EF040
+Entering the Thread Execution Environment 8504
+397 glProgramBinary core found.Entering the Thread Execution Environment 6116
+malign 7030050
+Entering the Thread Execution Environment 8956
+malign 4480840
+realign 4483A00
+realign 44F2A80
+recoalign 44EEF60
+recoalign 44EF080
+malign 44807D0
+realign 44839B0
+realign 44CC510
+recoalign 44EF0D0
+recoalign 44EF110
+malign 44808A0
+realign 2631A40
+realign 44F2A80
+recoalign 44EF160
+recoalign 44EF1A0
+malign 4480910
+realign 44F2EF0
+malign 4480970
+realign 447EB50
+realign 44CC510
+recoalign 44EF1F0
+recoalign 44EF230
+malign 2631A40
+malign 44F2F50
+malign 44F2FA0
+realign 44839B0
+realign 4481180
+realign 44F36E0
+recoalign 44EF230
+recoalign 44EF280
+Entering the Thread Execution Environment 8504
+398 glProgramParameteri core found.Entering the Thread Execution Environment 8956
+malign 44F3B90
+realign 4483A00
+realign 44CC510
+recoalign 44EF1F0
+recoalign 44EF2C0
+malign 44F3C00
+realign 4483A50
+realign 44F4380
+recoalign 44EF310
+recoalign 44EF350
+malign 44F3C60
+realign 44F2F50
+realign 44CC510
+recoalign 44EF3A0
+recoalign 44EF3E0
+malign 44F3CD0
+realign 44F3000
+malign 44F3D30
+realign 44F3DA0
+malign 44F3E00
+realign 44F4380
+malign 44CCA20
+Node 'DepthWriteEnabled' not handled.../system/video/sampleOutRgba.xsh.xmlUploading pipeline '../system/video/sampleOutRgba.xsh.xml'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/sampleOutRgba.xsh.xml>('../system/video/sampleOutRgba.xsh.xml')realign 44835A0
+malign 4420A60
+Entering the Thread Execution Environment 8504
+399 glUseProgramStages core found.Entering the Thread Execution Environment 8956
+malign 44F4890
+realign 44F3E70
+recoalign 44EF430
+recoalign 44EF470
+realign 43EC140
+recoalign 44EF4C0
+recoalign 44EF500
+malign 44F2F50
+malign 44F3050
+malign 44F30B0
+realign 4483A50
+realign 44F3100
+realign 264EEF0
+recoalign 44EF500
+recoalign 44EF550
+malign 44F3E70
+realign 4483A00
+realign 760470
+Entering the Thread Execution Environment 8504
+400 glActiveShaderProgram core found.Entering the Thread Execution Environment 8956
+recoalign 44EF4C0
+recoalign 44EF590
+malign 44F3ED0
+realign 4483AA0
+realign 44CCA20
+recoalign 44EF5E0
+recoalign 44EF620
+malign 44F3F40
+malign 44F3FA0
+malign 44F3050
+realign 4483A00
+realign 44F4010
+malign 44F3FA0
+realign 44F3100
+realign 44CCB20
+recoalign 44EF620
+recoalign 44EF670
+malign 44F3F40
+realign 44F2F50
+malign 44F4070
+realign 4483AA0
+realign 44D0510
+recoalign 44EF430
+recoalign 44EF6B0
+malign 44F3100
+malign 44F3160
+Entering the Thread Execution Environment 8504
+401 glCreateShaderProgramv core found.Entering the Thread Execution Environment 8956
+malign 44F31B0
+realign 4483AF0
+realign 264C8B0
+realign 44D0650
+Entering the Thread Execution Environment 8504
+402 glBindProgramPipeline core found.403 glDeleteProgramPipelines core found.Entering the Thread Execution Environment 8956
+recoalign 44EF6B0
+Entering the Thread Execution Environment 8504
+404 glGenProgramPipelines core found.Entering the Thread Execution Environment 8956
+recoalign 44EF700
+malign 44F4010
+realign 4483B40
+realign 44CCA20
+recoalign 44EF430
+recoalign 44EF740
+malign 44F40E0
+realign 4483B90
+realign 44E18C0
+recoalign 44EF790
+recoalign 44EF7D0
+malign 44F4140
+malign 44F41B0
+malign 44F3160
+realign 4483B40
+realign 442E480
+malign 44F41B0
+realign 44F3100
+realign 44CCA20
+recoalign 44EF7D0
+recoalign 44EF820
+malign 44F4140
+realign 44F3210
+malign 44F4210
+realign 4483B90
+realign 44D0510
+recoalign 44EF860
+recoalign 44EF8B0
+malign 44F3100
+malign 44F3260
+malign 44F32C0
+realign 4483AA0
+realign 2618A30
+realign 44CCA20
+recoalign 44EF8B0
+recoalign 44EF8F0
+malign 44F4280
+realign 4483BE0
+Entering the Thread Execution Environment 8504
+405 glIsProgramPipeline core found.Entering the Thread Execution Environment 8956
+realign 44D1F10
+recoalign 44EF860
+recoalign 44EF940
+malign 44F42E0
+realign 4483C30
+realign 44D0510
+recoalign 44EF980
+recoalign 44EF9D0
+malign 44F66F0
+malign 44F6750
+Entering the Thread Execution Environment 8504
+406 glGetProgramPipelineiv core found.Entering the Thread Execution Environment 8956
+malign 44F3260
+realign 4483BE0
+realign 266ED90
+malign 44F66F0
+realign 44F3100
+realign 44F2A80
+recoalign 44EF9D0
+recoalign 44EFA10
+malign 44F6750
+realign 44F3310
+malign 44F67C0
+realign 44F3100
+realign 44D0510
+recoalign 44EFA60
+recoalign 44EFAA0
+realign 44F2A80
+recoalign 44EFAF0
+recoalign 44EFB30
+malign 44F6820
+realign 4483B90
+realign 44D0510
+recoalign 44EFA60
+recoalign 44EFB80
+malign 44F6890
+realign 4483C30
+realign 44F2A80
+recoalign 44EFBC0
+Entering the Thread Execution Environment 8504
+407 glProgramUniform1i core found.Entering the Thread Execution Environment 8956
+recoalign 44EFC10
+malign 44F68F0
+realign 44F3370
+malign 44F6960
+realign 44F33C0
+realign 44D0510
+recoalign 44EFC50
+recoalign 44EFCA0
+malign 44F3100
+malign 44F3420
+malign 44F3470
+realign 4483C30
+realign 2618A30
+realign 44F2A80
+recoalign 44EFCA0
+recoalign 44EFCE0
+malign 44F69C0
+realign 4483B90
+realign 44F36E0
+recoalign 44EFC50
+recoalign 44EFD30
+malign 44F6A30
+realign 4483C80
+realign 44F2A80
+recoalign 44EFD70
+recoalign 44EFDC0
+malign 44F6A90
+realign 44F3420
+malign 44F6B00
+realign 447EB50
+realign 44C7CF0
+recoalign 44F6EF0
+recoalign 44F6F30
+realign 44F2A80
+recoalign 44F6F80
+recoalign 44F6FC0
+malign 44F6B60
+realign 4483C80
+realign 44F36E0
+recoalign 44F6EF0
+recoalign 44F7010
+malign 44F6BD0
+realign 4483B90
+realign 44F2A80
+recoalign 44F7050
+recoalign 44F70A0
+malign 44F6C30
+realign 44F33C0
+realign 44F36E0
+recoalign 44F70E0
+recoalign 44F7130
+malign 44F6CA0
+realign 44F3100
+malign 44F6D00
+realign 447EAF0
+realign 44F7ED0
+recoalign 44F7170
+recoalign 44F71C0
+Entering the Thread Execution Environment 8504
+408 glProgramUniform1iv core found.Entering the Thread Execution Environment 8956
+malign 44F33C0
+malign 44F34D0
+malign 44F3520
+realign 4483B90
+realign 6A4FA0
+realign 44F36E0
+recoalign 44F71C0
+recoalign 44F7200
+Entering the Thread Execution Environment 8504
+409 glProgramUniform1f core found.Entering the Thread Execution Environment 8956
+malign 44F6D70
+realign 4483C80
+realign 44F7ED0
+recoalign 44F7170
+recoalign 44F7250
+malign 44F6DD0
+realign 4483CD0
+realign 44F83A0
+recoalign 44F7290
+Entering the Thread Execution Environment 8504
+410 glProgramUniform1fv core found.Entering the Thread Execution Environment 8956
+recoalign 44F72E0
+malign 44F6E40
+realign 44F34D0
+realign 44F8880
+recoalign 44F7320
+recoalign 44F7370
+malign 44F7EF0
+realign 44F33C0
+malign 44F7F50
+realign 44F7FC0
+malign 44F8020
+realign 44F8D90
+malign 44F86D0
+Entering the Thread Execution Environment 8504
+411 glProgramUniform1d core found.Entering the Thread Execution Environment 8956
+../system/video/uvOutTristripQuad.vsh../system/video/sampleOutRgba2d.fshrealign 4483B90
+malign 44D0510
+realign 4483C30
+malign 44F6EF0
+malign 68C6E0
+realign 4483BE0
+malign 44F86D0
+malign 44F42E0
+malign 4420A60
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuad.vsh>('../system/video/uvOutTristripQuad.vsh'),1Entering the Thread Execution Environment 8504
+412 glProgramUniform1dv core found.Entering the Thread Execution Environment 8956
+malign 44F4280
+realign 4483AA0
+malign 44CCA20
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 447EAF0
+realign 442E480
+realign 442E6A0
+realign 44D0790
+realign 264EEF0
+realign 264EFA0
+realign 44CCB90
+realign 44F2A80
+realign 44F2B50
+realign 2657160
+realign 443B380
+realign 443B7A0
+realign 44F2A80
+realign 44CDF20
+realign 44F2A80
+realign 44F2BC0
+realign 44F7040
+realign 44F2A80
+realign 44F2BF0
+realign 44F36E0
+realign 44F3860
+realign 44D1F10
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44FA2D0
+realign 44FA7C0
+realign 44FACA0
+realign 44FA2D0
+realign 44FA7C0
+realign 44FACC0
+realign 44FA2D0
+Entering the Thread Execution Environment 8504
+413 glProgramUniform1ui core found.Entering the Thread Execution Environment 8956
+realign 44FA7E0
+realign 44FACF0
+Entering the Thread Execution Environment 8504
+414 glProgramUniform1uiv core found.Entering the Thread Execution Environment 8956
+realign 44FA2D0
+realign 44FA850
+realign 44FADD0
+realign 44FA2D0
+realign 44FA8A0
+malign 44FAE80
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUv[4] = vec2[](vec2(0, 1), vec2(0, 0), vec2(1, 1), vec2(1, 0));
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUv[gl_VertexID];
+}
+malign 44F4280
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/sampleOutRgba2d.fsh>('../system/video/sampleOutRgba2d.fsh'),1malign 44F4140
+realign 4483AA0
+malign 44CCA20
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 447EAF0
+realign 442E6A0
+realign 442E480
+realign 44D0790
+realign 264EFA0
+realign 264EEF0
+realign 44CCB90
+realign 44F2A80
+realign 44F2B50
+realign 2657160
+realign 443B7A0
+realign 443B380
+realign 44F2A80
+realign 44CDF20
+realign 44F2A80
+realign 44F2BC0
+realign 44F7040
+realign 44F2A80
+realign 44F2BF0
+realign 44F36E0
+realign 44F3860
+realign 44D1F10
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 447EAF0
+malign 44EFD70
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44F2A80
+realign 44F36E0
+realign 44FA2D0
+realign 44F36E0
+realign 44F33C0
+realign 44FA2D0
+realign 44F36E0
+realign 44FA2D0
+realign 44F36E0
+realign 44FA2D0
+realign 44FA790
+malign 44F92A0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    sgl_rgba = texture(samp, sgl_v.uv0);
+}
+malign 447EB50
+malign 44EFDC0
+malign 44F3520
+realign 4483AA0
+malign 2657160
+Entering the Thread Execution Environment 8504
+415 glProgramUniform2i core found.Entering the Thread Execution Environment 8956
+realign 442E480
+realign 44F9760
+malign 264C8B0
+malign 44F33C0
+realign 44839B0
+malign 44D1F10
+realign 4483910
+malign 44F9760
+Registering... Vertex Buffermalign 44CCA20
+malign 4483870
+Registering... CmdBufferRegistering... CmdBufferLoading file... <system/mmplayer.xss>('E:/qwadro/afx//system//mmplayer.xss')realign 4483780
+malign 44F2A80
+malign 44D2160
+require "core" for FileSystem
+
+class Main {
+  construct new() {
+    System.print("new game")
+  }
+
+  init() {
+    System.print("init game")
+  }
+  
+  quit() {
+      System.print("quit game")
+  }
+
+  step(dt) {
+    //System.print("update game")
+  }
+
+  draw(din, event) {
+    System.print("draw game")
+  }
+}
+
+var Game = Main.new()
+System.print(". game")
+Loading file... <code/core.xs>('E:/qwadro/afx//system//core.xs')malign 44F36E0
+afxScript.c:408
+afxScript.c:408
+(!xRslt)
+    Invalidrealign 4483780
+malign 44FAC30
+malign 44D25F0
+afxStorage.c:203
+afxStorage.c:223
+Reloading file 0... <art/world.tga>('art/world.tga')afxFile.c:622
+afxTarga.c:1293
+mmplayer.c:237
+mmplayer.c:239
+mmplayer.c:239
+(dumpImg)
+    InvalidafxTarga.c:1188
+afxTarga.c:1188
+(((afxResult)(1)) == _AfxAssertObjects((1), (afxObject const*)(&ras),(afxFcc_RAS)))
+    InvalidafxStorage.c:203
+afxStorage.c:223
+Opening file... <tmp/world2.tga>('tmp/world2.tga'),2afxFile.c:543
+afxTarga.c:1191
+Loading module... <../system32/binkw32.dl_>realign 68C760
+malign 44F2A80
+Entering the Thread Execution Environment 8504
+416 glProgramUniform2iv core found.Entering the Thread Execution Environment 8956
+Uploading pipeline 'system/video/rgbOutYuv.xsh.xml?yFlipped'Loading file... <system/video/rgbOutYuv.xsh.xml>('E:/qwadro/afx//system//video/rgbOutYuv.xsh.xml')realign 44862F0
+malign 44F2CF0
+malign 44FCCE0
+realign 4480770
+recoalign 4482D60
+recoalign 4482E40
+realign 43EC140
+recoalign 4482C00
+recoalign 4482C40
+realign 264ECE0
+recoalign 4482A50
+Entering the Thread Execution Environment 8504
+417 glProgramUniform2f core found.Entering the Thread Execution Environment 8956
+recoalign 4482B70
+malign 4480770
+realign 4486340
+realign 760470
+recoalign 4482C00
+recoalign 4482AE0
+malign 4480700
+realign 4486390
+realign 44FAC30
+recoalign 4482B20
+recoalign 4482A90
+malign 44806A0
+realign 44F7FA0
+realign 44FAD20
+recoalign 44828A0
+recoalign 44828E0
+malign 4480630
+realign 44F7FF0
+malign 4480500
+realign 4486390
+realign 44FD330
+Entering the Thread Execution Environment 8504
+418 glProgramUniform2fv core found.Entering the Thread Execution Environment 8956
+recoalign 4482D60
+recoalign 4482850
+malign 44F7FA0
+malign 44F8050
+malign 44F80A0
+realign 4486340
+realign 44F8100
+realign 44FAC30
+recoalign 4482850
+recoalign 4482780
+malign 4480490
+realign 44863E0
+realign 44FD330
+recoalign 4482D60
+recoalign 4482810
+malign 4480430
+Entering the Thread Execution Environment 8504
+419 glProgramUniform2d core found.420 glProgramUniform2dv core found.Entering the Thread Execution Environment 8956
+realign 4486430
+realign 44E18C0
+recoalign 4482660
+recoalign 4482270
+malign 4480360
+realign 44F8050
+malign 44802F0
+realign 4486430
+realign 44FAC30
+recoalign 44825D0
+recoalign 4482390
+realign 44FD330
+recoalign 44827C0
+recoalign 44826A0
+malign 4480220
+realign 4486390
+realign 44FAC30
+recoalign 44825D0
+recoalign 4482730
+malign 4480290
+realign 44863E0
+realign 44D2A80
+recoalign 44826F0
+recoalign 4482340
+malign 44801C0
+realign 44F7FA0
+realign 44FD330
+recoalign 44823D0
+recoalign 4482300
+malign 4480150
+realign 44F8150
+malign 44800F0
+realign 44F7FA0
+Entering the Thread Execution Environment 8504
+421 glProgramUniform2ui core found.Entering the Thread Execution Environment 8956
+realign 44FD590
+recoalign 4482610
+recoalign 44824B0
+Entering the Thread Execution Environment 8504
+422 glProgramUniform2uiv core found.Entering the Thread Execution Environment 8956
+malign 44F81B0
+malign 44F8200
+Entering the Thread Execution Environment 8504
+423 glProgramUniform3i core found.Entering the Thread Execution Environment 8956
+malign 44F8260
+realign 4486430
+realign 4480020
+realign 44FD810
+recoalign 44824B0
+recoalign 4482580
+malign 4480080
+realign 44863E0
+realign 44FD330
+recoalign 4482610
+recoalign 4482420
+malign 447FFB0
+realign 4486390
+realign 44FD600
+recoalign 4482460
+recoalign 44822B0
+malign 447FE10
+realign 44F8200
+realign 44FD8F0
+recoalign 44FDC20
+Entering the Thread Execution Environment 8504
+424 glProgramUniform3iv core found.Entering the Thread Execution Environment 8956
+recoalign 44FDC60
+malign 447FE80
+realign 44F81B0
+malign 447FD40
+realign 44F8200
+malign 447FDB0
+realign 44FD330
+malign 44CCBD0
+Node 'DepthWriteEnabled' not handled.../system/video/rgbOutYuv.xsh.xml?yFlippedUploading pipeline '../system/video/rgbOutYuv.xsh.xml?yFlipped'afxStorage.c:203
+afxStorage.c:223
+Loading file... <../system/video/rgbOutYuv.xsh.xml>('../system/video/rgbOutYuv.xsh.xml')realign 44862F0
+malign 44F2CF0
+malign 44FEC00
+realign 447FCE0
+recoalign 44FDCB0
+recoalign 44FDCF0
+Entering the Thread Execution Environment 8504
+425 glProgramUniform3f core found.Entering the Thread Execution Environment 8956
+realign 43EC140
+recoalign 44FDD40
+recoalign 44FDD80
+realign 264ECE0
+recoalign 44FDDD0
+recoalign 44FDE10
+malign 447FCE0
+realign 4486390
+realign 760470
+recoalign 44FDD40
+recoalign 44FDE60
+malign 447FB40
+realign 44863E0
+realign 44FAC30
+recoalign 44FDEA0
+recoalign 44FDEF0
+malign 44FF260
+realign 44F7FA0
+realign 44FAD20
+recoalign 44FDF30
+recoalign 44FDF80
+malign 44FF2D0
+realign 44F8100
+malign 44FF330
+realign 44863E0
+realign 44FD640
+recoalign 44FDCB0
+recoalign 44FDFC0
+malign 44F7FA0
+malign 44F82B0
+malign 44F8310
+realign 4486390
+realign 44F8360
+realign 44FD780
+recoalign 44FDFC0
+recoalign 44FE010
+malign 44FF3A0
+realign 4486480
+realign 44FAC30
+recoalign 44FDCB0
+recoalign 44FE050
+malign 44FF400
+realign 44864D0
+realign 44E18C0
+recoalign 44FE0A0
+recoalign 44FE0E0
+malign 44FF470
+realign 44F82B0
+malign 44FF4D0
+Entering the Thread Execution Environment 8504
+426 glProgramUniform3fv core found.427 glProgramUniform3d core found.428 glProgramUniform3dv core found.Entering the Thread Execution Environment 8956
+realign 44864D0
+realign 44FAC30
+recoalign 44FE130
+recoalign 44FE170
+realign 44FD640
+recoalign 44FE1C0
+recoalign 44FE200
+malign 44FF540
+realign 44863E0
+realign 44FAC30
+recoalign 44FE130
+Entering the Thread Execution Environment 8504
+429 glProgramUniform3ui core found.Entering the Thread Execution Environment 8956
+recoalign 44FE250
+malign 44FF5A0
+realign 4486480
+realign 44D2A80
+recoalign 44FE290
+recoalign 44FE2E0
+malign 44FF610
+realign 44F7FA0
+realign 44FD640
+recoalign 44FE320
+recoalign 44FE370
+malign 44FF670
+realign 44F83C0
+malign 44FF6E0
+realign 44F7FA0
+realign 44FFA50
+recoalign 44FE3B0
+recoalign 44FE400
+Entering the Thread Execution Environment 8504
+430 glProgramUniform3uiv core found.431 glProgramUniform4i core found.Entering the Thread Execution Environment 8956
+malign 44F8410
+malign 44F8470
+malign 44F84C0
+realign 44864D0
+realign 44FF740
+realign 44FD640
+recoalign 44FE400
+recoalign 44FE440
+malign 44FF7B0
+realign 4486480
+realign 44FFA50
+recoalign 44FE3B0
+recoalign 44FE490
+malign 44FF810
+realign 44863E0
+realign 44FFD20
+recoalign 44FE4D0
+recoalign 44FE520
+malign 44FF880
+realign 44F8470
+Entering the Thread Execution Environment 8504
+432 glProgramUniform4iv core found.Entering the Thread Execution Environment 8956
+realign 4500010
+recoalign 44FE560
+recoalign 44FE5B0
+malign 44FF8E0
+realign 44F8410
+malign 44FF950
+realign 44F8470
+malign 44FF9B0
+Entering the Thread Execution Environment 8504
+433 glProgramUniform4f core found.Entering the Thread Execution Environment 8956
+realign 44FFA50
+malign 44CCBD0
+../system/video/uvOutTristripQuadInvY.vsh../system/video/rgbOutYuvSigma.fshmalign 68C860
+Entering the Thread Execution Environment 8504
+434 glProgramUniform4fv core found.435 glProgramUniform4d core found.Entering the Thread Execution Environment 8956
+realign 44F67B0
+malign 44F2CF0
+malign 43F8120
+realign 44FF9B0
+Entering the Thread Execution Environment 8504
+436 glProgramUniform4dv core found.Entering the Thread Execution Environment 8956
+malign 44FAC30
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuadInvY.vsh>('../system/video/uvOutTristripQuadInvY.vsh'),1malign 43F8190
+realign 4483BE0
+malign 44FFD60
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 6A4140
+realign 442E6A0
+realign 442EA50
+realign 44CCBD0
+realign 264ECE0
+realign 264F100
+realign 44FFED0
+realign 44FAD30
+realign 44FFED0
+realign 2657340
+realign 443B380
+realign 443B7A0
+Entering the Thread Execution Environment 8504
+437 glProgramUniform4ui core found.Entering the Thread Execution Environment 8956
+realign 44FFED0
+realign 44CE8E0
+realign 44FAD30
+realign 44FD640
+realign 44F7040
+realign 44FD640
+Entering the Thread Execution Environment 8504
+438 glProgramUniform4uiv core found.Entering the Thread Execution Environment 8956
+realign 4502380
+realign 44FD640
+Entering the Thread Execution Environment 8504
+439 glProgramUniformMatrix2fv core found.Entering the Thread Execution Environment 8956
+realign 4502380
+realign 44D2A80
+Entering the Thread Execution Environment 8504
+440 glProgramUniformMatrix3fv core found.Entering the Thread Execution Environment 8956
+realign 44FD640
+realign 4502380
+realign 4502650
+realign 4502920
+realign 4502380
+realign 45026C0
+realign 4502A60
+realign 4502380
+realign 4501350
+realign 4501780
+realign 4501C10
+realign 4501350
+realign 4501850
+realign 4501D50
+realign 4501350
+realign 4501860
+realign 4501D70
+realign 4501350
+realign 4501870
+realign 4501DA0
+realign 4501350
+realign 45018F0
+realign 4501EB0
+realign 4501350
+malign 4500320
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUvFlippedY[4] = vec2[](vec2(0, 0), vec2(0, 1), vec2(1, 0), vec2(1, 1));
+// flipped V only
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUvFlippedY[gl_VertexID];
+}
+malign 44FF950
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/rgbOutYuvSigma.fsh>('../system/video/rgbOutYuvSigma.fsh'),1malign 44FF8E0
+realign 4483BE0
+malign 44FFD60
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 6A4140
+realign 442EA50
+realign 442E6A0
+realign 44CCBD0
+realign 264F100
+realign 264ECE0
+realign 44FFED0
+realign 44FAD30
+realign 44FFED0
+realign 2657340
+realign 443B7A0
+realign 443B380
+realign 44FFED0
+realign 44CE8E0
+realign 44FAD30
+realign 44FD640
+realign 44F7040
+realign 44FD640
+realign 4502970
+realign 44FD640
+realign 4502970
+realign 44D2A80
+realign 44FD640
+realign 4502970
+realign 4502C40
+realign 4502F10
+realign 4502970
+realign 4502CB0
+realign 4503050
+realign 4502970
+realign 4501940
+realign 6A4140
+malign 44FE560
+realign 4501D70
+realign 68C8E0
+malign 44FE5B0
+realign 45021C0
+realign 44CCBD0
+malign 44FE4D0
+realign 4501940
+realign 4501DE0
+realign 4502280
+realign 4501940
+realign 4501DF0
+realign 45022A0
+realign 4501940
+realign 44F8470
+realign 4501E00
+realign 45022E0
+realign 4501940
+realign 4501E30
+realign 2625690
+realign 4501940
+realign 4501E60
+realign 45023B0
+realign 4501940
+realign 4501EC0
+realign 4502490
+realign 4501940
+malign 4500910
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp0);
+SAMPLING_UNIT(0, 1, sampler2D, samp1);
+SAMPLING_UNIT(0, 2, sampler2D, samp2);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    vec3 yuv;
+    yuv.x = texture(samp0, sgl_v.uv0).r;
+    yuv.y = texture(samp2, sgl_v.uv0).r - 0.5;
+    yuv.z = texture(samp1, sgl_v.uv0).r - 0.5;
+    
+    vec3 rgb = mat3( 1, 1, 1, 0, -0.34414, 1.772, 1.402, -0.71414, 0) * yuv;
+    sgl_rgba = vec4(rgb, 1);
+}
+Entering the Thread Execution Environment 8504
+441 glProgramUniformMatrix4fv core found.Entering the Thread Execution Environment 8956
+malign 44D0790
+malign 44FE520
+Entering the Thread Execution Environment 8504
+442 glProgramUniformMatrix2dv core found.Entering the Thread Execution Environment 8956
+malign 44FE3B0
+malign 44FE490
+malign 44F8410
+realign 442E6A0
+realign 4500F00
+malign 44FAD30
+malign 44F8470
+afxStorage.c:203
+afxStorage.c:223
+Entering the Thread Execution Environment 8504
+443 glProgramUniformMatrix3dv core found.444 glProgramUniformMatrix4dv core found.445 glProgramUniformMatrix2x3fv core found.446 glProgramUniformMatrix3x2fv core found.Entering the Thread Execution Environment 8956
+realign 4486430
+malign 44CE8E0
+realign 4486340
+malign 44FD640
+realign 6A4140
+malign 45087B0
+realign 447FDB0
+malign 4508920
+Entering the Thread Execution Environment 8504
+447 glProgramUniformMatrix2x4fv core found.Entering the Thread Execution Environment 8956
+realign 4486340
+malign 4508A80
+Registering... WidgetEntering the Thread Execution Environment 8504
+448 glProgramUniformMatrix4x2fv core found.Entering the Thread Execution Environment 8956
+realign 4483BE0
+malign 4509C60
+afxDrawOutput 000 readapted. 1920x1080 @ 60.000000Hz <1.777778r, 1.776903p>malign 68C8E0
+realign 44864D0
+Entering the Thread Execution Environment 8504
+449 glProgramUniformMatrix3x4fv core found.Entering the Thread Execution Environment 8956
+malign 4509E40
+malign 68C960
+realign 264C9A0
+malign 4509FF0
+realign 4486390
+malign 760470
+malign 68C9E0
+realign 68CA60
+malign 450A150
+realign 6A4140
+malign 450A2C0
+malign 450A480
+realign 43EC140
+malign 450B460
+realign 44F6810
+malign 760390
+Entering the Thread Execution Environment 8504
+450 glProgramUniformMatrix4x3fv core found.451 glProgramUniformMatrix2x3dv core found.452 glProgramUniformMatrix3x2dv core found.453 glProgramUniformMatrix2x4dv core found.454 glProgramUniformMatrix4x2dv core found.455 glProgramUniformMatrix3x4dv core found.Entering the Thread Execution Environment 8956
+afxDrawOutput 000 adjusted. <1272, 1920, 0.663> 1.854227 <686, 1080, 0.635>malign 68C960
+Entering the Thread Execution Environment 8504
+456 glProgramUniformMatrix4x3dv core found.Entering the Thread Execution Environment 8956
+malign 4509FF0
+malign 68C9E0
+malign 450A150
+realign 68CA60
+realign 4486610
+realign 4486660
+realign 44F6810
+malign 450A2C0
+Entering the Thread Execution Environment 8504
+457 glValidateProgramPipeline core found.Entering the Thread Execution Environment 8956
+malign 450A480
+realign 43EC140
+malign 450B460
+realign 44F6930
+malign 760390
+Entering the Thread Execution Environment 8504
+458 glGetProgramPipelineInfoLog core found.Entering the Thread Execution Environment 8956
+afxDrawOutput 000 adjusted. <1280, 1920, 0.667> 1.777778 <720, 1080, 0.667>malign 68C960
+malign 4509FF0
+malign 68C9E0
+malign 450A150
+realign 68CA60
+realign 4486660
+realign 4486610
+realign 44F6930
+malign 450A2C0
+malign 450A480
+realign 450E970
+malign 450B460
+realign 44F6810
+malign 760390
+Entering the Thread Execution Environment 8504
+459 glVertexAttribL1d core found.460 glVertexAttribL2d core found.461 glVertexAttribL3d core found.462 glVertexAttribL4d core found.463 glVertexAttribL1dv core found.464 glVertexAttribL2dv core found.465 glVertexAttribL3dv core found.466 glVertexAttribL4dv core found.467 glVertexAttribLPointer core found.468 glGetVertexAttribLdv core found.469 glViewportArrayv core found.470 glViewportIndexedf core found.471 glViewportIndexedfv core found.472 glScissorArrayv core found.473 glScissorIndexed core found.474 glScissorIndexedv core found.475 glDepthRangeArrayv core found.476 glDepthRangeIndexed core found.477 glGetFloati_v core found.478 glGetDoublei_v core found.479 glDrawArraysInstancedBaseInstance core found.480 glDrawElementsInstancedBaseInstance core found.481 glDrawElementsInstancedBaseVertexBaseInstance core found.482 glGetInternalformativ core found.483 glGetActiveAtomicCounterBufferiv core found.484 glBindImageTexture core found.485 glMemoryBarrier core found.486 glTexStorage1D core found.487 glTexStorage2D core found.488 glTexStorage3D core found.489 glDrawTransformFeedbackInstanced core found.490 glDrawTransformFeedbackStreamInstanced core found.493 glDispatchCompute core found.494 glDispatchComputeIndirect core found.496 glFramebufferParameteri core found.497 glGetFramebufferParameteriv core found.498 glGetInternalformati64v core found.503 glInvalidateFramebuffer core found.504 glInvalidateSubFramebuffer core found.505 glMultiDrawArraysIndirect core found.506 glMultiDrawElementsIndirect core found.507 glGetProgramInterfaceiv core found.508 glGetProgramResourceIndex core found.509 glGetProgramResourceName core found.510 glGetProgramResourceiv core found.511 glGetProgramResourceLocation core found.512 glGetProgramResourceLocationIndex core found.513 glShaderStorageBlockBinding core found.514 glTexBufferRange core found.515 glTexStorage2DMultisample core found.516 glTexStorage3DMultisample core found.518 glBindVertexBuffer core found.519 glVertexAttribFormat core found.520 glVertexAttribIFormat core found.521 glVertexAttribLFormat core found.522 glVertexAttribBinding core found.523 glVertexBindingDivisor core found.524 glDebugMessageControl core found.525 glDebugMessageInsert core found.526 glDebugMessageCallback core found.527 glGetDebugMessageLog core found.528 glPushDebugGroup core found.529 glPopDebugGroup core found.530 glObjectLabel core found.531 glGetObjectLabel core found.532 glObjectPtrLabel core found.533 glGetObjectPtrLabel core found.534 glBufferStorage core found.543 glClipControlEXT ext found.551 glNamedBufferStorageEXT ext found.589 glTextureBufferRangeEXT ext found.606 glTextureParameteriEXT ext found.641 glMemoryBarrierByRegion core found.644 glGetGraphicsResetStatusARB ext found.645 glGetnCompressedTexImageARB ext found.646 glGetnTexImageARB ext found.647 glGetnUniformdvARB ext found.648 glGetnUniformfvARB ext found.649 glGetnUniformivARB ext found.650 glGetnUniformuivARB ext found.651 glReadnPixelsARB ext found.677 381 1920 1080 96 96 32 1 36 36 51 60 1 SIGMA GL/2 Hardware-accelerated Draw Processing Unit 000
+	Intel(R) HD Graphics 4.0.0 - Build 10.18.10.5161malign 44B9360
+sglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:751
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:777
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:787
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:789
+GL: INVAL_PARAMsglDdev_w32.c:299
+API ERROR HIGH 1280 GL error GL_INVALID_ENUMsglDdev_w32.c:793
+GL: INVAL_PARAMHardware-side buffer 044ce920 ready. 35052, 1, 1Hardware-side buffer 044ce998 ready. 35052, 2, 1Entering the Thread Execution Environment 8956
+realign 4486610
+malign 763F50
+malign 44B94A0
+malign 4510530
+malign 4511580
+afxDrawOps.c:151
+afxDrawOps.c:151
+(cmdb->inRenderPass)
+    Invalidmalign 44B95F0
+malign 4519DC0
+malign 451AE10
+afxDrawOps.c:151
+afxDrawOps.c:151
+(cmdb->inRenderPass)
+    InvalidEntering the Thread Execution Environment 8504
+Hardware-side raster 04508880 ready. de1, 8229, [1280,720,1]Entering the Thread Execution Environment 8956
+realign 44F6990
+malign 4530790
+malign 44B9880
+malign 452BA20
+malign 452CA70
+afxDrawOps.c:151
+afxDrawOps.c:151
+(cmdb->inRenderPass)
+    InvalidEntering the Thread Execution Environment 8504
+Hardware-side raster 04508960 ready. de1, 8229, [640,360,1]Hardware-side raster 045089f0 ready. de1, 8229, [640,360,1]afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/uvOutTristripQuadInvY.vsh>('../system/video/uvOutTristripQuadInvY.vsh'),1malign 43F8190
+realign 4486750
+malign 45305F0
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 44F6AB0
+realign 442F2D0
+realign 442ED80
+realign 2618A30
+realign 264ECE0
+realign 264F1B0
+realign 453EF40
+realign 6CF9C0
+realign 764480
+realign 2657340
+realign 443B8B0
+realign 443B9B0
+realign 452D2B0
+realign 44CEB50
+realign 452AD20
+realign 451F870
+realign 44F7040
+realign 452AD20
+realign 451F870
+realign 452AD20
+realign 451F870
+realign 44D2A80
+realign 451F870
+realign 451BF10
+realign 451F870
+realign 451BF10
+realign 451F870
+realign 86ED0F0
+realign 452FC20
+realign 452A260
+realign 452A680
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+realign 452FC20
+realign 452A260
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+const vec4 gsQuadPos[4] = vec4[](vec4(-1, 1, 0, 1), vec4(-1,-1, 0, 1), vec4(1, 1, 0, 1), vec4(1,-1, 0, 1));
+const vec2 gsQuadUvFlippedY[4] = vec2[](vec2(0, 0), vec2(0, 1), vec2(1, 0), vec2(1, 1));
+// flipped V only
+
+out block
+{
+    vec2 uv0;
+} sgl_v;
+
+void main()
+{
+    // draw a full coverage quad based on two tristripped triangles (4 indices). AfxDraw(0, 1, 0, 4)
+    gl_Position = gsQuadPos[gl_VertexID];
+    sgl_v.uv0 = gsQuadUvFlippedY[gl_VertexID];
+}
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/rgbOutYuvSigma.fsh>('../system/video/rgbOutYuvSigma.fsh'),1malign 6A7100
+realign 4486750
+malign 452B330
+afxStorage.c:203
+afxStorage.c:223
+Opening file... <../system/video/stdEnv.inc>('../system/video/stdEnv.inc'),1malign 44F6AB0
+realign 442FF10
+realign 442FF90
+realign 2618A30
+realign 264F1B0
+realign 264ECE0
+realign 86F8BA0
+realign 86FA270
+realign 6CF9C0
+realign 2657340
+realign 451E320
+realign 451E010
+realign 452D2B0
+realign 44CEB50
+realign 87106A0
+realign 452B800
+realign 44F7040
+realign 452B800
+realign 8713980
+realign 452B800
+realign 8713980
+realign 4539BE0
+realign 8713980
+realign 86FE0A0
+realign 453C3B0
+realign 8701400
+realign 453C3B0
+realign 8701400
+realign 86FD000
+realign 8701400
+realign 86FD000
+realign 44F6AB0
+malign 43ED3A0
+realign 8701400
+realign 450A600
+malign 43ED360
+realign 86FD000
+realign 2618A30
+malign 43ECA10
+realign 871EBE0
+realign 86FD000
+realign 871EBE0
+realign 86FD000
+realign 871EBE0
+realign 86FD000
+realign 871EBE0
+realign 44F7FF0
+realign 871F0A0
+realign 871F580
+realign 871EBE0
+realign 871F0D0
+realign 2625690
+realign 871EBE0
+realign 871F100
+realign 871F650
+realign 871EBE0
+realign 871F160
+realign 871F730
+realign 871EBE0
+#version 330 core // QWADRO. Engineered by SIGMA Technology Group.
+
+#define afxInt int
+#define afxNat uint
+
+#define afxReal float
+
+#define afxV2d vec2
+#define afxV3d vec3
+#define afxV4d vec4
+
+#define afxM2d mat2
+#define afxM3d mat3
+#define afxM4d mat4
+
+#define float2 vec2
+#define float3 vec3
+#define float4 vec4
+
+#define IN(_location_, _type_, _name_) layout(location = _location_) in _type_ _name_ 
+#define OUT(_location_, _type_, _name_) layout(location = _location_) out _type_ _name_ 
+//#define UNIFORM(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+//#define MULTIFORM(_set_, _binding_, _type_, _name_, _count_) _type_ _name_[_count_] 
+
+// ubo = std140, ssbo = std430
+#define UNIFORM_UNIT(_set_, _binding_, _name_) layout(std140) uniform _name_ 
+#define STORAGE_UNIT(_set_, _binding_, _access_, _name_) layout(std430) _access_ buffer _name_ 
+#define SAMPLING_UNIT(_set_, _binding_, _type_, _name_) uniform _type_ _name_ 
+#define PUSHABLE(_name_) layout(std140) uniform _name_
+
+SAMPLING_UNIT(0, 0, sampler2D, samp0);
+SAMPLING_UNIT(0, 1, sampler2D, samp1);
+SAMPLING_UNIT(0, 2, sampler2D, samp2);
+
+in block
+{
+    vec2 uv0;
+} sgl_v;
+
+OUT(0, vec4, sgl_rgba);
+
+void main()
+{
+    vec3 yuv;
+    yuv.x = texture(samp0, sgl_v.uv0).r;
+    yuv.y = texture(samp2, sgl_v.uv0).r - 0.5;
+    yuv.z = texture(samp1, sgl_v.uv0).r - 0.5;
+    
+    vec3 rgb = mat3( 1, 1, 1, 0, -0.34414, 1.772, 1.402, -0.71414, 0) * yuv;
+    sgl_rgba = vec4(rgb, 1);
+}
+afxPipeline 044f6fb8 hardware-side data instanced.Hardware-side sampler 044d2050 ready.Hardware-side raster 0450a030 ready. de1, 8058, [1280,720,1]Hardware-side raster 0450a0c0 ready. de1, 81a6, [1280,720,1]afxCanvas 04509e80 hardware-side data instanced.sglDdev_w32.c:122
+Hardware-side raster 0450a190 ready. de1, 8058, [1280,720,1]Hardware-side raster 0450a220 ready. de1, 81a6, [1280,720,1]afxCanvas 04509f30 hardware-side data instanced.Hardware-side raster 0450b4a0 ready. de1, 8058, [1280,720,1]Hardware-side raster 0450b530 ready. de1, 81a6, [1280,720,1]afxCanvas 0450a300 hardware-side data instanced.Entering the Thread Execution Environment 8956
+malign 44B9730
+malign 876C210
+malign 8765AB0
+afxDrawOps.c:151
+afxDrawOps.c:151
+(cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidEntering the Thread Execution Environment 8504
+Hardware-side raster 044fd680 ready. de1, 8229, [1280,720,1]Hardware-side raster 044fd710 ready. de1, 8229, [640,360,1]Hardware-side raster 045087f0 ready. de1, 8229, [640,360,1]Entering the Thread Execution Environment 8956
+afxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    Invalidrealign 44FF6E0
+malign 87672C0
+malign 44B9B10
+malign 871DBB0
+malign 871EC00
+afxDrawOps.c:151
+afxDrawOps.c:151
+(cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:121
+afxRasterOps.c:121
+(!cmdb->inRenderPass)
+    InvalidafxRasterOps.c:87
+afxRasterOps.c:87
+(!cmdb->inRenderPass)
+    InvalidafxRasterizationOps.c:310
+afxRasterizationOps.c:310
+(!cmdb->inRenderPass)
+    InvalidafxSystem_w32.c:118
+User input requested application break.realign 44F6990
+realign 44866B0
+Shutting down the Qwadro Execution Ecosystem...
+Anihilating 1 lost <Window> objects.sglDdev_w32.c:199
+sglDdev_w32.c:199
+(!gl->IsProgram(delRes->gpuHandle))
+    InvalidAnihilating 1 lost <SoundDevice> objects.

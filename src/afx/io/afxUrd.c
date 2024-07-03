@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define _AFX_URD_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 #include "qwadro/io/afxUrd.h"
 
 #define LOWORD(l) ((afxNat16)(l))
@@ -59,6 +59,7 @@ _AFX void Reverse32_(int Count, void *BufferInit)
     }
 }
 
+#if 0
 _AFX void Reverse16(int Count, void *BufferInit)
 {
     int v2; // eax
@@ -100,11 +101,12 @@ _AFX void Reverse16(int Count, void *BufferInit)
         }
     }
 }
+#endif
 
 _AFX void ReverseSection(int First16Bit, int First8Bit, int End, void *BufferInit)
 {
     Reverse32_(First16Bit, BufferInit);
-    Reverse16(First8Bit - First16Bit, (char *)BufferInit + First16Bit);
+    //Reverse16(First8Bit - First16Bit, (char *)BufferInit + First16Bit);
 }
 
 _AFX void* LoadFileSection2(afxUrdSection const *Section, void *DestinationMemory, void *Reader, afxBool fileIsByteReversed)
@@ -336,9 +338,7 @@ _AFX afxClassConfig _AfxUrdMgrCfg =
 {
     .fcc = afxFcc_URD,
     .name = "Uniform Resource Dictionary",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxUrd)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxUrd)),
     .ctor = (void*)_AfxUrdCtor,
     .dtor = (void*)_AfxUrdDtor
 };

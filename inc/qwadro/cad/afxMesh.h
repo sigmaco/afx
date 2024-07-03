@@ -19,14 +19,14 @@
 
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/mem/afxArray.h"
-#include "qwadro/math/afxAabb.h"
-#include "qwadro/core/afxObject.h"
+#include "qwadro/math/afxBox.h"
+#include "qwadro/base/afxObject.h"
 #include "qwadro/cad/afxMaterial.h"
 #include "qwadro/space/afxSkeleton.h"
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/math/afxVertex.h"
 #include "qwadro/cad/afxMeshTopology.h"
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/base/afxFixedString.h"
 
 /// O objeto afxMesh é a estrutura primária para dado geométrico no Qwadro.
 /// Este referencia dados de vértice, dados de triângulo, afxMaterial's, afxMeshMorph'es e afxMeshBias's.
@@ -61,7 +61,7 @@ AFX_DEFINE_STRUCT(afxMeshMorph) // aka morph target, blend shape
 
 AFX_DEFINE_STRUCT(afxMeshBias)
 {
-    afxAabb             aabb; // originally oobb;
+    afxBox             aabb; // originally oobb;
     afxNat              triCnt;
     afxNat*             tris; // indices to vertices
 };

@@ -91,10 +91,12 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2ux__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -105,11 +107,12 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2ux__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <ExceptionHandling>SyncCThrow</ExceptionHandling>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-    </Link>
+    <Link />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -124,7 +127,6 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
@@ -139,33 +141,24 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>__e2ux__;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\afx\ux\afxScript.c" />
+    <ClCompile Include="..\..\src\afx\ux\afxScript.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\src\afx\ux\afxGamepad.c" />
-    <ClCompile Include="..\..\src\afx\ux\afxHid.c" />
-    <ClCompile Include="..\..\src\afx\ux\afxWindow.c" />
-    <ClCompile Include="..\..\src\afx\ux\afxShell.c" />
+    <ClCompile Include="..\..\src\afx\ux\afxHid_W32.c" />
+    <ClCompile Include="..\..\src\afx\ux\afxWindow_W32.c" />
+    <ClCompile Include="..\..\src\afx\ux\afxShell_W32.c" />
     <ClCompile Include="..\..\src\afx\ux\afxWidget.c" />
-    <ClCompile Include="..\..\src\afx\ux\xss\xssCamera.c" />
-    <ClCompile Include="..\..\src\afx\ux\xss\xssDraw.c" />
-    <ClCompile Include="..\..\src\afx\ux\xss\xssIo.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_compiler.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_core.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_debug.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_opt_meta.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_opt_random.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_primitive.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_utils.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_value.c" />
-    <ClCompile Include="..\..\src\afx\ux\_luna\luna_vm.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\inc\qwadro\ux\afxScript.h" />
@@ -175,7 +168,9 @@
     <ClInclude Include="..\..\inc\qwadro\ux\afxShell.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxUxDefs.h" />
     <ClInclude Include="..\..\inc\qwadro\ux\afxWidget.h" />
-    <ClInclude Include="..\..\inc\qwadro\ux\xss\xss.h" />
+    <ClInclude Include="..\..\src\afx\ux\dev\AuxObjects.h" />
+    <ClInclude Include="..\..\src\afx\ux\dev\AuxDevKit.h" />
+    <ClInclude Include="..\..\src\afx\ux\dev\AuxOverWin32.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -187,9 +182,6 @@
     </ProjectReference>
     <ProjectReference Include="..\e2draw\e2draw.vcxproj">
       <Project>{2d93c9e6-a8bd-40e6-8ffe-cd15319b0241}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\e2sim\e2sim.vcxproj">
-      <Project>{0f78f3c8-d287-4a15-a69b-208b85c038f4}</Project>
     </ProjectReference>
     <ProjectReference Include="..\e2sound\e2sound.vcxproj">
       <Project>{1685d511-3934-4f31-b8a3-afa740f612b3}</Project>

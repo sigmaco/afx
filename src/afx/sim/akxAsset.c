@@ -18,7 +18,7 @@
 #define _AFX_ASSET_C
 #define _AFX_MODEL_C
 #define _AFX_SIMULATION_C
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/sim/akxAsset.h"
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/io/afxUri.h"
@@ -399,9 +399,7 @@ _AKX afxClassConfig _AfxCadMgrCfg =
 {
     .fcc = afxFcc_CAD,
     .name = "CAD Asset",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(akxAsset)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(akxAsset)),
     .ctor = (void*)_AfxCadCtor,
     .dtor = (void*)_AfxCadDtor
 };

@@ -22,9 +22,9 @@
 #define _AFX_BINK_VIDEO_C
 #include "afxBinkVideo.h"
 #include "afxBinkProxy.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/draw/avxCmdb.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
 
 static afxBool bootstrapped = FALSE;
 static afxModule binkw32 = NIL;
@@ -127,9 +127,9 @@ static void LoadLibNow(void)
         afxUri uri;
 #ifdef AFX_OS_WIN
 #ifdef AFX_OS_WIN64
-        AfxMakeUri(&uri, "system/binkw64.dl_", 0);
+        AfxMakeUri(&uri, "../system64/binkw64.dl_", 0);
 #else
-        AfxMakeUri(&uri, "system/binkw32.dl_", 0);
+        AfxMakeUri(&uri, "../system32/binkw32.dl_", 0);
 #endif
 #endif
 

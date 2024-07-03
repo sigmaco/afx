@@ -24,7 +24,7 @@
 #include <string.h>
 
 #define _AFX_XML_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 static char* xml_strtok_r(char *str, const char *delim, char **nextp) {
     char *ret;

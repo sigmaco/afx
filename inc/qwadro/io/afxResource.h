@@ -21,8 +21,8 @@
 
 #include "qwadro/io/afxUri.h"
 #include "qwadro/io/afxXml.h"
-#include "qwadro/core/afxTime.h"
-#include "qwadro/core/afxModule.h"
+#include "qwadro/exec/afxTime.h"
+#include "qwadro/exec/afxModule.h"
 
 // Base class for all resources.
 // Resource is the base class for all resource types.

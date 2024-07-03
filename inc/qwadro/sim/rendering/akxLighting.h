@@ -19,7 +19,7 @@
 
 #include "qwadro/sim/akxNode.h"
 #include "qwadro/mem/afxArray.h"
-#include "qwadro/draw/afxColor.h"
+#include "qwadro/draw/math/avxColor.h"
 
 #define AFX_LIT_ALIGN AFX_SIMD_ALIGN
 

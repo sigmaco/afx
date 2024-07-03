@@ -18,7 +18,7 @@
 
 #define _AFX_CORE_C
 #define _AFX_CODEC_C
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 _AFX afxNat AfxGetCompressionPaddingSize(afxCompressionType type)
 {
@@ -122,9 +122,7 @@ _AFX afxClassConfig _AfxCdcMgrCfg =
 {
     .fcc = afxFcc_CDC,
     .name = "Codec",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxCodec)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxCodec)),
     .ctor = (void*)_AfxCdcCtor,
     .dtor = (void*)_AfxCdcDtor
 };

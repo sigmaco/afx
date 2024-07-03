@@ -110,7 +110,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>AVX_DRV_SRC;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +145,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>AVX_DRV_SRC;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,19 +153,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\targl4\AvxToGlMapping.h" />
     <ClInclude Include="..\..\src\targl4\sgl.h" />
-    <ClInclude Include="..\..\src\targl4\sglDdrv.h" />
+    <ClInclude Include="..\..\src\targl4\WglLoader.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="targl4.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\targl4\sglCmdDecode.c" />
     <ClCompile Include="..\..\src\targl4\sglLiga.c" />
     <ClCompile Include="..\..\src\targl4\sglBuf.c" />
     <ClCompile Include="..\..\src\targl4\sglBufOps.c" />
     <ClCompile Include="..\..\src\targl4\sglCanv.c" />
-    <ClCompile Include="..\..\src\targl4\sglDcmd.c" />
+    <ClCompile Include="..\..\src\targl4\sglCmdEncode.c" />
     <ClCompile Include="..\..\src\targl4\sglDctx.c" />
     <ClCompile Include="..\..\src\targl4\sglDdev_w32.c" />
     <ClCompile Include="..\..\src\targl4\sglDin.c" />
@@ -175,10 +175,10 @@
     <ClCompile Include="..\..\src\targl4\sglDdge_w32.c" />
     <ClCompile Include="..\..\src\targl4\sglCmdb.c" />
     <ClCompile Include="..\..\src\targl4\sglFenc.c" />
-    <ClCompile Include="..\..\src\targl4\sglLoader.c" />
+    <ClCompile Include="..\..\src\targl4\WglLoader.c" />
     <ClCompile Include="..\..\src\targl4\sglPip.c" />
     <ClCompile Include="..\..\src\targl4\sglQryp.c" />
-    <ClCompile Include="..\..\src\targl4\sglQwadroToGpu.c" />
+    <ClCompile Include="..\..\src\targl4\AvxToGl.c" />
     <ClCompile Include="..\..\src\targl4\sglRas.c" />
     <ClCompile Include="..\..\src\targl4\sglRasOps.c" />
     <ClCompile Include="..\..\src\targl4\sglRazr.c" />

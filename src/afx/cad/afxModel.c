@@ -455,9 +455,7 @@ _AKX afxClassConfig _AkxMdlMgrCfg =
 {
     .fcc = afxFcc_MDL,
     .name = "Model",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxModel)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxModel)),
     .ctor = (void*)_AkxMdlCtor,
     .dtor = (void*)_AkxMdlDtor
 };

@@ -106,9 +106,7 @@ _AVX afxClassConfig const _AvxVbufMgrCfg =
 {
     .fcc = afxFcc_VBUF,
     .name = "Vertex Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxVertexBuffer)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxVertexBuffer)),
     .ctor = (void*)_AvxVbufCtor,
     .dtor = (void*)_AvxVbufDtor
 };
@@ -121,7 +119,7 @@ _AVX afxError AfxAcquireVertexBuffers(afxDrawInput din, afxNat cnt, afxVertexBuf
     AfxAssert(spec);
     AfxAssert(vbuf);
 
-    afxManager* cls = AfxGetVertexBufferClass(din);
+    afxClass* cls = AfxGetVertexBufferClass(din);
     AfxAssertClass(cls, afxFcc_VBUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)vbuf, (void const*[]) { din, spec }))
@@ -222,8 +220,8 @@ _AVX afxNat AfxReserveIndexBufferSegment(afxIndexBuffer ibuf, afxNat idxCnt, afx
         {
             if (!(idxCnt > room->idxCnt))
             {
-                alignedBaseIdx = AFX_ALIGN(room->baseIdx, AfxAbs(64 / stride));
-                padding = AfxAbs(alignedBaseIdx - room->baseIdx);
+                alignedBaseIdx = AFX_ALIGN(room->baseIdx, (64 / stride));
+                padding = (alignedBaseIdx - room->baseIdx);
                 alignedCnt = padding + size;
 
                 if (!(alignedCnt > room->idxCnt))
@@ -323,9 +321,7 @@ _AVX afxClassConfig const _AvxIbufMgrCfg =
 {
     .fcc = afxFcc_IBUF,
     .name = "Index Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxIndexBuffer)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(afxIndexBuffer)),
     .ctor = (void*)_AvxIbufCtor,
     .dtor = (void*)_AvxIbufDtor
 };
@@ -338,7 +334,7 @@ _AVX afxError AfxAcquireIndexBuffers(afxDrawContext dctx, afxNat cnt, afxIndexBu
     AfxAssert(spec);
     AfxAssert(ibuf);
 
-    afxManager* cls = 0;// AfxGetIndexBufferClass(dctx);
+    afxClass* cls = 0;// AfxGetIndexBufferClass(dctx);
     AfxAssertClass(cls, afxFcc_IBUF);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)ibuf, (void const*[]) { dctx, spec }))

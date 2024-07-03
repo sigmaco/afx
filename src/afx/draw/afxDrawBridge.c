@@ -19,7 +19,7 @@
 #define _AVX_DRAW_C
 #define _AVX_DRAW_BRIDGE_C
 #define _AVX_DRAW_QUEUE_C
-#include "qwadro/draw/afxDrawSystem.h"
+#include "dev/AvxDevKit.h"
 
 _AVX afxDrawDevice AfxGetDrawBridgeDevice(afxDrawBridge ddge)
 {
@@ -46,26 +46,58 @@ _AVX afxNat AfxGetDrawBridgePort(afxDrawBridge ddge)
     return ddge->portIdx;
 }
 
-#if 0
-_AVX afxNat AfxCountDrawQueues(afxDrawBridge ddge)
+_AVX afxClass const* _AvxGetDrawQueueClass(afxDrawBridge ddge)
 {
     afxError err = AFX_ERR_NONE;
+    /// ddge must be a valid afxDrawBridge handle.
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    afxClass const* cls = &ddge->dqueCls;
+    AfxAssertClass(cls, afxFcc_DQUE);
+    return cls;
+}
+
+_AVX afxNat _AvxCountDrawQueues(afxDrawBridge ddge)
+{
+    afxError err = AFX_ERR_NONE;
+    /// ddge must be a valid afxDrawBridge handle.
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
     return ddge->queCnt;
 }
 
-_AVX afxError AfxWaitForIdleDrawQueue(afxDrawBridge ddge, afxNat queIdx)
+_AVX afxBool _AvxGetDrawQueue(afxDrawBridge ddge, afxNat queIdx, afxDrawQueue* queue)
 {
     afxError err = AFX_ERR_NONE;
+    /// ddge must be a valid afxDrawBridge handle.
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    /// queIdx must be less than the value of queCnt for the bridge indicated by portIdx when device context was created.
     AfxAssertRange(ddge->queCnt, queIdx, 1);
+    afxBool rslt;
 
-    if (ddge->queCnt > queIdx)
+    if (!(rslt = (queIdx < ddge->queCnt))) AfxThrowError();
+    else
     {
+        afxDrawQueue dque = ddge->queues[queIdx];
+        AfxAssertObjects(1, &dque, afxFcc_DQUE);
+        /// queue must be a valid pointer to a afxDrawQueue handle.        
+        *queue = dque;
+    }
+    return rslt;
+}
+
+_AVX afxError _AvxWaitForIdleDrawQueue(afxDrawBridge ddge, afxNat queIdx)
+{
+    afxError err = AFX_ERR_NONE;
+    /// ddge must be a valid afxDrawBridge handle.
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    afxDrawQueue dque;
+
+    if (!_AvxGetDrawQueue(ddge, queIdx, &dque)) AfxThrowError();
+    else
+    {
+        AfxAssertObjects(1, &dque, afxFcc_DQUE);
+
         if (!ddge->waitCb)
         {
-            afxDrawQueue dque = ddge->queues[queIdx];
-
             AfxLockMutex(&dque->idleCndMtx);
 
             while (dque->workChn.cnt)
@@ -78,7 +110,19 @@ _AVX afxError AfxWaitForIdleDrawQueue(afxDrawBridge ddge, afxNat queIdx)
     }
     return err;
 }
-#endif
+
+_AVX afxError _AvxWaitForIdleDrawBridge(afxDrawBridge ddge)
+{
+    afxError err = AFX_ERR_NONE;
+    /// ddge must be a valid afxDrawBridge handle.
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    afxNat queCnt = ddge->queCnt;
+
+    for (afxNat i = 0; i < queCnt; i++)
+        _AvxWaitForIdleDrawQueue(ddge, i);
+    
+    return err;
+}
 
 _AVX afxNat AfxEnqueueExecutionRequest(afxDrawBridge ddge, afxFence fenc, afxNat cnt, afxExecutionRequest const req[])
 {
@@ -155,32 +199,67 @@ _AVX afxNat AfxEnqueueStampRequest(afxDrawBridge ddge, afxNat cnt, afxPresentati
     return queIdx;
 }
 
-_AVX afxError _AvxDdgeStdDtor(afxDrawBridge ddge)
+_AVX afxError _AvxDqueStdDtorCb(afxDrawQueue dque)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dque, afxFcc_DQUE);
+
+    AfxCleanUpMutex(&dque->workChnMtx);
+    AfxDeallocateArena(&dque->workArena);
+    AfxCleanUpSlock(&dque->workArenaSlock);
+    AfxCleanUpCondition(&dque->idleCnd);
+    AfxCleanUpMutex(&dque->idleCndMtx);
+
+    return err;
+}
+
+_AVX afxError _AvxDdgeStdDtorCb(afxDrawBridge ddge)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
 
     AfxWaitForDrawContext(ddge->dctx);
+    AfxWaitForDrawContext(ddge->dctx); // yes, two times.
 
-    AfxCleanUpChainedManagers(&ddge->managers);
-
-    for (afxNat i = 0; i < ddge->queCnt; i++)
-    {
-        afxDrawQueue dque = ddge->queues[i];
-
-        AfxCleanUpMutex(&dque->workChnMtx);
-        AfxDeallocateArena(&dque->workArena);
-        AfxCleanUpSlock(&dque->workArenaSlock);
-        AfxCleanUpCondition(&dque->idleCnd);
-        AfxCleanUpMutex(&dque->idleCndMtx);
-    }
-
+    AfxAssertObjects(ddge->queCnt, ddge->queues, afxFcc_DQUE);
+    AfxReleaseObjects(ddge->queCnt, ddge->queues);
+    AfxCleanUpChainedClasses(&ddge->classes);
     AfxDeallocate(ddge->queues);
 
     return err;
 }
 
-_AVX afxError _AvxDdgeStdCtor(afxDrawBridge ddge, afxCookie const* cookie)
+_AVX afxError _AvxDqueStdCtorCb(afxDrawQueue dque, afxCookie const* cookie)
+{
+    afxError err = AFX_ERR_NONE;
+    AfxAssertObjects(1, &dque, afxFcc_DQUE);
+
+    afxDrawContext dctx = cookie->udd[0];
+    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
+    afxDrawBridge ddge = cookie->udd[1];
+    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
+    afxDrawBridgeConfig const *cfg = ((afxDrawBridgeConfig const *)cookie->udd[2]);
+    AfxAssert(cfg);
+
+    dque->ddge = ddge;
+    dque->dctx = dctx;
+
+    dque->immediate = 0;// !!spec->immedate;
+
+    AfxSetUpSlock(&dque->workArenaSlock);
+    AfxAllocateArena(NIL, &dque->workArena, NIL, AfxHere());
+
+    AfxSetUpMutex(&dque->workChnMtx, AFX_MTX_PLAIN);
+    AfxSetUpChain(&dque->workChn, ddge);
+    AfxSetUpMutex(&dque->idleCndMtx, AFX_MTX_PLAIN);
+    AfxSetUpCondition(&dque->idleCnd);
+
+    dque->closed = FALSE;
+
+    return err;
+}
+
+_AVX afxError _AvxDdgeStdCtorCb(afxDrawBridge ddge, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &ddge, afxFcc_DDGE);
@@ -202,67 +281,34 @@ _AVX afxError _AvxDdgeStdCtor(afxDrawBridge ddge, afxCookie const* cookie)
     ddge->presentCb = NIL;
     ddge->stampCb = NIL;
 
-    ddge->queCnt = AfxMax(3, cfg->queueCnt);
+    ddge->queCnt = AfxMax(1, AfxMax(_AvxDqueStdImplementation.unitsPerPage, cfg->queueCnt));
 
-    AfxSetUpChain(&ddge->managers, ddge);
+    AfxSetUpChain(&ddge->classes, ddge);
+
+    afxClassConfig clsCfg = _AvxDqueStdImplementation;
+    clsCfg.maxCnt = ddge->queCnt;
+    clsCfg.unitsPerPage = ddge->queCnt;
+    AfxRegisterClass(&ddge->dqueCls, NIL, &ddge->classes, &clsCfg);
+    // what about size of device-dependent draw queues?
 
     if (!(ddge->queues = AfxAllocate(ddge->queCnt, sizeof(ddge->queues[0]), 0, AfxHere()))) AfxThrowError();
     else
     {
-        afxManager* cls = AfxGetDrawQueueClass(ddev, cfg->portIdx);
+        afxClass* cls = (afxClass*)_AvxGetDrawQueueClass(ddge);
         AfxAssertClass(cls, afxFcc_DQUE);
 
-        if (AfxAcquireObjects(cls, ddge->queCnt, (afxObject*)ddge->queues, (void const*[]) { ddev, ddge, cfg }))
-            AfxThrowError();
+        if (AfxAcquireObjects(cls, ddge->queCnt, (afxObject*)ddge->queues, (void const*[]) { dctx, ddge, cfg })) AfxThrowError();
+        else
+        {
+            AfxAssertObjects(ddge->queCnt, ddge->queues, afxFcc_DQUE);
+        }
 
         if (err)
             AfxDeallocate(ddge->queues);
     }
-    return err;
-}
-
-_AVX afxError _AvxDqueStdDtor(afxDrawQueue dque)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dque, afxFcc_DQUE);
-
-    AfxCleanUpMutex(&dque->workChnMtx);
-    AfxDeallocateArena(&dque->workArena);
-    AfxCleanUpSlock(&dque->workArenaSlock);
-    AfxCleanUpCondition(&dque->idleCnd);
-    AfxCleanUpMutex(&dque->idleCndMtx);
-
-    return err;
-}
-
-_AVX afxError _AvxDqueStdCtor(afxDrawQueue dque, afxCookie const* cookie)
-{
-    afxError err = AFX_ERR_NONE;
-    AfxAssertObjects(1, &dque, afxFcc_DQUE);
-
-    afxDrawDevice ddev = cookie->udd[0];
-    AfxAssertObjects(1, &ddev, afxFcc_DDEV);
-    afxDrawBridge ddge = cookie->udd[1];
-    AfxAssertObjects(1, &ddge, afxFcc_DDGE);
-    afxDrawBridgeConfig const *cfg = ((afxDrawBridgeConfig const *)cookie->udd[2]);
-    AfxAssert(cfg);
-
-    dque->ddge = ddge;
-    afxDrawContext dctx = AfxGetDrawBridgeContext(ddge);
-    AfxAssertObjects(1, &dctx, afxFcc_DCTX);
-    dque->dctx = dctx;
-
-    dque->immediate = 0;// !!spec->immedate;
-
-    AfxSetUpSlock(&dque->workArenaSlock);
-    AfxAllocateArena(NIL, &dque->workArena, NIL, AfxHere());
-
-    AfxSetUpMutex(&dque->workChnMtx, AFX_MTX_PLAIN);
-    AfxSetUpChain(&dque->workChn, ddge);
-    AfxSetUpMutex(&dque->idleCndMtx, AFX_MTX_PLAIN);
-    AfxSetUpCondition(&dque->idleCnd);
-
-    dque->closed = FALSE;
+    
+    if (err)
+        AfxCleanUpChainedClasses(&ddge->classes);
 
     return err;
 }
@@ -271,20 +317,18 @@ _AVX afxClassConfig const _AvxDqueStdImplementation =
 {
     .fcc = afxFcc_DQUE,
     .name = "DrawQueue",
-    .desc = "Draw Execution Queue",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxDrawQueue)),
-    .ctor = (void*)_AvxDqueStdCtor,
-    .dtor = (void*)_AvxDqueStdDtor
+    .desc = "Draw Device Execution Queue",
+    .fixedSiz = sizeof(AFX_OBJECT(afxDrawQueue)),
+    .ctor = (void*)_AvxDqueStdCtorCb,
+    .dtor = (void*)_AvxDqueStdDtorCb
 };
 
 _AVX afxClassConfig const _AvxDdgeStdImplementation =
 {
     .fcc = afxFcc_DDGE,
     .name = "DrawBrige",
-    .desc = "Draw Execution Bridge",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxDrawBridge)),
-    .ctor = (void*)_AvxDdgeStdCtor,
-    .dtor = (void*)_AvxDdgeStdDtor
+    .desc = "Draw Device Execution Bridge",
+    .fixedSiz = sizeof(AFX_OBJECT(afxDrawBridge)),
+    .ctor = (void*)_AvxDdgeStdCtorCb,
+    .dtor = (void*)_AvxDdgeStdDtorCb
 };

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="_nfo">
-      <UniqueIdentifier>{ee902471-68b0-4120-8ab6-db72fcab549e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="qwadro">
       <UniqueIdentifier>{48bb229e-5a12-4bc7-90ba-2054655dfe4e}</UniqueIdentifier>
     </Filter>
@@ -19,20 +16,23 @@
     <Filter Include="qwadro\mem">
       <UniqueIdentifier>{b64972ca-8a8c-4c1c-aab2-0059ec9c49a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\core">
+    <Filter Include="_dll">
+      <UniqueIdentifier>{ee902471-68b0-4120-8ab6-db72fcab549e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\base">
       <UniqueIdentifier>{629751d2-24e3-44d0-a657-fa62690906f8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="qwadro\core\_dep">
+    <Filter Include="qwadro\dev">
+      <UniqueIdentifier>{adcc620f-ecca-4935-b10a-6c6dfd3a4713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\dev\_dep">
       <UniqueIdentifier>{a08923a5-8750-4ed2-b33d-c26bbe41277b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="qwadro\exec">
+      <UniqueIdentifier>{7b85f528-4cd5-4ea7-abf9-5de2266aa6de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\qwadro\core\afxSystem.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxTerminal.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\afxQwadro.h">
       <Filter>qwadro</Filter>
     </ClInclude>
@@ -42,40 +42,7 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxVector.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxCoreDefs.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxEvent.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxFcc.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxIterator.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxRawString.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxString.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\math\afxTransform.h">
-      <Filter>qwadro\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxChain.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxDatabase.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxDebug.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxVersion.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\math\afxAabb.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\math\afxFrustum.h">
@@ -96,9 +63,6 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxMatrix.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\math\afxViewport.h">
-      <Filter>qwadro\math</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\math\afxTrigonometry.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
@@ -108,12 +72,6 @@
     <ClInclude Include="..\..\inc\qwadro\math\afxRotor.h">
       <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\math\afxOpticalMatrix.h">
-      <Filter>qwadro\math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxService.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\game\agxGameDefs.h">
       <Filter>qwadro\game</Filter>
     </ClInclude>
@@ -122,12 +80,6 @@
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\game\agxGameData.h">
       <Filter>qwadro\game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxObject.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxDevice.h">
-      <Filter>qwadro\core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\io\afxSource.h">
       <Filter>qwadro\io</Filter>
@@ -177,14 +129,8 @@
     <ClInclude Include="..\..\inc\qwadro\io\afxData.h">
       <Filter>qwadro\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxFixedString.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>_nfo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxRestring.h">
-      <Filter>qwadro\core</Filter>
+      <Filter>_dll</Filter>
     </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\mem\afxResidency.h">
       <Filter>qwadro\mem</Filter>
@@ -195,50 +141,110 @@
     <ClInclude Include="..\..\inc\qwadro\mem\afxMappedString.h">
       <Filter>qwadro\mem</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxClock.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxMutex.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxSlock.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxThread.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxTime.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxModule.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\inc\qwadro\io\afxStorage.h">
       <Filter>qwadro\io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxManager.h">
-      <Filter>qwadro\core</Filter>
+    <ClInclude Include="..\..\inc\qwadro\math\afxBox.h">
+      <Filter>qwadro\math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxPlatformDefs.h">
-      <Filter>qwadro\core</Filter>
+    <ClInclude Include="..\..\inc\qwadro\base\afxDebug.h">
+      <Filter>qwadro\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxCondition.h">
-      <Filter>qwadro\core</Filter>
+    <ClInclude Include="..\..\inc\qwadro\base\afxEvent.h">
+      <Filter>qwadro\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxManifest.h">
-      <Filter>qwadro\core</Filter>
+    <ClInclude Include="..\..\inc\qwadro\base\afxFcc.h">
+      <Filter>qwadro\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxAtomic.h">
-      <Filter>qwadro\core</Filter>
+    <ClInclude Include="..\..\inc\qwadro\base\afxFixedString.h">
+      <Filter>qwadro\base</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\mem\afxFifo.h">
+    <ClInclude Include="..\..\inc\qwadro\base\afxIterator.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxManifest.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxObject.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxPlatformDefs.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxRawString.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxRestring.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxString.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxVersion.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxChain.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxClass.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\base\afxCoreDefs.h">
+      <Filter>qwadro\base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\io\afxDatabase.h">
+      <Filter>qwadro\io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxSystem.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxTerminal.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxThread.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxTime.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxAtomic.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxClock.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxCondition.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxDevice.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxFence.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxModule.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxMutex.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxSemaphore.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxService.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\exec\afxSlock.h">
+      <Filter>qwadro\exec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\dev\afxDevCoreBase.h">
+      <Filter>qwadro\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\afx\dev\afxDevIoBase.h">
+      <Filter>qwadro\dev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\inc\qwadro\mem\afxInterlockedQueue.h">
       <Filter>qwadro\mem</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxFence.h">
-      <Filter>qwadro\core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\inc\qwadro\core\afxSemaphore.h">
-      <Filter>qwadro\core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -255,34 +261,13 @@
     <ClCompile Include="..\..\src\afx\afxQwadro.c">
       <Filter>qwadro</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxTerminal.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\afxQwadroCpp.cpp">
       <Filter>qwadro</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxCoreDefs.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxRawString.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxString.c">
-      <Filter>qwadro\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\math\afxTransform.c">
       <Filter>qwadro\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\math\afxMathOps.c">
-      <Filter>qwadro\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxDatabase.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxVersion.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\math\afxAabb.c">
       <Filter>qwadro\math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\math\afxFrustum.c">
@@ -309,29 +294,11 @@
     <ClCompile Include="..\..\src\afx\math\afxRotor.c">
       <Filter>qwadro\math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\math\afxOpticalMatrix.c">
-      <Filter>qwadro\math</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxService.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\game\agxGameObject.c">
       <Filter>qwadro\game</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\game\agxGameData.c">
       <Filter>qwadro\game</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxSystem_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxDevice.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxDebug_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxObject.c">
-      <Filter>qwadro\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\io\afxResource.c">
       <Filter>qwadro\io</Filter>
@@ -375,20 +342,11 @@
     <ClCompile Include="..\..\src\afx\mem\afxMmu.c">
       <Filter>qwadro\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxSystem.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\io\afxData.c">
       <Filter>qwadro\io</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\io\afxSource.c">
       <Filter>qwadro\io</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxFixedString.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxRestring.c">
-      <Filter>qwadro\core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\afx\math\afxSimd.c">
       <Filter>qwadro\math</Filter>
@@ -396,67 +354,109 @@
     <ClCompile Include="..\..\src\afx\mem\afxMappedString.c">
       <Filter>qwadro\mem</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxClock_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxMutex.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxSlock_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxTime_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxChain.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxModule.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\afx\io\afxStorage.c">
       <Filter>qwadro\io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxManager.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxCondition.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxManifest.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxThread_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\mem\afxFifo.c">
-      <Filter>qwadro\mem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxAtomic_x32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxAtomic_w32.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxFence.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\afx\core\afxSemaphore.c">
-      <Filter>qwadro\core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\lib\tinycthread.c">
-      <Filter>qwadro\core\_dep</Filter>
+      <Filter>qwadro\dev\_dep</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\rpmalloc\malloc.c">
-      <Filter>qwadro\core\_dep</Filter>
+      <Filter>qwadro\dev\_dep</Filter>
     </ClCompile>
     <ClCompile Include="..\..\lib\rpmalloc\rpmalloc.c">
-      <Filter>qwadro\core\_dep</Filter>
+      <Filter>qwadro\dev\_dep</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\math\afxBox.c">
+      <Filter>qwadro\math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxCoreDefs.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxDebug_w32.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxFixedString.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxManifest.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxObject.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxRawString.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxRestring.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxString.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxVersion.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxChain.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\base\afxClass.c">
+      <Filter>qwadro\base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\io\afxDatabase.c">
+      <Filter>qwadro\io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxService.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxSlock_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxSystem.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxSystem_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxTerminal.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxThread_PC.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxTime_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxAtomic_PC.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxClock_w32.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxCondition.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxDevice.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxFence.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxModule.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxMutex.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\exec\afxSemaphore.c">
+      <Filter>qwadro\exec</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\afx\mem\afxInterlockedQueue.c">
+      <Filter>qwadro\mem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="e2coree.rc">
-      <Filter>_nfo</Filter>
+      <Filter>_dll</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

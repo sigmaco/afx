@@ -19,8 +19,8 @@
 #include "qwadro/sim/afxSimulation.h"
 #include "qwadro/sim/rendering/akxSky.h"
 #include "qwadro/draw/avxCmdb.h"
-#include "qwadro/draw/pipe/afxDrawOps.h"
-#include "qwadro/draw/pipe/afxVertexInput.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
+#include "qwadro/draw/pipe/avxVertexInput.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
 
@@ -37,7 +37,8 @@ _AKX afxError AfxDrawSky(avxCmdb cmdb, akxSky* sky)
 
     AvxCmdBindRasterizer(cmdb, sky->skyRazr, NIL);
     AvxCmdBindVertexInput(cmdb, sky->skyVin);
-    AvxCmdBindRasters(cmdb, 0, 1, 1, &sky->smp, &sky->cubemap);
+    AvxCmdBindSamplers(cmdb, 0, 1, 1, &sky->smp);
+    AvxCmdBindRasters(cmdb, 0, 1, 1, &sky->cubemap, NIL);
 
     AvxCmdBindVertexSources(cmdb, 0, 1, (afxBuffer[]) { sky->cube }, NIL, NIL, (afxNat32[]) {sizeof(afxV3d)});
     //AvxCmdResetVertexStreams(cmdb, 1, NIL, (afxNat32[]) { sizeof(afxV3d) }, NIL);
@@ -164,14 +165,14 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     sky->skyRazr = AfxLoadRasterizerFromXsh(dctx, NIL, &uri);
     sky->type = akxSkyType_BOX;
 
-    afxVertexInputStream const vinStreams[] =
+    avxVertexInputStream const vinStreams[] =
     {
         {
             .instanceRate = 0,
             .slotIdx = 0
         }
     };
-    afxVertexInputAttr const vinAttrs[] =
+    avxVertexInputAttr const vinAttrs[] =
     {
         {
             .location = 0,
@@ -184,13 +185,13 @@ _AKX afxError AfxBuildSkybox(akxSky* sky, afxSimulation sim)
     sky->skyVin = AfxAcquireVertexInput(dctx, 1, vinStreams, 1, vinAttrs);
     AfxAssertObjects(1, &sky->skyVin, afxFcc_VIN);
 
-    afxSamplerConfig smpSpec = { 0 };
-    smpSpec.magFilter = afxTexelFilter_LINEAR;
-    smpSpec.minFilter = afxTexelFilter_LINEAR;
-    smpSpec.mipFilter = afxTexelFilter_LINEAR;
-    smpSpec.uvw[0] = afxTexelAddress_CLAMP;
-    smpSpec.uvw[1] = afxTexelAddress_CLAMP;
-    smpSpec.uvw[2] = afxTexelAddress_CLAMP;
+    avxSamplerConfig smpSpec = { 0 };
+    smpSpec.magFilter = avxTexelFilter_LINEAR;
+    smpSpec.minFilter = avxTexelFilter_LINEAR;
+    smpSpec.mipFilter = avxTexelFilter_LINEAR;
+    smpSpec.uvw[0] = avxTexelAddress_CLAMP;
+    smpSpec.uvw[1] = avxTexelAddress_CLAMP;
+    smpSpec.uvw[2] = avxTexelAddress_CLAMP;
 
     AfxAcquireSamplers(dctx, 1, &smpSpec, &sky->smp);
     AfxAssertObjects(1, &sky->smp, afxFcc_SAMP);

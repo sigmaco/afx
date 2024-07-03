@@ -57,9 +57,7 @@ _AKX afxClassConfig _AfxEntMgrCfg =
 {
     .fcc = afxFcc_ENT,
     .name = "Entity",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(akxEntity)),
-    .mmu = NIL,
+    .fixedSiz = sizeof(AFX_OBJECT(akxEntity)),
     .ctor = (void*)_AfxEntCtor,
     .dtor = (void*)_AfxEntDtor
 };

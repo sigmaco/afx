@@ -19,13 +19,13 @@
 
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/mem/afxArray.h"
-#include "qwadro/math/afxAabb.h"
-#include "qwadro/core/afxObject.h"
+#include "qwadro/math/afxBox.h"
+#include "qwadro/base/afxObject.h"
 #include "qwadro/cad/afxMaterial.h"
 #include "qwadro/space/afxSkeleton.h"
 #include "qwadro/io/afxUrd.h"
 #include "qwadro/math/afxVertex.h"
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/base/afxFixedString.h"
 
 AFX_DEFINE_STRUCT(afxVertex)
 {

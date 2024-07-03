@@ -40,7 +40,7 @@ AFX_OBJECT(afxModel)
     afxSkeleton         skl;
     afxNat              rigCnt;
     afxMeshRig*         rigs;
-    afxAabb             aabb;
+    afxBox             aabb;
     afxTransform        displacement;
     afxString           id; // 32
     afxStringBase       strb;

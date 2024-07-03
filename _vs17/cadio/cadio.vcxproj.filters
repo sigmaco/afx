@@ -15,15 +15,33 @@
     <ClCompile Include="..\..\src\cadio\afxWavefrontObject.c">
       <Filter>cadio</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\dep\glus\glus_complex.c" />
-    <ClCompile Include="..\..\dep\glus\glus_line.c" />
-    <ClCompile Include="..\..\dep\glus\glus_math.c" />
-    <ClCompile Include="..\..\dep\glus\glus_matrix.c" />
-    <ClCompile Include="..\..\dep\glus\glus_point.c" />
-    <ClCompile Include="..\..\dep\glus\glus_quaternion.c" />
-    <ClCompile Include="..\..\dep\glus\glus_shape.c" />
-    <ClCompile Include="..\..\dep\glus\glus_vector.c" />
-    <ClCompile Include="..\..\dep\glus\glus_wavefront.c" />
+    <ClCompile Include="..\..\..\dep_\glus\glus_wavefront.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_complex.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_line.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_math.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_matrix.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_point.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_quaternion.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_shape.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dep_\glus\glus_vector.c">
+      <Filter>cadio\deps\obj</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\cadio\afxWavefrontObject.h">

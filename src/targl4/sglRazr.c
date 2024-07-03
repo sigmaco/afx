@@ -17,15 +17,15 @@
 #include "qwadro/io/afxXml.h"
 #include "sgl.h"
 
-#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/pipe/avxPipeline.h"
 
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "qwadro/draw/io/afxXsh.h"
 // OpenGL/Vulkan Continuous Integration
 
-_SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr)
+_SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, avxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     glVmt const* gl = &dpu->gl;
@@ -44,13 +44,13 @@ _SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr)
         {
 
 #if 0
-            afxShader fsh;
-            AfxGetPipelineStage(pip, afxShaderStage_FRAGMENT, &fsh);
+            avxShader fsh;
+            AfxGetPipelineStage(pip, avxShaderStage_FRAGMENT, &fsh);
             afxNat outCnt = AfxCountColorOutputChannels(pip->base.razr);
             //vtxShd->base.ioDecls.
             for (afxNat i = 0; i < outCnt; i++)
             {
-                afxColorOutputChannel out;
+                avxColorOutputChannel out;
                 AfxGetColorOutputChannels(pip->base.razr, i, 1, &out);
             }
 #endif
@@ -61,7 +61,7 @@ _SGL afxError _DpuBindAndSyncRazr(sglDpu* dpu, afxRasterizer razr)
     return err;
 }
 
-_SGL afxError _SglRazrDtor(afxRasterizer razr)
+_SGL afxError _SglRazrDtor(avxRasterizer razr)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -72,7 +72,7 @@ _SGL afxError _SglRazrDtor(afxRasterizer razr)
     return err;
 }
 
-_SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
+_SGL afxError _SglRazrCtor(avxRasterizer razr, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
@@ -88,14 +88,3 @@ _SGL afxError _SglRazrCtor(afxRasterizer razr, afxCookie const* cookie)
     AfxAssertObjects(1, &razr, afxFcc_RAZR);
     return err;
 }
-
-_SGL afxClassConfig const _SglRazrMgrCfg =
-{
-    .fcc = afxFcc_RAZR,
-    .name = "Rasterizer",
-    .desc = "Draw Device Rasterization Pipeline",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxRasterizer)),
-    .ctor = (void*)_SglRazrCtor,
-    .dtor = (void*)_SglRazrDtor
-};

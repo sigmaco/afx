@@ -20,12 +20,12 @@
 #define AUX_WIDGET_H
 
 #include "qwadro/ux/afxUxDefs.h"
-#include "qwadro/draw/afxColor.h"
-#include "qwadro/core/afxChain.h"
-#include "qwadro/core/afxObject.h"
+#include "qwadro/draw/math/avxColor.h"
+#include "qwadro/base/afxChain.h"
+#include "qwadro/base/afxObject.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/math/afxTransform.h"
-//#include "afxViewport.h"
+//#include "avxViewport.h"
 //#include "qwadro/draw/dev/afxDrawInput.h"
 
 typedef enum afxWidgetType
@@ -118,7 +118,7 @@ AFX_OBJECT(afxWidget)
 #endif//_AUX_WIDGET_C
 #endif//_AUX_UX_C
 
-AUX afxError    AfxAcquireWidget(afxWindow ovy, afxViewport const* vp);
+AUX afxError    AfxAcquireWidget(afxWindow ovy, avxViewport const* vp);
 
 AUX afxError    AfxAcquireWidgets(afxWindow ovy, afxNat cnt, afxWidgetConfig config[], afxWidget widgets[]);
 

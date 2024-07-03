@@ -22,7 +22,7 @@
 #define AUX_HID_H
 
 #include "qwadro/ux/afxUxDefs.h"
-#include "qwadro/core/afxDevice.h"
+#include "qwadro/exec/afxDevice.h"
 #include "qwadro/math/afxVector.h"
 
 // A HID may be a haptic device.
@@ -217,33 +217,6 @@ typedef enum afxHidFlag
 {
     AFX_HID_FLAG_DUMMY
 } afxHidFlag;
-
-#ifdef _AUX_UX_C
-#ifdef _AUX_HID_C
-AFX_OBJECT(afxHid)
-{
-    AFX_OBJECT(afxDevice)   dev;
-    afxNat                  port;
-    afxHidFlag              flags;
-
-    // keyboard
-    afxNat                  fnKeyCnt;
-    afxNat                  keyCnt;
-    afxNat8                 lastKeyState[afxKey_TOTAL];
-    afxNat8                 prevKeyState[afxKey_TOTAL];
-
-    // mouse
-    afxNat                  buttonCnt;
-    afxNat                  sampleRate;
-    afxBool                 lastMbState[AFX_MB_TOTAL];
-    afxBool                 prevMbState[AFX_MB_TOTAL];
-    afxReal                 lastWheelDelta;
-    afxReal                 prevWheelDelta;
-    afxV2d                  lastMotion;
-    afxV2d                  prevMotion;
-};
-#endif//_AUX_HID_C
-#endif//_AUX_UX_C
 
 AUX afxNat      AfxGetHidPort(afxHid hid);
 AUX afxResult   AfxTestHidFlags(afxHid hid, afxHidFlag flags);

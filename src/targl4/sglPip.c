@@ -17,12 +17,12 @@
 #include "qwadro/io/afxXml.h"
 #include "sgl.h"
 
-#include "qwadro/draw/pipe/afxPipeline.h"
-#include "qwadro/draw/io/afxShaderBlueprint.h"
+#include "qwadro/draw/pipe/avxPipeline.h"
+#include "qwadro/draw/io/avxShaderBlueprint.h"
 #include "qwadro/draw/io/afxXsh.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 // OpenGL/Vulkan Continuous Integration
 
 #define _AFX_DBG_IGNORE_PRIM_RESTART
@@ -33,13 +33,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #if 0
-_SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
+_SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(avxPipeline pip)
 {
     glVmt* gl = &(((afxDrawSystem)AfxGetObjectProvider(&pip->obj))->vmt);
 #if 0
-    afxShaderStage                      stages;
-    afxShaderResourceType              type;
-    afxPipelineSubresType           baseType;
+    avxShaderStage                      stages;
+    avxShaderResourceType              type;
+    avxPipelineSubresType           baseType;
     afxNat32                            set,
         binding,
         loc,
@@ -50,7 +50,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
         off,
         siz;
     afxEmbeddedString(name, 16);
-    afxPipelineSubresource const    *subresources;
+    avxPipelineSubresource const    *subresources;
 #endif
     _DrawPipelineResource res, *resptr;
     GLuint gpuHandle = pip->gpuHandle;
@@ -156,7 +156,7 @@ _SGL afxResult _AfxRegisterOpenGlResourcesToQwadroDrawPipeline(afxPipeline pip)
 }
 #endif
 
-_SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* uri)
+_SGL afxError _SglLoadShaderBlueprint(avxShaderBlueprint* shdb, afxUri const* uri)
 {
     afxError err = AFX_ERR_NONE;
     afxUri fext;
@@ -202,7 +202,7 @@ _SGL afxError _SglLoadShaderBlueprint(afxShaderBlueprint* shdb, afxUri const* ur
     return err;
 }
 
-_SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPipeline pip)
+_SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, avxPipeline pip)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -241,12 +241,12 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
             afxArray code;
             AfxAllocateArray(&code, 4096, sizeof(afxByte), NIL);
 
-            for (afxNat stageIdx = 0; stageIdx < pip->base.stageCnt; stageIdx++)
+            for (afxNat stageIdx = 0; stageIdx < pip->m.stageCnt; stageIdx++)
             {
                 AfxEmptyArray(&code);
-                AfxDumpShaderCode(pip->base.stages[stageIdx].shd, &code);
+                AfxDumpShaderCode(pip->m.stages[stageIdx].shd, &code);
 
-                afxShaderStage stage = pip->base.stages[stageIdx].stage;
+                avxShaderStage stage = pip->m.stages[stageIdx].stage;
 
                 GLuint shader;
 
@@ -292,8 +292,8 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
             if (!err)
             {
 #if 0
-                afxShader shd;
-                afxRasterizer razr;
+                avxShader shd;
+                avxRasterizer razr;
 
                 if (AfxGetLinkedRasterizer(pip, &razr))
                 {
@@ -368,7 +368,7 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
                     gl->UseProgram(glHandle); _SglThrowErrorOccuried();
                     bound = TRUE;
 
-                    if (_DpuBindAndResolveLego(dpu, pip->base.liga, glHandle))
+                    if (_DpuBindAndResolveLego(dpu, pip->m.liga, glHandle))
                         AfxThrowError();
 
                     for (afxNat i = tmpShdGlHandleCnt; i-- > 0;)
@@ -394,7 +394,7 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
 
             if (!err)
             {
-                AfxLogEcho("afxPipeline %p hardware-side data instanced.", pip);
+                AfxLogEcho("avxPipeline %p hardware-side data instanced.", pip);
                 pip->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
             }
         }
@@ -407,7 +407,7 @@ _SGL afxError _DpuBindAndSyncPip(sglDpu* dpu, afxBool bind, afxBool sync, afxPip
     return err;
 }
 
-_SGL afxError _SglPipDtor(afxPipeline pip)
+_SGL afxError _SglPipDtor(avxPipeline pip)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -426,7 +426,7 @@ _SGL afxError _SglPipDtor(afxPipeline pip)
     return err;
 }
 
-_SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
+_SGL afxError _SglPipCtor(avxPipeline pip, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &pip, afxFcc_PIP);
@@ -435,7 +435,7 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     else
     {
         afxDrawContext dctx = cookie->udd[0];
-        afxPipelineBlueprint const *pipb = ((afxPipelineBlueprint const*)cookie->udd[1]) + cookie->no;
+        avxPipelineBlueprint const *pipb = ((avxPipelineBlueprint const*)cookie->udd[1]) + cookie->no;
         //AfxAssertType(pipb, afxFcc_PIPB);
 
         pip->glHandle = 0;
@@ -447,14 +447,3 @@ _SGL afxError _SglPipCtor(afxPipeline pip, afxCookie const* cookie)
     AfxAssertObjects(1, &pip, afxFcc_PIP);
     return err;
 }
-
-_SGL afxClassConfig const _SglPipMgrCfg =
-{
-    .fcc = afxFcc_PIP,
-    .name = "Pipeline",
-    .desc = "Draw Device Execution Pipeline",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxPipeline)),
-    .ctor = (void*)_SglPipCtor,
-    .dtor = (void*)_SglPipDtor
-};

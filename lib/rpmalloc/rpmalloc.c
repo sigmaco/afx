@@ -11,7 +11,7 @@
  *
  */
 
-#include "qwadro/core/afxAtomic.h"
+#include "qwadro/exec/afxAtomic.h"
 #include "rpmalloc/rpmalloc.h"
 
 #include <errno.h>

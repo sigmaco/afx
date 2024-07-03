@@ -14,16 +14,16 @@
  *                             <https://sigmaco.org/qwadro/>
  */
 
-#include "qwadro/io/afxXml.h"
 #include "sgl.h"
+#include "qwadro/io/afxXml.h"
 
-#include "qwadro/draw/pipe/afxPipeline.h"
+#include "qwadro/draw/pipe/avxPipeline.h"
 
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/io/afxUri.h"
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 
-_SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInputState* nextVinBindings)
+_SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, avxVertexInput vin, sglVertexInputState* nextVinBindings)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
@@ -49,11 +49,11 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
             gl->BindVertexArray(glHandle); _SglThrowErrorOccuried();
             vin->glHandle = glHandle;
 
-            afxNat attrCnt = vin->base.attrCnt;
+            afxNat attrCnt = vin->m.attrCnt;
 
             for (afxNat i = 0; i < attrCnt; i++)
             {
-                afxVertexInputAttr const* attr = &vin->base.attrs[i];
+                avxVertexInputAttr const* attr = &vin->m.attrs[i];
                 AfxAssertRange(afxVertexFormat_TOTAL, attr->fmt, 1);
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIBS, attr->location, 1);
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, attr->streamIdx, 1);
@@ -78,7 +78,7 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, srcIdx, 1);
                 gl->VertexAttribBinding(location, srcIdx); _SglThrowErrorOccuried();
 
-                afxNat instDivisor = vin->base.streams[srcIdx].instanceRate;
+                afxNat instDivisor = vin->m.streams[srcIdx].instanceRate;
 
                 if (instDivisor)
                 {
@@ -86,11 +86,11 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
                 }
             }
 
-            afxNat streamCnt = vin->base.streamCnt;
+            afxNat streamCnt = vin->m.streamCnt;
 
             for (afxNat i = 0; i < streamCnt; i++)
             {
-                afxVertexInputStream const* stream = &vin->base.streams[i];
+                avxVertexInputStream const* stream = &vin->m.streams[i];
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, stream->slotIdx, 1);
                 //AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_STRIDE, 0, stream->stride);
                 //gl->BindVertexBuffer(stream->slotIdx, 0, 0, stream->stride); _SglThrowErrorOccuried();
@@ -107,9 +107,9 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
 
         //if (updMask)
         {
-            for (afxNat i = 0; i < vin->base.streamCnt; i++)
+            for (afxNat i = 0; i < vin->m.streamCnt; i++)
             {
-                afxVertexInputStream const* stream = &vin->base.streams[i];
+                avxVertexInputStream const* stream = &vin->m.streams[i];
                 afxNat streamIdx = stream->slotIdx;
                 AfxAssertRange(SGL_MAX_VERTEX_ATTRIB_BINDINGS, streamIdx, 1);
                 
@@ -182,7 +182,7 @@ _SGL afxError _DpuBindAndSyncVin(sglDpu* dpu, afxVertexInput vin, sglVertexInput
     return err;
 }
 
-_SGL afxError _SglVinDtor(afxVertexInput vin)
+_SGL afxError _SglVinDtor(avxVertexInput vin)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
@@ -200,7 +200,7 @@ _SGL afxError _SglVinDtor(afxVertexInput vin)
     return err;
 }
 
-_SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
+_SGL afxError _SglVinCtor(avxVertexInput vin, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &vin, afxFcc_VIN);
@@ -216,13 +216,3 @@ _SGL afxError _SglVinCtor(afxVertexInput vin, afxCookie const* cookie)
     }
     return err;
 }
-
-_SGL afxClassConfig const _SglVinMgrCfg =
-{
-    .fcc = afxFcc_VIN,
-    .name = "Vertex Input",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxVertexInput)),
-    .ctor = (void*)_SglVinCtor,
-    .dtor = (void*)_SglVinDtor
-};

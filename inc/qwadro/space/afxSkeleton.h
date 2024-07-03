@@ -22,7 +22,7 @@
 #include "qwadro/io/afxUri.h"
 #include "qwadro/sim/afxSimDefs.h"
 #include "qwadro/math/afxMatrix.h"
-#include "qwadro/core/afxFixedString.h"
+#include "qwadro/base/afxFixedString.h"
 
 /// O objeto afxSkeleton é uma coleção hierárquica de articulações que descrevem a estrutura articular interna de um afxModel, e auxilia no manejo e na animação do mesmo. 
 

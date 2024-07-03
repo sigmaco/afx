@@ -185,8 +185,7 @@ _AKX afxClassConfig const _AkxPoseMgrCfg =
 {
     .fcc = afxFcc_POSE,
     .name = "Skeletal Pose",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(akxPose)),
+    .fixedSiz = sizeof(AFX_OBJECT(akxPose)),
     .ctor = (void*)_AkxPoseCtor,
     .dtor = (void*)_AkxPoseDtor
 };
@@ -198,7 +197,7 @@ _AKX afxError AfxAcquirePoses(afxSimulation sim, afxNat cnt, afxNat const artCnt
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    afxManager *cls = AfxGetPoseClass(sim);
+    afxClass *cls = AfxGetPoseClass(sim);
     AfxAssertClass(cls, afxFcc_POSE);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)lp, (void const*[]) { sim, artCnt }))

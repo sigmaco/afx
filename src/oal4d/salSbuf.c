@@ -45,9 +45,7 @@ _A4D afxClassConfig _SalSbufMgrCfg =
     .fcc = afxFcc_SBUF,
     .name = "SoundBuffer",
     .desc = "Sound Buffer",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(afxSoundBuffer)),
-    .mmu = NIL,
+    //.fixedSiz = sizeof(AFX_OBJECT(afxSoundBuffer)),
     .ctor = (void*)_SalSbufCtor,
     .dtor = (void*)_SalSbufDtor
 };

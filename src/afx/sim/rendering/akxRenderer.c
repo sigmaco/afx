@@ -27,7 +27,7 @@
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/math/afxQuaternion.h"
 #include "qwadro/math/afxMatrix.h"
-#include "qwadro/math/afxOpticalMatrix.h"
+#include "qwadro/draw/math/avxMatrix.h"
 #include "qwadro/math/afxVector.h"
 #include "qwadro/cad/afxMeshTopology.h"
 #include "qwadro/cad/akxVertexData.h"
@@ -88,7 +88,7 @@ _AKX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat
                 AfxBufferizeMeshTopology(msht);
                 AvxCmdBindIndexSource(cmdb, msht->cache.buf, msht->cache.base, msht->cache.range, msht->cache.stride);
                 
-                //AvxCmdSetPrimitiveTopology(cmdb, afxPrimTopology_TRI_LIST);
+                //AvxCmdSetPrimitiveTopology(cmdb, avxTopology_TRI_LIST);
                 //AvxCmdSetCullMode(cmdb, NIL);
                 //AvxCmdSwitchFrontFace(cmdb, AfxRandom2(0, 1));
 
@@ -110,7 +110,7 @@ _AKX afxError AkxCmdDrawBodies(avxCmdb cmdb, akxRenderer rnd, afxReal dt, afxNat
                 for (afxNat j = 0; j < surfCnt; j++)
                 {
                     afxMeshSurface *sec = AfxGetMeshSurface(msht, j);
-                    //AfxAssert(msh->topology->primType == afxPrimTopology_TRI_LIST);
+                    //AfxAssert(msh->topology->primType == avxTopology_TRI_LIST);
 
                     afxMaterialConstants mat;
 
@@ -199,7 +199,7 @@ _AKX afxError AkxCmdEndSceneRendering(avxCmdb cmdb, akxRenderer rnd)
     return err;
 }
 
-_AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera cam, afxRect const* drawArea, afxCanvas canv)
+_AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, avxCamera cam, afxRect const* drawArea, avxCanvas canv)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &rnd, afxFcc_RND);
@@ -207,7 +207,7 @@ _AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera
     afxNat frameIdx = (rnd->frameIdx + 1) % rnd->frameCnt;
     rnd->frameIdx = frameIdx;
 
-    //afxCanvas canv;
+    //avxCanvas canv;
     //AfxEnumerateDrawOutputCanvases(rnd->dout, outBufIdx, &canv);
     //rnd->canv = canv;
 
@@ -244,7 +244,7 @@ _AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera
     ddt.loadOp = afxSurfaceLoadOp_CLEAR;
     ddt.storeOp = afxSurfaceStoreOp_STORE;
 
-    //afxCanvas canv = rnd->canv;
+    //avxCanvas canv = rnd->canv;
     afxSynthesisConfig dps = { 0 };
     dps.canv = canv;
     dps.area = rnd->drawArea;
@@ -257,7 +257,7 @@ _AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera
 
     //afxWhd extent;
     //AfxGetCanvasExtent(canv, extent);
-    afxViewport vp = { 0 };
+    avxViewport vp = { 0 };
     vp.extent[0] = rnd->drawArea.extent[0];
     vp.extent[1] = rnd->drawArea.extent[1];
     vp.depth[0] = (afxReal)0;
@@ -287,7 +287,7 @@ _AKX afxError AkxCmdBeginSceneRendering(avxCmdb cmdb, akxRenderer rnd, afxCamera
 
         AfxCopyM4d(viewConstants->p, p);
         AfxCopyM4d(viewConstants->ip, ip);
-        AfxPickAtm4d(v, viewConstants->v);
+        AfxClipAtm4d(viewConstants->v, v);
         AfxCopyM4d(viewConstants->iv, iv);
         AfxMultiplyM4d(viewConstants->pv, p, v);
         AfxInvertM4d(viewConstants->pv, viewConstants->ipv);
@@ -368,7 +368,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
     }
 
     afxUri uri;
-    afxVertexInput vin;
+    avxVertexInput vin;
 
     //afxUri name;
 
@@ -401,14 +401,14 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
         iboSpec.usage = afxBufferUsage_INDEX;
         AfxAcquireBuffers(dctx, 1, &iboSpec, &rnd->testIbo);
         
-        afxVertexInputStream const vinStreams[] =
+        avxVertexInputStream const vinStreams[] =
         {
             {
                 .instanceRate = 0,
                 .slotIdx = 0
             }
         };
-        afxVertexInputAttr const vinAttrs[] =
+        avxVertexInputAttr const vinAttrs[] =
         {
             {
                 .location = 0,
@@ -435,7 +435,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
         }
     }
 
-    afxVertexInputStream const vinStreams[] =
+    avxVertexInputStream const vinStreams[] =
     {
         {
             .instanceRate = 0,
@@ -446,7 +446,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
             .slotIdx = 1
         }
     };
-    afxVertexInputAttr const vinAttrs[] =
+    avxVertexInputAttr const vinAttrs[] =
     {
         {
             .location = 0,
@@ -480,9 +480,9 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
         }
     };
 
-    afxVertexInput skinnedVin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams), vinStreams, AFX_COUNTOF(vinAttrs), vinAttrs);
+    avxVertexInput skinnedVin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams), vinStreams, AFX_COUNTOF(vinAttrs), vinAttrs);
     AfxAssertObjects(1, &skinnedVin, afxFcc_VIN);
-    afxVertexInputStream const vinStreams2[] =
+    avxVertexInputStream const vinStreams2[] =
     {
         {
             .instanceRate = 0,
@@ -493,7 +493,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
             .slotIdx = 1
         }
     };
-    afxVertexInputAttr const vinAttrs2[] =
+    avxVertexInputAttr const vinAttrs2[] =
     {
         {
             .location = 0,
@@ -515,7 +515,7 @@ _AKX afxError _AfxRndCtor(akxRenderer rnd, afxCookie const *cookie)
         }
     };
 
-    afxVertexInput rigidVin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams2), vinStreams2, AFX_COUNTOF(vinAttrs2), vinAttrs2);
+    avxVertexInput rigidVin = AfxAcquireVertexInput(dctx, AFX_COUNTOF(vinStreams2), vinStreams2, AFX_COUNTOF(vinAttrs2), vinAttrs2);
     AfxAssertObjects(1, &rigidVin, afxFcc_VIN);
 
 
@@ -577,8 +577,7 @@ _AKX afxClassConfig _AfxRndMgrCfg =
 {
     .fcc = afxFcc_RND,
     .name = "Renderer",
-    .unitsPerPage = 1,
-    .size = sizeof(AFX_OBJECT(akxRenderer)),
+    .fixedSiz = sizeof(AFX_OBJECT(akxRenderer)),
     .ctor = (void*)_AfxRndCtor,
     .dtor = (void*)_AfxRndDtor
 };

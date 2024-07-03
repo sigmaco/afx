@@ -43,7 +43,7 @@ AFX_DEFINE_STRUCT(afxMeshSurface)
     afxNat                  mtlIdx;
     afxNat                  baseTriIdx;
     afxNat                  triCnt;
-  //afxAabb                 aabb; // added this field to ease occlusion culling.
+  //afxBox                 aabb; // added this field to ease occlusion culling.
 };
 
 AFX_DEFINE_STRUCT(afxMeshTopologyCache)
@@ -80,7 +80,7 @@ AFX_OBJECT(afxMeshTopology)
 {
     afxNat                  surfCnt;
     afxMeshSurface*         surfaces;
-  //afxAabb                 aabb; // SIGMA added this field to ease occlusion culling.
+  //afxBox                 aabb; // SIGMA added this field to ease occlusion culling.
   //afxIndexBuffer          ibuf; // afxIndexBuffer --- aka triangles
   //afxNat                  idxRgn; // if ibuf is shared among other meshes, it should be a base for sections.    
     afxNat                  triCnt; // count of mapped vertices.

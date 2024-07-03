@@ -17,22 +17,22 @@
 #include "sgl.h"
 
 #if 0
-_SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge ddge, afxNat unit, afxLigature liga, afxLigature legt2)
+_SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge ddge, afxNat unit, avxLigature liga, avxLigature legt2)
 {
     afxError err = AFX_ERR_NONE;
-    afxLigature liga = AfxLegoGetTemplate(liga);
+    avxLigature liga = AfxLegoGetTemplate(liga);
     AfxAssertObject(liga, afxFcc_BSCH);
-    AfxAssert(liga->base.entryCnt >= legt2->entryCnt);
+    AfxAssert(liga->m.entryCnt >= legt2->entryCnt);
 
-    for (afxNat j = 0; j < liga->base.entryCnt; j++)
+    for (afxNat j = 0; j < liga->m.entryCnt; j++)
     {
-        afxLigatureEntry const *entry = &liga->base.entry[j];
-        afxLigatureEntry const *entry2 = &legt2->entry[j];
+        avxLigatureEntry const *entry = &liga->m.entry[j];
+        avxLigatureEntry const *entry2 = &legt2->entry[j];
         AfxAssert(entry->binding == entry2->binding);
         AfxAssert(entry->visibility == entry2->visibility);
         AfxAssert(entry->type == entry2->type);
 
-        afxPipelineRigData const *data = &liga->base.data[j];
+        avxPipelineRigData const *data = &liga->m.data[j];
 
         afxNat setId = (unit * _SGL_MAX_ENTRY_PER_LEGO);
         afxNat binding = setId + entry->binding;
@@ -87,18 +87,18 @@ _SGL afxError _SglDqueBindAndSyncLegoSub(afxDrawBridge ddge, afxNat unit, afxLig
     return err;
 }
 
-_SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge ddge, afxNat unit, afxLigature liga)
+_SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge ddge, afxNat unit, avxLigature liga)
 {
     //AfxEntry("pip=%p", pip);
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
-    afxLigature liga = AfxLegoGetTemplate(liga);
+    avxLigature liga = AfxLegoGetTemplate(liga);
     AfxAssertObject(liga, afxFcc_BSCH);
     glVmt const* gl = &ddge->wglVmt;
     
     if (ddge->state.pip)
     {
-        afxLigature legt2;
+        avxLigature legt2;
         AfxPipelineRigEnumerateTemplates(AfxPipelineGetRig(ddge->state.pip), unit, 1, &legt2);
 
         if (_SglDqueBindAndSyncLegoSub(ddge, unit, liga, legt2))
@@ -107,13 +107,13 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge ddge, afxNat unit, afxLigatu
     else
     {
         afxNat shdCnt;
-        afxShader shd;
+        avxShader shd;
         shdCnt = ddge->state.shdCnt;
 
         for (afxNat i = 0; i < shdCnt; i++)
         {
             shd = ddge->state.shd[i];
-            afxLigature legt2 = shd->liga[unit];
+            avxLigature legt2 = shd->liga[unit];
 
             if (_SglDqueBindAndSyncLegoSub(ddge, unit, liga, legt2))
                 AfxThrowError();
@@ -123,7 +123,7 @@ _SGL afxError _SglDqueBindAndSyncLego(afxDrawBridge ddge, afxNat unit, afxLigatu
 }
 #endif 
 
-_SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, afxLigature liga, GLuint glHandle)
+_SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, avxLigature liga, GLuint glHandle)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
@@ -134,17 +134,17 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, afxLigature liga, GLuint glHan
     AfxMakeString32(&tmp, 0);
     afxChar const *rawName = (void const *)AfxGetStringData(&tmp.str.str, 0);
 
-    afxNat setCnt = liga->base.setCnt;
+    afxNat setCnt = liga->m.setCnt;
 
     for (afxNat i = 0; i < setCnt; i++)
     {
-        afxNat set = liga->base.sets[i].set;
-        afxNat entryCnt = liga->base.sets[i].entryCnt;
-        afxNat baseEntry = liga->base.sets[i].baseEntry;
+        afxNat set = liga->m.sets[i].set;
+        afxNat entryCnt = liga->m.sets[i].entryCnt;
+        afxNat baseEntry = liga->m.sets[i].baseEntry;
 
         for (afxNat j = 0; j < entryCnt; j++)
         {
-            afxLigatureEntry const *entry = &liga->base.totalEntries[baseEntry + j];
+            avxLigatureEntry const *entry = &liga->m.totalEntries[baseEntry + j];
             AfxAssert(!AfxStringIsEmpty(&entry->name.str.str));
             AfxCopyString(&tmp.str, &entry->name.str.str);
             //AfxAssert(entry->visibility);
@@ -224,7 +224,7 @@ _SGL afxError _DpuBindAndResolveLego(sglDpu* dpu, afxLigature liga, GLuint glHan
     return err;
 }
 
-_SGL afxError _SglBschDtor(afxLigature liga)
+_SGL afxError _SglBschDtor(avxLigature liga)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
@@ -235,7 +235,7 @@ _SGL afxError _SglBschDtor(afxLigature liga)
     return err;
 }
 
-_SGL afxError _SglBschCtor(afxLigature liga, afxCookie const* cookie)
+_SGL afxError _SglBschCtor(avxLigature liga, afxCookie const* cookie)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
@@ -249,14 +249,3 @@ _SGL afxError _SglBschCtor(afxLigature liga, afxCookie const* cookie)
     AfxAssertObjects(1, &liga, afxFcc_BSCH);
     return err;
 }
-
-_SGL afxClassConfig const _SglBschMgrCfg =
-{
-    .fcc = afxFcc_BSCH,
-    .name = "Ligature",
-    .desc = "Pipelined Resourcing Ligature",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxLigature)),
-    .ctor = (void*)_SglBschCtor,
-    .dtor = (void*)_SglBschDtor
-};

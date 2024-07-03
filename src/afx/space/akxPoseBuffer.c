@@ -90,8 +90,7 @@ _AKX afxClassConfig const _AkxPosbMgrCfg =
 {
     .fcc = afxFcc_POSB,
     .name = "Skeletal Pose Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(akxPoseBuffer)),
+    .fixedSiz = sizeof(AFX_OBJECT(akxPoseBuffer)),
     .ctor = (void*)_AkxPosbCtor,
     .dtor = (void*)_AkxPosbDtor
 };
@@ -103,7 +102,7 @@ _AKX afxError AfxAcquirePoseBuffers(afxSimulation sim, afxNat cnt, afxNat const 
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &sim, afxFcc_SIM);
 
-    afxManager *cls = AfxGetPoseBufferClass(sim);
+    afxClass *cls = AfxGetPoseBufferClass(sim);
     AfxAssertClass(cls, afxFcc_POSB);
 
     if (AfxAcquireObjects(cls, cnt, (afxObject*)wp, (void const*[]) { sim, artCnt, excludeComposite }))

@@ -3,13 +3,13 @@
 #include <Windows.h>
 
 #define _AFX_SKELETON_C
-#include "qwadro/core/afxSystem.h"
+#include "qwadro/exec/afxSystem.h"
 #include "afxWavefrontObject.h"
 #include "qwadro/cad/afxMesh.h"
-#include "qwadro/sim/afxMaterial.h"
+#include "qwadro/cad/afxMaterial.h"
 #include "qwadro/sim/akxAsset.h"
-#include "../dep/glus/GL/glus.h"
-#include "../dep/glus/GLUS/glus_wavefront.h"
+#include "../../dep_/glus/GL/glus.h"
+#include "../../dep_/glus/GLUS/glus_wavefront.h"
 #include "qwadro/io/afxUri.h"
 #include "qwadro/draw/afxDrawSystem.h"
 #include "qwadro/math/afxVector.h"
@@ -72,7 +72,7 @@ DLLEXPORT void* CadbGetResourceInfoObj(void* data2, afxFcc type, afxNat resIdx, 
     if (name)
     {
         if (type != afxFcc_MSH)
-            AfxPickUriObject(data->name, name);
+            AfxClipUriTarget(name, data->name);
         else
             AfxResetUri(name);//AfxPickUriObject(name, &data->meshNames[resIdx]);
     }
@@ -118,7 +118,7 @@ DLLEXPORT afxError AfxLoadAssetsFromWavefrontObj(afxSimulation sim, afxFlags fla
         else
         {
             afxUri mdlNameUri;
-            AfxPickUriObject(&file2, &mdlNameUri);
+            AfxClipUriTarget(&mdlNameUri, &file2);
             afxString const*mdlName = AfxGetUriString(&mdlNameUri);
 
             afxNat meshCnt = 0, totalArtCnt = 0;

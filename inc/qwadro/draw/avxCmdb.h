@@ -31,7 +31,7 @@ or made invalid by another pipeline bind with that state specified as static.
 #ifndef AVX_CMDB_H
 #define AVX_CMDB_H
 
-#include "qwadro/draw/pipe/afxDrawOps.h"
+#include "qwadro/draw/pipe/avxDrawOps.h"
 
 typedef enum avxCmdbUsage
 {
@@ -76,34 +76,6 @@ typedef enum avxCmdbState
 
     avxCmdbState_INTERNAL_EXECUTING,
 } avxCmdbState;
-
-#ifdef _AVX_DRAW_C
-#ifdef _AVX_CMD_BUFFER_C
-#ifndef _AVX_CMD_BUFFER_IMPL
-AFX_OBJECT(avxCmdb)
-#else
-struct afxBaseCmdBuffer
-#endif
-{
-    afxError            (*beginCb)(avxCmdb, afxBool permanent);
-    afxError            (*endCb)(avxCmdb);
-    afxError            (*resetCb)(avxCmdb);
-    avxCmdbState   state;
-    afxAtom32           submCnt; /// number of submissions
-    afxMask64           submQueMask; /// one for each queue where this cmdb was submitted into.
-
-    afxNat              portIdx;
-    afxNat              poolIdx;
-    afxArena            cmdArena; /// owned by dctx data for specific port
-    afxBool             disposable; /// if true, at execution end, it is moved to invalid state and considered in recycle chain.
-
-    afxBool             inRenderPass;
-    afxBool             inVideoCoding;
-
-    afxCmd const*       stdCmds;
-};
-#endif//_AVX_CMD_BUFFER_C
-#endif//_AVX_DRAW_C
 
 AVX avxCmdbState   AfxGetCmdBufferState(avxCmdb cmdb);
 

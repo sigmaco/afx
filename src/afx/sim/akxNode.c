@@ -58,9 +58,7 @@ _AKX afxClassConfig _AfxNodMgrCfg =
 {
     .fcc = afxFcc_NOD,
     .name = "Node",
-    .unitsPerPage = 1,
-    //.size = sizeof(AFX_OBJECT(akxNode)),
-    .mmu = NIL,
+    //.fixedSiz = sizeof(AFX_OBJECT(akxNode)),
     .ctor = (void*)_AfxNodCtor,
     .dtor = (void*)_AfxNodDtor
 };

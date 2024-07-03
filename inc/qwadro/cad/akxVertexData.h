@@ -110,7 +110,7 @@ AFX_OBJECT(akxVertexData)
     //afxVertex*          vtx; // one for each vertex
     afxNat              attrCnt;
     akxVertexDataAttr*  attrs;
-    afxAabb             aabb;
+    afxBox             aabb;
 
     afxBool             cached;
     akxVertexDataCache  cache[2];

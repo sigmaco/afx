@@ -22,16 +22,16 @@
 #if 0
 _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
 {
-    if (!buf->base.mapped) AfxLogError("");
+    if (!buf->m.mapped) AfxLogError("");
     else
     {
         afxBuffer base = AfxBuffer.GetBase(buf);
 
-        buf->base.mapped = FALSE;
+        buf->m.mapped = FALSE;
 
         if (base->gpuHandle)
         {
-            glVmt const* gl = &(((afxDrawSystem)AfxGetObjectProvider(&buf->base.obj))->vmt);
+            glVmt const* gl = &(((afxDrawSystem)AfxGetObjectProvider(&buf->m.obj))->vmt);
             afxFlags usage = base->usage;
             GLenum target = NIL;
 
@@ -79,7 +79,7 @@ _SGL void _AfxStdUbufImplUnmap(afxBuffer buf)
             AfxAssert(gl->IsBuffer(base->gpuHandle));
 
             gl->BindBuffer(target, base->gpuHandle); _SglThrowErrorOccuried();
-            gl->BufferSubData(target, buf->base.mappedOff, buf->base.mappedRange, &(((afxByte*)buf->base.buf)[buf->base.mappedOff])); _SglThrowErrorOccuried();
+            gl->BufferSubData(target, buf->m.mappedOff, buf->m.mappedRange, &(((afxByte*)buf->m.buf)[buf->m.mappedOff])); _SglThrowErrorOccuried();
             gl->BindBuffer(target, 0); _SglThrowErrorOccuried();
 
             base->lastUpdTime = AfxGetTimer();
@@ -92,12 +92,12 @@ _SGL void* _AfxStdUbufImplMap(afxBuffer buf, afxSize off, afxSize siz)
 {
     void *ptr = NIL;
 
-    if (buf->base.mapped) AfxLogError("");
+    if (buf->m.mapped) AfxLogError("");
     else
     {
-        buf->base.mappedOff = off;
-        buf->base.mappedRange = siz ? siz : buf->base.cap - off;
-        buf->base.mapped = TRUE;
+        buf->m.mappedOff = off;
+        buf->m.mappedRange = siz ? siz : buf->m.cap - off;
+        buf->m.mapped = TRUE;
     }
     return ptr;
 }
@@ -135,8 +135,8 @@ _SGL afxError DpuBindAndSyncBuf(sglDpu* dpu, GLenum glTarget, afxBuffer buf)
             buf->glHandle = glHandle;
 
             AfxAssert(gl->BufferStorage);
-            gl->BufferStorage(buf->glTarget, buf->base.cap, NIL, buf->glAccess | GL_DYNAMIC_STORAGE_BIT); _SglThrowErrorOccuried();
-            AfxLogEcho("Hardware-side buffer %p ready. %u, %u, %x", buf, buf->glTarget, glHandle, buf->base.usage);
+            gl->BufferStorage(buf->glTarget, buf->m.cap, NIL, buf->glAccess | GL_DYNAMIC_STORAGE_BIT); _SglThrowErrorOccuried();
+            AfxLogEcho("Hardware-side buffer %p ready. %u, %u, %x", buf, buf->glTarget, glHandle, buf->m.usage);
             buf->updFlags &= ~(SGL_UPD_FLAG_DEVICE);
 
             if (glTarget != buf->glTarget)
@@ -221,7 +221,7 @@ _SGL afxError _DpuRemapBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ra
 
     GLenum glTarget = NIL;
 
-    if (buf->base.access & afxBufferAccess_W)
+    if (buf->m.access & afxBufferAccess_W)
         glTarget = GL_COPY_WRITE_BUFFER;
     else
         glTarget = GL_COPY_READ_BUFFER;
@@ -231,65 +231,66 @@ _SGL afxError _DpuRemapBuf(sglDpu* dpu, afxBuffer buf, afxSize offset, afxNat ra
     if (range)
     {
         GLenum glAccess = NIL;
-        AfxAssert(!buf->base.bytemap);
+        AfxAssert(!buf->m.bytemap);
 
 #if !0
         if (range == AfxGetBufferCapacity(buf))
         {
-            if (!(buf->base.access & afxBufferAccess_R))
+            if (!(buf->m.access & afxBufferAccess_R))
             {
-                if (buf->base.access & afxBufferAccess_W)
+                if (buf->m.access & afxBufferAccess_W)
                     glAccess = GL_WRITE_ONLY;
             }
             else
             {
-                if (buf->base.access & afxBufferAccess_W)
+                if (buf->m.access & afxBufferAccess_W)
                     glAccess = GL_READ_WRITE;
                 else
                     glAccess = GL_READ_ONLY;
             }
 
-            buf->base.bytemap = gl->MapBuffer(glTarget, glAccess); _SglThrowErrorOccuried();
+            buf->m.bytemap = gl->MapBuffer(glTarget, glAccess); _SglThrowErrorOccuried();
         }
         else
 #endif
         {
-            buf->base.bytemap = gl->MapBufferRange(glTarget, offset, range, buf->glAccess); _SglThrowErrorOccuried();
+            buf->m.bytemap = gl->MapBufferRange(glTarget, offset, range, buf->glAccess); _SglThrowErrorOccuried();
         }
 
-        buf->base.mappedOffset = offset;
-        buf->base.mappedRange = range;
-        buf->base.mappedFlags = flags;
-        AfxAssert(buf->base.bytemap);
+        buf->m.mappedOffset = offset;
+        buf->m.mappedRange = range;
+        buf->m.mappedFlags = flags;
+        AfxAssert(buf->m.bytemap);
     }
     else
     {
-        AfxAssert(buf->base.bytemap);
+        AfxAssert(buf->m.bytemap);
         gl->UnmapBuffer(glTarget); _SglThrowErrorOccuried();
-        buf->base.bytemap = NIL;
+        buf->m.bytemap = NIL;
 
         //gl->FlushMappedBufferRange(glTarget, subm->buf->glMappedOff, subm->buf->glMappedSiz); _SglThrowErrorOccuried();
-        buf->base.mappedOffset = 0;
-        buf->base.mappedRange = 0;
-        buf->base.mappedFlags = NIL;
+        buf->m.mappedOffset = 0;
+        buf->m.mappedRange = 0;
+        buf->m.mappedFlags = NIL;
     }
-    //AfxAssert(!AfxLoadAtom32(&buf->base.pendingRemap));
+    //AfxAssert(!AfxLoadAtom32(&buf->m.pendingRemap));
     return err;
 }
 
-_SGL afxError _BufRemapCb(afxBuffer buf, afxSize offset, afxNat range, afxFlags flags, afxNat* portIdx, afxNat* dqueIdx)
+_SGL afxError _BufRemapCb(afxBuffer buf, afxNat offset, afxNat range, afxFlags flags, afxNat* portIdx, afxNat* dqueIdx)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
-    AfxAssertRange(buf->base.cap, offset, range);
+    AfxAssertRange(buf->m.cap, offset, range);
     
-    if (buf->base.mappedRange) AfxThrowError();
+    if (buf->m.mappedRange) AfxThrowError();
     else
     {
         afxDrawContext dctx = AfxGetBufferContext(buf);
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
         afxNat bridgeIdx = 0;
-        afxDrawBridge ddge = AfxGetDrawBridge(dctx, bridgeIdx);
+        afxDrawBridge ddge;
+        AfxGetDrawBridge(dctx, bridgeIdx, &ddge);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
         afxNat queIdx = AFX_INVALID_INDEX;
 
@@ -311,13 +312,14 @@ _SGL afxError _BufUnmapCb(afxBuffer buf, afxNat* portIdx, afxNat* dqueIdx)
     afxError err = AFX_ERR_NONE;
     AfxAssertObjects(1, &buf, afxFcc_BUF);
 
-    if (!buf->base.mappedRange) AfxThrowError();
+    if (!buf->m.mappedRange) AfxThrowError();
     else
     {
         afxDrawContext dctx = AfxGetBufferContext(buf);
         AfxAssertObjects(1, &dctx, afxFcc_DCTX);
         afxNat bridgeIdx = 0;
-        afxDrawBridge ddge = AfxGetDrawBridge(dctx, bridgeIdx);
+        afxDrawBridge ddge;
+        AfxGetDrawBridge(dctx, bridgeIdx, &ddge);
         AfxAssertObjects(1, &ddge, afxFcc_DDGE);
         afxNat queIdx = AFX_INVALID_INDEX;
 
@@ -340,10 +342,10 @@ _SGL afxError _BufDtorCb(afxBuffer buf)
 
     afxDrawContext dctx = AfxGetBufferContext(buf);
 
-    if (buf->base.mappedRange)
+    if (buf->m.mappedRange)
     {
         AfxUnmapBuffer(buf, TRUE);
-        AfxAssert(!buf->base.mappedRange);
+        AfxAssert(!buf->m.mappedRange);
     }
 
     if (buf->glHandle)
@@ -372,8 +374,8 @@ _SGL afxError _BufCtorCb(afxBuffer buf, afxCookie const* cookie)
         buf->glTarget = NIL;
         buf->updFlags = SGL_UPD_FLAG_DEVICE_INST;
 
-        afxBufferUsage usage = buf->base.usage;
-        afxBufferAccess access = buf->base.access;
+        afxBufferUsage usage = buf->m.usage;
+        afxBufferAccess access = buf->m.access;
         GLbitfield glAccess = NIL;
 
         if (usage & afxBufferUsage_VERTEX)
@@ -409,12 +411,12 @@ _SGL afxError _BufCtorCb(afxBuffer buf, afxCookie const* cookie)
 
         buf->glAccess = glAccess;
 
-        buf->base.remap = _BufRemapCb;
-        buf->base.unmap = _BufUnmapCb;
+        buf->m.remap = _BufRemapCb;
+        buf->m.unmap = _BufUnmapCb;
 
         if (spec->src)
         {
-            if (AfxUpdateBuffer(buf, 0, buf->base.cap, spec->src))
+            if (AfxUpdateBuffer(buf, 0, buf->m.cap, spec->src))
                 AfxThrowError();
         }
 
@@ -423,14 +425,3 @@ _SGL afxError _BufCtorCb(afxBuffer buf, afxCookie const* cookie)
     }
     return err;
 }
-
-_SGL afxClassConfig const _SglBufMgrCfg =
-{
-    .fcc = afxFcc_BUF,
-    .name = "Buffer",
-    .desc = "Device Memory Buffer",
-    .unitsPerPage = 2,
-    .size = sizeof(AFX_OBJECT(afxBuffer)),
-    .ctor = (void*)_BufCtorCb,
-    .dtor = (void*)_BufDtorCb
-};

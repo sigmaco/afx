@@ -18,7 +18,7 @@
 #define AVX_PAINT_H
 
 #include "qwadro/draw/afxDrawDefs.h"
-#include "qwadro/draw/afxColor.h"
+#include "qwadro/draw/math/avxColor.h"
 
 AFX_DEFINE_HANDLE(avxVectorizer);
 
@@ -56,7 +56,7 @@ AVX void        AvxCmdTransformImmVertices(avxCmdb cmdb, afxM4d const m, afxNat 
 
 AVX void        AvxImmSetColor(avxCmdb cmdb, afxColor const inner, afxColor const outer);
 AVX void        AvxImmBindRasters();
-AVX void        AvxImmBindRasterizer(avxCmdb cmdb, afxRasterizer razr);
+AVX void        AvxImmBindRasterizer(avxCmdb cmdb, avxRasterizer razr);
 
 /// The BeginPath() function opens a path bracket in the specified device context.
 AVX afxBool     AvxBeginPath(avxVectorizer vecr);

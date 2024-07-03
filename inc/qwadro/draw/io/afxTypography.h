@@ -47,7 +47,7 @@ AFX_OBJECT(afxTypography)
     {
         afxNat  baseGlyphIdx;
         afxNat  glyphCnt;
-    }*          pages;
+    }*pages;
 };
 #endif//_AFX_TYPOGRAPHY_C
 #endif//_AVX_DRAW_C

@@ -110,7 +110,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>ASX_DRV_SRC;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,7 +145,6 @@
       <AdditionalIncludeDirectories>$(SolutionDir)..\inc;C:\Program Files (x86)\Visual Leak Detector\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <PreprocessorDefinitions>ASX_DRV_SRC;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

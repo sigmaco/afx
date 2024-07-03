@@ -16,7 +16,7 @@
 
 // This code is part of SIGMA Future Storage <https://sigmaco.org/future-storage>
 
-#include "qwadro/core/afxSystem.h"
+#include "../src/afx/dev/afxDevIoBase.h"
 
 
 _AFXINL void AfxMakeSource(afxSource *src)

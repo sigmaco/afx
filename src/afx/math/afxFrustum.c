@@ -60,7 +60,7 @@ _AFXINL afxBool AfxFrustumDoesCullSphere(afxFrustum const* f, afxSphere const* s
     return TRUE;
 }
 
-_AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxAabb const aabb)
+_AFXINL afxBool AfxFrustumDoesCullAabb(afxFrustum const* f, afxBox const aabb)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
@@ -157,7 +157,7 @@ _AFXINL afxBool AfxFrustumDoesCullFrustum(afxFrustum const* f, afxFrustum const*
     return allOut;
 }
 
-_AFXINL void AfxAabbEncapsulateFrustum(afxAabb aabb, afxFrustum const* f)
+_AFXINL void AfxAabbEncapsulateFrustum(afxBox aabb, afxFrustum const* f)
 {
     afxError err = AFX_ERR_NONE;
     AfxAssert(f);
